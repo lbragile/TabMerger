@@ -1,7 +1,8 @@
-chrome.tabs.getAllInWindow(null, (tabs) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   var ul = document.getElementById("tab-urls");
-  [...tabs].forEach((tab) => {
-    if (!tab.url.includes("chrome-extension://")) {
+  var tabs_to_remove = [];
+  [...request.tabs].forEach((tab) => {
+    if (!tab.url.includes("localhost:3000")) {
       let a = document.createElement("a");
       a.href = tab.url;
       a.innerHTML = tab.url;
@@ -12,10 +13,8 @@ chrome.tabs.getAllInWindow(null, (tabs) => {
 
       ul.append(li);
 
-      chrome.tabs.remove(tab.id);
+      tabs_to_remove.push(tab.id);
     }
   });
-  //   document.getElementById(
-  //     "tab-urls"
-  //   ).style.listStyleImage = `url('${tab.favIconUrl}')`;
+  sendResponse({ remove_tabs: tabs_to_remove });
 });
