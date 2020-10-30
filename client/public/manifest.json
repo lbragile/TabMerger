@@ -14,7 +14,7 @@
     "scripts": ["background.js"]
   },
 
-  "permissions": ["cookies", "tabs", "http://*/"],
+  "permissions": ["tabs", "http://*/"],
 
   "browser_action": {
     "default_icon": "logo192.png",
