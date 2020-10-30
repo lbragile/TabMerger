@@ -1,9 +1,8 @@
-var target_url = "http://localhost:3000";
 chrome.browserAction.onClicked.addListener((tab) => {
   chrome.tabs.create(
     {
       windowId: null,
-      url: target_url,
+      url: "http://localhost:3000",
       active: true,
       openerTabId: tab.id,
     },
@@ -12,10 +11,8 @@ chrome.browserAction.onClicked.addListener((tab) => {
       chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
         if (changeInfo.status == "complete" && tabId == newTab.id) {
           chrome.tabs.getAllInWindow(null, (tabs) => {
-            chrome.cookies.set({
-              url: target_url,
-              name: "tabs",
-              value: JSON.stringify(tabs),
+            chrome.tabs.sendMessage(newTab.id, { tabs }, (response) => {
+              chrome.tabs.remove(response.remove_tabs);
             });
           });
         }

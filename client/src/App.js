@@ -1,15 +1,21 @@
-import React, { useRef } from "react";
-import Cookies from "js-cookie";
+import React, { useState, useEffect } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 export default function App() {
-  var tabs = useRef(Cookies.get("tabs"));
+  const [tabs, setTabs] = useState([{ url: "" }]);
+
+  useEffect(() => {
+    window.addEventListener("message", (e) => {
+      if (e.source !== window) return;
+      setTabs(e.data.tabs);
+    });
+  }, []);
 
   return (
     <div>
-      {JSON.parse(tabs.current).map((tab) => {
+      {tabs.map((tab) => {
         return tab.url.includes("http") && !tab.url.includes("localhost") ? (
           <div className="inline-block" key={Math.random()}>
             <img
