@@ -1,9 +1,11 @@
-chrome.browserAction.onClicked.addListener((tab) => {
+function getAllTabsAndSend() {
   var window_tabs = null;
   chrome.tabs.getAllInWindow(null, (tabs) => {
     window_tabs = [...tabs];
     tabs.forEach((tab) => {
-      chrome.tabs.remove(tab.id);
+      if (!tab.url.includes("tests/integration")) {
+        chrome.tabs.remove(tab.id);
+      }
     });
   });
 
@@ -12,7 +14,6 @@ chrome.browserAction.onClicked.addListener((tab) => {
       windowId: null,
       url: "http://localhost:3000",
       active: true,
-      openerTabId: tab.id,
     },
     (newTab) => {
       // wait for tab to load
@@ -23,4 +24,17 @@ chrome.browserAction.onClicked.addListener((tab) => {
       });
     }
   );
+}
+
+chrome.browserAction.onClicked.addListener(() => {
+  getAllTabsAndSend();
 });
+
+chrome.runtime.onMessageExternal.addListener(
+  (request, sender, sendResponse) => {
+    if (request.msg === "get tabs") {
+      getAllTabsAndSend();
+    }
+    return true;
+  }
+);

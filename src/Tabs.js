@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+import "./Tabs.css";
 export default function Tabs(props) {
   const [tabs, setTabs] = useState([{ url: "" }]);
 
@@ -37,17 +38,30 @@ export default function Tabs(props) {
       setTabs(tabs_arr);
       window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
     });
-  }, []);
+  });
 
+  function removeTab(e) {
+    var title = e.target.parentNode.querySelector("a").textContent;
+    e.target.parentNode.style.display = "none";
+    console.log(title);
+    var tabs_arr = JSON.parse(window.localStorage.getItem("tabs"));
+    tabs_arr = tabs_arr.filter((item) => item.title !== title);
+    props.setCounter(tabs_arr.length);
+    setTabs(tabs_arr);
+    window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
+  }
   return (
-    <div>
+    <div className="tab-group">
       {tabs.map((tab) => {
-        return (
-          <div className="inline-block" key={Math.random()}>
+        return tab.url ? (
+          <div className="row" key={Math.random()}>
+            <p className="close_btn" onClick={(e) => removeTab(e)}>
+              ✖
+            </p>
             <img
               src={tab.favIconUrl}
-              width="16"
-              height="16"
+              width="24"
+              height="24"
               alt="icon for the url"
               className="m-2"
             />
@@ -55,7 +69,7 @@ export default function Tabs(props) {
               {tab.title}
             </a>
           </div>
-        );
+        ) : null;
       })}
     </div>
   );

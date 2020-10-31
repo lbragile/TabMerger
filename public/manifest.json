@@ -19,5 +19,9 @@
   "browser_action": {
     "default_icon": "logo192.png",
     "default_title": "Sort your tabs into tab groups"
+  },
+
+  "externally_connectable": {
+    "matches": ["http://localhost:3000/"]
   }
 }
