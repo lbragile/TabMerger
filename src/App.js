@@ -16,7 +16,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="container">
       <h1>Tabify</h1>
       <h5>Currently have {counter} tabs</h5>
       <Tabs setCounter={setCounter} />
@@ -28,6 +28,6 @@ export default function App() {
       >
         Merge All Tabs in Window
       </Button>
-    </>
+    </div>
   );
 }

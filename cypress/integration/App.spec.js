@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 describe("App Tests", () => {
+  const tab_elems = [".close-tab", ".img-tab", ".a-tab"];
   beforeEach(() => {
     cy.visit(Cypress.config().baseUrl);
     cy.fixture("tab").then((data) => {
@@ -23,20 +24,19 @@ describe("App Tests", () => {
       win.postMessage({ tabs }, "http://localhost:3000/");
     });
 
-    var elems = ["p", "img", "a"];
-    elems.forEach((elem) => {
+    tab_elems.forEach((elem) => {
       cy.get(elem).should("have.length", 6);
     });
   });
 
   it("works with empty tabs", () => {
     cy.clearLocalStorage();
+    cy.reload();
     cy.window().then((win) => {
       win.postMessage({ tabs: [] }, "http://localhost:3000/");
     });
 
-    var elems = ["p", "img", "a"];
-    elems.forEach((elem) => {
+    tab_elems.forEach((elem) => {
       cy.get(elem).should("not.exist");
     });
   });
@@ -50,14 +50,13 @@ describe("App Tests", () => {
 
     cy.contains("h5", "Currently have 6 tabs");
 
-    cy.get("p")
+    cy.get(tab_elems[0])
       .first()
-      .then(($p) => {
-        cy.wrap($p).click();
+      .then(($elem) => {
+        cy.wrap($elem).click();
       });
 
-    var elems = ["p", "img", "a"];
-    elems.forEach((elem) => {
+    tab_elems.forEach((elem) => {
       cy.get(elem).should("have.length", 5);
     });
 

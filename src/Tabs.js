@@ -2,79 +2,86 @@ import React, { useState, useEffect } from "react";
 
 import "./Tabs.css";
 export default function Tabs(props) {
-  const [tabs, setTabs] = useState([{ url: "" }]);
+  const [tabs, setTabs] = useState(
+    JSON.parse(window.localStorage.getItem("tabs")) || []
+  );
 
   useEffect(() => {
-    window.addEventListener("message", (e) => {
+    props.setCounter(tabs.length);
+
+    function triggerEvent(e) {
       /* istanbul ignore next */
-      if (
-        e.origin.includes("tests/integration") &&
-        e.origin !== window.location.href
-      )
-        return;
+      if (e.origin.includes("tests/integration") && e.source !== window) return;
 
       // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
-      var tabs_arr = JSON.parse(window.localStorage.getItem("tabs"));
-      if (!tabs_arr) {
-        tabs_arr = [...e.data.tabs];
-      } else {
-        var combined_arr = [...tabs_arr, ...e.data.tabs];
-        var unique_arr = Array.from(
-          new Set(
-            combined_arr.map((item) =>
-              JSON.stringify({
-                url: item.url,
-                favIconUrl: item.favIconUrl,
-                title: item.title,
-              })
-            )
+      var tabs_arr = tabs;
+      var combined_arr = [...tabs_arr, ...e.data.tabs];
+      var unique_arr = Array.from(
+        new Set(
+          combined_arr.map((item) =>
+            JSON.stringify({
+              url: item.url,
+              favIconUrl: item.favIconUrl,
+              title: item.title,
+            })
           )
-        );
-        unique_arr = unique_arr.map((item) => JSON.parse(item));
-        tabs_arr = unique_arr.filter(
-          (item) =>
-            item.url &&
-            item.url.includes("http") &&
-            !item.url.includes("localhost")
-        );
-      }
+        )
+      );
+      unique_arr = unique_arr.map((item) => JSON.parse(item));
+      tabs_arr = unique_arr.filter(
+        (item) =>
+          item.url &&
+          item.url.includes("http") &&
+          !item.url.includes("localhost")
+      );
 
-      props.setCounter(tabs_arr.length);
       setTabs(tabs_arr);
       window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
-    });
-  });
+    }
+
+    window.addEventListener("message", (e) => triggerEvent(e));
+
+    /* istanbul ignore next */
+    return () => {
+      window.removeEventListener("message", (e) => triggerEvent(e));
+    };
+  }, [tabs, props]);
 
   function removeTab(e) {
     var title = e.target.parentNode.querySelector("a").textContent;
     e.target.parentNode.style.display = "none";
-    console.log(title);
-    var tabs_arr = JSON.parse(window.localStorage.getItem("tabs"));
+    var tabs_arr = tabs;
     tabs_arr = tabs_arr.filter((item) => item.title !== title);
     props.setCounter(tabs_arr.length);
     setTabs(tabs_arr);
     window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
   }
+
   return (
-    <div className="tab-group">
+    <div className="d-flex flex-column mx-4 my-2">
       {tabs.map((tab) => {
-        return tab.url ? (
-          <div className="row" key={Math.random()}>
-            <p className="close_btn" onClick={(e) => removeTab(e)}>
+        return (
+          <div className="row my-2" key={Math.random()}>
+            <p className="close-tab" onClick={(e) => removeTab(e)}>
               ✖
             </p>
             <img
+              className="img-tab mx-2"
               src={tab.favIconUrl}
               width="24"
               height="24"
               alt="icon for the url"
-              className="m-2"
             />
-            <a href={tab.url} target="_blank" rel="noreferrer">
+            <a
+              href={tab.url}
+              className="a-tab"
+              target="_blank"
+              rel="noreferrer"
+            >
               {tab.title}
             </a>
           </div>
-        ) : null;
+        );
       })}
     </div>
   );

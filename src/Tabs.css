@@ -1,16 +1,10 @@
-.close_btn {
-  font-size: 0.6rem;
+.close-tab {
+  font-weight: bold;
   padding: 0;
   margin: 0;
 }
 
-.close_btn:hover {
+.close-tab:hover {
   cursor: pointer;
   fill: red;
-}
-
-.tab-group {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
