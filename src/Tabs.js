@@ -6,9 +6,10 @@ export default function Tabs(props) {
 
   useEffect(() => {
     window.addEventListener("message", (e) => {
+      /* istanbul ignore next */
       if (
-        e.source.location.href.includes("tests/integration") &&
-        e.source !== window
+        e.origin.includes("tests/integration") &&
+        e.origin !== window.location.href
       )
         return;
 
