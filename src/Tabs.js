@@ -6,7 +6,11 @@ export default function Tabs(props) {
 
   useEffect(() => {
     window.addEventListener("message", (e) => {
-      if (e.source !== window) return;
+      if (
+        e.source.location.href.includes("tests/integration") &&
+        e.source !== window
+      )
+        return;
 
       // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
       var tabs_arr = JSON.parse(window.localStorage.getItem("tabs"));
