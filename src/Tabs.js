@@ -57,28 +57,54 @@ export default function Tabs(props) {
     window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
   }
 
+  const dragStart = (e) => {
+    var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
+    e.dataTransfer.setData("tab_id", target.id);
+  };
+
+  const dragOver = (e) => {
+    e.stopPropagation();
+  };
+
   return (
     <div className="d-flex flex-column mx-4 my-2">
-      {tabs.map((tab) => {
+      <h5 className="mb-3">{tabs.length} tabs in this group</h5>
+      {tabs.map((tab, index) => {
         return (
-          <div className="row my-2" key={Math.random()}>
-            <p className="close-tab" onClick={(e) => removeTab(e)}>
+          <div
+            className="row mb-1"
+            id={"tab-" + index}
+            draggable
+            onDragStart={dragStart}
+            onDragOver={dragOver}
+            key={Math.random()}
+          >
+            <p
+              className="close-tab mr-2"
+              draggable={false}
+              onClick={(e) => removeTab(e)}
+            >
               ✖
             </p>
+            <p className="move-tab mr-2">☰</p>
             <img
-              className="img-tab mx-2"
+              className="img-tab mr-2"
               src={tab.favIconUrl}
               width="24"
               height="24"
               alt="icon for the url"
+              draggable={false}
             />
             <a
               href={tab.url}
               className="a-tab"
               target="_blank"
               rel="noreferrer"
+              draggable={false}
             >
-              {tab.title}
+              {tab.title.length > 50
+                ? tab.title.substring(0, 50) + "..."
+                : tab.title}
             </a>
           </div>
         );

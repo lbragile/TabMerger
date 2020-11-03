@@ -8,3 +8,7 @@
   cursor: pointer;
   fill: red;
 }
+
+.move-tab:hover {
+  cursor: move;
+}
