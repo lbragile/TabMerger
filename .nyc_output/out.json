@@ -155,11 +155,11 @@
       "15": {
         "start": {
           "line": 51,
-          "column": 16
+          "column": 14
         },
         "end": {
           "line": 51,
-          "column": 66
+          "column": 57
         }
       },
       "16": {
@@ -189,7 +189,7 @@
         },
         "end": {
           "line": 54,
-          "column": 63
+          "column": 59
         }
       },
       "19": {
@@ -199,7 +199,7 @@
         },
         "end": {
           "line": 54,
-          "column": 61
+          "column": 57
         }
       },
       "20": {
@@ -525,7 +525,7 @@
           },
           "end": {
             "line": 54,
-            "column": 61
+            "column": 57
           }
         },
         "line": 54
@@ -851,7 +851,7 @@
       ]
     },
     "_coverageSchema": "1a1c01bbd47fc00a2c39e90264f33305004495a9",
-    "hash": "91369a54711603d1af03af43232569731a381eb5"
+    "hash": "961d869d162b40ef04593e0e6832c84c4aba3d52"
   },
   "C:\\Users\\Lior Bragilevsky\\Desktop\\websites\\Tabify\\src\\Group.js": {
     "path": "C:\\Users\\Lior Bragilevsky\\Desktop\\websites\\Tabify\\src\\Group.js",

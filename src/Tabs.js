@@ -48,10 +48,10 @@ export default function Tabs(props) {
   }, [tabs, props]);
 
   function removeTab(e) {
-    var title = e.target.parentNode.querySelector("a").textContent;
+    var url = e.target.parentNode.querySelector("a").href;
     e.target.parentNode.style.display = "none";
     var tabs_arr = tabs;
-    tabs_arr = tabs_arr.filter((item) => item.title !== title);
+    tabs_arr = tabs_arr.filter((item) => item.url !== url);
     props.setCounter(tabs_arr.length);
     setTabs(tabs_arr);
     window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
