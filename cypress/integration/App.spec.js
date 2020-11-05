@@ -2,10 +2,11 @@
 
 describe("App Tests", () => {
   beforeEach(() => {
-    cy.visit(Cypress.config().baseUrl);
-    cy.fixture("tab").then((data) => {
-      window.localStorage.setItem("tabs", JSON.stringify(Object.values(data)));
+    cy.fixture("groups").then((data) => {
+      window.localStorage.setItem("groups", JSON.stringify(data));
     });
+    window.localStorage.setItem("tabTotal", 6);
+    cy.visit(Cypress.config().baseUrl);
   });
 
   context("Basic Functionality for Tabs", () => {
@@ -14,54 +15,93 @@ describe("App Tests", () => {
     it("renders everything", () => {
       cy.get("#merge-btn");
       cy.contains("h1", "Tabify");
-      cy.contains("h5", "total");
+
+      cy.get("#tab-total").should("have.text", "6 tabs total");
+
+      var details = [
+        { tabs: 2, color: "rgb(255, 204, 204)", title: "Group-0" },
+        { tabs: 4, color: "rgb(204, 204, 255)", title: "Group-1" },
+      ];
+
+      details.forEach((item, index) => {
+        cy.get(".tabTotal-inGroup")
+          .eq(index)
+          .should("have.text", item.tabs + " tabs in this group");
+
+        cy.get(".group-title")
+          .eq(index)
+          .should(
+            "have.css",
+            "background",
+            item.color +
+              " none repeat scroll 0% 0% / auto padding-box border-box"
+          )
+          .and("have.text", item.title);
+      });
     });
 
     it("displays the correct tabs", () => {
-      var tabs = JSON.parse(localStorage.getItem("tabs"));
-
       cy.get("#merge-btn").click(); // for coverage (does not do anything)
 
-      cy.window().then((win) => {
-        win.postMessage({ tabs }, "http://localhost:3000/");
-      });
-
       tab_elems.forEach((elem) => {
-        cy.get(elem).should("have.length", 6);
+        cy.get(elem).should(
+          "have.length",
+          window.localStorage.getItem("tabTotal")
+        );
       });
     });
 
     it("works with empty tabs", () => {
-      cy.clearLocalStorage();
-      cy.window().then((win) => {
-        win.postMessage({ tabs: [] }, "http://localhost:3000/");
+      cy.fixture("empty").then((data) => {
+        window.localStorage.setItem("groups", JSON.stringify(data));
       });
+      cy.reload();
 
       tab_elems.forEach((elem) => {
         cy.get(elem).should("not.exist");
       });
+
+      cy.get("#tab-total").should("have.text", "0 tabs total");
+      cy.get(".tabTotal-inGroup").should("have.text", "0 tabs in this group");
+      cy.get(".group-title")
+        .eq(0)
+        .should(
+          "have.css",
+          "background",
+          "rgb(201, 201, 201) none repeat scroll 0% 0% / auto padding-box border-box"
+        )
+        .and("have.text", "General");
     });
 
     it("removes tab on click", () => {
-      var tabs = JSON.parse(localStorage.getItem("tabs"));
+      function removeTab(index, left) {
+        cy.get("#tab-total").should("have.text", left + 1 + " tabs total");
 
-      cy.window().then((win) => {
-        win.postMessage({ tabs }, "http://localhost:3000/");
-      });
+        cy.get(tab_elems[0])
+          .eq(index)
+          .then(($elem) => {
+            cy.wrap($elem).click();
+          });
 
-      cy.contains("h5", "6 tabs total");
-
-      cy.get(tab_elems[0])
-        .first()
-        .then(($elem) => {
-          cy.wrap($elem).click();
+        tab_elems.forEach((elem) => {
+          cy.get(elem).should("have.length", left);
         });
 
-      tab_elems.forEach((elem) => {
-        cy.get(elem).should("have.length", 5);
-      });
+        cy.get("#tab-total").should("have.text", left + " tabs total");
+      }
 
-      cy.contains("h5", "5 tabs total");
+      var currentTabs = window.localStorage.getItem("tabTotal");
+      removeTab(0, --currentTabs);
+      cy.get(".tabTotal-inGroup")
+        .eq(0)
+        .should("have.text", "1 tab in this group");
+      cy.get(".group-title").eq(0).should("have.text", "Group-0");
+
+      removeTab(3, --currentTabs);
+      cy.get(".tabTotal-inGroup")
+        .eq(1)
+        .should("have.text", "3 tabs in this group");
+      cy.get(".group-title").eq(1).should("have.text", "Group-1");
     });
   });
 
@@ -74,7 +114,7 @@ describe("App Tests", () => {
     // https://github.com/cypress-io/cypress/issues/1570
     it("changes the background color of a group", () => {
       cy.get("#add-group-btn").click();
-      cy.get("input[type=color]").should("have.length", 2);
+      cy.get("input[type=color]").should("have.length", 3);
 
       var colors_hex = ["#ff0000", "#00ff00"];
       var colors_rgb = ["rgb(255, 0, 0)", "rgb(0, 255, 0)"];
@@ -101,7 +141,7 @@ describe("App Tests", () => {
           );
       });
 
-      cy.get("input[type=color]").should("have.length", 3);
+      cy.get("input[type=color]").should("have.length", 4);
     });
 
     it("edits group title", () => {

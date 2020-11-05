@@ -87,12 +87,14 @@ export default function Tabs(props) {
 
   return (
     <div className="d-flex flex-column mx-4 my-2">
-      <h5 className="mb-3">{tabs.length} tabs in this group</h5>
+      <h5 className="tabTotal-inGroup mb-3">
+        {tabs.length} {tabs.length === 1 ? "tab" : "tabs"} in this group
+      </h5>
       {tabs.map((tab, index) => {
         return (
           <div
             className="row mb-1"
-            id={"tab-" + index}
+            id={props.id + "-tab-" + index}
             draggable
             onDragStart={dragStart}
             onDragOver={dragOver}

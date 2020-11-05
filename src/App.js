@@ -106,7 +106,7 @@ export default function App() {
   return (
     <div className="container">
       <h1>Tabify</h1>
-      <h5>{tabTotal}&nbsp;tabs total</h5>
+      <h5 id="tab-total">{tabTotal} tabs total</h5>
 
       {groups}
 
