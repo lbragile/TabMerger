@@ -9,7 +9,7 @@ import { Button } from "react-bootstrap";
 
 export default function App() {
   const defaultColor = useRef("#C9C9C9");
-  const [counter, setCounter] = useState(0);
+  const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(() => {
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
     return group_blocks
@@ -22,7 +22,7 @@ export default function App() {
               color={group_blocks[item].color}
               key={Math.random()}
             >
-              <Tabs setCounter={setCounter} id={item} />
+              <Tabs setTabTotal={setTabTotal} id={item} />
             </Group>
           );
         })
@@ -34,7 +34,7 @@ export default function App() {
             color={defaultColor.current}
             key={Math.random()}
           >
-            <Tabs setCounter={setCounter} id="group-0" />
+            <Tabs setTabTotal={setTabTotal} id="group-0" />
           </Group>,
         ];
   });
@@ -70,8 +70,8 @@ export default function App() {
       var tabs_entry = [];
       for (let j = 0; j < group_tabs.length; j++) {
         tabs_entry.push({
-          img: group_tabs[j].querySelector("img").src,
-          favIconUrl: group_tabs[j].querySelector("a").href,
+          favIconUrl: group_tabs[j].querySelector("img").src,
+          url: group_tabs[j].querySelector("a").href,
           title: group_tabs[j].querySelector("a").innerText,
         });
       }
@@ -98,7 +98,7 @@ export default function App() {
         color={defaultColor.current}
         title="New Title"
       >
-        <Tabs setCounter={setCounter} id={"group-" + groups.length} />
+        <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
       </Group>,
     ]);
   };
@@ -106,7 +106,7 @@ export default function App() {
   return (
     <div className="container">
       <h1>Tabify</h1>
-      <h5>{counter} tabs total</h5>
+      <h5>{tabTotal}&nbsp;tabs total</h5>
 
       {groups}
 

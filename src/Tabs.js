@@ -8,8 +8,6 @@ export default function Tabs(props) {
   });
 
   useEffect(() => {
-    props.setCounter(tabs.length);
-
     function triggerEvent(e) {
       /* istanbul ignore next */
       if (e.origin.includes("tests/integration") && e.source !== window) return;
@@ -40,6 +38,17 @@ export default function Tabs(props) {
       updateGroups(tabs_arr);
     }
 
+    // total tab count
+    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+    var current_tab_total = group_blocks
+      ? Object.values(group_blocks).reduce((total, item) => {
+          return total + item.tabs.length;
+        }, 0)
+      : 0;
+
+    window.localStorage.setItem("tabTotal", current_tab_total);
+    props.setTabTotal(current_tab_total);
+
     window.addEventListener("message", (e) => triggerEvent(e));
 
     /* istanbul ignore next */
@@ -59,9 +68,12 @@ export default function Tabs(props) {
     e.target.parentNode.style.display = "none";
     var tabs_arr = tabs;
     tabs_arr = tabs_arr.filter((item) => item.url !== url);
-    props.setCounter(tabs_arr.length);
     setTabs(tabs_arr);
     updateGroups(tabs_arr);
+
+    var current = window.localStorage.getItem("tabTotal");
+    window.localStorage.setItem("tabTotal", current - 1);
+    props.setTabTotal(current - 1);
   }
 
   const dragStart = (e) => {
