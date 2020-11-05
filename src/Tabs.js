@@ -10,7 +10,11 @@ export default function Tabs(props) {
   useEffect(() => {
     function triggerEvent(e) {
       /* istanbul ignore next */
-      if (e.origin.includes("tests/integration") && e.source !== window) return;
+      if (
+        (e.origin.includes("tests/integration") && e.source !== window) ||
+        props.id !== "group-0"
+      )
+        return;
 
       // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
       var tabs_arr = tabs;
@@ -78,7 +82,13 @@ export default function Tabs(props) {
 
   const dragStart = (e) => {
     var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
-    e.dataTransfer.setData("tab_id", target.id);
+    e.dataTransfer.setData(
+      "transfer_details",
+      JSON.stringify({
+        tab_id: target.id,
+        group_id: target.closest(".group").id,
+      })
+    );
   };
 
   const dragOver = (e) => {

@@ -7,9 +7,34 @@ export default function Group(props) {
 
   const drop = (e) => {
     e.preventDefault();
-    const tab_id = e.dataTransfer.getData("tab_id");
+    const { tab_id, group_id } = JSON.parse(
+      e.dataTransfer.getData("transfer_details")
+    );
     const tab = document.getElementById(tab_id);
-    e.target.appendChild(tab);
+    var closest_group = e.target.closest(".group");
+    closest_group.lastChild.appendChild(tab);
+
+    // update localStorage
+    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+
+    // remove tab from group that originated the drag
+    group_blocks[group_id].tabs = group_blocks[group_id].tabs.filter(
+      (group_tab) => {
+        return group_tab.url !== tab.lastChild.href;
+      }
+    );
+
+    // add tab to target group
+    group_blocks[closest_group.id].tabs.push({
+      title: tab.lastChild.textContent,
+      url: tab.lastChild.href,
+      favIconUrl: tab.querySelectorAll("img")[0].src,
+    });
+
+    window.localStorage.setItem("groups", JSON.stringify(group_blocks));
+
+    // re-render page
+    window.location.reload();
   };
 
   const dragOver = (e) => {
