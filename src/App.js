@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -8,15 +8,50 @@ import Group from "./Group.js";
 import { Button } from "react-bootstrap";
 
 export default function App() {
+  const defaultColor = useRef("#C9C9C9");
   const [counter, setCounter] = useState(0);
-  const [groups, setGroups] = useState([
-    <Group id="group-0" className="group" key={Math.random()}>
-      <Tabs setCounter={setCounter} />
-    </Group>,
-  ]);
+  const [groups, setGroups] = useState(() => {
+    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+    return group_blocks
+      ? Object.keys(group_blocks).map((item) => {
+          return (
+            <Group
+              id={item}
+              className="group"
+              title={group_blocks[item].title}
+              color={group_blocks[item].color}
+              key={Math.random()}
+            >
+              <Tabs setCounter={setCounter} id={item} />
+            </Group>
+          );
+        })
+      : [
+          <Group
+            id="group-0"
+            className="group"
+            title="General"
+            color={defaultColor.current}
+            key={Math.random()}
+          >
+            <Tabs setCounter={setCounter} id="group-0" />
+          </Group>,
+        ];
+  });
+
+  // https://stackoverflow.com/a/5624139/4298115
+  function rgb2hex(input) {
+    var rgb = input.substr(4).replace(")", "").split(",");
+    var hex = rgb.map((elem) => {
+      let hex_temp = parseInt(elem).toString(16);
+      return hex_temp.length === 1 ? "0" + hex_temp : hex_temp;
+    });
+
+    return "#" + hex.join("");
+  }
 
   useEffect(() => {
-    // for each group, store the title, background color, and tab information
+    // once a group is added: for each group, store the title, background color, and tab information
     var group_blocks = document.querySelectorAll(".group");
     var ls_entry = {};
     for (let i = 0; i < group_blocks.length; i++) {
@@ -24,7 +59,8 @@ export default function App() {
         title: group_blocks[i].parentNode.firstChild.querySelector(
           "div[editext='view']"
         ).innerText,
-        color: group_blocks[i].style.background,
+        color: rgb2hex(group_blocks[i].style.background),
+        tabs: [],
       };
 
       var group_tabs = group_blocks[i].querySelectorAll(
@@ -35,13 +71,14 @@ export default function App() {
       for (let j = 0; j < group_tabs.length; j++) {
         tabs_entry.push({
           img: group_tabs[j].querySelector("img").src,
-          a: group_tabs[j].querySelector("a").href,
-          title: group_tabs[j].querySelector("a").innerText.substr(2),
+          favIconUrl: group_tabs[j].querySelector("a").href,
+          title: group_tabs[j].querySelector("a").innerText,
         });
       }
 
       ls_entry[group_blocks[i].id].tabs = tabs_entry;
     }
+
     window.localStorage.setItem("groups", JSON.stringify(ls_entry));
   }, [groups]);
 
@@ -58,7 +95,11 @@ export default function App() {
         id={"group-" + groups.length}
         className="group"
         key={Math.random()}
-      ></Group>,
+        color={defaultColor.current}
+        title="New Title"
+      >
+        <Tabs setCounter={setCounter} id={"group-" + groups.length} />
+      </Group>,
     ]);
   };
 
@@ -68,6 +109,7 @@ export default function App() {
       <h5>{counter} tabs total</h5>
 
       {groups}
+
       <div className="col">
         <Button
           className="d-block mb-2"

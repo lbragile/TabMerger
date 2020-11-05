@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 
 import "./Tabs.css";
 export default function Tabs(props) {
-  const [tabs, setTabs] = useState(
-    JSON.parse(window.localStorage.getItem("tabs")) || []
-  );
+  const [tabs, setTabs] = useState(() => {
+    var groups = JSON.parse(window.localStorage.getItem("groups"));
+    return (groups && groups[props.id] && groups[props.id].tabs) || [];
+  });
 
   useEffect(() => {
     props.setCounter(tabs.length);
@@ -36,7 +37,7 @@ export default function Tabs(props) {
       );
 
       setTabs(tabs_arr);
-      window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
+      updateGroups(tabs_arr);
     }
 
     window.addEventListener("message", (e) => triggerEvent(e));
@@ -45,7 +46,13 @@ export default function Tabs(props) {
     return () => {
       window.removeEventListener("message", (e) => triggerEvent(e));
     };
-  }, [tabs, props]);
+  });
+
+  function updateGroups(arr) {
+    var groups = JSON.parse(window.localStorage.getItem("groups"));
+    groups[props.id].tabs = arr;
+    window.localStorage.setItem("groups", JSON.stringify(groups));
+  }
 
   function removeTab(e) {
     var url = e.target.parentNode.querySelector("a").href;
@@ -54,7 +61,7 @@ export default function Tabs(props) {
     tabs_arr = tabs_arr.filter((item) => item.url !== url);
     props.setCounter(tabs_arr.length);
     setTabs(tabs_arr);
-    window.localStorage.setItem("tabs", JSON.stringify(tabs_arr));
+    updateGroups(tabs_arr);
   }
 
   const dragStart = (e) => {

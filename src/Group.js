@@ -3,7 +3,7 @@ import EdiText from "react-editext";
 
 import "./Group.css";
 export default function Group(props) {
-  const [title, setTitle] = useState("General");
+  const [title, setTitle] = useState(props.title);
 
   const drop = (e) => {
     e.preventDefault();
@@ -28,6 +28,19 @@ export default function Group(props) {
     backgroundColor(colorRef.current);
   }, []);
 
+  function handleTitleChange(val) {
+    setTitle(val);
+    var groups = JSON.parse(window.localStorage.getItem("groups"));
+    groups[props.id].title = val;
+    window.localStorage.setItem("groups", JSON.stringify(groups));
+  }
+
+  function handleColorChange(e) {
+    backgroundColor(e.target);
+    var groups = JSON.parse(window.localStorage.getItem("groups"));
+    groups[props.id].color = e.target.value;
+    window.localStorage.setItem("groups", JSON.stringify(groups));
+  }
   return (
     <div className="my-2">
       <div className="group-title d-flex justify-content-center">
@@ -35,7 +48,9 @@ export default function Group(props) {
           className="font-weight-bold"
           type="text"
           value={title}
-          onSave={(val) => setTitle(val)}
+          onSave={(val) => {
+            handleTitleChange(val);
+          }}
         />
       </div>
       <div
@@ -48,8 +63,8 @@ export default function Group(props) {
           <b className="mr-1">Background Color</b>
           <input
             ref={colorRef}
-            defaultValue={"#C9C9C9"}
-            onChange={(e) => backgroundColor(e.target)}
+            defaultValue={props.color}
+            onChange={(e) => handleColorChange(e)}
             type="color"
           />
         </div>
