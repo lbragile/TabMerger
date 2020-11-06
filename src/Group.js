@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Button } from "react-bootstrap";
 import EdiText from "react-editext";
 
 import "./Group.css";
@@ -62,6 +63,39 @@ export default function Group(props) {
     ).element;
   }
 
+  function openAllTabsInGroup(e) {
+    var tabs = e.target
+      .closest("div")
+      .nextSibling.querySelectorAll("div[draggable='true']");
+    [...tabs].forEach((tab) => {
+      tab.querySelector("a").click();
+    });
+  }
+
+  function deleteGroup(e) {
+    var group = e.target.closest(".group");
+
+    // remove from window
+    group.previousSibling.remove();
+    group.remove();
+
+    // update localstorage
+    var ls_groups = JSON.parse(window.localStorage.getItem("groups"));
+    delete ls_groups[group.id];
+
+    // must rename all keys properly
+    var new_groups = {};
+    if (Object.values(ls_groups).length > 0) {
+      Object.values(ls_groups).forEach((value, index) => {
+        new_groups["group-" + index] = value;
+      });
+    } else {
+      new_groups["group-0"] = { title: "General", color: "#c9c9c9", tabs: [] };
+    }
+    window.localStorage.setItem("groups", JSON.stringify(new_groups));
+    window.location.reload();
+  }
+
   return (
     <div className="my-2">
       <div className="group-title d-flex justify-content-center">
@@ -75,14 +109,27 @@ export default function Group(props) {
         />
       </div>
       <div id={props.id} className={props.className} onDragOver={dragOver}>
-        <div className="row mx-3 mt-2 float-right">
-          <b className="mr-1">Background Color</b>
+        <div className="row mx-3 mt-2 float-right d-flex flex-row align-items-center">
           <input
             ref={colorRef}
             defaultValue={props.color}
             onChange={(e) => handleColorChange(e)}
             type="color"
           />
+          <Button
+            variant="light"
+            className="mx-1"
+            onClick={(e) => openAllTabsInGroup(e)}
+          >
+            <b>Open All</b>
+          </Button>
+          <Button
+            variant="light"
+            className="mx-1"
+            onClick={(e) => deleteGroup(e)}
+          >
+            <b>Delete Group</b>
+          </Button>
         </div>
         {props.children}
       </div>
