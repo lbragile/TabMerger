@@ -5,42 +5,6 @@ import "./Group.css";
 export default function Group(props) {
   const [title, setTitle] = useState(props.title);
 
-  const drop = (e) => {
-    e.preventDefault();
-    const { tab_id, group_id } = JSON.parse(
-      e.dataTransfer.getData("transfer_details")
-    );
-    const tab = document.getElementById(tab_id);
-    var closest_group = e.target.closest(".group");
-    closest_group.lastChild.appendChild(tab);
-
-    // update localStorage
-    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
-
-    // remove tab from group that originated the drag
-    group_blocks[group_id].tabs = group_blocks[group_id].tabs.filter(
-      (group_tab) => {
-        return group_tab.url !== tab.lastChild.href;
-      }
-    );
-
-    // add tab to target group
-    group_blocks[closest_group.id].tabs.push({
-      title: tab.lastChild.textContent,
-      url: tab.lastChild.href,
-      favIconUrl: tab.querySelectorAll("img")[0].src,
-    });
-
-    window.localStorage.setItem("groups", JSON.stringify(group_blocks));
-
-    // re-render page
-    window.location.reload();
-  };
-
-  const dragOver = (e) => {
-    e.preventDefault();
-  };
-
   function backgroundColor(target) {
     var children = target.parentNode.parentNode.parentNode.children;
     [...children].forEach((child) => {
@@ -66,6 +30,38 @@ export default function Group(props) {
     groups[props.id].color = e.target.value;
     window.localStorage.setItem("groups", JSON.stringify(groups));
   }
+
+  const dragOver = (e) => {
+    e.preventDefault();
+    var group_block = e.target.closest(".group");
+    const afterElement = getDragAfterElement(group_block, e.clientY);
+    const currentElement = document.querySelector(".dragging");
+    if (afterElement == null) {
+      group_block.lastChild.appendChild(currentElement);
+    } else {
+      group_block.lastChild.insertBefore(currentElement, afterElement);
+    }
+  };
+
+  function getDragAfterElement(container, y) {
+    const draggableElements = [
+      ...container.querySelectorAll(".draggable:not(.dragging)"),
+    ];
+
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      { offset: Number.NEGATIVE_INFINITY }
+    ).element;
+  }
+
   return (
     <div className="my-2">
       <div className="group-title d-flex justify-content-center">
@@ -78,12 +74,7 @@ export default function Group(props) {
           }}
         />
       </div>
-      <div
-        id={props.id}
-        className={props.className}
-        onDrop={drop}
-        onDragOver={dragOver}
-      >
+      <div id={props.id} className={props.className} onDragOver={dragOver}>
         <div className="row mx-3 mt-2 float-right">
           <b className="mr-1">Background Color</b>
           <input

@@ -96,7 +96,7 @@ export default function App() {
         className="group"
         key={Math.random()}
         color={defaultColor.current}
-        title="New Title"
+        title="Title"
       >
         <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
       </Group>,

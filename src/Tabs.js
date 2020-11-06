@@ -82,17 +82,49 @@ export default function Tabs(props) {
 
   const dragStart = (e) => {
     var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
-    e.dataTransfer.setData(
-      "transfer_details",
-      JSON.stringify({
-        tab_id: target.id,
-        group_id: target.closest(".group").id,
-      })
-    );
+    target.classList.add("dragging");
+    target.closest(".group").classList.add("drag-origin");
   };
 
-  const dragOver = (e) => {
+  const dragEnd = (e) => {
     e.stopPropagation();
+    e.target.classList.remove("dragging");
+
+    const tab = e.target;
+    var closest_group = e.target.closest(".group");
+
+    var drag_origin = document.getElementsByClassName("drag-origin")[0];
+    drag_origin.classList.remove("drag-origin");
+
+    const origin_id = drag_origin.id;
+
+    // update localStorage
+    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+
+    if (origin_id !== closest_group.id) {
+      // remove tab from group that originated the drag
+      group_blocks[origin_id].tabs = group_blocks[origin_id].tabs.filter(
+        (group_tab) => {
+          return group_tab.url !== tab.lastChild.href;
+        }
+      );
+    }
+
+    // reorder tabs based on current positions
+    group_blocks[closest_group.id].tabs = [
+      ...closest_group.lastChild.querySelectorAll("div"),
+    ].map((item) => {
+      return {
+        title: item.lastChild.textContent,
+        url: item.lastChild.href,
+        favIconUrl: item.querySelectorAll("img")[0].src,
+      };
+    });
+
+    window.localStorage.setItem("groups", JSON.stringify(group_blocks));
+
+    // re-render page
+    window.location.reload();
   };
 
   return (
@@ -103,11 +135,11 @@ export default function Tabs(props) {
       {tabs.map((tab, index) => {
         return (
           <div
-            className="row mb-1"
+            className="row mb-1 draggable"
             id={props.id + "-tab-" + index}
             draggable
             onDragStart={dragStart}
-            onDragOver={dragOver}
+            onDragEnd={dragEnd}
             key={Math.random()}
           >
             <p
