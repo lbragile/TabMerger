@@ -103,24 +103,28 @@ export default function App() {
     ]);
   };
 
+  function openAllTabs() {
+    var tabs = document.querySelectorAll(".draggable");
+    tabs.forEach((tab) => {
+      tab.querySelector("a").click();
+    });
+  }
+
+  function deleteAllGroups() {
+    window.localStorage.setItem(
+      "groups",
+      JSON.stringify({
+        "group-0": { title: "General", color: "#c9c9c9", tabs: [] },
+      })
+    );
+    window.location.reload();
+  }
+
   return (
     <div className="container">
       <h1>Tabify</h1>
       <h5 id="tab-total">{tabTotal} tabs total</h5>
-
-      {groups}
-
-      <div className="col">
-        <Button
-          className="d-block mb-2"
-          id="add-group-btn"
-          variant="secondary"
-          type="button"
-          onClick={() => addGroup()}
-        >
-          Add Group
-        </Button>
-
+      <div className="row">
         <Button
           id="merge-btn"
           variant="primary"
@@ -129,7 +133,37 @@ export default function App() {
         >
           Merge Tabs
         </Button>
+        <Button
+          id="open-all-btn"
+          variant="dark"
+          type="button"
+          className="ml-1"
+          onClick={() => openAllTabs()}
+        >
+          Open All
+        </Button>
+        <Button
+          id="delete-all-btn"
+          variant="dark"
+          type="button"
+          className="ml-1"
+          onClick={() => deleteAllGroups()}
+        >
+          Delete All
+        </Button>
       </div>
+
+      {groups}
+
+      <Button
+        className="d-block mb-2"
+        id="add-group-btn"
+        variant="secondary"
+        type="button"
+        onClick={() => addGroup()}
+      >
+        Add Group
+      </Button>
     </div>
   );
 }

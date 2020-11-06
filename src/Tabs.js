@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import "./Tabs.css";
 export default function Tabs(props) {
+  const tab_title_length = useRef(100);
   const [tabs, setTabs] = useState(() => {
     var groups = JSON.parse(window.localStorage.getItem("groups"));
     return (groups && groups[props.id] && groups[props.id].tabs) || [];
@@ -165,8 +166,8 @@ export default function Tabs(props) {
               rel="noreferrer"
               draggable={false}
             >
-              {tab.title.length > 50
-                ? tab.title.substring(0, 50) + "..."
+              {tab.title.length > tab_title_length.current
+                ? tab.title.substring(0, tab_title_length.current) + "..."
                 : tab.title}
             </a>
           </div>

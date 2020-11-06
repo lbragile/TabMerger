@@ -5,6 +5,7 @@ import EdiText from "react-editext";
 import "./Group.css";
 export default function Group(props) {
   const [title, setTitle] = useState(props.title);
+  const [hide, setHide] = useState(false);
 
   function backgroundColor(target) {
     var children = target.parentNode.parentNode.parentNode.children;
@@ -75,10 +76,6 @@ export default function Group(props) {
   function deleteGroup(e) {
     var group = e.target.closest(".group");
 
-    // remove from window
-    group.previousSibling.remove();
-    group.remove();
-
     // update localstorage
     var ls_groups = JSON.parse(window.localStorage.getItem("groups"));
     delete ls_groups[group.id];
@@ -94,6 +91,19 @@ export default function Group(props) {
     }
     window.localStorage.setItem("groups", JSON.stringify(new_groups));
     window.location.reload();
+  }
+
+  function toggleGroup(e) {
+    var tabs = e.target.closest(".group").querySelectorAll(".draggable");
+    tabs.forEach((tab) => {
+      if (!hide) {
+        tab.style.display = "none";
+      } else {
+        tab.style.removeProperty("display");
+      }
+    });
+
+    setHide(!hide);
   }
 
   return (
@@ -121,7 +131,7 @@ export default function Group(props) {
             className="mx-1"
             onClick={(e) => openAllTabsInGroup(e)}
           >
-            <b>Open All</b>
+            <b>Open Group</b>
           </Button>
           <Button
             variant="light"
@@ -129,6 +139,13 @@ export default function Group(props) {
             onClick={(e) => deleteGroup(e)}
           >
             <b>Delete Group</b>
+          </Button>
+          <Button
+            variant="light"
+            className="mx-1"
+            onClick={(e) => toggleGroup(e)}
+          >
+            <b>{hide ? "Expand" : "Collapse"}</b>
           </Button>
         </div>
         {props.children}
