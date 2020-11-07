@@ -3,19 +3,38 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Tabs.css";
 export default function Tabs(props) {
   const tab_title_length = useRef(100);
+  var [tabTotal, setTabTotal] = useState(
+    parseInt(window.localStorage.getItem("tabTotal"))
+  );
   const [tabs, setTabs] = useState(() => {
     var groups = JSON.parse(window.localStorage.getItem("groups"));
     return (groups && groups[props.id] && groups[props.id].tabs) || [];
   });
 
   useEffect(() => {
+    function setCurrentTabTotal() {
+      // total tab count
+      var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+      var current_tab_total = group_blocks
+        ? Object.values(group_blocks).reduce((total, item) => {
+            return total + item.tabs.length;
+          }, 0)
+        : 0;
+
+      window.localStorage.setItem("tabTotal", current_tab_total);
+      props.setTabTotal(current_tab_total);
+      setTabTotal(current_tab_total);
+    }
+
     function triggerEvent(e) {
       /* istanbul ignore next */
       if (
         (e.origin.includes("tests/integration") && e.source !== window) ||
         props.id !== "group-0"
-      )
+      ) {
+        setCurrentTabTotal();
         return;
+      }
 
       // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
       var tabs_arr = tabs;
@@ -40,33 +59,18 @@ export default function Tabs(props) {
       );
 
       setTabs(tabs_arr);
-      updateGroups(tabs_arr);
+      var groups = JSON.parse(window.localStorage.getItem("groups"));
+      groups[props.id].tabs = tabs_arr;
+      window.localStorage.setItem("groups", JSON.stringify(groups));
     }
-
-    // total tab count
-    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
-    var current_tab_total = group_blocks
-      ? Object.values(group_blocks).reduce((total, item) => {
-          return total + item.tabs.length;
-        }, 0)
-      : 0;
-
-    window.localStorage.setItem("tabTotal", current_tab_total);
-    props.setTabTotal(current_tab_total);
-
+    setCurrentTabTotal();
     window.addEventListener("message", (e) => triggerEvent(e));
 
     /* istanbul ignore next */
     return () => {
       window.removeEventListener("message", (e) => triggerEvent(e));
     };
-  });
-
-  function updateGroups(arr) {
-    var groups = JSON.parse(window.localStorage.getItem("groups"));
-    groups[props.id].tabs = arr;
-    window.localStorage.setItem("groups", JSON.stringify(groups));
-  }
+  }, [props, tabs]);
 
   function removeTab(e) {
     var url = e.target.parentNode.querySelector("a").href;
@@ -74,11 +78,17 @@ export default function Tabs(props) {
     var tabs_arr = tabs;
     tabs_arr = tabs_arr.filter((item) => item.url !== url);
     setTabs(tabs_arr);
-    updateGroups(tabs_arr);
+
+    //update groups
+    var groups = JSON.parse(window.localStorage.getItem("groups"));
+    groups[props.id].tabs = tabs_arr;
+    window.localStorage.setItem("groups", JSON.stringify(groups));
 
     var current = window.localStorage.getItem("tabTotal");
     window.localStorage.setItem("tabTotal", current - 1);
     props.setTabTotal(current - 1);
+
+    window.location.reload();
   }
 
   const dragStart = (e) => {
@@ -131,7 +141,8 @@ export default function Tabs(props) {
   return (
     <div className="d-flex flex-column mx-4 my-2">
       <h5 className="tabTotal-inGroup mb-3">
-        {tabs.length} {tabs.length === 1 ? "tab" : "tabs"} in this group
+        {tabs.length} {tabs.length === 1 ? "tab" : "tabs"} in group{" "}
+        {!tabTotal ? null : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}
       </h5>
       {tabs.map((tab, index) => {
         return (

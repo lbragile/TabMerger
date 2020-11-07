@@ -20,6 +20,7 @@ export default function App() {
               className="group"
               title={group_blocks[item].title}
               color={group_blocks[item].color}
+              created={new Date(group_blocks[item].created).toString()}
               key={Math.random()}
             >
               <Tabs setTabTotal={setTabTotal} id={item} />
@@ -32,6 +33,7 @@ export default function App() {
             className="group"
             title="General"
             color={defaultColor.current}
+            created={new Date(Date.now()).toString()}
             key={Math.random()}
           >
             <Tabs setTabTotal={setTabTotal} id="group-0" />
@@ -56,10 +58,10 @@ export default function App() {
     var ls_entry = {};
     for (let i = 0; i < group_blocks.length; i++) {
       ls_entry[group_blocks[i].id] = {
-        title: group_blocks[i].parentNode.firstChild.querySelector(
-          "div[editext='view']"
-        ).innerText,
+        title: group_blocks[i].parentNode.querySelector("div[editext='view']")
+          .innerText,
         color: rgb2hex(group_blocks[i].style.background),
+        created: group_blocks[i].parentNode.querySelector(".created").innerText,
         tabs: [],
       };
 
@@ -97,6 +99,7 @@ export default function App() {
         key={Math.random()}
         color={defaultColor.current}
         title="Title"
+        created={new Date(Date.now()).toString()}
       >
         <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
       </Group>,
@@ -114,16 +117,22 @@ export default function App() {
     window.localStorage.setItem(
       "groups",
       JSON.stringify({
-        "group-0": { title: "General", color: "#c9c9c9", tabs: [] },
+        "group-0": {
+          title: "General",
+          color: "#c9c9c9",
+          created: new Date(Date.now()).toString(),
+          tabs: [],
+        },
       })
     );
+
     window.location.reload();
   }
 
   return (
     <div className="container">
       <h1>Tabify</h1>
-      <h5 id="tab-total">{tabTotal} tabs total</h5>
+      <h5 id="tab-total">{tabTotal} tabs in total</h5>
       <div className="row">
         <Button
           id="merge-btn"

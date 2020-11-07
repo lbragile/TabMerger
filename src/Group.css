@@ -40,3 +40,7 @@
   border-radius: 5px;
   margin: 0 5px;
 }
+
+.created {
+  background: none !important;
+}

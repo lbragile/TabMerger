@@ -87,7 +87,12 @@ export default function Group(props) {
         new_groups["group-" + index] = value;
       });
     } else {
-      new_groups["group-0"] = { title: "General", color: "#c9c9c9", tabs: [] };
+      new_groups["group-0"] = {
+        title: "General",
+        color: "#c9c9c9",
+        created: new Date(Date.now()).toString(),
+        tabs: [],
+      };
     }
     window.localStorage.setItem("groups", JSON.stringify(new_groups));
     window.location.reload();
@@ -106,9 +111,30 @@ export default function Group(props) {
     setHide(!hide);
   }
 
+  function formatDate(date_str) {
+    var date_parts = date_str.split(" ");
+    date_parts[0] = date_parts[0] + ".";
+    date_parts[1] = date_parts[1] + ".";
+    date_parts[2] = date_parts[2] + ",";
+    date_parts[6] = "PDT";
+    date_parts.splice(5, 1);
+    date_parts.splice(6, 2);
+
+    // time decreases by 1 hour on reloads for some reason?
+    var time = date_parts[4].split(":");
+    time[0] = parseInt(time[0]) + 1;
+    date_parts[4] = time.join(":");
+
+    return date_parts.join(" ");
+  }
+
   return (
-    <div className="my-2">
-      <div className="group-title d-flex justify-content-center">
+    <div className="my-3">
+      <div className="created float-right mr-1">
+        <b>Created:</b> {formatDate(props.created)}
+      </div>
+
+      <div className="group-title d-flex flex-row justify-content-center">
         <EdiText
           className="font-weight-bold"
           type="text"
@@ -118,6 +144,7 @@ export default function Group(props) {
           }}
         />
       </div>
+
       <div id={props.id} className={props.className} onDragOver={dragOver}>
         <div className="row mx-3 mt-2 float-right d-flex flex-row align-items-center">
           <input
@@ -148,6 +175,7 @@ export default function Group(props) {
             <b>{hide ? "Expand" : "Collapse"}</b>
           </Button>
         </div>
+
         {props.children}
       </div>
     </div>
