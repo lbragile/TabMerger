@@ -55,7 +55,8 @@ export default function Tabs(props) {
         (item) =>
           item.url &&
           item.url.includes("http") &&
-          !item.url.includes("localhost")
+          !item.url.includes("localhost") &&
+          !item.url.includes("netlify")
       );
 
       setTabs(tabs_arr);
