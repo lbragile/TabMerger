@@ -6,7 +6,7 @@ function getAllTabsAndSend(samePage) {
 
   chrome.tabs.getAllInWindow(null, (tabs) => {
     tabs.forEach((tab) => {
-      if (!tab.url.includes("localhost")) {
+      if (!tab.url.includes("localhost") && !tab.url.includes("netlify")) {
         chrome.tabs.remove(tab.id);
       }
     });
