@@ -1,5 +1,5 @@
 var url =
-  process.env.NODE_ENV === "production"
+  "%NODE_ENV%" === "production"
     ? "https://tabmerger.netlify.app"
     : "http://localhost:3000";
 
