@@ -1,4 +1,9 @@
 function getAllTabsAndSend(samePage) {
+  var url =
+    process.env.NODE_ENV === "production"
+      ? "https://tabmerger.netlify.app"
+      : "http://localhost:3000";
+
   chrome.tabs.getAllInWindow(null, (tabs) => {
     tabs.forEach((tab) => {
       if (!tab.url.includes("localhost")) {
@@ -9,7 +14,7 @@ function getAllTabsAndSend(samePage) {
       ? chrome.tabs.create(
           {
             windowId: null,
-            url: "http://localhost:3000",
+            url: url,
             active: true,
           },
           (newTab) => {

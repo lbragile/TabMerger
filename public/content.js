@@ -1,3 +1,8 @@
+var url =
+  process.env.NODE_ENV === "production"
+    ? "https://tabmerger.netlify.app"
+    : "http://localhost:3000";
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  window.postMessage({ tabs: request.tabs }, "http://localhost:3000");
+  window.postMessage({ tabs: request.tabs }, url);
 });
