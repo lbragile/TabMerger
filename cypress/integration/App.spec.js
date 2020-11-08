@@ -6,7 +6,7 @@ describe("App Tests", () => {
       window.localStorage.setItem("groups", JSON.stringify(data));
     });
     window.localStorage.setItem("tabTotal", 6);
-    cy.visit(Cypress.config().baseUrl);
+    cy.visit("chrome-extension://kdkfmpamdkkhmoomellenejnnajpfhpk/index.html");
   });
 
   context("Basic Functionality for Tabs", () => {
@@ -14,19 +14,29 @@ describe("App Tests", () => {
 
     it("renders everything", () => {
       cy.get("#merge-btn");
-      cy.contains("h1", "Tabify");
+      cy.contains("h1", "TabMerger");
 
-      cy.get("#tab-total").should("have.text", "6 tabs total");
+      cy.get("#tab-total").should("have.text", "6 tabs in total");
 
       var details = [
-        { tabs: 2, color: "rgb(255, 204, 204)", title: "Group-0" },
-        { tabs: 4, color: "rgb(204, 204, 255)", title: "Group-1" },
+        {
+          tabs: 2,
+          color: "rgb(255, 204, 204)",
+          title: "Group-0",
+          percent: "(33.33%)",
+        },
+        {
+          tabs: 4,
+          color: "rgb(204, 204, 255)",
+          title: "Group-1",
+          percent: "(66.67%)",
+        },
       ];
 
       details.forEach((item, index) => {
         cy.get(".tabTotal-inGroup")
           .eq(index)
-          .should("have.text", item.tabs + " tabs in this group");
+          .should("have.text", item.tabs + " tabs in group " + item.percent);
 
         cy.get(".group-title")
           .eq(index)
@@ -41,8 +51,6 @@ describe("App Tests", () => {
     });
 
     it("displays the correct tabs", () => {
-      cy.get("#merge-btn").click(); // for coverage (does not do anything)
-
       tab_elems.forEach((elem) => {
         cy.get(elem).should(
           "have.length",
@@ -61,8 +69,8 @@ describe("App Tests", () => {
         cy.get(elem).should("not.exist");
       });
 
-      cy.get("#tab-total").should("have.text", "0 tabs total");
-      cy.get(".tabTotal-inGroup").should("have.text", "0 tabs in this group");
+      cy.get("#tab-total").should("have.text", "0 tabs in total");
+      cy.get(".tabTotal-inGroup").should("have.text", "0 tabs in group ");
       cy.get(".group-title")
         .eq(0)
         .should(
@@ -75,7 +83,7 @@ describe("App Tests", () => {
 
     it("removes tab on click", () => {
       function removeTab(index, left) {
-        cy.get("#tab-total").should("have.text", left + 1 + " tabs total");
+        cy.get("#tab-total").should("have.text", left + 1 + " tabs in total");
 
         cy.get(tab_elems[0])
           .eq(index)
@@ -87,20 +95,16 @@ describe("App Tests", () => {
           cy.get(elem).should("have.length", left);
         });
 
-        cy.get("#tab-total").should("have.text", left + " tabs total");
+        cy.get("#tab-total").should("have.text", left + " tabs in total");
       }
 
       var currentTabs = window.localStorage.getItem("tabTotal");
       removeTab(0, --currentTabs);
-      cy.get(".tabTotal-inGroup")
-        .eq(0)
-        .should("have.text", "1 tab in this group");
+      cy.get(".tabTotal-inGroup").eq(0).should("contain", "1 tab in group");
       cy.get(".group-title").eq(0).should("have.text", "Group-0");
 
       removeTab(3, --currentTabs);
-      cy.get(".tabTotal-inGroup")
-        .eq(1)
-        .should("have.text", "3 tabs in this group");
+      cy.get(".tabTotal-inGroup").eq(1).should("contain", "3 tabs in group");
       cy.get(".group-title").eq(1).should("have.text", "Group-1");
     });
   });

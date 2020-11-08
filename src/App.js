@@ -85,7 +85,7 @@ export default function App() {
   }, [groups]);
 
   function sendMessage() {
-    chrome.runtime.sendMessage("canoomdemlnnobjpaihfioeifllgbfic", {
+    chrome.runtime.sendMessage("kdkfmpamdkkhmoomellenejnnajpfhpk", {
       msg: "get tabs",
     });
   }
@@ -131,7 +131,7 @@ export default function App() {
 
   return (
     <div className="container">
-      <h1>Tabify</h1>
+      <h1>TabMerger</h1>
       <h5 id="tab-total">{tabTotal} tabs in total</h5>
       <div className="row">
         <Button

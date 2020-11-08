@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 import "./Tabs.css";
 export default function Tabs(props) {
@@ -11,34 +11,34 @@ export default function Tabs(props) {
     return (groups && groups[props.id] && groups[props.id].tabs) || [];
   });
 
-  useEffect(() => {
-    function setCurrentTabTotal() {
-      // total tab count
-      var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
-      var current_tab_total = group_blocks
-        ? Object.values(group_blocks).reduce((total, item) => {
-            return total + item.tabs.length;
-          }, 0)
-        : 0;
+  const setCurrentTabTotal = useCallback(() => {
+    // total tab count
+    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+    var current_tab_total = group_blocks
+      ? Object.values(group_blocks).reduce((total, item) => {
+          return total + item.tabs.length;
+        }, 0)
+      : 0;
 
-      window.localStorage.setItem("tabTotal", current_tab_total);
-      props.setTabTotal(current_tab_total);
-      setTabTotal(current_tab_total);
-    }
+    window.localStorage.setItem("tabTotal", current_tab_total);
+    props.setTabTotal(current_tab_total);
+    setTabTotal(current_tab_total);
+  }, [props]);
 
-    function triggerEvent(e) {
+  const triggerEvent = useCallback(() => {
+    setTimeout(() => {
+      var bg = chrome.extension.getBackgroundPage();
+      console.log(bg.payload);
+
       /* istanbul ignore next */
-      if (
-        (e.origin.includes("tests/integration") && e.source !== window) ||
-        props.id !== "group-0"
-      ) {
+      if (props.id !== "group-0") {
         setCurrentTabTotal();
         return;
       }
 
       // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
       var tabs_arr = tabs;
-      var combined_arr = [...tabs_arr, ...e.data.tabs];
+      var combined_arr = [...tabs_arr, ...bg.payload.tabs];
       var unique_arr = Array.from(
         new Set(
           combined_arr.map((item) =>
@@ -54,24 +54,28 @@ export default function Tabs(props) {
       tabs_arr = unique_arr.filter(
         (item) =>
           item.url &&
-          item.url.includes("http") &&
-          !item.url.includes("localhost") &&
-          !item.url.includes("netlify")
+          !item.url.includes("chrome-extension") &&
+          !item.url.includes("chrome://extensions") &&
+          item.title !== "New Tab"
       );
 
       setTabs(tabs_arr);
       var groups = JSON.parse(window.localStorage.getItem("groups"));
       groups[props.id].tabs = tabs_arr;
       window.localStorage.setItem("groups", JSON.stringify(groups));
-    }
-    setCurrentTabTotal();
-    window.addEventListener("message", (e) => triggerEvent(e));
+    }, 10);
+  }, [props.id, setCurrentTabTotal, tabs]);
 
-    /* istanbul ignore next */
+  useEffect(() => {
+    setCurrentTabTotal();
+
+    const merge_btn = document.querySelector("#merge-btn");
+    merge_btn.addEventListener("click", triggerEvent);
+
     return () => {
-      window.removeEventListener("message", (e) => triggerEvent(e));
+      merge_btn.removeEventListener("click", triggerEvent);
     };
-  }, [props, tabs]);
+  }, [setCurrentTabTotal, triggerEvent]);
 
   function removeTab(e) {
     var url = e.target.parentNode.querySelector("a").href;
