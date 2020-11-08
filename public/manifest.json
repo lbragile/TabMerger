@@ -7,7 +7,7 @@
     "scripts": ["background.js"]
   },
 
-  "permissions": ["tabs", "activeTab", "<all_urls>"],
+  "permissions": ["tabs", "activeTab"],
 
   "browser_action": {
     "default_icon": "logo192.png",

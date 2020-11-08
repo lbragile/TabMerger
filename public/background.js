@@ -1,5 +1,3 @@
-window.payload = {};
-
 function getAllTabsAndSend(samePage) {
   chrome.tabs.getAllInWindow(null, (tabs) => {
     if (!samePage) {
@@ -7,14 +5,15 @@ function getAllTabsAndSend(samePage) {
         url: "index.html",
         active: true,
       });
-    } else {
-      tabs.forEach((tab) => {
-        if (!tab.url.includes("chrome-extension")) {
-          chrome.tabs.remove(tab.id);
-        }
-      });
     }
-    window.payload["tabs"] = tabs;
+
+    tabs.forEach((tab) => {
+      if (!tab.url.includes("chrome-extension")) {
+        chrome.tabs.remove(tab.id);
+      }
+    });
+
+    window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
   });
 }
 

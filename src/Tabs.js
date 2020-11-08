@@ -27,8 +27,8 @@ export default function Tabs(props) {
 
   const triggerEvent = useCallback(() => {
     setTimeout(() => {
-      var bg = chrome.extension.getBackgroundPage();
-      console.log(bg.payload);
+      var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
+      window.localStorage.removeItem("merged_tabs");
 
       /* istanbul ignore next */
       if (props.id !== "group-0") {
@@ -38,7 +38,7 @@ export default function Tabs(props) {
 
       // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
       var tabs_arr = tabs;
-      var combined_arr = [...tabs_arr, ...bg.payload.tabs];
+      var combined_arr = [...tabs_arr, ...merged_tabs];
       var unique_arr = Array.from(
         new Set(
           combined_arr.map((item) =>
@@ -67,15 +67,11 @@ export default function Tabs(props) {
   }, [props.id, setCurrentTabTotal, tabs]);
 
   useEffect(() => {
-    const merge_btn = document.querySelector("#merge-btn");
-    merge_btn.classList.add("shake-animation");
-    setTimeout(() => {
-      merge_btn.classList.remove("shake-animation");
-    }, 5000);
-  }, []);
-
-  useEffect(() => {
     setCurrentTabTotal();
+
+    if ("merged_tabs" in window.localStorage) {
+      triggerEvent();
+    }
 
     const merge_btn = document.querySelector("#merge-btn");
     merge_btn.addEventListener("click", triggerEvent);

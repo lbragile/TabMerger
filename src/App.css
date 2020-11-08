@@ -3,19 +3,3 @@
   padding: 0;
   box-sizing: border-box;
 }
-
-.shake-animation {
-  animation: changeBackground 1s linear infinite;
-}
-
-@keyframes changeBackground {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
