@@ -67,6 +67,14 @@ export default function Tabs(props) {
   }, [props.id, setCurrentTabTotal, tabs]);
 
   useEffect(() => {
+    const merge_btn = document.querySelector("#merge-btn");
+    merge_btn.classList.add("shake-animation");
+    setTimeout(() => {
+      merge_btn.classList.remove("shake-animation");
+    }, 5000);
+  }, []);
+
+  useEffect(() => {
     setCurrentTabTotal();
 
     const merge_btn = document.querySelector("#merge-btn");
