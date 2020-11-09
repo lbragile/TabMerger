@@ -160,6 +160,15 @@ export default function App() {
         >
           Delete All
         </Button>
+        <Button
+          id="options-btn"
+          variant="light"
+          type="button"
+          className="ml-1"
+          onClick={() => window.open(chrome.runtime.getURL("options.html"))}
+        >
+          Options
+        </Button>
       </div>
 
       {groups}

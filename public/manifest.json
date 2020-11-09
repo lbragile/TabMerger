@@ -2,6 +2,7 @@
   "manifest_version": 2,
   "name": "TabMerger",
   "version": "0.1.0",
+  "description": "Merges your tabs into one location to save memory usage and increase your productivity.",
 
   "background": {
     "scripts": ["background.js"]
@@ -9,8 +10,14 @@
 
   "permissions": ["tabs", "activeTab", "contextMenus"],
 
+  "icons": {
+    "192": "logo192.png"
+  },
+
   "browser_action": {
     "default_icon": "logo192.png",
     "default_title": "Sort your tabs into tab groups"
-  }
+  },
+
+  "options_page": "options.html"
 }

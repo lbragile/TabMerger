@@ -176,7 +176,7 @@ export default function Tabs(props) {
               src={tab.favIconUrl}
               width="24"
               height="24"
-              alt="icon for the url"
+              alt="icon"
               draggable={false}
             />
             <a
