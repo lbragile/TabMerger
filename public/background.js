@@ -20,21 +20,17 @@ function getTabsAndSend(info, tab) {
     }
 
     if (!info.samePage) {
-      tabs.forEach((item) => {
-        chrome.tabs.remove(item.id);
-      });
-
       chrome.tabs.create({
         url: "index.html",
         active: true,
       });
-    } else {
-      tabs.forEach((item) => {
-        if (!item.url.includes("chrome-extension")) {
-          chrome.tabs.remove(item.id);
-        }
-      });
     }
+
+    tabs.forEach((item) => {
+      if (!item.url.includes("chrome-extension")) {
+        chrome.tabs.remove(item.id);
+      }
+    });
 
     window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
   });
@@ -49,9 +45,14 @@ chrome.browserAction.onClicked.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.msg === "get tabs") {
+  if (request.msg === "all") {
     info.samePage = true;
-
+    getTabsAndSend(info, tab);
+  } else if (request.msg === "left") {
+    info.which = "left";
+    getTabsAndSend(info, tab);
+  } else if (request.msg === "right") {
+    info.which = "right";
     getTabsAndSend(info, tab);
   }
   return true;

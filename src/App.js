@@ -8,7 +8,11 @@ import Group from "./Group.js";
 import { Button } from "react-bootstrap";
 
 export default function App() {
-  const defaultColor = useRef("#C9C9C9");
+  const defaultColor = useRef(
+    (JSON.parse(window.localStorage.getItem("settings")) &&
+      JSON.parse(window.localStorage.getItem("settings")).color) ||
+      "#DEDEDE"
+  );
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(() => {
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
@@ -84,10 +88,8 @@ export default function App() {
     window.localStorage.setItem("groups", JSON.stringify(ls_entry));
   }, [groups]);
 
-  function sendMessage() {
-    chrome.runtime.sendMessage("kdkfmpamdkkhmoomellenejnnajpfhpk", {
-      msg: "get tabs",
-    });
+  function sendMessage(msg) {
+    chrome.runtime.sendMessage("kdkfmpamdkkhmoomellenejnnajpfhpk", msg);
   }
 
   const addGroup = () => {
@@ -119,7 +121,7 @@ export default function App() {
       JSON.stringify({
         "group-0": {
           title: "General",
-          color: "#c9c9c9",
+          color: defaultColor.current,
           created: new Date(Date.now()).toString(),
           tabs: [],
         },
@@ -138,34 +140,54 @@ export default function App() {
           id="merge-btn"
           variant="primary"
           type="button"
-          onClick={() => sendMessage()}
+          onClick={() => sendMessage({ msg: "all" })}
         >
-          Merge Tabs
+          Merge All Tabs
+        </Button>
+        <Button
+          id="merge-right-btn"
+          className="ml-1"
+          variant="secondary"
+          type="button"
+          onClick={() => sendMessage({ msg: "right" })}
+        >
+          Merge Right Tabs
+        </Button>
+        <Button
+          id="merge-left-btn"
+          className="ml-1"
+          variant="secondary"
+          type="button"
+          onClick={() => sendMessage({ msg: "left" })}
+        >
+          Merge Left Tabs
         </Button>
         <Button
           id="open-all-btn"
+          className="ml-1"
           variant="dark"
           type="button"
-          className="ml-1"
           onClick={() => openAllTabs()}
         >
           Open All
         </Button>
         <Button
           id="delete-all-btn"
+          className="ml-1"
           variant="dark"
           type="button"
-          className="ml-1"
           onClick={() => deleteAllGroups()}
         >
           Delete All
         </Button>
         <Button
           id="options-btn"
+          className="ml-1"
           variant="light"
           type="button"
-          className="ml-1"
-          onClick={() => window.open(chrome.runtime.getURL("options.html"))}
+          onClick={() =>
+            window.location.replace(chrome.runtime.getURL("options.html"))
+          }
         >
           Options
         </Button>

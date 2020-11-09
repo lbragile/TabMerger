@@ -8,7 +8,7 @@ export default function Group(props) {
   const [hide, setHide] = useState(false);
 
   function backgroundColor(target) {
-    var children = target.parentNode.parentNode.parentNode.children;
+    var children = target.closest(".group").parentNode.children;
     [...children].forEach((child) => {
       child.style.background = target.value;
     });
@@ -89,7 +89,7 @@ export default function Group(props) {
     } else {
       new_groups["group-0"] = {
         title: "General",
-        color: "#c9c9c9",
+        color: JSON.parse(window.localStorage.getItem("settings")).color,
         created: new Date(Date.now()).toString(),
         tabs: [],
       };

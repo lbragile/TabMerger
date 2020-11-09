@@ -1,24 +1,133 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My Test Extension Options</title>
+    <title>TabMerger Settings</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="options.css" />
   </head>
   <body>
-    Favorite color:
-    <select id="color">
-      <option value="red">red</option>
-      <option value="green">green</option>
-      <option value="blue">blue</option>
-      <option value="yellow">yellow</option>
-    </select>
+    <div class="container-fluid">
+      <h1>TabMerger Settings</h1>
+      <hr />
 
-    <label>
-      <input type="checkbox" id="like" />
-      I like colors.
-    </label>
+      <section>
+        <div class="row mx-0">
+          <h5 class="mr-2 mb-0">Default group color:</h5>
+          <input type="color" value="#DEDEDE" id="options-default-color" />
+        </div>
 
-    <div id="status"></div>
-    <button id="save">Save</button>
+        <div>
+          <small
+            >This will only be applied on new groups formed after settings are
+            saved!</small
+          >
+        </div>
+      </section>
+
+      <section>
+        <div class="row mx-0">
+          <h5 class="mr-2 mb-0">Default group title:</h5>
+          <input
+            class="px-1 w-10"
+            type="text"
+            value="Title"
+            id="options-default-title"
+          />
+        </div>
+        <div>
+          <small
+            >This will only be applied on new groups formed after settings are
+            saved!</small
+          >
+        </div>
+      </section>
+
+      <section>
+        <div>
+          <h5 class="mb-0">Restoring behaviour:</h5>
+          <small>This applies to both group and global actions.</small>
+        </div>
+
+        <div class="my-2">
+          <input
+            type="radio"
+            id="keep-tabs"
+            name="restore-tabs"
+            value="keep"
+            checked
+          />
+          <label for="keep" class="mb-0">Keep in TabMerger</label>
+          <div class="ml-3 mt-0">
+            <small
+              >You can still manually delete:
+              <ul class="mx-4">
+                <li>
+                  tab &rightarrow; <i>x</i> button beside them (on the left)
+                </li>
+                <li>
+                  group &rightarrow; <i>delete group</i> button (inside the
+                  group)
+                </li>
+                <li>everything &rightarrow; global <i>delete all</i> button</li>
+              </ul>
+            </small>
+          </div>
+        </div>
+
+        <div>
+          <input
+            type="radio"
+            id="remove-tabs"
+            value="remove"
+            name="restore-tabs"
+          />
+          <label for="remove" class="mb-0"
+            >Open and remove corresponding tab(s) from TabMerger</label
+          >
+          <div class="ml-3">
+            <small
+              >Opening a tab will remove that tab, the same goes for opening a
+              group and opening everything.</small
+            >
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="mx-0">
+          <h5 class="mr-2 mb-0">Exclude Websites:</h5>
+          <div>
+            <small
+              >Please enter the <i>full</i> website address of any website which
+              you would like to not merge. <br />These must begin with "http://"
+              or "https://" You may enter multiple comma seperated
+              values.</small
+            >
+          </div>
+          <textarea
+            class="px-1 mt-2"
+            rows="4"
+            cols="80"
+            id="options-blacklist"
+            placeholder="http://www.google.com, https://www.facebook.com"
+            maxlength="1000"
+          ></textarea>
+        </div>
+      </section>
+
+      <div class="mx-0 d-flex flex-row align-items-center">
+        <button class="btn btn-primary" id="save-btn">Save</button>
+        <button class="btn btn-secondary mx-2" id="home-btn">Home</button>
+      </div>
+      <div id="save-text" class="my-2 alert alert-success p-2 invisible">
+        Saved!
+      </div>
+    </div>
 
     <script src="options.js"></script>
   </body>

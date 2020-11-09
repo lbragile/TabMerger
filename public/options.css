@@ -1,0 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+section {
+  margin: 10px 0 20px 0;
+}
+
+.alert {
+  width: 65px;
+}
