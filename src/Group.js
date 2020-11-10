@@ -140,7 +140,12 @@ export default function Group(props) {
   return (
     <div className="my-3">
       <div className="created float-right mr-1">
-        <b>Created:</b> {formatDate(props.created)}
+        <b>Created:</b>{" "}
+        <span>
+          {props.created.split(" ").length > 6
+            ? formatDate(props.created)
+            : props.created}
+        </span>
       </div>
 
       <div className="group-title d-flex flex-row justify-content-center">

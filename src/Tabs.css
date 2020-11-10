@@ -21,4 +21,5 @@
 .draggable {
   position: relative;
   left: 25px;
+  width: 85%;
 }

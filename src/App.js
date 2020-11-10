@@ -16,10 +16,14 @@ import { BiArrowToRight } from "react-icons/bi";
 
 export default function App() {
   const defaultColor = useRef(
-    JSON.parse(window.localStorage.getItem("settings")).color || "#DEDEDE"
+    (JSON.parse(window.localStorage.getItem("settings")) &&
+      JSON.parse(window.localStorage.getItem("settings")).color) ||
+      "#DEDEDE"
   );
   const defaultTitle = useRef(
-    JSON.parse(window.localStorage.getItem("settings")).title || "Title"
+    (JSON.parse(window.localStorage.getItem("settings")) &&
+      JSON.parse(window.localStorage.getItem("settings")).title) ||
+      "Title"
   );
 
   const [tabTotal, setTabTotal] = useState(0);
@@ -33,7 +37,7 @@ export default function App() {
               className="group"
               title={group_blocks[item].title}
               color={group_blocks[item].color}
-              created={new Date(group_blocks[item].created).toString()}
+              created={group_blocks[item].created}
               key={Math.random()}
             >
               <Tabs setTabTotal={setTabTotal} id={item} />
@@ -74,7 +78,8 @@ export default function App() {
         title: group_blocks[i].parentNode.querySelector("div[editext='view']")
           .innerText,
         color: rgb2hex(group_blocks[i].style.background),
-        created: group_blocks[i].parentNode.querySelector(".created").innerText,
+        created: group_blocks[i].parentNode.querySelector(".created").lastChild
+          .innerText,
         tabs: [],
       };
 
