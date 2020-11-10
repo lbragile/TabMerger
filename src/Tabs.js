@@ -182,7 +182,7 @@ export default function Tabs(props) {
             </p>
             <img
               className="img-tab mr-2"
-              src={tab.favIconUrl}
+              src={tab.favIconUrl || "./images/logo16.png"}
               width="24"
               height="24"
               alt="icon"

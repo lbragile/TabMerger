@@ -156,7 +156,7 @@ export default function Group(props) {
           editButtonContent={
             <div className="tip mb-1">
               <BsPencilSquare color="saddlebrown" />
-              <span className="tiptext small">Edit Title</span>
+              <span className="tiptext-bottom">Edit Group Title</span>
             </div>
           }
           onSave={(val) => {
@@ -170,7 +170,7 @@ export default function Group(props) {
             onChange={(e) => handleColorChange(e)}
             type="color"
           />
-          <span className="tiptext small">Pick Color</span>
+          <span className="tiptext-bottom">Pick Group Color</span>
         </div>
       </div>
 
@@ -186,8 +186,8 @@ export default function Group(props) {
               ) : (
                 <FcCollapse style={{ transform: "rotate(0deg)" }} />
               )}
-              <span className="tiptext">
-                {hide ? "Expand Group" : "Collapse Group"}
+              <span className="tiptext-side">
+                {hide ? "Show Tabs" : "Hide Tabs"}
               </span>
             </div>
           </button>
@@ -197,7 +197,7 @@ export default function Group(props) {
           >
             <div className="tip">
               <FaWindowRestore color="forestgreen" />
-              <span className="tiptext">Open Group</span>
+              <span className="tiptext-side">Open Group</span>
             </div>
           </button>
           <button
@@ -206,7 +206,7 @@ export default function Group(props) {
           >
             <div className="tip">
               <CgRemove color="red" />
-              <span className="tiptext">Delete Group</span>
+              <span className="tiptext-side">Delete Group</span>
             </div>
           </button>
         </div>

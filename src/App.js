@@ -182,7 +182,7 @@ export default function App() {
                 color="black"
                 size="1.6rem"
               />
-              <span className="tiptext">Merge ALL Tabs In Window</span>
+              <span className="tiptext">Merge ALL Tabs</span>
             </div>
           </button>
           <button
@@ -193,7 +193,7 @@ export default function App() {
           >
             <div className="tip">
               <BiArrowToRight color="black" size="1.3rem" />
-              <span className="tiptext">Merge Tabs to the LEFT</span>
+              <span className="tiptext">Merge LEFT Tabs</span>
             </div>
           </button>
           <button
@@ -208,7 +208,7 @@ export default function App() {
                 color="black"
                 size="1.3rem"
               />
-              <span className="tiptext">Merge Tabs to the RIGHT</span>
+              <span className="tiptext">Merge RIGHT Tabs</span>
             </div>
           </button>
 
@@ -249,61 +249,41 @@ export default function App() {
           </button>
         </div>
 
-        {groups}
+        <div className="groups-container">
+          {groups}
 
-        <button
-          className="d-block mb-2 btn"
-          id="add-group-btn"
-          type="button"
-          onClick={() => addGroup()}
-        >
-          <div className="tip">
-            <MdAddCircle color="grey" size="2rem" />
-            <span className="tiptext">Add Group</span>
-          </div>
-        </button>
-      </div>
-
-      <div id="donate">
-        <div className="d-flex flex-column justify-content-center align-items-center">
-          <h4>
-            <b>Donate?</b>
-          </h4>
-          <p className="text-justify">
-            As a recent university graduate during the COVID-19 pandemic, it is
-            very difficult to find a job - especially in a field which does not
-            align with my education. After completing my degree, I realized that
-            full-stack development was for me. During the past year, I worked on
-            many different self-starter projects and decided to try out one that
-            involved chrome extensions. This was by far one of my most
-            challenging projects to date and I vow to continuously make
-            improvements to it. Any amount which you are willing/able to donate
-            would allow me to focus on creating more useful chrome extensions in
-            the future. Thank you, be safe, and have a great day!
-          </p>
-          <form
-            action="https://www.paypal.com/donate"
-            method="post"
-            target="_top"
+          <button
+            className="d-block mb-2 btn"
+            id="add-group-btn"
+            type="button"
+            onClick={() => addGroup()}
           >
-            <input
-              type="hidden"
-              name="hosted_button_id"
-              value="X3EYMX8CVA4SY"
-            />
-            <input
-              type="image"
-              src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
-              border="0"
-              name="submit"
-              title="PayPal - The safer, easier way to pay online!"
-              alt="Donate with PayPal button"
-            />
-          </form>
+            <div className="tip">
+              <MdAddCircle color="grey" size="2rem" />
+              <span className="tiptext">Add Group</span>
+            </div>
+          </button>
         </div>
       </div>
 
-      <div id="copyright">
+      <div id="donate" className="mb-2">
+        <form
+          action="https://www.paypal.com/donate"
+          method="post"
+          target="_top"
+        >
+          <input type="hidden" name="hosted_button_id" value="X3EYMX8CVA4SY" />
+          <input
+            type="image"
+            src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+            border="0"
+            name="submit"
+            alt="Donate with PayPal button"
+          />
+        </form>
+      </div>
+
+      <div id="copyright" className="mb-2">
         <b>&#169; Lior Bragilevsky, 2020</b>
       </div>
     </>

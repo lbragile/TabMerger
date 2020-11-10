@@ -1,10 +1,26 @@
 function getTabsAndSend(info, tab) {
   chrome.tabs.getAllInWindow(null, (tabs) => {
-    tabs.forEach((item, index) => {
-      if (item.url.includes("chrome-extension")) {
+    var extension_tabs = tabs.filter((item) =>
+      item.url.includes("chrome-extension")
+    );
+
+    var tab_urls = tabs.map((item) => item.url);
+
+    // IF more than one unique URL, can safetly close chrome-extension tabs without closing window.
+    // ELSE only chrome-extension tabs are open, so close all until one is left.
+    if (new Set(tab_urls).length > 1) {
+      extension_tabs.forEach((item) => {
         chrome.tabs.remove(item.id);
-      }
-    });
+      });
+    } else {
+      var num_tabs = extension_tabs.length;
+      extension_tabs.forEach((item) => {
+        if (num_tabs > 1) {
+          chrome.tabs.remove(item.id);
+          num_tabs--;
+        }
+      });
+    }
 
     if (info.which === "right") {
       for (var i in tabs) {
@@ -17,9 +33,6 @@ function getTabsAndSend(info, tab) {
     } else if (info.which === "excluding") {
       tabs.splice(tab.index, 1);
     } else if (info.which === "only") {
-      var extension_tabs = tabs.filter((item) =>
-        item.url.includes("chrome-extension")
-      );
       tabs = [tab, ...extension_tabs];
     }
     //else info.which === "all" (works by default)
@@ -29,11 +42,19 @@ function getTabsAndSend(info, tab) {
       active: true,
     });
 
-    tabs.forEach((item, index) => {
+    tabs.forEach((item) => {
       if (!item.url.includes("chrome-extension")) {
         chrome.tabs.remove(item.id);
       }
     });
+
+    // in case of multiple chrome-extension tabs. Can have 2 at most for any instance
+    chrome.tabs.query(
+      { title: "TabMerger", currentWindow: true },
+      (tabMergerTabs) => {
+        chrome.tabs.remove(tabMergerTabs[0].id);
+      }
+    );
 
     window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
   });

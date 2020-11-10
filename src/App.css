@@ -8,6 +8,13 @@
   position: relative;
 }
 
+.groups-container {
+  height: 750px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 10px 0px;
+}
+
 .tip {
   position: relative;
   display: inline-block;
@@ -15,19 +22,17 @@
 
 .tip .tiptext {
   visibility: hidden;
-  width: 120px;
   background-color: black;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px 3px;
-  position: absolute;
+  padding: 5px;
   z-index: 1;
-  bottom: 125%;
+  position: absolute;
+  bottom: 110%;
   left: 50%;
-  margin-left: -60px;
+  transform: translateX(-50%);
   opacity: 0;
-  transition: opacity 0.3s;
 }
 
 .tip .tiptext::after {
@@ -35,13 +40,68 @@
   position: absolute;
   top: 100%;
   left: 50%;
-  margin-left: -5px;
+  transform: translateX(-50%);
   border-width: 5px;
   border-style: solid;
   border-color: black transparent transparent transparent;
 }
 
-.tip:hover .tiptext {
+.tip .tiptext-side {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  z-index: 1;
+  position: absolute;
+  top: 60%;
+  right: 125%;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+
+.tip .tiptext-side::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent black;
+}
+
+.tip .tiptext-bottom {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  z-index: 1;
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  font-size: 1rem;
+}
+
+.tip .tiptext-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+
+.tip:hover .tiptext,
+.tip:hover .tiptext-side,
+.tip:hover .tiptext-bottom {
   visibility: visible;
   opacity: 0.9;
 }
@@ -62,14 +122,23 @@
 }
 
 #donate {
-  position: absolute;
+  position: fixed;
   bottom: 0%;
   left: 50%;
   transform: translateX(-50%);
 }
 
+input[type="image"]:focus {
+  border: none;
+  outline: none;
+}
+
+input[type="image"] {
+  transform: scale(1.1);
+}
+
 #copyright {
-  position: absolute;
+  position: fixed;
   bottom: 0%;
   left: calc(25% + 20px);
   transform: translateX(-50%);
