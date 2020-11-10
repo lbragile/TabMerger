@@ -5,14 +5,23 @@ import "./App.css";
 import Tabs from "./Tabs.js";
 import Group from "./Group.js";
 
-import { Button } from "react-bootstrap";
+import {
+  MdSettings,
+  MdDeleteForever,
+  MdVerticalAlignCenter,
+  MdAddCircle,
+} from "react-icons/md";
+import { FaTrashRestore } from "react-icons/fa";
+import { BiArrowToRight } from "react-icons/bi";
 
 export default function App() {
   const defaultColor = useRef(
-    (JSON.parse(window.localStorage.getItem("settings")) &&
-      JSON.parse(window.localStorage.getItem("settings")).color) ||
-      "#DEDEDE"
+    JSON.parse(window.localStorage.getItem("settings")).color || "#DEDEDE"
   );
+  const defaultTitle = useRef(
+    JSON.parse(window.localStorage.getItem("settings")).title || "Title"
+  );
+
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(() => {
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
@@ -35,7 +44,7 @@ export default function App() {
           <Group
             id="group-0"
             className="group"
-            title="General"
+            title={defaultTitle.current}
             color={defaultColor.current}
             created={new Date(Date.now()).toString()}
             key={Math.random()}
@@ -86,6 +95,17 @@ export default function App() {
     }
 
     window.localStorage.setItem("groups", JSON.stringify(ls_entry));
+    if (!window.localStorage.getItem("settings")) {
+      window.localStorage.setItem(
+        "settings",
+        JSON.stringify({
+          color: "#dedede",
+          title: "Title",
+          restore: "keep",
+          blacklist: "",
+        })
+      );
+    }
   }, [groups]);
 
   function sendMessage(msg) {
@@ -100,7 +120,7 @@ export default function App() {
         className="group"
         key={Math.random()}
         color={defaultColor.current}
-        title="Title"
+        title={defaultTitle.current}
         created={new Date(Date.now()).toString()}
       >
         <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
@@ -120,7 +140,7 @@ export default function App() {
       "groups",
       JSON.stringify({
         "group-0": {
-          title: "General",
+          title: defaultTitle.current,
           color: defaultColor.current,
           created: new Date(Date.now()).toString(),
           tabs: [],
@@ -134,76 +154,105 @@ export default function App() {
   return (
     <div className="container">
       <h1>TabMerger</h1>
-      <h5 id="tab-total">{tabTotal} tabs in total</h5>
+      <h3 id="tab-total">
+        {tabTotal} tabs in total{" "}
+        <span className="small">
+          {tabTotal > 0 ? `Saved ~${tabTotal * 50}MB of RAM` : null}
+        </span>
+      </h3>
+      <hr />
       <div className="row">
-        <Button
+        <button
           id="merge-btn"
-          variant="primary"
+          className="ml-3 py-1 px-2 btn btn-outline-primary"
           type="button"
           onClick={() => sendMessage({ msg: "all" })}
         >
-          Merge All Tabs
-        </Button>
-        <Button
+          <div className="tip">
+            <MdVerticalAlignCenter
+              style={{ transform: "rotate(90deg)" }}
+              color="black"
+              size="1.6rem"
+            />
+            <span className="tiptext">Merge ALL Tabs In Window</span>
+          </div>
+        </button>
+        <button
           id="merge-right-btn"
-          className="ml-1"
-          variant="secondary"
+          className="ml-1 py-1 px-2 btn btn-outline-warning"
           type="button"
           onClick={() => sendMessage({ msg: "right" })}
         >
-          Merge Right Tabs
-        </Button>
-        <Button
+          <div className="tip">
+            <BiArrowToRight
+              style={{ transform: "rotate(180deg)" }}
+              color="black"
+              size="1.3rem"
+            />
+            <span className="tiptext">Merge Tabs to the RIGHT</span>
+          </div>
+        </button>
+        <button
           id="merge-left-btn"
-          className="ml-1"
-          variant="secondary"
+          className="ml-1 py-1 px-2 btn btn-outline-warning"
           type="button"
           onClick={() => sendMessage({ msg: "left" })}
         >
-          Merge Left Tabs
-        </Button>
-        <Button
+          <div className="tip">
+            <BiArrowToRight color="black" size="1.3rem" />
+            <span className="tiptext">Merge Tabs to the LEFT</span>
+          </div>
+        </button>
+        <button
           id="open-all-btn"
-          className="ml-1"
-          variant="dark"
+          className="ml-3 py-1 px-2 btn btn-outline-success"
           type="button"
           onClick={() => openAllTabs()}
         >
-          Open All
-        </Button>
-        <Button
+          <div className="tip">
+            <FaTrashRestore color="green" size="1.3rem" />
+            <span className="tiptext">Open All</span>
+          </div>
+        </button>
+        <button
           id="delete-all-btn"
-          className="ml-1"
-          variant="dark"
+          className="ml-1 p-1 btn btn-outline-danger"
           type="button"
           onClick={() => deleteAllGroups()}
         >
-          Delete All
-        </Button>
-        <Button
+          <div className="tip">
+            <MdDeleteForever color="red" size="1.7rem" />
+            <span className="tiptext">Delete All</span>
+          </div>
+        </button>
+        <button
           id="options-btn"
-          className="ml-1"
-          variant="light"
+          className="ml-3 py-1 px-2 btn btn-outline-dark"
           type="button"
           onClick={() =>
             window.location.replace(chrome.runtime.getURL("options.html"))
           }
         >
-          Options
-        </Button>
+          <div className="tip">
+            <MdSettings color="grey" size="1.6rem" />
+            <span className="tiptext">Settings</span>
+          </div>
+        </button>
       </div>
 
       {groups}
 
-      <Button
-        className="d-block mb-2"
+      <button
+        className="d-block mb-2 btn"
         id="add-group-btn"
-        variant="secondary"
         type="button"
         onClick={() => addGroup()}
       >
-        Add Group
-      </Button>
+        <div className="tip">
+          <MdAddCircle color="grey" size="2rem" />
+          <span className="tiptext">Add Group</span>
+        </div>
+      </button>
     </div>
   );
 }

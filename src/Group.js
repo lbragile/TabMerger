@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button } from "react-bootstrap";
 import EdiText from "react-editext";
+
+import { FcCollapse } from "react-icons/fc";
+import { CgRemove } from "react-icons/cg";
+import { FaWindowRestore } from "react-icons/fa";
+import { BsPencilSquare } from "react-icons/bs";
 
 import "./Group.css";
 export default function Group(props) {
@@ -8,7 +12,7 @@ export default function Group(props) {
   const [hide, setHide] = useState(false);
 
   function backgroundColor(target) {
-    var children = target.closest(".group").parentNode.children;
+    var children = target.closest(".group-title").parentNode.children;
     [...children].forEach((child) => {
       child.style.background = target.value;
     });
@@ -20,10 +24,15 @@ export default function Group(props) {
   }, []);
 
   function handleTitleChange(val) {
-    setTitle(val);
-    var groups = JSON.parse(window.localStorage.getItem("groups"));
-    groups[props.id].title = val;
-    window.localStorage.setItem("groups", JSON.stringify(groups));
+    if (val.length < 15) {
+      setTitle(val);
+      var groups = JSON.parse(window.localStorage.getItem("groups"));
+      groups[props.id].title = val;
+      window.localStorage.setItem("groups", JSON.stringify(groups));
+    } else {
+      alert("Titles must be less than 15 characters long!");
+      window.location.reload();
+    }
   }
 
   function handleColorChange(e) {
@@ -88,7 +97,7 @@ export default function Group(props) {
       });
     } else {
       new_groups["group-0"] = {
-        title: "General",
+        title: JSON.parse(window.localStorage.getItem("settings")).title,
         color: JSON.parse(window.localStorage.getItem("settings")).color,
         created: new Date(Date.now()).toString(),
         tabs: [],
@@ -139,41 +148,62 @@ export default function Group(props) {
           className="font-weight-bold"
           type="text"
           value={title}
+          editButtonContent={
+            <div className="tip">
+              <BsPencilSquare color="saddlebrown" />
+              <span className="tiptext small">Edit Title</span>
+            </div>
+          }
           onSave={(val) => {
             handleTitleChange(val);
           }}
         />
-      </div>
-
-      <div id={props.id} className={props.className} onDragOver={dragOver}>
-        <div className="row mx-3 mt-2 float-right d-flex flex-row align-items-center">
+        <div className="tip ml-3">
           <input
             ref={colorRef}
             defaultValue={props.color}
             onChange={(e) => handleColorChange(e)}
             type="color"
           />
-          <Button
-            variant="light"
-            className="mx-1"
-            onClick={(e) => openAllTabsInGroup(e)}
-          >
-            <b>Open Group</b>
-          </Button>
-          <Button
-            variant="light"
-            className="mx-1"
-            onClick={(e) => deleteGroup(e)}
-          >
-            <b>Delete Group</b>
-          </Button>
-          <Button
-            variant="light"
-            className="mx-1"
+          <span className="tiptext small">Pick Color</span>
+        </div>
+      </div>
+
+      <div id={props.id} className={props.className} onDragOver={dragOver}>
+        <div className="mr-2 mt-1 float-right d-flex flex-column align-items-center">
+          <button
+            className="mt-1 p-1 btn btn-light"
             onClick={(e) => toggleGroup(e)}
           >
-            <b>{hide ? "Expand" : "Collapse"}</b>
-          </Button>
+            <div className="tip">
+              {hide ? (
+                <FcCollapse style={{ transform: "rotate(0deg)" }} />
+              ) : (
+                <FcCollapse style={{ transform: "rotate(180deg)" }} />
+              )}
+              <span className="tiptext">
+                {hide ? "Collapse Group" : "Expand Group"}
+              </span>
+            </div>
+          </button>
+          <button
+            className="mt-1 p-1 btn btn-light"
+            onClick={(e) => openAllTabsInGroup(e)}
+          >
+            <div className="tip">
+              <FaWindowRestore color="forestgreen" />
+              <span className="tiptext">Open Group</span>
+            </div>
+          </button>
+          <button
+            className="mt-1 p-1 btn btn-light"
+            onClick={(e) => deleteGroup(e)}
+          >
+            <div className="tip">
+              <CgRemove color="red" />
+              <span className="tiptext">Delete Group</span>
+            </div>
+          </button>
         </div>
 
         {props.children}
