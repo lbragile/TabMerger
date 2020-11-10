@@ -19,6 +19,10 @@
   border: none !important;
 }
 
+.styles_Editext__edit_button__hthOZ:hover {
+  background: none;
+}
+
 /* remove the default pencil */
 .styles_Editext__edit_button__hthOZ::before {
   display: none;
@@ -45,7 +49,7 @@
 .created {
   background: none !important;
   position: relative;
-  top: 8px;
+  top: 10px;
 }
 
 input[type="color"]:hover {

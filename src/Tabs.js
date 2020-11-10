@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
 import "./Tabs.css";
+
+import { TiDelete } from "react-icons/ti";
+import { AiOutlineMenu } from "react-icons/ai";
+
 export default function Tabs(props) {
   const tab_title_length = useRef(100);
   var [tabTotal, setTabTotal] = useState(
@@ -82,8 +86,7 @@ export default function Tabs(props) {
   }, [setCurrentTabTotal, triggerEvent]);
 
   function removeTab(e) {
-    var url = e.target.parentNode.querySelector("a").href;
-    e.target.parentNode.style.display = "none";
+    var url = e.target.closest("div").querySelector("a").href;
     var tabs_arr = tabs;
     tabs_arr = tabs_arr.filter((item) => item.url !== url);
     setTabs(tabs_arr);
@@ -168,9 +171,11 @@ export default function Tabs(props) {
               draggable={false}
               onClick={(e) => removeTab(e)}
             >
-              ✖
+              <TiDelete size="1.2rem" color="rgba(255,0,0,0.8)" />
             </p>
-            <p className="move-tab mr-2">☰</p>
+            <p className="move-tab mr-2">
+              <AiOutlineMenu size="1.2rem" color="grey" />
+            </p>
             <img
               className="img-tab mr-2"
               src={tab.favIconUrl}

@@ -75,8 +75,8 @@ export default function Group(props) {
 
   function openAllTabsInGroup(e) {
     var tabs = e.target
-      .closest("div")
-      .nextSibling.querySelectorAll("div[draggable='true']");
+      .closest(".group")
+      .querySelectorAll("div[draggable='true']");
     [...tabs].forEach((tab) => {
       tab.querySelector("a").click();
     });
@@ -149,7 +149,7 @@ export default function Group(props) {
           type="text"
           value={title}
           editButtonContent={
-            <div className="tip">
+            <div className="tip mb-1">
               <BsPencilSquare color="saddlebrown" />
               <span className="tiptext small">Edit Title</span>
             </div>
@@ -158,7 +158,7 @@ export default function Group(props) {
             handleTitleChange(val);
           }}
         />
-        <div className="tip ml-3">
+        <div className="tip ml-3 mb-1">
           <input
             ref={colorRef}
             defaultValue={props.color}
@@ -177,12 +177,12 @@ export default function Group(props) {
           >
             <div className="tip">
               {hide ? (
-                <FcCollapse style={{ transform: "rotate(0deg)" }} />
-              ) : (
                 <FcCollapse style={{ transform: "rotate(180deg)" }} />
+              ) : (
+                <FcCollapse style={{ transform: "rotate(0deg)" }} />
               )}
               <span className="tiptext">
-                {hide ? "Collapse Group" : "Expand Group"}
+                {hide ? "Expand Group" : "Collapse Group"}
               </span>
             </div>
           </button>

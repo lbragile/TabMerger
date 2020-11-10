@@ -40,3 +40,9 @@
   visibility: visible;
   opacity: 0.9;
 }
+
+/* remove focus after clicked */
+#add-group-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
