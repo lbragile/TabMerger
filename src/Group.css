@@ -1,6 +1,6 @@
 .group {
   min-height: 128px;
-  border: 1px solid transparent;
+  border: 1px solid lightgray;
   border-radius: 10px;
 }
 
@@ -9,6 +9,7 @@
   margin: 0;
   position: relative;
   left: 10px;
+  border: 1px solid lightgray;
   border-bottom: 1px black dashed;
   border-radius: 5px 5px 0 0;
   font-size: 1.3rem;
@@ -20,30 +21,30 @@
 }
 
 .styles_Editext__edit_button__hthOZ:hover {
-  background: none;
+  background: none !important;
 }
 
 /* remove the default pencil */
 .styles_Editext__edit_button__hthOZ::before {
-  display: none;
+  display: none !important;
 }
 
 .styles_Editext__button__6H8n_ {
-  border: none;
-  padding: 0;
-  background: none;
+  border: none !important;
+  padding: 0 !important;
+  background: none !important;
 }
 
 .styles_Editext__input__1534X {
-  padding: 2px;
-  text-align: center;
-  border-radius: 5px;
+  padding: 2px !important;
+  text-align: center !important;
+  border-radius: 5px !important;
 }
 
 .styles_Editext__save_button__3WN6q,
 .styles_Editext__cancel_button__259hb {
-  border-radius: 5px;
-  margin: 0 1px;
+  border-radius: 5px !important;
+  margin: 0 1px !important;
 }
 
 .created {

@@ -151,11 +151,15 @@ export default function Tabs(props) {
   };
 
   return (
-    <div className="d-flex flex-column mx-4 my-2">
-      <h5 className="tabTotal-inGroup mb-3">
-        {tabs.length} {tabs.length === 1 ? "tab" : "tabs"} in group{" "}
-        {!tabTotal ? null : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}
-      </h5>
+    <div className="d-flex flex-column mx-0 my-2">
+      <h4 className="tabTotal-inGroup mb-3">
+        <small>
+          {tabs.length} {tabs.length === 1 ? "tab" : "tabs"} in group{" "}
+          {!tabTotal
+            ? null
+            : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}
+        </small>
+      </h4>
       {tabs.map((tab, index) => {
         return (
           <div

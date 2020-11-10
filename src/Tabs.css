@@ -12,3 +12,13 @@
 .move-tab:hover {
   cursor: move;
 }
+
+.tabTotal-inGroup {
+  position: relative;
+  left: 15px;
+}
+
+.draggable {
+  position: relative;
+  left: 25px;
+}

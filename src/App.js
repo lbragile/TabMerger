@@ -154,12 +154,9 @@ export default function App() {
   return (
     <div className="container">
       <h1>TabMerger</h1>
-      <h3 id="tab-total">
-        {tabTotal} tabs in total{" "}
-        <span className="small">
-          {tabTotal > 0 ? `Saved ~${tabTotal * 50}MB of RAM` : null}
-        </span>
-      </h3>
+      <h2 id="tab-total">
+        <span className="small">{tabTotal} tabs in total</span>
+      </h2>
       <hr />
       <div className="row">
         <button
@@ -178,8 +175,19 @@ export default function App() {
           </div>
         </button>
         <button
-          id="merge-right-btn"
+          id="merge-left-btn"
           className="ml-1 py-1 px-2 btn btn-outline-warning"
+          type="button"
+          onClick={() => sendMessage({ msg: "left" })}
+        >
+          <div className="tip">
+            <BiArrowToRight color="black" size="1.3rem" />
+            <span className="tiptext">Merge Tabs to the LEFT</span>
+          </div>
+        </button>
+        <button
+          id="merge-right-btn"
+          className="ml-1 mr-4 py-1 px-2 btn btn-outline-warning"
           type="button"
           onClick={() => sendMessage({ msg: "right" })}
         >
@@ -192,20 +200,10 @@ export default function App() {
             <span className="tiptext">Merge Tabs to the RIGHT</span>
           </div>
         </button>
-        <button
-          id="merge-left-btn"
-          className="ml-1 py-1 px-2 btn btn-outline-warning"
-          type="button"
-          onClick={() => sendMessage({ msg: "left" })}
-        >
-          <div className="tip">
-            <BiArrowToRight color="black" size="1.3rem" />
-            <span className="tiptext">Merge Tabs to the LEFT</span>
-          </div>
-        </button>
+
         <button
           id="open-all-btn"
-          className="ml-3 py-1 px-2 btn btn-outline-success"
+          className="ml-4 py-1 px-2 btn btn-outline-success"
           type="button"
           onClick={() => openAllTabs()}
         >
@@ -227,7 +225,7 @@ export default function App() {
         </button>
         <button
           id="options-btn"
-          className="ml-3 py-1 px-2 btn btn-outline-dark"
+          className="mr-3 py-1 px-2 btn btn-outline-dark"
           type="button"
           onClick={() =>
             window.location.replace(chrome.runtime.getURL("options.html"))

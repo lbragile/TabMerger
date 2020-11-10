@@ -1,32 +1,35 @@
 function getTabsAndSend(info, tab) {
   chrome.tabs.getAllInWindow(null, (tabs) => {
-    for (var i in tabs) {
-      if (info.which === "right" && i > tab.index) {
-        tabs.splice(0, i);
-      } else if (info.which === "left") {
-        tabs.splice(tab.index);
-        break;
-      } else if (info.which === "excluding") {
-        tabs.splice(tab.index, 1);
-        break;
-      } else if (info.which === "only") {
-        var extension_tabs = tabs.filter((item) =>
-          item.url.includes("chrome-extension")
-        );
-        tabs = [tab, ...extension_tabs];
-        break;
+    tabs.forEach((item, index) => {
+      if (item.url.includes("chrome-extension")) {
+        chrome.tabs.remove(item.id);
       }
-      //else info.which === "all" (works by default)
-    }
+    });
 
-    if (!info.samePage) {
-      chrome.tabs.create({
-        url: "index.html",
-        active: true,
-      });
+    if (info.which === "right") {
+      for (var i in tabs) {
+        if (i > tab.index) {
+          tabs.splice(0, i);
+        }
+      }
+    } else if (info.which === "left") {
+      tabs.splice(tab.index);
+    } else if (info.which === "excluding") {
+      tabs.splice(tab.index, 1);
+    } else if (info.which === "only") {
+      var extension_tabs = tabs.filter((item) =>
+        item.url.includes("chrome-extension")
+      );
+      tabs = [tab, ...extension_tabs];
     }
+    //else info.which === "all" (works by default)
 
-    tabs.forEach((item) => {
+    chrome.tabs.create({
+      url: "index.html",
+      active: true,
+    });
+
+    tabs.forEach((item, index) => {
       if (!item.url.includes("chrome-extension")) {
         chrome.tabs.remove(item.id);
       }
@@ -37,25 +40,18 @@ function getTabsAndSend(info, tab) {
 }
 
 // default values
-var info = { samePage: false, which: "all" };
+var info = { which: "all" };
 var tab = { index: 0 };
 
 chrome.browserAction.onClicked.addListener(() => {
   getTabsAndSend(info, tab);
 });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.msg === "all") {
-    info.samePage = true;
-    getTabsAndSend(info, tab);
-  } else if (request.msg === "left") {
-    info.which = "left";
-    getTabsAndSend(info, tab);
-  } else if (request.msg === "right") {
-    info.which = "right";
-    getTabsAndSend(info, tab);
-  }
-  return true;
+chrome.runtime.onMessage.addListener((request) => {
+  info.which = request.msg;
+  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
+    getTabsAndSend(info, tabs[0]);
+  });
 });
 
 chrome.contextMenus.create({

@@ -172,7 +172,7 @@ export default function Group(props) {
       <div id={props.id} className={props.className} onDragOver={dragOver}>
         <div className="mr-2 mt-1 float-right d-flex flex-column align-items-center">
           <button
-            className="mt-1 p-1 btn btn-light"
+            className="btn-no-bg mt-1 p-1 btn btn-light btn-outline-info"
             onClick={(e) => toggleGroup(e)}
           >
             <div className="tip">
@@ -187,7 +187,7 @@ export default function Group(props) {
             </div>
           </button>
           <button
-            className="mt-1 p-1 btn btn-light"
+            className="btn-no-bg mt-1 p-1 btn btn-light btn-outline-success"
             onClick={(e) => openAllTabsInGroup(e)}
           >
             <div className="tip">
@@ -196,7 +196,7 @@ export default function Group(props) {
             </div>
           </button>
           <button
-            className="mt-1 p-1 btn btn-light"
+            className="btn-no-bg mt-1 p-1 btn btn-light btn-outline-danger"
             onClick={(e) => deleteGroup(e)}
           >
             <div className="tip">

@@ -3,6 +3,11 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.container {
+  position: relative;
+}
+
 .tip {
   position: relative;
   display: inline-block;
@@ -42,7 +47,16 @@
 }
 
 /* remove focus after clicked */
-#add-group-btn:focus {
+.btn:focus {
   outline: none;
   box-shadow: none;
+}
+
+.btn:hover {
+  background: white !important;
+}
+
+#options-btn {
+  position: absolute;
+  right: 0px;
 }
