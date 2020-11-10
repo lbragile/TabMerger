@@ -152,105 +152,155 @@ export default function App() {
   }
 
   return (
-    <div className="container">
-      <h1>TabMerger</h1>
-      <h2 id="tab-total">
-        <span className="small">{tabTotal} tabs in total</span>
-      </h2>
-      <hr />
-      <div className="row">
-        <button
-          id="merge-btn"
-          className="ml-3 py-1 px-2 btn btn-outline-primary"
-          type="button"
-          onClick={() => sendMessage({ msg: "all" })}
-        >
-          <div className="tip">
-            <MdVerticalAlignCenter
-              style={{ transform: "rotate(90deg)" }}
-              color="black"
-              size="1.6rem"
-            />
-            <span className="tiptext">Merge ALL Tabs In Window</span>
-          </div>
-        </button>
-        <button
-          id="merge-left-btn"
-          className="ml-1 py-1 px-2 btn btn-outline-warning"
-          type="button"
-          onClick={() => sendMessage({ msg: "left" })}
-        >
-          <div className="tip">
-            <BiArrowToRight color="black" size="1.3rem" />
-            <span className="tiptext">Merge Tabs to the LEFT</span>
-          </div>
-        </button>
-        <button
-          id="merge-right-btn"
-          className="ml-1 mr-4 py-1 px-2 btn btn-outline-warning"
-          type="button"
-          onClick={() => sendMessage({ msg: "right" })}
-        >
-          <div className="tip">
-            <BiArrowToRight
-              style={{ transform: "rotate(180deg)" }}
-              color="black"
-              size="1.3rem"
-            />
-            <span className="tiptext">Merge Tabs to the RIGHT</span>
-          </div>
-        </button>
+    <>
+      <div className="container">
+        <div className="d-flex flex-row align-items-center">
+          <img id="logo-img" src="./images/logo48.png" alt="TabMerger Logo" />
+          <h1 id="logo-text" className="px-1 pt-1">
+            TabMerger
+          </h1>
+        </div>
+        <h2 id="tab-total">
+          <span className="small">{tabTotal} tabs in total</span>
+        </h2>
+        <hr />
+        <div className="row">
+          <button
+            id="merge-btn"
+            className="ml-3 py-1 px-2 btn btn-outline-primary"
+            type="button"
+            onClick={() => sendMessage({ msg: "all" })}
+          >
+            <div className="tip">
+              <MdVerticalAlignCenter
+                style={{ transform: "rotate(90deg)" }}
+                color="black"
+                size="1.6rem"
+              />
+              <span className="tiptext">Merge ALL Tabs In Window</span>
+            </div>
+          </button>
+          <button
+            id="merge-left-btn"
+            className="ml-1 py-1 px-2 btn btn-outline-warning"
+            type="button"
+            onClick={() => sendMessage({ msg: "left" })}
+          >
+            <div className="tip">
+              <BiArrowToRight color="black" size="1.3rem" />
+              <span className="tiptext">Merge Tabs to the LEFT</span>
+            </div>
+          </button>
+          <button
+            id="merge-right-btn"
+            className="ml-1 mr-4 py-1 px-2 btn btn-outline-warning"
+            type="button"
+            onClick={() => sendMessage({ msg: "right" })}
+          >
+            <div className="tip">
+              <BiArrowToRight
+                style={{ transform: "rotate(180deg)" }}
+                color="black"
+                size="1.3rem"
+              />
+              <span className="tiptext">Merge Tabs to the RIGHT</span>
+            </div>
+          </button>
+
+          <button
+            id="open-all-btn"
+            className="ml-4 py-1 px-2 btn btn-outline-success"
+            type="button"
+            onClick={() => openAllTabs()}
+          >
+            <div className="tip">
+              <FaTrashRestore color="green" size="1.3rem" />
+              <span className="tiptext">Open All</span>
+            </div>
+          </button>
+          <button
+            id="delete-all-btn"
+            className="ml-1 p-1 btn btn-outline-danger"
+            type="button"
+            onClick={() => deleteAllGroups()}
+          >
+            <div className="tip">
+              <MdDeleteForever color="red" size="1.7rem" />
+              <span className="tiptext">Delete All</span>
+            </div>
+          </button>
+          <button
+            id="options-btn"
+            className="mr-3 py-1 px-2 btn btn-outline-dark"
+            type="button"
+            onClick={() =>
+              window.location.replace(chrome.runtime.getURL("options.html"))
+            }
+          >
+            <div className="tip">
+              <MdSettings color="grey" size="1.6rem" />
+              <span className="tiptext">Settings</span>
+            </div>
+          </button>
+        </div>
+
+        {groups}
 
         <button
-          id="open-all-btn"
-          className="ml-4 py-1 px-2 btn btn-outline-success"
+          className="d-block mb-2 btn"
+          id="add-group-btn"
           type="button"
-          onClick={() => openAllTabs()}
+          onClick={() => addGroup()}
         >
           <div className="tip">
-            <FaTrashRestore color="green" size="1.3rem" />
-            <span className="tiptext">Open All</span>
-          </div>
-        </button>
-        <button
-          id="delete-all-btn"
-          className="ml-1 p-1 btn btn-outline-danger"
-          type="button"
-          onClick={() => deleteAllGroups()}
-        >
-          <div className="tip">
-            <MdDeleteForever color="red" size="1.7rem" />
-            <span className="tiptext">Delete All</span>
-          </div>
-        </button>
-        <button
-          id="options-btn"
-          className="mr-3 py-1 px-2 btn btn-outline-dark"
-          type="button"
-          onClick={() =>
-            window.location.replace(chrome.runtime.getURL("options.html"))
-          }
-        >
-          <div className="tip">
-            <MdSettings color="grey" size="1.6rem" />
-            <span className="tiptext">Settings</span>
+            <MdAddCircle color="grey" size="2rem" />
+            <span className="tiptext">Add Group</span>
           </div>
         </button>
       </div>
 
-      {groups}
-
-      <button
-        className="d-block mb-2 btn"
-        id="add-group-btn"
-        type="button"
-        onClick={() => addGroup()}
-      >
-        <div className="tip">
-          <MdAddCircle color="grey" size="2rem" />
-          <span className="tiptext">Add Group</span>
+      <div id="donate">
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <h4>
+            <b>Donate?</b>
+          </h4>
+          <p className="text-justify">
+            As a recent university graduate during the COVID-19 pandemic, it is
+            very difficult to find a job - especially in a field which does not
+            align with my education. After completing my degree, I realized that
+            full-stack development was for me. During the past year, I worked on
+            many different self-starter projects and decided to try out one that
+            involved chrome extensions. This was by far one of my most
+            challenging projects to date and I vow to continuously make
+            improvements to it. Any amount which you are willing/able to donate
+            would allow me to focus on creating more useful chrome extensions in
+            the future. Thank you, be safe, and have a great day!
+          </p>
+          <form
+            action="https://www.paypal.com/donate"
+            method="post"
+            target="_top"
+          >
+            <input
+              type="hidden"
+              name="hosted_button_id"
+              value="X3EYMX8CVA4SY"
+            />
+            <input
+              type="image"
+              src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+              border="0"
+              name="submit"
+              title="PayPal - The safer, easier way to pay online!"
+              alt="Donate with PayPal button"
+            />
+          </form>
         </div>
-      </button>
-    </div>
+      </div>
+
+      <div id="copyright">
+        <b>&#169; Lior Bragilevsky, 2020</b>
+      </div>
+    </>
   );
 }
