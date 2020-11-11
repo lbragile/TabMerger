@@ -147,7 +147,7 @@ export default function Group(props) {
   }
 
   return (
-    <div className="my-3">
+    <div className="mt-3">
       <div className="created float-right mr-1">
         <b>Created:</b>{" "}
         <span>

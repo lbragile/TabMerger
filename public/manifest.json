@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "TabMerger",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Merges your tabs into one location to save memory usage and increase your productivity.",
 
   "background": {

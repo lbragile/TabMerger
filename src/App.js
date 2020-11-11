@@ -114,7 +114,11 @@ export default function App() {
   }, [groups]);
 
   function sendMessage(msg) {
-    chrome.runtime.sendMessage("kdkfmpamdkkhmoomellenejnnajpfhpk", msg);
+    var extension_id = chrome.runtime
+      .getURL("index.html")
+      .replace("chrome-extension://", "")
+      .replace("/index.html", "");
+    chrome.runtime.sendMessage(extension_id, msg);
   }
 
   const addGroup = () => {
@@ -259,7 +263,7 @@ export default function App() {
           {groups}
 
           <button
-            className="d-block mb-2 btn"
+            className="d-block mt-2 btn"
             id="add-group-btn"
             type="button"
             onClick={() => addGroup()}
@@ -289,9 +293,9 @@ export default function App() {
         </form>
       </div>
 
-      <div id="copyright" className="mb-2">
+      {/* <div id="copyright" className="mb-2">
         <b>&#169; Lior Bragilevsky, 2020</b>
-      </div>
+      </div> */}
     </>
   );
 }

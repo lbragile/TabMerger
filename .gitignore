@@ -1,6 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 debug.log
+.env
+build.zip
 
 # dependencies
 /node_modules

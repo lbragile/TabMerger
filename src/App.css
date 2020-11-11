@@ -20,58 +20,8 @@
   display: inline-block;
 }
 
-.tip .tiptext {
-  visibility: hidden;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-  z-index: 1;
-  position: absolute;
-  bottom: 110%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-}
-
-.tip .tiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-}
-
-.tip .tiptext-side {
-  visibility: hidden;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-  z-index: 1;
-  position: absolute;
-  top: 60%;
-  right: 125%;
-  transform: translateY(-50%);
-  opacity: 0;
-}
-
-.tip .tiptext-side::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  transform: translateY(-50%);
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent transparent black;
-}
-
+.tip .tiptext,
+.tip .tiptext-side,
 .tip .tiptext-bottom {
   visibility: hidden;
   background-color: black;
@@ -81,21 +31,55 @@
   padding: 5px;
   z-index: 1;
   position: absolute;
+  opacity: 0;
+}
+
+.tip .tiptext::after,
+.tiptext-side::after,
+.tiptext-bottom::after {
+  content: "";
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tip .tiptext {
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tip .tiptext::after {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tip .tiptext-side {
+  top: 60%;
+  right: 125%;
+  transform: translateY(-50%);
+}
+
+.tip .tiptext-side::after {
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent black;
+}
+
+.tip .tiptext-bottom {
   top: 110%;
   left: 50%;
   transform: translateX(-50%);
-  opacity: 0;
   font-size: 1rem;
 }
 
 .tip .tiptext-bottom::after {
-  content: "";
-  position: absolute;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border-width: 5px;
-  border-style: solid;
   border-color: transparent transparent black transparent;
 }
 

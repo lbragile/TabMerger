@@ -78,6 +78,16 @@ function getTabsAndSend(info, tab) {
   });
 }
 
+function excludeSite(info, tab) {
+  var settings = JSON.parse(window.localStorage.getItem("settings")) || {};
+  if (!settings.blacklist || settings.blacklist === "") {
+    settings.blacklist += `${tab.url}`;
+  } else {
+    settings.blacklist += `, ${tab.url}`;
+  }
+  window.localStorage.setItem("settings", JSON.stringify(settings));
+}
+
 // default values
 var info = { which: "all" };
 var tab = { index: 0 };
@@ -91,6 +101,25 @@ chrome.runtime.onMessage.addListener((request) => {
   chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
     getTabsAndSend(info, tabs[0]);
   });
+});
+
+chrome.contextMenus.create({
+  title: "Open TabMerger",
+  onclick: (info, tab) => {
+    window.open(chrome.runtime.getURL("index.html"));
+  },
+});
+
+chrome.contextMenus.create({
+  type: "separator",
+});
+
+chrome.contextMenus.create({
+  title: "Merge ALL tabs in this window",
+  onclick: (info, tab) => {
+    info.which = "all";
+    getTabsAndSend(info, tab);
+  },
 });
 
 chrome.contextMenus.create({
@@ -126,9 +155,30 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-  title: "Merge ALL tabs in this window",
+  type: "separator",
+});
+
+chrome.contextMenus.create({
+  title: "Exclude site from TabMerger's visibility",
   onclick: (info, tab) => {
-    info.which = "all";
-    getTabsAndSend(info, tab);
+    excludeSite(info, tab);
+  },
+});
+
+chrome.contextMenus.create({
+  type: "separator",
+});
+
+chrome.contextMenus.create({
+  title: "Instructions",
+  onclick: (info, tab) => {
+    window.open("https://tabmerger.herokuapp.com/instructions");
+  },
+});
+
+chrome.contextMenus.create({
+  title: "Contact Us",
+  onclick: (info, tab) => {
+    window.open("https://tabmerger.herokuapp.com/contact");
   },
 });
