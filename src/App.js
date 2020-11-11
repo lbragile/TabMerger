@@ -138,6 +138,12 @@ export default function App() {
     tabs.forEach((tab) => {
       tab.querySelector("a").click();
     });
+
+    if (
+      JSON.parse(window.localStorage.getItem("settings")).restore !== "keep"
+    ) {
+      document.querySelector("#delete-all-btn").click();
+    }
   }
 
   function deleteAllGroups() {

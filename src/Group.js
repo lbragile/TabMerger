@@ -80,6 +80,15 @@ export default function Group(props) {
     [...tabs].forEach((tab) => {
       tab.querySelector("a").click();
     });
+
+    if (
+      JSON.parse(window.localStorage.getItem("settings")).restore !== "keep"
+    ) {
+      e.target
+        .closest(".group")
+        .querySelector(".float-right")
+        .lastChild.click();
+    }
   }
 
   function deleteGroup(e) {
@@ -177,7 +186,7 @@ export default function Group(props) {
       <div id={props.id} className={props.className} onDragOver={dragOver}>
         <div className="mr-2 mt-1 float-right d-flex flex-column align-items-center">
           <button
-            className="btn-no-bg mt-1 p-1 btn btn-light btn-outline-info"
+            className="mt-1 p-1 btn btn-light btn-outline-info"
             onClick={(e) => toggleGroup(e)}
           >
             <div className="tip">
@@ -192,7 +201,7 @@ export default function Group(props) {
             </div>
           </button>
           <button
-            className="btn-no-bg mt-1 p-1 btn btn-light btn-outline-success"
+            className="mt-1 p-1 btn btn-light btn-outline-success"
             onClick={(e) => openAllTabsInGroup(e)}
           >
             <div className="tip">
@@ -201,7 +210,7 @@ export default function Group(props) {
             </div>
           </button>
           <button
-            className="btn-no-bg mt-1 p-1 btn btn-light btn-outline-danger"
+            className="mt-1 p-1 btn btn-light btn-outline-danger"
             onClick={(e) => deleteGroup(e)}
           >
             <div className="tip">

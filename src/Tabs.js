@@ -103,6 +103,14 @@ export default function Tabs(props) {
     window.location.reload();
   }
 
+  function keepOrRemoveTab(e) {
+    var restore_val = JSON.parse(window.localStorage.getItem("settings"))
+      .restore;
+    if (restore_val !== "keep") {
+      removeTab(e);
+    }
+  }
+
   const dragStart = (e) => {
     var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
     target.classList.add("dragging");
@@ -194,6 +202,7 @@ export default function Tabs(props) {
               target="_blank"
               rel="noreferrer"
               draggable={false}
+              onClick={(e) => keepOrRemoveTab(e)}
             >
               {tab.title.length > tab_title_length.current
                 ? tab.title.substring(0, tab_title_length.current) + "..."

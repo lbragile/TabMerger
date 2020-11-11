@@ -72,13 +72,15 @@
               >You can still manually delete:
               <ul class="mx-4">
                 <li>
-                  tab &rightarrow; <i>x</i> button beside them (on the left)
+                  tab &rightarrow;
+                  <span style="color: red">&Cross;</span> button beside them (on
+                  the left)
                 </li>
                 <li>
-                  group &rightarrow; <i>delete group</i> button (inside the
+                  group &rightarrow; <i>Delete Group</i> button (inside the
                   group)
                 </li>
-                <li>everything &rightarrow; global <i>delete all</i> button</li>
+                <li>everything &rightarrow; global <i>Delete All</i> button</li>
               </ul>
             </small>
           </div>
@@ -91,13 +93,17 @@
             value="remove"
             name="restore-tabs"
           />
-          <label for="remove" class="mb-0"
-            >Open and remove corresponding tab(s) from TabMerger</label
-          >
+          <label for="remove" class="mb-0">Remove from TabMerger</label>
           <div class="ml-3">
             <small
-              >Opening a tab will remove that tab from the TabMerger page, the
-              same goes for opening a group and opening everything.</small
+              >Opening a tab (<i>Click</i> on it) will remove that tab from
+              TabMerger's page, the same goes for opening tabs in a group (<i
+                >Open Group</i
+              >
+              button) and opening all tabs (<i>Open All</i> button).<br />
+              <b>Note:</b> in the <b>Open Group</b> case, the corresponding
+              (<b>ONE</b>) group will be removed. Likewise, in the
+              <b>Open All</b> case, <b>ALL</b> groups will be removed.</small
             >
           </div>
         </div>
@@ -109,9 +115,10 @@
           <div>
             <small
               >Please enter the <i>full</i> website address of any website which
-              you would like to not merge. <br />These must begin with "http://"
-              or "https://" You may enter multiple comma seperated
-              values.</small
+              you would like to not merge. <br />These <b>must</b> begin with
+              "http://" or "https://" - we recommend <i>copying</i> the link of
+              the tab and <i>pasting</i> it here. <br />You may enter multiple
+              comma seperated values.</small
             >
           </div>
           <textarea

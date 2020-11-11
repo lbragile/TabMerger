@@ -42,6 +42,24 @@ function getTabsAndSend(info, tab) {
       active: true,
     });
 
+    // apply blacklist items
+    tabs = tabs.filter((item) => {
+      var blacklist = JSON.parse(window.localStorage.getItem("settings"))
+        .blacklist.replace(" ", "")
+        .split(",");
+
+      blacklist.map((item) => item.toLowerCase());
+
+      var matched = false;
+      blacklist.forEach((blacklist_url) => {
+        if (item.url === blacklist_url) {
+          matched = true;
+        }
+      });
+
+      return !matched;
+    });
+
     tabs.forEach((item) => {
       if (!item.url.includes("chrome-extension")) {
         chrome.tabs.remove(item.id);
