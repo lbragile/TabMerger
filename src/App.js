@@ -204,6 +204,24 @@ export default function App() {
     }
   }
 
+  function copyLinkOnFocus(e) {
+    var text = selectElementContents(e.target);
+    document.execCommand("copy");
+    alert(
+      `Copied: ${text} to your clipboard, you can now share it with anyone.`
+    );
+  }
+
+  // https://stackoverflow.com/questions/6139107/programmatically-select-text-in-a-contenteditable-html-element
+  function selectElementContents(el) {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    return sel;
+  }
+
   return (
     <>
       <div className="container">
@@ -294,7 +312,14 @@ export default function App() {
                 <span className="tiptext">Share All</span>
               </div>
             </button>
-            <div className="ml-1" id="short-url" contentEditable></div>
+            <div
+              className="ml-1 py-1 px-2"
+              id="short-url"
+              contentEditable
+              onClick={(e) => {
+                copyLinkOnFocus(e);
+              }}
+            ></div>
           </div>
           <button
             id="options-btn"
