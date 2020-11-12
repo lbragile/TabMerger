@@ -208,7 +208,7 @@ export default function App() {
     var text = selectElementContents(e.target);
     document.execCommand("copy");
     alert(
-      `Copied: ${text} to your clipboard, you can now share it with anyone.`
+      `We copied the following link to your clipboard:\n\n${text}\n\nYou can now share it with anyone.`
     );
   }
 
