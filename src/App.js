@@ -13,6 +13,10 @@ import {
 } from "react-icons/md";
 import { FaTrashRestore } from "react-icons/fa";
 import { BiArrowToRight } from "react-icons/bi";
+import { FiShare } from "react-icons/fi";
+
+import { nanoid } from "nanoid";
+import axios from "axios";
 
 export default function App() {
   const defaultColor = useRef(
@@ -113,6 +117,19 @@ export default function App() {
     }
   }, [groups]);
 
+  useEffect(() => {
+    // for shared links
+    const query = window.location.search;
+    const urlParams = new URLSearchParams(query);
+    if (
+      urlParams &&
+      window.location.href !== chrome.runtime.getURL("index.html")
+    ) {
+      window.localStorage.setItem("groups", urlParams.get("ls"));
+      window.location.replace(chrome.runtime.getURL("index.html"));
+    }
+  }, []);
+
   function sendMessage(msg) {
     var extension_id = chrome.runtime
       .getURL("index.html")
@@ -164,6 +181,27 @@ export default function App() {
     );
 
     window.location.reload();
+  }
+
+  async function shareAllGroups(e) {
+    var group_blocks = window.localStorage.getItem("groups");
+    var unique_id = nanoid(15);
+    var response = await axios.post(
+      "https://tabmerger.herokuapp.com/shortenURL/",
+      {
+        groups: group_blocks.toString(),
+        id: unique_id,
+      }
+    );
+    if (response.data.success) {
+      e.target
+        .closest("button")
+        .nextSibling.append(
+          "https://tabmerger.herokuapp.com/sharedURL/" + unique_id
+        );
+    } else {
+      alert("Failed to generate shareable link. Please try again");
+    }
   }
 
   return (
@@ -221,7 +259,6 @@ export default function App() {
               <span className="tiptext">Merge RIGHT Tabs</span>
             </div>
           </button>
-
           <button
             id="open-all-btn"
             className="ml-4 py-1 px-2 btn btn-outline-success"
@@ -235,7 +272,7 @@ export default function App() {
           </button>
           <button
             id="delete-all-btn"
-            className="ml-1 p-1 btn btn-outline-danger"
+            className="ml-1 mr-4 p-1 btn btn-outline-danger"
             type="button"
             onClick={() => deleteAllGroups()}
           >
@@ -244,6 +281,21 @@ export default function App() {
               <span className="tiptext">Delete All</span>
             </div>
           </button>
+
+          <div className="d-flex flex-row align-items-center">
+            <button
+              id="share-all-btn"
+              className="ml-4 p-1 btn btn-outline-info"
+              type="button"
+              onClick={(e) => shareAllGroups(e)}
+            >
+              <div className="tip">
+                <FiShare color="darkcyan" size="1.4rem" />
+                <span className="tiptext">Share All</span>
+              </div>
+            </button>
+            <div className="ml-1" id="short-url" contentEditable></div>
+          </div>
           <button
             id="options-btn"
             className="mr-3 py-1 px-2 btn btn-outline-dark"
