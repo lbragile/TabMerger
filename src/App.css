@@ -128,10 +128,7 @@ input[type="image"] {
   transform: translateX(-50%);
 }
 
-#logo-text {
-  color: rgb(255, 198, 93);
-}
-
-#logo-img {
+/* #logo-img {
+  transform: scale(0.3);
   border-radius: 5px;
-}
+} */

@@ -225,16 +225,19 @@ export default function App() {
   return (
     <>
       <div className="container">
-        <div className="d-flex flex-row align-items-center">
-          <img id="logo-img" src="./images/logo48.png" alt="TabMerger Logo" />
-          <h1 id="logo-text" className="px-1 pt-1">
-            TabMerger
-          </h1>
+        <div>
+          <img
+            id="logo-img"
+            className="mt-2"
+            src="./images/logo-full-rescale.PNG"
+            alt="TabMerger Logo"
+          />
+          <h2 id="tab-total">
+            <span className="small">{tabTotal} tabs in total</span>
+          </h2>
+          <hr />
         </div>
-        <h2 id="tab-total">
-          <span className="small">{tabTotal} tabs in total</span>
-        </h2>
-        <hr />
+
         <div className="row">
           <button
             id="merge-btn"
