@@ -374,9 +374,9 @@ export default function App() {
         </form>
       </div>
 
-      {/* <div id="copyright" className="mb-2">
-        <b>&#169; Lior Bragilevsky, 2020</b>
-      </div> */}
+      <div id="copyright" className="mb-2">
+        <a href="https://tabmerger.herokuapp.com/">Need help?</a>
+      </div>
     </>
   );
 }

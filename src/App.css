@@ -124,7 +124,7 @@ input[type="image"] {
 #copyright {
   position: fixed;
   bottom: 0%;
-  left: calc(25% + 20px);
+  left: 25%;
   transform: translateX(-50%);
 }
 
