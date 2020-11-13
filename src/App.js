@@ -368,6 +368,7 @@ export default function App() {
             src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
             border="0"
             name="submit"
+            title="PayPal - The safer, easier way to pay online!"
             alt="Donate with PayPal button"
           />
         </form>
