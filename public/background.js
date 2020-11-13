@@ -23,11 +23,7 @@ function getTabsAndSend(info, tab) {
     }
 
     if (info.which === "right") {
-      for (var i in tabs) {
-        if (i > tab.index) {
-          tabs.splice(0, i);
-        }
-      }
+      tabs = tabs.filter((item) => item.index > tab.index);
     } else if (info.which === "left") {
       tabs.splice(tab.index);
     } else if (info.which === "excluding") {
