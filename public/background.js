@@ -100,81 +100,98 @@ chrome.runtime.onMessage.addListener((request) => {
 });
 
 chrome.contextMenus.create({
+  id: "open-tabmerger",
   title: "Open TabMerger",
-  onclick: (info, tab) => {
-    window.open(chrome.runtime.getURL("index.html"));
-  },
 });
 
 chrome.contextMenus.create({
+  id: "first-separator",
   type: "separator",
 });
 
 chrome.contextMenus.create({
+  id: "merge-all-menu",
   title: "Merge ALL tabs in this window",
-  onclick: (info, tab) => {
-    info.which = "all";
-    getTabsAndSend(info, tab);
-  },
 });
 
 chrome.contextMenus.create({
+  id: "merge-left-menu",
   title: "Merge tabs to LEFT of current tab in this window",
-  onclick: (info, tab) => {
-    info.which = "left";
-    getTabsAndSend(info, tab);
-  },
 });
 
 chrome.contextMenus.create({
+  id: "merge-right-menu",
   title: "Merge tabs to RIGHT of current tab in this window",
-  onclick: (info, tab) => {
-    info.which = "right";
-    getTabsAndSend(info, tab);
-  },
 });
 
 chrome.contextMenus.create({
+  id: "merge-excluding-menu",
   title: "Merge tabs EXCLUDING current tab in this window",
-  onclick: (info, tab) => {
-    info.which = "excluding";
-    getTabsAndSend(info, tab);
-  },
 });
 
 chrome.contextMenus.create({
+  id: "merge-only-menu",
   title: "Merge ONLY current tab in this window",
-  onclick: (info, tab) => {
-    info.which = "only";
-    getTabsAndSend(info, tab);
-  },
 });
 
 chrome.contextMenus.create({
+  id: "second-separator",
   type: "separator",
 });
 
 chrome.contextMenus.create({
+  id: "exclude-settings-menu",
   title: "Exclude site from TabMerger's visibility",
-  onclick: (info, tab) => {
-    excludeSite(info, tab);
-  },
 });
 
 chrome.contextMenus.create({
+  id: "third-separator",
   type: "separator",
 });
 
 chrome.contextMenus.create({
+  id: "dl-instructions",
   title: "Instructions",
-  onclick: (info, tab) => {
-    window.open("https://tabmerger.herokuapp.com/instructions");
-  },
 });
 
 chrome.contextMenus.create({
+  id: "dl-contact",
   title: "Contact Us",
-  onclick: (info, tab) => {
-    window.open("https://tabmerger.herokuapp.com/contact");
-  },
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  switch (info.menuItemId) {
+    case "open-tabmerger":
+      window.open(chrome.runtime.getURL("index.html"));
+      break;
+    case "merge-left-menu":
+      info.which = "left";
+      getTabsAndSend(info, tab);
+      break;
+    case "merge-right-menu":
+      info.which = "right";
+      getTabsAndSend(info, tab);
+      break;
+    case "merge-excluding-menu":
+      info.which = "excluding";
+      getTabsAndSend(info, tab);
+      break;
+    case "merge-only-menu":
+      info.which = "only";
+      getTabsAndSend(info, tab);
+      break;
+    case "exclude-settings-menu":
+      excludeSite(info, tab);
+      break;
+    case "dl-instructions":
+      window.open("https://tabmerger.herokuapp.com/instructions");
+      break;
+    case "dl-contact":
+      window.open("https://tabmerger.herokuapp.com/contact");
+      break;
+
+    default:
+      getTabsAndSend(info, tab);
+      break;
+  }
 });
