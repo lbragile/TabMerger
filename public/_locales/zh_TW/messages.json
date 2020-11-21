@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "扩展程序的标题，如Web Store中所示。"
+  },
+  "appDesc": {
+    "message": "将选项卡合并到一个位置，以节省内存使用量并提高生产率。",
+    "description": "扩展的描述，如Web Store中所示。"
+  }
+}

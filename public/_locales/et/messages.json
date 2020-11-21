@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Laienduse pealkiri, nagu see kuvatakse 'i veebipoes."
+  },
+  "appDesc": {
+    "message": "Mälukasutuse säästmiseks ja tootlikkuse suurendamiseks ühendatakse vahelehed ühte asukohta.",
+    "description": "Laienduse kirjeldus, nagu see kuvatakse 'i veebipoes."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "웹 스토어에 표시되는 확장의 제목입니다."
+  },
+  "appDesc": {
+    "message": "탭을 한 위치에 병합하여 메모리 사용량을 절약하고 생산성을 높입니다.",
+    "description": "웹 스토어에 표시되는 확장에 대한 설명입니다."
+  }
+}

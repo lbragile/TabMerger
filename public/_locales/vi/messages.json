@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Tiêu đề của tiện ích mở rộng, như được hiển thị trong Cửa hàng trực tuyến."
+  },
+  "appDesc": {
+    "message": "Hợp nhất các tab của bạn vào một vị trí để tiết kiệm bộ nhớ sử dụng và tăng năng suất của bạn.",
+    "description": "Mô tả của tiện ích mở rộng, như được hiển thị trong Cửa hàng trực tuyến."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Il titolo dell'estensione, come visualizzato nel  Web Store."
+  },
+  "appDesc": {
+    "message": "Unisce le schede in un'unica posizione per risparmiare l'utilizzo della memoria e aumentare la produttività.",
+    "description": "La descrizione dell'estensione, come visualizzata nel  Web Store."
+  }
+}

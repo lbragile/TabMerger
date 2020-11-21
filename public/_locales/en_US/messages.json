@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "The title of the extension, as displayed in the Chrome Web Store."
+  },
+  "appDesc": {
+    "message": "Merges your tabs into one location to save memory usage and increase your productivity.",
+    "description": "The description of the extension, as displayed in the Chrome Web Store."
+  }
+}

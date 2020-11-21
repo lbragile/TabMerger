@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Web Mağazası'nda görüntülendiği şekliyle uzantının başlığı."
+  },
+  "appDesc": {
+    "message": "Bellek kullanımından tasarruf etmek ve üretkenliğinizi artırmak için sekmelerinizi tek bir konumda birleştirir.",
+    "description": "Web Mağazası'nda görüntülendiği şekliyle uzantının açıklaması."
+  }
+}

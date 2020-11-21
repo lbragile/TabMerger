@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "El títol de l'extensió, tal com es mostra a  Web Store."
+  },
+  "appDesc": {
+    "message": "Combina les pestanyes en una ubicació per estalviar ús de memòria i augmentar la productivitat.",
+    "description": "La descripció de l'extensió, tal com es mostra a  Web Store."
+  }
+}

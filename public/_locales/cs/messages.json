@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Název rozšíření zobrazený v Internetovém obchodě ."
+  },
+  "appDesc": {
+    "message": "Sloučí vaše karty na jedno místo, aby šetřilo využití paměti a zvýšilo vaši produktivitu.",
+    "description": "Popis rozšíření, jak je zobrazen v Internetovém obchodě ."
+  }
+}

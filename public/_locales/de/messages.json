@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Der Titel der Erweiterung, wie er im  Web Store angezeigt wird."
+  },
+  "appDesc": {
+    "message": "Fügt Ihre Registerkarten an einem Ort zusammen, um Speicherplatz zu sparen und Ihre Produktivität zu steigern.",
+    "description": "Die Beschreibung der Erweiterung, wie sie im  Web Store angezeigt wird."
+  }
+}

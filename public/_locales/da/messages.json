@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Titlen på udvidelsen, som vist i  Webshop."
+  },
+  "appDesc": {
+    "message": "Fletter dine faner på ét sted for at spare hukommelsesforbrug og øge din produktivitet.",
+    "description": "Beskrivelsen af ​​udvidelsen som vist i  Webshop."
+  }
+}

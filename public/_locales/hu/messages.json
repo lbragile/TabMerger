@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "A kiterjesztés címe, a  Internetes áruházban megjelenítve."
+  },
+  "appDesc": {
+    "message": "A lapokat egy helyre egyesíti a memóriafelhasználás és a termelékenység növelése érdekében.",
+    "description": "A bővítmény leírása a  Internetes áruházban megjelenítve."
+  }
+}

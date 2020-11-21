@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "O título da extensão, conforme exibido na Web Store."
+  },
+  "appDesc": {
+    "message": "Mescla suas guias em um local para economizar o uso de memória e aumentar sua produtividade.",
+    "description": "A descrição da extensão, conforme exibida na Web Store."
+  }
+}

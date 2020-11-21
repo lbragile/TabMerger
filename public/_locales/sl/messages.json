@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Naslov razširitve, kot je prikazan v spletni trgovini."
+  },
+  "appDesc": {
+    "message": "Združi zavihke na enem mestu, da prihrani porabo pomnilnika in poveča produktivnost.",
+    "description": "Opis razširitve, kot je prikazan v spletni trgovini."
+  }
+}

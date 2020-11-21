@@ -1,8 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "TabMerger",
-  "version": "1.0.0",
-  "description": "Merges your tabs into one location to save memory usage and increase your productivity.",
+  "version": "1.0.1",
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
 
   "background": {
     "scripts": ["background.js"],

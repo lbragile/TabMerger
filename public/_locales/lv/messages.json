@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Paplašinājuma nosaukums, kas parādīts interneta veikalā."
+  },
+  "appDesc": {
+    "message": "Apvienojot cilnes vienā vietā, lai ietaupītu atmiņas patēriņu un palielinātu produktivitāti.",
+    "description": "Paplašinājuma apraksts, kas parādīts interneta veikalā."
+  }
+}

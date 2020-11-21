@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Ang pamagat ng extension, tulad ng ipinakita sa  Web Store."
+  },
+  "appDesc": {
+    "message": "Pinagsama ang iyong mga tab sa isang lokasyon upang i-save ang paggamit ng memorya at madagdagan ang iyong pagiging produktibo.",
+    "description": "Ang paglalarawan ng extension, tulad ng ipinakita sa  Web Store."
+  }
+}

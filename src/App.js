@@ -14,6 +14,7 @@ import {
 import { FaTrashRestore } from "react-icons/fa";
 import { BiArrowToRight } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
+import { RiStarSFill } from "react-icons/ri";
 
 import { nanoid } from "nanoid";
 import axios from "axios";
@@ -224,14 +225,16 @@ export default function App() {
 
   return (
     <>
-      <div className="container">
+      <div className="container" id="tabmerger-container">
         <div>
-          <img
-            id="logo-img"
-            className="mt-2"
-            src="./images/logo-full-rescale.PNG"
-            alt="TabMerger Logo"
-          />
+          <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc">
+            <img
+              id="logo-img"
+              className="mt-2"
+              src="./images/logo-full-rescale.PNG"
+              alt="TabMerger Logo"
+            />
+          </a>
           <h2 id="tab-total">
             <span className="small">{tabTotal} tabs in total</span>
           </h2>
@@ -356,26 +359,66 @@ export default function App() {
         </div>
       </div>
 
-      <div id="donate" className="mb-2">
-        <form
-          action="https://www.paypal.com/donate"
-          method="post"
-          target="_top"
-        >
-          <input type="hidden" name="hosted_button_id" value="X3EYMX8CVA4SY" />
-          <input
-            type="image"
-            src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
-            border="0"
-            name="submit"
-            title="PayPal - The safer, easier way to pay online!"
-            alt="Donate with PayPal button"
-          />
-        </form>
-      </div>
+      <div class="d-flex flex-column align-items-center" id="side-panel">
+        <h4>
+          <b>Quick Demo</b>
+        </h4>
+        <iframe
+          frameBorder="0"
+          width="535"
+          height="300"
+          src="https://www.youtube.com/embed/cXG1lIx7WP4?autoplay=1&mute=1&loop=1&controls=1&vq=hd1080&playlist=cXG1lIx7WP4"
+          allowFullScreen
+          id="video-demo"
+        ></iframe>
 
-      <div id="copyright" className="mb-2">
-        <a href="https://tabmerger.herokuapp.com/">Need help?</a>
+        <div id="donate" className="my-3">
+          <h4 className="mb-3 text-center">
+            <b>Support Us</b>
+          </h4>
+          <form
+            action="https://www.paypal.com/donate"
+            method="post"
+            target="_top"
+          >
+            <input
+              type="hidden"
+              name="hosted_button_id"
+              value="X3EYMX8CVA4SY"
+            />
+            <input
+              type="image"
+              src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+              border="0"
+              name="submit"
+              title="PayPal - The safer, easier way to pay online!"
+              alt="Donate with PayPal button"
+            />
+          </form>
+        </div>
+
+        <div id="donate" className="mb-3">
+          <h4 className="mb-1 text-center">
+            <b>Leave A Review</b>
+          </h4>
+          <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews">
+            <div className="row mx-0 px-1">
+              <RiStarSFill color="goldenrod" size="2rem" />
+              <RiStarSFill color="goldenrod" size="2rem" />
+              <RiStarSFill color="goldenrod" size="2rem" />
+              <RiStarSFill color="goldenrod" size="2rem" />
+              <RiStarSFill color="goldenrod" size="2rem" />
+            </div>
+          </a>
+        </div>
+
+        <a
+          href="https://tabmerger.herokuapp.com/"
+          className="btn btn-info font-weight-bold mb-3"
+          id="need-help"
+        >
+          Need help?
+        </a>
       </div>
     </>
   );

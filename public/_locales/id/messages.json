@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "TabMerger",
+    "description": "Judul ekstensi, seperti yang ditampilkan di Toko Web ."
+  },
+  "appDesc": {
+    "message": "Gabungkan tab Anda menjadi satu lokasi untuk menghemat penggunaan memori dan meningkatkan produktivitas Anda.",
+    "description": "Deskripsi ekstensi, seperti yang ditampilkan di Toko Web ."
+  }
+}
