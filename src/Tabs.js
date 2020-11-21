@@ -162,7 +162,10 @@ export default function Tabs(props) {
     <div className="d-flex flex-column mx-0 my-2">
       <h4 className="tabTotal-inGroup mb-3">
         <small>
-          {tabs.length} {tabs.length === 1 ? "tab" : "tabs"} in group{" "}
+          {tabs.length}{" "}
+          {tabs.length === 1
+            ? chrome.i18n.getMessage("groupTotalSingular")
+            : chrome.i18n.getMessage("groupTotalPlural")}{" "}
           {!tabTotal
             ? null
             : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}

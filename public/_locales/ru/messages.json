@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Объединяет ваши вкладки в одно место для экономии памяти и повышения производительности.",
     "description": "Описание расширения, отображаемое в Интернет-магазине."
+  },
+  "addGroup": {
+    "message": "Добавить группу"
+  },
+  "bgAll": {
+    "message": "Объединить ВСЕ вкладки в этом окне"
+  },
+  "bgContact": {
+    "message": "инструкции"
+  },
+  "bgExclude": {
+    "message": "Объединить вкладки"
+  },
+  "bgInstructions": {
+    "message": "Исключить сайт из видимости TabMerger"
+  },
+  "bgLeft": {
+    "message": "Объединить вкладки слева от текущей вкладки в этом окне"
+  },
+  "bgOnly": {
+    "message": " ЗА ИСКЛЮЧЕНИЕМ текущей вкладки в этом окне"
+  },
+  "bgOpen": {
+    "message": "Откройте TabMerger"
+  },
+  "bgRight": {
+    "message": "Объединить вкладки СПРАВА от текущей вкладки в этом окне"
+  },
+  "bgSiteExclude": {
+    "message": "Объединить ТОЛЬКО текущую вкладку в этом окне"
+  },
+  "created": {
+    "message": "Создано"
+  },
+  "deleteAll": {
+    "message": "Удалить все"
+  },
+  "deleteGroup": {
+    "message": "Удалить группу"
+  },
+  "editTitle": {
+    "message": "Изменить заголовок группы"
+  },
+  "groupTotalPlural": {
+    "message": "вкладки в группе"
+  },
+  "groupTotalSingular": {
+    "message": "вкладка в группе"
+  },
+  "hideTabs": {
+    "message": "Скрыть вкладки"
+  },
+  "leaveReview": {
+    "message": "Оставить отзыв"
+  },
+  "mergeALLtabs": {
+    "message": "Объединить ВСЕ вкладки"
+  },
+  "mergeLEFTtabs": {
+    "message": "Объединить левые вкладки"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Объединить ПРАВЫЕ вкладки"
+  },
+  "needHelp": {
+    "message": "Нужна помощь?"
+  },
+  "openAll": {
+    "message": "Открыть все"
+  },
+  "openGroup": {
+    "message": "Открытая группа"
+  },
+  "pageTotalPlural": {
+    "message": "вкладки всего"
+  },
+  "pageTotalSingular": {
+    "message": "вкладка в целом"
+  },
+  "pickColor": {
+    "message": "Выбрать цвет группы"
+  },
+  "quickDemo": {
+    "message": "Быстрая демонстрация"
+  },
+  "settings": {
+    "message": "Настройки"
+  },
+  "shareAll": {
+    "message": "Поделиться всем"
+  },
+  "showTabs": {
+    "message": "Показать вкладки"
+  },
+  "supportUs": {
+    "message": "Поддерживать нас"
+  },
+  "title": {
+    "message": "заглавие"
   }
 }

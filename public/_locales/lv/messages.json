@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Apvienojot cilnes vienā vietā, lai ietaupītu atmiņas patēriņu un palielinātu produktivitāti.",
     "description": "Paplašinājuma apraksts, kas parādīts interneta veikalā."
+  },
+  "addGroup": {
+    "message": "Pievienot grupu"
+  },
+  "bgAll": {
+    "message": "Apvienot VISAS cilnes šajā logā"
+  },
+  "bgContact": {
+    "message": "Instrukcijas"
+  },
+  "bgExclude": {
+    "message": "Apvienot cilnes"
+  },
+  "bgInstructions": {
+    "message": "Izslēdziet vietni no TabMerger redzamības"
+  },
+  "bgLeft": {
+    "message": "Šajā logā apvienot cilnes ar pašreizējās cilnes KREISO"
+  },
+  "bgOnly": {
+    "message": " IZŅEMOT pašreizējo cilni šajā logā"
+  },
+  "bgOpen": {
+    "message": "Atveriet cilni TabMerger"
+  },
+  "bgRight": {
+    "message": "Šajā logā apvienot cilnes ar RIGHT pašreizējo cilni"
+  },
+  "bgSiteExclude": {
+    "message": "Šajā logā apvienot TIKAI pašreizējo cilni"
+  },
+  "created": {
+    "message": "Izveidots"
+  },
+  "deleteAll": {
+    "message": "Dzēst visus"
+  },
+  "deleteGroup": {
+    "message": "Dzēst grupu"
+  },
+  "editTitle": {
+    "message": "Rediģēt grupas nosaukumu"
+  },
+  "groupTotalPlural": {
+    "message": "cilnes grupā"
+  },
+  "groupTotalSingular": {
+    "message": "cilne grupā"
+  },
+  "hideTabs": {
+    "message": "Slēpt cilnes"
+  },
+  "leaveReview": {
+    "message": "Atstājiet pārskatu"
+  },
+  "mergeALLtabs": {
+    "message": "Apvienot VISAS cilnes"
+  },
+  "mergeLEFTtabs": {
+    "message": "Apvienot kreisās cilnes"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Apvienot labās cilnes"
+  },
+  "needHelp": {
+    "message": "Vajadzīga palīdzība?"
+  },
+  "openAll": {
+    "message": "Atvērt visu"
+  },
+  "openGroup": {
+    "message": "Atvērt grupu"
+  },
+  "pageTotalPlural": {
+    "message": "cilnes kopā"
+  },
+  "pageTotalSingular": {
+    "message": "cilne kopā"
+  },
+  "pickColor": {
+    "message": "Izvēlieties grupas krāsu"
+  },
+  "quickDemo": {
+    "message": "Ātrā demonstrācija"
+  },
+  "settings": {
+    "message": "Iestatījumi"
+  },
+  "shareAll": {
+    "message": "Kopīgot visu"
+  },
+  "showTabs": {
+    "message": "Rādīt cilnes"
+  },
+  "supportUs": {
+    "message": "Atbalsti mūs"
+  },
+  "title": {
+    "message": "Nosaukums"
   }
 }

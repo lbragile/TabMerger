@@ -114,19 +114,6 @@ input[type="image"] {
   transform: scale(1.1);
 }
 
-#side-panel {
-  position: fixed;
-  top: 50%;
-  right: 25px;
-  transform: translateY(-50%);
-}
-
-#tabmerger-container {
-  position: absolute;
-  left: 25px;
-  top: 10px;
-}
-
 #video-demo {
   zoom: 1.25;
   background-color: none;
@@ -140,3 +127,14 @@ input[type="image"] {
 #need-help:hover {
   background: #17a2b8 !important;
 }
+
+/* #tabmerger-container {
+  position: absolute;
+  left: 15px;
+  top: 10px;
+} */
+
+/* #side-panel {
+  position: relative;
+  right: 50px;
+} */

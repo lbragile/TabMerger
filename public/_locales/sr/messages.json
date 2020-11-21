@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Спаја картице на једном месту ради уштеде меморије и повећања продуктивности.",
     "description": "Опис додатка, приказан у веб продавници."
+  },
+  "addGroup": {
+    "message": "Додај групу"
+  },
+  "bgAll": {
+    "message": "Споји СВЕ картице у овом прозору"
+  },
+  "bgContact": {
+    "message": "Контактирајте нас"
+  },
+  "bgExclude": {
+    "message": "Спајање картица ОСИМ ИСКЉУЧИВА тренутне картице у овом прозору"
+  },
+  "bgInstructions": {
+    "message": "Упутства"
+  },
+  "bgLeft": {
+    "message": "Споји картице у ЛЕВО тренутне картице у овом прозору"
+  },
+  "bgOnly": {
+    "message": "Споји САМО тренутну картицу у овом прозору"
+  },
+  "bgOpen": {
+    "message": "Отворите ТабМергер"
+  },
+  "bgRight": {
+    "message": "Обједините картице у ДЕСНО са тренутном картицом у овом прозору"
+  },
+  "bgSiteExclude": {
+    "message": "Изузмите локацију из видљивости ТабМергера"
+  },
+  "created": {
+    "message": "Створено"
+  },
+  "deleteAll": {
+    "message": "Делете Алл"
+  },
+  "deleteGroup": {
+    "message": "Избриши групу"
+  },
+  "editTitle": {
+    "message": "Измените наслов групе"
+  },
+  "groupTotalPlural": {
+    "message": "картице у групи"
+  },
+  "groupTotalSingular": {
+    "message": "таб у групи"
+  },
+  "hideTabs": {
+    "message": "Сакриј картице"
+  },
+  "leaveReview": {
+    "message": "Оставите преглед"
+  },
+  "mergeALLtabs": {
+    "message": "Споји СВЕ картице"
+  },
+  "mergeLEFTtabs": {
+    "message": "Споји ЛЕВЕ картице"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Споји ДЕСНЕ картице"
+  },
+  "needHelp": {
+    "message": "Потребна помоћ?"
+  },
+  "openAll": {
+    "message": "Отвори све"
+  },
+  "openGroup": {
+    "message": "Отвори групу"
+  },
+  "pageTotalPlural": {
+    "message": "укупно картице"
+  },
+  "pageTotalSingular": {
+    "message": "табулатор укупно"
+  },
+  "pickColor": {
+    "message": "Изаберите групну боју"
+  },
+  "quickDemo": {
+    "message": "Куицк Демо"
+  },
+  "settings": {
+    "message": "Подешавања"
+  },
+  "shareAll": {
+    "message": "Схаре Алл"
+  },
+  "showTabs": {
+    "message": "Прикажи картице"
+  },
+  "supportUs": {
+    "message": "Подржи нас"
+  },
+  "title": {
+    "message": "Наслов"
   }
 }

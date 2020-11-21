@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Łączy Twoje karty w jedną lokalizację, aby zaoszczędzić zużycie pamięci i zwiększyć produktywność.",
     "description": "Opis rozszerzenia wyświetlany w sklepie internetowym."
+  },
+  "addGroup": {
+    "message": "Dodaj grupę"
+  },
+  "bgAll": {
+    "message": "Scal WSZYSTKIE karty w tym oknie"
+  },
+  "bgContact": {
+    "message": "Skontaktuj się z nami"
+  },
+  "bgExclude": {
+    "message": "Scal karty Z WYŁĄCZENIEM bieżącej karty w tym oknie"
+  },
+  "bgInstructions": {
+    "message": "Instrukcje"
+  },
+  "bgLeft": {
+    "message": "Scal karty w LEWĄ stronę bieżącej karty w tym oknie"
+  },
+  "bgOnly": {
+    "message": "Scal TYLKO bieżącą kartę w tym oknie"
+  },
+  "bgOpen": {
+    "message": "Otwórz TabMerger"
+  },
+  "bgRight": {
+    "message": "Scal karty z prawej strony bieżącej karty w tym oknie"
+  },
+  "bgSiteExclude": {
+    "message": "Wyklucz witrynę z widoczności TabMerger"
+  },
+  "created": {
+    "message": "Utworzony"
+  },
+  "deleteAll": {
+    "message": "Usuń wszystko"
+  },
+  "deleteGroup": {
+    "message": "Usuń grupę"
+  },
+  "editTitle": {
+    "message": "Edytuj tytuł grupy"
+  },
+  "groupTotalPlural": {
+    "message": "karty w grupie"
+  },
+  "groupTotalSingular": {
+    "message": "karta w grupie"
+  },
+  "hideTabs": {
+    "message": "Ukryj karty"
+  },
+  "leaveReview": {
+    "message": "Zostaw recenzję"
+  },
+  "mergeALLtabs": {
+    "message": "Scal WSZYSTKIE karty"
+  },
+  "mergeLEFTtabs": {
+    "message": "Scal lewe karty"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Scal PRAWE karty"
+  },
+  "needHelp": {
+    "message": "Potrzebuję pomocy?"
+  },
+  "openAll": {
+    "message": "Otwórz wszystko"
+  },
+  "openGroup": {
+    "message": "Otwórz grupę"
+  },
+  "pageTotalPlural": {
+    "message": "łącznie"
+  },
+  "pageTotalSingular": {
+    "message": "w sumie"
+  },
+  "pickColor": {
+    "message": "Wybierz kolor grupy"
+  },
+  "quickDemo": {
+    "message": "Szybkie demo"
+  },
+  "settings": {
+    "message": "Ustawienia"
+  },
+  "shareAll": {
+    "message": "Udostępnij wszystko"
+  },
+  "showTabs": {
+    "message": "Pokaż karty"
+  },
+  "supportUs": {
+    "message": "Wesprzyj nas"
+  },
+  "title": {
+    "message": "Tytuł"
   }
 }

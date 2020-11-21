@@ -25,9 +25,7 @@ function restoreOptions() {
     document.getElementById("options-default-color").value = settings.color;
     document.getElementById("options-default-title").value = settings.title;
     document.querySelectorAll("input[name='restore-tabs']").forEach((item) => {
-      if (item.value === settings.restore) {
-        item.checked = true;
-      }
+      item.checked = item.value === settings.restore;
     });
     document.getElementById("options-blacklist").value = settings.blacklist;
   }

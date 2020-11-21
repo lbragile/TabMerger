@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "برای صرفه جویی در مصرف حافظه و افزایش بهره وری ، برگه های خود را در یک مکان ادغام می کنید.",
     "description": "شرح برنامه افزودنی ، همانطور که در فروشگاه وب  نشان داده شده است."
+  },
+  "addGroup": {
+    "message": "افزودن گروه"
+  },
+  "bgAll": {
+    "message": "همه برگه ها را در این پنجره ادغام کنید"
+  },
+  "bgContact": {
+    "message": "با ما تماس بگیرید"
+  },
+  "bgExclude": {
+    "message": "برگه ها را ادغام کنید به استثنای برگه فعلی در این پنجره"
+  },
+  "bgInstructions": {
+    "message": "دستورالعمل ها"
+  },
+  "bgLeft": {
+    "message": "برگه ها را به چپ برگه فعلی در این پنجره ادغام کنید"
+  },
+  "bgOnly": {
+    "message": "فقط زبانه فعلی را در این پنجره ادغام کنید"
+  },
+  "bgOpen": {
+    "message": "TabMerger را باز کنید"
+  },
+  "bgRight": {
+    "message": "برگه ها را به RIGHT برگه فعلی در این پنجره ادغام کنید"
+  },
+  "bgSiteExclude": {
+    "message": "سایت را از دید TabMerger حذف کنید"
+  },
+  "created": {
+    "message": "ایجاد شده"
+  },
+  "deleteAll": {
+    "message": "حذف همه"
+  },
+  "deleteGroup": {
+    "message": "حذف گروه"
+  },
+  "editTitle": {
+    "message": "ویرایش عنوان گروه"
+  },
+  "groupTotalPlural": {
+    "message": "برگه ها در گروه"
+  },
+  "groupTotalSingular": {
+    "message": "برگه در گروه"
+  },
+  "hideTabs": {
+    "message": "پنهان کردن برگه ها"
+  },
+  "leaveReview": {
+    "message": "یک بررسی بگذارید"
+  },
+  "mergeALLtabs": {
+    "message": "همه برگه ها را ادغام کنید"
+  },
+  "mergeLEFTtabs": {
+    "message": "برگه های LEFT را ادغام کنید"
+  },
+  "mergeRIGHTtabs": {
+    "message": "برگه های RIGHT را ادغام کنید"
+  },
+  "needHelp": {
+    "message": "کمک خواستن؟"
+  },
+  "openAll": {
+    "message": "همه را باز کنید"
+  },
+  "openGroup": {
+    "message": "باز کردن گروه"
+  },
+  "pageTotalPlural": {
+    "message": "در کل زبانه ها"
+  },
+  "pageTotalSingular": {
+    "message": "در کل برگه"
+  },
+  "pickColor": {
+    "message": "رنگ گروه را انتخاب کنید"
+  },
+  "quickDemo": {
+    "message": "نسخه ی نمایشی سریع"
+  },
+  "settings": {
+    "message": "تنظیمات"
+  },
+  "shareAll": {
+    "message": "اشتراک گذاری همه"
+  },
+  "showTabs": {
+    "message": "نمایش برگه ها"
+  },
+  "supportUs": {
+    "message": "از ما حمایت کنید"
+  },
+  "title": {
+    "message": "عنوان"
   }
 }

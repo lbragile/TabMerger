@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Spaja kartice na jednom mjestu radi uštede memorije i povećanja produktivnosti.",
     "description": "Opis proširenja prikazan u  web trgovini."
+  },
+  "addGroup": {
+    "message": "Dodaj grupu"
+  },
+  "bgAll": {
+    "message": "Spoji SVE kartice u ovom prozoru"
+  },
+  "bgContact": {
+    "message": "Kontaktirajte nas"
+  },
+  "bgExclude": {
+    "message": "Spajanje kartica ISKLJUČIVO trenutnu karticu u ovom prozoru"
+  },
+  "bgInstructions": {
+    "message": "Upute"
+  },
+  "bgLeft": {
+    "message": "Spoji kartice u LIJEVO od trenutne kartice u ovom prozoru"
+  },
+  "bgOnly": {
+    "message": "Spoji SAMO trenutnu karticu u ovom prozoru"
+  },
+  "bgOpen": {
+    "message": "Otvorite TabMerger"
+  },
+  "bgRight": {
+    "message": "Spoji kartice u DESNO s trenutnom karticom u ovom prozoru"
+  },
+  "bgSiteExclude": {
+    "message": "Izuzmite web mjesto iz vidljivosti TabMergera"
+  },
+  "created": {
+    "message": "Stvoreno"
+  },
+  "deleteAll": {
+    "message": "Izbrisati sve"
+  },
+  "deleteGroup": {
+    "message": "Izbriši grupu"
+  },
+  "editTitle": {
+    "message": "Uredi naslov grupe"
+  },
+  "groupTotalPlural": {
+    "message": "kartice u grupi"
+  },
+  "groupTotalSingular": {
+    "message": "tab u grupi"
+  },
+  "hideTabs": {
+    "message": "Sakrij kartice"
+  },
+  "leaveReview": {
+    "message": "Ostavite pregled"
+  },
+  "mergeALLtabs": {
+    "message": "Spoji SVE kartice"
+  },
+  "mergeLEFTtabs": {
+    "message": "Spoji LIJEVE kartice"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Spoji DESNE kartice"
+  },
+  "needHelp": {
+    "message": "Trebate pomoć?"
+  },
+  "openAll": {
+    "message": "Otvori sve"
+  },
+  "openGroup": {
+    "message": "Otvori grupu"
+  },
+  "pageTotalPlural": {
+    "message": "kartice ukupno"
+  },
+  "pageTotalSingular": {
+    "message": "tabulator ukupno"
+  },
+  "pickColor": {
+    "message": "Odaberite grupnu boju"
+  },
+  "quickDemo": {
+    "message": "Brzi demo"
+  },
+  "settings": {
+    "message": "Postavke"
+  },
+  "shareAll": {
+    "message": "Podijeli sve"
+  },
+  "showTabs": {
+    "message": "Prikaži kartice"
+  },
+  "supportUs": {
+    "message": "Podržite nas"
+  },
+  "title": {
+    "message": "Titula"
   }
 }

@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "탭을 한 위치에 병합하여 메모리 사용량을 절약하고 생산성을 높입니다.",
     "description": "웹 스토어에 표시되는 확장에 대한 설명입니다."
+  },
+  "addGroup": {
+    "message": "그룹 추가"
+  },
+  "bgAll": {
+    "message": "이 창에있는 모든 탭 병합"
+  },
+  "bgContact": {
+    "message": "문의하기"
+  },
+  "bgExclude": {
+    "message": "이 창에서 현재 탭을 제외한 탭 병합"
+  },
+  "bgInstructions": {
+    "message": "명령"
+  },
+  "bgLeft": {
+    "message": "이 창에서 탭을 현재 탭의 왼쪽에 병합"
+  },
+  "bgOnly": {
+    "message": "이 창에서 현재 탭만 병합"
+  },
+  "bgOpen": {
+    "message": "TabMerger 열기"
+  },
+  "bgRight": {
+    "message": "이 창에서 현재 탭의 오른쪽에 탭 병합"
+  },
+  "bgSiteExclude": {
+    "message": "TabMerger의 가시성에서 사이트 제외"
+  },
+  "created": {
+    "message": "만들어진"
+  },
+  "deleteAll": {
+    "message": "모두 삭제"
+  },
+  "deleteGroup": {
+    "message": "그룹 삭제"
+  },
+  "editTitle": {
+    "message": "그룹 제목 수정"
+  },
+  "groupTotalPlural": {
+    "message": "그룹의 탭"
+  },
+  "groupTotalSingular": {
+    "message": "그룹의 탭"
+  },
+  "hideTabs": {
+    "message": "탭 숨기기"
+  },
+  "leaveReview": {
+    "message": "리뷰를 남겨주세요"
+  },
+  "mergeALLtabs": {
+    "message": "모든 탭 병합"
+  },
+  "mergeLEFTtabs": {
+    "message": "왼쪽 탭 병합"
+  },
+  "mergeRIGHTtabs": {
+    "message": "오른쪽 탭 병합"
+  },
+  "needHelp": {
+    "message": "도움이 필요하다?"
+  },
+  "openAll": {
+    "message": "모두 열기"
+  },
+  "openGroup": {
+    "message": "오픈 그룹"
+  },
+  "pageTotalPlural": {
+    "message": "총 탭"
+  },
+  "pageTotalSingular": {
+    "message": "총 탭"
+  },
+  "pickColor": {
+    "message": "그룹 색상 선택"
+  },
+  "quickDemo": {
+    "message": "빠른 데모"
+  },
+  "settings": {
+    "message": "설정"
+  },
+  "shareAll": {
+    "message": "모두 공유"
+  },
+  "showTabs": {
+    "message": "탭 표시"
+  },
+  "supportUs": {
+    "message": "당신의 도움이 필요합니다"
+  },
+  "title": {
+    "message": "표제"
   }
 }

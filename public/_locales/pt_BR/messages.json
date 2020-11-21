@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Mescla suas guias em um local para economizar o uso de memória e aumentar sua produtividade.",
     "description": "A descrição da extensão, conforme exibida na Web Store."
+  },
+  "addGroup": {
+    "message": "Adicionar grupo"
+  },
+  "bgAll": {
+    "message": "Mesclar TODAS as guias nesta janela"
+  },
+  "bgContact": {
+    "message": "Contate-Nos"
+  },
+  "bgExclude": {
+    "message": "Mesclar abas EXCLUINDO a aba atual nesta janela"
+  },
+  "bgInstructions": {
+    "message": "Instruções"
+  },
+  "bgLeft": {
+    "message": "Mesclar as guias à ESQUERDA da guia atual nesta janela"
+  },
+  "bgOnly": {
+    "message": "Mesclar SOMENTE a guia atual nesta janela"
+  },
+  "bgOpen": {
+    "message": "Abra o TabMerger"
+  },
+  "bgRight": {
+    "message": "Mesclar as guias à DIREITA da guia atual nesta janela"
+  },
+  "bgSiteExclude": {
+    "message": "Excluir site da visibilidade do TabMerger"
+  },
+  "created": {
+    "message": "Criado"
+  },
+  "deleteAll": {
+    "message": "Apagar tudo"
+  },
+  "deleteGroup": {
+    "message": "Excluir Grupo"
+  },
+  "editTitle": {
+    "message": "Editar Título do Grupo"
+  },
+  "groupTotalPlural": {
+    "message": "guias no grupo"
+  },
+  "groupTotalSingular": {
+    "message": "guia no grupo"
+  },
+  "hideTabs": {
+    "message": "Ocultar abas"
+  },
+  "leaveReview": {
+    "message": "Deixe um comentário"
+  },
+  "mergeALLtabs": {
+    "message": "Mesclar TODAS as guias"
+  },
+  "mergeLEFTtabs": {
+    "message": "Mesclar guias ESQUERDA"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Mesclar guias DIREITA"
+  },
+  "needHelp": {
+    "message": "Preciso de ajuda?"
+  },
+  "openAll": {
+    "message": "Abra tudo"
+  },
+  "openGroup": {
+    "message": "Grupo Aberto"
+  },
+  "pageTotalPlural": {
+    "message": "guias no total"
+  },
+  "pageTotalSingular": {
+    "message": "guia no total"
+  },
+  "pickColor": {
+    "message": "Escolha a cor do grupo"
+  },
+  "quickDemo": {
+    "message": "Demonstração Rápida"
+  },
+  "settings": {
+    "message": "Definições"
+  },
+  "shareAll": {
+    "message": "Compartilhar tudo"
+  },
+  "showTabs": {
+    "message": "Mostrar abas"
+  },
+  "supportUs": {
+    "message": "Apoie-nos"
+  },
+  "title": {
+    "message": "Título"
   }
 }

@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Mälukasutuse säästmiseks ja tootlikkuse suurendamiseks ühendatakse vahelehed ühte asukohta.",
     "description": "Laienduse kirjeldus, nagu see kuvatakse 'i veebipoes."
+  },
+  "addGroup": {
+    "message": "Lisa rühm"
+  },
+  "bgAll": {
+    "message": "Ühenda selles aknas KÕIK vahekaardid"
+  },
+  "bgContact": {
+    "message": "Võta meiega ühendust"
+  },
+  "bgExclude": {
+    "message": "Ühenda selles aknas vahelehed VÄLJA ARVATADA praegust vahelehte"
+  },
+  "bgInstructions": {
+    "message": "Juhised"
+  },
+  "bgLeft": {
+    "message": "Ühenda selles aknas vahelehed praeguse vahelehe vasakule"
+  },
+  "bgOnly": {
+    "message": "Ühenda selles aknas AINULT praegune vaheleht"
+  },
+  "bgOpen": {
+    "message": "Avage TabMerger"
+  },
+  "bgRight": {
+    "message": "Ühenda selles aknas vahelehed praeguse vahelehe paremale"
+  },
+  "bgSiteExclude": {
+    "message": "Välistage sait TabMergeri nähtavuse hulgast"
+  },
+  "created": {
+    "message": "Loodud"
+  },
+  "deleteAll": {
+    "message": "Kustutada kõik"
+  },
+  "deleteGroup": {
+    "message": "Kustuta rühm"
+  },
+  "editTitle": {
+    "message": "Redigeeri grupi pealkirja"
+  },
+  "groupTotalPlural": {
+    "message": "vahelehed rühmas"
+  },
+  "groupTotalSingular": {
+    "message": "vahekaart rühmas"
+  },
+  "hideTabs": {
+    "message": "Peida vahelehed"
+  },
+  "leaveReview": {
+    "message": "Jäta ülevaade"
+  },
+  "mergeALLtabs": {
+    "message": "Ühenda KÕIK vahelehed"
+  },
+  "mergeLEFTtabs": {
+    "message": "Ühenda vasakpoolsed vahelehed"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Ühenda paremad vahelehed"
+  },
+  "needHelp": {
+    "message": "Abi vajama?"
+  },
+  "openAll": {
+    "message": "Ava kõik"
+  },
+  "openGroup": {
+    "message": "Avage rühm"
+  },
+  "pageTotalPlural": {
+    "message": "sakke kokku"
+  },
+  "pageTotalSingular": {
+    "message": "sakk kokku"
+  },
+  "pickColor": {
+    "message": "Valige grupi värv"
+  },
+  "quickDemo": {
+    "message": "Kiire demo"
+  },
+  "settings": {
+    "message": "Seaded"
+  },
+  "shareAll": {
+    "message": "Jaga kõiki"
+  },
+  "showTabs": {
+    "message": "Kuva vahelehed"
+  },
+  "supportUs": {
+    "message": "Toeta meid"
+  },
+  "title": {
+    "message": "Pealkiri"
   }
 }

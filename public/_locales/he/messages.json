@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "משלב את הכרטיסיות שלך למיקום אחד כדי לחסוך את השימוש בזיכרון ולהגדיל את הפרודוקטיביות שלך.",
     "description": "תיאור התוסף, כפי שמוצג בחנות האינטרנט של ."
+  },
+  "addGroup": {
+    "message": "הוסף קבוצה"
+  },
+  "bgAll": {
+    "message": "מיזג את כל הכרטיסיות בחלון זה"
+  },
+  "bgContact": {
+    "message": "צור קשר"
+  },
+  "bgExclude": {
+    "message": "מיזוג כרטיסיות למעט הכרטיסייה הנוכחית בחלון זה"
+  },
+  "bgInstructions": {
+    "message": "הוראות"
+  },
+  "bgLeft": {
+    "message": "מיזג כרטיסיות ל- LEFT מהכרטיסייה הנוכחית בחלון זה"
+  },
+  "bgOnly": {
+    "message": "מיזוג הכרטיסייה הנוכחית בלבד בחלון זה"
+  },
+  "bgOpen": {
+    "message": "פתח את TabMerger"
+  },
+  "bgRight": {
+    "message": "מיזג כרטיסיות לימין של הכרטיסייה הנוכחית בחלון זה"
+  },
+  "bgSiteExclude": {
+    "message": "אל תכלול את האתר מהראות של TabMerger"
+  },
+  "created": {
+    "message": "נוצר"
+  },
+  "deleteAll": {
+    "message": "מחק הכל"
+  },
+  "deleteGroup": {
+    "message": "מחק קבוצה"
+  },
+  "editTitle": {
+    "message": "ערוך את כותרת הקבוצה"
+  },
+  "groupTotalPlural": {
+    "message": "כרטיסיות בקבוצה"
+  },
+  "groupTotalSingular": {
+    "message": "הכרטיסייה בקבוצה"
+  },
+  "hideTabs": {
+    "message": "הסתר כרטיסיות"
+  },
+  "leaveReview": {
+    "message": "השאירו ביקורת"
+  },
+  "mergeALLtabs": {
+    "message": "מיזג את כל הכרטיסיות"
+  },
+  "mergeLEFTtabs": {
+    "message": "מיזוג כרטיסיות שמאלה"
+  },
+  "mergeRIGHTtabs": {
+    "message": "מיזוג כרטיסיות ימניות"
+  },
+  "needHelp": {
+    "message": "זקוק לעזרה?"
+  },
+  "openAll": {
+    "message": "תפתח הכל"
+  },
+  "openGroup": {
+    "message": "קבוצה פתוחה"
+  },
+  "pageTotalPlural": {
+    "message": "כרטיסיות בסך הכל"
+  },
+  "pageTotalSingular": {
+    "message": "כרטיסייה בסך הכל"
+  },
+  "pickColor": {
+    "message": "בחר צבע קבוצתי"
+  },
+  "quickDemo": {
+    "message": "הדגמה מהירה"
+  },
+  "settings": {
+    "message": "הגדרות"
+  },
+  "shareAll": {
+    "message": "שתף הכל"
+  },
+  "showTabs": {
+    "message": "הצג כרטיסיות"
+  },
+  "supportUs": {
+    "message": "תמכו בנו"
+  },
+  "title": {
+    "message": "כותרת"
   }
 }

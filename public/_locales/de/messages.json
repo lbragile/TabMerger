@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Fügt Ihre Registerkarten an einem Ort zusammen, um Speicherplatz zu sparen und Ihre Produktivität zu steigern.",
     "description": "Die Beschreibung der Erweiterung, wie sie im  Web Store angezeigt wird."
+  },
+  "addGroup": {
+    "message": "Gruppe hinzufügen"
+  },
+  "bgAll": {
+    "message": "Führen Sie ALLE Registerkarten in diesem Fenster zusammen"
+  },
+  "bgContact": {
+    "message": "Kontaktiere uns"
+  },
+  "bgExclude": {
+    "message": "Registerkarten zusammenführen AUSSCHLIESSLICH der aktuellen Registerkarte in diesem Fenster"
+  },
+  "bgInstructions": {
+    "message": "Anleitung"
+  },
+  "bgLeft": {
+    "message": "Führen Sie die Registerkarten in diesem Fenster links von der aktuellen Registerkarte zusammen"
+  },
+  "bgOnly": {
+    "message": "Führen Sie in diesem Fenster NUR die aktuelle Registerkarte zusammen"
+  },
+  "bgOpen": {
+    "message": "Öffnen Sie TabMerger"
+  },
+  "bgRight": {
+    "message": "Führen Sie die Registerkarten in diesem Fenster rechts von der aktuellen Registerkarte zusammen"
+  },
+  "bgSiteExclude": {
+    "message": "Schließen Sie die Site von der Sichtbarkeit von TabMerger aus"
+  },
+  "created": {
+    "message": "Erstellt"
+  },
+  "deleteAll": {
+    "message": "Alles löschen"
+  },
+  "deleteGroup": {
+    "message": "Gruppe löschen"
+  },
+  "editTitle": {
+    "message": "Gruppentitel bearbeiten"
+  },
+  "groupTotalPlural": {
+    "message": "Registerkarten in der Gruppe"
+  },
+  "groupTotalSingular": {
+    "message": "Registerkarte in der Gruppe"
+  },
+  "hideTabs": {
+    "message": "Tabs ausblenden"
+  },
+  "leaveReview": {
+    "message": "Hinterlassen Sie eine Bewertung"
+  },
+  "mergeALLtabs": {
+    "message": "ALLE Registerkarten zusammenführen"
+  },
+  "mergeLEFTtabs": {
+    "message": "Linke Registerkarten zusammenführen"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Führen Sie die RECHTEN Registerkarten zusammen"
+  },
+  "needHelp": {
+    "message": "Brauchen Sie Hilfe?"
+  },
+  "openAll": {
+    "message": "Öffne alle"
+  },
+  "openGroup": {
+    "message": "Gruppe öffnen"
+  },
+  "pageTotalPlural": {
+    "message": "Registerkarten insgesamt"
+  },
+  "pageTotalSingular": {
+    "message": "Registerkarte insgesamt"
+  },
+  "pickColor": {
+    "message": "Wählen Sie Gruppenfarbe"
+  },
+  "quickDemo": {
+    "message": "Schnelle Demo"
+  },
+  "settings": {
+    "message": "die Einstellungen"
+  },
+  "shareAll": {
+    "message": "Alle teilen"
+  },
+  "showTabs": {
+    "message": "Registerkarten anzeigen"
+  },
+  "supportUs": {
+    "message": "Unterstütze uns"
+  },
+  "title": {
+    "message": "Titel"
   }
 }

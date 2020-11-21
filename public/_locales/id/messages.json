@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Gabungkan tab Anda menjadi satu lokasi untuk menghemat penggunaan memori dan meningkatkan produktivitas Anda.",
     "description": "Deskripsi ekstensi, seperti yang ditampilkan di Toko Web ."
+  },
+  "addGroup": {
+    "message": "Tambahkan Grup"
+  },
+  "bgAll": {
+    "message": "Gabungkan SEMUA tab di jendela ini"
+  },
+  "bgContact": {
+    "message": "Hubungi kami"
+  },
+  "bgExclude": {
+    "message": "Gabungkan tab KECUALI tab saat ini di jendela ini"
+  },
+  "bgInstructions": {
+    "message": "Instruksi"
+  },
+  "bgLeft": {
+    "message": "Gabungkan tab ke KIRI dari tab saat ini di jendela ini"
+  },
+  "bgOnly": {
+    "message": "Gabungkan HANYA tab saat ini di jendela ini"
+  },
+  "bgOpen": {
+    "message": "Buka TabMerger"
+  },
+  "bgRight": {
+    "message": "Gabungkan tab ke KANAN dari tab saat ini di jendela ini"
+  },
+  "bgSiteExclude": {
+    "message": "Kecualikan situs dari visibilitas TabMerger"
+  },
+  "created": {
+    "message": "Dibuat"
+  },
+  "deleteAll": {
+    "message": "Hapus semua"
+  },
+  "deleteGroup": {
+    "message": "Hapus Grup"
+  },
+  "editTitle": {
+    "message": "Edit Judul Grup"
+  },
+  "groupTotalPlural": {
+    "message": "tab dalam grup"
+  },
+  "groupTotalSingular": {
+    "message": "tab dalam grup"
+  },
+  "hideTabs": {
+    "message": "Sembunyikan Tab"
+  },
+  "leaveReview": {
+    "message": "Tinggalkan Review"
+  },
+  "mergeALLtabs": {
+    "message": "Gabungkan SEMUA Tab"
+  },
+  "mergeLEFTtabs": {
+    "message": "Gabungkan Tab KIRI"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Gabungkan Tab KANAN"
+  },
+  "needHelp": {
+    "message": "Butuh bantuan?"
+  },
+  "openAll": {
+    "message": "Buka semua"
+  },
+  "openGroup": {
+    "message": "Buka Grup"
+  },
+  "pageTotalPlural": {
+    "message": "tab secara total"
+  },
+  "pageTotalSingular": {
+    "message": "tab secara total"
+  },
+  "pickColor": {
+    "message": "Pilih Warna Grup"
+  },
+  "quickDemo": {
+    "message": "Demo Cepat"
+  },
+  "settings": {
+    "message": "Pengaturan"
+  },
+  "shareAll": {
+    "message": "Bagikan Semua"
+  },
+  "showTabs": {
+    "message": "Tampilkan Tab"
+  },
+  "supportUs": {
+    "message": "Dukung Kami"
+  },
+  "title": {
+    "message": "Judul"
   }
 }

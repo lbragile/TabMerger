@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Inaunganisha tabo zako katika eneo moja ili kuhifadhi matumizi ya kumbukumbu na kuongeza uzalishaji wako.",
     "description": "Maelezo ya ugani, kama inavyoonyeshwa kwenye Duka la Wavuti."
+  },
+  "addGroup": {
+    "message": "Ongeza Kikundi"
+  },
+  "bgAll": {
+    "message": "Unganisha tabo ZOTE kwenye dirisha hili"
+  },
+  "bgContact": {
+    "message": "Wasiliana nasi"
+  },
+  "bgExclude": {
+    "message": "Unganisha tabo ukiondoa kichupo cha sasa kwenye dirisha hili"
+  },
+  "bgInstructions": {
+    "message": "Maagizo"
+  },
+  "bgLeft": {
+    "message": "Unganisha tabo kwenda KUSHOTO kwa kichupo cha sasa kwenye dirisha hili"
+  },
+  "bgOnly": {
+    "message": "Unganisha kichupo cha sasa pekee kwenye dirisha hili"
+  },
+  "bgOpen": {
+    "message": "Fungua TabMerger"
+  },
+  "bgRight": {
+    "message": "Unganisha tabo kwa HAKI ya kichupo cha sasa kwenye dirisha hili"
+  },
+  "bgSiteExclude": {
+    "message": "Tenga tovuti kutoka kwa mwonekano wa TabMerger"
+  },
+  "created": {
+    "message": "Imeundwa"
+  },
+  "deleteAll": {
+    "message": "Futa Zote"
+  },
+  "deleteGroup": {
+    "message": "Futa Kikundi"
+  },
+  "editTitle": {
+    "message": "Hariri Kichwa cha Kikundi"
+  },
+  "groupTotalPlural": {
+    "message": "tabo katika kikundi"
+  },
+  "groupTotalSingular": {
+    "message": "tab katika kikundi"
+  },
+  "hideTabs": {
+    "message": "Ficha Tabo"
+  },
+  "leaveReview": {
+    "message": "Acha Mapitio"
+  },
+  "mergeALLtabs": {
+    "message": "Unganisha Tabo ZOTE"
+  },
+  "mergeLEFTtabs": {
+    "message": "Unganisha Vichupo VYA KUSHOTO"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Unganisha Vichupo SAHIHI"
+  },
+  "needHelp": {
+    "message": "Unahitaji Msaada?"
+  },
+  "openAll": {
+    "message": "Fungua Zote"
+  },
+  "openGroup": {
+    "message": "Fungua Kikundi"
+  },
+  "pageTotalPlural": {
+    "message": "tabo kwa jumla"
+  },
+  "pageTotalSingular": {
+    "message": "tab kwa jumla"
+  },
+  "pickColor": {
+    "message": "Chagua Rangi ya Kikundi"
+  },
+  "quickDemo": {
+    "message": "Demo ya Haraka"
+  },
+  "settings": {
+    "message": "Mipangilio"
+  },
+  "shareAll": {
+    "message": "Shiriki Yote"
+  },
+  "showTabs": {
+    "message": "Onyesha Tabo"
+  },
+  "supportUs": {
+    "message": "Tusaidie"
+  },
+  "title": {
+    "message": "Kichwa"
   }
 }

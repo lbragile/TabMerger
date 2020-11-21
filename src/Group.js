@@ -149,7 +149,7 @@ export default function Group(props) {
   return (
     <div className="mt-3">
       <div className="created float-right mr-1">
-        <b>Created:</b>{" "}
+        <b>{chrome.i18n.getMessage("created")}:</b>{" "}
         <span>
           {props.created.split(" ").length > 6
             ? formatDate(props.created)
@@ -161,11 +161,13 @@ export default function Group(props) {
         <EdiText
           className="font-weight-bold"
           type="text"
-          value={title}
+          value={chrome.i18n.getMessage("title")}
           editButtonContent={
             <div className="tip mb-1">
               <BsPencilSquare color="saddlebrown" />
-              <span className="tiptext-bottom">Edit Group Title</span>
+              <span className="tiptext-bottom">
+                {chrome.i18n.getMessage("editTitle")}
+              </span>
             </div>
           }
           onSave={(val) => {
@@ -179,7 +181,9 @@ export default function Group(props) {
             onChange={(e) => handleColorChange(e)}
             type="color"
           />
-          <span className="tiptext-bottom">Pick Group Color</span>
+          <span className="tiptext-bottom">
+            {chrome.i18n.getMessage("pickColor")}
+          </span>
         </div>
       </div>
 
@@ -196,7 +200,9 @@ export default function Group(props) {
                 <FcCollapse style={{ transform: "rotate(0deg)" }} />
               )}
               <span className="tiptext-side">
-                {hide ? "Show Tabs" : "Hide Tabs"}
+                {hide
+                  ? chrome.i18n.getMessage("showTabs")
+                  : chrome.i18n.getMessage("hideTabs")}
               </span>
             </div>
           </button>
@@ -206,7 +212,9 @@ export default function Group(props) {
           >
             <div className="tip">
               <FaWindowRestore color="forestgreen" />
-              <span className="tiptext-side">Open Group</span>
+              <span className="tiptext-side">
+                {chrome.i18n.getMessage("openGroup")}
+              </span>
             </div>
           </button>
           <button
@@ -215,7 +223,9 @@ export default function Group(props) {
           >
             <div className="tip">
               <CgRemove color="red" />
-              <span className="tiptext-side">Delete Group</span>
+              <span className="tiptext-side">
+                {chrome.i18n.getMessage("deleteGroup")}
+              </span>
             </div>
           </button>
         </div>

@@ -224,202 +224,227 @@ export default function App() {
   }
 
   return (
-    <>
-      <div className="container" id="tabmerger-container">
-        <div>
-          <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc">
-            <img
-              id="logo-img"
-              className="mt-2"
-              src="./images/logo-full-rescale.PNG"
-              alt="TabMerger Logo"
-            />
-          </a>
-          <h2 id="tab-total">
-            <span className="small">{tabTotal} tabs in total</span>
-          </h2>
-          <hr />
-        </div>
-
-        <div className="row">
-          <button
-            id="merge-btn"
-            className="ml-3 py-1 px-2 btn btn-outline-primary"
-            type="button"
-            onClick={() => sendMessage({ msg: "all" })}
-          >
-            <div className="tip">
-              <MdVerticalAlignCenter
-                style={{ transform: "rotate(90deg)" }}
-                color="black"
-                size="1.6rem"
+    <div className="container-fluid">
+      <div className="row m-auto">
+        <div className="col-lg-8" id="tabmerger-container">
+          <div>
+            <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc">
+              <img
+                id="logo-img"
+                className="mt-2"
+                src="./images/logo-full-rescale.PNG"
+                alt="TabMerger Logo"
               />
-              <span className="tiptext">Merge ALL Tabs</span>
-            </div>
-          </button>
-          <button
-            id="merge-left-btn"
-            className="ml-1 py-1 px-2 btn btn-outline-warning"
-            type="button"
-            onClick={() => sendMessage({ msg: "left" })}
-          >
-            <div className="tip">
-              <BiArrowToRight color="black" size="1.3rem" />
-              <span className="tiptext">Merge LEFT Tabs</span>
-            </div>
-          </button>
-          <button
-            id="merge-right-btn"
-            className="ml-1 mr-4 py-1 px-2 btn btn-outline-warning"
-            type="button"
-            onClick={() => sendMessage({ msg: "right" })}
-          >
-            <div className="tip">
-              <BiArrowToRight
-                style={{ transform: "rotate(180deg)" }}
-                color="black"
-                size="1.3rem"
-              />
-              <span className="tiptext">Merge RIGHT Tabs</span>
-            </div>
-          </button>
-          <button
-            id="open-all-btn"
-            className="ml-4 py-1 px-2 btn btn-outline-success"
-            type="button"
-            onClick={() => openAllTabs()}
-          >
-            <div className="tip">
-              <FaTrashRestore color="green" size="1.3rem" />
-              <span className="tiptext">Open All</span>
-            </div>
-          </button>
-          <button
-            id="delete-all-btn"
-            className="ml-1 mr-4 p-1 btn btn-outline-danger"
-            type="button"
-            onClick={() => deleteAllGroups()}
-          >
-            <div className="tip">
-              <MdDeleteForever color="red" size="1.7rem" />
-              <span className="tiptext">Delete All</span>
-            </div>
-          </button>
+            </a>
+            <h2 id="tab-total">
+              <span className="small">
+                {tabTotal}{" "}
+                {tabTotal == 1
+                  ? chrome.i18n.getMessage("pageTotalSingular")
+                  : chrome.i18n.getMessage("pageTotalPlural")}
+              </span>
+            </h2>
+            <hr />
+          </div>
 
-          <div className="d-flex flex-row align-items-center">
+          <div className="row">
             <button
-              id="share-all-btn"
-              className="ml-4 p-1 btn btn-outline-info"
+              id="merge-btn"
+              className="ml-3 py-1 px-2 btn btn-outline-primary"
               type="button"
-              onClick={(e) => shareAllGroups(e)}
+              onClick={() => sendMessage({ msg: "all" })}
             >
               <div className="tip">
-                <FiShare color="darkcyan" size="1.4rem" />
-                <span className="tiptext">Share All</span>
+                <MdVerticalAlignCenter
+                  style={{ transform: "rotate(90deg)" }}
+                  color="black"
+                  size="1.6rem"
+                />
+                <span className="tiptext">
+                  {chrome.i18n.getMessage("mergeALLtabs")}
+                </span>
               </div>
             </button>
-            <div
-              className="ml-1 py-1 px-2"
-              id="short-url"
-              contentEditable
-              onClick={(e) => {
-                copyLinkOnFocus(e);
-              }}
-            ></div>
+            <button
+              id="merge-left-btn"
+              className="ml-1 py-1 px-2 btn btn-outline-warning"
+              type="button"
+              onClick={() => sendMessage({ msg: "left" })}
+            >
+              <div className="tip">
+                <BiArrowToRight color="black" size="1.3rem" />
+                <span className="tiptext">
+                  {chrome.i18n.getMessage("mergeLEFTtabs")}
+                </span>
+              </div>
+            </button>
+            <button
+              id="merge-right-btn"
+              className="ml-1 mr-4 py-1 px-2 btn btn-outline-warning"
+              type="button"
+              onClick={() => sendMessage({ msg: "right" })}
+            >
+              <div className="tip">
+                <BiArrowToRight
+                  style={{ transform: "rotate(180deg)" }}
+                  color="black"
+                  size="1.3rem"
+                />
+                <span className="tiptext">
+                  {chrome.i18n.getMessage("mergeRIGHTtabs")}
+                </span>
+              </div>
+            </button>
+            <button
+              id="open-all-btn"
+              className="ml-4 py-1 px-2 btn btn-outline-success"
+              type="button"
+              onClick={() => openAllTabs()}
+            >
+              <div className="tip">
+                <FaTrashRestore color="green" size="1.3rem" />
+                <span className="tiptext">
+                  {chrome.i18n.getMessage("openAll")}
+                </span>
+              </div>
+            </button>
+            <button
+              id="delete-all-btn"
+              className="ml-1 mr-4 p-1 btn btn-outline-danger"
+              type="button"
+              onClick={() => deleteAllGroups()}
+            >
+              <div className="tip">
+                <MdDeleteForever color="red" size="1.7rem" />
+                <span className="tiptext">
+                  {chrome.i18n.getMessage("deleteAll")}
+                </span>
+              </div>
+            </button>
+
+            <div className="d-flex flex-row align-items-center">
+              <button
+                id="share-all-btn"
+                className="ml-4 p-1 btn btn-outline-info"
+                type="button"
+                onClick={(e) => shareAllGroups(e)}
+              >
+                <div className="tip">
+                  <FiShare color="darkcyan" size="1.4rem" />
+                  <span className="tiptext">
+                    {chrome.i18n.getMessage("shareAll")}
+                  </span>
+                </div>
+              </button>
+              <div
+                className="ml-1 py-1 px-2"
+                id="short-url"
+                contentEditable
+                onClick={(e) => {
+                  copyLinkOnFocus(e);
+                }}
+              ></div>
+            </div>
+            <button
+              id="options-btn"
+              className="mr-3 py-1 px-2 btn btn-outline-dark"
+              type="button"
+              onClick={() =>
+                window.location.replace(chrome.runtime.getURL("options.html"))
+              }
+            >
+              <div className="tip">
+                <MdSettings color="grey" size="1.6rem" />
+                <span className="tiptext">
+                  {chrome.i18n.getMessage("settings")}
+                </span>
+              </div>
+            </button>
           </div>
-          <button
-            id="options-btn"
-            className="mr-3 py-1 px-2 btn btn-outline-dark"
-            type="button"
-            onClick={() =>
-              window.location.replace(chrome.runtime.getURL("options.html"))
-            }
-          >
-            <div className="tip">
-              <MdSettings color="grey" size="1.6rem" />
-              <span className="tiptext">Settings</span>
-            </div>
-          </button>
+
+          <div className="groups-container">
+            {groups}
+
+            <button
+              className="d-block mt-2 btn"
+              id="add-group-btn"
+              type="button"
+              onClick={() => addGroup()}
+            >
+              <div className="tip">
+                <MdAddCircle color="grey" size="2rem" />
+                <span className="tiptext">
+                  {chrome.i18n.getMessage("addGroup")}
+                </span>
+              </div>
+            </button>
+          </div>
         </div>
 
-        <div className="groups-container">
-          {groups}
+        <div className="col-lg-4 float-right my-auto">
+          <div class="d-flex flex-column align-items-center" id="side-panel">
+            <h4>
+              <b>{chrome.i18n.getMessage("quickDemo")}</b>
+            </h4>
+            <iframe
+              frameBorder="0"
+              width="425"
+              height="240"
+              src="https://www.youtube.com/embed/cXG1lIx7WP4?autoplay=1&mute=1&loop=1&controls=1&vq=hd1080&playlist=cXG1lIx7WP4"
+              allowFullScreen
+              id="video-demo"
+            ></iframe>
 
-          <button
-            className="d-block mt-2 btn"
-            id="add-group-btn"
-            type="button"
-            onClick={() => addGroup()}
-          >
-            <div className="tip">
-              <MdAddCircle color="grey" size="2rem" />
-              <span className="tiptext">Add Group</span>
+            <div id="donate" className="my-3">
+              <h4 className="mb-3 text-center">
+                <b>{chrome.i18n.getMessage("supportUs")}</b>
+              </h4>
+              <form
+                action="https://www.paypal.com/donate"
+                method="post"
+                target="_top"
+              >
+                <input
+                  type="hidden"
+                  name="hosted_button_id"
+                  value="X3EYMX8CVA4SY"
+                />
+                <input
+                  type="image"
+                  src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+                  border="0"
+                  name="submit"
+                  title="PayPal - The safer, easier way to pay online!"
+                  alt="Donate with PayPal button"
+                />
+              </form>
             </div>
-          </button>
+
+            <div id="donate" className="mb-3">
+              <h4 className="mb-1 text-center">
+                <b>{chrome.i18n.getMessage("leaveReview")}</b>
+              </h4>
+              <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews">
+                <div className="row mx-0 px-1">
+                  <RiStarSFill color="goldenrod" size="2rem" />
+                  <RiStarSFill color="goldenrod" size="2rem" />
+                  <RiStarSFill color="goldenrod" size="2rem" />
+                  <RiStarSFill color="goldenrod" size="2rem" />
+                  <RiStarSFill color="goldenrod" size="2rem" />
+                </div>
+              </a>
+            </div>
+
+            <a
+              href="https://tabmerger.herokuapp.com/"
+              className="btn btn-info font-weight-bold mb-3"
+              id="need-help"
+            >
+              {chrome.i18n.getMessage("needHelp")}
+            </a>
+          </div>
         </div>
       </div>
-
-      <div class="d-flex flex-column align-items-center" id="side-panel">
-        <h4>
-          <b>Quick Demo</b>
-        </h4>
-        <iframe
-          frameBorder="0"
-          width="535"
-          height="300"
-          src="https://www.youtube.com/embed/cXG1lIx7WP4?autoplay=1&mute=1&loop=1&controls=1&vq=hd1080&playlist=cXG1lIx7WP4"
-          allowFullScreen
-          id="video-demo"
-        ></iframe>
-
-        <div id="donate" className="my-3">
-          <h4 className="mb-3 text-center">
-            <b>Support Us</b>
-          </h4>
-          <form
-            action="https://www.paypal.com/donate"
-            method="post"
-            target="_top"
-          >
-            <input
-              type="hidden"
-              name="hosted_button_id"
-              value="X3EYMX8CVA4SY"
-            />
-            <input
-              type="image"
-              src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
-              border="0"
-              name="submit"
-              title="PayPal - The safer, easier way to pay online!"
-              alt="Donate with PayPal button"
-            />
-          </form>
-        </div>
-
-        <div id="donate" className="mb-3">
-          <h4 className="mb-1 text-center">
-            <b>Leave A Review</b>
-          </h4>
-          <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews">
-            <div className="row mx-0 px-1">
-              <RiStarSFill color="goldenrod" size="2rem" />
-              <RiStarSFill color="goldenrod" size="2rem" />
-              <RiStarSFill color="goldenrod" size="2rem" />
-              <RiStarSFill color="goldenrod" size="2rem" />
-              <RiStarSFill color="goldenrod" size="2rem" />
-            </div>
-          </a>
-        </div>
-
-        <a
-          href="https://tabmerger.herokuapp.com/"
-          className="btn btn-info font-weight-bold mb-3"
-          id="need-help"
-        >
-          Need help?
-        </a>
-      </div>
-    </>
+    </div>
   );
 }

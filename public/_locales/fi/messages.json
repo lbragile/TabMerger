@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Yhdistämällä välilehdet yhteen sijaintiin säästät muistin käyttöä ja lisäät tuottavuutta.",
     "description": " Web Storessa näkyvä laajennuksen kuvaus."
+  },
+  "addGroup": {
+    "message": "Lisää ryhmä"
+  },
+  "bgAll": {
+    "message": "Yhdistä KAIKKI välilehdet tähän ikkunaan"
+  },
+  "bgContact": {
+    "message": "Ota meihin yhteyttä"
+  },
+  "bgExclude": {
+    "message": "Yhdistä välilehdet lukuun ottamatta nykyistä välilehteä tässä ikkunassa"
+  },
+  "bgInstructions": {
+    "message": "Ohjeet"
+  },
+  "bgLeft": {
+    "message": "Yhdistä välilehdet nykyisen välilehden VASEMMALLE tässä ikkunassa"
+  },
+  "bgOnly": {
+    "message": "Yhdistä VAIN nykyinen välilehti tähän ikkunaan"
+  },
+  "bgOpen": {
+    "message": "Avaa TabMerger"
+  },
+  "bgRight": {
+    "message": "Yhdistä välilehdet nykyisen välilehden OIKEALLE tässä ikkunassa"
+  },
+  "bgSiteExclude": {
+    "message": "Sulje sivusto pois TabMergerin näkyvyydestä"
+  },
+  "created": {
+    "message": "Luotu"
+  },
+  "deleteAll": {
+    "message": "Poista kaikki"
+  },
+  "deleteGroup": {
+    "message": "Poista ryhmä"
+  },
+  "editTitle": {
+    "message": "Muokkaa ryhmän otsikkoa"
+  },
+  "groupTotalPlural": {
+    "message": "välilehdet ryhmässä"
+  },
+  "groupTotalSingular": {
+    "message": "välilehti ryhmässä"
+  },
+  "hideTabs": {
+    "message": "Piilota välilehdet"
+  },
+  "leaveReview": {
+    "message": "Jätä arvostelu"
+  },
+  "mergeALLtabs": {
+    "message": "Yhdistä KAIKKI välilehdet"
+  },
+  "mergeLEFTtabs": {
+    "message": "Yhdistä VASEN välilehdet"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Yhdistä OIKEA-välilehdet"
+  },
+  "needHelp": {
+    "message": "Tarvitsetko apua?"
+  },
+  "openAll": {
+    "message": "Avaa kaikki"
+  },
+  "openGroup": {
+    "message": "Avaa ryhmä"
+  },
+  "pageTotalPlural": {
+    "message": "välilehdet yhteensä"
+  },
+  "pageTotalSingular": {
+    "message": "välilehti yhteensä"
+  },
+  "pickColor": {
+    "message": "Valitse ryhmän väri"
+  },
+  "quickDemo": {
+    "message": "Nopea esittely"
+  },
+  "settings": {
+    "message": "asetukset"
+  },
+  "shareAll": {
+    "message": "Jaa kaikki"
+  },
+  "showTabs": {
+    "message": "Näytä välilehdet"
+  },
+  "supportUs": {
+    "message": "Tue meitä"
+  },
+  "title": {
+    "message": "Otsikko"
   }
 }

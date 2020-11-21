@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Fusionne vos onglets en un seul emplacement pour économiser la mémoire et augmenter votre productivité.",
     "description": "La description de l'extension, telle qu'elle apparaît dans le  Web Store."
+  },
+  "addGroup": {
+    "message": "Ajouter un groupe"
+  },
+  "bgAll": {
+    "message": "Fusionner TOUS les onglets de cette fenêtre"
+  },
+  "bgContact": {
+    "message": "Nous contacter"
+  },
+  "bgExclude": {
+    "message": "Fusionner les onglets EXCLUANT l'onglet actuel dans cette fenêtre"
+  },
+  "bgInstructions": {
+    "message": "Instructions"
+  },
+  "bgLeft": {
+    "message": "Fusionner les onglets à GAUCHE de l'onglet actuel dans cette fenêtre"
+  },
+  "bgOnly": {
+    "message": "Fusionner UNIQUEMENT l'onglet actuel dans cette fenêtre"
+  },
+  "bgOpen": {
+    "message": "Ouvrez TabMerger"
+  },
+  "bgRight": {
+    "message": "Fusionner les onglets à DROITE de l'onglet actuel dans cette fenêtre"
+  },
+  "bgSiteExclude": {
+    "message": "Exclure le site de la visibilité de TabMerger"
+  },
+  "created": {
+    "message": "Créé"
+  },
+  "deleteAll": {
+    "message": "Tout supprimer"
+  },
+  "deleteGroup": {
+    "message": "Supprimer le groupe"
+  },
+  "editTitle": {
+    "message": "Modifier le titre du groupe"
+  },
+  "groupTotalPlural": {
+    "message": "onglets dans le groupe"
+  },
+  "groupTotalSingular": {
+    "message": "onglet dans le groupe"
+  },
+  "hideTabs": {
+    "message": "Masquer les onglets"
+  },
+  "leaveReview": {
+    "message": "Laisser un commentaire"
+  },
+  "mergeALLtabs": {
+    "message": "Fusionner TOUS les onglets"
+  },
+  "mergeLEFTtabs": {
+    "message": "Fusionner les onglets GAUCHE"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Fusionner les onglets DROITS"
+  },
+  "needHelp": {
+    "message": "Besoin d'aide?"
+  },
+  "openAll": {
+    "message": "Ouvre tout"
+  },
+  "openGroup": {
+    "message": "Groupe ouvert"
+  },
+  "pageTotalPlural": {
+    "message": "onglets au total"
+  },
+  "pageTotalSingular": {
+    "message": "onglet au total"
+  },
+  "pickColor": {
+    "message": "Choisir la couleur du groupe"
+  },
+  "quickDemo": {
+    "message": "Démo rapide"
+  },
+  "settings": {
+    "message": "Réglages"
+  },
+  "shareAll": {
+    "message": "Tout partager"
+  },
+  "showTabs": {
+    "message": "Afficher les onglets"
+  },
+  "supportUs": {
+    "message": "Soutenez-nous"
+  },
+  "title": {
+    "message": "Titre"
   }
 }

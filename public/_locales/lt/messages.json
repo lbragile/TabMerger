@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Sujungia skirtukus į vieną vietą, kad sutaupytumėte atminties ir padidintumėte produktyvumą.",
     "description": "Plėtinio aprašymas, pateiktas internetinėje parduotuvėje."
+  },
+  "addGroup": {
+    "message": "Pridėti grupę"
+  },
+  "bgAll": {
+    "message": "Sujungti VISUS skirtukus šiame lange"
+  },
+  "bgContact": {
+    "message": "Nurodymai"
+  },
+  "bgExclude": {
+    "message": "Sujungti skirtukus"
+  },
+  "bgInstructions": {
+    "message": "Išskirkite svetainę iš „TabMerger“ matomumo"
+  },
+  "bgLeft": {
+    "message": "Šiame lange sujungti skirtukus į kairįjį dabartinio skirtuko"
+  },
+  "bgOnly": {
+    "message": " IŠSKYRUS dabartinį skirtuką šiame lange"
+  },
+  "bgOpen": {
+    "message": "Atidarykite „TabMerger“"
+  },
+  "bgRight": {
+    "message": "Sujunkite skirtukus į RIGHT dabartinio skirtuko šiame lange"
+  },
+  "bgSiteExclude": {
+    "message": "Šiame lange sujungti TIK dabartinį skirtuką"
+  },
+  "created": {
+    "message": "Sukurta"
+  },
+  "deleteAll": {
+    "message": "Ištrinti viską"
+  },
+  "deleteGroup": {
+    "message": "Ištrinti grupę"
+  },
+  "editTitle": {
+    "message": "Redaguoti grupės pavadinimą"
+  },
+  "groupTotalPlural": {
+    "message": "skirtukai grupėje"
+  },
+  "groupTotalSingular": {
+    "message": "skirtukas grupėje"
+  },
+  "hideTabs": {
+    "message": "Slėpti skirtukus"
+  },
+  "leaveReview": {
+    "message": "Palikite apžvalgą"
+  },
+  "mergeALLtabs": {
+    "message": "Sujungti VISUS skirtukus"
+  },
+  "mergeLEFTtabs": {
+    "message": "Sujungti kairiuosius skirtukus"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Sujungti dešinius skirtukus"
+  },
+  "needHelp": {
+    "message": "Reikia pagalbos?"
+  },
+  "openAll": {
+    "message": "Atidaryti viską"
+  },
+  "openGroup": {
+    "message": "Atidaryti grupę"
+  },
+  "pageTotalPlural": {
+    "message": "skirtukų iš viso"
+  },
+  "pageTotalSingular": {
+    "message": "skirtukas iš viso"
+  },
+  "pickColor": {
+    "message": "Pasirinkite grupės spalvą"
+  },
+  "quickDemo": {
+    "message": "Greita demonstracija"
+  },
+  "settings": {
+    "message": "Nustatymai"
+  },
+  "shareAll": {
+    "message": "Dalytis visais"
+  },
+  "showTabs": {
+    "message": "Rodyti skirtukus"
+  },
+  "supportUs": {
+    "message": "Paremkite mus"
+  },
+  "title": {
+    "message": "Pavadinimas"
   }
 }

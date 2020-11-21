@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "A lapokat egy helyre egyesíti a memóriafelhasználás és a termelékenység növelése érdekében.",
     "description": "A bővítmény leírása a  Internetes áruházban megjelenítve."
+  },
+  "addGroup": {
+    "message": "Csoport hozzáadása"
+  },
+  "bgAll": {
+    "message": "Az ablak MINDEN fülének egyesítése"
+  },
+  "bgContact": {
+    "message": "Lépjen kapcsolatba velünk"
+  },
+  "bgExclude": {
+    "message": "Fülek egyesítése KIVÉTELE az aktuális fület ebben az ablakban"
+  },
+  "bgInstructions": {
+    "message": "Utasítás"
+  },
+  "bgLeft": {
+    "message": "Fülek egyesítése ebben az ablakban az aktuális lap BALRA"
+  },
+  "bgOnly": {
+    "message": "CSAK az aktuális lap egyesítése ebben az ablakban"
+  },
+  "bgOpen": {
+    "message": "Nyissa meg a TabMerger alkalmazást"
+  },
+  "bgRight": {
+    "message": "Fülek egyesítése az ablak aktuális fülének JOBBRA"
+  },
+  "bgSiteExclude": {
+    "message": "A webhely kizárása a TabMerger láthatóságából"
+  },
+  "created": {
+    "message": "Létrehozva"
+  },
+  "deleteAll": {
+    "message": "Mindet törölni"
+  },
+  "deleteGroup": {
+    "message": "Csoport törlése"
+  },
+  "editTitle": {
+    "message": "Szerkessze a csoport címét"
+  },
+  "groupTotalPlural": {
+    "message": "fülek a csoportban"
+  },
+  "groupTotalSingular": {
+    "message": "fül a csoportban"
+  },
+  "hideTabs": {
+    "message": "Fülek elrejtése"
+  },
+  "leaveReview": {
+    "message": "Hagy egy áttekintést"
+  },
+  "mergeALLtabs": {
+    "message": "MINDEN lap egyesítése"
+  },
+  "mergeLEFTtabs": {
+    "message": "A BAL fülek egyesítése"
+  },
+  "mergeRIGHTtabs": {
+    "message": "JOBB lapok egyesítése"
+  },
+  "needHelp": {
+    "message": "Kell segítség?"
+  },
+  "openAll": {
+    "message": "Nyissa meg az összeset"
+  },
+  "openGroup": {
+    "message": "Nyissa meg a Csoportot"
+  },
+  "pageTotalPlural": {
+    "message": "fülek összesen"
+  },
+  "pageTotalSingular": {
+    "message": "fül összesen"
+  },
+  "pickColor": {
+    "message": "Válassza a Csoport színét"
+  },
+  "quickDemo": {
+    "message": "Gyors bemutató"
+  },
+  "settings": {
+    "message": "Beállítások"
+  },
+  "shareAll": {
+    "message": "Ossza meg mindet"
+  },
+  "showTabs": {
+    "message": "Fülek megjelenítése"
+  },
+  "supportUs": {
+    "message": "Támogass minket"
+  },
+  "title": {
+    "message": "Cím"
   }
 }

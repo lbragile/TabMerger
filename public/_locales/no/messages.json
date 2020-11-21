@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Slår sammen fanene på ett sted for å spare minne og øke produktiviteten.",
     "description": "Beskrivelsen av utvidelsen, som vist i nettbutikken."
+  },
+  "addGroup": {
+    "message": "Legg til gruppe"
+  },
+  "bgAll": {
+    "message": "Slå sammen ALLE faner i dette vinduet"
+  },
+  "bgContact": {
+    "message": "Kontakt oss"
+  },
+  "bgExclude": {
+    "message": "Slå sammen faner UTENGJELD gjeldende fane i dette vinduet"
+  },
+  "bgInstructions": {
+    "message": "Bruksanvisning"
+  },
+  "bgLeft": {
+    "message": "Slå sammen faner til VENSTRE for gjeldende fane i dette vinduet"
+  },
+  "bgOnly": {
+    "message": "Slå sammen KUN nåværende fane i dette vinduet"
+  },
+  "bgOpen": {
+    "message": "Åpne TabMerger"
+  },
+  "bgRight": {
+    "message": "Slå sammen faner til HØYRE for gjeldende fane i dette vinduet"
+  },
+  "bgSiteExclude": {
+    "message": "Ekskluder nettstedet fra TabMergers synlighet"
+  },
+  "created": {
+    "message": "Laget"
+  },
+  "deleteAll": {
+    "message": "Slette alle"
+  },
+  "deleteGroup": {
+    "message": "Slett gruppe"
+  },
+  "editTitle": {
+    "message": "Rediger gruppetittel"
+  },
+  "groupTotalPlural": {
+    "message": "faner i gruppe"
+  },
+  "groupTotalSingular": {
+    "message": "kategorien i gruppe"
+  },
+  "hideTabs": {
+    "message": "Skjul faner"
+  },
+  "leaveReview": {
+    "message": "Legg igjen en anmeldelse"
+  },
+  "mergeALLtabs": {
+    "message": "Slå sammen ALLE faner"
+  },
+  "mergeLEFTtabs": {
+    "message": "Slå sammen VENSTRE faner"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Slå sammen HØYRE faner"
+  },
+  "needHelp": {
+    "message": "Trenger hjelp?"
+  },
+  "openAll": {
+    "message": "Åpne alle"
+  },
+  "openGroup": {
+    "message": "Åpne gruppe"
+  },
+  "pageTotalPlural": {
+    "message": "faner totalt"
+  },
+  "pageTotalSingular": {
+    "message": "kategorien totalt"
+  },
+  "pickColor": {
+    "message": "Velg gruppefarge"
+  },
+  "quickDemo": {
+    "message": "Rask demo"
+  },
+  "settings": {
+    "message": "Innstillinger"
+  },
+  "shareAll": {
+    "message": "Del alle"
+  },
+  "showTabs": {
+    "message": "Vis faner"
+  },
+  "supportUs": {
+    "message": "Støtt oss"
+  },
+  "title": {
+    "message": "Tittel"
   }
 }

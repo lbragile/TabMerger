@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "મેમરી ટેક્સ્ટને બચાવવા અને તમારી ઉત્પાદકતા વધારવા માટે તમારા ટsબ્સને એક સ્થાનમાં મર્જ કરે છે.",
     "description": "એક્સ્ટેંશનનું વર્ણન, જેમ કે ક્રોમ વેબ સ્ટોરમાં પ્રદર્શિત થાય છે."
+  },
+  "addGroup": {
+    "message": "જૂથ ઉમેરો"
+  },
+  "bgAll": {
+    "message": "આ વિંડોમાં બધા ટsબ્સ મર્જ કરો"
+  },
+  "bgContact": {
+    "message": "અમારો સંપર્ક કરો"
+  },
+  "bgExclude": {
+    "message": "આ વિંડોમાં વર્તમાન ટ tabબને બાદ કરતાં ટsબ્સ મર્જ કરો"
+  },
+  "bgInstructions": {
+    "message": "સૂચનાઓ"
+  },
+  "bgLeft": {
+    "message": "આ વિંડોમાં ટ tabબ્સને વર્તમાન ટ tabબના ડાબેથી મર્જ કરો"
+  },
+  "bgOnly": {
+    "message": "આ વિંડોમાં ફક્ત વર્તમાન ટ tabબ મર્જ કરો"
+  },
+  "bgOpen": {
+    "message": "ટMબમર્જર ખોલો"
+  },
+  "bgRight": {
+    "message": "આ વિંડોમાં ટ tabબ્સને વર્તમાન ટ tabબના RIGHT પર મર્જ કરો"
+  },
+  "bgSiteExclude": {
+    "message": "ટMબમર્જરની દૃશ્યતામાંથી સાઇટને બાકાત રાખો"
+  },
+  "created": {
+    "message": "બનાવ્યું"
+  },
+  "deleteAll": {
+    "message": "બધું કાઢી નાંખો"
+  },
+  "deleteGroup": {
+    "message": "જૂથ કા .ી નાખો"
+  },
+  "editTitle": {
+    "message": "જૂથ શીર્ષક સંપાદિત કરો"
+  },
+  "groupTotalPlural": {
+    "message": "જૂથમાં ટsબ્સ"
+  },
+  "groupTotalSingular": {
+    "message": "જૂથમાં ટ tabબ"
+  },
+  "hideTabs": {
+    "message": "ટsબ્સ છુપાવો"
+  },
+  "leaveReview": {
+    "message": "એક સમીક્ષા છોડી દો"
+  },
+  "mergeALLtabs": {
+    "message": "બધા ટsબ્સ મર્જ કરો"
+  },
+  "mergeLEFTtabs": {
+    "message": "ડાબી ટ Tabબ્સ મર્જ કરો"
+  },
+  "mergeRIGHTtabs": {
+    "message": "અધિકાર ટsબ્સ મર્જ કરો"
+  },
+  "needHelp": {
+    "message": "મદદ જોઈતી?"
+  },
+  "openAll": {
+    "message": "બધા ખોલો"
+  },
+  "openGroup": {
+    "message": "ઓપન ગ્રુપ"
+  },
+  "pageTotalPlural": {
+    "message": "કુલ ટ tabબ્સ"
+  },
+  "pageTotalSingular": {
+    "message": "કુલ ટેબ"
+  },
+  "pickColor": {
+    "message": "જૂથનો રંગ ચૂંટો"
+  },
+  "quickDemo": {
+    "message": "ઝડપી ડેમો"
+  },
+  "settings": {
+    "message": "સેટિંગ્સ"
+  },
+  "shareAll": {
+    "message": "બધા શેર કરો"
+  },
+  "showTabs": {
+    "message": "ટsબ્સ બતાવો"
+  },
+  "supportUs": {
+    "message": "અમારો સપોર્ટ કરો"
+  },
+  "title": {
+    "message": "શીર્ષક"
   }
 }

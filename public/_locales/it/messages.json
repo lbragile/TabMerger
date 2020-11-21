@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Unisce le schede in un'unica posizione per risparmiare l'utilizzo della memoria e aumentare la produttività.",
     "description": "La descrizione dell'estensione, come visualizzata nel  Web Store."
+  },
+  "addGroup": {
+    "message": "Aggiungere gruppo"
+  },
+  "bgAll": {
+    "message": "Unisci TUTTE le schede in questa finestra"
+  },
+  "bgContact": {
+    "message": "Contattaci"
+  },
+  "bgExclude": {
+    "message": "Unisci schede ESCLUSA la scheda corrente in questa finestra"
+  },
+  "bgInstructions": {
+    "message": "Istruzioni"
+  },
+  "bgLeft": {
+    "message": "Unisci le schede a SINISTRA della scheda corrente in questa finestra"
+  },
+  "bgOnly": {
+    "message": "Unisci SOLO la scheda corrente in questa finestra"
+  },
+  "bgOpen": {
+    "message": "Apri TabMerger"
+  },
+  "bgRight": {
+    "message": "Unisci le schede a DESTRA della scheda corrente in questa finestra"
+  },
+  "bgSiteExclude": {
+    "message": "Escludi il sito dalla visibilità di TabMerger"
+  },
+  "created": {
+    "message": "Creato"
+  },
+  "deleteAll": {
+    "message": "Cancella tutto"
+  },
+  "deleteGroup": {
+    "message": "Elimina gruppo"
+  },
+  "editTitle": {
+    "message": "Modifica il titolo del gruppo"
+  },
+  "groupTotalPlural": {
+    "message": "schede nel gruppo"
+  },
+  "groupTotalSingular": {
+    "message": "scheda nel gruppo"
+  },
+  "hideTabs": {
+    "message": "Nascondi schede"
+  },
+  "leaveReview": {
+    "message": "Lascia una recensione"
+  },
+  "mergeALLtabs": {
+    "message": "Unisci TUTTE le schede"
+  },
+  "mergeLEFTtabs": {
+    "message": "Unisci schede SINISTRA"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Unisci schede DESTRA"
+  },
+  "needHelp": {
+    "message": "Ho bisogno di aiuto?"
+  },
+  "openAll": {
+    "message": "Apri tutto"
+  },
+  "openGroup": {
+    "message": "Apri gruppo"
+  },
+  "pageTotalPlural": {
+    "message": "schede in totale"
+  },
+  "pageTotalSingular": {
+    "message": "scheda in totale"
+  },
+  "pickColor": {
+    "message": "Scegli Colore gruppo"
+  },
+  "quickDemo": {
+    "message": "Demo veloce"
+  },
+  "settings": {
+    "message": "impostazioni"
+  },
+  "shareAll": {
+    "message": "Condividi tutto"
+  },
+  "showTabs": {
+    "message": "Mostra schede"
+  },
+  "supportUs": {
+    "message": "Supportaci"
+  },
+  "title": {
+    "message": "Titolo"
   }
 }

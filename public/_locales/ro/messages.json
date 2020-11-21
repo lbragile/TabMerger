@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Îmbină filele într-o singură locație pentru a economisi utilizarea memoriei și a vă crește productivitatea.",
     "description": "Descrierea extensiei, așa cum este afișată în Magazinul web."
+  },
+  "addGroup": {
+    "message": "Adăugare grup"
+  },
+  "bgAll": {
+    "message": "Îmbinați TOATE filele din această fereastră"
+  },
+  "bgContact": {
+    "message": "Contactează-ne"
+  },
+  "bgExclude": {
+    "message": "Îmbinarea filelor EXCLUDIND fila curentă din această fereastră"
+  },
+  "bgInstructions": {
+    "message": "Instrucțiuni"
+  },
+  "bgLeft": {
+    "message": "Îmbinați filele la STÂNGA din fila curentă în această fereastră"
+  },
+  "bgOnly": {
+    "message": "Îmbinați DOAR fila curentă din această fereastră"
+  },
+  "bgOpen": {
+    "message": "Deschideți TabMerger"
+  },
+  "bgRight": {
+    "message": "Îmbinați filele la DREAPTA filei curente din această fereastră"
+  },
+  "bgSiteExclude": {
+    "message": "Excludeți site-ul din vizibilitatea TabMerger"
+  },
+  "created": {
+    "message": "Creată"
+  },
+  "deleteAll": {
+    "message": "Sterge tot"
+  },
+  "deleteGroup": {
+    "message": "Ștergeți grupul"
+  },
+  "editTitle": {
+    "message": "Editați titlul grupului"
+  },
+  "groupTotalPlural": {
+    "message": "filele din grup"
+  },
+  "groupTotalSingular": {
+    "message": "filă în grup"
+  },
+  "hideTabs": {
+    "message": "Ascunde filele"
+  },
+  "leaveReview": {
+    "message": "Lăsați o recenzie"
+  },
+  "mergeALLtabs": {
+    "message": "Îmbinați TOATE filele"
+  },
+  "mergeLEFTtabs": {
+    "message": "Combinați filele din stânga"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Combinați filele DREAPTA"
+  },
+  "needHelp": {
+    "message": "Nevoie de ajutor?"
+  },
+  "openAll": {
+    "message": "Deschideți toate"
+  },
+  "openGroup": {
+    "message": "Deschideți grupul"
+  },
+  "pageTotalPlural": {
+    "message": "filele în total"
+  },
+  "pageTotalSingular": {
+    "message": "filă în total"
+  },
+  "pickColor": {
+    "message": "Alegeți culoarea grupului"
+  },
+  "quickDemo": {
+    "message": "Demo rapid"
+  },
+  "settings": {
+    "message": "Setări"
+  },
+  "shareAll": {
+    "message": "Distribuiți toate"
+  },
+  "showTabs": {
+    "message": "Afișați filele"
+  },
+  "supportUs": {
+    "message": "Ajuta-ne"
+  },
+  "title": {
+    "message": "Titlu"
   }
 }

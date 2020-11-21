@@ -101,7 +101,7 @@ chrome.runtime.onMessage.addListener((request) => {
 
 chrome.contextMenus.create({
   id: "open-tabmerger",
-  title: "Open TabMerger",
+  title: chrome.i18n.getMessage("bgOpen"),
 });
 
 chrome.contextMenus.create({
@@ -111,27 +111,27 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.create({
   id: "merge-all-menu",
-  title: "Merge ALL tabs in this window",
+  title: chrome.i18n.getMessage("bgAll"),
 });
 
 chrome.contextMenus.create({
   id: "merge-left-menu",
-  title: "Merge tabs to LEFT of current tab in this window",
+  title: chrome.i18n.getMessage("bgLeft"),
 });
 
 chrome.contextMenus.create({
   id: "merge-right-menu",
-  title: "Merge tabs to RIGHT of current tab in this window",
+  title: chrome.i18n.getMessage("bgRight"),
 });
 
 chrome.contextMenus.create({
   id: "merge-excluding-menu",
-  title: "Merge tabs EXCLUDING current tab in this window",
+  title: chrome.i18n.getMessage("bgExclude"),
 });
 
 chrome.contextMenus.create({
   id: "merge-only-menu",
-  title: "Merge ONLY current tab in this window",
+  title: chrome.i18n.getMessage("bgOnly"),
 });
 
 chrome.contextMenus.create({
@@ -141,7 +141,7 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.create({
   id: "exclude-settings-menu",
-  title: "Exclude site from TabMerger's visibility",
+  title: chrome.i18n.getMessage("bgSiteExclude"),
 });
 
 chrome.contextMenus.create({
@@ -151,12 +151,12 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.create({
   id: "dl-instructions",
-  title: "Instructions",
+  title: chrome.i18n.getMessage("bgInstructions"),
 });
 
 chrome.contextMenus.create({
   id: "dl-contact",
-  title: "Contact Us",
+  title: chrome.i18n.getMessage("bgContact"),
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {

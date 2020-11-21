@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Bellek kullanımından tasarruf etmek ve üretkenliğinizi artırmak için sekmelerinizi tek bir konumda birleştirir.",
     "description": "Web Mağazası'nda görüntülendiği şekliyle uzantının açıklaması."
+  },
+  "addGroup": {
+    "message": "Grup ekle"
+  },
+  "bgAll": {
+    "message": "Bu penceredeki TÜM sekmeleri birleştirin"
+  },
+  "bgContact": {
+    "message": "Bize Ulaşın"
+  },
+  "bgExclude": {
+    "message": "Bu penceredeki geçerli sekme HARİÇ sekmeleri birleştir"
+  },
+  "bgInstructions": {
+    "message": "Talimatlar"
+  },
+  "bgLeft": {
+    "message": "Sekmeleri bu penceredeki geçerli sekmenin SOLU ile birleştir"
+  },
+  "bgOnly": {
+    "message": "Bu pencerede YALNIZCA geçerli sekmeyi birleştir"
+  },
+  "bgOpen": {
+    "message": "TabMerger'ı açın"
+  },
+  "bgRight": {
+    "message": "Sekmeleri bu penceredeki geçerli sekmenin SAĞA birleştirin"
+  },
+  "bgSiteExclude": {
+    "message": "Siteyi TabMerger görünürlüğünden hariç tutun"
+  },
+  "created": {
+    "message": "Oluşturuldu"
+  },
+  "deleteAll": {
+    "message": "Hepsini sil"
+  },
+  "deleteGroup": {
+    "message": "Grubu Sil"
+  },
+  "editTitle": {
+    "message": "Grup Başlığını Düzenle"
+  },
+  "groupTotalPlural": {
+    "message": "gruptaki sekmeler"
+  },
+  "groupTotalSingular": {
+    "message": "gruptaki sekme"
+  },
+  "hideTabs": {
+    "message": "Sekmeleri Gizle"
+  },
+  "leaveReview": {
+    "message": "İnceleme bırak"
+  },
+  "mergeALLtabs": {
+    "message": "TÜM Sekmeleri Birleştir"
+  },
+  "mergeLEFTtabs": {
+    "message": "SOL Sekmeleri Birleştir"
+  },
+  "mergeRIGHTtabs": {
+    "message": "SAĞ Sekmeleri Birleştir"
+  },
+  "needHelp": {
+    "message": "Yardıma mı ihtiyacınız var?"
+  },
+  "openAll": {
+    "message": "Hepsini aç"
+  },
+  "openGroup": {
+    "message": "Açık Grup"
+  },
+  "pageTotalPlural": {
+    "message": "toplam sekme"
+  },
+  "pageTotalSingular": {
+    "message": "toplamda sekme"
+  },
+  "pickColor": {
+    "message": "Grup Rengini Seçin"
+  },
+  "quickDemo": {
+    "message": "Hızlı Demo"
+  },
+  "settings": {
+    "message": "Ayarlar"
+  },
+  "shareAll": {
+    "message": "Tümünü Paylaş"
+  },
+  "showTabs": {
+    "message": "Sekmeleri Göster"
+  },
+  "supportUs": {
+    "message": "Bizi destekle"
+  },
+  "title": {
+    "message": "Başlık"
   }
 }

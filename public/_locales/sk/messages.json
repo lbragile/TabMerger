@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Zlúči vaše karty na jedno miesto, aby šetrilo využitie pamäte a zvýšilo vašu produktivitu.",
     "description": "Popis prípony, ako sa zobrazuje vo webovom obchode."
+  },
+  "addGroup": {
+    "message": "Pridať skupinu"
+  },
+  "bgAll": {
+    "message": "Zlúčiť VŠETKY karty v tomto okne"
+  },
+  "bgContact": {
+    "message": "Kontaktuj nás"
+  },
+  "bgExclude": {
+    "message": "Zlúčiť karty OKREM súčasnej karty v tomto okne"
+  },
+  "bgInstructions": {
+    "message": "Inštrukcie"
+  },
+  "bgLeft": {
+    "message": "V tomto okne zlúčte karty doľava od aktuálnej karty"
+  },
+  "bgOnly": {
+    "message": "V tomto okne zlúčiť IBA aktuálnu kartu"
+  },
+  "bgOpen": {
+    "message": "Otvorte aplikáciu TabMerger"
+  },
+  "bgRight": {
+    "message": "V tomto okne zlúčte karty do PRÁVA aktuálnej karty"
+  },
+  "bgSiteExclude": {
+    "message": "Vylúčiť web z viditeľnosti TabMergeru"
+  },
+  "created": {
+    "message": "Vytvorené"
+  },
+  "deleteAll": {
+    "message": "Vymazať všetko"
+  },
+  "deleteGroup": {
+    "message": "Odstrániť skupinu"
+  },
+  "editTitle": {
+    "message": "Upraviť názov skupiny"
+  },
+  "groupTotalPlural": {
+    "message": "karty v skupine"
+  },
+  "groupTotalSingular": {
+    "message": "karta v skupine"
+  },
+  "hideTabs": {
+    "message": "Skryť karty"
+  },
+  "leaveReview": {
+    "message": "Zanechajte recenziu"
+  },
+  "mergeALLtabs": {
+    "message": "Zlúčiť VŠETKY karty"
+  },
+  "mergeLEFTtabs": {
+    "message": "Zlúčiť LEVÉ karty"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Zlúčiť PRAVÉ karty"
+  },
+  "needHelp": {
+    "message": "Potrebujete pomoc?"
+  },
+  "openAll": {
+    "message": "Otvoriť všetko"
+  },
+  "openGroup": {
+    "message": "Otvoriť skupinu"
+  },
+  "pageTotalPlural": {
+    "message": "karty celkovo"
+  },
+  "pageTotalSingular": {
+    "message": "karta celkovo"
+  },
+  "pickColor": {
+    "message": "Vyberte farbu skupiny"
+  },
+  "quickDemo": {
+    "message": "Rýchla ukážka"
+  },
+  "settings": {
+    "message": "nastavenie"
+  },
+  "shareAll": {
+    "message": "Zdieľať všetko"
+  },
+  "showTabs": {
+    "message": "Zobraziť karty"
+  },
+  "supportUs": {
+    "message": "Podpor nás"
+  },
+  "title": {
+    "message": "Názov"
   }
 }

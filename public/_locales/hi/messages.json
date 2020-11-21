@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "स्मृति उपयोग को बचाने और अपनी उत्पादकता बढ़ाने के लिए अपने टैब को एक स्थान पर जोड़ता है।",
     "description": "एक्सटेंशन का विवरण, जैसा कि क्रोम वेब स्टोर में प्रदर्शित होता है।"
+  },
+  "addGroup": {
+    "message": "समूह जोड़ें"
+  },
+  "bgAll": {
+    "message": "इस विंडो में सभी टैब मर्ज करें"
+  },
+  "bgContact": {
+    "message": "संपर्क करें"
+  },
+  "bgExclude": {
+    "message": "इस विंडो में मौजूदा टैब को छोड़ें टैब को मिलाएं"
+  },
+  "bgInstructions": {
+    "message": "अनुदेश"
+  },
+  "bgLeft": {
+    "message": "इस विंडो में करंट टैब के LEFT में मर्ज करें"
+  },
+  "bgOnly": {
+    "message": "इस विंडो में केवल वर्तमान टैब मर्ज करें"
+  },
+  "bgOpen": {
+    "message": "TabMerger खोलें"
+  },
+  "bgRight": {
+    "message": "इस विंडो में करंट टैब के राइट को मर्ज करें"
+  },
+  "bgSiteExclude": {
+    "message": "TabMerger की दृश्यता से साइट को बाहर करें"
+  },
+  "created": {
+    "message": "बनाया था"
+  },
+  "deleteAll": {
+    "message": "सभी हटा दो"
+  },
+  "deleteGroup": {
+    "message": "समूह हटाएँ"
+  },
+  "editTitle": {
+    "message": "समूह शीर्षक संपादित करें"
+  },
+  "groupTotalPlural": {
+    "message": "समूह में टैब"
+  },
+  "groupTotalSingular": {
+    "message": "समूह में टैब"
+  },
+  "hideTabs": {
+    "message": "टैब छिपाएं"
+  },
+  "leaveReview": {
+    "message": "समीक्षा लिखें"
+  },
+  "mergeALLtabs": {
+    "message": "सभी टैब को मर्ज करें"
+  },
+  "mergeLEFTtabs": {
+    "message": "मर्ज बाएँ टैब"
+  },
+  "mergeRIGHTtabs": {
+    "message": "मर्ज राइट टैब"
+  },
+  "needHelp": {
+    "message": "मदद की ज़रूरत है?"
+  },
+  "openAll": {
+    "message": "सभी खुले"
+  },
+  "openGroup": {
+    "message": "समूह खोलें"
+  },
+  "pageTotalPlural": {
+    "message": "कुल में टैब"
+  },
+  "pageTotalSingular": {
+    "message": "कुल में टैब"
+  },
+  "pickColor": {
+    "message": "समूह रंग चुनें"
+  },
+  "quickDemo": {
+    "message": "क्विक डेमो"
+  },
+  "settings": {
+    "message": "समायोजन"
+  },
+  "shareAll": {
+    "message": "सभी को साझा करें"
+  },
+  "showTabs": {
+    "message": "टैब दिखाएं"
+  },
+  "supportUs": {
+    "message": "हमें सहयोग दीजिये"
+  },
+  "title": {
+    "message": "शीर्षक"
   }
 }

@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "মেমরির ব্যবহার বাঁচাতে এবং আপনার উত্পাদনশীলতা বাড়ানোর জন্য আপনার ট্যাবগুলিকে এক জায়গায় একীভূত করে।",
     "description": "ক্রোম ওয়েব স্টোরে প্রদর্শিত হিসাবে এক্সটেনশনের বিবরণ।"
+  },
+  "addGroup": {
+    "message": "গ্রুপ যুক্ত করুন"
+  },
+  "bgAll": {
+    "message": "এই উইন্ডোতে সমস্ত ট্যাব মার্জ করুন"
+  },
+  "bgContact": {
+    "message": "যোগাযোগ করুন"
+  },
+  "bgExclude": {
+    "message": "এই উইন্ডোতে বর্তমান ট্যাবগুলি বাদ দিয়ে ট্যাবগুলি মার্জ করুন"
+  },
+  "bgInstructions": {
+    "message": "নির্দেশনা"
+  },
+  "bgLeft": {
+    "message": "এই উইন্ডোতে ট্যাবগুলি বর্তমান ট্যাবের LEFT এ মার্জ করুন"
+  },
+  "bgOnly": {
+    "message": "এই উইন্ডোটিতে কেবলমাত্র বর্তমান ট্যাবটি মার্জ করুন"
+  },
+  "bgOpen": {
+    "message": "TabMerger খুলুন"
+  },
+  "bgRight": {
+    "message": "এই উইন্ডোতে ট্যাবগুলি বর্তমান ট্যাবের RIGHT এ মার্জ করুন"
+  },
+  "bgSiteExclude": {
+    "message": "ট্যাবমার্জারের দৃশ্যমানতা থেকে সাইটকে বাদ দিন"
+  },
+  "created": {
+    "message": "তৈরি হয়েছে"
+  },
+  "deleteAll": {
+    "message": "সব মুছে ফেলুন"
+  },
+  "deleteGroup": {
+    "message": "দল মুছুন"
+  },
+  "editTitle": {
+    "message": "গোষ্ঠী শিরোনাম সম্পাদনা করুন"
+  },
+  "groupTotalPlural": {
+    "message": "গ্রুপে ট্যাব"
+  },
+  "groupTotalSingular": {
+    "message": "গ্রুপে ট্যাব"
+  },
+  "hideTabs": {
+    "message": "ট্যাবগুলি লুকান"
+  },
+  "leaveReview": {
+    "message": "একটি পর্যালোচনা ছেড়ে দিন"
+  },
+  "mergeALLtabs": {
+    "message": "সমস্ত ট্যাবগুলি মার্জ করুন"
+  },
+  "mergeLEFTtabs": {
+    "message": "বাম ট্যাবগুলি মার্জ করুন"
+  },
+  "mergeRIGHTtabs": {
+    "message": "সঠিক ট্যাবগুলি মার্জ করুন"
+  },
+  "needHelp": {
+    "message": "সাহায্য দরকার?"
+  },
+  "openAll": {
+    "message": "সব খোলো"
+  },
+  "openGroup": {
+    "message": "ওপেন গ্রুপ"
+  },
+  "pageTotalPlural": {
+    "message": "মোট ট্যাব"
+  },
+  "pageTotalSingular": {
+    "message": "মোট ট্যাব"
+  },
+  "pickColor": {
+    "message": "গ্রুপ রঙ চয়ন করুন"
+  },
+  "quickDemo": {
+    "message": "কুইক ডেমো"
+  },
+  "settings": {
+    "message": "সেটিংস"
+  },
+  "shareAll": {
+    "message": "সব শেয়ার করুন"
+  },
+  "showTabs": {
+    "message": "ট্যাবগুলি দেখান"
+  },
+  "supportUs": {
+    "message": "ভগ"
+  },
+  "title": {
+    "message": "শিরোনাম"
   }
 }

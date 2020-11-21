@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Sloučí vaše karty na jedno místo, aby šetřilo využití paměti a zvýšilo vaši produktivitu.",
     "description": "Popis rozšíření, jak je zobrazen v Internetovém obchodě ."
+  },
+  "addGroup": {
+    "message": "Přidat skupinu"
+  },
+  "bgAll": {
+    "message": "Sloučit VŠECHNY karty v tomto okně"
+  },
+  "bgContact": {
+    "message": "Kontaktujte nás"
+  },
+  "bgExclude": {
+    "message": "Sloučit karty OKREM aktuální karty v tomto okně"
+  },
+  "bgInstructions": {
+    "message": "Instrukce"
+  },
+  "bgLeft": {
+    "message": "Sloučit karty v levé části aktuální karty v tomto okně"
+  },
+  "bgOnly": {
+    "message": "Sloučit POUZE aktuální kartu v tomto okně"
+  },
+  "bgOpen": {
+    "message": "Otevřete TabMerger"
+  },
+  "bgRight": {
+    "message": "Sloučit karty do PRÁVA aktuální karty v tomto okně"
+  },
+  "bgSiteExclude": {
+    "message": "Vyloučit web z viditelnosti TabMergeru"
+  },
+  "created": {
+    "message": "Vytvořeno"
+  },
+  "deleteAll": {
+    "message": "Smazat všechny"
+  },
+  "deleteGroup": {
+    "message": "Odstranit skupinu"
+  },
+  "editTitle": {
+    "message": "Upravit název skupiny"
+  },
+  "groupTotalPlural": {
+    "message": "karty ve skupině"
+  },
+  "groupTotalSingular": {
+    "message": "záložka ve skupině"
+  },
+  "hideTabs": {
+    "message": "Skrýt karty"
+  },
+  "leaveReview": {
+    "message": "Zanechat recenzi"
+  },
+  "mergeALLtabs": {
+    "message": "Sloučit VŠECHNY karty"
+  },
+  "mergeLEFTtabs": {
+    "message": "Sloučit LEVÉ záložky"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Sloučit PRAVÉ záložky"
+  },
+  "needHelp": {
+    "message": "Potřebovat pomoc?"
+  },
+  "openAll": {
+    "message": "Otevřít vše"
+  },
+  "openGroup": {
+    "message": "Otevřít skupinu"
+  },
+  "pageTotalPlural": {
+    "message": "karty celkem"
+  },
+  "pageTotalSingular": {
+    "message": "karta celkem"
+  },
+  "pickColor": {
+    "message": "Vyberte barvu skupiny"
+  },
+  "quickDemo": {
+    "message": "Rychlá ukázka"
+  },
+  "settings": {
+    "message": "Nastavení"
+  },
+  "shareAll": {
+    "message": "Sdílet vše"
+  },
+  "showTabs": {
+    "message": "Zobrazit karty"
+  },
+  "supportUs": {
+    "message": "Podpoř nás"
+  },
+  "title": {
+    "message": "Titul"
   }
 }

@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Συγχώνευση των καρτελών σας σε μία τοποθεσία για εξοικονόμηση χρήσης μνήμης και αύξηση της παραγωγικότητάς σας.",
     "description": "Η περιγραφή της επέκτασης, όπως εμφανίζεται στο  Web Store."
+  },
+  "addGroup": {
+    "message": "Προσθήκη ομάδας"
+  },
+  "bgAll": {
+    "message": "Συγχώνευση ΟΛΩΝ των καρτελών σε αυτό το παράθυρο"
+  },
+  "bgContact": {
+    "message": "Επικοινωνήστε μαζί μας"
+  },
+  "bgExclude": {
+    "message": "Συγχώνευση καρτελών ΠΕΡΙΛΑΜΒΑΝΟΝΤΑΣ την τρέχουσα καρτέλα σε αυτό το παράθυρο"
+  },
+  "bgInstructions": {
+    "message": "Οδηγίες"
+  },
+  "bgLeft": {
+    "message": "Συγχώνευση καρτελών στο ΑΡΙΣΤΕΡΟ της τρέχουσας καρτέλας σε αυτό το παράθυρο"
+  },
+  "bgOnly": {
+    "message": "Συγχώνευση ΜΟΝΟ τρέχουσα καρτέλα σε αυτό το παράθυρο"
+  },
+  "bgOpen": {
+    "message": "Ανοίξτε το TabMerger"
+  },
+  "bgRight": {
+    "message": "Συγχώνευση καρτελών στο ΔΕΞΙΟ της τρέχουσας καρτέλας σε αυτό το παράθυρο"
+  },
+  "bgSiteExclude": {
+    "message": "Εξαίρεση ιστότοπου από την προβολή του TabMerger"
+  },
+  "created": {
+    "message": "Δημιουργήθηκε"
+  },
+  "deleteAll": {
+    "message": "Διαγραφή όλων"
+  },
+  "deleteGroup": {
+    "message": "Διαγραφή ομάδας"
+  },
+  "editTitle": {
+    "message": "Επεξεργασία τίτλου ομάδας"
+  },
+  "groupTotalPlural": {
+    "message": "καρτέλες σε ομάδα"
+  },
+  "groupTotalSingular": {
+    "message": "καρτέλα στην ομάδα"
+  },
+  "hideTabs": {
+    "message": "Απόκρυψη καρτελών"
+  },
+  "leaveReview": {
+    "message": "Αφήστε μια κριτική"
+  },
+  "mergeALLtabs": {
+    "message": "Συγχώνευση όλων των καρτελών"
+  },
+  "mergeLEFTtabs": {
+    "message": "Συγχώνευση ΑΡΙΣΤΕΩΝ καρτελών"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Συγχώνευση δεξιών καρτελών"
+  },
+  "needHelp": {
+    "message": "Χρειάζεστε βοήθεια;"
+  },
+  "openAll": {
+    "message": "Άνοιγμα όλων"
+  },
+  "openGroup": {
+    "message": "Άνοιγμα ομάδας"
+  },
+  "pageTotalPlural": {
+    "message": "συνολικά καρτέλες"
+  },
+  "pageTotalSingular": {
+    "message": "συνολικά καρτέλα"
+  },
+  "pickColor": {
+    "message": "Επιλέξτε χρώμα ομάδας"
+  },
+  "quickDemo": {
+    "message": "Γρήγορη επίδειξη"
+  },
+  "settings": {
+    "message": "Ρυθμίσεις"
+  },
+  "shareAll": {
+    "message": "Κοινή χρήση όλων"
+  },
+  "showTabs": {
+    "message": "Εμφάνιση καρτελών"
+  },
+  "supportUs": {
+    "message": "Υποστήριξε μας"
+  },
+  "title": {
+    "message": "Τίτλος"
   }
 }

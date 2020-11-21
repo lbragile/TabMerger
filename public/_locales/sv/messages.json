@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Slår samman dina flikar på en plats för att spara minnesanvändning och öka din produktivitet.",
     "description": "Beskrivningen av tillägget, som visas i webbutiken."
+  },
+  "addGroup": {
+    "message": "Lägg till grupp"
+  },
+  "bgAll": {
+    "message": "Slå samman ALLA flikar i det här fönstret"
+  },
+  "bgContact": {
+    "message": "Kontakta oss"
+  },
+  "bgExclude": {
+    "message": "Slå samman flikar EXKLUDERA aktuell flik i det här fönstret"
+  },
+  "bgInstructions": {
+    "message": "Instruktioner"
+  },
+  "bgLeft": {
+    "message": "Slå samman flikar till VÄNSTER för aktuell flik i det här fönstret"
+  },
+  "bgOnly": {
+    "message": "Slå ENDAST samman den aktuella fliken i det här fönstret"
+  },
+  "bgOpen": {
+    "message": "Öppna TabMerger"
+  },
+  "bgRight": {
+    "message": "Slå samman flikar till HÖGER för aktuell flik i det här fönstret"
+  },
+  "bgSiteExclude": {
+    "message": "Uteslut webbplats från TabMergers synlighet"
+  },
+  "created": {
+    "message": "Skapad"
+  },
+  "deleteAll": {
+    "message": "Radera allt"
+  },
+  "deleteGroup": {
+    "message": "Ta bort grupp"
+  },
+  "editTitle": {
+    "message": "Redigera grupptitel"
+  },
+  "groupTotalPlural": {
+    "message": "flikar i grupp"
+  },
+  "groupTotalSingular": {
+    "message": "flik i grupp"
+  },
+  "hideTabs": {
+    "message": "Dölj flikar"
+  },
+  "leaveReview": {
+    "message": "Lämna en recension"
+  },
+  "mergeALLtabs": {
+    "message": "Slå samman ALLA flikar"
+  },
+  "mergeLEFTtabs": {
+    "message": "Slå samman VÄNSTER flikar"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Slå ihop HÖGER flikar"
+  },
+  "needHelp": {
+    "message": "Behövs hjälp?"
+  },
+  "openAll": {
+    "message": "Öppna alla"
+  },
+  "openGroup": {
+    "message": "Öppna grupp"
+  },
+  "pageTotalPlural": {
+    "message": "flikar totalt"
+  },
+  "pageTotalSingular": {
+    "message": "fliken totalt"
+  },
+  "pickColor": {
+    "message": "Välj gruppfärg"
+  },
+  "quickDemo": {
+    "message": "Snabb demo"
+  },
+  "settings": {
+    "message": "inställningar"
+  },
+  "shareAll": {
+    "message": "Dela alla"
+  },
+  "showTabs": {
+    "message": "Visa flikar"
+  },
+  "supportUs": {
+    "message": "Stöd oss"
+  },
+  "title": {
+    "message": "Titel"
   }
 }

@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Združi zavihke na enem mestu, da prihrani porabo pomnilnika in poveča produktivnost.",
     "description": "Opis razširitve, kot je prikazan v spletni trgovini."
+  },
+  "addGroup": {
+    "message": "Dodaj skupino"
+  },
+  "bgAll": {
+    "message": "V tem oknu združite VSE zavihke"
+  },
+  "bgContact": {
+    "message": "Kontaktiraj nas"
+  },
+  "bgExclude": {
+    "message": "Združi zavihke RAZEN trenutnega zavihka v tem oknu"
+  },
+  "bgInstructions": {
+    "message": "Navodila"
+  },
+  "bgLeft": {
+    "message": "V tem oknu združite zavihke LEVO od trenutnega zavihka"
+  },
+  "bgOnly": {
+    "message": "V tem oknu združite SAMO trenutni zavihek"
+  },
+  "bgOpen": {
+    "message": "Odprite TabMerger"
+  },
+  "bgRight": {
+    "message": "V tem oknu združite zavihke v DESNO z zavihkom"
+  },
+  "bgSiteExclude": {
+    "message": "Izključite spletno mesto iz vidnosti TabMergerja"
+  },
+  "created": {
+    "message": "Ustvarjeno"
+  },
+  "deleteAll": {
+    "message": "Izbriši vse"
+  },
+  "deleteGroup": {
+    "message": "Izbriši skupino"
+  },
+  "editTitle": {
+    "message": "Uredi naslov skupine"
+  },
+  "groupTotalPlural": {
+    "message": "zavihki v skupini"
+  },
+  "groupTotalSingular": {
+    "message": "zavihek v skupini"
+  },
+  "hideTabs": {
+    "message": "Skrij zavihke"
+  },
+  "leaveReview": {
+    "message": "Pustite pregled"
+  },
+  "mergeALLtabs": {
+    "message": "Združi VSE zavihke"
+  },
+  "mergeLEFTtabs": {
+    "message": "Združi leve zavihke"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Združi DESNE zavihke"
+  },
+  "needHelp": {
+    "message": "Rabim pomoč?"
+  },
+  "openAll": {
+    "message": "Odpri vse"
+  },
+  "openGroup": {
+    "message": "Odpri skupino"
+  },
+  "pageTotalPlural": {
+    "message": "zavihkov skupaj"
+  },
+  "pageTotalSingular": {
+    "message": "zavihek skupaj"
+  },
+  "pickColor": {
+    "message": "Izberite barvo skupine"
+  },
+  "quickDemo": {
+    "message": "Hitra predstavitev"
+  },
+  "settings": {
+    "message": "Nastavitve"
+  },
+  "shareAll": {
+    "message": "Skupna raba vseh"
+  },
+  "showTabs": {
+    "message": "Pokaži zavihke"
+  },
+  "supportUs": {
+    "message": "Podprite nas"
+  },
+  "title": {
+    "message": "Naslov"
   }
 }

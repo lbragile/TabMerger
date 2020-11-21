@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Pinagsama ang iyong mga tab sa isang lokasyon upang i-save ang paggamit ng memorya at madagdagan ang iyong pagiging produktibo.",
     "description": "Ang paglalarawan ng extension, tulad ng ipinakita sa  Web Store."
+  },
+  "addGroup": {
+    "message": "Magdagdag ng grupo"
+  },
+  "bgAll": {
+    "message": "Pagsamahin ang LAHAT ng mga tab sa window na ito"
+  },
+  "bgContact": {
+    "message": "Makipag-ugnayan sa amin"
+  },
+  "bgExclude": {
+    "message": "Pagsamahin ang mga tab na EXCLUDING kasalukuyang tab sa window na ito"
+  },
+  "bgInstructions": {
+    "message": "Panuto"
+  },
+  "bgLeft": {
+    "message": "Pagsamahin ang mga tab sa KALIWAN ng kasalukuyang tab sa window na ito"
+  },
+  "bgOnly": {
+    "message": "Pagsamahin LAMANG kasalukuyang kasalukuyang tab sa window na ito"
+  },
+  "bgOpen": {
+    "message": "Buksan ang TabMerger"
+  },
+  "bgRight": {
+    "message": "Pagsamahin ang mga tab sa RIGHT ng kasalukuyang tab sa window na ito"
+  },
+  "bgSiteExclude": {
+    "message": "Ibukod ang site mula sa kakayahang makita ng TabMerger"
+  },
+  "created": {
+    "message": "Nilikha"
+  },
+  "deleteAll": {
+    "message": "Tanggalin ang lahat"
+  },
+  "deleteGroup": {
+    "message": "Tanggalin ang Pangkat"
+  },
+  "editTitle": {
+    "message": "I-edit ang Pamagat ng Grupo"
+  },
+  "groupTotalPlural": {
+    "message": "mga tab sa pangkat"
+  },
+  "groupTotalSingular": {
+    "message": "tab sa pangkat"
+  },
+  "hideTabs": {
+    "message": "Itago ang Mga Tab"
+  },
+  "leaveReview": {
+    "message": "Mag-iwan ng Isang Review"
+  },
+  "mergeALLtabs": {
+    "message": "Pagsamahin ang LAHAT ng Mga Tab"
+  },
+  "mergeLEFTtabs": {
+    "message": "Pagsamahin ang LEFT Tabs"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Pagsamahin ang RIGHT Tabs"
+  },
+  "needHelp": {
+    "message": "Kailangan ng tulong?"
+  },
+  "openAll": {
+    "message": "Buksan ang Lahat"
+  },
+  "openGroup": {
+    "message": "Buksan ang Pangkat"
+  },
+  "pageTotalPlural": {
+    "message": "mga tab sa kabuuan"
+  },
+  "pageTotalSingular": {
+    "message": "tab sa kabuuan"
+  },
+  "pickColor": {
+    "message": "Pumili ng Kulay ng Grupo"
+  },
+  "quickDemo": {
+    "message": "Mabilis na Demo"
+  },
+  "settings": {
+    "message": "Mga setting"
+  },
+  "shareAll": {
+    "message": "Ibahagi ang Lahat"
+  },
+  "showTabs": {
+    "message": "Ipakita ang Mga Tab"
+  },
+  "supportUs": {
+    "message": "Suportahan Kami"
+  },
+  "title": {
+    "message": "Pamagat"
   }
 }

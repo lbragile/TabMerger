@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Gabungkan tab anda ke satu lokasi untuk menjimatkan penggunaan memori dan meningkatkan produktiviti anda.",
     "description": "Keterangan pelanjutan, seperti yang dipaparkan di Kedai Web."
+  },
+  "addGroup": {
+    "message": "Tambah Kumpulan"
+  },
+  "bgAll": {
+    "message": "Gabungkan SEMUA tab di tetingkap ini"
+  },
+  "bgContact": {
+    "message": "Hubungi Kami"
+  },
+  "bgExclude": {
+    "message": "Gabungkan tab MENGECUALI tab semasa di tetingkap ini"
+  },
+  "bgInstructions": {
+    "message": "Arahan"
+  },
+  "bgLeft": {
+    "message": "Gabungkan tab ke KIRI tab semasa di tetingkap ini"
+  },
+  "bgOnly": {
+    "message": "Gabungkan HANYA tab semasa di tetingkap ini"
+  },
+  "bgOpen": {
+    "message": "Buka TabMerger"
+  },
+  "bgRight": {
+    "message": "Gabungkan tab ke KANAN tab semasa di tetingkap ini"
+  },
+  "bgSiteExclude": {
+    "message": "Kecualikan laman web dari keterlihatan TabMerger"
+  },
+  "created": {
+    "message": "Dicipta"
+  },
+  "deleteAll": {
+    "message": "Memadam semua"
+  },
+  "deleteGroup": {
+    "message": "Padam Kumpulan"
+  },
+  "editTitle": {
+    "message": "Edit Tajuk Kumpulan"
+  },
+  "groupTotalPlural": {
+    "message": "tab dalam kumpulan"
+  },
+  "groupTotalSingular": {
+    "message": "tab dalam kumpulan"
+  },
+  "hideTabs": {
+    "message": "Sembunyikan Tab"
+  },
+  "leaveReview": {
+    "message": "Tinggalkan Ulasan"
+  },
+  "mergeALLtabs": {
+    "message": "Gabungkan SEMUA Tab"
+  },
+  "mergeLEFTtabs": {
+    "message": "Gabungkan Tab KIRI"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Gabungkan Tab KANAN"
+  },
+  "needHelp": {
+    "message": "Perlukan bantuan?"
+  },
+  "openAll": {
+    "message": "Buka Semua"
+  },
+  "openGroup": {
+    "message": "Buka Kumpulan"
+  },
+  "pageTotalPlural": {
+    "message": "tab secara keseluruhan"
+  },
+  "pageTotalSingular": {
+    "message": "tab secara keseluruhan"
+  },
+  "pickColor": {
+    "message": "Pilih Warna Kumpulan"
+  },
+  "quickDemo": {
+    "message": "Demo Pantas"
+  },
+  "settings": {
+    "message": "Tetapan"
+  },
+  "shareAll": {
+    "message": "Kongsi Semua"
+  },
+  "showTabs": {
+    "message": "Tunjukkan Tab"
+  },
+  "supportUs": {
+    "message": "Sokong Kami"
+  },
+  "title": {
+    "message": "Tajuk"
   }
 }

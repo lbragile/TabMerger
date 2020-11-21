@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "የማስታወስ አጠቃቀምዎን ለመቆጠብ እና ምርታማነትዎን ለማሳደግ ትሮችዎን ወደ አንድ ቦታ ያዋህዷቸዋል።",
     "description": "በ  ድር መደብር ውስጥ እንደሚታየው የቅጥያው መግለጫ።"
+  },
+  "addGroup": {
+    "message": "ቡድን አክል"
+  },
+  "bgAll": {
+    "message": "በዚህ መስኮት ውስጥ ሁሉንም ትሮች ያዋህዱ"
+  },
+  "bgContact": {
+    "message": "አግኙን"
+  },
+  "bgExclude": {
+    "message": "ትሮችን አዋህድ በዚህ መስኮት ውስጥ የአሁኑ ትርን የማያካትት"
+  },
+  "bgInstructions": {
+    "message": "መመሪያዎች"
+  },
+  "bgLeft": {
+    "message": "ትሮችን በዚህ መስኮት ውስጥ ካለው የአሁኑ ትር LEFT ጋር ያዋህዱ"
+  },
+  "bgOnly": {
+    "message": "በዚህ መስኮት ውስጥ የአሁኑን ትር ብቻ ያዋህዱ"
+  },
+  "bgOpen": {
+    "message": "TabMerger ን ይክፈቱ"
+  },
+  "bgRight": {
+    "message": "ትሮችን በዚህ መስኮት ውስጥ ካለው የአሁኑ ትር RIGHT ጋር ያዋህዱ"
+  },
+  "bgSiteExclude": {
+    "message": "ጣቢያውን ከ TabMerger ታይነት አግልል"
+  },
+  "created": {
+    "message": "ተፈጥሯል"
+  },
+  "deleteAll": {
+    "message": "ሁሉንም ሰርዝ"
+  },
+  "deleteGroup": {
+    "message": "ቡድንን ሰርዝ"
+  },
+  "editTitle": {
+    "message": "የቡድን ርዕስ አርትዕ"
+  },
+  "groupTotalPlural": {
+    "message": "ትሮች በቡድን ውስጥ"
+  },
+  "groupTotalSingular": {
+    "message": "ትር በቡድን ውስጥ"
+  },
+  "hideTabs": {
+    "message": "ትሮችን ደብቅ"
+  },
+  "leaveReview": {
+    "message": "ግምገማ ይተው"
+  },
+  "mergeALLtabs": {
+    "message": "ሁሉንም ትሮች ያዋህዱ"
+  },
+  "mergeLEFTtabs": {
+    "message": "የግራ ትሮችን ያዋህዱ"
+  },
+  "mergeRIGHTtabs": {
+    "message": "የቀኝ ትሮችን ያዋህዱ"
+  },
+  "needHelp": {
+    "message": "እርዳታ ያስፈልጋል?"
+  },
+  "openAll": {
+    "message": "ሁሉንም ክፈት"
+  },
+  "openGroup": {
+    "message": "ክፈት ቡድን"
+  },
+  "pageTotalPlural": {
+    "message": "ትሮች በጠቅላላ"
+  },
+  "pageTotalSingular": {
+    "message": "ትር በአጠቃላይ"
+  },
+  "pickColor": {
+    "message": "የቡድን ቀለም ይምረጡ"
+  },
+  "quickDemo": {
+    "message": "ፈጣን ማሳያ"
+  },
+  "settings": {
+    "message": "ቅንብሮች"
+  },
+  "shareAll": {
+    "message": "ሁሉንም አጋራ"
+  },
+  "showTabs": {
+    "message": "ትሮችን አሳይ"
+  },
+  "supportUs": {
+    "message": "እኛን ይደግፉ"
+  },
+  "title": {
+    "message": "ርዕስ"
   }
 }

@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Merges your tabs into one location to save memory usage and increase your productivity.",
     "description": "The description of the extension, as displayed in the Chrome Web Store."
+  },
+  "pageTotalPlural": {
+    "message": "tabs in total"
+  },
+  "pageTotalSingular": {
+    "message": "tab in total"
+  },
+  "groupTotalPlural": {
+    "message": "tabs in group"
+  },
+  "groupTotalSingular": {
+    "message": "tab in group"
+  },
+  "mergeALLtabs": {
+    "message": "Merge ALL Tabs"
+  },
+  "mergeLEFTtabs": {
+    "message": "Merge LEFT Tabs"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Merge RIGHT Tabs"
+  },
+  "openAll": {
+    "message": "Open All"
+  },
+  "deleteAll": {
+    "message": "Delete All"
+  },
+  "shareAll": {
+    "message": "Share All"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "editTitle": {
+    "message": "Edit Group Title"
+  },
+  "pickColor": {
+    "message": "Pick Group Color"
+  },
+  "hideTabs": {
+    "message": "Hide Tabs"
+  },
+  "showTabs": {
+    "message": "Show Tabs"
+  },
+  "openGroup": {
+    "message": "Open Group"
+  },
+  "deleteGroup": {
+    "message": "Delete Group"
+  },
+  "addGroup": {
+    "message": "Add Group"
+  },
+  "title": {
+    "message": "Title"
+  },
+  "created": {
+    "message": "Created"
+  },
+  "quickDemo": {
+    "message": "Quick Demo"
+  },
+  "supportUs": {
+    "message": "Support Us"
+  },
+  "leaveReview": {
+    "message": "Leave A Review"
+  },
+  "needHelp": {
+    "message": "Need Help?"
+  },
+  "bgOpen": {
+    "message": "Open TabMerger"
+  },
+  "bgAll": {
+    "message": "Merge ALL tabs in this window"
+  },
+  "bgLeft": {
+    "message": "Merge tabs to LEFT of current tab in this window"
+  },
+  "bgRight": {
+    "message": "Merge tabs to RIGHT of current tab in this window"
+  },
+  "bgExclude": {
+    "message": "Merge tabs EXCLUDING current tab in this window"
+  },
+  "bgOnly": {
+    "message": "Merge ONLY current tab in this window"
+  },
+  "bgSiteExclude": {
+    "message": "Exclude site from TabMerger's visibility"
+  },
+  "bgInstructions": {
+    "message": "Instructions"
+  },
+  "bgContact": {
+    "message": "Contact Us"
   }
 }

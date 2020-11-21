@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Combina les pestanyes en una ubicació per estalviar ús de memòria i augmentar la productivitat.",
     "description": "La descripció de l'extensió, tal com es mostra a  Web Store."
+  },
+  "addGroup": {
+    "message": "Afegeix un grup"
+  },
+  "bgAll": {
+    "message": "Combineu TOTES les pestanyes d'aquesta finestra"
+  },
+  "bgContact": {
+    "message": "Poseu-vos en contacte amb nosaltres"
+  },
+  "bgExclude": {
+    "message": "Combina les pestanyes EXCLÉS la pestanya actual en aquesta finestra"
+  },
+  "bgInstructions": {
+    "message": "Instruccions"
+  },
+  "bgLeft": {
+    "message": "Combina les pestanyes a ESQUERRA de la pestanya actual en aquesta finestra"
+  },
+  "bgOnly": {
+    "message": "Combineu NOMÉS la pestanya actual en aquesta finestra"
+  },
+  "bgOpen": {
+    "message": "Obriu TabMerger"
+  },
+  "bgRight": {
+    "message": "Combineu les pestanyes a la DRETA de la pestanya actual en aquesta finestra"
+  },
+  "bgSiteExclude": {
+    "message": "Excloeu el lloc de la visibilitat de TabMerger"
+  },
+  "created": {
+    "message": "Creat"
+  },
+  "deleteAll": {
+    "message": "Eliminar tots"
+  },
+  "deleteGroup": {
+    "message": "Suprimeix el grup"
+  },
+  "editTitle": {
+    "message": "Edita el títol del grup"
+  },
+  "groupTotalPlural": {
+    "message": "pestanyes en grup"
+  },
+  "groupTotalSingular": {
+    "message": "pestanya en grup"
+  },
+  "hideTabs": {
+    "message": "Amaga les pestanyes"
+  },
+  "leaveReview": {
+    "message": "Deixa una ressenya"
+  },
+  "mergeALLtabs": {
+    "message": "Combina TOTES les pestanyes"
+  },
+  "mergeLEFTtabs": {
+    "message": "Combina les pestanyes ESQUERRA"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Combina les pestanyes DRETA"
+  },
+  "needHelp": {
+    "message": "Necessitar ajuda?"
+  },
+  "openAll": {
+    "message": "Obre-ho tot"
+  },
+  "openGroup": {
+    "message": "Grup obert"
+  },
+  "pageTotalPlural": {
+    "message": "pestanyes en total"
+  },
+  "pageTotalSingular": {
+    "message": "fitxa en total"
+  },
+  "pickColor": {
+    "message": "Selecciona el color del grup"
+  },
+  "quickDemo": {
+    "message": "Demostració ràpida"
+  },
+  "settings": {
+    "message": "Configuració"
+  },
+  "shareAll": {
+    "message": "Comparteix-ho tot"
+  },
+  "showTabs": {
+    "message": "Mostra les pestanyes"
+  },
+  "supportUs": {
+    "message": "Ajudeu-nos"
+  },
+  "title": {
+    "message": "Títol"
   }
 }

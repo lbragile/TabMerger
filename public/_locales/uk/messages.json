@@ -6,5 +6,104 @@
   "appDesc": {
     "message": "Об’єднує ваші вкладки в одному місці, щоб заощадити використання пам’яті та підвищити продуктивність.",
     "description": "Опис розширення, як показано у Веб-магазині."
+  },
+  "addGroup": {
+    "message": "Додати групу"
+  },
+  "bgAll": {
+    "message": "Об’єднайте ВСІ вкладки у цьому вікні"
+  },
+  "bgContact": {
+    "message": "Зв'яжіться з нами"
+  },
+  "bgExclude": {
+    "message": "Об’єднати вкладки ВИМОГО поточної вкладки у цьому вікні"
+  },
+  "bgInstructions": {
+    "message": "Інструкції"
+  },
+  "bgLeft": {
+    "message": "Об’єднайте вкладки вліво від поточної вкладки у цьому вікні"
+  },
+  "bgOnly": {
+    "message": "Об’єднати ТІЛЬКИ поточну вкладку у цьому вікні"
+  },
+  "bgOpen": {
+    "message": "Відкрийте TabMerger"
+  },
+  "bgRight": {
+    "message": "Об’єднайте вкладки вправо від поточної вкладки у цьому вікні"
+  },
+  "bgSiteExclude": {
+    "message": "Виключити сайт із видимості TabMerger"
+  },
+  "created": {
+    "message": "Створено"
+  },
+  "deleteAll": {
+    "message": "Видалити всі"
+  },
+  "deleteGroup": {
+    "message": "Видалити групу"
+  },
+  "editTitle": {
+    "message": "Редагувати заголовок групи"
+  },
+  "groupTotalPlural": {
+    "message": "вкладки в групі"
+  },
+  "groupTotalSingular": {
+    "message": "вкладка в групі"
+  },
+  "hideTabs": {
+    "message": "Сховати вкладки"
+  },
+  "leaveReview": {
+    "message": "Залиште відгук"
+  },
+  "mergeALLtabs": {
+    "message": "Об’єднати ВСІ Вкладки"
+  },
+  "mergeLEFTtabs": {
+    "message": "Об’єднати ВЛІВО Вкладки"
+  },
+  "mergeRIGHTtabs": {
+    "message": "Об’єднати ПРАВІ вкладки"
+  },
+  "needHelp": {
+    "message": "Потрібна допомога?"
+  },
+  "openAll": {
+    "message": "Відкрити все"
+  },
+  "openGroup": {
+    "message": "Відкрити групу"
+  },
+  "pageTotalPlural": {
+    "message": "загалом вкладки"
+  },
+  "pageTotalSingular": {
+    "message": "вкладка в цілому"
+  },
+  "pickColor": {
+    "message": "Виберіть колір групи"
+  },
+  "quickDemo": {
+    "message": "Швидка демонстрація"
+  },
+  "settings": {
+    "message": "Налаштування"
+  },
+  "shareAll": {
+    "message": "Поділитися всіма"
+  },
+  "showTabs": {
+    "message": "Показати вкладки"
+  },
+  "supportUs": {
+    "message": "Підтримайте нас"
+  },
+  "title": {
+    "message": "Заголовок"
   }
 }
