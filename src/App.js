@@ -367,7 +367,7 @@ export default function App() {
             <div className="d-flex flex-row align-items-center">
               <button
                 id="share-all-btn"
-                className="ml-4 p-1 btn btn-outline-info"
+                className="ml-4 p-2 btn btn-outline-info"
                 type="button"
                 onClick={(e) => shareAllGroups(e)}
               >
@@ -389,7 +389,7 @@ export default function App() {
             </div>
             <button
               id="options-btn"
-              className="mr-3 py-1 px-2 btn btn-outline-dark"
+              className="mr-3 p-2 btn btn-outline-dark"
               type="button"
               onClick={() =>
                 window.location.replace(chrome.runtime.getURL("options.html"))
