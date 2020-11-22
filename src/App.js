@@ -273,7 +273,7 @@ export default function App() {
             <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc">
               <img
                 id="logo-img"
-                className="mt-2"
+                className="mt-4"
                 src="./images/logo-full-rescale.PNG"
                 alt="TabMerger Logo"
               />
@@ -425,6 +425,13 @@ export default function App() {
 
         <div className="col-lg-4 float-right my-auto">
           <div class="d-flex flex-column align-items-center" id="side-panel">
+            <a
+              href="https://tabmerger.herokuapp.com/"
+              className="btn btn-info font-weight-bold mb-3"
+              id="need-help"
+            >
+              {chrome.i18n.getMessage("needHelp")}
+            </a>
             <h4>
               <b>{chrome.i18n.getMessage("quickDemo")}</b>
             </h4>
@@ -432,7 +439,7 @@ export default function App() {
               frameBorder="0"
               width="425"
               height="240"
-              src="https://www.youtube.com/embed/cXG1lIx7WP4?autoplay=1&mute=1&loop=1&controls=1&vq=hd1080&playlist=cXG1lIx7WP4"
+              src="https://www.youtube.com/embed/cXG1lIx7WP4?loop=1&controls=1&vq=hd1080&playlist=cXG1lIx7WP4"
               allowFullScreen
               id="video-demo"
             ></iframe>
@@ -474,14 +481,6 @@ export default function App() {
                 </div>
               </a>
             </div>
-
-            <a
-              href="https://tabmerger.herokuapp.com/"
-              className="btn btn-info font-weight-bold mb-3"
-              id="need-help"
-            >
-              {chrome.i18n.getMessage("needHelp")}
-            </a>
           </div>
         </div>
       </div>
