@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Názov prípony, ako sa zobrazuje vo webovom obchode."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Zlúči vaše karty na jedno miesto, aby šetrilo využitie pamäte a zvýšilo vašu produktivitu.",
-    "description": "Popis prípony, ako sa zobrazuje vo webovom obchode."
+    "message": "Zlúči vaše karty na jedno miesto, aby šetrilo využitie pamäte a zvýšilo vašu produktivitu."
   },
   "addGroup": {
     "message": "Pridať skupinu"

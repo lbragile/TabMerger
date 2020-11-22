@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "De titel van de extensie, zoals weergegeven in de webwinkel."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Voegt uw tabbladen samen op één locatie om geheugengebruik te besparen en uw productiviteit te verhogen.",
-    "description": "De beschrijving van de extensie, zoals weergegeven in de webwinkel."
+    "message": "Voegt uw tabbladen samen op één locatie om geheugengebruik te besparen en uw productiviteit te verhogen."
   },
   "addGroup": {
     "message": "Groep toevoegen"

@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Tytuł rozszerzenia wyświetlany w sklepie internetowym."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Łączy Twoje karty w jedną lokalizację, aby zaoszczędzić zużycie pamięci i zwiększyć produktywność.",
-    "description": "Opis rozszerzenia wyświetlany w sklepie internetowym."
+    "message": "Łączy Twoje karty w jedną lokalizację, aby zaoszczędzić zużycie pamięci i zwiększyć produktywność."
   },
   "addGroup": {
     "message": "Dodaj grupę"

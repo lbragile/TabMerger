@@ -1,5 +1,5 @@
 .group {
-  min-height: 128px;
+  min-height: 135px;
   border: 1px solid lightgray;
   border-radius: 10px;
 }
@@ -13,6 +13,7 @@
   border-bottom: 1px black dashed;
   border-radius: 5px 5px 0 0;
   font-size: 1.3rem;
+  color: black !important;
 }
 
 .styles_Editext__edit_button__hthOZ {
@@ -59,4 +60,5 @@ input[type="color"]:hover {
 
 .tabTotal-inGroup {
   width: 25%;
+  color: black !important;
 }

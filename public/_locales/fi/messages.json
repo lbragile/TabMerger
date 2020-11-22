@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Laajennuksen otsikko, joka näkyy  Web Storessa."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Yhdistämällä välilehdet yhteen sijaintiin säästät muistin käyttöä ja lisäät tuottavuutta.",
-    "description": " Web Storessa näkyvä laajennuksen kuvaus."
+    "message": "Yhdistämällä välilehdet yhteen sijaintiin säästät muistin käyttöä ja lisäät tuottavuutta."
   },
   "addGroup": {
     "message": "Lisää ryhmä"

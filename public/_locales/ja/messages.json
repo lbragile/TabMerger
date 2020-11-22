@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "ウェブストアに表示される拡張機能のタイトル。"
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "タブを1つの場所にマージして、メモリ使用量を節約し、生産性を向上させます。",
-    "description": "ウェブストアに表示される拡張機能の説明。"
+    "message": "タブを1つの場所にマージして、メモリ使用量を節約し、生産性を向上させます。"
   },
   "addGroup": {
     "message": "グループを追加"

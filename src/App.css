@@ -100,6 +100,23 @@
   background: white !important;
 }
 
+.btn#add-group-btn:hover {
+  background: none !important;
+}
+
+.btn#merge-btn,
+.btn#merge-left-btn,
+.btn#merge-right-btn,
+.btn#open-all-btn,
+.btn#delete-all-btn,
+.btn#share-all-btn,
+.btn#options-btn,
+.show-hide-btn,
+.open-group-btn,
+.delete-group-btn {
+  background: white !important;
+}
+
 #options-btn {
   position: absolute;
   right: 0px;
@@ -120,21 +137,10 @@ input[type="image"] {
   border: none;
 }
 
-#logo-img {
-  transform: scaleY(0.8);
-}
-
 #need-help:hover {
   background: #17a2b8 !important;
 }
 
-/* #tabmerger-container {
-  position: absolute;
-  left: 15px;
-  top: 10px;
-} */
-
-/* #side-panel {
-  position: relative;
-  right: 50px;
-} */
+#donate {
+  transform: scale(0.9);
+}

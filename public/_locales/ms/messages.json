@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Judul pelanjutan, seperti yang ditunjukkan di Kedai Web"
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Gabungkan tab anda ke satu lokasi untuk menjimatkan penggunaan memori dan meningkatkan produktiviti anda.",
-    "description": "Keterangan pelanjutan, seperti yang dipaparkan di Kedai Web."
+    "message": "Gabungkan tab anda ke satu lokasi untuk menjimatkan penggunaan memori dan meningkatkan produktiviti anda."
   },
   "addGroup": {
     "message": "Tambah Kumpulan"

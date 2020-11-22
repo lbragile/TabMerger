@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Naslov proširenja, prikazan u  web trgovini."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Spaja kartice na jednom mjestu radi uštede memorije i povećanja produktivnosti.",
-    "description": "Opis proširenja prikazan u  web trgovini."
+    "message": "Spaja kartice na jednom mjestu radi uštede memorije i povećanja produktivnosti."
   },
   "addGroup": {
     "message": "Dodaj grupu"

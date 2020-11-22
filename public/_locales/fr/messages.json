@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Le titre de l'extension, tel qu'il apparaît dans le  Web Store."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Fusionne vos onglets en un seul emplacement pour économiser la mémoire et augmenter votre productivité.",
-    "description": "La description de l'extension, telle qu'elle apparaît dans le  Web Store."
+    "message": "Fusionne vos onglets en un seul emplacement pour économiser la mémoire et augmenter votre productivité."
   },
   "addGroup": {
     "message": "Ajouter un groupe"

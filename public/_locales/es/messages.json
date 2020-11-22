@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "El título de la extensión, como se muestra en  Web Store."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Combina sus pestañas en una sola ubicación para ahorrar uso de memoria y aumentar su productividad.",
-    "description": "La descripción de la extensión, como se muestra en  Web Store."
+    "message": "Combina sus pestañas en una sola ubicación para ahorrar uso de memoria y aumentar su productividad."
   },
   "addGroup": {
     "message": "Añadir grupo"

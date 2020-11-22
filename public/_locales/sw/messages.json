@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Kichwa cha ugani, kama inavyoonyeshwa kwenye Duka la Wavuti."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Inaunganisha tabo zako katika eneo moja ili kuhifadhi matumizi ya kumbukumbu na kuongeza uzalishaji wako.",
-    "description": "Maelezo ya ugani, kama inavyoonyeshwa kwenye Duka la Wavuti."
+    "message": "Inaunganisha tabo zako katika eneo moja ili kuhifadhi matumizi ya kumbukumbu na kuongeza uzalishaji wako."
   },
   "addGroup": {
     "message": "Ongeza Kikundi"

@@ -129,6 +129,15 @@ export default function App() {
       window.localStorage.setItem("groups", urlParams.get("ls"));
       window.location.replace(chrome.runtime.getURL("index.html"));
     }
+
+    // set dark mode if needed
+    var json = { target: { checked: null } };
+    var darkModeSwitch = document.getElementById("darkMode");
+    var switchOn = window.localStorage.getItem("dark") === "true";
+    darkModeSwitch.checked = switchOn;
+    json.target.checked = switchOn;
+
+    toggleDarkMode(json);
   }, []);
 
   function sendMessage(msg) {
@@ -223,11 +232,44 @@ export default function App() {
     return sel;
   }
 
+  function toggleDarkMode(e) {
+    var container = document.querySelector("body");
+    var hr = document.querySelector("hr");
+    var settings_btn = document.getElementById("options-btn");
+
+    if (e.target.checked) {
+      container.style.background = "#343a40";
+      container.style.color = "white";
+      hr.style.borderTop = "1px white solid";
+      settings_btn.style.border = "1px gray solid";
+      window.localStorage.setItem("dark", "true");
+    } else {
+      container.style.background = "white";
+      container.style.color = "black";
+      hr.style.borderTop = "1px rgba(0,0,0,.1) solid";
+      settings_btn.style.border = "1px black solid";
+      window.localStorage.removeItem("dark");
+    }
+  }
+
   return (
     <div className="container-fluid">
       <div className="row m-auto">
         <div className="col-lg-8" id="tabmerger-container">
           <div>
+            <div className="custom-control custom-switch mt-4 float-right">
+              <input
+                type="checkbox"
+                className="custom-control-input"
+                id="darkMode"
+                onChange={(e) => {
+                  toggleDarkMode(e);
+                }}
+              />
+              <label className="custom-control-label" for="darkMode">
+                <b>Dark Mode</b>
+              </label>
+            </div>
             <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc">
               <img
                 id="logo-img"
@@ -297,7 +339,7 @@ export default function App() {
             </button>
             <button
               id="open-all-btn"
-              className="ml-4 py-1 px-2 btn btn-outline-success"
+              className="ml-4 py-2 px-2 btn btn-outline-success"
               type="button"
               onClick={() => openAllTabs()}
             >
@@ -411,11 +453,9 @@ export default function App() {
                 />
                 <input
                   type="image"
-                  src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+                  src="./images/paypal-donate.png"
                   border="0"
                   name="submit"
-                  title="PayPal - The safer, easier way to pay online!"
-                  alt="Donate with PayPal button"
                 />
               </form>
             </div>

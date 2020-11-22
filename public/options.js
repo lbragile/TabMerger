@@ -20,6 +20,18 @@ function saveOptions(e) {
 
 function restoreOptions() {
   var settings = JSON.parse(window.localStorage.getItem("settings"));
+  var body = document.querySelector("body");
+  var hr = document.querySelector("hr");
+
+  if (window.localStorage.getItem("dark")) {
+    body.style.background = "#343a40";
+    body.style.color = "white";
+    hr.style.borderTop = "1px white solid";
+  } else {
+    body.style.background = "white";
+    body.style.color = "black";
+    hr.style.borderTop = "1px rgba(0,0,0,.1) solid";
+  }
 
   if (settings) {
     document.getElementById("options-default-color").value = settings.color;

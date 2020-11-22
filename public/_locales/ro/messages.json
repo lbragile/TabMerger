@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Titlul extensiei, așa cum este afișat în Magazinul web."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Îmbină filele într-o singură locație pentru a economisi utilizarea memoriei și a vă crește productivitatea.",
-    "description": "Descrierea extensiei, așa cum este afișată în Magazinul web."
+    "message": "Îmbină filele într-o singură locație pentru a economisi utilizarea memoriei și a vă crește productivitatea."
   },
   "addGroup": {
     "message": "Adăugare grup"

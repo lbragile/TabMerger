@@ -131,19 +131,29 @@ export default function Group(props) {
 
   function formatDate(date_str) {
     var date_parts = date_str.split(" ");
-    date_parts[0] = date_parts[0] + ".";
-    date_parts[1] = date_parts[1] + ".";
-    date_parts[2] = date_parts[2] + ",";
-    date_parts[6] = "PDT";
-    date_parts.splice(5, 1);
-    date_parts.splice(6, 2);
+    const months = [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec",
+    ];
 
-    // time decreases by 1 hour on reloads for some reason?
-    var time = date_parts[4].split(":");
-    time[0] = parseInt(time[0]) + 1;
-    date_parts[4] = time.join(":");
+    date_parts = date_parts.filter((items, index) => 0 < index && index <= 4);
 
-    return date_parts.join(" ");
+    var temp = months.indexOf(date_parts[0].toLowerCase()) + 1 + "/";
+    date_parts[0] = date_parts[1] + "/";
+    date_parts[1] = temp;
+    date_parts[2] = date_parts[2] + " @ ";
+
+    return date_parts.join("");
   }
 
   return (
@@ -188,9 +198,9 @@ export default function Group(props) {
       </div>
 
       <div id={props.id} className={props.className} onDragOver={dragOver}>
-        <div className="mr-2 mt-1 float-right d-flex flex-column align-items-center">
+        <div className="mr-2 mt-2 float-right d-flex flex-column align-items-center">
           <button
-            className="mt-1 p-1 btn btn-light btn-outline-info"
+            className="show-hide-btn mt-1 p-1 btn btn-light btn-outline-info"
             onClick={(e) => toggleGroup(e)}
           >
             <div className="tip">
@@ -207,7 +217,7 @@ export default function Group(props) {
             </div>
           </button>
           <button
-            className="mt-1 p-1 btn btn-light btn-outline-success"
+            className="open-group-btn mt-1 p-1 btn btn-light btn-outline-success"
             onClick={(e) => openAllTabsInGroup(e)}
           >
             <div className="tip">
@@ -218,7 +228,7 @@ export default function Group(props) {
             </div>
           </button>
           <button
-            className="mt-1 p-1 btn btn-light btn-outline-danger"
+            className="delete-group-btn mt-1 p-1 btn btn-light btn-outline-danger"
             onClick={(e) => deleteGroup(e)}
           >
             <div className="tip">

@@ -160,21 +160,17 @@ export default function Tabs(props) {
 
   return (
     <div className="d-flex flex-column mx-0 my-2">
-      <h4 className="tabTotal-inGroup mb-3">
-        <small>
-          {tabs.length}{" "}
-          {tabs.length === 1
-            ? chrome.i18n.getMessage("groupTotalSingular")
-            : chrome.i18n.getMessage("groupTotalPlural")}{" "}
-          {!tabTotal
-            ? null
-            : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}
-        </small>
-      </h4>
+      <h5 className="tabTotal-inGroup mb-3">
+        {tabs.length}{" "}
+        {tabs.length === 1
+          ? chrome.i18n.getMessage("groupTotalSingular")
+          : chrome.i18n.getMessage("groupTotalPlural")}{" "}
+        {!tabTotal ? null : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}
+      </h5>
       {tabs.map((tab, index) => {
         return (
           <div
-            className="row mb-1 draggable"
+            className="row draggable p-0 m-0"
             id={props.id + "-tab-" + index}
             draggable
             onDragStart={dragStart}
@@ -207,9 +203,11 @@ export default function Tabs(props) {
               draggable={false}
               onClick={(e) => keepOrRemoveTab(e)}
             >
-              {tab.title.length > tab_title_length.current
-                ? tab.title.substring(0, tab_title_length.current) + "..."
-                : tab.title}
+              <span className="float-left">
+                {tab.title.length > tab_title_length.current
+                  ? tab.title.substring(0, tab_title_length.current) + "..."
+                  : tab.title}
+              </span>
             </a>
           </div>
         );

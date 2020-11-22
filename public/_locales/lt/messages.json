@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Plėtinio pavadinimas, rodomas internetinėje parduotuvėje."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Sujungia skirtukus į vieną vietą, kad sutaupytumėte atminties ir padidintumėte produktyvumą.",
-    "description": "Plėtinio aprašymas, pateiktas internetinėje parduotuvėje."
+    "message": "Sujungia skirtukus į vieną vietą, kad sutaupytumėte atminties ir padidintumėte produktyvumą."
   },
   "addGroup": {
     "message": "Pridėti grupę"

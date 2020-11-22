@@ -1,11 +1,9 @@
 {
   "appName": {
-    "message": "TabMerger",
-    "description": "Tittelen på utvidelsen, som vist i nettbutikken."
+    "message": "TabMerger"
   },
   "appDesc": {
-    "message": "Slår sammen fanene på ett sted for å spare minne og øke produktiviteten.",
-    "description": "Beskrivelsen av utvidelsen, som vist i nettbutikken."
+    "message": "Slår sammen fanene på ett sted for å spare minne og øke produktiviteten."
   },
   "addGroup": {
     "message": "Legg til gruppe"
