@@ -292,9 +292,10 @@ export default function App() {
           <div className="row">
             <button
               id="merge-btn"
-              className="ml-3 py-1 px-2 btn btn-outline-primary"
+              className="ml-3 p-0 btn btn-outline-primary"
               type="button"
               onClick={() => sendMessage({ msg: "all" })}
+              style={{ width: "45px", height: "45px" }}
             >
               <div className="tip">
                 <MdVerticalAlignCenter
@@ -309,9 +310,10 @@ export default function App() {
             </button>
             <button
               id="merge-left-btn"
-              className="ml-1 py-1 px-2 btn btn-outline-warning"
+              className="ml-1 p-0 btn btn-outline-warning"
               type="button"
               onClick={() => sendMessage({ msg: "left" })}
+              style={{ width: "45px", height: "45px" }}
             >
               <div className="tip">
                 <BiArrowToRight color="black" size="1.3rem" />
@@ -322,9 +324,10 @@ export default function App() {
             </button>
             <button
               id="merge-right-btn"
-              className="ml-1 mr-4 py-1 px-2 btn btn-outline-warning"
+              className="ml-1 mr-4 p-0 btn btn-outline-warning"
               type="button"
               onClick={() => sendMessage({ msg: "right" })}
+              style={{ width: "45px", height: "45px" }}
             >
               <div className="tip">
                 <BiArrowToRight
@@ -339,12 +342,16 @@ export default function App() {
             </button>
             <button
               id="open-all-btn"
-              className="ml-4 py-2 px-2 btn btn-outline-success"
+              className="ml-4 p-0 btn btn-outline-success"
               type="button"
               onClick={() => openAllTabs()}
+              style={{ width: "45px", height: "45px" }}
             >
               <div className="tip">
-                <FaTrashRestore color="green" size="1.3rem" />
+                <FaTrashRestore
+                  color="green"
+                  style={{ width: "22px", height: "22px", padding: "0" }}
+                />
                 <span className="tiptext">
                   {chrome.i18n.getMessage("openAll")}
                 </span>
@@ -352,12 +359,21 @@ export default function App() {
             </button>
             <button
               id="delete-all-btn"
-              className="ml-1 mr-4 p-1 btn btn-outline-danger"
+              className="ml-1 mr-4 p-0 btn btn-outline-danger"
               type="button"
               onClick={() => deleteAllGroups()}
+              style={{ width: "45px", height: "45px" }}
             >
               <div className="tip">
-                <MdDeleteForever color="red" size="1.7rem" />
+                <MdDeleteForever
+                  color="red"
+                  style={{
+                    width: "30px",
+                    height: "35px",
+                    padding: "0",
+                    paddingTop: "4px",
+                  }}
+                />
                 <span className="tiptext">
                   {chrome.i18n.getMessage("deleteAll")}
                 </span>
@@ -367,9 +383,10 @@ export default function App() {
             <div className="d-flex flex-row align-items-center">
               <button
                 id="share-all-btn"
-                className="ml-4 p-2 btn btn-outline-info"
+                className="ml-4 p-0 btn btn-outline-info"
                 type="button"
                 onClick={(e) => shareAllGroups(e)}
+                style={{ width: "45px", height: "45px" }}
               >
                 <div className="tip">
                   <FiShare color="darkcyan" size="1.4rem" />
@@ -379,21 +396,20 @@ export default function App() {
                 </div>
               </button>
               <div
-                className="ml-1 py-1 px-2"
+                className="ml-1"
                 id="short-url"
                 contentEditable
-                onClick={(e) => {
-                  copyLinkOnFocus(e);
-                }}
+                onClick={(e) => copyLinkOnFocus(e)}
               ></div>
             </div>
             <button
               id="options-btn"
-              className="mr-3 p-2 btn btn-outline-dark"
+              className="mr-3 p-0 btn btn-outline-dark"
               type="button"
               onClick={() =>
                 window.location.replace(chrome.runtime.getURL("options.html"))
               }
+              style={{ width: "45px", height: "45px" }}
             >
               <div className="tip">
                 <MdSettings color="grey" size="1.6rem" />
@@ -408,7 +424,7 @@ export default function App() {
             {groups}
 
             <button
-              className="d-block mt-2 btn"
+              className="d-block mt-2 ml-3 p-2 btn"
               id="add-group-btn"
               type="button"
               onClick={() => addGroup()}
@@ -436,10 +452,8 @@ export default function App() {
               <b>{chrome.i18n.getMessage("quickDemo")}</b>
             </h4>
             <iframe
-              frameBorder="0"
-              width="425"
-              height="240"
-              src="https://www.youtube.com/embed/cXG1lIx7WP4?loop=1&controls=1&vq=hd1080&playlist=cXG1lIx7WP4"
+              style={{ frameBorder: "0", width: "100%", height: "270px" }}
+              src="https://www.youtube.com/embed/cXG1lIx7WP4?controls=1&hd=1&playlist=cXG1lIx7WP4"
               allowFullScreen
               id="video-demo"
             ></iframe>
