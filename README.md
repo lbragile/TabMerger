@@ -24,10 +24,11 @@ If so, consider leaving a positive & meaningful <a href="https://chrome.google.c
 
 ## TODO
 
-- [ ] Integrate syncing across devices with Chrome Storage API.
+- [ ] Integrate syncing across devices with Chrome Storage API so that a user does not need to share a link with themselves to regain access to their tab list.
 - [ ] Make available on other browsers such as firefox, microsoft edge, etc.
 - [ ] Move global merge button within groups. This will allow a user to merge tabs directly into a group rather than always into the top group (`id: group-0`).
 - [ ] Implement search functionality (group search to filter groups & tab search to filter within a group for a specific tab).
 - [ ] Major refactoring to simplify the logic and avoid redundant reloading of the page.
+- [ ] Integrate testing with Cypress? ⬅ I couldn't figure out how to test Chrome API
 
 📩 If you have any more suggestions please send me a message on GitHub.
