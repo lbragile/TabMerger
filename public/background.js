@@ -1,96 +1,70 @@
-var is_chrome = /chrome/i.test(navigator.userAgent);
+const getTabsAndSend = (info, tab) => {
+  chrome.tabs.query({ currentWindow: true }, (tabs) => {
+    var extension_tabs = tabs.filter((item) => item.title === "TabMerger");
+    var tab_urls = tabs.map((item) => item.url);
 
-const getTabsAndSend = async (info, tab) => {
-  if (is_chrome) {
-    chrome.tabs.query({ currentWindow: true }, (tabs) =>
-      filterTabs(info, tabs, tab)
-    );
-  } else {
-    var tabs = await browser.tabs.query({ currentWindow: true });
-    filterTabs(info, tabs, tab);
-  }
-};
+    // IF more than one unique URL, can safetly close chrome-extension tabs without closing window.
+    // ELSE only chrome-extension tabs are open, so close all until one is left.
+    if (new Set(tab_urls).length > 1) {
+      extension_tabs.forEach((item) => {
+        chrome.tabs.remove(item.id);
+      });
+    } else {
+      var num_tabs = extension_tabs.length;
+      extension_tabs.forEach((item) => {
+        if (num_tabs > 1) {
+          chrome.tabs.remove(item.id);
+          num_tabs--;
+        }
+      });
+    }
 
-async function filterTabs(info, tabs, tab) {
-  var extension_tabs = tabs.filter((item) => item.title === "TabMerger");
+    switch (info.which) {
+      case "right":
+        tabs = tabs.filter((item) => item.index > tab.index);
+        break;
+      case "left":
+        tabs.splice(tab.index);
+        break;
+      case "excluding":
+        tabs.splice(tab.index, 1);
+        break;
+      case "only":
+        tabs = [tab, ...extension_tabs];
+        break;
 
-  var tab_urls = tabs.map((item) => item.url);
+      default:
+        // info.which === "all"
+        break;
+    }
 
-  // IF more than one unique URL, can safetly close chrome-extension tabs without closing window.
-  // ELSE only chrome-extension tabs are open, so close all until one is left.
-  if (new Set(tab_urls).length > 1) {
-    extension_tabs.forEach(async (item) => {
-      is_chrome
-        ? chrome.tabs.remove(item.id)
-        : await browser.tabs.remove(item.id);
+    chrome.tabs.create({ url: "index.html", active: true });
+
+    // apply blacklist items
+    tabs = tabs.filter((item) => {
+      var blacklist_sites = JSON.parse(window.localStorage.getItem("settings"))
+        .blacklist.replace(" ", "")
+        .split(",");
+
+      blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
+      return !blacklist_sites.includes(item.url);
     });
-  } else {
-    var num_tabs = extension_tabs.length;
-    extension_tabs.forEach(async (item) => {
-      if (num_tabs > 1) {
-        is_chrome
-          ? chrome.tabs.remove(item.id)
-          : await browser.tabs.remove(item.id);
-        num_tabs--;
+
+    tabs.forEach((item) => {
+      if (item.title !== "TabMerger") {
+        chrome.tabs.remove(item.id);
       }
     });
-  }
 
-  switch (info.which) {
-    case "right":
-      tabs = tabs.filter((item) => item.index > tab.index);
-      break;
-    case "left":
-      tabs.splice(tab.index);
-      break;
-    case "excluding":
-      tabs.splice(tab.index, 1);
-      break;
-    case "only":
-      tabs = [tab, ...extension_tabs];
-      break;
-
-    default:
-      // info.which === "all"
-      break;
-  }
-
-  const createOpts = { url: "index.html", active: true };
-  is_chrome
-    ? chrome.tabs.create(createOpts)
-    : await browser.tabs.create(createOpts);
-
-  // apply blacklist items
-  tabs = tabs.filter((item) => {
-    var blacklist_sites = JSON.parse(window.localStorage.getItem("settings"))
-      .blacklist.replace(" ", "")
-      .split(",");
-
-    blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
-    return !blacklist_sites.includes(item.url);
-  });
-
-  tabs.forEach(async (item) => {
-    if (item.title !== "TabMerger") {
-      is_chrome
-        ? chrome.tabs.remove(item.id)
-        : await browser.tabs.remove(item.id);
-    }
-  });
-
-  // in case of multiple chrome-extension tabs. Can have 2 at most for any instance
-  const queryOpts = { title: "TabMerger", currentWindow: true };
-  if (is_chrome) {
+    // in case of multiple chrome-extension tabs. Can have 2 at most for any instance
+    const queryOpts = { title: "TabMerger", currentWindow: true };
     chrome.tabs.query(queryOpts, (tabMergerTabs) => {
       chrome.tabs.remove(tabMergerTabs[0].id);
     });
-  } else {
-    var tabMergerTabs = await browser.tabs.query(queryOpts);
-    await browser.tabs.remove(tabMergerTabs[0].id);
-  }
 
-  window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
-}
+    window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
+  });
+};
 
 function excludeSite(info, tab) {
   var settings = JSON.parse(window.localStorage.getItem("settings")) || {};
@@ -103,51 +77,36 @@ function excludeSite(info, tab) {
 }
 
 function translate(msg) {
-  return is_chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+  return chrome.i18n.getMessage(msg);
 }
 
 // default values
 var info = { which: "all" };
 var tab = { index: 0 };
 
-is_chrome
-  ? chrome.browserAction.onClicked.addListener(getTabsAndSend)
-  : browser.browserAction.onClicked.addListener(getTabsAndSend);
+chrome.browserAction.onClicked.addListener(getTabsAndSend);
 
-const extensionMessage = async (request) => {
+const extensionMessage = (request) => {
   info.which = request.msg;
   var queryOpts = { currentWindow: true, active: true };
-  if (is_chrome) {
-    chrome.tabs.query(queryOpts, (tabs) => {
-      getTabsAndSend(info, tabs[0]);
-    });
-  } else {
-    var tabs = await browser.tabs.query(queryOpts);
+  chrome.tabs.query(queryOpts, (tabs) => {
     getTabsAndSend(info, tabs[0]);
-  }
+  });
 };
 
-is_chrome
-  ? chrome.runtime.onMessage.addListener(extensionMessage)
-  : browser.runtime.onMessage.addListener(extensionMessage);
+chrome.runtime.onMessage.addListener(extensionMessage);
 
 function createContextMenu(id, title, type) {
-  // prettier-ignore
-  is_chrome
-    ? chrome.contextMenus.create({ id, title, type })
-    : browser.contextMenus.create({ id, title, type });
+  chrome.contextMenus.create({ id, title, type });
 }
 
-const contextMenuClick = async (info, tab) => {
+const contextMenuClick = (info, tab) => {
   switch (info.menuItemId) {
     case "open-tabmerger":
-      is_chrome
-        ? window.open(chrome.runtime.getURL("index.html"))
-        : await browser.tabs.create({
-            active: true,
-            url: browser.runtime.getURL("index.html"),
-          });
-
+      chrome.tabs.create({
+        active: true,
+        url: chrome.runtime.getURL("index.html"),
+      });
       break;
     case "merge-left-menu":
       info.which = "left";
@@ -170,15 +129,11 @@ const contextMenuClick = async (info, tab) => {
       break;
     case "dl-instructions":
       var dest_url = "https://tabmerger.herokuapp.com/instructions";
-      is_chrome
-        ? window.open(dest_url)
-        : await browser.tabs.create({ active: true, url: dest_url });
+      chrome.tabs.create({ active: true, url: dest_url });
       break;
     case "dl-contact":
       var dest_url = "https://tabmerger.herokuapp.com/contact";
-      is_chrome
-        ? window.open(dest_url)
-        : await browser.tabs.create({ active: true, url: dest_url });
+      chrome.tabs.create({ active: true, url: dest_url });
       break;
 
     default:
@@ -204,6 +159,4 @@ createContextMenu("dl-instructions", translate("bgInstructions"));
 createContextMenu("dl-contact", translate("bgContact"));
 
 // context menu actions
-is_chrome
-  ? chrome.contextMenus.onClicked.addListener(contextMenuClick)
-  : browser.contextMenus.onClicked.addListener(contextMenuClick);
+chrome.contextMenus.onClicked.addListener(contextMenuClick);

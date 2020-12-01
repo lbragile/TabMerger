@@ -160,7 +160,7 @@ export default function Tabs(props) {
   };
 
   function translate(msg) {
-    return chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+    return chrome.i18n.getMessage(msg);
   }
 
   return (

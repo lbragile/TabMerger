@@ -25,10 +25,10 @@ export default function Group(props) {
 
   function handleTitleChange(val) {
     if (val.length < 15) {
-      setTitle(val);
       var groups = JSON.parse(window.localStorage.getItem("groups"));
       groups[props.id].title = val;
       window.localStorage.setItem("groups", JSON.stringify(groups));
+      setTitle(val);
     } else {
       alert("Titles must be less than 15 characters long!");
       window.location.reload();
@@ -146,7 +146,7 @@ export default function Group(props) {
   }
 
   function translate(msg) {
-    return chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+    return chrome.i18n.getMessage(msg);
   }
 
   return (
@@ -164,9 +164,9 @@ export default function Group(props) {
         <EdiText
           className="font-weight-bold"
           type="text"
-          value={translate("title")}
+          value={translate(title) || title}
           editButtonContent={
-            <div className="tip mb-1">
+            <div className="tip p-0 mb-1">
               <BsPencilSquare color="saddlebrown" />
               <span className="tiptext-bottom">{translate("editTitle")}</span>
             </div>
@@ -175,7 +175,7 @@ export default function Group(props) {
             handleTitleChange(val);
           }}
         />
-        <div className="tip ml-3 mb-1">
+        <div className="tip ml-3 p-0">
           <input
             ref={colorRef}
             defaultValue={props.color}

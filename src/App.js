@@ -20,16 +20,9 @@ import { nanoid } from "nanoid";
 import axios from "axios";
 
 export default function App() {
-  const defaultColor = useRef(
-    (JSON.parse(window.localStorage.getItem("settings")) &&
-      JSON.parse(window.localStorage.getItem("settings")).color) ||
-      "#DEDEDE"
-  );
-  const defaultTitle = useRef(
-    (JSON.parse(window.localStorage.getItem("settings")) &&
-      JSON.parse(window.localStorage.getItem("settings")).title) ||
-      "Title"
-  );
+  var settings = JSON.parse(window.localStorage.getItem("settings"));
+  const defaultColor = useRef((settings && settings.color) || "#DEDEDE");
+  const defaultTitle = useRef((settings && settings.title) || "Title");
 
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(() => {
@@ -122,9 +115,7 @@ export default function App() {
     // for shared links
     const query = window.location.search;
     const urlParams = new URLSearchParams(query);
-    const ext_url = chrome
-      ? chrome.runtime.getURL("index.html")
-      : browser.runtime.getURL("index.html");
+    const ext_url = chrome.runtime.getURL("index.html");
     if (urlParams && window.location.href !== ext_url) {
       window.localStorage.setItem("groups", urlParams.get("ls"));
       window.location.replace(ext_url);
@@ -141,10 +132,8 @@ export default function App() {
   }, []);
 
   function sendMessage(msg) {
-    var extension_id = chrome ? chrome.runtime.id : browser.runtime.id;
-    chrome
-      ? chrome.runtime.sendMessage(extension_id, msg)
-      : browser.runtime.sendMessage(extension_id, msg);
+    var extension_id = chrome.runtime.id;
+    chrome.runtime.sendMessage(extension_id, msg);
   }
 
   const addGroup = () => {
@@ -253,7 +242,7 @@ export default function App() {
   }
 
   function translate(msg) {
-    return chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+    return chrome.i18n.getMessage(msg);
   }
 
   return (
@@ -399,11 +388,7 @@ export default function App() {
               className="mr-3 p-0 btn btn-outline-dark"
               type="button"
               onClick={() =>
-                window.location.replace(
-                  chrome
-                    ? chrome.runtime.getURL("options.html")
-                    : browser.runtime.getURL("options.html")
-                )
+                window.location.replace(chrome.runtime.getURL("options.html"))
               }
               style={{ width: "45px", height: "45px" }}
             >

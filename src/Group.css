@@ -58,6 +58,15 @@ input[type="color"]:hover {
   cursor: pointer;
 }
 
+input[type="color"] {
+  width: 40px;
+  margin-top: 7px;
+}
+
+input[editext="input"] {
+  width: 180px;
+}
+
 .tabTotal-inGroup {
   width: 25%;
   color: black !important;
