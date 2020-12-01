@@ -194,7 +194,7 @@ export default function App() {
 
   async function shareAllGroups(e) {
     var group_blocks = window.localStorage.getItem("groups");
-    var id_extra = /chrome/i.test(navigator.userAgent) ? "_c" : "_f";
+    var id_extra = /chrome/i.test(navigator.userAgent) ? "-c" : "-f";
     var unique_id = nanoid(13) + id_extra;
     var response = await axios.post(
       "https://tabmerger.herokuapp.com/shortenURL/",
