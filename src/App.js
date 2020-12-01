@@ -245,6 +245,34 @@ export default function App() {
     return chrome.i18n.getMessage(msg);
   }
 
+  function tabFilter(e) {
+    var tabs = document.querySelectorAll(".draggable > a");
+
+    var tab_titles = [...tabs].map((item) => item.innerText.toLowerCase());
+    tab_titles.forEach((item, index) => {
+      if (item.indexOf(e.target.value.toLowerCase()) === -1) {
+        tabs[index].parentNode.style.display = "none";
+      } else {
+        tabs[index].parentNode.style.display = "";
+      }
+    });
+  }
+
+  function groupFilter(e) {
+    var groups = JSON.parse(window.localStorage.getItem("groups"));
+    var group_titles = Object.values(groups).map((item) =>
+      item.title.toLowerCase()
+    );
+    group_titles.forEach((item, index) => {
+      if (item.indexOf(e.target.value.toLowerCase()) === -1) {
+        // prettier-ignore
+        document.querySelector("#group-" + index).parentNode.style.display = "none";
+      } else {
+        document.querySelector("#group-" + index).parentNode.style.display = "";
+      }
+    });
+  }
+
   return (
     <div className="container-fluid">
       <div className="row m-auto">
@@ -271,14 +299,38 @@ export default function App() {
                 alt="TabMerger Logo"
               />
             </a>
-            <h2 id="tab-total">
-              <span className="small">
-                {tabTotal}{" "}
-                {tabTotal == 1
-                  ? translate("pageTotalSingular")
-                  : translate("pageTotalPlural")}
-              </span>
-            </h2>
+            <div>
+              <h2 id="tab-total">
+                <span className="small">
+                  {tabTotal}{" "}
+                  {tabTotal == 1
+                    ? translate("pageTotalSingular")
+                    : translate("pageTotalPlural")}
+                </span>
+              </h2>
+
+              <div className="search-filter d-inline-block float-right">
+                <label for="search-group" className="mr-1 font-weight-bold">
+                  Group Title:{" "}
+                </label>
+                <input
+                  type="text"
+                  name="search-group"
+                  className="mr-4"
+                  className="px-1"
+                  onChange={(e) => groupFilter(e)}
+                />
+                <label for="tab-group" className="ml-2 mr-1 font-weight-bold">
+                  Tab Title:{" "}
+                </label>
+                <input
+                  type="text"
+                  name="tab-group"
+                  className="px-1"
+                  onChange={(e) => tabFilter(e)}
+                />
+              </div>
+            </div>
             <hr />
           </div>
 
@@ -462,8 +514,14 @@ export default function App() {
               <h4 className="mb-1 text-center">
                 <b>{translate("leaveReview")}</b>
               </h4>
-              <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews">
-                <div className="row mx-0 px-1">
+              <a
+                href={
+                  /chrome/i.test(navigator.userAgent)
+                    ? "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews"
+                    : "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/reviews/"
+                }
+              >
+                <div className="row ml-1 px-1">
                   <RiStarSFill color="goldenrod" size="2rem" />
                   <RiStarSFill color="goldenrod" size="2rem" />
                   <RiStarSFill color="goldenrod" size="2rem" />

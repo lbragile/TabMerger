@@ -131,6 +131,24 @@ input[type="image"] {
   transform: scale(1.1);
 }
 
+.search-filter {
+  position: relative;
+  top: -40px;
+}
+
+.search-filter > input {
+  border-radius: 5px;
+  width: 150px;
+}
+
+.search-filter > input:focus {
+  outline: none;
+}
+
+hr {
+  margin-top: 0;
+}
+
 #video-demo {
   zoom: 1.25;
   background-color: none;
