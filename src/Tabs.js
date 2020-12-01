@@ -58,8 +58,9 @@ export default function Tabs(props) {
       tabs_arr = unique_arr.filter(
         (item) =>
           item.url &&
-          !item.url.includes("chrome-extension") &&
           !item.url.includes("chrome://extensions") &&
+          !item.url.includes("about:addons") &&
+          item.title !== "TabMerger" &&
           item.title !== "New Tab"
       );
 
