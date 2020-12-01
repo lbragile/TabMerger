@@ -1,18 +1,18 @@
+var is_chrome = /chrome/i.test(navigator.userAgent);
+
 const getTabsAndSend = async (info, tab) => {
-  if (chrome) {
+  if (is_chrome) {
     chrome.tabs.query({ currentWindow: true }, (tabs) =>
-      filterTabs(info, tabs)
+      filterTabs(info, tabs, tab)
     );
   } else {
     var tabs = await browser.tabs.query({ currentWindow: true });
-    filterTabs(info, tabs);
+    filterTabs(info, tabs, tab);
   }
 };
 
-function filterTabs(info, tabs) {
-  var extension_tabs = tabs.filter((item) =>
-    item.url.includes("chrome-extension")
-  );
+async function filterTabs(info, tabs, tab) {
+  var extension_tabs = tabs.filter((item) => item.title === "TabMerger");
 
   var tab_urls = tabs.map((item) => item.url);
 
@@ -20,13 +20,15 @@ function filterTabs(info, tabs) {
   // ELSE only chrome-extension tabs are open, so close all until one is left.
   if (new Set(tab_urls).length > 1) {
     extension_tabs.forEach(async (item) => {
-      chrome ? chrome.tabs.remove(item.id) : await browser.tabs.remove(item.id);
+      is_chrome
+        ? chrome.tabs.remove(item.id)
+        : await browser.tabs.remove(item.id);
     });
   } else {
     var num_tabs = extension_tabs.length;
     extension_tabs.forEach(async (item) => {
       if (num_tabs > 1) {
-        chrome
+        is_chrome
           ? chrome.tabs.remove(item.id)
           : await browser.tabs.remove(item.id);
         num_tabs--;
@@ -34,19 +36,29 @@ function filterTabs(info, tabs) {
     });
   }
 
-  if (info.which === "right") {
-    tabs = tabs.filter((item) => item.index > tab.index);
-  } else if (info.which === "left") {
-    tabs.splice(tab.index);
-  } else if (info.which === "excluding") {
-    tabs.splice(tab.index, 1);
-  } else if (info.which === "only") {
-    tabs = [tab, ...extension_tabs];
+  switch (info.which) {
+    case "right":
+      tabs = tabs.filter((item) => item.index > tab.index);
+      break;
+    case "left":
+      tabs.splice(tab.index);
+      break;
+    case "excluding":
+      tabs.splice(tab.index, 1);
+      break;
+    case "only":
+      tabs = [tab, ...extension_tabs];
+      break;
+
+    default:
+      // info.which === "all"
+      break;
   }
-  //else info.which === "all" (works by default)
 
   const createOpts = { url: "index.html", active: true };
-  chrome ? chrome.tabs.create(createOpts) : browser.tabs.create(createOpts);
+  is_chrome
+    ? chrome.tabs.create(createOpts)
+    : await browser.tabs.create(createOpts);
 
   // apply blacklist items
   tabs = tabs.filter((item) => {
@@ -59,20 +71,23 @@ function filterTabs(info, tabs) {
   });
 
   tabs.forEach(async (item) => {
-    if (!item.url.includes("chrome-extension")) {
-      chrome ? chrome.tabs.remove(item.id) : await browser.tabs.remove(item.id);
+    if (item.title !== "TabMerger") {
+      is_chrome
+        ? chrome.tabs.remove(item.id)
+        : await browser.tabs.remove(item.id);
     }
   });
 
   // in case of multiple chrome-extension tabs. Can have 2 at most for any instance
   const queryOpts = { title: "TabMerger", currentWindow: true };
-  chrome
-    ? chrome.tabs.query(queryOpts, (tabMergerTabs) => {
-        chrome.tabs.remove(tabMergerTabs[0].id);
-      })
-    : browser.tabs.query(queryOpts, async (tabMergerTabs) => {
-        await browser.tabs.remove(tabMergerTabs[0].id);
-      });
+  if (is_chrome) {
+    chrome.tabs.query(queryOpts, (tabMergerTabs) => {
+      chrome.tabs.remove(tabMergerTabs[0].id);
+    });
+  } else {
+    var tabMergerTabs = await browser.tabs.query(queryOpts);
+    await browser.tabs.remove(tabMergerTabs[0].id);
+  }
 
   window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
 }
@@ -88,40 +103,51 @@ function excludeSite(info, tab) {
 }
 
 function translate(msg) {
-  return chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+  return is_chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
 }
 
 // default values
 var info = { which: "all" };
 var tab = { index: 0 };
 
-chrome
+is_chrome
   ? chrome.browserAction.onClicked.addListener(getTabsAndSend)
   : browser.browserAction.onClicked.addListener(getTabsAndSend);
 
-const extensionMessage = (request) => {
+const extensionMessage = async (request) => {
   info.which = request.msg;
-  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
+  var queryOpts = { currentWindow: true, active: true };
+  if (is_chrome) {
+    chrome.tabs.query(queryOpts, (tabs) => {
+      getTabsAndSend(info, tabs[0]);
+    });
+  } else {
+    var tabs = await browser.tabs.query(queryOpts);
     getTabsAndSend(info, tabs[0]);
-  });
+  }
 };
 
-chrome
+is_chrome
   ? chrome.runtime.onMessage.addListener(extensionMessage)
   : browser.runtime.onMessage.addListener(extensionMessage);
 
 function createContextMenu(id, title, type) {
   // prettier-ignore
-  chrome
+  is_chrome
     ? chrome.contextMenus.create({ id, title, type })
     : browser.contextMenus.create({ id, title, type });
 }
 
-const contextMenuClick = (info, tab) => {
+const contextMenuClick = async (info, tab) => {
   switch (info.menuItemId) {
     case "open-tabmerger":
-      window.open(chrome.runtime.getURL("index.html"));
-      console.log(chrome.runtime.getURL("index.html"));
+      is_chrome
+        ? window.open(chrome.runtime.getURL("index.html"))
+        : await browser.tabs.create({
+            active: true,
+            url: browser.runtime.getURL("index.html"),
+          });
+
       break;
     case "merge-left-menu":
       info.which = "left";
@@ -143,10 +169,16 @@ const contextMenuClick = (info, tab) => {
       excludeSite(info, tab);
       break;
     case "dl-instructions":
-      window.open("https://tabmerger.herokuapp.com/instructions");
+      var dest_url = "https://tabmerger.herokuapp.com/instructions";
+      is_chrome
+        ? window.open(dest_url)
+        : await browser.tabs.create({ active: true, url: dest_url });
       break;
     case "dl-contact":
-      window.open("https://tabmerger.herokuapp.com/contact");
+      var dest_url = "https://tabmerger.herokuapp.com/contact";
+      is_chrome
+        ? window.open(dest_url)
+        : await browser.tabs.create({ active: true, url: dest_url });
       break;
 
     default:
@@ -172,6 +204,6 @@ createContextMenu("dl-instructions", translate("bgInstructions"));
 createContextMenu("dl-contact", translate("bgContact"));
 
 // context menu actions
-chrome
+is_chrome
   ? chrome.contextMenus.onClicked.addListener(contextMenuClick)
   : browser.contextMenus.onClicked.addListener(contextMenuClick);
