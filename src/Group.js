@@ -131,20 +131,9 @@ export default function Group(props) {
 
   function formatDate(date_str) {
     var date_parts = date_str.split(" ");
-    const months = [
-      "jan",
-      "feb",
-      "mar",
-      "apr",
-      "may",
-      "jun",
-      "jul",
-      "aug",
-      "sep",
-      "oct",
-      "nov",
-      "dec",
-    ];
+    // prettier-ignore
+    const months = ["jan", "feb", "mar", "apr", "may", "jun",
+                    "jul", "aug", "sep", "oct", "nov", "dec"];
 
     date_parts = date_parts.filter((items, index) => 0 < index && index <= 4);
 
@@ -156,10 +145,14 @@ export default function Group(props) {
     return date_parts.join("");
   }
 
+  function translate(msg) {
+    return chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+  }
+
   return (
     <div className="mt-3">
       <div className="created float-right mr-1">
-        <b>{chrome.i18n.getMessage("created")}:</b>{" "}
+        <b>{translate("created")}:</b>{" "}
         <span>
           {props.created.split(" ").length > 6
             ? formatDate(props.created)
@@ -171,13 +164,11 @@ export default function Group(props) {
         <EdiText
           className="font-weight-bold"
           type="text"
-          value={chrome.i18n.getMessage("title")}
+          value={translate("title")}
           editButtonContent={
             <div className="tip mb-1">
               <BsPencilSquare color="saddlebrown" />
-              <span className="tiptext-bottom">
-                {chrome.i18n.getMessage("editTitle")}
-              </span>
+              <span className="tiptext-bottom">{translate("editTitle")}</span>
             </div>
           }
           onSave={(val) => {
@@ -191,9 +182,7 @@ export default function Group(props) {
             onChange={(e) => handleColorChange(e)}
             type="color"
           />
-          <span className="tiptext-bottom">
-            {chrome.i18n.getMessage("pickColor")}
-          </span>
+          <span className="tiptext-bottom">{translate("pickColor")}</span>
         </div>
       </div>
 
@@ -210,9 +199,7 @@ export default function Group(props) {
                 <FcCollapse style={{ transform: "rotate(0deg)" }} />
               )}
               <span className="tiptext-side">
-                {hide
-                  ? chrome.i18n.getMessage("showTabs")
-                  : chrome.i18n.getMessage("hideTabs")}
+                {hide ? translate("showTabs") : translate("hideTabs")}
               </span>
             </div>
           </button>
@@ -222,9 +209,7 @@ export default function Group(props) {
           >
             <div className="tip">
               <FaWindowRestore color="forestgreen" />
-              <span className="tiptext-side">
-                {chrome.i18n.getMessage("openGroup")}
-              </span>
+              <span className="tiptext-side">{translate("openGroup")}</span>
             </div>
           </button>
           <button
@@ -233,9 +218,7 @@ export default function Group(props) {
           >
             <div className="tip">
               <CgRemove color="red" />
-              <span className="tiptext-side">
-                {chrome.i18n.getMessage("deleteGroup")}
-              </span>
+              <span className="tiptext-side">{translate("deleteGroup")}</span>
             </div>
           </button>
         </div>

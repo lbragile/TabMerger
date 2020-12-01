@@ -158,13 +158,17 @@ export default function Tabs(props) {
     window.location.reload();
   };
 
+  function translate(msg) {
+    return chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+  }
+
   return (
     <div className="d-flex flex-column mx-0 my-2">
       <h5 className="tabTotal-inGroup mb-3">
         {tabs.length}{" "}
         {tabs.length === 1
-          ? chrome.i18n.getMessage("groupTotalSingular")
-          : chrome.i18n.getMessage("groupTotalPlural")}{" "}
+          ? translate("groupTotalSingular")
+          : translate("groupTotalPlural")}{" "}
         {!tabTotal ? null : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}
       </h5>
       {tabs.map((tab, index) => {

@@ -122,12 +122,12 @@ export default function App() {
     // for shared links
     const query = window.location.search;
     const urlParams = new URLSearchParams(query);
-    if (
-      urlParams &&
-      window.location.href !== chrome.runtime.getURL("index.html")
-    ) {
+    const ext_url = chrome
+      ? chrome.runtime.getURL("index.html")
+      : browser.runtime.getURL("index.html");
+    if (urlParams && window.location.href !== ext_url) {
       window.localStorage.setItem("groups", urlParams.get("ls"));
-      window.location.replace(chrome.runtime.getURL("index.html"));
+      window.location.replace(ext_url);
     }
 
     // set dark mode if needed
@@ -141,11 +141,10 @@ export default function App() {
   }, []);
 
   function sendMessage(msg) {
-    var extension_id = chrome.runtime
-      .getURL("index.html")
-      .replace("chrome-extension://", "")
-      .replace("/index.html", "");
-    chrome.runtime.sendMessage(extension_id, msg);
+    var extension_id = chrome ? chrome.runtime.id : browser.runtime.id;
+    chrome
+      ? chrome.runtime.sendMessage(extension_id, msg)
+      : browser.runtime.sendMessage(extension_id, msg);
   }
 
   const addGroup = () => {
@@ -252,6 +251,10 @@ export default function App() {
     }
   }
 
+  function translate(msg) {
+    return chrome ? chrome.i18n.getMessage(msg) : browser.i18n.getMessage(msg);
+  }
+
   return (
     <div className="container-fluid">
       <div className="row m-auto">
@@ -282,8 +285,8 @@ export default function App() {
               <span className="small">
                 {tabTotal}{" "}
                 {tabTotal == 1
-                  ? chrome.i18n.getMessage("pageTotalSingular")
-                  : chrome.i18n.getMessage("pageTotalPlural")}
+                  ? translate("pageTotalSingular")
+                  : translate("pageTotalPlural")}
               </span>
             </h2>
             <hr />
@@ -303,9 +306,7 @@ export default function App() {
                   color="black"
                   size="1.6rem"
                 />
-                <span className="tiptext">
-                  {chrome.i18n.getMessage("mergeALLtabs")}
-                </span>
+                <span className="tiptext">{translate("mergeALLtabs")}</span>
               </div>
             </button>
             <button
@@ -317,9 +318,7 @@ export default function App() {
             >
               <div className="tip">
                 <BiArrowToRight color="black" size="1.3rem" />
-                <span className="tiptext">
-                  {chrome.i18n.getMessage("mergeLEFTtabs")}
-                </span>
+                <span className="tiptext">{translate("mergeLEFTtabs")}</span>
               </div>
             </button>
             <button
@@ -335,9 +334,7 @@ export default function App() {
                   color="black"
                   size="1.3rem"
                 />
-                <span className="tiptext">
-                  {chrome.i18n.getMessage("mergeRIGHTtabs")}
-                </span>
+                <span className="tiptext">{translate("mergeRIGHTtabs")}</span>
               </div>
             </button>
             <button
@@ -352,9 +349,7 @@ export default function App() {
                   color="green"
                   style={{ width: "22px", height: "22px", padding: "0" }}
                 />
-                <span className="tiptext">
-                  {chrome.i18n.getMessage("openAll")}
-                </span>
+                <span className="tiptext">{translate("openAll")}</span>
               </div>
             </button>
             <button
@@ -374,9 +369,7 @@ export default function App() {
                     paddingTop: "4px",
                   }}
                 />
-                <span className="tiptext">
-                  {chrome.i18n.getMessage("deleteAll")}
-                </span>
+                <span className="tiptext">{translate("deleteAll")}</span>
               </div>
             </button>
 
@@ -390,9 +383,7 @@ export default function App() {
               >
                 <div className="tip">
                   <FiShare color="darkcyan" size="1.4rem" />
-                  <span className="tiptext">
-                    {chrome.i18n.getMessage("shareAll")}
-                  </span>
+                  <span className="tiptext">{translate("shareAll")}</span>
                 </div>
               </button>
               <div
@@ -407,15 +398,17 @@ export default function App() {
               className="mr-3 p-0 btn btn-outline-dark"
               type="button"
               onClick={() =>
-                window.location.replace(chrome.runtime.getURL("options.html"))
+                window.location.replace(
+                  chrome
+                    ? chrome.runtime.getURL("options.html")
+                    : browser.runtime.getURL("options.html")
+                )
               }
               style={{ width: "45px", height: "45px" }}
             >
               <div className="tip">
                 <MdSettings color="grey" size="1.6rem" />
-                <span className="tiptext">
-                  {chrome.i18n.getMessage("settings")}
-                </span>
+                <span className="tiptext">{translate("settings")}</span>
               </div>
             </button>
           </div>
@@ -431,9 +424,7 @@ export default function App() {
             >
               <div className="tip">
                 <MdAddCircle color="grey" size="2rem" />
-                <span className="tiptext">
-                  {chrome.i18n.getMessage("addGroup")}
-                </span>
+                <span className="tiptext">{translate("addGroup")}</span>
               </div>
             </button>
           </div>
@@ -446,10 +437,10 @@ export default function App() {
               className="btn btn-info font-weight-bold mb-3"
               id="need-help"
             >
-              {chrome.i18n.getMessage("needHelp")}
+              {translate("needHelp")}
             </a>
             <h4>
-              <b>{chrome.i18n.getMessage("quickDemo")}</b>
+              <b>{translate("quickDemo")}</b>
             </h4>
             <iframe
               style={{ frameBorder: "0", width: "100%", height: "270px" }}
@@ -460,7 +451,7 @@ export default function App() {
 
             <div id="donate" className="my-3">
               <h4 className="mb-3 text-center">
-                <b>{chrome.i18n.getMessage("supportUs")}</b>
+                <b>{translate("supportUs")}</b>
               </h4>
               <form
                 action="https://www.paypal.com/donate"
@@ -481,9 +472,9 @@ export default function App() {
               </form>
             </div>
 
-            <div id="donate" className="mb-3">
+            <div id="review" className="mb-3">
               <h4 className="mb-1 text-center">
-                <b>{chrome.i18n.getMessage("leaveReview")}</b>
+                <b>{translate("leaveReview")}</b>
               </h4>
               <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews">
                 <div className="row mx-0 px-1">
