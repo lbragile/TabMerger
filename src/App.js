@@ -18,7 +18,8 @@ export default function App() {
   const defaultColor = useRef((settings && settings.color) || "#DEDEDE");
   const defaultTitle = useRef((settings && settings.title) || "Title");
 
-  const [tabTotal, setTabTotal] = useState(0);
+  // prettier-ignore
+  const [tabTotal, setTabTotal] = useState(window.localStorage.getItem("tabTotal") || 0);
   const [groups, setGroups] = useState(() => {
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
     return group_blocks
@@ -60,6 +61,15 @@ export default function App() {
 
     return "#" + hex.join("");
   }
+
+  // // fix tabTotal incase of duplicate tab being merged
+  // useEffect(() => {
+  //   var actualTotal = document.querySelectorAll(".draggable").length;
+  //   if (actualTotal != tabTotal) {
+  //     window.localStorage.setItem("tabTotal", actualTotal);
+  //     setTabTotal(actualTotal);
+  //   }
+  // }, [tabTotal]);
 
   useEffect(() => {
     // once a group is added: for each group, store the title, background color, and tab information
@@ -167,6 +177,7 @@ export default function App() {
       })
     );
 
+    window.localStorage.setItem("tabTotal", 0);
     window.location.reload();
   }
 
@@ -292,7 +303,7 @@ export default function App() {
               <h2 id="tab-total">
                 <span className="small">
                   {tabTotal}{" "}
-                  {tabTotal == 1
+                  {tabTotal === 1
                     ? translate("pageTotalSingular")
                     : translate("pageTotalPlural")}
                 </span>
@@ -305,8 +316,7 @@ export default function App() {
                 <input
                   type="text"
                   name="search-group"
-                  className="mr-4"
-                  className="px-1"
+                  className="mr-4 px-1"
                   onChange={(e) => groupFilter(e)}
                 />
                 <label for="tab-group" className="ml-2 mr-1 font-weight-bold">
@@ -429,6 +439,7 @@ export default function App() {
               style={{ frameBorder: "0", width: "100%", height: "270px" }}
               src="https://www.youtube.com/embed/cXG1lIx7WP4?controls=1&hd=1&playlist=cXG1lIx7WP4"
               allowFullScreen
+              title="TabMerger Quick Demo"
               id="video-demo"
             ></iframe>
 
@@ -449,6 +460,7 @@ export default function App() {
                 <input
                   type="image"
                   src="./images/paypal-donate.png"
+                  alt="Donate with PayPal button"
                   border="0"
                   name="submit"
                 />

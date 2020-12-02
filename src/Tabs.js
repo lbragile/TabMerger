@@ -8,26 +8,12 @@ import { AiOutlineMenu } from "react-icons/ai";
 export default function Tabs(props) {
   const tab_title_length = useRef(100);
   var [tabTotal, setTabTotal] = useState(
-    parseInt(window.localStorage.getItem("tabTotal"))
+    parseInt(window.localStorage.getItem("tabTotal")) || 0
   );
   const [tabs, setTabs] = useState(() => {
     var groups = JSON.parse(window.localStorage.getItem("groups"));
     return (groups && groups[props.id] && groups[props.id].tabs) || [];
   });
-
-  const setCurrentTabTotal = useCallback(() => {
-    // total tab count
-    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
-    var current_tab_total = group_blocks
-      ? Object.values(group_blocks).reduce((total, item) => {
-          return total + item.tabs.length;
-        }, 0)
-      : 0;
-
-    window.localStorage.setItem("tabTotal", current_tab_total);
-    props.setTabTotal(current_tab_total);
-    setTabTotal(current_tab_total);
-  }, [props]);
 
   const triggerEvent = useCallback(() => {
     setTimeout(() => {
@@ -35,7 +21,6 @@ export default function Tabs(props) {
 
       // skip groups which merging doesn't apply to, just update their tally
       if (props.id !== window.localStorage.getItem("into_group")) {
-        setCurrentTabTotal();
         return;
       }
 
@@ -72,26 +57,18 @@ export default function Tabs(props) {
       groups[props.id].tabs = tabs_arr;
       window.localStorage.setItem("groups", JSON.stringify(groups));
     }, 10);
-  }, [props.id, setCurrentTabTotal, tabs]);
+  }, [props.id, tabs]);
 
   useEffect(() => {
-    setCurrentTabTotal();
-
     if ("merged_tabs" in window.localStorage) {
+      var merged_tabs = window.localStorage.getItem("merged_tabs");
+      var total_tabs = tabTotal + JSON.parse(merged_tabs).length;
+      window.localStorage.setItem("tabTotal", total_tabs);
+      props.setTabTotal(total_tabs);
+      setTabTotal(total_tabs);
       triggerEvent();
     }
-
-    const merge_btn = document.querySelectorAll(".merge-btn");
-    [...merge_btn].forEach((item) =>
-      item.addEventListener("click", triggerEvent)
-    );
-
-    return () => {
-      [...merge_btn].forEach((item) =>
-        item.removeEventListener("click", triggerEvent)
-      );
-    };
-  }, [setCurrentTabTotal, triggerEvent]);
+  }, [triggerEvent]);
 
   function removeTab(e) {
     var url = e.target.closest("div").querySelector("a").href;
@@ -112,8 +89,8 @@ export default function Tabs(props) {
   }
 
   function keepOrRemoveTab(e) {
-    var restore_val = JSON.parse(window.localStorage.getItem("settings"))
-      .restore;
+    // prettier-ignore
+    var restore_val = JSON.parse(window.localStorage.getItem("settings")).restore;
     if (restore_val !== "keep") {
       removeTab(e);
     }

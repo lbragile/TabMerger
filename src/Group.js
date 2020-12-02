@@ -86,17 +86,17 @@ export default function Group(props) {
     if (
       JSON.parse(window.localStorage.getItem("settings")).restore !== "keep"
     ) {
-      e.target
-        .closest(".group")
-        .querySelector(".float-right")
-        .lastChild.click();
+      e.target.closest("td").querySelector(".delete-group-btn").click();
     }
   }
 
   function deleteGroup(e) {
     var group = e.target.closest(".group");
+    var group_tabs = group.querySelectorAll(".draggable");
+    var currentTotal = window.localStorage.getItem("tabTotal");
 
-    // update localstorage
+    window.localStorage.setItem("tabTotal", currentTotal - group_tabs.length);
+
     var ls_groups = JSON.parse(window.localStorage.getItem("groups"));
     delete ls_groups[group.id];
 
@@ -107,9 +107,10 @@ export default function Group(props) {
         new_groups["group-" + index] = value;
       });
     } else {
+      var settings = JSON.parse(window.localStorage.getItem("settings"));
       new_groups["group-0"] = {
-        title: JSON.parse(window.localStorage.getItem("settings")).title,
-        color: JSON.parse(window.localStorage.getItem("settings")).color,
+        title: settings.title,
+        color: settings.color,
         created: new Date(Date.now()).toString(),
         tabs: [],
       };
@@ -196,9 +197,9 @@ export default function Group(props) {
       <div id={props.id} className={props.className} onDragOver={dragOver}>
         <table className="mr-4 mt-2 float-right">
           <tr className="row">
-            <td className="d-flex flex-column">
+            <td className="d-flex flex-row">
               <button
-                className="merge-btn mt-1 mr-2 btn btn-outline-primary"
+                className="merge-btn mr-1 btn btn-outline-primary"
                 type="button"
                 style={{ width: "26px", height: "34px" }}
                 onClick={() => sendMessage({ msg: "all", id: props.id })}
@@ -220,7 +221,7 @@ export default function Group(props) {
                 </div>
               </button>
               <button
-                className="merge-left-btn mt-1 mr-2 btn btn-outline-warning"
+                className="merge-left-btn mr-1 btn btn-outline-warning"
                 type="button"
                 style={{ width: "26px", height: "34px" }}
                 onClick={() => sendMessage({ msg: "left", id: props.id })}
@@ -241,7 +242,7 @@ export default function Group(props) {
                 </div>
               </button>
               <button
-                className="merge-right-btn mt-1 mr-2 btn btn-outline-warning"
+                className="merge-right-btn mr-4 btn btn-outline-warning"
                 type="button"
                 style={{ width: "26px", height: "34px" }}
                 onClick={() => sendMessage({ msg: "right", id: props.id })}
@@ -264,9 +265,27 @@ export default function Group(props) {
               </button>
             </td>
 
-            <td className="d-flex flex-column">
+            <td className="d-flex flex-row">
               <button
-                className="show-hide-btn mt-1 p-1 btn btn-light btn-outline-info"
+                className="open-group-btn mr-1 p-1 btn btn-light btn-outline-success"
+                onClick={(e) => openAllTabsInGroup(e)}
+              >
+                <div className="tip">
+                  <FaWindowRestore color="forestgreen" />
+                  <span className="tiptext">{translate("openGroup")}</span>
+                </div>
+              </button>
+              <button
+                className="delete-group-btn mr-4 p-1 btn btn-light btn-outline-danger"
+                onClick={(e) => deleteGroup(e)}
+              >
+                <div className="tip">
+                  <CgRemove color="red" />
+                  <span className="tiptext">{translate("deleteGroup")}</span>
+                </div>
+              </button>
+              <button
+                className="show-hide-btn mr-1 p-1 btn btn-light btn-outline-info"
                 onClick={(e) => toggleGroup(e)}
               >
                 <div className="tip">
@@ -275,28 +294,8 @@ export default function Group(props) {
                   ) : (
                     <FcCollapse style={{ transform: "rotate(0deg)" }} />
                   )}
-                  <span className="tiptext-side">
+                  <span className="tiptext">
                     {hide ? translate("showTabs") : translate("hideTabs")}
-                  </span>
-                </div>
-              </button>
-              <button
-                className="open-group-btn mt-1 p-1 btn btn-light btn-outline-success"
-                onClick={(e) => openAllTabsInGroup(e)}
-              >
-                <div className="tip">
-                  <FaWindowRestore color="forestgreen" />
-                  <span className="tiptext-side">{translate("openGroup")}</span>
-                </div>
-              </button>
-              <button
-                className="delete-group-btn mt-1 p-1 btn btn-light btn-outline-danger"
-                onClick={(e) => deleteGroup(e)}
-              >
-                <div className="tip">
-                  <CgRemove color="red" />
-                  <span className="tiptext-side">
-                    {translate("deleteGroup")}
                   </span>
                 </div>
               </button>

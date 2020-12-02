@@ -13,6 +13,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   margin: 10px 0px;
+  padding-right: 5px;
 }
 
 .tip {
@@ -36,7 +37,6 @@
 }
 
 .tip .tiptext::after,
-.tiptext-side::after,
 .tiptext-merge::after,
 .tiptext-bottom::after {
   content: "";
@@ -52,36 +52,19 @@
   transform: translateX(-50%);
 }
 
-.tip .tiptext::after {
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.tip .tiptext-side {
-  top: 60%;
-  right: 125%;
-  transform: translateY(-50%);
-}
-
-.tip .tiptext-side::after {
-  top: 50%;
-  left: 100%;
-  transform: translateY(-50%);
-  border-color: transparent transparent transparent black;
-}
-
 .tip .tiptext-merge {
-  top: 50%;
-  right: 160%;
-  transform: translateY(-50%);
+  bottom: 100%;
+  left: 5%;
+  transform: translateX(-50%);
+  line-height: 1.3;
+  padding: 3px 5px;
 }
 
+.tip .tiptext::after,
 .tip .tiptext-merge::after {
-  top: 50%;
-  left: 100%;
-  transform: translateY(-50%);
-  border-color: transparent transparent transparent black;
+  top: 100%;
+  left: 48%;
+  transform: translateX(-50%);
 }
 
 .tip .tiptext-bottom {
@@ -99,7 +82,6 @@
 }
 
 .tip:hover .tiptext,
-.tip:hover .tiptext-side,
 .tip:hover .tiptext-merge,
 .tip:hover .tiptext-bottom {
   visibility: visible;
@@ -118,6 +100,10 @@
 
 .btn#add-group-btn:hover {
   background: none !important;
+}
+
+.btn-outline-warning {
+  border: 1px solid goldenrod;
 }
 
 .btn.merge-btn,
@@ -143,13 +129,17 @@ input[type="image"]:focus {
   outline: none;
 }
 
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: none !important;
+}
+
 input[type="image"] {
   transform: scale(1.1);
 }
 
 .search-filter {
   position: relative;
-  top: -40px;
+  top: -35px;
 }
 
 .search-filter > input {
@@ -177,4 +167,23 @@ hr {
 
 #donate {
   transform: scale(0.9);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: grey;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(134, 134, 134, 0.5);
+  -webkit-box-shadow: inset 0 0 6px rgba(134, 134, 134, 0.5);
+}
+
+::-webkit-scrollbar-track {
+  border: 1px grey solid;
 }
