@@ -16,47 +16,27 @@ export default function Tabs(props) {
   });
 
   const triggerEvent = useCallback(() => {
-    setTimeout(() => {
+    // skip groups which merging doesn't apply to
+    if (props.id === window.localStorage.getItem("into_group")) {
       var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
-
-      // skip groups which merging doesn't apply to, just update their tally
-      if (props.id !== window.localStorage.getItem("into_group")) {
-        return;
-      }
 
       // remove local storage items that are no longer needed
       window.localStorage.removeItem("merged_tabs");
       window.localStorage.removeItem("into_group");
 
-      // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
-      var tabs_arr = tabs;
-      var combined_arr = [...tabs_arr, ...merged_tabs];
-      var unique_arr = Array.from(
-        new Set(
-          combined_arr.map((item) =>
-            JSON.stringify({
-              url: item.url,
-              favIconUrl: item.favIconUrl,
-              title: item.title,
-            })
-          )
-        )
-      );
-      unique_arr = unique_arr.map((item) => JSON.parse(item));
-      tabs_arr = unique_arr.filter(
-        (item) =>
-          item.url &&
-          !item.url.includes("chrome://extensions") &&
-          !item.url.includes("about:addons") &&
-          item.title !== "TabMerger" &&
-          item.title !== "New Tab"
-      );
+      // store relevant details of combined tabs
+      var tabs_arr = [...tabs, ...merged_tabs];
+      tabs_arr = tabs_arr.map((item) => ({
+        url: item.url,
+        favIconUrl: item.favIconUrl,
+        title: item.title,
+      }));
 
       setTabs(tabs_arr);
       var groups = JSON.parse(window.localStorage.getItem("groups"));
       groups[props.id].tabs = tabs_arr;
       window.localStorage.setItem("groups", JSON.stringify(groups));
-    }, 10);
+    }
   }, [props.id, tabs]);
 
   useEffect(() => {

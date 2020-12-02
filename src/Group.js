@@ -83,10 +83,13 @@ export default function Group(props) {
       tab.querySelector("a").click();
     });
 
-    if (
-      JSON.parse(window.localStorage.getItem("settings")).restore !== "keep"
-    ) {
-      e.target.closest("td").querySelector(".delete-group-btn").click();
+    var restore_val = JSON.parse(localStorage.getItem("settings")).restore;
+    if (restore_val !== "keep") {
+      // adjust tabTotal prior to deleting to avoid negative number due to double subtraction
+      var currentTotal = parseInt(window.localStorage.getItem("tabTotal"));
+      window.localStorage.setItem("tabTotal", currentTotal + [...tabs].length);
+
+      deleteGroup(e);
     }
   }
 

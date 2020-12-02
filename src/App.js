@@ -62,46 +62,40 @@ export default function App() {
     return "#" + hex.join("");
   }
 
-  // // fix tabTotal incase of duplicate tab being merged
-  // useEffect(() => {
-  //   var actualTotal = document.querySelectorAll(".draggable").length;
-  //   if (actualTotal != tabTotal) {
-  //     window.localStorage.setItem("tabTotal", actualTotal);
-  //     setTabTotal(actualTotal);
-  //   }
-  // }, [tabTotal]);
-
   useEffect(() => {
     // once a group is added: for each group, store the title, background color, and tab information
-    var group_blocks = document.querySelectorAll(".group");
-    var ls_entry = {};
-    for (let i = 0; i < group_blocks.length; i++) {
-      ls_entry[group_blocks[i].id] = {
-        title: group_blocks[i].parentNode.querySelector("div[editext='view']")
-          .innerText,
-        color: rgb2hex(group_blocks[i].style.background),
-        created: group_blocks[i].parentNode.querySelector(".created").lastChild
-          .innerText,
-        tabs: [],
-      };
+    setTimeout(() => {
+      var group_blocks = document.querySelectorAll(".group");
+      var ls_entry = {};
+      for (let i = 0; i < group_blocks.length; i++) {
+        ls_entry[group_blocks[i].id] = {
+          title: group_blocks[i].parentNode.querySelector("div[editext='view']")
+            .innerText,
+          color: rgb2hex(group_blocks[i].style.background),
+          created: group_blocks[i].parentNode.querySelector(".created")
+            .lastChild.innerText,
+          tabs: [],
+        };
 
-      var group_tabs = group_blocks[i].querySelectorAll(
-        "div[draggable='true']"
-      );
+        var group_tabs = group_blocks[i].querySelectorAll(
+          "div[draggable='true']"
+        );
 
-      var tabs_entry = [];
-      for (let j = 0; j < group_tabs.length; j++) {
-        tabs_entry.push({
-          favIconUrl: group_tabs[j].querySelector("img").src,
-          url: group_tabs[j].querySelector("a").href,
-          title: group_tabs[j].querySelector("a").innerText,
-        });
+        var tabs_entry = [];
+        for (let j = 0; j < group_tabs.length; j++) {
+          tabs_entry.push({
+            favIconUrl: group_tabs[j].querySelector("img").src,
+            url: group_tabs[j].querySelector("a").href,
+            title: group_tabs[j].querySelector("a").innerText,
+          });
+        }
+
+        ls_entry[group_blocks[i].id].tabs = tabs_entry;
       }
 
-      ls_entry[group_blocks[i].id].tabs = tabs_entry;
-    }
+      window.localStorage.setItem("groups", JSON.stringify(ls_entry));
+    }, 10);
 
-    window.localStorage.setItem("groups", JSON.stringify(ls_entry));
     if (!window.localStorage.getItem("settings")) {
       window.localStorage.setItem(
         "settings",

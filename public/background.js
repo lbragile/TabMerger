@@ -62,6 +62,18 @@ const getTabsAndSend = (info, tab, group_id) => {
       chrome.tabs.remove(tabMergerTabs[0].id);
     });
 
+    // get a list of all the current tab titles
+    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+    var tab_titles = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
+    Object.values(group_blocks).forEach((item) => {
+      var groups_tab_titles = item.tabs.map((curr_tab) => curr_tab.title);
+      tab_titles = tab_titles.concat(groups_tab_titles);
+    });
+
+    tabs = tabs.filter((item) => {
+      return !tab_titles.includes(item.title);
+    });
+
     window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
     window.localStorage.setItem("into_group", group_id ? group_id : "group-0");
   });
