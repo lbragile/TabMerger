@@ -1,4 +1,4 @@
-const getTabsAndSend = (info, tab) => {
+const getTabsAndSend = (info, tab, group_id) => {
   chrome.tabs.query({ currentWindow: true }, (tabs) => {
     var extension_tabs = tabs.filter((item) => item.title === "TabMerger");
     var tab_urls = tabs.map((item) => item.url);
@@ -63,6 +63,7 @@ const getTabsAndSend = (info, tab) => {
     });
 
     window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
+    window.localStorage.setItem("into_group", group_id ? group_id : "group-0");
   });
 };
 
@@ -90,7 +91,7 @@ const extensionMessage = (request) => {
   info.which = request.msg;
   var queryOpts = { currentWindow: true, active: true };
   chrome.tabs.query(queryOpts, (tabs) => {
-    getTabsAndSend(info, tabs[0]);
+    getTabsAndSend(info, tabs[0], request.id);
   });
 };
 

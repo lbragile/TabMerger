@@ -5,14 +5,8 @@ import "./App.css";
 import Tabs from "./Tabs.js";
 import Group from "./Group.js";
 
-import {
-  MdSettings,
-  MdDeleteForever,
-  MdVerticalAlignCenter,
-  MdAddCircle,
-} from "react-icons/md";
+import { MdSettings, MdDeleteForever, MdAddCircle } from "react-icons/md";
 import { FaTrashRestore } from "react-icons/fa";
-import { BiArrowToRight } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
 import { RiStarSFill } from "react-icons/ri";
 
@@ -131,11 +125,6 @@ export default function App() {
     toggleDarkMode(json);
   }, []);
 
-  function sendMessage(msg) {
-    var extension_id = chrome.runtime.id;
-    chrome.runtime.sendMessage(extension_id, msg);
-  }
-
   const addGroup = () => {
     setGroups([
       ...groups,
@@ -241,10 +230,6 @@ export default function App() {
     }
   }
 
-  function translate(msg) {
-    return chrome.i18n.getMessage(msg);
-  }
-
   function tabFilter(e) {
     var tabs = document.querySelectorAll(".draggable > a");
 
@@ -271,6 +256,10 @@ export default function App() {
         document.querySelector("#group-" + index).parentNode.style.display = "";
       }
     });
+  }
+
+  function translate(msg) {
+    return chrome.i18n.getMessage(msg);
   }
 
   return (
@@ -335,50 +324,6 @@ export default function App() {
           </div>
 
           <div className="row">
-            <button
-              id="merge-btn"
-              className="ml-3 p-0 btn btn-outline-primary"
-              type="button"
-              onClick={() => sendMessage({ msg: "all" })}
-              style={{ width: "45px", height: "45px" }}
-            >
-              <div className="tip">
-                <MdVerticalAlignCenter
-                  style={{ transform: "rotate(90deg)" }}
-                  color="black"
-                  size="1.6rem"
-                />
-                <span className="tiptext">{translate("mergeALLtabs")}</span>
-              </div>
-            </button>
-            <button
-              id="merge-left-btn"
-              className="ml-1 p-0 btn btn-outline-warning"
-              type="button"
-              onClick={() => sendMessage({ msg: "left" })}
-              style={{ width: "45px", height: "45px" }}
-            >
-              <div className="tip">
-                <BiArrowToRight color="black" size="1.3rem" />
-                <span className="tiptext">{translate("mergeLEFTtabs")}</span>
-              </div>
-            </button>
-            <button
-              id="merge-right-btn"
-              className="ml-1 mr-4 p-0 btn btn-outline-warning"
-              type="button"
-              onClick={() => sendMessage({ msg: "right" })}
-              style={{ width: "45px", height: "45px" }}
-            >
-              <div className="tip">
-                <BiArrowToRight
-                  style={{ transform: "rotate(180deg)" }}
-                  color="black"
-                  size="1.3rem"
-                />
-                <span className="tiptext">{translate("mergeRIGHTtabs")}</span>
-              </div>
-            </button>
             <button
               id="open-all-btn"
               className="ml-4 p-0 btn btn-outline-success"

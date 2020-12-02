@@ -32,13 +32,16 @@ export default function Tabs(props) {
   const triggerEvent = useCallback(() => {
     setTimeout(() => {
       var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
-      window.localStorage.removeItem("merged_tabs");
 
-      /* istanbul ignore next */
-      if (props.id !== "group-0") {
+      // skip groups which merging doesn't apply to, just update their tally
+      if (props.id !== window.localStorage.getItem("into_group")) {
         setCurrentTabTotal();
         return;
       }
+
+      // remove local storage items that are no longer needed
+      window.localStorage.removeItem("merged_tabs");
+      window.localStorage.removeItem("into_group");
 
       // want to only use unique tabs, if multiple identical tabs are open we only store the unique ones
       var tabs_arr = tabs;
@@ -78,11 +81,15 @@ export default function Tabs(props) {
       triggerEvent();
     }
 
-    const merge_btn = document.querySelector("#merge-btn");
-    merge_btn.addEventListener("click", triggerEvent);
+    const merge_btn = document.querySelectorAll(".merge-btn");
+    [...merge_btn].forEach((item) =>
+      item.addEventListener("click", triggerEvent)
+    );
 
     return () => {
-      merge_btn.removeEventListener("click", triggerEvent);
+      [...merge_btn].forEach((item) =>
+        item.removeEventListener("click", triggerEvent)
+      );
     };
   }, [setCurrentTabTotal, triggerEvent]);
 

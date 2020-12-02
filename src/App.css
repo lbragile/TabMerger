@@ -22,6 +22,7 @@
 
 .tip .tiptext,
 .tip .tiptext-side,
+.tip .tiptext-merge,
 .tip .tiptext-bottom {
   visibility: hidden;
   background-color: black;
@@ -36,6 +37,7 @@
 
 .tip .tiptext::after,
 .tiptext-side::after,
+.tiptext-merge::after,
 .tiptext-bottom::after {
   content: "";
   position: absolute;
@@ -69,6 +71,19 @@
   border-color: transparent transparent transparent black;
 }
 
+.tip .tiptext-merge {
+  top: 50%;
+  right: 160%;
+  transform: translateY(-50%);
+}
+
+.tip .tiptext-merge::after {
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent black;
+}
+
 .tip .tiptext-bottom {
   top: 110%;
   left: 50%;
@@ -85,6 +100,7 @@
 
 .tip:hover .tiptext,
 .tip:hover .tiptext-side,
+.tip:hover .tiptext-merge,
 .tip:hover .tiptext-bottom {
   visibility: visible;
   opacity: 0.9;
@@ -104,9 +120,9 @@
   background: none !important;
 }
 
-.btn#merge-btn,
-.btn#merge-left-btn,
-.btn#merge-right-btn,
+.btn.merge-btn,
+.btn.merge-left-btn,
+.btn.merge-right-btn,
 .btn#open-all-btn,
 .btn#delete-all-btn,
 .btn#share-all-btn,

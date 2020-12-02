@@ -4,7 +4,9 @@ import EdiText from "react-editext";
 import { FcCollapse } from "react-icons/fc";
 import { CgRemove } from "react-icons/cg";
 import { FaWindowRestore } from "react-icons/fa";
+import { BiArrowToRight } from "react-icons/bi";
 import { BsPencilSquare } from "react-icons/bs";
+import { MdVerticalAlignCenter } from "react-icons/md";
 
 import "./Group.css";
 export default function Group(props) {
@@ -145,6 +147,11 @@ export default function Group(props) {
     return date_parts.join("");
   }
 
+  function sendMessage(msg) {
+    var extension_id = chrome.runtime.id;
+    chrome.runtime.sendMessage(extension_id, msg);
+  }
+
   function translate(msg) {
     return chrome.i18n.getMessage(msg);
   }
@@ -187,41 +194,115 @@ export default function Group(props) {
       </div>
 
       <div id={props.id} className={props.className} onDragOver={dragOver}>
-        <div className="mr-2 mt-2 float-right d-flex flex-column align-items-center">
-          <button
-            className="show-hide-btn mt-1 p-1 btn btn-light btn-outline-info"
-            onClick={(e) => toggleGroup(e)}
-          >
-            <div className="tip">
-              {hide ? (
-                <FcCollapse style={{ transform: "rotate(180deg)" }} />
-              ) : (
-                <FcCollapse style={{ transform: "rotate(0deg)" }} />
-              )}
-              <span className="tiptext-side">
-                {hide ? translate("showTabs") : translate("hideTabs")}
-              </span>
-            </div>
-          </button>
-          <button
-            className="open-group-btn mt-1 p-1 btn btn-light btn-outline-success"
-            onClick={(e) => openAllTabsInGroup(e)}
-          >
-            <div className="tip">
-              <FaWindowRestore color="forestgreen" />
-              <span className="tiptext-side">{translate("openGroup")}</span>
-            </div>
-          </button>
-          <button
-            className="delete-group-btn mt-1 p-1 btn btn-light btn-outline-danger"
-            onClick={(e) => deleteGroup(e)}
-          >
-            <div className="tip">
-              <CgRemove color="red" />
-              <span className="tiptext-side">{translate("deleteGroup")}</span>
-            </div>
-          </button>
-        </div>
+        <table className="mr-4 mt-2 float-right">
+          <tr className="row">
+            <td className="d-flex flex-column">
+              <button
+                className="merge-btn mt-1 mr-2 btn btn-outline-primary"
+                type="button"
+                style={{ width: "26px", height: "34px" }}
+                onClick={() => sendMessage({ msg: "all", id: props.id })}
+              >
+                <div className="tip">
+                  <MdVerticalAlignCenter
+                    style={{
+                      transform: "rotate(90deg)",
+                      position: "relative",
+                      left: "-10px",
+                      top: "-3px",
+                    }}
+                    color="black"
+                    size="1.3rem"
+                  />
+                  <span className="tiptext-merge">
+                    {translate("mergeALLtabs")}
+                  </span>
+                </div>
+              </button>
+              <button
+                className="merge-left-btn mt-1 mr-2 btn btn-outline-warning"
+                type="button"
+                style={{ width: "26px", height: "34px" }}
+                onClick={() => sendMessage({ msg: "left", id: props.id })}
+              >
+                <div className="tip">
+                  <BiArrowToRight
+                    style={{
+                      position: "relative",
+                      left: "-10px",
+                      top: "-3px",
+                    }}
+                    color="black"
+                    size="1.3rem"
+                  />
+                  <span className="tiptext-merge">
+                    {translate("mergeLEFTtabs")}
+                  </span>
+                </div>
+              </button>
+              <button
+                className="merge-right-btn mt-1 mr-2 btn btn-outline-warning"
+                type="button"
+                style={{ width: "26px", height: "34px" }}
+                onClick={() => sendMessage({ msg: "right", id: props.id })}
+              >
+                <div className="tip">
+                  <BiArrowToRight
+                    style={{
+                      transform: "rotate(180deg)",
+                      position: "relative",
+                      left: "-10px",
+                      top: "-3px",
+                    }}
+                    color="black"
+                    size="1.3rem"
+                  />
+                  <span className="tiptext-merge">
+                    {translate("mergeRIGHTtabs")}
+                  </span>
+                </div>
+              </button>
+            </td>
+
+            <td className="d-flex flex-column">
+              <button
+                className="show-hide-btn mt-1 p-1 btn btn-light btn-outline-info"
+                onClick={(e) => toggleGroup(e)}
+              >
+                <div className="tip">
+                  {hide ? (
+                    <FcCollapse style={{ transform: "rotate(180deg)" }} />
+                  ) : (
+                    <FcCollapse style={{ transform: "rotate(0deg)" }} />
+                  )}
+                  <span className="tiptext-side">
+                    {hide ? translate("showTabs") : translate("hideTabs")}
+                  </span>
+                </div>
+              </button>
+              <button
+                className="open-group-btn mt-1 p-1 btn btn-light btn-outline-success"
+                onClick={(e) => openAllTabsInGroup(e)}
+              >
+                <div className="tip">
+                  <FaWindowRestore color="forestgreen" />
+                  <span className="tiptext-side">{translate("openGroup")}</span>
+                </div>
+              </button>
+              <button
+                className="delete-group-btn mt-1 p-1 btn btn-light btn-outline-danger"
+                onClick={(e) => deleteGroup(e)}
+              >
+                <div className="tip">
+                  <CgRemove color="red" />
+                  <span className="tiptext-side">
+                    {translate("deleteGroup")}
+                  </span>
+                </div>
+              </button>
+            </td>
+          </tr>
+        </table>
 
         {props.children}
       </div>
