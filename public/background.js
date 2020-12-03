@@ -30,24 +30,16 @@ function getTabsAndSend(info, tab, group_id) {
 
     // apply blacklist items
     tabs = tabs.filter((item) => {
-      var blacklist_sites = JSON.parse(window.localStorage.getItem("settings"))
-        .blacklist.replace(" ", "")
-        .split(",");
-
+      var settings = JSON.parse(window.localStorage.getItem("settings"));
+      var blacklist_sites = settings.blacklist.replace(" ", "").split(",");
       blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
       return !blacklist_sites.includes(item.url);
     });
 
-    // close the to-be-merged tabs
-    tabs.forEach((item) => {
-      chrome.tabs.remove(item.id);
-    });
+    findExtTabAndSwitch();
 
-    chrome.tabs.query({ active: true }, (currTab) => {
-      if (currTab.title !== "TabMerger") {
-        findExtTabAndSwitch();
-      }
-    });
+    // close the to-be-merged tabs
+    chrome.tabs.remove(tabs.map((x) => x.id));
 
     // ===== FILTERING for tab total counts ====== //
     // get a list of all the current tab titles
