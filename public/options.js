@@ -23,15 +23,20 @@ function restoreOptions() {
   var settings = JSON.parse(window.localStorage.getItem("settings"));
   var body = document.querySelector("body");
   var hr = document.querySelector("hr");
+  var code_block = document.querySelector("code");
 
   if (window.localStorage.getItem("dark")) {
     body.style.background = "#343a40";
     body.style.color = "white";
     hr.style.borderTop = "1px white solid";
+    code_block.style.color = "white";
+    code_block.style.border = "white 1px solid";
   } else {
     body.style.background = "white";
     body.style.color = "black";
     hr.style.borderTop = "1px rgba(0,0,0,.1) solid";
+    code_block.style.color = "black";
+    code_block.style.border = "black 1px solid";
   }
 
   if (settings) {

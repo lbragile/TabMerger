@@ -22,8 +22,6 @@ section {
 }
 
 code {
-  background: rgba(189, 255, 222, 0.541);
-  color: black;
   font-size: 0.95rem;
   position: relative;
   left: 5%;

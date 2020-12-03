@@ -47,8 +47,14 @@ export default function Tabs(props) {
       props.setTabTotal(total_tabs);
       setTabTotal(total_tabs);
       triggerEvent();
+
+      // to update all components, this is safe here since merged_tabs
+      // is only defined on first triggerEvent
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
     }
-  }, [triggerEvent]);
+  }, []);
 
   function removeTab(e) {
     var url = e.target.closest("div").querySelector("a").href;
