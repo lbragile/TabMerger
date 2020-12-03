@@ -1,44 +1,32 @@
-const getTabsAndSend = (info, tab, group_id) => {
+function getTabsAndSend(info, tab, group_id) {
   chrome.tabs.query({ currentWindow: true }, (tabs) => {
-    var extension_tabs = tabs.filter((item) => item.title === "TabMerger");
-    var tab_urls = tabs.map((item) => item.url);
-
-    // IF more than one unique URL, can safetly close chrome-extension tabs without closing window.
-    // ELSE only chrome-extension tabs are open, so close all until one is left.
-    if (new Set(tab_urls).length > 1) {
-      extension_tabs.forEach((item) => {
-        chrome.tabs.remove(item.id);
-      });
-    } else {
-      var num_tabs = extension_tabs.length;
-      extension_tabs.forEach((item) => {
-        if (num_tabs > 1) {
-          chrome.tabs.remove(item.id);
-          num_tabs--;
-        }
-      });
-    }
-
     switch (info.which) {
       case "right":
-        tabs = tabs.filter((item) => item.index > tab.index);
+        tabs = tabs.filter(
+          (item) => item.index > tab.index && item.title !== "TabMerger"
+        );
         break;
       case "left":
-        tabs.splice(tab.index);
+        tabs = tabs.filter(
+          (item) => item.index < tab.index && item.title !== "TabMerger"
+        );
         break;
       case "excluding":
-        tabs.splice(tab.index, 1);
+        tabs = tabs.filter(
+          (item) => item.index !== tab.index && item.title !== "TabMerger"
+        );
         break;
       case "only":
-        tabs = [tab, ...extension_tabs];
+        tabs = tabs.filter(
+          (item) => item.index === tab.index && item.title !== "TabMerger"
+        );
         break;
 
       default:
-        // info.which === "all"
+        //all
+        tabs = tabs.filter((item) => item.title !== "TabMerger");
         break;
     }
-
-    chrome.tabs.create({ url: "index.html", active: true });
 
     // apply blacklist items
     tabs = tabs.filter((item) => {
@@ -50,18 +38,18 @@ const getTabsAndSend = (info, tab, group_id) => {
       return !blacklist_sites.includes(item.url);
     });
 
+    // close the to-be-merged tabs
     tabs.forEach((item) => {
-      if (item.title !== "TabMerger") {
-        chrome.tabs.remove(item.id);
+      chrome.tabs.remove(item.id);
+    });
+
+    chrome.tabs.query({ active: true }, (currTab) => {
+      if (currTab.title !== "TabMerger") {
+        findExtTabAndSwitch();
       }
     });
 
-    // in case of multiple chrome-extension tabs. Can have 2 at most for any instance
-    const queryOpts = { title: "TabMerger", currentWindow: true };
-    chrome.tabs.query(queryOpts, (tabMergerTabs) => {
-      chrome.tabs.remove(tabMergerTabs[0].id);
-    });
-
+    // ===== FILTERING for tab total counts ====== //
     // get a list of all the current tab titles
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
     var tab_titles = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
@@ -77,7 +65,21 @@ const getTabsAndSend = (info, tab, group_id) => {
     window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
     window.localStorage.setItem("into_group", group_id ? group_id : "group-0");
   });
-};
+}
+
+function findExtTabAndSwitch() {
+  chrome.tabs.query(
+    { title: "TabMerger", currentWindow: true },
+    (tabMergerTabs) => {
+      if (tabMergerTabs[0]) {
+        chrome.tabs.update(tabMergerTabs[0].id, { highlighted: true });
+        chrome.tabs.reload(tabMergerTabs[0].id);
+      } else {
+        chrome.tabs.create({ url: "index.html", active: true });
+      }
+    }
+  );
+}
 
 function excludeSite(info, tab) {
   var settings = JSON.parse(window.localStorage.getItem("settings")) || {};
@@ -97,7 +99,14 @@ function translate(msg) {
 var info = { which: "all" };
 var tab = { index: 0 };
 
-chrome.browserAction.onClicked.addListener(getTabsAndSend);
+// extension click - open without merging or with merging
+chrome.browserAction.onClicked.addListener(() => {
+  if (JSON.parse(window.localStorage.getItem("settings")).open === "without") {
+    findExtTabAndSwitch();
+  } else {
+    getTabsAndSend(info, tab);
+  }
+});
 
 const extensionMessage = (request) => {
   info.which = request.msg;
@@ -116,10 +125,7 @@ function createContextMenu(id, title, type) {
 const contextMenuClick = (info, tab) => {
   switch (info.menuItemId) {
     case "open-tabmerger":
-      chrome.tabs.create({
-        active: true,
-        url: chrome.runtime.getURL("index.html"),
-      });
+      findExtTabAndSwitch();
       break;
     case "merge-left-menu":
       info.which = "left";

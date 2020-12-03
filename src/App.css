@@ -153,6 +153,7 @@ input[type="image"] {
 
 hr {
   margin-top: 0;
+  width: 100%;
 }
 
 #video-demo {

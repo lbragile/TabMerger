@@ -3,11 +3,12 @@ function saveOptions(e) {
   var title = document.getElementById("options-default-title").value;
   var restore = document.querySelector("input[name='restore-tabs']:checked")
     .value;
+  var open = document.querySelector("input[name='ext-open']:checked").value;
   var blacklist = document.getElementById("options-blacklist").value;
 
   window.localStorage.setItem(
     "settings",
-    JSON.stringify({ color, title, restore, blacklist })
+    JSON.stringify({ open, color, title, restore, blacklist })
   );
 
   e.target.classList.replace("btn-primary", "btn-success");
@@ -38,6 +39,9 @@ function restoreOptions() {
     document.getElementById("options-default-title").value = settings.title;
     document.querySelectorAll("input[name='restore-tabs']").forEach((item) => {
       item.checked = item.value === settings.restore;
+    });
+    document.querySelectorAll("input[name='ext-open']").forEach((item) => {
+      item.checked = item.value === settings.open;
     });
     document.getElementById("options-blacklist").value = settings.blacklist;
   }

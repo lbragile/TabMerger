@@ -100,6 +100,7 @@ export default function App() {
       window.localStorage.setItem(
         "settings",
         JSON.stringify({
+          open: "without",
           color: "#dedede",
           title: "Title",
           restore: "keep",
