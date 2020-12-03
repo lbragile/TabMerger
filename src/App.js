@@ -286,7 +286,13 @@ export default function App() {
                 <b>Dark Mode</b>
               </label>
             </div>
-            <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc">
+            <a
+              href={
+                /chrome/i.test(navigator.userAgent)
+                  ? "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc"
+                  : "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger"
+              }
+            >
               <img
                 id="logo-img"
                 className="mt-4"
