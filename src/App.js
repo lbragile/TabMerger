@@ -436,10 +436,13 @@ export default function App() {
             <h4>
               <b>{translate("quickDemo")}</b>
             </h4>
+
             <iframe
-              style={{ frameBorder: "0", width: "100%", height: "270px" }}
-              src="https://www.youtube.com/embed/cXG1lIx7WP4?controls=1&hd=1&playlist=cXG1lIx7WP4"
-              allowFullScreen
+              style={{ frameBorder: "0", width: "100%", height: "260px" }}
+              src="https://www.youtube.com/embed/gx0dNUbwCn4?controls=1&hd=1&playlist=gx0dNUbwCn4"
+              allowFullScreen="true"
+              webkitallowfullscreen="true"
+              mozallowfullscreen="true"
               title="TabMerger Quick Demo"
               id="video-demo"
             ></iframe>

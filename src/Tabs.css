@@ -16,6 +16,7 @@
 .tabTotal-inGroup {
   position: relative;
   left: 15px;
+  width: 75% !important;
 }
 
 .draggable {
