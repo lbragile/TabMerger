@@ -10,7 +10,8 @@
 
 .left-side-container {
   position: relative;
-  top: -12px;
+  top: -40px;
+  z-index: 0;
 }
 
 .groups-container {
@@ -18,7 +19,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 5px;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .tip {
@@ -55,13 +56,16 @@
   bottom: 110%;
   left: 50%;
   transform: translateX(-50%);
+  font-size: 0.95rem;
+  line-height: 1.3;
 }
 
 .tip .tiptext-merge {
   bottom: 100%;
   left: 5%;
   transform: translateX(-50%);
-  line-height: 1.3;
+  line-height: 1.4;
+  font-size: 0.95rem;
   padding: 3px 5px;
 }
 
@@ -76,7 +80,8 @@
   top: 110%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1rem;
+  line-height: 1.4;
+  font-size: 0.95rem;
 }
 
 .tip .tiptext-bottom::after {
@@ -139,6 +144,12 @@ input[type="image"]:focus {
   outline: none;
 }
 
+.custom-control-label:hover,
+.custom-control-label::before,
+.custom-control-label::after {
+  cursor: pointer;
+}
+
 .custom-control-input:focus ~ .custom-control-label::before {
   box-shadow: none !important;
 }
@@ -149,7 +160,9 @@ input[type="image"] {
 
 .search-filter {
   position: relative;
-  top: -35px;
+  top: -63px;
+  left: -15px;
+  z-index: 1;
 }
 
 .search-filter > input {

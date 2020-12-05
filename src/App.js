@@ -36,7 +36,7 @@ export default function App() {
               created={group_blocks[item].created}
               key={Math.random()}
             >
-              <Tabs setTabTotal={setTabTotal} id={item} />
+              <Tabs setTabTotal={setTabTotal} setGroups={setGroups} id={item} />
             </Group>
           );
         })
@@ -49,7 +49,11 @@ export default function App() {
             created={new Date(Date.now()).toString()}
             key={Math.random()}
           >
-            <Tabs setTabTotal={setTabTotal} id="group-0" />
+            <Tabs
+              setTabTotal={setTabTotal}
+              setGroups={setGroups}
+              id="group-0"
+            />
           </Group>,
         ];
   });
@@ -135,7 +139,11 @@ export default function App() {
         title={defaultTitle.current}
         created={new Date(Date.now()).toString()}
       >
-        <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
+        <Tabs
+          setTabTotal={setTabTotal}
+          setGroups={setGroups}
+          id={"group-" + groups.length}
+        />
       </Group>,
     ]);
   };
@@ -154,20 +162,30 @@ export default function App() {
   }
 
   function deleteAllGroups() {
-    window.localStorage.setItem(
-      "groups",
-      JSON.stringify({
-        "group-0": {
-          title: defaultTitle.current,
-          color: defaultColor.current,
-          created: new Date(Date.now()).toString(),
-          tabs: [],
-        },
-      })
-    );
+    var default_group = JSON.stringify({
+      "group-0": {
+        title: defaultTitle.current,
+        color: defaultColor.current,
+        created: new Date(Date.now()).toString(),
+        tabs: [],
+      },
+    });
 
+    window.localStorage.setItem("groups", default_group);
     window.localStorage.setItem("tabTotal", 0);
-    window.location.reload();
+    setTabTotal(0);
+    setGroups([
+      <Group
+        id="group-0"
+        className="group"
+        title={defaultTitle.current}
+        color={defaultColor.current}
+        created={new Date(Date.now()).toString()}
+        key={Math.random()}
+      >
+        <Tabs setTabTotal={setTabTotal} setGroups={setGroups} id="group-0" />
+      </Group>,
+    ]);
   }
 
   function toggleDarkMode(e) {
@@ -227,9 +245,6 @@ export default function App() {
         window.localStorage.setItem("groups", fileContent.groups);
         window.localStorage.setItem("tabTotal", fileContent.totalTabs);
         window.localStorage.setItem("settings", fileContent.settings);
-        // alert(
-        //   "Successfully imported your file.\nTabMerger will now reload the page for you to see changes!"
-        // );
         window.location.reload();
       };
     } else {
@@ -240,7 +255,7 @@ export default function App() {
   }
 
   const exportJSON = () => {
-    window.location.reload();
+    setGroups(groups);
 
     var dataStr =
       "data:text/json;charset=utf-8," +
@@ -390,25 +405,35 @@ export default function App() {
                 </span>
               </h2>
 
-              <div className="search-filter d-inline-block float-right">
-                <label for="search-group" className="mr-1 font-weight-bold">
-                  Group Title:{" "}
-                </label>
-                <input
-                  type="text"
-                  name="search-group"
-                  className="mr-4 px-1"
-                  onChange={(e) => groupFilter(e)}
-                />
-                <label for="tab-group" className="ml-2 mr-1 font-weight-bold">
-                  Tab Title:{" "}
-                </label>
-                <input
-                  type="text"
-                  name="tab-group"
-                  className="px-1"
-                  onChange={(e) => tabFilter(e)}
-                />
+              <div className="search-filter row float-right">
+                <div>
+                  <label
+                    for="search-group"
+                    className="d-block mb-0 font-weight-bold"
+                  >
+                    Group Title:{" "}
+                  </label>
+                  <input
+                    type="text"
+                    name="search-group"
+                    className="mr-2 px-1"
+                    onChange={(e) => groupFilter(e)}
+                  />
+                </div>
+                <div>
+                  <label
+                    for="tab-group"
+                    className="d-block mb-0 font-weight-bold"
+                  >
+                    Tab Title:{" "}
+                  </label>
+                  <input
+                    type="text"
+                    name="tab-group"
+                    className="px-1"
+                    onChange={(e) => tabFilter(e)}
+                  />
+                </div>
               </div>
             </div>
             <hr />
@@ -517,7 +542,7 @@ export default function App() {
               </button>
               <button
                 id="options-btn"
-                className="mr-3 p-0 btn btn-outline-dark"
+                className="p-0 btn btn-outline-dark"
                 type="button"
                 onClick={() =>
                   window.location.replace(chrome.runtime.getURL("options.html"))
@@ -535,7 +560,7 @@ export default function App() {
               {groups}
 
               <button
-                className="d-block mt-2 ml-3 p-2 btn"
+                className="d-block mt-1 ml-3 p-2 btn"
                 id="add-group-btn"
                 type="button"
                 onClick={() => addGroup()}

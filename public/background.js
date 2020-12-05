@@ -65,7 +65,7 @@ function findExtTabAndSwitch() {
     (tabMergerTabs) => {
       if (tabMergerTabs[0]) {
         chrome.tabs.update(tabMergerTabs[0].id, { highlighted: true });
-        chrome.tabs.reload(tabMergerTabs[0].id);
+        // chrome.tabs.reload(tabMergerTabs[0].id);
       } else {
         chrome.tabs.create({ url: "index.html", active: true });
       }

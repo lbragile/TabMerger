@@ -18,13 +18,13 @@
     "message": "tab in group"
   },
   "mergeALLtabs": {
-    "message": "Merge ALL Tabs"
+    "message": "Merge ALL"
   },
   "mergeLEFTtabs": {
-    "message": "Merge LEFT Tabs"
+    "message": "Merge LEFT"
   },
   "mergeRIGHTtabs": {
-    "message": "Merge RIGHT Tabs"
+    "message": "Merge RIGHT"
   },
   "openAll": {
     "message": "Open All"

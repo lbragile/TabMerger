@@ -26,15 +26,15 @@ export default function Group(props) {
   }, []);
 
   function handleTitleChange(val) {
+    var groups = JSON.parse(window.localStorage.getItem("groups"));
     if (val.length < 15) {
-      var groups = JSON.parse(window.localStorage.getItem("groups"));
       groups[props.id].title = val;
-      window.localStorage.setItem("groups", JSON.stringify(groups));
-      setTitle(val);
     } else {
       alert("Titles must be less than 15 characters long!");
-      window.location.reload();
+      groups[props.id].title = title;
     }
+    window.localStorage.setItem("groups", JSON.stringify(groups));
+    setTitle(groups[props.id].title);
   }
 
   function handleColorChange(e) {

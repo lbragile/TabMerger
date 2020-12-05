@@ -7,9 +7,6 @@ import { AiOutlineMenu } from "react-icons/ai";
 
 export default function Tabs(props) {
   const tab_title_length = useRef(100);
-  var [tabTotal, setTabTotal] = useState(
-    parseInt(window.localStorage.getItem("tabTotal")) || 0
-  );
   const [tabs, setTabs] = useState(() => {
     var groups = JSON.parse(window.localStorage.getItem("groups"));
     return (groups && groups[props.id] && groups[props.id].tabs) || [];
@@ -42,17 +39,12 @@ export default function Tabs(props) {
   useEffect(() => {
     if ("merged_tabs" in window.localStorage) {
       var merged_tabs = window.localStorage.getItem("merged_tabs");
-      var total_tabs = tabTotal + JSON.parse(merged_tabs).length;
+      var total_tabs =
+        parseInt(window.localStorage.getItem("tabTotal")) +
+        JSON.parse(merged_tabs).length;
       window.localStorage.setItem("tabTotal", total_tabs);
       props.setTabTotal(total_tabs);
-      setTabTotal(total_tabs);
       triggerEvent();
-
-      // to update all components, this is safe here since merged_tabs
-      // is only defined on first triggerEvent
-      setTimeout(() => {
-        window.location.reload();
-      }, 1);
     }
   }, []);
 
@@ -70,8 +62,6 @@ export default function Tabs(props) {
     var current = window.localStorage.getItem("tabTotal");
     window.localStorage.setItem("tabTotal", current - 1);
     props.setTabTotal(current - 1);
-
-    window.location.reload();
   }
 
   function keepOrRemoveTab(e) {
@@ -123,10 +113,9 @@ export default function Tabs(props) {
       };
     });
 
-    window.localStorage.setItem("groups", JSON.stringify(group_blocks));
-
-    // re-render page
-    window.location.reload();
+    var groups_str = JSON.stringify(group_blocks);
+    window.localStorage.setItem("groups", groups_str);
+    props.setGroups(groups_str);
   };
 
   function translate(msg) {
@@ -134,13 +123,12 @@ export default function Tabs(props) {
   }
 
   return (
-    <div className="d-flex flex-column mx-0 my-2">
-      <h5 className="tabTotal-inGroup mb-3">
+    <div className="d-flex flex-column mx-0">
+      <h5 className="tabTotal-inGroup mt-1 mb-3">
         {tabs.length}{" "}
         {tabs.length === 1
           ? translate("groupTotalSingular")
-          : translate("groupTotalPlural")}{" "}
-        {!tabTotal ? null : `(${((tabs.length * 100) / tabTotal).toFixed(2)}%)`}
+          : translate("groupTotalPlural")}
       </h5>
       {tabs.map((tab, index) => {
         return (
