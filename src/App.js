@@ -6,12 +6,15 @@ import Tabs from "./Tabs.js";
 import Group from "./Group.js";
 
 import { MdSettings, MdDeleteForever, MdAddCircle } from "react-icons/md";
-import { FaTrashRestore } from "react-icons/fa";
-import { FiShare } from "react-icons/fi";
+import {
+  FaTrashRestore,
+  FaFileImport,
+  FaFileExport,
+  FaFilePdf,
+} from "react-icons/fa";
 import { RiStarSFill } from "react-icons/ri";
 
-import { nanoid } from "nanoid";
-import axios from "axios";
+import jsPDF from "jspdf";
 
 export default function App() {
   var settings = JSON.parse(window.localStorage.getItem("settings"));
@@ -111,15 +114,6 @@ export default function App() {
   }, [groups]);
 
   useEffect(() => {
-    // for shared links
-    const query = window.location.search;
-    const urlParams = new URLSearchParams(query);
-    const ext_url = chrome.runtime.getURL("index.html");
-    if (urlParams && window.location.href !== ext_url) {
-      window.localStorage.setItem("groups", urlParams.get("ls"));
-      window.location.replace(ext_url);
-    }
-
     // set dark mode if needed
     var json = { target: { checked: null } };
     var darkModeSwitch = document.getElementById("darkMode");
@@ -176,46 +170,6 @@ export default function App() {
     window.location.reload();
   }
 
-  async function shareAllGroups(e) {
-    var group_blocks = window.localStorage.getItem("groups");
-    var id_extra = /chrome/i.test(navigator.userAgent) ? "-c" : "-f";
-    var unique_id = nanoid(13) + id_extra;
-    var response = await axios.post(
-      "https://tabmerger.herokuapp.com/shortenURL/",
-      {
-        groups: group_blocks.toString(),
-        id: unique_id,
-      }
-    );
-    if (response.data.success) {
-      e.target
-        .closest("button")
-        .nextSibling.append(
-          "https://tabmerger.herokuapp.com/sharedURL/" + unique_id
-        );
-    } else {
-      alert("Failed to generate shareable link. Please try again");
-    }
-  }
-
-  function copyLinkOnFocus(e) {
-    var text = selectElementContents(e.target);
-    document.execCommand("copy");
-    alert(
-      `We copied the following link to your clipboard:\n\n${text}\n\nYou can now share it with anyone.`
-    );
-  }
-
-  // https://stackoverflow.com/questions/6139107/programmatically-select-text-in-a-contenteditable-html-element
-  function selectElementContents(el) {
-    var range = document.createRange();
-    range.selectNodeContents(el);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    return sel;
-  }
-
   function toggleDarkMode(e) {
     var container = document.querySelector("body");
     var hr = document.querySelector("hr");
@@ -262,6 +216,132 @@ export default function App() {
         document.querySelector("#group-" + index).parentNode.style.display = "";
       }
     });
+  }
+
+  function readImportedFile(e) {
+    if (e.target.files[0].type === "application/json") {
+      var reader = new FileReader();
+      reader.readAsText(e.target.files[0]);
+      reader.onload = () => {
+        var fileContent = JSON.parse(reader.result);
+        window.localStorage.setItem("groups", fileContent.groups);
+        window.localStorage.setItem("tabTotal", fileContent.totalTabs);
+        window.localStorage.setItem("settings", fileContent.settings);
+        // alert(
+        //   "Successfully imported your file.\nTabMerger will now reload the page for you to see changes!"
+        // );
+        window.location.reload();
+      };
+    } else {
+      alert(
+        'You must import a JSON file (.json extension)!\nThese can be generated via the "Export JSON" button.'
+      );
+    }
+  }
+
+  const exportJSON = () => {
+    window.location.reload();
+
+    var dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(
+        JSON.stringify({
+          groups: window.localStorage.getItem("groups"),
+          totalTabs: window.localStorage.getItem("tabTotal"),
+          settings: window.localStorage.getItem("settings"),
+        })
+      );
+
+    var anchor = document.getElementById("export-btn");
+    anchor.setAttribute("href", dataStr);
+    anchor.setAttribute("download", outputFileName() + ".json");
+  };
+
+  function outputFileName() {
+    const timestamp = new Date(Date.now()).toString().split(" ").slice(1, 5);
+    const date_str = timestamp.slice(0, 3).join("-");
+
+    return `TabMerger [${date_str} @ ${timestamp[3]}]`;
+  }
+
+  function exportPDF() {
+    var doc = new jsPDF();
+
+    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+    var total = window.localStorage.getItem("tabTotal");
+
+    var { width, height } = doc.internal.pageSize;
+    // prettier-ignore
+    var x = 25, y = 50;
+
+    doc.addImage("./images/logo-full-rescale.PNG", "PNG", x, y - 25, 74.4, 14);
+    doc.setFontSize(11);
+    doc.text("Get TabMerger Today:", x + 90, y - 15);
+    doc.setTextColor(51, 153, 255);
+    doc.textWithLink("Chrome", x + 131, y - 15, {
+      url:
+        "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc",
+    });
+    doc.setTextColor("#000");
+    doc.text("|", x + 146, y - 15);
+    doc.setTextColor(51, 153, 255);
+    doc.textWithLink("FireFox", x + 149, y - 15, {
+      url: "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/",
+    });
+    doc.addImage("./images/logo16.png", "PNG", width - 20, y - 20, 5, 5);
+
+    doc.setFontSize(16);
+    doc.setTextColor("000");
+    doc.text(total + " tabs in total", x, y);
+    Object.values(group_blocks).forEach((item) => {
+      y += 15;
+      if (y >= height) {
+        doc.addPage();
+        y = 25;
+      }
+      doc.setTextColor("000");
+      doc.setFontSize(20);
+      doc.text(item.title, x, y);
+
+      doc.setFontSize(12);
+      item.tabs.forEach((tab, index) => {
+        y += 10;
+        if (y >= height) {
+          doc.addPage();
+          y = 25;
+        }
+        doc.setTextColor("#000");
+        doc.text(index + 1 + ".", x + 5, y);
+        doc.setTextColor(51, 153, 255);
+        doc.textWithLink(
+          tab.title.length > 75 ? tab.title.substr(0, 75) + "..." : tab.title,
+          x + 10,
+          y,
+          {
+            url: tab.url,
+          }
+        );
+      });
+    });
+
+    // page numbers
+    doc.setTextColor("000");
+    var pageCount = doc.internal.getNumberOfPages();
+    for (var i = 0; i < pageCount; i++) {
+      doc.setPage(i);
+      doc.text(
+        width / 2 - 20,
+        height - 5,
+        "Page " +
+          doc.internal.getCurrentPageInfo().pageNumber +
+          " of " +
+          pageCount
+      );
+
+      doc.text(width - 50, height - 5, "© Lior Bragilevsky");
+    }
+
+    doc.save(outputFileName() + ".pdf");
   }
 
   function translate(msg) {
@@ -333,94 +413,139 @@ export default function App() {
             </div>
             <hr />
           </div>
-
-          <div className="row">
-            <button
-              id="open-all-btn"
-              className="ml-4 p-0 btn btn-outline-success"
-              type="button"
-              onClick={() => openAllTabs()}
-              style={{ width: "45px", height: "45px" }}
-            >
-              <div className="tip">
-                <FaTrashRestore
-                  color="green"
-                  style={{ width: "22px", height: "22px", padding: "0" }}
-                />
-                <span className="tiptext">{translate("openAll")}</span>
-              </div>
-            </button>
-            <button
-              id="delete-all-btn"
-              className="ml-1 mr-4 p-0 btn btn-outline-danger"
-              type="button"
-              onClick={() => deleteAllGroups()}
-              style={{ width: "45px", height: "45px" }}
-            >
-              <div className="tip">
-                <MdDeleteForever
-                  color="red"
-                  style={{
-                    width: "30px",
-                    height: "35px",
-                    padding: "0",
-                    paddingTop: "4px",
-                  }}
-                />
-                <span className="tiptext">{translate("deleteAll")}</span>
-              </div>
-            </button>
-
-            <div className="d-flex flex-row align-items-center">
+          <div className="left-side-container">
+            <div className="global-btn row">
               <button
-                id="share-all-btn"
-                className="ml-4 p-0 btn btn-outline-info"
+                id="open-all-btn"
+                className="ml-3 p-0 btn btn-outline-success"
                 type="button"
-                onClick={(e) => shareAllGroups(e)}
+                onClick={() => openAllTabs()}
                 style={{ width: "45px", height: "45px" }}
               >
                 <div className="tip">
-                  <FiShare color="darkcyan" size="1.4rem" />
-                  <span className="tiptext">{translate("shareAll")}</span>
+                  <FaTrashRestore
+                    color="green"
+                    style={{ width: "22px", height: "22px", padding: "0" }}
+                  />
+                  <span className="tiptext">{translate("openAll")}</span>
                 </div>
               </button>
-              <div
-                className="ml-1"
-                id="short-url"
-                contentEditable
-                onClick={(e) => copyLinkOnFocus(e)}
-              ></div>
+              <button
+                id="delete-all-btn"
+                className="ml-1 mr-4 p-0 btn btn-outline-danger"
+                type="button"
+                onClick={() => deleteAllGroups()}
+                style={{ width: "45px", height: "45px" }}
+              >
+                <div className="tip">
+                  <MdDeleteForever
+                    color="red"
+                    style={{
+                      width: "30px",
+                      height: "35px",
+                      padding: "0",
+                      paddingTop: "4px",
+                    }}
+                  />
+                  <span className="tiptext">{translate("deleteAll")}</span>
+                </div>
+              </button>
+
+              <a
+                id="export-btn"
+                className="ml-4 btn btn-outline-info"
+                style={{
+                  width: "45px",
+                  height: "45px",
+                }}
+                onClick={exportJSON}
+              >
+                <div className="tip">
+                  <FaFileExport
+                    color="darkcyan"
+                    size="1.5rem"
+                    style={{
+                      position: "relative",
+                      top: "2px",
+                    }}
+                  />
+                  <span className="tiptext">Export JSON</span>
+                </div>
+              </a>
+
+              <div>
+                <label
+                  id="import-btn"
+                  for="import-input"
+                  className="mx-1 my-0 btn btn-outline-info"
+                  style={{
+                    width: "45px",
+                    height: "45px",
+                  }}
+                >
+                  <div className="tip">
+                    <FaFileImport
+                      color="darkcyan"
+                      size="1.4rem"
+                      style={{
+                        position: "relative",
+                        top: "3px",
+                      }}
+                    />
+                    <span className="tiptext">Import JSON</span>
+                  </div>
+                </label>
+                <input
+                  id="import-input"
+                  type="file"
+                  accept=".json"
+                  onChange={(e) => readImportedFile(e)}
+                ></input>
+              </div>
+
+              <button
+                id="pdf-btn"
+                className="p-0 btn btn-outline-info"
+                type="button"
+                onClick={() => exportPDF()}
+                style={{ width: "45px", height: "45px" }}
+              >
+                <div className="tip">
+                  <FaFilePdf color="purple" size="1.5rem" />
+                  <span className="tiptext">Export PDF</span>
+                </div>
+              </button>
+              <button
+                id="options-btn"
+                className="mr-3 p-0 btn btn-outline-dark"
+                type="button"
+                onClick={() =>
+                  window.location.replace(chrome.runtime.getURL("options.html"))
+                }
+                style={{ width: "45px", height: "45px" }}
+              >
+                <div className="tip">
+                  <MdSettings color="grey" size="1.6rem" />
+                  <span className="tiptext">{translate("settings")}</span>
+                </div>
+              </button>
             </div>
-            <button
-              id="options-btn"
-              className="mr-3 p-0 btn btn-outline-dark"
-              type="button"
-              onClick={() =>
-                window.location.replace(chrome.runtime.getURL("options.html"))
-              }
-              style={{ width: "45px", height: "45px" }}
-            >
-              <div className="tip">
-                <MdSettings color="grey" size="1.6rem" />
-                <span className="tiptext">{translate("settings")}</span>
-              </div>
-            </button>
-          </div>
 
-          <div className="groups-container">
-            {groups}
+            <div className="groups-container">
+              {groups}
 
-            <button
-              className="d-block mt-2 ml-3 p-2 btn"
-              id="add-group-btn"
-              type="button"
-              onClick={() => addGroup()}
-            >
-              <div className="tip">
-                <MdAddCircle color="grey" size="2rem" />
-                <span className="tiptext">{translate("addGroup")}</span>
-              </div>
-            </button>
+              <button
+                className="d-block mt-2 ml-3 p-2 btn"
+                id="add-group-btn"
+                type="button"
+                onClick={() => addGroup()}
+              >
+                <div className="tip">
+                  <MdAddCircle color="grey" size="2rem" />
+                  <span className="tiptext">{translate("addGroup")}</span>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
 

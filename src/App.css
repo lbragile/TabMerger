@@ -8,12 +8,17 @@
   position: relative;
 }
 
+.left-side-container {
+  position: relative;
+  top: -12px;
+}
+
 .groups-container {
   height: 750px;
   overflow-y: auto;
   overflow-x: hidden;
-  margin: 10px 0px;
   padding-right: 5px;
+  margin-top: 20px;
 }
 
 .tip {
@@ -111,7 +116,9 @@
 .btn.merge-right-btn,
 .btn#open-all-btn,
 .btn#delete-all-btn,
-.btn#share-all-btn,
+.btn#export-btn,
+.btn#import-btn,
+.btn#pdf-btn,
 .btn#options-btn,
 .show-hide-btn,
 .open-group-btn,
@@ -122,6 +129,9 @@
 #options-btn {
   position: absolute;
   right: 0px;
+}
+#pdf-btn {
+  border: 1px solid purple;
 }
 
 input[type="image"]:focus {
@@ -152,8 +162,22 @@ input[type="image"] {
 }
 
 hr {
-  margin-top: 0;
+  margin: 0;
   width: 100%;
+}
+
+#import-btn {
+  cursor: pointer;
+}
+
+#import-input {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.global-btn {
+  width: 80% !important;
 }
 
 #video-demo {

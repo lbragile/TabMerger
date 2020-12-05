@@ -161,7 +161,7 @@ export default function Group(props) {
   }
 
   return (
-    <div className="mt-3">
+    <div className={props.id === "group-0" ? "mt-0" : "mt-3"}>
       <div className="created float-right mr-1">
         <b>{translate("created")}:</b>{" "}
         <span>
