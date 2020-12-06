@@ -55,13 +55,16 @@ function getTabsAndSend(info, tab, group_id) {
     });
 
     // need time to open page sometimes
-    setTimeout(() => {
-      window.localStorage.setItem(
-        "into_group",
-        group_id ? group_id : "group-0"
-      );
-      window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
-    }, 50);
+    setTimeout(
+      () => {
+        window.localStorage.setItem(
+          "into_group",
+          group_id ? group_id : "group-0"
+        );
+        window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
+      },
+      /chrome/i.test(navigator.userAgent) ? 50 : 200
+    );
   });
 }
 
