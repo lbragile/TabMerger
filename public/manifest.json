@@ -54,7 +54,7 @@
       "description": "Merge RIGHT Tabs"
     },
     "remove-visibility": {
-      "description": "Remove From TabMerger's Visibility"
+      "description": "Exclude From Merging"
     },
     "merge-xcluding-menu": {
       "description": "Merge EXCLUDING Current"

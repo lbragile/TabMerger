@@ -260,6 +260,17 @@ export default function App() {
     return `TabMerger [${date_str} @ ${timestamp[3]}]`;
   }
 
+  // clean the titles so that they are UTF-8 friendly
+  function cleanString(input) {
+    var output = "";
+    for (var i = 0; i < input.length; i++) {
+      if (input.charCodeAt(i) <= 127) {
+        output += input.charAt(i);
+      }
+    }
+    return output;
+  }
+
   function exportPDF() {
     var doc = new jsPDF();
 
@@ -269,7 +280,14 @@ export default function App() {
     // prettier-ignore
     var x = 25, y = 50;
 
-    doc.addImage("./images/logo-full-rescale.PNG", "PNG", x, y - 25, 74.4, 14);
+    doc.addImage(
+      "./images/logo-full-rescale.PNG",
+      "PNG",
+      x - 5,
+      y - 25,
+      74.4,
+      14
+    );
     doc.setFontSize(11);
     doc.text("Get TabMerger Today:", x + 90, y - 15);
     doc.setTextColor(51, 153, 255);
@@ -287,8 +305,18 @@ export default function App() {
 
     doc.setFontSize(16);
     doc.setTextColor("000");
-    doc.text(tabTotal + " tabs in total", x, y);
+    doc.text(tabTotal + " tabs in total", x - 5, y);
+
     Object.values(group_blocks).forEach((item) => {
+      // rectangle around the group
+      doc.setFillColor(item.color);
+
+      var group_height =
+        item.tabs.length > 0
+          ? 10 * (item.tabs.length + 1)
+          : 10 * (item.tabs.length + 2);
+      doc.roundedRect(x - 5, y + 8, 175, group_height, 1, 1, "F");
+
       y += 15;
       if (y >= height) {
         doc.addPage();
@@ -299,24 +327,35 @@ export default function App() {
       doc.text(item.title, x, y);
 
       doc.setFontSize(12);
-      item.tabs.forEach((tab, index) => {
-        y += 10;
-        if (y >= height) {
-          doc.addPage();
-          y = 25;
-        }
-        doc.setTextColor("#000");
-        doc.text(index + 1 + ".", x + 5, y);
-        doc.setTextColor(51, 153, 255);
-        doc.textWithLink(
-          tab.title.length > 75 ? tab.title.substr(0, 75) + "..." : tab.title,
-          x + 10,
-          y,
-          {
-            url: tab.url,
+
+      // if tabs in the group exist
+      if (item.tabs.length > 0) {
+        item.tabs.forEach((tab, index) => {
+          y += 10;
+          if (y >= height) {
+            doc.addPage();
+            y = 25;
           }
-        );
-      });
+          doc.setTextColor("#000");
+          doc.text(index + 1 + ".", x + 5, y);
+          doc.setTextColor(51, 153, 255);
+
+          var favIcon = tab.favIconUrl;
+          if (favIcon.includes(".ico")) {
+            favIcon = "./images/logo16.png";
+          }
+          var title =
+            tab.title.length > 75 ? tab.title.substr(0, 75) + "..." : tab.title;
+          doc.addImage(favIcon, x + 11, y - 4, 5, 5);
+
+          //prettier-ignore
+          doc.textWithLink(cleanString(title), x + 18, y, { url: tab.url });
+        });
+      } else {
+        doc.setTextColor("#000");
+        doc.text("|=~=~= NO TABS IN GROUP =~=~=|", x + 5, y + 10);
+        y += 10;
+      }
     });
 
     // page numbers

@@ -165,7 +165,7 @@ const contextMenuOrShortCut = (info, tab) => {
   }
 
   switch (info.menuItemId || info.command) {
-    case "open-tabmerger":
+    case "aopen-tabmerger":
       findExtTabAndSwitch();
       break;
     case "merge-left-menu":
