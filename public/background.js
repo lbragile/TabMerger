@@ -54,8 +54,14 @@ function getTabsAndSend(info, tab, group_id) {
       return !tab_titles.includes(item.title);
     });
 
-    window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
-    window.localStorage.setItem("into_group", group_id ? group_id : "group-0");
+    // need time to open page sometimes
+    setTimeout(() => {
+      window.localStorage.setItem(
+        "into_group",
+        group_id ? group_id : "group-0"
+      );
+      window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
+    }, 50);
   });
 }
 
@@ -88,6 +94,35 @@ function excludeSite(info, tab) {
   window.localStorage.setItem("settings", JSON.stringify(settings));
 }
 
+function createDefaultStorageItems() {
+  if (!window.localStorage.getItem("settings")) {
+    window.localStorage.setItem(
+      "settings",
+      JSON.stringify({
+        open: "without",
+        color: "#dedede",
+        title: "Title",
+        restore: "keep",
+        blacklist: "",
+      })
+    );
+  }
+
+  if (!window.localStorage.getItem("groups")) {
+    window.localStorage.setItem(
+      "groups",
+      JSON.stringify({
+        "group-0": {
+          title: "Title",
+          color: "#dedede",
+          created: new Date(Date.now()).toString(),
+          tabs: [],
+        },
+      })
+    );
+  }
+}
+
 function translate(msg) {
   return chrome.i18n.getMessage(msg);
 }
@@ -98,6 +133,8 @@ var tab = { index: 0 };
 
 // extension click - open without merging or with merging
 chrome.browserAction.onClicked.addListener(() => {
+  createDefaultStorageItems();
+
   if (JSON.parse(window.localStorage.getItem("settings")).open === "without") {
     findExtTabAndSwitch();
   } else {
@@ -120,6 +157,8 @@ function createContextMenu(id, title, type) {
 }
 
 const contextMenuOrShortCut = (info, tab) => {
+  createDefaultStorageItems();
+
   // shortcut keyboard commands
   if (typeof info === "string") {
     info = { which: "all", command: info };
@@ -137,18 +176,18 @@ const contextMenuOrShortCut = (info, tab) => {
       info.which = "right";
       getTabsAndSend(info, tab);
       break;
-    case "merge-excluding-menu":
+    case "merge-xcluding-menu":
       info.which = "excluding";
       getTabsAndSend(info, tab);
       break;
-    case "merge-only-menu":
+    case "merge-snly-menu":
       info.which = "only";
       getTabsAndSend(info, tab);
       break;
-    case "exclude-settings-menu":
+    case "remove-visibility":
       excludeSite(info, tab);
       break;
-    case "dl-instructions":
+    case "zdl-instructions":
       var dest_url = "https://tabmerger.herokuapp.com/instructions";
       chrome.tabs.create({ active: true, url: dest_url });
       break;
@@ -169,14 +208,14 @@ createContextMenu("first-separator", "separator", "separator");
 createContextMenu("merge-all-menu", translate("bgAll"));
 createContextMenu("merge-left-menu", translate("bgLeft"));
 createContextMenu("merge-right-menu", translate("bgRight"));
-createContextMenu("merge-excluding-menu", translate("bgExclude"));
-createContextMenu("merge-only-menu", translate("bgOnly"));
+createContextMenu("merge-xcluding-menu", translate("bgExclude"));
+createContextMenu("merge-snly-menu", translate("bgOnly"));
 
 createContextMenu("second-separator", "separator", "separator");
-createContextMenu("exclude-settings-menu", translate("bgSiteExclude"));
+createContextMenu("remove-visibility", translate("bgSiteExclude"));
 
 createContextMenu("third-separator", "separator", "separator");
-createContextMenu("dl-instructions", translate("bgInstructions"));
+createContextMenu("zdl-instructions", translate("bgInstructions"));
 createContextMenu("dl-contact", translate("bgContact"));
 
 // context menu actions

@@ -18,8 +18,8 @@ import jsPDF from "jspdf";
 
 export default function App() {
   var settings = JSON.parse(window.localStorage.getItem("settings"));
-  const defaultColor = useRef((settings && settings.color) || "#DEDEDE");
-  const defaultTitle = useRef((settings && settings.title) || "Title");
+  const defaultColor = useRef(settings.color);
+  const defaultTitle = useRef(settings.title);
 
   const [tabTotal, setTabTotal] = useState(() => {
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
@@ -27,8 +27,6 @@ export default function App() {
     Object.values(group_blocks).forEach((x) => (sum += x.tabs.length));
     return sum;
   });
-
-  const [appStatus, setAppStatus] = useState(false);
 
   const groupFormation = useCallback(
     (group_blocks) => {
@@ -43,11 +41,7 @@ export default function App() {
                 created={x.created}
                 key={Math.random()}
               >
-                <Tabs
-                  setTabTotal={setTabTotal}
-                  groupFormation={groupFormation}
-                  id={"group-" + index}
-                />
+                <Tabs setTabTotal={setTabTotal} id={"group-" + index} />
               </Group>
             );
           })
@@ -60,11 +54,7 @@ export default function App() {
               created={new Date(Date.now()).toString()}
               key={Math.random()}
             >
-              <Tabs
-                setTabTotal={setTabTotal}
-                groupFormation={groupFormation}
-                id="group-0"
-              />
+              <Tabs setTabTotal={setTabTotal} id="group-0" />
             </Group>,
           ];
     },
@@ -113,19 +103,6 @@ export default function App() {
 
       window.localStorage.setItem("groups", JSON.stringify(ls_entry));
     }, 10);
-
-    if (!window.localStorage.getItem("settings")) {
-      window.localStorage.setItem(
-        "settings",
-        JSON.stringify({
-          open: "without",
-          color: "#dedede",
-          title: "Title",
-          restore: "keep",
-          blacklist: "",
-        })
-      );
-    }
   }, [groups]);
 
   useEffect(() => {
@@ -150,11 +127,7 @@ export default function App() {
         title={defaultTitle.current}
         created={new Date(Date.now()).toString()}
       >
-        <Tabs
-          setTabTotal={setTabTotal}
-          groupFormation={groupFormation}
-          id={"group-" + groups.length}
-        />
+        <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
       </Group>,
     ]);
   };
@@ -193,11 +166,7 @@ export default function App() {
         created={new Date(Date.now()).toString()}
         key={Math.random()}
       >
-        <Tabs
-          setTabTotal={setTabTotal}
-          groupFormation={groupFormation}
-          id="group-0"
-        />
+        <Tabs setTabTotal={setTabTotal} id="group-0" />
       </Group>,
     ]);
   }

@@ -37,15 +37,15 @@ export default function Tabs(props) {
   }, [props.id, tabs]);
 
   useEffect(() => {
-    function checkMerging() {
-      if ("merged_tabs" in window.localStorage) {
+    const checkMerging = (e) => {
+      if (e.key === "merged_tabs") {
         // prettier-ignore
         var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
         var current_tabs = document.querySelectorAll(".draggable");
         props.setTabTotal(current_tabs.length + merged_tabs.length);
         mergeEvent();
       }
-    }
+    };
 
     window.addEventListener("storage", checkMerging);
 

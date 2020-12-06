@@ -198,6 +198,8 @@ hr {
   zoom: 1.25;
   background-color: none;
   border: none;
+  box-shadow: 0 0 8px lightskyblue;
+  border-radius: 10px;
 }
 
 #need-help:hover {

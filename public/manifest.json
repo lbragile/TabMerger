@@ -29,11 +29,11 @@
   },
 
   "commands": {
-    "open-tabmerger": {
+    "merge-snly-menu": {
       "suggested_key": {
         "default": "Alt+O"
       },
-      "description": "Open/Navigate to TabMerger (without merging)"
+      "description": "Merge ONLY Current"
     },
     "merge-all-menu": {
       "suggested_key": {
@@ -52,6 +52,18 @@
         "default": "Alt+R"
       },
       "description": "Merge RIGHT Tabs"
+    },
+    "remove-visibility": {
+      "description": "Remove From TabMerger's Visibility"
+    },
+    "merge-xcluding-menu": {
+      "description": "Merge EXCLUDING Current"
+    },
+    "zdl-instructions": {
+      "description": "Instructions & Help"
+    },
+    "aopen-tabmerger": {
+      "description": "Open/Navigate to TabMerger"
     }
   }
 }
