@@ -5,10 +5,11 @@ function saveOptions(e) {
     .value;
   var open = document.querySelector("input[name='ext-open']:checked").value;
   var blacklist = document.getElementById("options-blacklist").value;
+  var dark = JSON.parse(window.localStorage.getItem("settings")).dark;
 
   window.localStorage.setItem(
     "settings",
-    JSON.stringify({ open, color, title, restore, blacklist })
+    JSON.stringify({ open, color, title, restore, blacklist, dark })
   );
 
   e.target.classList.replace("btn-primary", "btn-success");
