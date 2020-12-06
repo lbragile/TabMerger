@@ -127,7 +127,7 @@ export default function Tabs(props) {
 
   return (
     <div className="d-flex flex-column mx-0">
-      <h5 className="tabTotal-inGroup mt-1 mb-3">
+      <h5 className="tabTotal-inGroup my-2">
         {tabs.length}{" "}
         {tabs.length === 1
           ? translate("groupTotalSingular")
