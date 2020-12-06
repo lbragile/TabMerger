@@ -282,14 +282,8 @@ export default function App() {
     // prettier-ignore
     var x = 25, y = 50;
 
-    doc.addImage(
-      "./images/logo-full-rescale.PNG",
-      "PNG",
-      x - 5,
-      y - 25,
-      74.4,
-      14
-    );
+    // prettier-ignore
+    doc.addImage("./images/logo-full-rescale.PNG", x - 5,  y - 25, 74.4, 14);
     doc.setFontSize(11);
     doc.text("Get TabMerger Today:", x + 90, y - 15);
     doc.setTextColor(51, 153, 255);
@@ -303,7 +297,7 @@ export default function App() {
     doc.textWithLink("FireFox", x + 149, y - 15, {
       url: "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/",
     });
-    doc.addImage("./images/logo16.png", "PNG", width - 20, y - 20, 5, 5);
+    doc.addImage("./images/logo128.png", "PNG", width - 20, y - 20, 5, 5);
 
     doc.setFontSize(16);
     doc.setTextColor("000");
@@ -342,13 +336,13 @@ export default function App() {
           doc.text(index + 1 + ".", x + 5, y);
           doc.setTextColor(51, 153, 255);
 
-          var favIcon = tab.favIconUrl;
-          if (favIcon.includes(".ico")) {
-            favIcon = "./images/logo16.png";
-          }
           var title =
             tab.title.length > 75 ? tab.title.substr(0, 75) + "..." : tab.title;
-          doc.addImage(favIcon, x + 11, y - 4, 5, 5);
+          try {
+            doc.addImage(tab.favIconUrl, x + 11, y - 4, 5, 5);
+          } catch (err) {
+            doc.addImage("./images/logo128.png", x + 11, y - 4, 5, 5);
+          }
 
           //prettier-ignore
           doc.textWithLink(cleanString(title), x + 18, y, { url: tab.url });
