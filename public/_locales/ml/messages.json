@@ -92,8 +92,23 @@
   "settings": {
     "message": "ക്രമീകരണങ്ങൾ"
   },
-  "shareAll": {
-    "message": "എല്ലാം പങ്കിടുക"
+  "darkMode": {
+    "message": "ഇരുണ്ട മോഡ്"
+  },
+  "exportJSON": {
+    "message": "JSON കയറ്റുമതി ചെയ്യുക"
+  },
+  "exportPDF": {
+    "message": "PDF കയറ്റുമതി ചെയ്യുക"
+  },
+  "groupTitle": {
+    "message": "ഗ്രൂപ്പ് ശീർഷകം"
+  },
+  "importJSON": {
+    "message": "JSON ഇറക്കുമതി ചെയ്യുക"
+  },
+  "tabTitle": {
+    "message": "ടാബ് ശീർഷകം"
   },
   "showTabs": {
     "message": "ടാബുകൾ കാണിക്കുക"

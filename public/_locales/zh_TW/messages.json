@@ -92,8 +92,23 @@
   "settings": {
     "message": "设定值"
   },
-  "shareAll": {
-    "message": "全部分享"
+  "darkMode": {
+    "message": "暗模式"
+  },
+  "exportJSON": {
+    "message": "汇出JSON"
+  },
+  "exportPDF": {
+    "message": "导出PDF"
+  },
+  "groupTitle": {
+    "message": "组标题"
+  },
+  "importJSON": {
+    "message": "导入JSON"
+  },
+  "tabTitle": {
+    "message": "标签标题"
   },
   "showTabs": {
     "message": "显示标签"

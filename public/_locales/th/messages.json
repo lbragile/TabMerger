@@ -92,8 +92,23 @@
   "settings": {
     "message": "การตั้งค่า"
   },
-  "shareAll": {
-    "message": "แบ่งปันทั้งหมด"
+  "darkMode": {
+    "message": "โหมดมืด"
+  },
+  "exportJSON": {
+    "message": "ส่งออก JSON"
+  },
+  "exportPDF": {
+    "message": "ส่งออก PDF"
+  },
+  "groupTitle": {
+    "message": "ชื่อกลุ่ม"
+  },
+  "importJSON": {
+    "message": "นำเข้า JSON"
+  },
+  "tabTitle": {
+    "message": "ชื่อแท็บ"
   },
   "showTabs": {
     "message": "แสดงแท็บ"

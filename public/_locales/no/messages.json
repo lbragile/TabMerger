@@ -92,8 +92,23 @@
   "settings": {
     "message": "Innstillinger"
   },
-  "shareAll": {
-    "message": "Del alle"
+  "darkMode": {
+    "message": "Mørk modus"
+  },
+  "exportJSON": {
+    "message": "Eksporter JSON"
+  },
+  "exportPDF": {
+    "message": "Eksporter PDF"
+  },
+  "groupTitle": {
+    "message": "Gruppetittel"
+  },
+  "importJSON": {
+    "message": "Importer JSON"
+  },
+  "tabTitle": {
+    "message": "Fanetittel"
   },
   "showTabs": {
     "message": "Vis faner"

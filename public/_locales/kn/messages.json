@@ -92,8 +92,23 @@
   "settings": {
     "message": "ಸಂಯೋಜನೆಗಳು"
   },
-  "shareAll": {
-    "message": "ಎಲ್ಲವನ್ನೂ ಹಂಚಿಕೊಳ್ಳಿ"
+  "darkMode": {
+    "message": "ಡಾರ್ಕ್ ಮೋಡ್"
+  },
+  "exportJSON": {
+    "message": "JSON ರಫ್ತು ಮಾಡಿ"
+  },
+  "exportPDF": {
+    "message": "ಪಿಡಿಎಫ್ ರಫ್ತು ಮಾಡಿ"
+  },
+  "groupTitle": {
+    "message": "ಗುಂಪು ಶೀರ್ಷಿಕೆ"
+  },
+  "importJSON": {
+    "message": "JSON ಅನ್ನು ಆಮದು ಮಾಡಿ"
+  },
+  "tabTitle": {
+    "message": "ಟ್ಯಾಬ್ ಶೀರ್ಷಿಕೆ"
   },
   "showTabs": {
     "message": "ಟ್ಯಾಬ್‌ಗಳನ್ನು ತೋರಿಸಿ"

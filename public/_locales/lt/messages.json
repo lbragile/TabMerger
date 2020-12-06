@@ -92,8 +92,23 @@
   "settings": {
     "message": "Nustatymai"
   },
-  "shareAll": {
-    "message": "Dalytis visais"
+  "darkMode": {
+    "message": "Tamsus režimas"
+  },
+  "exportJSON": {
+    "message": "Eksportuoti JSON"
+  },
+  "exportPDF": {
+    "message": "Eksportuoti PDF"
+  },
+  "groupTitle": {
+    "message": "Grupės pavadinimas"
+  },
+  "importJSON": {
+    "message": "Importuoti JSON"
+  },
+  "tabTitle": {
+    "message": "Skirtuko pavadinimas"
   },
   "showTabs": {
     "message": "Rodyti skirtukus"

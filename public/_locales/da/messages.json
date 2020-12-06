@@ -95,8 +95,23 @@
   "shareAll": {
     "message": "Del alle"
   },
-  "showTabs": {
-    "message": "Vis faner"
+  "darkMode": {
+    "message": "Mørk tilstand"
+  },
+  "exportJSON": {
+    "message": "Eksporter JSON"
+  },
+  "exportPDF": {
+    "message": "Eksporter PDF"
+  },
+  "groupTitle": {
+    "message": "Gruppetitel"
+  },
+  "importJSON": {
+    "message": "Importér JSON"
+  },
+  "tabTitle": {
+    "message": "Fanebladets titel"
   },
   "supportUs": {
     "message": "Støt os"

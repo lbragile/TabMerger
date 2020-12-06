@@ -32,8 +32,23 @@
   "deleteAll": {
     "message": "Delete All"
   },
-  "shareAll": {
-    "message": "Share All"
+  "exportJSON": {
+    "message": "Export JSON"
+  },
+  "importJSON": {
+    "message": "Import JSON"
+  },
+  "exportPDF": {
+    "message": "Export PDF"
+  },
+  "groupTitle": {
+    "message": "Group Title"
+  },
+  "tabTitle": {
+    "message": "Tab Title"
+  },
+  "darkMode": {
+    "message": "Dark Mode"
   },
   "settings": {
     "message": "Settings"

@@ -92,8 +92,23 @@
   "settings": {
     "message": "সেটিংস"
   },
-  "shareAll": {
-    "message": "সব শেয়ার করুন"
+  "darkMode": {
+    "message": "গা .় মোড"
+  },
+  "exportJSON": {
+    "message": "JSON রফতানি করুন"
+  },
+  "exportPDF": {
+    "message": "পিডিএফ রফতানি করুন"
+  },
+  "groupTitle": {
+    "message": "গ্রুপ শিরোনাম"
+  },
+  "importJSON": {
+    "message": "JSON আমদানি করুন"
+  },
+  "tabTitle": {
+    "message": "ট্যাব শিরোনাম"
   },
   "showTabs": {
     "message": "ট্যাবগুলি দেখান"

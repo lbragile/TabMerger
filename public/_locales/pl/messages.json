@@ -92,8 +92,23 @@
   "settings": {
     "message": "Ustawienia"
   },
-  "shareAll": {
-    "message": "Udostępnij wszystko"
+  "darkMode": {
+    "message": "Tryb ciemny"
+  },
+  "exportJSON": {
+    "message": "Eksportuj JSON"
+  },
+  "exportPDF": {
+    "message": "Eksportuj PDF"
+  },
+  "groupTitle": {
+    "message": "Tytuł grupy"
+  },
+  "importJSON": {
+    "message": "Importuj JSON"
+  },
+  "tabTitle": {
+    "message": "Tytuł karty"
   },
   "showTabs": {
     "message": "Pokaż karty"

@@ -92,8 +92,23 @@
   "settings": {
     "message": "Cài đặt"
   },
-  "shareAll": {
-    "message": "Chia sẻ tất cả"
+  "darkMode": {
+    "message": "Chế độ tối"
+  },
+  "exportJSON": {
+    "message": "Xuất JSON"
+  },
+  "exportPDF": {
+    "message": "Xuất PDF"
+  },
+  "groupTitle": {
+    "message": "Tiêu đề nhóm"
+  },
+  "importJSON": {
+    "message": "Nhập JSON"
+  },
+  "tabTitle": {
+    "message": "Tiêu đề tab"
   },
   "showTabs": {
     "message": "Hiển thị các tab"

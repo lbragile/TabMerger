@@ -92,8 +92,23 @@
   "settings": {
     "message": "Настройки"
   },
-  "shareAll": {
-    "message": "Поделиться всем"
+  "darkMode": {
+    "message": "Темный режим"
+  },
+  "exportJSON": {
+    "message": "Экспорт JSON"
+  },
+  "exportPDF": {
+    "message": "Экспорт PDF"
+  },
+  "groupTitle": {
+    "message": "Заголовок группы"
+  },
+  "importJSON": {
+    "message": "Импортировать JSON"
+  },
+  "tabTitle": {
+    "message": "Заголовок вкладки"
   },
   "showTabs": {
     "message": "Показать вкладки"

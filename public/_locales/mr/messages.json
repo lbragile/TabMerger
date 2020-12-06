@@ -92,8 +92,23 @@
   "settings": {
     "message": "सेटिंग्ज"
   },
-  "shareAll": {
-    "message": "सर्व सामायिक करा"
+  "darkMode": {
+    "message": "गडद मोड"
+  },
+  "exportJSON": {
+    "message": "JSON निर्यात करा"
+  },
+  "exportPDF": {
+    "message": "पीडीएफ निर्यात करा"
+  },
+  "groupTitle": {
+    "message": "गट शीर्षक"
+  },
+  "importJSON": {
+    "message": "JSON आयात करा"
+  },
+  "tabTitle": {
+    "message": "टॅब शीर्षक"
   },
   "showTabs": {
     "message": "टॅब दर्शवा"

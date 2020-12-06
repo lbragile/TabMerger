@@ -104,6 +104,7 @@ function createDefaultStorageItems() {
         title: "Title",
         restore: "keep",
         blacklist: "",
+        dark: 1,
       })
     );
   }

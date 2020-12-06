@@ -25,7 +25,7 @@ function restoreOptions() {
   var hr = document.querySelector("hr");
   var code_block = document.querySelector("code");
 
-  if (window.localStorage.getItem("dark")) {
+  if (settings && settings.dark) {
     body.style.background = "#343a40";
     body.style.color = "white";
     hr.style.borderTop = "1px white solid";

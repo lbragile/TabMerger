@@ -92,8 +92,23 @@
   "settings": {
     "message": "ቅንብሮች"
   },
-  "shareAll": {
-    "message": "ሁሉንም አጋራ"
+  "darkMode": {
+    "message": "ጨለማ ሁነታ"
+  },
+  "exportJSON": {
+    "message": "JSON ላክ"
+  },
+  "exportPDF": {
+    "message": "ፒዲኤፍ ላክ"
+  },
+  "groupTitle": {
+    "message": "የቡድን ርዕስ"
+  },
+  "importJSON": {
+    "message": "JSON አስመጣ"
+  },
+  "tabTitle": {
+    "message": "የትር ርዕስ"
   },
   "showTabs": {
     "message": "ትሮችን አሳይ"

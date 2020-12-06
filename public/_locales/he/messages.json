@@ -92,8 +92,23 @@
   "settings": {
     "message": "הגדרות"
   },
-  "shareAll": {
-    "message": "שתף הכל"
+  "darkMode": {
+    "message": "מצב כהה"
+  },
+  "exportJSON": {
+    "message": "ייצא את JSON"
+  },
+  "exportPDF": {
+    "message": "ייצא PDF"
+  },
+  "groupTitle": {
+    "message": "כותרת הקבוצה"
+  },
+  "importJSON": {
+    "message": "ייבא את JSON"
+  },
+  "tabTitle": {
+    "message": "כותרת הכרטיסייה"
   },
   "showTabs": {
     "message": "הצג כרטיסיות"

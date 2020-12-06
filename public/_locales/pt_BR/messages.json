@@ -92,8 +92,23 @@
   "settings": {
     "message": "Definições"
   },
-  "shareAll": {
-    "message": "Compartilhar tudo"
+  "darkMode": {
+    "message": "Modo escuro"
+  },
+  "exportJSON": {
+    "message": "Exportar JSON"
+  },
+  "exportPDF": {
+    "message": "Exportar PDF"
+  },
+  "groupTitle": {
+    "message": "Título do Grupo"
+  },
+  "importJSON": {
+    "message": "Importar JSON"
+  },
+  "tabTitle": {
+    "message": "Título da aba"
   },
   "showTabs": {
     "message": "Mostrar abas"

@@ -92,8 +92,23 @@
   "settings": {
     "message": "Tetapan"
   },
-  "shareAll": {
-    "message": "Kongsi Semua"
+  "darkMode": {
+    "message": "Mod Gelap"
+  },
+  "exportJSON": {
+    "message": "Eksport JSON"
+  },
+  "exportPDF": {
+    "message": "Eksport PDF"
+  },
+  "groupTitle": {
+    "message": "Tajuk Kumpulan"
+  },
+  "importJSON": {
+    "message": "Import JSON"
+  },
+  "tabTitle": {
+    "message": "Tajuk Tab"
   },
   "showTabs": {
     "message": "Tunjukkan Tab"

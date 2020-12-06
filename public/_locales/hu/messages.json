@@ -92,8 +92,23 @@
   "settings": {
     "message": "Beállítások"
   },
-  "shareAll": {
-    "message": "Ossza meg mindet"
+  "darkMode": {
+    "message": "Sötét mód"
+  },
+  "exportJSON": {
+    "message": "Exportálja a JSON-t"
+  },
+  "exportPDF": {
+    "message": "Exportálás PDF-be"
+  },
+  "groupTitle": {
+    "message": "Csoport címe"
+  },
+  "importJSON": {
+    "message": "JSON importálása"
+  },
+  "tabTitle": {
+    "message": "Lap címe"
   },
   "showTabs": {
     "message": "Fülek megjelenítése"

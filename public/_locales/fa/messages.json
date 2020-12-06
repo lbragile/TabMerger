@@ -92,8 +92,23 @@
   "settings": {
     "message": "تنظیمات"
   },
-  "shareAll": {
-    "message": "اشتراک گذاری همه"
+  "darkMode": {
+    "message": "حالت تاریک"
+  },
+  "exportJSON": {
+    "message": "صادرات JSON"
+  },
+  "exportPDF": {
+    "message": "صادرات PDF"
+  },
+  "groupTitle": {
+    "message": "عنوان گروه"
+  },
+  "importJSON": {
+    "message": "JSON را وارد کنید"
+  },
+  "tabTitle": {
+    "message": "عنوان برگه"
   },
   "showTabs": {
     "message": "نمایش برگه ها"

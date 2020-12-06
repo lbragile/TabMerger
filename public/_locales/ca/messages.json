@@ -92,8 +92,23 @@
   "settings": {
     "message": "Configuració"
   },
-  "shareAll": {
-    "message": "Comparteix-ho tot"
+  "darkMode": {
+    "message": "Mode fosc"
+  },
+  "exportJSON": {
+    "message": "Exporta JSON"
+  },
+  "exportPDF": {
+    "message": "Exporta PDF"
+  },
+  "groupTitle": {
+    "message": "Títol del grup"
+  },
+  "importJSON": {
+    "message": "Importa JSON"
+  },
+  "tabTitle": {
+    "message": "Títol de la pestanya"
   },
   "showTabs": {
     "message": "Mostra les pestanyes"

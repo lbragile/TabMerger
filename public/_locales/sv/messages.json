@@ -92,8 +92,23 @@
   "settings": {
     "message": "inställningar"
   },
-  "shareAll": {
-    "message": "Dela alla"
+  "darkMode": {
+    "message": "Mörkt läge"
+  },
+  "exportJSON": {
+    "message": "Exportera JSON"
+  },
+  "exportPDF": {
+    "message": "Exportera PDF"
+  },
+  "groupTitle": {
+    "message": "Grupptitel"
+  },
+  "importJSON": {
+    "message": "Importera JSON"
+  },
+  "tabTitle": {
+    "message": "Flikens titel"
   },
   "showTabs": {
     "message": "Visa flikar"

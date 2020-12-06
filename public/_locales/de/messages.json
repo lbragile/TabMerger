@@ -92,8 +92,23 @@
   "settings": {
     "message": "die Einstellungen"
   },
-  "shareAll": {
-    "message": "Alle teilen"
+  "darkMode": {
+    "message": "Dunkler Modus"
+  },
+  "exportJSON": {
+    "message": "JSON exportieren"
+  },
+  "exportPDF": {
+    "message": "PDF exportieren"
+  },
+  "groupTitle": {
+    "message": "Gruppentitel"
+  },
+  "importJSON": {
+    "message": "JSON importieren"
+  },
+  "tabTitle": {
+    "message": "Tab-Titel"
   },
   "showTabs": {
     "message": "Registerkarten anzeigen"

@@ -92,8 +92,23 @@
   "settings": {
     "message": "Seaded"
   },
-  "shareAll": {
-    "message": "Jaga kõiki"
+  "darkMode": {
+    "message": "Tume režiim"
+  },
+  "exportJSON": {
+    "message": "Ekspordi JSON"
+  },
+  "exportPDF": {
+    "message": "Ekspordi PDF"
+  },
+  "groupTitle": {
+    "message": "Grupi pealkiri"
+  },
+  "importJSON": {
+    "message": "Importige JSON"
+  },
+  "tabTitle": {
+    "message": "Vahekaardi pealkiri"
   },
   "showTabs": {
     "message": "Kuva vahelehed"

@@ -92,8 +92,23 @@
   "settings": {
     "message": "Nastavitve"
   },
-  "shareAll": {
-    "message": "Skupna raba vseh"
+  "darkMode": {
+    "message": "Temni način"
+  },
+  "exportJSON": {
+    "message": "Izvozi JSON"
+  },
+  "exportPDF": {
+    "message": "Izvozi PDF"
+  },
+  "groupTitle": {
+    "message": "Naslov skupine"
+  },
+  "importJSON": {
+    "message": "Uvozi JSON"
+  },
+  "tabTitle": {
+    "message": "Naslov zavihka"
   },
   "showTabs": {
     "message": "Pokaži zavihke"

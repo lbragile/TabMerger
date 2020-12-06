@@ -92,8 +92,23 @@
   "settings": {
     "message": "asetukset"
   },
-  "shareAll": {
-    "message": "Jaa kaikki"
+  "darkMode": {
+    "message": "Tumma tila"
+  },
+  "exportJSON": {
+    "message": "Vie JSON"
+  },
+  "exportPDF": {
+    "message": "Vie PDF"
+  },
+  "groupTitle": {
+    "message": "Ryhmän nimi"
+  },
+  "importJSON": {
+    "message": "Tuo JSON"
+  },
+  "tabTitle": {
+    "message": "Välilehden otsikko"
   },
   "showTabs": {
     "message": "Näytä välilehdet"

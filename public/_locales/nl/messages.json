@@ -92,8 +92,23 @@
   "settings": {
     "message": "Instellingen"
   },
-  "shareAll": {
-    "message": "Deel alles"
+  "darkMode": {
+    "message": "Donkere modus"
+  },
+  "exportJSON": {
+    "message": "Exporteer JSON"
+  },
+  "exportPDF": {
+    "message": "Exporteer PDF"
+  },
+  "groupTitle": {
+    "message": "Groepstitel"
+  },
+  "importJSON": {
+    "message": "Importeer JSON"
+  },
+  "tabTitle": {
+    "message": "Tabbladtitel"
   },
   "showTabs": {
     "message": "Tabbladen weergeven"

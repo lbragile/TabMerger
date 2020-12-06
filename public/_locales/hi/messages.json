@@ -92,8 +92,23 @@
   "settings": {
     "message": "समायोजन"
   },
-  "shareAll": {
-    "message": "सभी को साझा करें"
+  "darkMode": {
+    "message": "डार्क मोड"
+  },
+  "exportJSON": {
+    "message": "JSON निर्यात करें"
+  },
+  "exportPDF": {
+    "message": "पीडीएफ निर्यात करें"
+  },
+  "groupTitle": {
+    "message": "समूह का शीर्षक"
+  },
+  "importJSON": {
+    "message": "आयात JSON"
+  },
+  "tabTitle": {
+    "message": "टैब शीर्षक"
   },
   "showTabs": {
     "message": "टैब दिखाएं"

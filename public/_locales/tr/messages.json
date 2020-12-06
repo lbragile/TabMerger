@@ -92,8 +92,23 @@
   "settings": {
     "message": "Ayarlar"
   },
-  "shareAll": {
-    "message": "Tümünü Paylaş"
+  "darkMode": {
+    "message": "Karanlık Mod"
+  },
+  "exportJSON": {
+    "message": "JSON'yi dışa aktar"
+  },
+  "exportPDF": {
+    "message": "PDF'yi dışa aktar"
+  },
+  "groupTitle": {
+    "message": "Grup Başlığı"
+  },
+  "importJSON": {
+    "message": "JSON'u içe aktar"
+  },
+  "tabTitle": {
+    "message": "Sekme Başlığı"
   },
   "showTabs": {
     "message": "Sekmeleri Göster"

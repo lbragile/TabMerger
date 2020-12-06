@@ -92,8 +92,23 @@
   "settings": {
     "message": "அமைப்புகள்"
   },
-  "shareAll": {
-    "message": "அனைத்தையும் பகிரவும்"
+  "darkMode": {
+    "message": "இருண்ட பயன்முறை"
+  },
+  "exportJSON": {
+    "message": "JSON ஐ ஏற்றுமதி செய்க"
+  },
+  "exportPDF": {
+    "message": "PDF ஐ ஏற்றுமதி செய்க"
+  },
+  "groupTitle": {
+    "message": "குழு தலைப்பு"
+  },
+  "importJSON": {
+    "message": "JSON ஐ இறக்குமதி செய்க"
+  },
+  "tabTitle": {
+    "message": "தாவல் தலைப்பு"
   },
   "showTabs": {
     "message": "தாவல்களைக் காட்டு"

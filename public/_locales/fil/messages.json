@@ -92,8 +92,23 @@
   "settings": {
     "message": "Mga setting"
   },
-  "shareAll": {
-    "message": "Ibahagi ang Lahat"
+  "darkMode": {
+    "message": "Madilim na Mode"
+  },
+  "exportJSON": {
+    "message": "I-export si JSON"
+  },
+  "exportPDF": {
+    "message": "I-export ang PDF"
+  },
+  "groupTitle": {
+    "message": "Pamagat ng Grupo"
+  },
+  "importJSON": {
+    "message": "I-import si JSON"
+  },
+  "tabTitle": {
+    "message": "Pamagat ng Tab"
   },
   "showTabs": {
     "message": "Ipakita ang Mga Tab"

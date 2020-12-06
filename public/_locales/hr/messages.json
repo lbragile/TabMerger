@@ -92,8 +92,23 @@
   "settings": {
     "message": "Postavke"
   },
-  "shareAll": {
-    "message": "Podijeli sve"
+  "darkMode": {
+    "message": "Tamni način rada"
+  },
+  "exportJSON": {
+    "message": "Izvoz JSON-a"
+  },
+  "exportPDF": {
+    "message": "Izvoz PDF-a"
+  },
+  "groupTitle": {
+    "message": "Naslov grupe"
+  },
+  "importJSON": {
+    "message": "Uvezi JSON"
+  },
+  "tabTitle": {
+    "message": "Naslov kartice"
   },
   "showTabs": {
     "message": "Prikaži kartice"

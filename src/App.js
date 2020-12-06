@@ -28,38 +28,35 @@ export default function App() {
     return sum;
   });
 
-  const groupFormation = useCallback(
-    (group_blocks) => {
-      return group_blocks
-        ? Object.values(group_blocks).map((x, index) => {
-            return (
-              <Group
-                id={"group-" + index}
-                className="group"
-                title={x.title}
-                color={x.color}
-                created={x.created}
-                key={Math.random()}
-              >
-                <Tabs setTabTotal={setTabTotal} id={"group-" + index} />
-              </Group>
-            );
-          })
-        : [
+  const groupFormation = (group_blocks) => {
+    return group_blocks
+      ? Object.values(group_blocks).map((x, index) => {
+          return (
             <Group
-              id="group-0"
+              id={"group-" + index}
               className="group"
-              title={defaultTitle.current}
-              color={defaultColor.current}
-              created={new Date(Date.now()).toString()}
+              title={x.title}
+              color={x.color}
+              created={x.created}
               key={Math.random()}
             >
-              <Tabs setTabTotal={setTabTotal} id="group-0" />
-            </Group>,
-          ];
-    },
-    [window.localStorage.getItem("groups")]
-  );
+              <Tabs setTabTotal={setTabTotal} id={"group-" + index} />
+            </Group>
+          );
+        })
+      : [
+          <Group
+            id="group-0"
+            className="group"
+            title={defaultTitle.current}
+            color={defaultColor.current}
+            created={new Date(Date.now()).toString()}
+            key={Math.random()}
+          >
+            <Tabs setTabTotal={setTabTotal} id="group-0" />
+          </Group>,
+        ];
+  };
 
   const [groups, setGroups] = useState(
     groupFormation(JSON.parse(window.localStorage.getItem("groups")))
@@ -109,7 +106,7 @@ export default function App() {
     // set dark mode if needed
     var json = { target: { checked: null } };
     var darkModeSwitch = document.getElementById("darkMode");
-    var switchOn = window.localStorage.getItem("dark") === "true";
+    var switchOn = JSON.parse(window.localStorage.getItem("settings")).dark;
     darkModeSwitch.checked = switchOn;
     json.target.checked = switchOn;
 
@@ -176,18 +173,23 @@ export default function App() {
     var hr = document.querySelector("hr");
     var settings_btn = document.getElementById("options-btn");
 
+    var settings = JSON.parse(window.localStorage.getItem("settings"));
     if (e.target.checked) {
       container.style.background = "#343a40";
       container.style.color = "white";
       hr.style.borderTop = "1px white solid";
       settings_btn.style.border = "1px gray solid";
-      window.localStorage.setItem("dark", "true");
+
+      settings.dark = 1;
+      window.localStorage.setItem("settings", JSON.stringify(settings));
     } else {
       container.style.background = "white";
       container.style.color = "black";
       hr.style.borderTop = "1px rgba(0,0,0,.1) solid";
       settings_btn.style.border = "1px black solid";
-      window.localStorage.removeItem("dark");
+
+      settings.dark = 0;
+      window.localStorage.setItem("settings", JSON.stringify(settings));
     }
   }
 
@@ -323,8 +325,8 @@ export default function App() {
         y = 25;
       }
       doc.setTextColor("000");
-      doc.setFontSize(20);
-      doc.text(item.title, x, y);
+      doc.setFontSize(16);
+      doc.text(item.title, x - 3, y);
 
       doc.setFontSize(12);
 
@@ -353,7 +355,7 @@ export default function App() {
         });
       } else {
         doc.setTextColor("#000");
-        doc.text("|=~=~= NO TABS IN GROUP =~=~=|", x + 5, y + 10);
+        doc.text("[ NO TABS IN GROUP ]", x + 5, y + 10);
         y += 10;
       }
     });
@@ -397,7 +399,7 @@ export default function App() {
                 }}
               />
               <label className="custom-control-label" for="darkMode">
-                <b>Dark Mode</b>
+                <b>{translate("darkMode")}</b>
               </label>
             </div>
             <a
@@ -430,7 +432,7 @@ export default function App() {
                     for="search-group"
                     className="d-block mb-0 font-weight-bold"
                   >
-                    Group Title:{" "}
+                    {translate("groupTitle")}:{" "}
                   </label>
                   <input
                     type="text"
@@ -444,7 +446,7 @@ export default function App() {
                     for="search-tab"
                     className="d-block mb-0 font-weight-bold"
                   >
-                    Tab Title:{" "}
+                    {translate("tabTitle")}:{" "}
                   </label>
                   <input
                     type="text"
@@ -513,7 +515,7 @@ export default function App() {
                       top: "2px",
                     }}
                   />
-                  <span className="tiptext">Export JSON</span>
+                  <span className="tiptext">{translate("exportJSON")}</span>
                 </div>
               </a>
 
@@ -536,7 +538,7 @@ export default function App() {
                         top: "3px",
                       }}
                     />
-                    <span className="tiptext">Import JSON</span>
+                    <span className="tiptext">{translate("importJSON")}</span>
                   </div>
                 </label>
                 <input
@@ -556,7 +558,7 @@ export default function App() {
               >
                 <div className="tip">
                   <FaFilePdf color="purple" size="1.5rem" />
-                  <span className="tiptext">Export PDF</span>
+                  <span className="tiptext">{translate("exportPDF")}</span>
                 </div>
               </button>
               <button

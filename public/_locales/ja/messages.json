@@ -92,8 +92,23 @@
   "settings": {
     "message": "設定"
   },
-  "shareAll": {
-    "message": "すべて共有"
+  "darkMode": {
+    "message": "ダークモード"
+  },
+  "exportJSON": {
+    "message": "JSONをエクスポートする"
+  },
+  "exportPDF": {
+    "message": "PDFをエクスポート"
+  },
+  "groupTitle": {
+    "message": "グループタイトル"
+  },
+  "importJSON": {
+    "message": "JSONをインポートする"
+  },
+  "tabTitle": {
+    "message": "タブタイトル"
   },
   "showTabs": {
     "message": "タブを表示"

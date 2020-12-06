@@ -92,8 +92,23 @@
   "settings": {
     "message": "إعدادات"
   },
-  "shareAll": {
-    "message": "مشاركة الكل"
+  "darkMode": {
+    "message": "الوضع المظلم"
+  },
+  "exportJSON": {
+    "message": "تصدير JSON"
+  },
+  "exportPDF": {
+    "message": "تصدير ملف PDF"
+  },
+  "groupTitle": {
+    "message": "عنوان المجموعة"
+  },
+  "importJSON": {
+    "message": "استيراد JSON"
+  },
+  "tabTitle": {
+    "message": "عنوان علامة التبويب"
   },
   "showTabs": {
     "message": "إظهار علامات التبويب"

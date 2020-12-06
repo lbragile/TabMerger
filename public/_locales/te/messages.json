@@ -92,8 +92,23 @@
   "settings": {
     "message": "సెట్టింగులు"
   },
-  "shareAll": {
-    "message": "అన్నీ భాగస్వామ్యం చేయండి"
+  "darkMode": {
+    "message": "డార్క్ మోడ్ை"
+  },
+  "exportJSON": {
+    "message": "JSON ని ఎగుమతి చేయండి"
+  },
+  "exportPDF": {
+    "message": "PDF ని ఎగుమతి చేయండి"
+  },
+  "groupTitle": {
+    "message": "సమూహ శీర్షిక"
+  },
+  "importJSON": {
+    "message": "JSON ను దిగుమతి చేయండి"
+  },
+  "tabTitle": {
+    "message": "టాబ్ శీర్షిక"
   },
   "showTabs": {
     "message": "ట్యాబ్‌లను చూపించు"

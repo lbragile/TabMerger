@@ -92,8 +92,23 @@
   "settings": {
     "message": "Подешавања"
   },
-  "shareAll": {
-    "message": "Схаре Алл"
+  "darkMode": {
+    "message": "Тамни режим"
+  },
+  "exportJSON": {
+    "message": "Извези ЈСОН"
+  },
+  "exportPDF": {
+    "message": "Извези ПДФ"
+  },
+  "groupTitle": {
+    "message": "Наслов групе"
+  },
+  "importJSON": {
+    "message": "Увези ЈСОН"
+  },
+  "tabTitle": {
+    "message": "Наслов картице"
   },
   "showTabs": {
     "message": "Прикажи картице"

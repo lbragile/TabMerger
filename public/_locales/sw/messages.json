@@ -92,8 +92,23 @@
   "settings": {
     "message": "Mipangilio"
   },
-  "shareAll": {
-    "message": "Shiriki Yote"
+  "darkMode": {
+    "message": "Njia Nyeusi"
+  },
+  "exportJSON": {
+    "message": "Hamisha JSON"
+  },
+  "exportPDF": {
+    "message": "Hamisha PDF"
+  },
+  "groupTitle": {
+    "message": "Kichwa cha Kikundi"
+  },
+  "importJSON": {
+    "message": "Ingiza JSON"
+  },
+  "tabTitle": {
+    "message": "Kichwa cha Kichupo"
   },
   "showTabs": {
     "message": "Onyesha Tabo"

@@ -92,8 +92,23 @@
   "settings": {
     "message": "Ρυθμίσεις"
   },
-  "shareAll": {
-    "message": "Κοινή χρήση όλων"
+  "darkMode": {
+    "message": "Σκοτεινή λειτουργία"
+  },
+  "exportJSON": {
+    "message": "Εξαγωγή JSON"
+  },
+  "exportPDF": {
+    "message": "Εξαγωγή PDF"
+  },
+  "groupTitle": {
+    "message": "Τίτλος ομάδας"
+  },
+  "importJSON": {
+    "message": "Εισαγωγή JSON"
+  },
+  "tabTitle": {
+    "message": "Τίτλος καρτέλας"
   },
   "showTabs": {
     "message": "Εμφάνιση καρτελών"

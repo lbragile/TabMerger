@@ -92,8 +92,23 @@
   "settings": {
     "message": "설정"
   },
-  "shareAll": {
-    "message": "모두 공유"
+  "darkMode": {
+    "message": "다크 모드"
+  },
+  "exportJSON": {
+    "message": "JSON 내보내기"
+  },
+  "exportPDF": {
+    "message": "PDF 내보내기"
+  },
+  "groupTitle": {
+    "message": "그룹 제목"
+  },
+  "importJSON": {
+    "message": "JSON 가져 오기"
+  },
+  "tabTitle": {
+    "message": "탭 제목"
   },
   "showTabs": {
     "message": "탭 표시"

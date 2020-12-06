@@ -92,8 +92,23 @@
   "settings": {
     "message": "સેટિંગ્સ"
   },
-  "shareAll": {
-    "message": "બધા શેર કરો"
+  "darkMode": {
+    "message": "ડાર્ક મોડ"
+  },
+  "exportJSON": {
+    "message": "નિકાસ JSON"
+  },
+  "exportPDF": {
+    "message": "પીડીએફ નિકાસ કરો"
+  },
+  "groupTitle": {
+    "message": "જૂથ શીર્ષક"
+  },
+  "importJSON": {
+    "message": "આયાત કરો JSON"
+  },
+  "tabTitle": {
+    "message": "ટ Tabબ શીર્ષક"
   },
   "showTabs": {
     "message": "ટsબ્સ બતાવો"

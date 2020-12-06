@@ -92,8 +92,23 @@
   "settings": {
     "message": "Iestatījumi"
   },
-  "shareAll": {
-    "message": "Kopīgot visu"
+  "darkMode": {
+    "message": "Tumšais režīms"
+  },
+  "exportJSON": {
+    "message": "Eksportēt JSON"
+  },
+  "exportPDF": {
+    "message": "Eksportēt PDF"
+  },
+  "groupTitle": {
+    "message": "Grupas nosaukums"
+  },
+  "importJSON": {
+    "message": "Importēt JSON"
+  },
+  "tabTitle": {
+    "message": "Cilnes nosaukums"
   },
   "showTabs": {
     "message": "Rādīt cilnes"

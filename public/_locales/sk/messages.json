@@ -92,8 +92,23 @@
   "settings": {
     "message": "nastavenie"
   },
-  "shareAll": {
-    "message": "Zdieľať všetko"
+  "darkMode": {
+    "message": "Tmavý režim"
+  },
+  "exportJSON": {
+    "message": "Exportovať JSON"
+  },
+  "exportPDF": {
+    "message": "Exportovať PDF"
+  },
+  "groupTitle": {
+    "message": "Názov skupiny"
+  },
+  "importJSON": {
+    "message": "Importovať JSON"
+  },
+  "tabTitle": {
+    "message": "Názov karty"
   },
   "showTabs": {
     "message": "Zobraziť karty"

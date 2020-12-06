@@ -92,8 +92,23 @@
   "settings": {
     "message": "Setări"
   },
-  "shareAll": {
-    "message": "Distribuiți toate"
+  "darkMode": {
+    "message": "Mod întunecat"
+  },
+  "exportJSON": {
+    "message": "Exportați JSON"
+  },
+  "exportPDF": {
+    "message": "Exportați PDF"
+  },
+  "groupTitle": {
+    "message": "Titlul grupului"
+  },
+  "importJSON": {
+    "message": "Importați JSON"
+  },
+  "tabTitle": {
+    "message": "Titlu filă"
   },
   "showTabs": {
     "message": "Afișați filele"
