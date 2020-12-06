@@ -12,7 +12,7 @@ export default function Tabs(props) {
     return (groups && groups[props.id] && groups[props.id].tabs) || [];
   });
 
-  const triggerEvent = useCallback(() => {
+  const mergeEvent = useCallback(() => {
     // skip groups which merging doesn't apply to
     if (props.id === window.localStorage.getItem("into_group")) {
       var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
@@ -22,7 +22,8 @@ export default function Tabs(props) {
       window.localStorage.removeItem("into_group");
 
       // store relevant details of combined tabs
-      var tabs_arr = [...tabs, ...merged_tabs];
+      var groups = JSON.parse(window.localStorage.getItem("groups"));
+      var tabs_arr = [...groups[props.id].tabs, ...merged_tabs];
       tabs_arr = tabs_arr.map((item) => ({
         url: item.url,
         favIconUrl: item.favIconUrl,
@@ -30,22 +31,27 @@ export default function Tabs(props) {
       }));
 
       setTabs(tabs_arr);
-      var groups = JSON.parse(window.localStorage.getItem("groups"));
       groups[props.id].tabs = tabs_arr;
       window.localStorage.setItem("groups", JSON.stringify(groups));
     }
   }, [props.id, tabs]);
 
   useEffect(() => {
-    if ("merged_tabs" in window.localStorage) {
-      var merged_tabs = window.localStorage.getItem("merged_tabs");
-      var total_tabs =
-        parseInt(window.localStorage.getItem("tabTotal")) +
-        JSON.parse(merged_tabs).length;
-      window.localStorage.setItem("tabTotal", total_tabs);
-      props.setTabTotal(total_tabs);
-      triggerEvent();
+    function checkMerging() {
+      if ("merged_tabs" in window.localStorage) {
+        // prettier-ignore
+        var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
+        var current_tabs = document.querySelectorAll(".draggable");
+        props.setTabTotal(current_tabs.length + merged_tabs.length);
+        mergeEvent();
+      }
     }
+
+    window.addEventListener("storage", checkMerging);
+
+    return () => {
+      window.removeEventListener("storage", checkMerging);
+    };
   }, []);
 
   function removeTab(e) {
@@ -59,9 +65,7 @@ export default function Tabs(props) {
     groups[props.id].tabs = tabs_arr;
     window.localStorage.setItem("groups", JSON.stringify(groups));
 
-    var current = window.localStorage.getItem("tabTotal");
-    window.localStorage.setItem("tabTotal", current - 1);
-    props.setTabTotal(current - 1);
+    props.setTabTotal(document.querySelectorAll(".draggable").length - 1);
   }
 
   function keepOrRemoveTab(e) {
@@ -113,9 +117,8 @@ export default function Tabs(props) {
       };
     });
 
-    var groups_str = JSON.stringify(group_blocks);
-    window.localStorage.setItem("groups", groups_str);
-    props.setGroups(groups_str);
+    window.localStorage.setItem("groups", JSON.stringify(group_blocks));
+    window.location.reload();
   };
 
   function translate(msg) {

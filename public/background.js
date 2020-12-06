@@ -64,8 +64,13 @@ function findExtTabAndSwitch() {
     { title: "TabMerger", currentWindow: true },
     (tabMergerTabs) => {
       if (tabMergerTabs[0]) {
-        chrome.tabs.update(tabMergerTabs[0].id, { highlighted: true });
-        // chrome.tabs.reload(tabMergerTabs[0].id);
+        if (!tabMergerTabs[0].active) {
+          chrome.tabs.reload(tabMergerTabs[0].id);
+        }
+        chrome.tabs.update(tabMergerTabs[0].id, {
+          highlighted: true,
+          active: true,
+        });
       } else {
         chrome.tabs.create({ url: "index.html", active: true });
       }

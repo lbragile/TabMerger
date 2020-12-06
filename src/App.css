@@ -10,7 +10,7 @@
 
 .left-side-container {
   position: relative;
-  top: -40px;
+  top: -35px;
   z-index: 0;
 }
 
@@ -160,17 +160,18 @@ input[type="image"] {
 
 .search-filter {
   position: relative;
-  top: -63px;
+  top: -60px;
   left: -15px;
   z-index: 1;
 }
 
-.search-filter > input {
+.search-filter input {
   border-radius: 5px;
   width: 150px;
+  border: 1px solid black;
 }
 
-.search-filter > input:focus {
+.search-filter input:focus {
   outline: none;
 }
 

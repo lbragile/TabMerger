@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -21,42 +21,59 @@ export default function App() {
   const defaultColor = useRef((settings && settings.color) || "#DEDEDE");
   const defaultTitle = useRef((settings && settings.title) || "Title");
 
-  // prettier-ignore
-  const [tabTotal, setTabTotal] = useState(window.localStorage.getItem("tabTotal") || 0);
-  const [groups, setGroups] = useState(() => {
+  const [tabTotal, setTabTotal] = useState(() => {
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
-    return group_blocks
-      ? Object.keys(group_blocks).map((item) => {
-          return (
+    var sum = 0;
+    Object.values(group_blocks).forEach((x) => (sum += x.tabs.length));
+    return sum;
+  });
+
+  const [appStatus, setAppStatus] = useState(false);
+
+  const groupFormation = useCallback(
+    (group_blocks) => {
+      return group_blocks
+        ? Object.values(group_blocks).map((x, index) => {
+            return (
+              <Group
+                id={"group-" + index}
+                className="group"
+                title={x.title}
+                color={x.color}
+                created={x.created}
+                key={Math.random()}
+              >
+                <Tabs
+                  setTabTotal={setTabTotal}
+                  groupFormation={groupFormation}
+                  id={"group-" + index}
+                />
+              </Group>
+            );
+          })
+        : [
             <Group
-              id={item}
+              id="group-0"
               className="group"
-              title={group_blocks[item].title}
-              color={group_blocks[item].color}
-              created={group_blocks[item].created}
+              title={defaultTitle.current}
+              color={defaultColor.current}
+              created={new Date(Date.now()).toString()}
               key={Math.random()}
             >
-              <Tabs setTabTotal={setTabTotal} setGroups={setGroups} id={item} />
-            </Group>
-          );
-        })
-      : [
-          <Group
-            id="group-0"
-            className="group"
-            title={defaultTitle.current}
-            color={defaultColor.current}
-            created={new Date(Date.now()).toString()}
-            key={Math.random()}
-          >
-            <Tabs
-              setTabTotal={setTabTotal}
-              setGroups={setGroups}
-              id="group-0"
-            />
-          </Group>,
-        ];
-  });
+              <Tabs
+                setTabTotal={setTabTotal}
+                groupFormation={groupFormation}
+                id="group-0"
+              />
+            </Group>,
+          ];
+    },
+    [window.localStorage.getItem("groups")]
+  );
+
+  const [groups, setGroups] = useState(
+    groupFormation(JSON.parse(window.localStorage.getItem("groups")))
+  );
 
   // https://stackoverflow.com/a/5624139/4298115
   function rgb2hex(input) {
@@ -84,18 +101,12 @@ export default function App() {
           tabs: [],
         };
 
-        var group_tabs = group_blocks[i].querySelectorAll(
-          "div[draggable='true']"
-        );
-
-        var tabs_entry = [];
-        for (let j = 0; j < group_tabs.length; j++) {
-          tabs_entry.push({
-            favIconUrl: group_tabs[j].querySelector("img").src,
-            url: group_tabs[j].querySelector("a").href,
-            title: group_tabs[j].querySelector("a").innerText,
-          });
-        }
+        var group_tabs = group_blocks[i].querySelectorAll(".draggable");
+        var tabs_entry = [...group_tabs].map((x) => ({
+          favIconUrl: x.querySelector("img").src,
+          url: x.querySelector("a").href,
+          title: x.querySelector("a").innerText,
+        }));
 
         ls_entry[group_blocks[i].id].tabs = tabs_entry;
       }
@@ -141,7 +152,7 @@ export default function App() {
       >
         <Tabs
           setTabTotal={setTabTotal}
-          setGroups={setGroups}
+          groupFormation={groupFormation}
           id={"group-" + groups.length}
         />
       </Group>,
@@ -172,7 +183,6 @@ export default function App() {
     });
 
     window.localStorage.setItem("groups", default_group);
-    window.localStorage.setItem("tabTotal", 0);
     setTabTotal(0);
     setGroups([
       <Group
@@ -183,7 +193,11 @@ export default function App() {
         created={new Date(Date.now()).toString()}
         key={Math.random()}
       >
-        <Tabs setTabTotal={setTabTotal} setGroups={setGroups} id="group-0" />
+        <Tabs
+          setTabTotal={setTabTotal}
+          groupFormation={groupFormation}
+          id="group-0"
+        />
       </Group>,
     ]);
   }
@@ -243,7 +257,6 @@ export default function App() {
       reader.onload = () => {
         var fileContent = JSON.parse(reader.result);
         window.localStorage.setItem("groups", fileContent.groups);
-        window.localStorage.setItem("tabTotal", fileContent.totalTabs);
         window.localStorage.setItem("settings", fileContent.settings);
         window.location.reload();
       };
@@ -262,7 +275,6 @@ export default function App() {
       encodeURIComponent(
         JSON.stringify({
           groups: window.localStorage.getItem("groups"),
-          totalTabs: window.localStorage.getItem("tabTotal"),
           settings: window.localStorage.getItem("settings"),
         })
       );
@@ -283,7 +295,6 @@ export default function App() {
     var doc = new jsPDF();
 
     var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
-    var total = window.localStorage.getItem("tabTotal");
 
     var { width, height } = doc.internal.pageSize;
     // prettier-ignore
@@ -307,7 +318,7 @@ export default function App() {
 
     doc.setFontSize(16);
     doc.setTextColor("000");
-    doc.text(total + " tabs in total", x, y);
+    doc.text(tabTotal + " tabs in total", x, y);
     Object.values(group_blocks).forEach((item) => {
       y += 15;
       if (y >= height) {
@@ -422,14 +433,14 @@ export default function App() {
                 </div>
                 <div>
                   <label
-                    for="tab-group"
+                    for="search-tab"
                     className="d-block mb-0 font-weight-bold"
                   >
                     Tab Title:{" "}
                   </label>
                   <input
                     type="text"
-                    name="tab-group"
+                    name="search-tab"
                     className="px-1"
                     onChange={(e) => tabFilter(e)}
                   />

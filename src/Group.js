@@ -35,6 +35,7 @@ export default function Group(props) {
     }
     window.localStorage.setItem("groups", JSON.stringify(groups));
     setTitle(groups[props.id].title);
+    window.location.reload();
   }
 
   function handleColorChange(e) {
@@ -85,20 +86,12 @@ export default function Group(props) {
 
     var restore_val = JSON.parse(localStorage.getItem("settings")).restore;
     if (restore_val !== "keep") {
-      // adjust tabTotal prior to deleting to avoid negative number due to double subtraction
-      var currentTotal = parseInt(window.localStorage.getItem("tabTotal"));
-      window.localStorage.setItem("tabTotal", currentTotal + [...tabs].length);
-
       deleteGroup(e);
     }
   }
 
   function deleteGroup(e) {
     var group = e.target.closest(".group");
-    var group_tabs = group.querySelectorAll(".draggable");
-    var currentTotal = window.localStorage.getItem("tabTotal");
-
-    window.localStorage.setItem("tabTotal", currentTotal - group_tabs.length);
 
     var ls_groups = JSON.parse(window.localStorage.getItem("groups"));
     delete ls_groups[group.id];
