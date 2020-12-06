@@ -119,8 +119,13 @@ function createContextMenu(id, title, type) {
   chrome.contextMenus.create({ id, title, type });
 }
 
-const contextMenuClick = (info, tab) => {
-  switch (info.menuItemId) {
+const contextMenuOrShortCut = (info, tab) => {
+  // shortcut keyboard commands
+  if (typeof info === "string") {
+    info = { which: "all", command: info };
+  }
+
+  switch (info.menuItemId || info.command) {
     case "open-tabmerger":
       findExtTabAndSwitch();
       break;
@@ -175,4 +180,7 @@ createContextMenu("dl-instructions", translate("bgInstructions"));
 createContextMenu("dl-contact", translate("bgContact"));
 
 // context menu actions
-chrome.contextMenus.onClicked.addListener(contextMenuClick);
+chrome.contextMenus.onClicked.addListener(contextMenuOrShortCut);
+
+// shortcut keyboard
+chrome.commands.onCommand.addListener(contextMenuOrShortCut);

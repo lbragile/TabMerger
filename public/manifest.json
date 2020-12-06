@@ -26,5 +26,32 @@
   "browser_action": {
     "default_icon": "images/logo128.png",
     "default_title": "Merge your tabs into groups"
+  },
+
+  "commands": {
+    "open-tabmerger": {
+      "suggested_key": {
+        "default": "Alt+O"
+      },
+      "description": "Open/Navigate to TabMerger (without merging)"
+    },
+    "merge-all-menu": {
+      "suggested_key": {
+        "default": "Alt+A"
+      },
+      "description": "Merge ALL Tabs"
+    },
+    "merge-left-menu": {
+      "suggested_key": {
+        "default": "Alt+L"
+      },
+      "description": "Merge LEFT Tabs"
+    },
+    "merge-right-menu": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
+      "description": "Merge RIGHT Tabs"
+    }
   }
 }
