@@ -203,7 +203,7 @@ const contextMenuOrShortCut = (info, tab) => {
   }
 };
 
-createContextMenu("open-tabmerger", translate("bgOpen"));
+createContextMenu("aopen-tabmerger", translate("bgOpen"));
 
 createContextMenu("first-separator", "separator", "separator");
 createContextMenu("merge-all-menu", translate("bgAll"));

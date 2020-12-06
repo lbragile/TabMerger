@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -504,6 +504,7 @@ export default function App() {
                   width: "45px",
                   height: "45px",
                 }}
+                href="\#"
                 onClick={exportJSON}
               >
                 <div className="tip">

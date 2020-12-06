@@ -25,174 +25,182 @@
       </div>
       <h2>Settings</h2>
       <hr />
+      <div class="row">
+        <div class="col-6">
+          <section>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Default group color:</h5>
+              <input type="color" value="#DEDEDE" id="options-default-color" />
+            </div>
 
-      <section>
-        <div class="row mx-0">
-          <h5 class="mr-2 mb-0">Default group color:</h5>
-          <input type="color" value="#DEDEDE" id="options-default-color" />
-        </div>
-
-        <div>
-          <small
-            >This will only be applied on new groups formed after settings are
-            saved!</small
-          >
-        </div>
-      </section>
-
-      <section>
-        <div class="row mx-0">
-          <h5 class="mr-2 mb-0">Default group title:</h5>
-          <input
-            class="px-1 w-10"
-            type="text"
-            value="Title"
-            maxlength="15"
-            id="options-default-title"
-          />
-        </div>
-        <div>
-          <small
-            >This will only be applied on new groups formed after settings are
-            saved!</small
-          >
-        </div>
-      </section>
-
-      <section>
-        <div>
-          <h5 class="mb-0">Extension Opening Behaviour:</h5>
-          <small
-            >The following happens when TabMerger's extension icon is
-            clicked.</small
-          >
-        </div>
-
-        <div class="my-2">
-          <input
-            type="radio"
-            id="open-without"
-            name="ext-open"
-            value="without"
-            checked
-          />
-          <label for="keep" class="mb-0"
-            >Open Without Merging (<i>default</i>)</label
-          >
-          <div class="ml-3 mt-0">
-            <small
-              >This will open (or switch if already open) TabMerger's extensions
-              page without merging the currently open tabs in the same window.
-              The user can then merge open tabs by using each group's merging
-              buttons. Such a behaviour is desireable for full control of the
-              merging process.
-            </small>
-          </div>
-        </div>
-
-        <div>
-          <input type="radio" id="open-with" name="ext-open" value="with" />
-          <label for="remove" class="mb-0">Open & Merge</label>
-          <div class="ml-3">
-            <small
-              >This will open (or switch if already open) TabMerger's extensions
-              page <b>AND</b> merge the currently open tabs in the same window.
-              The merged tabs will be grouped into the top group. Thus, the user
-              will then be able to sort the tabs along various groups via the
-              drag-and-drop feature. This behaviour is desireable when the user
-              wants to avoid opening an extra tab (TabMerger) prior to
-              merging.</small
-            >
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div>
-          <h5 class="mb-0">Restoring behaviour:</h5>
-          <small>This applies to both group and global actions.</small>
-        </div>
-
-        <div class="my-2">
-          <input
-            type="radio"
-            id="keep-tabs"
-            name="restore-tabs"
-            value="keep"
-            checked
-          />
-          <label for="keep" class="mb-0"
-            >Keep in TabMerger (<i>default</i>)</label
-          >
-          <div class="ml-3 mt-0">
-            <small
-              >You can still manually delete:
-              <ul class="mx-4">
-                <li>
-                  tab &rightarrow;
-                  <span style="color: red">&Cross;</span> button beside them (on
-                  the left)
-                </li>
-                <li>
-                  group &rightarrow; <i>Delete Group</i> button (inside the
-                  group)
-                </li>
-                <li>everything &rightarrow; global <i>Delete All</i> button</li>
-              </ul>
-            </small>
-          </div>
-        </div>
-
-        <div>
-          <input
-            type="radio"
-            id="remove-tabs"
-            value="remove"
-            name="restore-tabs"
-          />
-          <label for="remove" class="mb-0">Remove from TabMerger</label>
-          <div class="ml-3">
-            <small
-              >Opening a tab (<i>Click</i> on it) will remove that tab from
-              TabMerger's page, the same goes for opening tabs in a group (<i
-                >Open Group</i
+            <div>
+              <small
+                >This will only be applied on new groups formed after settings
+                are saved!</small
               >
-              button) and opening all tabs (<i>Open All</i> button).
-              <b>Note:</b> in the <b>Open Group</b> case, the corresponding
-              (<b>ONE</b>) group will be removed. Likewise, in the
-              <b>Open All</b> case, <b>ALL</b> groups will be removed.</small
-            >
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
 
-      <section>
-        <div class="mx-0">
-          <h5 class="mr-2 mb-0">Exclude Websites:</h5>
-          <div>
-            Please enter the <i>full</i> website address of any website which
-            you would like to not merge. <br />These <b>must</b> begin with
-            "http://" or "https://" - we recommend <i>copying</i> the link of
-            the tab and <i>pasting</i> it here. <br />You may enter multiple
-            comma seperated values. <br />
-            <b>Note:</b> TabMerger provides a menu for you to quickly do this,
-            simply right click on any page you want to exclude, then in the
-            <i>context menu</i> popup navigate to:<br /><code
-              >TabMerger > Exclude Site from TabMerger's Visibility</code
-            ><br />Doing this will cause the corresponding tab's URL to show up
-            here right away, without the need to navigate to this settings page.
-          </div>
-          <textarea
-            class="px-1 mt-2"
-            rows="4"
-            cols="80"
-            id="options-blacklist"
-            placeholder="http://www.google.com, https://www.facebook.com"
-            maxlength="1000"
-          ></textarea>
-        </div>
-      </section>
+          <section>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Default group title:</h5>
+              <input
+                class="px-1 w-10"
+                type="text"
+                value="Title"
+                maxlength="15"
+                id="options-default-title"
+              />
+            </div>
+            <div>
+              <small
+                >This will only be applied on new groups formed after settings
+                are saved!</small
+              >
+            </div>
+          </section>
 
+          <section>
+            <div class="mx-0">
+              <h5 class="mr-2 mb-0">Exclude Websites:</h5>
+              <div>
+                Please enter the <i>full</i> website address of any website
+                which you would like to not merge. <br />These <b>must</b> begin
+                with "http://" or "https://" - we recommend <i>copying</i> the
+                link of the tab and <i>pasting</i> it here. <br />You may enter
+                multiple comma seperated values. <br />
+                <b>Note:</b> TabMerger provides a menu for you to quickly do
+                this, simply right click on any page you want to exclude, then
+                in the <i>context menu</i> popup navigate to:<br /><code
+                  >TabMerger > Exclude Site from TabMerger's Visibility</code
+                ><br />Doing this will cause the corresponding tab's URL to show
+                up here right away, without the need to navigate to this
+                settings page.
+              </div>
+              <textarea
+                class="px-1 mt-2"
+                rows="4"
+                cols="70"
+                id="options-blacklist"
+                placeholder="http://www.google.com, https://www.facebook.com"
+                maxlength="1000"
+              ></textarea>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-6">
+          <section>
+            <div>
+              <h5 class="mb-0">Extension Opening Behaviour:</h5>
+              <small
+                >The following happens when TabMerger's extension icon is
+                clicked.</small
+              >
+            </div>
+
+            <div class="my-2">
+              <input
+                type="radio"
+                id="open-without"
+                name="ext-open"
+                value="without"
+                checked
+              />
+              <label for="keep" class="mb-0"
+                >Open Without Merging (<i>default</i>)</label
+              >
+              <div class="ml-3 mt-0">
+                <small
+                  >This will open (or switch if already open) TabMerger's
+                  extensions page without merging the currently open tabs in the
+                  same window. The user can then merge open tabs by using each
+                  group's merging buttons. Such a behaviour is desireable for
+                  full control of the merging process.
+                </small>
+              </div>
+            </div>
+
+            <div>
+              <input type="radio" id="open-with" name="ext-open" value="with" />
+              <label for="remove" class="mb-0">Open & Merge</label>
+              <div class="ml-3">
+                <small
+                  >This will open (or switch if already open) TabMerger's
+                  extensions page <b>AND</b> merge the currently open tabs in
+                  the same window. The merged tabs will be grouped into the top
+                  group. Thus, the user will then be able to sort the tabs along
+                  various groups via the drag-and-drop feature. This behaviour
+                  is desireable when the user wants to avoid opening an extra
+                  tab (TabMerger) prior to merging.</small
+                >
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div>
+              <h5 class="mb-0">Restoring behaviour:</h5>
+              <small>This applies to both group and global actions.</small>
+            </div>
+
+            <div class="my-2">
+              <input
+                type="radio"
+                id="keep-tabs"
+                name="restore-tabs"
+                value="keep"
+                checked
+              />
+              <label for="keep" class="mb-0"
+                >Keep in TabMerger (<i>default</i>)</label
+              >
+              <div class="ml-3 mt-0">
+                <small
+                  >You can still manually delete:
+                  <ul class="mx-4">
+                    <li>
+                      tab &rightarrow;
+                      <span style="color: red">&Cross;</span> button beside them
+                      (on the left)
+                    </li>
+                    <li>
+                      group &rightarrow; <i>Delete Group</i> button (inside the
+                      group)
+                    </li>
+                    <li>
+                      everything &rightarrow; global <i>Delete All</i> button
+                    </li>
+                  </ul>
+                </small>
+              </div>
+            </div>
+
+            <div>
+              <input
+                type="radio"
+                id="remove-tabs"
+                value="remove"
+                name="restore-tabs"
+              />
+              <label for="remove" class="mb-0">Remove from TabMerger</label>
+              <div class="ml-3">
+                <small
+                  >Opening a tab (<i>Click</i> on it) will remove that tab from
+                  TabMerger's page, the same goes for opening tabs in a group
+                  (<i>Open Group</i> button) and opening all tabs (<i
+                    >Open All</i
+                  >
+                  button). <b>Note:</b> in the <b>Open Group</b> case, the
+                  corresponding (<b>ONE</b>) group will be removed. Likewise, in
+                  the <b>Open All</b> case, <b>ALL</b> groups will be
+                  removed.</small
+                >
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
       <div class="mx-0 d-flex flex-row align-items-center">
         <button class="option-btn btn btn-primary" id="save-btn">Save</button>
         <button class="option-btn btn btn-secondary mx-1" id="home-btn">

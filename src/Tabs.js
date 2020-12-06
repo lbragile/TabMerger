@@ -34,7 +34,7 @@ export default function Tabs(props) {
       groups[props.id].tabs = tabs_arr;
       window.localStorage.setItem("groups", JSON.stringify(groups));
     }
-  }, [props.id, tabs]);
+  }, [props.id]);
 
   useEffect(() => {
     const checkMerging = (e) => {
@@ -52,7 +52,7 @@ export default function Tabs(props) {
     return () => {
       window.removeEventListener("storage", checkMerging);
     };
-  }, []);
+  }, [mergeEvent, props]);
 
   function removeTab(e) {
     var url = e.target.closest("div").querySelector("a").href;

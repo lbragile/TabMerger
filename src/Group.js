@@ -35,7 +35,10 @@ export default function Group(props) {
     }
     window.localStorage.setItem("groups", JSON.stringify(groups));
     setTitle(groups[props.id].title);
-    window.location.reload();
+
+    if (val.length >= 15) {
+      window.location.reload();
+    }
   }
 
   function handleColorChange(e) {
