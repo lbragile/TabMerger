@@ -28,6 +28,8 @@
     "default_title": "Merge your tabs into groups"
   },
 
+  "incognito": "split",
+
   "commands": {
     "merge-snly-menu": {
       "suggested_key": {
