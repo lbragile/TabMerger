@@ -45,11 +45,31 @@ export default function Tabs(props) {
       if (e.key === "merged_tabs") {
         // prettier-ignore
         var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
-        var current_tabs = document.querySelectorAll(".draggable");
-        props.setTabTotal(current_tabs.length + merged_tabs.length);
-        mergeEvent();
+
         chrome.storage.sync.getBytesInUse("groups", (bytesInUse) => {
-          console.log(bytesInUse);
+          var num_bytes = bytesInUse + JSON.stringify(merged_tabs).length;
+          console.log(num_bytes);
+          if (num_bytes < 8192) {
+            // close the to-be-merged tabs
+            chrome.tabs.remove(merged_tabs.map((x) => x.id));
+
+            var total = document.querySelectorAll(".draggable").length;
+            props.setTabTotal(total + merged_tabs.length);
+            mergeEvent();
+          } else {
+            // remove local storage items to allow merging same tabs again
+            window.localStorage.removeItem("merged_tabs");
+            window.localStorage.removeItem("into_group");
+
+            alert(
+              `Syncing capacity exceeded by ${
+                num_bytes - 8192
+              } bytes.\n\nPlease do one of the following:
+1. Create a new group and merge new tabs into it;
+2. Remove some tabs from this group;
+3. Merge less tabs into this group (each tab is ~100-400 bytes).`
+            );
+          }
         });
       }
     };

@@ -41,9 +41,6 @@ function getTabsAndSend(info, tab, group_id) {
 
     findExtTabAndSwitch();
 
-    // close the to-be-merged tabs
-    chrome.tabs.remove(tabs.map((x) => x.id));
-
     // ===== FILTERING for tab total counts ====== //
     // get a list of all the current tab titles
     var tab_titles = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
@@ -100,7 +97,7 @@ function excludeSite(info, tab) {
 }
 
 function createDefaultStorageItems() {
-  chrome.storage.sync.clear();
+  // chrome.storage.sync.clear();
 
   var default_settings = {
     open: "without",
