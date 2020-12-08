@@ -5,12 +5,14 @@ function saveOptions(e) {
     .value;
   var open = document.querySelector("input[name='ext-open']:checked").value;
   var blacklist = document.getElementById("options-blacklist").value;
-  var dark = JSON.parse(window.localStorage.getItem("settings")).dark;
 
-  window.localStorage.setItem(
-    "settings",
-    JSON.stringify({ open, color, title, restore, blacklist, dark })
-  );
+  chrome.storage.sync.get("settings", (result) => {
+    var dark = result.settings.dark;
+
+    chrome.storage.sync.set({
+      settings: { open, color, title, restore, blacklist, dark },
+    });
+  });
 
   e.target.classList.replace("btn-primary", "btn-success");
   document.getElementById("save-text").classList.remove("invisible");
@@ -21,26 +23,12 @@ function saveOptions(e) {
 }
 
 function restoreOptions() {
-  var settings = JSON.parse(window.localStorage.getItem("settings"));
   var body = document.querySelector("body");
   var hr = document.querySelector("hr");
   var code_block = document.querySelector("code");
 
-  if (settings && settings.dark) {
-    body.style.background = "#343a40";
-    body.style.color = "white";
-    hr.style.borderTop = "1px white solid";
-    code_block.style.color = "white";
-    code_block.style.border = "white 1px solid";
-  } else {
-    body.style.background = "white";
-    body.style.color = "black";
-    hr.style.borderTop = "1px rgba(0,0,0,.1) solid";
-    code_block.style.color = "black";
-    code_block.style.border = "black 1px solid";
-  }
-
-  if (settings) {
+  chrome.storage.sync.get("settings", (result) => {
+    var settings = result.settings;
     document.getElementById("options-default-color").value = settings.color;
     document.getElementById("options-default-title").value = settings.title;
     document.querySelectorAll("input[name='restore-tabs']").forEach((item) => {
@@ -50,7 +38,18 @@ function restoreOptions() {
       item.checked = item.value === settings.open;
     });
     document.getElementById("options-blacklist").value = settings.blacklist;
-  }
+
+    // dark mode adjustments
+    body.style.background = settings.dark ? "#343a40" : "white";
+    body.style.color = settings.dark ? "white" : "black";
+    hr.style.borderTop = settings.dark
+      ? "1px white solid"
+      : "1px rgba(0,0,0,.1) solid";
+    code_block.style.color = settings.dark ? "white" : "black";
+    code_block.style.border = settings.dark
+      ? "1px white solid"
+      : "1px black solid";
+  });
 }
 
 function goHome() {

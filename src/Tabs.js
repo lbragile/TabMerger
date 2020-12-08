@@ -7,10 +7,13 @@ import { AiOutlineMenu } from "react-icons/ai";
 
 export default function Tabs(props) {
   const tab_title_length = useRef(100);
-  const [tabs, setTabs] = useState(() => {
-    var groups = JSON.parse(window.localStorage.getItem("groups"));
-    return (groups && groups[props.id] && groups[props.id].tabs) || [];
-  });
+  const [tabs, setTabs] = useState([]);
+
+  useEffect(() => {
+    chrome.storage.sync.get("groups", (result) => {
+      setTabs(result.groups[props.id] ? result.groups[props.id].tabs : []);
+    });
+  }, []);
 
   const mergeEvent = useCallback(() => {
     // skip groups which merging doesn't apply to
@@ -22,17 +25,18 @@ export default function Tabs(props) {
       window.localStorage.removeItem("into_group");
 
       // store relevant details of combined tabs
-      var groups = JSON.parse(window.localStorage.getItem("groups"));
-      var tabs_arr = [...groups[props.id].tabs, ...merged_tabs];
-      tabs_arr = tabs_arr.map((item) => ({
-        url: item.url,
-        favIconUrl: item.favIconUrl,
-        title: item.title,
-      }));
+      chrome.storage.sync.get("groups", (result) => {
+        var tabs_arr = [...result.groups[props.id].tabs, ...merged_tabs];
+        tabs_arr = tabs_arr.map((item) => ({
+          url: item.url,
+          favIconUrl: item.favIconUrl,
+          title: item.title,
+        }));
 
-      setTabs(tabs_arr);
-      groups[props.id].tabs = tabs_arr;
-      window.localStorage.setItem("groups", JSON.stringify(groups));
+        setTabs(tabs_arr);
+        result.groups[props.id].tabs = tabs_arr;
+        chrome.storage.sync.set({ groups: result.groups });
+      });
     }
   }, [props.id]);
 
@@ -44,6 +48,9 @@ export default function Tabs(props) {
         var current_tabs = document.querySelectorAll(".draggable");
         props.setTabTotal(current_tabs.length + merged_tabs.length);
         mergeEvent();
+        chrome.storage.sync.getBytesInUse("groups", (bytesInUse) => {
+          console.log(bytesInUse);
+        });
       }
     };
 
@@ -61,19 +68,20 @@ export default function Tabs(props) {
     setTabs(tabs_arr);
 
     //update groups
-    var groups = JSON.parse(window.localStorage.getItem("groups"));
-    groups[props.id].tabs = tabs_arr;
-    window.localStorage.setItem("groups", JSON.stringify(groups));
+    chrome.storage.sync.get("groups", (result) => {
+      result.groups[props.id].tabs = tabs_arr;
+      chrome.storage.sync.set({ groups: result.groups });
+    });
 
     props.setTabTotal(document.querySelectorAll(".draggable").length - 1);
   }
 
   function keepOrRemoveTab(e) {
-    // prettier-ignore
-    var restore_val = JSON.parse(window.localStorage.getItem("settings")).restore;
-    if (restore_val !== "keep") {
-      removeTab(e);
-    }
+    chrome.storage.sync.get("settings", (result) => {
+      if (result.settings.restore !== "keep") {
+        removeTab(e);
+      }
+    });
   }
 
   const dragStart = (e) => {
@@ -95,30 +103,30 @@ export default function Tabs(props) {
     const origin_id = drag_origin.id;
 
     // update localStorage
-    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
+    chrome.storage.sync.get("groups", (result) => {
+      if (origin_id !== closest_group.id) {
+        // remove tab from group that originated the drag
+        result.groups[origin_id].tabs = result.groups[origin_id].tabs.filter(
+          (group_tab) => {
+            return group_tab.url !== tab.lastChild.href;
+          }
+        );
+      }
 
-    if (origin_id !== closest_group.id) {
-      // remove tab from group that originated the drag
-      group_blocks[origin_id].tabs = group_blocks[origin_id].tabs.filter(
-        (group_tab) => {
-          return group_tab.url !== tab.lastChild.href;
-        }
-      );
-    }
+      // reorder tabs based on current positions
+      result.groups[closest_group.id].tabs = [
+        ...closest_group.lastChild.querySelectorAll("div"),
+      ].map((item) => {
+        return {
+          title: item.lastChild.textContent,
+          url: item.lastChild.href,
+          favIconUrl: item.querySelectorAll("img")[0].src,
+        };
+      });
 
-    // reorder tabs based on current positions
-    group_blocks[closest_group.id].tabs = [
-      ...closest_group.lastChild.querySelectorAll("div"),
-    ].map((item) => {
-      return {
-        title: item.lastChild.textContent,
-        url: item.lastChild.href,
-        favIconUrl: item.querySelectorAll("img")[0].src,
-      };
+      chrome.storage.sync.set({ groups: result.groups });
+      window.location.reload();
     });
-
-    window.localStorage.setItem("groups", JSON.stringify(group_blocks));
-    window.location.reload();
   };
 
   function translate(msg) {

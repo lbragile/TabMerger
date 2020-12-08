@@ -29,11 +29,14 @@ function getTabsAndSend(info, tab, group_id) {
     }
 
     // apply blacklist items
-    tabs = tabs.filter((item) => {
-      var settings = JSON.parse(window.localStorage.getItem("settings"));
-      var blacklist_sites = settings.blacklist.replace(" ", "").split(",");
-      blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
-      return !blacklist_sites.includes(item.url);
+    chrome.storage.sync.get("settings", (result) => {
+      tabs = tabs.filter((item) => {
+        var blacklist_sites = result.settings.blacklist
+          .replace(" ", "")
+          .split(",");
+        blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
+        return !blacklist_sites.includes(item.url);
+      });
     });
 
     findExtTabAndSwitch();
@@ -43,11 +46,12 @@ function getTabsAndSend(info, tab, group_id) {
 
     // ===== FILTERING for tab total counts ====== //
     // get a list of all the current tab titles
-    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
     var tab_titles = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
-    Object.values(group_blocks).forEach((item) => {
-      var groups_tab_titles = item.tabs.map((curr_tab) => curr_tab.title);
-      tab_titles = tab_titles.concat(groups_tab_titles);
+    chrome.storage.sync.get("groups", (result) => {
+      Object.values(result.groups).forEach((item) => {
+        var groups_tab_titles = item.tabs.map((curr_tab) => curr_tab.title);
+        tab_titles = tab_titles.concat(groups_tab_titles);
+      });
     });
 
     tabs = tabs.filter((item) => {
@@ -88,43 +92,43 @@ function findExtTabAndSwitch() {
 }
 
 function excludeSite(info, tab) {
-  var settings = JSON.parse(window.localStorage.getItem("settings")) || {};
-  if (!settings.blacklist || settings.blacklist === "") {
-    settings.blacklist += `${tab.url}`;
-  } else {
-    settings.blacklist += `, ${tab.url}`;
-  }
-  window.localStorage.setItem("settings", JSON.stringify(settings));
+  chrome.storage.sync.get("settings", (result) => {
+    result.settings.blacklist +=
+      result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
+    chrome.storage.sync.set({ settings: result.settings });
+  });
 }
 
 function createDefaultStorageItems() {
-  if (!window.localStorage.getItem("settings")) {
-    window.localStorage.setItem(
-      "settings",
-      JSON.stringify({
-        open: "without",
-        color: "#dedede",
-        title: "Title",
-        restore: "keep",
-        blacklist: "",
-        dark: 1,
-      })
-    );
-  }
+  chrome.storage.sync.clear();
 
-  if (!window.localStorage.getItem("groups")) {
-    window.localStorage.setItem(
-      "groups",
-      JSON.stringify({
-        "group-0": {
-          title: "Title",
-          color: "#dedede",
-          created: new Date(Date.now()).toString(),
-          tabs: [],
-        },
-      })
-    );
-  }
+  var default_settings = {
+    open: "without",
+    color: "#dedede",
+    title: "Title",
+    restore: "keep",
+    blacklist: "",
+    dark: true,
+  };
+
+  var default_groups = {
+    "group-0": {
+      title: "Title",
+      color: "#dedede",
+      created: new Date(Date.now()).toString(),
+      tabs: [],
+    },
+  };
+
+  chrome.storage.sync.get(["settings", "groups"], (result) => {
+    if (!result.settings) {
+      chrome.storage.sync.set({ settings: default_settings });
+    }
+
+    if (!result.groups) {
+      chrome.storage.sync.set({ groups: default_groups });
+    }
+  });
 }
 
 function translate(msg) {
@@ -139,11 +143,11 @@ var tab = { index: 0 };
 chrome.browserAction.onClicked.addListener(() => {
   createDefaultStorageItems();
 
-  if (JSON.parse(window.localStorage.getItem("settings")).open === "without") {
-    findExtTabAndSwitch();
-  } else {
-    getTabsAndSend(info, tab);
-  }
+  chrome.storage.sync.get("settings", (result) => {
+    result.settings.open === "without"
+      ? findExtTabAndSwitch()
+      : getTabsAndSend(info, tab);
+  });
 });
 
 const extensionMessage = (request) => {

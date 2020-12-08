@@ -26,26 +26,29 @@ export default function Group(props) {
   }, []);
 
   function handleTitleChange(val) {
-    var groups = JSON.parse(window.localStorage.getItem("groups"));
-    if (val.length < 15) {
-      groups[props.id].title = val;
-    } else {
-      alert("Titles must be less than 15 characters long!");
-      groups[props.id].title = title;
-    }
-    window.localStorage.setItem("groups", JSON.stringify(groups));
-    setTitle(groups[props.id].title);
+    chrome.storage.sync.get("groups", (result) => {
+      if (val.length < 15) {
+        result.groups[props.id].title = val;
+      } else {
+        alert("Titles must be less than 15 characters long!");
+        result.groups[props.id].title = title;
+      }
+      chrome.storage.sync.set({ groups: result.groups });
+      setTitle(result.groups[props.id].title);
 
-    if (val.length >= 15) {
-      window.location.reload();
-    }
+      if (val.length >= 15) {
+        window.location.reload();
+      }
+    });
   }
 
   function handleColorChange(e) {
     backgroundColor(e.target);
-    var groups = JSON.parse(window.localStorage.getItem("groups"));
-    groups[props.id].color = e.target.value;
-    window.localStorage.setItem("groups", JSON.stringify(groups));
+
+    chrome.storage.sync.get("groups", (result) => {
+      result.groups[props.id].color = e.target.value;
+      chrome.storage.sync.set({ groups: result.groups });
+    });
   }
 
   const dragOver = (e) => {
@@ -87,35 +90,35 @@ export default function Group(props) {
       tab.querySelector("a").click();
     });
 
-    var restore_val = JSON.parse(localStorage.getItem("settings")).restore;
-    if (restore_val !== "keep") {
-      deleteGroup(e);
-    }
+    chrome.storage.sync.get("settings", (result) => {
+      if (result.settings.restore !== "keep") {
+        deleteGroup(e);
+      }
+    });
   }
 
   function deleteGroup(e) {
-    var group = e.target.closest(".group");
+    chrome.storage.sync.get(["groups", "settings"], (result) => {
+      delete result.groups[e.target.closest(".group").id];
 
-    var ls_groups = JSON.parse(window.localStorage.getItem("groups"));
-    delete ls_groups[group.id];
+      // must rename all keys properly
+      var new_groups = {};
+      if (Object.values(result.groups).length > 0) {
+        Object.values(result.groups).forEach((value, index) => {
+          new_groups["group-" + index] = value;
+        });
+      } else {
+        new_groups["group-0"] = {
+          title: result.settings.title,
+          color: result.settings.color,
+          created: new Date(Date.now()).toString(),
+          tabs: [],
+        };
+      }
 
-    // must rename all keys properly
-    var new_groups = {};
-    if (Object.values(ls_groups).length > 0) {
-      Object.values(ls_groups).forEach((value, index) => {
-        new_groups["group-" + index] = value;
-      });
-    } else {
-      var settings = JSON.parse(window.localStorage.getItem("settings"));
-      new_groups["group-0"] = {
-        title: settings.title,
-        color: settings.color,
-        created: new Date(Date.now()).toString(),
-        tabs: [],
-      };
-    }
-    window.localStorage.setItem("groups", JSON.stringify(new_groups));
-    window.location.reload();
+      chrome.storage.sync.set({ groups: new_groups });
+      window.location.reload();
+    });
   }
 
   function toggleGroup(e) {

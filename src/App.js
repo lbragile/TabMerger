@@ -17,50 +17,49 @@ import { RiStarSFill } from "react-icons/ri";
 import jsPDF from "jspdf";
 
 export default function App() {
-  var settings = JSON.parse(window.localStorage.getItem("settings"));
-  const defaultColor = useRef(settings.color);
-  const defaultTitle = useRef(settings.title);
+  const defaultColor = useRef("#000000");
+  const defaultTitle = useRef("Title");
+  const [tabTotal, setTabTotal] = useState(0);
+  const [groups, setGroups] = useState(null);
 
-  const [tabTotal, setTabTotal] = useState(() => {
-    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
-    var sum = 0;
-    Object.values(group_blocks).forEach((x) => (sum += x.tabs.length));
-    return sum;
-  });
+  useEffect(() => {
+    // set dark mode if needed & assign default values to state variables
+    chrome.storage.sync.get(["settings", "groups"], (result) => {
+      var json = { target: { checked: null } };
+      var darkModeSwitch = document.getElementById("darkMode");
+      darkModeSwitch.checked = result.settings.dark;
+      json.target.checked = result.settings.dark;
+
+      toggleDarkMode(json);
+
+      // state variables
+      defaultColor.current = result.settings.color;
+      defaultTitle.current = result.settings.title;
+
+      var sum = 0;
+      Object.values(result.groups).forEach((x) => (sum += x.tabs.length));
+      setTabTotal(sum);
+      setGroups(groupFormation(result.groups));
+    });
+  }, []);
 
   const groupFormation = (group_blocks) => {
-    return group_blocks
-      ? Object.values(group_blocks).map((x, index) => {
-          return (
-            <Group
-              id={"group-" + index}
-              className="group"
-              title={x.title}
-              color={x.color}
-              created={x.created}
-              key={Math.random()}
-            >
-              <Tabs setTabTotal={setTabTotal} id={"group-" + index} />
-            </Group>
-          );
-        })
-      : [
-          <Group
-            id="group-0"
-            className="group"
-            title={defaultTitle.current}
-            color={defaultColor.current}
-            created={new Date(Date.now()).toString()}
-            key={Math.random()}
-          >
-            <Tabs setTabTotal={setTabTotal} id="group-0" />
-          </Group>,
-        ];
+    return Object.values(group_blocks).map((x, i) => {
+      var id = group_blocks ? "group-" + i : "group-0";
+      return (
+        <Group
+          id={id}
+          className="group"
+          title={group_blocks ? x.title : defaultTitle.current}
+          color={group_blocks ? x.color : defaultColor.current}
+          created={group_blocks ? x.created : new Date(Date.now()).toString()}
+          key={Math.random()}
+        >
+          <Tabs setTabTotal={setTabTotal} id={id} />
+        </Group>
+      );
+    });
   };
-
-  const [groups, setGroups] = useState(
-    groupFormation(JSON.parse(window.localStorage.getItem("groups")))
-  );
 
   // https://stackoverflow.com/a/5624139/4298115
   function rgb2hex(input) {
@@ -98,20 +97,9 @@ export default function App() {
         ls_entry[group_blocks[i].id].tabs = tabs_entry;
       }
 
-      window.localStorage.setItem("groups", JSON.stringify(ls_entry));
+      chrome.storage.sync.set({ groups: ls_entry });
     }, 10);
   }, [groups]);
-
-  useEffect(() => {
-    // set dark mode if needed
-    var json = { target: { checked: null } };
-    var darkModeSwitch = document.getElementById("darkMode");
-    var switchOn = JSON.parse(window.localStorage.getItem("settings")).dark;
-    darkModeSwitch.checked = switchOn;
-    json.target.checked = switchOn;
-
-    toggleDarkMode(json);
-  }, []);
 
   const addGroup = () => {
     setGroups([
@@ -135,24 +123,25 @@ export default function App() {
       tab.querySelector("a").click();
     });
 
-    if (
-      JSON.parse(window.localStorage.getItem("settings")).restore !== "keep"
-    ) {
-      document.querySelector("#delete-all-btn").click();
-    }
+    chrome.storage.sync.get("settings", (result) => {
+      if (result.settings.restore !== "keep") {
+        document.querySelector("#delete-all-btn").click();
+      }
+    });
   }
 
   function deleteAllGroups() {
-    var default_group = JSON.stringify({
+    var default_group = {
       "group-0": {
         title: defaultTitle.current,
         color: defaultColor.current,
         created: new Date(Date.now()).toString(),
         tabs: [],
       },
-    });
+    };
 
-    window.localStorage.setItem("groups", default_group);
+    chrome.storage.sync.set({ groups: default_group });
+
     setTabTotal(0);
     setGroups([
       <Group
@@ -173,24 +162,20 @@ export default function App() {
     var hr = document.querySelector("hr");
     var settings_btn = document.getElementById("options-btn");
 
-    var settings = JSON.parse(window.localStorage.getItem("settings"));
-    if (e.target.checked) {
-      container.style.background = "#343a40";
-      container.style.color = "white";
-      hr.style.borderTop = "1px white solid";
-      settings_btn.style.border = "1px gray solid";
+    var isChecked = e.target.checked;
+    container.style.background = isChecked ? "#343a40" : "white";
+    container.style.color = isChecked ? "white" : "black";
+    hr.style.borderTop = isChecked
+      ? "1px white solid"
+      : "1px rgba(0,0,0,.1) solid";
+    settings_btn.style.border = isChecked
+      ? "1px gray solid"
+      : "1px black solid";
 
-      settings.dark = 1;
-      window.localStorage.setItem("settings", JSON.stringify(settings));
-    } else {
-      container.style.background = "white";
-      container.style.color = "black";
-      hr.style.borderTop = "1px rgba(0,0,0,.1) solid";
-      settings_btn.style.border = "1px black solid";
-
-      settings.dark = 0;
-      window.localStorage.setItem("settings", JSON.stringify(settings));
-    }
+    chrome.storage.sync.get("settings", (result) => {
+      result.settings.dark = isChecked === true;
+      chrome.storage.sync.set({ settings: result.settings });
+    });
   }
 
   function tabFilter(e) {
@@ -207,17 +192,19 @@ export default function App() {
   }
 
   function groupFilter(e) {
-    var groups = JSON.parse(window.localStorage.getItem("groups"));
-    var group_titles = Object.values(groups).map((item) =>
-      item.title.toLowerCase()
-    );
-    group_titles.forEach((item, index) => {
-      if (item.indexOf(e.target.value.toLowerCase()) === -1) {
-        // prettier-ignore
-        document.querySelector("#group-" + index).parentNode.style.display = "none";
-      } else {
-        document.querySelector("#group-" + index).parentNode.style.display = "";
-      }
+    chrome.storage.sync.get("groups", (result) => {
+      var group_titles = Object.values(result.groups).map((item) =>
+        item.title.toLowerCase()
+      );
+      group_titles.forEach((item, index) => {
+        if (item.indexOf(e.target.value.toLowerCase()) === -1) {
+          // prettier-ignore
+          document.querySelector("#group-" + index).parentNode.style.display = "none";
+        } else {
+          document.querySelector("#group-" + index).parentNode.style.display =
+            "";
+        }
+      });
     });
   }
 
@@ -227,8 +214,8 @@ export default function App() {
       reader.readAsText(e.target.files[0]);
       reader.onload = () => {
         var fileContent = JSON.parse(reader.result);
-        window.localStorage.setItem("groups", fileContent.groups);
-        window.localStorage.setItem("settings", fileContent.settings);
+        chrome.storage.sync.set({ groups: fileContent.groups });
+        chrome.storage.sync.set({ settings: fileContent.settings });
         window.location.reload();
       };
     } else {
@@ -241,18 +228,22 @@ export default function App() {
   const exportJSON = () => {
     setGroups(groups);
 
-    var dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(
-        JSON.stringify({
-          groups: window.localStorage.getItem("groups"),
-          settings: window.localStorage.getItem("settings"),
-        })
-      );
+    chrome.storage.sync.get(["settings", "groups"], (result) => {
+      var dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(
+          JSON.stringify({
+            groups: result.groups,
+            settings: result.settings,
+          })
+        );
 
-    var anchor = document.getElementById("export-btn");
-    anchor.setAttribute("href", dataStr);
-    anchor.setAttribute("download", outputFileName() + ".json");
+      var anchor = document.createElement("a");
+      anchor.setAttribute("href", dataStr);
+      anchor.setAttribute("download", outputFileName() + ".json");
+      anchor.click();
+      anchor.remove();
+    });
   };
 
   function outputFileName() {
@@ -273,10 +264,8 @@ export default function App() {
     return output;
   }
 
-  function exportPDF() {
+  async function exportPDF() {
     var doc = new jsPDF();
-
-    var group_blocks = JSON.parse(window.localStorage.getItem("groups"));
 
     var { width, height } = doc.internal.pageSize;
     // prettier-ignore
@@ -302,6 +291,14 @@ export default function App() {
     doc.setFontSize(16);
     doc.setTextColor("000");
     doc.text(tabTotal + " tabs in total", x - 5, y);
+
+    var promise = new Promise((resolve) => {
+      chrome.storage.sync.get("groups", (result) => {
+        resolve(result.groups);
+      });
+    });
+
+    var group_blocks = await promise;
 
     Object.values(group_blocks).forEach((item) => {
       // rectangle around the group
@@ -338,14 +335,8 @@ export default function App() {
 
           var title =
             tab.title.length > 75 ? tab.title.substr(0, 75) + "..." : tab.title;
-          try {
-            doc.addImage(tab.favIconUrl, x + 11, y - 4, 5, 5);
-          } catch (err) {
-            doc.addImage("./images/logo128.png", x + 11, y - 4, 5, 5);
-          }
-
           //prettier-ignore
-          doc.textWithLink(cleanString(title), x + 18, y, { url: tab.url });
+          doc.textWithLink(cleanString(title), index < 9 ? x + 11 : x + 13, y, { url: tab.url });
         });
       } else {
         doc.setTextColor("#000");
@@ -491,14 +482,14 @@ export default function App() {
                 </div>
               </button>
 
-              <a
+              <button
                 id="export-btn"
                 className="ml-4 btn btn-outline-info"
                 style={{
                   width: "45px",
                   height: "45px",
                 }}
-                href="\#"
+                type="button"
                 onClick={exportJSON}
               >
                 <div className="tip">
@@ -512,7 +503,7 @@ export default function App() {
                   />
                   <span className="tiptext">{translate("exportJSON")}</span>
                 </div>
-              </a>
+              </button>
 
               <div>
                 <label

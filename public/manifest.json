@@ -15,7 +15,7 @@
     "open_in_tab": true
   },
 
-  "permissions": ["tabs", "contextMenus"],
+  "permissions": ["tabs", "contextMenus", "storage"],
 
   "icons": {
     "128": "images/logo128.png",
