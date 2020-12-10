@@ -61,6 +61,13 @@ function getTabsAndSend(info, tab, group_id) {
       });
     });
 
+    // duplicates (already in TabMerger) can be removed
+    var duplicates = tabs.filter((x) => {
+      return filter_vals.includes(x.title) || filter_vals.includes(x.url);
+    });
+
+    chrome.tabs.remove(duplicates.map((x) => x.id));
+
     // apply above filter
     tabs = tabs.filter((x) => {
       return !filter_vals.includes(x.title) && !filter_vals.includes(x.url);
@@ -78,7 +85,7 @@ function getTabsAndSend(info, tab, group_id) {
       }
     });
 
-    // close duplicates
+    // close duplicates in the merging process
     indicies.forEach((i) => {
       chrome.tabs.remove(tabs[i].id);
     });

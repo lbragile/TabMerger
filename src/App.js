@@ -17,7 +17,7 @@ import { RiStarSFill } from "react-icons/ri";
 import jsPDF from "jspdf";
 
 export default function App() {
-  const defaultColor = useRef("#000000");
+  const defaultColor = useRef("#dedede");
   const defaultTitle = useRef("Title");
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
@@ -160,7 +160,7 @@ export default function App() {
     var settings_btn = document.getElementById("options-btn");
 
     var isChecked = e.target.checked;
-    container.style.background = isChecked ? "#06090F" : "white";
+    container.style.background = isChecked ? "#0d1117" : "white";
     container.style.color = isChecked ? "white" : "black";
     hr.style.borderTop = isChecked
       ? "1px white solid"

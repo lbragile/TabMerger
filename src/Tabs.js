@@ -6,7 +6,9 @@ import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
 
 export default function Tabs(props) {
-  const tab_title_length = useRef(100);
+  const TAB_TITLE_LENGTH = useRef(100);
+  const ITEM_STORAGE_LIMIT = useRef(7500);
+
   const [tabs, setTabs] = useState([]);
 
   useEffect(() => {
@@ -17,20 +19,21 @@ export default function Tabs(props) {
 
   useEffect(() => {
     const checkMerging = (changes, namespace) => {
-      if (namespace === "local" && changes.merged_tabs.newValue) {
-        chrome.storage.local.get(["into_group", "merged_tabs"], (local) => {
+      if (
+        namespace === "local" &&
+        changes.merged_tabs &&
+        changes.merged_tabs.newValue &&
+        changes.merged_tabs.newValue.length !== 0
+      ) {
+        console.log(changes.merged_tabs.newValue);
+        chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
           chrome.storage.sync.getBytesInUse("groups", (bytesInUse) => {
             // prettier-ignore
             var into_group = local.into_group, merged_tabs = local.merged_tabs;
             var num_bytes = bytesInUse + merged_tabs.length;
 
-            const storage_limit = 7800;
-
             console.log(num_bytes);
-            if (num_bytes < storage_limit) {
-              var total = document.querySelectorAll(".draggable").length;
-              props.setTabTotal(total + tabs.length);
-
+            if (num_bytes < ITEM_STORAGE_LIMIT.current) {
               // close tabs to avoid leaving some open
               chrome.tabs.remove(merged_tabs.map((x) => x.id));
 
@@ -48,6 +51,9 @@ export default function Tabs(props) {
                   }));
 
                   setTabs(tabs_arr);
+                  var total = document.querySelectorAll(".draggable").length;
+                  props.setTabTotal(total);
+
                   sync.groups[into_group].tabs = tabs_arr;
                   chrome.storage.sync.set({ groups: sync.groups }, () => {});
                 });
@@ -55,11 +61,11 @@ export default function Tabs(props) {
             } else {
               alert(
                 `Syncing capacity exceeded by ${
-                  num_bytes - storage_limit
+                  num_bytes - ITEM_STORAGE_LIMIT.current
                 } bytes.\n\nPlease do one of the following:
-  1. Create a new group and merge new tabs into it;
-  2. Remove some tabs from this group;
-  3. Merge less tabs into this group (each tab is ~100-300 bytes).`
+    1. Create a new group and merge new tabs into it;
+    2. Remove some tabs from this group;
+    3. Merge less tabs into this group (each tab is ~100-300 bytes).`
               );
             }
 
@@ -215,8 +221,8 @@ export default function Tabs(props) {
               onClick={(e) => keepOrRemoveTab(e)}
             >
               <span className="float-left">
-                {tab.title.length > tab_title_length.current
-                  ? tab.title.substring(0, tab_title_length.current) + "..."
+                {tab.title.length > TAB_TITLE_LENGTH.current
+                  ? tab.title.substring(0, TAB_TITLE_LENGTH.current) + "..."
                   : tab.title}
               </span>
             </a>
