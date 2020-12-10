@@ -24,7 +24,7 @@ export default function App() {
 
   useEffect(() => {
     // set dark mode if needed & assign default values to state variables
-    chrome.storage.sync.get(["settings", "groups"], (result) => {
+    chrome.storage.sync.get(null, (result) => {
       var json = { target: { checked: null } };
       var darkModeSwitch = document.getElementById("darkMode");
       darkModeSwitch.checked = result.settings.dark;
@@ -35,24 +35,26 @@ export default function App() {
       // state variables
       defaultColor.current = result.settings.color;
       defaultTitle.current = result.settings.title;
+      delete result.settings; // delete but do not update sync storage;
 
       var sum = 0;
-      Object.values(result.groups).forEach((x) => (sum += x.tabs.length));
+      Object.keys(result).forEach((key) => (sum += result[key].tabs.length));
+
       setTabTotal(sum);
-      setGroups(groupFormation(result.groups));
+      setGroups(groupFormation(result));
     });
   }, []);
 
-  const groupFormation = (group_blocks) => {
-    return Object.values(group_blocks).map((x, i) => {
-      var id = group_blocks ? "group-" + i : "group-0";
+  const groupFormation = (group_items) => {
+    return Object.values(group_items).map((x, i) => {
+      var id = "group-" + i;
       return (
         <Group
           id={id}
           className="group"
-          title={group_blocks ? x.title : defaultTitle.current}
-          color={group_blocks ? x.color : defaultColor.current}
-          created={group_blocks ? x.created : new Date(Date.now()).toString()}
+          title={x.title}
+          color={x.color}
+          created={x.created}
           key={Math.random()}
         >
           <Tabs setTabTotal={setTabTotal} id={id} />
@@ -70,6 +72,12 @@ export default function App() {
     });
 
     return "#" + hex.join("");
+  }
+
+  function updateGroupItem(name, value) {
+    var storage_entry = {};
+    storage_entry[name] = value;
+    chrome.storage.sync.set(storage_entry, () => {});
   }
 
   useEffect(() => {
@@ -97,7 +105,9 @@ export default function App() {
         ls_entry[group_blocks[i].id].tabs = tabs_entry;
       }
 
-      chrome.storage.sync.set({ groups: ls_entry });
+      Object.keys(ls_entry).forEach((key) => {
+        updateGroupItem(key, ls_entry[key]);
+      });
     }, 10);
   }, [groups]);
 
@@ -118,40 +128,38 @@ export default function App() {
   };
 
   function openAllTabs() {
-    var tab_links = document.querySelectorAll(".a-tab");
-    for (var i = 0; i < tab_links.length; i++) {
-      tab_links.item(i).click();
-      if (i === tab_links.length - 1) {
+    chrome.storage.sync.get("settings", (result) => {
+      var tab_links = document.querySelectorAll(".a-tab");
+      for (var i = 0; i < tab_links.length; i++) {
+        tab_links.item(i).click();
+      }
+
+      if (result.settings.restore !== "keep") {
         deleteAllGroups();
       }
-    }
+    });
   }
 
   function deleteAllGroups() {
     var default_group = {
-      "group-0": {
-        title: defaultTitle.current,
-        color: defaultColor.current,
-        created: new Date(Date.now()).toString(),
-        tabs: [],
-      },
+      title: defaultTitle.current,
+      color: defaultColor.current,
+      created: new Date(Date.now()).toString(),
+      tabs: [],
     };
 
-    chrome.storage.sync.set({ groups: default_group });
+    // clear all the groups (easiest by wiping sync and restoring the settings)
+    chrome.storage.sync.get("settings", (result) => {
+      chrome.storage.sync.clear(() => {
+        chrome.storage.sync.set({
+          "group-0": default_group,
+          settings: result.settings,
+        });
+      });
+    });
 
     setTabTotal(0);
-    setGroups([
-      <Group
-        id="group-0"
-        className="group"
-        title={defaultTitle.current}
-        color={defaultColor.current}
-        created={new Date(Date.now()).toString()}
-        key={Math.random()}
-      >
-        <Tabs setTabTotal={setTabTotal} id="group-0" />
-      </Group>,
-    ]);
+    window.location.reload();
   }
 
   function toggleDarkMode(e) {
@@ -189,18 +197,17 @@ export default function App() {
   }
 
   function groupFilter(e) {
-    chrome.storage.sync.get("groups", (result) => {
-      var group_titles = Object.values(result.groups).map((item) =>
-        item.title.toLowerCase()
-      );
-      group_titles.forEach((item, index) => {
-        if (item.indexOf(e.target.value.toLowerCase()) === -1) {
-          // prettier-ignore
-          document.querySelector("#group-" + index).parentNode.style.display = "none";
-        } else {
-          document.querySelector("#group-" + index).parentNode.style.display =
-            "";
+    chrome.storage.sync.get(null, (result) => {
+      var group_titles = Object.keys(result).map((key) => {
+        if (key !== "settings") {
+          return result[key].title.toLowerCase();
         }
+      });
+
+      group_titles.forEach((x, i) => {
+        var parent = document.querySelector("#group-" + i).parentNode;
+        var title_in_filter = x.indexOf(e.target.value.toLowerCase()) === -1;
+        parent.style.display = title_in_filter ? "none" : "";
       });
     });
   }
@@ -211,8 +218,10 @@ export default function App() {
       reader.readAsText(e.target.files[0]);
       reader.onload = () => {
         var fileContent = JSON.parse(reader.result);
-        chrome.storage.sync.set({ groups: fileContent.groups });
-        chrome.storage.sync.set({ settings: fileContent.settings });
+        Object.keys(fileContent).forEach((key) => {
+          updateGroupItem(key, fileContent[key]);
+        });
+
         window.location.reload();
       };
     } else {
@@ -225,15 +234,10 @@ export default function App() {
   const exportJSON = () => {
     setGroups(groups);
 
-    chrome.storage.sync.get(["settings", "groups"], (result) => {
+    chrome.storage.sync.get(null, (result) => {
       var dataStr =
         "data:text/json;charset=utf-8," +
-        encodeURIComponent(
-          JSON.stringify({
-            groups: result.groups,
-            settings: result.settings,
-          })
-        );
+        encodeURIComponent(JSON.stringify(result));
 
       var anchor = document.createElement("a");
       anchor.setAttribute("href", dataStr);
@@ -289,13 +293,11 @@ export default function App() {
     doc.setTextColor("000");
     doc.text(tabTotal + " tabs in total", x - 5, y);
 
-    var promise = new Promise((resolve) => {
-      chrome.storage.sync.get("groups", (result) => {
-        resolve(result.groups);
+    var group_blocks = await new Promise((resolve) => {
+      chrome.storage.sync.get(null, (result) => {
+        resolve(result);
       });
     });
-
-    var group_blocks = await promise;
 
     Object.values(group_blocks).forEach((item) => {
       // rectangle around the group

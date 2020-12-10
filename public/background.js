@@ -53,9 +53,12 @@ function getTabsAndSend(info, tab, group_id) {
     // get a list of all the current tab titles and/or urls
     var filter_vals = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
     await new Promise((resolve) => {
-      chrome.storage.sync.get("groups", (result) => {
-        Object.values(result.groups).forEach((item) => {
-          filter_vals = filter_vals.concat(item.tabs.map((x) => x.url));
+      chrome.storage.sync.get(null, (result) => {
+        Object.keys(result).forEach((key) => {
+          if (key !== "settings") {
+            var extra_vals = result[key].tabs.map((x) => x.url);
+            filter_vals = filter_vals.concat(extra_vals);
+          }
         });
         resolve(0);
       });
@@ -132,6 +135,7 @@ function excludeSite(info, tab) {
 }
 
 function createDefaultStorageItems() {
+  // sometimes need to quickly reset sync storage
   // chrome.storage.sync.clear();
 
   var default_settings = {
@@ -143,22 +147,20 @@ function createDefaultStorageItems() {
     dark: true,
   };
 
-  var default_groups = {
-    "group-0": {
-      title: "Title",
-      color: "#dedede",
-      created: new Date(Date.now()).toString(),
-      tabs: [],
-    },
+  var default_group = {
+    title: "Title",
+    color: "#dedede",
+    created: new Date(Date.now()).toString(),
+    tabs: [],
   };
 
-  chrome.storage.sync.get(["settings", "groups"], (result) => {
+  chrome.storage.sync.get(["settings", "groups-0"], (result) => {
     if (!result.settings) {
       chrome.storage.sync.set({ settings: default_settings });
     }
 
-    if (!result.groups) {
-      chrome.storage.sync.set({ groups: default_groups });
+    if (!result["group-0"]) {
+      chrome.storage.sync.set({ "group-0": default_group });
     }
   });
 }

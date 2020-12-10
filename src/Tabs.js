@@ -11,9 +11,15 @@ export default function Tabs(props) {
 
   const [tabs, setTabs] = useState([]);
 
+  function updateGroupItem(name, value) {
+    var storage_entry = {};
+    storage_entry[name] = value;
+    chrome.storage.sync.set(storage_entry, () => {});
+  }
+
   useEffect(() => {
-    chrome.storage.sync.get("groups", (result) => {
-      setTabs(result.groups[props.id] ? result.groups[props.id].tabs : []);
+    chrome.storage.sync.get(props.id, (result) => {
+      setTabs(result[props.id] ? result[props.id].tabs : []);
     });
   }, []);
 
@@ -39,11 +45,8 @@ export default function Tabs(props) {
 
               // store relevant details of combined tabs (only if group matches id)
               if (props.id === into_group) {
-                chrome.storage.sync.get("groups", (sync) => {
-                  var tabs_arr = [
-                    ...sync.groups[into_group].tabs,
-                    ...merged_tabs,
-                  ];
+                chrome.storage.sync.get(props.id, (sync) => {
+                  var tabs_arr = [...sync[props.id].tabs, ...merged_tabs];
                   tabs_arr = tabs_arr.map((item) => ({
                     url: item.url,
                     favIconUrl: item.favIconUrl,
@@ -54,8 +57,8 @@ export default function Tabs(props) {
                   var total = document.querySelectorAll(".draggable").length;
                   props.setTabTotal(total);
 
-                  sync.groups[into_group].tabs = tabs_arr;
-                  chrome.storage.sync.set({ groups: sync.groups }, () => {});
+                  sync[props.id].tabs = tabs_arr;
+                  updateGroupItem(props.id, sync[props.id]);
                 });
               }
             } else {
@@ -69,6 +72,8 @@ export default function Tabs(props) {
               );
             }
 
+            // remove to be able to detect changes again
+            // (even if same tabs are needed to be merged)
             chrome.storage.local.remove(["into_group", "merged_tabs"]);
           });
         });
@@ -89,9 +94,9 @@ export default function Tabs(props) {
     props.setTabTotal(tabs_arr.length);
 
     //update groups
-    chrome.storage.sync.get("groups", (result) => {
-      result.groups[props.id].tabs = tabs_arr;
-      chrome.storage.sync.set({ groups: result.groups }, () => {});
+    chrome.storage.sync.get(props.id, (result) => {
+      result[props.id].tabs = tabs_arr;
+      updateGroupItem(props.id, result[props.id]);
     });
   }
 
@@ -146,18 +151,16 @@ export default function Tabs(props) {
     const origin_id = drag_origin.id;
 
     // update localStorage
-    chrome.storage.sync.get("groups", (result) => {
+    chrome.storage.sync.get([origin_id, closest_group.id], (result) => {
       if (origin_id !== closest_group.id) {
         // remove tab from group that originated the drag
-        result.groups[origin_id].tabs = result.groups[origin_id].tabs.filter(
-          (group_tab) => {
-            return group_tab.url !== tab.lastChild.href;
-          }
-        );
+        result[origin_id].tabs = result[origin_id].tabs.filter((group_tab) => {
+          return group_tab.url !== tab.lastChild.href;
+        });
       }
 
       // reorder tabs based on current positions
-      result.groups[closest_group.id].tabs = [
+      result[closest_group.id].tabs = [
         ...closest_group.lastChild.querySelectorAll("div"),
       ].map((item) => {
         return {
@@ -167,7 +170,8 @@ export default function Tabs(props) {
         };
       });
 
-      chrome.storage.sync.set({ groups: result.groups });
+      updateGroupItem(origin_id, result[origin_id]);
+      updateGroupItem(closest_group.id, result[closest_group.id]);
       window.location.reload();
     });
   };

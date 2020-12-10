@@ -25,16 +25,23 @@ export default function Group(props) {
     backgroundColor(colorRef.current);
   }, []);
 
+  function updateGroupItem(name, value) {
+    var storage_entry = {};
+    storage_entry[name] = value;
+    chrome.storage.sync.set(storage_entry, () => {});
+  }
+
   function handleTitleChange(val) {
-    chrome.storage.sync.get("groups", (result) => {
+    chrome.storage.sync.get(props.id, (result) => {
       if (val.length < 15) {
-        result.groups[props.id].title = val;
+        result[props.id].title = val;
       } else {
         alert("Titles must be less than 15 characters long!");
-        result.groups[props.id].title = title;
+        result[props.id].title = title;
       }
-      chrome.storage.sync.set({ groups: result.groups });
-      setTitle(result.groups[props.id].title);
+
+      updateGroupItem(props.id, result[props.id]);
+      setTitle(result[props.id].title);
 
       if (val.length >= 15) {
         window.location.reload();
@@ -45,9 +52,9 @@ export default function Group(props) {
   function handleColorChange(e) {
     backgroundColor(e.target);
 
-    chrome.storage.sync.get("groups", (result) => {
-      result.groups[props.id].color = e.target.value;
-      chrome.storage.sync.set({ groups: result.groups });
+    chrome.storage.sync.get(props.id, (result) => {
+      result[props.id].color = e.target.value;
+      updateGroupItem(props.id, result[props.id]);
     });
   }
 
@@ -83,41 +90,72 @@ export default function Group(props) {
   }
 
   function openAllTabsInGroup(e) {
-    var closest_group = e.target.closest(".group");
-    var tab_links = closest_group.querySelectorAll(".a-tab");
-    console.log(tab_links);
-    for (var i = 0; i < tab_links.length; i++) {
-      tab_links.item(i).click();
-      if (i === tab_links.length - 1) {
-        setTimeout(() => {
-          deleteGroup(e);
-        }, 100);
+    chrome.storage.sync.get("settings", (result) => {
+      var target = e.target.closest(".group");
+      var tab_links = target.querySelectorAll(".a-tab");
+      for (var i = 0; i < tab_links.length; i++) {
+        tab_links.item(i).click();
       }
-    }
+
+      if (result.settings.restore !== "keep") {
+        deleteGroup(e);
+      }
+    });
   }
 
-  async function deleteGroup(e) {
-    chrome.storage.sync.get(["groups", "settings"], (result) => {
-      var closest_group = e.target.closest(".group");
-      delete result.groups[closest_group.id];
+  function deleteGroup(e) {
+    var target = e.target.closest(".group");
 
-      // must rename all keys properly
-      var new_groups = {};
-      if (Object.values(result.groups).length > 0) {
-        Object.values(result.groups).forEach((value, index) => {
-          new_groups["group-" + index] = value;
-        });
-      } else {
-        new_groups["group-0"] = {
-          title: result.settings.title,
-          color: result.settings.color,
-          created: new Date(Date.now()).toString(),
-          tabs: [],
-        };
-      }
+    // must rename all keys for the groups above deleted group item
+    // (pass null to get all items - including settings)
+    chrome.storage.sync.remove(target.id, () => {
+      chrome.storage.sync.get(null, (result) => {
+        // if removed the only existing group -> settings is left
+        if (Object.keys(result).length === 1) {
+          result["group-0"] = {
+            title: result.settings.title,
+            color: result.settings.color,
+            created: new Date(Date.now()).toString(),
+            tabs: [],
+          };
+        } else {
+          var group_names = []; // need to change these
+          var index_deleted = target.id.charAt(target.id.length - 1);
+          Object.keys(result).forEach((key) => {
+            if (
+              key !== "settings" &&
+              parseInt(key.charAt(key.length - 1)) > parseInt(index_deleted)
+            ) {
+              console.log(
+                parseInt(key.charAt(key.length - 1)),
+                parseInt(index_deleted),
+                "index"
+              );
+              group_names.push(key);
+            }
+          });
 
-      chrome.storage.sync.set({ groups: new_groups });
-      window.location.reload();
+          // perform the renaming of items
+          var result_str = JSON.stringify(result);
+
+          group_names.forEach((key) => {
+            var new_index = parseInt(key.charAt(key.length - 1)) - 1;
+            result_str = result_str.replace(key, "group-" + new_index);
+          });
+
+          // get back json object with new item key names
+          result = JSON.parse(result_str);
+
+          // easiest to clear all the items and restore the values as needed
+          chrome.storage.sync.clear(() => {
+            Object.keys(result).forEach((key) => {
+              updateGroupItem(key, result[key]);
+            });
+
+            window.location.reload();
+          });
+        }
+      });
     });
   }
 
