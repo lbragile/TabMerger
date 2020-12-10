@@ -83,23 +83,23 @@ export default function Group(props) {
   }
 
   function openAllTabsInGroup(e) {
-    var tabs = e.target
-      .closest(".group")
-      .querySelectorAll("div[draggable='true']");
-    [...tabs].forEach((tab) => {
-      tab.querySelector("a").click();
-    });
-
-    chrome.storage.sync.get("settings", (result) => {
-      if (result.settings.restore !== "keep") {
-        deleteGroup(e);
+    var closest_group = e.target.closest(".group");
+    var tab_links = closest_group.querySelectorAll(".a-tab");
+    console.log(tab_links);
+    for (var i = 0; i < tab_links.length; i++) {
+      tab_links.item(i).click();
+      if (i === tab_links.length - 1) {
+        setTimeout(() => {
+          deleteGroup(e);
+        }, 100);
       }
-    });
+    }
   }
 
-  function deleteGroup(e) {
+  async function deleteGroup(e) {
     chrome.storage.sync.get(["groups", "settings"], (result) => {
-      delete result.groups[e.target.closest(".group").id];
+      var closest_group = e.target.closest(".group");
+      delete result.groups[closest_group.id];
 
       // must rename all keys properly
       var new_groups = {};
@@ -197,7 +197,7 @@ export default function Group(props) {
       </div>
 
       <div id={props.id} className={props.className} onDragOver={dragOver}>
-        <table className="mr-4 mt-2 float-right">
+        <table className="mr-3 mt-1 float-right">
           <tr className="row">
             <td className="d-flex flex-row">
               <button

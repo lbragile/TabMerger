@@ -1,5 +1,5 @@
 function getTabsAndSend(info, tab, group_id) {
-  chrome.tabs.query({ currentWindow: true }, (tabs) => {
+  chrome.tabs.query({ currentWindow: true }, async (tabs) => {
     switch (info.which) {
       case "right":
         tabs = tabs.filter(
@@ -29,40 +29,68 @@ function getTabsAndSend(info, tab, group_id) {
     }
 
     // apply blacklist items
-    chrome.storage.sync.get("settings", (result) => {
-      tabs = tabs.filter((item) => {
-        var blacklist_sites = result.settings.blacklist
-          .replace(" ", "")
-          .split(",");
-        blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
-        return !blacklist_sites.includes(item.url);
+    await new Promise((resolve) => {
+      chrome.storage.sync.get("settings", (result) => {
+        tabs = tabs.filter((item) => {
+          var blacklist_sites = result.settings.blacklist
+            .replace(" ", "")
+            .split(",");
+          blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
+          return !blacklist_sites.includes(item.url);
+        });
+        resolve(tabs);
       });
     });
 
     findExtTabAndSwitch();
 
-    // ===== FILTERING for tab total counts ====== //
-    // get a list of all the current tab titles
-    var tab_titles = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
-    chrome.storage.sync.get("groups", (result) => {
-      Object.values(result.groups).forEach((item) => {
-        var groups_tab_titles = item.tabs.map((curr_tab) => curr_tab.title);
-        tab_titles = tab_titles.concat(groups_tab_titles);
+    // ===== FILTERING ====== //
+    // remove unnecessary information from each tab
+    tabs = tabs.map((x) => {
+      return { title: x.title, favIconUrl: x.favIconUrl, url: x.url, id: x.id };
+    });
+
+    // get a list of all the current tab titles and/or urls
+    var filter_vals = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
+    await new Promise((resolve) => {
+      chrome.storage.sync.get("groups", (result) => {
+        Object.values(result.groups).forEach((item) => {
+          filter_vals = filter_vals.concat(item.tabs.map((x) => x.url));
+        });
+        resolve(0);
       });
     });
 
-    tabs = tabs.filter((item) => {
-      return !tab_titles.includes(item.title);
+    // apply above filter
+    tabs = tabs.filter((x) => {
+      return !filter_vals.includes(x.title) && !filter_vals.includes(x.url);
     });
+
+    // make sure original merge has no duplicated values
+    // obtain offending indicies
+    // prettier-ignore
+    var prev_urls = [], indicies = [];
+    tabs.forEach((x, i) => {
+      if (prev_urls.includes(x.url)) {
+        indicies.push(i);
+      } else {
+        prev_urls.push(x.url);
+      }
+    });
+
+    // close duplicates
+    indicies.forEach((i) => {
+      chrome.tabs.remove(tabs[i].id);
+    });
+
+    // filter out offending indicies
+    tabs = tabs.filter((x, i) => !indicies.includes(i));
 
     // need time to open page sometimes
     setTimeout(
       () => {
-        window.localStorage.setItem(
-          "into_group",
-          group_id ? group_id : "group-0"
-        );
-        window.localStorage.setItem("merged_tabs", JSON.stringify(tabs));
+        var whichGroup = group_id ? group_id : "group-0";
+        chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
       },
       /chrome/i.test(navigator.userAgent) ? 50 : 200
     );

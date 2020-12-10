@@ -40,7 +40,7 @@ function restoreOptions() {
     document.getElementById("options-blacklist").value = settings.blacklist;
 
     // dark mode adjustments
-    body.style.background = settings.dark ? "#343a40" : "white";
+    body.style.background = settings.dark ? "#06090F" : "white";
     body.style.color = settings.dark ? "white" : "black";
     hr.style.borderTop = settings.dark
       ? "1px white solid"

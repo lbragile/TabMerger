@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import "./Tabs.css";
 
@@ -15,88 +15,105 @@ export default function Tabs(props) {
     });
   }, []);
 
-  const mergeEvent = useCallback(() => {
-    // skip groups which merging doesn't apply to
-    if (props.id === window.localStorage.getItem("into_group")) {
-      var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
-
-      // remove local storage items that are no longer needed
-      window.localStorage.removeItem("merged_tabs");
-      window.localStorage.removeItem("into_group");
-
-      // store relevant details of combined tabs
-      chrome.storage.sync.get("groups", (result) => {
-        var tabs_arr = [...result.groups[props.id].tabs, ...merged_tabs];
-        tabs_arr = tabs_arr.map((item) => ({
-          url: item.url,
-          favIconUrl: item.favIconUrl,
-          title: item.title,
-        }));
-
-        setTabs(tabs_arr);
-        result.groups[props.id].tabs = tabs_arr;
-        chrome.storage.sync.set({ groups: result.groups });
-      });
-    }
-  }, [props.id]);
-
   useEffect(() => {
-    const checkMerging = (e) => {
-      if (e.key === "merged_tabs") {
-        // prettier-ignore
-        var merged_tabs = JSON.parse(window.localStorage.getItem("merged_tabs"));
+    const checkMerging = (changes, namespace) => {
+      if (namespace === "local" && changes.merged_tabs.newValue) {
+        chrome.storage.local.get(["into_group", "merged_tabs"], (local) => {
+          chrome.storage.sync.getBytesInUse("groups", (bytesInUse) => {
+            // prettier-ignore
+            var into_group = local.into_group, merged_tabs = local.merged_tabs;
+            var num_bytes = bytesInUse + merged_tabs.length;
 
-        chrome.storage.sync.getBytesInUse("groups", (bytesInUse) => {
-          var num_bytes = bytesInUse + JSON.stringify(merged_tabs).length;
-          console.log(num_bytes);
-          if (num_bytes < 8192) {
-            // close the to-be-merged tabs
-            chrome.tabs.remove(merged_tabs.map((x) => x.id));
+            const storage_limit = 7800;
 
-            var total = document.querySelectorAll(".draggable").length;
-            props.setTabTotal(total + merged_tabs.length);
-            mergeEvent();
-          } else {
-            // remove local storage items to allow merging same tabs again
-            window.localStorage.removeItem("merged_tabs");
-            window.localStorage.removeItem("into_group");
+            console.log(num_bytes);
+            if (num_bytes < storage_limit) {
+              var total = document.querySelectorAll(".draggable").length;
+              props.setTabTotal(total + tabs.length);
 
-            alert(
-              `Syncing capacity exceeded by ${
-                num_bytes - 8192
-              } bytes.\n\nPlease do one of the following:
-1. Create a new group and merge new tabs into it;
-2. Remove some tabs from this group;
-3. Merge less tabs into this group (each tab is ~100-400 bytes).`
-            );
-          }
+              // close tabs to avoid leaving some open
+              chrome.tabs.remove(merged_tabs.map((x) => x.id));
+
+              // store relevant details of combined tabs (only if group matches id)
+              if (props.id === into_group) {
+                chrome.storage.sync.get("groups", (sync) => {
+                  var tabs_arr = [
+                    ...sync.groups[into_group].tabs,
+                    ...merged_tabs,
+                  ];
+                  tabs_arr = tabs_arr.map((item) => ({
+                    url: item.url,
+                    favIconUrl: item.favIconUrl,
+                    title: item.title,
+                  }));
+
+                  setTabs(tabs_arr);
+                  sync.groups[into_group].tabs = tabs_arr;
+                  chrome.storage.sync.set({ groups: sync.groups }, () => {});
+                });
+              }
+            } else {
+              alert(
+                `Syncing capacity exceeded by ${
+                  num_bytes - storage_limit
+                } bytes.\n\nPlease do one of the following:
+  1. Create a new group and merge new tabs into it;
+  2. Remove some tabs from this group;
+  3. Merge less tabs into this group (each tab is ~100-300 bytes).`
+              );
+            }
+
+            chrome.storage.local.remove(["into_group", "merged_tabs"]);
+          });
         });
       }
     };
 
-    window.addEventListener("storage", checkMerging);
+    chrome.storage.onChanged.addListener(checkMerging);
 
     return () => {
-      window.removeEventListener("storage", checkMerging);
+      chrome.storage.onChanged.removeListener(checkMerging);
     };
-  }, [mergeEvent, props]);
+  }, []);
 
   function removeTab(e) {
     var url = e.target.closest("div").querySelector("a").href;
-    var tabs_arr = tabs;
-    tabs_arr = tabs_arr.filter((item) => item.url !== url);
+    var tabs_arr = tabs.filter((item) => item.url !== url);
     setTabs(tabs_arr);
+    props.setTabTotal(tabs_arr.length);
 
     //update groups
     chrome.storage.sync.get("groups", (result) => {
       result.groups[props.id].tabs = tabs_arr;
-      chrome.storage.sync.set({ groups: result.groups });
+      chrome.storage.sync.set({ groups: result.groups }, () => {});
     });
-
-    props.setTabTotal(document.querySelectorAll(".draggable").length - 1);
   }
 
-  function keepOrRemoveTab(e) {
+  async function keepOrRemoveTab(e) {
+    e.preventDefault(); // stop from opening new tab
+    // try to not open tabs if it is already open
+    await new Promise((resolve) => {
+      chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
+        var tab_url = e.target.href;
+        var same_tab = windowTabs.filter((x) => x.url === tab_url);
+        if (same_tab[0]) {
+          chrome.tabs.update(
+            same_tab[0].id,
+            {
+              highlighted: true,
+              active: true,
+            },
+            (tab) => {
+              chrome.tabs.move(tab.id, { index: -1 });
+            }
+          );
+        } else {
+          chrome.tabs.create({ url: tab_url, active: true });
+        }
+        resolve(0);
+      });
+    });
+
     chrome.storage.sync.get("settings", (result) => {
       if (result.settings.restore !== "keep") {
         removeTab(e);
@@ -155,7 +172,7 @@ export default function Tabs(props) {
 
   return (
     <div className="d-flex flex-column mx-0">
-      <h5 className="tabTotal-inGroup my-2">
+      <h5 className="tabTotal-inGroup mt-1 mb-3">
         {tabs.length}{" "}
         {tabs.length === 1
           ? translate("groupTotalSingular")

@@ -15,10 +15,6 @@
 }
 
 .groups-container {
-  height: 750px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 5px;
   margin-top: 15px;
 }
 
@@ -192,6 +188,14 @@ hr {
 
 .global-btn {
   width: 80% !important;
+}
+
+#side-panel {
+  position: fixed;
+  top: 50%;
+  right: 2%;
+  transform: translateY(-50%);
+  width: 30%;
 }
 
 #video-demo {

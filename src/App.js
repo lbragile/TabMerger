@@ -107,10 +107,10 @@ export default function App() {
       <Group
         id={"group-" + groups.length}
         className="group"
-        key={Math.random()}
         color={defaultColor.current}
         title={defaultTitle.current}
         created={new Date(Date.now()).toString()}
+        key={Math.random()}
       >
         <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
       </Group>,
@@ -118,16 +118,13 @@ export default function App() {
   };
 
   function openAllTabs() {
-    var tabs = document.querySelectorAll(".draggable");
-    tabs.forEach((tab) => {
-      tab.querySelector("a").click();
-    });
-
-    chrome.storage.sync.get("settings", (result) => {
-      if (result.settings.restore !== "keep") {
-        document.querySelector("#delete-all-btn").click();
+    var tab_links = document.querySelectorAll(".a-tab");
+    for (var i = 0; i < tab_links.length; i++) {
+      tab_links.item(i).click();
+      if (i === tab_links.length - 1) {
+        deleteAllGroups();
       }
-    });
+    }
   }
 
   function deleteAllGroups() {
@@ -163,7 +160,7 @@ export default function App() {
     var settings_btn = document.getElementById("options-btn");
 
     var isChecked = e.target.checked;
-    container.style.background = isChecked ? "#343a40" : "white";
+    container.style.background = isChecked ? "#06090F" : "white";
     container.style.color = isChecked ? "white" : "black";
     hr.style.borderTop = isChecked
       ? "1px white solid"
@@ -581,7 +578,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="col-lg-4 float-right my-auto">
+        <div className="col-lg-4">
           <div class="d-flex flex-column align-items-center" id="side-panel">
             <a
               href="https://tabmerger.herokuapp.com/"
