@@ -31,7 +31,6 @@ export default function Tabs(props) {
         changes.merged_tabs.newValue &&
         changes.merged_tabs.newValue.length !== 0
       ) {
-        console.log(changes.merged_tabs.newValue);
         chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
           chrome.storage.sync.getBytesInUse("groups", (bytesInUse) => {
             // prettier-ignore
@@ -87,51 +86,6 @@ export default function Tabs(props) {
     };
   }, []);
 
-  function removeTab(e) {
-    var url = e.target.closest("div").querySelector("a").href;
-    var tabs_arr = tabs.filter((item) => item.url !== url);
-    setTabs(tabs_arr);
-    props.setTabTotal(tabs_arr.length);
-
-    //update groups
-    chrome.storage.sync.get(props.id, (result) => {
-      result[props.id].tabs = tabs_arr;
-      updateGroupItem(props.id, result[props.id]);
-    });
-  }
-
-  async function keepOrRemoveTab(e) {
-    e.preventDefault(); // stop from opening new tab
-    // try to not open tabs if it is already open
-    await new Promise((resolve) => {
-      chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
-        var tab_url = e.target.href;
-        var same_tab = windowTabs.filter((x) => x.url === tab_url);
-        if (same_tab[0]) {
-          chrome.tabs.update(
-            same_tab[0].id,
-            {
-              highlighted: true,
-              active: true,
-            },
-            (tab) => {
-              chrome.tabs.move(tab.id, { index: -1 });
-            }
-          );
-        } else {
-          chrome.tabs.create({ url: tab_url, active: true });
-        }
-        resolve(0);
-      });
-    });
-
-    chrome.storage.sync.get("settings", (result) => {
-      if (result.settings.restore !== "keep") {
-        removeTab(e);
-      }
-    });
-  }
-
   const dragStart = (e) => {
     var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
     target.classList.add("dragging");
@@ -175,6 +129,19 @@ export default function Tabs(props) {
       window.location.reload();
     });
   };
+
+  function removeTab(e) {
+    var tab = e.target.closest(".draggable");
+    var url = tab.querySelector("a").href;
+    var group = tab.closest(".group");
+
+    chrome.storage.sync.get(group.id, (result) => {
+      result[group.id].tabs = tabs.filter((x) => x.url != url);
+      updateGroupItem(group.id, result[group.id]);
+      setTabs(result[group.id].tabs);
+      props.setTabTotal(document.querySelectorAll(".draggable").length);
+    });
+  }
 
   function translate(msg) {
     return chrome.i18n.getMessage(msg);
@@ -222,7 +189,14 @@ export default function Tabs(props) {
               target="_blank"
               rel="noreferrer"
               draggable={false}
-              onClick={(e) => keepOrRemoveTab(e)}
+              onClick={(e) => {
+                e.preventDefault();
+                var tab =
+                  e.target.tagName === "SPAN" ? e.target.parentNode : e.target;
+                chrome.storage.local.set({
+                  remove: [tab.href],
+                });
+              }}
             >
               <span className="float-left">
                 {tab.title.length > TAB_TITLE_LENGTH.current

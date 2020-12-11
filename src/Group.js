@@ -90,17 +90,9 @@ export default function Group(props) {
   }
 
   function openAllTabsInGroup(e) {
-    chrome.storage.sync.get("settings", (result) => {
-      var target = e.target.closest(".group");
-      var tab_links = target.querySelectorAll(".a-tab");
-      for (var i = 0; i < tab_links.length; i++) {
-        tab_links.item(i).click();
-      }
-
-      if (result.settings.restore !== "keep") {
-        deleteGroup(e);
-      }
-    });
+    var target = e.target.closest(".group");
+    var tab_links = [...target.querySelectorAll(".a-tab")].map((x) => x.href);
+    chrome.storage.local.set({ remove: tab_links });
   }
 
   function deleteGroup(e) {
@@ -145,16 +137,16 @@ export default function Group(props) {
 
           // get back json object with new item key names
           result = JSON.parse(result_str);
-
-          // easiest to clear all the items and restore the values as needed
-          chrome.storage.sync.clear(() => {
-            Object.keys(result).forEach((key) => {
-              updateGroupItem(key, result[key]);
-            });
-
-            window.location.reload();
-          });
         }
+
+        // easiest to clear all the items and restore the values as needed
+        chrome.storage.sync.clear(() => {
+          Object.keys(result).forEach((key) => {
+            updateGroupItem(key, result[key]);
+          });
+
+          window.location.reload();
+        });
       });
     });
   }

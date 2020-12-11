@@ -136,6 +136,7 @@ function excludeSite(info, tab) {
 
 function createDefaultStorageItems() {
   // sometimes need to quickly reset sync storage
+  // chrome.storage.local.clear();
   // chrome.storage.sync.clear();
 
   var default_settings = {
@@ -154,7 +155,7 @@ function createDefaultStorageItems() {
     tabs: [],
   };
 
-  chrome.storage.sync.get(["settings", "groups-0"], (result) => {
+  chrome.storage.sync.get(["settings", "group-0"], (result) => {
     if (!result.settings) {
       chrome.storage.sync.set({ settings: default_settings });
     }

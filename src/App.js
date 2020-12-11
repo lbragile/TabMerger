@@ -63,6 +63,57 @@ export default function App() {
     });
   };
 
+  useEffect(() => {
+    const removeTabs = (changes, namespace) => {
+      if (namespace === "local" && changes.remove && changes.remove.newValue) {
+        // try to not open tabs if it is already open
+        chrome.tabs.query({ currentWindow: true }, async (windowTabs) => {
+          for (var i = 0; i < changes.remove.newValue.length; i++) {
+            var tab_url = changes.remove.newValue[i];
+            var same_tab = windowTabs.filter((x) => x.url === tab_url);
+            if (same_tab[0]) {
+              chrome.tabs.update(
+                same_tab[0].id,
+                {
+                  highlighted: true,
+                  active: true,
+                },
+                (tab) => {
+                  chrome.tabs.move(tab.id, { index: -1 });
+                }
+              );
+            } else {
+              chrome.tabs.create({ url: tab_url, active: true });
+            }
+
+            // remove tab if needed
+            await new Promise((resolve) => {
+              chrome.storage.sync.get("settings", (result) => {
+                if (result.settings.restore !== "keep") {
+                  var elem = document.querySelector(
+                    `.draggable a[href='${tab_url}']`
+                  );
+
+                  // click on the x button for this tab
+                  elem.parentNode.querySelector(".close-tab").click();
+                }
+                resolve(0);
+              });
+            });
+          }
+        });
+      }
+
+      chrome.storage.local.remove("remove");
+    };
+
+    chrome.storage.onChanged.addListener(removeTabs);
+
+    return () => {
+      chrome.storage.onChanged.removeListener(removeTabs);
+    };
+  }, []);
+
   // https://stackoverflow.com/a/5624139/4298115
   function rgb2hex(input) {
     var rgb = input.substr(4).replace(")", "").split(",");
@@ -127,17 +178,9 @@ export default function App() {
     ]);
   };
 
-  function openAllTabs() {
-    chrome.storage.sync.get("settings", (result) => {
-      var tab_links = document.querySelectorAll(".a-tab");
-      for (var i = 0; i < tab_links.length; i++) {
-        tab_links.item(i).click();
-      }
-
-      if (result.settings.restore !== "keep") {
-        deleteAllGroups();
-      }
-    });
+  async function openAllTabs() {
+    var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+    chrome.storage.local.set({ remove: tab_links });
   }
 
   function deleteAllGroups() {
@@ -168,7 +211,7 @@ export default function App() {
     var settings_btn = document.getElementById("options-btn");
 
     var isChecked = e.target.checked;
-    container.style.background = isChecked ? "#0d1117" : "white";
+    container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
     container.style.color = isChecked ? "white" : "black";
     hr.style.borderTop = isChecked
       ? "1px white solid"
@@ -187,28 +230,20 @@ export default function App() {
     var tabs = document.querySelectorAll(".draggable > a");
 
     var tab_titles = [...tabs].map((item) => item.innerText.toLowerCase());
-    tab_titles.forEach((item, index) => {
-      if (item.indexOf(e.target.value.toLowerCase()) === -1) {
-        tabs[index].parentNode.style.display = "none";
-      } else {
-        tabs[index].parentNode.style.display = "";
-      }
+    tab_titles.forEach((x, index) => {
+      var title_match = x.indexOf(e.target.value.toLowerCase()) === -1;
+      tabs[index].parentNode.style.display = title_match ? "none" : "";
     });
   }
 
   function groupFilter(e) {
-    chrome.storage.sync.get(null, (result) => {
-      var group_titles = Object.keys(result).map((key) => {
-        if (key !== "settings") {
-          return result[key].title.toLowerCase();
-        }
-      });
+    var group_section = document.querySelectorAll("div[editext='view']");
 
-      group_titles.forEach((x, i) => {
-        var parent = document.querySelector("#group-" + i).parentNode;
-        var title_in_filter = x.indexOf(e.target.value.toLowerCase()) === -1;
-        parent.style.display = title_in_filter ? "none" : "";
-      });
+    var group_titles = [...group_section].map((x) => x.innerText.toLowerCase());
+    group_titles.forEach((x, i) => {
+      var parent = group_section[i].closest(".group-title").parentNode;
+      var title_in_filter = x.indexOf(e.target.value.toLowerCase()) === -1;
+      parent.style.display = title_in_filter ? "none" : "";
     });
   }
 
@@ -295,6 +330,7 @@ export default function App() {
 
     var group_blocks = await new Promise((resolve) => {
       chrome.storage.sync.get(null, (result) => {
+        delete result.settings;
         resolve(result);
       });
     });
