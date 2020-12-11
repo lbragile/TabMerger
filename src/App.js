@@ -17,6 +17,9 @@ import { RiStarSFill } from "react-icons/ri";
 import jsPDF from "jspdf";
 
 export default function App() {
+  const ITEM_STORAGE_LIMIT = useRef(300);
+  const SYNC_STORAGE_LIMIT = useRef(1000);
+
   const defaultColor = useRef("#dedede");
   const defaultTitle = useRef("Title");
   const [tabTotal, setTabTotal] = useState(0);
@@ -111,6 +114,88 @@ export default function App() {
 
     return () => {
       chrome.storage.onChanged.removeListener(removeTabs);
+    };
+  }, []);
+
+  useEffect(() => {
+    const checkMerging = (changes, namespace) => {
+      if (
+        namespace === "local" &&
+        changes.merged_tabs &&
+        changes.merged_tabs.newValue &&
+        changes.merged_tabs.newValue.length !== 0
+      ) {
+        chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
+          // prettier-ignore
+          var into_group = local.into_group, merged_tabs = local.merged_tabs;
+          chrome.storage.sync.getBytesInUse(null, (syncBytesInUse) => {
+            var sync_bytes = syncBytesInUse + merged_tabs.length;
+
+            console.log(sync_bytes, "sync bytes");
+            if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
+              chrome.storage.sync.getBytesInUse(
+                into_group,
+                (itemBytesInUse) => {
+                  var item_bytes = itemBytesInUse + merged_tabs.length;
+
+                  console.log(item_bytes, into_group + " bytes");
+                  if (item_bytes < ITEM_STORAGE_LIMIT.current) {
+                    // close tabs to avoid leaving some open
+                    chrome.tabs.remove(merged_tabs.map((x) => x.id));
+
+                    chrome.storage.sync.get(null, (sync) => {
+                      delete sync.settings;
+
+                      var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
+                      tabs_arr = tabs_arr.map((item) => ({
+                        url: item.url,
+                        favIconUrl: item.favIconUrl,
+                        title: item.title,
+                      }));
+
+                      var current = document.querySelectorAll(".draggable");
+                      setTabTotal(current.length + merged_tabs.length);
+
+                      sync[into_group].tabs = tabs_arr;
+                      updateGroupItem(into_group, sync[into_group]);
+                      setGroups(groupFormation(sync));
+                    });
+                  } else {
+                    alert(
+                      `Group's syncing capacity exceeded by ${
+                        item_bytes - ITEM_STORAGE_LIMIT.current
+                      } bytes.\n\nPlease do one of the following:
+      1. Create a new group and merge new tabs into it;
+      2. Remove some tabs from this group;
+      3. Merge less tabs into this group (each tab is ~100-300 bytes).`
+                    );
+                  }
+                }
+              );
+            } else {
+              alert(
+                `Total syncing capacity exceeded by ${
+                  sync_bytes - SYNC_STORAGE_LIMIT.current
+                } bytes.\n\nPlease do one of the following:
+      1. Remove some tabs from any group;
+      2. Delete a group that is no longer needed;
+      3. Merge less tabs into this group (each tab is ~100-300 bytes).
+      \nMake sure to Export JSON or PDF to have a backup copy!`
+              );
+            }
+
+            // remove to be able to detect changes again
+            // (even if same tabs are needed to be merged)
+            chrome.storage.local.remove(["into_group", "merged_tabs"]);
+          });
+        });
+      }
+    };
+
+    chrome.storage.onChanged.addListener(checkMerging);
+
+    return () => {
+      chrome.storage.onChanged.removeListener(checkMerging);
     };
   }, []);
 

@@ -7,7 +7,6 @@ import { AiOutlineMenu } from "react-icons/ai";
 
 export default function Tabs(props) {
   const TAB_TITLE_LENGTH = useRef(100);
-  const ITEM_STORAGE_LIMIT = useRef(7500);
 
   const [tabs, setTabs] = useState([]);
 
@@ -21,69 +20,6 @@ export default function Tabs(props) {
     chrome.storage.sync.get(props.id, (result) => {
       setTabs(result[props.id] ? result[props.id].tabs : []);
     });
-  }, []);
-
-  useEffect(() => {
-    const checkMerging = (changes, namespace) => {
-      if (
-        namespace === "local" &&
-        changes.merged_tabs &&
-        changes.merged_tabs.newValue &&
-        changes.merged_tabs.newValue.length !== 0
-      ) {
-        chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
-          chrome.storage.sync.getBytesInUse("groups", (bytesInUse) => {
-            // prettier-ignore
-            var into_group = local.into_group, merged_tabs = local.merged_tabs;
-            var num_bytes = bytesInUse + merged_tabs.length;
-
-            console.log(num_bytes);
-            if (num_bytes < ITEM_STORAGE_LIMIT.current) {
-              // close tabs to avoid leaving some open
-              chrome.tabs.remove(merged_tabs.map((x) => x.id));
-
-              // store relevant details of combined tabs (only if group matches id)
-              if (props.id === into_group) {
-                chrome.storage.sync.get(props.id, (sync) => {
-                  var tabs_arr = [...sync[props.id].tabs, ...merged_tabs];
-                  tabs_arr = tabs_arr.map((item) => ({
-                    url: item.url,
-                    favIconUrl: item.favIconUrl,
-                    title: item.title,
-                  }));
-
-                  setTabs(tabs_arr);
-                  var total = document.querySelectorAll(".draggable").length;
-                  props.setTabTotal(total);
-
-                  sync[props.id].tabs = tabs_arr;
-                  updateGroupItem(props.id, sync[props.id]);
-                });
-              }
-            } else {
-              alert(
-                `Syncing capacity exceeded by ${
-                  num_bytes - ITEM_STORAGE_LIMIT.current
-                } bytes.\n\nPlease do one of the following:
-    1. Create a new group and merge new tabs into it;
-    2. Remove some tabs from this group;
-    3. Merge less tabs into this group (each tab is ~100-300 bytes).`
-              );
-            }
-
-            // remove to be able to detect changes again
-            // (even if same tabs are needed to be merged)
-            chrome.storage.local.remove(["into_group", "merged_tabs"]);
-          });
-        });
-      }
-    };
-
-    chrome.storage.onChanged.addListener(checkMerging);
-
-    return () => {
-      chrome.storage.onChanged.removeListener(checkMerging);
-    };
   }, []);
 
   const dragStart = (e) => {
