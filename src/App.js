@@ -60,7 +60,11 @@ export default function App() {
           created={x.created}
           key={Math.random()}
         >
-          <Tabs setTabTotal={setTabTotal} id={id} />
+          <Tabs
+            itemLimit={ITEM_STORAGE_LIMIT.current}
+            setTabTotal={setTabTotal}
+            id={id}
+          />
         </Group>
       );
     });
@@ -129,14 +133,16 @@ export default function App() {
           // prettier-ignore
           var into_group = local.into_group, merged_tabs = local.merged_tabs;
           chrome.storage.sync.getBytesInUse(null, (syncBytesInUse) => {
-            var sync_bytes = syncBytesInUse + merged_tabs.length;
+            var sync_bytes =
+              syncBytesInUse + JSON.stringify(merged_tabs).length;
 
             console.log(sync_bytes, "sync bytes");
             if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
               chrome.storage.sync.getBytesInUse(
                 into_group,
                 (itemBytesInUse) => {
-                  var item_bytes = itemBytesInUse + merged_tabs.length;
+                  var item_bytes =
+                    itemBytesInUse + JSON.stringify(merged_tabs).length;
 
                   console.log(item_bytes, into_group + " bytes");
                   if (item_bytes < ITEM_STORAGE_LIMIT.current) {
@@ -258,7 +264,11 @@ export default function App() {
         created={new Date(Date.now()).toString()}
         key={Math.random()}
       >
-        <Tabs setTabTotal={setTabTotal} id={"group-" + groups.length} />
+        <Tabs
+          itemLimit={ITEM_STORAGE_LIMIT.current}
+          setTabTotal={setTabTotal}
+          id={"group-" + groups.length}
+        />
       </Group>,
     ]);
   };

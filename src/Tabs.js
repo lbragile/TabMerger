@@ -41,28 +41,50 @@ export default function Tabs(props) {
     const origin_id = drag_origin.id;
 
     // update localStorage
-    chrome.storage.sync.get([origin_id, closest_group.id], (result) => {
-      if (origin_id !== closest_group.id) {
-        // remove tab from group that originated the drag
-        result[origin_id].tabs = result[origin_id].tabs.filter((group_tab) => {
-          return group_tab.url !== tab.lastChild.href;
+    var tab_bytes = JSON.stringify({
+      url: tab.querySelector("a").href,
+      title: tab.querySelector("a").innerText,
+      favIconUrl: tab.querySelector("img").src,
+    }).length;
+
+    chrome.storage.sync.getBytesInUse(closest_group.id, (itemBytesInUse) => {
+      var newBytesInUse = itemBytesInUse + tab_bytes;
+      console.log(newBytesInUse);
+      if (newBytesInUse < props.itemLimit) {
+        chrome.storage.sync.get([origin_id, closest_group.id], (result) => {
+          if (origin_id !== closest_group.id) {
+            // remove tab from group that originated the drag
+            result[origin_id].tabs = result[origin_id].tabs.filter(
+              (group_tab) => {
+                return group_tab.url !== tab.lastChild.href;
+              }
+            );
+          }
+
+          // reorder tabs based on current positions
+          result[closest_group.id].tabs = [
+            ...closest_group.lastChild.querySelectorAll("div"),
+          ].map((item) => {
+            return {
+              title: item.lastChild.textContent,
+              url: item.lastChild.href,
+              favIconUrl: item.querySelectorAll("img")[0].src,
+            };
+          });
+
+          updateGroupItem(origin_id, result[origin_id]);
+          updateGroupItem(closest_group.id, result[closest_group.id]);
+          window.location.reload();
         });
+      } else {
+        alert(`Group's syncing capacity exceeded by ${
+          newBytesInUse - props.itemLimit
+        } bytes.\n\nPlease do one of the following:
+        1. Create a new group and merge new tabs into it;
+        2. Remove some tabs from this group;
+        3. Merge less tabs into this group (each tab is ~100-300 bytes).`);
+        window.location.reload();
       }
-
-      // reorder tabs based on current positions
-      result[closest_group.id].tabs = [
-        ...closest_group.lastChild.querySelectorAll("div"),
-      ].map((item) => {
-        return {
-          title: item.lastChild.textContent,
-          url: item.lastChild.href,
-          favIconUrl: item.querySelectorAll("img")[0].src,
-        };
-      });
-
-      updateGroupItem(origin_id, result[origin_id]);
-      updateGroupItem(closest_group.id, result[closest_group.id]);
-      window.location.reload();
     });
   };
 
