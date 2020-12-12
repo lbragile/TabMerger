@@ -55,8 +55,8 @@ export default function Tabs(props) {
           : itemBytesInUse;
 
       console.log(newBytesInUse);
-      if (newBytesInUse < props.itemLimit) {
-        chrome.storage.sync.get([origin_id, closest_group.id], (result) => {
+      chrome.storage.sync.get(null, (result) => {
+        if (newBytesInUse < props.itemLimit) {
           if (origin_id !== closest_group.id) {
             // remove tab from group that originated the drag
             result[origin_id].tabs = result[origin_id].tabs.filter(
@@ -79,17 +79,19 @@ export default function Tabs(props) {
 
           updateGroupItem(origin_id, result[origin_id]);
           updateGroupItem(closest_group.id, result[closest_group.id]);
-          window.location.reload();
-        });
-      } else {
-        alert(`Group's syncing capacity exceeded by ${
-          newBytesInUse - props.itemLimit
-        } bytes.\n\nPlease do one of the following:
+        } else {
+          alert(`Group's syncing capacity exceeded by ${
+            newBytesInUse - props.itemLimit
+          } bytes.\n\nPlease do one of the following:
         1. Create a new group and merge new tabs into it;
         2. Remove some tabs from this group;
         3. Merge less tabs into this group (each tab is ~100-300 bytes).`);
-        window.location.reload();
-      }
+        }
+
+        // update the groups
+        delete result.settings;
+        props.setGroups(props.groupFormation(result));
+      });
     });
   };
 

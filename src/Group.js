@@ -32,7 +32,7 @@ export default function Group(props) {
   }
 
   function handleTitleChange(val) {
-    chrome.storage.sync.get(props.id, (result) => {
+    chrome.storage.sync.get(null, (result) => {
       if (val.length < 15) {
         result[props.id].title = val;
       } else {
@@ -44,7 +44,9 @@ export default function Group(props) {
       setTitle(result[props.id].title);
 
       if (val.length >= 15) {
-        window.location.reload();
+        // update the groups
+        delete result.settings;
+        props.setGroups(props.groupFormation(result));
       }
     });
   }
@@ -134,13 +136,20 @@ export default function Group(props) {
           result = JSON.parse(result_str);
         }
 
+        // update total count
+        props.setTabTotal(
+          document.querySelectorAll(".draggable").length -
+            target.querySelectorAll(".draggable").length
+        );
+
         // easiest to clear all the items and restore the values as needed
         chrome.storage.sync.clear(() => {
           Object.keys(result).forEach((key) => {
             updateGroupItem(key, result[key]);
           });
 
-          window.location.reload();
+          delete result.settings;
+          props.setGroups(props.groupFormation(result));
         });
       });
     });
@@ -165,7 +174,7 @@ export default function Group(props) {
     const months = ["jan", "feb", "mar", "apr", "may", "jun",
                     "jul", "aug", "sep", "oct", "nov", "dec"];
 
-    date_parts = date_parts.filter((items, index) => 0 < index && index <= 4);
+    date_parts = date_parts.filter((_, index) => 0 < index && index <= 4);
 
     var temp = months.indexOf(date_parts[0].toLowerCase()) + 1 + "/";
     date_parts[0] = date_parts[1] + "/";
@@ -222,113 +231,105 @@ export default function Group(props) {
       </div>
 
       <div id={props.id} className={props.className} onDragOver={dragOver}>
-        <table className="mr-3 mt-1 float-right">
-          <tr className="row">
-            <td className="d-flex flex-row">
-              <button
-                className="merge-btn mr-1 btn btn-outline-primary"
-                type="button"
-                style={{ width: "26px", height: "34px" }}
-                onClick={() => sendMessage({ msg: "all", id: props.id })}
-              >
-                <div className="tip">
-                  <MdVerticalAlignCenter
-                    style={{
-                      transform: "rotate(90deg)",
-                      position: "relative",
-                      left: "-10px",
-                      top: "-3px",
-                    }}
-                    color="black"
-                    size="1.3rem"
-                  />
-                  <span className="tiptext-merge">
-                    {translate("mergeALLtabs")}
-                  </span>
-                </div>
-              </button>
-              <button
-                className="merge-left-btn mr-1 btn btn-outline-warning"
-                type="button"
-                style={{ width: "26px", height: "34px" }}
-                onClick={() => sendMessage({ msg: "left", id: props.id })}
-              >
-                <div className="tip">
-                  <BiArrowToRight
-                    style={{
-                      position: "relative",
-                      left: "-10px",
-                      top: "-3px",
-                    }}
-                    color="black"
-                    size="1.3rem"
-                  />
-                  <span className="tiptext-merge">
-                    {translate("mergeLEFTtabs")}
-                  </span>
-                </div>
-              </button>
-              <button
-                className="merge-right-btn mr-4 btn btn-outline-warning"
-                type="button"
-                style={{ width: "26px", height: "34px" }}
-                onClick={() => sendMessage({ msg: "right", id: props.id })}
-              >
-                <div className="tip">
-                  <BiArrowToRight
-                    style={{
-                      transform: "rotate(180deg)",
-                      position: "relative",
-                      left: "-10px",
-                      top: "-3px",
-                    }}
-                    color="black"
-                    size="1.3rem"
-                  />
-                  <span className="tiptext-merge">
-                    {translate("mergeRIGHTtabs")}
-                  </span>
-                </div>
-              </button>
-            </td>
+        <div className="mr-1 mt-1 row float-right">
+          <button
+            className="merge-btn mr-1 btn btn-outline-primary"
+            type="button"
+            style={{ width: "26px", height: "34px" }}
+            onClick={() => sendMessage({ msg: "all", id: props.id })}
+          >
+            <div className="tip">
+              <MdVerticalAlignCenter
+                style={{
+                  transform: "rotate(90deg)",
+                  position: "relative",
+                  left: "-10px",
+                  top: "-3px",
+                }}
+                color="black"
+                size="1.3rem"
+              />
+              <span className="tiptext-merge">{translate("mergeALLtabs")}</span>
+            </div>
+          </button>
+          <button
+            className="merge-left-btn mr-1 btn btn-outline-warning"
+            type="button"
+            style={{ width: "26px", height: "34px" }}
+            onClick={() => sendMessage({ msg: "left", id: props.id })}
+          >
+            <div className="tip">
+              <BiArrowToRight
+                style={{
+                  position: "relative",
+                  left: "-10px",
+                  top: "-3px",
+                }}
+                color="black"
+                size="1.3rem"
+              />
+              <span className="tiptext-merge">
+                {translate("mergeLEFTtabs")}
+              </span>
+            </div>
+          </button>
+          <button
+            className="merge-right-btn mr-4 btn btn-outline-warning"
+            type="button"
+            style={{ width: "26px", height: "34px" }}
+            onClick={() => sendMessage({ msg: "right", id: props.id })}
+          >
+            <div className="tip">
+              <BiArrowToRight
+                style={{
+                  transform: "rotate(180deg)",
+                  position: "relative",
+                  left: "-10px",
+                  top: "-3px",
+                }}
+                color="black"
+                size="1.3rem"
+              />
+              <span className="tiptext-merge">
+                {translate("mergeRIGHTtabs")}
+              </span>
+            </div>
+          </button>
 
-            <td className="d-flex flex-row">
-              <button
-                className="open-group-btn mr-1 p-1 btn btn-light btn-outline-success"
-                onClick={(e) => openAllTabsInGroup(e)}
-              >
-                <div className="tip">
-                  <FaWindowRestore color="forestgreen" />
-                  <span className="tiptext">{translate("openGroup")}</span>
-                </div>
-              </button>
-              <button
-                className="delete-group-btn mr-4 p-1 btn btn-light btn-outline-danger"
-                onClick={(e) => deleteGroup(e)}
-              >
-                <div className="tip">
-                  <CgRemove color="red" />
-                  <span className="tiptext">{translate("deleteGroup")}</span>
-                </div>
-              </button>
-              <button
-                className="show-hide-btn mr-1 p-1 btn btn-light btn-outline-info"
-                onClick={(e) => toggleGroup(e)}
-              >
-                <div className="tip">
-                  {hide ? (
-                    <FcCollapse style={{ transform: "rotate(180deg)" }} />
-                  ) : (
-                    <FcCollapse style={{ transform: "rotate(0deg)" }} />
-                  )}
-                  <span className="tiptext">
-                    {hide ? translate("showTabs") : translate("hideTabs")}
-                  </span>
-                </div>
-              </button>
-            </td>
-          </tr>
-        </table>
+          <button
+            className="open-group-btn mr-1 p-1 btn btn-light btn-outline-success"
+            onClick={(e) => openAllTabsInGroup(e)}
+          >
+            <div className="tip">
+              <FaWindowRestore color="forestgreen" />
+              <span className="tiptext">{translate("openGroup")}</span>
+            </div>
+          </button>
+          <button
+            className="delete-group-btn mr-4 p-1 btn btn-light btn-outline-danger"
+            onClick={(e) => deleteGroup(e)}
+          >
+            <div className="tip">
+              <CgRemove color="red" />
+              <span className="tiptext">{translate("deleteGroup")}</span>
+            </div>
+          </button>
+          <button
+            className="show-hide-btn mr-1 p-1 btn btn-light btn-outline-info"
+            onClick={(e) => toggleGroup(e)}
+          >
+            <div className="tip">
+              {hide ? (
+                <FcCollapse style={{ transform: "rotate(180deg)" }} />
+              ) : (
+                <FcCollapse style={{ transform: "rotate(0deg)" }} />
+              )}
+              <span className="tiptext">
+                {hide ? translate("showTabs") : translate("hideTabs")}
+              </span>
+            </div>
+          </button>
+        </div>
 
         {props.children}
       </div>

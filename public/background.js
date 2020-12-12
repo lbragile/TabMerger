@@ -109,9 +109,6 @@ function findExtTabAndSwitch() {
     { title: "TabMerger", currentWindow: true },
     (tabMergerTabs) => {
       if (tabMergerTabs[0]) {
-        if (!tabMergerTabs[0].active) {
-          chrome.tabs.reload(tabMergerTabs[0].id);
-        }
         chrome.tabs.update(tabMergerTabs[0].id, {
           highlighted: true,
           active: true,
