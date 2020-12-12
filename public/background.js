@@ -97,13 +97,10 @@ function getTabsAndSend(info, tab, group_id) {
     tabs = tabs.filter((x, i) => !indicies.includes(i));
 
     // need time to open page sometimes
-    setTimeout(
-      () => {
-        var whichGroup = group_id ? group_id : "group-0";
-        chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
-      },
-      /chrome/i.test(navigator.userAgent) ? 50 : 200
-    );
+    setTimeout(() => {
+      var whichGroup = group_id ? group_id : "group-0";
+      chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
+    }, 200);
   });
 }
 

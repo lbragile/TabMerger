@@ -118,11 +118,6 @@ export default function Group(props) {
               key !== "settings" &&
               parseInt(key.charAt(key.length - 1)) > parseInt(index_deleted)
             ) {
-              console.log(
-                parseInt(key.charAt(key.length - 1)),
-                parseInt(index_deleted),
-                "index"
-              );
               group_names.push(key);
             }
           });

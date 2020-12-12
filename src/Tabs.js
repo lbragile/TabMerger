@@ -48,7 +48,12 @@ export default function Tabs(props) {
     }).length;
 
     chrome.storage.sync.getBytesInUse(closest_group.id, (itemBytesInUse) => {
-      var newBytesInUse = itemBytesInUse + tab_bytes;
+      // moving into same group should not increase number of bytes
+      var newBytesInUse =
+        origin_id !== closest_group.id
+          ? itemBytesInUse + tab_bytes
+          : itemBytesInUse;
+
       console.log(newBytesInUse);
       if (newBytesInUse < props.itemLimit) {
         chrome.storage.sync.get([origin_id, closest_group.id], (result) => {

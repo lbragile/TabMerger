@@ -17,8 +17,8 @@ import { RiStarSFill } from "react-icons/ri";
 import jsPDF from "jspdf";
 
 export default function App() {
-  const ITEM_STORAGE_LIMIT = useRef(300);
-  const SYNC_STORAGE_LIMIT = useRef(1000);
+  const ITEM_STORAGE_LIMIT = useRef(8000);
+  const SYNC_STORAGE_LIMIT = useRef(102000);
 
   const defaultColor = useRef("#dedede");
   const defaultTitle = useRef("Title");
