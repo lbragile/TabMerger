@@ -1,5 +1,5 @@
 .group {
-  min-height: 85px;
+  min-height: 75px;
   border-radius: 10px;
 }
 
@@ -12,6 +12,34 @@
   border-radius: 5px 5px 0 0;
   font-size: 1.3rem;
   color: black !important;
+}
+
+/* PAGE TOTAL COUNTER */
+.tabTotal-inGroup {
+  width: 25%;
+  color: black !important;
+}
+
+/* TIMESTAMP */
+.created {
+  background: none !important;
+  position: relative;
+  top: 10px;
+}
+
+/* COLOR PICKER (GROUP) */
+input[type="color"]:hover {
+  cursor: pointer;
+}
+
+input[type="color"] {
+  width: 40px;
+  margin-top: 7px;
+}
+
+/* EDITEXT */
+input[editext="input"] {
+  width: 180px;
 }
 
 .styles_Editext__edit_button__hthOZ {
@@ -44,28 +72,4 @@
 .styles_Editext__cancel_button__259hb {
   border-radius: 5px !important;
   margin: 0 1px !important;
-}
-
-.created {
-  background: none !important;
-  position: relative;
-  top: 10px;
-}
-
-input[type="color"]:hover {
-  cursor: pointer;
-}
-
-input[type="color"] {
-  width: 40px;
-  margin-top: 7px;
-}
-
-input[editext="input"] {
-  width: 180px;
-}
-
-.tabTotal-inGroup {
-  width: 25%;
-  color: black !important;
 }

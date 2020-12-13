@@ -90,7 +90,7 @@ export default function Tabs(props) {
 
         // update the groups
         delete result.settings;
-        props.setGroups(props.groupFormation(result));
+        props.setGroups(JSON.stringify(result));
       });
     });
   };
@@ -108,22 +108,30 @@ export default function Tabs(props) {
     });
   }
 
+  async function handleTabClick(e) {
+    // ["tab", url_link]
+    e.preventDefault();
+    var tab = e.target.tagName === "SPAN" ? e.target.parentNode : e.target;
+    chrome.storage.local.set({ remove: ["tab", tab.href] });
+  }
+
   function translate(msg) {
     return chrome.i18n.getMessage(msg);
   }
 
   return (
     <div className="d-flex flex-column mx-0">
-      <h5 className="tabTotal-inGroup mt-1 mb-3">
-        {tabs.length}{" "}
-        {tabs.length === 1
-          ? translate("groupTotalSingular")
-          : translate("groupTotalPlural")}
+      <h5 className="tabTotal-inGroup my-1">
+        {tabs.length +
+          " " +
+          translate(
+            tabs.length === 1 ? "groupTotalSingular" : "groupTotalPlural"
+          )}
       </h5>
       {tabs.map((tab, index) => {
         return (
           <div
-            className="row draggable p-0 m-0"
+            className="row draggable p-0 mx-0 my-2"
             id={props.id + "-tab-" + index}
             draggable
             onDragStart={dragStart}
@@ -154,14 +162,7 @@ export default function Tabs(props) {
               target="_blank"
               rel="noreferrer"
               draggable={false}
-              onClick={(e) => {
-                e.preventDefault();
-                var tab =
-                  e.target.tagName === "SPAN" ? e.target.parentNode : e.target;
-                chrome.storage.local.set({
-                  remove: [tab.href],
-                });
-              }}
+              onClick={(e) => handleTabClick(e)}
             >
               <span className="float-left">
                 {tab.title.length > TAB_TITLE_LENGTH.current

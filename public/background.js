@@ -1,67 +1,54 @@
-function getTabsAndSend(info, tab, group_id) {
+function filterTabs(info, tab, group_id) {
   chrome.tabs.query({ currentWindow: true }, async (tabs) => {
+    findExtTabAndSwitch();
+
+    // FILTER BASED ON USER BUTTON CLICK
+    tabs = tabs.filter((x) => x.title !== "TabMerger");
     switch (info.which) {
       case "right":
-        tabs = tabs.filter(
-          (item) => item.index > tab.index && item.title !== "TabMerger"
-        );
+        tabs = tabs.filter((x) => x.index > tab.index);
         break;
       case "left":
-        tabs = tabs.filter(
-          (item) => item.index < tab.index && item.title !== "TabMerger"
-        );
+        tabs = tabs.filter((x) => x.index < tab.index);
         break;
       case "excluding":
-        tabs = tabs.filter(
-          (item) => item.index !== tab.index && item.title !== "TabMerger"
-        );
+        tabs = tabs.filter((x) => x.index !== tab.index);
         break;
       case "only":
-        tabs = tabs.filter(
-          (item) => item.index === tab.index && item.title !== "TabMerger"
-        );
+        tabs = tabs.filter((x) => x.index === tab.index);
         break;
 
       default:
-        //all
-        tabs = tabs.filter((item) => item.title !== "TabMerger");
+        //all (already filtered all tabs except TabMerger)
         break;
     }
 
-    // apply blacklist items
-    await new Promise((resolve) => {
-      chrome.storage.sync.get("settings", (result) => {
-        tabs = tabs.filter((item) => {
-          var blacklist_sites = result.settings.blacklist
-            .replace(" ", "")
-            .split(",");
-          blacklist_sites = blacklist_sites.map((item) => item.toLowerCase());
-          return !blacklist_sites.includes(item.url);
-        });
-        resolve(tabs);
-      });
-    });
-
-    findExtTabAndSwitch();
-
-    // ===== FILTERING ====== //
-    // remove unnecessary information from each tab
-    tabs = tabs.map((x) => {
-      return { title: x.title, favIconUrl: x.favIconUrl, url: x.url, id: x.id };
-    });
-
-    // get a list of all the current tab titles and/or urls
+    // create duplicate title/url list & filter blacklisted sites
     var filter_vals = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
     await new Promise((resolve) => {
       chrome.storage.sync.get(null, (result) => {
+        // get a list of all the current tab titles and/or urls
         Object.keys(result).forEach((key) => {
           if (key !== "settings") {
             var extra_vals = result[key].tabs.map((x) => x.url);
             filter_vals = filter_vals.concat(extra_vals);
           }
         });
+
+        // apply blacklist items
+        tabs = tabs.filter((x) => {
+          var bl_sites = result.settings.blacklist.replace(" ", "").split(",");
+          bl_sites = bl_sites.map((site) => site.toLowerCase());
+          return !bl_sites.includes(x.url);
+        });
+
         resolve(0);
       });
+    });
+
+    // remove unnecessary information from each tab
+    tabs = tabs.map((x) => {
+      return { title: x.title, favIconUrl: x.favIconUrl, url: x.url, id: x.id };
     });
 
     // duplicates (already in TabMerger) can be removed
@@ -94,30 +81,22 @@ function getTabsAndSend(info, tab, group_id) {
     });
 
     // filter out offending indicies
-    tabs = tabs.filter((x, i) => !indicies.includes(i));
+    tabs = tabs.filter((_, i) => !indicies.includes(i));
 
-    // need time to open page sometimes
-    setTimeout(() => {
-      var whichGroup = group_id ? group_id : "group-0";
-      chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
-    }, 200);
+    var whichGroup = group_id ? group_id : "group-0";
+    chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
   });
 }
 
 function findExtTabAndSwitch() {
-  chrome.tabs.query(
-    { title: "TabMerger", currentWindow: true },
-    (tabMergerTabs) => {
-      if (tabMergerTabs[0]) {
-        chrome.tabs.update(tabMergerTabs[0].id, {
-          highlighted: true,
-          active: true,
-        });
-      } else {
-        chrome.tabs.create({ url: "index.html", active: true });
-      }
-    }
-  );
+  var query = { title: "TabMerger", currentWindow: true };
+  var exists = { highlighted: true, active: true };
+  var not_exist = { url: "index.html", active: true };
+  chrome.tabs.query(query, (tabMergerTabs) => {
+    tabMergerTabs[0]
+      ? chrome.tabs.update(tabMergerTabs[0].id, exists)
+      : chrome.tabs.create(not_exist);
+  });
 }
 
 function excludeSite(info, tab) {
@@ -128,11 +107,7 @@ function excludeSite(info, tab) {
   });
 }
 
-function createDefaultStorageItems() {
-  // sometimes need to quickly reset sync storage
-  // chrome.storage.local.clear();
-  // chrome.storage.sync.clear();
-
+async function createDefaultStorageItems() {
   var default_settings = {
     open: "without",
     color: "#dedede",
@@ -175,7 +150,7 @@ chrome.browserAction.onClicked.addListener(() => {
   chrome.storage.sync.get("settings", (result) => {
     result.settings.open === "without"
       ? findExtTabAndSwitch()
-      : getTabsAndSend(info, tab);
+      : filterTabs(info, tab);
   });
 });
 
@@ -183,7 +158,7 @@ const extensionMessage = (request) => {
   info.which = request.msg;
   var queryOpts = { currentWindow: true, active: true };
   chrome.tabs.query(queryOpts, (tabs) => {
-    getTabsAndSend(info, tabs[0], request.id);
+    filterTabs(info, tabs[0], request.id);
   });
 };
 
@@ -207,19 +182,19 @@ const contextMenuOrShortCut = (info, tab) => {
       break;
     case "merge-left-menu":
       info.which = "left";
-      getTabsAndSend(info, tab);
+      filterTabs(info, tab);
       break;
     case "merge-right-menu":
       info.which = "right";
-      getTabsAndSend(info, tab);
+      filterTabs(info, tab);
       break;
     case "merge-xcluding-menu":
       info.which = "excluding";
-      getTabsAndSend(info, tab);
+      filterTabs(info, tab);
       break;
     case "merge-snly-menu":
       info.which = "only";
-      getTabsAndSend(info, tab);
+      filterTabs(info, tab);
       break;
     case "remove-visibility":
       excludeSite(info, tab);
@@ -234,7 +209,7 @@ const contextMenuOrShortCut = (info, tab) => {
       break;
 
     default:
-      getTabsAndSend(info, tab);
+      filterTabs(info, tab);
       break;
   }
 };

@@ -10,7 +10,7 @@
 
 .left-side-container {
   position: relative;
-  top: -35px;
+  top: -10px;
   z-index: 0;
 }
 
@@ -18,128 +18,22 @@
   margin-top: 15px;
 }
 
-.tip {
-  position: relative;
-  display: inline-block;
-}
-
-.tip .tiptext,
-.tip .tiptext-side,
-.tip .tiptext-merge,
-.tip .tiptext-bottom {
-  visibility: hidden;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-  z-index: 1;
-  position: absolute;
-  opacity: 0;
-}
-
-.tip .tiptext::after,
-.tiptext-merge::after,
-.tiptext-bottom::after {
-  content: "";
-  position: absolute;
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-}
-
-.tip .tiptext {
-  bottom: 110%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.95rem;
-  line-height: 1.3;
-}
-
-.tip .tiptext-merge {
-  bottom: 100%;
-  left: 5%;
-  transform: translateX(-50%);
-  line-height: 1.4;
-  font-size: 0.95rem;
-  padding: 3px 5px;
-}
-
-.tip .tiptext::after,
-.tip .tiptext-merge::after {
-  top: 100%;
-  left: 48%;
-  transform: translateX(-50%);
-}
-
-.tip .tiptext-bottom {
-  top: 110%;
-  left: 50%;
-  transform: translateX(-50%);
-  line-height: 1.4;
-  font-size: 0.95rem;
-}
-
-.tip .tiptext-bottom::after {
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-color: transparent transparent black transparent;
-}
-
-.tip:hover .tiptext,
-.tip:hover .tiptext-merge,
-.tip:hover .tiptext-bottom {
-  visibility: visible;
-  opacity: 0.9;
-}
-
-/* remove focus after clicked */
+/* BUTTONS - Remove Ignore Focus */
 .btn:focus {
   outline: none;
   box-shadow: none;
 }
 
+.btn:not(#need-help) {
+  background: white;
+}
+
 .btn:hover {
-  background: white !important;
+  background: white;
+  cursor: pointer;
 }
 
-.btn#add-group-btn:hover {
-  background: none !important;
-}
-
-.btn-outline-warning {
-  border: 1px solid goldenrod;
-}
-
-.btn.merge-btn,
-.btn.merge-left-btn,
-.btn.merge-right-btn,
-.btn#open-all-btn,
-.btn#delete-all-btn,
-.btn#export-btn,
-.btn#import-btn,
-.btn#pdf-btn,
-.btn#options-btn,
-.show-hide-btn,
-.open-group-btn,
-.delete-group-btn {
-  background: white !important;
-}
-
-#options-btn {
-  position: absolute;
-  right: 0px;
-}
-#pdf-btn {
-  border: 1px solid purple;
-}
-
-input[type="image"]:focus {
-  border: none;
-  outline: none;
-}
-
+/* DARK MODE SWITCH */
 .custom-control-label:hover,
 .custom-control-label::before,
 .custom-control-label::after {
@@ -150,15 +44,11 @@ input[type="image"]:focus {
   box-shadow: none !important;
 }
 
-input[type="image"] {
-  transform: scale(1.1);
-}
-
+/* GROUP & TAB FILTERS */
 .search-filter {
   position: relative;
-  top: -60px;
+  top: -35px;
   left: -15px;
-  z-index: 1;
 }
 
 .search-filter input {
@@ -176,20 +66,7 @@ hr {
   width: 100%;
 }
 
-#import-btn {
-  cursor: pointer;
-}
-
-#import-input {
-  opacity: 0;
-  position: absolute;
-  z-index: -1;
-}
-
-.global-btn {
-  width: 80% !important;
-}
-
+/* RIGHT SIDE (VIDEO - DONATE - SUPPORT - REVIEW) */
 #side-panel {
   position: fixed;
   top: 50%;
@@ -210,10 +87,21 @@ hr {
   background: #17a2b8 !important;
 }
 
+/* DONATE BUTTON */
+input[type="image"] {
+  transform: scale(1.1);
+}
+
 #donate {
   transform: scale(0.9);
 }
 
+input[type="image"]:focus {
+  border: none;
+  outline: none;
+}
+
+/* SCROLLBAR */
 ::-webkit-scrollbar {
   width: 10px;
 }

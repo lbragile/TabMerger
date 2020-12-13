@@ -1,31 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+
 import Tabs from "./Tabs.js";
 import Group from "./Group.js";
+import Button from "./Button.js";
+
+import "./App.css";
+import "./Button.css";
 
 import { MdSettings, MdDeleteForever, MdAddCircle } from "react-icons/md";
-import {
-  FaTrashRestore,
-  FaFileImport,
-  FaFileExport,
-  FaFilePdf,
-} from "react-icons/fa";
+// prettier-ignore
+import { FaTrashRestore, FaFileImport, FaFileExport, FaFilePdf } from "react-icons/fa";
 import { RiStarSFill } from "react-icons/ri";
 
 import jsPDF from "jspdf";
 
 export default function App() {
-  const ITEM_STORAGE_LIMIT = useRef(8000);
-  const SYNC_STORAGE_LIMIT = useRef(102000);
+  const ITEM_STORAGE_LIMIT = useRef(8000); //500 for testing - 8000 for production
+  const SYNC_STORAGE_LIMIT = useRef(102000); //1000 for testing - 102000 for production
 
   const defaultColor = useRef("#dedede");
   const defaultTitle = useRef("Title");
-  const [tabTotal, setTabTotal] = useState(0);
-  const [groups, setGroups] = useState(null);
+  const defaultGroup = useRef({
+    title: defaultTitle.current,
+    color: defaultColor.current,
+    created: new Date(Date.now()).toString(),
+    tabs: [],
+  });
 
-  useEffect(() => {
+  const [tabTotal, setTabTotal] = useState(0);
+  const [groups, setGroups] = useState(
+    JSON.stringify({ "group-0": defaultGroup.current })
+  );
+
+  useEffect(async () => {
     // set dark mode if needed & assign default values to state variables
     chrome.storage.sync.get(null, (result) => {
       var json = { target: { checked: null } };
@@ -44,12 +52,29 @@ export default function App() {
       Object.keys(result).forEach((key) => (sum += result[key].tabs.length));
 
       setTabTotal(sum);
-      setGroups(groupFormation(result));
+      setGroups(JSON.stringify(result));
     });
+
+    chrome.storage.onChanged.addListener(checkMerging);
+    chrome.storage.onChanged.addListener(openOrRemoveTabs);
+
+    return () => {
+      chrome.storage.onChanged.removeListener(checkMerging);
+      chrome.storage.onChanged.removeListener(openOrRemoveTabs);
+    };
   }, []);
 
+  useEffect(() => {
+    if (groups !== JSON.stringify({ "group-0": defaultGroup.current })) {
+      var parsed_groups = JSON.parse(groups);
+      Object.keys(parsed_groups).forEach((key) => {
+        updateGroupItem(key, parsed_groups[key]);
+      });
+    }
+  }, [groups]);
+
   const groupFormation = (group_items) => {
-    return Object.values(group_items).map((x, i) => {
+    return Object.values(JSON.parse(group_items)).map((x, i) => {
       var id = "group-" + i;
       return (
         <Group
@@ -61,25 +86,27 @@ export default function App() {
           key={Math.random()}
           setGroups={setGroups}
           setTabTotal={setTabTotal}
-          groupFormation={groupFormation}
         >
           <Tabs
             itemLimit={ITEM_STORAGE_LIMIT.current}
             setTabTotal={setTabTotal}
             id={id}
             setGroups={setGroups}
-            groupFormation={groupFormation}
           />
         </Group>
       );
     });
   };
 
-  useEffect(() => {
-    const removeTabs = (changes, namespace) => {
-      if (namespace === "local" && changes.remove && changes.remove.newValue) {
-        // try to not open tabs if it is already open
-        chrome.tabs.query({ currentWindow: true }, async (windowTabs) => {
+  const openOrRemoveTabs = (changes, namespace) => {
+    if (namespace === "local" && changes.remove && changes.remove.newValue) {
+      // extract and remove the button type from array
+      var btn_type = changes.remove.newValue[0];
+      changes.remove.newValue.splice(0, 1);
+
+      // try to not open tabs if it is already open
+      chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
+        chrome.storage.sync.get(null, (result) => {
           for (var i = 0; i < changes.remove.newValue.length; i++) {
             var tab_url = changes.remove.newValue[i];
             var same_tab = windowTabs.filter((x) => x.url === tab_url);
@@ -88,129 +115,114 @@ export default function App() {
             } else {
               chrome.tabs.create({ url: tab_url, active: false });
             }
-
-            // remove tab if needed
-            await new Promise((resolve) => {
-              chrome.storage.sync.get("settings", (result) => {
-                if (result.settings.restore !== "keep") {
-                  var elem = document.querySelector(
-                    `.draggable a[href='${tab_url}']`
-                  );
-
-                  // click on the x button for this tab
-                  elem.parentNode.querySelector(".close-tab").click();
-                }
-                resolve(0);
-              });
-            });
           }
-        });
-      }
 
-      chrome.storage.local.remove("remove");
-    };
-
-    chrome.storage.onChanged.addListener(removeTabs);
-
-    return () => {
-      chrome.storage.onChanged.removeListener(removeTabs);
-    };
-  }, []);
-
-  useEffect(() => {
-    const checkMerging = (changes, namespace) => {
-      if (
-        namespace === "local" &&
-        changes.merged_tabs &&
-        changes.merged_tabs.newValue &&
-        changes.merged_tabs.newValue.length !== 0
-      ) {
-        chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
-          // prettier-ignore
-          var into_group = local.into_group, merged_tabs = local.merged_tabs;
-          chrome.storage.sync.getBytesInUse(null, (syncBytesInUse) => {
-            var sync_bytes =
-              syncBytesInUse + JSON.stringify(merged_tabs).length;
-
-            console.log(sync_bytes, "sync bytes");
-            if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
-              chrome.storage.sync.getBytesInUse(
-                into_group,
-                (itemBytesInUse) => {
-                  var item_bytes =
-                    itemBytesInUse + JSON.stringify(merged_tabs).length;
-
-                  console.log(item_bytes, into_group + " bytes");
-                  if (item_bytes < ITEM_STORAGE_LIMIT.current) {
-                    // close tabs to avoid leaving some open
-                    chrome.tabs.remove(merged_tabs.map((x) => x.id));
-
-                    chrome.storage.sync.get(null, (sync) => {
-                      delete sync.settings;
-
-                      var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
-                      tabs_arr = tabs_arr.map((item) => ({
-                        url: item.url,
-                        favIconUrl: item.favIconUrl,
-                        title: item.title,
-                      }));
-
-                      var current = document.querySelectorAll(".draggable");
-                      setTabTotal(current.length + merged_tabs.length);
-
-                      sync[into_group].tabs = tabs_arr;
-                      updateGroupItem(into_group, sync[into_group]);
-                      setGroups(groupFormation(sync));
-                    });
-                  } else {
-                    alert(
-                      `Group's syncing capacity exceeded by ${
-                        item_bytes - ITEM_STORAGE_LIMIT.current
-                      } bytes.\n\nPlease do one of the following:
-      1. Create a new group and merge new tabs into it;
-      2. Remove some tabs from this group;
-      3. Merge less tabs into this group (each tab is ~100-300 bytes).`
-                    );
-                  }
-                }
+          // remove tab if needed
+          if (result.settings.restore !== "keep") {
+            if (btn_type !== "all") {
+              var any_tab_url = changes.remove.newValue[0];
+              var elem = document.querySelector(`a[href='${any_tab_url}']`);
+              var group_id = elem.closest(".group").id;
+              result[group_id].tabs = result[group_id].tabs.filter(
+                (x) => !changes.remove.newValue.includes(x.url)
               );
+              updateGroupItem(group_id, result[group_id]);
             } else {
-              alert(
-                `Total syncing capacity exceeded by ${
-                  sync_bytes - SYNC_STORAGE_LIMIT.current
-                } bytes.\n\nPlease do one of the following:
-      1. Remove some tabs from any group;
-      2. Delete a group that is no longer needed;
-      3. Merge less tabs into this group (each tab is ~100-300 bytes).
-      \nMake sure to Export JSON or PDF to have a backup copy!`
-              );
+              // set all
+              Object.keys(result).forEach((key) => {
+                if (key !== "settings") {
+                  result[key].tabs = [];
+                  updateGroupItem(key, result[key]);
+                }
+              });
             }
 
-            // remove to be able to detect changes again
-            // (even if same tabs are needed to be merged)
-            chrome.storage.local.remove(["into_group", "merged_tabs"]);
-          });
+            // update global counter
+            setTabTotal(
+              document.querySelectorAll(".draggable").length -
+                changes.remove.newValue.length
+            );
+
+            // update groups
+            delete result.settings;
+            setGroups(JSON.stringify(result));
+          }
         });
-      }
-    };
+      });
 
-    chrome.storage.onChanged.addListener(checkMerging);
+      // in case "Keep in TabMerger" setting, this allows to open multiple times
+      chrome.storage.local.remove("remove");
+    }
+  };
 
-    return () => {
-      chrome.storage.onChanged.removeListener(checkMerging);
-    };
-  }, []);
+  const checkMerging = (changes, namespace) => {
+    if (
+      namespace === "local" &&
+      changes.merged_tabs &&
+      changes.merged_tabs.newValue &&
+      changes.merged_tabs.newValue.length !== 0
+    ) {
+      chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
+        // prettier-ignore
+        var into_group = local.into_group, merged_tabs = local.merged_tabs;
+        chrome.storage.sync.getBytesInUse(null, (syncBytesInUse) => {
+          var sync_bytes = syncBytesInUse + JSON.stringify(merged_tabs).length;
+          if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
+            chrome.storage.sync.getBytesInUse(into_group, (itemBytesInUse) => {
+              var item_bytes =
+                itemBytesInUse + JSON.stringify(merged_tabs).length;
 
-  // https://stackoverflow.com/a/5624139/4298115
-  function rgb2hex(input) {
-    var rgb = input.substr(4).replace(")", "").split(",");
-    var hex = rgb.map((elem) => {
-      let hex_temp = parseInt(elem).toString(16);
-      return hex_temp.length === 1 ? "0" + hex_temp : hex_temp;
-    });
+              if (item_bytes < ITEM_STORAGE_LIMIT.current) {
+                // close tabs to avoid leaving some open
+                chrome.tabs.remove(merged_tabs.map((x) => x.id));
 
-    return "#" + hex.join("");
-  }
+                chrome.storage.sync.get(null, (sync) => {
+                  delete sync.settings;
+
+                  var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
+                  tabs_arr = tabs_arr.map((item) => ({
+                    url: item.url,
+                    favIconUrl: item.favIconUrl,
+                    title: item.title,
+                  }));
+
+                  var current = document.querySelectorAll(".draggable");
+                  setTabTotal(current.length + merged_tabs.length);
+
+                  sync[into_group].tabs = tabs_arr;
+                  updateGroupItem(into_group, sync[into_group]);
+                  setGroups(JSON.stringify(sync));
+                });
+              } else {
+                alert(
+                  `Group's syncing capacity exceeded by ${
+                    item_bytes - ITEM_STORAGE_LIMIT.current
+                  } bytes.\n\nPlease do one of the following:
+    1. Create a new group and merge new tabs into it;
+    2. Remove some tabs from this group;
+    3. Merge less tabs into this group (each tab is ~100-300 bytes).`
+                );
+              }
+            });
+          } else {
+            alert(
+              `Total syncing capacity exceeded by ${
+                sync_bytes - SYNC_STORAGE_LIMIT.current
+              } bytes.\n\nPlease do one of the following:
+    1. Remove some tabs from any group;
+    2. Delete a group that is no longer needed;
+    3. Merge less tabs into this group (each tab is ~100-300 bytes).
+    \nMake sure to Export JSON or PDF to have a backup copy!`
+            );
+          }
+
+          // remove to be able to detect changes again
+          // (even if same tabs are needed to be merged)
+          chrome.storage.local.remove(["into_group", "merged_tabs"]);
+        });
+      });
+    }
+  };
 
   function updateGroupItem(name, value) {
     var storage_entry = {};
@@ -218,86 +230,34 @@ export default function App() {
     chrome.storage.sync.set(storage_entry, () => {});
   }
 
-  useEffect(() => {
-    // once a group is added: for each group, store the title, background color, and tab information
-    setTimeout(() => {
-      var group_blocks = document.querySelectorAll(".group");
-      var ls_entry = {};
-      for (let i = 0; i < group_blocks.length; i++) {
-        ls_entry[group_blocks[i].id] = {
-          title: group_blocks[i].parentNode.querySelector("div[editext='view']")
-            .innerText,
-          color: rgb2hex(group_blocks[i].style.background),
-          created: group_blocks[i].parentNode.querySelector(".created")
-            .lastChild.innerText,
-          tabs: [],
-        };
-
-        var group_tabs = group_blocks[i].querySelectorAll(".draggable");
-        var tabs_entry = [...group_tabs].map((x) => ({
-          favIconUrl: x.querySelector("img").src,
-          url: x.querySelector("a").href,
-          title: x.querySelector("a").innerText,
-        }));
-
-        ls_entry[group_blocks[i].id].tabs = tabs_entry;
-      }
-
-      Object.keys(ls_entry).forEach((key) => {
-        updateGroupItem(key, ls_entry[key]);
-      });
-    }, 10);
-  }, [groups]);
-
   const addGroup = () => {
-    setGroups([
-      ...groups,
-      <Group
-        id={"group-" + groups.length}
-        className="group"
-        color={defaultColor.current}
-        title={defaultTitle.current}
-        created={new Date(Date.now()).toString()}
-        key={Math.random()}
-        setGroups={setGroups}
-        setTabTotal={setTabTotal}
-        groupFormation={groupFormation}
-      >
-        <Tabs
-          itemLimit={ITEM_STORAGE_LIMIT.current}
-          setTabTotal={setTabTotal}
-          id={"group-" + groups.length}
-          setGroups={setGroups}
-          groupFormation={groupFormation}
-        />
-      </Group>,
-    ]);
+    var current_groups = JSON.parse(groups);
+    var num_keys = Object.keys(current_groups).length;
+    defaultGroup.current.created = new Date(Date.now()).toString();
+    current_groups["group-" + num_keys] = defaultGroup.current;
+    setGroups(JSON.stringify(current_groups));
   };
 
-  async function openAllTabs() {
+  function openAllTabs() {
+    // ["all", ... url_links ...]
     var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+    tab_links.unshift("all");
     chrome.storage.local.set({ remove: tab_links });
   }
 
   function deleteAllGroups() {
-    var default_group = {
-      title: defaultTitle.current,
-      color: defaultColor.current,
-      created: new Date(Date.now()).toString(),
-      tabs: [],
-    };
-
     // clear all the groups (easiest by wiping sync and restoring the settings)
     chrome.storage.sync.get("settings", (result) => {
       chrome.storage.sync.clear(() => {
+        defaultGroup.current.created = new Date(Date.now()).toString();
         chrome.storage.sync.set(
           {
-            "group-0": default_group,
+            "group-0": defaultGroup.current,
             settings: result.settings,
           },
           () => {
             setTabTotal(0);
-            setGroups(groupFormation({ "group-0": default_group }));
+            setGroups(JSON.stringify({ "group-0": defaultGroup.current }));
           }
         );
       });
@@ -358,7 +318,14 @@ export default function App() {
           });
 
           delete fileContent.settings;
-          setGroups(groupFormation(fileContent));
+          setGroups(JSON.stringify(fileContent));
+
+          var sum = 0;
+          Object.values(fileContent).forEach((val) => {
+            sum += val.tabs.length;
+          });
+
+          setTabTotal(sum);
         };
       });
     } else {
@@ -404,7 +371,16 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
     return output;
   }
 
-  async function exportPDF() {
+  function addPage(doc, y, height) {
+    if (y >= height - 20) {
+      doc.addPage();
+      y = 15;
+    }
+
+    return y;
+  }
+
+  function exportPDF() {
     var doc = new jsPDF();
 
     var { width, height } = doc.internal.pageSize;
@@ -432,76 +408,83 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
     doc.setTextColor("000");
     doc.text(tabTotal + " tabs in total", x - 5, y);
 
-    var group_blocks = await new Promise((resolve) => {
-      chrome.storage.sync.get(null, (result) => {
-        delete result.settings;
-        resolve(result);
-      });
-    });
+    chrome.storage.sync.get(null, (result) => {
+      delete result.settings;
 
-    Object.values(group_blocks).forEach((item) => {
-      // rectangle around the group
-      doc.setFillColor(item.color);
+      Object.values(result).forEach((item) => {
+        // rectangle around the group
+        doc.setFillColor(item.color);
 
-      var group_height =
-        item.tabs.length > 0
-          ? 10 * (item.tabs.length + 1)
-          : 10 * (item.tabs.length + 2);
-      doc.roundedRect(x - 5, y + 8, 175, group_height, 1, 1, "F");
+        var group_height =
+          item.tabs.length > 0
+            ? 10 * (item.tabs.length + 1)
+            : 10 * (item.tabs.length + 2);
 
-      y += 15;
-      if (y >= height) {
-        doc.addPage();
-        y = 25;
-      }
-      doc.setTextColor("000");
-      doc.setFontSize(16);
-      doc.text(item.title, x - 3, y);
+        // make sure group height never exceeds the page limit
+        if (y + group_height > height - 20) {
+          var extra = 5;
+          group_height = height - 20 - y - extra;
+        }
 
-      doc.setFontSize(12);
+        doc.roundedRect(x - 5, y + 8, 175, group_height, 1, 1, "F");
 
-      // if tabs in the group exist
-      if (item.tabs.length > 0) {
-        item.tabs.forEach((tab, index) => {
-          y += 10;
-          if (y >= height) {
-            doc.addPage();
-            y = 25;
-          }
-          doc.setTextColor("#000");
-          doc.text(index + 1 + ".", x + 5, y);
-          doc.setTextColor(51, 153, 255);
+        y += 15;
+        y = addPage(doc, y, height);
 
-          var title =
-            tab.title.length > 75 ? tab.title.substr(0, 75) + "..." : tab.title;
-          //prettier-ignore
-          doc.textWithLink(cleanString(title), index < 9 ? x + 11 : x + 13, y, { url: tab.url });
-        });
-      } else {
         doc.setTextColor("#000");
-        doc.text("[ NO TABS IN GROUP ]", x + 5, y + 10);
-        y += 10;
+        doc.setFontSize(16);
+        doc.text(item.title, x - 3, y);
+
+        doc.setFontSize(12);
+
+        // if tabs in the group exist
+        if (item.tabs.length > 0) {
+          item.tabs.forEach((tab, index) => {
+            y += 10;
+            y = addPage(doc, y, height);
+
+            doc.setTextColor("#000");
+            doc.text(index + 1 + ".", x + 5, y);
+            doc.setTextColor(51, 153, 255);
+
+            var title =
+              tab.title.length > 75
+                ? tab.title.substr(0, 75) + "..."
+                : tab.title;
+
+            doc.textWithLink(
+              cleanString(title),
+              index < 9 ? x + 11 : x + 13,
+              y,
+              { url: tab.url }
+            );
+          });
+        } else {
+          doc.setTextColor("#000");
+          doc.text("[ NO TABS IN GROUP ]", x + 5, y + 10);
+          y += 10;
+        }
+      });
+
+      // page numbers
+      doc.setTextColor("#000");
+      var pageCount = doc.internal.getNumberOfPages();
+      for (var i = 0; i < pageCount; i++) {
+        doc.setPage(i);
+        doc.text(
+          width / 2 - 20,
+          height - 5,
+          "Page " +
+            doc.internal.getCurrentPageInfo().pageNumber +
+            " of " +
+            pageCount
+        );
+
+        doc.text(width - 50, height - 5, "© Lior Bragilevsky");
       }
+
+      doc.save(outputFileName() + ".pdf");
     });
-
-    // page numbers
-    doc.setTextColor("000");
-    var pageCount = doc.internal.getNumberOfPages();
-    for (var i = 0; i < pageCount; i++) {
-      doc.setPage(i);
-      doc.text(
-        width / 2 - 20,
-        height - 5,
-        "Page " +
-          doc.internal.getCurrentPageInfo().pageNumber +
-          " of " +
-          pageCount
-      );
-
-      doc.text(width - 50, height - 5, "© Lior Bragilevsky");
-    }
-
-    doc.save(outputFileName() + ".pdf");
   }
 
   function translate(msg) {
@@ -551,119 +534,67 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
               </h2>
 
               <div className="search-filter row float-right">
-                <div>
-                  <label
-                    for="search-group"
-                    className="d-block mb-0 font-weight-bold"
-                  >
-                    {translate("groupTitle")}:{" "}
-                  </label>
-                  <input
-                    type="text"
-                    name="search-group"
-                    className="mr-2 px-1"
-                    onChange={(e) => groupFilter(e)}
-                  />
-                </div>
-                <div>
-                  <label
-                    for="search-tab"
-                    className="d-block mb-0 font-weight-bold"
-                  >
-                    {translate("tabTitle")}:{" "}
-                  </label>
-                  <input
-                    type="text"
-                    name="search-tab"
-                    className="px-1"
-                    onChange={(e) => tabFilter(e)}
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="search-group"
+                  className="mr-2 px-1"
+                  placeholder={translate("groupTitle")}
+                  onChange={(e) => groupFilter(e)}
+                />
+                <input
+                  type="text"
+                  name="search-tab"
+                  className="px-1"
+                  placeholder={translate("tabTitle")}
+                  onChange={(e) => tabFilter(e)}
+                />
               </div>
             </div>
             <hr />
           </div>
           <div className="left-side-container">
-            <div className="global-btn row">
-              <button
+            <div className="global-btn-row row">
+              <Button
                 id="open-all-btn"
-                className="ml-3 p-0 btn btn-outline-success"
-                type="button"
+                classes="ml-3 p-0 btn-in-global btn-outline-success"
+                translate={translate("openAll")}
+                tooltip={"tiptext-global"}
                 onClick={() => openAllTabs()}
-                style={{ width: "45px", height: "45px" }}
               >
-                <div className="tip">
-                  <FaTrashRestore
-                    color="green"
-                    style={{ width: "22px", height: "22px", padding: "0" }}
-                  />
-                  <span className="tiptext">{translate("openAll")}</span>
-                </div>
-              </button>
-              <button
-                id="delete-all-btn"
-                className="ml-1 mr-4 p-0 btn btn-outline-danger"
-                type="button"
-                onClick={() => deleteAllGroups()}
-                style={{ width: "45px", height: "45px" }}
-              >
-                <div className="tip">
-                  <MdDeleteForever
-                    color="red"
-                    style={{
-                      width: "30px",
-                      height: "35px",
-                      padding: "0",
-                      paddingTop: "4px",
-                    }}
-                  />
-                  <span className="tiptext">{translate("deleteAll")}</span>
-                </div>
-              </button>
+                <FaTrashRestore color="green" />
+              </Button>
 
-              <button
+              <Button
+                id="delete-all-btn"
+                classes="ml-1 mr-4 p-0 btn-in-global btn-outline-danger"
+                translate={translate("deleteAll")}
+                tooltip={"tiptext-global"}
+                onClick={() => deleteAllGroups()}
+              >
+                <MdDeleteForever color="red" />
+              </Button>
+
+              <Button
                 id="export-btn"
-                className="ml-4 btn btn-outline-info"
-                style={{
-                  width: "45px",
-                  height: "45px",
-                }}
-                type="button"
+                classes="ml-4 btn-in-global btn-outline-info"
+                translate={translate("exportJSON")}
+                tooltip={"tiptext-global"}
                 onClick={exportJSON}
               >
-                <div className="tip">
-                  <FaFileExport
-                    color="darkcyan"
-                    size="1.5rem"
-                    style={{
-                      position: "relative",
-                      top: "2px",
-                    }}
-                  />
-                  <span className="tiptext">{translate("exportJSON")}</span>
-                </div>
-              </button>
+                <FaFileExport color="darkcyan" size="1.5rem" />
+              </Button>
 
               <div>
                 <label
                   id="import-btn"
                   for="import-input"
-                  className="mx-1 my-0 btn btn-outline-info"
-                  style={{
-                    width: "45px",
-                    height: "45px",
-                  }}
+                  className="mx-1 my-0 btn-in-global btn btn-outline-info"
                 >
                   <div className="tip">
-                    <FaFileImport
-                      color="darkcyan"
-                      size="1.4rem"
-                      style={{
-                        position: "relative",
-                        top: "3px",
-                      }}
-                    />
-                    <span className="tiptext">{translate("importJSON")}</span>
+                    <FaFileImport color="darkcyan" size="1.4rem" />
+                    <span className="tiptext-global">
+                      {translate("importJSON")}
+                    </span>
                   </div>
                 </label>
                 <input
@@ -674,48 +605,38 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
                 ></input>
               </div>
 
-              <button
+              <Button
                 id="pdf-btn"
-                className="p-0 btn btn-outline-info"
-                type="button"
+                classes="p-0 btn-in-global btn-outline-info"
+                translate={translate("exportPDF")}
+                tooltip={"tiptext-global"}
                 onClick={() => exportPDF()}
-                style={{ width: "45px", height: "45px" }}
               >
-                <div className="tip">
-                  <FaFilePdf color="purple" size="1.5rem" />
-                  <span className="tiptext">{translate("exportPDF")}</span>
-                </div>
-              </button>
-              <button
+                <FaFilePdf color="purple" size="1.5rem" />
+              </Button>
+
+              <Button
                 id="options-btn"
-                className="p-0 btn btn-outline-dark"
-                type="button"
-                onClick={() =>
-                  window.location.replace(chrome.runtime.getURL("options.html"))
-                }
-                style={{ width: "45px", height: "45px" }}
+                classes="p-0 btn-in-global btn-outline-dark"
+                translate={translate("settings")}
+                tooltip={"tiptext-global"}
+                onClick={() => window.location.replace("/options.html")}
               >
-                <div className="tip">
-                  <MdSettings color="grey" size="1.6rem" />
-                  <span className="tiptext">{translate("settings")}</span>
-                </div>
-              </button>
+                <MdSettings color="grey" size="1.6rem" />
+              </Button>
             </div>
-
             <div className="groups-container">
-              {groups}
+              {groupFormation(groups)}
 
-              <button
-                className="d-block mt-1 ml-3 p-2 btn"
+              <Button
                 id="add-group-btn"
-                type="button"
+                classes="d-block btn-in-global mt-1 ml-3 p-2"
+                translate={translate("addGroup")}
+                tooltip={"tiptext-global"}
                 onClick={() => addGroup()}
               >
-                <div className="tip">
-                  <MdAddCircle color="grey" size="2rem" />
-                  <span className="tiptext">{translate("addGroup")}</span>
-                </div>
-              </button>
+                <MdAddCircle color="grey" size="2rem" />
+              </Button>
             </div>
           </div>
         </div>
@@ -779,11 +700,9 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
                 }
               >
                 <div className="row ml-1 px-1">
-                  <RiStarSFill color="goldenrod" size="2rem" />
-                  <RiStarSFill color="goldenrod" size="2rem" />
-                  <RiStarSFill color="goldenrod" size="2rem" />
-                  <RiStarSFill color="goldenrod" size="2rem" />
-                  <RiStarSFill color="goldenrod" size="2rem" />
+                  {[1, 2, 3, 4, 5].map(() => {
+                    return <RiStarSFill color="goldenrod" size="2rem" />;
+                  })}
                 </div>
               </a>
             </div>

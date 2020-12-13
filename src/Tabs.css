@@ -1,7 +1,16 @@
+/* COUNTER */
+.tabTotal-inGroup {
+  position: relative;
+  left: 15px;
+  width: 75% !important;
+}
+
+/* X */
 .close-tab {
   font-weight: bold;
   padding: 0;
   margin: 0;
+  height: 20px;
 }
 
 .close-tab:hover {
@@ -9,16 +18,16 @@
   fill: red;
 }
 
+/* MENU */
+.move-tab {
+  margin-bottom: 0;
+}
+
 .move-tab:hover {
   cursor: move;
 }
 
-.tabTotal-inGroup {
-  position: relative;
-  left: 15px;
-  width: 75% !important;
-}
-
+/* ENTIRE TAB */
 .draggable {
   position: relative;
   left: 25px;
