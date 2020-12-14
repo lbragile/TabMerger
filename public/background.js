@@ -1,32 +1,53 @@
+// default values
+var info = { which: "all" };
+var tab = { index: 0 };
+
+// extension click - open without merging or with merging
+chrome.browserAction.onClicked.addListener(() => {
+  createDefaultStorageItems();
+
+  chrome.storage.sync.get("settings", (result) => {
+    result.settings.open === "without"
+      ? findExtTabAndSwitch()
+      : filterTabs(info, tab);
+  });
+});
+
 function filterTabs(info, tab, group_id) {
-  chrome.tabs.query({ currentWindow: true }, async (tabs) => {
-    findExtTabAndSwitch();
+  findExtTabAndSwitch();
 
-    // FILTER BASED ON USER BUTTON CLICK
-    tabs = tabs.filter((x) => x.title !== "TabMerger");
-    switch (info.which) {
-      case "right":
-        tabs = tabs.filter((x) => x.index > tab.index);
-        break;
-      case "left":
-        tabs = tabs.filter((x) => x.index < tab.index);
-        break;
-      case "excluding":
-        tabs = tabs.filter((x) => x.index !== tab.index);
-        break;
-      case "only":
-        tabs = tabs.filter((x) => x.index === tab.index);
-        break;
+  // need a slight delay to ensure that new tab is set
+  setTimeout(() => {
+    chrome.tabs.query({ currentWindow: true }, (tabs) => {
+      // FILTER BASED ON USER BUTTON CLICK
+      tabs = tabs.filter((x) => x.title !== "TabMerger");
+      switch (info.which) {
+        case "right":
+          tabs = tabs.filter((x) => x.index > tab.index);
+          break;
+        case "left":
+          tabs = tabs.filter((x) => x.index < tab.index);
+          break;
+        case "excluding":
+          tabs = tabs.filter((x) => x.index !== tab.index);
+          break;
+        case "only":
+          tabs = tabs.filter((x) => x.index === tab.index);
+          break;
 
-      default:
-        //all (already filtered all tabs except TabMerger)
-        break;
-    }
+        default:
+          //all (already filtered all tabs except TabMerger)
+          break;
+      }
 
-    // create duplicate title/url list & filter blacklisted sites
-    var filter_vals = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
-    await new Promise((resolve) => {
-      chrome.storage.sync.get(null, (result) => {
+      // create duplicate title/url list & filter blacklisted sites
+      var filter_vals = [
+        "TabMerger",
+        "New Tab",
+        "Extensions",
+        "Add-ons Manager",
+      ];
+      chrome.storage.sync.get(null, async (result) => {
         // get a list of all the current tab titles and/or urls
         Object.keys(result).forEach((key) => {
           if (key !== "settings") {
@@ -42,50 +63,79 @@ function filterTabs(info, tab, group_id) {
           return !bl_sites.includes(x.url);
         });
 
-        resolve(0);
+        // remove unnecessary information from each tab
+        tabs = tabs.map((x) => {
+          return {
+            title: x.title,
+            favIconUrl: convertToShortURL(x.favIconUrl),
+            url: x.url,
+            id: x.id,
+          };
+        });
+
+        // duplicates (already in TabMerger) can be removed
+        var duplicates = tabs.filter((x) => {
+          return filter_vals.includes(x.title) || filter_vals.includes(x.url);
+        });
+
+        chrome.tabs.remove(duplicates.map((x) => x.id));
+
+        // apply above filter
+        tabs = tabs.filter((x) => {
+          return !filter_vals.includes(x.title) && !filter_vals.includes(x.url);
+        });
+
+        // make sure original merge has no duplicated values
+        // obtain offending indicies
+        // prettier-ignore
+        var prev_urls = [], indicies = [];
+        tabs.forEach((x, i) => {
+          if (prev_urls.includes(x.url)) {
+            indicies.push(i);
+          } else {
+            prev_urls.push(x.url);
+          }
+        });
+
+        // close duplicates in the merging process
+        indicies.forEach((i) => {
+          chrome.tabs.remove(tabs[i].id);
+        });
+
+        // filter out offending indicies
+        tabs = tabs.filter((_, i) => !indicies.includes(i));
+
+        var whichGroup = group_id ? group_id : "group-0";
+        chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
       });
     });
+  }, 100);
+}
 
-    // remove unnecessary information from each tab
-    tabs = tabs.map((x) => {
-      return { title: x.title, favIconUrl: x.favIconUrl, url: x.url, id: x.id };
-    });
+// Firefox gives base64 string, so must convert it to blob url
+function convertToShortURL(input_str, sliceSize = 512) {
+  if (input_str.includes("base64")) {
+    input_str = input_str.split(",")[1]; // get the base64 part
+    const byteCharacters = atob(input_str);
+    const byteArrays = [];
 
-    // duplicates (already in TabMerger) can be removed
-    var duplicates = tabs.filter((x) => {
-      return filter_vals.includes(x.title) || filter_vals.includes(x.url);
-    });
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
 
-    chrome.tabs.remove(duplicates.map((x) => x.id));
-
-    // apply above filter
-    tabs = tabs.filter((x) => {
-      return !filter_vals.includes(x.title) && !filter_vals.includes(x.url);
-    });
-
-    // make sure original merge has no duplicated values
-    // obtain offending indicies
-    // prettier-ignore
-    var prev_urls = [], indicies = [];
-    tabs.forEach((x, i) => {
-      if (prev_urls.includes(x.url)) {
-        indicies.push(i);
-      } else {
-        prev_urls.push(x.url);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
       }
-    });
 
-    // close duplicates in the merging process
-    indicies.forEach((i) => {
-      chrome.tabs.remove(tabs[i].id);
-    });
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
 
-    // filter out offending indicies
-    tabs = tabs.filter((_, i) => !indicies.includes(i));
-
-    var whichGroup = group_id ? group_id : "group-0";
-    chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
-  });
+    const blob = new Blob(byteArrays);
+    return URL.createObjectURL(blob);
+  } else {
+    return input_str;
+  }
 }
 
 function findExtTabAndSwitch() {
@@ -99,15 +149,7 @@ function findExtTabAndSwitch() {
   });
 }
 
-function excludeSite(info, tab) {
-  chrome.storage.sync.get("settings", (result) => {
-    result.settings.blacklist +=
-      result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
-    chrome.storage.sync.set({ settings: result.settings });
-  });
-}
-
-async function createDefaultStorageItems() {
+function createDefaultStorageItems() {
   var default_settings = {
     open: "without",
     color: "#dedede",
@@ -135,25 +177,6 @@ async function createDefaultStorageItems() {
   });
 }
 
-function translate(msg) {
-  return chrome.i18n.getMessage(msg);
-}
-
-// default values
-var info = { which: "all" };
-var tab = { index: 0 };
-
-// extension click - open without merging or with merging
-chrome.browserAction.onClicked.addListener(() => {
-  createDefaultStorageItems();
-
-  chrome.storage.sync.get("settings", (result) => {
-    result.settings.open === "without"
-      ? findExtTabAndSwitch()
-      : filterTabs(info, tab);
-  });
-});
-
 const extensionMessage = (request) => {
   info.which = request.msg;
   var queryOpts = { currentWindow: true, active: true };
@@ -162,8 +185,6 @@ const extensionMessage = (request) => {
   });
 };
 
-chrome.runtime.onMessage.addListener(extensionMessage);
-
 function createContextMenu(id, title, type) {
   chrome.contextMenus.create({ id, title, type });
 }
@@ -171,7 +192,7 @@ function createContextMenu(id, title, type) {
 const contextMenuOrShortCut = (info, tab) => {
   createDefaultStorageItems();
 
-  // shortcut keyboard commands
+  // right click menu OR shortcut keyboard commands
   if (typeof info === "string") {
     info = { which: "all", command: info };
   }
@@ -214,21 +235,36 @@ const contextMenuOrShortCut = (info, tab) => {
   }
 };
 
-createContextMenu("aopen-tabmerger", translate("bgOpen"));
+function excludeSite(info, tab) {
+  chrome.storage.sync.get("settings", (result) => {
+    result.settings.blacklist +=
+      result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
+    chrome.storage.sync.set({ settings: result.settings });
+  });
+}
 
+function translate(msg) {
+  return chrome.i18n.getMessage(msg);
+}
+
+createContextMenu("aopen-tabmerger", translate("bgOpen"));
+//--------------------------//
 createContextMenu("first-separator", "separator", "separator");
 createContextMenu("merge-all-menu", translate("bgAll"));
 createContextMenu("merge-left-menu", translate("bgLeft"));
 createContextMenu("merge-right-menu", translate("bgRight"));
 createContextMenu("merge-xcluding-menu", translate("bgExclude"));
 createContextMenu("merge-snly-menu", translate("bgOnly"));
-
+//--------------------------//
 createContextMenu("second-separator", "separator", "separator");
 createContextMenu("remove-visibility", translate("bgSiteExclude"));
-
+//--------------------------//
 createContextMenu("third-separator", "separator", "separator");
 createContextMenu("zdl-instructions", translate("bgInstructions"));
 createContextMenu("dl-contact", translate("bgContact"));
+
+// merge button clicks
+chrome.runtime.onMessage.addListener(extensionMessage);
 
 // context menu actions
 chrome.contextMenus.onClicked.addListener(contextMenuOrShortCut);
