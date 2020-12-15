@@ -135,7 +135,6 @@ export default function App() {
                       var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
                       tabs_arr = tabs_arr.map((x) => ({
                         url: x.url,
-                        favIconUrl: x.favIconUrl,
                         title: x.title,
                       }));
 

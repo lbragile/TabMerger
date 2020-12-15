@@ -44,7 +44,6 @@ export default function Tabs(props) {
     var tab_bytes = JSON.stringify({
       url: tab.querySelector("a").href,
       title: tab.querySelector("a").innerText,
-      favIconUrl: tab.querySelector("img").src,
     }).length;
 
     chrome.storage.sync.getBytesInUse(closest_group.id, (itemBytesInUse) => {
@@ -68,13 +67,10 @@ export default function Tabs(props) {
           // reorder tabs based on current positions
           result[closest_group.id].tabs = [
             ...closest_group.lastChild.querySelectorAll("div"),
-          ].map((item) => {
-            return {
-              title: item.lastChild.textContent,
-              url: item.lastChild.href,
-              favIconUrl: item.querySelectorAll("img")[0].src,
-            };
-          });
+          ].map((item) => ({
+            title: item.lastChild.textContent,
+            url: item.lastChild.href,
+          }));
 
           updateGroupItem(origin_id, result[origin_id]);
           updateGroupItem(closest_group.id, result[closest_group.id]);
@@ -108,11 +104,17 @@ export default function Tabs(props) {
     });
   }
 
-  async function handleTabClick(e) {
+  function handleTabClick(e) {
     // ["tab", url_link]
     e.preventDefault();
     var tab = e.target.tagName === "SPAN" ? e.target.parentNode : e.target;
     chrome.storage.local.set({ remove: ["tab", tab.href] });
+  }
+
+  function getFavIconURL(url) {
+    var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+    var domain = matches && matches[1]; // domain will be null if no match is found
+    return "http://www.google.com/s2/favicons?domain=" + domain;
   }
 
   function translate(msg) {
@@ -150,9 +152,7 @@ export default function Tabs(props) {
             </p>
             <img
               className="img-tab mr-2"
-              src={tab.favIconUrl || "./images/logo16.png"}
-              width="24"
-              height="24"
+              src={getFavIconURL(tab.url) || "./images/logo16.png"}
               alt="icon"
               draggable={false}
             />

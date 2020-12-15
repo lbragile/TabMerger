@@ -70,7 +70,6 @@ function filterTabs(info, tab, group_id) {
         tabs = tabs.map((x) => {
           return {
             title: x.title,
-            favIconUrl: convertToShortURL(x.favIconUrl),
             url: x.url,
             id: x.id,
           };
@@ -113,32 +112,6 @@ function filterTabs(info, tab, group_id) {
       });
     });
   }, 200);
-}
-
-// Firefox gives base64 string, so must convert it to blob url
-function convertToShortURL(input_str, sliceSize = 512) {
-  if (input_str && input_str.includes("base64")) {
-    input_str = input_str.split(",")[1]; // get the base64 part
-    const byteCharacters = atob(input_str);
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
-    }
-
-    const blob = new Blob(byteArrays);
-    return URL.createObjectURL(blob);
-  } else {
-    return input_str;
-  }
 }
 
 function findExtTabAndSwitch() {
