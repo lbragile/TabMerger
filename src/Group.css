@@ -28,48 +28,55 @@
 }
 
 /* COLOR PICKER (GROUP) */
-input[type="color"]:hover {
-  cursor: pointer;
-}
-
 input[type="color"] {
   width: 40px;
   margin-top: 7px;
 }
 
+input[type="color"]:hover {
+  cursor: pointer;
+}
+
 /* EDITEXT */
 input[editext="input"] {
-  width: 180px;
+  width: 150px;
+  padding: 2px;
+  text-align: center;
+  border-radius: 5px;
 }
 
-.styles_Editext__edit_button__hthOZ {
-  padding: 0 !important;
-  border: none !important;
-}
-
-.styles_Editext__edit_button__hthOZ:hover {
-  background: none !important;
+.title-edit-btn {
+  border: none;
+  padding: 0;
+  background: none;
 }
 
 /* remove the default pencil */
-.styles_Editext__edit_button__hthOZ::before {
-  display: none !important;
+.title-edit-btn::before {
+  display: none;
 }
 
-.styles_Editext__button__6H8n_ {
-  border: none !important;
-  padding: 0 !important;
-  background: none !important;
+.title-edit-btn:hover {
+  background: none;
 }
 
-.styles_Editext__input__1534X {
-  padding: 2px !important;
-  text-align: center !important;
-  border-radius: 5px !important;
+.title-save-btn,
+.title-cancel-btn {
+  padding: 0 5px;
+  background: none;
+  border: none;
 }
 
-.styles_Editext__save_button__3WN6q,
-.styles_Editext__cancel_button__259hb {
-  border-radius: 5px !important;
-  margin: 0 1px !important;
+.title-save-btn:focus,
+.title-cancel-btn:focus {
+  border: none;
+  outline: none;
+}
+
+.title-save-btn {
+  color: green;
+}
+
+.title-cancel-btn {
+  color: red;
 }

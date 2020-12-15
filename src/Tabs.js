@@ -20,7 +20,7 @@ export default function Tabs(props) {
     chrome.storage.sync.get(props.id, (result) => {
       setTabs(result[props.id] ? result[props.id].tabs : []);
     });
-  }, []);
+  }, [props.id]);
 
   const dragStart = (e) => {
     var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
@@ -101,7 +101,7 @@ export default function Tabs(props) {
     var group = tab.closest(".group");
 
     chrome.storage.sync.get(group.id, (result) => {
-      result[group.id].tabs = tabs.filter((x) => x.url != url);
+      result[group.id].tabs = tabs.filter((x) => x.url !== url);
       updateGroupItem(group.id, result[group.id]);
       setTabs(result[group.id].tabs);
       props.setTabTotal(document.querySelectorAll(".draggable").length);

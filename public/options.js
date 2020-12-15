@@ -1,4 +1,4 @@
-function saveOptions(e) {
+const saveOptions = (e) => {
   var color = document.getElementById("options-default-color").value;
   var title = document.getElementById("options-default-title").value;
   var restore = document.querySelector("input[name='restore-tabs']:checked")
@@ -20,9 +20,9 @@ function saveOptions(e) {
     e.target.classList.replace("btn-success", "btn-primary");
     document.getElementById("save-text").classList.add("invisible");
   }, 1500);
-}
+};
 
-function restoreOptions() {
+const restoreOptions = () => {
   var body = document.querySelector("body");
   var hr = document.querySelector("hr");
   var code_block = document.querySelector("code");
@@ -50,13 +50,27 @@ function restoreOptions() {
       ? "1px white solid"
       : "1px black solid";
   });
-}
+};
 
-function goHome() {
-  var homeURL = window.location.href.replace("options", "index");
-  window.location.replace(homeURL);
-}
+const resetOptions = () => {
+  var default_settings = {
+    open: "without",
+    color: "#dedede",
+    title: "Title",
+    restore: "keep",
+    blacklist: "",
+    dark: true,
+  };
+
+  chrome.storage.sync.set({ settings: default_settings });
+  window.location.reload();
+};
+
+const goHome = () => {
+  window.location.replace("/index.html");
+};
 
 window.addEventListener("load", restoreOptions);
 document.getElementById("save-btn").addEventListener("click", saveOptions);
+document.getElementById("reset-btn").addEventListener("click", resetOptions);
 document.getElementById("home-btn").addEventListener("click", goHome);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import EdiText from "react-editext";
 
 import { FcCollapse } from "react-icons/fc";
@@ -13,21 +13,12 @@ import "./Button.css";
 
 import "./Group.css";
 export default function Group(props) {
-  const [title, setTitle] = useState(props.title);
   const [hide, setHide] = useState(false);
 
-  const colorRef = useRef();
-
   useEffect(() => {
-    setGroupBackground(colorRef.current);
-  }, []);
-
-  function setGroupBackground(target) {
-    var children = target.closest(".group-title").parentNode.children;
-    [...children].forEach((child) => {
-      child.style.background = target.value;
-    });
-  }
+    var group = document.getElementById(props.id);
+    setGroupBackground(group);
+  }, [props.id]);
 
   function updateGroupItem(name, value) {
     var storage_entry = {};
@@ -35,33 +26,53 @@ export default function Group(props) {
     chrome.storage.sync.set(storage_entry, () => {});
   }
 
+  function setGroupBackground(e) {
+    var group_title = e.previousSibling;
+    var color, target;
+    if (e.target) {
+      color = e.target.value;
+      target = e.target.closest(".group-title");
+    } else {
+      color = group_title.querySelector("input[type='color']").value;
+      target = e;
+    }
+    [...target.parentNode.children].forEach((child) => {
+      child.style.background = color;
+    });
+  }
+
+  function saveGroupBackground(e) {
+    chrome.storage.sync.get(null, (result) => {
+      result[props.id].color = e.target.value;
+      updateGroupItem(props.id, result[props.id]);
+
+      delete result.settings;
+      props.setGroups(JSON.stringify(result));
+    });
+  }
+
   function handleTitleChange(val) {
     chrome.storage.sync.get(null, (result) => {
       if (val.length < 15) {
         result[props.id].title = val;
       } else {
-        alert("Titles must be less than 15 characters long!");
-        result[props.id].title = title;
+        result[props.id].title = val.substr(0, 12) + "...";
       }
 
       updateGroupItem(props.id, result[props.id]);
-      setTitle(result[props.id].title);
 
-      if (val.length >= 15) {
-        // update the groups
-        delete result.settings;
-        props.setGroups(JSON.stringify(result));
-      }
+      delete result.settings;
+      props.setGroups(JSON.stringify(result));
     });
   }
 
-  function handleColorChange(e) {
-    setGroupBackground(e.target);
-
-    chrome.storage.sync.get(props.id, (result) => {
-      result[props.id].color = e.target.value;
-      updateGroupItem(props.id, result[props.id]);
-    });
+  function getEditTitleIcon() {
+    return (
+      <div className="tip p-0 mb-1">
+        <BsPencilSquare color="saddlebrown" />
+        <span className="tiptext-global">{translate("editTitle")}</span>
+      </div>
+    );
   }
 
   const dragOver = (e) => {
@@ -209,22 +220,22 @@ export default function Group(props) {
         <EdiText
           className="font-weight-bold"
           type="text"
-          value={translate(title) || title}
-          editButtonContent={
-            <div className="tip p-0 mb-1">
-              <BsPencilSquare color="saddlebrown" />
-              <span className="tiptext-global">{translate("editTitle")}</span>
-            </div>
-          }
-          onSave={(val) => {
-            handleTitleChange(val);
-          }}
+          value={translate(props.title) || props.title}
+          saveButtonClassName="title-save-btn"
+          cancelButtonClassName="title-cancel-btn"
+          editButtonClassName="title-edit-btn"
+          editButtonContent={getEditTitleIcon()}
+          saveButtonContent="✓"
+          cancelButtonContent="✕"
+          onEditingStart={() => document.activeElement.select()}
+          onSave={(val) => handleTitleChange(val)}
+          submitOnUnfocus
         />
         <div className="tip ml-3 p-0">
           <input
-            ref={colorRef}
             defaultValue={props.color}
-            onChange={(e) => handleColorChange(e)}
+            onChange={(e) => setGroupBackground(e)}
+            onBlur={(e) => saveGroupBackground(e)}
             type="color"
           />
           <span className="tiptext-global">{translate("pickColor")}</span>

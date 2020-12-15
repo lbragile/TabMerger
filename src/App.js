@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Tabs from "./Tabs.js";
@@ -18,12 +18,13 @@ import jsPDF from "jspdf";
 export default function App() {
   const ITEM_STORAGE_LIMIT = useRef(8000); //500 for testing - 8000 for production
   const SYNC_STORAGE_LIMIT = useRef(102000); //1000 for testing - 102000 for production
+  const NUM_GROUP_LIMIT = useRef(300); // 3 for testing - 3000 for production
 
-  const defaultColor = useRef("#dedede");
-  const defaultTitle = useRef("Title");
+  const [color, setColor] = useState("#dedede");
+  const [title, setTitle] = useState("Title");
   const defaultGroup = useRef({
-    title: defaultTitle.current,
-    color: defaultColor.current,
+    title,
+    color,
     created: new Date(Date.now()).toString(),
     tabs: [],
   });
@@ -33,72 +34,11 @@ export default function App() {
     JSON.stringify({ "group-0": defaultGroup.current })
   );
 
-  useEffect(async () => {
-    // set dark mode if needed & assign default values to state variables
-    chrome.storage.sync.get(null, (result) => {
-      var json = { target: { checked: null } };
-      var darkModeSwitch = document.getElementById("darkMode");
-      darkModeSwitch.checked = result.settings.dark;
-      json.target.checked = result.settings.dark;
+  function findSameTab(tab_list, match_url) {
+    return tab_list.filter((x) => x.url === match_url);
+  }
 
-      toggleDarkMode(json);
-
-      // state variables
-      defaultColor.current = result.settings.color;
-      defaultTitle.current = result.settings.title;
-      delete result.settings; // delete but do not update sync storage;
-
-      var sum = 0;
-      Object.keys(result).forEach((key) => (sum += result[key].tabs.length));
-
-      setTabTotal(sum);
-      setGroups(JSON.stringify(result));
-    });
-
-    chrome.storage.onChanged.addListener(checkMerging);
-    chrome.storage.onChanged.addListener(openOrRemoveTabs);
-
-    return () => {
-      chrome.storage.onChanged.removeListener(checkMerging);
-      chrome.storage.onChanged.removeListener(openOrRemoveTabs);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (groups !== JSON.stringify({ "group-0": defaultGroup.current })) {
-      var parsed_groups = JSON.parse(groups);
-      Object.keys(parsed_groups).forEach((key) => {
-        updateGroupItem(key, parsed_groups[key]);
-      });
-    }
-  }, [groups]);
-
-  const groupFormation = (group_items) => {
-    return Object.values(JSON.parse(group_items)).map((x, i) => {
-      var id = "group-" + i;
-      return (
-        <Group
-          id={id}
-          className="group"
-          title={x.title}
-          color={x.color}
-          created={x.created}
-          key={Math.random()}
-          setGroups={setGroups}
-          setTabTotal={setTabTotal}
-        >
-          <Tabs
-            itemLimit={ITEM_STORAGE_LIMIT.current}
-            setTabTotal={setTabTotal}
-            id={id}
-            setGroups={setGroups}
-          />
-        </Group>
-      );
-    });
-  };
-
-  const openOrRemoveTabs = (changes, namespace) => {
+  const openOrRemoveTabs = useCallback((changes, namespace) => {
     if (namespace === "local" && changes.remove && changes.remove.newValue) {
       // extract and remove the button type from array
       var btn_type = changes.remove.newValue[0];
@@ -109,7 +49,7 @@ export default function App() {
         chrome.storage.sync.get(null, (result) => {
           for (var i = 0; i < changes.remove.newValue.length; i++) {
             var tab_url = changes.remove.newValue[i];
-            var same_tab = windowTabs.filter((x) => x.url === tab_url);
+            var same_tab = findSameTab(windowTabs, tab_url);
             if (same_tab[0]) {
               chrome.tabs.move(same_tab[0].id, { index: -1 });
             } else {
@@ -153,9 +93,9 @@ export default function App() {
       // in case "Keep in TabMerger" setting, this allows to open multiple times
       chrome.storage.local.remove("remove");
     }
-  };
+  }, []);
 
-  const checkMerging = (changes, namespace) => {
+  const checkMerging = useCallback((changes, namespace) => {
     if (
       namespace === "local" &&
       changes.merged_tabs &&
@@ -180,10 +120,10 @@ export default function App() {
                   delete sync.settings;
 
                   var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
-                  tabs_arr = tabs_arr.map((item) => ({
-                    url: item.url,
-                    favIconUrl: item.favIconUrl,
-                    title: item.title,
+                  tabs_arr = tabs_arr.map((x) => ({
+                    url: x.url,
+                    favIconUrl: x.favIconUrl,
+                    title: x.title,
                   }));
 
                   var current = document.querySelectorAll(".draggable");
@@ -222,6 +162,75 @@ export default function App() {
         });
       });
     }
+  }, []);
+
+  useEffect(() => {
+    chrome.runtime.setUninstallURL("https://tabmerger.herokuapp.com/survey");
+
+    // set dark mode if needed & assign default values to state variables
+    chrome.storage.sync.get(null, (result) => {
+      var json = { target: { checked: null } };
+      var darkModeSwitch = document.getElementById("darkMode");
+      darkModeSwitch.checked = result.settings.dark;
+      json.target.checked = result.settings.dark;
+
+      toggleDarkMode(json);
+
+      // state variables
+      setColor(result.settings.color);
+      setTitle(result.settings.title);
+      delete result.settings; // delete but do not update sync storage;
+
+      var sum = 0;
+      Object.keys(result).forEach((key) => (sum += result[key].tabs.length));
+
+      setTabTotal(sum);
+      setGroups(JSON.stringify(result));
+    });
+
+    chrome.storage.onChanged.addListener(checkMerging);
+    chrome.storage.onChanged.addListener(openOrRemoveTabs);
+
+    return () => {
+      chrome.storage.onChanged.removeListener(checkMerging);
+      chrome.storage.onChanged.removeListener(openOrRemoveTabs);
+    };
+  }, [checkMerging, openOrRemoveTabs]);
+
+  useEffect(() => {
+    if (groups !== JSON.stringify({ "group-0": defaultGroup.current })) {
+      var parsed_groups = JSON.parse(groups);
+      Object.keys(parsed_groups).forEach((key) => {
+        updateGroupItem(key, parsed_groups[key]);
+      });
+    }
+  }, [groups]);
+
+  const groupFormation = (group_items) => {
+    return Object.values(JSON.parse(group_items)).map((x, i) => {
+      var id = "group-" + i;
+      return (
+        <Group
+          id={id}
+          className="group"
+          title={x.title}
+          color={x.color}
+          created={x.created}
+          key={Math.random()}
+          setColor={setColor}
+          setTitle={setTitle}
+          setGroups={setGroups}
+          setTabTotal={setTabTotal}
+        >
+          <Tabs
+            itemLimit={ITEM_STORAGE_LIMIT.current}
+            setTabTotal={setTabTotal}
+            id={id}
+            setGroups={setGroups}
+          />
+        </Group>
+      );
+    });
   };
 
   function updateGroupItem(name, value) {
@@ -233,9 +242,22 @@ export default function App() {
   const addGroup = () => {
     var current_groups = JSON.parse(groups);
     var num_keys = Object.keys(current_groups).length;
-    defaultGroup.current.created = new Date(Date.now()).toString();
-    current_groups["group-" + num_keys] = defaultGroup.current;
-    setGroups(JSON.stringify(current_groups));
+
+    if (num_keys < NUM_GROUP_LIMIT.current) {
+      chrome.storage.sync.get("settings", (result) => {
+        defaultGroup.current.created = new Date(Date.now()).toString();
+        defaultGroup.current.color = result.settings.color;
+        defaultGroup.current.title = result.settings.title;
+        current_groups["group-" + num_keys] = defaultGroup.current;
+        setGroups(JSON.stringify(current_groups));
+      });
+    } else {
+      alert(
+        `Number of groups exceeded.\n\nPlease do one of the following:
+1. Delete a group that is no longer needed;
+2. Merge tabs into another existing group.`
+      );
+    }
   };
 
   function openAllTabs() {
@@ -343,7 +365,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
     chrome.storage.sync.get(null, (result) => {
       var dataStr =
         "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(result));
+        encodeURIComponent(JSON.stringify(result, null, 2));
 
       var anchor = document.createElement("a");
       anchor.setAttribute("href", dataStr);
@@ -487,6 +509,31 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
     });
   }
 
+  function getTabMergerLink(reviews) {
+    var link;
+    var isOpera = navigator.userAgent.indexOf(" OPR/") >= 0;
+    var isFirefox = typeof InstallTrigger !== "undefined";
+    var isIE = /*@cc_on!@*/ false || !!document.documentMode;
+    var isEdge = !isIE && !!window.StyleMedia;
+    var isChrome = !!window.chrome && !!window.chrome.runtime;
+    var isEdgeChromium = isChrome && navigator.userAgent.indexOf("Edg") !== -1;
+
+    if (isIE || isEdge || isEdgeChromium) {
+      link =
+        "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
+    } else if (isChrome || isOpera) {
+      link =
+        "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
+    } else if (isFirefox) {
+      link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
+    }
+
+    if (reviews && !isFirefox) {
+      link += "/reviews/";
+    }
+    return link;
+  }
+
   function translate(msg) {
     return chrome.i18n.getMessage(msg);
   }
@@ -509,13 +556,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
                 <b>{translate("darkMode")}</b>
               </label>
             </div>
-            <a
-              href={
-                /chrome/i.test(navigator.userAgent)
-                  ? "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc"
-                  : "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger"
-              }
-            >
+            <a href={getTabMergerLink(false)}>
               <img
                 id="logo-img"
                 className="mt-4"
@@ -692,13 +733,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
               <h4 className="mb-1 text-center">
                 <b>{translate("leaveReview")}</b>
               </h4>
-              <a
-                href={
-                  /chrome/i.test(navigator.userAgent)
-                    ? "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews"
-                    : "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/reviews/"
-                }
-              >
+              <a href={getTabMergerLink(true)}>
                 <div className="row ml-1 px-1">
                   {[1, 2, 3, 4, 5].map(() => {
                     return <RiStarSFill color="goldenrod" size="2rem" />;

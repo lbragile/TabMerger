@@ -12,19 +12,11 @@ textarea {
   width: 100%;
 }
 
-.alert {
-  width: 65px;
+#home-btn {
+  border: 1px solid black;
 }
 
-#logo-text {
-  color: rgb(255, 198, 93);
-}
-
-.option-btn {
-  position: relative;
-  top: -15px;
-}
-
+/* DIRECTIONS (TabMerger > ....) */
 code {
   font-size: 0.95rem;
   position: relative;
@@ -34,6 +26,12 @@ code {
   border-radius: 5px;
 }
 
+/* NOTES UNDER TITLES */
 small {
   font-size: 0.9rem;
+}
+
+/* SAVE ALERT */
+.alert {
+  width: 65px;
 }

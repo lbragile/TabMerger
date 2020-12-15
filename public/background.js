@@ -109,12 +109,12 @@ function filterTabs(info, tab, group_id) {
         chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs });
       });
     });
-  }, 100);
+  }, 200);
 }
 
 // Firefox gives base64 string, so must convert it to blob url
 function convertToShortURL(input_str, sliceSize = 512) {
-  if (input_str.includes("base64")) {
+  if (input_str && input_str.includes("base64")) {
     input_str = input_str.split(",")[1]; // get the base64 part
     const byteCharacters = atob(input_str);
     const byteArrays = [];
