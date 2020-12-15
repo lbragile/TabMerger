@@ -84,7 +84,7 @@ export default function Group(props) {
     }
 
     // allow scrolling while dragging
-    document.documentElement.scrollTop += e.clientY - e.pageY;
+    window.scrollTop += e.clientY - e.pageY;
   };
 
   function getDragAfterElement(container, y) {

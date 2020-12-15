@@ -71,6 +71,27 @@ The following lists the items which need to be crossed off of TabMerger's bucket
 - [x] Implement search functionality (group search to filter groups & tab search to filter within a group for a specific tab). **v1.2.1**
 - [x] Major refactoring to simplify the logic and avoid redundant reloading of the page. **v1.2.1 & up**
 
+### Testing In Firefox - Manifest Change Required 😤
+
+To allow Firefox to use `storage.sync()` API, when testing you need to build TabMerger by updating the manifest. To do this, you should replace:
+
+```
+"incognito": "split",
+```
+
+with
+
+```
+"incognito": "spanning",
+
+"browser_specific_settings": {
+  "gecko": {
+    "id": "{19feb84f-3a0b-4ca3-bbae-211b52eb158b}",
+    "strict_min_version": "42.0"
+  }
+},
+```
+
 ### Contact :iphone:
 
 📩 If you have any more suggestions please send me a message on GitHub, lbragile@gmail.com, or <a href="https://www.linkedin.com/in/liorbragilevsky/">LinkedIn</a>.
