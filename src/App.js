@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Tabs from "./Tabs.js";
@@ -38,134 +38,145 @@ export default function App() {
     return tab_list.filter((x) => x.url === match_url);
   }
 
-  const openOrRemoveTabs = useCallback((changes, namespace) => {
-    if (namespace === "local" && changes.remove && changes.remove.newValue) {
-      // extract and remove the button type from array
-      var btn_type = changes.remove.newValue[0];
-      changes.remove.newValue.splice(0, 1);
-
-      // try to not open tabs if it is already open
-      chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
-        chrome.storage.sync.get(null, (result) => {
-          for (var i = 0; i < changes.remove.newValue.length; i++) {
-            var tab_url = changes.remove.newValue[i];
-            var same_tab = findSameTab(windowTabs, tab_url);
-            if (same_tab[0]) {
-              chrome.tabs.move(same_tab[0].id, { index: -1 });
-            } else {
-              chrome.tabs.create({ url: tab_url, active: false });
-            }
-          }
-
-          // remove tab if needed
-          if (result.settings.restore !== "keep") {
-            if (btn_type !== "all") {
-              var any_tab_url = changes.remove.newValue[0];
-              var elem = document.querySelector(`a[href='${any_tab_url}']`);
-              var group_id = elem.closest(".group").id;
-              result[group_id].tabs = result[group_id].tabs.filter(
-                (x) => !changes.remove.newValue.includes(x.url)
-              );
-              updateGroupItem(group_id, result[group_id]);
-            } else {
-              // set all
-              Object.keys(result).forEach((key) => {
-                if (key !== "settings") {
-                  result[key].tabs = [];
-                  updateGroupItem(key, result[key]);
-                }
-              });
-            }
-
-            // update global counter
-            setTabTotal(
-              document.querySelectorAll(".draggable").length -
-                changes.remove.newValue.length
-            );
-
-            // update groups
-            delete result.settings;
-            setGroups(JSON.stringify(result));
-          }
-        });
-      });
-
-      // in case "Keep in TabMerger" setting, this allows to open multiple times
-      chrome.storage.local.remove("remove");
-    }
-  }, []);
-
-  const checkMerging = useCallback((changes, namespace) => {
-    if (
-      namespace === "local" &&
-      changes.merged_tabs &&
-      changes.merged_tabs.newValue &&
-      changes.merged_tabs.newValue.length !== 0
-    ) {
-      chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
-        // prettier-ignore
-        var into_group = local.into_group, merged_tabs = local.merged_tabs;
-        chrome.storage.sync.getBytesInUse(null, (syncBytesInUse) => {
-          var sync_bytes = syncBytesInUse + JSON.stringify(merged_tabs).length;
-          if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
-            chrome.storage.sync.getBytesInUse(into_group, (itemBytesInUse) => {
-              var item_bytes =
-                itemBytesInUse + JSON.stringify(merged_tabs).length;
-
-              if (item_bytes < ITEM_STORAGE_LIMIT.current) {
-                // close tabs to avoid leaving some open
-                chrome.tabs.remove(merged_tabs.map((x) => x.id));
-
-                chrome.storage.sync.get(null, (sync) => {
-                  delete sync.settings;
-
-                  var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
-                  tabs_arr = tabs_arr.map((x) => ({
-                    url: x.url,
-                    favIconUrl: x.favIconUrl,
-                    title: x.title,
-                  }));
-
-                  var current = document.querySelectorAll(".draggable");
-                  setTabTotal(current.length + merged_tabs.length);
-
-                  sync[into_group].tabs = tabs_arr;
-                  updateGroupItem(into_group, sync[into_group]);
-                  setGroups(JSON.stringify(sync));
-                });
-              } else {
-                alert(
-                  `Group's syncing capacity exceeded by ${
-                    item_bytes - ITEM_STORAGE_LIMIT.current
-                  } bytes.\n\nPlease do one of the following:
-    1. Create a new group and merge new tabs into it;
-    2. Remove some tabs from this group;
-    3. Merge less tabs into this group (each tab is ~100-300 bytes).`
-                );
-              }
-            });
-          } else {
-            alert(
-              `Total syncing capacity exceeded by ${
-                sync_bytes - SYNC_STORAGE_LIMIT.current
-              } bytes.\n\nPlease do one of the following:
-    1. Remove some tabs from any group;
-    2. Delete a group that is no longer needed;
-    3. Merge less tabs into this group (each tab is ~100-300 bytes).
-    \nMake sure to Export JSON or PDF to have a backup copy!`
-            );
-          }
-
-          // remove to be able to detect changes again
-          // (even if same tabs are needed to be merged)
-          chrome.storage.local.remove(["into_group", "merged_tabs"]);
-        });
-      });
-    }
-  }, []);
-
   useEffect(() => {
-    chrome.runtime.setUninstallURL("https://tabmerger.herokuapp.com/survey");
+    const updateExtension = (details) => {
+      var msg = `An update (v${details.version}) is availble for TabMerger.\nSelect 'OK' to update or 'Cancel' to do so at a later time.`;
+      var response = window.confirm(msg);
+
+      if (response) {
+        chrome.runtime.reload();
+      }
+    };
+
+    const openOrRemoveTabs = (changes, namespace) => {
+      if (namespace === "local" && changes.remove && changes.remove.newValue) {
+        // extract and remove the button type from array
+        var btn_type = changes.remove.newValue[0];
+        changes.remove.newValue.splice(0, 1);
+
+        // try to not open tabs if it is already open
+        chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
+          chrome.storage.sync.get(null, (result) => {
+            for (var i = 0; i < changes.remove.newValue.length; i++) {
+              var tab_url = changes.remove.newValue[i];
+              var same_tab = findSameTab(windowTabs, tab_url);
+              if (same_tab[0]) {
+                chrome.tabs.move(same_tab[0].id, { index: -1 });
+              } else {
+                chrome.tabs.create({ url: tab_url, active: false });
+              }
+            }
+
+            // remove tab if needed
+            if (result.settings.restore !== "keep") {
+              if (btn_type !== "all") {
+                var any_tab_url = changes.remove.newValue[0];
+                var elem = document.querySelector(`a[href='${any_tab_url}']`);
+                var group_id = elem.closest(".group").id;
+                result[group_id].tabs = result[group_id].tabs.filter(
+                  (x) => !changes.remove.newValue.includes(x.url)
+                );
+                updateGroupItem(group_id, result[group_id]);
+              } else {
+                // set all
+                Object.keys(result).forEach((key) => {
+                  if (key !== "settings") {
+                    result[key].tabs = [];
+                    updateGroupItem(key, result[key]);
+                  }
+                });
+              }
+
+              // update global counter
+              setTabTotal(
+                document.querySelectorAll(".draggable").length -
+                  changes.remove.newValue.length
+              );
+
+              // update groups
+              delete result.settings;
+              setGroups(JSON.stringify(result));
+            }
+          });
+        });
+
+        // in case "Keep in TabMerger" setting, this allows to open multiple times
+        chrome.storage.local.remove("remove");
+      }
+    };
+
+    const checkMerging = (changes, namespace) => {
+      if (
+        namespace === "local" &&
+        changes.merged_tabs &&
+        changes.merged_tabs.newValue &&
+        changes.merged_tabs.newValue.length !== 0
+      ) {
+        chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
+          // prettier-ignore
+          var into_group = local.into_group, merged_tabs = local.merged_tabs;
+          chrome.storage.sync.getBytesInUse(null, (syncBytesInUse) => {
+            var sync_bytes =
+              syncBytesInUse + JSON.stringify(merged_tabs).length;
+            if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
+              chrome.storage.sync.getBytesInUse(
+                into_group,
+                (itemBytesInUse) => {
+                  var item_bytes =
+                    itemBytesInUse + JSON.stringify(merged_tabs).length;
+
+                  if (item_bytes < ITEM_STORAGE_LIMIT.current) {
+                    // close tabs to avoid leaving some open
+                    chrome.tabs.remove(merged_tabs.map((x) => x.id));
+
+                    chrome.storage.sync.get(null, (sync) => {
+                      delete sync.settings;
+
+                      var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
+                      tabs_arr = tabs_arr.map((x) => ({
+                        url: x.url,
+                        favIconUrl: x.favIconUrl,
+                        title: x.title,
+                      }));
+
+                      var current = document.querySelectorAll(".draggable");
+                      setTabTotal(current.length + merged_tabs.length);
+
+                      sync[into_group].tabs = tabs_arr;
+                      updateGroupItem(into_group, sync[into_group]);
+                      setGroups(JSON.stringify(sync));
+                    });
+                  } else {
+                    alert(
+                      `Group's syncing capacity exceeded by ${
+                        item_bytes - ITEM_STORAGE_LIMIT.current
+                      } bytes.\n\nPlease do one of the following:
+      1. Create a new group and merge new tabs into it;
+      2. Remove some tabs from this group;
+      3. Merge less tabs into this group (each tab is ~100-300 bytes).`
+                    );
+                  }
+                }
+              );
+            } else {
+              alert(
+                `Total syncing capacity exceeded by ${
+                  sync_bytes - SYNC_STORAGE_LIMIT.current
+                } bytes.\n\nPlease do one of the following:
+      1. Remove some tabs from any group;
+      2. Delete a group that is no longer needed;
+      3. Merge less tabs into this group (each tab is ~100-300 bytes).
+      \nMake sure to Export JSON or PDF to have a backup copy!`
+              );
+            }
+
+            // remove to be able to detect changes again
+            // (even if same tabs are needed to be merged)
+            chrome.storage.local.remove(["into_group", "merged_tabs"]);
+          });
+        });
+      }
+    };
 
     // set dark mode if needed & assign default values to state variables
     chrome.storage.sync.get(null, (result) => {
@@ -188,14 +199,16 @@ export default function App() {
       setGroups(JSON.stringify(result));
     });
 
+    chrome.runtime.onUpdateAvailable.addListener(updateExtension);
     chrome.storage.onChanged.addListener(checkMerging);
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
 
     return () => {
       chrome.storage.onChanged.removeListener(checkMerging);
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
+      chrome.runtime.onUpdateAvailable.removeListener(updateExtension);
     };
-  }, [checkMerging, openOrRemoveTabs]);
+  }, []);
 
   useEffect(() => {
     if (groups !== JSON.stringify({ "group-0": defaultGroup.current })) {
@@ -279,6 +292,8 @@ export default function App() {
           },
           () => {
             setTabTotal(0);
+            defaultGroup.current.color = result.settings.color;
+            defaultGroup.current.title = result.settings.title;
             setGroups(JSON.stringify({ "group-0": defaultGroup.current }));
           }
         );

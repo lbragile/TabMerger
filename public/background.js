@@ -2,12 +2,15 @@
 var info = { which: "all" };
 var tab = { index: 0 };
 
+// ask the user to take a survey to figure out why they removed TabMerger
+chrome.runtime.setUninstallURL("https://tabmerger.herokuapp.com/survey");
+
 // extension click - open without merging or with merging
 chrome.browserAction.onClicked.addListener(() => {
   createDefaultStorageItems();
 
   chrome.storage.sync.get("settings", (result) => {
-    result.settings.open === "without"
+    result.settings === undefined || result.settings.open === "without"
       ? findExtTabAndSwitch()
       : filterTabs(info, tab);
   });

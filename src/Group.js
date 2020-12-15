@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import EdiText from "react-editext";
 
 import { FcCollapse } from "react-icons/fc";
@@ -13,6 +13,8 @@ import "./Button.css";
 
 import "./Group.css";
 export default function Group(props) {
+  const TITLE_TRIM_LIMIT = useRef(15);
+
   const [hide, setHide] = useState(false);
 
   useEffect(() => {
@@ -53,12 +55,7 @@ export default function Group(props) {
 
   function handleTitleChange(val) {
     chrome.storage.sync.get(null, (result) => {
-      if (val.length < 15) {
-        result[props.id].title = val;
-      } else {
-        result[props.id].title = val.substr(0, 12) + "...";
-      }
-
+      result[props.id].title = val;
       updateGroupItem(props.id, result[props.id]);
 
       delete result.settings;
@@ -85,6 +82,9 @@ export default function Group(props) {
     } else {
       group_block.lastChild.insertBefore(currentElement, afterElement);
     }
+
+    // allow scrolling while dragging
+    document.documentElement.scrollTop += e.clientY - e.pageY;
   };
 
   function getDragAfterElement(container, y) {
@@ -205,6 +205,15 @@ export default function Group(props) {
     return chrome.i18n.getMessage(msg);
   }
 
+  function trimTitle(str) {
+    var limit = TITLE_TRIM_LIMIT.current;
+    if (str.length > limit) {
+      str = str.substr(0, limit - 3) + "...";
+    }
+
+    return str;
+  }
+
   return (
     <div className={props.id === "group-0" ? "mt-0" : "mt-3"}>
       <div className="created float-right mr-1">
@@ -220,7 +229,7 @@ export default function Group(props) {
         <EdiText
           className="font-weight-bold"
           type="text"
-          value={translate(props.title) || props.title}
+          value={trimTitle(translate(props.title)) || trimTitle(props.title)}
           saveButtonClassName="title-save-btn"
           cancelButtonClassName="title-cancel-btn"
           editButtonClassName="title-edit-btn"

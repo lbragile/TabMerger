@@ -54,7 +54,6 @@ export default function Tabs(props) {
           ? itemBytesInUse + tab_bytes
           : itemBytesInUse;
 
-      console.log(newBytesInUse);
       chrome.storage.sync.get(null, (result) => {
         if (newBytesInUse < props.itemLimit) {
           if (origin_id !== closest_group.id) {
@@ -79,6 +78,10 @@ export default function Tabs(props) {
 
           updateGroupItem(origin_id, result[origin_id]);
           updateGroupItem(closest_group.id, result[closest_group.id]);
+
+          // update the groups
+          delete result.settings;
+          props.setGroups(JSON.stringify(result));
         } else {
           alert(`Group's syncing capacity exceeded by ${
             newBytesInUse - props.itemLimit
@@ -86,11 +89,8 @@ export default function Tabs(props) {
         1. Create a new group and merge new tabs into it;
         2. Remove some tabs from this group;
         3. Merge less tabs into this group (each tab is ~100-300 bytes).`);
+          window.location.reload();
         }
-
-        // update the groups
-        delete result.settings;
-        props.setGroups(JSON.stringify(result));
       });
     });
   };

@@ -47,7 +47,6 @@ The following lists the items which need to be crossed off of TabMerger's bucket
 #### MEDIUM PRIORITY :exclamation:
 
 - [ ] Translate settings page with Google Translate API
-- [ ] Better drag and drop - allow scrolling?
 - [ ] Combine tab and group filters into one filter (use RegEx to figure out which one is requested)
 - [ ] Hide tabs in groups with persistence.
 - [ ] Format PDF output well for multi-page groups. Add tab icons for each tab regardless of icon extension type.
@@ -64,6 +63,7 @@ The following lists the items which need to be crossed off of TabMerger's bucket
 - [x] Integrate syncing across devices with Chrome Storage API so that a user does not need to share a link with themselves to regain access to their tab list. Will store items as groups and monitor item storage and global storage limits, warning users as necessary. Note that drag and drop must be checked also. **v1.3.0**
 - [x] Incognito mode - should work with Syncing to remember data. **v1.3.0**
 - [x] Better merge and restore functionality. Avoid duplicates when merging, avoid creating tabs if they already are open in the window. **v1.3.0**
+- [x] Better drag and drop - allow scrolling? **v1.3.0**
 - [x] Add a restore to default settings button. **v1.3.0**
 - [x] Redirect to survey URL upon uninstall event. **v1.3.0**
 - [x] Make available on other browsers (Firefox, Edge, Opera). **v1.2.1**
