@@ -10,11 +10,11 @@ function setTabMergerLink() {
   if (isIE || isEdge || isEdgeChromium) {
     link =
       "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
+  } else if (isFirefox) {
+    link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
   } else if (isChrome || isOpera) {
     link =
       "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
-  } else if (isFirefox) {
-    link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
   }
 
   document.getElementById("logo-img").parentNode.href = link;
