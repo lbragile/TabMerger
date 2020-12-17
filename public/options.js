@@ -31,11 +31,11 @@ const restoreOptions = () => {
     var settings = result.settings;
     document.getElementById("options-default-color").value = settings.color;
     document.getElementById("options-default-title").value = settings.title;
-    document.querySelectorAll("input[name='restore-tabs']").forEach((item) => {
-      item.checked = item.value === settings.restore;
+    document.querySelectorAll("input[name='restore-tabs']").forEach((x) => {
+      x.checked = x.value === settings.restore;
     });
-    document.querySelectorAll("input[name='ext-open']").forEach((item) => {
-      item.checked = item.value === settings.open;
+    document.querySelectorAll("input[name='ext-open']").forEach((x) => {
+      x.checked = x.value === settings.open;
     });
     document.getElementById("options-blacklist").value = settings.blacklist;
 
@@ -49,44 +49,24 @@ const restoreOptions = () => {
     code_block.style.border = settings.dark
       ? "1px white solid"
       : "1px black solid";
+
+    var darkMode = document.getElementById("darkMode");
+    darkMode.checked = settings.dark;
+    darkMode.addEventListener("change", () => window.location.reload());
   });
 };
 
 const saveOptions = (e) => {
-  var color = document.getElementById("options-default-color").value;
-  var title = document.getElementById("options-default-title").value;
-  var restore = document.querySelector("input[name='restore-tabs']:checked")
-    .value;
-  var open = document.querySelector("input[name='ext-open']:checked").value;
-  var blacklist = document.getElementById("options-blacklist").value;
-
-  chrome.storage.sync.get("settings", (result) => {
-    var dark = result.settings.dark;
-
-    chrome.storage.sync.set({
-      settings: { open, color, title, restore, blacklist, dark },
-    });
-  });
-
   e.target.classList.replace("btn-primary", "btn-success");
   document.getElementById("save-text").classList.remove("invisible");
   setTimeout(() => {
     e.target.classList.replace("btn-success", "btn-primary");
     document.getElementById("save-text").classList.add("invisible");
-  }, 1500);
+    window.location.reload();
+  }, 500);
 };
 
 const resetOptions = () => {
-  var default_settings = {
-    open: "without",
-    color: "#dedede",
-    title: "Title",
-    restore: "keep",
-    blacklist: "",
-    dark: true,
-  };
-
-  chrome.storage.sync.set({ settings: default_settings });
   window.location.reload();
 };
 
@@ -94,7 +74,39 @@ const goHome = () => {
   window.location.replace("/index.html");
 };
 
+const setSync = () => {
+  if (document.activeElement.id === "reset-btn") {
+    var default_settings = {
+      open: "without",
+      color: "#dedede",
+      title: "Title",
+      restore: "keep",
+      blacklist: "",
+      dark: true,
+    };
+
+    chrome.storage.sync.set({ settings: default_settings });
+  } else {
+    var color = document.getElementById("options-default-color").value;
+    var title = document.getElementById("options-default-title").value;
+    var restore = document.querySelector("input[name='restore-tabs']:checked")
+      .value;
+    var open = document.querySelector("input[name='ext-open']:checked").value;
+    var blacklist = document.getElementById("options-blacklist").value;
+    var dark = document.getElementById("darkMode").checked;
+
+    chrome.storage.sync.get("settings", (result) => {
+      var store_val = { open, color, title, restore, blacklist, dark };
+      if (store_val !== result.settings) {
+        chrome.storage.sync.set({ settings: store_val });
+      }
+    });
+  }
+};
+
 window.addEventListener("load", restoreOptions);
+window.addEventListener("beforeunload", setSync);
+
 document.getElementById("save-btn").addEventListener("click", saveOptions);
 document.getElementById("reset-btn").addEventListener("click", resetOptions);
 document.getElementById("home-btn").addEventListener("click", goHome);

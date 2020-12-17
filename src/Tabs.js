@@ -10,12 +10,6 @@ export default function Tabs(props) {
 
   const [tabs, setTabs] = useState([]);
 
-  function updateGroupItem(name, value) {
-    var storage_entry = {};
-    storage_entry[name] = value;
-    chrome.storage.sync.set(storage_entry, () => {});
-  }
-
   useEffect(() => {
     chrome.storage.sync.get(props.id, (result) => {
       setTabs(result[props.id] ? result[props.id].tabs : []);
@@ -72,9 +66,6 @@ export default function Tabs(props) {
             url: item.lastChild.href,
           }));
 
-          updateGroupItem(origin_id, result[origin_id]);
-          updateGroupItem(closest_group.id, result[closest_group.id]);
-
           // update the groups
           delete result.settings;
           props.setGroups(JSON.stringify(result));
@@ -98,7 +89,6 @@ export default function Tabs(props) {
 
     chrome.storage.sync.get(group.id, (result) => {
       result[group.id].tabs = tabs.filter((x) => x.url !== url);
-      updateGroupItem(group.id, result[group.id]);
       setTabs(result[group.id].tabs);
       props.setTabTotal(document.querySelectorAll(".draggable").length);
     });
@@ -123,13 +113,6 @@ export default function Tabs(props) {
 
   return (
     <div className="d-flex flex-column mx-0">
-      <h5 className="tabTotal-inGroup my-1">
-        {tabs.length +
-          " " +
-          translate(
-            tabs.length === 1 ? "groupTotalSingular" : "groupTotalPlural"
-          )}
-      </h5>
       {tabs.map((tab, index) => {
         return (
           <div

@@ -4,13 +4,14 @@
   box-sizing: border-box;
 }
 
-.container {
+.container-fluid {
   position: relative;
+  width: 90%;
 }
 
-.left-side-container {
+.container-below-hr {
   position: relative;
-  top: -10px;
+  top: 15px;
   z-index: 0;
 }
 
@@ -31,17 +32,6 @@
 .btn:hover {
   background: white;
   cursor: pointer;
-}
-
-/* DARK MODE SWITCH */
-.custom-control-label:hover,
-.custom-control-label::before,
-.custom-control-label::after {
-  cursor: pointer;
-}
-
-.custom-control-input:focus ~ .custom-control-label::before {
-  box-shadow: none !important;
 }
 
 /* GROUP & TAB FILTERS */
@@ -66,39 +56,20 @@ hr {
   width: 100%;
 }
 
-/* RIGHT SIDE (VIDEO - DONATE - SUPPORT - REVIEW) */
-#side-panel {
-  position: fixed;
-  top: 50%;
-  right: 2%;
-  transform: translateY(-50%);
-  width: 30%;
+/* LINKS (SUPPORT | VIDEO | DONATE | REVIEW) */
+.link-container {
+  float: right;
 }
 
-#video-demo {
-  zoom: 1.25;
-  background-color: none;
-  border: none;
-  box-shadow: 0 0 8px lightskyblue;
-  border-radius: 10px;
+.link,
+.link:hover {
+  text-decoration: none;
+  color: black;
+  z-index: 5;
 }
 
-#need-help:hover {
-  background: #17a2b8 !important;
-}
-
-/* DONATE BUTTON */
-input[type="image"] {
-  transform: scale(1.1);
-}
-
-#donate {
-  transform: scale(0.9);
-}
-
-input[type="image"]:focus {
-  border: none;
-  outline: none;
+.link:hover {
+  font-weight: bold;
 }
 
 /* SCROLLBAR */

@@ -1,32 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
-import EdiText from "react-editext";
 
-import { FcCollapse } from "react-icons/fc";
-import { CgRemove } from "react-icons/cg";
+import { IoMdCloseCircle, IoIosColorFill } from "react-icons/io";
 import { FaWindowRestore } from "react-icons/fa";
 import { BiArrowToRight } from "react-icons/bi";
-import { BsPencilSquare } from "react-icons/bs";
 import { MdVerticalAlignCenter } from "react-icons/md";
+import { AiOutlineMinus, AiOutlineReload } from "react-icons/ai";
 
 import Button from "./Button.js";
 import "./Button.css";
-
 import "./Group.css";
+
 export default function Group(props) {
   const TITLE_TRIM_LIMIT = useRef(15);
-
   const [hide, setHide] = useState(false);
 
   useEffect(() => {
     var group = document.getElementById(props.id);
     setGroupBackground(group);
   }, [props.id]);
-
-  function updateGroupItem(name, value) {
-    var storage_entry = {};
-    storage_entry[name] = value;
-    chrome.storage.sync.set(storage_entry, () => {});
-  }
 
   function setGroupBackground(e) {
     var group_title = e.previousSibling;
@@ -43,33 +34,34 @@ export default function Group(props) {
     });
   }
 
-  function saveGroupBackground(e) {
-    chrome.storage.sync.get(null, (result) => {
-      result[props.id].color = e.target.value;
-      updateGroupItem(props.id, result[props.id]);
-
-      delete result.settings;
-      props.setGroups(JSON.stringify(result));
-    });
+  function updateGroup(e, type) {
+    var group_title = e.target.closest(".group-title");
+    var group_id = group_title.nextSibling.id;
+    var current_groups = JSON.parse(props.groups);
+    if (type === "color") {
+      current_groups[group_id].color = e.target.value;
+    } else {
+      current_groups[group_id].title = e.target.innerText;
+      props.setTitle(e.target.innerText);
+      e.target.lastChild.style.visibility = "hidden";
+    }
+    props.setGroups(JSON.stringify(current_groups));
   }
 
-  function handleTitleChange(val) {
-    chrome.storage.sync.get(null, (result) => {
-      result[props.id].title = val;
-      updateGroupItem(props.id, result[props.id]);
+  function selectTitle(e) {
+    var range = document.createRange();
+    range.selectNodeContents(e.target);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
 
-      delete result.settings;
-      props.setGroups(JSON.stringify(result));
-    });
+    e.target.lastChild.style.visibility = "visible";
   }
 
-  function getEditTitleIcon() {
-    return (
-      <div className="tip p-0 mb-1">
-        <BsPencilSquare color="saddlebrown" />
-        <span className="tiptext-global">{translate("editTitle")}</span>
-      </div>
-    );
+  function reloadTitle(e) {
+    var title_text = e.target.closest("p");
+    title_text.firstChild.innerText = props.title;
+    title_text.blur();
   }
 
   const dragOver = (e) => {
@@ -159,15 +151,8 @@ export default function Group(props) {
             target.querySelectorAll(".draggable").length
         );
 
-        // easiest to clear all the items and restore the values as needed
-        chrome.storage.sync.clear(() => {
-          Object.keys(result).forEach((key) => {
-            updateGroupItem(key, result[key]);
-          });
-
-          delete result.settings;
-          props.setGroups(JSON.stringify(result));
-        });
+        delete result.settings;
+        props.setGroups(JSON.stringify(result));
       });
     });
   }
@@ -202,16 +187,21 @@ export default function Group(props) {
   }
 
   function translate(msg) {
-    return chrome.i18n.getMessage(msg);
+    try {
+      return chrome.i18n.getMessage(msg);
+    } catch (err) {
+      return msg;
+    }
   }
 
-  function trimTitle(str) {
-    var limit = TITLE_TRIM_LIMIT.current;
-    if (str.length > limit) {
-      str = str.substr(0, limit - 3) + "...";
+  function monitorTitleLength(e) {
+    if (e.target.innerText.length > TITLE_TRIM_LIMIT.current) {
+      e.preventDefault();
     }
 
-    return str;
+    if (e.keyCode === 13) {
+      e.target.blur();
+    }
   }
 
   return (
@@ -226,60 +216,49 @@ export default function Group(props) {
       </div>
 
       <div className="group-title d-flex flex-row justify-content-center">
-        <EdiText
-          className="font-weight-bold"
-          type="text"
-          value={trimTitle(translate(props.title)) || trimTitle(props.title)}
-          saveButtonClassName="title-save-btn"
-          cancelButtonClassName="title-cancel-btn"
-          editButtonClassName="title-edit-btn"
-          editButtonContent={getEditTitleIcon()}
-          saveButtonContent="✓"
-          cancelButtonContent="✕"
-          onEditingStart={() => document.activeElement.select()}
-          onSave={(val) => handleTitleChange(val)}
-          submitOnUnfocus
-        />
-        <div className="tip ml-3 p-0">
-          <input
-            defaultValue={props.color}
-            onChange={(e) => setGroupBackground(e)}
-            onBlur={(e) => saveGroupBackground(e)}
-            type="color"
-          />
-          <span className="tiptext-global">{translate("pickColor")}</span>
-        </div>
-      </div>
+        <h5 className="tabTotal-inGroup">
+          {JSON.parse(props.groups)[props.id].tabs.length + " Tabs"}
+        </h5>
 
-      <div id={props.id} className={props.className} onDragOver={dragOver}>
-        <div className="mr-1 mt-1 row float-right">
-          <Button
-            classes="merge-btn mr-1 btn-in-group btn-outline-primary"
-            translate={translate("mergeALLtabs")}
-            tooltip={"tiptext-group"}
-            onClick={() => sendMessage({ msg: "all", id: props.id })}
-          >
-            <MdVerticalAlignCenter color="black" size="1.3rem" />
-          </Button>
-          <Button
-            classes="merge-left-btn mr-1 btn-in-group btn-outline-warning"
-            translate={translate("mergeLEFTtabs")}
-            tooltip={"tiptext-group"}
-            onClick={() => sendMessage({ msg: "left", id: props.id })}
-          >
-            <BiArrowToRight color="black" size="1.3rem" />
-          </Button>
-          <Button
-            classes="merge-right-btn mr-1 btn-in-group btn-outline-warning"
-            translate={translate("mergeRIGHTtabs")}
-            tooltip={"tiptext-group"}
-            onClick={() => sendMessage({ msg: "right", id: props.id })}
-          >
-            <BiArrowToRight color="black" size="1.3rem" />
-          </Button>
+        <p
+          className="title-edit-input font-weight-bold p-1 mb-0"
+          contentEditable
+          onFocus={(e) => selectTitle(e)}
+          onBlur={(e) => updateGroup(e, "title")}
+          onKeyDown={(e) => monitorTitleLength(e)}
+        >
+          <span>{props.title}</span>
+          <span className="reload-title">
+            <AiOutlineReload size="1.2rem" onClick={(e) => reloadTitle(e)} />
+          </span>
+        </p>
 
+        <div className="title-btn-containter row">
+          <div className="tip p-0">
+            <span>
+              <IoIosColorFill
+                className="input-color"
+                onClick={(e) => e.target.closest("span").nextSibling.click()}
+              />
+            </span>
+            <input
+              defaultValue={props.color}
+              onChange={(e) => setGroupBackground(e)}
+              onBlur={(e) => updateGroup(e, "color")}
+              type="color"
+            />
+            <span className="tiptext-global">{translate("pickColor")}</span>
+          </div>
           <Button
-            classes="open-group-btn mr-1 ml-2 btn-in-group btn-light btn-outline-success"
+            classes="show-hide-btn btn-in-group-title"
+            translate={hide ? translate("showTabs") : translate("hideTabs")}
+            tooltip={"tiptext-group"}
+            onClick={(e) => toggleGroup(e)}
+          >
+            <AiOutlineMinus color="darkcyan" />
+          </Button>
+          <Button
+            classes="open-group-btn btn-in-group-title"
             translate={translate("openGroup")}
             tooltip={"tiptext-group"}
             onClick={(e) => openGroup(e)}
@@ -288,24 +267,44 @@ export default function Group(props) {
           </Button>
 
           <Button
-            classes="delete-group-btn mr-1 btn-in-group btn-light btn-outline-danger"
+            classes="delete-group-btn btn-in-group-title"
             translate={translate("deleteGroup")}
             tooltip={"tiptext-group"}
             onClick={(e) => deleteGroup(e)}
           >
-            <CgRemove color="red" />
+            <IoMdCloseCircle color="red" />
           </Button>
+        </div>
+      </div>
 
-          <Button
-            classes="show-hide-btn mr-1 ml-2 btn-in-group btn-light btn-outline-info"
-            translate={hide ? translate("showTabs") : translate("hideTabs")}
-            tooltip={"tiptext-group"}
-            onClick={(e) => toggleGroup(e)}
-          >
-            <FcCollapse
-              style={{ transform: hide ? "rotate(180deg)" : "rotate(0deg)" }}
-            />
-          </Button>
+      <div id={props.id} className={props.className} onDragOver={dragOver}>
+        <div className="merging-container float-right">
+          <div className="d-flex flex-column">
+            <Button
+              classes="merge-btn btn-for-merging btn-outline-primary"
+              translate={translate("mergeALLtabs")}
+              tooltip={"tiptext-group"}
+              onClick={() => sendMessage({ msg: "all", id: props.id })}
+            >
+              <MdVerticalAlignCenter color="black" size="1.3rem" />
+            </Button>
+            <Button
+              classes="merge-left-btn btn-for-merging btn-outline-warning"
+              translate={translate("mergeLEFTtabs")}
+              tooltip={"tiptext-group"}
+              onClick={() => sendMessage({ msg: "left", id: props.id })}
+            >
+              <BiArrowToRight color="black" size="1.3rem" />
+            </Button>
+            <Button
+              classes="merge-right-btn btn-for-merging btn-outline-warning"
+              translate={translate("mergeRIGHTtabs")}
+              tooltip={"tiptext-group"}
+              onClick={() => sendMessage({ msg: "right", id: props.id })}
+            >
+              <BiArrowToRight color="black" size="1.3rem" />
+            </Button>
+          </div>
         </div>
 
         {props.children}

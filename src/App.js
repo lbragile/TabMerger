@@ -10,8 +10,8 @@ import "./Button.css";
 
 import { MdSettings, MdDeleteForever, MdAddCircle } from "react-icons/md";
 // prettier-ignore
-import { FaTrashRestore, FaFileImport, FaFileExport, FaFilePdf } from "react-icons/fa";
-import { RiStarSFill } from "react-icons/ri";
+import { FaTrashRestore, FaFilePdf } from "react-icons/fa";
+import { BiImport, BiExport } from "react-icons/bi";
 
 import jsPDF from "jspdf";
 
@@ -39,15 +39,6 @@ export default function App() {
   }
 
   useEffect(() => {
-    const updateExtension = (details) => {
-      var msg = `An update (v${details.version}) is availble for TabMerger.\nSelect 'OK' to update or 'Cancel' to do so at a later time.`;
-      var response = window.confirm(msg);
-
-      if (response) {
-        chrome.runtime.reload();
-      }
-    };
-
     const openOrRemoveTabs = (changes, namespace) => {
       if (namespace === "local" && changes.remove && changes.remove.newValue) {
         // extract and remove the button type from array
@@ -76,13 +67,11 @@ export default function App() {
                 result[group_id].tabs = result[group_id].tabs.filter(
                   (x) => !changes.remove.newValue.includes(x.url)
                 );
-                updateGroupItem(group_id, result[group_id]);
               } else {
                 // set all
                 Object.keys(result).forEach((key) => {
                   if (key !== "settings") {
                     result[key].tabs = [];
-                    updateGroupItem(key, result[key]);
                   }
                 });
               }
@@ -142,7 +131,6 @@ export default function App() {
                       setTabTotal(current.length + merged_tabs.length);
 
                       sync[into_group].tabs = tabs_arr;
-                      updateGroupItem(into_group, sync[into_group]);
                       setGroups(JSON.stringify(sync));
                     });
                   } else {
@@ -177,14 +165,21 @@ export default function App() {
       }
     };
 
+    function updateSync() {
+      if (
+        JSON.stringify(groups) !==
+        JSON.stringify({ "group-0": defaultGroup.current })
+      ) {
+        var current_groups = JSON.parse(groups);
+        Object.keys(current_groups).forEach((key) => {
+          updateGroupItem(key, current_groups[key]);
+        });
+      }
+    }
+
     // set dark mode if needed & assign default values to state variables
     chrome.storage.sync.get(null, (result) => {
-      var json = { target: { checked: null } };
-      var darkModeSwitch = document.getElementById("darkMode");
-      darkModeSwitch.checked = result.settings.dark;
-      json.target.checked = result.settings.dark;
-
-      toggleDarkMode(json);
+      toggleDarkMode(result.settings.dark);
 
       // state variables
       setColor(result.settings.color);
@@ -198,25 +193,16 @@ export default function App() {
       setGroups(JSON.stringify(result));
     });
 
-    chrome.runtime.onUpdateAvailable.addListener(updateExtension);
     chrome.storage.onChanged.addListener(checkMerging);
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
+    window.addEventListener("beforeunload", updateSync());
 
     return () => {
       chrome.storage.onChanged.removeListener(checkMerging);
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
-      chrome.runtime.onUpdateAvailable.removeListener(updateExtension);
+      window.removeEventListener("beforeunload", updateSync());
     };
   }, []);
-
-  useEffect(() => {
-    if (groups !== JSON.stringify({ "group-0": defaultGroup.current })) {
-      var parsed_groups = JSON.parse(groups);
-      Object.keys(parsed_groups).forEach((key) => {
-        updateGroupItem(key, parsed_groups[key]);
-      });
-    }
-  }, [groups]);
 
   const groupFormation = (group_items) => {
     return Object.values(JSON.parse(group_items)).map((x, i) => {
@@ -231,6 +217,7 @@ export default function App() {
           key={Math.random()}
           setColor={setColor}
           setTitle={setTitle}
+          groups={groups}
           setGroups={setGroups}
           setTabTotal={setTabTotal}
         >
@@ -300,12 +287,12 @@ export default function App() {
     });
   }
 
-  function toggleDarkMode(e) {
+  function toggleDarkMode(isChecked) {
     var container = document.querySelector("body");
     var hr = document.querySelector("hr");
     var settings_btn = document.getElementById("options-btn");
+    var links = document.getElementsByClassName("link");
 
-    var isChecked = e.target.checked;
     container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
     container.style.color = isChecked ? "white" : "black";
     hr.style.borderTop = isChecked
@@ -315,9 +302,8 @@ export default function App() {
       ? "1px gray solid"
       : "1px black solid";
 
-    chrome.storage.sync.get("settings", (result) => {
-      result.settings.dark = isChecked === true;
-      chrome.storage.sync.set({ settings: result.settings });
+    [...links].forEach((x) => {
+      x.style.color = isChecked ? "white" : "black";
     });
   }
 
@@ -349,9 +335,6 @@ export default function App() {
         reader.readAsText(e.target.files[0]);
         reader.onload = () => {
           var fileContent = JSON.parse(reader.result);
-          Object.keys(fileContent).forEach((key) => {
-            updateGroupItem(key, fileContent[key]);
-          });
 
           delete fileContent.settings;
           setGroups(JSON.stringify(fileContent));
@@ -554,207 +537,152 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
 
   return (
     <div className="container-fluid">
-      <div className="row m-auto">
-        <div className="col-lg-8" id="tabmerger-container">
-          <div>
-            <div className="custom-control custom-switch mt-4 float-right">
-              <input
-                type="checkbox"
-                className="custom-control-input"
-                id="darkMode"
-                onChange={(e) => {
-                  toggleDarkMode(e);
-                }}
-              />
-              <label className="custom-control-label" for="darkMode">
-                <b>{translate("darkMode")}</b>
-              </label>
-            </div>
-            <a href={getTabMergerLink(false)}>
-              <img
-                id="logo-img"
-                className="mt-4"
-                src="./images/logo-full-rescale.PNG"
-                alt="TabMerger Logo"
-              />
-            </a>
-            <div>
-              <h2 id="tab-total">
-                <span className="small">
-                  {tabTotal}{" "}
-                  {tabTotal === 1
-                    ? translate("pageTotalSingular")
-                    : translate("pageTotalPlural")}
-                </span>
-              </h2>
-
-              <div className="search-filter row float-right">
-                <input
-                  type="text"
-                  name="search-group"
-                  className="mr-2 px-1"
-                  placeholder={translate("groupTitle")}
-                  onChange={(e) => groupFilter(e)}
-                />
-                <input
-                  type="text"
-                  name="search-tab"
-                  className="px-1"
-                  placeholder={translate("tabTitle")}
-                  onChange={(e) => tabFilter(e)}
-                />
-              </div>
-            </div>
-            <hr />
-          </div>
-          <div className="left-side-container">
-            <div className="global-btn-row row">
-              <Button
-                id="open-all-btn"
-                classes="ml-3 p-0 btn-in-global btn-outline-success"
-                translate={translate("openAll")}
-                tooltip={"tiptext-global"}
-                onClick={() => openAllTabs()}
-              >
-                <FaTrashRestore color="green" />
-              </Button>
-
-              <Button
-                id="delete-all-btn"
-                classes="ml-1 mr-4 p-0 btn-in-global btn-outline-danger"
-                translate={translate("deleteAll")}
-                tooltip={"tiptext-global"}
-                onClick={() => deleteAllGroups()}
-              >
-                <MdDeleteForever color="red" />
-              </Button>
-
-              <Button
-                id="export-btn"
-                classes="ml-4 btn-in-global btn-outline-info"
-                translate={translate("exportJSON")}
-                tooltip={"tiptext-global"}
-                onClick={exportJSON}
-              >
-                <FaFileExport color="darkcyan" size="1.5rem" />
-              </Button>
-
-              <div>
-                <label
-                  id="import-btn"
-                  for="import-input"
-                  className="mx-1 my-0 btn-in-global btn btn-outline-info"
-                >
-                  <div className="tip">
-                    <FaFileImport color="darkcyan" size="1.4rem" />
-                    <span className="tiptext-global">
-                      {translate("importJSON")}
-                    </span>
-                  </div>
-                </label>
-                <input
-                  id="import-input"
-                  type="file"
-                  accept=".json"
-                  onChange={(e) => readImportedFile(e)}
-                ></input>
-              </div>
-
-              <Button
-                id="pdf-btn"
-                classes="p-0 btn-in-global btn-outline-info"
-                translate={translate("exportPDF")}
-                tooltip={"tiptext-global"}
-                onClick={() => exportPDF()}
-              >
-                <FaFilePdf color="purple" size="1.5rem" />
-              </Button>
-
-              <Button
-                id="options-btn"
-                classes="p-0 btn-in-global btn-outline-dark"
-                translate={translate("settings")}
-                tooltip={"tiptext-global"}
-                onClick={() => window.location.replace("/options.html")}
-              >
-                <MdSettings color="grey" size="1.6rem" />
-              </Button>
-            </div>
-            <div className="groups-container">
-              {groupFormation(groups)}
-
-              <Button
-                id="add-group-btn"
-                classes="d-block btn-in-global mt-1 ml-3 p-2"
-                translate={translate("addGroup")}
-                tooltip={"tiptext-global"}
-                onClick={() => addGroup()}
-              >
-                <MdAddCircle color="grey" size="2rem" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-lg-4">
-          <div class="d-flex flex-column align-items-center" id="side-panel">
-            <a
-              href="https://tabmerger.herokuapp.com/"
-              className="btn btn-info font-weight-bold mb-3"
-              id="need-help"
-            >
-              {translate("needHelp")}
-            </a>
-            <h4>
-              <b>{translate("quickDemo")}</b>
-            </h4>
-
-            <iframe
-              style={{ frameBorder: "0", width: "100%", height: "260px" }}
-              src="https://www.youtube.com/embed/gx0dNUbwCn4?controls=1&hd=1&playlist=gx0dNUbwCn4"
-              allowFullScreen="true"
-              webkitallowfullscreen="true"
-              mozallowfullscreen="true"
-              title="TabMerger Quick Demo"
-              id="video-demo"
-            ></iframe>
-
-            <div id="donate" className="my-3">
-              <h4 className="mb-3 text-center">
-                <b>{translate("supportUs")}</b>
-              </h4>
-              <form
-                action="https://www.paypal.com/donate"
-                method="post"
-                target="_top"
-              >
-                <input
-                  type="hidden"
-                  name="hosted_button_id"
-                  value="X3EYMX8CVA4SY"
-                />
-                <input
-                  type="image"
-                  src="./images/paypal-donate.png"
-                  alt="Donate with PayPal button"
-                  border="0"
-                  name="submit"
-                />
-              </form>
-            </div>
-
-            <div id="review" className="mb-3">
-              <h4 className="mb-1 text-center">
-                <b>{translate("leaveReview")}</b>
-              </h4>
-              <a href={getTabMergerLink(true)}>
-                <div className="row ml-1 px-1">
-                  {[1, 2, 3, 4, 5].map(() => {
-                    return <RiStarSFill color="goldenrod" size="2rem" />;
-                  })}
-                </div>
+      <div className="row link-container mt-4 mr-2">
+        {[
+          { url: "https://tabmerger.herokuapp.com/", text: "HELP" },
+          { url: "https://youtu.be/gx0dNUbwCn4", text: "DEMO" },
+          {
+            url:
+              "https://www.paypal.com/donate?hosted_button_id=X3EYMX8CVA4SY&source=url",
+            text: "DONATE",
+          },
+          { url: getTabMergerLink(true), text: "REVIEW" },
+        ].map((x, i) => {
+          return (
+            <>
+              <a className="link" href={x.url} target="_blank" rel="noreferrer">
+                {x.text}
               </a>
+              <span style={{ padding: "0 5px" }}>{i === 3 ? "" : " | "}</span>
+            </>
+          );
+        })}
+      </div>
+
+      <div className="col" id="tabmerger-container">
+        <div>
+          <a href={getTabMergerLink(false)}>
+            <img
+              id="logo-img"
+              className="mt-4"
+              src="./images/logo-full-rescale.PNG"
+              alt="TabMerger Logo"
+            />
+          </a>
+          <div>
+            <h2 id="tab-total">
+              <span className="small">
+                {tabTotal}{" "}
+                {tabTotal === 1
+                  ? translate("pageTotalSingular")
+                  : translate("pageTotalPlural")}
+              </span>
+            </h2>
+
+            <div className="search-filter row float-right">
+              <input
+                type="text"
+                name="search-group"
+                className="mr-2 px-1"
+                placeholder={translate("groupTitle")}
+                onChange={(e) => groupFilter(e)}
+              />
+              <input
+                type="text"
+                name="search-tab"
+                className="px-1"
+                placeholder={translate("tabTitle")}
+                onChange={(e) => tabFilter(e)}
+              />
             </div>
+          </div>
+          <hr />
+        </div>
+        <div className="container-below-hr">
+          <div className="global-btn-row row">
+            <Button
+              id="open-all-btn"
+              classes="p-0 btn-in-global btn-outline-success"
+              translate={translate("openAll")}
+              tooltip={"tiptext-global"}
+              onClick={() => openAllTabs()}
+            >
+              <FaTrashRestore color="green" />
+            </Button>
+
+            <Button
+              id="delete-all-btn"
+              classes="ml-1 mr-4 p-0 btn-in-global btn-outline-danger"
+              translate={translate("deleteAll")}
+              tooltip={"tiptext-global"}
+              onClick={() => deleteAllGroups()}
+            >
+              <MdDeleteForever color="red" />
+            </Button>
+
+            <Button
+              id="export-btn"
+              classes="ml-4 btn-in-global btn-outline-info"
+              translate={translate("exportJSON")}
+              tooltip={"tiptext-global"}
+              onClick={exportJSON}
+            >
+              <BiExport color="darkcyan" size="1.4rem" />
+            </Button>
+
+            <div>
+              <label
+                id="import-btn"
+                for="import-input"
+                className="mx-1 my-0 btn-in-global btn btn-outline-info"
+              >
+                <div className="tip">
+                  <BiImport color="darkcyan" size="1.4rem" />
+                  <span className="tiptext-global">
+                    {translate("importJSON")}
+                  </span>
+                </div>
+              </label>
+              <input
+                id="import-input"
+                type="file"
+                accept=".json"
+                onChange={(e) => readImportedFile(e)}
+              ></input>
+            </div>
+
+            <Button
+              id="pdf-btn"
+              classes="p-0 btn-in-global btn-outline-info"
+              translate={translate("exportPDF")}
+              tooltip={"tiptext-global"}
+              onClick={() => exportPDF()}
+            >
+              <FaFilePdf color="purple" size="1.5rem" />
+            </Button>
+
+            <Button
+              id="options-btn"
+              classes="p-0 btn-in-global btn-outline-dark"
+              translate={translate("settings")}
+              tooltip={"tiptext-global"}
+              onClick={() => window.location.replace("/options.html")}
+            >
+              <MdSettings color="grey" size="1.6rem" />
+            </Button>
+          </div>
+          <div className="groups-container">
+            {groupFormation(groups)}
+
+            <Button
+              id="add-group-btn"
+              classes="d-block btn-in-global mt-1 ml-3 p-2"
+              translate={translate("addGroup")}
+              tooltip={"tiptext-global"}
+              onClick={() => addGroup()}
+            >
+              <MdAddCircle color="#cfcfcf" size="2rem" />
+            </Button>
           </div>
         </div>
       </div>

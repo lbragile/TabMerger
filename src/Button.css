@@ -8,26 +8,36 @@
 }
 
 .btn-in-global {
-  width: 45px;
-  height: 45px;
+  width: 30px;
+  height: 30px;
+}
+
+#open-all-btn svg,
+#import-btn svg,
+#export-btn svg {
+  padding: 0;
 }
 
 #open-all-btn svg {
   width: 22px;
   height: 22px;
-  padding: 0;
+  position: relative;
+  top: -2px;
+}
+
+#import-btn svg,
+#export-btn svg {
+  position: relative;
+  left: -11px;
+  top: -6px;
+  width: 26px;
+  height: 26px;
 }
 
 #delete-all-btn svg {
-  width: 30px;
-  height: 35px;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  padding-top: 4px;
-}
-
-#import-btn svg {
-  position: relative;
-  top: 3px;
 }
 
 #import-input {
@@ -40,6 +50,12 @@
   border: 1px solid purple;
 }
 
+#pdf-btn svg {
+  position: relative;
+  left: 1px;
+  top: -1px;
+}
+
 #options-btn {
   position: absolute;
   right: 0px;
@@ -49,16 +65,36 @@
   background: none !important;
 }
 
-/* GROUP */
-.btn-in-group {
-  width: 26px;
-  height: 34px;
+/* MERGE BUTTONS */
+.merging-container {
+  margin-top: 1px;
+  margin-right: 3px;
 }
 
-.btn-in-group svg {
+.btn-for-merging,
+.btn-in-group-title {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+}
+
+.btn-for-merging svg {
   position: relative;
   left: -10px;
-  top: -3px;
+  top: -10px;
+}
+
+.title-btn-containter {
+  position: absolute;
+  right: 20px;
+  top: 2px;
+}
+
+.btn-in-group-title {
+  margin: 0;
+  padding: 0 2px;
+  border: none;
+  background: none !important;
 }
 
 .merge-btn svg {

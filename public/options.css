@@ -12,8 +12,30 @@ textarea {
   width: 100%;
 }
 
-#home-btn {
-  border: 1px solid black;
+hr {
+  margin: 0;
+}
+
+.container {
+  position: relative;
+}
+
+/* DARK MODE SWITCH */
+.custom-control {
+  position: absolute;
+  top: 90px;
+  right: 0;
+  margin-right: 15px;
+}
+
+.custom-control-label:hover,
+.custom-control-label::before,
+.custom-control-label::after {
+  cursor: pointer;
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: none !important;
 }
 
 /* DIRECTIONS (TabMerger > ....) */
@@ -23,6 +45,7 @@ code {
   left: 5%;
   transform: translateX(-50%);
   padding: 2px 5px;
+  margin: 10px 0;
   border-radius: 5px;
 }
 
@@ -34,4 +57,9 @@ small {
 /* SAVE ALERT */
 .alert {
   width: 65px;
+}
+
+/* BUTTONS */
+#home-btn {
+  border: 1px solid black;
 }

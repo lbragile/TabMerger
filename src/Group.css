@@ -1,6 +1,6 @@
 .group {
   min-height: 75px;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .group-title {
@@ -14,69 +14,65 @@
   color: black !important;
 }
 
-/* PAGE TOTAL COUNTER */
-.tabTotal-inGroup {
-  width: 25%;
-  color: black !important;
-}
-
 /* TIMESTAMP */
 .created {
   background: none !important;
   position: relative;
-  top: 10px;
+  top: 7px;
+}
+
+/* GROUP COUNTER */
+.tabTotal-inGroup {
+  margin: 0;
+  padding: 1px;
+  position: absolute;
+  left: 10px;
+  top: 2px;
+  color: black !important;
+
+  min-width: 24px;
+  min-height: 24px;
+  text-align: center;
 }
 
 /* COLOR PICKER (GROUP) */
-input[type="color"] {
-  width: 40px;
-  margin-top: 7px;
+.input-color {
+  position: absolute;
+  right: 10px;
+  top: 2px;
+  width: 24px;
+  height: 24px;
 }
 
-input[type="color"]:hover {
+.input-color:hover {
   cursor: pointer;
 }
 
-/* EDITEXT */
-input[editext="input"] {
-  width: 150px;
-  padding: 2px;
-  text-align: center;
-  border-radius: 5px;
-}
-
-.title-edit-btn {
-  border: none;
-  padding: 0;
-  background: none;
-}
-
-/* remove the default pencil */
-.title-edit-btn::before {
+input[type="color"] {
   display: none;
 }
 
-.title-edit-btn:hover {
-  background: none;
+/* GROUP TITLE */
+.title-edit-input {
+  height: 30px;
+  position: relative;
+  top: -5px;
+  left: -10%;
+  padding-bottom: 5px;
 }
 
-.title-save-btn,
-.title-cancel-btn {
-  padding: 0 5px;
-  background: none;
-  border: none;
-}
-
-.title-save-btn:focus,
-.title-cancel-btn:focus {
+.title-edit-input:focus {
   border: none;
   outline: none;
 }
 
-.title-save-btn {
-  color: green;
+.reload-title {
+  visibility: hidden;
+  position: relative;
+  padding: 0 5px;
+  top: -3px;
 }
 
-.title-cancel-btn {
-  color: red;
+.reload-title:hover {
+  cursor: pointer;
 }

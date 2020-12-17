@@ -143,12 +143,11 @@ function createDefaultStorageItems() {
   };
 
   chrome.storage.sync.get(["settings", "group-0"], (result) => {
-    if (!result.settings) {
-      chrome.storage.sync.set({ settings: default_settings });
-    }
-
-    if (!result["group-0"]) {
-      chrome.storage.sync.set({ "group-0": default_group });
+    if (!result.settings || !result["group-0"]) {
+      chrome.storage.sync.set({
+        settings: default_settings,
+        "group-0": default_group,
+      });
     }
   });
 }

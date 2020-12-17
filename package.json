@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "jspdf": "^2.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-editext": "^3.17.1",
     "react-icons": "^3.11.0",
     "react-scripts": "4.0.0"
   },
