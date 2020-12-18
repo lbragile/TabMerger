@@ -86,7 +86,10 @@ const setSync = () => {
     };
 
     chrome.storage.sync.set({ settings: default_settings });
-  } else {
+  } else if (
+    document.activeElement.id === "save-btn" ||
+    document.activeElement.id === "darkMode"
+  ) {
     var color = document.getElementById("options-default-color").value;
     var title = document.getElementById("options-default-title").value;
     var restore = document.querySelector("input[name='restore-tabs']:checked")

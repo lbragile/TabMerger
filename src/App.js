@@ -9,7 +9,6 @@ import "./App.css";
 import "./Button.css";
 
 import { MdSettings, MdDeleteForever, MdAddCircle } from "react-icons/md";
-// prettier-ignore
 import { FaTrashRestore, FaFilePdf } from "react-icons/fa";
 import { BiImport, BiExport } from "react-icons/bi";
 
@@ -20,61 +19,64 @@ export default function App() {
   const SYNC_STORAGE_LIMIT = useRef(102000); //1000 for testing - 102000 for production
   const NUM_GROUP_LIMIT = useRef(300); // 3 for testing - 3000 for production
 
-  const [color, setColor] = useState("#dedede");
-  const [title, setTitle] = useState("Title");
   const defaultGroup = useRef({
-    title,
-    color,
-    created: new Date(Date.now()).toString(),
+    title: "Title",
+    color: "#dedede",
+    created: getTimestamp(),
     tabs: [],
   });
 
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(
-    JSON.stringify({ "group-0": defaultGroup.current })
+    localStorage.getItem("groups") ||
+      JSON.stringify({ "group-0": defaultGroup.current })
   );
 
-  function findSameTab(tab_list, match_url) {
-    return tab_list.filter((x) => x.url === match_url);
-  }
-
   useEffect(() => {
+    function findSameTab(tab_list, match_url) {
+      return tab_list.filter((x) => x.url === match_url);
+    }
+
     const openOrRemoveTabs = (changes, namespace) => {
-      if (namespace === "local" && changes.remove && changes.remove.newValue) {
+      if (
+        namespace === "local" &&
+        changes.remove &&
+        changes.remove.newValue !== []
+      ) {
         // extract and remove the button type from array
         var btn_type = changes.remove.newValue[0];
         changes.remove.newValue.splice(0, 1);
 
         // try to not open tabs if it is already open
         chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
-          chrome.storage.sync.get(null, (result) => {
-            for (var i = 0; i < changes.remove.newValue.length; i++) {
-              var tab_url = changes.remove.newValue[i];
-              var same_tab = findSameTab(windowTabs, tab_url);
-              if (same_tab[0]) {
-                chrome.tabs.move(same_tab[0].id, { index: -1 });
-              } else {
-                chrome.tabs.create({ url: tab_url, active: false });
-              }
+          for (var i = 0; i < changes.remove.newValue.length; i++) {
+            var tab_url = changes.remove.newValue[i];
+            var same_tab = findSameTab(windowTabs, tab_url);
+            if (same_tab[0]) {
+              chrome.tabs.move(same_tab[0].id, { index: -1 });
+            } else {
+              chrome.tabs.create({ url: tab_url, active: false });
             }
+          }
 
-            // remove tab if needed
+          // remove tab if needed
+          chrome.storage.sync.get("settings", (result) => {
+            var group_blocks = JSON.parse(localStorage.getItem("groups"));
             if (result.settings.restore !== "keep") {
               if (btn_type !== "all") {
                 var any_tab_url = changes.remove.newValue[0];
                 var elem = document.querySelector(`a[href='${any_tab_url}']`);
                 var group_id = elem.closest(".group").id;
-                result[group_id].tabs = result[group_id].tabs.filter(
-                  (x) => !changes.remove.newValue.includes(x.url)
-                );
+                group_blocks[group_id].tabs = group_blocks[
+                  group_id
+                ].tabs.filter((x) => !changes.remove.newValue.includes(x.url));
               } else {
-                // set all
-                Object.keys(result).forEach((key) => {
-                  if (key !== "settings") {
-                    result[key].tabs = [];
-                  }
+                Object.keys(group_blocks).forEach((key) => {
+                  group_blocks[key].tabs = [];
                 });
               }
+
+              localStorage.setItem("groups", JSON.stringify(group_blocks));
 
               // update global counter
               setTabTotal(
@@ -82,15 +84,10 @@ export default function App() {
                   changes.remove.newValue.length
               );
 
-              // update groups
-              delete result.settings;
-              setGroups(JSON.stringify(result));
+              setGroups(JSON.stringify(group_blocks));
             }
           });
         });
-
-        // in case "Keep in TabMerger" setting, this allows to open multiple times
-        chrome.storage.local.remove("remove");
       }
     };
 
@@ -104,63 +101,61 @@ export default function App() {
         chrome.storage.local.get(["merged_tabs", "into_group"], (local) => {
           // prettier-ignore
           var into_group = local.into_group, merged_tabs = local.merged_tabs;
-          chrome.storage.sync.getBytesInUse(null, (syncBytesInUse) => {
-            var sync_bytes =
-              syncBytesInUse + JSON.stringify(merged_tabs).length;
-            if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
-              chrome.storage.sync.getBytesInUse(
-                into_group,
-                (itemBytesInUse) => {
-                  var item_bytes =
-                    itemBytesInUse + JSON.stringify(merged_tabs).length;
+          var merged_bytes = JSON.stringify(merged_tabs).length;
+          var sync_bytes = groups.length + merged_bytes;
 
-                  if (item_bytes < ITEM_STORAGE_LIMIT.current) {
-                    // close tabs to avoid leaving some open
-                    chrome.tabs.remove(merged_tabs.map((x) => x.id));
+          if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
+            var this_group = JSON.parse(localStorage.getItem("groups"))[
+              into_group
+            ];
+            var item_bytes = JSON.stringify(this_group).length + merged_bytes;
 
-                    chrome.storage.sync.get(null, (sync) => {
-                      delete sync.settings;
+            // prettier-ignore
+            console.log(item_bytes, "item", sync_bytes, "sync", merged_bytes, "merge");
 
-                      var tabs_arr = [...sync[into_group].tabs, ...merged_tabs];
-                      tabs_arr = tabs_arr.map((x) => ({
-                        url: x.url,
-                        title: x.title,
-                      }));
+            if (item_bytes < ITEM_STORAGE_LIMIT.current) {
+              // close tabs to avoid leaving some open
+              chrome.tabs.remove(merged_tabs.map((x) => x.id));
 
-                      var current = document.querySelectorAll(".draggable");
-                      setTabTotal(current.length + merged_tabs.length);
+              var tabs_arr = [...this_group.tabs, ...merged_tabs];
+              tabs_arr = tabs_arr.map((x) => ({
+                url: x.url,
+                title: x.title,
+              }));
 
-                      sync[into_group].tabs = tabs_arr;
-                      setGroups(JSON.stringify(sync));
-                    });
-                  } else {
-                    alert(
-                      `Group's syncing capacity exceeded by ${
-                        item_bytes - ITEM_STORAGE_LIMIT.current
-                      } bytes.\n\nPlease do one of the following:
+              var existing_groups = JSON.parse(localStorage.getItem("groups"));
+              existing_groups[into_group].tabs = tabs_arr;
+
+              localStorage.setItem("groups", JSON.stringify(existing_groups));
+
+              var current = document.querySelectorAll(".draggable");
+              setTabTotal(current.length + merged_tabs.length);
+              setGroups(JSON.stringify(existing_groups));
+            } else {
+              alert(
+                `Group's syncing capacity exceeded by ${
+                  item_bytes - ITEM_STORAGE_LIMIT.current
+                } bytes.\n\nPlease do one of the following:
       1. Create a new group and merge new tabs into it;
       2. Remove some tabs from this group;
       3. Merge less tabs into this group (each tab is ~100-300 bytes).`
-                    );
-                  }
-                }
               );
-            } else {
-              alert(
-                `Total syncing capacity exceeded by ${
-                  sync_bytes - SYNC_STORAGE_LIMIT.current
-                } bytes.\n\nPlease do one of the following:
+            }
+          } else {
+            alert(
+              `Total syncing capacity exceeded by ${
+                sync_bytes - SYNC_STORAGE_LIMIT.current
+              } bytes.\n\nPlease do one of the following:
       1. Remove some tabs from any group;
       2. Delete a group that is no longer needed;
       3. Merge less tabs into this group (each tab is ~100-300 bytes).
       \nMake sure to Export JSON or PDF to have a backup copy!`
-              );
-            }
+            );
+          }
 
-            // remove to be able to detect changes again
-            // (even if same tabs are needed to be merged)
-            chrome.storage.local.remove(["into_group", "merged_tabs"]);
-          });
+          // remove to be able to detect changes again
+          // (even if same tabs are needed to be merged)
+          chrome.storage.local.remove(["into_group", "merged_tabs"]);
         });
       }
     };
@@ -178,28 +173,19 @@ export default function App() {
     }
 
     // set dark mode if needed & assign default values to state variables
-    chrome.storage.sync.get(null, (result) => {
+    chrome.storage.sync.get("settings", (result) => {
       toggleDarkMode(result.settings.dark);
-
-      // state variables
-      setColor(result.settings.color);
-      setTitle(result.settings.title);
-      delete result.settings; // delete but do not update sync storage;
-
-      var sum = 0;
-      Object.keys(result).forEach((key) => (sum += result[key].tabs.length));
-
-      setTabTotal(sum);
-      setGroups(JSON.stringify(result));
     });
 
-    chrome.storage.onChanged.addListener(checkMerging);
+    setTabTotal(document.querySelectorAll(".draggable").length);
+
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
+    chrome.storage.onChanged.addListener(checkMerging);
     window.addEventListener("beforeunload", updateSync());
 
     return () => {
-      chrome.storage.onChanged.removeListener(checkMerging);
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
+      chrome.storage.onChanged.removeListener(checkMerging);
       window.removeEventListener("beforeunload", updateSync());
     };
   }, []);
@@ -214,17 +200,17 @@ export default function App() {
           title={x.title}
           color={x.color}
           created={x.created}
-          key={Math.random()}
-          setColor={setColor}
-          setTitle={setTitle}
+          num_tabs={(x.tabs && x.tabs.length) || 0}
           groups={groups}
           setGroups={setGroups}
           setTabTotal={setTabTotal}
+          getTimestamp={getTimestamp}
+          key={Math.random()}
         >
           <Tabs
+            id={id}
             itemLimit={ITEM_STORAGE_LIMIT.current}
             setTabTotal={setTabTotal}
-            id={id}
             setGroups={setGroups}
           />
         </Group>
@@ -233,21 +219,41 @@ export default function App() {
   };
 
   function updateGroupItem(name, value) {
-    var storage_entry = {};
-    storage_entry[name] = value;
-    chrome.storage.sync.set(storage_entry, () => {});
+    if (localStorage.getItem("groups")) {
+      var ls_entry = JSON.parse(localStorage.getItem("groups"));
+      ls_entry[name] = value;
+      localStorage.setItem("groups", JSON.stringify(ls_entry));
+    } else {
+      localStorage.setItem(
+        "groups",
+        JSON.stringify({ "group-0": defaultGroup.current })
+      );
+    }
+  }
+
+  function getTimestamp() {
+    var date_parts = new Date(Date.now()).toString().split(" ");
+    date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
+
+    // dd/mm/yyyy @ hh:mm:ss
+    date_parts[0] = date_parts[1] + "/";
+    date_parts[1] = new Date().getMonth() + 1 + "/";
+    date_parts[2] += " @ ";
+
+    return date_parts.join("");
   }
 
   const addGroup = () => {
-    var current_groups = JSON.parse(groups);
+    var current_groups = JSON.parse(localStorage.getItem("groups"));
     var num_keys = Object.keys(current_groups).length;
 
     if (num_keys < NUM_GROUP_LIMIT.current) {
       chrome.storage.sync.get("settings", (result) => {
-        defaultGroup.current.created = new Date(Date.now()).toString();
+        defaultGroup.current.created = getTimestamp();
         defaultGroup.current.color = result.settings.color;
         defaultGroup.current.title = result.settings.title;
         current_groups["group-" + num_keys] = defaultGroup.current;
+        localStorage.setItem("groups", JSON.stringify(current_groups));
         setGroups(JSON.stringify(current_groups));
       });
     } else {
@@ -267,30 +273,21 @@ export default function App() {
   }
 
   function deleteAllGroups() {
-    // clear all the groups (easiest by wiping sync and restoring the settings)
     chrome.storage.sync.get("settings", (result) => {
-      chrome.storage.sync.clear(() => {
-        defaultGroup.current.created = new Date(Date.now()).toString();
-        chrome.storage.sync.set(
-          {
-            "group-0": defaultGroup.current,
-            settings: result.settings,
-          },
-          () => {
-            setTabTotal(0);
-            defaultGroup.current.color = result.settings.color;
-            defaultGroup.current.title = result.settings.title;
-            setGroups(JSON.stringify({ "group-0": defaultGroup.current }));
-          }
-        );
-      });
+      defaultGroup.current.created = getTimestamp();
+      defaultGroup.current.color = result.settings.color;
+      defaultGroup.current.title = result.settings.title;
+
+      var new_entry = JSON.stringify({ "group-0": defaultGroup.current });
+      localStorage.setItem("groups", new_entry);
+      setTabTotal(0);
+      setGroups(new_entry);
     });
   }
 
   function toggleDarkMode(isChecked) {
     var container = document.querySelector("body");
     var hr = document.querySelector("hr");
-    var settings_btn = document.getElementById("options-btn");
     var links = document.getElementsByClassName("link");
 
     container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
@@ -298,9 +295,6 @@ export default function App() {
     hr.style.borderTop = isChecked
       ? "1px white solid"
       : "1px rgba(0,0,0,.1) solid";
-    settings_btn.style.border = isChecked
-      ? "1px gray solid"
-      : "1px black solid";
 
     [...links].forEach((x) => {
       x.style.color = isChecked ? "white" : "black";
@@ -330,13 +324,14 @@ export default function App() {
 
   function readImportedFile(e) {
     if (e.target.files[0].type === "application/json") {
-      chrome.storage.sync.clear(() => {
-        var reader = new FileReader();
-        reader.readAsText(e.target.files[0]);
-        reader.onload = () => {
-          var fileContent = JSON.parse(reader.result);
+      var reader = new FileReader();
+      reader.readAsText(e.target.files[0]);
+      reader.onload = () => {
+        var fileContent = JSON.parse(reader.result);
 
+        chrome.storage.sync.set({ settings: fileContent.settings }, () => {
           delete fileContent.settings;
+          localStorage.setItem("groups", JSON.stringify(fileContent));
           setGroups(JSON.stringify(fileContent));
 
           var sum = 0;
@@ -345,8 +340,8 @@ export default function App() {
           });
 
           setTabTotal(sum);
-        };
-      });
+        });
+      };
     } else {
       alert(
         `You must import a JSON file (.json extension)!\n
@@ -359,10 +354,13 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
   const exportJSON = () => {
     setGroups(groups);
 
-    chrome.storage.sync.get(null, (result) => {
+    var group_blocks = JSON.parse(localStorage.getItem("groups"));
+    chrome.storage.sync.get("settings", (result) => {
+      group_blocks["settings"] = result.settings;
+
       var dataStr =
         "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(result, null, 2));
+        encodeURIComponent(JSON.stringify(group_blocks, null, 2));
 
       var anchor = document.createElement("a");
       anchor.setAttribute("href", dataStr);
@@ -427,83 +425,75 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
     doc.setTextColor("000");
     doc.text(tabTotal + " tabs in total", x - 5, y);
 
-    chrome.storage.sync.get(null, (result) => {
-      delete result.settings;
+    var result = JSON.parse(localStorage.getItem("groups"));
+    Object.values(result).forEach((item) => {
+      // rectangle around the group
+      doc.setFillColor(item.color);
 
-      Object.values(result).forEach((item) => {
-        // rectangle around the group
-        doc.setFillColor(item.color);
+      var group_height =
+        item.tabs.length > 0
+          ? 10 * (item.tabs.length + 1)
+          : 10 * (item.tabs.length + 2);
 
-        var group_height =
-          item.tabs.length > 0
-            ? 10 * (item.tabs.length + 1)
-            : 10 * (item.tabs.length + 2);
-
-        // make sure group height never exceeds the page limit
-        if (y + group_height > height - 20) {
-          var extra = 5;
-          group_height = height - 20 - y - extra;
-        }
-
-        doc.roundedRect(x - 5, y + 8, 175, group_height, 1, 1, "F");
-
-        y += 15;
-        y = addPage(doc, y, height);
-
-        doc.setTextColor("#000");
-        doc.setFontSize(16);
-        doc.text(item.title, x - 3, y);
-
-        doc.setFontSize(12);
-
-        // if tabs in the group exist
-        if (item.tabs.length > 0) {
-          item.tabs.forEach((tab, index) => {
-            y += 10;
-            y = addPage(doc, y, height);
-
-            doc.setTextColor("#000");
-            doc.text(index + 1 + ".", x + 5, y);
-            doc.setTextColor(51, 153, 255);
-
-            var title =
-              tab.title.length > 75
-                ? tab.title.substr(0, 75) + "..."
-                : tab.title;
-
-            doc.textWithLink(
-              cleanString(title),
-              index < 9 ? x + 11 : x + 13,
-              y,
-              { url: tab.url }
-            );
-          });
-        } else {
-          doc.setTextColor("#000");
-          doc.text("[ NO TABS IN GROUP ]", x + 5, y + 10);
-          y += 10;
-        }
-      });
-
-      // page numbers
-      doc.setTextColor("#000");
-      var pageCount = doc.internal.getNumberOfPages();
-      for (var i = 0; i < pageCount; i++) {
-        doc.setPage(i);
-        doc.text(
-          width / 2 - 20,
-          height - 5,
-          "Page " +
-            doc.internal.getCurrentPageInfo().pageNumber +
-            " of " +
-            pageCount
-        );
-
-        doc.text(width - 50, height - 5, "© Lior Bragilevsky");
+      // make sure group height never exceeds the page limit
+      if (y + group_height > height - 20) {
+        var extra = 5;
+        group_height = height - 20 - y - extra;
       }
 
-      doc.save(outputFileName() + ".pdf");
+      doc.roundedRect(x - 5, y + 8, 175, group_height, 1, 1, "F");
+
+      y += 15;
+      y = addPage(doc, y, height);
+
+      doc.setTextColor("#000");
+      doc.setFontSize(16);
+      doc.text(item.title, x - 3, y);
+
+      doc.setFontSize(12);
+
+      // if tabs in the group exist
+      if (item.tabs.length > 0) {
+        item.tabs.forEach((tab, index) => {
+          y += 10;
+          y = addPage(doc, y, height);
+
+          doc.setTextColor("#000");
+          doc.text(index + 1 + ".", x + 5, y);
+          doc.setTextColor(51, 153, 255);
+
+          var title =
+            tab.title.length > 75 ? tab.title.substr(0, 75) + "..." : tab.title;
+
+          doc.textWithLink(cleanString(title), index < 9 ? x + 11 : x + 13, y, {
+            url: tab.url,
+          });
+        });
+      } else {
+        doc.setTextColor("#000");
+        doc.text("[ NO TABS IN GROUP ]", x + 5, y + 10);
+        y += 10;
+      }
     });
+
+    // page numbers
+    doc.setTextColor("#000");
+    var pageCount = doc.internal.getNumberOfPages();
+    for (var i = 0; i < pageCount; i++) {
+      doc.setPage(i);
+      doc.text(
+        width / 2 - 20,
+        height - 5,
+        "Page " +
+          doc.internal.getCurrentPageInfo().pageNumber +
+          " of " +
+          pageCount
+      );
+
+      doc.text(width - 50, height - 5, "© Lior Bragilevsky");
+    }
+
+    doc.save(outputFileName() + ".pdf");
   }
 
   function getTabMergerLink(reviews) {
@@ -602,7 +592,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
           <div className="global-btn-row row">
             <Button
               id="open-all-btn"
-              classes="p-0 btn-in-global btn-outline-success"
+              classes="p-0 btn-in-global"
               translate={translate("openAll")}
               tooltip={"tiptext-global"}
               onClick={() => openAllTabs()}
@@ -612,7 +602,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
 
             <Button
               id="delete-all-btn"
-              classes="ml-1 mr-4 p-0 btn-in-global btn-outline-danger"
+              classes="ml-1 mr-4 p-0 btn-in-global"
               translate={translate("deleteAll")}
               tooltip={"tiptext-global"}
               onClick={() => deleteAllGroups()}
@@ -622,7 +612,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
 
             <Button
               id="export-btn"
-              classes="ml-4 btn-in-global btn-outline-info"
+              classes="ml-4 btn-in-global"
               translate={translate("exportJSON")}
               tooltip={"tiptext-global"}
               onClick={exportJSON}
@@ -634,7 +624,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
               <label
                 id="import-btn"
                 for="import-input"
-                className="mx-1 my-0 btn-in-global btn btn-outline-info"
+                className="mx-1 my-0 btn-in-global btn"
               >
                 <div className="tip">
                   <BiImport color="darkcyan" size="1.4rem" />
@@ -653,7 +643,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
 
             <Button
               id="pdf-btn"
-              classes="p-0 btn-in-global btn-outline-info"
+              classes="p-0 btn-in-global"
               translate={translate("exportPDF")}
               tooltip={"tiptext-global"}
               onClick={() => exportPDF()}
@@ -663,7 +653,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
 
             <Button
               id="options-btn"
-              classes="p-0 btn-in-global btn-outline-dark"
+              classes="p-0 btn-in-global"
               translate={translate("settings")}
               tooltip={"tiptext-global"}
               onClick={() => window.location.replace("/options.html")}
@@ -672,7 +662,22 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
             </Button>
           </div>
           <div className="groups-container">
-            {groupFormation(groups)}
+            <table>
+              {groupFormation(groups).map((x, i) => {
+                if (i % 2 === 0) {
+                  return (
+                    <tr>
+                      <td>{x}</td>
+                      {groupFormation(groups)[i + 1] ? (
+                        <td>{groupFormation(groups)[i + 1]}</td>
+                      ) : (
+                        <td></td>
+                      )}
+                    </tr>
+                  );
+                }
+              })}
+            </table>
 
             <Button
               id="add-group-btn"

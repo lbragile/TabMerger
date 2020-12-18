@@ -1,10 +1,5 @@
-.group {
-  min-height: 75px;
-  border-radius: 5px;
-}
-
 .group-title {
-  width: 25%;
+  width: 50%;
   margin: 0;
   position: relative;
   left: 10px;
@@ -14,11 +9,28 @@
   color: black !important;
 }
 
+.group {
+  min-height: 75px;
+  border-radius: 5px;
+  position: relative;
+}
+
+table {
+  position: relative;
+  width: 100%;
+}
+
+td {
+  width: 50%;
+  padding: 0 5px;
+}
+
 /* TIMESTAMP */
 .created {
   background: none !important;
-  position: relative;
-  top: 7px;
+  position: absolute;
+  top: -25px;
+  right: 0;
 }
 
 /* GROUP COUNTER */
@@ -57,7 +69,6 @@ input[type="color"] {
   height: 30px;
   position: relative;
   top: -5px;
-  left: -10%;
   padding-bottom: 5px;
 }
 
@@ -70,7 +81,6 @@ input[type="color"] {
   visibility: hidden;
   position: relative;
   padding: 0 5px;
-  top: -3px;
 }
 
 .reload-title:hover {

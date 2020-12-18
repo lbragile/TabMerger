@@ -50,15 +50,15 @@ function filterTabs(info, tab, group_id) {
         "Extensions",
         "Add-ons Manager",
       ];
-      chrome.storage.sync.get(null, async (result) => {
-        // get a list of all the current tab titles and/or urls
-        Object.keys(result).forEach((key) => {
-          if (key !== "settings") {
-            var extra_vals = result[key].tabs.map((x) => x.url);
-            filter_vals = filter_vals.concat(extra_vals);
-          }
-        });
 
+      // get a list of all the current tab titles and/or urls
+      var group_blocks = JSON.parse(localStorage.getItem("groups"));
+      Object.keys(group_blocks).forEach((key) => {
+        var extra_vals = group_blocks[key].tabs.map((x) => x.url);
+        filter_vals = filter_vals.concat(extra_vals);
+      });
+
+      chrome.storage.sync.get("settings", (result) => {
         // apply blacklist items
         tabs = tabs.filter((x) => {
           var bl_sites = result.settings.blacklist.replace(" ", "").split(",");
@@ -87,8 +87,7 @@ function filterTabs(info, tab, group_id) {
           return !filter_vals.includes(x.title) && !filter_vals.includes(x.url);
         });
 
-        // make sure original merge has no duplicated values
-        // obtain offending indicies
+        // make sure original merge has no duplicated values obtain offending indicies
         // prettier-ignore
         var prev_urls = [], indicies = [];
         tabs.forEach((x, i) => {

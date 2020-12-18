@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 import "./Tabs.css";
 
@@ -6,15 +6,12 @@ import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
 
 export default function Tabs(props) {
-  const TAB_TITLE_LENGTH = useRef(100);
+  const TAB_TITLE_LENGTH = useRef(85);
 
-  const [tabs, setTabs] = useState([]);
-
-  useEffect(() => {
-    chrome.storage.sync.get(props.id, (result) => {
-      setTabs(result[props.id] ? result[props.id].tabs : []);
-    });
-  }, [props.id]);
+  const [tabs, setTabs] = useState(() => {
+    var groups = JSON.parse(localStorage.getItem("groups"));
+    return (groups && groups[props.id] && groups[props.id].tabs) || [];
+  });
 
   const dragStart = (e) => {
     var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
@@ -34,7 +31,6 @@ export default function Tabs(props) {
 
     const origin_id = drag_origin.id;
 
-    // update localStorage
     var tab_bytes = JSON.stringify({
       url: tab.querySelector("a").href,
       title: tab.querySelector("a").innerText,
@@ -47,38 +43,37 @@ export default function Tabs(props) {
           ? itemBytesInUse + tab_bytes
           : itemBytesInUse;
 
-      chrome.storage.sync.get(null, (result) => {
-        if (newBytesInUse < props.itemLimit) {
-          if (origin_id !== closest_group.id) {
-            // remove tab from group that originated the drag
-            result[origin_id].tabs = result[origin_id].tabs.filter(
-              (group_tab) => {
-                return group_tab.url !== tab.lastChild.href;
-              }
-            );
-          }
+      var result = JSON.parse(localStorage.getItem("groups"));
+      if (newBytesInUse < props.itemLimit) {
+        if (origin_id !== closest_group.id) {
+          // remove tab from group that originated the drag
+          result[origin_id].tabs = result[origin_id].tabs.filter(
+            (group_tab) => {
+              return group_tab.url !== tab.lastChild.href;
+            }
+          );
+        }
 
-          // reorder tabs based on current positions
-          result[closest_group.id].tabs = [
-            ...closest_group.lastChild.querySelectorAll("div"),
-          ].map((item) => ({
-            title: item.lastChild.textContent,
-            url: item.lastChild.href,
-          }));
+        // reorder tabs based on current positions
+        result[closest_group.id].tabs = [
+          ...closest_group.lastChild.querySelectorAll("div"),
+        ].map((item) => ({
+          title: item.lastChild.textContent,
+          url: item.lastChild.href,
+        }));
 
-          // update the groups
-          delete result.settings;
-          props.setGroups(JSON.stringify(result));
-        } else {
-          alert(`Group's syncing capacity exceeded by ${
-            newBytesInUse - props.itemLimit
-          } bytes.\n\nPlease do one of the following:
+        // update the groups
+        localStorage.setItem("groups", JSON.stringify(result));
+        props.setGroups(JSON.stringify(result));
+      } else {
+        alert(`Group's syncing capacity exceeded by ${
+          newBytesInUse - props.itemLimit
+        } bytes.\n\nPlease do one of the following:
         1. Create a new group and merge new tabs into it;
         2. Remove some tabs from this group;
         3. Merge less tabs into this group (each tab is ~100-300 bytes).`);
-          window.location.reload();
-        }
-      });
+        window.location.reload();
+      }
     });
   };
 
@@ -87,11 +82,12 @@ export default function Tabs(props) {
     var url = tab.querySelector("a").href;
     var group = tab.closest(".group");
 
-    chrome.storage.sync.get(group.id, (result) => {
-      result[group.id].tabs = tabs.filter((x) => x.url !== url);
-      setTabs(result[group.id].tabs);
-      props.setTabTotal(document.querySelectorAll(".draggable").length);
-    });
+    var group_blocks = JSON.parse(localStorage.getItem("groups"));
+    group_blocks[group.id].tabs = tabs.filter((x) => x.url !== url);
+    localStorage.setItem("groups", JSON.stringify(group_blocks));
+    setTabs(group_blocks[group.id].tabs);
+    props.setTabTotal(document.querySelectorAll(".draggable").length - 1);
+    props.setGroups(JSON.stringify(group_blocks));
   }
 
   function handleTabClick(e) {
@@ -113,11 +109,10 @@ export default function Tabs(props) {
 
   return (
     <div className="d-flex flex-column mx-0">
-      {tabs.map((tab, index) => {
+      {tabs.map((tab) => {
         return (
           <div
-            className="row draggable p-0 mx-0 my-2"
-            id={props.id + "-tab-" + index}
+            className="row draggable p-0 mx-0 mt-2"
             draggable
             onDragStart={dragStart}
             onDragEnd={dragEnd}

@@ -1,3 +1,10 @@
+/* ENTIRE TAB */
+.draggable {
+  position: relative;
+  left: 10px;
+  width: 95%;
+}
+
 /* X */
 .close-tab {
   font-weight: bold;
@@ -31,11 +38,4 @@
 /* TAB URL */
 .a-tab {
   margin-top: 1px;
-}
-
-/* ENTIRE TAB */
-.draggable {
-  position: relative;
-  left: 25px;
-  width: 100%;
 }

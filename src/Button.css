@@ -3,26 +3,28 @@
   width: 80% !important;
 }
 
-.btn-outline-warning {
-  border: 1px solid goldenrod;
-}
-
 .btn-in-global {
   width: 30px;
   height: 30px;
 }
 
 #open-all-btn svg,
+#delete-all-btn svg,
 #import-btn svg,
 #export-btn svg {
+  width: 22px;
+  height: 22px;
   padding: 0;
 }
 
 #open-all-btn svg {
-  width: 22px;
-  height: 22px;
   position: relative;
   top: -2px;
+}
+
+#delete-all-btn svg {
+  width: 26px;
+  height: 26px;
 }
 
 #import-btn svg,
@@ -44,10 +46,6 @@
   opacity: 0;
   position: absolute;
   z-index: -1;
-}
-
-#pdf-btn {
-  border: 1px solid purple;
 }
 
 #pdf-btn svg {
@@ -103,10 +101,6 @@
 
 .merge-right-btn svg {
   transform: rotate(180deg);
-}
-
-.open-group-btn:focus {
-  border: forestgreen 1px solid;
 }
 
 .open-group-btn svg,
