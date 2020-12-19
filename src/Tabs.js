@@ -36,45 +36,43 @@ export default function Tabs(props) {
       title: tab.querySelector("a").innerText,
     }).length;
 
-    chrome.storage.sync.getBytesInUse(closest_group.id, (itemBytesInUse) => {
-      // moving into same group should not increase number of bytes
-      var newBytesInUse =
-        origin_id !== closest_group.id
-          ? itemBytesInUse + tab_bytes
-          : itemBytesInUse;
+    var result = JSON.parse(localStorage.getItem("groups"));
+    var itemBytesInUse = JSON.stringify(result[closest_group.id]).length;
 
-      var result = JSON.parse(localStorage.getItem("groups"));
-      if (newBytesInUse < props.itemLimit) {
-        if (origin_id !== closest_group.id) {
-          // remove tab from group that originated the drag
-          result[origin_id].tabs = result[origin_id].tabs.filter(
-            (group_tab) => {
-              return group_tab.url !== tab.lastChild.href;
-            }
-          );
-        }
+    // moving into same group should not increase number of bytes
+    var newBytesInUse =
+      origin_id !== closest_group.id
+        ? itemBytesInUse + tab_bytes
+        : itemBytesInUse;
 
-        // reorder tabs based on current positions
-        result[closest_group.id].tabs = [
-          ...closest_group.lastChild.querySelectorAll("div"),
-        ].map((item) => ({
-          title: item.lastChild.textContent,
-          url: item.lastChild.href,
-        }));
+    if (newBytesInUse < props.itemLimit) {
+      if (origin_id !== closest_group.id) {
+        // remove tab from group that originated the drag
+        result[origin_id].tabs = result[origin_id].tabs.filter((group_tab) => {
+          return group_tab.url !== tab.lastChild.href;
+        });
+      }
 
-        // update the groups
-        localStorage.setItem("groups", JSON.stringify(result));
-        props.setGroups(JSON.stringify(result));
-      } else {
-        alert(`Group's syncing capacity exceeded by ${
-          newBytesInUse - props.itemLimit
-        } bytes.\n\nPlease do one of the following:
+      // reorder tabs based on current positions
+      result[closest_group.id].tabs = [
+        ...closest_group.lastChild.querySelectorAll("div"),
+      ].map((item) => ({
+        title: item.lastChild.textContent,
+        url: item.lastChild.href,
+      }));
+
+      // update the groups
+      localStorage.setItem("groups", JSON.stringify(result));
+      props.setGroups(JSON.stringify(result));
+    } else {
+      alert(`Group's syncing capacity exceeded by ${
+        newBytesInUse - props.itemLimit
+      } bytes.\n\nPlease do one of the following:
         1. Create a new group and merge new tabs into it;
         2. Remove some tabs from this group;
         3. Merge less tabs into this group (each tab is ~100-300 bytes).`);
-        window.location.reload();
-      }
-    });
+      window.location.reload();
+    }
   };
 
   function removeTab(e) {
@@ -103,16 +101,12 @@ export default function Tabs(props) {
     return "http://www.google.com/s2/favicons?domain=" + domain;
   }
 
-  function translate(msg) {
-    return chrome.i18n.getMessage(msg);
-  }
-
   return (
     <div className="d-flex flex-column mx-0">
       {tabs.map((tab) => {
         return (
           <div
-            className="row draggable p-0 mx-0 mt-2"
+            className="row draggable p-0 mx-0"
             draggable
             onDragStart={dragStart}
             onDragEnd={dragEnd}
@@ -123,10 +117,10 @@ export default function Tabs(props) {
               draggable={false}
               onClick={(e) => removeTab(e)}
             >
-              <TiDelete size="1.2rem" color="rgba(255,0,0,0.8)" />
+              <TiDelete size="1.2rem" color="black" />
             </p>
             <p className="move-tab mr-2">
-              <AiOutlineMenu size="1.2rem" color="grey" />
+              <AiOutlineMenu size="1.2rem" color="black" />
             </p>
             <img
               className="img-tab mr-2"

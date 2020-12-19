@@ -17,7 +17,7 @@ export default function Group(props) {
   useEffect(() => {
     var group = document.getElementById(props.id);
     setGroupBackground(group);
-  }, [props.id]);
+  }, []);
 
   function setGroupBackground(e) {
     var color, target;
@@ -34,8 +34,10 @@ export default function Group(props) {
     });
 
     var current_groups = JSON.parse(localStorage.getItem("groups"));
-    current_groups[props.id].color = color;
-    localStorage.setItem("groups", JSON.stringify(current_groups));
+    if (current_groups[props.id]) {
+      current_groups[props.id].color = color;
+      localStorage.setItem("groups", JSON.stringify(current_groups));
+    }
   }
 
   function setTitle(e) {
@@ -206,10 +208,15 @@ export default function Group(props) {
 
   return (
     <div
-      className={["group-0", "group-1"].includes(props.id) ? "mt-0" : "mt-3"}
+      className={
+        "group-item " +
+        (["group-0", "group-1"].includes(props.id) ? "mt-0" : "mt-3")
+      }
     >
       <div className="group-title d-flex flex-row justify-content-center">
-        <h5 className="tabTotal-inGroup">{props.num_tabs + " Tabs"}</h5>
+        <h5 className="tabTotal-inGroup">
+          {props.num_tabs + (props.num_tabs !== 1 ? " Tabs" : " Tab")}
+        </h5>
 
         <p
           className="title-edit-input font-weight-bold p-1 mb-0"
@@ -225,25 +232,27 @@ export default function Group(props) {
         </p>
 
         <div className="title-btn-containter row">
-          <div className="tip p-0">
-            <span>
+          <div>
+            <div className="tip p-0">
               <BiColorFill
                 className="input-color"
-                onClick={(e) => e.target.closest("span").nextSibling.click()}
+                onClick={(e) => e.target.closest("div").nextSibling.click()}
               />
-            </span>
+              <span className="tiptext-group-color">
+                {translate("pickColor")}
+              </span>
+            </div>
             <input
               type="color"
               defaultValue={props.color}
               onChange={(e) => setGroupBackground(e)}
             />
-            <span className="tiptext-global">{translate("pickColor")}</span>
           </div>
 
           <Button
             classes="show-hide-btn btn-in-group-title"
             translate={hide ? translate("showTabs") : translate("hideTabs")}
-            tooltip={"tiptext-group"}
+            tooltip={"tiptext-group-title"}
             onClick={(e) => toggleGroup(e)}
           >
             <AiOutlineMinus />
@@ -251,7 +260,7 @@ export default function Group(props) {
           <Button
             classes="open-group-btn btn-in-group-title"
             translate={translate("openGroup")}
-            tooltip={"tiptext-group"}
+            tooltip={"tiptext-group-title"}
             onClick={(e) => openGroup(e)}
           >
             <VscChromeRestore />
@@ -260,7 +269,7 @@ export default function Group(props) {
           <Button
             classes="delete-group-btn btn-in-group-title"
             translate={translate("deleteGroup")}
-            tooltip={"tiptext-group"}
+            tooltip={"tiptext-group-title"}
             onClick={(e) => deleteGroup(e)}
           >
             <AiOutlineClose />
@@ -277,7 +286,7 @@ export default function Group(props) {
             <Button
               classes="merge-btn btn-for-merging btn-outline-dark"
               translate={translate("mergeALLtabs")}
-              tooltip={"tiptext-group"}
+              tooltip={"tiptext-group-merge"}
               onClick={() => sendMessage({ msg: "all", id: props.id })}
             >
               <MdVerticalAlignCenter color="black" size="1.3rem" />
@@ -285,7 +294,7 @@ export default function Group(props) {
             <Button
               classes="merge-left-btn btn-for-merging btn-outline-dark"
               translate={translate("mergeLEFTtabs")}
-              tooltip={"tiptext-group"}
+              tooltip={"tiptext-group-merge"}
               onClick={() => sendMessage({ msg: "left", id: props.id })}
             >
               <BiArrowToRight color="black" size="1.3rem" />
@@ -293,7 +302,7 @@ export default function Group(props) {
             <Button
               classes="merge-right-btn btn-for-merging btn-outline-dark"
               translate={translate("mergeRIGHTtabs")}
-              tooltip={"tiptext-group"}
+              tooltip={"tiptext-group-merge"}
               onClick={() => sendMessage({ msg: "right", id: props.id })}
             >
               <BiArrowToRight color="black" size="1.3rem" />

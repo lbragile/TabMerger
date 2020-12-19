@@ -9,9 +9,14 @@
   width: 90%;
 }
 
+#tab-total {
+  position: relative;
+  top: 5px;
+}
+
 .container-below-hr {
   position: relative;
-  top: 15px;
+  top: -10px;
   z-index: 0;
 }
 
@@ -38,17 +43,25 @@
 .search-filter {
   position: relative;
   top: -35px;
-  left: -15px;
+  left: 90%;
+  text-align: right;
 }
 
 .search-filter input {
-  border-radius: 5px;
-  width: 150px;
+  border-radius: 0 5px 5px 0;
+  width: 142px;
   border: 1px solid black;
 }
 
 .search-filter input:focus {
   outline: none;
+}
+
+.input-group-text {
+  padding: 5px;
+  margin: 0;
+  border: 1px solid black;
+  border-right: none;
 }
 
 hr {

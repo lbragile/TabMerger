@@ -6,6 +6,7 @@
 .btn-in-global {
   width: 30px;
   height: 30px;
+  border: 1px black solid;
 }
 
 #open-all-btn svg,
@@ -61,6 +62,7 @@
 
 #add-group-btn {
   background: none !important;
+  border: none;
 }
 
 /* MERGE BUTTONS */
@@ -116,7 +118,10 @@
 }
 
 .tiptext-global,
-.tiptext-group {
+.tiptext-group-title,
+.tiptext-group-color,
+.tiptext-group-merge,
+.tiptext-json {
   visibility: hidden;
   background-color: black;
   color: #fff;
@@ -134,13 +139,31 @@
   font-size: 0.95rem;
 }
 
-.tiptext-group {
-  bottom: 100%;
-  left: 5%;
+.tiptext-group-title {
+  bottom: 90%;
+  left: 55%;
+}
+
+.tiptext-group-color {
+  bottom: 25px;
+  left: -20px;
+}
+
+.tiptext-group-merge {
+  bottom: 35px;
+  left: 0px;
+}
+
+.tiptext-json {
+  bottom: 35px;
+  left: 3px;
 }
 
 .tiptext-global::after,
-.tiptext-group::after {
+.tiptext-group-title::after,
+.tiptext-group-color::after,
+.tiptext-group-merge::after,
+.tiptext-json::after {
   content: "";
   border-width: 5px;
   border-style: solid;
@@ -153,7 +176,10 @@
 }
 
 .tip:hover .tiptext-global,
-.tip:hover .tiptext-group {
+.tip:hover .tiptext-group-title,
+.tip:hover .tiptext-group-color,
+.tip:hover .tiptext-group-merge,
+.tip:hover .tiptext-json {
   visibility: visible;
   opacity: 0.9;
 }
