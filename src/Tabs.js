@@ -32,8 +32,8 @@ export default function Tabs(props) {
     const origin_id = drag_origin.id;
 
     var tab_bytes = JSON.stringify({
-      url: tab.querySelector("a").href,
       title: tab.querySelector("a").innerText,
+      url: tab.querySelector("a").href,
     }).length;
 
     var result = JSON.parse(localStorage.getItem("groups"));

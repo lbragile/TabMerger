@@ -63,6 +63,7 @@
 #add-group-btn {
   background: none !important;
   border: none;
+  margin-bottom: 10px;
 }
 
 /* MERGE BUTTONS */

@@ -124,29 +124,45 @@ function findExtTabAndSwitch() {
   });
 }
 
+function getTimestamp() {
+  var date_parts = new Date(Date.now()).toString().split(" ");
+  date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
+
+  // dd/mm/yyyy @ hh:mm:ss
+  date_parts[0] = date_parts[1] + "/";
+  date_parts[1] = new Date().getMonth() + 1 + "/";
+  date_parts[2] += " @ ";
+
+  return date_parts.join("");
+}
+
 function createDefaultStorageItems() {
   var default_settings = {
-    open: "without",
-    color: "#dedede",
-    title: "Title",
-    restore: "keep",
     blacklist: "",
+    color: "#dedede",
     dark: true,
+    open: "without",
+    restore: "keep",
+    title: "Title",
   };
 
   var default_group = {
-    title: "Title",
     color: "#dedede",
-    created: new Date(Date.now()).toString(),
+    created: getTimestamp(),
     tabs: [],
+    title: "Title",
   };
 
-  chrome.storage.sync.get(["settings", "group-0"], (result) => {
-    if (!result.settings || !result["group-0"]) {
-      chrome.storage.sync.set({
-        settings: default_settings,
-        "group-0": default_group,
-      });
+  if (!localStorage.getItem("groups")) {
+    localStorage.setItem(
+      "groups",
+      JSON.stringify({ "group-0": default_group })
+    );
+  }
+
+  chrome.storage.sync.get(["settings"], (result) => {
+    if (!result.settings) {
+      chrome.storage.sync.set({ settings: default_settings });
     }
   });
 }

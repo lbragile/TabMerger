@@ -7,6 +7,7 @@
 .container-fluid {
   position: relative;
   width: 90%;
+  overflow-x: hidden;
 }
 
 #tab-total {
@@ -51,6 +52,7 @@
   border-radius: 0 5px 5px 0;
   width: 142px;
   border: 1px solid black;
+  padding: 2px 2px 2px 4px;
 }
 
 .search-filter input:focus {

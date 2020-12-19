@@ -136,10 +136,10 @@ export default function Group(props) {
       // if removed the only existing group
       if (Object.keys(group_blocks).length === 1) {
         group_blocks["group-0"] = {
-          title: result.settings.title,
           color: result.settings.color,
           created: props.getTimestamp(),
           tabs: [],
+          title: result.settings.title,
         };
       } else {
         // must rename all keys for the groups above deleted group item

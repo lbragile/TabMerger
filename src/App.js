@@ -18,12 +18,12 @@ import jsPDF from "jspdf";
 export default function App() {
   const ITEM_STORAGE_LIMIT = useRef(500); //500 for testing - 8000 for production
   const SYNC_STORAGE_LIMIT = useRef(1000); //1000 for testing - 102000 for production
-  const NUM_GROUP_LIMIT = useRef(3); // 3 for testing - 3000 for production
+  const NUM_GROUP_LIMIT = useRef(100); // 3 for testing - 100 for production
 
   const defaultGroup = useRef({
-    title: "Title",
     color: "#dedede",
     created: getTimestamp(),
+    title: "Title",
     tabs: [],
   });
 
@@ -39,11 +39,7 @@ export default function App() {
     }
 
     const openOrRemoveTabs = (changes, namespace) => {
-      if (
-        namespace === "local" &&
-        changes.remove &&
-        changes.remove.newValue !== []
-      ) {
+      if (namespace === "local" && changes.remove && changes.remove.newValue) {
         // extract and remove the button type from array
         var btn_type = changes.remove.newValue[0];
         changes.remove.newValue.splice(0, 1);
@@ -87,6 +83,9 @@ export default function App() {
 
               setGroups(JSON.stringify(group_blocks));
             }
+
+            // allow reopening same tab
+            chrome.storage.local.remove(["remove"]);
           });
         });
       }
@@ -104,7 +103,8 @@ export default function App() {
           var into_group = local.into_group, merged_tabs = local.merged_tabs;
           var group_blocks = localStorage.getItem("groups");
           var merged_bytes = JSON.stringify(merged_tabs).length;
-          var sync_bytes = group_blocks.length + merged_bytes;
+
+          var sync_bytes = JSON.stringify(group_blocks).length + merged_bytes;
 
           if (sync_bytes < SYNC_STORAGE_LIMIT.current) {
             var this_group = JSON.parse(group_blocks)[into_group];
@@ -119,8 +119,8 @@ export default function App() {
 
               var tabs_arr = [...this_group.tabs, ...merged_tabs];
               tabs_arr = tabs_arr.map((x) => ({
-                url: x.url,
                 title: x.title,
+                url: x.url,
               }));
 
               var existing_groups = JSON.parse(localStorage.getItem("groups"));
@@ -153,21 +153,36 @@ export default function App() {
             );
           }
 
-          // remove to be able to detect changes again
-          // (even if same tabs are needed to be merged)
+          // remove to be able to detect changes again (even for same tabs)
           chrome.storage.local.remove(["into_group", "merged_tabs"]);
         });
       }
     };
 
-    function updateSync() {
+    async function updateSync() {
       if (
-        JSON.stringify(groups) !==
+        localStorage.getItem("groups") !==
         JSON.stringify({ "group-0": defaultGroup.current })
       ) {
-        var current_groups = JSON.parse(groups);
-        Object.keys(current_groups).forEach((key) => {
-          updateGroupItem(key, current_groups[key]);
+        var current_groups = JSON.parse(localStorage.getItem("groups"));
+        for (var key of Object.keys(current_groups)) {
+          await updateGroupItem(key, current_groups[key]);
+        }
+        chrome.storage.sync.get(null, (result) => {
+          delete result.settings;
+          var remove_keys = Object.keys(result).filter(
+            (key) => !Object.keys(current_groups).includes(key)
+          );
+          chrome.storage.sync.remove(remove_keys, () => {
+            chrome.storage.sync.get(null, (result) => {
+              console.log("This is printed for your information only:");
+              Object.keys(result).forEach((key) => {
+                console.log(
+                  `[INFO] Synced: ${key} -> ${JSON.stringify(result[key])}`
+                );
+              });
+            });
+          });
         });
       }
     }
@@ -219,16 +234,27 @@ export default function App() {
   };
 
   function updateGroupItem(name, value) {
-    if (localStorage.getItem("groups")) {
-      var ls_entry = JSON.parse(localStorage.getItem("groups"));
-      ls_entry[name] = value;
-      localStorage.setItem("groups", JSON.stringify(ls_entry));
-    } else {
-      localStorage.setItem(
-        "groups",
-        JSON.stringify({ "group-0": defaultGroup.current })
-      );
-    }
+    var sync_entry = {};
+    sync_entry[name] = value;
+
+    // need to make sure to only set changed groups
+    return new Promise((resolve) => {
+      chrome.storage.sync.get(name, (x) => {
+        if (
+          x[name] === undefined ||
+          x[name].color !== value.color ||
+          x[name].created !== value.created ||
+          x[name].title !== value.title ||
+          JSON.stringify(x[name].tabs) !== JSON.stringify(value.tabs)
+        ) {
+          chrome.storage.sync.set(sync_entry, () => {
+            resolve(0);
+          });
+        } else {
+          resolve(0);
+        }
+      });
+    });
   }
 
   function getTimestamp() {
@@ -302,13 +328,25 @@ export default function App() {
   }
 
   function filterRegEx(e) {
-    var section, titles, match, tab_items;
-    section = document.querySelectorAll(".group-item");
+    var sections, titles, match, tab_items;
+    sections = document.querySelectorAll(".group-item");
 
     if (e.target.value[0] === "#") {
-      titles = [...section].map((x) => x.querySelector("p").innerText);
+      titles = [...sections].map((x) => x.querySelector("p").innerText);
       match = e.target.value.substr(1);
     } else {
+      // if a group has no tabs must hide it when typing
+      if (e.target.value.length > 0) {
+        sections.forEach((x) => {
+          var num_tabs = x.querySelector(".draggable");
+          if (!num_tabs) {
+            x.style.display = "none";
+          }
+        });
+      } else {
+        sections.forEach((x) => (x.style.display = ""));
+      }
+
       tab_items = document.querySelectorAll(".draggable");
       titles = [...tab_items].map((x) => x.lastChild.innerText);
       match = e.target.value;
@@ -316,7 +354,7 @@ export default function App() {
 
     titles.forEach((x, i) => {
       var title_in_filter = x.toLowerCase().indexOf(match.toLowerCase()) === -1;
-      section[i].style.display = title_in_filter ? "none" : "";
+      sections[i].style.display = title_in_filter ? "none" : "";
     });
   }
 
@@ -576,7 +614,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
               <input
                 type="text"
                 name="search-group"
-                className="mr-2 px-1"
+                className="mr-2"
                 placeholder="#_&rarr; group, _&rarr; tab"
                 onChange={(e) => filterRegEx(e)}
               />
@@ -663,11 +701,13 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
                 if (i % 2 === 0) {
                   return (
                     <tr>
-                      <td>{x}</td>
+                      <td className="align-top">{x}</td>
                       {groupFormation(groups)[i + 1] ? (
-                        <td>{groupFormation(groups)[i + 1]}</td>
+                        <td className="align-top">
+                          {groupFormation(groups)[i + 1]}
+                        </td>
                       ) : (
-                        <td></td>
+                        <td className="align-top"></td>
                       )}
                     </tr>
                   );
