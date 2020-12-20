@@ -49,9 +49,9 @@
   z-index: -1;
 }
 
-#pdf-btn svg {
+#sync-btn svg {
   position: relative;
-  left: 1px;
+  left: 0px;
   top: -1px;
 }
 

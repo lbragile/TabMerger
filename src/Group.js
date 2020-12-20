@@ -33,23 +33,28 @@ export default function Group(props) {
       child.style.background = color;
     });
 
-    var current_groups = JSON.parse(localStorage.getItem("groups"));
-    if (current_groups[props.id]) {
-      current_groups[props.id].color = color;
-      localStorage.setItem("groups", JSON.stringify(current_groups));
-    }
+    chrome.storage.local.get("groups", (local) => {
+      var current_groups = local.groups;
+      if (current_groups && current_groups[props.id]) {
+        current_groups[props.id].color = color;
+        chrome.storage.local.set({ groups: current_groups });
+      }
+    });
   }
 
   function setTitle(e) {
-    var group_title = e.target.closest(".group-title");
-    var group_id = group_title.nextSibling.id;
-    var current_groups = JSON.parse(localStorage.getItem("groups"));
+    chrome.storage.local.get("groups", (local) => {
+      var group_title = e.target.closest(".group-title");
+      var group_id = group_title.nextSibling.id;
+      var current_groups = local.groups;
 
-    current_groups[group_id].title = e.target.firstChild.innerText;
-    e.target.lastChild.style.visibility = "hidden";
+      current_groups[group_id].title = e.target.firstChild.innerText;
+      e.target.lastChild.style.visibility = "hidden";
 
-    localStorage.setItem("groups", JSON.stringify(current_groups));
-    props.setGroups(JSON.stringify(current_groups));
+      chrome.storage.local.set({ groups: current_groups }, () => {
+        props.setGroups(JSON.stringify(current_groups));
+      });
+    });
   }
 
   function selectTitle(e) {
@@ -129,53 +134,55 @@ export default function Group(props) {
   }
 
   function deleteGroup(e) {
-    var target = e.target.closest(".group-title").nextSibling;
-    var group_blocks = JSON.parse(localStorage.getItem("groups"));
+    chrome.storage.local.get("groups", (local) => {
+      chrome.storage.sync.get("settings", (sync) => {
+        var target = e.target.closest(".group-title").nextSibling;
+        var group_blocks = local.groups;
 
-    chrome.storage.sync.get("settings", (result) => {
-      // if removed the only existing group
-      if (Object.keys(group_blocks).length === 1) {
-        group_blocks["group-0"] = {
-          color: result.settings.color,
-          created: props.getTimestamp(),
-          tabs: [],
-          title: result.settings.title,
-        };
-      } else {
-        // must rename all keys for the groups above deleted group item
-        var group_names = []; // need to change these
-        var index_deleted = target.id.charAt(target.id.length - 1);
-        Object.keys(group_blocks).forEach((key) => {
-          if (parseInt(key.charAt(key.length - 1)) > parseInt(index_deleted)) {
-            group_names.push(key);
+        // if removed the only existing group
+        if (Object.keys(group_blocks).length === 1) {
+          group_blocks["group-0"] = {
+            color: sync.settings.color,
+            created: props.getTimestamp(),
+            tabs: [],
+            title: sync.settings.title,
+          };
+        } else {
+          // must rename all keys for the groups above deleted group item
+          var group_names = []; // need to change these
+          var index_deleted = target.id.split("-")[1];
+          Object.keys(group_blocks).forEach((key) => {
+            if (parseInt(key.split("-")[1]) > parseInt(index_deleted)) {
+              group_names.push(key);
+            }
+          });
+
+          // perform the renaming of items
+          var group_blocks_str = JSON.stringify(group_blocks);
+          group_names.forEach((key) => {
+            var new_name = "group-" + (parseInt(key.split("-")[1]) - 1);
+            group_blocks_str = group_blocks_str.replace(key, new_name);
+          });
+
+          // get back json object with new item key names
+          group_blocks = JSON.parse(group_blocks_str);
+
+          // if group to be deleted is last - must only delete it
+          if (!group_names[0]) {
+            delete group_blocks["group-" + index_deleted];
           }
-        });
-
-        // perform the renaming of items
-        var group_blocks_str = JSON.stringify(group_blocks);
-        group_names.forEach((key) => {
-          var new_name = "group-" + (parseInt(key.charAt(key.length - 1)) - 1);
-          group_blocks_str = group_blocks_str.replace(key, new_name);
-        });
-
-        // get back json object with new item key names
-        group_blocks = JSON.parse(group_blocks_str);
-
-        // if group to be deleted is last - must only delete it
-        if (!group_names[0]) {
-          delete group_blocks["group-" + index_deleted];
         }
-      }
 
-      localStorage.setItem("groups", JSON.stringify(group_blocks));
+        chrome.storage.local.set({ groups: group_blocks }, () => {
+          // update total count
+          props.setTabTotal(
+            document.querySelectorAll(".draggable").length -
+              target.querySelectorAll(".draggable").length
+          );
 
-      // update total count
-      props.setTabTotal(
-        document.querySelectorAll(".draggable").length -
-          target.querySelectorAll(".draggable").length
-      );
-
-      props.setGroups(JSON.stringify(group_blocks));
+          props.setGroups(JSON.stringify(group_blocks));
+        });
+      });
     });
   }
 
