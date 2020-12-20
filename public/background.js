@@ -7,125 +7,127 @@ chrome.runtime.setUninstallURL("https://tabmerger.herokuapp.com/survey");
 
 // extension click - open without merging or with merging
 chrome.browserAction.onClicked.addListener(() => {
-  chrome.storage.sync.get("settings", (result) => {
+  chrome.storage.sync.get("settings", async (result) => {
     result.settings === undefined || result.settings.open === "without"
-      ? findExtTabAndSwitch()
+      ? await findExtTabAndSwitch()
       : filterTabs(info, tab);
   });
 });
 
-function filterTabs(info, tab, group_id) {
-  findExtTabAndSwitch();
+async function filterTabs(info, tab, group_id) {
+  await findExtTabAndSwitch();
 
-  // need a slight delay to ensure that new tab is set
-  setTimeout(() => {
-    chrome.tabs.query({ currentWindow: true }, (tabs) => {
-      // FILTER BASED ON USER BUTTON CLICK
-      tabs = tabs.filter((x) => x.title !== "TabMerger");
-      switch (info.which) {
-        case "right":
-          tabs = tabs.filter((x) => x.index > tab.index);
-          break;
-        case "left":
-          tabs = tabs.filter((x) => x.index < tab.index);
-          break;
-        case "excluding":
-          tabs = tabs.filter((x) => x.index !== tab.index);
-          break;
-        case "only":
-          tabs = tabs.filter((x) => x.index === tab.index);
-          break;
+  chrome.tabs.query({ currentWindow: true }, (tabs) => {
+    // FILTER BASED ON USER BUTTON CLICK
+    tabs = tabs.filter((x) => x.title !== "TabMerger");
+    switch (info.which) {
+      case "right":
+        tabs = tabs.filter((x) => x.index > tab.index);
+        break;
+      case "left":
+        tabs = tabs.filter((x) => x.index < tab.index);
+        break;
+      case "excluding":
+        tabs = tabs.filter((x) => x.index !== tab.index);
+        break;
+      case "only":
+        tabs = tabs.filter((x) => x.index === tab.index);
+        break;
 
-        default:
-          //all (already filtered all tabs except TabMerger)
-          break;
-      }
+      default:
+        //all (already filtered all tabs except TabMerger)
+        break;
+    }
 
-      // create duplicate title/url list & filter blacklisted sites
-      var filter_vals = [
-        "TabMerger",
-        "New Tab",
-        "Extensions",
-        "Add-ons Manager",
-      ];
+    // create duplicate title/url list & filter blacklisted sites
+    var filter_vals = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
 
-      chrome.storage.sync.get("settings", (sync) => {
-        chrome.storage.local.get("groups", (local) => {
-          // get a list of all the current tab titles and/or urls
-          var group_blocks = local.groups;
-          Object.keys(group_blocks).forEach((key) => {
-            var extra_vals = group_blocks[key].tabs.map((x) => x.url);
-            filter_vals = filter_vals.concat(extra_vals);
-          });
+    chrome.storage.sync.get("settings", (sync) => {
+      chrome.storage.local.get("groups", (local) => {
+        // get a list of all the current tab titles and/or urls
+        var group_blocks = local.groups;
+        Object.keys(group_blocks).forEach((key) => {
+          var extra_vals = group_blocks[key].tabs.map((x) => x.url);
+          filter_vals = filter_vals.concat(extra_vals);
+        });
 
-          // apply blacklist items
-          tabs = tabs.filter((x) => {
-            var bl_sites = sync.settings.blacklist.replace(" ", "").split(",");
-            bl_sites = bl_sites.map((site) => site.toLowerCase());
-            return !bl_sites.includes(x.url);
-          });
+        // apply blacklist items
+        tabs = tabs.filter((x) => {
+          var bl_sites = sync.settings.blacklist.replace(" ", "").split(",");
+          bl_sites = bl_sites.map((site) => site.toLowerCase());
+          return !bl_sites.includes(x.url);
+        });
 
-          // remove unnecessary information from each tab
-          tabs = tabs.map((x) => {
-            return {
-              title: x.title,
-              url: x.url,
-              id: x.id,
-            };
-          });
+        // remove unnecessary information from each tab
+        tabs = tabs.map((x) => {
+          return {
+            title: x.title,
+            url: x.url,
+            id: x.id,
+          };
+        });
 
-          // duplicates (already in TabMerger) can be removed
-          var duplicates = tabs.filter((x) => {
-            return filter_vals.includes(x.title) || filter_vals.includes(x.url);
-          });
+        // duplicates (already in TabMerger) can be removed
+        var duplicates = tabs.filter((x) => {
+          return filter_vals.includes(x.title) || filter_vals.includes(x.url);
+        });
 
-          chrome.tabs.remove(duplicates.map((x) => x.id));
+        chrome.tabs.remove(duplicates.map((x) => x.id));
 
-          // apply above filter
-          tabs = tabs.filter((x) => {
-            return (
-              !filter_vals.includes(x.title) && !filter_vals.includes(x.url)
-            );
-          });
+        // apply above filter
+        tabs = tabs.filter((x) => {
+          return !filter_vals.includes(x.title) && !filter_vals.includes(x.url);
+        });
 
-          // make sure original merge has no duplicated values obtain offending indicies
-          // prettier-ignore
-          var prev_urls = [], indicies = [];
-          tabs.forEach((x, i) => {
-            if (prev_urls.includes(x.url)) {
-              indicies.push(i);
-            } else {
-              prev_urls.push(x.url);
-            }
-          });
+        // make sure original merge has no duplicated values obtain offending indicies
+        // prettier-ignore
+        var prev_urls = [], indicies = [];
+        tabs.forEach((x, i) => {
+          if (prev_urls.includes(x.url)) {
+            indicies.push(i);
+          } else {
+            prev_urls.push(x.url);
+          }
+        });
 
-          // close duplicates in the merging process
-          indicies.forEach((i) => {
-            chrome.tabs.remove(tabs[i].id);
-          });
+        // close duplicates in the merging process
+        indicies.forEach((i) => {
+          chrome.tabs.remove(tabs[i].id);
+        });
 
-          // filter out offending indicies
-          tabs = tabs.filter((_, i) => !indicies.includes(i));
+        // filter out offending indicies
+        tabs = tabs.filter((_, i) => !indicies.includes(i));
 
-          var whichGroup = group_id ? group_id : "group-0";
-          chrome.storage.local.set({
-            into_group: whichGroup,
-            merged_tabs: tabs,
-          });
+        var whichGroup = group_id ? group_id : "group-0";
+        chrome.storage.local.set({
+          into_group: whichGroup,
+          merged_tabs: tabs,
         });
       });
     });
-  }, 200);
+  });
 }
 
 function findExtTabAndSwitch() {
   var query = { title: "TabMerger", currentWindow: true };
   var exists = { highlighted: true, active: true };
   var not_exist = { url: "index.html", active: true };
-  chrome.tabs.query(query, (tabMergerTabs) => {
-    tabMergerTabs[0]
-      ? chrome.tabs.update(tabMergerTabs[0].id, exists)
-      : chrome.tabs.create(not_exist);
+  return new Promise((resolve) => {
+    chrome.tabs.query(query, (tabMergerTabs) => {
+      tabMergerTabs[0]
+        ? chrome.tabs.update(tabMergerTabs[0].id, exists, () => {
+            resolve(0);
+          })
+        : chrome.tabs.create(not_exist, (newTab) => {
+            function listener(tabId, changeInfo) {
+              if (changeInfo.status === "complete" && tabId === newTab.id) {
+                chrome.tabs.onUpdated.removeListener(listener);
+                resolve(0);
+              }
+            }
+            chrome.tabs.onUpdated.addListener(listener);
+          });
+    });
   });
 }
 
@@ -153,7 +155,7 @@ function createContextMenu(id, title, type) {
   chrome.contextMenus.create({ id, title, type });
 }
 
-const contextMenuOrShortCut = (info, tab) => {
+const contextMenuOrShortCut = async (info, tab) => {
   // right click menu OR shortcut keyboard commands
   if (typeof info === "string") {
     info = { which: "all", command: info };
@@ -161,7 +163,7 @@ const contextMenuOrShortCut = (info, tab) => {
 
   switch (info.menuItemId || info.command) {
     case "aopen-tabmerger":
-      findExtTabAndSwitch();
+      await findExtTabAndSwitch();
       break;
     case "merge-left-menu":
       info.which = "left";

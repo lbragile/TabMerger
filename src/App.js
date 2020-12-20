@@ -26,9 +26,7 @@ export default function App() {
   });
 
   const [tabTotal, setTabTotal] = useState(0);
-  const [groups, setGroups] = useState(
-    JSON.stringify({ "group-0": defaultGroup.current })
-  );
+  const [groups, setGroups] = useState();
 
   useEffect(() => {
     var default_settings = {
@@ -265,38 +263,40 @@ export default function App() {
   }
 
   const groupFormation = () => {
-    var sorted_vals;
-    var group_blocks = JSON.parse(groups);
-    if (Object.keys(group_blocks).length > 1) {
-      var sorted_groups = sortByKey(JSON.parse(groups));
-      sorted_vals = sorted_groups.map((x) => x[1]);
-    } else {
-      sorted_vals = Object.values(group_blocks);
-    }
-    return sorted_vals.map((x, i) => {
-      var id = "group-" + i;
-      return (
-        <Group
-          id={id}
-          className="group"
-          title={x.title}
-          color={x.color}
-          created={x.created}
-          num_tabs={(x.tabs && x.tabs.length) || 0}
-          setGroups={setGroups}
-          setTabTotal={setTabTotal}
-          getTimestamp={getTimestamp}
-          key={Math.random()}
-        >
-          <Tabs
+    if (groups) {
+      var sorted_vals;
+      var group_blocks = JSON.parse(groups);
+      if (Object.keys(group_blocks).length > 1) {
+        var sorted_groups = sortByKey(JSON.parse(groups));
+        sorted_vals = sorted_groups.map((x) => x[1]);
+      } else {
+        sorted_vals = Object.values(group_blocks);
+      }
+      return sorted_vals.map((x, i) => {
+        var id = "group-" + i;
+        return (
+          <Group
             id={id}
-            itemLimit={ITEM_STORAGE_LIMIT.current}
-            setTabTotal={setTabTotal}
+            className="group"
+            title={x.title}
+            color={x.color}
+            created={x.created}
+            num_tabs={(x.tabs && x.tabs.length) || 0}
             setGroups={setGroups}
-          />
-        </Group>
-      );
-    });
+            setTabTotal={setTabTotal}
+            getTimestamp={getTimestamp}
+            key={Math.random()}
+          >
+            <Tabs
+              id={id}
+              itemLimit={ITEM_STORAGE_LIMIT.current}
+              setTabTotal={setTabTotal}
+              setGroups={setGroups}
+            />
+          </Group>
+        );
+      });
+    }
   };
 
   function updateGroupItem(name, value) {
@@ -398,34 +398,58 @@ export default function App() {
   }
 
   function filterRegEx(e) {
-    var sections, titles, match, tab_items;
+    // prettier-ignore
+    var sections, titles, match, tab_items, search_type, no_match, keep_sections = [];
     sections = document.querySelectorAll(".group-item");
 
     if (e.target.value[0] === "#") {
       titles = [...sections].map((x) => x.querySelector("p").innerText);
-      match = e.target.value.substr(1);
-    } else {
-      // if a group has no tabs must hide it when typing
-      if (e.target.value.length > 0) {
-        sections.forEach((x) => {
-          var num_tabs = x.querySelector(".draggable");
-          if (!num_tabs) {
-            x.style.display = "none";
-          }
-        });
-      } else {
-        sections.forEach((x) => (x.style.display = ""));
-      }
+      match = e.target.value.substr(1).toLowerCase();
+      search_type = "group";
+    } else if (e.target.value !== "") {
+      tab_items = [...sections].map((x) => [
+        ...x.querySelectorAll(".draggable"),
+      ]);
+      titles = tab_items.map((x) => {
+        return x.map((y) => y.lastChild.innerText.toLowerCase());
+      });
 
-      tab_items = document.querySelectorAll(".draggable");
-      titles = [...tab_items].map((x) => x.lastChild.innerText);
-      match = e.target.value;
+      match = e.target.value.toLowerCase();
+      search_type = "tab";
+    } else {
+      // no typing? show all groups and tabs
+      sections.forEach((x) => (x.style.display = ""));
+      [...document.querySelectorAll(".draggable")].forEach(
+        (x) => (x.style.display = "")
+      );
     }
 
-    titles.forEach((x, i) => {
-      var title_in_filter = x.toLowerCase().indexOf(match.toLowerCase()) === -1;
-      sections[i].style.display = title_in_filter ? "none" : "";
-    });
+    if (search_type === "group") {
+      titles.forEach((x, i) => {
+        no_match = x.toLowerCase().indexOf(match) === -1;
+        sections[i].style.display = no_match ? "none" : "";
+      });
+    } else if (search_type === "tab") {
+      titles.forEach((title, i) => {
+        // individual tabs where a group has 1 tab matching
+        title.forEach((x, j) => {
+          // maintain a list of groups to keep since
+          // they contain at least one match
+          no_match = x.indexOf(match) === -1;
+
+          if (!no_match) {
+            keep_sections.push(i);
+          }
+
+          tab_items[i][j].style.display = no_match ? "none" : "";
+        });
+      });
+
+      // remove groups based on above calculations
+      sections.forEach((x, i) => {
+        x.style.display = !keep_sections.includes(i) ? "none" : "";
+      });
+    }
   }
 
   function readImportedFile(e) {
@@ -648,20 +672,24 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
           </div>
           <div className="groups-container">
             <table>
-              {groupFormation().map((x, i) => {
-                if (i % 2 === 0) {
-                  return (
-                    <tr>
-                      <td className="align-top">{x}</td>
-                      {groupFormation()[i + 1] ? (
-                        <td className="align-top">{groupFormation()[i + 1]}</td>
-                      ) : (
-                        <td className="align-top"></td>
-                      )}
-                    </tr>
-                  );
-                }
-              })}
+              {groupFormation()
+                ? groupFormation().map((x, i) => {
+                    if (i % 2 === 0) {
+                      return (
+                        <tr>
+                          <td className="align-top">{x}</td>
+                          {groupFormation()[i + 1] ? (
+                            <td className="align-top">
+                              {groupFormation()[i + 1]}
+                            </td>
+                          ) : (
+                            <td className="align-top"></td>
+                          )}
+                        </tr>
+                      );
+                    }
+                  })
+                : null}
             </table>
 
             <Button
