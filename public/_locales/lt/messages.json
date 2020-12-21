@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Ištrinti grupę"
   },
-  "editTitle": {
-    "message": "Redaguoti grupės pavadinimą"
-  },
-  "groupTotalPlural": {
-    "message": "skirtukai grupėje"
-  },
-  "groupTotalSingular": {
-    "message": "skirtukas grupėje"
-  },
   "hideTabs": {
     "message": "Slėpti skirtukus"
-  },
-  "leaveReview": {
-    "message": "Palikite apžvalgą"
   },
   "mergeALLtabs": {
     "message": "Sujungti VISUS skirtukus"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Atidaryti grupę"
   },
-  "pageTotalPlural": {
-    "message": "skirtukų iš viso"
-  },
-  "pageTotalSingular": {
-    "message": "skirtukas iš viso"
-  },
   "pickColor": {
     "message": "Pasirinkite grupės spalvą"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Eksportuoti JSON"
   },
-  "exportPDF": {
-    "message": "Eksportuoti PDF"
-  },
-  "groupTitle": {
-    "message": "Grupės pavadinimas"
-  },
   "importJSON": {
     "message": "Importuoti JSON"
-  },
-  "tabTitle": {
-    "message": "Skirtuko pavadinimas"
   },
   "showTabs": {
     "message": "Rodyti skirtukus"

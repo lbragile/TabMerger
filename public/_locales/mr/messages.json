@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "गट हटवा"
   },
-  "editTitle": {
-    "message": "गट शीर्षक संपादित करा"
-  },
-  "groupTotalPlural": {
-    "message": "गटात टॅब"
-  },
-  "groupTotalSingular": {
-    "message": "गटात टॅब"
-  },
   "hideTabs": {
     "message": "टॅब लपवा"
-  },
-  "leaveReview": {
-    "message": "एक पुनरावलोकन द्या"
   },
   "mergeALLtabs": {
     "message": "सर्व टॅब विलीन करा"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "मुक्त गट"
   },
-  "pageTotalPlural": {
-    "message": "एकूण टॅब"
-  },
-  "pageTotalSingular": {
-    "message": "एकूण टॅब"
-  },
   "pickColor": {
     "message": "गट रंग निवडा"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON निर्यात करा"
   },
-  "exportPDF": {
-    "message": "पीडीएफ निर्यात करा"
-  },
-  "groupTitle": {
-    "message": "गट शीर्षक"
-  },
   "importJSON": {
     "message": "JSON आयात करा"
-  },
-  "tabTitle": {
-    "message": "टॅब शीर्षक"
   },
   "showTabs": {
     "message": "टॅब दर्शवा"

@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Видалити групу"
   },
-  "editTitle": {
-    "message": "Редагувати заголовок групи"
-  },
-  "groupTotalPlural": {
-    "message": "вкладки в групі"
-  },
-  "groupTotalSingular": {
-    "message": "вкладка в групі"
-  },
   "hideTabs": {
     "message": "Сховати вкладки"
-  },
-  "leaveReview": {
-    "message": "Залиште відгук"
   },
   "mergeALLtabs": {
     "message": "Об’єднати ВСІ Вкладки"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Відкрити групу"
   },
-  "pageTotalPlural": {
-    "message": "загалом вкладки"
-  },
-  "pageTotalSingular": {
-    "message": "вкладка в цілому"
-  },
   "pickColor": {
     "message": "Виберіть колір групи"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Експортувати JSON"
   },
-  "exportPDF": {
-    "message": "Експортувати PDF"
-  },
-  "groupTitle": {
-    "message": "Назва групи"
-  },
   "importJSON": {
     "message": "Імпортуйте JSON"
-  },
-  "tabTitle": {
-    "message": "Заголовок вкладки"
   },
   "showTabs": {
     "message": "Показати вкладки"

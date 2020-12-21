@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Eliminar grupo"
   },
-  "editTitle": {
-    "message": "Editar título de grupo"
-  },
-  "groupTotalPlural": {
-    "message": "pestañas en grupo"
-  },
-  "groupTotalSingular": {
-    "message": "pestaña en grupo"
-  },
   "hideTabs": {
     "message": "Ocultar pestañas"
-  },
-  "leaveReview": {
-    "message": "Dejar un comentario"
   },
   "mergeALLtabs": {
     "message": "Fusionar TODAS las pestañas"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Grupo abierto"
   },
-  "pageTotalPlural": {
-    "message": "pestañas en total"
-  },
-  "pageTotalSingular": {
-    "message": "pestaña en total"
-  },
   "pickColor": {
     "message": "Elegir color de grupo"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exportar JSON"
   },
-  "exportPDF": {
-    "message": "Exportar PDF"
-  },
-  "groupTitle": {
-    "message": "Título del grupo"
-  },
   "importJSON": {
     "message": "Importar JSON"
-  },
-  "tabTitle": {
-    "message": "Título de la pestaña"
   },
   "showTabs": {
     "message": "Mostrar pestañas"

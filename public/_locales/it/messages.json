@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Elimina gruppo"
   },
-  "editTitle": {
-    "message": "Modifica il titolo del gruppo"
-  },
-  "groupTotalPlural": {
-    "message": "schede nel gruppo"
-  },
-  "groupTotalSingular": {
-    "message": "scheda nel gruppo"
-  },
   "hideTabs": {
     "message": "Nascondi schede"
-  },
-  "leaveReview": {
-    "message": "Lascia una recensione"
   },
   "mergeALLtabs": {
     "message": "Unisci TUTTE le schede"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Apri gruppo"
   },
-  "pageTotalPlural": {
-    "message": "schede in totale"
-  },
-  "pageTotalSingular": {
-    "message": "scheda in totale"
-  },
   "pickColor": {
     "message": "Scegli Colore gruppo"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Esporta JSON"
   },
-  "exportPDF": {
-    "message": "Esporta PDF"
-  },
-  "groupTitle": {
-    "message": "Titolo del gruppo"
-  },
   "importJSON": {
     "message": "Importa JSON"
-  },
-  "tabTitle": {
-    "message": "Titolo scheda"
   },
   "showTabs": {
     "message": "Mostra schede"

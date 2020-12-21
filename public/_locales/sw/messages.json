@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Futa Kikundi"
   },
-  "editTitle": {
-    "message": "Hariri Kichwa cha Kikundi"
-  },
-  "groupTotalPlural": {
-    "message": "tabo katika kikundi"
-  },
-  "groupTotalSingular": {
-    "message": "tab katika kikundi"
-  },
   "hideTabs": {
     "message": "Ficha Tabo"
-  },
-  "leaveReview": {
-    "message": "Acha Mapitio"
   },
   "mergeALLtabs": {
     "message": "Unganisha Tabo ZOTE"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Fungua Kikundi"
   },
-  "pageTotalPlural": {
-    "message": "tabo kwa jumla"
-  },
-  "pageTotalSingular": {
-    "message": "tab kwa jumla"
-  },
   "pickColor": {
     "message": "Chagua Rangi ya Kikundi"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Hamisha JSON"
   },
-  "exportPDF": {
-    "message": "Hamisha PDF"
-  },
-  "groupTitle": {
-    "message": "Kichwa cha Kikundi"
-  },
   "importJSON": {
     "message": "Ingiza JSON"
-  },
-  "tabTitle": {
-    "message": "Kichwa cha Kichupo"
   },
   "showTabs": {
     "message": "Onyesha Tabo"

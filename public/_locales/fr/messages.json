@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Supprimer le groupe"
   },
-  "editTitle": {
-    "message": "Modifier le titre du groupe"
-  },
-  "groupTotalPlural": {
-    "message": "onglets dans le groupe"
-  },
-  "groupTotalSingular": {
-    "message": "onglet dans le groupe"
-  },
   "hideTabs": {
     "message": "Masquer les onglets"
-  },
-  "leaveReview": {
-    "message": "Laisser un commentaire"
   },
   "mergeALLtabs": {
     "message": "Fusionner TOUS les onglets"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Groupe ouvert"
   },
-  "pageTotalPlural": {
-    "message": "onglets au total"
-  },
-  "pageTotalSingular": {
-    "message": "onglet au total"
-  },
   "pickColor": {
     "message": "Choisir la couleur du groupe"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exporter JSON"
   },
-  "exportPDF": {
-    "message": "Exporter le PDF"
-  },
-  "groupTitle": {
-    "message": "Titre du groupe"
-  },
   "importJSON": {
     "message": "Importer JSON"
-  },
-  "tabTitle": {
-    "message": "Titre de l'onglet"
   },
   "showTabs": {
     "message": "Afficher les onglets"

@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Suprimeix el grup"
   },
-  "editTitle": {
-    "message": "Edita el títol del grup"
-  },
-  "groupTotalPlural": {
-    "message": "pestanyes en grup"
-  },
-  "groupTotalSingular": {
-    "message": "pestanya en grup"
-  },
   "hideTabs": {
     "message": "Amaga les pestanyes"
-  },
-  "leaveReview": {
-    "message": "Deixa una ressenya"
   },
   "mergeALLtabs": {
     "message": "Combina TOTES les pestanyes"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Grup obert"
   },
-  "pageTotalPlural": {
-    "message": "pestanyes en total"
-  },
-  "pageTotalSingular": {
-    "message": "fitxa en total"
-  },
   "pickColor": {
     "message": "Selecciona el color del grup"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exporta JSON"
   },
-  "exportPDF": {
-    "message": "Exporta PDF"
-  },
-  "groupTitle": {
-    "message": "Títol del grup"
-  },
   "importJSON": {
     "message": "Importa JSON"
-  },
-  "tabTitle": {
-    "message": "Títol de la pestanya"
   },
   "showTabs": {
     "message": "Mostra les pestanyes"

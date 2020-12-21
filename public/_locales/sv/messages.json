@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Ta bort grupp"
   },
-  "editTitle": {
-    "message": "Redigera grupptitel"
-  },
-  "groupTotalPlural": {
-    "message": "flikar i grupp"
-  },
-  "groupTotalSingular": {
-    "message": "flik i grupp"
-  },
   "hideTabs": {
     "message": "Dölj flikar"
-  },
-  "leaveReview": {
-    "message": "Lämna en recension"
   },
   "mergeALLtabs": {
     "message": "Slå samman ALLA flikar"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Öppna grupp"
   },
-  "pageTotalPlural": {
-    "message": "flikar totalt"
-  },
-  "pageTotalSingular": {
-    "message": "fliken totalt"
-  },
   "pickColor": {
     "message": "Välj gruppfärg"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exportera JSON"
   },
-  "exportPDF": {
-    "message": "Exportera PDF"
-  },
-  "groupTitle": {
-    "message": "Grupptitel"
-  },
   "importJSON": {
     "message": "Importera JSON"
-  },
-  "tabTitle": {
-    "message": "Flikens titel"
   },
   "showTabs": {
     "message": "Visa flikar"

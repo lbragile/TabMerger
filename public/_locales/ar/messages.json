@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "حذف المجموعة"
   },
-  "editTitle": {
-    "message": "تحرير عنوان المجموعة"
-  },
-  "groupTotalPlural": {
-    "message": "علامات التبويب في المجموعة"
-  },
-  "groupTotalSingular": {
-    "message": "علامة التبويب في المجموعة"
-  },
   "hideTabs": {
     "message": "إخفاء علامات التبويب"
-  },
-  "leaveReview": {
-    "message": "ترك التعليق"
   },
   "mergeALLtabs": {
     "message": "دمج جميع علامات التبويب"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "مجموعة مفتوحة"
   },
-  "pageTotalPlural": {
-    "message": "علامات التبويب في المجموع"
-  },
-  "pageTotalSingular": {
-    "message": "علامة التبويب في المجموع"
-  },
   "pickColor": {
     "message": "اختر لون المجموعة"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "تصدير JSON"
   },
-  "exportPDF": {
-    "message": "تصدير ملف PDF"
-  },
-  "groupTitle": {
-    "message": "عنوان المجموعة"
-  },
   "importJSON": {
     "message": "استيراد JSON"
-  },
-  "tabTitle": {
-    "message": "عنوان علامة التبويب"
   },
   "showTabs": {
     "message": "إظهار علامات التبويب"

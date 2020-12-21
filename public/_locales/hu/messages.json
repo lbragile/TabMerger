@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Csoport törlése"
   },
-  "editTitle": {
-    "message": "Szerkessze a csoport címét"
-  },
-  "groupTotalPlural": {
-    "message": "fülek a csoportban"
-  },
-  "groupTotalSingular": {
-    "message": "fül a csoportban"
-  },
   "hideTabs": {
     "message": "Fülek elrejtése"
-  },
-  "leaveReview": {
-    "message": "Hagy egy áttekintést"
   },
   "mergeALLtabs": {
     "message": "MINDEN lap egyesítése"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Nyissa meg a Csoportot"
   },
-  "pageTotalPlural": {
-    "message": "fülek összesen"
-  },
-  "pageTotalSingular": {
-    "message": "fül összesen"
-  },
   "pickColor": {
     "message": "Válassza a Csoport színét"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exportálja a JSON-t"
   },
-  "exportPDF": {
-    "message": "Exportálás PDF-be"
-  },
-  "groupTitle": {
-    "message": "Csoport címe"
-  },
   "importJSON": {
     "message": "JSON importálása"
-  },
-  "tabTitle": {
-    "message": "Lap címe"
   },
   "showTabs": {
     "message": "Fülek megjelenítése"

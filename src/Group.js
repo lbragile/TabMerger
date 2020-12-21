@@ -96,10 +96,11 @@ export default function Group(props) {
     var group_block = e.target.closest(".group");
     const afterElement = getDragAfterElement(group_block, e.clientY);
     const currentElement = document.querySelector(".dragging");
+    var location = group_block.querySelector(".tabs-container");
     if (afterElement == null) {
-      group_block.lastChild.appendChild(currentElement);
+      location.appendChild(currentElement);
     } else {
-      group_block.lastChild.insertBefore(currentElement, afterElement);
+      location.insertBefore(currentElement, afterElement);
     }
 
     // allow scrolling while dragging
@@ -214,12 +215,7 @@ export default function Group(props) {
   }
 
   return (
-    <div
-      className={
-        "group-item " +
-        (["group-0", "group-1"].includes(props.id) ? "mt-0" : "mt-3")
-      }
-    >
+    <div className={"group-item " + ("group-0" === props.id ? "mt-0" : "mt-3")}>
       <div className="group-title d-flex flex-row justify-content-center">
         <h5 className="tabTotal-inGroup">
           {props.num_tabs + (props.num_tabs !== 1 ? " Tabs" : " Tab")}

@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Удалить группу"
   },
-  "editTitle": {
-    "message": "Изменить заголовок группы"
-  },
-  "groupTotalPlural": {
-    "message": "вкладки в группе"
-  },
-  "groupTotalSingular": {
-    "message": "вкладка в группе"
-  },
   "hideTabs": {
     "message": "Скрыть вкладки"
-  },
-  "leaveReview": {
-    "message": "Оставить отзыв"
   },
   "mergeALLtabs": {
     "message": "Объединить ВСЕ вкладки"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Открытая группа"
   },
-  "pageTotalPlural": {
-    "message": "вкладки всего"
-  },
-  "pageTotalSingular": {
-    "message": "вкладка в целом"
-  },
   "pickColor": {
     "message": "Выбрать цвет группы"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Экспорт JSON"
   },
-  "exportPDF": {
-    "message": "Экспорт PDF"
-  },
-  "groupTitle": {
-    "message": "Заголовок группы"
-  },
   "importJSON": {
     "message": "Импортировать JSON"
-  },
-  "tabTitle": {
-    "message": "Заголовок вкладки"
   },
   "showTabs": {
     "message": "Показать вкладки"

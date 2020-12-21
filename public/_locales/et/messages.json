@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Kustuta rühm"
   },
-  "editTitle": {
-    "message": "Redigeeri grupi pealkirja"
-  },
-  "groupTotalPlural": {
-    "message": "vahelehed rühmas"
-  },
-  "groupTotalSingular": {
-    "message": "vahekaart rühmas"
-  },
   "hideTabs": {
     "message": "Peida vahelehed"
-  },
-  "leaveReview": {
-    "message": "Jäta ülevaade"
   },
   "mergeALLtabs": {
     "message": "Ühenda KÕIK vahelehed"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Avage rühm"
   },
-  "pageTotalPlural": {
-    "message": "sakke kokku"
-  },
-  "pageTotalSingular": {
-    "message": "sakk kokku"
-  },
   "pickColor": {
     "message": "Valige grupi värv"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Ekspordi JSON"
   },
-  "exportPDF": {
-    "message": "Ekspordi PDF"
-  },
-  "groupTitle": {
-    "message": "Grupi pealkiri"
-  },
   "importJSON": {
     "message": "Importige JSON"
-  },
-  "tabTitle": {
-    "message": "Vahekaardi pealkiri"
   },
   "showTabs": {
     "message": "Kuva vahelehed"

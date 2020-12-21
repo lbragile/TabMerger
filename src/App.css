@@ -6,23 +6,32 @@
 
 .container-fluid {
   position: relative;
-  width: 90%;
+  width: 60%;
   overflow-x: hidden;
 }
 
-#tab-total {
-  position: relative;
-  top: 5px;
-}
-
 .container-below-hr {
-  position: relative;
-  top: -10px;
   z-index: 0;
 }
 
 .groups-container {
   margin-top: 15px;
+}
+
+.subtitle {
+  position: relative;
+  width: 100%;
+}
+
+#sync-text {
+  height: 30px;
+  display: inline-block;
+  padding: 3px;
+  margin: 0;
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* BUTTONS - Remove Ignore Focus */
@@ -42,17 +51,19 @@
 
 /* GROUP & TAB FILTERS */
 .search-filter {
-  position: relative;
-  top: -35px;
-  left: 90%;
-  text-align: right;
+  position: absolute;
+  right: 0;
+  top: 4px;
+  max-width: 178px;
+  margin: 0;
+  padding: 0;
 }
 
 .search-filter input {
   border-radius: 0 5px 5px 0;
-  width: 142px;
+  width: 150px;
   border: 1px solid black;
-  padding: 2px 2px 2px 4px;
+  padding: 2px;
 }
 
 .search-filter input:focus {

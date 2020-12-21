@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Slet gruppe"
   },
-  "editTitle": {
-    "message": "Rediger gruppetitel"
-  },
-  "groupTotalPlural": {
-    "message": "faner i gruppe"
-  },
-  "groupTotalSingular": {
-    "message": "fane i gruppe"
-  },
   "hideTabs": {
     "message": "Skjul faner"
-  },
-  "leaveReview": {
-    "message": "Efterlad en anmeldelse"
   },
   "mergeALLtabs": {
     "message": "Flet ALLE faner"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Åbn gruppe"
   },
-  "pageTotalPlural": {
-    "message": "faner i alt"
-  },
-  "pageTotalSingular": {
-    "message": "fanen i alt"
-  },
   "pickColor": {
     "message": "Vælg gruppefarve"
   },
@@ -101,17 +83,8 @@
   "exportJSON": {
     "message": "Eksporter JSON"
   },
-  "exportPDF": {
-    "message": "Eksporter PDF"
-  },
-  "groupTitle": {
-    "message": "Gruppetitel"
-  },
   "importJSON": {
     "message": "Importér JSON"
-  },
-  "tabTitle": {
-    "message": "Fanebladets titel"
   },
   "supportUs": {
     "message": "Støt os"

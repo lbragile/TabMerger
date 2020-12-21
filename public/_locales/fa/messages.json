@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "حذف گروه"
   },
-  "editTitle": {
-    "message": "ویرایش عنوان گروه"
-  },
-  "groupTotalPlural": {
-    "message": "برگه ها در گروه"
-  },
-  "groupTotalSingular": {
-    "message": "برگه در گروه"
-  },
   "hideTabs": {
     "message": "پنهان کردن برگه ها"
-  },
-  "leaveReview": {
-    "message": "یک بررسی بگذارید"
   },
   "mergeALLtabs": {
     "message": "همه برگه ها را ادغام کنید"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "باز کردن گروه"
   },
-  "pageTotalPlural": {
-    "message": "در کل زبانه ها"
-  },
-  "pageTotalSingular": {
-    "message": "در کل برگه"
-  },
   "pickColor": {
     "message": "رنگ گروه را انتخاب کنید"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "صادرات JSON"
   },
-  "exportPDF": {
-    "message": "صادرات PDF"
-  },
-  "groupTitle": {
-    "message": "عنوان گروه"
-  },
   "importJSON": {
     "message": "JSON را وارد کنید"
-  },
-  "tabTitle": {
-    "message": "عنوان برگه"
   },
   "showTabs": {
     "message": "نمایش برگه ها"

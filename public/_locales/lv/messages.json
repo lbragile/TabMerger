@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Dzēst grupu"
   },
-  "editTitle": {
-    "message": "Rediģēt grupas nosaukumu"
-  },
-  "groupTotalPlural": {
-    "message": "cilnes grupā"
-  },
-  "groupTotalSingular": {
-    "message": "cilne grupā"
-  },
   "hideTabs": {
     "message": "Slēpt cilnes"
-  },
-  "leaveReview": {
-    "message": "Atstājiet pārskatu"
   },
   "mergeALLtabs": {
     "message": "Apvienot VISAS cilnes"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Atvērt grupu"
   },
-  "pageTotalPlural": {
-    "message": "cilnes kopā"
-  },
-  "pageTotalSingular": {
-    "message": "cilne kopā"
-  },
   "pickColor": {
     "message": "Izvēlieties grupas krāsu"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Eksportēt JSON"
   },
-  "exportPDF": {
-    "message": "Eksportēt PDF"
-  },
-  "groupTitle": {
-    "message": "Grupas nosaukums"
-  },
   "importJSON": {
     "message": "Importēt JSON"
-  },
-  "tabTitle": {
-    "message": "Cilnes nosaukums"
   },
   "showTabs": {
     "message": "Rādīt cilnes"

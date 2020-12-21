@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Xóa nhóm"
   },
-  "editTitle": {
-    "message": "Chỉnh sửa Tiêu đề Nhóm"
-  },
-  "groupTotalPlural": {
-    "message": "tab trong nhóm"
-  },
-  "groupTotalSingular": {
-    "message": "tab trong nhóm"
-  },
   "hideTabs": {
     "message": "Ẩn các tab"
-  },
-  "leaveReview": {
-    "message": "Để lại đánh giá"
   },
   "mergeALLtabs": {
     "message": "Hợp nhất TẤT CẢ các tab"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Mở nhóm"
   },
-  "pageTotalPlural": {
-    "message": "tổng số tab"
-  },
-  "pageTotalSingular": {
-    "message": "tab tổng cộng"
-  },
   "pickColor": {
     "message": "Chọn màu nhóm"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Xuất JSON"
   },
-  "exportPDF": {
-    "message": "Xuất PDF"
-  },
-  "groupTitle": {
-    "message": "Tiêu đề nhóm"
-  },
   "importJSON": {
     "message": "Nhập JSON"
-  },
-  "tabTitle": {
-    "message": "Tiêu đề tab"
   },
   "showTabs": {
     "message": "Hiển thị các tab"

@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Izbriši skupino"
   },
-  "editTitle": {
-    "message": "Uredi naslov skupine"
-  },
-  "groupTotalPlural": {
-    "message": "zavihki v skupini"
-  },
-  "groupTotalSingular": {
-    "message": "zavihek v skupini"
-  },
   "hideTabs": {
     "message": "Skrij zavihke"
-  },
-  "leaveReview": {
-    "message": "Pustite pregled"
   },
   "mergeALLtabs": {
     "message": "Združi VSE zavihke"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Odpri skupino"
   },
-  "pageTotalPlural": {
-    "message": "zavihkov skupaj"
-  },
-  "pageTotalSingular": {
-    "message": "zavihek skupaj"
-  },
   "pickColor": {
     "message": "Izberite barvo skupine"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Izvozi JSON"
   },
-  "exportPDF": {
-    "message": "Izvozi PDF"
-  },
-  "groupTitle": {
-    "message": "Naslov skupine"
-  },
   "importJSON": {
     "message": "Uvozi JSON"
-  },
-  "tabTitle": {
-    "message": "Naslov zavihka"
   },
   "showTabs": {
     "message": "Pokaži zavihke"

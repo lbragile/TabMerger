@@ -9,7 +9,7 @@ import "./App.css";
 import "./Button.css";
 
 import { MdSettings, MdDeleteForever, MdAddCircle } from "react-icons/md";
-import { FaTrashRestore, FaSync } from "react-icons/fa";
+import { FaTrashRestore } from "react-icons/fa";
 import { BiImport, BiExport } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 
@@ -17,6 +17,20 @@ export default function App() {
   const ITEM_STORAGE_LIMIT = useRef(8000); //500 for testing - 8000 for production
   const SYNC_STORAGE_LIMIT = useRef(102000); //1000 for testing - 102000 for production
   const NUM_GROUP_LIMIT = useRef(100); // 3 for testing - 100 for production
+
+  const links = useRef([
+    { url: "https://tabmerger.herokuapp.com/", text: "HELP" },
+    { url: "https://youtu.be/gx0dNUbwCn4", text: "DEMO" },
+    {
+      url:
+        "https://www.paypal.com/donate?hosted_button_id=X3EYMX8CVA4SY&source=url",
+      text: "DONATE",
+    },
+    { url: getTabMergerLink(true), text: "REVIEW" },
+    { url: "https://tabmerger.herokuapp.com/contact", text: "CONTACT" },
+  ]);
+
+  var sync_timestamp = useRef();
 
   const defaultGroup = useRef({
     color: "#dedede",
@@ -29,6 +43,11 @@ export default function App() {
   const [groups, setGroups] = useState();
 
   useEffect(() => {
+    // cretes a sync alarm to fire every minute, a minute from now
+    var coeff = 1000 * 60 * 1;
+    var next_minute = Math.ceil(new Date().getTime() / coeff) * coeff;
+    chrome.alarms.create("sync", { when: next_minute, periodInMinutes: 1 });
+
     var default_settings = {
       blacklist: "",
       color: "#dedede",
@@ -52,16 +71,15 @@ export default function App() {
       delete sync.settings;
       chrome.storage.local.get("groups", (local) => {
         var ls_entry = { "group-0": default_group };
-        if (!local.groups && !sync["group-0"]) {
-          chrome.storage.local.set({ groups: ls_entry });
-        } else if (!local.groups && sync["group-0"]) {
+        if (sync["groups-0"]) {
           Object.keys(sync).forEach((key) => {
             ls_entry[key] = sync[key];
           });
-          chrome.storage.local.set({ groups: ls_entry });
-        } else {
+        } else if (local.groups) {
           ls_entry = local.groups;
         }
+
+        chrome.storage.local.set({ groups: ls_entry });
 
         setGroups(JSON.stringify(ls_entry));
         var num_tabs = 0;
@@ -205,6 +223,56 @@ export default function App() {
       }
     };
 
+    const updateSync = (alarm) => {
+      if (alarm.name === "sync") {
+        sync_timestamp.current.innerText = getTimestamp();
+        var sync_container = sync_timestamp.current.parentNode;
+        if (sync_container.classList.contains("alert-danger")) {
+          sync_container.classList.replace("alert-danger", "alert-success");
+        }
+
+        chrome.storage.local.get("groups", async (local) => {
+          var current_groups = local.groups;
+          if (current_groups !== { "group-0": defaultGroup.current }) {
+            for (var key of Object.keys(current_groups)) {
+              await updateGroupItem(key, current_groups[key]);
+            }
+            chrome.storage.sync.get(null, (sync) => {
+              delete sync.settings;
+              var remove_keys = Object.keys(sync).filter(
+                (key) => !Object.keys(current_groups).includes(key)
+              );
+              chrome.storage.sync.remove(remove_keys);
+            });
+          }
+        });
+      }
+    };
+
+    function updateGroupItem(name, value) {
+      var sync_entry = {};
+      sync_entry[name] = value;
+
+      // need to make sure to only set changed groups
+      return new Promise((resolve) => {
+        chrome.storage.sync.get(name, (x) => {
+          if (
+            x[name] === undefined ||
+            x[name].color !== value.color ||
+            x[name].created !== value.created ||
+            x[name].title !== value.title ||
+            JSON.stringify(x[name].tabs) !== JSON.stringify(value.tabs)
+          ) {
+            chrome.storage.sync.set(sync_entry, () => {
+              resolve(0);
+            });
+          } else {
+            resolve(0);
+          }
+        });
+      });
+    }
+
     // set dark mode if needed & assign default values to state variables
     chrome.storage.sync.get("settings", (result) => {
       toggleDarkMode(result.settings.dark);
@@ -214,45 +282,14 @@ export default function App() {
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
+    chrome.alarms.onAlarm.addListener(updateSync);
 
     return () => {
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
+      chrome.alarms.onAlarm.removeListener(updateSync);
     };
   }, []);
-
-  function updateSync(e) {
-    var alert = e.target.closest(".btn").nextSibling;
-    alert.style.visibility = "visible";
-    setTimeout(() => {
-      alert.style.visibility = "hidden";
-    }, 2000);
-
-    chrome.storage.local.get("groups", async (local) => {
-      var current_groups = local.groups;
-      if (current_groups !== { "group-0": defaultGroup.current }) {
-        for (var key of Object.keys(current_groups)) {
-          await updateGroupItem(key, current_groups[key]);
-        }
-        chrome.storage.sync.get(null, (sync) => {
-          delete sync.settings;
-          var remove_keys = Object.keys(sync).filter(
-            (key) => !Object.keys(current_groups).includes(key)
-          );
-          chrome.storage.sync.remove(remove_keys, () => {
-            chrome.storage.sync.get(null, (sync) => {
-              console.log("This is printed for your information only:");
-              Object.keys(sync).forEach((key) => {
-                console.log(
-                  `[INFO] Synced: ${key} -> ${JSON.stringify(sync[key])}`
-                );
-              });
-            });
-          });
-        });
-      }
-    });
-  }
 
   function sortByKey(json) {
     var sortedArray = [];
@@ -304,30 +341,6 @@ export default function App() {
       });
     }
   };
-
-  function updateGroupItem(name, value) {
-    var sync_entry = {};
-    sync_entry[name] = value;
-
-    // need to make sure to only set changed groups
-    return new Promise((resolve) => {
-      chrome.storage.sync.get(name, (x) => {
-        if (
-          x[name] === undefined ||
-          x[name].color !== value.color ||
-          x[name].created !== value.created ||
-          x[name].title !== value.title ||
-          JSON.stringify(x[name].tabs) !== JSON.stringify(value.tabs)
-        ) {
-          chrome.storage.sync.set(sync_entry, () => {
-            resolve(0);
-          });
-        } else {
-          resolve(0);
-        }
-      });
-    });
-  }
 
   function getTimestamp() {
     var date_parts = new Date(Date.now()).toString().split(" ");
@@ -545,22 +558,15 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
   return (
     <div className="container-fluid">
       <div className="row link-container mt-4 mr-2">
-        {[
-          { url: "https://tabmerger.herokuapp.com/", text: "HELP" },
-          { url: "https://youtu.be/gx0dNUbwCn4", text: "DEMO" },
-          {
-            url:
-              "https://www.paypal.com/donate?hosted_button_id=X3EYMX8CVA4SY&source=url",
-            text: "DONATE",
-          },
-          { url: getTabMergerLink(true), text: "REVIEW" },
-        ].map((x, i) => {
+        {links.current.map((x, i) => {
           return (
             <>
               <a className="link" href={x.url} target="_blank" rel="noreferrer">
                 {x.text}
               </a>
-              <span style={{ padding: "0 5px" }}>{i === 3 ? "" : " | "}</span>
+              <span style={{ padding: "0 5px" }}>
+                {i === links.current.length - 1 ? "" : " | "}
+              </span>
             </>
           );
         })}
@@ -576,17 +582,19 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
               alt="TabMerger Logo"
             />
           </a>
-          <div>
-            <h2 id="tab-total">
+          <div className="subtitle">
+            <h2 id="tab-total" className="mb-0">
               <span className="small">
-                {tabTotal}{" "}
-                {tabTotal === 1
-                  ? translate("pageTotalSingular")
-                  : translate("pageTotalPlural")}
+                {tabTotal + (tabTotal === 1 ? " Tab" : " Tabs")}
               </span>
             </h2>
 
-            <div className="input-group search-filter float-right">
+            <p className="alert alert-danger" id="sync-text">
+              <b>Last Sync:</b>{" "}
+              <span ref={sync_timestamp}>--/--/---- @ --:--:--</span>
+            </p>
+
+            <div className="input-group search-filter">
               <div className="input-group-prepend">
                 <span className="input-group-text">
                   <AiOutlineSearch />
@@ -595,15 +603,14 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
               <input
                 type="text"
                 name="search-group"
-                className="mr-2"
-                placeholder="#_&rarr; group, _&rarr; tab"
+                placeholder="#_ &rarr; group, _ &rarr; tab"
                 onChange={(e) => filterRegEx(e)}
               />
             </div>
           </div>
           <hr />
         </div>
-        <div className="container-below-hr">
+        <div className="container-below-hr mt-3">
           <div className="global-btn-row row">
             <Button
               id="open-all-btn"
@@ -657,17 +664,6 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
             </div>
 
             <Button
-              id="sync-btn"
-              classes="p-0 ml-4 btn-in-global"
-              translate={"Sync"}
-              tooltip={"tiptext-global"}
-              onClick={(e) => updateSync(e)}
-            >
-              <FaSync color="purple" size="1.2rem" />
-            </Button>
-            <div class="alert alert-success">✔</div>
-
-            <Button
               id="options-btn"
               classes="p-0 btn-in-global"
               translate={translate("settings")}
@@ -678,26 +674,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
             </Button>
           </div>
           <div className="groups-container">
-            <table>
-              {groupFormation()
-                ? groupFormation().map((x, i) => {
-                    if (i % 2 === 0) {
-                      return (
-                        <tr>
-                          <td className="align-top">{x}</td>
-                          {groupFormation()[i + 1] ? (
-                            <td className="align-top">
-                              {groupFormation()[i + 1]}
-                            </td>
-                          ) : (
-                            <td className="align-top"></td>
-                          )}
-                        </tr>
-                      );
-                    }
-                  })
-                : null}
-            </table>
+            {groupFormation() ? groupFormation() : null}
 
             <Button
               id="add-group-btn"

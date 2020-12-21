@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "ಗುಂಪನ್ನು ಅಳಿಸಿ"
   },
-  "editTitle": {
-    "message": "ಗುಂಪು ಶೀರ್ಷಿಕೆಯನ್ನು ಸಂಪಾದಿಸಿ"
-  },
-  "groupTotalPlural": {
-    "message": "ಗುಂಪಿನಲ್ಲಿ ಟ್ಯಾಬ್‌ಗಳು"
-  },
-  "groupTotalSingular": {
-    "message": "ಗುಂಪಿನಲ್ಲಿ ಟ್ಯಾಬ್"
-  },
   "hideTabs": {
     "message": "ಟ್ಯಾಬ್‌ಗಳನ್ನು ಮರೆಮಾಡಿ"
-  },
-  "leaveReview": {
-    "message": "ವಿಮರ್ಶೆಯನ್ನು ಬಿಡಿ"
   },
   "mergeALLtabs": {
     "message": "ಎಲ್ಲಾ ಟ್ಯಾಬ್‌ಗಳನ್ನು ವಿಲೀನಗೊಳಿಸಿ"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "ಓಪನ್ ಗ್ರೂಪ್"
   },
-  "pageTotalPlural": {
-    "message": "ಒಟ್ಟು ಟ್ಯಾಬ್‌ಗಳು"
-  },
-  "pageTotalSingular": {
-    "message": "ಒಟ್ಟು ಟ್ಯಾಬ್"
-  },
   "pickColor": {
     "message": "ಗುಂಪು ಬಣ್ಣವನ್ನು ಆರಿಸಿ"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON ರಫ್ತು ಮಾಡಿ"
   },
-  "exportPDF": {
-    "message": "ಪಿಡಿಎಫ್ ರಫ್ತು ಮಾಡಿ"
-  },
-  "groupTitle": {
-    "message": "ಗುಂಪು ಶೀರ್ಷಿಕೆ"
-  },
   "importJSON": {
     "message": "JSON ಅನ್ನು ಆಮದು ಮಾಡಿ"
-  },
-  "tabTitle": {
-    "message": "ಟ್ಯಾಬ್ ಶೀರ್ಷಿಕೆ"
   },
   "showTabs": {
     "message": "ಟ್ಯಾಬ್‌ಗಳನ್ನು ತೋರಿಸಿ"

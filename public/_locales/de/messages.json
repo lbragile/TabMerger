@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Gruppe löschen"
   },
-  "editTitle": {
-    "message": "Gruppentitel bearbeiten"
-  },
-  "groupTotalPlural": {
-    "message": "Registerkarten in der Gruppe"
-  },
-  "groupTotalSingular": {
-    "message": "Registerkarte in der Gruppe"
-  },
   "hideTabs": {
     "message": "Tabs ausblenden"
-  },
-  "leaveReview": {
-    "message": "Hinterlassen Sie eine Bewertung"
   },
   "mergeALLtabs": {
     "message": "ALLE Registerkarten zusammenführen"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Gruppe öffnen"
   },
-  "pageTotalPlural": {
-    "message": "Registerkarten insgesamt"
-  },
-  "pageTotalSingular": {
-    "message": "Registerkarte insgesamt"
-  },
   "pickColor": {
     "message": "Wählen Sie Gruppenfarbe"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON exportieren"
   },
-  "exportPDF": {
-    "message": "PDF exportieren"
-  },
-  "groupTitle": {
-    "message": "Gruppentitel"
-  },
   "importJSON": {
     "message": "JSON importieren"
-  },
-  "tabTitle": {
-    "message": "Tab-Titel"
   },
   "showTabs": {
     "message": "Registerkarten anzeigen"

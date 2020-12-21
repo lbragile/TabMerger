@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "מחק קבוצה"
   },
-  "editTitle": {
-    "message": "ערוך את כותרת הקבוצה"
-  },
-  "groupTotalPlural": {
-    "message": "כרטיסיות בקבוצה"
-  },
-  "groupTotalSingular": {
-    "message": "הכרטיסייה בקבוצה"
-  },
   "hideTabs": {
     "message": "הסתר כרטיסיות"
-  },
-  "leaveReview": {
-    "message": "השאירו ביקורת"
   },
   "mergeALLtabs": {
     "message": "מיזג את כל הכרטיסיות"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "קבוצה פתוחה"
   },
-  "pageTotalPlural": {
-    "message": "כרטיסיות בסך הכל"
-  },
-  "pageTotalSingular": {
-    "message": "כרטיסייה בסך הכל"
-  },
   "pickColor": {
     "message": "בחר צבע קבוצתי"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "ייצא את JSON"
   },
-  "exportPDF": {
-    "message": "ייצא PDF"
-  },
-  "groupTitle": {
-    "message": "כותרת הקבוצה"
-  },
   "importJSON": {
     "message": "ייבא את JSON"
-  },
-  "tabTitle": {
-    "message": "כותרת הכרטיסייה"
   },
   "showTabs": {
     "message": "הצג כרטיסיות"

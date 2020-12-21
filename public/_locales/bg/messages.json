@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Изтриване на група"
   },
-  "editTitle": {
-    "message": "Редактиране на заглавието на групата"
-  },
-  "groupTotalPlural": {
-    "message": "раздели в група"
-  },
-  "groupTotalSingular": {
-    "message": "раздел в група"
-  },
   "hideTabs": {
     "message": "Скриване на разделите"
-  },
-  "leaveReview": {
-    "message": "Оставете преглед"
   },
   "mergeALLtabs": {
     "message": "Обединете ВСИЧКИ раздели"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Отваряне на група"
   },
-  "pageTotalPlural": {
-    "message": "общо раздели"
-  },
-  "pageTotalSingular": {
-    "message": "в раздела общо"
-  },
   "pickColor": {
     "message": "Изберете цвят на групата"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Експортирайте JSON"
   },
-  "exportPDF": {
-    "message": "Експортиране на PDF"
-  },
-  "groupTitle": {
-    "message": "Заглавие на групата"
-  },
   "importJSON": {
     "message": "Импортиране на JSON"
-  },
-  "tabTitle": {
-    "message": "Заглавие на раздела"
   },
   "showTabs": {
     "message": "Показване на раздели"

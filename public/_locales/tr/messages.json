@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Grubu Sil"
   },
-  "editTitle": {
-    "message": "Grup Başlığını Düzenle"
-  },
-  "groupTotalPlural": {
-    "message": "gruptaki sekmeler"
-  },
-  "groupTotalSingular": {
-    "message": "gruptaki sekme"
-  },
   "hideTabs": {
     "message": "Sekmeleri Gizle"
-  },
-  "leaveReview": {
-    "message": "İnceleme bırak"
   },
   "mergeALLtabs": {
     "message": "TÜM Sekmeleri Birleştir"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Açık Grup"
   },
-  "pageTotalPlural": {
-    "message": "toplam sekme"
-  },
-  "pageTotalSingular": {
-    "message": "toplamda sekme"
-  },
   "pickColor": {
     "message": "Grup Rengini Seçin"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON'yi dışa aktar"
   },
-  "exportPDF": {
-    "message": "PDF'yi dışa aktar"
-  },
-  "groupTitle": {
-    "message": "Grup Başlığı"
-  },
   "importJSON": {
     "message": "JSON'u içe aktar"
-  },
-  "tabTitle": {
-    "message": "Sekme Başlığı"
   },
   "showTabs": {
     "message": "Sekmeleri Göster"

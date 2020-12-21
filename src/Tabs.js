@@ -6,7 +6,7 @@ import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
 
 export default function Tabs(props) {
-  const TAB_TITLE_LENGTH = useRef(85);
+  const TAB_TITLE_LENGTH = useRef(80);
 
   const [tabs, setTabs] = useState([]);
 
@@ -35,9 +35,10 @@ export default function Tabs(props) {
 
     const origin_id = drag_origin.id;
 
+    var anchor = tab.querySelector("a");
     var tab_bytes = JSON.stringify({
-      title: tab.querySelector("a").innerText,
-      url: tab.querySelector("a").href,
+      title: anchor.innerText,
+      url: anchor.href,
     }).length;
 
     chrome.storage.local.get("groups", (local) => {
@@ -63,9 +64,9 @@ export default function Tabs(props) {
         // reorder tabs based on current positions
         result[closest_group.id].tabs = [
           ...closest_group.lastChild.querySelectorAll("div"),
-        ].map((item) => ({
-          title: item.lastChild.textContent,
-          url: item.lastChild.href,
+        ].map((x) => ({
+          title: x.lastChild.textContent,
+          url: x.lastChild.href,
         }));
 
         // update the groups
@@ -114,11 +115,11 @@ export default function Tabs(props) {
   }
 
   return (
-    <div className="d-flex flex-column mx-0">
+    <div className="d-flex flex-column mx-0 tabs-container">
       {tabs.map((tab) => {
         return (
           <div
-            className="row draggable p-0 mx-0"
+            className="row draggable p-0 mx-0 "
             draggable
             onDragStart={dragStart}
             onDragEnd={dragEnd}

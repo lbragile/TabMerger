@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "그룹 삭제"
   },
-  "editTitle": {
-    "message": "그룹 제목 수정"
-  },
-  "groupTotalPlural": {
-    "message": "그룹의 탭"
-  },
-  "groupTotalSingular": {
-    "message": "그룹의 탭"
-  },
   "hideTabs": {
     "message": "탭 숨기기"
-  },
-  "leaveReview": {
-    "message": "리뷰를 남겨주세요"
   },
   "mergeALLtabs": {
     "message": "모든 탭 병합"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "오픈 그룹"
   },
-  "pageTotalPlural": {
-    "message": "총 탭"
-  },
-  "pageTotalSingular": {
-    "message": "총 탭"
-  },
   "pickColor": {
     "message": "그룹 색상 선택"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON 내보내기"
   },
-  "exportPDF": {
-    "message": "PDF 내보내기"
-  },
-  "groupTitle": {
-    "message": "그룹 제목"
-  },
   "importJSON": {
     "message": "JSON 가져 오기"
-  },
-  "tabTitle": {
-    "message": "탭 제목"
   },
   "showTabs": {
     "message": "탭 표시"

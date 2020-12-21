@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "删除群组"
   },
-  "editTitle": {
-    "message": "编辑组标题"
-  },
-  "groupTotalPlural": {
-    "message": "组中的标签"
-  },
-  "groupTotalSingular": {
-    "message": "组中的标签"
-  },
   "hideTabs": {
     "message": "隐藏标签"
-  },
-  "leaveReview": {
-    "message": "发表评论"
   },
   "mergeALLtabs": {
     "message": "合并所有标签"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "公开组"
   },
-  "pageTotalPlural": {
-    "message": "总共标签"
-  },
-  "pageTotalSingular": {
-    "message": "总共标签"
-  },
   "pickColor": {
     "message": "选择组颜色"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "汇出JSON"
   },
-  "exportPDF": {
-    "message": "导出PDF"
-  },
-  "groupTitle": {
-    "message": "组标题"
-  },
   "importJSON": {
     "message": "导入JSON"
-  },
-  "tabTitle": {
-    "message": "标签标题"
   },
   "showTabs": {
     "message": "显示标签"

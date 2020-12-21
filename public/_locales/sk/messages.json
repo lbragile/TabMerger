@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Odstrániť skupinu"
   },
-  "editTitle": {
-    "message": "Upraviť názov skupiny"
-  },
-  "groupTotalPlural": {
-    "message": "karty v skupine"
-  },
-  "groupTotalSingular": {
-    "message": "karta v skupine"
-  },
   "hideTabs": {
     "message": "Skryť karty"
-  },
-  "leaveReview": {
-    "message": "Zanechajte recenziu"
   },
   "mergeALLtabs": {
     "message": "Zlúčiť VŠETKY karty"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Otvoriť skupinu"
   },
-  "pageTotalPlural": {
-    "message": "karty celkovo"
-  },
-  "pageTotalSingular": {
-    "message": "karta celkovo"
-  },
   "pickColor": {
     "message": "Vyberte farbu skupiny"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exportovať JSON"
   },
-  "exportPDF": {
-    "message": "Exportovať PDF"
-  },
-  "groupTitle": {
-    "message": "Názov skupiny"
-  },
   "importJSON": {
     "message": "Importovať JSON"
-  },
-  "tabTitle": {
-    "message": "Názov karty"
   },
   "showTabs": {
     "message": "Zobraziť karty"

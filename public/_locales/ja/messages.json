@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "グループを削除"
   },
-  "editTitle": {
-    "message": "グループタイトルの編集"
-  },
-  "groupTotalPlural": {
-    "message": "グループ内のタブ"
-  },
-  "groupTotalSingular": {
-    "message": "グループ内のタブ"
-  },
   "hideTabs": {
     "message": "タブを非表示"
-  },
-  "leaveReview": {
-    "message": "レビューを残す"
   },
   "mergeALLtabs": {
     "message": "すべてのタブをマージ"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "オープングループ"
   },
-  "pageTotalPlural": {
-    "message": "合計タブ"
-  },
-  "pageTotalSingular": {
-    "message": "合計タブ"
-  },
   "pickColor": {
     "message": "グループの色を選ぶ"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSONをエクスポートする"
   },
-  "exportPDF": {
-    "message": "PDFをエクスポート"
-  },
-  "groupTitle": {
-    "message": "グループタイトル"
-  },
   "importJSON": {
     "message": "JSONをインポートする"
-  },
-  "tabTitle": {
-    "message": "タブタイトル"
   },
   "showTabs": {
     "message": "タブを表示"

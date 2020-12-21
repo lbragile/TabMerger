@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Excluir Grupo"
   },
-  "editTitle": {
-    "message": "Editar Título do Grupo"
-  },
-  "groupTotalPlural": {
-    "message": "guias no grupo"
-  },
-  "groupTotalSingular": {
-    "message": "guia no grupo"
-  },
   "hideTabs": {
     "message": "Ocultar abas"
-  },
-  "leaveReview": {
-    "message": "Deixe um comentário"
   },
   "mergeALLtabs": {
     "message": "Mesclar TODAS as guias"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Grupo Aberto"
   },
-  "pageTotalPlural": {
-    "message": "guias no total"
-  },
-  "pageTotalSingular": {
-    "message": "guia no total"
-  },
   "pickColor": {
     "message": "Escolha a cor do grupo"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exportar JSON"
   },
-  "exportPDF": {
-    "message": "Exportar PDF"
-  },
-  "groupTitle": {
-    "message": "Título do Grupo"
-  },
   "importJSON": {
     "message": "Importar JSON"
-  },
-  "tabTitle": {
-    "message": "Título da aba"
   },
   "showTabs": {
     "message": "Mostrar abas"

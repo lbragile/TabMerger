@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Ștergeți grupul"
   },
-  "editTitle": {
-    "message": "Editați titlul grupului"
-  },
-  "groupTotalPlural": {
-    "message": "filele din grup"
-  },
-  "groupTotalSingular": {
-    "message": "filă în grup"
-  },
   "hideTabs": {
     "message": "Ascunde filele"
-  },
-  "leaveReview": {
-    "message": "Lăsați o recenzie"
   },
   "mergeALLtabs": {
     "message": "Îmbinați TOATE filele"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Deschideți grupul"
   },
-  "pageTotalPlural": {
-    "message": "filele în total"
-  },
-  "pageTotalSingular": {
-    "message": "filă în total"
-  },
   "pickColor": {
     "message": "Alegeți culoarea grupului"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exportați JSON"
   },
-  "exportPDF": {
-    "message": "Exportați PDF"
-  },
-  "groupTitle": {
-    "message": "Titlul grupului"
-  },
   "importJSON": {
     "message": "Importați JSON"
-  },
-  "tabTitle": {
-    "message": "Titlu filă"
   },
   "showTabs": {
     "message": "Afișați filele"

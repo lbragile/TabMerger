@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Usuń grupę"
   },
-  "editTitle": {
-    "message": "Edytuj tytuł grupy"
-  },
-  "groupTotalPlural": {
-    "message": "karty w grupie"
-  },
-  "groupTotalSingular": {
-    "message": "karta w grupie"
-  },
   "hideTabs": {
     "message": "Ukryj karty"
-  },
-  "leaveReview": {
-    "message": "Zostaw recenzję"
   },
   "mergeALLtabs": {
     "message": "Scal WSZYSTKIE karty"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Otwórz grupę"
   },
-  "pageTotalPlural": {
-    "message": "łącznie"
-  },
-  "pageTotalSingular": {
-    "message": "w sumie"
-  },
   "pickColor": {
     "message": "Wybierz kolor grupy"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Eksportuj JSON"
   },
-  "exportPDF": {
-    "message": "Eksportuj PDF"
-  },
-  "groupTitle": {
-    "message": "Tytuł grupy"
-  },
   "importJSON": {
     "message": "Importuj JSON"
-  },
-  "tabTitle": {
-    "message": "Tytuł karty"
   },
   "showTabs": {
     "message": "Pokaż karty"

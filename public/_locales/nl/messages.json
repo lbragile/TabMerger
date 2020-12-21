@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Groep verwijderen"
   },
-  "editTitle": {
-    "message": "Bewerk groepstitel"
-  },
-  "groupTotalPlural": {
-    "message": "tabbladen in groep"
-  },
-  "groupTotalSingular": {
-    "message": "tabblad in groep"
-  },
   "hideTabs": {
     "message": "Tabbladen verbergen"
-  },
-  "leaveReview": {
-    "message": "Laat je mening achter"
   },
   "mergeALLtabs": {
     "message": "Voeg ALLE tabbladen samen"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Open groep"
   },
-  "pageTotalPlural": {
-    "message": "tabbladen in totaal"
-  },
-  "pageTotalSingular": {
-    "message": "tabblad in totaal"
-  },
   "pickColor": {
     "message": "Kies Groepskleur"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Exporteer JSON"
   },
-  "exportPDF": {
-    "message": "Exporteer PDF"
-  },
-  "groupTitle": {
-    "message": "Groepstitel"
-  },
   "importJSON": {
     "message": "Importeer JSON"
-  },
-  "tabTitle": {
-    "message": "Tabbladtitel"
   },
   "showTabs": {
     "message": "Tabbladen weergeven"

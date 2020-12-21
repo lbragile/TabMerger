@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "দল মুছুন"
   },
-  "editTitle": {
-    "message": "গোষ্ঠী শিরোনাম সম্পাদনা করুন"
-  },
-  "groupTotalPlural": {
-    "message": "গ্রুপে ট্যাব"
-  },
-  "groupTotalSingular": {
-    "message": "গ্রুপে ট্যাব"
-  },
   "hideTabs": {
     "message": "ট্যাবগুলি লুকান"
-  },
-  "leaveReview": {
-    "message": "একটি পর্যালোচনা ছেড়ে দিন"
   },
   "mergeALLtabs": {
     "message": "সমস্ত ট্যাবগুলি মার্জ করুন"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "ওপেন গ্রুপ"
   },
-  "pageTotalPlural": {
-    "message": "মোট ট্যাব"
-  },
-  "pageTotalSingular": {
-    "message": "মোট ট্যাব"
-  },
   "pickColor": {
     "message": "গ্রুপ রঙ চয়ন করুন"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON রফতানি করুন"
   },
-  "exportPDF": {
-    "message": "পিডিএফ রফতানি করুন"
-  },
-  "groupTitle": {
-    "message": "গ্রুপ শিরোনাম"
-  },
   "importJSON": {
     "message": "JSON আমদানি করুন"
-  },
-  "tabTitle": {
-    "message": "ট্যাব শিরোনাম"
   },
   "showTabs": {
     "message": "ট্যাবগুলি দেখান"

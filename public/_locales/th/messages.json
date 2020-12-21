@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "ลบกลุ่ม"
   },
-  "editTitle": {
-    "message": "แก้ไขชื่อกลุ่ม"
-  },
-  "groupTotalPlural": {
-    "message": "แท็บในกลุ่ม"
-  },
-  "groupTotalSingular": {
-    "message": "แท็บในกลุ่ม"
-  },
   "hideTabs": {
     "message": "ซ่อนแท็บ"
-  },
-  "leaveReview": {
-    "message": "ออกความคิดเห็น"
   },
   "mergeALLtabs": {
     "message": "รวมทุกแท็บ"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "เปิดกลุ่ม"
   },
-  "pageTotalPlural": {
-    "message": "แท็บทั้งหมด"
-  },
-  "pageTotalSingular": {
-    "message": "แท็บทั้งหมด"
-  },
   "pickColor": {
     "message": "เลือกสีของกลุ่ม"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "ส่งออก JSON"
   },
-  "exportPDF": {
-    "message": "ส่งออก PDF"
-  },
-  "groupTitle": {
-    "message": "ชื่อกลุ่ม"
-  },
   "importJSON": {
     "message": "นำเข้า JSON"
-  },
-  "tabTitle": {
-    "message": "ชื่อแท็บ"
   },
   "showTabs": {
     "message": "แสดงแท็บ"

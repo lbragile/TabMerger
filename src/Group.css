@@ -1,5 +1,5 @@
 .group-title {
-  width: 50%;
+  width: 40%;
   margin: 0;
   position: relative;
   left: 10px;
@@ -13,16 +13,6 @@
   min-height: 75px;
   border-radius: 5px;
   position: relative;
-}
-
-table {
-  position: relative;
-  width: 100%;
-}
-
-td {
-  width: 50%;
-  padding: 0 5px;
 }
 
 /* TIMESTAMP */

@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Poista ryhmä"
   },
-  "editTitle": {
-    "message": "Muokkaa ryhmän otsikkoa"
-  },
-  "groupTotalPlural": {
-    "message": "välilehdet ryhmässä"
-  },
-  "groupTotalSingular": {
-    "message": "välilehti ryhmässä"
-  },
   "hideTabs": {
     "message": "Piilota välilehdet"
-  },
-  "leaveReview": {
-    "message": "Jätä arvostelu"
   },
   "mergeALLtabs": {
     "message": "Yhdistä KAIKKI välilehdet"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Avaa ryhmä"
   },
-  "pageTotalPlural": {
-    "message": "välilehdet yhteensä"
-  },
-  "pageTotalSingular": {
-    "message": "välilehti yhteensä"
-  },
   "pickColor": {
     "message": "Valitse ryhmän väri"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Vie JSON"
   },
-  "exportPDF": {
-    "message": "Vie PDF"
-  },
-  "groupTitle": {
-    "message": "Ryhmän nimi"
-  },
   "importJSON": {
     "message": "Tuo JSON"
-  },
-  "tabTitle": {
-    "message": "Välilehden otsikko"
   },
   "showTabs": {
     "message": "Näytä välilehdet"

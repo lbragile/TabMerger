@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "குழுவை நீக்கு"
   },
-  "editTitle": {
-    "message": "குழு தலைப்பைத் திருத்து"
-  },
-  "groupTotalPlural": {
-    "message": "குழுவில் தாவல்கள்"
-  },
-  "groupTotalSingular": {
-    "message": "குழுவில் தாவல்"
-  },
   "hideTabs": {
     "message": "தாவல்களை மறைக்க"
-  },
-  "leaveReview": {
-    "message": "ஒரு விமர்சனத்தை விடுங்கள்"
   },
   "mergeALLtabs": {
     "message": "எல்லா தாவல்களையும் ஒன்றிணைக்கவும்"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "திறந்த குழு"
   },
-  "pageTotalPlural": {
-    "message": "மொத்த தாவல்கள்"
-  },
-  "pageTotalSingular": {
-    "message": "தாவல் மொத்தம்"
-  },
   "pickColor": {
     "message": "குழு வண்ணத்தைத் தேர்ந்தெடுங்கள்"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON ஐ ஏற்றுமதி செய்க"
   },
-  "exportPDF": {
-    "message": "PDF ஐ ஏற்றுமதி செய்க"
-  },
-  "groupTitle": {
-    "message": "குழு தலைப்பு"
-  },
   "importJSON": {
     "message": "JSON ஐ இறக்குமதி செய்க"
-  },
-  "tabTitle": {
-    "message": "தாவல் தலைப்பு"
   },
   "showTabs": {
     "message": "தாவல்களைக் காட்டு"

@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "ഗ്രൂപ്പ് ഇല്ലാതാക്കുക"
   },
-  "editTitle": {
-    "message": "ഗ്രൂപ്പ് ശീർഷകം എഡിറ്റുചെയ്യുക"
-  },
-  "groupTotalPlural": {
-    "message": "ഗ്രൂപ്പിലെ ടാബുകൾ"
-  },
-  "groupTotalSingular": {
-    "message": "ഗ്രൂപ്പിലെ ടാബ്"
-  },
   "hideTabs": {
     "message": "ടാബുകൾ മറയ്‌ക്കുക"
-  },
-  "leaveReview": {
-    "message": "ഒരു അവലോകനം വിടുക"
   },
   "mergeALLtabs": {
     "message": "എല്ലാ ടാബുകളും ലയിപ്പിക്കുക"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "ഗ്രൂപ്പ് തുറക്കുക"
   },
-  "pageTotalPlural": {
-    "message": "മൊത്തം ടാബുകൾ"
-  },
-  "pageTotalSingular": {
-    "message": "മൊത്തം ടാബ്"
-  },
   "pickColor": {
     "message": "ഗ്രൂപ്പ് വർണ്ണം തിരഞ്ഞെടുക്കുക"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON കയറ്റുമതി ചെയ്യുക"
   },
-  "exportPDF": {
-    "message": "PDF കയറ്റുമതി ചെയ്യുക"
-  },
-  "groupTitle": {
-    "message": "ഗ്രൂപ്പ് ശീർഷകം"
-  },
   "importJSON": {
     "message": "JSON ഇറക്കുമതി ചെയ്യുക"
-  },
-  "tabTitle": {
-    "message": "ടാബ് ശീർഷകം"
   },
   "showTabs": {
     "message": "ടാബുകൾ കാണിക്കുക"

@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "సమూహాన్ని తొలగించండి"
   },
-  "editTitle": {
-    "message": "సమూహ శీర్షికను సవరించండి"
-  },
-  "groupTotalPlural": {
-    "message": "సమూహంలో ట్యాబ్‌లు"
-  },
-  "groupTotalSingular": {
-    "message": "సమూహంలో టాబ్"
-  },
   "hideTabs": {
     "message": "ట్యాబ్‌లను దాచు"
-  },
-  "leaveReview": {
-    "message": "సమీక్షను వదిలివేయండి"
   },
   "mergeALLtabs": {
     "message": "అన్ని ట్యాబ్‌లను విలీనం చేయండి"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "ఓపెన్ గ్రూప్"
   },
-  "pageTotalPlural": {
-    "message": "మొత్తం ట్యాబ్‌లు"
-  },
-  "pageTotalSingular": {
-    "message": "మొత్తం టాబ్"
-  },
   "pickColor": {
     "message": "సమూహ రంగును ఎంచుకోండి"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON ని ఎగుమతి చేయండి"
   },
-  "exportPDF": {
-    "message": "PDF ని ఎగుమతి చేయండి"
-  },
-  "groupTitle": {
-    "message": "సమూహ శీర్షిక"
-  },
   "importJSON": {
     "message": "JSON ను దిగుమతి చేయండి"
-  },
-  "tabTitle": {
-    "message": "టాబ్ శీర్షిక"
   },
   "showTabs": {
     "message": "ట్యాబ్‌లను చూపించు"

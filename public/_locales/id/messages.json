@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Hapus Grup"
   },
-  "editTitle": {
-    "message": "Edit Judul Grup"
-  },
-  "groupTotalPlural": {
-    "message": "tab dalam grup"
-  },
-  "groupTotalSingular": {
-    "message": "tab dalam grup"
-  },
   "hideTabs": {
     "message": "Sembunyikan Tab"
-  },
-  "leaveReview": {
-    "message": "Tinggalkan Review"
   },
   "mergeALLtabs": {
     "message": "Gabungkan SEMUA Tab"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Buka Grup"
   },
-  "pageTotalPlural": {
-    "message": "tab secara total"
-  },
-  "pageTotalSingular": {
-    "message": "tab secara total"
-  },
   "pickColor": {
     "message": "Pilih Warna Grup"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Ekspor JSON"
   },
-  "exportPDF": {
-    "message": "Ekspor PDF"
-  },
-  "groupTitle": {
-    "message": "Judul Grup"
-  },
   "importJSON": {
     "message": "Impor JSON"
-  },
-  "tabTitle": {
-    "message": "Judul Tab"
   },
   "showTabs": {
     "message": "Tampilkan Tab"

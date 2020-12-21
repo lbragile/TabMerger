@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "ቡድንን ሰርዝ"
   },
-  "editTitle": {
-    "message": "የቡድን ርዕስ አርትዕ"
-  },
-  "groupTotalPlural": {
-    "message": "ትሮች በቡድን ውስጥ"
-  },
-  "groupTotalSingular": {
-    "message": "ትር በቡድን ውስጥ"
-  },
   "hideTabs": {
     "message": "ትሮችን ደብቅ"
-  },
-  "leaveReview": {
-    "message": "ግምገማ ይተው"
   },
   "mergeALLtabs": {
     "message": "ሁሉንም ትሮች ያዋህዱ"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "ክፈት ቡድን"
   },
-  "pageTotalPlural": {
-    "message": "ትሮች በጠቅላላ"
-  },
-  "pageTotalSingular": {
-    "message": "ትር በአጠቃላይ"
-  },
   "pickColor": {
     "message": "የቡድን ቀለም ይምረጡ"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "JSON ላክ"
   },
-  "exportPDF": {
-    "message": "ፒዲኤፍ ላክ"
-  },
-  "groupTitle": {
-    "message": "የቡድን ርዕስ"
-  },
   "importJSON": {
     "message": "JSON አስመጣ"
-  },
-  "tabTitle": {
-    "message": "የትር ርዕስ"
   },
   "showTabs": {
     "message": "ትሮችን አሳይ"

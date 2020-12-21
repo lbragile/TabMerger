@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Izbriši grupu"
   },
-  "editTitle": {
-    "message": "Uredi naslov grupe"
-  },
-  "groupTotalPlural": {
-    "message": "kartice u grupi"
-  },
-  "groupTotalSingular": {
-    "message": "tab u grupi"
-  },
   "hideTabs": {
     "message": "Sakrij kartice"
-  },
-  "leaveReview": {
-    "message": "Ostavite pregled"
   },
   "mergeALLtabs": {
     "message": "Spoji SVE kartice"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Otvori grupu"
   },
-  "pageTotalPlural": {
-    "message": "kartice ukupno"
-  },
-  "pageTotalSingular": {
-    "message": "tabulator ukupno"
-  },
   "pickColor": {
     "message": "Odaberite grupnu boju"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Izvoz JSON-a"
   },
-  "exportPDF": {
-    "message": "Izvoz PDF-a"
-  },
-  "groupTitle": {
-    "message": "Naslov grupe"
-  },
   "importJSON": {
     "message": "Uvezi JSON"
-  },
-  "tabTitle": {
-    "message": "Naslov kartice"
   },
   "showTabs": {
     "message": "Prikaži kartice"

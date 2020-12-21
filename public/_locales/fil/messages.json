@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Tanggalin ang Pangkat"
   },
-  "editTitle": {
-    "message": "I-edit ang Pamagat ng Grupo"
-  },
-  "groupTotalPlural": {
-    "message": "mga tab sa pangkat"
-  },
-  "groupTotalSingular": {
-    "message": "tab sa pangkat"
-  },
   "hideTabs": {
     "message": "Itago ang Mga Tab"
-  },
-  "leaveReview": {
-    "message": "Mag-iwan ng Isang Review"
   },
   "mergeALLtabs": {
     "message": "Pagsamahin ang LAHAT ng Mga Tab"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Buksan ang Pangkat"
   },
-  "pageTotalPlural": {
-    "message": "mga tab sa kabuuan"
-  },
-  "pageTotalSingular": {
-    "message": "tab sa kabuuan"
-  },
   "pickColor": {
     "message": "Pumili ng Kulay ng Grupo"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "I-export si JSON"
   },
-  "exportPDF": {
-    "message": "I-export ang PDF"
-  },
-  "groupTitle": {
-    "message": "Pamagat ng Grupo"
-  },
   "importJSON": {
     "message": "I-import si JSON"
-  },
-  "tabTitle": {
-    "message": "Pamagat ng Tab"
   },
   "showTabs": {
     "message": "Ipakita ang Mga Tab"

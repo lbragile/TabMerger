@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "Διαγραφή ομάδας"
   },
-  "editTitle": {
-    "message": "Επεξεργασία τίτλου ομάδας"
-  },
-  "groupTotalPlural": {
-    "message": "καρτέλες σε ομάδα"
-  },
-  "groupTotalSingular": {
-    "message": "καρτέλα στην ομάδα"
-  },
   "hideTabs": {
     "message": "Απόκρυψη καρτελών"
-  },
-  "leaveReview": {
-    "message": "Αφήστε μια κριτική"
   },
   "mergeALLtabs": {
     "message": "Συγχώνευση όλων των καρτελών"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "Άνοιγμα ομάδας"
   },
-  "pageTotalPlural": {
-    "message": "συνολικά καρτέλες"
-  },
-  "pageTotalSingular": {
-    "message": "συνολικά καρτέλα"
-  },
   "pickColor": {
     "message": "Επιλέξτε χρώμα ομάδας"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "Εξαγωγή JSON"
   },
-  "exportPDF": {
-    "message": "Εξαγωγή PDF"
-  },
-  "groupTitle": {
-    "message": "Τίτλος ομάδας"
-  },
   "importJSON": {
     "message": "Εισαγωγή JSON"
-  },
-  "tabTitle": {
-    "message": "Τίτλος καρτέλας"
   },
   "showTabs": {
     "message": "Εμφάνιση καρτελών"

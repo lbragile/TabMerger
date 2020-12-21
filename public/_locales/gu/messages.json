@@ -44,20 +44,8 @@
   "deleteGroup": {
     "message": "જૂથ કા .ી નાખો"
   },
-  "editTitle": {
-    "message": "જૂથ શીર્ષક સંપાદિત કરો"
-  },
-  "groupTotalPlural": {
-    "message": "જૂથમાં ટsબ્સ"
-  },
-  "groupTotalSingular": {
-    "message": "જૂથમાં ટ tabબ"
-  },
   "hideTabs": {
     "message": "ટsબ્સ છુપાવો"
-  },
-  "leaveReview": {
-    "message": "એક સમીક્ષા છોડી દો"
   },
   "mergeALLtabs": {
     "message": "બધા ટsબ્સ મર્જ કરો"
@@ -77,12 +65,6 @@
   "openGroup": {
     "message": "ઓપન ગ્રુપ"
   },
-  "pageTotalPlural": {
-    "message": "કુલ ટ tabબ્સ"
-  },
-  "pageTotalSingular": {
-    "message": "કુલ ટેબ"
-  },
   "pickColor": {
     "message": "જૂથનો રંગ ચૂંટો"
   },
@@ -98,17 +80,8 @@
   "exportJSON": {
     "message": "નિકાસ JSON"
   },
-  "exportPDF": {
-    "message": "પીડીએફ નિકાસ કરો"
-  },
-  "groupTitle": {
-    "message": "જૂથ શીર્ષક"
-  },
   "importJSON": {
     "message": "આયાત કરો JSON"
-  },
-  "tabTitle": {
-    "message": "ટ Tabબ શીર્ષક"
   },
   "showTabs": {
     "message": "ટsબ્સ બતાવો"

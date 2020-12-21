@@ -5,18 +5,6 @@
   "appDesc": {
     "message": "Merges your tabs into one location to save memory usage and increase your productivity."
   },
-  "pageTotalPlural": {
-    "message": "tabs in total"
-  },
-  "pageTotalSingular": {
-    "message": "tab in total"
-  },
-  "groupTotalPlural": {
-    "message": "tabs in group"
-  },
-  "groupTotalSingular": {
-    "message": "tab in group"
-  },
   "mergeALLtabs": {
     "message": "Merge ALL Tabs"
   },
@@ -38,23 +26,11 @@
   "importJSON": {
     "message": "Import JSON"
   },
-  "exportPDF": {
-    "message": "Export PDF"
-  },
-  "groupTitle": {
-    "message": "Group Title"
-  },
-  "tabTitle": {
-    "message": "Tab Title"
-  },
   "darkMode": {
     "message": "Dark Mode"
   },
   "settings": {
     "message": "Settings"
-  },
-  "editTitle": {
-    "message": "Edit Group Title"
   },
   "pickColor": {
     "message": "Pick Group Color"
@@ -85,9 +61,6 @@
   },
   "supportUs": {
     "message": "Support Us"
-  },
-  "leaveReview": {
-    "message": "Leave A Review"
   },
   "needHelp": {
     "message": "Need Help?"
