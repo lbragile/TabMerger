@@ -54,12 +54,11 @@ small {
   font-size: 0.9rem;
 }
 
-/* SAVE ALERT */
-.alert {
-  width: 65px;
-}
-
 /* BUTTONS */
 #home-btn {
   border: 1px solid black;
+}
+
+.btn:focus {
+  box-shadow: none;
 }

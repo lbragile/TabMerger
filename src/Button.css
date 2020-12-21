@@ -52,7 +52,16 @@
 #sync-btn svg {
   position: relative;
   left: 0px;
-  top: -1px;
+  top: -2px;
+}
+
+.alert {
+  padding: 2px 0 0 0;
+  margin: 1px 0 0 4px;
+  width: 28px;
+  height: 28px;
+  text-align: center;
+  visibility: hidden;
 }
 
 #options-btn {
