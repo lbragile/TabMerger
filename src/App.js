@@ -43,7 +43,7 @@ export default function App() {
   const [groups, setGroups] = useState();
 
   useEffect(() => {
-    // cretes a sync alarm to fire every minute, a minute from now
+    // creates a sync alarm to fire every minute, a minute from now
     var coeff = 1000 * 60 * 1;
     var next_minute = Math.ceil(new Date().getTime() / coeff) * coeff;
     chrome.alarms.create("sync", { when: next_minute, periodInMinutes: 1 });
@@ -67,26 +67,34 @@ export default function App() {
     chrome.storage.sync.get(null, (sync) => {
       if (!sync.settings) {
         chrome.storage.sync.set({ settings: default_settings });
+        toggleDarkMode(true);
+      } else {
+        toggleDarkMode(sync.settings.dark);
+        setTabTotal(document.querySelectorAll(".draggable").length);
       }
       delete sync.settings;
       chrome.storage.local.get("groups", (local) => {
         var ls_entry = { "group-0": default_group };
-        if (sync["groups-0"]) {
-          Object.keys(sync).forEach((key) => {
+        if (sync["group-0"]) {
+          var sync_keys = Object.keys(sync);
+          sync_keys.forEach((key) => {
             ls_entry[key] = sync[key];
           });
+          chrome.storage.sync.remove(sync_keys.filter((x) => x !== "settings"));
         } else if (local.groups) {
           ls_entry = local.groups;
         }
 
-        chrome.storage.local.set({ groups: ls_entry });
+        chrome.storage.local.clear(() => {
+          chrome.storage.local.set({ groups: ls_entry });
 
-        setGroups(JSON.stringify(ls_entry));
-        var num_tabs = 0;
-        Object.keys(ls_entry).forEach((key) => {
-          num_tabs += ls_entry[key].tabs.length;
+          setGroups(JSON.stringify(ls_entry));
+          var num_tabs = 0;
+          Object.keys(ls_entry).forEach((key) => {
+            num_tabs += ls_entry[key].tabs.length;
+          });
+          setTabTotal(num_tabs);
         });
-        setTabTotal(num_tabs);
       });
     });
   }, []);
@@ -272,13 +280,6 @@ export default function App() {
         });
       });
     }
-
-    // set dark mode if needed & assign default values to state variables
-    chrome.storage.sync.get("settings", (result) => {
-      toggleDarkMode(result.settings.dark);
-    });
-
-    setTabTotal(document.querySelectorAll(".draggable").length);
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
