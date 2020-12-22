@@ -11,6 +11,7 @@ import "./Button.css";
 import { MdSettings, MdDeleteForever, MdAddCircle } from "react-icons/md";
 import { FaTrashRestore } from "react-icons/fa";
 import { BiImport, BiExport } from "react-icons/bi";
+import { BsCloudUpload, BsCloudDownload } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";
 
 export default function App() {
@@ -42,12 +43,15 @@ export default function App() {
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState();
 
-  useEffect(() => {
-    // creates a sync alarm to fire every minute, a minute from now
-    var coeff = 1000 * 60 * 1;
-    var next_minute = Math.ceil(new Date().getTime() / coeff) * coeff;
-    chrome.alarms.create("sync", { when: next_minute, periodInMinutes: 1 });
+  function updateTabTotal(ls_entry) {
+    var num_tabs = 0;
+    Object.values(ls_entry).forEach((val) => {
+      num_tabs += val.tabs.length;
+    });
+    setTabTotal(num_tabs);
+  }
 
+  useEffect(() => {
     var default_settings = {
       blacklist: "",
       color: "#dedede",
@@ -70,34 +74,107 @@ export default function App() {
         toggleDarkMode(true);
       } else {
         toggleDarkMode(sync.settings.dark);
-        setTabTotal(document.querySelectorAll(".draggable").length);
       }
+
+      if (sync["group-0"]) {
+        toggleSyncTimestamp(true);
+      }
+
       delete sync.settings;
       chrome.storage.local.get("groups", (local) => {
-        var ls_entry = { "group-0": default_group };
-        if (sync["group-0"]) {
-          var sync_keys = Object.keys(sync);
-          sync_keys.forEach((key) => {
-            ls_entry[key] = sync[key];
-          });
-          chrome.storage.sync.remove(sync_keys.filter((x) => x !== "settings"));
-        } else if (local.groups) {
-          ls_entry = local.groups;
-        }
+        var ls_entry = local.groups || { "group-0": default_group };
 
         chrome.storage.local.clear(() => {
-          chrome.storage.local.set({ groups: ls_entry });
-
-          setGroups(JSON.stringify(ls_entry));
-          var num_tabs = 0;
-          Object.keys(ls_entry).forEach((key) => {
-            num_tabs += ls_entry[key].tabs.length;
+          chrome.storage.local.set({ groups: ls_entry }, () => {
+            setGroups(JSON.stringify(ls_entry));
+            updateTabTotal(ls_entry);
           });
-          setTabTotal(num_tabs);
         });
       });
     });
   }, []);
+
+  const updateSync = () => {
+    chrome.storage.local.get("groups", async (local) => {
+      var current_groups = local.groups;
+      if (current_groups !== { "group-0": defaultGroup.current }) {
+        for (var key of Object.keys(current_groups)) {
+          await updateGroupItem(key, current_groups[key]);
+        }
+
+        // remove extras from previous sync
+        chrome.storage.sync.get(null, (sync) => {
+          delete sync.settings;
+          var remove_keys = Object.keys(sync).filter(
+            (key) => !Object.keys(current_groups).includes(key)
+          );
+          chrome.storage.sync.remove(remove_keys, () => {
+            toggleSyncTimestamp(true);
+          });
+        });
+      }
+    });
+  };
+
+  function updateGroupItem(name, value) {
+    var sync_entry = {};
+    sync_entry[name] = value;
+
+    // need to make sure to only set changed groups
+    return new Promise((resolve) => {
+      chrome.storage.sync.get(name, (x) => {
+        if (
+          x[name] === undefined ||
+          x[name].color !== value.color ||
+          x[name].created !== value.created ||
+          x[name].title !== value.title ||
+          JSON.stringify(x[name].tabs) !== JSON.stringify(value.tabs)
+        ) {
+          chrome.storage.sync.set(sync_entry, () => {
+            resolve(0);
+          });
+        } else {
+          resolve(0);
+        }
+      });
+    });
+  }
+
+  const loadSyncedData = () => {
+    chrome.storage.sync.get(null, (sync) => {
+      if (sync["group-0"]) {
+        delete sync.settings;
+        chrome.storage.local.clear(() => {
+          var new_ls = {};
+          var remove_keys = [];
+          Object.keys(sync).forEach((key) => {
+            new_ls[key] = sync[key];
+            remove_keys.push(key);
+          });
+
+          chrome.storage.local.set({ groups: new_ls }, () => {
+            chrome.storage.sync.remove(remove_keys, () => {
+              toggleSyncTimestamp(false);
+              setGroups(JSON.stringify(new_ls));
+              updateTabTotal(new_ls);
+            });
+          });
+        });
+      }
+    });
+  };
+
+  function toggleSyncTimestamp(positive) {
+    var sync_container = sync_timestamp.current.parentNode;
+
+    if (positive) {
+      sync_timestamp.current.innerText = getTimestamp();
+      sync_container.classList.replace("alert-danger", "alert-success");
+    } else {
+      sync_timestamp.current.innerText = "--/--/-- @ --:--:--";
+      sync_container.classList.replace("alert-success", "alert-danger");
+    }
+  }
 
   useEffect(() => {
     function findSameTab(tab_list, match_url) {
@@ -231,64 +308,12 @@ export default function App() {
       }
     };
 
-    const updateSync = (alarm) => {
-      if (alarm.name === "sync") {
-        sync_timestamp.current.innerText = getTimestamp();
-        var sync_container = sync_timestamp.current.parentNode;
-        if (sync_container.classList.contains("alert-danger")) {
-          sync_container.classList.replace("alert-danger", "alert-success");
-        }
-
-        chrome.storage.local.get("groups", async (local) => {
-          var current_groups = local.groups;
-          if (current_groups !== { "group-0": defaultGroup.current }) {
-            for (var key of Object.keys(current_groups)) {
-              await updateGroupItem(key, current_groups[key]);
-            }
-            chrome.storage.sync.get(null, (sync) => {
-              delete sync.settings;
-              var remove_keys = Object.keys(sync).filter(
-                (key) => !Object.keys(current_groups).includes(key)
-              );
-              chrome.storage.sync.remove(remove_keys);
-            });
-          }
-        });
-      }
-    };
-
-    function updateGroupItem(name, value) {
-      var sync_entry = {};
-      sync_entry[name] = value;
-
-      // need to make sure to only set changed groups
-      return new Promise((resolve) => {
-        chrome.storage.sync.get(name, (x) => {
-          if (
-            x[name] === undefined ||
-            x[name].color !== value.color ||
-            x[name].created !== value.created ||
-            x[name].title !== value.title ||
-            JSON.stringify(x[name].tabs) !== JSON.stringify(value.tabs)
-          ) {
-            chrome.storage.sync.set(sync_entry, () => {
-              resolve(0);
-            });
-          } else {
-            resolve(0);
-          }
-        });
-      });
-    }
-
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
-    chrome.alarms.onAlarm.addListener(updateSync);
 
     return () => {
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
-      chrome.alarms.onAlarm.removeListener(updateSync);
     };
   }, []);
 
@@ -483,12 +508,7 @@ export default function App() {
           delete fileContent.settings;
           chrome.storage.local.set({ groups: fileContent }, () => {
             setGroups(JSON.stringify(fileContent));
-
-            var sum = 0;
-            Object.values(fileContent).forEach((val) => {
-              sum += val.tabs.length;
-            });
-            setTabTotal(sum);
+            updateTabTotal(fileContent);
           });
         });
       };
@@ -578,7 +598,7 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
           <a href={getTabMergerLink(false)}>
             <img
               id="logo-img"
-              className="mt-4"
+              className="my-4"
               src="./images/logo-full-rescale.PNG"
               alt="TabMerger Logo"
             />
@@ -589,11 +609,6 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
                 {tabTotal + (tabTotal === 1 ? " Tab" : " Tabs")}
               </span>
             </h2>
-
-            <p className="alert alert-danger" id="sync-text">
-              <b>Last Sync:</b>{" "}
-              <span ref={sync_timestamp}>--/--/---- @ --:--:--</span>
-            </p>
 
             <div className="input-group search-filter">
               <div className="input-group-prepend">
@@ -663,6 +678,31 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
                 onChange={(e) => readImportedFile(e)}
               ></input>
             </div>
+
+            <Button
+              id="sync-in-btn"
+              classes="ml-4 p-0 btn-in-global"
+              translate={"Sync Write"}
+              tooltip={"tiptext-global"}
+              onClick={updateSync}
+            >
+              <BsCloudUpload color="black" size="1.5rem" />
+            </Button>
+
+            <Button
+              id="sync-in-btn"
+              classes="ml-1 p-0 btn-in-global"
+              translate={"Sync Read"}
+              tooltip={"tiptext-global"}
+              onClick={loadSyncedData}
+            >
+              <BsCloudDownload color="black" size="1.5rem" />
+            </Button>
+
+            <p className="alert alert-danger" id="sync-text">
+              <b>Last Sync:</b>{" "}
+              <span ref={sync_timestamp}>--/--/---- @ --:--:--</span>
+            </p>
 
             <Button
               id="options-btn"
