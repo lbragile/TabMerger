@@ -11,7 +11,7 @@
   },
 
   "options_ui": {
-    "page": "options.html",
+    "page": "settings/settings.html",
     "open_in_tab": true
   },
 

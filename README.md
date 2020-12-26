@@ -43,6 +43,7 @@ The following lists the items which need to be crossed off of TabMerger's bucket
 - [ ] Star groups (favourites) - moves group to top (can be used to sort groups?)
 - [ ] Lock groups to prevent accidental deleting (or changing)
 - [ ] Undo deleted tabs (store all relevant details for up to 5 tabs). Only apply to single tab removal?
+- [ ] Tab drag from URL lock into TabMerger (like in bookmarks saving)
 
 #### MEDIUM PRIORITY :exclamation:
 

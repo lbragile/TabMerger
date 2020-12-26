@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -21,81 +21,66 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
-.group-title {
-  width: 40%;
+* {
   margin: 0;
-  position: relative;
-  left: 10px;
-  border-bottom: 1px black dashed;
-  border-radius: 5px 5px 0 0;
-  font-size: 1.3rem;
-  color: black !important;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.group {
-  min-height: 75px;
-  border-radius: 5px;
+section {
+  margin: 10px 0 20px 0;
+}
+
+textarea {
+  width: 100%;
+}
+
+hr {
+  margin: 0;
+}
+
+.container,
+.title {
   position: relative;
 }
 
-/* TIMESTAMP */
-.created {
-  background: none !important;
+/* DARK MODE SWITCH */
+.custom-control {
   position: absolute;
-  top: -25px;
   right: 0;
 }
 
-/* GROUP COUNTER */
-.tabTotal-inGroup {
-  margin: 0;
-  padding: 1px;
-  position: absolute;
-  left: 10px;
-  top: 2px;
-  color: black !important;
-
-  min-width: 24px;
-  min-height: 24px;
-  text-align: center;
-}
-
-/* COLOR PICKER (GROUP) */
-.input-color {
-  position: absolute;
-  right: 10px;
-  top: -23px;
-  width: 24px;
-  height: 24px;
-}
-
-.input-color:hover {
+.custom-control-label:hover,
+.custom-control-label::before,
+.custom-control-label::after {
   cursor: pointer;
 }
 
-input[type="color"] {
-  display: none;
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: none !important;
 }
 
-/* GROUP TITLE */
-.title-edit-input {
-  height: 30px;
+/* DIRECTIONS (TabMerger > ....) */
+code {
+  font-size: 0.95rem;
   position: relative;
-  top: -5px;
-  padding-bottom: 5px;
+  left: 5%;
+  transform: translateX(-50%);
+  padding: 2px 5px;
+  margin: 10px 0;
+  border-radius: 5px;
 }
 
-.title-edit-input:focus {
-  border: none;
-  outline: none;
+/* NOTES UNDER TITLES */
+small {
+  font-size: 0.9rem;
 }
 
-.reload-title {
-  visibility: hidden;
-  position: relative;
-  padding: 0 5px;
+/* BUTTONS */
+#home-btn {
+  border: 1px solid black;
 }
 
-.reload-title:hover {
-  cursor: pointer;
+.btn:focus {
+  box-shadow: none;
 }

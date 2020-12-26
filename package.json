@@ -1,6 +1,6 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "tabmerger",
+  "version": "1.5.0",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.5.3",

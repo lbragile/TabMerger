@@ -1,3 +1,26 @@
+<!-- 
+TabMerger as the name implies merges your tabs into one location to save
+memory usage and increase your productivity.
+
+Copyright (C) 2021  Lior Bragilevsky
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+If you have any questions, comments, or concerns you can contact the
+TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+-->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,24 +33,26 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="options.css" />
+    <link rel="stylesheet" href="settings.css" />
   </head>
   <body>
     <div class="container my-auto">
-      <div class="d-flex flex-row align-items-center mt-4">
+      <a href="#">
+        <img
+          id="logo-img"
+          class="mt-4 mb-2"
+          src="../images/logo-full-rescale.PNG"
+          alt="TabMerger Logo"
+        />
+      </a>
+      <div class="title d-flex flex-row align-items-end">
+        <h2>Settings</h2>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="darkMode" />
           <label class="custom-control-label" for="darkMode">🌗</label>
         </div>
-        <a href="#">
-          <img
-            id="logo-img"
-            src="./images/logo-full-rescale.PNG"
-            alt="TabMerger Logo"
-          />
-        </a>
       </div>
-      <h2>Settings</h2>
+
       <hr />
       <div class="row">
         <div class="col-6">
@@ -67,23 +92,25 @@
           <section>
             <div class="mx-0">
               <h5 class="mr-2 mb-0">Exclude Websites:</h5>
-              <div>
-                Please enter the <i>full</i> website address of any website
-                which you would like to not merge. <br />These <b>must</b> begin
-                with "http://" or "https://" - we recommend <i>copying</i> the
-                link of the tab and <i>pasting</i> it here. <br />You may enter
-                multiple comma seperated values. <br />
-                <b>Note:</b> TabMerger provides a menu for you to quickly do
-                this, simply right click on any page you want to exclude, then
-                in the <i>context menu</i> popup navigate to:<br /><br /><code
-                  >TabMerger > Exclude Site from TabMerger's Visibility</code
-                ><br /><br />Doing this will cause the corresponding tab's URL
-                to show up here right away, without the need to navigate to this
-                settings page.
+              <div class="text-justify">
+                <small>
+                  Please enter the <i>full</i> website address of any website
+                  which you would like to not merge. This URL <b>must</b> begin
+                  with "http://" or "https://" - we recommend <i>copying</i> the
+                  link of the tab and <i>pasting</i> it here. You may enter
+                  multiple comma seperated values. <br />
+                  <b>Note:</b> TabMerger provides a menu for you to quickly do
+                  this, simply right click on any page you want to exclude, then
+                  in the <i>context menu</i> popup navigate to:<br /><br /><code
+                    >TabMerger > Exclude Site from TabMerger's Visibility</code
+                  ><br /><br />Doing this will cause the corresponding tab's URL
+                  to show up here right away, without the need to navigate to
+                  this settings page.
+                </small>
               </div>
               <textarea
                 class="px-1 mt-2"
-                rows="7"
+                rows="4"
                 id="options-blacklist"
                 placeholder="http://www.google.com, https://www.facebook.com"
                 maxlength="1000"
@@ -113,12 +140,12 @@
               <label for="keep" class="mb-0"
                 >Open Without Merging (<i>default</i>)</label
               >
-              <div class="ml-3 mt-0">
+              <div class="ml-3 mt-0 text-justify">
                 <small
                   >This will open (or switch if already open) TabMerger's
-                  extensions page without merging the currently open tabs in the
-                  same window. The user can then merge open tabs by using each
-                  group's merging buttons. Such a behavior is desireable for
+                  extensions page <b>without</b> merging the currently open tabs
+                  in the same window. The user can then merge open tabs by using
+                  each group's merging buttons. Such behavior is desireable for
                   full control of the merging process.
                 </small>
               </div>
@@ -127,15 +154,14 @@
             <div>
               <input type="radio" id="open-with" name="ext-open" value="with" />
               <label for="remove" class="mb-0">Open & Merge</label>
-              <div class="ml-3">
+              <div class="ml-3 text-justify">
                 <small
-                  >This will open (or switch if already open) TabMerger's
-                  extensions page <b>AND</b> merge the currently open tabs in
-                  the same window. The merged tabs will be grouped into the top
-                  group. Thus, the user will then be able to sort the tabs along
-                  various groups via the drag-and-drop feature. This behavior is
-                  desireable when the user wants to avoid opening an extra tab
-                  (TabMerger) prior to merging.</small
+                  >Same as above but <b>with</b> merging. The merged tabs will
+                  be grouped into the top group. Thus, the user will then be
+                  able to sort the tabs along various groups via the
+                  drag-and-drop feature. This behavior is desireable when the
+                  user wants to avoid opening an extra tab (TabMerger) prior to
+                  merging.</small
                 >
               </div>
             </div>
@@ -160,21 +186,8 @@
               >
               <div class="ml-3 mt-0">
                 <small
-                  >You can still manually delete:
-                  <ul class="mx-4">
-                    <li>
-                      tab &rightarrow;
-                      <span style="color: red">&Cross;</span> button beside them
-                      (on the left)
-                    </li>
-                    <li>
-                      group &rightarrow; <i>Delete Group</i> button (inside the
-                      group)
-                    </li>
-                    <li>
-                      everything &rightarrow; global <i>Delete All</i> button
-                    </li>
-                  </ul>
+                  >You can still manually delete tabs by the delete tab, group,
+                  or all actions.
                 </small>
               </div>
             </div>
@@ -190,15 +203,11 @@
               <div class="ml-3">
                 <small
                   >Opening a tab (<i>Click</i> on it) will remove that tab from
-                  TabMerger's page, the same goes for opening tabs in a group
-                  (<i>Open Group</i> button) and opening all tabs (<i
-                    >Open All</i
+                  TabMerger's page. This holds for any other opening action (<i
+                    >group</i
                   >
-                  button). <b>Note:</b> in the <b>Open Group</b> case, the
-                  corresponding (<b>ONE</b>) group will be removed. Likewise, in
-                  the <b>Open All</b> case, <b>ALL</b> groups will be
-                  removed.</small
-                >
+                  or <i>all</i>).
+                </small>
               </div>
             </div>
           </section>
@@ -215,6 +224,6 @@
       </div>
     </div>
 
-    <script src="options.js"></script>
+    <script src="settings.js"></script>
   </body>
 </html>
