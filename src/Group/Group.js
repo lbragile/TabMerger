@@ -6,9 +6,10 @@ import { VscChromeRestore } from "react-icons/vsc";
 import { BiColorFill, BiArrowToRight } from "react-icons/bi";
 import { MdVerticalAlignCenter } from "react-icons/md";
 
-import Button from "./Button.js";
-import "./Button.css";
+import Button from "../Button/Button.js";
+
 import "./Group.css";
+import "../Button/Button.css";
 
 export default function Group(props) {
   const TITLE_TRIM_LIMIT = useRef(15);

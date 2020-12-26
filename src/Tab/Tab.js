@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 
-import "./Tabs.css";
-
 import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
 
-export default function Tabs(props) {
+import "./Tab.css";
+
+export default function Tab(props) {
   const TAB_TITLE_LENGTH = useRef(80);
 
   const [tabs, setTabs] = useState([]);
@@ -109,7 +109,7 @@ export default function Tabs(props) {
   }
 
   function getFavIconURL(url) {
-    var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+    var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
     var domain = matches && matches[1]; // domain will be null if no match is found
     return "http://www.google.com/s2/favicons?domain=" + domain;
   }
