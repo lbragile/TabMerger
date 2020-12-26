@@ -34,34 +34,34 @@ If so, consider leaving a positive & meaningful review (<a href="https://chrome.
 
 ## TODO :chart_with_upwards_trend:
 
-The following lists the items which need to be crossed off of TabMerger's bucket (and some that were recently completed/highlights) list since the release of v1.2.1.
+The following lists the items which need to be crossed off of TabMerger's bucket list (and some that were recently completed/highlights) since the release of v1.2.1.
 
 #### HIGH PRIORITY :exclamation::exclamation:
 
-- [ ] Pinned tab information =▶ settings options (by default DO NOT merge pinned tabs)
+- [ ] Integrate testing with Cypress or Puppeteer? ◀= I couldn't figure out how to test Chrome API since Cypress does not seem to allow redirection to `chrome://` URLs. Ideally would also have code coverage reports.
+- [ ] Pinned tab information =▶ settings options (by default **DO NOT** merge pinned tabs)
 - [ ] Star groups (favourites) - moves group to top (can be used to sort groups?)
 - [ ] Lock groups to prevent accidental deleting (or changing)
 - [ ] Undo deleted tabs (store all relevant details for up to 5 tabs). Only apply to single tab removal?
-- [ ] Integrate testing with Cypress? ◀= I couldn't figure out how to test Chrome API since Cypress does not seem to allow redirection to `chrome://` URLs.
 
 #### MEDIUM PRIORITY :exclamation:
 
-- [ ] Translate settings page with Google Translate API
-- [ ] Combine tab and group filters into one filter (use RegEx to figure out which one is requested)
 - [ ] Hide tabs in groups with persistence.
-- [ ] Format PDF output well for multi-page groups. Add tab icons for each tab regardless of icon extension type.
+- [ ] Create PDF with good formatting, avoid using libraries if possible to reduce extension weight. Format PDF output well for multi-page groups. Add tab icons for each tab regardless of icon extension type.
+- [ ] Translate settings page with Google Translate API. Also add translations to some words on the main page via the `locale` folder.
 
 #### LOW PRIORITY :grey_exclamation:
 
 - [ ] Let user add tags that can be clicked to search tab categories?
-- [ ] Allow hiding/showing the right side container (with the quick video demo and links)
 - [ ] Remember grouped tabs from browser when restoring (place them in the same group name and color - in the browser window)
 - [ ] Run offline?
 
 #### DONE :heavy_check_mark:
 
-- [x] Integrate syncing across devices with Chrome Storage API so that a user does not need to share a link with themselves to regain access to their tab list. Will store items as groups and monitor item storage and global storage limits, warning users as necessary. Note that drag and drop must be checked also. **v1.3.0**
-- [x] Incognito mode - should work with Syncing to remember data. **v1.3.0**
+- [x] Combine tab and group filters into one filter (use RegEx to figure out which one is requested). Can add `#` in front of text for group searches. **v1.4.3**
+- [x] <s>Allow hiding/showing the right side container (with the quick video demo and links)</s> This is now just links at the top right. **v1.4.3**
+- [x] Integrate syncing across devices with Chrome Storage API so that a user does not need to share a link with themselves to regain access to their tab list. Will store items as groups and monitor item storage and global storage limits, warning users as necessary. Note that drag and drop & number of groups made must be checked also. **v1.3.0 (stable in v1.4.3)**
+- [x] Incognito mode - should work with Syncing to remember data. **v1.3.0 (stable in v1.4.3)**
 - [x] Better merge and restore functionality. Avoid duplicates when merging, avoid creating tabs if they already are open in the window. **v1.3.0**
 - [x] Better drag and drop - allow scrolling? **v1.3.0**
 - [x] Add a restore to default settings button. **v1.3.0**
@@ -86,8 +86,7 @@ with
 
 "browser_specific_settings": {
   "gecko": {
-    "id": "{19feb84f-3a0b-4ca3-bbae-211b52eb158b}",
-    "strict_min_version": "42.0"
+    "id": "{19feb84f-3a0b-4ca3-bbae-211b52eb158b}"
   }
 },
 ```

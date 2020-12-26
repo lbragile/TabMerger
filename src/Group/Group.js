@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 
 // prettier-ignore
 import { AiOutlineMinus,AiOutlineClose, AiOutlineReload } from "react-icons/ai";
@@ -15,33 +15,36 @@ export default function Group(props) {
   const TITLE_TRIM_LIMIT = useRef(15);
   const [hide, setHide] = useState(false);
 
+  const setGroupBackground = useCallback(
+    (e) => {
+      var color, target;
+      if (e.target) {
+        color = e.target.value;
+        target = e.target.closest(".group-title");
+      } else {
+        var group_title = e.previousSibling;
+        color = group_title.querySelector("input[type='color']").value;
+        target = e;
+      }
+      [...target.parentNode.children].forEach((child) => {
+        child.style.background = color;
+      });
+
+      chrome.storage.local.get("groups", (local) => {
+        var current_groups = local.groups;
+        if (current_groups && current_groups[props.id]) {
+          current_groups[props.id].color = color;
+          chrome.storage.local.set({ groups: current_groups });
+        }
+      });
+    },
+    [props.id]
+  );
+
   useEffect(() => {
     var group = document.getElementById(props.id);
     setGroupBackground(group);
-  }, []);
-
-  function setGroupBackground(e) {
-    var color, target;
-    if (e.target) {
-      color = e.target.value;
-      target = e.target.closest(".group-title");
-    } else {
-      var group_title = e.previousSibling;
-      color = group_title.querySelector("input[type='color']").value;
-      target = e;
-    }
-    [...target.parentNode.children].forEach((child) => {
-      child.style.background = color;
-    });
-
-    chrome.storage.local.get("groups", (local) => {
-      var current_groups = local.groups;
-      if (current_groups && current_groups[props.id]) {
-        current_groups[props.id].color = color;
-        chrome.storage.local.set({ groups: current_groups });
-      }
-    });
-  }
+  }, [props.id, setGroupBackground]);
 
   function setTitle(e) {
     chrome.storage.local.get("groups", (local) => {
