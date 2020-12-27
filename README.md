@@ -6,7 +6,7 @@
 
 ### Merges your tabs into one location to save memory usage and increase your productivity.
 
-[<img src="https://media.giphy.com/media/cOb0OPXlIHtnZcQC75/giphy.gif" alt="TabMerger v1.4.3 Cross-Browser Extension Walkthrough" width="640" height="360"/>](https://youtu.be/zkI0T-GzmzQ)
+[<img src="https://i.imgur.com/gVmsvKp.png" alt="TabMerger v1.4.3 Cross-Browser Extension Walkthrough" width="640" height="360"/>](https://youtu.be/zkI0T-GzmzQ)
 
 ## Description 🖋
 
