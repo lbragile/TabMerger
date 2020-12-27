@@ -2,16 +2,15 @@
 
 [![Issues](https://img.shields.io/github/issues/lbragile/TabMerger)](https://github.com/lbragile/TabMerger/issues) [![Forks](https://img.shields.io/github/forks/lbragile/TabMerger)](https://github.com/lbragile/TabMerger) [![Stars](https://img.shields.io/github/stars/lbragile/TabMerger)](https://github.com/lbragile/TabMerger) [![contributions welcome](https://img.shields.io/badge/contrib-welcome-brightgreen.svg?style=flat)](https://github.com/lbragile/TabMerger) [![Active Development](https://img.shields.io/badge/maint-active-brightgreen.svg)](https://github.com/lbragile/TabMerger) [![License](https://img.shields.io/github/license/lbragile/TabMerger)](https://github.com/lbragile/TabMerger/blob/master/LICENSE)
 
-[<img src="https://i.imgur.com/gXUxra5.png" alt="Chrome" width="48px" height="48px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) <span style="margin: 0 15px 0 0"></span>[<img src="https://i.imgur.com/VLhu3y6.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) <span style="margin: 0 15px 0 0"></span>[<img src="https://i.imgur.com/3LuWU6A.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn) <span style="margin: 0 15px 0 0"></span>[<img src="https://i.imgur.com/wQzf6Ov.png" alt="Opera" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn)
+[<img src="https://i.imgur.com/gXUxra5.png" alt="Chrome" width="48px" height="48px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) <span style="margin: 0 15px 0 0"></span>[<img src="https://i.imgur.com/VLhu3y6.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) <span style="margin: 0 15px 0 0"></span>[<img src="https://i.imgur.com/3LuWU6A.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn)
 
 ### Merges your tabs into one location to save memory usage and increase your productivity.
 
-<!-- <img src="https://media.giphy.com/media/cOb0OPXlIHtnZcQC75/giphy.gif" alt="TabMerger v1.2.0 Example Use Case Available In Chrome & FireFox" width="640" height="360"/> -->
+[<img src="https://media.giphy.com/media/cOb0OPXlIHtnZcQC75/giphy.gif" alt="TabMerger v1.4.3 Cross-Browser Extension Walkthrough" width="640" height="360"/>](https://youtu.be/zkI0T-GzmzQ)
 
 ## Description 🖋
 
-Tired of searching through squished tab icons to find that one tab you are sure is there?
-With TabMerger you can simplify this clutter while greatly increasing productivity in a highly organized and customizable fashion!
+Tired of searching through squished tab icons to find that one tab you are sure is there? With TabMerger you can simplify this clutter while greatly increasing productivity in a highly organized and customizable fashion!
 
 With a single click, you can have all your tabs in a single place, where you can then re-arrange them into appropriate groups, delete extra/unwanted tabs, customize group colors, and so much more. All tabs that are merged into TabMerger are stored internally for you to use at a later time, even when you close the browser window. Lots of analytics are provided to keep you informed about the state of your tabs.
 
@@ -38,9 +37,9 @@ The following lists the items which need to be crossed off of TabMerger's bucket
 
 #### HIGH PRIORITY :exclamation::exclamation:
 
-- [ ] Integrate testing with Cypress or Puppeteer? ◀= I couldn't figure out how to test Chrome API since Cypress does not seem to allow redirection to `chrome://` URLs. Ideally would also have code coverage reports.
-- [ ] Pinned tab information =▶ settings options (by default **DO NOT** merge pinned tabs)
-- [ ] Star groups (favourites) - moves group to top (can be used to sort groups?)
+- [ ] Integrate testing with Cypress or Puppeteer? &rarr; I couldn't figure out how to test Chrome API since Cypress does not seem to allow redirection to `chrome://` URLs. Ideally would also have code coverage reports.
+- [ ] Pinned tab information &rarr; settings options (by default **DO NOT** merge pinned tabs)
+- [ ] Star groups (favourites) &rarr; moves group to top (can be used to sort groups?)
 - [ ] Lock groups to prevent accidental deleting (or changing)
 - [ ] Undo deleted tabs (store all relevant details for up to 5 tabs). Only apply to single tab removal?
 - [ ] Tab drag from URL lock into TabMerger (like in bookmarks saving)

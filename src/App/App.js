@@ -44,7 +44,7 @@ export default function App() {
 
   const links = useRef([
     { url: "https://tabmerger.herokuapp.com/", text: "HELP" },
-    { url: "https://youtu.be/gx0dNUbwCn4", text: "DEMO" },
+    { url: "https://youtu.be/zkI0T-GzmzQ", text: "DEMO" },
     { url: process.env.REACT_APP_PAYPAL_URL, text: "DONATE" },
     { url: getTabMergerLink(true), text: "REVIEW" },
     { url: "https://tabmerger.herokuapp.com/contact", text: "CONTACT" },
