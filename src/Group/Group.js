@@ -24,7 +24,12 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 import React, { useEffect, useState, useRef, useCallback } from "react";
 
 // prettier-ignore
-import { AiOutlineMinus,AiOutlineClose, AiOutlineReload } from "react-icons/ai";
+import {setBGHelper, setTitle, selectTitle, monitorTitleLength, reloadTitle, dragOver, 
+  openGroup, deleteGroup, toggleGroup, sendMessage} from "./Group_functions"
+import { translate } from "../App/App_functions";
+
+// prettier-ignore
+import {  AiOutlineMinus,  AiOutlineClose,  AiOutlineReload,} from "react-icons/ai";
 import { VscChromeRestore } from "react-icons/vsc";
 import { BiColorFill, BiArrowToRight } from "react-icons/bi";
 import { MdVerticalAlignCenter } from "react-icons/md";
@@ -40,26 +45,7 @@ export default function Group(props) {
 
   const setGroupBackground = useCallback(
     (e) => {
-      var color, target;
-      if (e.target) {
-        color = e.target.value;
-        target = e.target.closest(".group-title");
-      } else {
-        var group_title = e.previousSibling;
-        color = group_title.querySelector("input[type='color']").value;
-        target = e;
-      }
-      [...target.parentNode.children].forEach((child) => {
-        child.style.background = color;
-      });
-
-      chrome.storage.local.get("groups", (local) => {
-        var current_groups = local.groups;
-        if (current_groups && current_groups[props.id]) {
-          current_groups[props.id].color = color;
-          chrome.storage.local.set({ groups: current_groups });
-        }
-      });
+      setBGHelper(e, props.id);
     },
     [props.id]
   );
@@ -68,178 +54,6 @@ export default function Group(props) {
     var group = document.getElementById(props.id);
     setGroupBackground(group);
   }, [props.id, setGroupBackground]);
-
-  function setTitle(e) {
-    chrome.storage.local.get("groups", (local) => {
-      var group_title = e.target.closest(".group-title");
-      var group_id = group_title.nextSibling.id;
-      var current_groups = local.groups;
-
-      current_groups[group_id].title = e.target.firstChild.innerText;
-      e.target.lastChild.style.visibility = "hidden";
-
-      chrome.storage.local.set({ groups: current_groups }, () => {
-        props.setGroups(JSON.stringify(current_groups));
-      });
-    });
-  }
-
-  function selectTitle(e) {
-    var range = document.createRange();
-    range.selectNodeContents(e.target.firstChild);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-
-    e.target.lastChild.style.visibility = "visible";
-  }
-
-  function monitorTitleLength(e) {
-    var text_len = e.target.firstChild.innerText.length;
-    var isBackspace = e.keyCode === 8;
-    var isEnter = e.keyCode === 13;
-    var textSel =
-      window.getSelection().focusOffset !== window.getSelection().anchorOffset;
-    if (
-      (!isBackspace && !textSel && text_len === TITLE_TRIM_LIMIT.current) ||
-      (isBackspace && (text_len === 1 || textSel))
-    ) {
-      e.preventDefault();
-    }
-
-    if (isEnter) {
-      e.target.blur();
-    }
-  }
-
-  function reloadTitle(e) {
-    var title_text = e.target.closest("p");
-    title_text.firstChild.innerText = props.title;
-    title_text.blur();
-  }
-
-  const dragOver = (e) => {
-    e.preventDefault();
-    var group_block = e.target.closest(".group");
-    const afterElement = getDragAfterElement(group_block, e.clientY);
-    const currentElement = document.querySelector(".dragging");
-    var location = group_block.querySelector(".tabs-container");
-    if (afterElement == null) {
-      location.appendChild(currentElement);
-    } else {
-      location.insertBefore(currentElement, afterElement);
-    }
-
-    // allow scrolling while dragging
-    window.scrollTop += e.clientY - e.pageY;
-  };
-
-  function getDragAfterElement(container, y) {
-    const draggableElements = [
-      ...container.querySelectorAll(".draggable:not(.dragging)"),
-    ];
-
-    return draggableElements.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
-        }
-      },
-      { offset: Number.NEGATIVE_INFINITY }
-    ).element;
-  }
-
-  function openGroup(e) {
-    // ["group", ... url_links ...]
-    var target = e.target.closest(".group-title").nextSibling;
-    var tab_links = [...target.querySelectorAll(".a-tab")].map((x) => x.href);
-    tab_links.unshift("group");
-    chrome.storage.local.set({ remove: tab_links });
-  }
-
-  function deleteGroup(e) {
-    chrome.storage.local.get("groups", (local) => {
-      chrome.storage.sync.get("settings", (sync) => {
-        var target = e.target.closest(".group-title").nextSibling;
-        var group_blocks = local.groups;
-
-        // if removed the only existing group
-        if (Object.keys(group_blocks).length === 1) {
-          group_blocks["group-0"] = {
-            color: sync.settings.color,
-            created: props.getTimestamp(),
-            tabs: [],
-            title: sync.settings.title,
-          };
-        } else {
-          // must rename all keys for the groups above deleted group item
-          var group_names = []; // need to change these
-          var index_deleted = target.id.split("-")[1];
-          Object.keys(group_blocks).forEach((key) => {
-            if (parseInt(key.split("-")[1]) > parseInt(index_deleted)) {
-              group_names.push(key);
-            }
-          });
-
-          // perform the renaming of items
-          var group_blocks_str = JSON.stringify(group_blocks);
-          group_names.forEach((key) => {
-            var new_name = "group-" + (parseInt(key.split("-")[1]) - 1);
-            group_blocks_str = group_blocks_str.replace(key, new_name);
-          });
-
-          // get back json object with new item key names
-          group_blocks = JSON.parse(group_blocks_str);
-
-          // if group to be deleted is last - must only delete it
-          if (!group_names[0]) {
-            delete group_blocks["group-" + index_deleted];
-          }
-        }
-
-        chrome.storage.local.set({ groups: group_blocks }, () => {
-          // update total count
-          props.setTabTotal(
-            document.querySelectorAll(".draggable").length -
-              target.querySelectorAll(".draggable").length
-          );
-
-          props.setGroups(JSON.stringify(group_blocks));
-        });
-      });
-    });
-  }
-
-  function toggleGroup(e) {
-    var tabs = e.target
-      .closest(".group-title")
-      .nextSibling.querySelectorAll(".draggable");
-    tabs.forEach((tab) => {
-      if (!hide) {
-        tab.style.display = "none";
-      } else {
-        tab.style.removeProperty("display");
-      }
-    });
-
-    setHide(!hide);
-  }
-
-  function sendMessage(msg) {
-    chrome.runtime.sendMessage(chrome.runtime.id, msg);
-  }
-
-  function translate(msg) {
-    try {
-      return chrome.i18n.getMessage(msg);
-    } catch (err) {
-      return msg;
-    }
-  }
 
   return (
     <div className={"group-item " + ("group-0" === props.id ? "mt-0" : "mt-3")}>
@@ -252,12 +66,15 @@ export default function Group(props) {
           className="title-edit-input font-weight-bold p-1 mb-0"
           contentEditable
           onFocus={(e) => selectTitle(e)}
-          onBlur={(e) => setTitle(e)}
-          onKeyDown={(e) => monitorTitleLength(e)}
+          onBlur={(e) => setTitle(e, props.setGroups)}
+          onKeyDown={(e) => monitorTitleLength(e, TITLE_TRIM_LIMIT.current)}
         >
           <span>{props.title}</span>
           <span className="reload-title">
-            <AiOutlineReload size="1.2rem" onClick={(e) => reloadTitle(e)} />
+            <AiOutlineReload
+              size="1.2rem"
+              onClick={(e) => reloadTitle(e, props.title)}
+            />
           </span>
         </p>
 
@@ -283,7 +100,7 @@ export default function Group(props) {
             classes="show-hide-btn btn-in-group-title"
             translate={hide ? translate("showTabs") : translate("hideTabs")}
             tooltip={"tiptext-group-title"}
-            onClick={(e) => toggleGroup(e)}
+            onClick={(e) => toggleGroup(e, hide, setHide)}
           >
             <AiOutlineMinus />
           </Button>
@@ -300,7 +117,14 @@ export default function Group(props) {
             classes="delete-group-btn btn-in-group-title"
             translate={translate("deleteGroup")}
             tooltip={"tiptext-group-title"}
-            onClick={(e) => deleteGroup(e)}
+            onClick={(e) =>
+              deleteGroup(
+                e,
+                props.getTimestamp(),
+                props.setTabTotal,
+                props.setGroups
+              )
+            }
           >
             <AiOutlineClose />
           </Button>
