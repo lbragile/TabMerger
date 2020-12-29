@@ -24,18 +24,13 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 import Tabs from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
 
-export function toggleSyncTimestampHelper(positive, sync_node) {
-  var sync_container = sync_node.parentNode;
-
-  if (positive) {
-    sync_node.innerText = getTimestamp();
-    sync_container.classList.replace("alert-danger", "alert-success");
-  } else {
-    sync_node.innerText = "--/--/---- @ --:--:--";
-    sync_container.classList.replace("alert-success", "alert-danger");
-  }
-}
-
+/*------------------------------- HELPER FUNCTIONS -----------------------------*/
+/**
+ * Toggles TabMerger's theme (light or dark).
+ * In dark mode, the theme is set to dark background with light text.
+ * In light mode, the exact opposite happens - light background with dark text.
+ * @param {boolean} isChecked whether dark mode is enabled or disabled
+ */
 function toggleDarkMode(isChecked) {
   var container = document.querySelector("body");
   var hr = document.querySelector("hr");
@@ -52,6 +47,137 @@ function toggleDarkMode(isChecked) {
   });
 }
 
+/**
+ * Chrome's storage sync has limits per item. Therefore, the groups are stored individually
+ * as one group per item (unlike in Chrome's storage local - where they are all one big item).
+ * Due to this and the fact that there is also a limit of sync write operations per minute,
+ * Sync items are updated only when they change and only changed items are overwritten with new values.
+ * @param {string} key Group id of an item that might need to be updated
+ * @param {string} value Value corresponding to the above group id
+ *
+ * @return Promise that resolves if sync is updated or no update is required
+ */
+function updateGroupItem(key, value) {
+  var sync_entry = {};
+  sync_entry[key] = value;
+
+  // need to make sure to only set changed groups
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(key, (x) => {
+      if (
+        x[key] === undefined ||
+        x[key].color !== value.color ||
+        x[key].created !== value.created ||
+        x[key].title !== value.title ||
+        JSON.stringify(x[key].tabs) !== JSON.stringify(value.tabs)
+      ) {
+        chrome.storage.sync.set(sync_entry, () => {
+          resolve(0);
+        });
+      } else {
+        resolve(0);
+      }
+    });
+  });
+}
+
+/**
+ * Sorts the groups based on their ids so that the order is id index based ("group-{index}").
+ * @example
+ * "group-0", ..., "group-9", "group-10", ... ✅
+ * "group-0", "group-1", "group-10", ..., "group-9", ... ❌
+ * @param {object} json
+ *
+ * @return {object[]} Values from the sorted groups
+ */
+function sortByKey(json) {
+  var sortedArray = [];
+
+  // Push each JSON Object entry in array by [key, value]
+  for (var i in json) {
+    sortedArray.push([i, json[i]]);
+  }
+
+  var sorted_groups = sortedArray.sort((a, b) => {
+    var opts = { numeric: true, sensitivity: "base" };
+    return a[0].localeCompare(b[0], undefined, opts);
+  });
+
+  // get the sorted values
+  return sorted_groups.map((x) => x[1]);
+}
+
+/**
+ * Updates the total tab count based on tabs in all the groups inside TabMerger
+ * @param {{groups: {"group-id": {color: string, created: string, tabs:
+ *  [{title: string, url: string}], title: string}}}} ls_entry current group information
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ */
+function updateTabTotal(ls_entry, setTabTotal) {
+  var num_tabs = 0;
+  Object.values(ls_entry).forEach((val) => {
+    num_tabs += val.tabs.length;
+  });
+  setTabTotal(num_tabs);
+}
+
+/**
+ * Given a list of tab objects, filters and returns a specific tab which contains the correct URL.
+ * @param {object[]} tab_list All the tabs in the group that need to be filtered
+ * @param {string} match_url The full URL that is being matched against
+ *
+ * @return {object[]} Tab that has a URL matching the match_url parameter
+ */
+function findSameTab(tab_list, match_url) {
+  return tab_list.filter((x) => x.url === match_url);
+}
+
+/**
+ * Output filename generation for exporting file functions (JSON and/or PDF)
+ *
+ * @return ```TabMerger [dd/mm/yyyy @ hh:mm:ss]```
+ */
+function outputFileName() {
+  const timestamp = new Date(Date.now()).toString().split(" ").slice(1, 5);
+  const date_str = timestamp.slice(0, 3).join("-");
+
+  return `TabMerger [${date_str} @ ${timestamp[3]}]`;
+}
+
+/*-------------------------------------------------------------------------------*/
+
+/**
+ * Changes the state of the "Last Sync" indicator:
+ * @example
+ * positive = false ➡ 🟥 `Last Sync: --/--/---- @ --:--:--` 🟥
+ * positive = true ➡ 🟩 `Last Sync: 11/11/2020 @ 11:11:11` 🟩
+ * @param {boolean} positive Whether a sync happened or not
+ * @param {HTMLElement} sync_node Node that contains the sync time message
+ */
+export function toggleSyncTimestampHelper(positive, sync_node) {
+  var sync_container = sync_node.parentNode;
+
+  if (positive) {
+    sync_node.innerText = getTimestamp();
+    sync_container.classList.replace("alert-danger", "alert-success");
+  } else {
+    sync_node.innerText = "--/--/---- @ --:--:--";
+    sync_container.classList.replace("alert-success", "alert-danger");
+  }
+}
+
+/**
+ * Initialize the local & sync storage when the user first installs TabMerger.
+ * @param {{blacklist: string, color: string, dark: boolean,
+ *  open: "with" | "without", restore: "keep" | "remove", title: string}} default_settings TabMerger's original default settings
+ * @param {{color: string, created: string, tabs: object[], title: string}} default_group TabMerger's original default group (with up-to-date timestamp)
+ * @param {HTMLElement} sync_node Node indicating the "Last Sync" time
+ * @param {Function} setGroups For re-rendering the initial groups
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ *
+ * @see defaultSettings in App.js
+ * @see defaultGroup in App.js
+ */
 export function storageInit(
   default_settings,
   default_group,
@@ -85,6 +211,13 @@ export function storageInit(
   });
 }
 
+/**
+ * Updates the sync items - only those that have changes are overwritten
+ * @param {{color: string, created: string, tabs: object[], title: string}} default_group TabMerger's default group
+ * @param {HTMLElement} sync_node Node corresponding to the "Last Sync:" timestamp
+ *
+ * @see defaultGroup in App.js
+ */
 export function updateSync(default_group, sync_node) {
   chrome.storage.local.get("groups", async (local) => {
     var current_groups = local.groups;
@@ -107,30 +240,16 @@ export function updateSync(default_group, sync_node) {
   });
 }
 
-function updateGroupItem(name, value) {
-  var sync_entry = {};
-  sync_entry[name] = value;
-
-  // need to make sure to only set changed groups
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(name, (x) => {
-      if (
-        x[name] === undefined ||
-        x[name].color !== value.color ||
-        x[name].created !== value.created ||
-        x[name].title !== value.title ||
-        JSON.stringify(x[name].tabs) !== JSON.stringify(value.tabs)
-      ) {
-        chrome.storage.sync.set(sync_entry, () => {
-          resolve(0);
-        });
-      } else {
-        resolve(0);
-      }
-    });
-  });
-}
-
+/**
+ * Provides the ability to upload group items from Sync storage.
+ * This action overwrites local storage accordingly.
+ * @example
+ * 1. "TabMerger <= uploaded # groups ➡ overwrite current"
+ * 2. "TabMerger > uploaded # groups ➡ overwrite current & delete extra groups"
+ * @param {HTMLElement} sync_node Node corresponding to the "Last Sync:" timestamp
+ * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setTabTotal For re-rendering the total tab count
+ */
 export function loadSyncedData(sync_node, setGroups, setTabTotal) {
   chrome.storage.sync.get(null, (sync) => {
     if (sync["group-0"]) {
@@ -155,10 +274,15 @@ export function loadSyncedData(sync_node, setGroups, setTabTotal) {
   });
 }
 
-function findSameTab(tab_list, match_url) {
-  return tab_list.filter((x) => x.url === match_url);
-}
-
+/**
+ * When a restoring action is performed, the corresponding tab(s) need to be opened.
+ * However, if the settings indicate to "Remove from TabMerger" when restoring, the tab(s)
+ * also need to be removed.
+ * @param {object} changes contains the changed keys and they old & new values
+ * @param {string} namespace local or sync storage type
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {Function} setGroups For re-rendering the groups
+ */
 export function openOrRemoveTabsHelper(
   changes,
   namespace,
@@ -219,6 +343,21 @@ export function openOrRemoveTabsHelper(
   }
 }
 
+/**
+ * When a merging action is performed, TabMerger checks if Chrome's syncing limits are
+ * adhered to before performing the merge. This (in addition to local storage) ensures
+ * that TabMerger's data is never lost. If limits are exceeded, the action is canceled
+ * and the user is given a warning with instructions.
+ * @param {object} changes contains the changed keys and they old & new values
+ * @param {string} namespace local or sync storage type
+ * @param {number} sync_limit Limit for overall sync storage - includes all groups, tabs, settings, etc.
+ * @param {number} item_limit Limit for each group with regards to sync item storage - only contains group related details
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {Function} setGroups For re-rendering the groups
+ *
+ * @see SYNC_STORAGE_LIMIT in App.js
+ * @see ITEM_STORAGE_LIMIT in App.js
+ */
 export function checkMergingHelper(
   changes,
   namespace,
@@ -296,24 +435,11 @@ export function checkMergingHelper(
   }
 }
 
-// sort so that group-0, ..., group-9, group-10, ...
-function sortByKey(json) {
-  var sortedArray = [];
-
-  // Push each JSON Object entry in array by [key, value]
-  for (var i in json) {
-    sortedArray.push([i, json[i]]);
-  }
-
-  var sorted_groups = sortedArray.sort((a, b) => {
-    var opts = { numeric: true, sensitivity: "base" };
-    return a[0].localeCompare(b[0], undefined, opts);
-  });
-
-  // get the sorted values
-  return sorted_groups.map((x) => x[1]);
-}
-
+/**
+ * Produces a timestamp which is added to newly formed groups
+ *
+ * @return ```dd/mm/yyyy @ hh:mm:ss```
+ */
 export function getTimestamp() {
   var date_parts = new Date(Date.now()).toString().split(" ");
   date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
@@ -326,6 +452,19 @@ export function getTimestamp() {
   return date_parts.join("");
 }
 
+/**
+ * Forms the group components with tab draggable tab components inside.
+ * Each formed group has correct & up-to-date information.
+ * @param {string} groups A stringified object consisting of TabMerger's current group information
+ * @param {number} itemLimit Limit for each group with regards to sync item storage - only contains group related details
+ * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ *
+ * @see ITEM_STORAGE_LIMIT in App.js
+ *
+ * @return If "groups" is defined - array of group components which include the correct number of tab components inside each.
+ * Else - null
+ */
 export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
   if (groups) {
     var group_values = Object.values(JSON.parse(groups));
@@ -362,7 +501,15 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
   }
 }
 
-export const addGroup = (num_group_limit, group_tabs, setGroups) => {
+/**
+ * Allows the user to add a group with the default title & color chosen in the settings.
+ * Each new group is always empty and has a creation timestamp.
+ * @param {number} num_group_limit an upper limit on the number of groups that can be created
+ * @param {Function} setGroups For re-rendering the groups
+ *
+ * @see NUM_GROUP_LIMIT in App.js
+ */
+export const addGroup = (num_group_limit, setGroups) => {
   chrome.storage.local.get("groups", (local) => {
     var current_groups = local.groups;
     var num_keys = Object.keys(current_groups).length;
@@ -372,7 +519,7 @@ export const addGroup = (num_group_limit, group_tabs, setGroups) => {
         current_groups["group-" + num_keys] = {
           color: sync.settings.color,
           created: getTimestamp(),
-          tabs: group_tabs,
+          tabs: [],
           title: sync.settings.title,
         };
         chrome.storage.local.set({ groups: current_groups }, () => {
@@ -389,20 +536,30 @@ export const addGroup = (num_group_limit, group_tabs, setGroups) => {
   });
 };
 
+/**
+ * Sets Chrome's local storage with an array (["all", ... url_links ...]) consisting
+ * of all the tabs in TabMerger to consider for removal.
+ */
 export function openAllTabs() {
-  // ["all", ... url_links ...]
   var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
   tab_links.unshift("all");
   chrome.storage.local.set({ remove: tab_links });
 }
 
-export function deleteAllGroups(group_tabs, setTabTotal, setGroups) {
+/**
+ * Allows the user to delete every group (including tabs) inside TabMerger.
+ * A default group is formed to allow for re-merging after deletion.
+ * The default group has title & color matching settings parameter and a creation timestamp.
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {Function} setGroups For re-rendering the groups
+ */
+export function deleteAllGroups(setTabTotal, setGroups) {
   chrome.storage.sync.get("settings", (sync) => {
     var new_entry = {
       "group-0": {
         color: sync.settings.color,
         created: getTimestamp(),
-        tabs: group_tabs,
+        tabs: [],
         title: sync.settings.title,
       },
     };
@@ -413,6 +570,18 @@ export function deleteAllGroups(group_tabs, setTabTotal, setGroups) {
   });
 }
 
+/**
+ * Allows the user to search for groups or tabs within TabMerger using a filter.
+ * The filter is case-insensitive and updates the groups in real time as the user types.
+ * This action is non-persistent and will reset once the page reloads or a re-render occurs.
+ * Tabs/Groups are simply hidden from the user once a filter is applied, that is they are not
+ * removed from TabMerger and thus the counts (group and global) are not updated.
+ * @example
+ * #chess ➡ Group Search
+ * chess ➡ Tab Search
+ *
+ * @param {HTMLElement} e Node corresponding to the search filter
+ */
 export function filterRegEx(e) {
   // prettier-ignore
   var sections, titles, match, tab_items, search_type, no_match, keep_sections = [];
@@ -466,14 +635,15 @@ export function filterRegEx(e) {
   }
 }
 
-function updateTabTotal(ls_entry, setTabTotal) {
-  var num_tabs = 0;
-  Object.values(ls_entry).forEach((val) => {
-    num_tabs += val.tabs.length;
-  });
-  setTabTotal(num_tabs);
-}
-
+/**
+ * Allows the user to import a JSON file which they exported previously.
+ * This JSON file contains TabMerger's configuration and once uploaded
+ * overwrites the current configuration. Checks are made to ensure a JSON
+ * file is uploaded.
+ * @param {HTMLElement} e Node corresponding to the input file field
+ * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ */
 export function readImportedFile(e, setGroups, setTabTotal) {
   if (e.target.files[0].type === "application/json") {
     var reader = new FileReader();
@@ -498,6 +668,9 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
   }
 }
 
+/**
+ * Allows the user to export TabMerger's current configuration (including settings).
+ */
 export const exportJSON = () => {
   chrome.storage.local.get("groups", (local) => {
     var group_blocks = local.groups;
@@ -517,14 +690,13 @@ export const exportJSON = () => {
   });
 };
 
-// output filename generation
-function outputFileName() {
-  const timestamp = new Date(Date.now()).toString().split(" ").slice(1, 5);
-  const date_str = timestamp.slice(0, 3).join("-");
-
-  return `TabMerger [${date_str} @ ${timestamp[3]}]`;
-}
-
+/**
+ * On different browsers, this generates the corresponding link to the browser's webstore
+ * where TabMerger can be downloaded.
+ * @param {boolean} reviews Whether or not the link should be to a reviews page
+ *
+ * @return A URL link to TabMerger's webstore (or reviews) page
+ */
 export function getTabMergerLink(reviews) {
   var link;
   var isOpera = navigator.userAgent.indexOf(" OPR/") >= 0;
@@ -550,6 +722,16 @@ export function getTabMergerLink(reviews) {
   return link;
 }
 
+/**
+ * Checks if a translation for a specific key is available and returns the translation.
+ * @param {string} msg The key specified in the "_locales" folder corresponding to a translation from English
+ *
+ * @see ```./public/_locales/``` For key/value translation pairs
+ *
+ * @return {string} If key exists - translation from English to the corresponding language (based on user's Chrome Language settings),
+ * Else - the original message
+ *
+ */
 export function translate(msg) {
   try {
     return chrome.i18n.getMessage(msg);

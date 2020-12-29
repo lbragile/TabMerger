@@ -21,27 +21,32 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
-// default values
-var info = { which: "all" };
-var tab = { index: 0 };
-
-// ask the user to take a survey to figure out why they removed TabMerger
-chrome.runtime.setUninstallURL("https://tabmerger.herokuapp.com/survey");
-
-// extension click - open without merging or with merging
-chrome.browserAction.onClicked.addListener(() => {
+/**
+ * extension click from toolbar - open TabMerger with or without merging tabs (according to settings)
+ */
+const handleBrowserIconClick = () => {
   chrome.storage.sync.get("settings", async (result) => {
     result.settings === undefined || result.settings.open === "without"
       ? await findExtTabAndSwitch()
-      : filterTabs(info, tab);
+      : await filterTabs(info, tab);
   });
-});
+};
 
+/**
+ * Filters a list of tabs according to the merging information provided in the parameters.
+ * Sets the local storage item corresponding to the group to merge into and the tabs to merge.
+ * Avoids duplicates as much as possible. If duplicate tabs are merged, only a single copy of the
+ * many duplicates is included in the merge (the other duplicate tabs are simply closed).
+ * @param {{which: string}} info which direction to merge from
+ * @param {{title: string, url: string, id?: string}} tab indicates where the merging call originated from
+ * @param {string?} group_id the group to merge into (if merge button from one of TabMerger's groups is used)
+ */
 async function filterTabs(info, tab, group_id) {
+  // navigate to TabMerger before proceeding
   await findExtTabAndSwitch();
 
   chrome.tabs.query({ currentWindow: true }, (tabs) => {
-    // FILTER BASED ON USER BUTTON CLICK
+    // filter based on user's merge button click
     tabs = tabs.filter((x) => x.title !== "TabMerger");
     switch (info.which) {
       case "right":
@@ -131,6 +136,13 @@ async function filterTabs(info, tab, group_id) {
   });
 }
 
+/**
+ * When TabMerger is open, this navigates to its tab if not on that tab already.
+ * When TabMerger is not open, this opens its tab on the very right side.
+ * Function ends when TabMerger's tab becomes active and its loading status is complete.
+ *
+ * @return A promise which should be awaited. Resolve value is insignificant
+ */
 function findExtTabAndSwitch() {
   var query = { title: "TabMerger", currentWindow: true };
   var exists = { highlighted: true, active: true };
@@ -154,32 +166,40 @@ function findExtTabAndSwitch() {
   });
 }
 
-function getTimestamp() {
-  var date_parts = new Date(Date.now()).toString().split(" ");
-  date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
-
-  // dd/mm/yyyy @ hh:mm:ss
-  date_parts[0] = date_parts[1] + "/";
-  date_parts[1] = new Date().getMonth() + 1 + "/";
-  date_parts[2] += " @ ";
-
-  return date_parts.join("");
-}
-
+/**
+ * Fired when an extension merge button is clicked.
+ * Filters the tabs in the current window to prepare for the merging process.
+ * @param {{msg: string, id: string}} request Contains information regarding
+ * which way to merge and the calling tab's id
+ */
 const extensionMessage = (request) => {
   info.which = request.msg;
   var queryOpts = { currentWindow: true, active: true };
-  chrome.tabs.query(queryOpts, (tabs) => {
-    filterTabs(info, tabs[0], request.id);
+  chrome.tabs.query(queryOpts, async (tabs) => {
+    await filterTabs(info, tabs[0], request.id);
   });
 };
 
+/**
+ * Helper function for creating a contextMenu (right click) item.
+ * @param {string} id unique value for locating each contextMenu item added
+ * @param {string} title the contextMenu's item title
+ * @param {string} type "separator" or "normal" (default)
+ */
 function createContextMenu(id, title, type) {
   chrome.contextMenus.create({ id, title, type });
 }
 
+/**
+ * Handles contextMenu item clicks or keyboard shortcut events for both merging actions and
+ * other actions like excluding from visibility, opening TabMerger, visiting help site, etc.
+ * @param {{which: string, command?: string, menuItemId?: string}} info Indicates merging direction,
+ * keyboard command, and/or the contextMenu item that was clicked
+ * @param {{url: string, title: string, id?: string}} tab The tab for which the event occured.
+ * Used when determining which tabs to merge
+ */
 const contextMenuOrShortCut = async (info, tab) => {
-  // right click menu OR shortcut keyboard commands
+  // need to alter the info object if it comes from a keyboard shortcut event
   if (typeof info === "string") {
     info = { which: "all", command: info };
   }
@@ -190,22 +210,22 @@ const contextMenuOrShortCut = async (info, tab) => {
       break;
     case "merge-left-menu":
       info.which = "left";
-      filterTabs(info, tab);
+      await filterTabs(info, tab);
       break;
     case "merge-right-menu":
       info.which = "right";
-      filterTabs(info, tab);
+      await filterTabs(info, tab);
       break;
     case "merge-xcluding-menu":
       info.which = "excluding";
-      filterTabs(info, tab);
+      await filterTabs(info, tab);
       break;
     case "merge-snly-menu":
       info.which = "only";
-      filterTabs(info, tab);
+      await filterTabs(info, tab);
       break;
     case "remove-visibility":
-      excludeSite(info, tab);
+      excludeSite(tab);
       break;
     case "zdl-instructions":
       var dest_url = "https://tabmerger.herokuapp.com/instructions";
@@ -217,12 +237,17 @@ const contextMenuOrShortCut = async (info, tab) => {
       break;
 
     default:
-      filterTabs(info, tab);
+      await filterTabs(info, tab);
       break;
   }
 };
 
-function excludeSite(info, tab) {
+/**
+ * Any URL specified here will be excluded from TabMerger when a merging action is performed.
+ * This means that it will be ignored even when other tabs are merged in.
+ * @param {object} tab The tab which should be excluded from TabMerger's merging visibility
+ */
+function excludeSite(tab) {
   chrome.storage.sync.get("settings", (result) => {
     result.settings.blacklist +=
       result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
@@ -230,10 +255,36 @@ function excludeSite(info, tab) {
   });
 }
 
+/**
+ * Checks if a translation for a specific key is available and returns the translation.
+ * @param {string} msg The key specified in the "_locales" folder corresponding to a translation from English
+ *
+ * @see ```./public/_locales/``` For key/value translation pairs
+ *
+ * @return {string} If key exists - translation from English to the corresponding language (based on user's Chrome Language settings),
+ * Else - the original message
+ *
+ */
 function translate(msg) {
-  return chrome.i18n.getMessage(msg);
+  try {
+    return chrome.i18n.getMessage(msg);
+  } catch (err) {
+    return msg;
+  }
 }
 
+/*------------------------------- MAIN -----------------------------*/
+
+// prettier-ignore
+var info = { which: "all" }, tab = { index: 0 };
+
+// ask the user to take a survey to figure out why they removed TabMerger
+chrome.runtime.setUninstallURL("https://tabmerger.herokuapp.com/survey");
+
+// when the user clicks the TabMerger icons in the browser's toolbar
+chrome.browserAction.onClicked.addListener(handleBrowserIconClick);
+
+// contextMenu creation
 createContextMenu("aopen-tabmerger", translate("bgOpen"));
 //--------------------------//
 createContextMenu("first-separator", "separator", "separator");

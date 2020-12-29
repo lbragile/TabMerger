@@ -21,6 +21,12 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
+/**
+ * Sets the initial tabs based on Chrome's local storage upon initial render.
+ * If Chrome's local storage is empty, this is set to an empty array.
+ * @param {function} setTabs For re-rendering the group's tabs
+ * @param {string} id Used to get the correct group tabs
+ */
 export function setInitTabs(setTabs, id) {
   chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
@@ -28,12 +34,25 @@ export function setInitTabs(setTabs, id) {
   });
 }
 
+/**
+ * Adds necessary classes to the tab element once a drag event is initialized
+ * @param {HTMLElement} e The tab which will be dragged within the same group or across groups
+ */
 export function dragStart(e) {
   var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
   target.classList.add("dragging");
   target.closest(".group").classList.add("drag-origin");
 }
 
+/**
+ * Handles the drop event once a drag is finished. Needs to re-order tabs accordingly and
+ * check for sync limit violations - warning the user accordingly.
+ * @param {HTMLElement} e  The dragged tab
+ * @param {number} item_limit Group based sync limit
+ * @param {Function} setGroups For re-rendering the groups
+ *
+ * @see ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value
+ */
 export function dragEnd(e, item_limit, setGroups) {
   e.stopPropagation();
   e.target.classList.remove("dragging");
@@ -94,6 +113,14 @@ export function dragEnd(e, item_limit, setGroups) {
   });
 }
 
+/**
+ * Removes a tab from the group and adjusts global & group counts.
+ * @param {HTMLElement} e The "x" node element that user clicked on
+ * @param {[{title: string, url: string, id: string?}]} tabs The group's existing tabs (to find tab to remove)
+ * @param {function} setTabs For re-rendering the group's tabs
+ * @param {function} setTabTotal For re-rendering the total number of groups
+ * @param {function} setGroups For re-rendering the overall groups
+ */
 export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
   var tab = e.target.closest(".draggable");
   var url = tab.querySelector("a").href;
@@ -110,13 +137,23 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
   });
 }
 
+/**
+ * Sets Chrome's local storage with an array (["tab", url_link]) consisting
+ * of the tab to consider for removal after a user clicks to restore it.
+ * @param {HTMLElement} e
+ */
 export function handleTabClick(e) {
-  // ["tab", url_link]
   e.preventDefault();
   var tab = e.target.tagName === "SPAN" ? e.target.parentNode : e.target;
   chrome.storage.local.set({ remove: ["tab", tab.href] });
 }
 
+/**
+ * Used to retrieve FavIconURL from a given domain.
+ * Note that only the domain of a given URL is used, not the full URL.
+ * @param {string} url Full URL of the tab for which the FavIconURL is required
+ * @return {string} The tab's FavIconURL in the form of a google API call.
+ */
 export function getFavIconURL(url) {
   var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
   var domain = matches && matches[1]; // domain will be null if no match is found

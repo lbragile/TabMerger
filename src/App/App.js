@@ -24,10 +24,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "../Button/Button.js";
 
-// prettier-ignore
-import { toggleSyncTimestampHelper, storageInit, updateSync, loadSyncedData, openOrRemoveTabsHelper, 
-         checkMergingHelper, groupFormation, getTimestamp, addGroup, openAllTabs, deleteAllGroups, 
-         filterRegEx, readImportedFile, exportJSON, getTabMergerLink, translate } from "./App_functions";
+import * as AppFunc from "./App_functions";
 
 import "./App.css";
 import "../Button/Button.css";
@@ -48,7 +45,7 @@ export default function App() {
     { url: "https://tabmerger.herokuapp.com/", text: "HELP" },
     { url: "https://youtu.be/zkI0T-GzmzQ", text: "DEMO" },
     { url: process.env.REACT_APP_PAYPAL_URL, text: "DONATE" },
-    { url: getTabMergerLink(true), text: "REVIEW" },
+    { url: AppFunc.getTabMergerLink(true), text: "REVIEW" },
     { url: "https://tabmerger.herokuapp.com/contact", text: "CONTACT" },
   ]);
 
@@ -56,7 +53,7 @@ export default function App() {
 
   const defaultGroup = useRef({
     color: "#dedede",
-    created: getTimestamp(),
+    created: AppFunc.getTimestamp(),
     tabs: [],
     title: "Title",
   });
@@ -75,35 +72,25 @@ export default function App() {
 
   const toggleSyncTimestamp = useCallback(
     (positive) => {
-      toggleSyncTimestampHelper(positive, syncTimestamp.current);
+      AppFunc.toggleSyncTimestampHelper(positive, syncTimestamp.current);
     },
     [syncTimestamp]
   );
 
   useEffect(() => {
-    storageInit(
-      defaultSettings.current,
-      defaultGroup.current,
-      syncTimestamp.current,
-      setGroups,
-      setTabTotal
-    );
+    // prettier-ignore
+    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setGroups, setTabTotal);
   }, [toggleSyncTimestamp]);
 
   useEffect(() => {
     const openOrRemoveTabs = (changes, namespace) => {
-      openOrRemoveTabsHelper(changes, namespace, setTabTotal, setGroups);
+      // prettier-ignore
+      AppFunc.openOrRemoveTabsHelper(changes, namespace, setTabTotal, setGroups);
     };
 
     const checkMerging = (changes, namespace) => {
-      checkMergingHelper(
-        changes,
-        namespace,
-        SYNC_STORAGE_LIMIT.current,
-        ITEM_STORAGE_LIMIT.current,
-        setTabTotal,
-        setGroups
-      );
+      // prettier-ignore
+      AppFunc.checkMergingHelper(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups);
     };
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
@@ -134,7 +121,7 @@ export default function App() {
 
       <div className="col" id="tabmerger-container">
         <div>
-          <a href={getTabMergerLink(false)}>
+          <a href={AppFunc.getTabMergerLink(false)}>
             <img
               id="logo-img"
               className="my-4"
@@ -159,7 +146,7 @@ export default function App() {
                 type="text"
                 name="search-group"
                 placeholder="#_ &rarr; group, _ &rarr; tab"
-                onChange={(e) => filterRegEx(e)}
+                onChange={(e) => AppFunc.filterRegEx(e)}
               />
             </div>
           </div>
@@ -170,9 +157,9 @@ export default function App() {
             <Button
               id="open-all-btn"
               classes="p-0 ml-3 btn-in-global"
-              translate={translate("openAll")}
+              translate={AppFunc.translate("openAll")}
               tooltip={"tiptext-global"}
-              onClick={() => openAllTabs()}
+              onClick={() => AppFunc.openAllTabs()}
             >
               <FaTrashRestore color="green" />
             </Button>
@@ -180,15 +167,9 @@ export default function App() {
             <Button
               id="delete-all-btn"
               classes="ml-1 mr-4 p-0 btn-in-global"
-              translate={translate("deleteAll")}
+              translate={AppFunc.translate("deleteAll")}
               tooltip={"tiptext-global"}
-              onClick={() =>
-                deleteAllGroups(
-                  defaultGroup.current.tabs,
-                  setTabTotal,
-                  setGroups
-                )
-              }
+              onClick={() => AppFunc.deleteAllGroups(setTabTotal, setGroups)}
             >
               <MdDeleteForever color="red" />
             </Button>
@@ -196,9 +177,9 @@ export default function App() {
             <Button
               id="export-btn"
               classes="ml-4 btn-in-global"
-              translate={translate("exportJSON")}
+              translate={AppFunc.translate("exportJSON")}
               tooltip={"tiptext-json"}
-              onClick={exportJSON}
+              onClick={AppFunc.exportJSON}
             >
               <BiExport color="darkcyan" size="1.4rem" />
             </Button>
@@ -212,7 +193,7 @@ export default function App() {
                 <div className="tip">
                   <BiImport color="darkcyan" size="1.4rem" />
                   <span className="tiptext-json">
-                    {translate("importJSON")}
+                    {AppFunc.translate("importJSON")}
                   </span>
                 </div>
               </label>
@@ -220,7 +201,9 @@ export default function App() {
                 id="import-input"
                 type="file"
                 accept=".json"
-                onChange={(e) => readImportedFile(e, setGroups, setTabTotal)}
+                onChange={(e) =>
+                  AppFunc.readImportedFile(e, setGroups, setTabTotal)
+                }
               ></input>
             </div>
 
@@ -230,7 +213,7 @@ export default function App() {
               translate={"Sync Write"}
               tooltip={"tiptext-global"}
               onClick={() =>
-                updateSync(defaultGroup.current, syncTimestamp.current)
+                AppFunc.updateSync(defaultGroup.current, syncTimestamp.current)
               }
             >
               <BsCloudUpload color="black" size="1.5rem" />
@@ -242,7 +225,8 @@ export default function App() {
               translate={"Sync Read"}
               tooltip={"tiptext-global"}
               onClick={() =>
-                loadSyncedData(syncTimestamp.current, setGroups, setTabTotal)
+                // prettier-ignore
+                AppFunc.loadSyncedData(syncTimestamp.current, setGroups, setTabTotal)
               }
             >
               <BsCloudDownload color="black" size="1.5rem" />
@@ -256,7 +240,7 @@ export default function App() {
             <Button
               id="options-btn"
               classes="p-0 btn-in-global"
-              translate={translate("settings")}
+              translate={AppFunc.translate("settings")}
               tooltip={"tiptext-global"}
               onClick={() => window.location.replace("/settings/settings.html")}
             >
@@ -264,24 +248,18 @@ export default function App() {
             </Button>
           </div>
           <div className="groups-container">
-            {groupFormation(
-              groups,
-              ITEM_STORAGE_LIMIT.current,
-              setGroups,
-              setTabTotal
-            )}
+            {
+              // prettier-ignore
+              AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current, setGroups, setTabTotal)
+            }
 
             <Button
               id="add-group-btn"
               classes="d-block btn-in-global mt-1 mb-4 ml-3 p-2"
-              translate={translate("addGroup")}
+              translate={AppFunc.translate("addGroup")}
               tooltip={"tiptext-global"}
               onClick={() =>
-                addGroup(
-                  NUM_GROUP_LIMIT.current,
-                  defaultGroup.current.tabs,
-                  setGroups
-                )
+                AppFunc.addGroup(NUM_GROUP_LIMIT.current, setGroups)
               }
             >
               <MdAddCircle

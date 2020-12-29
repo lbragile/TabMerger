@@ -23,8 +23,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 import React, { useState, useRef, useEffect } from "react";
 
-// prettier-ignore
-import {setInitTabs, dragStart, dragEnd, removeTab, handleTabClick, getFavIconURL} from "./Tab_functions"
+import * as TabFunc from "./Tab_functions";
 
 import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -33,10 +32,10 @@ import "./Tab.css";
 
 export default function Tab(props) {
   const TAB_TITLE_LENGTH = useRef(80);
-  const [tabs, setTabs] = useState([]);
+  const [tabs, setTabs] = useState(props.init_tabs || []);
 
   useEffect(() => {
-    setInitTabs(setTabs, props.id);
+    TabFunc.setInitTabs(setTabs, props.id);
   }, [props.id]);
 
   return (
@@ -46,15 +45,18 @@ export default function Tab(props) {
           <div
             className="row draggable p-0 mx-0 "
             draggable
-            onDragStart={(e) => dragStart(e)}
-            onDragEnd={(e) => dragEnd(e, props.itemLimit, props.setGroups)}
+            onDragStart={(e) => TabFunc.dragStart(e)}
+            onDragEnd={(e) =>
+              TabFunc.dragEnd(e, props.itemLimit, props.setGroups)
+            }
             key={Math.random()}
           >
             <p
               className="close-tab mr-2"
               draggable={false}
               onClick={(e) =>
-                removeTab(e, tabs, setTabs, props.setTabTotal, props.setGroups)
+                // prettier-ignore
+                TabFunc.removeTab(e, tabs, setTabs, props.setTabTotal, props.setGroups)
               }
             >
               <TiDelete size="1.2rem" color="black" />
@@ -64,7 +66,7 @@ export default function Tab(props) {
             </p>
             <img
               className="img-tab mr-2"
-              src={getFavIconURL(tab.url) || "./images/logo16.png"}
+              src={TabFunc.getFavIconURL(tab.url)}
               alt="icon"
               draggable={false}
             />
@@ -74,7 +76,7 @@ export default function Tab(props) {
               target="_blank"
               rel="noreferrer"
               draggable={false}
-              onClick={(e) => handleTabClick(e)}
+              onClick={(e) => TabFunc.handleTabClick(e)}
             >
               <span className="float-left">
                 {tab.title.length > TAB_TITLE_LENGTH.current

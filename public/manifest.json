@@ -5,6 +5,9 @@
   "description": "__MSG_appDesc__",
   "default_locale": "en",
 
+  "author": "Lior Bragilevsky",
+  "homepage_url": "https://tabmerger.herokuapp.com/",
+
   "background": {
     "scripts": ["background.js"],
     "persistent": true
