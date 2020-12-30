@@ -76,7 +76,7 @@ export function setBGHelper(e, id) {
     var current_groups = local.groups;
     if (current_groups && current_groups[id]) {
       current_groups[id].color = color;
-      chrome.storage.local.set({ groups: current_groups });
+      chrome.storage.local.set({ groups: current_groups }, () => {});
     }
   });
 }
@@ -185,7 +185,7 @@ export function openGroup(e) {
   var target = e.target.closest(".group-title").nextSibling;
   var tab_links = [...target.querySelectorAll(".a-tab")].map((x) => x.href);
   tab_links.unshift("group");
-  chrome.storage.local.set({ remove: tab_links });
+  chrome.storage.local.set({ remove: tab_links }, () => {});
 }
 
 /**

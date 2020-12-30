@@ -14,7 +14,13 @@ global.chrome = {
     },
   },
   i18n: {
-    getMessage: function () {},
+    getMessage: function (msg) {
+      if (msg === "Title") {
+        return "титул";
+      } else {
+        throw "Error, translation for input does not exist";
+      }
+    },
   },
   runtime: {
     id: "ldhahppapilmnhocniaifnlieiofgnii",

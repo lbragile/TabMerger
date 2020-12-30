@@ -20,7 +20,10 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "test": "jest --coverage --silent",
-    "test:watch": "jest --coverage --silent --watchAll"
+    "test:watch": "npm run test --watchAll",
+    "test-tab": "npm run test -- ./__tests__/Tab.spec.js",
+    "test-group": "npm run test -- ./__tests__/Group.spec.js",
+    "test-app": "npm run test -- ./__tests__/App.spec.js"
   },
   "eslintConfig": {
     "extends": [

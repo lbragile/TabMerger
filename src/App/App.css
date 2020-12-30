@@ -29,7 +29,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 .container-fluid {
   position: relative;
-  width: 60%;
+  width: 70%;
   overflow-x: hidden;
 }
 
@@ -135,4 +135,17 @@ hr {
 
 ::-webkit-scrollbar-track {
   border: 1px grey solid;
+}
+
+/* Responsive Adjustments for Laptops */
+@media only screen and (max-width: 1600px) {
+  .container-fluid {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .container-fluid {
+    width: 90%;
+  }
 }

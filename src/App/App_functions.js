@@ -21,7 +21,7 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
-import Tabs from "../Tab/Tab.js";
+import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
 
 /*------------------------------- HELPER FUNCTIONS -----------------------------*/
@@ -187,7 +187,7 @@ export function storageInit(
 ) {
   chrome.storage.sync.get(null, (sync) => {
     if (!sync.settings) {
-      chrome.storage.sync.set({ settings: default_settings });
+      chrome.storage.sync.set({ settings: default_settings }, () => {});
       toggleDarkMode(true);
     } else {
       toggleDarkMode(sync.settings.dark);
@@ -487,7 +487,7 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
           getTimestamp={getTimestamp}
           key={Math.random()}
         >
-          <Tabs
+          <Tab
             id={id}
             itemLimit={itemLimit}
             setTabTotal={setTabTotal}
@@ -543,7 +543,7 @@ export function addGroup(num_group_limit, setGroups) {
 export function openAllTabs() {
   var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
   tab_links.unshift("all");
-  chrome.storage.local.set({ remove: tab_links });
+  chrome.storage.local.set({ remove: tab_links }, () => {});
 }
 
 /**
@@ -654,6 +654,9 @@ export function readImportedFile(e, setGroups, setTabTotal) {
       chrome.storage.sync.set({ settings: fileContent.settings }, () => {
         delete fileContent.settings;
         chrome.storage.local.set({ groups: fileContent }, () => {
+          // reset the file input so it can trigger again
+          e.target.value = "";
+
           setGroups(JSON.stringify(fileContent));
           updateTabTotal(fileContent, setTabTotal);
         });

@@ -22,7 +22,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
 .group-title {
-  width: 40%;
+  width: 35%;
   margin: 0;
   position: relative;
   left: 10px;
@@ -98,4 +98,17 @@ input[type="color"] {
 
 .reload-title:hover {
   cursor: pointer;
+}
+
+/* Responsive Adjustments for Laptops */
+@media only screen and (max-width: 1600px) {
+  .group-title {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .container-fluid {
+    width: 45%;
+  }
 }
