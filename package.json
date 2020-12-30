@@ -19,7 +19,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "test": "jest --coverage"
+    "test": "jest --coverage --silent",
+    "test:watch": "jest --coverage --silent --watchAll"
   },
   "eslintConfig": {
     "extends": [

@@ -32,7 +32,7 @@ import "./Tab.css";
 
 export default function Tab(props) {
   const TAB_TITLE_LENGTH = useRef(80);
-  const [tabs, setTabs] = useState(props.init_tabs || []);
+  const [tabs, setTabs] = useState([]);
 
   useEffect(() => {
     TabFunc.setInitTabs(setTabs, props.id);
@@ -78,11 +78,9 @@ export default function Tab(props) {
               draggable={false}
               onClick={(e) => TabFunc.handleTabClick(e)}
             >
-              <span className="float-left">
-                {tab.title.length > TAB_TITLE_LENGTH.current
-                  ? tab.title.substring(0, TAB_TITLE_LENGTH.current) + "..."
-                  : tab.title}
-              </span>
+              {tab.title.length > TAB_TITLE_LENGTH.current
+                ? tab.title.substring(0, TAB_TITLE_LENGTH.current) + "..."
+                : tab.title}
             </a>
           </div>
         );

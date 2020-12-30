@@ -25,16 +25,54 @@ global.chrome = {
   },
   storage: {
     local: {
-      clear: function () {},
-      get: function () {},
-      remove: function () {},
-      set: function () {},
+      clear: function () {
+        localStorage.clear();
+      },
+      get: function (key, cb) {
+        const item = JSON.parse(localStorage.getItem(key));
+        cb({ [key]: item });
+      },
+      remove: function (keys, cb) {
+        if (Array.isArray(keys)) {
+          keys.forEach((key) => {
+            localStorage.removeItem(key);
+          });
+        } else {
+          localStorage.removeItem(keys);
+        }
+
+        cb();
+      },
+      set: function (obj, cb) {
+        const key = Object.keys(obj)[0];
+        localStorage.setItem(key, JSON.stringify(obj[key]));
+        cb();
+      },
     },
     sync: {
-      clear: function () {},
-      get: function () {},
-      remove: function () {},
-      set: function () {},
+      clear: function () {
+        sessionStorage.clear();
+      },
+      get: function (key, cb) {
+        const item = JSON.parse(sessionStorage.getItem(key));
+        cb({ [key]: item });
+      },
+      remove: function (keys, cb) {
+        if (Array.isArray(keys)) {
+          keys.forEach((key) => {
+            sessionStorage.removeItem(key);
+          });
+        } else {
+          sessionStorage.removeItem(keys);
+        }
+
+        cb();
+      },
+      set: function (obj, cb) {
+        const key = Object.keys(obj)[0];
+        sessionStorage.setItem(key, JSON.stringify(obj[key]));
+        cb();
+      },
     },
     onChanged: {
       addListener: function () {},

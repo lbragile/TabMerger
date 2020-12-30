@@ -509,7 +509,7 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
  *
  * @see NUM_GROUP_LIMIT in App.js
  */
-export const addGroup = (num_group_limit, setGroups) => {
+export function addGroup(num_group_limit, setGroups) {
   chrome.storage.local.get("groups", (local) => {
     var current_groups = local.groups;
     var num_keys = Object.keys(current_groups).length;
@@ -534,7 +534,7 @@ export const addGroup = (num_group_limit, setGroups) => {
       );
     }
   });
-};
+}
 
 /**
  * Sets Chrome's local storage with an array (["all", ... url_links ...]) consisting

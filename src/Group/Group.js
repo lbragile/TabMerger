@@ -118,12 +118,8 @@ export default function Group(props) {
             translate={translate("deleteGroup")}
             tooltip={"tiptext-group-title"}
             onClick={(e) =>
-              GroupFunc.deleteGroup(
-                e,
-                props.getTimestamp(),
-                props.setTabTotal,
-                props.setGroups
-              )
+              // prettier-ignore
+              GroupFunc.deleteGroup(e, props.getTimestamp(), props.setTabTotal, props.setGroups)
             }
           >
             <AiOutlineClose />

@@ -1,0 +1,24 @@
+name: TabMerger Unit Testing
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+    - name: Install Dependencies
+      run: npm i
+        
+    - name: Run Tests
+      run: npm run test
+
+    - name: Upload Coverage Report to Codecov  
+    - uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage/coverage-final.json

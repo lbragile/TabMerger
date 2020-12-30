@@ -122,15 +122,17 @@ export function dragEnd(e, item_limit, setGroups) {
  * @param {function} setGroups For re-rendering the overall groups
  */
 export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
-  var tab = e.target.closest(".draggable");
-  var url = tab.querySelector("a").href;
-  var group = tab.closest(".group");
+  var tab, url, group_id;
+
+  tab = e.target.closest(".draggable");
+  url = tab.querySelector("a").href;
+  group_id = tab.closest(".group").id;
 
   chrome.storage.local.get("groups", (local) => {
     var group_blocks = local.groups;
-    group_blocks[group.id].tabs = tabs.filter((x) => x.url !== url);
+    group_blocks[group_id].tabs = tabs.filter((x) => x.url !== url);
     chrome.storage.local.set({ groups: group_blocks }, () => {
-      setTabs(group_blocks[group.id].tabs);
+      setTabs(group_blocks[group_id].tabs);
       setTabTotal(document.querySelectorAll(".draggable").length);
       setGroups(JSON.stringify(group_blocks));
     });
@@ -144,8 +146,7 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
  */
 export function handleTabClick(e) {
   e.preventDefault();
-  var tab = e.target.tagName === "SPAN" ? e.target.parentNode : e.target;
-  chrome.storage.local.set({ remove: ["tab", tab.href] });
+  chrome.storage.local.set({ remove: ["tab", e.target.href] }, () => {});
 }
 
 /**
