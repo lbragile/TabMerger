@@ -187,7 +187,7 @@ export default function App() {
             <div>
               <label
                 id="import-btn"
-                for="import-input"
+                htmlFor="import-input"
                 className="ml-1 mr-4 my-0 btn-in-global btn"
               >
                 <div className="tip">
@@ -212,9 +212,7 @@ export default function App() {
               classes="ml-4 p-0 btn-in-global"
               translate={"Sync Write"}
               tooltip={"tiptext-global"}
-              onClick={() =>
-                AppFunc.updateSync(defaultGroup.current, syncTimestamp.current)
-              }
+              onClick={() => AppFunc.updateSync(syncTimestamp.current)}
             >
               <BsCloudUpload color="black" size="1.5rem" />
             </Button>

@@ -34,4 +34,42 @@ export const init_groups = {
     ],
     title: "Social",
   },
+  "group-10": {
+    color: "#123123",
+    created: "01/01/2021 @ 12:34:56",
+    tabs: [
+      {
+        title: "A",
+        url: "https://www.a.com/",
+      },
+    ],
+    title: "A",
+  },
+  "group-9": {
+    color: "#456456",
+    created: "10/09/2021 @ 12:11:10",
+    tabs: [
+      {
+        title: "B",
+        url: "https://www.b.com/",
+      },
+    ],
+    title: "B",
+  },
+};
+
+export const default_settings = {
+  blacklist: "",
+  color: "#dedede",
+  dark: true,
+  open: "without",
+  restore: "keep",
+  title: "Title",
+};
+
+export const default_group = {
+  color: "#dedede",
+  created: "",
+  tabs: [],
+  title: "Title",
 };

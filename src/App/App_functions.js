@@ -30,8 +30,10 @@ import Group from "../Group/Group.js";
  * In dark mode, the theme is set to dark background with light text.
  * In light mode, the exact opposite happens - light background with dark text.
  * @param {boolean} isChecked whether dark mode is enabled or disabled
+ *
+ * @note Exported for testing purposes
  */
-function toggleDarkMode(isChecked) {
+export function toggleDarkMode(isChecked) {
   var container = document.querySelector("body");
   var hr = document.querySelector("hr");
   var links = document.getElementsByClassName("link");
@@ -39,8 +41,8 @@ function toggleDarkMode(isChecked) {
   container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
   container.style.color = isChecked ? "white" : "black";
   hr.style.borderTop = isChecked
-    ? "1px white solid"
-    : "1px rgba(0,0,0,.1) solid";
+    ? "1px solid white"
+    : "1px solid rgba(0,0,0,.1)";
 
   [...links].forEach((x) => {
     x.style.color = isChecked ? "white" : "black";
@@ -56,22 +58,20 @@ function toggleDarkMode(isChecked) {
  * @param {string} value Value corresponding to the above group id
  *
  * @return Promise that resolves if sync is updated or no update is required
+ *
+ * @note Exported for testing purposes
  */
-function updateGroupItem(key, value) {
-  var sync_entry = {};
-  sync_entry[key] = value;
-
-  // need to make sure to only set changed groups
+export function updateGroupItem(key, value) {
   return new Promise((resolve) => {
     chrome.storage.sync.get(key, (x) => {
       if (
-        x[key] === undefined ||
+        !x[key] ||
         x[key].color !== value.color ||
         x[key].created !== value.created ||
         x[key].title !== value.title ||
         JSON.stringify(x[key].tabs) !== JSON.stringify(value.tabs)
       ) {
-        chrome.storage.sync.set(sync_entry, () => {
+        chrome.storage.sync.set({ [key]: value }, () => {
           resolve(0);
         });
       } else {
@@ -89,8 +89,10 @@ function updateGroupItem(key, value) {
  * @param {object} json
  *
  * @return {object[]} Values from the sorted groups
+ *
+ * @note Exported for testing purposes
  */
-function sortByKey(json) {
+export function sortByKey(json) {
   var sortedArray = [];
 
   // Push each JSON Object entry in array by [key, value]
@@ -127,8 +129,10 @@ function updateTabTotal(ls_entry, setTabTotal) {
  * @param {string} match_url The full URL that is being matched against
  *
  * @return {object[]} Tab that has a URL matching the match_url parameter
+ *
+ * @note Exported for testing purposes
  */
-function findSameTab(tab_list, match_url) {
+export function findSameTab(tab_list, match_url) {
   return tab_list.filter((x) => x.url === match_url);
 }
 
@@ -136,12 +140,11 @@ function findSameTab(tab_list, match_url) {
  * Output filename generation for exporting file functions (JSON and/or PDF)
  *
  * @return ```TabMerger [dd/mm/yyyy @ hh:mm:ss]```
+ *
+ * @note Exported for testing purposes
  */
-function outputFileName() {
-  const timestamp = new Date(Date.now()).toString().split(" ").slice(1, 5);
-  const date_str = timestamp.slice(0, 3).join("-");
-
-  return `TabMerger [${date_str} @ ${timestamp[3]}]`;
+export function outputFileName() {
+  return `TabMerger [${getTimestamp()}]`;
 }
 
 /*-------------------------------------------------------------------------------*/
@@ -178,13 +181,8 @@ export function toggleSyncTimestampHelper(positive, sync_node) {
  * @see defaultSettings in App.js
  * @see defaultGroup in App.js
  */
-export function storageInit(
-  default_settings,
-  default_group,
-  sync_node,
-  setGroups,
-  setTabTotal
-) {
+// prettier-ignore
+export function storageInit(default_settings, default_group, sync_node, setGroups, setTabTotal) {
   chrome.storage.sync.get(null, (sync) => {
     if (!sync.settings) {
       chrome.storage.sync.set({ settings: default_settings }, () => {});
@@ -201,7 +199,7 @@ export function storageInit(
     chrome.storage.local.get("groups", (local) => {
       var ls_entry = local.groups || { "group-0": default_group };
 
-      chrome.storage.local.clear(() => {
+      chrome.storage.local.remove(["groups"], () => {
         chrome.storage.local.set({ groups: ls_entry }, () => {
           setGroups(JSON.stringify(ls_entry));
           updateTabTotal(ls_entry, setTabTotal);
@@ -213,15 +211,14 @@ export function storageInit(
 
 /**
  * Updates the sync items - only those that have changes are overwritten
- * @param {{color: string, created: string, tabs: object[], title: string}} default_group TabMerger's default group
  * @param {HTMLElement} sync_node Node corresponding to the "Last Sync:" timestamp
  *
  * @see defaultGroup in App.js
  */
-export function updateSync(default_group, sync_node) {
+export function updateSync(sync_node) {
   chrome.storage.local.get("groups", async (local) => {
     var current_groups = local.groups;
-    if (current_groups !== { "group-0": default_group }) {
+    if (current_groups && current_groups["group-0"].tabs.length > 0) {
       for (var key of Object.keys(current_groups)) {
         await updateGroupItem(key, current_groups[key]);
       }
@@ -254,7 +251,7 @@ export function loadSyncedData(sync_node, setGroups, setTabTotal) {
   chrome.storage.sync.get(null, (sync) => {
     if (sync["group-0"]) {
       delete sync.settings;
-      chrome.storage.local.clear(() => {
+      chrome.storage.local.remove(["groups"], () => {
         var new_ls = {};
         var remove_keys = [];
         Object.keys(sync).forEach((key) => {

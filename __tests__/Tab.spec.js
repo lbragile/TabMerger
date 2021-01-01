@@ -20,17 +20,16 @@ function addIdAndClassToGroup(container, id, class_name) {
   group_node.classList.add(class_name);
 }
 
-var init_ls_entry, init_tabs, mockSet;
+var init_tabs, mockSet;
 
 beforeEach(() => {
-  chrome.storage.local.set({ groups: init_groups }, () => {});
-  init_ls_entry = JSON.parse(localStorage.getItem("groups"));
-  init_tabs = init_ls_entry["group-0"].tabs;
+  localStorage.setItem("groups", JSON.stringify(init_groups));
+  init_tabs = init_groups["group-0"].tabs;
   mockSet = jest.fn(); // mock for setState hooks
 });
 
 afterEach(() => {
-  chrome.storage.local.clear();
+  localStorage.clear();
   jest.clearAllMocks();
 });
 
@@ -43,7 +42,7 @@ describe("setInitTabs", () => {
 
     it("works when empty", () => {
       // set the tabs to be empty
-      chrome.storage.local.set({ groups: { "group-0": {} } }, () => {});
+      localStorage.setItem("groups", JSON.stringify({ "group-0": {} }));
 
       const { container } = render(<Tab id="group-0" />);
       expect(container.getElementsByClassName("draggable").length).toEqual(0);
@@ -162,11 +161,10 @@ describe("removeTab", () => {
       expect(chromeSetSpy).toHaveBeenCalled();
     });
 
-    chrome.storage.local.get("groups", (local) => {
-      expect(init_tabs.length).toEqual(3);
-      expect(local.groups["group-0"].tabs.length).toEqual(2);
-      expect(removeTabSpy).toHaveBeenCalledTimes(1);
-    });
+    var groups = JSON.parse(localStorage.getItem("groups"));
+    expect(init_tabs.length).toEqual(3);
+    expect(groups["group-0"].tabs.length).toEqual(2);
+    expect(removeTabSpy).toHaveBeenCalledTimes(1);
 
     expect.assertions(4);
   });

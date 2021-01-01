@@ -31,12 +31,13 @@ global.chrome = {
   },
   storage: {
     local: {
-      clear: function () {
-        localStorage.clear();
-      },
       get: function (key, cb) {
-        const item = JSON.parse(localStorage.getItem(key));
-        cb({ [key]: item });
+        if (key) {
+          const item = JSON.parse(localStorage.getItem(key));
+          cb({ [key]: item });
+        } else {
+          cb({ ...localStorage });
+        }
       },
       remove: function (keys, cb) {
         if (Array.isArray(keys)) {
@@ -56,12 +57,13 @@ global.chrome = {
       },
     },
     sync: {
-      clear: function () {
-        sessionStorage.clear();
-      },
       get: function (key, cb) {
-        const item = JSON.parse(sessionStorage.getItem(key));
-        cb({ [key]: item });
+        if (key) {
+          const item = JSON.parse(sessionStorage.getItem(key));
+          cb({ [key]: item });
+        } else {
+          cb({ ...sessionStorage });
+        }
       },
       remove: function (keys, cb) {
         if (Array.isArray(keys)) {
