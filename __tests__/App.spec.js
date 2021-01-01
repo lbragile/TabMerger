@@ -5,9 +5,6 @@ import { render, waitFor } from "@testing-library/react";
 
 import * as AppFunc from "../src/App/App_functions";
 
-// prettier-ignore
-import { init_groups, default_settings, default_group } from "../__mocks__/variableMocks";
-
 import App from "../src/App/App";
 
 // variables used in these tests
@@ -28,6 +25,7 @@ beforeEach(() => {
   new_item = init_groups["group-0"];
   Object.keys(init_groups).forEach((key) => {
     sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
+    localStorage.setItem(key, JSON.stringify(init_groups[key]));
   });
 
   chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
@@ -41,6 +39,7 @@ beforeEach(() => {
 
 afterEach(() => {
   sessionStorage.clear();
+  localStorage.clear();
   jest.clearAllMocks();
 });
 
@@ -85,8 +84,7 @@ describe("updateGroupItem", () => {
 
     await AppFunc.updateGroupItem("group-0", new_item);
 
-    // prettier-ignore
-    expect(JSON.parse(sessionStorage.getItem("group-0"))).toStrictEqual(new_item);
+    expect(JSON.parse(sessionStorage.getItem("group-0"))).toEqual(new_item);
     // prettier-ignore
     expect(chromeSyncSetSpy).toHaveBeenCalledWith({ "group-0": new_item }, expect.anything());
     expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
@@ -99,7 +97,7 @@ describe("updateGroupItem", () => {
     await AppFunc.updateGroupItem("group-0", new_item);
 
     // prettier-ignore
-    expect(JSON.parse(sessionStorage.getItem("group-0"))).toStrictEqual(new_item);
+    expect(JSON.parse(sessionStorage.getItem("group-0"))).toEqual(new_item);
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
   });
 });
@@ -124,8 +122,9 @@ describe("findSameTab", () => {
     matcher = tabs[0].url;
 
     response = AppFunc.findSameTab(tabs, matcher);
-    expect(response).toStrictEqual([tabs[0]]);
+    expect(response).toEqual([tabs[0]]);
   });
+
   it("return empty array if no match is found", () => {
     tabs = init_groups["group-0"].tabs;
     matcher = null;
@@ -215,29 +214,115 @@ describe("updateSync", () => {
   });
 });
 
-// describe("loadSyncedData", () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
+describe("loadSyncedData", () => {
+  it("does nothing when no groups in sync storage", () => {
+    sessionStorage.clear();
+    chromeSyncGetSpy.mockClear();
+    AppFunc.loadSyncedData(sync_node, mockSet, mockSet);
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+  });
 
-//   it("does nothing when no groups in sync storage", () => {
-//     sessionStorage.clear();
-//     AppFunc.loadSyncedData(sync_node, mockSet, mockSet);
-//     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-//   });
+  it("calls the correct functions", () => {
+    jest.clearAllMocks();
+    sessionStorage.clear();
 
-//   it("calls the correct functions", () => {
-//     delete init_groups["group-9"];
-//     sessionStorage.setItem("groups", JSON.stringify(init_groups));
+    const new_ss_item = {
+      "group-0": init_groups["group-0"],
+      "group-1": init_groups["group-1"],
+    };
 
-//     AppFunc.loadSyncedData(sync_node, mockSet, mockSet);
+    sessionStorage.setItem("group-0", JSON.stringify(new_ss_item["group-0"]));
+    sessionStorage.setItem("group-1", JSON.stringify(new_ss_item["group-1"]));
 
-//     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-//     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-//     // prettier-ignore
-//     // expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, expect.anything());
-//   });
-// });
+    AppFunc.loadSyncedData(sync_node, mockSet, mockSet);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncRemoveSpy).toHaveBeenCalledTimes(1);
+    // prettier-ignore
+    expect(chromeSyncRemoveSpy).toHaveBeenCalledWith(["group-0", "group-1"], expect.anything());
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+
+    // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_ss_item }, expect.anything());
+    // prettier-ignore
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], expect.anything());
+  });
+});
+
+describe("openAllTabs", () => {
+  it("sets the local storage item correctly", () => {
+    // document.querySelectorAll must be stubbed or else it is not read
+    document.body.innerHTML =
+      '<div><a class="a-tab" href="www.abc.com"></a></div>';
+
+    var expected_ls = { remove: ["all", "http://localhost/www.abc.com"] };
+    chromeLocalSetSpy.mockClear();
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+    AppFunc.openAllTabs();
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+
+    // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, expect.anything());
+  });
+});
+
+describe("deleteAllGroups", () => {
+  it("adjusts local storage to a default group only", () => {
+    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+
+    var new_entry = {
+      "group-0": {
+        color: "#dedede",
+        created: AppFunc.getTimestamp(),
+        tabs: [],
+        title: "Title",
+      },
+    };
+
+    chromeSyncGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+    mockSet.mockClear();
+
+    AppFunc.deleteAllGroups(mockSet, mockSet);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledTimes(2);
+
+    // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({groups: new_entry}, expect.anything());
+    // prettier-ignore
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", expect.anything());
+
+    expect(mockSet).toHaveBeenCalledWith(0);
+    expect(mockSet).toHaveBeenCalledWith(JSON.stringify(new_entry));
+  });
+});
+
+// IN PROGRESS
+describe("filterRegEx", () => {
+  it("works for group search", () => {
+    document.body.innerHTML =
+      '<div class="group-item"><p>aaaaa</p></div>' +
+      '<div class="group-item"><p>bbbbb</p></div>';
+
+    AppFunc.filterRegEx({ target: { value: "#abc" } });
+  });
+
+  it("works for tab search", () => {
+    document.body.innerHTML =
+      '<div class="group-item"><div class="draggable"><p>a</p><a href="a">aaaaa</a></div></div>' +
+      '<div class="group-item"><div class="draggable"><p>b</p><a href="b">bbbbb</a></div></div>';
+
+    AppFunc.filterRegEx({ target: { value: "abc" } });
+  });
+
+  it("does nothing when no value is supplied (after backspace)", () => {
+    AppFunc.filterRegEx({ target: { value: "" } });
+  });
+});
 
 describe("translate", () => {
   it("returns a translation if avaiable", () => {

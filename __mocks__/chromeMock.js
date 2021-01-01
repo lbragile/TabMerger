@@ -32,11 +32,16 @@ global.chrome = {
   storage: {
     local: {
       get: function (key, cb) {
+        var item;
         if (key) {
-          const item = JSON.parse(localStorage.getItem(key));
+          item = JSON.parse(localStorage.getItem(key));
           cb({ [key]: item });
         } else {
-          cb({ ...localStorage });
+          item = { ...localStorage };
+          Object.keys(item).forEach((key) => {
+            item[key] = JSON.parse(item[key]);
+          });
+          cb(item);
         }
       },
       remove: function (keys, cb) {
@@ -58,11 +63,16 @@ global.chrome = {
     },
     sync: {
       get: function (key, cb) {
+        var item;
         if (key) {
-          const item = JSON.parse(sessionStorage.getItem(key));
+          item = JSON.parse(sessionStorage.getItem(key));
           cb({ [key]: item });
         } else {
-          cb({ ...sessionStorage });
+          item = { ...sessionStorage };
+          Object.keys(item).forEach((key) => {
+            item[key] = JSON.parse(item[key]);
+          });
+          cb(item);
         }
       },
       remove: function (keys, cb) {

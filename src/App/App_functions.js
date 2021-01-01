@@ -585,13 +585,13 @@ export function filterRegEx(e) {
   sections = document.querySelectorAll(".group-item");
 
   if (e.target.value[0] === "#") {
-    titles = [...sections].map((x) => x.querySelector("p").innerText);
+    titles = [...sections].map((x) => x.querySelector("p").textContent);
     match = e.target.value.substr(1).toLowerCase();
     search_type = "group";
   } else if (e.target.value !== "") {
     tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
     titles = tab_items.map((x) => {
-      return x.map((y) => y.lastChild.innerText.toLowerCase());
+      return x.map((y) => y.lastChild.textContent.toLowerCase());
     });
 
     match = e.target.value.toLowerCase();

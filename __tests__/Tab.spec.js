@@ -2,7 +2,6 @@ import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 
 import * as TabFunc from "../src/Tab/Tab_functions";
-import { init_groups } from "../__mocks__/variableMocks.js";
 
 import Tab from "../src/Tab/Tab";
 

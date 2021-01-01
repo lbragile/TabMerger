@@ -2,7 +2,6 @@ import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 
 import * as GroupFunc from "../src/Group/Group_functions";
-import { init_groups } from "../__mocks__/variableMocks";
 
 import Group from "../src/Group/Group";
 import Tab from "../src/Tab/Tab";
