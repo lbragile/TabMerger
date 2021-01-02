@@ -576,7 +576,7 @@ describe("translate", () => {
     expect(AppFunc.translate("Title")).toEqual("титул");
   });
 
-  it("returns original msg if translation is not avaialbe", () => {
+  it("returns original msg if translation is not available", () => {
     expect(AppFunc.translate("random")).toEqual("random");
   });
 });

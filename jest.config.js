@@ -12,7 +12,16 @@ module.exports = {
 
   testPathIgnorePatterns: [
     "<rootDir>/node_modules/",
+    "<rootDir>/build/",
+    "<rootDir>/public/",
     "<rootDir>/__tests__/__mocks__/",
+    "<rootDir>/src/Button/",
+  ],
+
+  coveragePathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/build/",
+    "<rootDir>/public/",
     "<rootDir>/src/Button/",
   ],
 
