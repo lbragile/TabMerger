@@ -21,6 +21,8 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
+import { getTimestamp, updateTabTotal } from "../App/App_functions";
+
 /*------------------------------- HELPER FUNCTIONS -----------------------------*/
 /**
  * USed to determine the element after the current one when dragging a tab.
@@ -192,11 +194,10 @@ export function openGroup(e) {
  * Deletes a groups which the user selects to delete and reorders all the other groups accordingly
  * by changing their "group id" value.
  * @param {HTMLElement} e Node corresponding to the group to be deleted
- * @param {string} timestamp a string of the format ```dd/mm/yyyy @ hh:mm:ss``` for a new default group (if all other groups deleted)
  * @param {Function} setTabTotal For re-rendering the global tab counter
  * @param {Function} setGroups For re-rendering the groups based on their new id
  */
-export function deleteGroup(e, timestamp, setTabTotal, setGroups) {
+export function deleteGroup(e, setTabTotal, setGroups) {
   chrome.storage.local.get("groups", (local) => {
     chrome.storage.sync.get("settings", (sync) => {
       var target = e.target.closest(".group-title").nextSibling;
@@ -206,7 +207,7 @@ export function deleteGroup(e, timestamp, setTabTotal, setGroups) {
       if (Object.keys(group_blocks).length === 1) {
         group_blocks["group-0"] = {
           color: sync.settings.color,
-          created: timestamp,
+          created: getTimestamp(),
           tabs: [],
           title: sync.settings.title,
         };
@@ -237,12 +238,7 @@ export function deleteGroup(e, timestamp, setTabTotal, setGroups) {
       }
 
       chrome.storage.local.set({ groups: group_blocks }, () => {
-        // update total count
-        setTabTotal(
-          document.querySelectorAll(".draggable").length -
-            target.querySelectorAll(".draggable").length
-        );
-
+        updateTabTotal(group_blocks, setTabTotal);
         setGroups(JSON.stringify(group_blocks));
       });
     });

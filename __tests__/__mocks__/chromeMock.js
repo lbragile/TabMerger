@@ -25,6 +25,7 @@ global.chrome = {
   runtime: {
     id: "ldhahppapilmnhocniaifnlieiofgnii",
     setUninstallURL: function () {},
+    sendMessage: function () {},
     onMessage: {
       addListener: function () {},
     },

@@ -1,7 +1,30 @@
+/* 
+TabMerger as the name implies merges your tabs into one location to save
+memory usage and increase your productivity.
+
+Copyright (C) 2021  Lior Bragilevsky
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+If you have any questions, comments, or concerns you can contact the
+TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+*/
+
 import React from "react";
 window.React = React;
 
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, fireEvent } from "@testing-library/react";
 
 import * as AppFunc from "../src/App/App_functions";
 
@@ -41,6 +64,34 @@ afterEach(() => {
   sessionStorage.clear();
   localStorage.clear();
   jest.clearAllMocks();
+});
+
+describe("going to settings menu", () => {
+  it("navigates to the correct url", () => {
+    // store current window
+    const oldWindowLocation = window.location;
+    delete window.location;
+
+    // mock reload function
+    window.location = Object.defineProperties(
+      {},
+      {
+        ...Object.getOwnPropertyDescriptors(oldWindowLocation),
+        replace: {
+          configurable: true,
+          value: jest.fn(),
+        },
+      }
+    );
+
+    fireEvent.click(container.querySelector("#options-btn"));
+    expect(window.location.replace).toHaveBeenCalledTimes(1);
+    // prettier-ignore
+    expect(window.location.replace).toHaveBeenCalledWith("/settings/settings.html");
+
+    // restore window
+    window.location = oldWindowLocation;
+  });
 });
 
 describe("toggleDarkMode", () => {
@@ -116,6 +167,22 @@ describe("sortByKey", () => {
   });
 });
 
+describe("updateTabTotal", () => {
+  it("calculates the number of tabs correctly when not empty", () => {
+    mockSet.mockClear();
+    AppFunc.updateTabTotal(init_groups, mockSet);
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(7);
+  });
+
+  it("calculates the number of tabs correctly when empty", () => {
+    mockSet.mockClear();
+    AppFunc.updateTabTotal({}, mockSet);
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(0);
+  });
+});
+
 describe("findSameTab", () => {
   it("returns correct tab when match is found", () => {
     tabs = init_groups["group-0"].tabs;
@@ -157,10 +224,71 @@ describe("toggleSyncTimestampHelper", () => {
   });
 });
 
-// describe("storageInit", () => {});
+describe("storageInit", () => {
+  const any = expect.anything();
+
+  beforeEach(() => {
+    sessionStorage.clear();
+    localStorage.clear();
+
+    chromeSyncGetSpy.mockClear();
+    chromeSyncSetSpy.mockClear();
+    chromeLocalGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+    chromeLocalRemoveSpy.mockClear();
+  });
+
+  test("sync settings are null & local groups are null", () => {
+    // prettier-ignore
+    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, any);
+
+    expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
+    // prettier-ignore
+    expect(chromeSyncSetSpy).toHaveBeenCalledWith({settings: default_settings}, any);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", any);
+
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], any);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    //prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({groups: {"group-0": default_group}}, any);
+
+    expect(mockSet).toHaveBeenCalledTimes(2);
+  });
+
+  test("sync settings exist & sync group-0 is null", () => {
+    sessionStorage.setItem("settings", 1);
+    chromeSyncSetSpy.mockClear();
+
+    // prettier-ignore
+    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
+    expect(chromeSyncSetSpy).not.toHaveBeenCalled();
+  });
+
+  test("sync group-0 exists & local groups exist", () => {
+    sessionStorage.setItem("group-0", 1);
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+
+    // prettier-ignore
+    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, expect.anything());
+    expect(mockSet).toHaveBeenCalledTimes(2);
+  });
+});
 
 describe("updateSync", () => {
   beforeEach(() => {
+    fireEvent.click(container.querySelector("#sync-write-btn")); // test coverage
+
+    localStorage.clear();
     chromeSyncSetSpy.mockClear();
   });
 
@@ -216,6 +344,8 @@ describe("updateSync", () => {
 
 describe("loadSyncedData", () => {
   it("does nothing when no groups in sync storage", () => {
+    fireEvent.click(container.querySelector("#sync-read-btn")); // test coverage
+
     sessionStorage.clear();
     chromeSyncGetSpy.mockClear();
     AppFunc.loadSyncedData(sync_node, mockSet, mockSet);
@@ -251,16 +381,41 @@ describe("loadSyncedData", () => {
   });
 });
 
+// IN PROGRESS
+describe("openOrRemoveTabsHelper", () => {
+  beforeEach(() => {
+    chromeSyncGetSpy.mockClear();
+    chromeLocalGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+  });
+
+  it("does nothing when namespace is not 'local'", () => {
+    // prettier-ignore
+    AppFunc.openOrRemoveTabsHelper({ remove: { newValue: ["a"] } }, "sync", mockSet, mockSet);
+  });
+
+  it("opens the correct tabs and removes them from TabMerger if needed", () => {
+    // prettier-ignore
+    AppFunc.openOrRemoveTabsHelper({ remove: { newValue: ["a"] } }, "local", mockSet, mockSet);
+    // expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    // expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    // expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+
+    // // prettier-ignore
+    // expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", expect.anything());
+  });
+});
+
 describe("openAllTabs", () => {
   it("sets the local storage item correctly", () => {
     // document.querySelectorAll must be stubbed or else it is not read
     document.body.innerHTML =
       '<div><a class="a-tab" href="www.abc.com"></a></div>';
 
-    var expected_ls = { remove: ["all", "http://localhost/www.abc.com"] };
+    var expected_ls = { remove: ["all", location.href + "www.abc.com"] };
     chromeLocalSetSpy.mockClear();
     localStorage.setItem("groups", JSON.stringify(init_groups));
-    AppFunc.openAllTabs();
+    fireEvent.click(container.querySelector("#open-all-btn"));
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
 
     // prettier-ignore
@@ -268,8 +423,56 @@ describe("openAllTabs", () => {
   });
 });
 
+describe("addGroup", () => {
+  beforeEach(() => {
+    fireEvent.click(container.querySelector("#add-group-btn")); // test coverage
+
+    chromeLocalGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+    chromeSyncGetSpy.mockClear();
+  });
+
+  it("warns if group limit exceeded", () => {
+    global.alert = jest.fn();
+
+    AppFunc.addGroup(1, mockSet);
+    expect(alert).toHaveBeenCalledTimes(1);
+    expect(alert.mock.calls.pop()[0]).toContain("Number of groups exceeded.");
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", expect.anything());
+
+    expect(chromeSyncGetSpy).not.toHaveBeenCalled();
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+  });
+
+  it("adjusts the groups if limit is not exceeded", () => {
+    delete init_groups["group-11"];
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+
+    var groups = init_groups;
+    default_group.created = AppFunc.getTimestamp();
+    groups["group-4"] = default_group;
+
+    AppFunc.addGroup(100, mockSet);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    // prettier-ignore
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", expect.anything());
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, expect.anything());
+
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(JSON.stringify(groups));
+  });
+});
+
 describe("deleteAllGroups", () => {
   it("adjusts local storage to a default group only", () => {
+    fireEvent.click(container.querySelector("#delete-all-btn")); // for coverage
+
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
 
     var new_entry = {
@@ -308,7 +511,8 @@ describe("filterRegEx", () => {
       '<div class="group-item"><p>aaaaa</p></div>' +
       '<div class="group-item"><p>bbbbb</p></div>';
 
-    AppFunc.filterRegEx({ target: { value: "#abc" } });
+    // prettier-ignore
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#abc" } })
   });
 
   it("works for tab search", () => {
@@ -316,11 +520,54 @@ describe("filterRegEx", () => {
       '<div class="group-item"><div class="draggable"><p>a</p><a href="a">aaaaa</a></div></div>' +
       '<div class="group-item"><div class="draggable"><p>b</p><a href="b">bbbbb</a></div></div>';
 
-    AppFunc.filterRegEx({ target: { value: "abc" } });
+    // prettier-ignore
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "abc" } });
   });
 
   it("does nothing when no value is supplied (after backspace)", () => {
-    AppFunc.filterRegEx({ target: { value: "" } });
+    // need a change to happen
+    // prettier-ignore
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "a" } });
+
+    // prettier-ignore
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "" } });
+  });
+});
+
+describe("readImportedFile", () => {
+  it("alerts on wrong non json inupt", () => {
+    global.alert = jest.fn();
+
+    const input = {
+      target: {
+        files: [{ type: "application/pdf" }],
+      },
+    };
+
+    fireEvent.change(container.querySelector("#import-input"), input);
+
+    expect(alert).toHaveBeenCalledTimes(1);
+
+    // prettier-ignore
+    expect(alert.mock.calls.pop()[0]).toContain("You must import a JSON file (.json extension)!");
+  });
+
+  // it("updates sync and local storage on json input (valid)", () => {});
+});
+
+describe("exportJSON", () => {
+  it("correctly exports a JSON file of the current configuration", () => {
+    chromeLocalGetSpy.mockClear();
+    chromeSyncGetSpy.mockClear();
+
+    const any = expect.anything();
+    fireEvent.click(container.querySelector("#export-btn"));
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", any);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", any);
   });
 });
 

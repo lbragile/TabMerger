@@ -21,8 +21,6 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
-/* istanbul ignore file */
-
 import React from "react";
 
 export default function Button(props) {

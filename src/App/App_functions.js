@@ -114,8 +114,10 @@ export function sortByKey(json) {
  * @param {{groups: {"group-id": {color: string, created: string, tabs:
  *  [{title: string, url: string}], title: string}}}} ls_entry current group information
  * @param {Function} setTabTotal For re-rendering the total tab counter
+ *
+ * @note Exported for testing purposes
  */
-function updateTabTotal(ls_entry, setTabTotal) {
+export function updateTabTotal(ls_entry, setTabTotal) {
   var num_tabs = 0;
   Object.values(ls_entry).forEach((val) => {
     num_tabs += val.tabs.length;
@@ -280,12 +282,8 @@ export function loadSyncedData(sync_node, setGroups, setTabTotal) {
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setGroups For re-rendering the groups
  */
-export function openOrRemoveTabsHelper(
-  changes,
-  namespace,
-  setTabTotal,
-  setGroups
-) {
+// prettier-ignore
+export function openOrRemoveTabsHelper(changes, namespace, setTabTotal, setGroups) {
   if (namespace === "local" && changes.remove && changes.remove.newValue) {
     // extract and remove the button type from array
     var btn_type = changes.remove.newValue[0];
@@ -355,14 +353,8 @@ export function openOrRemoveTabsHelper(
  * @see SYNC_STORAGE_LIMIT in App.js
  * @see ITEM_STORAGE_LIMIT in App.js
  */
-export function checkMergingHelper(
-  changes,
-  namespace,
-  sync_limit,
-  item_limit,
-  setTabTotal,
-  setGroups
-) {
+// prettier-ignore
+export function checkMergingHelper(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
   if (
     namespace === "local" &&
     changes.merged_tabs &&
@@ -481,7 +473,6 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
           num_tabs={(x.tabs && x.tabs.length) || 0}
           setGroups={setGroups}
           setTabTotal={setTabTotal}
-          getTimestamp={getTimestamp}
           key={Math.random()}
         >
           <Tab
