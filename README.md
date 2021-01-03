@@ -4,6 +4,15 @@
 
 [<img src="https://i.imgur.com/gXUxra5.png" alt="Chrome" width="48px" height="48px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) <span style="margin: 0 10px 0 0"></span>[<img src="https://i.imgur.com/VLhu3y6.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) [<img src="https://i.imgur.com/3LuWU6A.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn)
 
+
+[<img align="left" src="https://i.imgur.com/gXUxra5.png" alt="Chrome" width="48px" height="48px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [<img align="left" src="https://i.imgur.com/VLhu3y6.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) [<img align="left" src="https://i.imgur.com/3LuWU6A.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn)
+
+
+
+<img align="left" src="https://i.imgur.com/gXUxra5.png" width="48px" height="48px" /> [<img align="left" src="https://i.imgur.com/VLhu3y6.png" alt="Firefox" width="48px" height="48px" />](oi)
+  <img align="left" src="/img3.png" width="100" />
+
+
 ### Merges your tabs into one location to save memory usage and increase your productivity.
 
 [<img src="https://i.imgur.com/gVmsvKp.png" alt="TabMerger v1.4.3 Cross-Browser Extension Walkthrough"/>](https://youtu.be/zkI0T-GzmzQ)
