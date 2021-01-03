@@ -4,7 +4,7 @@
 
 
 <p float="left">
-  <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc"><img src="https://i.imgur.com/gXUxra5.png" alt="Chrome" width="48" height="48"/></a>
+  <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc"><img src="Docs/Img/README_Edge_48px.png" alt="Chrome" width="48" height="48"/></a>
   <a href="https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/"><img src="https://i.imgur.com/VLhu3y6.png" alt="Firefox" width="48" height="48"/></a>
   <a href="https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn"><img src="https://i.imgur.com/3LuWU6A.png" alt="Edge" width="48" height="48"/></a>
 </p>
