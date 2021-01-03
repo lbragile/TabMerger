@@ -36,17 +36,12 @@ import Group from "../Group/Group.js";
 export function toggleDarkMode(isChecked) {
   var container = document.querySelector("body");
   var hr = document.querySelector("hr");
-  var links = document.getElementsByClassName("link");
 
   container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
   container.style.color = isChecked ? "white" : "black";
   hr.style.borderTop = isChecked
     ? "1px solid white"
     : "1px solid rgba(0,0,0,.1)";
-
-  [...links].forEach((x) => {
-    x.style.color = isChecked ? "white" : "black";
-  });
 }
 
 /**

@@ -30,15 +30,11 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 .container-fluid {
   position: relative;
   width: 70%;
-  overflow-x: hidden;
-}
-
-.container-below-hr {
-  z-index: 0;
+  overflow: hidden;
 }
 
 .groups-container {
-  margin-top: 15px;
+  margin-left: 5%;
 }
 
 .subtitle {
@@ -48,9 +44,25 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 #sync-text {
   height: 28px;
-  display: inline-block;
-  padding: 0 3px 1px 3px;
-  margin: 1px 0 0 8px;
+  max-width: 95%;
+  padding: 1px;
+}
+
+#logo-img {
+  width: 90%;
+}
+
+/* SIDEBAR */
+.sidebar {
+  height: 100%;
+  width: 245px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background-color: #111;
+  overflow: hidden;
+  padding-top: 12.5vh;
 }
 
 /* BUTTONS - Remove Ignore Focus */
@@ -70,51 +82,75 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 /* GROUP & TAB FILTERS */
 .search-filter {
-  position: absolute;
-  right: 0;
-  top: 4px;
-  max-width: 178px;
-  margin: 0;
-  padding: 0;
+  width: 90%;
+  padding: 0 5px;
+  margin-left: 20px !important;
 }
 
 .search-filter input {
-  border-radius: 0 5px 5px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgb(192, 192, 192);
+  padding: 2px 5px;
   width: 150px;
-  border: 1px solid black;
-  padding: 2px;
 }
 
 .search-filter input:focus {
   outline: none;
+  color: white;
+}
+
+.search-filter input::placeholder {
+  color: rgb(163, 163, 163);
 }
 
 .input-group-text {
-  padding: 5px;
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+
+.input-group-prepend > span {
+  font-size: 1.3rem;
+  padding: 5px 0px;
   margin: 0;
-  border: 1px solid black;
-  border-right: none;
+  border-bottom: 1px solid rgb(192, 192, 192);
+}
+
+.input-group-append > span {
+  padding: 0 5px;
+}
+
+.input-group-append > span:hover {
+  cursor: pointer;
 }
 
 hr {
   margin: 0;
-  width: 100%;
+  width: 95%;
+  border-top: 1px solid white;
 }
 
 /* LINKS (SUPPORT | VIDEO | DONATE | REVIEW) */
-.link-container {
-  float: right;
-}
-
 .link,
 .link:hover {
+  display: block;
   text-decoration: none;
-  color: black;
+  color: white;
   z-index: 5;
 }
 
 .link:hover {
   font-weight: bold;
+}
+
+/* COPYRIGHT NOTICE */
+#copyright {
+  font-size: 0.9rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 /* SCROLLBAR */

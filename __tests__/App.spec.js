@@ -77,7 +77,7 @@ describe("going to settings menu", () => {
       {},
       {
         ...Object.getOwnPropertyDescriptors(oldWindowLocation),
-        replace: {
+        assign: {
           configurable: true,
           value: jest.fn(),
         },
@@ -85,9 +85,9 @@ describe("going to settings menu", () => {
     );
 
     fireEvent.click(container.querySelector("#options-btn"));
-    expect(window.location.replace).toHaveBeenCalledTimes(1);
+    expect(window.location.assign).toHaveBeenCalledTimes(1);
     // prettier-ignore
-    expect(window.location.replace).toHaveBeenCalledWith("/settings/settings.html");
+    expect(window.location.assign).toHaveBeenCalledWith("/settings/settings.html");
 
     // restore window
     window.location = oldWindowLocation;
@@ -106,9 +106,6 @@ describe("toggleDarkMode", () => {
     expect(body.style.background).toEqual("white");
     expect(body.style.color).toEqual("black");
     expect(hr.style.borderTop).toEqual("1px solid rgba(0,0,0,.1)");
-    [...links].forEach((x) => {
-      expect(x.style.color).toEqual("black");
-    });
   });
 
   test("dark mode", () => {
@@ -116,9 +113,6 @@ describe("toggleDarkMode", () => {
     expect(body.style.background).toEqual("rgb(52, 58, 64)");
     expect(body.style.color).toEqual("white");
     expect(hr.style.borderTop).toEqual("1px solid white");
-    [...links].forEach((x) => {
-      expect(x.style.color).toEqual("white");
-    });
   });
 });
 

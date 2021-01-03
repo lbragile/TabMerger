@@ -148,6 +148,32 @@ describe("setTitle", () => {
     // });
   });
 
+  describe("openGroup", () => {
+    it("forms an array that matches ['group', ..., tab_links, ...]", () => {
+      chromeLocalSetSpy.mockClear();
+
+      var mock_target = {
+        target: {
+          closest: jest.fn(() => {
+            return {
+              nextSibling: {
+                querySelectorAll: jest.fn(() => {
+                  return [{ href: "aaa" }, { href: "bbb" }];
+                }),
+              },
+            };
+          }),
+        },
+      };
+
+      GroupFunc.openGroup(mock_target);
+
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      // prettier-ignore
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({remove: ["group", "aaa", "bbb"]}, expect.anything());
+    });
+  });
+
   describe("deleteGroup", () => {
     var mock_target, any;
 
@@ -235,38 +261,56 @@ describe("setTitle", () => {
   });
 });
 
-// can't be tested?
-// describe("toggleGroup", () => {
-//   var mock_target, any;
+// can't be tested properly?
+describe("toggleGroup", () => {
+  var mock_target, any;
 
-//   beforeEach(() => {
-//     any = expect.anything();
+  beforeEach(() => {
+    any = expect.anything();
 
-//     mock_target = (input) => {
-//       return {
-//         target: {
-//           closest: jest.fn(() => {
-//             return {
-//               nextSibling: {
-//                 querySelectorAll: jest.fn(() => {
-//                   return {
-//                     style: {
-//                       display: jest.fn(() => input),
-//                     },
-//                   };
-//                 }),
-//               },
-//             };
-//           }),
-//         },
-//       };
-//     };
-//   });
+    mock_target = {
+      target: {
+        closest: jest.fn(() => {
+          return {
+            nextSibling: {
+              querySelectorAll: jest.fn(() => {
+                return [
+                  {
+                    style: {
+                      display: "",
+                      removeProperty: jest.fn(() => "display"),
+                    },
+                  },
+                ];
+              }),
+            },
+          };
+        }),
+      },
+    };
+  });
 
-//   it("hides the group", ()=>{
+  it("hides the group when it was showing and user pressed hide", () => {
+    var tabs = mock_target.target.closest().nextSibling.querySelectorAll();
+    mockSet.mockClear();
+    GroupFunc.toggleGroup(mock_target, false, mockSet);
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(true);
+    expect(tabs.length).toBe(1);
+  });
 
-//   })
-// });
+  it("shows the group when it was hidden and user pressed show", () => {
+    var tabs = mock_target.target.closest().nextSibling.querySelectorAll();
+    // var spy = jest.spyOn(tabs[0].style, "removeProperty");
+
+    mockSet.mockClear();
+    GroupFunc.toggleGroup(mock_target, true, mockSet);
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(false);
+    expect(tabs.length).toBe(1);
+    // expect(spy).toHaveBeenCalledWith("display");
+  });
+});
 
 describe("sendMessage", () => {
   it("sends a message to background script with correct parameters", async () => {

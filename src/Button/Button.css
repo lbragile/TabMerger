@@ -22,48 +22,42 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
 /* GLOBAL */
-.global-btn-row {
-  width: 80% !important;
+.btn-in-global {
+  width: 36px;
+  height: 36px;
 }
 
-.btn-in-global {
-  width: 30px;
-  height: 30px;
-  border: 1px black solid;
+#import-btn,
+#export-btn {
+  margin: 0;
+}
+
+#options-btn {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+#add-group-btn {
+  margin-top: 40px;
 }
 
 #open-all-btn svg,
 #delete-all-btn svg,
 #import-btn svg,
-#export-btn svg {
+#export-btn svg,
+.link-global svg {
   width: 22px;
   height: 22px;
   padding: 0;
 }
 
-#open-all-btn svg {
-  position: relative;
-  top: -2px;
-}
-
-#delete-all-btn svg {
-  width: 26px;
-  height: 26px;
-}
-
 #import-btn svg,
 #export-btn svg {
   position: relative;
-  left: -11px;
-  top: -6px;
+  left: -7px;
+  top: -1px;
   width: 26px;
   height: 26px;
-}
-
-#delete-all-btn svg {
-  width: 28px;
-  height: 28px;
-  padding: 0;
 }
 
 #import-input {
@@ -76,17 +70,6 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   position: relative;
   left: 0px;
   top: -2px;
-}
-
-#options-btn {
-  position: absolute;
-  right: 15px;
-}
-
-#add-group-btn {
-  background: none !important;
-  border: none;
-  margin-bottom: 10px;
 }
 
 /* MERGE BUTTONS */
@@ -141,11 +124,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   display: inline-block;
 }
 
-.tiptext-global,
-.tiptext-group-title,
-.tiptext-group-color,
-.tiptext-group-merge,
-.tiptext-json {
+.tip span {
   visibility: hidden;
   background-color: black;
   color: #fff;
@@ -183,11 +162,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   left: 3px;
 }
 
-.tiptext-global::after,
-.tiptext-group-title::after,
-.tiptext-group-color::after,
-.tiptext-group-merge::after,
-.tiptext-json::after {
+.tip span::after {
   content: "";
   border-width: 5px;
   border-style: solid;
@@ -199,11 +174,11 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   transform: translateX(-50%);
 }
 
-.tip:hover .tiptext-global,
-.tip:hover .tiptext-group-title,
-.tip:hover .tiptext-group-color,
-.tip:hover .tiptext-group-merge,
-.tip:hover .tiptext-json {
+.tiptext-global-white::after {
+  border-color: white transparent transparent transparent !important;
+}
+
+.tip:hover span {
   visibility: visible;
   opacity: 0.9;
 }
