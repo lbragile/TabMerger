@@ -1,95 +1,53 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "మెమరీ వినియోగాన్ని ఆదా చేయడానికి మరియు మీ ఉత్పాదకతను పెంచడానికి మీ ట్యాబ్‌లను ఒకే చోట విలీనం చేస్తుంది."
   },
-  "addGroup": {
-    "message": "సమూహాన్ని జోడించండి"
-  },
-  "bgAll": {
-    "message": "ఈ విండోలో అన్ని ట్యాబ్‌లను విలీనం చేయండి"
-  },
-  "bgContact": {
-    "message": "మమ్మల్ని సంప్రదించండి"
-  },
+  "leaveReview": { "message": "లీవ్ రివ్యూ" },
+  "donate": { "message": "దానం" },
+  "copyright": { "message": "కాపీరైట్" },
+  "tabs": { "message": "టాబ్లు" },
+  "tab": { "message": "టాబ్" },
+  "searchForTabs": { "message": "టాబ్ల కోసం శోధన" },
+  "group": { "message": "సమూహం" },
+  "write": { "message": "వ్రాయడానికి" },
+  "read": { "message": "చదవండి" },
+  "sync": { "message": "సమకాలీకరించు" },
+  "addGroup": { "message": "సమూహాన్ని జోడించండి" },
+  "bgAll": { "message": "ఈ విండోలో అన్ని ట్యాబ్‌లను విలీనం చేయండి" },
+  "bgContact": { "message": "మమ్మల్ని సంప్రదించండి" },
   "bgExclude": {
     "message": "ఈ విండోలో ప్రస్తుత ట్యాబ్‌ను మినహాయించి ట్యాబ్‌లను విలీనం చేయండి"
   },
-  "bgInstructions": {
-    "message": "సూచనలు"
-  },
+  "bgInstructions": { "message": "సూచనలు" },
   "bgLeft": {
     "message": "ఈ విండోలో ప్రస్తుత ట్యాబ్ యొక్క ఎడమ వైపున ట్యాబ్‌లను విలీనం చేయండి"
   },
-  "bgOnly": {
-    "message": "ఈ విండోలో ప్రస్తుత టాబ్‌ను మాత్రమే విలీనం చేయండి"
-  },
-  "bgOpen": {
-    "message": "టాబ్‌మెర్గర్ తెరవండి"
-  },
+  "bgOnly": { "message": "ఈ విండోలో ప్రస్తుత టాబ్‌ను మాత్రమే విలీనం చేయండి" },
+  "bgOpen": { "message": "టాబ్‌మెర్గర్ తెరవండి" },
   "bgRight": {
     "message": "ఈ విండోలో ప్రస్తుత ట్యాబ్ యొక్క కుడి వైపుకు ట్యాబ్‌లను విలీనం చేయండి"
   },
   "bgSiteExclude": {
     "message": "టాబ్‌మెర్గర్ యొక్క దృశ్యమానత నుండి సైట్‌ను మినహాయించండి"
   },
-  "created": {
-    "message": "సృష్టించబడింది"
-  },
-  "deleteAll": {
-    "message": "అన్నిటిని తొలిగించు"
-  },
-  "deleteGroup": {
-    "message": "సమూహాన్ని తొలగించండి"
-  },
-  "hideTabs": {
-    "message": "ట్యాబ్‌లను దాచు"
-  },
-  "mergeALLtabs": {
-    "message": "అన్ని ట్యాబ్‌లను విలీనం చేయండి"
-  },
-  "mergeLEFTtabs": {
-    "message": "ఎడమ ట్యాబ్‌లను విలీనం చేయండి"
-  },
-  "mergeRIGHTtabs": {
-    "message": "కుడి ట్యాబ్‌లను విలీనం చేయండి"
-  },
-  "needHelp": {
-    "message": "సహాయం కావాలి?"
-  },
-  "openAll": {
-    "message": "అన్నీ తెరవండి"
-  },
-  "openGroup": {
-    "message": "ఓపెన్ గ్రూప్"
-  },
-  "pickColor": {
-    "message": "సమూహ రంగును ఎంచుకోండి"
-  },
-  "quickDemo": {
-    "message": "త్వరిత డెమో"
-  },
-  "settings": {
-    "message": "సెట్టింగులు"
-  },
-  "darkMode": {
-    "message": "డార్క్ మోడ్ை"
-  },
-  "exportJSON": {
-    "message": "JSON ని ఎగుమతి చేయండి"
-  },
-  "importJSON": {
-    "message": "JSON ను దిగుమతి చేయండి"
-  },
-  "showTabs": {
-    "message": "ట్యాబ్‌లను చూపించు"
-  },
-  "supportUs": {
-    "message": "మాకు మద్దతు ఇవ్వండి"
-  },
-  "title": {
-    "message": "శీర్షిక"
-  }
+  "created": { "message": "సృష్టించబడింది" },
+  "deleteAll": { "message": "అన్నిటిని తొలిగించు" },
+  "deleteGroup": { "message": "సమూహాన్ని తొలగించండి" },
+  "hideTabs": { "message": "ట్యాబ్‌లను దాచు" },
+  "mergeALLtabs": { "message": "అన్ని ట్యాబ్‌లను విలీనం చేయండి" },
+  "mergeLEFTtabs": { "message": "ఎడమ ట్యాబ్‌లను విలీనం చేయండి" },
+  "mergeRIGHTtabs": { "message": "కుడి ట్యాబ్‌లను విలీనం చేయండి" },
+  "needHelp": { "message": "సహాయం కావాలి?" },
+  "openAll": { "message": "అన్నీ తెరవండి" },
+  "openGroup": { "message": "ఓపెన్ గ్రూప్" },
+  "pickColor": { "message": "సమూహ రంగును ఎంచుకోండి" },
+  "quickDemo": { "message": "త్వరిత డెమో" },
+  "settings": { "message": "సెట్టింగులు" },
+  "darkMode": { "message": "డార్క్ మోడ్ை" },
+  "exportJSON": { "message": "JSON ని ఎగుమతి చేయండి" },
+  "importJSON": { "message": "JSON ను దిగుమతి చేయండి" },
+  "showTabs": { "message": "ట్యాబ్‌లను చూపించు" },
+  "supportUs": { "message": "మాకు మద్దతు ఇవ్వండి" },
+  "title": { "message": "శీర్షిక" }
 }

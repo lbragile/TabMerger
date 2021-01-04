@@ -32,7 +32,9 @@ export default function Button(props) {
     >
       <div className="tip">
         {props.children}
-        <span className={props.tooltip}>{props.translate}</span>
+        {props.translate ? (
+          <span className={props.tooltip}>{props.translate}</span>
+        ) : null}
       </div>
     </button>
   );

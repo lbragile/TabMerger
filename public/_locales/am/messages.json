@@ -1,95 +1,45 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "የማስታወስ አጠቃቀምዎን ለመቆጠብ እና ምርታማነትዎን ለማሳደግ ትሮችዎን ወደ አንድ ቦታ ያዋህዷቸዋል።"
   },
-  "addGroup": {
-    "message": "ቡድን አክል"
-  },
-  "bgAll": {
-    "message": "በዚህ መስኮት ውስጥ ሁሉንም ትሮች ያዋህዱ"
-  },
-  "bgContact": {
-    "message": "አግኙን"
-  },
-  "bgExclude": {
-    "message": "ትሮችን አዋህድ በዚህ መስኮት ውስጥ የአሁኑ ትርን የማያካትት"
-  },
-  "bgInstructions": {
-    "message": "መመሪያዎች"
-  },
-  "bgLeft": {
-    "message": "ትሮችን በዚህ መስኮት ውስጥ ካለው የአሁኑ ትር LEFT ጋር ያዋህዱ"
-  },
-  "bgOnly": {
-    "message": "በዚህ መስኮት ውስጥ የአሁኑን ትር ብቻ ያዋህዱ"
-  },
-  "bgOpen": {
-    "message": "TabMerger ን ይክፈቱ"
-  },
-  "bgRight": {
-    "message": "ትሮችን በዚህ መስኮት ውስጥ ካለው የአሁኑ ትር RIGHT ጋር ያዋህዱ"
-  },
-  "bgSiteExclude": {
-    "message": "ጣቢያውን ከ TabMerger ታይነት አግልል"
-  },
-  "created": {
-    "message": "ተፈጥሯል"
-  },
-  "deleteAll": {
-    "message": "ሁሉንም ሰርዝ"
-  },
-  "deleteGroup": {
-    "message": "ቡድንን ሰርዝ"
-  },
-  "hideTabs": {
-    "message": "ትሮችን ደብቅ"
-  },
-  "mergeALLtabs": {
-    "message": "ሁሉንም ትሮች ያዋህዱ"
-  },
-  "mergeLEFTtabs": {
-    "message": "የግራ ትሮችን ያዋህዱ"
-  },
-  "mergeRIGHTtabs": {
-    "message": "የቀኝ ትሮችን ያዋህዱ"
-  },
-  "needHelp": {
-    "message": "እርዳታ ያስፈልጋል?"
-  },
-  "openAll": {
-    "message": "ሁሉንም ክፈት"
-  },
-  "openGroup": {
-    "message": "ክፈት ቡድን"
-  },
-  "pickColor": {
-    "message": "የቡድን ቀለም ይምረጡ"
-  },
-  "quickDemo": {
-    "message": "ፈጣን ማሳያ"
-  },
-  "settings": {
-    "message": "ቅንብሮች"
-  },
-  "darkMode": {
-    "message": "ጨለማ ሁነታ"
-  },
-  "exportJSON": {
-    "message": "JSON ላክ"
-  },
-  "importJSON": {
-    "message": "JSON አስመጣ"
-  },
-  "showTabs": {
-    "message": "ትሮችን አሳይ"
-  },
-  "supportUs": {
-    "message": "እኛን ይደግፉ"
-  },
-  "title": {
-    "message": "ርዕስ"
-  }
+  "leaveReview": { "message": "ውጣ ክለሳ" },
+  "donate": { "message": "ለገሠ" },
+  "copyright": { "message": "የቅጂ መብት" },
+  "tabs": { "message": "ትሮች" },
+  "tab": { "message": "ትር" },
+  "searchForTabs": { "message": "ትሮች ፈልግ" },
+  "group": { "message": "ቡድን" },
+  "write": { "message": "ፃፍ" },
+  "read": { "message": "አንብብ" },
+  "sync": { "message": "ሲንክሮናይዝ" },
+  "addGroup": { "message": "ቡድን አክል" },
+  "bgAll": { "message": "በዚህ መስኮት ውስጥ ሁሉንም ትሮች ያዋህዱ" },
+  "bgContact": { "message": "አግኙን" },
+  "bgExclude": { "message": "ትሮችን አዋህድ በዚህ መስኮት ውስጥ የአሁኑ ትርን የማያካትት" },
+  "bgInstructions": { "message": "መመሪያዎች" },
+  "bgLeft": { "message": "ትሮችን በዚህ መስኮት ውስጥ ካለው የአሁኑ ትር LEFT ጋር ያዋህዱ" },
+  "bgOnly": { "message": "በዚህ መስኮት ውስጥ የአሁኑን ትር ብቻ ያዋህዱ" },
+  "bgOpen": { "message": "TabMerger ን ይክፈቱ" },
+  "bgRight": { "message": "ትሮችን በዚህ መስኮት ውስጥ ካለው የአሁኑ ትር RIGHT ጋር ያዋህዱ" },
+  "bgSiteExclude": { "message": "ጣቢያውን ከ TabMerger ታይነት አግልል" },
+  "created": { "message": "ተፈጥሯል" },
+  "deleteAll": { "message": "ሁሉንም ሰርዝ" },
+  "deleteGroup": { "message": "ቡድንን ሰርዝ" },
+  "hideTabs": { "message": "ትሮችን ደብቅ" },
+  "mergeALLtabs": { "message": "ሁሉንም ትሮች ያዋህዱ" },
+  "mergeLEFTtabs": { "message": "የግራ ትሮችን ያዋህዱ" },
+  "mergeRIGHTtabs": { "message": "የቀኝ ትሮችን ያዋህዱ" },
+  "needHelp": { "message": "እርዳታ ያስፈልጋል?" },
+  "openAll": { "message": "ሁሉንም ክፈት" },
+  "openGroup": { "message": "ክፈት ቡድን" },
+  "pickColor": { "message": "የቡድን ቀለም ይምረጡ" },
+  "quickDemo": { "message": "ፈጣን ማሳያ" },
+  "settings": { "message": "ቅንብሮች" },
+  "darkMode": { "message": "ጨለማ ሁነታ" },
+  "exportJSON": { "message": "JSON ላክ" },
+  "importJSON": { "message": "JSON አስመጣ" },
+  "showTabs": { "message": "ትሮችን አሳይ" },
+  "supportUs": { "message": "እኛን ይደግፉ" },
+  "title": { "message": "ርዕስ" }
 }

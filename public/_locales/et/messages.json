@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Mälukasutuse säästmiseks ja tootlikkuse suurendamiseks ühendatakse vahelehed ühte asukohta."
   },
-  "addGroup": {
-    "message": "Lisa rühm"
-  },
-  "bgAll": {
-    "message": "Ühenda selles aknas KÕIK vahekaardid"
-  },
-  "bgContact": {
-    "message": "Võta meiega ühendust"
-  },
+  "leaveReview": { "message": "Lahku Review" },
+  "donate": { "message": "annetama" },
+  "copyright": { "message": "autoriõigus" },
+  "tabs": { "message": "tabs" },
+  "tab": { "message": "Tab" },
+  "searchForTabs": { "message": "Otsi vahelehed" },
+  "group": { "message": "Grupp" },
+  "write": { "message": "Write" },
+  "read": { "message": "Loe" },
+  "sync": { "message": "Sünkroniseeri" },
+  "addGroup": { "message": "Lisa rühm" },
+  "bgAll": { "message": "Ühenda selles aknas KÕIK vahekaardid" },
+  "bgContact": { "message": "Võta meiega ühendust" },
   "bgExclude": {
     "message": "Ühenda selles aknas vahelehed VÄLJA ARVATADA praegust vahelehte"
   },
-  "bgInstructions": {
-    "message": "Juhised"
-  },
+  "bgInstructions": { "message": "Juhised" },
   "bgLeft": {
     "message": "Ühenda selles aknas vahelehed praeguse vahelehe vasakule"
   },
-  "bgOnly": {
-    "message": "Ühenda selles aknas AINULT praegune vaheleht"
-  },
-  "bgOpen": {
-    "message": "Avage TabMerger"
-  },
+  "bgOnly": { "message": "Ühenda selles aknas AINULT praegune vaheleht" },
+  "bgOpen": { "message": "Avage TabMerger" },
   "bgRight": {
     "message": "Ühenda selles aknas vahelehed praeguse vahelehe paremale"
   },
-  "bgSiteExclude": {
-    "message": "Välistage sait TabMergeri nähtavuse hulgast"
-  },
-  "created": {
-    "message": "Loodud"
-  },
-  "deleteAll": {
-    "message": "Kustutada kõik"
-  },
-  "deleteGroup": {
-    "message": "Kustuta rühm"
-  },
-  "hideTabs": {
-    "message": "Peida vahelehed"
-  },
-  "mergeALLtabs": {
-    "message": "Ühenda KÕIK vahelehed"
-  },
-  "mergeLEFTtabs": {
-    "message": "Ühenda vasakpoolsed vahelehed"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Ühenda paremad vahelehed"
-  },
-  "needHelp": {
-    "message": "Abi vajama?"
-  },
-  "openAll": {
-    "message": "Ava kõik"
-  },
-  "openGroup": {
-    "message": "Avage rühm"
-  },
-  "pickColor": {
-    "message": "Valige grupi värv"
-  },
-  "quickDemo": {
-    "message": "Kiire demo"
-  },
-  "settings": {
-    "message": "Seaded"
-  },
-  "darkMode": {
-    "message": "Tume režiim"
-  },
-  "exportJSON": {
-    "message": "Ekspordi JSON"
-  },
-  "importJSON": {
-    "message": "Importige JSON"
-  },
-  "showTabs": {
-    "message": "Kuva vahelehed"
-  },
-  "supportUs": {
-    "message": "Toeta meid"
-  },
-  "title": {
-    "message": "Pealkiri"
-  }
+  "bgSiteExclude": { "message": "Välistage sait TabMergeri nähtavuse hulgast" },
+  "created": { "message": "Loodud" },
+  "deleteAll": { "message": "Kustutada kõik" },
+  "deleteGroup": { "message": "Kustuta rühm" },
+  "hideTabs": { "message": "Peida vahelehed" },
+  "mergeALLtabs": { "message": "Ühenda KÕIK vahelehed" },
+  "mergeLEFTtabs": { "message": "Ühenda vasakpoolsed vahelehed" },
+  "mergeRIGHTtabs": { "message": "Ühenda paremad vahelehed" },
+  "needHelp": { "message": "Abi vajama?" },
+  "openAll": { "message": "Ava kõik" },
+  "openGroup": { "message": "Avage rühm" },
+  "pickColor": { "message": "Valige grupi värv" },
+  "quickDemo": { "message": "Kiire demo" },
+  "settings": { "message": "Seaded" },
+  "darkMode": { "message": "Tume režiim" },
+  "exportJSON": { "message": "Ekspordi JSON" },
+  "importJSON": { "message": "Importige JSON" },
+  "showTabs": { "message": "Kuva vahelehed" },
+  "supportUs": { "message": "Toeta meid" },
+  "title": { "message": "Pealkiri" }
 }

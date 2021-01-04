@@ -1,95 +1,55 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Combina sus pestañas en una sola ubicación para ahorrar uso de memoria y aumentar su productividad."
   },
-  "addGroup": {
-    "message": "Añadir grupo"
-  },
-  "bgAll": {
-    "message": "Combinar TODAS las pestañas en esta ventana"
-  },
-  "bgContact": {
-    "message": "Contáctenos"
-  },
+  "leaveReview": { "message": "Deje opinión" },
+  "donate": { "message": "Donar" },
+  "copyright": { "message": "Derechos de autor" },
+  "tabs": { "message": "Pestañas" },
+  "tab": { "message": "Lengüeta" },
+  "searchForTabs": { "message": "Búsqueda de fichas" },
+  "group": { "message": "grupo" },
+  "write": { "message": "Escribir" },
+  "read": { "message": "Leer" },
+  "sync": { "message": "Sincronizar" },
+  "addGroup": { "message": "Añadir grupo" },
+  "bgAll": { "message": "Combinar TODAS las pestañas en esta ventana" },
+  "bgContact": { "message": "Contáctenos" },
   "bgExclude": {
     "message": "Combinar pestañas EXCLUYENDO la pestaña actual en esta ventana"
   },
-  "bgInstructions": {
-    "message": "Instrucciones"
-  },
+  "bgInstructions": { "message": "Instrucciones" },
   "bgLeft": {
     "message": "Fusionar pestañas a la IZQUIERDA de la pestaña actual en esta ventana"
   },
   "bgOnly": {
     "message": "Fusionar SOLAMENTE la pestaña actual en esta ventana"
   },
-  "bgOpen": {
-    "message": "Abrir TabMerger"
-  },
+  "bgOpen": { "message": "Abrir TabMerger" },
   "bgRight": {
     "message": "Combinar pestañas a la DERECHA de la pestaña actual en esta ventana"
   },
   "bgSiteExclude": {
     "message": "Excluir el sitio de la visibilidad de TabMerger"
   },
-  "created": {
-    "message": "Creado"
-  },
-  "deleteAll": {
-    "message": "Eliminar todos"
-  },
-  "deleteGroup": {
-    "message": "Eliminar grupo"
-  },
-  "hideTabs": {
-    "message": "Ocultar pestañas"
-  },
-  "mergeALLtabs": {
-    "message": "Fusionar TODAS las pestañas"
-  },
-  "mergeLEFTtabs": {
-    "message": "Fusionar pestañas IZQUIERDA"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Fusionar pestañas DERECHA"
-  },
-  "needHelp": {
-    "message": "¿Necesitas ayuda?"
-  },
-  "openAll": {
-    "message": "Abrir todo"
-  },
-  "openGroup": {
-    "message": "Grupo abierto"
-  },
-  "pickColor": {
-    "message": "Elegir color de grupo"
-  },
-  "quickDemo": {
-    "message": "Demo rápida"
-  },
-  "settings": {
-    "message": "Configuraciones"
-  },
-  "darkMode": {
-    "message": "Modo oscuro"
-  },
-  "exportJSON": {
-    "message": "Exportar JSON"
-  },
-  "importJSON": {
-    "message": "Importar JSON"
-  },
-  "showTabs": {
-    "message": "Mostrar pestañas"
-  },
-  "supportUs": {
-    "message": "Apoyanos"
-  },
-  "title": {
-    "message": "Título"
-  }
+  "created": { "message": "Creado" },
+  "deleteAll": { "message": "Eliminar todos" },
+  "deleteGroup": { "message": "Eliminar grupo" },
+  "hideTabs": { "message": "Ocultar pestañas" },
+  "mergeALLtabs": { "message": "Fusionar TODAS las pestañas" },
+  "mergeLEFTtabs": { "message": "Fusionar pestañas IZQUIERDA" },
+  "mergeRIGHTtabs": { "message": "Fusionar pestañas DERECHA" },
+  "needHelp": { "message": "¿Necesitas ayuda?" },
+  "openAll": { "message": "Abrir todo" },
+  "openGroup": { "message": "Grupo abierto" },
+  "pickColor": { "message": "Elegir color de grupo" },
+  "quickDemo": { "message": "Demo rápida" },
+  "settings": { "message": "Configuraciones" },
+  "darkMode": { "message": "Modo oscuro" },
+  "exportJSON": { "message": "Exportar JSON" },
+  "importJSON": { "message": "Importar JSON" },
+  "showTabs": { "message": "Mostrar pestañas" },
+  "supportUs": { "message": "Apoyanos" },
+  "title": { "message": "Título" }
 }

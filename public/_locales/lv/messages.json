@@ -1,95 +1,49 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Apvienojot cilnes vienā vietā, lai ietaupītu atmiņas patēriņu un palielinātu produktivitāti."
   },
-  "addGroup": {
-    "message": "Pievienot grupu"
-  },
-  "bgAll": {
-    "message": "Apvienot VISAS cilnes šajā logā"
-  },
-  "bgContact": {
-    "message": "Instrukcijas"
-  },
-  "bgExclude": {
-    "message": "Apvienot cilnes"
-  },
-  "bgInstructions": {
-    "message": "Izslēdziet vietni no TabMerger redzamības"
-  },
+  "leaveReview": { "message": "Atstājiet atsauksmi" },
+  "donate": { "message": "ziedot" },
+  "copyright": { "message": "Autortiesības" },
+  "tabs": { "message": "cilnes" },
+  "tab": { "message": "Tab" },
+  "searchForTabs": { "message": "Meklēt cilnes" },
+  "group": { "message": "grupa" },
+  "write": { "message": "Rakstīt" },
+  "read": { "message": "Lasīt" },
+  "sync": { "message": "Sinhronizēt" },
+  "addGroup": { "message": "Pievienot grupu" },
+  "bgAll": { "message": "Apvienot VISAS cilnes šajā logā" },
+  "bgContact": { "message": "Instrukcijas" },
+  "bgExclude": { "message": "Apvienot cilnes" },
+  "bgInstructions": { "message": "Izslēdziet vietni no TabMerger redzamības" },
   "bgLeft": {
     "message": "Šajā logā apvienot cilnes ar pašreizējās cilnes KREISO"
   },
-  "bgOnly": {
-    "message": " IZŅEMOT pašreizējo cilni šajā logā"
-  },
-  "bgOpen": {
-    "message": "Atveriet cilni TabMerger"
-  },
+  "bgOnly": { "message": " IZŅEMOT pašreizējo cilni šajā logā" },
+  "bgOpen": { "message": "Atveriet cilni TabMerger" },
   "bgRight": {
     "message": "Šajā logā apvienot cilnes ar RIGHT pašreizējo cilni"
   },
-  "bgSiteExclude": {
-    "message": "Šajā logā apvienot TIKAI pašreizējo cilni"
-  },
-  "created": {
-    "message": "Izveidots"
-  },
-  "deleteAll": {
-    "message": "Dzēst visus"
-  },
-  "deleteGroup": {
-    "message": "Dzēst grupu"
-  },
-  "hideTabs": {
-    "message": "Slēpt cilnes"
-  },
-  "mergeALLtabs": {
-    "message": "Apvienot VISAS cilnes"
-  },
-  "mergeLEFTtabs": {
-    "message": "Apvienot kreisās cilnes"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Apvienot labās cilnes"
-  },
-  "needHelp": {
-    "message": "Vajadzīga palīdzība?"
-  },
-  "openAll": {
-    "message": "Atvērt visu"
-  },
-  "openGroup": {
-    "message": "Atvērt grupu"
-  },
-  "pickColor": {
-    "message": "Izvēlieties grupas krāsu"
-  },
-  "quickDemo": {
-    "message": "Ātrā demonstrācija"
-  },
-  "settings": {
-    "message": "Iestatījumi"
-  },
-  "darkMode": {
-    "message": "Tumšais režīms"
-  },
-  "exportJSON": {
-    "message": "Eksportēt JSON"
-  },
-  "importJSON": {
-    "message": "Importēt JSON"
-  },
-  "showTabs": {
-    "message": "Rādīt cilnes"
-  },
-  "supportUs": {
-    "message": "Atbalsti mūs"
-  },
-  "title": {
-    "message": "Nosaukums"
-  }
+  "bgSiteExclude": { "message": "Šajā logā apvienot TIKAI pašreizējo cilni" },
+  "created": { "message": "Izveidots" },
+  "deleteAll": { "message": "Dzēst visus" },
+  "deleteGroup": { "message": "Dzēst grupu" },
+  "hideTabs": { "message": "Slēpt cilnes" },
+  "mergeALLtabs": { "message": "Apvienot VISAS cilnes" },
+  "mergeLEFTtabs": { "message": "Apvienot kreisās cilnes" },
+  "mergeRIGHTtabs": { "message": "Apvienot labās cilnes" },
+  "needHelp": { "message": "Vajadzīga palīdzība?" },
+  "openAll": { "message": "Atvērt visu" },
+  "openGroup": { "message": "Atvērt grupu" },
+  "pickColor": { "message": "Izvēlieties grupas krāsu" },
+  "quickDemo": { "message": "Ātrā demonstrācija" },
+  "settings": { "message": "Iestatījumi" },
+  "darkMode": { "message": "Tumšais režīms" },
+  "exportJSON": { "message": "Eksportēt JSON" },
+  "importJSON": { "message": "Importēt JSON" },
+  "showTabs": { "message": "Rādīt cilnes" },
+  "supportUs": { "message": "Atbalsti mūs" },
+  "title": { "message": "Nosaukums" }
 }

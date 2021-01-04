@@ -1,95 +1,55 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Fusionne vos onglets en un seul emplacement pour économiser la mémoire et augmenter votre productivité."
   },
-  "addGroup": {
-    "message": "Ajouter un groupe"
-  },
-  "bgAll": {
-    "message": "Fusionner TOUS les onglets de cette fenêtre"
-  },
-  "bgContact": {
-    "message": "Nous contacter"
-  },
+  "leaveReview": { "message": "congé d'examen" },
+  "donate": { "message": "Faire un don" },
+  "copyright": { "message": "droits d'auteur" },
+  "tabs": { "message": "Les onglets" },
+  "tab": { "message": "Languette" },
+  "searchForTabs": { "message": "Recherchez des onglets" },
+  "group": { "message": "groupe" },
+  "write": { "message": "Écrire" },
+  "read": { "message": "Lis" },
+  "sync": { "message": "Synchroniser" },
+  "addGroup": { "message": "Ajouter un groupe" },
+  "bgAll": { "message": "Fusionner TOUS les onglets de cette fenêtre" },
+  "bgContact": { "message": "Nous contacter" },
   "bgExclude": {
     "message": "Fusionner les onglets EXCLUANT l'onglet actuel dans cette fenêtre"
   },
-  "bgInstructions": {
-    "message": "Instructions"
-  },
+  "bgInstructions": { "message": "Instructions" },
   "bgLeft": {
     "message": "Fusionner les onglets à GAUCHE de l'onglet actuel dans cette fenêtre"
   },
   "bgOnly": {
     "message": "Fusionner UNIQUEMENT l'onglet actuel dans cette fenêtre"
   },
-  "bgOpen": {
-    "message": "Ouvrez TabMerger"
-  },
+  "bgOpen": { "message": "Ouvrez TabMerger" },
   "bgRight": {
     "message": "Fusionner les onglets à DROITE de l'onglet actuel dans cette fenêtre"
   },
   "bgSiteExclude": {
     "message": "Exclure le site de la visibilité de TabMerger"
   },
-  "created": {
-    "message": "Créé"
-  },
-  "deleteAll": {
-    "message": "Tout supprimer"
-  },
-  "deleteGroup": {
-    "message": "Supprimer le groupe"
-  },
-  "hideTabs": {
-    "message": "Masquer les onglets"
-  },
-  "mergeALLtabs": {
-    "message": "Fusionner TOUS les onglets"
-  },
-  "mergeLEFTtabs": {
-    "message": "Fusionner les onglets GAUCHE"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Fusionner les onglets DROITS"
-  },
-  "needHelp": {
-    "message": "Besoin d'aide?"
-  },
-  "openAll": {
-    "message": "Ouvre tout"
-  },
-  "openGroup": {
-    "message": "Groupe ouvert"
-  },
-  "pickColor": {
-    "message": "Choisir la couleur du groupe"
-  },
-  "quickDemo": {
-    "message": "Démo rapide"
-  },
-  "settings": {
-    "message": "Réglages"
-  },
-  "darkMode": {
-    "message": "Mode sombre"
-  },
-  "exportJSON": {
-    "message": "Exporter JSON"
-  },
-  "importJSON": {
-    "message": "Importer JSON"
-  },
-  "showTabs": {
-    "message": "Afficher les onglets"
-  },
-  "supportUs": {
-    "message": "Soutenez-nous"
-  },
-  "title": {
-    "message": "Titre"
-  }
+  "created": { "message": "Créé" },
+  "deleteAll": { "message": "Tout supprimer" },
+  "deleteGroup": { "message": "Supprimer le groupe" },
+  "hideTabs": { "message": "Masquer les onglets" },
+  "mergeALLtabs": { "message": "Fusionner TOUS les onglets" },
+  "mergeLEFTtabs": { "message": "Fusionner les onglets GAUCHE" },
+  "mergeRIGHTtabs": { "message": "Fusionner les onglets DROITS" },
+  "needHelp": { "message": "Besoin d'aide?" },
+  "openAll": { "message": "Ouvre tout" },
+  "openGroup": { "message": "Groupe ouvert" },
+  "pickColor": { "message": "Choisir la couleur du groupe" },
+  "quickDemo": { "message": "Démo rapide" },
+  "settings": { "message": "Réglages" },
+  "darkMode": { "message": "Mode sombre" },
+  "exportJSON": { "message": "Exporter JSON" },
+  "importJSON": { "message": "Importer JSON" },
+  "showTabs": { "message": "Afficher les onglets" },
+  "supportUs": { "message": "Soutenez-nous" },
+  "title": { "message": "Titre" }
 }

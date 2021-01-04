@@ -1,95 +1,49 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Mescla suas guias em um local para economizar o uso de memória e aumentar sua produtividade."
   },
-  "addGroup": {
-    "message": "Adicionar grupo"
-  },
-  "bgAll": {
-    "message": "Mesclar TODAS as guias nesta janela"
-  },
-  "bgContact": {
-    "message": "Contate-Nos"
-  },
-  "bgExclude": {
-    "message": "Mesclar abas EXCLUINDO a aba atual nesta janela"
-  },
-  "bgInstructions": {
-    "message": "Instruções"
-  },
+  "leaveReview": { "message": "Deixar comentário" },
+  "donate": { "message": "Doar" },
+  "copyright": { "message": "direito autoral" },
+  "tabs": { "message": "Guias" },
+  "tab": { "message": "Aba" },
+  "searchForTabs": { "message": "Procurar guias" },
+  "group": { "message": "grupo" },
+  "write": { "message": "Escreva" },
+  "read": { "message": "Ler" },
+  "sync": { "message": "Sincronizar" },
+  "addGroup": { "message": "Adicionar grupo" },
+  "bgAll": { "message": "Mesclar TODAS as guias nesta janela" },
+  "bgContact": { "message": "Contate-Nos" },
+  "bgExclude": { "message": "Mesclar abas EXCLUINDO a aba atual nesta janela" },
+  "bgInstructions": { "message": "Instruções" },
   "bgLeft": {
     "message": "Mesclar as guias à ESQUERDA da guia atual nesta janela"
   },
-  "bgOnly": {
-    "message": "Mesclar SOMENTE a guia atual nesta janela"
-  },
-  "bgOpen": {
-    "message": "Abra o TabMerger"
-  },
+  "bgOnly": { "message": "Mesclar SOMENTE a guia atual nesta janela" },
+  "bgOpen": { "message": "Abra o TabMerger" },
   "bgRight": {
     "message": "Mesclar as guias à DIREITA da guia atual nesta janela"
   },
-  "bgSiteExclude": {
-    "message": "Excluir site da visibilidade do TabMerger"
-  },
-  "created": {
-    "message": "Criado"
-  },
-  "deleteAll": {
-    "message": "Apagar tudo"
-  },
-  "deleteGroup": {
-    "message": "Excluir Grupo"
-  },
-  "hideTabs": {
-    "message": "Ocultar abas"
-  },
-  "mergeALLtabs": {
-    "message": "Mesclar TODAS as guias"
-  },
-  "mergeLEFTtabs": {
-    "message": "Mesclar guias ESQUERDA"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Mesclar guias DIREITA"
-  },
-  "needHelp": {
-    "message": "Preciso de ajuda?"
-  },
-  "openAll": {
-    "message": "Abra tudo"
-  },
-  "openGroup": {
-    "message": "Grupo Aberto"
-  },
-  "pickColor": {
-    "message": "Escolha a cor do grupo"
-  },
-  "quickDemo": {
-    "message": "Demonstração Rápida"
-  },
-  "settings": {
-    "message": "Definições"
-  },
-  "darkMode": {
-    "message": "Modo escuro"
-  },
-  "exportJSON": {
-    "message": "Exportar JSON"
-  },
-  "importJSON": {
-    "message": "Importar JSON"
-  },
-  "showTabs": {
-    "message": "Mostrar abas"
-  },
-  "supportUs": {
-    "message": "Apoie-nos"
-  },
-  "title": {
-    "message": "Título"
-  }
+  "bgSiteExclude": { "message": "Excluir site da visibilidade do TabMerger" },
+  "created": { "message": "Criado" },
+  "deleteAll": { "message": "Apagar tudo" },
+  "deleteGroup": { "message": "Excluir Grupo" },
+  "hideTabs": { "message": "Ocultar abas" },
+  "mergeALLtabs": { "message": "Mesclar TODAS as guias" },
+  "mergeLEFTtabs": { "message": "Mesclar guias ESQUERDA" },
+  "mergeRIGHTtabs": { "message": "Mesclar guias DIREITA" },
+  "needHelp": { "message": "Preciso de ajuda?" },
+  "openAll": { "message": "Abra tudo" },
+  "openGroup": { "message": "Grupo Aberto" },
+  "pickColor": { "message": "Escolha a cor do grupo" },
+  "quickDemo": { "message": "Demonstração Rápida" },
+  "settings": { "message": "Definições" },
+  "darkMode": { "message": "Modo escuro" },
+  "exportJSON": { "message": "Exportar JSON" },
+  "importJSON": { "message": "Importar JSON" },
+  "showTabs": { "message": "Mostrar abas" },
+  "supportUs": { "message": "Apoie-nos" },
+  "title": { "message": "Título" }
 }

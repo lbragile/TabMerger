@@ -1,95 +1,55 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Combina les pestanyes en una ubicació per estalviar ús de memòria i augmentar la productivitat."
   },
-  "addGroup": {
-    "message": "Afegeix un grup"
-  },
-  "bgAll": {
-    "message": "Combineu TOTES les pestanyes d'aquesta finestra"
-  },
-  "bgContact": {
-    "message": "Poseu-vos en contacte amb nosaltres"
-  },
+  "leaveReview": { "message": "deixar un comentari" },
+  "donate": { "message": "Donar" },
+  "copyright": { "message": "drets d'autor" },
+  "tabs": { "message": "fitxes" },
+  "tab": { "message": "llengüeta" },
+  "searchForTabs": { "message": "Cerca de fitxes" },
+  "group": { "message": "grup" },
+  "write": { "message": "comentari" },
+  "read": { "message": "llegir" },
+  "sync": { "message": "sincronitzar" },
+  "addGroup": { "message": "Afegeix un grup" },
+  "bgAll": { "message": "Combineu TOTES les pestanyes d'aquesta finestra" },
+  "bgContact": { "message": "Poseu-vos en contacte amb nosaltres" },
   "bgExclude": {
     "message": "Combina les pestanyes EXCLÉS la pestanya actual en aquesta finestra"
   },
-  "bgInstructions": {
-    "message": "Instruccions"
-  },
+  "bgInstructions": { "message": "Instruccions" },
   "bgLeft": {
     "message": "Combina les pestanyes a ESQUERRA de la pestanya actual en aquesta finestra"
   },
   "bgOnly": {
     "message": "Combineu NOMÉS la pestanya actual en aquesta finestra"
   },
-  "bgOpen": {
-    "message": "Obriu TabMerger"
-  },
+  "bgOpen": { "message": "Obriu TabMerger" },
   "bgRight": {
     "message": "Combineu les pestanyes a la DRETA de la pestanya actual en aquesta finestra"
   },
   "bgSiteExclude": {
     "message": "Excloeu el lloc de la visibilitat de TabMerger"
   },
-  "created": {
-    "message": "Creat"
-  },
-  "deleteAll": {
-    "message": "Eliminar tots"
-  },
-  "deleteGroup": {
-    "message": "Suprimeix el grup"
-  },
-  "hideTabs": {
-    "message": "Amaga les pestanyes"
-  },
-  "mergeALLtabs": {
-    "message": "Combina TOTES les pestanyes"
-  },
-  "mergeLEFTtabs": {
-    "message": "Combina les pestanyes ESQUERRA"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Combina les pestanyes DRETA"
-  },
-  "needHelp": {
-    "message": "Necessitar ajuda?"
-  },
-  "openAll": {
-    "message": "Obre-ho tot"
-  },
-  "openGroup": {
-    "message": "Grup obert"
-  },
-  "pickColor": {
-    "message": "Selecciona el color del grup"
-  },
-  "quickDemo": {
-    "message": "Demostració ràpida"
-  },
-  "settings": {
-    "message": "Configuració"
-  },
-  "darkMode": {
-    "message": "Mode fosc"
-  },
-  "exportJSON": {
-    "message": "Exporta JSON"
-  },
-  "importJSON": {
-    "message": "Importa JSON"
-  },
-  "showTabs": {
-    "message": "Mostra les pestanyes"
-  },
-  "supportUs": {
-    "message": "Ajudeu-nos"
-  },
-  "title": {
-    "message": "Títol"
-  }
+  "created": { "message": "Creat" },
+  "deleteAll": { "message": "Eliminar tots" },
+  "deleteGroup": { "message": "Suprimeix el grup" },
+  "hideTabs": { "message": "Amaga les pestanyes" },
+  "mergeALLtabs": { "message": "Combina TOTES les pestanyes" },
+  "mergeLEFTtabs": { "message": "Combina les pestanyes ESQUERRA" },
+  "mergeRIGHTtabs": { "message": "Combina les pestanyes DRETA" },
+  "needHelp": { "message": "Necessitar ajuda?" },
+  "openAll": { "message": "Obre-ho tot" },
+  "openGroup": { "message": "Grup obert" },
+  "pickColor": { "message": "Selecciona el color del grup" },
+  "quickDemo": { "message": "Demostració ràpida" },
+  "settings": { "message": "Configuració" },
+  "darkMode": { "message": "Mode fosc" },
+  "exportJSON": { "message": "Exporta JSON" },
+  "importJSON": { "message": "Importa JSON" },
+  "showTabs": { "message": "Mostra les pestanyes" },
+  "supportUs": { "message": "Ajudeu-nos" },
+  "title": { "message": "Títol" }
 }

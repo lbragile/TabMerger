@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Gabungkan tab anda ke satu lokasi untuk menjimatkan penggunaan memori dan meningkatkan produktiviti anda."
   },
-  "addGroup": {
-    "message": "Tambah Kumpulan"
-  },
-  "bgAll": {
-    "message": "Gabungkan SEMUA tab di tetingkap ini"
-  },
-  "bgContact": {
-    "message": "Hubungi Kami"
-  },
+  "leaveReview": { "message": "cuti Ulasan" },
+  "donate": { "message": "menderma" },
+  "copyright": { "message": "hak cipta" },
+  "tabs": { "message": "Tabs" },
+  "tab": { "message": "tab" },
+  "searchForTabs": { "message": "Mencari tab" },
+  "group": { "message": "kumpulan" },
+  "write": { "message": "Tulis" },
+  "read": { "message": "Baca" },
+  "sync": { "message": "Segerakkan" },
+  "addGroup": { "message": "Tambah Kumpulan" },
+  "bgAll": { "message": "Gabungkan SEMUA tab di tetingkap ini" },
+  "bgContact": { "message": "Hubungi Kami" },
   "bgExclude": {
     "message": "Gabungkan tab MENGECUALI tab semasa di tetingkap ini"
   },
-  "bgInstructions": {
-    "message": "Arahan"
-  },
-  "bgLeft": {
-    "message": "Gabungkan tab ke KIRI tab semasa di tetingkap ini"
-  },
-  "bgOnly": {
-    "message": "Gabungkan HANYA tab semasa di tetingkap ini"
-  },
-  "bgOpen": {
-    "message": "Buka TabMerger"
-  },
+  "bgInstructions": { "message": "Arahan" },
+  "bgLeft": { "message": "Gabungkan tab ke KIRI tab semasa di tetingkap ini" },
+  "bgOnly": { "message": "Gabungkan HANYA tab semasa di tetingkap ini" },
+  "bgOpen": { "message": "Buka TabMerger" },
   "bgRight": {
     "message": "Gabungkan tab ke KANAN tab semasa di tetingkap ini"
   },
   "bgSiteExclude": {
     "message": "Kecualikan laman web dari keterlihatan TabMerger"
   },
-  "created": {
-    "message": "Dicipta"
-  },
-  "deleteAll": {
-    "message": "Memadam semua"
-  },
-  "deleteGroup": {
-    "message": "Padam Kumpulan"
-  },
-  "hideTabs": {
-    "message": "Sembunyikan Tab"
-  },
-  "mergeALLtabs": {
-    "message": "Gabungkan SEMUA Tab"
-  },
-  "mergeLEFTtabs": {
-    "message": "Gabungkan Tab KIRI"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Gabungkan Tab KANAN"
-  },
-  "needHelp": {
-    "message": "Perlukan bantuan?"
-  },
-  "openAll": {
-    "message": "Buka Semua"
-  },
-  "openGroup": {
-    "message": "Buka Kumpulan"
-  },
-  "pickColor": {
-    "message": "Pilih Warna Kumpulan"
-  },
-  "quickDemo": {
-    "message": "Demo Pantas"
-  },
-  "settings": {
-    "message": "Tetapan"
-  },
-  "darkMode": {
-    "message": "Mod Gelap"
-  },
-  "exportJSON": {
-    "message": "Eksport JSON"
-  },
-  "importJSON": {
-    "message": "Import JSON"
-  },
-  "showTabs": {
-    "message": "Tunjukkan Tab"
-  },
-  "supportUs": {
-    "message": "Sokong Kami"
-  },
-  "title": {
-    "message": "Tajuk"
-  }
+  "created": { "message": "Dicipta" },
+  "deleteAll": { "message": "Memadam semua" },
+  "deleteGroup": { "message": "Padam Kumpulan" },
+  "hideTabs": { "message": "Sembunyikan Tab" },
+  "mergeALLtabs": { "message": "Gabungkan SEMUA Tab" },
+  "mergeLEFTtabs": { "message": "Gabungkan Tab KIRI" },
+  "mergeRIGHTtabs": { "message": "Gabungkan Tab KANAN" },
+  "needHelp": { "message": "Perlukan bantuan?" },
+  "openAll": { "message": "Buka Semua" },
+  "openGroup": { "message": "Buka Kumpulan" },
+  "pickColor": { "message": "Pilih Warna Kumpulan" },
+  "quickDemo": { "message": "Demo Pantas" },
+  "settings": { "message": "Tetapan" },
+  "darkMode": { "message": "Mod Gelap" },
+  "exportJSON": { "message": "Eksport JSON" },
+  "importJSON": { "message": "Import JSON" },
+  "showTabs": { "message": "Tunjukkan Tab" },
+  "supportUs": { "message": "Sokong Kami" },
+  "title": { "message": "Tajuk" }
 }

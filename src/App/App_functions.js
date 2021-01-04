@@ -461,7 +461,6 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
       return (
         <Group
           id={id}
-          className="group"
           title={x.title}
           color={x.color}
           created={x.created}
@@ -571,7 +570,7 @@ export function filterRegEx(e) {
   sections = document.querySelectorAll(".group-item");
 
   if (e.target.value[0] === "#") {
-    titles = [...sections].map((x) => x.querySelector("p").textContent);
+    titles = [...sections].map((x) => x.querySelector("input").value);
     match = e.target.value.substr(1).toLowerCase();
     search_type = "group";
   } else if (e.target.value !== "") {

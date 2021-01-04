@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "A lapokat egy helyre egyesíti a memóriafelhasználás és a termelékenység növelése érdekében."
   },
-  "addGroup": {
-    "message": "Csoport hozzáadása"
-  },
-  "bgAll": {
-    "message": "Az ablak MINDEN fülének egyesítése"
-  },
-  "bgContact": {
-    "message": "Lépjen kapcsolatba velünk"
-  },
+  "leaveReview": { "message": "Hagyjuk felülvizsgálati" },
+  "donate": { "message": "Adományoz" },
+  "copyright": { "message": "szerzői jog" },
+  "tabs": { "message": "Lapok" },
+  "tab": { "message": "Tab" },
+  "searchForTabs": { "message": "Keresése lapok" },
+  "group": { "message": "csoport" },
+  "write": { "message": "Ír" },
+  "read": { "message": "Olvas" },
+  "sync": { "message": "Szinkronizálás" },
+  "addGroup": { "message": "Csoport hozzáadása" },
+  "bgAll": { "message": "Az ablak MINDEN fülének egyesítése" },
+  "bgContact": { "message": "Lépjen kapcsolatba velünk" },
   "bgExclude": {
     "message": "Fülek egyesítése KIVÉTELE az aktuális fület ebben az ablakban"
   },
-  "bgInstructions": {
-    "message": "Utasítás"
-  },
+  "bgInstructions": { "message": "Utasítás" },
   "bgLeft": {
     "message": "Fülek egyesítése ebben az ablakban az aktuális lap BALRA"
   },
-  "bgOnly": {
-    "message": "CSAK az aktuális lap egyesítése ebben az ablakban"
-  },
-  "bgOpen": {
-    "message": "Nyissa meg a TabMerger alkalmazást"
-  },
-  "bgRight": {
-    "message": "Fülek egyesítése az ablak aktuális fülének JOBBRA"
-  },
+  "bgOnly": { "message": "CSAK az aktuális lap egyesítése ebben az ablakban" },
+  "bgOpen": { "message": "Nyissa meg a TabMerger alkalmazást" },
+  "bgRight": { "message": "Fülek egyesítése az ablak aktuális fülének JOBBRA" },
   "bgSiteExclude": {
     "message": "A webhely kizárása a TabMerger láthatóságából"
   },
-  "created": {
-    "message": "Létrehozva"
-  },
-  "deleteAll": {
-    "message": "Mindet törölni"
-  },
-  "deleteGroup": {
-    "message": "Csoport törlése"
-  },
-  "hideTabs": {
-    "message": "Fülek elrejtése"
-  },
-  "mergeALLtabs": {
-    "message": "MINDEN lap egyesítése"
-  },
-  "mergeLEFTtabs": {
-    "message": "A BAL fülek egyesítése"
-  },
-  "mergeRIGHTtabs": {
-    "message": "JOBB lapok egyesítése"
-  },
-  "needHelp": {
-    "message": "Kell segítség?"
-  },
-  "openAll": {
-    "message": "Nyissa meg az összeset"
-  },
-  "openGroup": {
-    "message": "Nyissa meg a Csoportot"
-  },
-  "pickColor": {
-    "message": "Válassza a Csoport színét"
-  },
-  "quickDemo": {
-    "message": "Gyors bemutató"
-  },
-  "settings": {
-    "message": "Beállítások"
-  },
-  "darkMode": {
-    "message": "Sötét mód"
-  },
-  "exportJSON": {
-    "message": "Exportálja a JSON-t"
-  },
-  "importJSON": {
-    "message": "JSON importálása"
-  },
-  "showTabs": {
-    "message": "Fülek megjelenítése"
-  },
-  "supportUs": {
-    "message": "Támogass minket"
-  },
-  "title": {
-    "message": "Cím"
-  }
+  "created": { "message": "Létrehozva" },
+  "deleteAll": { "message": "Mindet törölni" },
+  "deleteGroup": { "message": "Csoport törlése" },
+  "hideTabs": { "message": "Fülek elrejtése" },
+  "mergeALLtabs": { "message": "MINDEN lap egyesítése" },
+  "mergeLEFTtabs": { "message": "A BAL fülek egyesítése" },
+  "mergeRIGHTtabs": { "message": "JOBB lapok egyesítése" },
+  "needHelp": { "message": "Kell segítség?" },
+  "openAll": { "message": "Nyissa meg az összeset" },
+  "openGroup": { "message": "Nyissa meg a Csoportot" },
+  "pickColor": { "message": "Válassza a Csoport színét" },
+  "quickDemo": { "message": "Gyors bemutató" },
+  "settings": { "message": "Beállítások" },
+  "darkMode": { "message": "Sötét mód" },
+  "exportJSON": { "message": "Exportálja a JSON-t" },
+  "importJSON": { "message": "JSON importálása" },
+  "showTabs": { "message": "Fülek megjelenítése" },
+  "supportUs": { "message": "Támogass minket" },
+  "title": { "message": "Cím" }
 }

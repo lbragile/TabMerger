@@ -90,12 +90,10 @@ export function setBGHelper(e, id) {
  */
 export function setTitle(e, setGroups) {
   chrome.storage.local.get("groups", (local) => {
-    var group_title = e.target.closest(".group-title");
-    var group_id = group_title.nextSibling.id;
+    var group_id = e.target.closest(".group-title").nextSibling.id;
     var current_groups = local.groups;
 
-    current_groups[group_id].title = e.target.firstChild.innerText;
-    e.target.lastChild.style.visibility = "hidden";
+    current_groups[group_id].title = e.target.value;
 
     chrome.storage.local.set({ groups: current_groups }, () => {
       setGroups(JSON.stringify(current_groups));
@@ -104,56 +102,13 @@ export function setTitle(e, setGroups) {
 }
 
 /**
- * Allows the user to select a group's title by simply clicking on it.
- * @param {HTMLElement} e The group node whose title is being selected
- */
-export function selectTitle(e) {
-  var range = document.createRange();
-  range.selectNodeContents(e.target.firstChild);
-  var sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-
-  e.target.lastChild.style.visibility = "visible";
-}
-
-/**
- * Prevents the user from making the group's title too long.
- * Also prevents undesireable actions that would cause the title to be empty.
- * Lastly, allows the user to use backspace and enter keys.
+ * Allows the user to use enter key to exit title editing mode.
  * @param {HTMLElement} e Node corresponding to the group whose title is being changed
- * @param {number} title_trim_limit Title's maximum length, anything beyond this is trimmed down
- *
- * @see TITLE_TRIM_LIMIT in Group.js
  */
-export function monitorTitleLength(e, title_trim_limit) {
-  var text_len = e.target.firstChild.innerText.length;
-  var isBackspace = e.keyCode === 8;
-  var isEnter = e.keyCode === 13;
-  var textSel =
-    window.getSelection().focusOffset !== window.getSelection().anchorOffset;
-  if (
-    (!isBackspace && !textSel && text_len === title_trim_limit) ||
-    (isBackspace && (text_len === 1 || textSel))
-  ) {
-    e.preventDefault();
-  }
-
-  if (isEnter) {
+export function blurOnEnter(e) {
+  if (e.keyCode === 13) {
     e.target.blur();
   }
-}
-
-/**
- * Allows the user to restore the previous title they had for a given group.
- * Desireable if the user inputs a long title that they are not happy with and want a quick redo.
- * @param {HTMLElement} e Node corresponding to the group whose title is being changed
- * @param {string} title Group's title prior to the current one
- */
-export function reloadTitle(e, title) {
-  var title_text = e.target.closest("p");
-  title_text.firstChild.innerText = title;
-  title_text.blur();
 }
 
 /**

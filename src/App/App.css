@@ -21,6 +21,10 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
+:root {
+  --sidebar-width: 245px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -29,17 +33,20 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 .container-fluid {
   position: relative;
-  width: 70%;
-  overflow: hidden;
+  left: calc(var(--sidebar-width) + 15px);
+  margin: 50px 0;
+  max-width: 1300px;
 }
 
-.groups-container {
-  margin-left: 5%;
+#tabmerger-container {
+  overflow: hidden;
+  /* margin: 20px 0 20px calc(5% + 245px); */
 }
 
 .subtitle {
   position: relative;
   width: 100%;
+  color: white;
 }
 
 #sync-text {
@@ -55,13 +62,12 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 /* SIDEBAR */
 .sidebar {
   height: 100%;
-  width: 245px;
+  width: var(--sidebar-width);
   position: fixed;
   left: 0;
   top: 0;
   z-index: 1;
-  background-color: #111;
-  overflow: hidden;
+  background-color: rgb(27, 27, 27);
   padding-top: 12.5vh;
 }
 
@@ -171,17 +177,4 @@ hr {
 
 ::-webkit-scrollbar-track {
   border: 1px grey solid;
-}
-
-/* Responsive Adjustments for Laptops */
-@media only screen and (max-width: 1600px) {
-  .container-fluid {
-    width: 80%;
-  }
-}
-
-@media only screen and (max-width: 1200px) {
-  .container-fluid {
-    width: 90%;
-  }
 }

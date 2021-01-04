@@ -1,95 +1,49 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "برای صرفه جویی در مصرف حافظه و افزایش بهره وری ، برگه های خود را در یک مکان ادغام می کنید."
   },
-  "addGroup": {
-    "message": "افزودن گروه"
-  },
-  "bgAll": {
-    "message": "همه برگه ها را در این پنجره ادغام کنید"
-  },
-  "bgContact": {
-    "message": "با ما تماس بگیرید"
-  },
+  "leaveReview": { "message": "بررسی را ترک کنید" },
+  "donate": { "message": "اهدا کنید" },
+  "copyright": { "message": "کپی رایت" },
+  "tabs": { "message": "زبانه ها" },
+  "tab": { "message": "برگه" },
+  "searchForTabs": { "message": "برگه ها را جستجو کنید" },
+  "group": { "message": "گروه" },
+  "write": { "message": "نوشتن" },
+  "read": { "message": "خواندن" },
+  "sync": { "message": "همگام سازی کنید" },
+  "addGroup": { "message": "افزودن گروه" },
+  "bgAll": { "message": "همه برگه ها را در این پنجره ادغام کنید" },
+  "bgContact": { "message": "با ما تماس بگیرید" },
   "bgExclude": {
     "message": "برگه ها را ادغام کنید به استثنای برگه فعلی در این پنجره"
   },
-  "bgInstructions": {
-    "message": "دستورالعمل ها"
-  },
-  "bgLeft": {
-    "message": "برگه ها را به چپ برگه فعلی در این پنجره ادغام کنید"
-  },
-  "bgOnly": {
-    "message": "فقط زبانه فعلی را در این پنجره ادغام کنید"
-  },
-  "bgOpen": {
-    "message": "TabMerger را باز کنید"
-  },
+  "bgInstructions": { "message": "دستورالعمل ها" },
+  "bgLeft": { "message": "برگه ها را به چپ برگه فعلی در این پنجره ادغام کنید" },
+  "bgOnly": { "message": "فقط زبانه فعلی را در این پنجره ادغام کنید" },
+  "bgOpen": { "message": "TabMerger را باز کنید" },
   "bgRight": {
     "message": "برگه ها را به RIGHT برگه فعلی در این پنجره ادغام کنید"
   },
-  "bgSiteExclude": {
-    "message": "سایت را از دید TabMerger حذف کنید"
-  },
-  "created": {
-    "message": "ایجاد شده"
-  },
-  "deleteAll": {
-    "message": "حذف همه"
-  },
-  "deleteGroup": {
-    "message": "حذف گروه"
-  },
-  "hideTabs": {
-    "message": "پنهان کردن برگه ها"
-  },
-  "mergeALLtabs": {
-    "message": "همه برگه ها را ادغام کنید"
-  },
-  "mergeLEFTtabs": {
-    "message": "برگه های LEFT را ادغام کنید"
-  },
-  "mergeRIGHTtabs": {
-    "message": "برگه های RIGHT را ادغام کنید"
-  },
-  "needHelp": {
-    "message": "کمک خواستن؟"
-  },
-  "openAll": {
-    "message": "همه را باز کنید"
-  },
-  "openGroup": {
-    "message": "باز کردن گروه"
-  },
-  "pickColor": {
-    "message": "رنگ گروه را انتخاب کنید"
-  },
-  "quickDemo": {
-    "message": "نسخه ی نمایشی سریع"
-  },
-  "settings": {
-    "message": "تنظیمات"
-  },
-  "darkMode": {
-    "message": "حالت تاریک"
-  },
-  "exportJSON": {
-    "message": "صادرات JSON"
-  },
-  "importJSON": {
-    "message": "JSON را وارد کنید"
-  },
-  "showTabs": {
-    "message": "نمایش برگه ها"
-  },
-  "supportUs": {
-    "message": "از ما حمایت کنید"
-  },
-  "title": {
-    "message": "عنوان"
-  }
+  "bgSiteExclude": { "message": "سایت را از دید TabMerger حذف کنید" },
+  "created": { "message": "ایجاد شده" },
+  "deleteAll": { "message": "حذف همه" },
+  "deleteGroup": { "message": "حذف گروه" },
+  "hideTabs": { "message": "پنهان کردن برگه ها" },
+  "mergeALLtabs": { "message": "همه برگه ها را ادغام کنید" },
+  "mergeLEFTtabs": { "message": "برگه های LEFT را ادغام کنید" },
+  "mergeRIGHTtabs": { "message": "برگه های RIGHT را ادغام کنید" },
+  "needHelp": { "message": "کمک خواستن؟" },
+  "openAll": { "message": "همه را باز کنید" },
+  "openGroup": { "message": "باز کردن گروه" },
+  "pickColor": { "message": "رنگ گروه را انتخاب کنید" },
+  "quickDemo": { "message": "نسخه ی نمایشی سریع" },
+  "settings": { "message": "تنظیمات" },
+  "darkMode": { "message": "حالت تاریک" },
+  "exportJSON": { "message": "صادرات JSON" },
+  "importJSON": { "message": "JSON را وارد کنید" },
+  "showTabs": { "message": "نمایش برگه ها" },
+  "supportUs": { "message": "از ما حمایت کنید" },
+  "title": { "message": "عنوان" }
 }

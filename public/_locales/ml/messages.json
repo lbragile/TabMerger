@@ -1,95 +1,53 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "മെമ്മറി ഉപയോഗം ലാഭിക്കുന്നതിനും ഉൽ‌പാദനക്ഷമത വർദ്ധിപ്പിക്കുന്നതിനും നിങ്ങളുടെ ടാബുകൾ ഒരു സ്ഥലത്ത് ലയിപ്പിക്കുന്നു."
   },
-  "addGroup": {
-    "message": "ഗ്രൂപ്പ് ചേർക്കുക"
-  },
-  "bgAll": {
-    "message": "ഈ വിൻഡോയിൽ എല്ലാ ടാബുകളും ലയിപ്പിക്കുക"
-  },
-  "bgContact": {
-    "message": "ഞങ്ങളെ സമീപിക്കുക"
-  },
+  "leaveReview": { "message": "അവധി റിവ്യൂ" },
+  "donate": { "message": "സംഭാവനചെയ്യുക" },
+  "copyright": { "message": "പകർപ്പവകാശം" },
+  "tabs": { "message": "ടാബുകൾ" },
+  "tab": { "message": "ടാബ്" },
+  "searchForTabs": { "message": "ടാബുകൾ തിരയൂ" },
+  "group": { "message": "ഗ്രൂപ്പ്" },
+  "write": { "message": "എഴുതുക" },
+  "read": { "message": "വായിക്കുക" },
+  "sync": { "message": "സമന്വയിപ്പിക്കുക" },
+  "addGroup": { "message": "ഗ്രൂപ്പ് ചേർക്കുക" },
+  "bgAll": { "message": "ഈ വിൻഡോയിൽ എല്ലാ ടാബുകളും ലയിപ്പിക്കുക" },
+  "bgContact": { "message": "ഞങ്ങളെ സമീപിക്കുക" },
   "bgExclude": {
     "message": "ടാബുകൾ ലയിപ്പിക്കുക ഈ വിൻഡോയിൽ നിലവിലെ ടാബ് ഒഴികെ"
   },
-  "bgInstructions": {
-    "message": "നിർദ്ദേശങ്ങൾ"
-  },
+  "bgInstructions": { "message": "നിർദ്ദേശങ്ങൾ" },
   "bgLeft": {
     "message": "ഈ വിൻഡോയിലെ നിലവിലെ ടാബിന്റെ ഇടതുവശത്തേക്ക് ടാബുകൾ ലയിപ്പിക്കുക"
   },
-  "bgOnly": {
-    "message": "ഈ വിൻ‌ഡോയിൽ‌ നിലവിലുള്ള ടാബ് മാത്രം ലയിപ്പിക്കുക"
-  },
-  "bgOpen": {
-    "message": "ടാബ് മെർജർ തുറക്കുക"
-  },
+  "bgOnly": { "message": "ഈ വിൻ‌ഡോയിൽ‌ നിലവിലുള്ള ടാബ് മാത്രം ലയിപ്പിക്കുക" },
+  "bgOpen": { "message": "ടാബ് മെർജർ തുറക്കുക" },
   "bgRight": {
     "message": "ഈ വിൻഡോയിലെ നിലവിലെ ടാബിന്റെ വലതുവശത്തേക്ക് ടാബുകൾ ലയിപ്പിക്കുക"
   },
   "bgSiteExclude": {
     "message": "ടാബ് മെർജറിന്റെ ദൃശ്യപരതയിൽ നിന്ന് സൈറ്റ് ഒഴിവാക്കുക"
   },
-  "created": {
-    "message": "സൃഷ്ടിച്ചു"
-  },
-  "deleteAll": {
-    "message": "എല്ലാം ഇല്ലാതാക്കുക"
-  },
-  "deleteGroup": {
-    "message": "ഗ്രൂപ്പ് ഇല്ലാതാക്കുക"
-  },
-  "hideTabs": {
-    "message": "ടാബുകൾ മറയ്‌ക്കുക"
-  },
-  "mergeALLtabs": {
-    "message": "എല്ലാ ടാബുകളും ലയിപ്പിക്കുക"
-  },
-  "mergeLEFTtabs": {
-    "message": "ഇടത് ടാബുകൾ ലയിപ്പിക്കുക"
-  },
-  "mergeRIGHTtabs": {
-    "message": "ശരിയായ ടാബുകൾ ലയിപ്പിക്കുക"
-  },
-  "needHelp": {
-    "message": "സഹായം ആവശ്യമുണ്ട്?"
-  },
-  "openAll": {
-    "message": "എല്ലാം തുറക്കുക"
-  },
-  "openGroup": {
-    "message": "ഗ്രൂപ്പ് തുറക്കുക"
-  },
-  "pickColor": {
-    "message": "ഗ്രൂപ്പ് വർണ്ണം തിരഞ്ഞെടുക്കുക"
-  },
-  "quickDemo": {
-    "message": "ദ്രുത ഡെമോ"
-  },
-  "settings": {
-    "message": "ക്രമീകരണങ്ങൾ"
-  },
-  "darkMode": {
-    "message": "ഇരുണ്ട മോഡ്"
-  },
-  "exportJSON": {
-    "message": "JSON കയറ്റുമതി ചെയ്യുക"
-  },
-  "importJSON": {
-    "message": "JSON ഇറക്കുമതി ചെയ്യുക"
-  },
-  "showTabs": {
-    "message": "ടാബുകൾ കാണിക്കുക"
-  },
-  "supportUs": {
-    "message": "ഞങ്ങളെ പിന്തുണയ്ക്കുക"
-  },
-  "title": {
-    "message": "ശീർഷകം"
-  }
+  "created": { "message": "സൃഷ്ടിച്ചു" },
+  "deleteAll": { "message": "എല്ലാം ഇല്ലാതാക്കുക" },
+  "deleteGroup": { "message": "ഗ്രൂപ്പ് ഇല്ലാതാക്കുക" },
+  "hideTabs": { "message": "ടാബുകൾ മറയ്‌ക്കുക" },
+  "mergeALLtabs": { "message": "എല്ലാ ടാബുകളും ലയിപ്പിക്കുക" },
+  "mergeLEFTtabs": { "message": "ഇടത് ടാബുകൾ ലയിപ്പിക്കുക" },
+  "mergeRIGHTtabs": { "message": "ശരിയായ ടാബുകൾ ലയിപ്പിക്കുക" },
+  "needHelp": { "message": "സഹായം ആവശ്യമുണ്ട്?" },
+  "openAll": { "message": "എല്ലാം തുറക്കുക" },
+  "openGroup": { "message": "ഗ്രൂപ്പ് തുറക്കുക" },
+  "pickColor": { "message": "ഗ്രൂപ്പ് വർണ്ണം തിരഞ്ഞെടുക്കുക" },
+  "quickDemo": { "message": "ദ്രുത ഡെമോ" },
+  "settings": { "message": "ക്രമീകരണങ്ങൾ" },
+  "darkMode": { "message": "ഇരുണ്ട മോഡ്" },
+  "exportJSON": { "message": "JSON കയറ്റുമതി ചെയ്യുക" },
+  "importJSON": { "message": "JSON ഇറക്കുമതി ചെയ്യുക" },
+  "showTabs": { "message": "ടാബുകൾ കാണിക്കുക" },
+  "supportUs": { "message": "ഞങ്ങളെ പിന്തുണയ്ക്കുക" },
+  "title": { "message": "ശീർഷകം" }
 }

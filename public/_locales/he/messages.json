@@ -1,95 +1,45 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "משלב את הכרטיסיות שלך למיקום אחד כדי לחסוך את השימוש בזיכרון ולהגדיל את הפרודוקטיביות שלך."
   },
-  "addGroup": {
-    "message": "הוסף קבוצה"
-  },
-  "bgAll": {
-    "message": "מיזג את כל הכרטיסיות בחלון זה"
-  },
-  "bgContact": {
-    "message": "צור קשר"
-  },
-  "bgExclude": {
-    "message": "מיזוג כרטיסיות למעט הכרטיסייה הנוכחית בחלון זה"
-  },
-  "bgInstructions": {
-    "message": "הוראות"
-  },
-  "bgLeft": {
-    "message": "מיזג כרטיסיות ל- LEFT מהכרטיסייה הנוכחית בחלון זה"
-  },
-  "bgOnly": {
-    "message": "מיזוג הכרטיסייה הנוכחית בלבד בחלון זה"
-  },
-  "bgOpen": {
-    "message": "פתח את TabMerger"
-  },
-  "bgRight": {
-    "message": "מיזג כרטיסיות לימין של הכרטיסייה הנוכחית בחלון זה"
-  },
-  "bgSiteExclude": {
-    "message": "אל תכלול את האתר מהראות של TabMerger"
-  },
-  "created": {
-    "message": "נוצר"
-  },
-  "deleteAll": {
-    "message": "מחק הכל"
-  },
-  "deleteGroup": {
-    "message": "מחק קבוצה"
-  },
-  "hideTabs": {
-    "message": "הסתר כרטיסיות"
-  },
-  "mergeALLtabs": {
-    "message": "מיזג את כל הכרטיסיות"
-  },
-  "mergeLEFTtabs": {
-    "message": "מיזוג כרטיסיות שמאלה"
-  },
-  "mergeRIGHTtabs": {
-    "message": "מיזוג כרטיסיות ימניות"
-  },
-  "needHelp": {
-    "message": "זקוק לעזרה?"
-  },
-  "openAll": {
-    "message": "תפתח הכל"
-  },
-  "openGroup": {
-    "message": "קבוצה פתוחה"
-  },
-  "pickColor": {
-    "message": "בחר צבע קבוצתי"
-  },
-  "quickDemo": {
-    "message": "הדגמה מהירה"
-  },
-  "settings": {
-    "message": "הגדרות"
-  },
-  "darkMode": {
-    "message": "מצב כהה"
-  },
-  "exportJSON": {
-    "message": "ייצא את JSON"
-  },
-  "importJSON": {
-    "message": "ייבא את JSON"
-  },
-  "showTabs": {
-    "message": "הצג כרטיסיות"
-  },
-  "supportUs": {
-    "message": "תמכו בנו"
-  },
-  "title": {
-    "message": "כותרת"
-  }
+  "leaveReview": { "message": "השאירו ביקורת" },
+  "donate": { "message": "לִתְרוֹם" },
+  "copyright": { "message": "זכויות יוצרים" },
+  "tabs": { "message": "כרטיסיות" },
+  "tab": { "message": "כרטיסייה" },
+  "searchForTabs": { "message": "חפש כרטיסיות" },
+  "group": { "message": "קְבוּצָה" },
+  "write": { "message": "לִכתוֹב" },
+  "read": { "message": "לקרוא" },
+  "sync": { "message": "לְסַנכְרֵן" },
+  "addGroup": { "message": "הוסף קבוצה" },
+  "bgAll": { "message": "מיזג את כל הכרטיסיות בחלון זה" },
+  "bgContact": { "message": "צור קשר" },
+  "bgExclude": { "message": "מיזוג כרטיסיות למעט הכרטיסייה הנוכחית בחלון זה" },
+  "bgInstructions": { "message": "הוראות" },
+  "bgLeft": { "message": "מיזג כרטיסיות ל- LEFT מהכרטיסייה הנוכחית בחלון זה" },
+  "bgOnly": { "message": "מיזוג הכרטיסייה הנוכחית בלבד בחלון זה" },
+  "bgOpen": { "message": "פתח את TabMerger" },
+  "bgRight": { "message": "מיזג כרטיסיות לימין של הכרטיסייה הנוכחית בחלון זה" },
+  "bgSiteExclude": { "message": "אל תכלול את האתר מהראות של TabMerger" },
+  "created": { "message": "נוצר" },
+  "deleteAll": { "message": "מחק הכל" },
+  "deleteGroup": { "message": "מחק קבוצה" },
+  "hideTabs": { "message": "הסתר כרטיסיות" },
+  "mergeALLtabs": { "message": "מיזג את כל הכרטיסיות" },
+  "mergeLEFTtabs": { "message": "מיזוג כרטיסיות שמאלה" },
+  "mergeRIGHTtabs": { "message": "מיזוג כרטיסיות ימניות" },
+  "needHelp": { "message": "זקוק לעזרה?" },
+  "openAll": { "message": "תפתח הכל" },
+  "openGroup": { "message": "קבוצה פתוחה" },
+  "pickColor": { "message": "בחר צבע קבוצתי" },
+  "quickDemo": { "message": "הדגמה מהירה" },
+  "settings": { "message": "הגדרות" },
+  "darkMode": { "message": "מצב כהה" },
+  "exportJSON": { "message": "ייצא את JSON" },
+  "importJSON": { "message": "ייבא את JSON" },
+  "showTabs": { "message": "הצג כרטיסיות" },
+  "supportUs": { "message": "תמכו בנו" },
+  "title": { "message": "כותרת" }
 }

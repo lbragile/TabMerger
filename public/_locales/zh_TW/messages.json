@@ -1,95 +1,44 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "将选项卡合并到一个位置，以节省内存使用量并提高生产率。"
   },
-  "addGroup": {
-    "message": "新增群组"
-  },
-  "bgAll": {
-    "message": "合并此窗口中的所有标签"
-  },
-  "bgContact": {
-    "message": "联系我们"
-  },
-  "bgExclude": {
-    "message": "合并选项卡，此窗口中不包括当前选项卡"
-  },
-  "bgInstructions": {
-    "message": "使用说明"
-  },
-  "bgLeft": {
-    "message": "在此窗口中将标签合并到当前标签的左侧"
-  },
-  "bgOnly": {
-    "message": "在此窗口中仅合并当前选项卡"
-  },
-  "bgOpen": {
-    "message": "打开TabMerger"
-  },
-  "bgRight": {
-    "message": "在此窗口中将标签合并到当前标签的右侧"
-  },
-  "bgSiteExclude": {
-    "message": "从TabMerger的可见性中排除网站"
-  },
-  "created": {
-    "message": "已建立"
-  },
-  "deleteAll": {
-    "message": "删除所有"
-  },
-  "deleteGroup": {
-    "message": "删除群组"
-  },
-  "hideTabs": {
-    "message": "隐藏标签"
-  },
-  "mergeALLtabs": {
-    "message": "合并所有标签"
-  },
-  "mergeLEFTtabs": {
-    "message": "合并左标签"
-  },
-  "mergeRIGHTtabs": {
-    "message": "合并右标签"
-  },
-  "needHelp": {
-    "message": "需要帮忙？"
-  },
-  "openAll": {
-    "message": "全部打开"
-  },
-  "openGroup": {
-    "message": "公开组"
-  },
-  "pickColor": {
-    "message": "选择组颜色"
-  },
-  "quickDemo": {
-    "message": "快速演示"
-  },
-  "settings": {
-    "message": "设定值"
-  },
-  "darkMode": {
-    "message": "暗模式"
-  },
-  "exportJSON": {
-    "message": "汇出JSON"
-  },
-  "importJSON": {
-    "message": "导入JSON"
-  },
-  "showTabs": {
-    "message": "显示标签"
-  },
-  "supportUs": {
-    "message": "支持我们"
-  },
-  "title": {
-    "message": "标题"
-  }
+  "leaveReview": { "message": "离开评论" },
+  "donate": { "message": "捐" },
+  "copyright": { "message": "版权" },
+  "tabs": { "message": "标签" },
+  "tab": { "message": "标签" },
+  "searchForTabs": { "message": "搜索标签" },
+  "group": { "message": "组" },
+  "write": { "message": "写" },
+  "read": { "message": "读" },
+  "sync": { "message": "同步" },
+  "addGroup": { "message": "新增群组" },
+  "bgAll": { "message": "合并此窗口中的所有标签" },
+  "bgContact": { "message": "联系我们" },
+  "bgExclude": { "message": "合并选项卡，此窗口中不包括当前选项卡" },
+  "bgInstructions": { "message": "使用说明" },
+  "bgLeft": { "message": "在此窗口中将标签合并到当前标签的左侧" },
+  "bgOnly": { "message": "在此窗口中仅合并当前选项卡" },
+  "bgOpen": { "message": "打开TabMerger" },
+  "bgRight": { "message": "在此窗口中将标签合并到当前标签的右侧" },
+  "bgSiteExclude": { "message": "从TabMerger的可见性中排除网站" },
+  "created": { "message": "已建立" },
+  "deleteAll": { "message": "删除所有" },
+  "deleteGroup": { "message": "删除群组" },
+  "hideTabs": { "message": "隐藏标签" },
+  "mergeALLtabs": { "message": "合并所有标签" },
+  "mergeLEFTtabs": { "message": "合并左标签" },
+  "mergeRIGHTtabs": { "message": "合并右标签" },
+  "needHelp": { "message": "需要帮忙？" },
+  "openAll": { "message": "全部打开" },
+  "openGroup": { "message": "公开组" },
+  "pickColor": { "message": "选择组颜色" },
+  "quickDemo": { "message": "快速演示" },
+  "settings": { "message": "设定值" },
+  "darkMode": { "message": "暗模式" },
+  "exportJSON": { "message": "汇出JSON" },
+  "importJSON": { "message": "导入JSON" },
+  "showTabs": { "message": "显示标签" },
+  "title": { "message": "标题" }
 }

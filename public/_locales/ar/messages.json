@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "يدمج علامات التبويب الخاصة بك في مكان واحد لتوفير استخدام الذاكرة وزيادة إنتاجيتك."
   },
-  "addGroup": {
-    "message": "أضف مجموعة"
-  },
-  "bgAll": {
-    "message": "دمج جميع علامات التبويب في هذه النافذة"
-  },
-  "bgContact": {
-    "message": "اتصل بنا"
-  },
+  "Leave Review": { "message": "اترك مراجعة" },
+  "Donate": { "message": "تبرع" },
+  "Copyright": { "message": "حقوق النشر" },
+  "Tabs": { "message": "نوافذ التبويب" },
+  "Tab": { "message": "التبويب" },
+  "Search for tabs": { "message": "ابحث عن علامات التبويب" },
+  "group": { "message": "مجموعة" },
+  "Sync Write": { "message": "مزامنة الكتابة" },
+  "Sync Read": { "message": "قراءة المزامنة" },
+  "Sync": { "message": "مزامنة" },
+  "addGroup": { "message": "أضف مجموعة" },
+  "bgAll": { "message": "دمج جميع علامات التبويب في هذه النافذة" },
+  "bgContact": { "message": "اتصل بنا" },
   "bgExclude": {
     "message": "دمج علامات التبويب باستثناء علامة التبويب الحالية في هذه النافذة"
   },
-  "bgInstructions": {
-    "message": "تعليمات"
-  },
+  "bgInstructions": { "message": "تعليمات" },
   "bgLeft": {
     "message": "دمج علامات التبويب إلى اليسار من علامة التبويب الحالية في هذه النافذة"
   },
-  "bgOnly": {
-    "message": "دمج علامة التبويب الحالية فقط في هذه النافذة"
-  },
-  "bgOpen": {
-    "message": "افتح TabMerger"
-  },
+  "bgOnly": { "message": "دمج علامة التبويب الحالية فقط في هذه النافذة" },
+  "bgOpen": { "message": "افتح TabMerger" },
   "bgRight": {
     "message": "دمج علامات التبويب في يمين علامة التبويب الحالية في هذه النافذة"
   },
-  "bgSiteExclude": {
-    "message": "استبعاد الموقع من رؤية TabMerger"
-  },
-  "created": {
-    "message": "خلقت"
-  },
-  "deleteAll": {
-    "message": "حذف الكل"
-  },
-  "deleteGroup": {
-    "message": "حذف المجموعة"
-  },
-  "hideTabs": {
-    "message": "إخفاء علامات التبويب"
-  },
-  "mergeALLtabs": {
-    "message": "دمج جميع علامات التبويب"
-  },
-  "mergeLEFTtabs": {
-    "message": "دمج علامات التبويب اليسرى"
-  },
-  "mergeRIGHTtabs": {
-    "message": "دمج علامات التبويب اليمنى"
-  },
-  "needHelp": {
-    "message": "تحتاج مساعدة؟"
-  },
-  "openAll": {
-    "message": "افتح الكل"
-  },
-  "openGroup": {
-    "message": "مجموعة مفتوحة"
-  },
-  "pickColor": {
-    "message": "اختر لون المجموعة"
-  },
-  "quickDemo": {
-    "message": "عرض سريع"
-  },
-  "settings": {
-    "message": "إعدادات"
-  },
-  "darkMode": {
-    "message": "الوضع المظلم"
-  },
-  "exportJSON": {
-    "message": "تصدير JSON"
-  },
-  "importJSON": {
-    "message": "استيراد JSON"
-  },
-  "showTabs": {
-    "message": "إظهار علامات التبويب"
-  },
-  "supportUs": {
-    "message": "ادعمنا"
-  },
-  "title": {
-    "message": "عنوان"
-  }
+  "bgSiteExclude": { "message": "استبعاد الموقع من رؤية TabMerger" },
+  "created": { "message": "خلقت" },
+  "deleteAll": { "message": "حذف الكل" },
+  "deleteGroup": { "message": "حذف المجموعة" },
+  "hideTabs": { "message": "إخفاء علامات التبويب" },
+  "mergeALLtabs": { "message": "دمج جميع علامات التبويب" },
+  "mergeLEFTtabs": { "message": "دمج علامات التبويب اليسرى" },
+  "mergeRIGHTtabs": { "message": "دمج علامات التبويب اليمنى" },
+  "needHelp": { "message": "تحتاج مساعدة؟" },
+  "openAll": { "message": "افتح الكل" },
+  "openGroup": { "message": "مجموعة مفتوحة" },
+  "pickColor": { "message": "اختر لون المجموعة" },
+  "quickDemo": { "message": "عرض سريع" },
+  "settings": { "message": "إعدادات" },
+  "darkMode": { "message": "الوضع المظلم" },
+  "exportJSON": { "message": "تصدير JSON" },
+  "importJSON": { "message": "استيراد JSON" },
+  "showTabs": { "message": "إظهار علامات التبويب" },
+  "supportUs": { "message": "ادعمنا" },
+  "title": { "message": "عنوان" }
 }

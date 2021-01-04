@@ -1,95 +1,55 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Inaunganisha tabo zako katika eneo moja ili kuhifadhi matumizi ya kumbukumbu na kuongeza uzalishaji wako."
   },
-  "addGroup": {
-    "message": "Ongeza Kikundi"
-  },
-  "bgAll": {
-    "message": "Unganisha tabo ZOTE kwenye dirisha hili"
-  },
-  "bgContact": {
-    "message": "Wasiliana nasi"
-  },
+  "leaveReview": { "message": "kuondoka Tathmini" },
+  "donate": { "message": "Changia" },
+  "copyright": { "message": "Copyright" },
+  "tabs": { "message": "Tabs" },
+  "tab": { "message": "tab" },
+  "searchForTabs": { "message": "Tafuta tabo" },
+  "group": { "message": "kundi" },
+  "write": { "message": "Andika" },
+  "read": { "message": "Read" },
+  "sync": { "message": "Synchronize" },
+  "addGroup": { "message": "Ongeza Kikundi" },
+  "bgAll": { "message": "Unganisha tabo ZOTE kwenye dirisha hili" },
+  "bgContact": { "message": "Wasiliana nasi" },
   "bgExclude": {
     "message": "Unganisha tabo ukiondoa kichupo cha sasa kwenye dirisha hili"
   },
-  "bgInstructions": {
-    "message": "Maagizo"
-  },
+  "bgInstructions": { "message": "Maagizo" },
   "bgLeft": {
     "message": "Unganisha tabo kwenda KUSHOTO kwa kichupo cha sasa kwenye dirisha hili"
   },
   "bgOnly": {
     "message": "Unganisha kichupo cha sasa pekee kwenye dirisha hili"
   },
-  "bgOpen": {
-    "message": "Fungua TabMerger"
-  },
+  "bgOpen": { "message": "Fungua TabMerger" },
   "bgRight": {
     "message": "Unganisha tabo kwa HAKI ya kichupo cha sasa kwenye dirisha hili"
   },
   "bgSiteExclude": {
     "message": "Tenga tovuti kutoka kwa mwonekano wa TabMerger"
   },
-  "created": {
-    "message": "Imeundwa"
-  },
-  "deleteAll": {
-    "message": "Futa Zote"
-  },
-  "deleteGroup": {
-    "message": "Futa Kikundi"
-  },
-  "hideTabs": {
-    "message": "Ficha Tabo"
-  },
-  "mergeALLtabs": {
-    "message": "Unganisha Tabo ZOTE"
-  },
-  "mergeLEFTtabs": {
-    "message": "Unganisha Vichupo VYA KUSHOTO"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Unganisha Vichupo SAHIHI"
-  },
-  "needHelp": {
-    "message": "Unahitaji Msaada?"
-  },
-  "openAll": {
-    "message": "Fungua Zote"
-  },
-  "openGroup": {
-    "message": "Fungua Kikundi"
-  },
-  "pickColor": {
-    "message": "Chagua Rangi ya Kikundi"
-  },
-  "quickDemo": {
-    "message": "Demo ya Haraka"
-  },
-  "settings": {
-    "message": "Mipangilio"
-  },
-  "darkMode": {
-    "message": "Njia Nyeusi"
-  },
-  "exportJSON": {
-    "message": "Hamisha JSON"
-  },
-  "importJSON": {
-    "message": "Ingiza JSON"
-  },
-  "showTabs": {
-    "message": "Onyesha Tabo"
-  },
-  "supportUs": {
-    "message": "Tusaidie"
-  },
-  "title": {
-    "message": "Kichwa"
-  }
+  "created": { "message": "Imeundwa" },
+  "deleteAll": { "message": "Futa Zote" },
+  "deleteGroup": { "message": "Futa Kikundi" },
+  "hideTabs": { "message": "Ficha Tabo" },
+  "mergeALLtabs": { "message": "Unganisha Tabo ZOTE" },
+  "mergeLEFTtabs": { "message": "Unganisha Vichupo VYA KUSHOTO" },
+  "mergeRIGHTtabs": { "message": "Unganisha Vichupo SAHIHI" },
+  "needHelp": { "message": "Unahitaji Msaada?" },
+  "openAll": { "message": "Fungua Zote" },
+  "openGroup": { "message": "Fungua Kikundi" },
+  "pickColor": { "message": "Chagua Rangi ya Kikundi" },
+  "quickDemo": { "message": "Demo ya Haraka" },
+  "settings": { "message": "Mipangilio" },
+  "darkMode": { "message": "Njia Nyeusi" },
+  "exportJSON": { "message": "Hamisha JSON" },
+  "importJSON": { "message": "Ingiza JSON" },
+  "showTabs": { "message": "Onyesha Tabo" },
+  "supportUs": { "message": "Tusaidie" },
+  "title": { "message": "Kichwa" }
 }

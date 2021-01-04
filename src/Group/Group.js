@@ -26,8 +26,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import * as GroupFunc from "./Group_functions";
 import { translate } from "../App/App_functions";
 
-// prettier-ignore
-import {  AiOutlineMinus,  AiOutlineClose,  AiOutlineReload,} from "react-icons/ai";
+import { AiOutlineMinus, AiOutlineClose } from "react-icons/ai";
 import { VscChromeRestore } from "react-icons/vsc";
 import { BiColorFill, BiArrowToRight } from "react-icons/bi";
 import { MdVerticalAlignCenter } from "react-icons/md";
@@ -56,27 +55,20 @@ export default function Group(props) {
   return (
     <div className={"group-item " + ("group-0" === props.id ? "mt-0" : "mt-3")}>
       <div className="group-title d-flex flex-row justify-content-center">
-        <h5 className="tabTotal-inGroup">
-          {props.num_tabs + (props.num_tabs !== 1 ? " Tabs" : " Tab")}
+        <h5 className="group-tab-count">
+          {props.num_tabs +
+            " " +
+            translate(props.num_tabs !== 1 ? "tabs" : "tab")}
         </h5>
 
-        <p
-          className="title-edit-input font-weight-bold p-1 mb-0"
-          contentEditable
-          onFocus={(e) => GroupFunc.selectTitle(e)}
-          onBlur={(e) => GroupFunc.setTitle(e, props.setGroups)}
-          onKeyDown={(e) =>
-            GroupFunc.monitorTitleLength(e, TITLE_TRIM_LIMIT.current)
-          }
-        >
-          <span>{props.title}</span>
-          <span className="reload-title">
-            <AiOutlineReload
-              size="1.2rem"
-              onClick={(e) => GroupFunc.reloadTitle(e, props.title)}
-            />
-          </span>
-        </p>
+        <input
+          className="title-edit-input font-weight-bold mb-0"
+          onFocus={(e) => e.target.select()}
+          onBlur={(e) => GroupFunc.setTitle(e, props.setGroups, props.title)}
+          onKeyDown={(e) => GroupFunc.blurOnEnter(e)}
+          maxLength={TITLE_TRIM_LIMIT.current}
+          defaultValue={props.title}
+        />
 
         <div className="title-btn-containter row">
           <div>
@@ -126,14 +118,11 @@ export default function Group(props) {
         </div>
       </div>
 
-      <div
-        id={props.id}
-        className={props.className}
-        onDragOver={GroupFunc.dragOver}
-      >
+      <div id={props.id} className="group" onDragOver={GroupFunc.dragOver}>
         <div className="created mr-1">
           <b>{translate("created")}:</b> <span>{props.created}</span>
         </div>
+
         <div className="merging-container float-right">
           <div className="d-flex flex-column">
             <Button

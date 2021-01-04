@@ -33,6 +33,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { AiOutlineSearch, AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { BiImport, BiExport, BiHelpCircle } from "react-icons/bi";
 import { BsCloudUpload, BsCloudDownload, BsChat, BsInfoCircle } from "react-icons/bs"; // prettier-ignore
+import { FaReddit, FaStackOverflow } from "react-icons/fa";
 import { FiYoutube, FiStar, FiSettings } from "react-icons/fi";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
@@ -44,20 +45,15 @@ export default function App() {
   const NUM_GROUP_LIMIT = useRef(100); // 3 for testing - 100 for production
 
   const links = useRef([
-    // prettier-ignore
-    { url: "https://tabmerger.herokuapp.com/", text: "Help", icon: <BiHelpCircle color="black" /> },
-    // prettier-ignore
-    { url: "https://youtu.be/zkI0T-GzmzQ", text: "Demo", icon: <FiYoutube color="black" /> },
-    // prettier-ignore
-    { url: process.env.REACT_APP_PAYPAL_URL, text: "Donate", icon: <RiHandCoinLine color="black" /> },
-    // prettier-ignore
-    { url: AppFunc.getTabMergerLink(true), text: "Review", icon: <FiStar color="black" /> },
-    // prettier-ignore
-    { url: "https://tabmerger.herokuapp.com/contact", text: "Contact", icon: <BsChat color="black" /> },
-    // prettier-ignore
-    { url: "https://github.com/lbragile/TabMerger", text: "GitHub", icon: <AiFillGithub color="black" /> },
-    // prettier-ignore
-    { url: "https://www.linkedin.com/in/liorbragilevsky/", text: "LinkedIn", icon: <AiFillLinkedin color="black" /> },
+    { url: "https://tabmerger.herokuapp.com/", text: AppFunc.translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
+    { url: "https://youtu.be/zkI0T-GzmzQ", text: AppFunc.translate("quickDemo"), icon: <FiYoutube color="black" /> }, // prettier-ignore
+    { url: process.env.REACT_APP_PAYPAL_URL, text: AppFunc.translate("donate"), icon: <RiHandCoinLine color="black" /> }, // prettier-ignore
+    { url: AppFunc.getTabMergerLink(true), text: AppFunc.translate("leaveReview"), icon: <FiStar color="black" /> }, // prettier-ignore
+    { url: "https://tabmerger.herokuapp.com/contact", text: AppFunc.translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
+    { url: "https://github.com/lbragile/TabMerger", text: "GitHub", icon: <AiFillGithub color="black" /> }, // prettier-ignore
+    { url: "https://www.linkedin.com/in/liorbragilevsky/", text: "LinkedIn", icon: <AiFillLinkedin color="black" /> }, // prettier-ignore
+    { url: "https://stackoverflow.com/users/4298115/lbragile", text: "StackOverflow", icon: <FaStackOverflow color="black" /> }, // prettier-ignore
+    { url: "https://www.reddit.com/user/lbragile_dev", text: "Reddit", icon: <FaReddit color="black" /> }, // prettier-ignore
   ]);
 
   var syncTimestamp = useRef();
@@ -127,7 +123,9 @@ export default function App() {
         <div className="subtitle">
           <h2 id="tab-total" className="mt-2 mb-4">
             <span className="small">
-              {tabTotal + (tabTotal === 1 ? " Tab" : " Tabs")}
+              {tabTotal +
+                " " +
+                AppFunc.translate(tabTotal === 1 ? "tab" : "tabs")}
             </span>
           </h2>
         </div>
@@ -141,18 +139,18 @@ export default function App() {
             type="text"
             name="search-group"
             maxLength={20}
-            placeholder="Search for tabs..."
+            placeholder={AppFunc.translate("searchForTabs") + "..."}
             onChange={(e) => AppFunc.filterRegEx(e)}
+            onBlur={(e) => e.target.select()}
           />
           <div className="input-group-append">
             <span className="input-group-text">
               <div className="tip">
                 <BsInfoCircle color="white" size="1rem" />
                 <span className="tiptext-global-white text-left">
-                  <small>
-                    #_ &rarr; Group
-                    <br />_ &rarr; Tab
-                  </small>
+                  #___ &rarr; {AppFunc.translate("group")}
+                  <br />
+                  ___ &rarr; {AppFunc.translate("tab")}
                 </span>
               </div>
             </span>
@@ -163,7 +161,8 @@ export default function App() {
 
         <div className="global-btn-row col">
           <p className="mx-auto alert alert-danger" id="sync-text">
-            <b>Sync:</b> <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
+            <b>{AppFunc.translate("sync").substr(0, 4)}:</b>{" "}
+            <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
           </p>
 
           <Button
@@ -200,7 +199,9 @@ export default function App() {
             <Button
               id="sync-write-btn"
               classes="p-0 mx-1 btn-in-global"
-              translate={"Sync Write"}
+              translate={
+                AppFunc.translate("sync").substr(0, 4) + " " +  AppFunc.translate("write") // prettier-ignore
+              }
               tooltip={"tiptext-global"}
               onClick={() => AppFunc.updateSync(syncTimestamp.current)}
             >
@@ -243,7 +244,9 @@ export default function App() {
             <Button
               id="sync-read-btn"
               classes="p-0 mx-1 btn-in-global"
-              translate={"Sync Read"}
+              translate={
+                AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("read") // prettier-ignore
+              }
               tooltip={"tiptext-global"}
               onClick={() =>
                 // prettier-ignore
@@ -272,7 +275,7 @@ export default function App() {
             <Button
               id={x.text.toLowerCase() + "-btn"}
               classes="p-0 mx-1 link-global btn-in-global"
-              translate={AppFunc.translate(x.text)}
+              translate={x.text}
               tooltip={"tiptext-global"}
               onClick={() => window.open(x.url, "_blank")}
               key={Math.random()}
@@ -290,7 +293,6 @@ export default function App() {
               <Button
                 id={x.text.toLowerCase() + "-btn"}
                 classes="p-0 mx-1 link-global btn-in-global"
-                translate={AppFunc.translate(x.text)}
                 onClick={() => window.open(x.url, "_blank")}
                 key={Math.random()}
               >
@@ -307,7 +309,7 @@ export default function App() {
 
       <div className="container-fluid" id="main">
         <div className="col" id="tabmerger-container">
-          <div className="groups-container my-4">
+          <div className="groups-container">
             {
               // prettier-ignore
               AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current, setGroups, setTabTotal)

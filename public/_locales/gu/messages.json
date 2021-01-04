@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "મેમરી ટેક્સ્ટને બચાવવા અને તમારી ઉત્પાદકતા વધારવા માટે તમારા ટsબ્સને એક સ્થાનમાં મર્જ કરે છે."
   },
-  "addGroup": {
-    "message": "જૂથ ઉમેરો"
-  },
-  "bgAll": {
-    "message": "આ વિંડોમાં બધા ટsબ્સ મર્જ કરો"
-  },
-  "bgContact": {
-    "message": "અમારો સંપર્ક કરો"
-  },
+  "leaveReview": { "message": "છોડો સમીક્ષા" },
+  "donate": { "message": "દાન" },
+  "copyright": { "message": "કોપીરાઇટ" },
+  "tabs": { "message": "ટૅબ્સ" },
+  "tab": { "message": "ટૅબ" },
+  "searchForTabs": { "message": "ટૅબ્સ માટે શોધ" },
+  "group": { "message": "જૂથ" },
+  "write": { "message": "લખો" },
+  "read": { "message": "વાંચવું" },
+  "sync": { "message": "સમન્વય" },
+  "addGroup": { "message": "જૂથ ઉમેરો" },
+  "bgAll": { "message": "આ વિંડોમાં બધા ટsબ્સ મર્જ કરો" },
+  "bgContact": { "message": "અમારો સંપર્ક કરો" },
   "bgExclude": {
     "message": "આ વિંડોમાં વર્તમાન ટ tabબને બાદ કરતાં ટsબ્સ મર્જ કરો"
   },
-  "bgInstructions": {
-    "message": "સૂચનાઓ"
-  },
+  "bgInstructions": { "message": "સૂચનાઓ" },
   "bgLeft": {
     "message": "આ વિંડોમાં ટ tabબ્સને વર્તમાન ટ tabબના ડાબેથી મર્જ કરો"
   },
-  "bgOnly": {
-    "message": "આ વિંડોમાં ફક્ત વર્તમાન ટ tabબ મર્જ કરો"
-  },
-  "bgOpen": {
-    "message": "ટMબમર્જર ખોલો"
-  },
+  "bgOnly": { "message": "આ વિંડોમાં ફક્ત વર્તમાન ટ tabબ મર્જ કરો" },
+  "bgOpen": { "message": "ટMબમર્જર ખોલો" },
   "bgRight": {
     "message": "આ વિંડોમાં ટ tabબ્સને વર્તમાન ટ tabબના RIGHT પર મર્જ કરો"
   },
-  "bgSiteExclude": {
-    "message": "ટMબમર્જરની દૃશ્યતામાંથી સાઇટને બાકાત રાખો"
-  },
-  "created": {
-    "message": "બનાવ્યું"
-  },
-  "deleteAll": {
-    "message": "બધું કાઢી નાંખો"
-  },
-  "deleteGroup": {
-    "message": "જૂથ કા .ી નાખો"
-  },
-  "hideTabs": {
-    "message": "ટsબ્સ છુપાવો"
-  },
-  "mergeALLtabs": {
-    "message": "બધા ટsબ્સ મર્જ કરો"
-  },
-  "mergeLEFTtabs": {
-    "message": "ડાબી ટ Tabબ્સ મર્જ કરો"
-  },
-  "mergeRIGHTtabs": {
-    "message": "અધિકાર ટsબ્સ મર્જ કરો"
-  },
-  "needHelp": {
-    "message": "મદદ જોઈતી?"
-  },
-  "openAll": {
-    "message": "બધા ખોલો"
-  },
-  "openGroup": {
-    "message": "ઓપન ગ્રુપ"
-  },
-  "pickColor": {
-    "message": "જૂથનો રંગ ચૂંટો"
-  },
-  "quickDemo": {
-    "message": "ઝડપી ડેમો"
-  },
-  "settings": {
-    "message": "સેટિંગ્સ"
-  },
-  "darkMode": {
-    "message": "ડાર્ક મોડ"
-  },
-  "exportJSON": {
-    "message": "નિકાસ JSON"
-  },
-  "importJSON": {
-    "message": "આયાત કરો JSON"
-  },
-  "showTabs": {
-    "message": "ટsબ્સ બતાવો"
-  },
-  "supportUs": {
-    "message": "અમારો સપોર્ટ કરો"
-  },
-  "title": {
-    "message": "શીર્ષક"
-  }
+  "bgSiteExclude": { "message": "ટMબમર્જરની દૃશ્યતામાંથી સાઇટને બાકાત રાખો" },
+  "created": { "message": "બનાવ્યું" },
+  "deleteAll": { "message": "બધું કાઢી નાંખો" },
+  "deleteGroup": { "message": "જૂથ કા .ી નાખો" },
+  "hideTabs": { "message": "ટsબ્સ છુપાવો" },
+  "mergeALLtabs": { "message": "બધા ટsબ્સ મર્જ કરો" },
+  "mergeLEFTtabs": { "message": "ડાબી ટ Tabબ્સ મર્જ કરો" },
+  "mergeRIGHTtabs": { "message": "અધિકાર ટsબ્સ મર્જ કરો" },
+  "needHelp": { "message": "મદદ જોઈતી?" },
+  "openAll": { "message": "બધા ખોલો" },
+  "openGroup": { "message": "ઓપન ગ્રુપ" },
+  "pickColor": { "message": "જૂથનો રંગ ચૂંટો" },
+  "quickDemo": { "message": "ઝડપી ડેમો" },
+  "settings": { "message": "સેટિંગ્સ" },
+  "darkMode": { "message": "ડાર્ક મોડ" },
+  "exportJSON": { "message": "નિકાસ JSON" },
+  "importJSON": { "message": "આયાત કરો JSON" },
+  "showTabs": { "message": "ટsબ્સ બતાવો" },
+  "supportUs": { "message": "અમારો સપોર્ટ કરો" },
+  "title": { "message": "શીર્ષક" }
 }

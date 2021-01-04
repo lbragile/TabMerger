@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Об’єднує ваші вкладки в одному місці, щоб заощадити використання пам’яті та підвищити продуктивність."
   },
-  "addGroup": {
-    "message": "Додати групу"
-  },
-  "bgAll": {
-    "message": "Об’єднайте ВСІ вкладки у цьому вікні"
-  },
-  "bgContact": {
-    "message": "Зв'яжіться з нами"
-  },
+  "leaveReview": { "message": "залишити відгук" },
+  "donate": { "message": "жертвувати" },
+  "copyright": { "message": "авторське право" },
+  "tabs": { "message": "Виберіть" },
+  "tab": { "message": "табуляція" },
+  "searchForTabs": { "message": "Пошук вкладок" },
+  "group": { "message": "група" },
+  "write": { "message": "написати" },
+  "read": { "message": "Читати" },
+  "sync": { "message": "синхронізувати" },
+  "addGroup": { "message": "Додати групу" },
+  "bgAll": { "message": "Об’єднайте ВСІ вкладки у цьому вікні" },
+  "bgContact": { "message": "Зв'яжіться з нами" },
   "bgExclude": {
     "message": "Об’єднати вкладки ВИМОГО поточної вкладки у цьому вікні"
   },
-  "bgInstructions": {
-    "message": "Інструкції"
-  },
+  "bgInstructions": { "message": "Інструкції" },
   "bgLeft": {
     "message": "Об’єднайте вкладки вліво від поточної вкладки у цьому вікні"
   },
-  "bgOnly": {
-    "message": "Об’єднати ТІЛЬКИ поточну вкладку у цьому вікні"
-  },
-  "bgOpen": {
-    "message": "Відкрийте TabMerger"
-  },
+  "bgOnly": { "message": "Об’єднати ТІЛЬКИ поточну вкладку у цьому вікні" },
+  "bgOpen": { "message": "Відкрийте TabMerger" },
   "bgRight": {
     "message": "Об’єднайте вкладки вправо від поточної вкладки у цьому вікні"
   },
-  "bgSiteExclude": {
-    "message": "Виключити сайт із видимості TabMerger"
-  },
-  "created": {
-    "message": "Створено"
-  },
-  "deleteAll": {
-    "message": "Видалити всі"
-  },
-  "deleteGroup": {
-    "message": "Видалити групу"
-  },
-  "hideTabs": {
-    "message": "Сховати вкладки"
-  },
-  "mergeALLtabs": {
-    "message": "Об’єднати ВСІ Вкладки"
-  },
-  "mergeLEFTtabs": {
-    "message": "Об’єднати ВЛІВО Вкладки"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Об’єднати ПРАВІ вкладки"
-  },
-  "needHelp": {
-    "message": "Потрібна допомога?"
-  },
-  "openAll": {
-    "message": "Відкрити все"
-  },
-  "openGroup": {
-    "message": "Відкрити групу"
-  },
-  "pickColor": {
-    "message": "Виберіть колір групи"
-  },
-  "quickDemo": {
-    "message": "Швидка демонстрація"
-  },
-  "settings": {
-    "message": "Налаштування"
-  },
-  "darkMode": {
-    "message": "Темний режим"
-  },
-  "exportJSON": {
-    "message": "Експортувати JSON"
-  },
-  "importJSON": {
-    "message": "Імпортуйте JSON"
-  },
-  "showTabs": {
-    "message": "Показати вкладки"
-  },
-  "supportUs": {
-    "message": "Підтримайте нас"
-  },
-  "title": {
-    "message": "Заголовок"
-  }
+  "bgSiteExclude": { "message": "Виключити сайт із видимості TabMerger" },
+  "created": { "message": "Створено" },
+  "deleteAll": { "message": "Видалити всі" },
+  "deleteGroup": { "message": "Видалити групу" },
+  "hideTabs": { "message": "Сховати вкладки" },
+  "mergeALLtabs": { "message": "Об’єднати ВСІ Вкладки" },
+  "mergeLEFTtabs": { "message": "Об’єднати ВЛІВО Вкладки" },
+  "mergeRIGHTtabs": { "message": "Об’єднати ПРАВІ вкладки" },
+  "needHelp": { "message": "Потрібна допомога?" },
+  "openAll": { "message": "Відкрити все" },
+  "openGroup": { "message": "Відкрити групу" },
+  "pickColor": { "message": "Виберіть колір групи" },
+  "quickDemo": { "message": "Швидка демонстрація" },
+  "settings": { "message": "Налаштування" },
+  "darkMode": { "message": "Темний режим" },
+  "exportJSON": { "message": "Експортувати JSON" },
+  "importJSON": { "message": "Імпортуйте JSON" },
+  "showTabs": { "message": "Показати вкладки" },
+  "supportUs": { "message": "Підтримайте нас" },
+  "title": { "message": "Заголовок" }
 }

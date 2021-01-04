@@ -502,20 +502,20 @@ describe("deleteAllGroups", () => {
 describe("filterRegEx", () => {
   it("works for group search", () => {
     document.body.innerHTML =
-      '<div class="group-item"><p>aaaaa</p></div>' +
-      '<div class="group-item"><p>bbbbb</p></div>';
+      '<div class="group-item"><input>aaaaa</input><p>aaaaa</p></div>' +
+      '<div class="group-item"><input>bbbbb</input><p>bbbbb</p></div>';
 
     // prettier-ignore
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#abc" } })
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#a" } })
   });
 
   it("works for tab search", () => {
     document.body.innerHTML =
-      '<div class="group-item"><div class="draggable"><p>a</p><a href="a">aaaaa</a></div></div>' +
-      '<div class="group-item"><div class="draggable"><p>b</p><a href="b">bbbbb</a></div></div>';
+      '<div class="group-item"><input>aaaaa</input><div class="draggable"><p>a</p><a href="a">aaaaa</a></div></div>' +
+      '<div class="group-item"><input>bbbbb</input><div class="draggable"><p>b</p><a href="b">bbbbb</a></div></div>';
 
     // prettier-ignore
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "abc" } });
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "a" } });
   });
 
   it("does nothing when no value is supplied (after backspace)", () => {

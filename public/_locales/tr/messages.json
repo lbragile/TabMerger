@@ -1,95 +1,53 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Bellek kullanımından tasarruf etmek ve üretkenliğinizi artırmak için sekmelerinizi tek bir konumda birleştirir."
   },
-  "addGroup": {
-    "message": "Grup ekle"
-  },
-  "bgAll": {
-    "message": "Bu penceredeki TÜM sekmeleri birleştirin"
-  },
-  "bgContact": {
-    "message": "Bize Ulaşın"
-  },
+  "leaveReview": { "message": "Görüş bildirin" },
+  "donate": { "message": "bağışlamak" },
+  "copyright": { "message": "telif hakkı" },
+  "tabs": { "message": "Sekmeler" },
+  "tab": { "message": "çıkıntı" },
+  "searchForTabs": { "message": "sekmelerin ara" },
+  "group": { "message": "grup" },
+  "write": { "message": "Yazmak" },
+  "read": { "message": "Okuma" },
+  "sync": { "message": "Senkronize" },
+  "addGroup": { "message": "Grup ekle" },
+  "bgAll": { "message": "Bu penceredeki TÜM sekmeleri birleştirin" },
+  "bgContact": { "message": "Bize Ulaşın" },
   "bgExclude": {
     "message": "Bu penceredeki geçerli sekme HARİÇ sekmeleri birleştir"
   },
-  "bgInstructions": {
-    "message": "Talimatlar"
-  },
+  "bgInstructions": { "message": "Talimatlar" },
   "bgLeft": {
     "message": "Sekmeleri bu penceredeki geçerli sekmenin SOLU ile birleştir"
   },
-  "bgOnly": {
-    "message": "Bu pencerede YALNIZCA geçerli sekmeyi birleştir"
-  },
-  "bgOpen": {
-    "message": "TabMerger'ı açın"
-  },
+  "bgOnly": { "message": "Bu pencerede YALNIZCA geçerli sekmeyi birleştir" },
+  "bgOpen": { "message": "TabMerger'ı açın" },
   "bgRight": {
     "message": "Sekmeleri bu penceredeki geçerli sekmenin SAĞA birleştirin"
   },
   "bgSiteExclude": {
     "message": "Siteyi TabMerger görünürlüğünden hariç tutun"
   },
-  "created": {
-    "message": "Oluşturuldu"
-  },
-  "deleteAll": {
-    "message": "Hepsini sil"
-  },
-  "deleteGroup": {
-    "message": "Grubu Sil"
-  },
-  "hideTabs": {
-    "message": "Sekmeleri Gizle"
-  },
-  "mergeALLtabs": {
-    "message": "TÜM Sekmeleri Birleştir"
-  },
-  "mergeLEFTtabs": {
-    "message": "SOL Sekmeleri Birleştir"
-  },
-  "mergeRIGHTtabs": {
-    "message": "SAĞ Sekmeleri Birleştir"
-  },
-  "needHelp": {
-    "message": "Yardıma mı ihtiyacınız var?"
-  },
-  "openAll": {
-    "message": "Hepsini aç"
-  },
-  "openGroup": {
-    "message": "Açık Grup"
-  },
-  "pickColor": {
-    "message": "Grup Rengini Seçin"
-  },
-  "quickDemo": {
-    "message": "Hızlı Demo"
-  },
-  "settings": {
-    "message": "Ayarlar"
-  },
-  "darkMode": {
-    "message": "Karanlık Mod"
-  },
-  "exportJSON": {
-    "message": "JSON'yi dışa aktar"
-  },
-  "importJSON": {
-    "message": "JSON'u içe aktar"
-  },
-  "showTabs": {
-    "message": "Sekmeleri Göster"
-  },
-  "supportUs": {
-    "message": "Bizi destekle"
-  },
-  "title": {
-    "message": "Başlık"
-  }
+  "created": { "message": "Oluşturuldu" },
+  "deleteAll": { "message": "Hepsini sil" },
+  "deleteGroup": { "message": "Grubu Sil" },
+  "hideTabs": { "message": "Sekmeleri Gizle" },
+  "mergeALLtabs": { "message": "TÜM Sekmeleri Birleştir" },
+  "mergeLEFTtabs": { "message": "SOL Sekmeleri Birleştir" },
+  "mergeRIGHTtabs": { "message": "SAĞ Sekmeleri Birleştir" },
+  "needHelp": { "message": "Yardıma mı ihtiyacınız var?" },
+  "openAll": { "message": "Hepsini aç" },
+  "openGroup": { "message": "Açık Grup" },
+  "pickColor": { "message": "Grup Rengini Seçin" },
+  "quickDemo": { "message": "Hızlı Demo" },
+  "settings": { "message": "Ayarlar" },
+  "darkMode": { "message": "Karanlık Mod" },
+  "exportJSON": { "message": "JSON'yi dışa aktar" },
+  "importJSON": { "message": "JSON'u içe aktar" },
+  "showTabs": { "message": "Sekmeleri Göster" },
+  "supportUs": { "message": "Bizi destekle" },
+  "title": { "message": "Başlık" }
 }

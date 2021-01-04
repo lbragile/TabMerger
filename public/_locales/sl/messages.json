@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Združi zavihke na enem mestu, da prihrani porabo pomnilnika in poveča produktivnost."
   },
-  "addGroup": {
-    "message": "Dodaj skupino"
-  },
-  "bgAll": {
-    "message": "V tem oknu združite VSE zavihke"
-  },
-  "bgContact": {
-    "message": "Kontaktiraj nas"
-  },
+  "leaveReview": { "message": "Zapusti Pregled" },
+  "donate": { "message": "Donate" },
+  "copyright": { "message": "avtorske pravice" },
+  "tabs": { "message": "zavihki" },
+  "tab": { "message": "Tab" },
+  "searchForTabs": { "message": "Iskanje karticah" },
+  "group": { "message": "skupina" },
+  "write": { "message": "Pisanje" },
+  "read": { "message": "Preberite" },
+  "sync": { "message": "Sinhronizacija" },
+  "addGroup": { "message": "Dodaj skupino" },
+  "bgAll": { "message": "V tem oknu združite VSE zavihke" },
+  "bgContact": { "message": "Kontaktiraj nas" },
   "bgExclude": {
     "message": "Združi zavihke RAZEN trenutnega zavihka v tem oknu"
   },
-  "bgInstructions": {
-    "message": "Navodila"
-  },
+  "bgInstructions": { "message": "Navodila" },
   "bgLeft": {
     "message": "V tem oknu združite zavihke LEVO od trenutnega zavihka"
   },
-  "bgOnly": {
-    "message": "V tem oknu združite SAMO trenutni zavihek"
-  },
-  "bgOpen": {
-    "message": "Odprite TabMerger"
-  },
-  "bgRight": {
-    "message": "V tem oknu združite zavihke v DESNO z zavihkom"
-  },
+  "bgOnly": { "message": "V tem oknu združite SAMO trenutni zavihek" },
+  "bgOpen": { "message": "Odprite TabMerger" },
+  "bgRight": { "message": "V tem oknu združite zavihke v DESNO z zavihkom" },
   "bgSiteExclude": {
     "message": "Izključite spletno mesto iz vidnosti TabMergerja"
   },
-  "created": {
-    "message": "Ustvarjeno"
-  },
-  "deleteAll": {
-    "message": "Izbriši vse"
-  },
-  "deleteGroup": {
-    "message": "Izbriši skupino"
-  },
-  "hideTabs": {
-    "message": "Skrij zavihke"
-  },
-  "mergeALLtabs": {
-    "message": "Združi VSE zavihke"
-  },
-  "mergeLEFTtabs": {
-    "message": "Združi leve zavihke"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Združi DESNE zavihke"
-  },
-  "needHelp": {
-    "message": "Rabim pomoč?"
-  },
-  "openAll": {
-    "message": "Odpri vse"
-  },
-  "openGroup": {
-    "message": "Odpri skupino"
-  },
-  "pickColor": {
-    "message": "Izberite barvo skupine"
-  },
-  "quickDemo": {
-    "message": "Hitra predstavitev"
-  },
-  "settings": {
-    "message": "Nastavitve"
-  },
-  "darkMode": {
-    "message": "Temni način"
-  },
-  "exportJSON": {
-    "message": "Izvozi JSON"
-  },
-  "importJSON": {
-    "message": "Uvozi JSON"
-  },
-  "showTabs": {
-    "message": "Pokaži zavihke"
-  },
-  "supportUs": {
-    "message": "Podprite nas"
-  },
-  "title": {
-    "message": "Naslov"
-  }
+  "created": { "message": "Ustvarjeno" },
+  "deleteAll": { "message": "Izbriši vse" },
+  "deleteGroup": { "message": "Izbriši skupino" },
+  "hideTabs": { "message": "Skrij zavihke" },
+  "mergeALLtabs": { "message": "Združi VSE zavihke" },
+  "mergeLEFTtabs": { "message": "Združi leve zavihke" },
+  "mergeRIGHTtabs": { "message": "Združi DESNE zavihke" },
+  "needHelp": { "message": "Rabim pomoč?" },
+  "openAll": { "message": "Odpri vse" },
+  "openGroup": { "message": "Odpri skupino" },
+  "pickColor": { "message": "Izberite barvo skupine" },
+  "quickDemo": { "message": "Hitra predstavitev" },
+  "settings": { "message": "Nastavitve" },
+  "darkMode": { "message": "Temni način" },
+  "exportJSON": { "message": "Izvozi JSON" },
+  "importJSON": { "message": "Uvozi JSON" },
+  "showTabs": { "message": "Pokaži zavihke" },
+  "supportUs": { "message": "Podprite nas" },
+  "title": { "message": "Naslov" }
 }

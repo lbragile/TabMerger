@@ -1,95 +1,45 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "स्मृति उपयोग को बचाने और अपनी उत्पादकता बढ़ाने के लिए अपने टैब को एक स्थान पर जोड़ता है।"
   },
-  "addGroup": {
-    "message": "समूह जोड़ें"
-  },
-  "bgAll": {
-    "message": "इस विंडो में सभी टैब मर्ज करें"
-  },
-  "bgContact": {
-    "message": "संपर्क करें"
-  },
-  "bgExclude": {
-    "message": "इस विंडो में मौजूदा टैब को छोड़ें टैब को मिलाएं"
-  },
-  "bgInstructions": {
-    "message": "अनुदेश"
-  },
-  "bgLeft": {
-    "message": "इस विंडो में करंट टैब के LEFT में मर्ज करें"
-  },
-  "bgOnly": {
-    "message": "इस विंडो में केवल वर्तमान टैब मर्ज करें"
-  },
-  "bgOpen": {
-    "message": "TabMerger खोलें"
-  },
-  "bgRight": {
-    "message": "इस विंडो में करंट टैब के राइट को मर्ज करें"
-  },
-  "bgSiteExclude": {
-    "message": "TabMerger की दृश्यता से साइट को बाहर करें"
-  },
-  "created": {
-    "message": "बनाया था"
-  },
-  "deleteAll": {
-    "message": "सभी हटा दो"
-  },
-  "deleteGroup": {
-    "message": "समूह हटाएँ"
-  },
-  "hideTabs": {
-    "message": "टैब छिपाएं"
-  },
-  "mergeALLtabs": {
-    "message": "सभी टैब को मर्ज करें"
-  },
-  "mergeLEFTtabs": {
-    "message": "मर्ज बाएँ टैब"
-  },
-  "mergeRIGHTtabs": {
-    "message": "मर्ज राइट टैब"
-  },
-  "needHelp": {
-    "message": "मदद की ज़रूरत है?"
-  },
-  "openAll": {
-    "message": "सभी खुले"
-  },
-  "openGroup": {
-    "message": "समूह खोलें"
-  },
-  "pickColor": {
-    "message": "समूह रंग चुनें"
-  },
-  "quickDemo": {
-    "message": "क्विक डेमो"
-  },
-  "settings": {
-    "message": "समायोजन"
-  },
-  "darkMode": {
-    "message": "डार्क मोड"
-  },
-  "exportJSON": {
-    "message": "JSON निर्यात करें"
-  },
-  "importJSON": {
-    "message": "आयात JSON"
-  },
-  "showTabs": {
-    "message": "टैब दिखाएं"
-  },
-  "supportUs": {
-    "message": "हमें सहयोग दीजिये"
-  },
-  "title": {
-    "message": "शीर्षक"
-  }
+  "leaveReview": { "message": "अवकाश समीक्षा" },
+  "donate": { "message": "दान करना" },
+  "copyright": { "message": "कॉपीराइट" },
+  "tabs": { "message": "टैब" },
+  "tab": { "message": "टैब" },
+  "searchForTabs": { "message": "टैब के लिए खोज" },
+  "group": { "message": "समूह" },
+  "write": { "message": "लिखो" },
+  "read": { "message": "पढ़ें" },
+  "sync": { "message": "सिंक्रनाइज़" },
+  "addGroup": { "message": "समूह जोड़ें" },
+  "bgAll": { "message": "इस विंडो में सभी टैब मर्ज करें" },
+  "bgContact": { "message": "संपर्क करें" },
+  "bgExclude": { "message": "इस विंडो में मौजूदा टैब को छोड़ें टैब को मिलाएं" },
+  "bgInstructions": { "message": "अनुदेश" },
+  "bgLeft": { "message": "इस विंडो में करंट टैब के LEFT में मर्ज करें" },
+  "bgOnly": { "message": "इस विंडो में केवल वर्तमान टैब मर्ज करें" },
+  "bgOpen": { "message": "TabMerger खोलें" },
+  "bgRight": { "message": "इस विंडो में करंट टैब के राइट को मर्ज करें" },
+  "bgSiteExclude": { "message": "TabMerger की दृश्यता से साइट को बाहर करें" },
+  "created": { "message": "बनाया था" },
+  "deleteAll": { "message": "सभी हटा दो" },
+  "deleteGroup": { "message": "समूह हटाएँ" },
+  "hideTabs": { "message": "टैब छिपाएं" },
+  "mergeALLtabs": { "message": "सभी टैब को मर्ज करें" },
+  "mergeLEFTtabs": { "message": "मर्ज बाएँ टैब" },
+  "mergeRIGHTtabs": { "message": "मर्ज राइट टैब" },
+  "needHelp": { "message": "मदद की ज़रूरत है?" },
+  "openAll": { "message": "सभी खुले" },
+  "openGroup": { "message": "समूह खोलें" },
+  "pickColor": { "message": "समूह रंग चुनें" },
+  "quickDemo": { "message": "क्विक डेमो" },
+  "settings": { "message": "समायोजन" },
+  "darkMode": { "message": "डार्क मोड" },
+  "exportJSON": { "message": "JSON निर्यात करें" },
+  "importJSON": { "message": "आयात JSON" },
+  "showTabs": { "message": "टैब दिखाएं" },
+  "supportUs": { "message": "हमें सहयोग दीजिये" },
+  "title": { "message": "शीर्षक" }
 }

@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Yhdistämällä välilehdet yhteen sijaintiin säästät muistin käyttöä ja lisäät tuottavuutta."
   },
-  "addGroup": {
-    "message": "Lisää ryhmä"
-  },
-  "bgAll": {
-    "message": "Yhdistä KAIKKI välilehdet tähän ikkunaan"
-  },
-  "bgContact": {
-    "message": "Ota meihin yhteyttä"
-  },
+  "leaveReview": { "message": "leave Review" },
+  "donate": { "message": "Lahjoittaa" },
+  "copyright": { "message": "tekijänoikeus" },
+  "tabs": { "message": "välilehdet" },
+  "tab": { "message": "kieleke" },
+  "searchForTabs": { "message": "Etsi välilehdet" },
+  "group": { "message": "ryhmä" },
+  "write": { "message": "Kirjoittaa" },
+  "read": { "message": "Lukea" },
+  "sync": { "message": "Synkronoida" },
+  "addGroup": { "message": "Lisää ryhmä" },
+  "bgAll": { "message": "Yhdistä KAIKKI välilehdet tähän ikkunaan" },
+  "bgContact": { "message": "Ota meihin yhteyttä" },
   "bgExclude": {
     "message": "Yhdistä välilehdet lukuun ottamatta nykyistä välilehteä tässä ikkunassa"
   },
-  "bgInstructions": {
-    "message": "Ohjeet"
-  },
+  "bgInstructions": { "message": "Ohjeet" },
   "bgLeft": {
     "message": "Yhdistä välilehdet nykyisen välilehden VASEMMALLE tässä ikkunassa"
   },
-  "bgOnly": {
-    "message": "Yhdistä VAIN nykyinen välilehti tähän ikkunaan"
-  },
-  "bgOpen": {
-    "message": "Avaa TabMerger"
-  },
+  "bgOnly": { "message": "Yhdistä VAIN nykyinen välilehti tähän ikkunaan" },
+  "bgOpen": { "message": "Avaa TabMerger" },
   "bgRight": {
     "message": "Yhdistä välilehdet nykyisen välilehden OIKEALLE tässä ikkunassa"
   },
-  "bgSiteExclude": {
-    "message": "Sulje sivusto pois TabMergerin näkyvyydestä"
-  },
-  "created": {
-    "message": "Luotu"
-  },
-  "deleteAll": {
-    "message": "Poista kaikki"
-  },
-  "deleteGroup": {
-    "message": "Poista ryhmä"
-  },
-  "hideTabs": {
-    "message": "Piilota välilehdet"
-  },
-  "mergeALLtabs": {
-    "message": "Yhdistä KAIKKI välilehdet"
-  },
-  "mergeLEFTtabs": {
-    "message": "Yhdistä VASEN välilehdet"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Yhdistä OIKEA-välilehdet"
-  },
-  "needHelp": {
-    "message": "Tarvitsetko apua?"
-  },
-  "openAll": {
-    "message": "Avaa kaikki"
-  },
-  "openGroup": {
-    "message": "Avaa ryhmä"
-  },
-  "pickColor": {
-    "message": "Valitse ryhmän väri"
-  },
-  "quickDemo": {
-    "message": "Nopea esittely"
-  },
-  "settings": {
-    "message": "asetukset"
-  },
-  "darkMode": {
-    "message": "Tumma tila"
-  },
-  "exportJSON": {
-    "message": "Vie JSON"
-  },
-  "importJSON": {
-    "message": "Tuo JSON"
-  },
-  "showTabs": {
-    "message": "Näytä välilehdet"
-  },
-  "supportUs": {
-    "message": "Tue meitä"
-  },
-  "title": {
-    "message": "Otsikko"
-  }
+  "bgSiteExclude": { "message": "Sulje sivusto pois TabMergerin näkyvyydestä" },
+  "created": { "message": "Luotu" },
+  "deleteAll": { "message": "Poista kaikki" },
+  "deleteGroup": { "message": "Poista ryhmä" },
+  "hideTabs": { "message": "Piilota välilehdet" },
+  "mergeALLtabs": { "message": "Yhdistä KAIKKI välilehdet" },
+  "mergeLEFTtabs": { "message": "Yhdistä VASEN välilehdet" },
+  "mergeRIGHTtabs": { "message": "Yhdistä OIKEA-välilehdet" },
+  "needHelp": { "message": "Tarvitsetko apua?" },
+  "openAll": { "message": "Avaa kaikki" },
+  "openGroup": { "message": "Avaa ryhmä" },
+  "pickColor": { "message": "Valitse ryhmän väri" },
+  "quickDemo": { "message": "Nopea esittely" },
+  "settings": { "message": "asetukset" },
+  "darkMode": { "message": "Tumma tila" },
+  "exportJSON": { "message": "Vie JSON" },
+  "importJSON": { "message": "Tuo JSON" },
+  "showTabs": { "message": "Näytä välilehdet" },
+  "supportUs": { "message": "Tue meitä" },
+  "title": { "message": "Otsikko" }
 }

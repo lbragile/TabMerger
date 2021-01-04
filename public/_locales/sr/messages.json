@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Спаја картице на једном месту ради уштеде меморије и повећања продуктивности."
   },
-  "addGroup": {
-    "message": "Додај групу"
-  },
-  "bgAll": {
-    "message": "Споји СВЕ картице у овом прозору"
-  },
-  "bgContact": {
-    "message": "Контактирајте нас"
-  },
+  "leaveReview": { "message": "Оставите коментар" },
+  "donate": { "message": "поклонити" },
+  "copyright": { "message": "Ауторско право" },
+  "tabs": { "message": "табс" },
+  "tab": { "message": "табулатор" },
+  "searchForTabs": { "message": "Сеарцх фор табс" },
+  "group": { "message": "група" },
+  "write": { "message": "врите" },
+  "read": { "message": "читати" },
+  "sync": { "message": "Синхронизација" },
+  "addGroup": { "message": "Додај групу" },
+  "bgAll": { "message": "Споји СВЕ картице у овом прозору" },
+  "bgContact": { "message": "Контактирајте нас" },
   "bgExclude": {
     "message": "Спајање картица ОСИМ ИСКЉУЧИВА тренутне картице у овом прозору"
   },
-  "bgInstructions": {
-    "message": "Упутства"
-  },
+  "bgInstructions": { "message": "Упутства" },
   "bgLeft": {
     "message": "Споји картице у ЛЕВО тренутне картице у овом прозору"
   },
-  "bgOnly": {
-    "message": "Споји САМО тренутну картицу у овом прозору"
-  },
-  "bgOpen": {
-    "message": "Отворите ТабМергер"
-  },
+  "bgOnly": { "message": "Споји САМО тренутну картицу у овом прозору" },
+  "bgOpen": { "message": "Отворите ТабМергер" },
   "bgRight": {
     "message": "Обједините картице у ДЕСНО са тренутном картицом у овом прозору"
   },
-  "bgSiteExclude": {
-    "message": "Изузмите локацију из видљивости ТабМергера"
-  },
-  "created": {
-    "message": "Створено"
-  },
-  "deleteAll": {
-    "message": "Делете Алл"
-  },
-  "deleteGroup": {
-    "message": "Избриши групу"
-  },
-  "hideTabs": {
-    "message": "Сакриј картице"
-  },
-  "mergeALLtabs": {
-    "message": "Споји СВЕ картице"
-  },
-  "mergeLEFTtabs": {
-    "message": "Споји ЛЕВЕ картице"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Споји ДЕСНЕ картице"
-  },
-  "needHelp": {
-    "message": "Потребна помоћ?"
-  },
-  "openAll": {
-    "message": "Отвори све"
-  },
-  "openGroup": {
-    "message": "Отвори групу"
-  },
-  "pickColor": {
-    "message": "Изаберите групну боју"
-  },
-  "quickDemo": {
-    "message": "Куицк Демо"
-  },
-  "settings": {
-    "message": "Подешавања"
-  },
-  "darkMode": {
-    "message": "Тамни режим"
-  },
-  "exportJSON": {
-    "message": "Извези ЈСОН"
-  },
-  "importJSON": {
-    "message": "Увези ЈСОН"
-  },
-  "showTabs": {
-    "message": "Прикажи картице"
-  },
-  "supportUs": {
-    "message": "Подржи нас"
-  },
-  "title": {
-    "message": "Наслов"
-  }
+  "bgSiteExclude": { "message": "Изузмите локацију из видљивости ТабМергера" },
+  "created": { "message": "Створено" },
+  "deleteAll": { "message": "Делете Алл" },
+  "deleteGroup": { "message": "Избриши групу" },
+  "hideTabs": { "message": "Сакриј картице" },
+  "mergeALLtabs": { "message": "Споји СВЕ картице" },
+  "mergeLEFTtabs": { "message": "Споји ЛЕВЕ картице" },
+  "mergeRIGHTtabs": { "message": "Споји ДЕСНЕ картице" },
+  "needHelp": { "message": "Потребна помоћ?" },
+  "openAll": { "message": "Отвори све" },
+  "openGroup": { "message": "Отвори групу" },
+  "pickColor": { "message": "Изаберите групну боју" },
+  "quickDemo": { "message": "Куицк Демо" },
+  "settings": { "message": "Подешавања" },
+  "darkMode": { "message": "Тамни режим" },
+  "exportJSON": { "message": "Извези ЈСОН" },
+  "importJSON": { "message": "Увези ЈСОН" },
+  "showTabs": { "message": "Прикажи картице" },
+  "supportUs": { "message": "Подржи нас" },
+  "title": { "message": "Наслов" }
 }

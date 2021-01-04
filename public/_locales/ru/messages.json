@@ -1,95 +1,51 @@
 {
-  "appName": {
-    "message": "TabMerger"
-  },
+  "appName": { "message": "TabMerger" },
   "appDesc": {
     "message": "Объединяет ваши вкладки в одно место для экономии памяти и повышения производительности."
   },
-  "addGroup": {
-    "message": "Добавить группу"
-  },
-  "bgAll": {
-    "message": "Объединить ВСЕ вкладки в этом окне"
-  },
-  "bgContact": {
-    "message": "инструкции"
-  },
-  "bgExclude": {
-    "message": "Объединить вкладки"
-  },
-  "bgInstructions": {
-    "message": "Исключить сайт из видимости TabMerger"
-  },
+  "leaveReview": { "message": "Оставить отзыв" },
+  "donate": { "message": "жертвовать" },
+  "copyright": { "message": "авторское право" },
+  "tabs": { "message": "Вкладки" },
+  "tab": { "message": "табуляция" },
+  "searchForTabs": { "message": "Поиск вкладок" },
+  "group": { "message": "группа" },
+  "write": { "message": "Написать" },
+  "read": { "message": "Читать" },
+  "sync": { "message": "Синхронизировать" },
+  "addGroup": { "message": "Добавить группу" },
+  "bgAll": { "message": "Объединить ВСЕ вкладки в этом окне" },
+  "bgContact": { "message": "инструкции" },
+  "bgExclude": { "message": "Объединить вкладки" },
+  "bgInstructions": { "message": "Исключить сайт из видимости TabMerger" },
   "bgLeft": {
     "message": "Объединить вкладки слева от текущей вкладки в этом окне"
   },
-  "bgOnly": {
-    "message": " ЗА ИСКЛЮЧЕНИЕМ текущей вкладки в этом окне"
-  },
-  "bgOpen": {
-    "message": "Откройте TabMerger"
-  },
+  "bgOnly": { "message": " ЗА ИСКЛЮЧЕНИЕМ текущей вкладки в этом окне" },
+  "bgOpen": { "message": "Откройте TabMerger" },
   "bgRight": {
     "message": "Объединить вкладки СПРАВА от текущей вкладки в этом окне"
   },
   "bgSiteExclude": {
     "message": "Объединить ТОЛЬКО текущую вкладку в этом окне"
   },
-  "created": {
-    "message": "Создано"
-  },
-  "deleteAll": {
-    "message": "Удалить все"
-  },
-  "deleteGroup": {
-    "message": "Удалить группу"
-  },
-  "hideTabs": {
-    "message": "Скрыть вкладки"
-  },
-  "mergeALLtabs": {
-    "message": "Объединить ВСЕ вкладки"
-  },
-  "mergeLEFTtabs": {
-    "message": "Объединить левые вкладки"
-  },
-  "mergeRIGHTtabs": {
-    "message": "Объединить ПРАВЫЕ вкладки"
-  },
-  "needHelp": {
-    "message": "Нужна помощь?"
-  },
-  "openAll": {
-    "message": "Открыть все"
-  },
-  "openGroup": {
-    "message": "Открытая группа"
-  },
-  "pickColor": {
-    "message": "Выбрать цвет группы"
-  },
-  "quickDemo": {
-    "message": "Быстрая демонстрация"
-  },
-  "settings": {
-    "message": "Настройки"
-  },
-  "darkMode": {
-    "message": "Темный режим"
-  },
-  "exportJSON": {
-    "message": "Экспорт JSON"
-  },
-  "importJSON": {
-    "message": "Импортировать JSON"
-  },
-  "showTabs": {
-    "message": "Показать вкладки"
-  },
-  "supportUs": {
-    "message": "Поддерживать нас"
-  },
-  "title": {
-    "message": "заглавие"
-  }
+  "created": { "message": "Создано" },
+  "deleteAll": { "message": "Удалить все" },
+  "deleteGroup": { "message": "Удалить группу" },
+  "hideTabs": { "message": "Скрыть вкладки" },
+  "mergeALLtabs": { "message": "Объединить ВСЕ вкладки" },
+  "mergeLEFTtabs": { "message": "Объединить левые вкладки" },
+  "mergeRIGHTtabs": { "message": "Объединить ПРАВЫЕ вкладки" },
+  "needHelp": { "message": "Нужна помощь?" },
+  "openAll": { "message": "Открыть все" },
+  "openGroup": { "message": "Открытая группа" },
+  "pickColor": { "message": "Выбрать цвет группы" },
+  "quickDemo": { "message": "Быстрая демонстрация" },
+  "settings": { "message": "Настройки" },
+  "darkMode": { "message": "Темный режим" },
+  "exportJSON": { "message": "Экспорт JSON" },
+  "importJSON": { "message": "Импортировать JSON" },
+  "showTabs": { "message": "Показать вкладки" },
+  "supportUs": { "message": "Поддерживать нас" },
+  "title": { "message": "заглавие" }
 }
