@@ -4,9 +4,9 @@
 
 
 <p float="left">
-  <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc"><img src="https://i.imgur.com/NKFtwOA.png" alt="Chrome" width="48" height="48"/></a>
-  <a href="https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/"><img src="https://i.imgur.com/YTz727e.png" alt="Firefox" width="48" height="48"/></a>
-  <a href="https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn"><img src="https://i.imgur.com/YQR2RYd.png" alt="Edge" width="48" height="48"/></a>
+  <a href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc"><img src="Docs/Img/README_Chrome_48px.png" alt="Chrome" width="48" height="48"/></a>
+  <a href="https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/"><img src="Docs/Img/README_Firefox_48px.png" alt="Firefox" width="48" height="48"/></a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn"><img src="Docs/Img/README_Edge_48px.png" alt="Edge" width="48" height="48"/></a>
 </p>
 
 
