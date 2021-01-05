@@ -1,4 +1,4 @@
-name: "CodeQL Security Inspection"
+name: 'CodeQL Security Inspection'
 
 on:
   push:
@@ -6,17 +6,11 @@ on:
   pull_request:
     branches: [master]
   schedule:
-    - cron: "39 19 * * 4"
+    - cron: '39 19 * * 4'
 
 jobs:
-  analyze:
-    name: Analyze
+  code-security:
     runs-on: windows-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["javascript"]
 
     steps:
       - name: Checkout repository
@@ -26,7 +20,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
-          languages: ${{ matrix.language }}
+          languages: 'javascript'
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1

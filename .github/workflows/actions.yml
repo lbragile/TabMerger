@@ -1,9 +1,13 @@
 name: TabMerger Unit Testing
 
-on: [push, pull_request]
+on:
+  push:
+    branches: ['master', 'main']
+  pull_request:
+    branches: ['master', 'main']
 
 jobs:
-  test:
+  unit-testing:
     runs-on: windows-latest
 
     steps:
@@ -14,7 +18,7 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -24,7 +28,7 @@ jobs:
       - name: Test using Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: "12"
+          node-version: '12'
 
       - name: Install Dependencies
         run: npm i

@@ -41,4 +41,4 @@ This Code of Conduct applies both within project spaces and in public spaces whe
 
 ### Enforcement :police_car:
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting me at lbragile.masc@gmail.com. All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. I am obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting me at lbragile@gmail.com. All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. I am obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.
