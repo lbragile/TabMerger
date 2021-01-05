@@ -25,6 +25,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "../Button/Button.js";
 
 import * as AppFunc from "./App_functions";
+import * as AppHelper from "./App_helpers";
 
 import "./App.css";
 import "../Button/Button.css";
@@ -60,7 +61,7 @@ export default function App() {
 
   const defaultGroup = useRef({
     color: "#dedede",
-    created: AppFunc.getTimestamp(),
+    created: AppHelper.getTimestamp(),
     tabs: [],
     title: "Title",
   });
@@ -79,7 +80,7 @@ export default function App() {
 
   const toggleSyncTimestamp = useCallback(
     (positive) => {
-      AppFunc.toggleSyncTimestampHelper(positive, syncTimestamp.current);
+      AppHelper.toggleSyncTimestamp(positive, syncTimestamp.current);
     },
     [syncTimestamp]
   );
@@ -92,12 +93,12 @@ export default function App() {
   useEffect(() => {
     const openOrRemoveTabs = (changes, namespace) => {
       // prettier-ignore
-      AppFunc.openOrRemoveTabsHelper(changes, namespace, setTabTotal, setGroups);
+      AppFunc.openOrRemoveTabs(changes, namespace, setTabTotal, setGroups);
     };
 
     const checkMerging = (changes, namespace) => {
       // prettier-ignore
-      AppFunc.checkMergingHelper(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups);
+      AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups);
     };
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
@@ -121,7 +122,7 @@ export default function App() {
           />
         </a>
         <div className="subtitle">
-          <h2 id="tab-total" className="mt-2 mb-4">
+          <h2 className="mt-2 mb-4">
             <span className="small">
               {tabTotal +
                 " " +
@@ -140,8 +141,8 @@ export default function App() {
             name="search-group"
             maxLength={20}
             placeholder={AppFunc.translate("searchForTabs") + "..."}
-            onChange={(e) => AppFunc.filterRegEx(e)}
-            onBlur={(e) => e.target.select()}
+            onChange={(e) => AppFunc.regexSearchForTab(e)}
+            onBlur={(e) => AppFunc.resetSearch(e)}
           />
           <div className="input-group-append">
             <span className="input-group-text">
@@ -203,7 +204,7 @@ export default function App() {
                 AppFunc.translate("sync").substr(0, 4) + " " +  AppFunc.translate("write") // prettier-ignore
               }
               tooltip={"tiptext-global"}
-              onClick={() => AppFunc.updateSync(syncTimestamp.current)}
+              onClick={() => AppFunc.syncWrite(syncTimestamp.current)}
             >
               <BsCloudUpload color="black" size="1.5rem" />
             </Button>
@@ -236,22 +237,15 @@ export default function App() {
               id="import-input"
               type="file"
               accept=".json"
-              onChange={(e) =>
-                AppFunc.readImportedFile(e, setGroups, setTabTotal)
-              }
+              onChange={(e) => AppFunc.importJSON(e, setGroups, setTabTotal)}
             ></input>
 
             <Button
               id="sync-read-btn"
               classes="p-0 mx-1 btn-in-global"
-              translate={
-                AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("read") // prettier-ignore
-              }
+              translate={AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("read")} // prettier-ignore
               tooltip={"tiptext-global"}
-              onClick={() =>
-                // prettier-ignore
-                AppFunc.loadSyncedData(syncTimestamp.current, setGroups, setTabTotal)
-              }
+              onClick={() => AppFunc.syncRead(syncTimestamp.current, setGroups, setTabTotal)} // prettier-ignore
             >
               <BsCloudDownload color="black" size="1.5rem" />
             </Button>
@@ -277,7 +271,10 @@ export default function App() {
               classes="p-0 mx-1 link-global btn-in-global"
               translate={x.text}
               tooltip={"tiptext-global"}
-              onClick={() => window.open(x.url, "_blank")}
+              onClick={
+                /* istanbul ignore next */
+                () => window.open(x.url, "_blank")
+              }
               key={Math.random()}
             >
               {x.icon}
@@ -293,7 +290,10 @@ export default function App() {
               <Button
                 id={x.text.toLowerCase() + "-btn"}
                 classes="p-0 mx-1 link-global btn-in-global"
-                onClick={() => window.open(x.url, "_blank")}
+                onClick={
+                  /* istanbul ignore next */
+                  () => window.open(x.url, "_blank")
+                }
                 key={Math.random()}
               >
                 {x.icon}
@@ -311,8 +311,7 @@ export default function App() {
         <div className="col" id="tabmerger-container">
           <div className="groups-container">
             {
-              // prettier-ignore
-              AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current, setGroups, setTabTotal)
+              AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current, setGroups, setTabTotal) /* prettier-ignore */
             }
           </div>
         </div>

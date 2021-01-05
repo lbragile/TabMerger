@@ -38,17 +38,31 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   border-radius: 5px;
 }
 
-/* GROUP TAB COUNTER */
-.group-tab-count {
-  margin: 0;
-  padding: 1px;
+.title-count-color-container {
   position: absolute;
-  left: 10px;
-  top: 2px;
-  color: black;
-  min-width: 24px;
-  min-height: 24px;
+  left: 20px;
+}
+
+.title-btn-containter {
+  position: absolute;
+  right: 20px;
+  top: 3px;
+}
+
+/* GROUP TAB COUNTER */
+.group-count {
+  margin: 1px 10px 0 0;
+  padding: 0 4px 4px 4px;
+
+  min-width: 28px;
+  height: 28px;
   text-align: center;
+
+  border: 2px solid black;
+  border-radius: 50%;
+
+  font-weight: bold;
+  color: black;
 }
 
 /* TIMESTAMP */
@@ -61,9 +75,8 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 /* COLOR PICKER (GROUP) */
 .input-color {
-  position: absolute;
-  right: 10px;
-  top: -23px;
+  position: relative;
+  top: -2px;
   width: 24px;
   height: 24px;
 }
@@ -100,11 +113,5 @@ input[type="color"] {
 @media only screen and (max-width: 1200px) {
   .group-title {
     width: 50%;
-  }
-}
-
-@media only screen and (max-width: 992px) {
-  .group-title {
-    width: 60%;
   }
 }

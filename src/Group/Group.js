@@ -42,7 +42,7 @@ export default function Group(props) {
 
   const setGroupBackground = useCallback(
     (e) => {
-      GroupFunc.setBGHelper(e, props.id);
+      GroupFunc.setGroupBackground(e, props.id);
     },
     [props.id]
   );
@@ -53,13 +53,25 @@ export default function Group(props) {
   }, [props.id, setGroupBackground]);
 
   return (
-    <div className={"group-item " + ("group-0" === props.id ? "mt-0" : "mt-3")}>
+    <div className={"group-item " + (props.id === "group-0" ? "mt-0" : "mt-3")}>
       <div className="group-title d-flex flex-row justify-content-center">
-        <h5 className="group-tab-count">
-          {props.num_tabs +
-            " " +
-            translate(props.num_tabs !== 1 ? "tabs" : "tab")}
-        </h5>
+        <div className="title-count-color-container row">
+          <h5 className="group-count">{props.num_tabs}</h5>
+          <div className="tip p-0">
+            <BiColorFill
+              className="input-color"
+              onClick={(e) => e.target.closest("div").nextSibling.click()}
+            />
+            <span className="tiptext-group-color">
+              {translate("pickColor")}
+            </span>
+          </div>
+          <input
+            type="color"
+            defaultValue={props.color}
+            onChange={(e) => setGroupBackground(e)}
+          />
+        </div>
 
         <input
           className="title-edit-input font-weight-bold mb-0"
@@ -71,23 +83,6 @@ export default function Group(props) {
         />
 
         <div className="title-btn-containter row">
-          <div>
-            <div className="tip p-0">
-              <BiColorFill
-                className="input-color"
-                onClick={(e) => e.target.closest("div").nextSibling.click()}
-              />
-              <span className="tiptext-group-color">
-                {translate("pickColor")}
-              </span>
-            </div>
-            <input
-              type="color"
-              defaultValue={props.color}
-              onChange={(e) => setGroupBackground(e)}
-            />
-          </div>
-
           <Button
             classes="show-hide-btn btn-in-group-title"
             translate={hide ? translate("showTabs") : translate("hideTabs")}
@@ -109,9 +104,7 @@ export default function Group(props) {
             classes="delete-group-btn btn-in-group-title"
             translate={translate("deleteGroup")}
             tooltip={"tiptext-group-title"}
-            onClick={(e) =>
-              GroupFunc.deleteGroup(e, props.setTabTotal, props.setGroups)
-            }
+            onClick={(e) => GroupFunc.deleteGroup(e, props.setTabTotal, props.setGroups)} // prettier-ignore
           >
             <AiOutlineClose />
           </Button>
@@ -129,9 +122,7 @@ export default function Group(props) {
               classes="merge-btn btn-for-merging btn-outline-dark"
               translate={translate("mergeALLtabs")}
               tooltip={"tiptext-group-merge"}
-              onClick={() =>
-                GroupFunc.sendMessage({ msg: "all", id: props.id })
-              }
+              onClick={() => GroupFunc.sendMessage({ msg: "all", id: props.id })} // prettier-ignore
             >
               <MdVerticalAlignCenter color="black" size="1.3rem" />
             </Button>
@@ -139,9 +130,7 @@ export default function Group(props) {
               classes="merge-left-btn btn-for-merging btn-outline-dark"
               translate={translate("mergeLEFTtabs")}
               tooltip={"tiptext-group-merge"}
-              onClick={() =>
-                GroupFunc.sendMessage({ msg: "left", id: props.id })
-              }
+              onClick={() => GroupFunc.sendMessage({ msg: "left", id: props.id })} // prettier-ignore
             >
               <BiArrowToRight color="black" size="1.3rem" />
             </Button>
@@ -149,9 +138,7 @@ export default function Group(props) {
               classes="merge-right-btn btn-for-merging btn-outline-dark"
               translate={translate("mergeRIGHTtabs")}
               tooltip={"tiptext-group-merge"}
-              onClick={() =>
-                GroupFunc.sendMessage({ msg: "right", id: props.id })
-              }
+              onClick={() => GroupFunc.sendMessage({ msg: "right", id: props.id })} // prettier-ignore
             >
               <BiArrowToRight color="black" size="1.3rem" />
             </Button>

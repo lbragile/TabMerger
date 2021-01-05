@@ -21,6 +21,21 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
+/* FOCUS & BACKGROUND */
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn:not(#need-help) {
+  background: white;
+}
+
+.btn:hover {
+  background: white;
+  cursor: pointer;
+}
+
 /* GLOBAL */
 .btn-in-global {
   width: 36px;
@@ -89,12 +104,6 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   position: relative;
   left: -10px;
   top: -10px;
-}
-
-.title-btn-containter {
-  position: absolute;
-  right: 20px;
-  top: 2px;
 }
 
 .btn-in-group-title {

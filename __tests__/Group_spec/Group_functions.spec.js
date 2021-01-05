@@ -22,19 +22,15 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+window.React = React;
 
-import { getTimestamp } from "../src/App/App_functions";
-import * as GroupFunc from "../src/Group/Group_functions";
+import { render, fireEvent } from "@testing-library/react";
 
-import Group from "../src/Group/Group";
-import Tab from "../src/Tab/Tab";
+import { getTimestamp } from "../../src/App/App_helpers";
+import * as GroupFunc from "../../src/Group/Group_functions";
 
-var mockSet, container;
-// variables used in these tests
-var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
-// prettier-ignore
-var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
+import Group from "../../src/Group/Group";
+import Tab from "../../src/Tab/Tab";
 
 /**
  * Alter init_groups non-destructively by removing some keys
@@ -53,10 +49,11 @@ function alterGroups(remove) {
   return groups;
 }
 
+var mockSet, container;
+var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
+var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
+
 beforeEach(() => {
-  //   chrome.storage.local.set({ groups: init_groups }, () => {});
-  //   init_ls_entry = JSON.parse(localStorage.getItem("groups"));
-  //   init_tabs = init_ls_entry["group-0"].tabs;
   mockSet = jest.fn(); // mock for setState hooks
   container = render(
     <Group
@@ -115,8 +112,7 @@ describe("setTitle", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", expect.anything());
-    // prettier-ignore
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, expect.anything());
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, expect.anything()); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(init_groups));
@@ -143,8 +139,7 @@ describe("setTitle", () => {
       GroupFunc.openGroup(mock_target);
 
       expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      // prettier-ignore
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({remove: ["group", "aaa", "bbb"]}, expect.anything());
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({remove: ["group", "aaa", "bbb"]}, expect.anything()); // prettier-ignore
     });
   });
 
@@ -283,21 +278,5 @@ describe("toggleGroup", () => {
     expect(mockSet).toHaveBeenCalledWith(false);
     expect(tabs.length).toBe(1);
     // expect(spy).toHaveBeenCalledWith("display");
-  });
-});
-
-describe("sendMessage", () => {
-  it("sends a message to background script with correct parameters", async () => {
-    var spy = jest.spyOn(chrome.runtime, "sendMessage");
-    var id = chrome.runtime.id;
-
-    fireEvent.click(container.querySelector(".merge-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "all", id: "group-0" });
-
-    fireEvent.click(container.querySelector(".merge-left-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "left", id: "group-0" });
-
-    fireEvent.click(container.querySelector(".merge-right-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "right", id: "group-0" });
   });
 });

@@ -148,15 +148,3 @@ export function handleTabClick(e) {
   e.preventDefault();
   chrome.storage.local.set({ remove: ["tab", e.target.href] }, () => {});
 }
-
-/**
- * Used to retrieve FavIconURL from a given domain.
- * Note that only the domain of a given URL is used, not the full URL.
- * @param {string} url Full URL of the tab for which the FavIconURL is required
- * @return {string} The tab's FavIconURL in the form of a google API call.
- */
-export function getFavIconURL(url) {
-  var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
-  var domain = matches && matches[1]; // domain will be null if no match is found
-  return "http://www.google.com/s2/favicons?domain=" + domain;
-}

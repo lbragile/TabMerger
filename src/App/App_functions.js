@@ -21,150 +21,10 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
+import * as AppHelper from "./App_helpers";
+
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
-
-/*------------------------------- HELPER FUNCTIONS -----------------------------*/
-/**
- * Toggles TabMerger's theme (light or dark).
- * In dark mode, the theme is set to dark background with light text.
- * In light mode, the exact opposite happens - light background with dark text.
- * @param {boolean} isChecked whether dark mode is enabled or disabled
- *
- * @note Exported for testing purposes
- */
-export function toggleDarkMode(isChecked) {
-  var container = document.querySelector("body");
-  var hr = document.querySelector("hr");
-
-  container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
-  container.style.color = isChecked ? "white" : "black";
-  hr.style.borderTop = isChecked
-    ? "1px solid white"
-    : "1px solid rgba(0,0,0,.1)";
-}
-
-/**
- * Chrome's storage sync has limits per item. Therefore, the groups are stored individually
- * as one group per item (unlike in Chrome's storage local - where they are all one big item).
- * Due to this and the fact that there is also a limit of sync write operations per minute,
- * Sync items are updated only when they change and only changed items are overwritten with new values.
- * @param {string} key Group id of an item that might need to be updated
- * @param {string} value Value corresponding to the above group id
- *
- * @return Promise that resolves if sync is updated or no update is required
- *
- * @note Exported for testing purposes
- */
-export function updateGroupItem(key, value) {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(key, (x) => {
-      if (
-        !x[key] ||
-        x[key].color !== value.color ||
-        x[key].created !== value.created ||
-        x[key].title !== value.title ||
-        JSON.stringify(x[key].tabs) !== JSON.stringify(value.tabs)
-      ) {
-        chrome.storage.sync.set({ [key]: value }, () => {
-          resolve(0);
-        });
-      } else {
-        resolve(0);
-      }
-    });
-  });
-}
-
-/**
- * Sorts the groups based on their ids so that the order is id index based ("group-{index}").
- * @example
- * "group-0", ..., "group-9", "group-10", ... ✅
- * "group-0", "group-1", "group-10", ..., "group-9", ... ❌
- * @param {object} json
- *
- * @return {object[]} Values from the sorted groups
- *
- * @note Exported for testing purposes
- */
-export function sortByKey(json) {
-  var sortedArray = [];
-
-  // Push each JSON Object entry in array by [key, value]
-  for (var i in json) {
-    sortedArray.push([i, json[i]]);
-  }
-
-  var sorted_groups = sortedArray.sort((a, b) => {
-    var opts = { numeric: true, sensitivity: "base" };
-    return a[0].localeCompare(b[0], undefined, opts);
-  });
-
-  // get the sorted values
-  return sorted_groups.map((x) => x[1]);
-}
-
-/**
- * Updates the total tab count based on tabs in all the groups inside TabMerger
- * @param {{groups: {"group-id": {color: string, created: string, tabs:
- *  [{title: string, url: string}], title: string}}}} ls_entry current group information
- * @param {Function} setTabTotal For re-rendering the total tab counter
- *
- * @note Exported for testing purposes
- */
-export function updateTabTotal(ls_entry, setTabTotal) {
-  var num_tabs = 0;
-  Object.values(ls_entry).forEach((val) => {
-    num_tabs += val.tabs.length;
-  });
-  setTabTotal(num_tabs);
-}
-
-/**
- * Given a list of tab objects, filters and returns a specific tab which contains the correct URL.
- * @param {object[]} tab_list All the tabs in the group that need to be filtered
- * @param {string} match_url The full URL that is being matched against
- *
- * @return {object[]} Tab that has a URL matching the match_url parameter
- *
- * @note Exported for testing purposes
- */
-export function findSameTab(tab_list, match_url) {
-  return tab_list.filter((x) => x.url === match_url);
-}
-
-/**
- * Output filename generation for exporting file functions (JSON and/or PDF)
- *
- * @return ```TabMerger [dd/mm/yyyy @ hh:mm:ss]```
- *
- * @note Exported for testing purposes
- */
-export function outputFileName() {
-  return `TabMerger [${getTimestamp()}]`;
-}
-
-/*-------------------------------------------------------------------------------*/
-
-/**
- * Changes the state of the "Last Sync" indicator:
- * @example
- * positive = false ➡ 🟥 `Last Sync: --/--/---- @ --:--:--` 🟥
- * positive = true ➡ 🟩 `Last Sync: 11/11/2020 @ 11:11:11` 🟩
- * @param {boolean} positive Whether a sync happened or not
- * @param {HTMLElement} sync_node Node that contains the sync time message
- */
-export function toggleSyncTimestampHelper(positive, sync_node) {
-  var sync_container = sync_node.parentNode;
-
-  if (positive) {
-    sync_node.innerText = getTimestamp();
-    sync_container.classList.replace("alert-danger", "alert-success");
-  } else {
-    sync_node.innerText = "--/--/---- @ --:--:--";
-    sync_container.classList.replace("alert-success", "alert-danger");
-  }
-}
 
 /**
  * Initialize the local & sync storage when the user first installs TabMerger.
@@ -183,13 +43,13 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
   chrome.storage.sync.get(null, (sync) => {
     if (!sync.settings) {
       chrome.storage.sync.set({ settings: default_settings }, () => {});
-      toggleDarkMode(true);
+      AppHelper.toggleDarkMode(true);
     } else {
-      toggleDarkMode(sync.settings.dark);
+      AppHelper.toggleDarkMode(sync.settings.dark);
     }
 
     if (sync["group-0"]) {
-      toggleSyncTimestampHelper(true, sync_node);
+      AppHelper.toggleSyncTimestamp(true, sync_node);
     }
 
     delete sync.settings;
@@ -199,7 +59,7 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
       chrome.storage.local.remove(["groups"], () => {
         chrome.storage.local.set({ groups: ls_entry }, () => {
           setGroups(JSON.stringify(ls_entry));
-          updateTabTotal(ls_entry, setTabTotal);
+          AppHelper.updateTabTotal(ls_entry, setTabTotal);
         });
       });
     });
@@ -212,12 +72,12 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
  *
  * @see defaultGroup in App.js
  */
-export function updateSync(sync_node) {
+export function syncWrite(sync_node) {
   chrome.storage.local.get("groups", async (local) => {
     var current_groups = local.groups;
     if (current_groups && current_groups["group-0"].tabs.length > 0) {
       for (var key of Object.keys(current_groups)) {
-        await updateGroupItem(key, current_groups[key]);
+        await AppHelper.updateGroupItem(key, current_groups[key]);
       }
 
       // remove extras from previous sync
@@ -227,7 +87,7 @@ export function updateSync(sync_node) {
           (key) => !Object.keys(current_groups).includes(key)
         );
         chrome.storage.sync.remove(remove_keys, () => {
-          toggleSyncTimestampHelper(true, sync_node);
+          AppHelper.toggleSyncTimestamp(true, sync_node);
         });
       });
     }
@@ -244,7 +104,7 @@ export function updateSync(sync_node) {
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab count
  */
-export function loadSyncedData(sync_node, setGroups, setTabTotal) {
+export function syncRead(sync_node, setGroups, setTabTotal) {
   chrome.storage.sync.get(null, (sync) => {
     if (sync["group-0"]) {
       delete sync.settings;
@@ -258,9 +118,9 @@ export function loadSyncedData(sync_node, setGroups, setTabTotal) {
 
         chrome.storage.local.set({ groups: new_ls }, () => {
           chrome.storage.sync.remove(remove_keys, () => {
-            toggleSyncTimestampHelper(false, sync_node);
+            AppHelper.toggleSyncTimestamp(false, sync_node);
             setGroups(JSON.stringify(new_ls));
-            updateTabTotal(new_ls, setTabTotal);
+            AppHelper.updateTabTotal(new_ls, setTabTotal);
           });
         });
       });
@@ -278,7 +138,7 @@ export function loadSyncedData(sync_node, setGroups, setTabTotal) {
  * @param {Function} setGroups For re-rendering the groups
  */
 // prettier-ignore
-export function openOrRemoveTabsHelper(changes, namespace, setTabTotal, setGroups) {
+export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
   if (namespace === "local" && changes.remove && changes.remove.newValue) {
     // extract and remove the button type from array
     var btn_type = changes.remove.newValue[0];
@@ -288,7 +148,7 @@ export function openOrRemoveTabsHelper(changes, namespace, setTabTotal, setGroup
     chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
       for (var i = 0; i < changes.remove.newValue.length; i++) {
         var tab_url = changes.remove.newValue[i];
-        var same_tab = findSameTab(windowTabs, tab_url);
+        var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
         if (same_tab[0]) {
           chrome.tabs.move(same_tab[0].id, { index: -1 });
         } else {
@@ -349,7 +209,7 @@ export function openOrRemoveTabsHelper(changes, namespace, setTabTotal, setGroup
  * @see ITEM_STORAGE_LIMIT in App.js
  */
 // prettier-ignore
-export function checkMergingHelper(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
+export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
   if (
     namespace === "local" &&
     changes.merged_tabs &&
@@ -420,23 +280,6 @@ export function checkMergingHelper(changes, namespace, sync_limit, item_limit, s
 }
 
 /**
- * Produces a timestamp which is added to newly formed groups
- *
- * @return ```dd/mm/yyyy @ hh:mm:ss```
- */
-export function getTimestamp() {
-  var date_parts = new Date(Date.now()).toString().split(" ");
-  date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
-
-  // dd/mm/yyyy @ hh:mm:ss
-  date_parts[0] = date_parts[1] + "/";
-  date_parts[1] = new Date().getMonth() + 1 + "/";
-  date_parts[2] += " @ ";
-
-  return date_parts.join("");
-}
-
-/**
  * Forms the group components with tab draggable tab components inside.
  * Each formed group has correct & up-to-date information.
  * @param {string} groups A stringified object consisting of TabMerger's current group information
@@ -454,7 +297,9 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
     var group_values = Object.values(JSON.parse(groups));
 
     var sorted_vals =
-      group_values.length > 10 ? sortByKey(JSON.parse(groups)) : group_values;
+      group_values.length > 10
+        ? AppHelper.sortByKey(JSON.parse(groups))
+        : group_values;
 
     return sorted_vals.map((x, i) => {
       var id = "group-" + i;
@@ -500,7 +345,7 @@ export function addGroup(num_group_limit, setGroups) {
       chrome.storage.sync.get("settings", (sync) => {
         current_groups["group-" + num_keys] = {
           color: sync.settings.color,
-          created: getTimestamp(),
+          created: AppHelper.getTimestamp(),
           tabs: [],
           title: sync.settings.title,
         };
@@ -540,7 +385,7 @@ export function deleteAllGroups(setTabTotal, setGroups) {
     var new_entry = {
       "group-0": {
         color: sync.settings.color,
-        created: getTimestamp(),
+        created: AppHelper.getTimestamp(),
         tabs: [],
         title: sync.settings.title,
       },
@@ -564,13 +409,15 @@ export function deleteAllGroups(setTabTotal, setGroups) {
  *
  * @param {HTMLElement} e Node corresponding to the search filter
  */
-export function filterRegEx(e) {
+export function regexSearchForTab(e) {
   // prettier-ignore
   var sections, titles, match, tab_items, search_type, no_match, keep_sections = [];
   sections = document.querySelectorAll(".group-item");
 
   if (e.target.value[0] === "#") {
-    titles = [...sections].map((x) => x.querySelector("input").value);
+    titles = [...sections].map(
+      (x) => x.querySelector(".title-edit-input").value
+    );
     match = e.target.value.substr(1).toLowerCase();
     search_type = "group";
   } else if (e.target.value !== "") {
@@ -618,6 +465,20 @@ export function filterRegEx(e) {
 }
 
 /**
+ * Clears the tab search input field when the user exits it (onBlur).
+ * Additionally, this will undo the search operation and display all the tabs & groups.
+ * @param {HTMLElement} e Node corresponding to the tab search filter
+ *
+ * @note The timeout is added to allow operations like opening a tab
+ */
+export function resetSearch(e) {
+  setTimeout(() => {
+    e.target.value = "";
+    regexSearchForTab(e);
+  }, 100);
+}
+
+/**
  * Allows the user to import a JSON file which they exported previously.
  * This JSON file contains TabMerger's configuration and once uploaded
  * overwrites the current configuration. Checks are made to ensure a JSON
@@ -626,7 +487,7 @@ export function filterRegEx(e) {
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab counter
  */
-export function readImportedFile(e, setGroups, setTabTotal) {
+export function importJSON(e, setGroups, setTabTotal) {
   if (e.target.files[0].type === "application/json") {
     var reader = new FileReader();
     reader.readAsText(e.target.files[0]);
@@ -640,7 +501,7 @@ export function readImportedFile(e, setGroups, setTabTotal) {
           e.target.value = "";
 
           setGroups(JSON.stringify(fileContent));
-          updateTabTotal(fileContent, setTabTotal);
+          AppHelper.updateTabTotal(fileContent, setTabTotal);
         });
       });
     };
@@ -668,7 +529,7 @@ export const exportJSON = () => {
 
       var anchor = document.createElement("a");
       anchor.setAttribute("href", dataStr);
-      anchor.setAttribute("download", outputFileName() + ".json");
+      anchor.setAttribute("download", AppHelper.outputFileName() + ".json");
       anchor.click();
       anchor.remove();
     });
@@ -704,6 +565,7 @@ export function getTabMergerLink(reviews) {
   if (reviews && !isFirefox) {
     link += "/reviews/";
   }
+
   return link;
 }
 

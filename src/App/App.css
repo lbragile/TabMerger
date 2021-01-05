@@ -33,14 +33,9 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 .container-fluid {
   position: relative;
-  left: calc(var(--sidebar-width) + 15px);
+  left: calc(var(--sidebar-width) + 5%);
   margin: 50px 0;
   max-width: 1300px;
-}
-
-#tabmerger-container {
-  overflow: hidden;
-  /* margin: 20px 0 20px calc(5% + 245px); */
 }
 
 .subtitle {
@@ -69,21 +64,6 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   z-index: 1;
   background-color: rgb(27, 27, 27);
   padding-top: 12.5vh;
-}
-
-/* BUTTONS - Remove Ignore Focus */
-.btn:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.btn:not(#need-help) {
-  background: white;
-}
-
-.btn:hover {
-  background: white;
-  cursor: pointer;
 }
 
 /* GROUP & TAB FILTERS */
@@ -177,4 +157,11 @@ hr {
 
 ::-webkit-scrollbar-track {
   border: 1px grey solid;
+}
+
+/* Responsive Adjustments for Laptops */
+@media only screen and (max-width: 1600px) {
+  .container-fluid {
+    left: calc(var(--sidebar-width) + 2%);
+  }
 }

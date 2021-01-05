@@ -24,6 +24,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 import React, { useState, useRef, useEffect } from "react";
 
 import * as TabFunc from "./Tab_functions";
+import * as TabHelper from "./Tab_helpers";
 
 import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -46,18 +47,13 @@ export default function Tab(props) {
             className="row draggable p-0 mx-0 "
             draggable
             onDragStart={(e) => TabFunc.dragStart(e)}
-            onDragEnd={(e) =>
-              TabFunc.dragEnd(e, props.itemLimit, props.setGroups)
-            }
+            onDragEnd={(e) => TabFunc.dragEnd(e, props.itemLimit, props.setGroups)} // prettier-ignore
             key={Math.random()}
           >
             <p
               className="close-tab mr-2"
               draggable={false}
-              onClick={(e) =>
-                // prettier-ignore
-                TabFunc.removeTab(e, tabs, setTabs, props.setTabTotal, props.setGroups)
-              }
+              onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, props.setTabTotal, props.setGroups)} // prettier-ignore
             >
               <TiDelete size="1.2rem" color="black" />
             </p>
@@ -66,7 +62,7 @@ export default function Tab(props) {
             </p>
             <img
               className="img-tab mr-2"
-              src={TabFunc.getFavIconURL(tab.url)}
+              src={TabHelper.getFavIconURL(tab.url)}
               alt="icon"
               draggable={false}
             />

@@ -21,9 +21,9 @@
     "eject": "react-scripts eject",
     "test": "jest --coverage",
     "test:watch": "npm run test --watchAll",
-    "test-tab": "npm run test -- ./__tests__/Tab.spec.js",
-    "test-group": "npm run test -- ./__tests__/Group.spec.js",
-    "test-app": "npm run test -- ./__tests__/App.spec.js"
+    "test-tab": "npm run test -- ./__tests__/Tab_spec/",
+    "test-group": "npm run test -- ./__tests__/Group_spec/",
+    "test-app": "npm run test -- ./__tests__/App_spec/"
   },
   "eslintConfig": {
     "extends": [
