@@ -1,0 +1,30 @@
+{
+  "source": {
+    "includePattern": ".js$",
+    "include": ["src", "public"],
+    "exclude": ["node_modules", "src/Button", "coverage", "build", "__tests__"]
+  },
+  "recurseDepth": 5,
+  "opts": {
+    "destination": "./docs/",
+    "readme": "./README.md",
+    "recurse": true
+  },
+  "plugins": ["plugins/markdown"],
+  "templates": {
+    "default": {
+      "staticFiles": {
+        "include": ["."],
+        "exclude": [
+          "node_modules",
+          "public/settings",
+          "public/_locales",
+          "public/background.js",
+          "public/index.html",
+          "public/manifest.json"
+        ],
+        "excludePattern": "^((?!public).)*$"
+      }
+    }
+  }
+}

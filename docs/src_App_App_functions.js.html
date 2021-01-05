@@ -1,4 +1,32 @@
-/* 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/App/App_functions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/App/App_functions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -15,10 +43,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program.  If not, see &lt;https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+TabMerger team at &lt;https://tabmerger.herokuapp.com/contact/>
 */
 
 import * as AppHelper from './App_helpers';
@@ -31,7 +59,7 @@ import Group from '../Group/Group.js';
  */
 
 /**
- * Initialize the local & sync storage when the user first installs TabMerger.
+ * Initialize the local &amp; sync storage when the user first installs TabMerger.
  * @param {{blacklist: string, color: string, dark: boolean,
  *  open: "with" | "without", restore: "keep" | "remove", title: string}} default_settings TabMerger's original default settings
  * @param {{color: string, created: string, tabs: object[], title: string}} default_group TabMerger's original default group (with up-to-date timestamp)
@@ -78,7 +106,7 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
 export function syncWrite(sync_node) {
   chrome.storage.local.get('groups', async (local) => {
     var current_groups = local.groups;
-    if (current_groups && current_groups['group-0'].tabs.length > 0) {
+    if (current_groups &amp;&amp; current_groups['group-0'].tabs.length > 0) {
       for (var key of Object.keys(current_groups)) {
         await AppHelper.updateGroupItem(key, current_groups[key]);
       }
@@ -99,8 +127,8 @@ export function syncWrite(sync_node) {
  * Provides the ability to upload group items from Sync storage.
  * This action overwrites local storage accordingly.
  * @example
- * 1. "TabMerger <= uploaded # groups ➡ overwrite current"
- * 2. "TabMerger > uploaded # groups ➡ overwrite current & delete extra groups"
+ * 1. "TabMerger &lt;= uploaded # groups ➡ overwrite current"
+ * 2. "TabMerger > uploaded # groups ➡ overwrite current &amp; delete extra groups"
  * @param {HTMLElement} sync_node Node corresponding to the "Last Sync:" timestamp
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab count
@@ -133,20 +161,20 @@ export function syncRead(sync_node, setGroups, setTabTotal) {
  * When a restoring action is performed, the corresponding tab(s) need to be opened.
  * However, if the settings indicate to "Remove from TabMerger" when restoring, the tab(s)
  * also need to be removed.
- * @param {object} changes contains the changed keys and they old & new values
+ * @param {object} changes contains the changed keys and they old &amp; new values
  * @param {string} namespace local or sync storage type
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setGroups For re-rendering the groups
  */
 export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
-  if (namespace === 'local' && changes.remove && changes.remove.newValue) {
+  if (namespace === 'local' &amp;&amp; changes.remove &amp;&amp; changes.remove.newValue) {
     // extract and remove the button type from array
     var btn_type = changes.remove.newValue[0];
     changes.remove.newValue.splice(0, 1);
 
     // try to not open tabs if it is already open
     chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
-      for (var i = 0; i < changes.remove.newValue.length; i++) {
+      for (var i = 0; i &lt; changes.remove.newValue.length; i++) {
         var tab_url = changes.remove.newValue[i];
         var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
         if (same_tab[0]) {
@@ -195,7 +223,7 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  * adhered to before performing the merge. This (in addition to local storage) ensures
  * that TabMerger's data is never lost. If limits are exceeded, the action is canceled
  * and the user is given a warning with instructions.
- * @param {object} changes contains the changed keys and they old & new values
+ * @param {object} changes contains the changed keys and they old &amp; new values
  * @param {string} namespace local or sync storage type
  * @param {number} sync_limit Limit for overall sync storage - includes all groups, tabs, settings, etc.
  * @param {number} item_limit Limit for each group with regards to sync item storage - only contains group related details
@@ -207,9 +235,9 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  */
 export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
   if (
-    namespace === 'local' &&
-    changes.merged_tabs &&
-    changes.merged_tabs.newValue &&
+    namespace === 'local' &amp;&amp;
+    changes.merged_tabs &amp;&amp;
+    changes.merged_tabs.newValue &amp;&amp;
     changes.merged_tabs.newValue.length !== 0
   ) {
     chrome.storage.local.get(['merged_tabs', 'into_group', 'groups'], (local) => {
@@ -219,13 +247,13 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
 
       var sync_bytes = JSON.stringify(group_blocks).length + merged_bytes;
 
-      if (sync_bytes < sync_limit) {
+      if (sync_bytes &lt; sync_limit) {
         var this_group = group_blocks[into_group];
         var item_bytes = JSON.stringify(this_group).length + merged_bytes;
 
         // console.log(item_bytes, "item", sync_bytes, "sync", merged_bytes, "merge");
 
-        if (item_bytes < item_limit) {
+        if (item_bytes &lt; item_limit) {
           // close tabs to avoid leaving some open
           chrome.tabs.remove(merged_tabs.map((x) => x.id));
 
@@ -268,7 +296,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
 
 /**
  * Forms the group components with tab draggable tab components inside.
- * Each formed group has correct & up-to-date information.
+ * Each formed group has correct &amp; up-to-date information.
  * @param {string} groups A stringified object consisting of TabMerger's current group information
  * @param {number} itemLimit Limit for each group with regards to sync item storage - only contains group related details
  * @param {Function} setGroups For re-rendering the groups
@@ -288,18 +316,18 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
     return sorted_vals.map((x, i) => {
       var id = 'group-' + i;
       return (
-        <Group
+        &lt;Group
           id={id}
           title={x.title}
           color={x.color}
           created={x.created}
-          num_tabs={(x.tabs && x.tabs.length) || 0}
+          num_tabs={(x.tabs &amp;&amp; x.tabs.length) || 0}
           setGroups={setGroups}
           setTabTotal={setTabTotal}
           key={Math.random()}
         >
-          <Tab id={id} itemLimit={itemLimit} setTabTotal={setTabTotal} setGroups={setGroups} />
-        </Group>
+          &lt;Tab id={id} itemLimit={itemLimit} setTabTotal={setTabTotal} setGroups={setGroups} />
+        &lt;/Group>
       );
     });
   } else {
@@ -308,7 +336,7 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
 }
 
 /**
- * Allows the user to add a group with the default title & color chosen in the settings.
+ * Allows the user to add a group with the default title &amp; color chosen in the settings.
  * Each new group is always empty and has a creation timestamp.
  * @param {number} num_group_limit an upper limit on the number of groups that can be created
  * @param {Function} setGroups For re-rendering the groups
@@ -320,7 +348,7 @@ export function addGroup(num_group_limit, setGroups) {
     var current_groups = local.groups;
     var num_keys = Object.keys(current_groups).length;
 
-    if (num_keys < num_group_limit) {
+    if (num_keys &lt; num_group_limit) {
       chrome.storage.sync.get('settings', (sync) => {
         current_groups['group-' + num_keys] = {
           color: sync.settings.color,
@@ -355,7 +383,7 @@ export function openAllTabs() {
 /**
  * Allows the user to delete every group (including tabs) inside TabMerger.
  * A default group is formed to allow for re-merging after deletion.
- * The default group has title & color matching settings parameter and a creation timestamp.
+ * The default group has title &amp; color matching settings parameter and a creation timestamp.
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setGroups For re-rendering the groups
  */
@@ -440,7 +468,7 @@ export function regexSearchForTab(e) {
 
 /**
  * Clears the tab search input field when the user exits it (onBlur).
- * Additionally, this will undo the search operation and display all the tabs & groups.
+ * Additionally, this will undo the search operation and display all the tabs &amp; groups.
  * @param {HTMLElement} e Node corresponding to the tab search filter
  *
  * @note The timeout is added to allow operations like opening a tab
@@ -520,9 +548,9 @@ export function getTabMergerLink(reviews) {
   var isOpera = navigator.userAgent.indexOf(' OPR/') >= 0;
   var isFirefox = typeof InstallTrigger !== 'undefined';
   var isIE = /*@cc_on!@*/ false || !!document.documentMode;
-  var isEdge = !isIE && !!window.StyleMedia;
-  var isChrome = !!window.chrome && !!window.chrome.runtime;
-  var isEdgeChromium = isChrome && navigator.userAgent.indexOf('Edg') !== -1;
+  var isEdge = !isIE &amp;&amp; !!window.StyleMedia;
+  var isChrome = !!window.chrome &amp;&amp; !!window.chrome.runtime;
+  var isEdgeChromium = isChrome &amp;&amp; navigator.userAgent.indexOf('Edg') !== -1;
 
   if (isIE || isEdge || isEdgeChromium) {
     link = 'https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn';
@@ -532,7 +560,7 @@ export function getTabMergerLink(reviews) {
     link = 'https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc';
   }
 
-  if (reviews && !isFirefox) {
+  if (reviews &amp;&amp; !isFirefox) {
     link += '/reviews/';
   }
 
@@ -556,3 +584,26 @@ export function translate(msg) {
     return msg;
   }
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-__Script_Background.html">__Script/Background</a></li><li><a href="module-App_App_functions.html">App/App_functions</a></li><li><a href="module-App_App_helpers.html">App/App_helpers</a></li><li><a href="module-Group_Group_functions.html">Group/Group_functions</a></li><li><a href="module-Group_Group_helpers.html">Group/Group_helpers</a></li><li><a href="module-Tab_Tab_functions.html">Tab/Tab_functions</a></li><li><a href="module-Tab_Tab_helpers.html">Tab/Tab_helpers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Jan 05 2021 14:35:52 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -22,19 +22,21 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
 /**
+ * @module Group/Group_helpers
+ */
+
+/**
  * USed to determine the element after the current one when dragging a tab.
  * @param {HTMLElement} container The group which the dragged tab is above
  * @param {number} y The tab's y coordinate in the window
  *
- * @see dragOver function below
+ * @see dragOver in Group_helpers.js
  * @link modified from https://github.com/WebDevSimplified/Drag-And-Drop
  *
  * @return The tab element immediately after the current position of the dragged tab.
  */
 export function getDragAfterElement(container, y) {
-  const draggableElements = [
-    ...container.querySelectorAll(".draggable:not(.dragging)"),
-  ];
+  const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
 
   return draggableElements.reduce(
     (closest, child) => {

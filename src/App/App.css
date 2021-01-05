@@ -48,6 +48,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   height: 28px;
   max-width: 99%;
   padding: 1px;
+  overflow: auto;
 }
 
 #logo-img {

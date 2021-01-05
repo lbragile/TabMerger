@@ -22,6 +22,10 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 */
 
 /**
+ * @module Tab/Tab_helpers
+ */
+
+/**
  * Used to retrieve FavIconURL from a given domain
  * @param {string} url Full URL of the tab for which the FavIconURL is required
  * @return {string} The tab's FavIconURL in the form of a google API call.
@@ -33,5 +37,5 @@ export function getFavIconURL(url) {
   var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
   var domain = matches && matches[1];
 
-  return "http://www.google.com/s2/favicons?domain=" + domain;
+  return 'http://www.google.com/s2/favicons?domain=' + domain;
 }
