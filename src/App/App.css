@@ -46,7 +46,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 #sync-text {
   height: 28px;
-  max-width: 95%;
+  max-width: 99%;
   padding: 1px;
 }
 
@@ -77,7 +77,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   background: none;
   border: none;
   border-bottom: 1px solid rgb(192, 192, 192);
-  padding: 2px 5px;
+  padding: 0 5px;
   width: 150px;
 }
 
@@ -87,7 +87,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 }
 
 .search-filter input::placeholder {
-  color: rgb(163, 163, 163);
+  color: rgb(196, 196, 196);
 }
 
 .input-group-text {
@@ -137,6 +137,7 @@ hr {
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
+  color: white;
 }
 
 /* SCROLLBAR */

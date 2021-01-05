@@ -1,8 +1,4 @@
-## Contributing
-
-When contributing to this repository, please first discuss the change you wish to make via an issue, email (lbragile@gmail.com), or direct GitHub message before making a change. This will ensure that your changes have a high likely hood of being approved. You can find a list of features that need to be integrated into TabMerger at <a href="https://github.com/lbragile/TabMerger/projects/1">Projects > Todo</a>. This list is great for anyone who wants to contribute features from minor (low priority) to major (high priority) that TabMerger users indicated they would like to see in future iterations.
-
-## First Time?
+### First Time?
 
 If this is your first time contributing to a project, please see the following step by step <a href="https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/">guide</a>.
 

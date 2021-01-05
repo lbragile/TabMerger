@@ -51,11 +51,11 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 /* GROUP TAB COUNTER */
 .group-count {
-  margin: 1px 10px 0 0;
-  padding: 0 4px 4px 4px;
+  margin: 3px 10px 0 0;
+  padding: 2px 3px;
 
-  min-width: 28px;
-  height: 28px;
+  min-width: 26px;
+  height: 26px;
   text-align: center;
 
   border: 2px solid black;
@@ -63,6 +63,11 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
   font-weight: bold;
   color: black;
+}
+
+.group-count span {
+  position: relative;
+  top: -4px;
 }
 
 /* TIMESTAMP */

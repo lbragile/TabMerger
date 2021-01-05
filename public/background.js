@@ -25,8 +25,8 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
  * extension click from toolbar - open TabMerger with or without merging tabs (according to settings)
  */
 const handleBrowserIconClick = () => {
-  chrome.storage.sync.get("settings", async (result) => {
-    result.settings === undefined || result.settings.open === "without"
+  chrome.storage.sync.get('settings', async (result) => {
+    result.settings === undefined || result.settings.open === 'without'
       ? await findExtTabAndSwitch()
       : await filterTabs(info, tab);
   });
@@ -47,18 +47,18 @@ async function filterTabs(info, tab, group_id) {
 
   chrome.tabs.query({ currentWindow: true }, (tabs) => {
     // filter based on user's merge button click
-    tabs = tabs.filter((x) => x.title !== "TabMerger");
+    tabs = tabs.filter((x) => x.title !== 'TabMerger');
     switch (info.which) {
-      case "right":
+      case 'right':
         tabs = tabs.filter((x) => x.index > tab.index);
         break;
-      case "left":
+      case 'left':
         tabs = tabs.filter((x) => x.index < tab.index);
         break;
-      case "excluding":
+      case 'excluding':
         tabs = tabs.filter((x) => x.index !== tab.index);
         break;
-      case "only":
+      case 'only':
         tabs = tabs.filter((x) => x.index === tab.index);
         break;
 
@@ -68,10 +68,10 @@ async function filterTabs(info, tab, group_id) {
     }
 
     // create duplicate title/url list & filter blacklisted sites
-    var filter_vals = ["TabMerger", "New Tab", "Extensions", "Add-ons Manager"];
+    var filter_vals = ['TabMerger', 'New Tab', 'Extensions', 'Add-ons Manager'];
 
-    chrome.storage.sync.get("settings", (sync) => {
-      chrome.storage.local.get("groups", (local) => {
+    chrome.storage.sync.get('settings', (sync) => {
+      chrome.storage.local.get('groups', (local) => {
         // get a list of all the current tab titles and/or urls
         var group_blocks = local.groups;
         Object.keys(group_blocks).forEach((key) => {
@@ -81,7 +81,7 @@ async function filterTabs(info, tab, group_id) {
 
         // apply blacklist items
         tabs = tabs.filter((x) => {
-          var bl_sites = sync.settings.blacklist.replace(" ", "").split(",");
+          var bl_sites = sync.settings.blacklist.replace(' ', '').split(',');
           bl_sites = bl_sites.map((site) => site.toLowerCase());
           return !bl_sites.includes(x.url);
         });
@@ -108,8 +108,7 @@ async function filterTabs(info, tab, group_id) {
         });
 
         // make sure original merge has no duplicated values obtain offending indicies
-        // prettier-ignore
-        var prev_urls = [], indicies = [];
+        var prev_urls = [], indicies = []; // prettier-ignore
         tabs.forEach((x, i) => {
           if (prev_urls.includes(x.url)) {
             indicies.push(i);
@@ -126,7 +125,7 @@ async function filterTabs(info, tab, group_id) {
         // filter out offending indicies
         tabs = tabs.filter((_, i) => !indicies.includes(i));
 
-        var whichGroup = group_id ? group_id : "group-0";
+        var whichGroup = group_id ? group_id : 'group-0';
         chrome.storage.local.set({
           into_group: whichGroup,
           merged_tabs: tabs,
@@ -144,9 +143,9 @@ async function filterTabs(info, tab, group_id) {
  * @return A promise which should be awaited. Resolve value is insignificant
  */
 function findExtTabAndSwitch() {
-  var query = { title: "TabMerger", currentWindow: true };
+  var query = { title: 'TabMerger', currentWindow: true };
   var exists = { highlighted: true, active: true };
-  var not_exist = { url: "index.html", active: true };
+  var not_exist = { url: 'index.html', active: true };
   return new Promise((resolve) => {
     chrome.tabs.query(query, (tabMergerTabs) => {
       tabMergerTabs[0]
@@ -155,7 +154,7 @@ function findExtTabAndSwitch() {
           })
         : chrome.tabs.create(not_exist, (newTab) => {
             function listener(tabId, changeInfo) {
-              if (changeInfo.status === "complete" && tabId === newTab.id) {
+              if (changeInfo.status === 'complete' && tabId === newTab.id) {
                 chrome.tabs.onUpdated.removeListener(listener);
                 resolve(0);
               }
@@ -200,39 +199,39 @@ function createContextMenu(id, title, type) {
  */
 const contextMenuOrShortCut = async (info, tab) => {
   // need to alter the info object if it comes from a keyboard shortcut event
-  if (typeof info === "string") {
-    info = { which: "all", command: info };
+  if (typeof info === 'string') {
+    info = { which: 'all', command: info };
   }
 
   switch (info.menuItemId || info.command) {
-    case "aopen-tabmerger":
+    case 'aopen-tabmerger':
       await findExtTabAndSwitch();
       break;
-    case "merge-left-menu":
-      info.which = "left";
+    case 'merge-left-menu':
+      info.which = 'left';
       await filterTabs(info, tab);
       break;
-    case "merge-right-menu":
-      info.which = "right";
+    case 'merge-right-menu':
+      info.which = 'right';
       await filterTabs(info, tab);
       break;
-    case "merge-xcluding-menu":
-      info.which = "excluding";
+    case 'merge-xcluding-menu':
+      info.which = 'excluding';
       await filterTabs(info, tab);
       break;
-    case "merge-snly-menu":
-      info.which = "only";
+    case 'merge-snly-menu':
+      info.which = 'only';
       await filterTabs(info, tab);
       break;
-    case "remove-visibility":
+    case 'remove-visibility':
       excludeSite(tab);
       break;
-    case "zdl-instructions":
-      var dest_url = "https://tabmerger.herokuapp.com/instructions";
+    case 'zdl-instructions':
+      var dest_url = 'https://tabmerger.herokuapp.com/instructions';
       chrome.tabs.create({ active: true, url: dest_url });
       break;
-    case "dl-contact":
-      var dest_url = "https://tabmerger.herokuapp.com/contact";
+    case 'dl-contact':
+      var dest_url = 'https://tabmerger.herokuapp.com/contact';
       chrome.tabs.create({ active: true, url: dest_url });
       break;
 
@@ -248,9 +247,8 @@ const contextMenuOrShortCut = async (info, tab) => {
  * @param {object} tab The tab which should be excluded from TabMerger's merging visibility
  */
 function excludeSite(tab) {
-  chrome.storage.sync.get("settings", (result) => {
-    result.settings.blacklist +=
-      result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
+  chrome.storage.sync.get('settings', (result) => {
+    result.settings.blacklist += result.settings.blacklist === '' ? `${tab.url}` : `, ${tab.url}`;
     chrome.storage.sync.set({ settings: result.settings });
   });
 }
@@ -275,31 +273,30 @@ function translate(msg) {
 
 /*------------------------------- MAIN -----------------------------*/
 
-// prettier-ignore
-var info = { which: "all" }, tab = { index: 0 };
+var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
 
 // ask the user to take a survey to figure out why they removed TabMerger
-chrome.runtime.setUninstallURL("https://tabmerger.herokuapp.com/survey");
+chrome.runtime.setUninstallURL('https://tabmerger.herokuapp.com/survey');
 
 // when the user clicks the TabMerger icons in the browser's toolbar
 chrome.browserAction.onClicked.addListener(handleBrowserIconClick);
 
 // contextMenu creation
-createContextMenu("aopen-tabmerger", translate("bgOpen"));
+createContextMenu('aopen-tabmerger', translate('bgOpen'));
 //--------------------------//
-createContextMenu("first-separator", "separator", "separator");
-createContextMenu("merge-all-menu", translate("bgAll"));
-createContextMenu("merge-left-menu", translate("bgLeft"));
-createContextMenu("merge-right-menu", translate("bgRight"));
-createContextMenu("merge-xcluding-menu", translate("bgExclude"));
-createContextMenu("merge-snly-menu", translate("bgOnly"));
+createContextMenu('first-separator', 'separator', 'separator');
+createContextMenu('merge-all-menu', translate('bgAll'));
+createContextMenu('merge-left-menu', translate('bgLeft'));
+createContextMenu('merge-right-menu', translate('bgRight'));
+createContextMenu('merge-xcluding-menu', translate('bgExclude'));
+createContextMenu('merge-snly-menu', translate('bgOnly'));
 //--------------------------//
-createContextMenu("second-separator", "separator", "separator");
-createContextMenu("remove-visibility", translate("bgSiteExclude"));
+createContextMenu('second-separator', 'separator', 'separator');
+createContextMenu('remove-visibility', translate('bgSiteExclude'));
 //--------------------------//
-createContextMenu("third-separator", "separator", "separator");
-createContextMenu("zdl-instructions", translate("bgInstructions"));
-createContextMenu("dl-contact", translate("bgContact"));
+createContextMenu('third-separator', 'separator', 'separator');
+createContextMenu('zdl-instructions', translate('bgInstructions'));
+createContextMenu('dl-contact', translate('bgContact'));
 
 // merge button clicks
 chrome.runtime.onMessage.addListener(extensionMessage);
