@@ -14,12 +14,16 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@testing-library/react": "^11.2.2",
-    "jsdoc": "^3.6.6"
+    "jsdoc": "^3.6.6",
+    "zip-a-folder": "0.0.12"
   },
   "scripts": {
     "docs": "./node_modules/.bin/jsdoc -c jsdoc.config.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-firefox": "node helpers/build_helper.js firefox && npm run build && node helpers/zip_helper.js firefox",
+    "build-chrome": "node helpers/build_helper.js chrome && npm run build && node helpers/zip_helper.js chrome",
+    "build-all": "npm run build-firefox && npm run build-chrome",
     "eject": "react-scripts eject",
     "test": "jest --coverage",
     "test:watch": "npm run test --watchAll",

@@ -4,33 +4,35 @@
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
+
   "author": "Lior Bragilevsky",
   "homepage_url": "https://tabmerger.herokuapp.com/",
+
   "background": {
-    "scripts": [
-      "background.js"
-    ],
+    "scripts": ["background.js"],
     "persistent": true
   },
+
   "options_ui": {
     "page": "settings/settings.html",
     "open_in_tab": true
   },
-  "permissions": [
-    "tabs",
-    "contextMenus",
-    "storage"
-  ],
+
+  "permissions": ["tabs", "contextMenus", "storage"],
+
   "icons": {
-    "16": "images/logo16.png",
+    "128": "images/logo128.png",
     "48": "images/logo48.png",
-    "128": "images/logo128.png"
+    "16": "images/logo16.png"
   },
+
   "browser_action": {
     "default_icon": "images/logo128.png",
     "default_title": "Merge your tabs into groups"
   },
+
   "incognito": "split",
+
   "commands": {
     "merge-snly-menu": {
       "suggested_key": {

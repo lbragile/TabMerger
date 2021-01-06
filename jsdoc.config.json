@@ -21,7 +21,8 @@
           "public/_locales",
           "public/background.js",
           "public/index.html",
-          "public/manifest.json"
+          "public/manifest.json",
+          "docs/"
         ],
         "excludePattern": "^((?!public).)*$"
       }

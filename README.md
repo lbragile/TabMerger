@@ -35,26 +35,37 @@ If so, consider leaving a positive & meaningful review (<a href="https://chrome.
 
 The following lists the items which need to be crossed off of TabMerger's bucket list (and some that were recently completed/highlights) since the release of **v1.2.1**. See the full list in TabMerger's GitHub <a href="https://github.com/lbragile/TabMerger/projects/1">Project Page</a>.
 
-## Testing In Firefox - Manifest Change Required 😤
+## Build 🔨
 
-To allow Firefox to use `storage.sync()` API, when testing you need to build TabMerger by updating the manifest. To do this, you should replace:
+Firefox requires the manifest to include a key named `browser_specific_settings` to allow the usage of `chrome.storage.sync()` API. However, such a key is not supported in Chrome/Edge 😒.
 
-```
-"incognito": "split",
-```
+To make life simpler, I created a few build scripts which can be used to generate the build zip file for each browser. These are found in `<rootDir>/helpers/`. The way these work is that they manipulate a `manifest_template.json` to create the correct `manifest.json` for each browser type and place it inside the `<rootDir>/public` folder. Here is the workflow:
 
-with
+`generate correct manifest.json -> npm run build -> make a zip folder`
 
-```
-"incognito": "spanning",
+Or in terms of files:
 
-"browser_specific_settings": {
-  "gecko": {
-    "id": "{19feb84f-3a0b-4ca3-bbae-211b52eb158b}"
-  }
-},
-```
+`build_helper.js -> npm run build -> zip_helper.js`
 
+Note that `build_helper.js` simply manipulates the template manifest file in order to create the correct manifest. Namely, the keys: `incognito` and `browser_specific_settings` are modified or removed as needed per browser.
+
+Use command: `npm run build-all` to create zipped build folders for all browsers (Chrome & Edge are identical).
+
+
+## Test ✅
+
+Each Pull Request is automatically subjected to this repository's unit testing. If thresholds are not met, the pull request will fail and will thus not be accepted (see <a href="https://github.com/lbragile/TabMerger/blob/master/.github/CONTRIBUTING.md">CONTRIBUTING.md</a>).
+
+Thus, when you add a new feature or modify existing features, ensure that you write sufficient tests to cover all scenarios in which your addition influences the overall system.
+
+**Not sure how to write tests?**
+Simply ask for my help as an issue or direct message prior to making a pull request.
+
+**Checking your tests**
+Many scripts are provided to check your test scripts. For example:
+`npm run test` will check all the test scripts at once, while `npm run test-app` will only check the test scripts of the `App` component.
+
+In all cases, code coverage is collected and displayed at the end of the run, as well as a detailed list of passing/failing tests is provided.
 ## Contact 📞
 
 📩 If you have any more suggestions please send me a message on GitHub, lbragile@gmail.com, or <a href="https://www.linkedin.com/in/liorbragilevsky/">LinkedIn</a>.

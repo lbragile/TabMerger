@@ -2,7 +2,7 @@
 
 .env
 debug.log
-build.zip
+build_*.zip
 
 # dependencies
 /node_modules
