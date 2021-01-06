@@ -46,9 +46,9 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
 
 #sync-text {
   height: 28px;
-  max-width: 99%;
-  padding: 1px;
-  overflow: auto;
+  padding: 1px 3px;
+  display: inline;
+  font-size: 0.95rem;
 }
 
 #logo-img {
