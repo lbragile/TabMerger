@@ -18,20 +18,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useState as useStateMock } from "react";
+import React, { useState as useStateMock } from 'react';
 
-jest.mock("react", () => ({
-  ...jest.requireActual("react"),
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
   useState: jest.fn(),
 }));
 
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor } from '@testing-library/react';
 
-import * as GroupFunc from "../../src/Group/Group_functions";
-import Group from "../../src/Group/Group";
+import * as GroupFunc from '../../src/Group/Group_functions';
+import Group from '../../src/Group/Group';
 
 var container, mockSet, anything;
 
@@ -67,51 +67,51 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("Change Group Color", () => {
-  it("opens color input on click", () => {
-    var spy = jest.spyOn(GroupFunc, "setGroupBackground");
-    fireEvent.click(container.querySelector(".input-color"));
+describe('Change Group Color', () => {
+  it('opens color input on click', () => {
+    var spy = jest.spyOn(GroupFunc, 'setGroupBackground');
+    fireEvent.click(container.querySelector('.input-color'));
 
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it("calls setGroupBackground on change", () => {
-    var spy = jest.spyOn(GroupFunc, "setGroupBackground");
+  it('calls setGroupBackground on change', () => {
+    var spy = jest.spyOn(GroupFunc, 'setGroupBackground');
     spy.mockClear();
 
     fireEvent.change(container.querySelector("input[type='color'"), {
-      target: { value: "#000" },
+      target: { value: '#000' },
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("Group Title", () => {
+describe('Group Title', () => {
   var titleSpy, blurSpy, elem;
   beforeEach(() => {
-    titleSpy = jest.spyOn(GroupFunc, "setTitle");
-    blurSpy = jest.spyOn(GroupFunc, "blurOnEnter");
-    elem = container.querySelector(".title-edit-input");
+    titleSpy = jest.spyOn(GroupFunc, 'setTitle');
+    blurSpy = jest.spyOn(GroupFunc, 'blurOnEnter');
+    elem = container.querySelector('.title-edit-input');
   });
 
   // not working properly
-  it.skip("selects title on Focus", () => {
+  it.skip('selects title on Focus', () => {
     fireEvent.focus(elem);
     expect(container.activeElement).toBe(elem);
   });
 
-  it("set title on blur", () => {
-    localStorage.setItem("groups", JSON.stringify(init_groups));
+  it('set title on blur', () => {
+    localStorage.setItem('groups', JSON.stringify(init_groups));
     fireEvent.focus(elem);
     fireEvent.blur(elem);
     expect(titleSpy).toHaveBeenCalledTimes(1);
-    expect(titleSpy).toHaveBeenCalledWith(anything, anything, "Title");
+    expect(titleSpy).toHaveBeenCalledWith(anything, anything, 'Title');
     expect(mockSet).toHaveBeenCalledTimes(1);
   });
 
-  it("blurs on Enter key press", () => {
-    var spy = jest.spyOn(GroupFunc, "blurOnEnter");
+  it('blurs on Enter key press', () => {
+    var spy = jest.spyOn(GroupFunc, 'blurOnEnter');
     fireEvent.focus(elem);
     fireEvent.keyDown(elem, { keyCode: 13 });
 
@@ -120,75 +120,75 @@ describe("Group Title", () => {
   });
 });
 
-describe("Toggle Group (Hide/Show)", () => {
-  it("calls toggleGroup on click -> show", () => {
-    var spy = jest.spyOn(GroupFunc, "toggleGroup");
-    fireEvent.click(container.querySelector(".show-hide-btn"));
+describe('Toggle Group (Hide/Show)', () => {
+  it('calls toggleGroup on click -> show', () => {
+    var spy = jest.spyOn(GroupFunc, 'toggleGroup');
+    fireEvent.click(container.querySelector('.show-hide-btn'));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(anything, false, anything);
   });
 
   // not working
-  it.skip("calls toggleGroup on click -> hide", async () => {
-    var spy = jest.spyOn(GroupFunc, "toggleGroup");
-    fireEvent.click(container.querySelector(".show-hide-btn"));
+  it.skip('calls toggleGroup on click -> hide', async () => {
+    var spy = jest.spyOn(GroupFunc, 'toggleGroup');
+    fireEvent.click(container.querySelector('.show-hide-btn'));
     spy.mockClear();
 
     await waitFor(() => {
-      expect(container.querySelector(".show-hide-btn")).toBeTruthy();
+      expect(container.querySelector('.show-hide-btn')).toBeTruthy();
     });
 
-    fireEvent.click(container.querySelector(".show-hide-btn"));
+    fireEvent.click(container.querySelector('.show-hide-btn'));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(anything, true, anything);
   });
 });
 
-describe("Open Group", () => {
-  it("calls openGroup on click", () => {
-    var spy = jest.spyOn(GroupFunc, "openGroup");
-    fireEvent.click(container.querySelector(".open-group-btn"));
+describe('Open Group', () => {
+  it('calls openGroup on click', () => {
+    var spy = jest.spyOn(GroupFunc, 'openGroup');
+    fireEvent.click(container.querySelector('.open-group-btn'));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(anything);
   });
 });
 
-describe("Delete Group", () => {
-  it("calls deleteGroup on click", () => {
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+describe('Delete Group', () => {
+  it('calls deleteGroup on click', () => {
+    localStorage.setItem('groups', JSON.stringify(init_groups));
+    sessionStorage.setItem('settings', JSON.stringify(default_settings));
 
-    var spy = jest.spyOn(GroupFunc, "deleteGroup");
-    fireEvent.click(container.querySelector(".delete-group-btn"));
+    var spy = jest.spyOn(GroupFunc, 'deleteGroup');
+    fireEvent.click(container.querySelector('.delete-group-btn'));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(anything, anything, anything);
   });
 });
 
-describe("sendMessage", () => {
+describe('sendMessage', () => {
   var spy, id;
 
   beforeEach(() => {
-    spy = jest.spyOn(chrome.runtime, "sendMessage");
+    spy = jest.spyOn(chrome.runtime, 'sendMessage');
     id = chrome.runtime.id;
   });
 
-  it("sends a message to background script with correct parameters -> all", () => {
-    fireEvent.click(container.querySelector(".merge-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "all", id: "group-0" });
+  it('sends a message to background script with correct parameters -> all', () => {
+    fireEvent.click(container.querySelector('.merge-btn'));
+    expect(spy).toHaveBeenCalledWith(id, { msg: 'all', id: 'group-0' });
   });
 
-  it("sends a message to background script with correct parameters -> left", () => {
-    fireEvent.click(container.querySelector(".merge-left-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "left", id: "group-0" });
+  it('sends a message to background script with correct parameters -> left', () => {
+    fireEvent.click(container.querySelector('.merge-left-btn'));
+    expect(spy).toHaveBeenCalledWith(id, { msg: 'left', id: 'group-0' });
   });
 
-  it("sends a message to background script with correct parameters -> right", () => {
-    fireEvent.click(container.querySelector(".merge-right-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "right", id: "group-0" });
+  it('sends a message to background script with correct parameters -> right', () => {
+    fireEvent.click(container.querySelector('.merge-right-btn'));
+    expect(spy).toHaveBeenCalledWith(id, { msg: 'right', id: 'group-0' });
   });
 });

@@ -6,7 +6,7 @@
   "default_locale": "en",
 
   "author": "Lior Bragilevsky",
-  "homepage_url": "https://tabmerger.herokuapp.com/",
+  "homepage_url": "https://lbragile.github.io/TabMerger-Extension/",
 
   "background": {
     "scripts": ["background.js"],

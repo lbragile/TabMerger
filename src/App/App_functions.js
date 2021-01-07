@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import * as AppHelper from './App_helpers';
@@ -309,7 +309,8 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
 
 /**
  * Allows the user to add a group with the default title & color chosen in the settings.
- * Each new group is always empty and has a creation timestamp.
+ * Each new group is always empty and has a creation timestamp. Also scrolls the page
+ * down so that the new group is in full view to the user.
  * @param {number} num_group_limit an upper limit on the number of groups that can be created
  * @param {Function} setGroups For re-rendering the groups
  *
@@ -330,6 +331,12 @@ export function addGroup(num_group_limit, setGroups) {
         };
         chrome.storage.local.set({ groups: current_groups }, () => {
           setGroups(JSON.stringify(current_groups));
+
+          setTimeout(() => {
+            // scroll to the bottom to see new group right away
+            var scrollingElement = document.scrollingElement || document.body;
+            scrollingElement.scrollTop = scrollingElement.scrollHeight;
+          }, 50);
         });
       });
     } else {

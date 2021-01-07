@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 -->
 
 <!DOCTYPE html>
@@ -38,12 +38,7 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
   <body>
     <div class="container my-auto">
       <a href="#">
-        <img
-          id="logo-img"
-          class="mt-4 mb-2"
-          src="../images/logo-full-rescale.PNG"
-          alt="TabMerger Logo"
-        />
+        <img id="logo-img" class="mt-4 mb-2" src="../images/logo-full-rescale.PNG" alt="TabMerger Logo" />
       </a>
       <div class="title d-flex flex-row align-items-end">
         <h2>Settings</h2>
@@ -63,29 +58,17 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
             </div>
 
             <div>
-              <small
-                >This will only be applied on new groups formed after settings
-                are saved!</small
-              >
+              <small>This will only be applied on new groups formed after settings are saved!</small>
             </div>
           </section>
 
           <section>
             <div class="row mx-0">
               <h5 class="mr-2 mb-0">Default Group Title:</h5>
-              <input
-                class="px-1 w-10"
-                type="text"
-                value="Title"
-                maxlength="15"
-                id="options-default-title"
-              />
+              <input class="px-1 w-10" type="text" value="Title" maxlength="15" id="options-default-title" />
             </div>
             <div>
-              <small
-                >This will only be applied on new groups formed after settings
-                are saved!</small
-              >
+              <small>This will only be applied on new groups formed after settings are saved!</small>
             </div>
           </section>
 
@@ -94,18 +77,14 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
               <h5 class="mr-2 mb-0">Exclude Websites:</h5>
               <div class="text-justify">
                 <small>
-                  Please enter the <i>full</i> website address of any website
-                  which you would like to not merge. This URL <b>must</b> begin
-                  with "http://" or "https://" - we recommend <i>copying</i> the
-                  link of the tab and <i>pasting</i> it here. You may enter
-                  multiple comma seperated values. <br />
-                  <b>Note:</b> TabMerger provides a menu for you to quickly do
-                  this, simply right click on any page you want to exclude, then
-                  in the <i>context menu</i> popup navigate to:<br /><br /><code
+                  Please enter the <i>full</i> website address of any website which you would like to not merge. This
+                  URL <b>must</b> begin with "http://" or "https://" - we recommend <i>copying</i> the link of the tab
+                  and <i>pasting</i> it here. You may enter multiple comma seperated values. <br />
+                  <b>Note:</b> TabMerger provides a menu for you to quickly do this, simply right click on any page you
+                  want to exclude, then in the <i>context menu</i> popup navigate to:<br /><br /><code
                     >TabMerger > Exclude Site from TabMerger's Visibility</code
-                  ><br /><br />Doing this will cause the corresponding tab's URL
-                  to show up here right away, without the need to navigate to
-                  this settings page.
+                  ><br /><br />Doing this will cause the corresponding tab's URL to show up here right away, without the
+                  need to navigate to this settings page.
                 </small>
               </div>
               <textarea
@@ -123,30 +102,17 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
           <section>
             <div>
               <h5 class="mb-0">Extension Opening Behavior:</h5>
-              <small
-                >The following happens when TabMerger's extension icon is
-                clicked.</small
-              >
+              <small>The following happens when TabMerger's extension icon is clicked.</small>
             </div>
 
             <div class="my-2">
-              <input
-                type="radio"
-                id="open-without"
-                name="ext-open"
-                value="without"
-                checked
-              />
-              <label for="keep" class="mb-0"
-                >Open Without Merging (<i>default</i>)</label
-              >
+              <input type="radio" id="open-without" name="ext-open" value="without" checked />
+              <label for="keep" class="mb-0">Open Without Merging (<i>default</i>)</label>
               <div class="ml-3 mt-0 text-justify">
                 <small
-                  >This will open (or switch if already open) TabMerger's
-                  extensions page <b>without</b> merging the currently open tabs
-                  in the same window. The user can then merge open tabs by using
-                  each group's merging buttons. Such behavior is desireable for
-                  full control of the merging process.
+                  >This will open (or switch if already open) TabMerger's extensions page <b>without</b> merging the
+                  currently open tabs in the same window. The user can then merge open tabs by using each group's
+                  merging buttons. Such behavior is desireable for full control of the merging process.
                 </small>
               </div>
             </div>
@@ -156,11 +122,9 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
               <label for="remove" class="mb-0">Open & Merge</label>
               <div class="ml-3 text-justify">
                 <small
-                  >Same as above but <b>with</b> merging. The merged tabs will
-                  be grouped into the top group. Thus, the user will then be
-                  able to sort the tabs along various groups via the
-                  drag-and-drop feature. This behavior is desireable when the
-                  user wants to avoid opening an extra tab (TabMerger) prior to
+                  >Same as above but <b>with</b> merging. The merged tabs will be grouped into the top group. Thus, the
+                  user will then be able to sort the tabs along various groups via the drag-and-drop feature. This
+                  behavior is desireable when the user wants to avoid opening an extra tab (TabMerger) prior to
                   merging.</small
                 >
               </div>
@@ -174,39 +138,20 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
             </div>
 
             <div class="my-2">
-              <input
-                type="radio"
-                id="keep-tabs"
-                name="restore-tabs"
-                value="keep"
-                checked
-              />
-              <label for="keep" class="mb-0"
-                >Keep in TabMerger (<i>default</i>)</label
-              >
+              <input type="radio" id="keep-tabs" name="restore-tabs" value="keep" checked />
+              <label for="keep" class="mb-0">Keep in TabMerger (<i>default</i>)</label>
               <div class="ml-3 mt-0">
-                <small
-                  >You can still manually delete tabs by the delete tab, group,
-                  or all actions.
-                </small>
+                <small>You can still manually delete tabs by the delete tab, group, or all actions. </small>
               </div>
             </div>
 
             <div>
-              <input
-                type="radio"
-                id="remove-tabs"
-                value="remove"
-                name="restore-tabs"
-              />
+              <input type="radio" id="remove-tabs" value="remove" name="restore-tabs" />
               <label for="remove" class="mb-0">Remove from TabMerger</label>
               <div class="ml-3">
                 <small
-                  >Opening a tab (<i>Click</i> on it) will remove that tab from
-                  TabMerger's page. This holds for any other opening action (<i
-                    >group</i
-                  >
-                  or <i>all</i>).
+                  >Opening a tab (<i>Click</i> on it) will remove that tab from TabMerger's page. This holds for any
+                  other opening action (<i>group</i> or <i>all</i>).
                 </small>
               </div>
             </div>
@@ -215,12 +160,8 @@ TabMerger team at <https://tabmerger.herokuapp.com/contact/>
       </div>
       <div class="mx-0 d-flex flex-row align-items-center">
         <button class="option-btn btn btn-primary" id="save-btn">Save</button>
-        <button class="option-btn btn btn-secondary ml-1 mr-4" id="reset-btn">
-          Reset
-        </button>
-        <button class="option-btn btn btn-light ml-4" id="home-btn">
-          Home
-        </button>
+        <button class="option-btn btn btn-secondary ml-1 mr-4" id="reset-btn">Reset</button>
+        <button class="option-btn btn btn-light ml-4" id="home-btn">Home</button>
       </div>
     </div>
 

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -46,11 +46,11 @@ export default function App() {
   const NUM_GROUP_LIMIT = useRef(100); // 3 for testing - 100 for production
 
   const links = useRef([
-    { url: "https://tabmerger.herokuapp.com/", text: AppFunc.translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
+    { url: "https://lbragile.github.io/TabMerger-Extension/", text: AppFunc.translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
     { url: 'https://youtu.be/zkI0T-GzmzQ', text: AppFunc.translate('quickDemo'), icon: <FiYoutube color="black" /> },
     { url: process.env.REACT_APP_PAYPAL_URL, text: AppFunc.translate("donate"), icon: <RiHandCoinLine color="black" /> }, // prettier-ignore
     { url: AppFunc.getTabMergerLink(true), text: AppFunc.translate('leaveReview'), icon: <FiStar color="black" /> },
-    { url: "https://tabmerger.herokuapp.com/contact", text: AppFunc.translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
+    { url: "https://lbragile.github.io/TabMerger-Extension/contact", text: AppFunc.translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
     { url: 'https://github.com/lbragile/TabMerger', text: 'GitHub', icon: <AiFillGithub color="black" /> },
     { url: 'https://www.linkedin.com/in/liorbragilevsky/', text: 'LinkedIn', icon: <AiFillLinkedin color="black" /> },
     { url: "https://stackoverflow.com/users/4298115/lbragile", text: "StackOverflow", icon: <FaStackOverflow color="black" /> }, // prettier-ignore

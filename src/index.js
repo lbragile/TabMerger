@@ -18,16 +18,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App/App";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App/App';
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root')
 );

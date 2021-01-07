@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://tabmerger.herokuapp.com/contact/>
+TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
@@ -212,11 +212,11 @@ const contextMenuOrShortCut = async (info, tab) => {
       excludeSite(tab);
       break;
     case 'zdl-instructions':
-      var dest_url = 'https://tabmerger.herokuapp.com/instructions';
+      var dest_url = 'https://lbragile.github.io/TabMerger-Extension/instructions';
       chrome.tabs.create({ active: true, url: dest_url });
       break;
     case 'dl-contact':
-      var dest_url = 'https://tabmerger.herokuapp.com/contact';
+      var dest_url = 'https://lbragile.github.io/TabMerger-Extension/contact';
       chrome.tabs.create({ active: true, url: dest_url });
       break;
 
@@ -261,7 +261,7 @@ function translate(msg) {
 var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
 
 // ask the user to take a survey to figure out why they removed TabMerger
-chrome.runtime.setUninstallURL('https://tabmerger.herokuapp.com/survey');
+chrome.runtime.setUninstallURL('https://lbragile.github.io/TabMerger-Extension/survey');
 
 // when the user clicks the TabMerger icons in the browser's toolbar
 chrome.browserAction.onClicked.addListener(handleBrowserIconClick);
