@@ -2,7 +2,7 @@
   "source": {
     "includePattern": ".js$",
     "include": ["src", "public"],
-    "exclude": ["node_modules", "src/Button", "coverage", "build", "__tests__"]
+    "exclude": ["node_modules", "src/Button", "coverage", "build", "tests"]
   },
   "recurseDepth": 5,
   "opts": {

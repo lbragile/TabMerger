@@ -18,18 +18,31 @@
     "zip-a-folder": "0.0.12"
   },
   "scripts": {
-    "docs": "./node_modules/.bin/jsdoc -c jsdoc.config.json",
+    "docs": "./node_modules/.bin/jsdoc -c ./config/jsdoc.config.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build-firefox": "node helpers/build_helper.js firefox && npm run build && node helpers/zip_helper.js firefox",
-    "build-chrome": "node helpers/build_helper.js chrome && npm run build && node helpers/zip_helper.js chrome",
+    "build-firefox": "node misc/adjust_manifest.js firefox && npm run build && node misc/zip.js firefox",
+    "build-chrome": "node misc/adjust_manifest.js chrome && npm run build && node misc/zip.js chrome",
     "build-all": "npm run build-firefox && npm run build-chrome",
     "eject": "react-scripts eject",
-    "test": "jest --coverage",
+    "test": "jest --coverage --config ./config/jest.config.js",
     "test:watch": "npm run test --watchAll",
-    "test-tab": "npm run test -- ./__tests__/Tab_spec/",
-    "test-group": "npm run test -- ./__tests__/Group_spec/",
-    "test-app": "npm run test -- ./__tests__/App_spec/"
+    "test-tab": "npm run test -- ./tests/Tab_spec/",
+    "test-group": "npm run test -- ./tests/Group_spec/",
+    "test-app": "npm run test -- ./tests/App_spec/"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-react"
+    ]
   },
   "eslintConfig": {
     "extends": [

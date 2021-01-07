@@ -39,15 +39,15 @@ The following lists the items which need to be crossed off of TabMerger's bucket
 
 Firefox requires the manifest to include a key named `browser_specific_settings` to allow the usage of `chrome.storage.sync()` API. However, such a key is not supported in Chrome/Edge 😒.
 
-To make life simpler, I created a few build scripts which can be used to generate the build zip file for each browser. These are found in `<rootDir>/helpers/`. The way these work is that they manipulate a `manifest_template.json` to create the correct `manifest.json` for each browser type and place it inside the `<rootDir>/public` folder. Here is the workflow:
+To make life simpler, I created a few build scripts which can be used to generate the build zip file for each browser. These are found in `<rootDir>/misc/`. The way these work is that they manipulate a `manifest_template.json` to create the correct `manifest.json` for each browser type and place it inside the `<rootDir>/public/` folder. Here is the workflow:
 
 `generate correct manifest.json -> npm run build -> make a zip folder`
 
 Or in terms of files:
 
-`build_helper.js -> npm run build -> zip_helper.js`
+`adjust_manifest.js -> npm run build -> zip.js`
 
-Note that `build_helper.js` simply manipulates the template manifest file in order to create the correct manifest. Namely, the keys: `incognito` and `browser_specific_settings` are modified or removed as needed per browser.
+Note that `adjust_manifest.js` simply manipulates the template manifest file in order to create the correct manifest. Namely, the keys: `incognito` and `browser_specific_settings` are modified or removed as needed per browser.
 
 Use command: `npm run build-all` to create zipped build folders for all browsers (Chrome & Edge are identical).
 
