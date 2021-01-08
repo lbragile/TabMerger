@@ -13,6 +13,7 @@
   "write": { "message": "எழுது" },
   "read": { "message": "படி" },
   "sync": { "message": "ஒருங்கிணைக்கவும்" },
+  "print": { "message": "அச்சிடுக PDF" },
   "addGroup": { "message": "குழுவைச் சேர்க்கவும்" },
   "bgAll": { "message": "இந்த சாளரத்தில் எல்லா தாவல்களையும் இணைக்கவும்" },
   "bgContact": { "message": "எங்களை தொடர்பு கொள்ள" },

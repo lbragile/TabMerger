@@ -13,6 +13,7 @@
   "write": { "message": "Schreiben" },
   "read": { "message": "Lesen" },
   "sync": { "message": "Synchronisieren" },
+  "print": { "message": "drucken PDF" },
   "addGroup": { "message": "Gruppe hinzufügen" },
   "bgAll": {
     "message": "Führen Sie ALLE Registerkarten in diesem Fenster zusammen"

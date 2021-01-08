@@ -13,6 +13,7 @@
   "write": { "message": "comentari" },
   "read": { "message": "llegir" },
   "sync": { "message": "sincronitzar" },
+  "print": { "message": "Imprimeix PDF" },
   "addGroup": { "message": "Afegeix un grup" },
   "bgAll": { "message": "Combineu TOTES les pestanyes d'aquesta finestra" },
   "bgContact": { "message": "Poseu-vos en contacte amb nosaltres" },

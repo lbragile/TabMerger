@@ -13,6 +13,7 @@
   "write": { "message": "લખો" },
   "read": { "message": "વાંચવું" },
   "sync": { "message": "સમન્વય" },
+  "print": { "message": "પ્રિંટ પીડીએફ" },
   "addGroup": { "message": "જૂથ ઉમેરો" },
   "bgAll": { "message": "આ વિંડોમાં બધા ટsબ્સ મર્જ કરો" },
   "bgContact": { "message": "અમારો સંપર્ક કરો" },

@@ -13,6 +13,7 @@
   "write": { "message": "Pisati" },
   "read": { "message": "Čitati" },
   "sync": { "message": "Sinkronizacija" },
+  "print": { "message": "otisak PDF" },
   "addGroup": { "message": "Dodaj grupu" },
   "bgAll": { "message": "Spoji SVE kartice u ovom prozoru" },
   "bgContact": { "message": "Kontaktirajte nas" },

@@ -4,7 +4,7 @@ global.init_groups = {
     created: "11/12/2020 @ 22:13:24",
     tabs: [
       {
-        title: "Stack Overflow - Where Developers Learn, Share, & Build Careersaaaaaaaaaaaaaaaaaaaaaa",
+        title: "Stack Overflow - Where Developers Learn, Share, & Build Careers",
         url: "https://stackoverflow.com/",
       },
       {

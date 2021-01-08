@@ -69,11 +69,11 @@ Each Pull Request is automatically subjected to this repository's unit testing. 
 
 Thus, when you add a new feature or modify existing features, ensure that you write sufficient tests to cover all scenarios in which your addition influences the overall system.
 
-##### Not sure how to write tests?
+#### Not Sure How To Write Tests ❔
 
 Simply ask for my help as an issue or direct message prior to making a pull request.
 
-##### Checking your tests:
+#### Checking Your Tests 👑
 
 Many scripts are provided to check your test scripts. For example:
 `npm run test` will check all the test scripts at once, while `npm run test-app` will only check the test scripts of the `App` component.

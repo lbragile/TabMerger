@@ -13,6 +13,7 @@
   "write": { "message": "Pisanje" },
   "read": { "message": "Preberite" },
   "sync": { "message": "Sinhronizacija" },
+  "print": { "message": "Tiskanje PDF" },
   "addGroup": { "message": "Dodaj skupino" },
   "bgAll": { "message": "V tem oknu združite VSE zavihke" },
   "bgContact": { "message": "Kontaktiraj nas" },

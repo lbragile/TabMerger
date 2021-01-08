@@ -13,6 +13,7 @@
   "write": { "message": "نوشتن" },
   "read": { "message": "خواندن" },
   "sync": { "message": "همگام سازی کنید" },
+  "print": { "message": "PDF چاپ" },
   "addGroup": { "message": "افزودن گروه" },
   "bgAll": { "message": "همه برگه ها را در این پنجره ادغام کنید" },
   "bgContact": { "message": "با ما تماس بگیرید" },

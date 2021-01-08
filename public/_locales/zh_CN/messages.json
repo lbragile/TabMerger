@@ -13,6 +13,7 @@
   "write": { "message": "写" },
   "read": { "message": "读" },
   "sync": { "message": "同步" },
+  "print": { "message": "打印 PDF" },
   "addGroup": { "message": "新增群组" },
   "bgAll": { "message": "合并此窗口中的所有标签" },
   "bgContact": { "message": "联系我们" },

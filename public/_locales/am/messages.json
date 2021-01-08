@@ -13,6 +13,7 @@
   "write": { "message": "ፃፍ" },
   "read": { "message": "አንብብ" },
   "sync": { "message": "ሲንክሮናይዝ" },
+  "print": { "message": "እትም PDF" },
   "addGroup": { "message": "ቡድን አክል" },
   "bgAll": { "message": "በዚህ መስኮት ውስጥ ሁሉንም ትሮች ያዋህዱ" },
   "bgContact": { "message": "አግኙን" },

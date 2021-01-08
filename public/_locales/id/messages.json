@@ -13,6 +13,7 @@
   "write": { "message": "Menulis" },
   "read": { "message": "Baca" },
   "sync": { "message": "sinkronisasi" },
+  "print": { "message": "Mencetak PDF" },
   "addGroup": { "message": "Tambahkan Grup" },
   "bgAll": { "message": "Gabungkan SEMUA tab di jendela ini" },
   "bgContact": { "message": "Hubungi kami" },

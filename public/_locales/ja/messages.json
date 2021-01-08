@@ -13,6 +13,7 @@
   "write": { "message": "書く" },
   "read": { "message": "読んだ" },
   "sync": { "message": "同期" },
+  "print": { "message": "プリント PDF" },
   "addGroup": { "message": "グループを追加" },
   "bgAll": { "message": "このウィンドウのすべてのタブをマージ" },
   "bgContact": { "message": "お問い合わせ" },

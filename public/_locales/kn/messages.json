@@ -13,6 +13,7 @@
   "write": { "message": "ಬರೆಯಿರಿ" },
   "read": { "message": "ಓದಿ" },
   "sync": { "message": "ಸಿಂಕ್ರೊನೈಜ್" },
+  "print": { "message": "ಪ್ರಿಂಟ್ ಪಿಡಿಎಫ್" },
   "addGroup": { "message": "ಗುಂಪು ಸೇರಿಸಿ" },
   "bgAll": { "message": "ಈ ವಿಂಡೋದಲ್ಲಿ ಎಲ್ಲಾ ಟ್ಯಾಬ್‌ಗಳನ್ನು ವಿಲೀನಗೊಳಿಸಿ" },
   "bgContact": { "message": "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ" },

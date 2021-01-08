@@ -13,6 +13,7 @@
   "write": { "message": "Viết" },
   "read": { "message": "Đọc" },
   "sync": { "message": "Làm cho đồng bộ" },
+  "print": { "message": "xuất bản PDF" },
   "addGroup": { "message": "Thêm nhóm" },
   "bgAll": { "message": "Hợp nhất TẤT CẢ các tab trong cửa sổ này" },
   "bgContact": { "message": "Liên hệ chúng tôi" },

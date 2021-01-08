@@ -13,6 +13,7 @@
   "write": { "message": "Ír" },
   "read": { "message": "Olvas" },
   "sync": { "message": "Szinkronizálás" },
+  "print": { "message": "Nyomtatás PDF" },
   "addGroup": { "message": "Csoport hozzáadása" },
   "bgAll": { "message": "Az ablak MINDEN fülének egyesítése" },
   "bgContact": { "message": "Lépjen kapcsolatba velünk" },

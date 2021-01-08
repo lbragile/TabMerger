@@ -62,4 +62,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 /* TAB URL */
 .a-tab {
   margin-top: 1px;
+  width: 85%;
+  text-align: left;
+  vertical-align: middle;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -13,6 +13,7 @@
   "write": { "message": "Написать" },
   "read": { "message": "Читать" },
   "sync": { "message": "Синхронизировать" },
+  "print": { "message": "Распечатать PDF" },
   "addGroup": { "message": "Добавить группу" },
   "bgAll": { "message": "Объединить ВСЕ вкладки в этом окне" },
   "bgContact": { "message": "инструкции" },

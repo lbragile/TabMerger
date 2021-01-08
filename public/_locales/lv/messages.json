@@ -13,6 +13,7 @@
   "write": { "message": "Rakstīt" },
   "read": { "message": "Lasīt" },
   "sync": { "message": "Sinhronizēt" },
+  "print": { "message": "drukāt PDF" },
   "addGroup": { "message": "Pievienot grupu" },
   "bgAll": { "message": "Apvienot VISAS cilnes šajā logā" },
   "bgContact": { "message": "Instrukcijas" },

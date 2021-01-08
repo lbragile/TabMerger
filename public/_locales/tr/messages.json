@@ -13,6 +13,7 @@
   "write": { "message": "Yazmak" },
   "read": { "message": "Okuma" },
   "sync": { "message": "Senkronize" },
+  "print": { "message": "Yazdır PDF" },
   "addGroup": { "message": "Grup ekle" },
   "bgAll": { "message": "Bu penceredeki TÜM sekmeleri birleştirin" },
   "bgContact": { "message": "Bize Ulaşın" },

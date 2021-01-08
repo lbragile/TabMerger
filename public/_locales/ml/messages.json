@@ -13,6 +13,7 @@
   "write": { "message": "എഴുതുക" },
   "read": { "message": "വായിക്കുക" },
   "sync": { "message": "സമന്വയിപ്പിക്കുക" },
+  "print": { "message": "പ്രിന്റ് പിഡിഎഫ്" },
   "addGroup": { "message": "ഗ്രൂപ്പ് ചേർക്കുക" },
   "bgAll": { "message": "ഈ വിൻഡോയിൽ എല്ലാ ടാബുകളും ലയിപ്പിക്കുക" },
   "bgContact": { "message": "ഞങ്ങളെ സമീപിക്കുക" },

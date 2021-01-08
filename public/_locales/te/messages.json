@@ -13,6 +13,7 @@
   "write": { "message": "వ్రాయడానికి" },
   "read": { "message": "చదవండి" },
   "sync": { "message": "సమకాలీకరించు" },
+  "print": { "message": "ప్రింట్ PDF" },
   "addGroup": { "message": "సమూహాన్ని జోడించండి" },
   "bgAll": { "message": "ఈ విండోలో అన్ని ట్యాబ్‌లను విలీనం చేయండి" },
   "bgContact": { "message": "మమ్మల్ని సంప్రదించండి" },

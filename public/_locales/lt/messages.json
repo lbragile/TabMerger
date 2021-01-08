@@ -13,6 +13,7 @@
   "write": { "message": "Parašyti" },
   "read": { "message": "Skaityti" },
   "sync": { "message": "Sinchronizuoti" },
+  "print": { "message": "Spausdinti PDF" },
   "addGroup": { "message": "Pridėti grupę" },
   "bgAll": { "message": "Sujungti VISUS skirtukus šiame lange" },
   "bgContact": { "message": "Nurodymai" },

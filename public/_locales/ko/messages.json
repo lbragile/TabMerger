@@ -13,6 +13,7 @@
   "write": { "message": "쓰다" },
   "read": { "message": "읽다" },
   "sync": { "message": "동기화" },
+  "print": { "message": "인쇄 PDF" },
   "addGroup": { "message": "그룹 추가" },
   "bgAll": { "message": "이 창에있는 모든 탭 병합" },
   "bgContact": { "message": "문의하기" },

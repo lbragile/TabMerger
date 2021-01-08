@@ -13,6 +13,7 @@
   "write": { "message": "लिहा" },
   "read": { "message": "वाचा" },
   "sync": { "message": "समक्रमित करा" },
+  "print": { "message": "प्रिंट PDF" },
   "addGroup": { "message": "गट जोडा" },
   "bgAll": { "message": "या विंडोमध्ये सर्व टॅब विलीन करा" },
   "bgContact": { "message": "आमच्याशी संपर्क साधा" },

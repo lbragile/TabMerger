@@ -13,6 +13,7 @@
   "write": { "message": "Write" },
   "read": { "message": "Loe" },
   "sync": { "message": "Sünkroniseeri" },
+  "print": { "message": "Prindi PDF" },
   "addGroup": { "message": "Lisa rühm" },
   "bgAll": { "message": "Ühenda selles aknas KÕIK vahekaardid" },
   "bgContact": { "message": "Võta meiega ühendust" },

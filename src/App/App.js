@@ -33,7 +33,7 @@ import "../Button/Button.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { AiOutlineSearch, AiFillGithub, AiFillLinkedin, AiFillStar } from "react-icons/ai";
-import { BiImport, BiExport, BiHelpCircle } from "react-icons/bi";
+import { BiImport, BiExport, BiHelpCircle, BiPrinter } from "react-icons/bi";
 import { BsCloudUpload, BsCloudDownload, BsChat, BsInfoCircle } from "react-icons/bs";
 import { FaReddit, FaStackOverflow } from "react-icons/fa";
 import { FiYoutube, FiStar, FiSettings } from "react-icons/fi";
@@ -156,7 +156,7 @@ export default function App() {
               <span key={Math.random()}>
                 <p className={i > 0 ? "mt-3 mb-1" : "mb-1 mt-0"}>
                   {[1, 2, 3, 4, 5].map((_) => {
-                    return <AiFillStar color="goldenrod" />;
+                    return <AiFillStar color="goldenrod" key={Math.random()} />;
                   })}
                 </p>
                 <p className="text-center px-1 my-0">{review}</p>
@@ -180,7 +180,7 @@ export default function App() {
             <FiSettings color="black" size="1.6rem" />
           </Button>
 
-          <div>
+          <div className="mt-2">
             <Button
               id="open-all-btn"
               classes="p-0 mx-1 btn-in-global"
@@ -248,8 +248,18 @@ export default function App() {
           </div>
 
           <Button
+            id="print-btn"
+            classes="p-0 mt-2 mx-auto d-block btn-in-global"
+            translate={AppFunc.translate("print")}
+            tooltip={"tiptext-global"}
+            onClick={() => window.print()}
+          >
+            <BiPrinter color="black" size="1.5rem" />
+          </Button>
+
+          <Button
             id="add-group-btn"
-            classes="p-0 mx-auto d-block btn-in-global"
+            classes="p-0 mt-2 mx-auto d-block btn-in-global"
             translate={AppFunc.translate("addGroup")}
             tooltip={"tiptext-global"}
             onClick={() => AppFunc.addGroup(NUM_GROUP_LIMIT.current, setGroups)}
@@ -263,7 +273,7 @@ export default function App() {
         {links.current.slice(0, 5).map((x) => {
           return (
             <Button
-              id={x.text.toLowerCase() + "-btn"}
+              id={x.text.split(" ")[0].toLowerCase() + "-btn"}
               classes="p-0 mx-1 link-global btn-in-global"
               translate={x.text}
               tooltip={"tiptext-global"}
@@ -282,7 +292,7 @@ export default function App() {
           {links.current.slice(5).map((x) => {
             return (
               <Button
-                id={x.text.toLowerCase() + "-btn"}
+                id={x.text.split(" ")[0].toLowerCase() + "-btn"}
                 classes="p-0 mx-1 link-global btn-in-global"
                 key={Math.random()}
               >

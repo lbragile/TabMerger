@@ -13,6 +13,7 @@
   "write": { "message": "Schrijven" },
   "read": { "message": "Lezen" },
   "sync": { "message": "Synchroniseren" },
+  "print": { "message": "Afdrukken PDF" },
   "addGroup": { "message": "Groep toevoegen" },
   "bgAll": { "message": "Voeg ALLE tabbladen samen in dit venster" },
   "bgContact": { "message": "Neem contact op" },

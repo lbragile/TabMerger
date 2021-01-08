@@ -13,6 +13,7 @@
   "write": { "message": "Skrive" },
   "read": { "message": "Lese" },
   "sync": { "message": "Synkroniser" },
+  "print": { "message": "Skriv ut PDF" },
   "addGroup": { "message": "Legg til gruppe" },
   "bgAll": { "message": "Slå sammen ALLE faner i dette vinduet" },
   "bgContact": { "message": "Kontakt oss" },

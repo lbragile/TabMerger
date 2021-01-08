@@ -13,6 +13,7 @@
   "write": { "message": "write" },
   "read": { "message": "Čítať" },
   "sync": { "message": "synchronizovať" },
+  "print": { "message": "vytlačiť PDF" },
   "addGroup": { "message": "Pridať skupinu" },
   "bgAll": { "message": "Zlúčiť VŠETKY karty v tomto okne" },
   "bgContact": { "message": "Kontaktuj nás" },

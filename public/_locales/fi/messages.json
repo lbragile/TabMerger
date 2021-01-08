@@ -13,6 +13,7 @@
   "write": { "message": "Kirjoittaa" },
   "read": { "message": "Lukea" },
   "sync": { "message": "Synkronoida" },
+  "print": { "message": "Tulosta PDF" },
   "addGroup": { "message": "Lisää ryhmä" },
   "bgAll": { "message": "Yhdistä KAIKKI välilehdet tähän ikkunaan" },
   "bgContact": { "message": "Ota meihin yhteyttä" },

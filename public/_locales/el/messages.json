@@ -13,6 +13,7 @@
   "write": { "message": "Γράφω" },
   "read": { "message": "Ανάγνωση" },
   "sync": { "message": "Συγχρονίζω" },
+  "print": { "message": "Εκτύπωση PDF" },
   "addGroup": { "message": "Προσθήκη ομάδας" },
   "bgAll": { "message": "Συγχώνευση ΟΛΩΝ των καρτελών σε αυτό το παράθυρο" },
   "bgContact": { "message": "Επικοινωνήστε μαζί μας" },

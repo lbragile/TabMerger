@@ -13,6 +13,7 @@
   "write": { "message": "লিখন" },
   "read": { "message": "পড়ুন" },
   "sync": { "message": "সিংক্রোনাইজ" },
+  "print": { "message": "প্রিন্ট পিডিএফ" },
   "addGroup": { "message": "গ্রুপ যুক্ত করুন" },
   "bgAll": { "message": "এই উইন্ডোতে সমস্ত ট্যাব মার্জ করুন" },
   "bgContact": { "message": "যোগাযোগ করুন" },

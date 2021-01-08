@@ -13,6 +13,7 @@
   "write": { "message": "pisać" },
   "read": { "message": "Czytać" },
   "sync": { "message": "Synchronizować" },
+  "print": { "message": "Wydrukować PDF" },
   "addGroup": { "message": "Dodaj grupę" },
   "bgAll": { "message": "Scal WSZYSTKIE karty w tym oknie" },
   "bgContact": { "message": "Skontaktuj się z nami" },

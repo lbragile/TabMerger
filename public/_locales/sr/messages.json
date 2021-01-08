@@ -13,6 +13,7 @@
   "write": { "message": "врите" },
   "read": { "message": "читати" },
   "sync": { "message": "Синхронизација" },
+  "print": { "message": "Штампа ПДФ" },
   "addGroup": { "message": "Додај групу" },
   "bgAll": { "message": "Споји СВЕ картице у овом прозору" },
   "bgContact": { "message": "Контактирајте нас" },

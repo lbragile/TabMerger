@@ -210,7 +210,7 @@ hr {
 
   .sidebar {
     background: rgb(27, 27, 27) !important;
-    padding-top: 5% !important;
+    padding-top: 7.5% !important;
   }
 
   .group-color,
@@ -242,11 +242,8 @@ hr {
   }
 
   .draggable a {
-    max-width: 90% !important;
+    width: 92.5% !important;
     text-decoration: none !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
   }
 
   @page {

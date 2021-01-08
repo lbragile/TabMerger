@@ -13,6 +13,7 @@
   "Sync Write": { "message": "مزامنة الكتابة" },
   "Sync Read": { "message": "قراءة المزامنة" },
   "Sync": { "message": "مزامنة" },
+  "print": { "message": "PDF طباعة" },
   "addGroup": { "message": "أضف مجموعة" },
   "bgAll": { "message": "دمج جميع علامات التبويب في هذه النافذة" },
   "bgContact": { "message": "اتصل بنا" },

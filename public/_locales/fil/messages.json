@@ -13,6 +13,7 @@
   "write": { "message": "Sumulat" },
   "read": { "message": "Basahin" },
   "sync": { "message": "I-synchronize" },
+  "print": { "message": "tatak PDF" },
   "addGroup": { "message": "Magdagdag ng grupo" },
   "bgAll": { "message": "Pagsamahin ang LAHAT ng mga tab sa window na ito" },
   "bgContact": { "message": "Makipag-ugnayan sa amin" },

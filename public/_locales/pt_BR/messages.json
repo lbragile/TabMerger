@@ -13,6 +13,7 @@
   "write": { "message": "Escreva" },
   "read": { "message": "Ler" },
   "sync": { "message": "Sincronizar" },
+  "print": { "message": "Versão para impressão PDF" },
   "addGroup": { "message": "Adicionar grupo" },
   "bgAll": { "message": "Mesclar TODAS as guias nesta janela" },
   "bgContact": { "message": "Contate-Nos" },

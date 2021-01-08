@@ -13,6 +13,7 @@
   "write": { "message": "Scrie" },
   "read": { "message": "Citit" },
   "sync": { "message": "Sincroniza" },
+  "print": { "message": "Imprimare PDF" },
   "addGroup": { "message": "Adăugare grup" },
   "bgAll": { "message": "Îmbinați TOATE filele din această fereastră" },
   "bgContact": { "message": "Contactează-ne" },
