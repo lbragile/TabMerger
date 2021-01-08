@@ -21,17 +21,17 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useState as useStateMock } from 'react';
+import React, { useState as useStateMock } from "react";
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
   useState: jest.fn(),
 }));
 
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from "@testing-library/react";
 
-import * as AppFunc from '../../src/App/App_functions';
-import App from '../../src/App/App';
+import * as AppFunc from "../../src/App/App_functions";
+import App from "../../src/App/App";
 
 var container, mockSet, anything;
 const prev_window = window.location;
@@ -84,17 +84,17 @@ afterEach(() => {
 //   });
 // });
 
-describe('Tab Search', () => {
+describe("Tab Search", () => {
   var regexSearchForTab, resetSearch;
 
   beforeEach(() => {
-    regexSearchForTab = jest.spyOn(AppFunc, 'regexSearchForTab');
-    resetSearch = jest.spyOn(AppFunc, 'resetSearch');
+    regexSearchForTab = jest.spyOn(AppFunc, "regexSearchForTab");
+    resetSearch = jest.spyOn(AppFunc, "resetSearch");
   });
 
-  it('calls regexSearchForTab on change -> group', () => {
-    fireEvent.change(container.querySelector('.input-group input'), {
-      target: { value: '#a' },
+  it("calls regexSearchForTab on change -> group", () => {
+    fireEvent.change(container.querySelector(".input-group input"), {
+      target: { value: "#a" },
     });
 
     expect(regexSearchForTab).toHaveBeenCalledTimes(1);
@@ -102,9 +102,9 @@ describe('Tab Search', () => {
     expect(resetSearch).not.toHaveBeenCalled();
   });
 
-  it('calls regexSearchForTab on change -> tab', () => {
-    fireEvent.change(container.querySelector('.input-group input'), {
-      target: { value: 'a' },
+  it("calls regexSearchForTab on change -> tab", () => {
+    fireEvent.change(container.querySelector(".input-group input"), {
+      target: { value: "a" },
     });
 
     expect(regexSearchForTab).toHaveBeenCalledTimes(1);
@@ -112,8 +112,8 @@ describe('Tab Search', () => {
     expect(resetSearch).not.toHaveBeenCalled();
   });
 
-  it('calls resetSearch on blur', () => {
-    fireEvent.blur(container.querySelector('.input-group input'));
+  it("calls resetSearch on blur", () => {
+    fireEvent.blur(container.querySelector(".input-group input"));
 
     expect(regexSearchForTab).not.toHaveBeenCalled();
     expect(resetSearch).toHaveBeenCalledTimes(1);
@@ -121,19 +121,19 @@ describe('Tab Search', () => {
   });
 });
 
-describe('Settings Button', () => {
-  it('calls window location assign with correct parameter on click', () => {
-    fireEvent.click(container.querySelector('#options-btn'));
+describe("Settings Button", () => {
+  it("calls window location assign with correct parameter on click", () => {
+    fireEvent.click(container.querySelector("#options-btn"));
 
     expect(window.location.assign).toHaveBeenCalledTimes(1);
-    expect(window.location.assign).toHaveBeenCalledWith('/settings/settings.html');
+    expect(window.location.assign).toHaveBeenCalledWith("/settings/settings.html");
   });
 });
 
-describe('Open All Button', () => {
-  it('calls openAllTabs on click', () => {
-    var spy = jest.spyOn(AppFunc, 'openAllTabs');
-    fireEvent.click(container.querySelector('#open-all-btn'));
+describe("Open All Button", () => {
+  it("calls openAllTabs on click", () => {
+    var spy = jest.spyOn(AppFunc, "openAllTabs");
+    fireEvent.click(container.querySelector("#open-all-btn"));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).not.toHaveBeenCalledWith(anything);
@@ -150,20 +150,20 @@ describe('Open All Button', () => {
 //   });
 // });
 
-describe('Sync Write Button', () => {
-  it('calls syncWrite on click', () => {
-    var spy = jest.spyOn(AppFunc, 'syncWrite');
-    fireEvent.click(container.querySelector('#sync-write-btn'));
+describe("Sync Write Button", () => {
+  it("calls syncWrite on click", () => {
+    var spy = jest.spyOn(AppFunc, "syncWrite");
+    fireEvent.click(container.querySelector("#sync-write-btn"));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(anything);
   });
 });
 
-describe('Delete All Button', () => {
-  it('calls deleteAllGroups on click', () => {
-    var spy = jest.spyOn(AppFunc, 'deleteAllGroups');
-    fireEvent.click(container.querySelector('#delete-all-btn'));
+describe("Delete All Button", () => {
+  it("calls deleteAllGroups on click", () => {
+    var spy = jest.spyOn(AppFunc, "deleteAllGroups");
+    fireEvent.click(container.querySelector("#delete-all-btn"));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(anything, anything);
@@ -171,11 +171,11 @@ describe('Delete All Button', () => {
   });
 });
 
-describe('Import JSON Input', () => {
-  it('calls importJSON on change', () => {
-    var spy = jest.spyOn(AppFunc, 'importJSON');
-    fireEvent.change(container.querySelector('#import-input'), {
-      target: { files: ['TabMerger.json'] },
+describe("Import JSON Input", () => {
+  it("calls importJSON on change", () => {
+    var spy = jest.spyOn(AppFunc, "importJSON");
+    fireEvent.change(container.querySelector("#import-input"), {
+      target: { files: ["TabMerger.json"] },
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
@@ -184,10 +184,10 @@ describe('Import JSON Input', () => {
   });
 });
 
-describe('Sync Read Button', () => {
-  it('calls syncRead on click', () => {
-    var spy = jest.spyOn(AppFunc, 'syncRead');
-    fireEvent.click(container.querySelector('#sync-read-btn'));
+describe("Sync Read Button", () => {
+  it("calls syncRead on click", () => {
+    var spy = jest.spyOn(AppFunc, "syncRead");
+    fireEvent.click(container.querySelector("#sync-read-btn"));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(anything, anything, anything);
@@ -195,10 +195,10 @@ describe('Sync Read Button', () => {
   });
 });
 
-describe('Add Group Button', () => {
-  it('calls addGroup on click', () => {
-    var spy = jest.spyOn(AppFunc, 'addGroup');
-    fireEvent.click(container.querySelector('#add-group-btn'));
+describe("Add Group Button", () => {
+  it("calls addGroup on click", () => {
+    var spy = jest.spyOn(AppFunc, "addGroup");
+    fireEvent.click(container.querySelector("#add-group-btn"));
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(100, anything);

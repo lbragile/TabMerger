@@ -21,13 +21,13 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import { getFavIconURL } from '../../src/Tab/Tab_helpers';
+import { getFavIconURL } from "../../src/Tab/Tab_helpers";
 
-describe('getFavIconURL', () => {
-  it('returns the API call with just domain name', () => {
-    var base = 'http://www.google.com/s2/favicons?domain=';
-    var url = 'https://www.google.com/';
-    var domain = 'www.google.com';
+describe("getFavIconURL", () => {
+  it("returns the API call with just domain name", () => {
+    var base = "http://www.google.com/s2/favicons?domain=";
+    var url = "https://www.google.com/";
+    var domain = "www.google.com";
     expect(getFavIconURL(url)).toBe(base + domain);
   });
 });

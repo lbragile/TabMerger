@@ -21,11 +21,11 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from 'react';
+import React from "react";
 
 export default function Button(props) {
   return (
-    <button id={props.id} className={props.classes + ' btn'} onClick={props.onClick}>
+    <button id={props.id} className={props.classes + " btn"} onClick={props.onClick}>
       <div className="tip">
         {props.children}
         {props.translate ? <span className={props.tooltip}>{props.translate}</span> : null}

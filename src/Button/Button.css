@@ -169,7 +169,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 }
 
 .tip span::after {
-  content: '';
+  content: "";
   border-width: 5px;
   border-style: solid;
   border-color: black transparent transparent transparent;

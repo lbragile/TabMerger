@@ -36,7 +36,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @return The tab element immediately after the current position of the dragged tab.
  */
 export function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
+  const draggableElements = [...container.querySelectorAll(".draggable:not(.dragging)")];
 
   return draggableElements.reduce(
     (closest, child) => {

@@ -21,10 +21,10 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import * as AppHelper from './App_helpers';
+import * as AppHelper from "./App_helpers";
 
-import Tab from '../Tab/Tab.js';
-import Group from '../Group/Group.js';
+import Tab from "../Tab/Tab.js";
+import Group from "../Group/Group.js";
 
 /**
  * @module App/App_functions
@@ -51,15 +51,15 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
       AppHelper.toggleDarkMode(sync.settings.dark);
     }
 
-    if (sync['group-0']) {
+    if (sync["group-0"]) {
       AppHelper.toggleSyncTimestamp(true, sync_node);
     }
 
     delete sync.settings;
-    chrome.storage.local.get('groups', (local) => {
-      var ls_entry = local.groups || { 'group-0': default_group };
+    chrome.storage.local.get("groups", (local) => {
+      var ls_entry = local.groups || { "group-0": default_group };
 
-      chrome.storage.local.remove(['groups'], () => {
+      chrome.storage.local.remove(["groups"], () => {
         chrome.storage.local.set({ groups: ls_entry }, () => {
           setGroups(JSON.stringify(ls_entry));
           AppHelper.updateTabTotal(ls_entry, setTabTotal);
@@ -76,9 +76,9 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
  * @see defaultGroup in App.js
  */
 export function syncWrite(sync_node) {
-  chrome.storage.local.get('groups', async (local) => {
+  chrome.storage.local.get("groups", async (local) => {
     var current_groups = local.groups;
-    if (current_groups && current_groups['group-0'].tabs.length > 0) {
+    if (current_groups && current_groups["group-0"].tabs.length > 0) {
       for (var key of Object.keys(current_groups)) {
         await AppHelper.updateGroupItem(key, current_groups[key]);
       }
@@ -107,9 +107,9 @@ export function syncWrite(sync_node) {
  */
 export function syncRead(sync_node, setGroups, setTabTotal) {
   chrome.storage.sync.get(null, (sync) => {
-    if (sync['group-0']) {
+    if (sync["group-0"]) {
       delete sync.settings;
-      chrome.storage.local.remove(['groups'], () => {
+      chrome.storage.local.remove(["groups"], () => {
         var new_ls = {};
         var remove_keys = [];
         Object.keys(sync).forEach((key) => {
@@ -139,7 +139,7 @@ export function syncRead(sync_node, setGroups, setTabTotal) {
  * @param {Function} setGroups For re-rendering the groups
  */
 export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
-  if (namespace === 'local' && changes.remove && changes.remove.newValue) {
+  if (namespace === "local" && changes.remove && changes.remove.newValue) {
     // extract and remove the button type from array
     var btn_type = changes.remove.newValue[0];
     changes.remove.newValue.splice(0, 1);
@@ -157,14 +157,14 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
       }
 
       // remove tab if needed
-      chrome.storage.sync.get('settings', (sync) => {
-        chrome.storage.local.get('groups', (local) => {
+      chrome.storage.sync.get("settings", (sync) => {
+        chrome.storage.local.get("groups", (local) => {
           var group_blocks = local.groups;
-          if (sync.settings.restore !== 'keep') {
-            if (btn_type !== 'all') {
+          if (sync.settings.restore !== "keep") {
+            if (btn_type !== "all") {
               var any_tab_url = changes.remove.newValue[0];
               var elem = document.querySelector(`a[href='${any_tab_url}']`);
-              var group_id = elem.closest('.group').id;
+              var group_id = elem.closest(".group").id;
               group_blocks[group_id].tabs = group_blocks[group_id].tabs.filter(
                 (x) => !changes.remove.newValue.includes(x.url)
               );
@@ -176,14 +176,14 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
 
             chrome.storage.local.set({ groups: group_blocks }, () => {
               // update global counter
-              setTabTotal(document.querySelectorAll('.draggable').length - changes.remove.newValue.length);
+              setTabTotal(document.querySelectorAll(".draggable").length - changes.remove.newValue.length);
 
               setGroups(JSON.stringify(group_blocks));
             });
           }
 
           // allow reopening same tab
-          chrome.storage.local.remove(['remove']);
+          chrome.storage.local.remove(["remove"]);
         });
       });
     });
@@ -207,12 +207,12 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  */
 export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
   if (
-    namespace === 'local' &&
+    namespace === "local" &&
     changes.merged_tabs &&
     changes.merged_tabs.newValue &&
     changes.merged_tabs.newValue.length !== 0
   ) {
-    chrome.storage.local.get(['merged_tabs', 'into_group', 'groups'], (local) => {
+    chrome.storage.local.get(["merged_tabs", "into_group", "groups"], (local) => {
       var into_group = local.into_group, merged_tabs = local.merged_tabs; // prettier-ignore
       var group_blocks = local.groups;
       var merged_bytes = JSON.stringify(merged_tabs).length;
@@ -238,7 +238,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
           group_blocks[into_group].tabs = tabs_arr;
 
           chrome.storage.local.set({ groups: group_blocks }, () => {
-            var current = document.querySelectorAll('.draggable');
+            var current = document.querySelectorAll(".draggable");
             setTabTotal(current.length + merged_tabs.length);
             setGroups(JSON.stringify(group_blocks));
           });
@@ -261,7 +261,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
       }
 
       // remove to be able to detect changes again (even for same tabs)
-      chrome.storage.local.remove(['into_group', 'merged_tabs']);
+      chrome.storage.local.remove(["into_group", "merged_tabs"]);
     });
   }
 }
@@ -286,7 +286,7 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
     var sorted_vals = group_values.length > 10 ? AppHelper.sortByKey(JSON.parse(groups)) : group_values;
 
     return sorted_vals.map((x, i) => {
-      var id = 'group-' + i;
+      var id = "group-" + i;
       return (
         <Group
           id={id}
@@ -317,13 +317,13 @@ export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
  * @see NUM_GROUP_LIMIT in App.js
  */
 export function addGroup(num_group_limit, setGroups) {
-  chrome.storage.local.get('groups', (local) => {
+  chrome.storage.local.get("groups", (local) => {
     var current_groups = local.groups;
     var num_keys = Object.keys(current_groups).length;
 
     if (num_keys < num_group_limit) {
-      chrome.storage.sync.get('settings', (sync) => {
-        current_groups['group-' + num_keys] = {
+      chrome.storage.sync.get("settings", (sync) => {
+        current_groups["group-" + num_keys] = {
           color: sync.settings.color,
           created: AppHelper.getTimestamp(),
           tabs: [],
@@ -354,8 +354,8 @@ export function addGroup(num_group_limit, setGroups) {
  * of all the tabs in TabMerger to consider for removal.
  */
 export function openAllTabs() {
-  var tab_links = [...document.querySelectorAll('.a-tab')].map((x) => x.href);
-  tab_links.unshift('all');
+  var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+  tab_links.unshift("all");
   chrome.storage.local.set({ remove: tab_links }, () => {});
 }
 
@@ -367,9 +367,9 @@ export function openAllTabs() {
  * @param {Function} setGroups For re-rendering the groups
  */
 export function deleteAllGroups(setTabTotal, setGroups) {
-  chrome.storage.sync.get('settings', (sync) => {
+  chrome.storage.sync.get("settings", (sync) => {
     var new_entry = {
-      'group-0': {
+      "group-0": {
         color: sync.settings.color,
         created: AppHelper.getTimestamp(),
         tabs: [],
@@ -397,32 +397,32 @@ export function deleteAllGroups(setTabTotal, setGroups) {
  */
 export function regexSearchForTab(e) {
   var sections, titles, match, tab_items, search_type, no_match, keep_sections = []; // prettier-ignore
-  sections = document.querySelectorAll('.group-item');
+  sections = document.querySelectorAll(".group-item");
 
-  if (e.target.value[0] === '#') {
-    titles = [...sections].map((x) => x.querySelector('.title-edit-input').value);
+  if (e.target.value[0] === "#") {
+    titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
     match = e.target.value.substr(1).toLowerCase();
-    search_type = 'group';
-  } else if (e.target.value !== '') {
-    tab_items = [...sections].map((x) => [...x.querySelectorAll('.draggable')]);
+    search_type = "group";
+  } else if (e.target.value !== "") {
+    tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
     titles = tab_items.map((x) => {
       return x.map((y) => y.lastChild.textContent.toLowerCase());
     });
 
     match = e.target.value.toLowerCase();
-    search_type = 'tab';
+    search_type = "tab";
   } else {
     // no typing? show all groups and tabs
-    sections.forEach((x) => (x.style.display = ''));
-    [...document.querySelectorAll('.draggable')].forEach((x) => (x.style.display = ''));
+    sections.forEach((x) => (x.style.display = ""));
+    [...document.querySelectorAll(".draggable")].forEach((x) => (x.style.display = ""));
   }
 
-  if (search_type === 'group') {
+  if (search_type === "group") {
     titles.forEach((x, i) => {
       no_match = x.toLowerCase().indexOf(match) === -1;
-      sections[i].style.display = no_match ? 'none' : '';
+      sections[i].style.display = no_match ? "none" : "";
     });
-  } else if (search_type === 'tab') {
+  } else if (search_type === "tab") {
     titles.forEach((title, i) => {
       // individual tabs where a group has 1 tab matching
       title.forEach((x, j) => {
@@ -434,13 +434,13 @@ export function regexSearchForTab(e) {
           keep_sections.push(i);
         }
 
-        tab_items[i][j].style.display = no_match ? 'none' : '';
+        tab_items[i][j].style.display = no_match ? "none" : "";
       });
     });
 
     // remove groups based on above calculations
     sections.forEach((x, i) => {
-      x.style.display = !keep_sections.includes(i) ? 'none' : '';
+      x.style.display = !keep_sections.includes(i) ? "none" : "";
     });
   }
 }
@@ -454,7 +454,7 @@ export function regexSearchForTab(e) {
  */
 export function resetSearch(e) {
   setTimeout(() => {
-    e.target.value = '';
+    e.target.value = "";
     regexSearchForTab(e);
   }, 100);
 }
@@ -469,7 +469,7 @@ export function resetSearch(e) {
  * @param {Function} setTabTotal For re-rendering the total tab counter
  */
 export function importJSON(e, setGroups, setTabTotal) {
-  if (e.target.files[0].type === 'application/json') {
+  if (e.target.files[0].type === "application/json") {
     var reader = new FileReader();
     reader.readAsText(e.target.files[0]);
     reader.onload = () => {
@@ -479,7 +479,7 @@ export function importJSON(e, setGroups, setTabTotal) {
         delete fileContent.settings;
         chrome.storage.local.set({ groups: fileContent }, () => {
           // reset the file input so it can trigger again
-          e.target.value = '';
+          e.target.value = "";
 
           setGroups(JSON.stringify(fileContent));
           AppHelper.updateTabTotal(fileContent, setTabTotal);
@@ -499,16 +499,16 @@ Be careful, only import JSON files generated by TabMerger, otherwise you risk lo
  * Allows the user to export TabMerger's current configuration (including settings).
  */
 export const exportJSON = () => {
-  chrome.storage.local.get('groups', (local) => {
+  chrome.storage.local.get("groups", (local) => {
     var group_blocks = local.groups;
-    chrome.storage.sync.get('settings', (sync) => {
-      group_blocks['settings'] = sync.settings;
+    chrome.storage.sync.get("settings", (sync) => {
+      group_blocks["settings"] = sync.settings;
 
-      var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
 
-      var anchor = document.createElement('a');
-      anchor.setAttribute('href', dataStr);
-      anchor.setAttribute('download', AppHelper.outputFileName() + '.json');
+      var anchor = document.createElement("a");
+      anchor.setAttribute("href", dataStr);
+      anchor.setAttribute("download", AppHelper.outputFileName() + ".json");
       anchor.click();
       anchor.remove();
     });
@@ -524,23 +524,23 @@ export const exportJSON = () => {
  */
 export function getTabMergerLink(reviews) {
   var link;
-  var isOpera = navigator.userAgent.indexOf(' OPR/') >= 0;
-  var isFirefox = typeof InstallTrigger !== 'undefined';
+  var isOpera = navigator.userAgent.indexOf(" OPR/") >= 0;
+  var isFirefox = typeof InstallTrigger !== "undefined";
   var isIE = /*@cc_on!@*/ false || !!document.documentMode;
   var isEdge = !isIE && !!window.StyleMedia;
   var isChrome = !!window.chrome && !!window.chrome.runtime;
-  var isEdgeChromium = isChrome && navigator.userAgent.indexOf('Edg') !== -1;
+  var isEdgeChromium = isChrome && navigator.userAgent.indexOf("Edg") !== -1;
 
   if (isIE || isEdge || isEdgeChromium) {
-    link = 'https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn';
+    link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {
-    link = 'https://addons.mozilla.org/en-CA/firefox/addon/tabmerger';
+    link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
   } else if (isChrome || isOpera) {
-    link = 'https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc';
+    link = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
   }
 
   if (reviews && !isFirefox) {
-    link += '/reviews/';
+    link += "/reviews/";
   }
 
   return link;

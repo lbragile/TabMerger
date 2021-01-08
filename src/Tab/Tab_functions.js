@@ -32,7 +32,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @param {string} id Used to get the correct group tabs
  */
 export function setInitTabs(setTabs, id) {
-  chrome.storage.local.get('groups', (local) => {
+  chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
     setTabs((groups && groups[id] && groups[id].tabs) || []);
   });
@@ -43,9 +43,9 @@ export function setInitTabs(setTabs, id) {
  * @param {HTMLElement} e The tab which will be dragged within the same group or across groups
  */
 export function dragStart(e) {
-  var target = e.target.tagName === 'DIV' ? e.target : e.target.parentNode;
-  target.classList.add('dragging');
-  target.closest('.group').classList.add('drag-origin');
+  var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
+  target.classList.add("dragging");
+  target.closest(".group").classList.add("drag-origin");
 }
 
 /**
@@ -59,23 +59,23 @@ export function dragStart(e) {
  */
 export function dragEnd(e, item_limit, setGroups) {
   e.stopPropagation();
-  e.target.classList.remove('dragging');
+  e.target.classList.remove("dragging");
 
   const tab = e.target;
-  var closest_group = e.target.closest('.group');
+  var closest_group = e.target.closest(".group");
 
-  var drag_origin = document.getElementsByClassName('drag-origin')[0];
-  drag_origin.classList.remove('drag-origin');
+  var drag_origin = document.getElementsByClassName("drag-origin")[0];
+  drag_origin.classList.remove("drag-origin");
 
   const origin_id = drag_origin.id;
 
-  var anchor = tab.querySelector('a');
+  var anchor = tab.querySelector("a");
   var tab_bytes = JSON.stringify({
     title: anchor.innerText,
     url: anchor.href,
   }).length;
 
-  chrome.storage.local.get('groups', (local) => {
+  chrome.storage.local.get("groups", (local) => {
     var result = local.groups;
     var itemBytesInUse = JSON.stringify(result[closest_group.id]).length;
 
@@ -91,7 +91,7 @@ export function dragEnd(e, item_limit, setGroups) {
       }
 
       // reorder tabs based on current positions
-      result[closest_group.id].tabs = [...closest_group.lastChild.querySelectorAll('div')].map((x) => ({
+      result[closest_group.id].tabs = [...closest_group.lastChild.querySelectorAll("div")].map((x) => ({
         title: x.lastChild.textContent,
         url: x.lastChild.href,
       }));
@@ -123,16 +123,16 @@ export function dragEnd(e, item_limit, setGroups) {
 export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
   var tab, url, group_id;
 
-  tab = e.target.closest('.draggable');
-  url = tab.querySelector('a').href;
-  group_id = tab.closest('.group').id;
+  tab = e.target.closest(".draggable");
+  url = tab.querySelector("a").href;
+  group_id = tab.closest(".group").id;
 
-  chrome.storage.local.get('groups', (local) => {
+  chrome.storage.local.get("groups", (local) => {
     var group_blocks = local.groups;
     group_blocks[group_id].tabs = tabs.filter((x) => x.url !== url);
     chrome.storage.local.set({ groups: group_blocks }, () => {
       setTabs(group_blocks[group_id].tabs);
-      setTabTotal(document.querySelectorAll('.draggable').length);
+      setTabTotal(document.querySelectorAll(".draggable").length);
       setGroups(JSON.stringify(group_blocks));
     });
   });
@@ -145,5 +145,5 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
  */
 export function handleTabClick(e) {
   e.preventDefault();
-  chrome.storage.local.set({ remove: ['tab', e.target.href] }, () => {});
+  chrome.storage.local.set({ remove: ["tab", e.target.href] }, () => {});
 }

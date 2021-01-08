@@ -31,15 +31,15 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @return ```dd/mm/yyyy @ hh:mm:ss```
  */
 export function getTimestamp() {
-  var date_parts = new Date(Date.now()).toString().split(' ');
+  var date_parts = new Date(Date.now()).toString().split(" ");
   date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
 
   // dd/mm/yyyy @ hh:mm:ss
-  date_parts[0] = date_parts[1] + '/';
-  date_parts[1] = ('0' + new Date().getMonth() + 1).slice(-2) + '/';
-  date_parts[2] += ' @ ';
+  date_parts[0] = date_parts[1] + "/";
+  date_parts[1] = ("0" + new Date().getMonth() + 1).slice(-2) + "/";
+  date_parts[2] += " @ ";
 
-  return date_parts.join('');
+  return date_parts.join("");
 }
 
 /**
@@ -51,12 +51,12 @@ export function getTimestamp() {
  * @note Exported for testing purposes
  */
 export function toggleDarkMode(isChecked) {
-  var container = document.querySelector('body');
-  var sidebar = document.querySelector('.sidebar');
+  var container = document.querySelector("body");
+  var sidebar = document.querySelector(".sidebar");
 
-  container.style.background = isChecked ? 'rgb(52, 58, 64)' : 'white';
-  container.style.color = isChecked ? 'white' : 'black';
-  sidebar.style.background = isChecked ? 'rgb(27, 27, 27)' : 'rgb(120, 120, 120)';
+  container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
+  container.style.color = isChecked ? "white" : "black";
+  sidebar.style.background = isChecked ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 }
 
 /**
@@ -72,10 +72,10 @@ export function toggleSyncTimestamp(positive, sync_node) {
 
   if (positive) {
     sync_node.innerText = getTimestamp();
-    sync_container.classList.replace('alert-danger', 'alert-success');
+    sync_container.classList.replace("alert-danger", "alert-success");
   } else {
-    sync_node.innerText = '--/--/---- @ --:--:--';
-    sync_container.classList.replace('alert-success', 'alert-danger');
+    sync_node.innerText = "--/--/---- @ --:--:--";
+    sync_container.classList.replace("alert-success", "alert-danger");
   }
 }
 
@@ -131,7 +131,7 @@ export function sortByKey(json) {
   }
 
   var sorted_groups = sortedArray.sort((a, b) => {
-    var opts = { numeric: true, sensitivity: 'base' };
+    var opts = { numeric: true, sensitivity: "base" };
     return a[0].localeCompare(b[0], undefined, opts);
   });
 

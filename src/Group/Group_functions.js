@@ -25,8 +25,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Group/Group_functions
  */
 
-import { getTimestamp, updateTabTotal } from '../App/App_helpers';
-import { getDragAfterElement } from './Group_helpers';
+import { getTimestamp, updateTabTotal } from "../App/App_helpers";
+import { getDragAfterElement } from "./Group_helpers";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -37,7 +37,7 @@ export function setGroupBackground(e, id) {
   var color, target;
   if (e.target) {
     color = e.target.value;
-    target = e.target.closest('.group-title');
+    target = e.target.closest(".group-title");
   } else {
     var group_title = e.previousSibling;
     color = group_title.querySelector("input[type='color']").value;
@@ -47,7 +47,7 @@ export function setGroupBackground(e, id) {
     child.style.background = color;
   });
 
-  chrome.storage.local.get('groups', (local) => {
+  chrome.storage.local.get("groups", (local) => {
     var current_groups = local.groups;
     if (current_groups && current_groups[id]) {
       current_groups[id].color = color;
@@ -62,8 +62,8 @@ export function setGroupBackground(e, id) {
  * @param {Function} setGroups For re-rendering the groups once the title is changed
  */
 export function setTitle(e, setGroups) {
-  chrome.storage.local.get('groups', (local) => {
-    var group_id = e.target.closest('.group-title').nextSibling.id;
+  chrome.storage.local.get("groups", (local) => {
+    var group_id = e.target.closest(".group-title").nextSibling.id;
     var current_groups = local.groups;
 
     current_groups[group_id].title = e.target.value;
@@ -92,10 +92,10 @@ export function blurOnEnter(e) {
  */
 export const dragOver = (e) => {
   e.preventDefault();
-  var group_block = e.target.closest('.group');
+  var group_block = e.target.closest(".group");
   const afterElement = getDragAfterElement(group_block, e.clientY);
-  const currentElement = document.querySelector('.dragging');
-  var location = group_block.querySelector('.tabs-container');
+  const currentElement = document.querySelector(".dragging");
+  var location = group_block.querySelector(".tabs-container");
   if (afterElement == null) {
     location.appendChild(currentElement);
   } else {
@@ -112,9 +112,9 @@ export const dragOver = (e) => {
  * @param {HTMLElement} e Node corresponding to the group that contains the tabs to be opened
  */
 export function openGroup(e) {
-  var target = e.target.closest('.group-title').nextSibling;
-  var tab_links = [...target.querySelectorAll('.a-tab')].map((x) => x.href);
-  tab_links.unshift('group');
+  var target = e.target.closest(".group-title").nextSibling;
+  var tab_links = [...target.querySelectorAll(".a-tab")].map((x) => x.href);
+  tab_links.unshift("group");
   chrome.storage.local.set({ remove: tab_links }, () => {});
 }
 
@@ -126,14 +126,14 @@ export function openGroup(e) {
  * @param {Function} setGroups For re-rendering the groups based on their new id
  */
 export function deleteGroup(e, setTabTotal, setGroups) {
-  chrome.storage.local.get('groups', (local) => {
-    chrome.storage.sync.get('settings', (sync) => {
-      var target = e.target.closest('.group-title').nextSibling;
+  chrome.storage.local.get("groups", (local) => {
+    chrome.storage.sync.get("settings", (sync) => {
+      var target = e.target.closest(".group-title").nextSibling;
       var group_blocks = local.groups;
 
       // if removed the only existing group
       if (Object.keys(group_blocks).length === 1) {
-        group_blocks['group-0'] = {
+        group_blocks["group-0"] = {
           color: sync.settings.color,
           created: getTimestamp(),
           tabs: [],
@@ -142,9 +142,9 @@ export function deleteGroup(e, setTabTotal, setGroups) {
       } else {
         // must rename all keys for the groups above deleted group item
         var group_names = []; // need to change these
-        var index_deleted = target.id.split('-')[1];
+        var index_deleted = target.id.split("-")[1];
         Object.keys(group_blocks).forEach((key) => {
-          if (parseInt(key.split('-')[1]) > parseInt(index_deleted)) {
+          if (parseInt(key.split("-")[1]) > parseInt(index_deleted)) {
             group_names.push(key);
           }
         });
@@ -152,7 +152,7 @@ export function deleteGroup(e, setTabTotal, setGroups) {
         // perform the renaming of items
         var group_blocks_str = JSON.stringify(group_blocks);
         group_names.forEach((key) => {
-          var new_name = 'group-' + (parseInt(key.split('-')[1]) - 1);
+          var new_name = "group-" + (parseInt(key.split("-")[1]) - 1);
           group_blocks_str = group_blocks_str.replace(key, new_name);
         });
 
@@ -161,7 +161,7 @@ export function deleteGroup(e, setTabTotal, setGroups) {
 
         // if group to be deleted is last - must only delete it
         if (!group_names[0]) {
-          delete group_blocks['group-' + index_deleted];
+          delete group_blocks["group-" + index_deleted];
         }
       }
 
@@ -182,12 +182,12 @@ export function deleteGroup(e, setTabTotal, setGroups) {
  * @param {Function} setHide For re-rendering the group's visible/hidden state
  */
 export function toggleGroup(e, hide, setHide) {
-  var tabs = e.target.closest('.group-title').nextSibling.querySelectorAll('.draggable');
+  var tabs = e.target.closest(".group-title").nextSibling.querySelectorAll(".draggable");
   tabs.forEach((tab) => {
     if (!hide) {
-      tab.style.display = 'none';
+      tab.style.display = "none";
     } else {
-      tab.style.removeProperty('display');
+      tab.style.removeProperty("display");
     }
   });
 

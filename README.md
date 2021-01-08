@@ -58,14 +58,16 @@ Each Pull Request is automatically subjected to this repository's unit testing. 
 
 Thus, when you add a new feature or modify existing features, ensure that you write sufficient tests to cover all scenarios in which your addition influences the overall system.
 
-**Not sure how to write tests?**
+##### Not sure how to write tests?
+
 Simply ask for my help as an issue or direct message prior to making a pull request.
 
-**Checking your tests**
+##### Checking your tests:
+
 Many scripts are provided to check your test scripts. For example:
 `npm run test` will check all the test scripts at once, while `npm run test-app` will only check the test scripts of the `App` component.
 
-In all cases, code coverage is collected and displayed at the end of the run, as well as a detailed list of passing/failing tests is provided.
+In all cases, code coverage is collected and displayed at the end of the run, as well as a detailed list of passing/failing tests is provided. Furthermore, a `<rootDir>/coverage/` folder is created to highlight important details in an HTML format (viewable on the internet). 
 ## Contact 📞
 
 📩 If you have any more suggestions please send me a message on GitHub, lbragile@gmail.com, or <a href="https://www.linkedin.com/in/liorbragilevsky/">LinkedIn</a>.

@@ -38,8 +38,8 @@ html {
 .container-fluid {
   position: relative;
   left: calc(var(--sidebar-width) + 5%);
-  margin: 50px 0;
-  max-width: 1300px;
+  margin: 50px 0 40px 0;
+  width: calc(90% - var(--sidebar-width));
 }
 
 .subtitle {
@@ -55,8 +55,17 @@ html {
   font-size: 0.95rem;
 }
 
+.subtitle > h2,
+#logo-img {
+  margin-bottom: 32px;
+}
+
 #logo-img {
   width: 90%;
+}
+
+hr {
+  margin: 20px 0 !important;
 }
 
 /* SIDEBAR */
@@ -169,5 +178,26 @@ hr {
 @media only screen and (max-width: 1600px) {
   .container-fluid {
     left: calc(var(--sidebar-width) + 2%);
+    width: calc(96% - var(--sidebar-width));
+  }
+
+  .subtitle > h2,
+  #logo-img {
+    margin-bottom: 28px;
+  }
+
+  hr {
+    margin: 16px 0 !important;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .subtitle > h2,
+  #logo-img {
+    margin-bottom: 24px;
+  }
+
+  hr {
+    margin: 12px 0 !important;
   }
 }

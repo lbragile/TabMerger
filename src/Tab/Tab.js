@@ -21,18 +21,18 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
-import * as TabFunc from './Tab_functions';
-import * as TabHelper from './Tab_helpers';
+import * as TabFunc from "./Tab_functions";
+import * as TabHelper from "./Tab_helpers";
 
-import { TiDelete } from 'react-icons/ti';
-import { AiOutlineMenu } from 'react-icons/ai';
+import { TiDelete } from "react-icons/ti";
+import { AiOutlineMenu } from "react-icons/ai";
 
-import './Tab.css';
+import "./Tab.css";
 
 export default function Tab(props) {
-  const TAB_TITLE_LENGTH = useRef(80);
+  const TAB_TITLE_LENGTH = useRef(Math.floor(window.innerWidth / 100) * 7);
   const [tabs, setTabs] = useState([]);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function Tab(props) {
               onClick={(e) => TabFunc.handleTabClick(e)}
             >
               {tab.title.length > TAB_TITLE_LENGTH.current
-                ? tab.title.substring(0, TAB_TITLE_LENGTH.current) + '...'
+                ? tab.title.substring(0, TAB_TITLE_LENGTH.current) + "..."
                 : tab.title}
             </a>
           </div>

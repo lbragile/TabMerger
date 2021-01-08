@@ -21,8 +21,8 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-describe('true', () => {
-  it('passes', () => {
+describe("true", () => {
+  it("passes", () => {
     expect(true).toBeTruthy();
   });
 });

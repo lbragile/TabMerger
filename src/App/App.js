@@ -21,24 +21,24 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Button from '../Button/Button.js';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import Button from "../Button/Button.js";
 
-import * as AppFunc from './App_functions';
-import * as AppHelper from './App_helpers';
+import * as AppFunc from "./App_functions";
+import * as AppHelper from "./App_helpers";
 
-import './App.css';
-import '../Button/Button.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "./App.css";
+import "../Button/Button.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import { AiOutlineSearch, AiFillGithub, AiFillLinkedin } from 'react-icons/ai';
-import { BiImport, BiExport, BiHelpCircle } from 'react-icons/bi';
-import { BsCloudUpload, BsCloudDownload, BsChat, BsInfoCircle } from 'react-icons/bs';
-import { FaReddit, FaStackOverflow } from 'react-icons/fa';
-import { FiYoutube, FiStar, FiSettings } from 'react-icons/fi';
-import { GiExpand } from 'react-icons/gi';
-import { GrClear, GrAddCircle } from 'react-icons/gr';
-import { RiHandCoinLine } from 'react-icons/ri';
+import { AiOutlineSearch, AiFillGithub, AiFillLinkedin } from "react-icons/ai";
+import { BiImport, BiExport, BiHelpCircle } from "react-icons/bi";
+import { BsCloudUpload, BsCloudDownload, BsChat, BsInfoCircle } from "react-icons/bs";
+import { FaReddit, FaStackOverflow } from "react-icons/fa";
+import { FiYoutube, FiStar, FiSettings } from "react-icons/fi";
+import { GiExpand } from "react-icons/gi";
+import { GrClear, GrAddCircle } from "react-icons/gr";
+import { RiHandCoinLine } from "react-icons/ri";
 
 export default function App() {
   const ITEM_STORAGE_LIMIT = useRef(8000); //500 for testing - 8000 for production
@@ -47,32 +47,32 @@ export default function App() {
 
   const links = useRef([
     { url: "https://lbragile.github.io/TabMerger-Extension/", text: AppFunc.translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
-    { url: 'https://youtu.be/zkI0T-GzmzQ', text: AppFunc.translate('quickDemo'), icon: <FiYoutube color="black" /> },
+    { url: "https://youtu.be/zkI0T-GzmzQ", text: AppFunc.translate("quickDemo"), icon: <FiYoutube color="black" /> },
     { url: process.env.REACT_APP_PAYPAL_URL, text: AppFunc.translate("donate"), icon: <RiHandCoinLine color="black" /> }, // prettier-ignore
-    { url: AppFunc.getTabMergerLink(true), text: AppFunc.translate('leaveReview'), icon: <FiStar color="black" /> },
+    { url: AppFunc.getTabMergerLink(true), text: AppFunc.translate("leaveReview"), icon: <FiStar color="black" /> },
     { url: "https://lbragile.github.io/TabMerger-Extension/contact", text: AppFunc.translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
-    { url: 'https://github.com/lbragile/TabMerger', text: 'GitHub', icon: <AiFillGithub color="black" /> },
-    { url: 'https://www.linkedin.com/in/liorbragilevsky/', text: 'LinkedIn', icon: <AiFillLinkedin color="black" /> },
+    { url: "https://github.com/lbragile/TabMerger", text: "GitHub", icon: <AiFillGithub color="black" /> },
+    { url: "https://www.linkedin.com/in/liorbragilevsky/", text: "LinkedIn", icon: <AiFillLinkedin color="black" /> },
     { url: "https://stackoverflow.com/users/4298115/lbragile", text: "StackOverflow", icon: <FaStackOverflow color="black" /> }, // prettier-ignore
-    { url: 'https://www.reddit.com/user/lbragile_dev', text: 'Reddit', icon: <FaReddit color="black" /> },
+    { url: "https://www.reddit.com/user/lbragile_dev", text: "Reddit", icon: <FaReddit color="black" /> },
   ]);
 
   var syncTimestamp = useRef();
 
   const defaultGroup = useRef({
-    color: '#dedede',
+    color: "#dedede",
     created: AppHelper.getTimestamp(),
     tabs: [],
-    title: 'Title',
+    title: "Title",
   });
 
   const defaultSettings = useRef({
-    blacklist: '',
-    color: '#dedede',
+    blacklist: "",
+    color: "#dedede",
     dark: true,
-    open: 'without',
-    restore: 'keep',
-    title: 'Title',
+    open: "without",
+    restore: "keep",
+    title: "Title",
   });
 
   const [tabTotal, setTabTotal] = useState(0);
@@ -111,11 +111,11 @@ export default function App() {
     <div id="app-wrapper" className="text-center">
       <nav id="mySidebar" className="sidebar">
         <a href={AppFunc.getTabMergerLink(false)}>
-          <img id="logo-img" className="my-4" src="./images/logo-full-rescale.PNG" alt="TabMerger Logo" />
+          <img id="logo-img" src="./images/logo-full-rescale.PNG" alt="TabMerger Logo" />
         </a>
         <div className="subtitle">
-          <h2 className="mt-2 mb-4">
-            <span className="small">{tabTotal + ' ' + AppFunc.translate(tabTotal === 1 ? 'tab' : 'tabs')}</span>
+          <h2>
+            <span className="small">{tabTotal + " " + AppFunc.translate(tabTotal === 1 ? "tab" : "tabs")}</span>
           </h2>
         </div>
         <div className="input-group search-filter my-3 mx-auto">
@@ -128,7 +128,7 @@ export default function App() {
             type="text"
             name="search-group"
             maxLength={20}
-            placeholder={AppFunc.translate('searchForTabs') + '...'}
+            placeholder={AppFunc.translate("searchForTabs") + "..."}
             onChange={(e) => AppFunc.regexSearchForTab(e)}
             onBlur={(e) => AppFunc.resetSearch(e)}
           />
@@ -137,28 +137,28 @@ export default function App() {
               <div className="tip">
                 <BsInfoCircle color="white" size="1rem" />
                 <span className="tiptext-global-white text-left">
-                  #___ &rarr; {AppFunc.translate('group')}
+                  #___ &rarr; {AppFunc.translate("group")}
                   <br />
-                  ___ &rarr; {AppFunc.translate('tab')}
+                  ___ &rarr; {AppFunc.translate("tab")}
                 </span>
               </div>
             </span>
           </div>
         </div>
 
-        <hr className="my-4 mx-auto" />
+        <hr className="mx-auto" />
 
         <div className="global-btn-row col">
           <p className="mx-auto alert alert-danger" id="sync-text">
-            <b>{AppFunc.translate('sync').substr(0, 4)}:</b> <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
+            <b>{AppFunc.translate("sync").substr(0, 4)}:</b> <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
           </p>
 
           <Button
             id="options-btn"
             classes="p-0 mx-auto d-block btn-in-global"
-            translate={AppFunc.translate('settings')}
-            tooltip={'tiptext-global'}
-            onClick={() => window.location.assign('/settings/settings.html')}
+            translate={AppFunc.translate("settings")}
+            tooltip={"tiptext-global"}
+            onClick={() => window.location.assign("/settings/settings.html")}
           >
             <FiSettings color="black" size="1.6rem" />
           </Button>
@@ -167,8 +167,8 @@ export default function App() {
             <Button
               id="open-all-btn"
               classes="p-0 mx-1 btn-in-global"
-              translate={AppFunc.translate('openAll')}
-              tooltip={'tiptext-global'}
+              translate={AppFunc.translate("openAll")}
+              tooltip={"tiptext-global"}
               onClick={() => AppFunc.openAllTabs()}
             >
               <GiExpand color="black" />
@@ -177,8 +177,8 @@ export default function App() {
             <Button
               id="export-btn"
               classes="mx-1 btn-in-global"
-              translate={AppFunc.translate('exportJSON')}
-              tooltip={'tiptext-json'}
+              translate={AppFunc.translate("exportJSON")}
+              tooltip={"tiptext-json"}
               onClick={AppFunc.exportJSON}
             >
               <BiExport color="black" size="1.4rem" />
@@ -187,8 +187,8 @@ export default function App() {
             <Button
               id="sync-write-btn"
               classes="p-0 mx-1 btn-in-global"
-              translate={AppFunc.translate('sync').substr(0, 4) + ' ' + AppFunc.translate('write')}
-              tooltip={'tiptext-global'}
+              translate={AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("write")}
+              tooltip={"tiptext-global"}
               onClick={() => AppFunc.syncWrite(syncTimestamp.current)}
             >
               <BsCloudUpload color="black" size="1.5rem" />
@@ -199,8 +199,8 @@ export default function App() {
             <Button
               id="delete-all-btn"
               classes="p-0 mx-1 btn-in-global"
-              translate={AppFunc.translate('deleteAll')}
-              tooltip={'tiptext-global'}
+              translate={AppFunc.translate("deleteAll")}
+              tooltip={"tiptext-global"}
               onClick={() => AppFunc.deleteAllGroups(setTabTotal, setGroups)}
             >
               <GrClear color="black" />
@@ -209,7 +209,7 @@ export default function App() {
             <label id="import-btn" htmlFor="import-input" className="mx-1 btn-in-global btn">
               <div className="tip">
                 <BiImport color="black" size="1.4rem" />
-                <span className="tiptext-json">{AppFunc.translate('importJSON')}</span>
+                <span className="tiptext-json">{AppFunc.translate("importJSON")}</span>
               </div>
             </label>
             <input
@@ -222,8 +222,8 @@ export default function App() {
             <Button
               id="sync-read-btn"
               classes="p-0 mx-1 btn-in-global"
-              translate={AppFunc.translate('sync').substr(0, 4) + ' ' + AppFunc.translate('read')}
-              tooltip={'tiptext-global'}
+              translate={AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("read")}
+              tooltip={"tiptext-global"}
               onClick={() => AppFunc.syncRead(syncTimestamp.current, setGroups, setTabTotal)}
             >
               <BsCloudDownload color="black" size="1.5rem" />
@@ -233,26 +233,26 @@ export default function App() {
           <Button
             id="add-group-btn"
             classes="p-0 mx-auto d-block btn-in-global"
-            translate={AppFunc.translate('addGroup')}
-            tooltip={'tiptext-global'}
+            translate={AppFunc.translate("addGroup")}
+            tooltip={"tiptext-global"}
             onClick={() => AppFunc.addGroup(NUM_GROUP_LIMIT.current, setGroups)}
           >
             <GrAddCircle color="black" size="1.5rem" />
           </Button>
         </div>
 
-        <hr className="my-4 mx-auto" />
+        <hr className="mx-auto" />
 
         {links.current.slice(0, 5).map((x) => {
           return (
             <Button
-              id={x.text.toLowerCase() + '-btn'}
+              id={x.text.toLowerCase() + "-btn"}
               classes="p-0 mx-1 link-global btn-in-global"
               translate={x.text}
-              tooltip={'tiptext-global'}
+              tooltip={"tiptext-global"}
               onClick={
                 /* istanbul ignore next */
-                () => window.open(x.url, '_blank')
+                () => window.open(x.url, "_blank")
               }
               key={Math.random()}
             >
@@ -261,17 +261,17 @@ export default function App() {
           );
         })}
 
-        <hr className="my-4 mx-auto" />
+        <hr className="mx-auto" />
 
         <div className="mx-auto">
           {links.current.slice(5).map((x) => {
             return (
               <Button
-                id={x.text.toLowerCase() + '-btn'}
+                id={x.text.toLowerCase() + "-btn"}
                 classes="p-0 mx-1 link-global btn-in-global"
                 onClick={
                   /* istanbul ignore next */
-                  () => window.open(x.url, '_blank')
+                  () => window.open(x.url, "_blank")
                 }
                 key={Math.random()}
               >
@@ -281,7 +281,7 @@ export default function App() {
           })}
         </div>
 
-        <div id="copyright" className="my-4">
+        <div id="copyright" className="mt-4">
           Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
         </div>
       </nav>

@@ -91,7 +91,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   cursor: pointer;
 }
 
-input[type='color'] {
+input[type="color"] {
   display: none;
 }
 
@@ -119,5 +119,11 @@ input[type='color'] {
 @media only screen and (max-width: 1200px) {
   .group-title {
     width: 50%;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .group-title {
+    width: 55%;
   }
 }

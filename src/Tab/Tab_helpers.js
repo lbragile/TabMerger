@@ -37,5 +37,5 @@ export function getFavIconURL(url) {
   var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
   var domain = matches && matches[1];
 
-  return 'http://www.google.com/s2/favicons?domain=' + domain;
+  return "http://www.google.com/s2/favicons?domain=" + domain;
 }
