@@ -8,6 +8,18 @@
 
 [<img src="https://i.imgur.com/gVmsvKp.png" alt="TabMerger v1.4.3 Cross-Browser Extension Walkthrough"/>](https://youtu.be/zkI0T-GzmzQ)
 
+## Table of Contents 📃
+1. [Description](#description)
+2. [Contributing](#contributing)
+3. [Download](#download)
+4. [Leave A Review](#leave-a-review)
+5. [Todo](#todo)
+6. [Build](#build)
+7. [Test](#test)
+    - [Writing Tests](#not-sure-how-to-write-tests)
+    - [Code Coverage](#checking-your-tests)
+8. [Contact](#contact)
+
 ## Description 🖋
 
 Tired of searching through squished tab icons to find that one tab you are sure is there? With TabMerger you can simplify this clutter while greatly increasing productivity in a highly organized and customizable fashion!
@@ -51,7 +63,6 @@ Note that `adjust_manifest.js` simply manipulates the template manifest file in 
 
 Use command: `npm run build-all` to create zipped build folders for all browsers (Chrome & Edge are identical).
 
-
 ## Test ✅
 
 Each Pull Request is automatically subjected to this repository's unit testing. If thresholds are not met, the pull request will fail and will thus not be accepted (see <a href="https://github.com/lbragile/TabMerger/blob/master/.github/CONTRIBUTING.md">CONTRIBUTING.md</a>).
@@ -68,6 +79,7 @@ Many scripts are provided to check your test scripts. For example:
 `npm run test` will check all the test scripts at once, while `npm run test-app` will only check the test scripts of the `App` component.
 
 In all cases, code coverage is collected and displayed at the end of the run, as well as a detailed list of passing/failing tests is provided. Furthermore, a `<rootDir>/coverage/` folder is created to highlight important details in an HTML format (viewable on the internet). 
+
 ## Contact 📞
 
 📩 If you have any more suggestions please send me a message on GitHub, lbragile@gmail.com, or <a href="https://www.linkedin.com/in/liorbragilevsky/">LinkedIn</a>.

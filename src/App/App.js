@@ -23,6 +23,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "../Button/Button.js";
+import reviews from "../review_text.js";
 
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
@@ -31,7 +32,7 @@ import "./App.css";
 import "../Button/Button.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { AiOutlineSearch, AiFillGithub, AiFillLinkedin } from "react-icons/ai";
+import { AiOutlineSearch, AiFillGithub, AiFillLinkedin, AiFillStar } from "react-icons/ai";
 import { BiImport, BiExport, BiHelpCircle } from "react-icons/bi";
 import { BsCloudUpload, BsCloudDownload, BsChat, BsInfoCircle } from "react-icons/bs";
 import { FaReddit, FaStackOverflow } from "react-icons/fa";
@@ -148,6 +149,22 @@ export default function App() {
 
         <hr className="mx-auto" />
 
+        {/* reviews image (only shown in print mode) */}
+        <div id="reviews-img" className="d-none">
+          {Object.values(reviews).map((review, i) => {
+            return (
+              <span key={Math.random()}>
+                <p className={i > 0 ? "mt-3 mb-1" : "mb-1 mt-0"}>
+                  {[1, 2, 3, 4, 5].map((_) => {
+                    return <AiFillStar color="goldenrod" />;
+                  })}
+                </p>
+                <p className="text-center px-1 my-0">{review}</p>
+              </span>
+            );
+          })}
+        </div>
+
         <div className="global-btn-row col">
           <p className="mx-auto alert alert-danger" id="sync-text">
             <b>{AppFunc.translate("sync").substr(0, 4)}:</b> <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
@@ -250,13 +267,11 @@ export default function App() {
               classes="p-0 mx-1 link-global btn-in-global"
               translate={x.text}
               tooltip={"tiptext-global"}
-              onClick={
-                /* istanbul ignore next */
-                () => window.open(x.url, "_blank")
-              }
               key={Math.random()}
             >
-              {x.icon}
+              <a href={x.url} target="_blank">
+                {x.icon}
+              </a>
             </Button>
           );
         })}
@@ -269,13 +284,11 @@ export default function App() {
               <Button
                 id={x.text.toLowerCase() + "-btn"}
                 classes="p-0 mx-1 link-global btn-in-global"
-                onClick={
-                  /* istanbul ignore next */
-                  () => window.open(x.url, "_blank")
-                }
                 key={Math.random()}
               >
-                {x.icon}
+                <a href={x.url} target="_blank">
+                  {x.icon}
+                </a>
               </Button>
             );
           })}

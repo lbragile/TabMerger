@@ -57,9 +57,9 @@ export default function Group(props) {
       <div className="group-title d-flex flex-row justify-content-center">
         <div className="title-count-color-container row">
           <h5 className="group-count">
-            <span>{props.num_tabs}</span>
+            <span style={{ left: props.num_tabs > 9 ? "-1px" : "0" }}>{props.num_tabs}</span>
           </h5>
-          <div className="tip p-0">
+          <div className="group-color tip p-0">
             <BiColorFill className="input-color" onClick={(e) => e.target.closest("div").nextSibling.click()} />
             <span className="tiptext-group-color">{translate("pickColor")}</span>
           </div>

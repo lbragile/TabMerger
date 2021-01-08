@@ -201,3 +201,57 @@ hr {
     margin: 12px 0 !important;
   }
 }
+
+/* PRINTING */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  .sidebar {
+    background: rgb(27, 27, 27) !important;
+    padding-top: 5% !important;
+  }
+
+  .group-color,
+  .show-hide-btn,
+  .open-group-btn,
+  .delete-group-btn,
+  .close-tab,
+  .move-tab,
+  #sync-text,
+  .btn-for-merging,
+  .created,
+  .search-filter,
+  .global-btn-row {
+    display: none !important;
+  }
+
+  #reviews-img {
+    display: block !important;
+    margin: 0 auto !important;
+    font-size: 0.9rem !important;
+  }
+
+  .group-count {
+    border: none !important;
+  }
+
+  .group-count span {
+    top: -1px !important;
+  }
+
+  .draggable a {
+    max-width: 90% !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  @page {
+    size: 8.5in 11in;
+    size: portrait;
+    margin: none;
+  }
+}
