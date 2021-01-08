@@ -217,6 +217,10 @@ hr {
     padding-top: 7.5% !important;
   }
 
+  .group-title {
+    width: 50% !important;
+  }
+
   .group-color,
   .show-hide-btn,
   .open-group-btn,
