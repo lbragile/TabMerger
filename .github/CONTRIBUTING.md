@@ -2,11 +2,11 @@
 
 ## Table of Contents 📃
 
-1. [Contributing](#contributing)
-2. [Reporting Issues](#reporting-issues)
-3. [Pull Requests](#pull-requests)
-    - [First Time](#first-time)
-    - [Process](#process)
+1. [Contributing](#contributing-)
+2. [Reporting Issues](#reporting-issues-)
+3. [Pull Requests](#pull-requests-)
+    - [First Time](#first-time-)
+    - [Process](#process-)
 
 ## Contributing 😍
 

@@ -1,13 +1,13 @@
 # TabMerger's Code of Conduct 📜
 
 ## Table of Contents 📃
-1. [Pledge](#pledge)
-2. [Standards](#standards)
-    - [Acceptable Behaviour](#acceptable-behaviour)
-    - [Unacceptable Behaviour](#unacceptable-behaviour)
-3. [Responsibilities](#responsibilities)
-4. [Scope](#scope)
-5. [Enforcement](#enforcement)
+1. [Pledge](#pledge-)
+2. [Standards](#standards-)
+    - [Acceptable Behaviour](#acceptable-behaviour-)
+    - [Unacceptable Behaviour](#unacceptable-behaviour-)
+3. [Responsibilities](#responsibilities-)
+4. [Scope](#scope-)
+5. [Enforcement](#enforcement-)
 
 ### Pledge 📌
 

@@ -2,9 +2,9 @@
 This document outlines security procedures and general policies for TabMerger.
 
 ## Table of Contents 📃
-1. [Bug Reporting](#bug-reporting)
-2. [Disclosure Policy](#disclosure-policy)
-3. [Have Comments?](#have-comments)
+1. [Bug Reporting](#bug-reporting-)
+2. [Disclosure Policy](#disclosure-policy-)
+3. [Have Comments?](#have-comments-)
 
 ## Bug Reporting 🐛
 I take all security bugs extremely seriously. Thank you for improving (or wanting to improve) TabMerger's security. I appreciate your efforts/responsible disclosure and will make every effort to acknowledge your contributions.

@@ -9,16 +9,16 @@
 [<img src="https://i.imgur.com/gVmsvKp.png" alt="TabMerger v1.4.3 Cross-Browser Extension Walkthrough"/>](https://youtu.be/zkI0T-GzmzQ)
 
 ## Table of Contents 📃
-1. [Description](#description)
-2. [Contributing](#contributing)
-3. [Download](#download)
-4. [Leave A Review](#leave-a-review)
-5. [Todo](#todo)
-6. [Build](#build)
-7. [Test](#test)
-    - [Writing Tests](#not-sure-how-to-write-tests)
-    - [Code Coverage](#checking-your-tests)
-8. [Contact](#contact)
+1. [Description](#description-)
+2. [Contributing](#contributing-)
+3. [Download](#download-)
+4. [Leave A Review](#leave-a-review-)
+5. [Todo](#todo-)
+6. [Build](#build-)
+7. [Test](#test-)
+    - [Writing Tests](#not-sure-how-to-write-tests-)
+    - [Code Coverage](#checking-your-tests-)
+8. [Contact](#contact-)
 
 ## Description 🖋
 
