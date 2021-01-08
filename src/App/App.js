@@ -269,7 +269,7 @@ export default function App() {
               tooltip={"tiptext-global"}
               key={Math.random()}
             >
-              <a href={x.url} target="_blank">
+              <a href={x.url} rel="noreferrer" target="_blank">
                 {x.icon}
               </a>
             </Button>
@@ -286,7 +286,7 @@ export default function App() {
                 classes="p-0 mx-1 link-global btn-in-global"
                 key={Math.random()}
               >
-                <a href={x.url} target="_blank">
+                <a href={x.url} rel="noreferrer" target="_blank">
                   {x.icon}
                 </a>
               </Button>
