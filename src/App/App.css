@@ -181,6 +181,10 @@ hr {
     width: calc(96% - var(--sidebar-width));
   }
 
+  .sidebar {
+    padding-top: 7vh;
+  }
+
   .subtitle > h2,
   #logo-img {
     margin-bottom: 28px;
