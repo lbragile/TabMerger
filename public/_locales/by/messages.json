@@ -1,0 +1,96 @@
+{
+    "appName": {
+      "message": "TabMerger"
+    },
+    "appDesc": {
+      "message": "Аб'ядноўвае вашыя тэчкi ў адно месца, каб захаваць памяць і павялічыць прадукцыйнасць."
+    },
+    "mergeALLtabs": {
+      "message": "Аб'яднаць УСЕ тэчкi"
+    },
+    "mergeLEFTtabs": {
+      "message": "Аб'яднаць тэчкi ЗЛЕВА"
+    },
+    "mergeRIGHTtabs": {
+      "message": "Аб'яднаць тэчкi ЗПРАВА"
+    },
+    "openAll": {
+      "message": "Адкрыць усё"
+    },
+    "deleteAll": {
+      "message": "Выдалiць усё"
+    },
+    "exportJSON": {
+      "message": "Экспартаваць у JSON"
+    },
+    "importJSON": {
+      "message": "Iмпартаваць з JSON"
+    },
+    "darkMode": {
+      "message": "Цёмны рэжым"
+    },
+    "settings": {
+      "message": "Налады"
+    },
+    "pickColor": {
+      "message": "Абраць колер групы"
+    },
+    "hideTabs": {
+      "message": "Схаваць тэчкi"
+    },
+    "showTabs": {
+      "message": "Паказаць тэчкi"
+    },
+    "openGroup": {
+      "message": "Адкрыць групу"
+    },
+    "deleteGroup": {
+      "message": "Выдалiць групу"
+    },
+    "addGroup": {
+      "message": "Дадаць групу"
+    },
+    "title": {
+      "message": "Назва"
+    },
+    "created": {
+      "message": "Створана"
+    },
+    "quickDemo": {
+      "message": "Хуткая дэманстрацыя"
+    },
+    "supportUs": {
+      "message": "Падтрымайце нас"
+    },
+    "needHelp": {
+      "message": "Патрэбна дапамога?"
+    },
+    "bgOpen": {
+      "message": "Адкрыць TabMerger"
+    },
+    "bgAll": {
+      "message": "Аб'яднаць УСЕ тэчкі ў гэтым акне"
+    },
+    "bgLeft": {
+      "message": "Аб'яднаць укладкі ўлева ад бягучай укладкі ў гэтым акне"
+    },
+    "bgRight": {
+      "message": "Аб'яднаць укладкі ўправа ад бягучай укладкі ў гэтым акне"
+    },
+    "bgExclude": {
+      "message": "Аб'яднаць укладкі АКРУГА бягучую ўкладку ў гэтым акне"
+    },
+    "bgOnly": {
+      "message": "Аб'яднаць ТОЛЬКІ бягучую ўкладку ў гэтым акне"
+    },
+    "bgSiteExclude": {
+      "message": "Выключыць сайт з бачнасці TabMerger"
+    },
+    "bgInstructions": {
+      "message": "Інструкцыя"
+    },
+    "bgContact": {
+      "message": "Звяжыцеся з намі"
+    }
+  }
+  
