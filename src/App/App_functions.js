@@ -78,7 +78,7 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
 export function syncWrite(sync_node) {
   chrome.storage.local.get("groups", async (local) => {
     var current_groups = local.groups;
-    if (current_groups && current_groups["group-0"].tabs.length > 0) {
+    if (current_groups && (current_groups["group-0"].tabs.length > 0 || Object.keys(current_groups).length > 1)) {
       for (var key of Object.keys(current_groups)) {
         await AppHelper.updateGroupItem(key, current_groups[key]);
       }

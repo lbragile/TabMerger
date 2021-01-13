@@ -7,7 +7,7 @@ assignees: lbragile
 ---
 
 **Before Proceeding**
-Make sure there are no <a href="https://github.com/lbragile/TabMerger/labels/bug">existing issues</a> that are similar in nature to what you plan to propose.
+Make sure there are no [existing issues](https://github.com/lbragile/TabMerger/labels/bug) that are similar in nature to what you plan to propose. Additionally ensure that your request is not already in the [todo](https://github.com/lbragile/TabMerger/projects/1) list - you can *filter* cards.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
