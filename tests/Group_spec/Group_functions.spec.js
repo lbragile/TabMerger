@@ -24,13 +24,15 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 window.React = React;
 
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 
 import { getTimestamp } from "../../src/components/App/App_helpers";
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 
-import Group from "../../src/Group/Group";
-import Tab from "../../src/Tab/Tab";
+import Group from "../../src/components/Group/Group";
+import Tab from "../../src/components/Tab/Tab";
+
+import { AppProvider } from "../../src/context/AppContext";
 
 /**
  * Alter init_groups non-destructively by removing some keys
@@ -56,24 +58,23 @@ var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 beforeEach(() => {
   mockSet = jest.fn(); // mock for setState hooks
   container = render(
-    <Group
-      id="group-0"
-      className="group"
-      title="Title"
-      color="#dedede"
-      created="11/11/2020 @ 11:11:11"
-      num_tabs={0}
-      setGroups={mockSet}
-      setTabTotal={mockSet}
-      key={Math.random()}
-    >
-      <Tab></Tab>
-    </Group>
+    <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
+      <Group
+        id="group-0"
+        title="Title"
+        color="#dedede"
+        created="11/11/2020 @ 11:11:11"
+        num_tabs={0}
+        key={Math.random()}
+      >
+        <Tab id="group-0"></Tab>
+      </Group>
+    </AppProvider>
   ).container;
 
   Object.keys(init_groups).forEach((key) => {
     sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
-    localStorage.setItem(key, JSON.stringify(init_groups[key]));
+    localStorage.setItem("groups", JSON.stringify(init_groups));
   });
 
   chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
@@ -117,116 +118,133 @@ describe("setTitle", () => {
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(init_groups));
   });
+});
 
-  describe("openGroup", () => {
-    it("forms an array that matches ['group', ..., tab_links, ...]", () => {
-      chromeLocalSetSpy.mockClear();
+describe.skip("dragOver", () => {
+  it("finds the correct after element -> not end", () => {
+    var drag_elem = container.querySelector(".draggable");
+    expect(container).toMatchSnapshot();
+    var next_elem = container.querySelector(".draggable:nth-child(2)");
 
-      var mock_target = {
+    const stub = {
+      preventDefault: jest.fn(),
+      target: drag_elem,
+    };
+
+    GroupFunc.dragOver(stub);
+
+    expect(window.scrollTop).toHaveBeenCalled();
+  });
+});
+
+describe("openGroup", () => {
+  it("forms an array that matches ['group', ..., tab_links, ...]", () => {
+    chromeLocalSetSpy.mockClear();
+
+    var mock_target = {
+      target: {
+        closest: jest.fn(() => {
+          return {
+            nextSibling: {
+              querySelectorAll: jest.fn(() => {
+                return [{ href: "aaa" }, { href: "bbb" }];
+              }),
+            },
+          };
+        }),
+      },
+    };
+
+    GroupFunc.openGroup(mock_target);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ remove: ["group", "aaa", "bbb"] }, expect.anything());
+  });
+});
+
+describe("deleteGroup", () => {
+  var mock_target, any;
+
+  beforeEach(() => {
+    any = expect.anything();
+
+    mock_target = (group_id) => {
+      return {
         target: {
           closest: jest.fn(() => {
             return {
               nextSibling: {
-                querySelectorAll: jest.fn(() => {
-                  return [{ href: "aaa" }, { href: "bbb" }];
-                }),
+                id: group_id,
               },
             };
           }),
         },
       };
-
-      GroupFunc.openGroup(mock_target);
-
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ remove: ["group", "aaa", "bbb"] }, expect.anything());
-    });
+    };
   });
 
-  describe("deleteGroup", () => {
-    var mock_target, any;
+  it("removes the group and adjusts counts (last group)", () => {
+    var groups = alterGroups(["group-10"]);
+    localStorage.setItem("groups", JSON.stringify(groups));
+    delete groups["group-9"];
 
-    beforeEach(() => {
-      any = expect.anything();
+    chromeLocalGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+    chromeSyncGetSpy.mockClear();
 
-      mock_target = (group_id) => {
-        return {
-          target: {
-            closest: jest.fn(() => {
-              return {
-                nextSibling: {
-                  id: group_id,
-                },
-              };
-            }),
-          },
-        };
-      };
+    GroupFunc.deleteGroup(mock_target("group-9"), mockSet, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledTimes(2);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", any);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", any);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
+    expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
+    expect(mockSet).toHaveBeenNthCalledWith(2, 5);
+  });
+
+  it("deletes the only remaining group", () => {
+    var groups = alterGroups(["group-1", "group-9", "group-10"]);
+    localStorage.setItem("groups", JSON.stringify(groups));
+    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+    groups = { "group-0": default_group };
+    groups["group-0"].created = getTimestamp();
+
+    chromeLocalGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+    chromeSyncGetSpy.mockClear();
+
+    GroupFunc.deleteGroup(mock_target("group-0"), mockSet, mockSet);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
+    expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
+    expect(mockSet).toHaveBeenNthCalledWith(2, 0);
+  });
+
+  it("deletes middle group and adjusts group keys for remaining", () => {
+    var groups = {};
+    Object.values(init_groups).forEach((val, i) => {
+      groups["group-" + i] = val;
     });
 
-    it("removes the group and adjusts counts (last group)", () => {
-      var groups = alterGroups(["group-10"]);
-      localStorage.setItem("groups", JSON.stringify(groups));
-      delete groups["group-9"];
+    localStorage.setItem("groups", JSON.stringify(groups));
+    sessionStorage.setItem("settings", JSON.stringify(default_settings));
 
-      chromeLocalGetSpy.mockClear();
-      chromeLocalSetSpy.mockClear();
-      chromeSyncGetSpy.mockClear();
+    delete groups["group-1"];
+    groups = JSON.parse(JSON.stringify(groups).replace("group-2", "group-1"));
+    groups = JSON.parse(JSON.stringify(groups).replace("group-3", "group-2"));
 
-      GroupFunc.deleteGroup(mock_target("group-9"), mockSet, mockSet);
+    chromeLocalGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+    chromeSyncGetSpy.mockClear();
 
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(mockSet).toHaveBeenCalledTimes(2);
-
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", any);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", any);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
-      expect(mockSet).toHaveBeenNthCalledWith(1, 5);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(groups));
-    });
-
-    it("deletes the only remaining group", () => {
-      var groups = alterGroups(["group-1", "group-9", "group-10"]);
-      localStorage.setItem("groups", JSON.stringify(groups));
-      sessionStorage.setItem("settings", JSON.stringify(default_settings));
-      groups = { "group-0": default_group };
-      groups["group-0"].created = getTimestamp();
-
-      chromeLocalGetSpy.mockClear();
-      chromeLocalSetSpy.mockClear();
-      chromeSyncGetSpy.mockClear();
-
-      GroupFunc.deleteGroup(mock_target("group-0"), mockSet, mockSet);
-
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
-      expect(mockSet).toHaveBeenNthCalledWith(1, 0);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(groups));
-    });
-
-    it("deletes middle group and adjusts group keys for remaining", () => {
-      var groups = {};
-      Object.values(init_groups).forEach((val, i) => {
-        groups["group-" + i] = val;
-      });
-
-      localStorage.setItem("groups", JSON.stringify(groups));
-      sessionStorage.setItem("settings", JSON.stringify(default_settings));
-
-      delete groups["group-1"];
-      groups = JSON.parse(JSON.stringify(groups).replace("group-2", "group-1"));
-      groups = JSON.parse(JSON.stringify(groups).replace("group-3", "group-2"));
-
-      chromeLocalGetSpy.mockClear();
-      chromeLocalSetSpy.mockClear();
-      chromeSyncGetSpy.mockClear();
-
-      GroupFunc.deleteGroup(mock_target("group-1"), mockSet, mockSet);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
-      expect(mockSet).toHaveBeenNthCalledWith(1, 5);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(groups));
-    });
+    GroupFunc.deleteGroup(mock_target("group-1"), mockSet, mockSet);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
+    expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
+    expect(mockSet).toHaveBeenNthCalledWith(2, 5);
   });
 });
 

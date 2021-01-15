@@ -34,6 +34,8 @@ import { render, fireEvent, waitFor } from "@testing-library/react";
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 import Group from "../../src/components/Group/Group";
 
+import { AppProvider } from "../../src/context/AppContext";
+
 var container, mockSet, anything;
 
 beforeEach(() => {
@@ -43,17 +45,17 @@ beforeEach(() => {
   anything = expect.anything();
 
   container = render(
-    <Group
-      id="group-0"
-      className="group"
-      title="Title"
-      color="#dedede"
-      created="11/11/2020 @ 11:11:11"
-      num_tabs={0}
-      setGroups={mockSet}
-      setTabTotal={mockSet}
-      key={Math.random()}
-    ></Group>
+    <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
+      <Group
+        id="group-0"
+        className="group"
+        title="Title"
+        color="#dedede"
+        created="11/11/2020 @ 11:11:11"
+        num_tabs={0}
+        key={Math.random()}
+      />
+    </AppProvider>
   ).container;
 
   Object.keys(init_groups).forEach((key) => {

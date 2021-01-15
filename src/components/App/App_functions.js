@@ -62,7 +62,7 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
       chrome.storage.local.remove(["groups"], () => {
         chrome.storage.local.set({ groups: ls_entry }, () => {
           setGroups(JSON.stringify(ls_entry));
-          AppHelper.updateTabTotal(ls_entry, setTabTotal);
+          setTabTotal(AppHelper.updateTabTotal(ls_entry));
         });
       });
     });
@@ -121,7 +121,7 @@ export function syncRead(sync_node, setGroups, setTabTotal) {
           chrome.storage.sync.remove(remove_keys, () => {
             AppHelper.toggleSyncTimestamp(false, sync_node);
             setGroups(JSON.stringify(new_ls));
-            AppHelper.updateTabTotal(new_ls, setTabTotal);
+            setTabTotal(AppHelper.updateTabTotal(new_ls));
           });
         });
       });
@@ -478,7 +478,7 @@ export function importJSON(e, setGroups, setTabTotal) {
           e.target.value = "";
 
           setGroups(JSON.stringify(fileContent));
-          AppHelper.updateTabTotal(fileContent, setTabTotal);
+          setTabTotal(AppHelper.updateTabTotal(fileContent));
         });
       });
     };

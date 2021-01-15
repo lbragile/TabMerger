@@ -1,6 +1,6 @@
 import React from "react";
 
-import { translate, regexSearchForTab, resetSearch } from "../components/App/App_functions";
+import { translate, regexSearchForTab, resetSearch } from "../App/App_functions";
 
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";

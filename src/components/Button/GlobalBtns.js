@@ -1,7 +1,7 @@
 import React from "react";
 
-import { translate } from "../components/App/App_functions";
-import Button from "../components/Button/Button";
+import { translate } from "../App/App_functions";
+import Button from "./Button";
 
 import { GLOBAL_BUTTONS } from "./button_details.js";
 import ImportBtn from "./ImportBtn.js";
@@ -16,7 +16,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       {GLOBAL_BUTTONS(syncTimestamp.current, group_limit, setTabTotal, setGroups).map((x, i) => {
         if (i <= 4 || i >= 6) {
           return (
-            <>
+            <span key={Math.random()}>
               <Button
                 id={x.id}
                 classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
@@ -28,10 +28,10 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
                 {x.icon}
               </Button>
               {i === 3 ? <div /> : null}
-            </>
+            </span>
           );
         } else {
-          return <ImportBtn setTabTotal={setTabTotal} setGroups={setGroups} />;
+          return <ImportBtn setTabTotal={setTabTotal} setGroups={setGroups} key={Math.random()} />;
         }
       })}
     </div>

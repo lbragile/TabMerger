@@ -1,6 +1,6 @@
 import React from "react";
 
-import Button from "../components/Button/Button";
+import Button from "./Button";
 
 export default function LinkBtn({ text, url, icon, tooltip }) {
   return (

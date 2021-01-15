@@ -139,16 +139,16 @@ describe("sortByKey", () => {
 describe("updateTabTotal", () => {
   it("calculates the number of tabs correctly when not empty", () => {
     mockSet.mockClear();
-    AppHelper.updateTabTotal(init_groups, mockSet);
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith(7);
+    const result = AppHelper.updateTabTotal(init_groups);
+    expect(mockSet).not.toHaveBeenCalled();
+    expect(result).toBe(7);
   });
 
   it("calculates the number of tabs correctly when empty", () => {
     mockSet.mockClear();
-    AppHelper.updateTabTotal({}, mockSet);
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith(0);
+    const result = AppHelper.updateTabTotal({});
+    expect(mockSet).not.toHaveBeenCalled();
+    expect(result).toBe(0);
   });
 });
 

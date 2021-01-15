@@ -1,7 +1,7 @@
 import React from "react";
 import { BiImport } from "react-icons/bi";
 
-import { translate, importJSON } from "../components/App/App_functions";
+import { translate, importJSON } from "../App/App_functions";
 
 export default function ImportBtn({ setGroups, setTabTotal }) {
   return (

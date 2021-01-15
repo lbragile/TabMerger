@@ -23,10 +23,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 window.React = React;
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
 import Tab from "../../src/components/Tab/Tab";
+
+import { AppProvider } from "../../src/context/AppContext";
 
 /**
  * When rendering just <Tab /> no group component is rendered.
@@ -48,7 +50,11 @@ beforeEach(() => {
   localStorage.setItem("groups", JSON.stringify(init_groups));
   init_tabs = init_groups["group-0"].tabs;
   mockSet = jest.fn(); // mock for setState hooks
-  container = render(<Tab id="group-0" setTabTotal={mockSet} setGroups={mockSet} />).container;
+  container = render(
+    <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
+      <Tab id="group-0" />
+    </AppProvider>
+  ).container;
 });
 
 afterEach(() => {
@@ -64,8 +70,11 @@ describe("setInitTabs", () => {
 
     it("works when empty", () => {
       localStorage.setItem("groups", JSON.stringify({ "group-0": {} }));
-      container = render(<Tab id="group-0" />).container;
-
+      container = render(
+        <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
+          <Tab id="group-0" />
+        </AppProvider>
+      ).container;
       expect(container.getElementsByClassName("draggable").length).toEqual(0);
     });
   });
@@ -81,62 +90,125 @@ describe("setInitTabs", () => {
 });
 
 describe("dragStart", () => {
-  it("adds the appropriate classes to the draggable and container", () => {
-    var draggable = container.querySelector(".draggable");
-    var dragStartSpy = jest.spyOn(TabFunc, "dragStart");
+  var dragStartSpy, draggable;
+
+  beforeEach(() => {
+    dragStartSpy = jest.spyOn(TabFunc, "dragStart");
     addIdAndClassToGroup(container, "group-0", "group");
+  });
 
-    fireEvent.dragStart(draggable);
-
+  afterEach(() => {
     expect(dragStartSpy).toHaveBeenCalledTimes(1);
     expect(container.querySelector(".draggable").classList).toContain("dragging");
     expect(container.querySelector(".tabs-container").parentNode.classList).toContain("drag-origin");
   });
-});
 
-// this needs to be re-worked
-describe("dragEnd", () => {
-  beforeEach(() => {
-    window.alert = jest.fn();
+  it("adds the appropriate classes to the draggable and container -> draggable click", () => {
+    draggable = container.querySelector(".draggable");
+    fireEvent.dragStart(draggable);
   });
 
-  // double check this
+  it("adds the appropriate classes to the draggable and container -> tab link click", () => {
+    draggable = container.querySelector(".move-tab");
+    fireEvent.dragStart(draggable);
+  });
+});
+
+// Note that tabs are not actually dragged, need puppeteer to test this
+describe("dragEnd", () => {
+  var chromeLocalGetSpy, chromeLocalSetSpy;
+
+  beforeEach(() => {
+    chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
+    chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
+  });
+
   it("works for same group", () => {
     addIdAndClassToGroup(container, "group-0", "group");
 
-    var dragStartSpy = jest.spyOn(TabFunc, "dragStart");
-    var dragEndSpy = jest.spyOn(TabFunc, "dragEnd");
-    var alertSpy = jest.spyOn(window, "alert");
+    var stub = {
+      stopPropagation: jest.fn(),
+      target: container.querySelectorAll("#group-0 .draggable")[1],
+    };
 
-    var draggable = container.querySelector(".draggable");
-    fireEvent.dragStart(draggable);
-    fireEvent.dragEnd(draggable);
+    // stub the document
+    document.getElementsByClassName = jest.fn(() => [container.querySelector(".draggable").closest(".group")]);
 
-    expect(dragStartSpy).toHaveBeenCalledTimes(1);
-    expect(dragEndSpy).toHaveBeenCalledTimes(1);
-    expect(alertSpy).toHaveBeenCalledTimes(1); // ??? this seems wrong
-    expect(container.querySelector(".draggable").classList).not.toContain("dragging");
-    expect(container.querySelector(".tabs-container").parentNode.classList).not.toContain("drag-origin");
+    TabFunc.dragEnd(stub, 8000, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", expect.anything());
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, expect.anything());
+
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(JSON.stringify(init_groups));
   });
 
-  // needs work
-  it.skip("works for different groups", () => {
+  it("works for different group", () => {
+    // make a second group
+    var container2 = render(
+      <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
+        <Tab id="group-1" />
+      </AppProvider>
+    ).container;
+
     addIdAndClassToGroup(container, "group-0", "group");
-    const container_0 = container;
-    var { container } = render(<Tab id="group-1" />);
-    addIdAndClassToGroup(container, "group-1", "group");
-    const container_1 = container;
-    var dragStartSpy = jest.spyOn(TabFunc, "dragStart");
-    var dragEndSpy = jest.spyOn(TabFunc, "dragEnd");
-    var draggable_0 = container_0.querySelector(".draggable");
-    var draggable_1 = container_1.querySelector(".draggable");
-    fireEvent.dragStart(draggable_0);
-    fireEvent.dragEnd(draggable_1);
-    expect(dragStartSpy).toHaveBeenCalledTimes(1);
-    expect(dragEndSpy).toHaveBeenCalledTimes(1);
+    addIdAndClassToGroup(container2, "group-1", "group");
+
+    var stub = {
+      stopPropagation: jest.fn(),
+      target: container.querySelectorAll("#group-0 .draggable")[1],
+    };
+
+    // stub the document
+    document.getElementsByClassName = jest.fn(() => [container2.querySelector(".draggable").closest(".group")]);
+
+    chromeLocalGetSpy.mockClear();
+    chromeLocalSetSpy.mockClear();
+
+    TabFunc.dragEnd(stub, 8000, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", expect.anything());
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, expect.anything());
+
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(JSON.stringify(init_groups));
   });
 
-  // it("fails when limit is exceeded", ()=>{})
+  it("fails when limit is exceeded", () => {
+    const { location, alert } = window;
+    delete window.location;
+    delete window.alert;
+
+    window.location = { reload: jest.fn() };
+    window.alert = jest.fn();
+
+    addIdAndClassToGroup(container, "group-0", "group");
+
+    var stub = {
+      stopPropagation: jest.fn(),
+      target: container.querySelectorAll("#group-0 .draggable")[1],
+    };
+
+    // stub the document
+    document.getElementsByClassName = jest.fn(() => [container.querySelector(".draggable").closest(".group")]);
+
+    TabFunc.dragEnd(stub, 100, mockSet);
+
+    expect(window.alert).toHaveBeenCalledTimes(1);
+    expect(window.alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded");
+
+    expect(window.location.reload).toHaveBeenCalled();
+
+    window.location = location;
+    window.alert = alert;
+  });
+
   // it("does not change limit for same group", ()=>{})
 });
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { translate, getTabMergerLink } from "../components/App/App_functions";
+import { translate, getTabMergerLink } from "../App/App_functions";
 
 export default function Header({ total }) {
   return (

@@ -143,16 +143,15 @@ export function sortByKey(json) {
  * Updates the total tab count based on tabs in all the groups inside TabMerger
  * @param {{groups: {"group-id": {color: string, created: string, tabs:
  *  Array.<{title: string, url: string}>, title: string}}}} ls_entry current group information
- * @param {Function} setTabTotal For re-rendering the total tab counter
  *
  * @note Exported for testing purposes
  */
-export function updateTabTotal(ls_entry, setTabTotal) {
+export function updateTabTotal(ls_entry) {
   var num_tabs = 0;
   Object.values(ls_entry).forEach((val) => {
     num_tabs += val.tabs.length;
   });
-  setTabTotal(num_tabs);
+  return num_tabs;
 }
 
 /**

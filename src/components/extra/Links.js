@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 
-import { translate, getTabMergerLink } from "../components/App/App_functions";
-import LinkBtn from "./LinkBtn.js";
+import { translate, getTabMergerLink } from "../App/App_functions";
+import LinkBtn from "../Button/LinkBtn.js";
 
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { BiHelpCircle } from "react-icons/bi";
@@ -28,13 +28,13 @@ export default function Links() {
       <hr className="mx-auto" />
 
       {LINKS.current.slice(0, 5).map((x) => {
-        return <LinkBtn text={x.text} url={x.url} icon={x.icon} tooltip="tiptext-global" />;
+        return <LinkBtn text={x.text} url={x.url} icon={x.icon} tooltip="tiptext-global" key={Math.random()} />;
       })}
 
       <hr className="mx-auto" />
 
       {LINKS.current.slice(5).map((x) => {
-        return <LinkBtn text={x.text} url={x.url} icon={x.icon} />;
+        return <LinkBtn text={x.text} url={x.url} icon={x.icon} key={Math.random()} />;
       })}
     </React.Fragment>
   );

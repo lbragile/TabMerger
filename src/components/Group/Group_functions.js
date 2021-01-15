@@ -166,8 +166,8 @@ export function deleteGroup(e, setTabTotal, setGroups) {
       }
 
       chrome.storage.local.set({ groups: group_blocks }, () => {
-        updateTabTotal(group_blocks, setTabTotal);
         setGroups(JSON.stringify(group_blocks));
+        setTabTotal(updateTabTotal(group_blocks));
       });
     });
   });

@@ -26,13 +26,13 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
 
-import { AppProvider } from "../../context/AppContext";
+import GlobalBtns from "../Button/GlobalBtns.js";
+import Header from "../extra/Header.js";
+import TabSearch from "../extra/TabSearch.js";
+import Reviews from "../extra/Reviews.js";
+import Links from "../extra/Links.js";
 
-import Header from "../../other/Header.js";
-import TabSearch from "../../other/TabSearch.js";
-import Reviews from "../../other/Reviews.js";
-import GlobalBtns from "../../other/GlobalBtns.js";
-import Links from "../../other/Links.js";
+import { AppProvider } from "../../context/AppContext";
 
 import "./App.css";
 import "../Button/Button.css";

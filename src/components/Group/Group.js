@@ -30,7 +30,7 @@ import { AppContext } from "../../context/AppContext";
 import { BiColorFill } from "react-icons/bi";
 
 import Button from "../Button/Button.js";
-import { GROUP_TITLE_BUTTONS, MERGE_BUTTONS } from "../../other/button_details";
+import { GROUP_TITLE_BUTTONS, MERGE_BUTTONS } from "../Button/button_details";
 
 import "./Group.css";
 import "../Button/Button.css";

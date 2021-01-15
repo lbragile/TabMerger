@@ -7,8 +7,8 @@ import { GrClear, GrAddCircle } from "react-icons/gr";
 import { MdVerticalAlignCenter } from "react-icons/md";
 import { VscChromeRestore } from "react-icons/vsc";
 
-import * as AppFunc from "../components/App/App_functions";
-import * as GroupFunc from "../components/Group/Group_functions";
+import * as AppFunc from "../App/App_functions";
+import * as GroupFunc from "../Group/Group_functions";
 
 export const GLOBAL_BUTTONS = (sync_node, group_limit, setTabTotal, setGroups) => {
   return [

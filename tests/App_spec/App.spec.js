@@ -141,15 +141,15 @@ describe("Open All Button", () => {
   });
 });
 
-// describe("Export Button", () => {
-//   it("calls exportJSON on click", () => {
-//     var spy = jest.spyOn(AppFunc, "exportJSON");
-//     fireEvent.click(container.querySelector("#export-btn"));
+describe("Export Button", () => {
+  it("calls exportJSON on click", () => {
+    var spy = jest.spyOn(AppFunc, "exportJSON");
+    fireEvent.click(container.querySelector("#export-btn"));
 
-//     expect(spy).toHaveBeenCalledTimes(1);
-//     expect(spy).toHaveBeenCalledWith(anything);
-//   });
-// });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith();
+  });
+});
 
 describe("Sync Write Button", () => {
   it("calls syncWrite on click", () => {
@@ -188,6 +188,7 @@ describe("Import JSON Input", () => {
 describe("Sync Read Button", () => {
   it("calls syncRead on click", () => {
     var spy = jest.spyOn(AppFunc, "syncRead");
+
     fireEvent.click(container.querySelector("#sync-read-btn"));
 
     expect(spy).toHaveBeenCalledTimes(1);

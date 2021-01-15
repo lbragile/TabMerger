@@ -62,7 +62,7 @@ export function dragEnd(e, item_limit, setGroups) {
   e.target.classList.remove("dragging");
 
   const tab = e.target;
-  var closest_group = e.target.closest(".group");
+  var closest_group = tab.closest(".group");
 
   var drag_origin = document.getElementsByClassName("drag-origin")[0];
   drag_origin.classList.remove("drag-origin");
@@ -70,14 +70,11 @@ export function dragEnd(e, item_limit, setGroups) {
   const origin_id = drag_origin.id;
 
   var anchor = tab.querySelector("a");
-  var tab_bytes = JSON.stringify({
-    title: anchor.innerText,
-    url: anchor.href,
-  }).length;
+  var tab_bytes = JSON.stringify({ title: anchor.innerText, url: anchor.href }).length;
 
   chrome.storage.local.get("groups", (local) => {
-    var result = local.groups;
-    var itemBytesInUse = JSON.stringify(result[closest_group.id]).length;
+    var groups = local.groups;
+    var itemBytesInUse = JSON.stringify(groups[closest_group.id]).length;
 
     // moving into same group should not increase number of bytes
     var newBytesInUse = origin_id !== closest_group.id ? itemBytesInUse + tab_bytes : itemBytesInUse;
@@ -85,20 +82,20 @@ export function dragEnd(e, item_limit, setGroups) {
     if (newBytesInUse < item_limit) {
       if (origin_id !== closest_group.id) {
         // remove tab from group that originated the drag
-        result[origin_id].tabs = result[origin_id].tabs.filter((group_tab) => {
+        groups[origin_id].tabs = groups[origin_id].tabs.filter((group_tab) => {
           return group_tab.url !== tab.lastChild.href;
         });
       }
 
       // reorder tabs based on current positions
-      result[closest_group.id].tabs = [...closest_group.lastChild.querySelectorAll("div")].map((x) => ({
+      groups[closest_group.id].tabs = [...closest_group.lastChild.querySelectorAll("div")].map((x) => ({
         title: x.lastChild.textContent,
         url: x.lastChild.href,
       }));
 
       // update the groups
-      chrome.storage.local.set({ groups: result }, () => {
-        setGroups(JSON.stringify(result));
+      chrome.storage.local.set({ groups }, () => {
+        setGroups(JSON.stringify(groups));
       });
     } else {
       alert(`Group's syncing capacity exceeded by ${

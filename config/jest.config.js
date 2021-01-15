@@ -15,7 +15,8 @@ module.exports = {
     "<rootDir>/public/",
     "<rootDir>/tests/__mocks__/",
     "<rootDir>/src/components/Button/",
-    "<rootDir>/src/other/",
+    "<rootDir>/src/components/extra/",
+    "<rootDir>/src/context/",
   ],
 
   coveragePathIgnorePatterns: [
@@ -23,7 +24,8 @@ module.exports = {
     "<rootDir>/build/",
     "<rootDir>/public/",
     "<rootDir>/src/components/Button/",
-    "<rootDir>/src/other/",
+    "<rootDir>/src/components/extra/",
+    "<rootDir>/src/context/",
   ],
 
   verbose: true,
