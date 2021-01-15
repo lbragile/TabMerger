@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React, { useState as useStateMock } from "react";
+window.React = React;
 
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
@@ -30,8 +31,8 @@ jest.mock("react", () => ({
 
 import { render, fireEvent, waitFor } from "@testing-library/react";
 
-import * as GroupFunc from "../../src/Group/Group_functions";
-import Group from "../../src/Group/Group";
+import * as GroupFunc from "../../src/components/Group/Group_functions";
+import Group from "../../src/components/Group/Group";
 
 var container, mockSet, anything;
 

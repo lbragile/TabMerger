@@ -22,10 +22,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React from "react";
+window.React = React;
 import { render, fireEvent, waitFor } from "@testing-library/react";
 
-import * as TabFunc from "../../src/Tab/Tab_functions";
-import Tab from "../../src/Tab/Tab";
+import * as TabFunc from "../../src/components/Tab/Tab_functions";
+import Tab from "../../src/components/Tab/Tab";
 
 /**
  * When rendering just <Tab /> no group component is rendered.

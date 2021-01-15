@@ -26,9 +26,9 @@ window.React = React;
 
 import { render } from "@testing-library/react";
 
-import * as AppHelper from "../../src/App/App_helpers";
+import * as AppHelper from "../../src/components/App/App_helpers";
 
-import App from "../../src/App/App";
+import App from "../../src/components/App/App";
 
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;

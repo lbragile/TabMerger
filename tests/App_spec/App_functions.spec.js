@@ -26,10 +26,10 @@ window.React = React;
 
 import { render, waitFor, fireEvent } from "@testing-library/react";
 
-import * as AppFunc from "../../src/App/App_functions";
-import * as AppHelper from "../../src/App/App_helpers";
+import * as AppFunc from "../../src/components/App/App_functions";
+import * as AppHelper from "../../components/src/App/App_helpers";
 
-import App from "../../src/App/App";
+import App from "../../src/components/App/App";
 
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;

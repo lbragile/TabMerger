@@ -27,12 +27,10 @@ import * as GroupFunc from "./Group_functions";
 import { translate } from "../App/App_functions";
 import { AppContext } from "../../context/AppContext";
 
-import { AiOutlineMinus, AiOutlineClose } from "react-icons/ai";
-import { VscChromeRestore } from "react-icons/vsc";
-import { BiColorFill, BiArrowToRight } from "react-icons/bi";
-import { MdVerticalAlignCenter } from "react-icons/md";
+import { BiColorFill } from "react-icons/bi";
 
 import Button from "../Button/Button.js";
+import { GROUP_TITLE_BUTTONS, MERGE_BUTTONS } from "../../other/button_details";
 
 import "./Group.css";
 import "../Button/Button.css";
@@ -79,31 +77,19 @@ export default function Group(props) {
         />
 
         <div className="title-btn-containter row">
-          <Button
-            classes="show-hide-btn btn-in-group-title"
-            translate={hide ? translate("showTabs") : translate("hideTabs")}
-            tooltip={"tiptext-group-title"}
-            onClick={(e) => GroupFunc.toggleGroup(e, hide, setHide)}
-          >
-            <AiOutlineMinus />
-          </Button>
-          <Button
-            classes="open-group-btn btn-in-group-title"
-            translate={translate("openGroup")}
-            tooltip={"tiptext-group-title"}
-            onClick={(e) => GroupFunc.openGroup(e)}
-          >
-            <VscChromeRestore />
-          </Button>
-
-          <Button
-            classes="delete-group-btn btn-in-group-title"
-            translate={translate("deleteGroup")}
-            tooltip={"tiptext-group-title"}
-            onClick={(e) => GroupFunc.deleteGroup(e, setTabTotal, setGroups)}
-          >
-            <AiOutlineClose />
-          </Button>
+          {GROUP_TITLE_BUTTONS(hide, setHide, setTabTotal, setGroups).map((x) => {
+            return (
+              <Button
+                classes={x.classes}
+                translate={x.translate}
+                tooltip={"tiptext-group-title"}
+                onClick={x.clickFn}
+                key={Math.random()}
+              >
+                {x.icon}
+              </Button>
+            );
+          })}
         </div>
       </div>
 
@@ -114,30 +100,19 @@ export default function Group(props) {
 
         <div className="merging-container float-right">
           <div className="d-flex flex-column">
-            <Button
-              classes="merge-btn btn-for-merging btn-outline-dark"
-              translate={translate("mergeALLtabs")}
-              tooltip={"tiptext-group-merge"}
-              onClick={() => GroupFunc.sendMessage({ msg: "all", id: props.id })}
-            >
-              <MdVerticalAlignCenter color="black" size="1.3rem" />
-            </Button>
-            <Button
-              classes="merge-left-btn btn-for-merging btn-outline-dark"
-              translate={translate("mergeLEFTtabs")}
-              tooltip={"tiptext-group-merge"}
-              onClick={() => GroupFunc.sendMessage({ msg: "left", id: props.id })}
-            >
-              <BiArrowToRight color="black" size="1.3rem" />
-            </Button>
-            <Button
-              classes="merge-right-btn btn-for-merging btn-outline-dark"
-              translate={translate("mergeRIGHTtabs")}
-              tooltip={"tiptext-group-merge"}
-              onClick={() => GroupFunc.sendMessage({ msg: "right", id: props.id })}
-            >
-              <BiArrowToRight color="black" size="1.3rem" />
-            </Button>
+            {MERGE_BUTTONS(props.id).map((x) => {
+              return (
+                <Button
+                  classes={x.classes}
+                  translate={x.translate}
+                  tooltip={"tiptext-group-merge"}
+                  onClick={x.clickFn}
+                  key={Math.random()}
+                >
+                  {x.icon}
+                </Button>
+              );
+            })}
           </div>
         </div>
 

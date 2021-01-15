@@ -26,8 +26,8 @@ window.React = React;
 
 import { render, fireEvent } from "@testing-library/react";
 
-import { getTimestamp } from "../../src/App/App_helpers";
-import * as GroupFunc from "../../src/Group/Group_functions";
+import { getTimestamp } from "../../src/components/App/App_helpers";
+import * as GroupFunc from "../../src/components/Group/Group_functions";
 
 import Group from "../../src/Group/Group";
 import Tab from "../../src/Tab/Tab";

@@ -63,11 +63,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 #import-btn svg,
 #export-btn svg {
+  width: 26px;
+  height: 26px;
+}
+
+#import-btn svg {
   position: relative;
   left: -8px;
   top: -2px;
-  width: 26px;
-  height: 26px;
 }
 
 #import-input {

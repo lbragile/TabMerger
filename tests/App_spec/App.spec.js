@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React, { useState as useStateMock } from "react";
+window.React = React;
 
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
@@ -30,8 +31,8 @@ jest.mock("react", () => ({
 
 import { render, fireEvent } from "@testing-library/react";
 
-import * as AppFunc from "../../src/App/App_functions";
-import App from "../../src/App/App";
+import * as AppFunc from "../../src/components/App/App_functions";
+import App from "../../src/components/App/App";
 
 var container, mockSet, anything;
 const prev_window = window.location;
