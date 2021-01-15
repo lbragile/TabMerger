@@ -270,35 +270,31 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
  * Forms the group components with tab draggable tab components inside.
  * Each formed group has correct & up-to-date information.
  * @param {string} groups A stringified object consisting of TabMerger's current group information
- * @param {number} itemLimit Limit for each group with regards to sync item storage - only contains group related details
- * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {number} item_limit Limit for each group with regards to sync item storage - only contains group related details
  *
  * @see ITEM_STORAGE_LIMIT in App.js
  *
  * @return If "groups" is defined - array of group components which include the correct number of tab components inside each.
  * Else - null
  */
-export function groupFormation(groups, itemLimit, setGroups, setTabTotal) {
+export function groupFormation(groups, item_limit) {
   if (groups) {
-    var group_values = Object.values(JSON.parse(groups));
-
-    var sorted_vals = group_values.length > 10 ? AppHelper.sortByKey(JSON.parse(groups)) : group_values;
+    var parsed_groups = JSON.parse(groups);
+    var group_values = Object.values(parsed_groups);
+    var sorted_vals = group_values.length > 10 ? AppHelper.sortByKey(parsed_groups) : group_values;
 
     return sorted_vals.map((x, i) => {
       var id = "group-" + i;
       return (
         <Group
           id={id}
-          title={x.title}
-          color={x.color}
-          created={x.created}
+          title={x.title || x.name || "Title"}
+          color={x.color || "#dedede"}
+          created={x.created || AppHelper.getTimestamp()}
           num_tabs={(x.tabs && x.tabs.length) || 0}
-          setGroups={setGroups}
-          setTabTotal={setTabTotal}
           key={Math.random()}
         >
-          <Tab id={id} itemLimit={itemLimit} setTabTotal={setTabTotal} setGroups={setGroups} />
+          <Tab id={id} item_limit={item_limit} />
         </Group>
       );
     });

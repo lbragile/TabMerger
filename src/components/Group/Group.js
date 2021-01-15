@@ -21,10 +21,11 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
 
 import * as GroupFunc from "./Group_functions";
 import { translate } from "../App/App_functions";
+import { AppContext } from "../../context/AppContext";
 
 import { AiOutlineMinus, AiOutlineClose } from "react-icons/ai";
 import { VscChromeRestore } from "react-icons/vsc";
@@ -39,6 +40,8 @@ import "../Button/Button.css";
 export default function Group(props) {
   const TITLE_TRIM_LIMIT = useRef(15);
   const [hide, setHide] = useState(false);
+
+  const { setTabTotal, setGroups } = useContext(AppContext);
 
   const setGroupBackground = useCallback(
     (e) => {
@@ -69,7 +72,7 @@ export default function Group(props) {
         <input
           className="title-edit-input font-weight-bold mb-0"
           onFocus={(e) => e.target.select()}
-          onBlur={(e) => GroupFunc.setTitle(e, props.setGroups, props.title)}
+          onBlur={(e) => GroupFunc.setTitle(e, setGroups, props.title)}
           onKeyDown={(e) => GroupFunc.blurOnEnter(e)}
           maxLength={TITLE_TRIM_LIMIT.current}
           defaultValue={props.title}
@@ -97,7 +100,7 @@ export default function Group(props) {
             classes="delete-group-btn btn-in-group-title"
             translate={translate("deleteGroup")}
             tooltip={"tiptext-group-title"}
-            onClick={(e) => GroupFunc.deleteGroup(e, props.setTabTotal, props.setGroups)}
+            onClick={(e) => GroupFunc.deleteGroup(e, setTabTotal, setGroups)}
           >
             <AiOutlineClose />
           </Button>

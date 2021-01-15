@@ -23,7 +23,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "../Button/Button.js";
-import reviews from "../review_text.js";
+import { REVIEWS } from "../../other/review_text.js";
 
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
@@ -40,6 +40,8 @@ import { FiYoutube, FiStar, FiSettings } from "react-icons/fi";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 import { RiHandCoinLine } from "react-icons/ri";
+
+import { AppProvider } from "../../context/AppContext";
 
 export default function App() {
   const ITEM_STORAGE_LIMIT = useRef(8000); //500 for testing - 8000 for production
@@ -59,22 +61,8 @@ export default function App() {
   ]);
 
   var syncTimestamp = useRef();
-
-  const defaultGroup = useRef({
-    color: "#dedede",
-    created: AppHelper.getTimestamp(),
-    tabs: [],
-    title: "Title",
-  });
-
-  const defaultSettings = useRef({
-    blacklist: "",
-    color: "#dedede",
-    dark: true,
-    open: "without",
-    restore: "keep",
-    title: "Title",
-  });
+  const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), tabs: [], title: "Title" });
+  const defaultSettings = useRef({ blacklist: "", color: "#dedede", dark: true, open: "without", restore: "keep", title: "Title" }); // prettier-ignore
 
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState();
@@ -115,9 +103,7 @@ export default function App() {
           <img id="logo-img" src="./images/logo-full-rescale.PNG" alt="TabMerger Logo" />
         </a>
         <div className="subtitle">
-          <h2>
-            <span className="small">{tabTotal + " " + AppFunc.translate(tabTotal === 1 ? "tab" : "tabs")}</span>
-          </h2>
+          <h3>{tabTotal + " " + AppFunc.translate(tabTotal === 1 ? "tab" : "tabs")}</h3>
         </div>
         <div className="input-group search-filter my-3 mx-auto">
           <div className="input-group-prepend">
@@ -151,13 +137,13 @@ export default function App() {
 
         {/* reviews image (only shown in print mode) */}
         <div id="reviews-img" className="d-none">
-          {Object.values(reviews).map((review, i) => {
+          {REVIEWS.map((review, i) => {
             return (
               <span key={Math.random()}>
                 <p className={i > 0 ? "mt-3 mb-1" : "mb-1 mt-0"}>
-                  {[1, 2, 3, 4, 5].map((_) => {
-                    return <AiFillStar color="goldenrod" key={Math.random()} />;
-                  })}
+                  {[1, 2, 3, 4, 5].map((_) => (
+                    <AiFillStar color="goldenrod" key={Math.random()} />
+                  ))}
                 </p>
                 <p className="text-center px-1 my-0">{review}</p>
               </span>
@@ -271,51 +257,41 @@ export default function App() {
         <hr className="mx-auto" />
 
         {links.current.slice(0, 5).map((x) => {
-          return (
-            <Button
-              id={x.text.split(" ")[0].toLowerCase() + "-btn"}
-              classes="p-0 mx-1 link-global btn-in-global"
-              translate={x.text}
-              tooltip={"tiptext-global"}
-              key={Math.random()}
-            >
-              <a href={x.url} rel="noreferrer" target="_blank">
-                {x.icon}
-              </a>
-            </Button>
-          );
+          return <LinkButton text={x.text} url={x.url} icon={x.icon} tooltip="tiptext-global" />;
         })}
 
         <hr className="mx-auto" />
 
-        <div className="mx-auto">
-          {links.current.slice(5).map((x) => {
-            return (
-              <Button
-                id={x.text.split(" ")[0].toLowerCase() + "-btn"}
-                classes="p-0 mx-1 link-global btn-in-global"
-                key={Math.random()}
-              >
-                <a href={x.url} rel="noreferrer" target="_blank">
-                  {x.icon}
-                </a>
-              </Button>
-            );
-          })}
-        </div>
+        {links.current.slice(5).map((x) => {
+          return <LinkButton text={x.text} url={x.url} icon={x.icon} />;
+        })}
 
         <div id="copyright" className="mt-4">
           Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
         </div>
       </nav>
 
-      <div className="container-fluid" id="main">
-        <div className="col" id="tabmerger-container">
-          <div className="groups-container">
-            {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current, setGroups, setTabTotal)}
-          </div>
+      <AppProvider value={{ setGroups, setTabTotal }}>
+        <div className="container-fluid col" id="tabmerger-container">
+          {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current)}
         </div>
-      </div>
+      </AppProvider>
     </div>
+  );
+}
+
+function LinkButton({ text, url, icon, tooltip }) {
+  return (
+    <Button
+      id={text.split(" ")[0].toLowerCase() + "-btn"}
+      classes="p-0 mx-1 link-global btn-in-global"
+      translate={tooltip ? text : null}
+      tooltip={tooltip}
+      key={Math.random()}
+    >
+      <a href={url} rel="noreferrer" target="_blank">
+        {icon}
+      </a>
+    </Button>
   );
 }

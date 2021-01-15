@@ -21,10 +21,11 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import * as TabFunc from "./Tab_functions";
 import * as TabHelper from "./Tab_helpers";
+import { AppContext } from "../../context/AppContext";
 
 import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -33,6 +34,7 @@ import "./Tab.css";
 
 export default function Tab(props) {
   const [tabs, setTabs] = useState([]);
+  const { setTabTotal, setGroups } = useContext(AppContext);
 
   useEffect(() => {
     TabFunc.setInitTabs(setTabs, props.id);
@@ -46,13 +48,13 @@ export default function Tab(props) {
             className="row draggable p-0 mx-0 "
             draggable
             onDragStart={(e) => TabFunc.dragStart(e)}
-            onDragEnd={(e) => TabFunc.dragEnd(e, props.itemLimit, props.setGroups)}
+            onDragEnd={(e) => TabFunc.dragEnd(e, props.item_limit, setGroups)}
             key={Math.random()}
           >
             <p
               className="close-tab mr-2"
               draggable={false}
-              onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, props.setTabTotal, props.setGroups)}
+              onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, setTabTotal, setGroups)}
             >
               <TiDelete size="1.2rem" color="black" />
             </p>
