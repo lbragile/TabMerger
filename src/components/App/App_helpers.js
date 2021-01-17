@@ -51,11 +51,11 @@ export function getTimestamp() {
  * @note Exported for testing purposes
  */
 export function toggleDarkMode(isChecked) {
-  var container = document.querySelector("body");
+  var body = document.querySelector("body");
   var sidebar = document.querySelector(".sidebar");
 
-  container.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
-  container.style.color = isChecked ? "white" : "black";
+  body.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
+  body.style.color = isChecked ? "white" : "black";
   sidebar.style.background = isChecked ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 }
 

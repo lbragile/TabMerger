@@ -24,13 +24,13 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 window.React = React;
 
-import { render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 
 import { getTimestamp } from "../../src/components/App/App_helpers";
 import * as GroupFunc from "../../src/components/Group/Group_functions";
+import * as GroupHelper from "../../src/components/Group/Group_helpers";
 
 import Group from "../../src/components/Group/Group";
-import Tab from "../../src/components/Tab/Tab";
 
 import { AppProvider } from "../../src/context/AppContext";
 
@@ -51,12 +51,19 @@ function alterGroups(remove) {
   return groups;
 }
 
-var mockSet, container;
+var mockSet, container, anything;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 
 beforeEach(() => {
-  mockSet = jest.fn(); // mock for setState hooks
+  Object.keys(init_groups).forEach((key) => {
+    sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
+  });
+  localStorage.setItem("groups", JSON.stringify(init_groups));
+
+  mockSet = jest.fn();
+  anything = expect.anything();
+
   container = render(
     <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
       <Group
@@ -66,16 +73,9 @@ beforeEach(() => {
         created="11/11/2020 @ 11:11:11"
         num_tabs={0}
         key={Math.random()}
-      >
-        <Tab id="group-0"></Tab>
-      </Group>
+      ></Group>
     </AppProvider>
   ).container;
-
-  Object.keys(init_groups).forEach((key) => {
-    sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-  });
 
   chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
   chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
@@ -92,11 +92,36 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+describe("Change Group Color", () => {
+  it("opens color input on click", () => {
+    var spy = jest.spyOn(GroupFunc, "setGroupBackground");
+    fireEvent.click(container.querySelector(".input-color"));
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("calls setGroupBackground on change", () => {
+    var spy = jest.spyOn(GroupFunc, "setGroupBackground");
+    jest.clearAllMocks();
+
+    fireEvent.change(container.querySelector("input[type='color'"), {
+      target: { value: "#000" },
+    });
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    init_groups["group-0"].color = "#000000";
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, anything);
+  });
+});
+
 describe("setTitle", () => {
   it("updates local storage", () => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
-    chromeLocalGetSpy.mockClear();
-    chromeLocalSetSpy.mockClear();
+    jest.clearAllMocks();
 
     var target_mock = {
       target: {
@@ -109,31 +134,85 @@ describe("setTitle", () => {
     };
 
     GroupFunc.setTitle(target_mock, mockSet);
+    init_groups["group-0"].title = target_mock.target.value;
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", expect.anything());
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, expect.anything());
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(init_groups));
   });
 });
 
-describe.skip("dragOver", () => {
-  it("finds the correct after element -> not end", () => {
-    var drag_elem = container.querySelector(".draggable");
-    expect(container).toMatchSnapshot();
-    var next_elem = container.querySelector(".draggable:nth-child(2)");
+describe("dragOver", () => {
+  var drag_elem, stub;
 
-    const stub = {
-      preventDefault: jest.fn(),
-      target: drag_elem,
-    };
+  beforeEach(() => {
+    document.body.innerHTML =
+      `<div class="group">` +
+      `  <div class="tabs-container">` +
+      `    <div class="draggable">a</div>` +
+      `    <div class="draggable">b</div>` +
+      `    <div class="draggable">c</div>` +
+      `  </div>` +
+      `</div>`;
+
+    drag_elem = document.querySelector(".draggable");
+    drag_elem.classList.add("dragging");
+
+    stub = { preventDefault: jest.fn(), clientY: window.innerHeight, target: drag_elem };
+
+    global.scrollTo = jest.fn();
+  });
+
+  it("finds the correct after element -> start/middle", () => {
+    jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
+      return document.querySelector(".draggable:nth-child(3)");
+    });
 
     GroupFunc.dragOver(stub);
 
-    expect(window.scrollTop).toHaveBeenCalled();
+    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
+    expect(tabs_text).toEqual(["b", "a", "c"]);
+
+    expect(global.scrollTo).toHaveBeenCalled();
+    expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
+  });
+
+  it("finds the correct after element -> end", () => {
+    jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
+      return document.querySelector(".draggable:nth-child(4)");
+    });
+
+    // to avoid scrolling
+    stub.clientY = 20;
+
+    GroupFunc.dragOver(stub);
+
+    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
+    expect(tabs_text).toEqual(["b", "c", "a"]);
+
+    expect(global.scrollTo).not.toHaveBeenCalled();
+  });
+
+  it("does nothing if after element = dragging element", () => {
+    jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
+      return document.querySelector(".draggable:nth-child(1)");
+    });
+
+    // scroll up
+    stub.clientY = 0;
+
+    GroupFunc.dragOver(stub);
+
+    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
+    expect(tabs_text).toEqual(["a", "b", "c"]);
+
+    expect(global.scrollTo).toHaveBeenCalled();
+    expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
   });
 });
 
@@ -158,16 +237,14 @@ describe("openGroup", () => {
     GroupFunc.openGroup(mock_target);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ remove: ["group", "aaa", "bbb"] }, expect.anything());
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ remove: ["group", "aaa", "bbb"] }, anything);
   });
 });
 
 describe("deleteGroup", () => {
-  var mock_target, any;
+  var mock_target;
 
   beforeEach(() => {
-    any = expect.anything();
-
     mock_target = (group_id) => {
       return {
         target: {
@@ -188,9 +265,7 @@ describe("deleteGroup", () => {
     localStorage.setItem("groups", JSON.stringify(groups));
     delete groups["group-9"];
 
-    chromeLocalGetSpy.mockClear();
-    chromeLocalSetSpy.mockClear();
-    chromeSyncGetSpy.mockClear();
+    jest.clearAllMocks();
 
     GroupFunc.deleteGroup(mock_target("group-9"), mockSet, mockSet);
 
@@ -199,9 +274,9 @@ describe("deleteGroup", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledTimes(2);
 
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", any);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", any);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, anything);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
     expect(mockSet).toHaveBeenNthCalledWith(2, 5);
   });
@@ -213,13 +288,11 @@ describe("deleteGroup", () => {
     groups = { "group-0": default_group };
     groups["group-0"].created = getTimestamp();
 
-    chromeLocalGetSpy.mockClear();
-    chromeLocalSetSpy.mockClear();
-    chromeSyncGetSpy.mockClear();
+    jest.clearAllMocks();
 
     GroupFunc.deleteGroup(mock_target("group-0"), mockSet, mockSet);
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, anything);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
     expect(mockSet).toHaveBeenNthCalledWith(2, 0);
   });
@@ -237,64 +310,35 @@ describe("deleteGroup", () => {
     groups = JSON.parse(JSON.stringify(groups).replace("group-2", "group-1"));
     groups = JSON.parse(JSON.stringify(groups).replace("group-3", "group-2"));
 
-    chromeLocalGetSpy.mockClear();
-    chromeLocalSetSpy.mockClear();
-    chromeSyncGetSpy.mockClear();
+    jest.clearAllMocks();
 
     GroupFunc.deleteGroup(mock_target("group-1"), mockSet, mockSet);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, any);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, anything);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
     expect(mockSet).toHaveBeenNthCalledWith(2, 5);
   });
 });
 
-// can't be tested properly?
-describe("toggleGroup", () => {
-  var mock_target, any;
+describe("sendMessage", () => {
+  var spy, id;
 
   beforeEach(() => {
-    any = expect.anything();
-
-    mock_target = {
-      target: {
-        closest: jest.fn(() => {
-          return {
-            nextSibling: {
-              querySelectorAll: jest.fn(() => {
-                return [
-                  {
-                    style: {
-                      display: "",
-                      removeProperty: jest.fn(() => "display"),
-                    },
-                  },
-                ];
-              }),
-            },
-          };
-        }),
-      },
-    };
+    spy = jest.spyOn(chrome.runtime, "sendMessage");
+    id = chrome.runtime.id;
   });
 
-  it("hides the group when it was showing and user pressed hide", () => {
-    var tabs = mock_target.target.closest().nextSibling.querySelectorAll();
-    mockSet.mockClear();
-    GroupFunc.toggleGroup(mock_target, false, mockSet);
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith(true);
-    expect(tabs.length).toBe(1);
+  it("sends a message to background script with correct parameters -> all", () => {
+    fireEvent.click(container.querySelector(".merge-btn"));
+    expect(spy).toHaveBeenCalledWith(id, { msg: "all", id: "group-0" });
   });
 
-  it("shows the group when it was hidden and user pressed show", () => {
-    var tabs = mock_target.target.closest().nextSibling.querySelectorAll();
-    // var spy = jest.spyOn(tabs[0].style, "removeProperty");
+  it("sends a message to background script with correct parameters -> left", () => {
+    fireEvent.click(container.querySelector(".merge-left-btn"));
+    expect(spy).toHaveBeenCalledWith(id, { msg: "left", id: "group-0" });
+  });
 
-    mockSet.mockClear();
-    GroupFunc.toggleGroup(mock_target, true, mockSet);
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith(false);
-    expect(tabs.length).toBe(1);
-    // expect(spy).toHaveBeenCalledWith("display");
+  it("sends a message to background script with correct parameters -> right", () => {
+    fireEvent.click(container.querySelector(".merge-right-btn"));
+    expect(spy).toHaveBeenCalledWith(id, { msg: "right", id: "group-0" });
   });
 });

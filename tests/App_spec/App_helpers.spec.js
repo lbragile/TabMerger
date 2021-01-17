@@ -33,10 +33,11 @@ import App from "../../src/components/App/App";
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
 var mockSet, container, new_item, current_key_order, current_val, response;
-var body, tabs, matcher, sync_node, sync_container;
+var tabs, matcher, sync_node, sync_container, anything;
 
 beforeEach(() => {
   mockSet = jest.fn(); // mock for setState hooks
+  anything = expect.anything();
 
   container = render(<App />).container;
   sync_node = container.querySelector("#sync-text span");
@@ -64,26 +65,34 @@ afterEach(() => {
 });
 
 describe("toggleDarkMode", () => {
+  var body, sidebar;
+
   beforeEach(() => {
     body = container.querySelector(".container-fluid").closest("body");
+    sidebar = container.querySelector("nav.sidebar");
   });
 
   test("light mode", () => {
     AppHelper.toggleDarkMode(false);
+
     expect(body.style.background).toEqual("white");
     expect(body.style.color).toEqual("black");
+    expect(sidebar.style.background).toEqual("rgb(120, 120, 120)");
   });
 
   test("dark mode", () => {
     AppHelper.toggleDarkMode(true);
+
     expect(body.style.background).toEqual("rgb(52, 58, 64)");
     expect(body.style.color).toEqual("white");
+    expect(sidebar.style.background).toEqual("rgb(27, 27, 27)");
   });
 });
 
 describe("toggleSyncTimestampHelper", () => {
   it("turns green and has right timestamp when sync is on", () => {
     AppHelper.toggleSyncTimestamp(true, sync_node);
+
     expect(sync_node.innerText).toBe(AppHelper.getTimestamp());
     expect(sync_container.classList).not.toContain("alert-danger");
     expect(sync_container.classList).toContain("alert-success");
@@ -91,6 +100,7 @@ describe("toggleSyncTimestampHelper", () => {
 
   it("turns red and has no timestamp when sync is off", () => {
     AppHelper.toggleSyncTimestamp(false, sync_node);
+
     expect(sync_node.innerText).toBe("--/--/---- @ --:--:--");
     expect(sync_container.classList).toContain("alert-danger");
     expect(sync_container.classList).not.toContain("alert-success");
@@ -99,25 +109,30 @@ describe("toggleSyncTimestampHelper", () => {
 
 describe("updateGroupItem", () => {
   it("updates the sync storage when an item changed", async () => {
+    jest.clearAllMocks();
     new_item.color = "#fff";
-
-    expect(sessionStorage.getItem("group-0")).toBeTruthy();
-    chromeSyncSetSpy.mockClear(); // settings is using set also
 
     await AppHelper.updateGroupItem("group-0", new_item);
 
     expect(JSON.parse(sessionStorage.getItem("group-0"))).toEqual(new_item);
-    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ "group-0": new_item }, expect.anything());
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("group-0", anything);
+
     expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ "group-0": new_item }, anything);
   });
 
   it("does not update sync storage for the same input item value", async () => {
-    expect(sessionStorage.getItem("group-0")).toBeTruthy();
-    chromeSyncSetSpy.mockClear(); // settings is using set also
+    jest.clearAllMocks();
 
     await AppHelper.updateGroupItem("group-0", new_item);
 
     expect(JSON.parse(sessionStorage.getItem("group-0"))).toEqual(new_item);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("group-0", anything);
+
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
   });
 });
@@ -138,16 +153,12 @@ describe("sortByKey", () => {
 
 describe("updateTabTotal", () => {
   it("calculates the number of tabs correctly when not empty", () => {
-    mockSet.mockClear();
     const result = AppHelper.updateTabTotal(init_groups);
-    expect(mockSet).not.toHaveBeenCalled();
     expect(result).toBe(7);
   });
 
   it("calculates the number of tabs correctly when empty", () => {
-    mockSet.mockClear();
     const result = AppHelper.updateTabTotal({});
-    expect(mockSet).not.toHaveBeenCalled();
     expect(result).toBe(0);
   });
 });

@@ -48,11 +48,8 @@ export function setGroupBackground(e, id) {
   });
 
   chrome.storage.local.get("groups", (local) => {
-    var current_groups = local.groups;
-    if (current_groups && current_groups[id]) {
-      current_groups[id].color = color;
-      chrome.storage.local.set({ groups: current_groups }, () => {});
-    }
+    local.groups[id].color = color;
+    chrome.storage.local.set({ groups: local.groups }, () => {});
   });
 }
 
@@ -78,6 +75,7 @@ export function setTitle(e, setGroups) {
  * Allows the user to use enter key to exit title editing mode.
  * @param {HTMLElement} e Node corresponding to the group whose title is being changed
  */
+/* istanbul ignore next */
 export function blurOnEnter(e) {
   if (e.keyCode === 13) {
     e.target.blur();
@@ -102,8 +100,11 @@ export const dragOver = (e) => {
     location.insertBefore(currentElement, afterElement);
   }
 
-  // allow scrolling while dragging
-  window.scrollTop += e.clientY - e.pageY;
+  // allow scrolling while dragging with a 10px offset from top/bottom
+  const offset = 10;
+  if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
+    window.scrollTo(0, e.clientY);
+  }
 };
 
 /**
@@ -181,14 +182,11 @@ export function deleteGroup(e, setTabTotal, setGroups) {
  * @param {boolean} hide Whether the group's tabs are visible or hidden
  * @param {Function} setHide For re-rendering the group's visible/hidden state
  */
+/* istanbul ignore next */
 export function toggleGroup(e, hide, setHide) {
   var tabs = e.target.closest(".group-title").nextSibling.querySelectorAll(".draggable");
   tabs.forEach((tab) => {
-    if (!hide) {
-      tab.style.display = "none";
-    } else {
-      tab.style.removeProperty("display");
-    }
+    tab.style.display = hide ? "" : "none";
   });
 
   setHide(!hide);

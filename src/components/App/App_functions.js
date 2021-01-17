@@ -329,9 +329,7 @@ export function addGroup(num_group_limit, setGroups) {
           setGroups(JSON.stringify(current_groups));
 
           setTimeout(() => {
-            // scroll to the bottom to see new group right away
-            var scrollingElement = document.scrollingElement || document.body;
-            scrollingElement.scrollTop = scrollingElement.scrollHeight;
+            window.scrollTo(0, document.body.scrollHeight);
           }, 50);
         });
       });
@@ -448,6 +446,7 @@ export function regexSearchForTab(e) {
  *
  * @note The timeout is added to allow operations like opening a tab
  */
+/* istanbul ignore next */
 export function resetSearch(e) {
   setTimeout(() => {
     e.target.value = "";
@@ -518,6 +517,7 @@ export function exportJSON() {
  *
  * @return A URL link to TabMerger's webstore (or reviews) page
  */
+/* istanbul ignore next */
 export function getTabMergerLink(reviews) {
   var link;
   var isOpera = navigator.userAgent.indexOf(" OPR/") >= 0;

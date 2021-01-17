@@ -5,11 +5,7 @@
     "exclude": ["node_modules", "src/Button", "coverage", "build", "tests"]
   },
   "recurseDepth": 5,
-  "opts": {
-    "destination": "./docs/",
-    "readme": "./README.md",
-    "recurse": true
-  },
+  "opts": { "destination": "./docs/", "readme": "./README.md", "recurse": true },
   "plugins": ["plugins/markdown"],
   "templates": {
     "default": {
