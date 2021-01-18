@@ -7,7 +7,7 @@ export default function LinkBtn({ text, url, icon, tooltip }) {
     <Button
       id={text.split(" ")[0].toLowerCase() + "-btn"}
       classes="p-0 mx-1 link-global btn-in-global"
-      translate={tooltip ? text : null}
+      translate={tooltip && text}
       tooltip={tooltip}
       key={Math.random()}
     >

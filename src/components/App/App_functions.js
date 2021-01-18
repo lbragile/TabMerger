@@ -141,7 +141,7 @@ export function syncRead(sync_node, setGroups, setTabTotal) {
 export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
   if (namespace === "local" && changes.remove && changes.remove.newValue) {
     // extract and remove the button type from array
-    var btn_type = changes.remove.newValue[0];
+    var group_id = changes.remove.newValue[0];
     changes.remove.newValue.splice(0, 1);
 
     // try to not open tabs if it is already open
@@ -161,10 +161,7 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
         chrome.storage.local.get("groups", (local) => {
           var group_blocks = local.groups;
           if (sync.settings.restore !== "keep") {
-            if (btn_type !== "all") {
-              var any_tab_url = changes.remove.newValue[0];
-              var elem = document.querySelector(`a[href='${any_tab_url}']`);
-              var group_id = elem.closest(".group").id;
+            if (group_id) {
               group_blocks[group_id].tabs = group_blocks[group_id].tabs.filter(
                 (x) => !changes.remove.newValue.includes(x.url)
               );
@@ -175,15 +172,13 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
             }
 
             chrome.storage.local.set({ groups: group_blocks }, () => {
-              // update global counter
-              setTabTotal(document.querySelectorAll(".draggable").length - changes.remove.newValue.length);
-
+              setTabTotal(AppHelper.updateTabTotal(group_blocks));
               setGroups(JSON.stringify(group_blocks));
             });
           }
 
           // allow reopening same tab
-          chrome.storage.local.remove(["remove"]);
+          chrome.storage.local.remove(["remove"], () => {});
         });
       });
     });
@@ -344,12 +339,12 @@ export function addGroup(num_group_limit, setGroups) {
 }
 
 /**
- * Sets Chrome's local storage with an array (["all", ... url_links ...]) consisting
+ * Sets Chrome's local storage with an array ([null, ... url_links ...]) consisting
  * of all the tabs in TabMerger to consider for removal.
  */
 export function openAllTabs() {
   var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
-  tab_links.unshift("all");
+  tab_links.unshift(null);
   chrome.storage.local.set({ remove: tab_links }, () => {});
 }
 

@@ -88,10 +88,10 @@ export function dragEnd(e, item_limit, setGroups) {
       }
 
       // reorder tabs based on current positions
-      groups[closest_group.id].tabs = [...closest_group.lastChild.querySelectorAll("div")].map((x) => ({
-        title: x.lastChild.textContent,
-        url: x.lastChild.href,
-      }));
+      groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
+        const anchor = x.querySelector("a");
+        return { title: anchor.textContent, url: anchor.href };
+      });
 
       // update the groups
       chrome.storage.local.set({ groups }, () => {
@@ -136,11 +136,11 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
 }
 
 /**
- * Sets Chrome's local storage with an array (["tab", url_link]) consisting
+ * Sets Chrome's local storage with an array (["group id", url_link]) consisting
  * of the tab to consider for removal after a user clicks to restore it.
- * @param {HTMLElement} e
+ * @param {HTMLElement} e Node representing the tab that was clicked
  */
 export function handleTabClick(e) {
   e.preventDefault();
-  chrome.storage.local.set({ remove: ["tab", e.target.href] }, () => {});
+  chrome.storage.local.set({ remove: [e.target.closest(".group").id, e.target.href] }, () => {});
 }

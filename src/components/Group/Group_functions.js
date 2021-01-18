@@ -108,14 +108,14 @@ export const dragOver = (e) => {
 };
 
 /**
- * Sets Chrome's local storage with an array (["group", ... url_links ...]) consisting
+ * Sets Chrome's local storage with an array (["group id", ... url_links ...]) consisting
  * of the group's tabs to consider for removal.
  * @param {HTMLElement} e Node corresponding to the group that contains the tabs to be opened
  */
 export function openGroup(e) {
   var target = e.target.closest(".group-title").nextSibling;
   var tab_links = [...target.querySelectorAll(".a-tab")].map((x) => x.href);
-  tab_links.unshift("group");
+  tab_links.unshift(target.id);
   chrome.storage.local.set({ remove: tab_links }, () => {});
 }
 

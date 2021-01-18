@@ -28,7 +28,7 @@ export default function Button(props) {
     <button id={props.id} className={props.classes + " btn"} onClick={props.onClick}>
       <div className="tip">
         {props.children}
-        {props.translate ? <span className={props.tooltip}>{props.translate}</span> : null}
+        {props.translate && <span className={props.tooltip}>{props.translate}</span>}
       </div>
     </button>
   );

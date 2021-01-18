@@ -27,7 +27,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
               >
                 {x.icon}
               </Button>
-              {i === 3 ? <div /> : null}
+              {i === 3 && <div />}
             </span>
           );
         } else {

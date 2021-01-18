@@ -217,7 +217,7 @@ describe("dragOver", () => {
 });
 
 describe("openGroup", () => {
-  it("forms an array that matches ['group', ..., tab_links, ...]", () => {
+  it("forms an array that matches ['group-id', ..., tab_links, ...]", () => {
     chromeLocalSetSpy.mockClear();
 
     var mock_target = {
@@ -228,6 +228,7 @@ describe("openGroup", () => {
               querySelectorAll: jest.fn(() => {
                 return [{ href: "aaa" }, { href: "bbb" }];
               }),
+              id: "group-0",
             },
           };
         }),
@@ -237,7 +238,7 @@ describe("openGroup", () => {
     GroupFunc.openGroup(mock_target);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ remove: ["group", "aaa", "bbb"] }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ remove: ["group-0", "aaa", "bbb"] }, anything);
   });
 });
 

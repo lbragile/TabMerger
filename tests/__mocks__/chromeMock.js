@@ -99,9 +99,24 @@ global.chrome = {
     },
   },
   tabs: {
-    create: function () {},
-    move: function () {},
-    query: function () {},
+    create: function (obj) {
+      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+      open_tabs.push(obj);
+      sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
+    },
+    move: function (id, _) {
+      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+
+      var tab_to_move = open_tabs.filter((x) => x.id === id);
+      var index = open_tabs.indexOf(tab_to_move[0]);
+      open_tabs.push(open_tabs.splice(index, 1)[0]); // move it to the end
+
+      sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
+    },
+    query: function (_, cb) {
+      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+      cb(open_tabs);
+    },
     remove: function () {},
     update: function () {},
     onUpdated: {
