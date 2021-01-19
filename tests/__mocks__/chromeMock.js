@@ -18,7 +18,7 @@ global.chrome = {
       if (msg === "Title") {
         return "титул";
       } else {
-        throw "Error, translation for input does not exist";
+        throw new Error("Translation for input does not exist");
       }
     },
   },
@@ -32,11 +32,21 @@ global.chrome = {
   },
   storage: {
     local: {
-      get: function (key, cb) {
+      get: function (keys, cb) {
         var item;
-        if (key) {
-          item = JSON.parse(localStorage.getItem(key));
-          cb({ [key]: item });
+        if (keys) {
+          var local = {};
+          // create array if not already
+          keys = Array.isArray(keys) ? keys : [keys];
+          keys.forEach((key) => {
+            // can be a simple string or a stringify
+            try {
+              local[key] = JSON.parse(localStorage.getItem(key));
+            } catch (err) {
+              local[key] = localStorage.getItem(key);
+            }
+          });
+          cb(local);
         } else {
           item = { ...localStorage };
           Object.keys(item).forEach((key) => {
@@ -117,7 +127,11 @@ global.chrome = {
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
       cb(open_tabs);
     },
-    remove: function () {},
+    remove: function (ids) {
+      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+      var remain_open_tabs = open_tabs.filter((x) => !ids.includes(x.id));
+      sessionStorage.setItem("open_tabs", JSON.stringify(remain_open_tabs));
+    },
     update: function () {},
     onUpdated: {
       addListener: function () {},

@@ -24,12 +24,13 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 window.React = React;
 
-import { render, waitFor, fireEvent } from "@testing-library/react";
+import { render, waitFor, fireEvent, act } from "@testing-library/react";
 
 import * as AppFunc from "../../src/components/App/App_functions";
 import * as AppHelper from "../../src/components/App/App_helpers";
 
 import App from "../../src/components/App/App";
+import { exportedVal } from "../__mocks__/jsonImportMock";
 
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
@@ -212,7 +213,6 @@ describe("syncRead", () => {
   });
 });
 
-// IN PROGRESS
 describe("openOrRemoveTabs", () => {
   var chromeTabsMove, chromeTabsCreate;
   var tab_single = "https://stackoverflow.com/";
@@ -471,19 +471,135 @@ describe("openOrRemoveTabs", () => {
   });
 });
 
-describe("openAllTabs", () => {
-  it("sets the local storage item correctly", () => {
-    // document.querySelectorAll must be stubbed or else it is not read
-    document.body.innerHTML = '<div><a class="a-tab" href="www.abc.com"></a></div>';
-    var expected_ls = { remove: [null, location.href + "www.abc.com"] };
+// note that duplicate removal is made in background script!
+describe("checkMerging", () => {
+  var chromeTabsRemove;
+  const SYNC_LIMIT = 102000;
+  const ITEM_LIMIT = 8000;
 
-    chromeLocalSetSpy.mockClear();
+  var merge_all = [
+    { url: location.href + "a", title: "merged tab a", id: 0 },
+    { url: location.href + "b", title: "merged tab b", id: 1 },
+    { url: location.href + "c", title: "merged tab c", id: 2 },
+  ];
+
+  beforeEach(() => {
+    global.alert = jest.fn();
+    chromeTabsRemove = jest.spyOn(chrome.tabs, "remove");
+    jest.clearAllMocks();
+  });
+
+  it("does nothing when namespace is not 'local'", () => {
+    AppFunc.checkMerging({}, "sync", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
+
+    expect(chromeLocalGetSpy).not.toHaveBeenCalled();
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    expect(chromeTabsRemove).not.toHaveBeenCalled();
+    expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
+  });
+
+  test("merge all and none exist in TabMerger - no exceeding limit", () => {
+    var stub = { merged_tabs: { newValue: merge_all } };
+    const into_group = "group-1";
+
+    var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    expected_groups[into_group].tabs = [
+      ...expected_groups[into_group].tabs,
+      ...merge_all.map((x) => ({ title: x.title, url: x.url })),
+    ];
+
     localStorage.setItem("groups", JSON.stringify(init_groups));
+    localStorage.setItem("into_group", into_group);
+    localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
+    sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
 
-    AppFunc.openAllTabs();
+    jest.clearAllMocks();
+
+    AppFunc.checkMerging(stub, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
+
+    expect(chromeTabsRemove).toHaveBeenCalledTimes(1);
+    expect(chromeTabsRemove).toHaveBeenCalledWith([0, 1, 2]);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups }, anything);
+
+    expect(mockSet).toHaveBeenCalledTimes(2);
+    expect(mockSet).toHaveBeenNthCalledWith(1, 10);
+    expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
+
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
+
+    expect(sessionStorage.getItem("open_tabs")).toBe("[]");
+  });
+
+  test("merge all and none exist in TabMerger - exceeding SYNC limit", () => {
+    var stub = { merged_tabs: { newValue: merge_all } };
+    const into_group = "group-1";
+
+    var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    expected_groups[into_group].tabs = [
+      ...expected_groups[into_group].tabs,
+      ...merge_all.map((x) => ({ title: x.title, url: x.url })),
+    ];
+
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+    localStorage.setItem("into_group", into_group);
+    localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
+    sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
+
+    jest.clearAllMocks();
+
+    AppFunc.checkMerging(stub, "local", 100, ITEM_LIMIT, mockSet, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
+
+    expect(chromeTabsRemove).not.toHaveBeenCalled();
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    expect(mockSet).not.toHaveBeenCalled();
+
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
+
+    expect(alert.mock.calls.pop()[0]).toContain("Total syncing capacity exceeded by");
+    expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
+  });
+
+  test("merge all and none exist in TabMerger - exceeding ITEM limit", () => {
+    var stub = { merged_tabs: { newValue: merge_all } };
+    const into_group = "group-1";
+
+    var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    expected_groups[into_group].tabs = [
+      ...expected_groups[into_group].tabs,
+      ...merge_all.map((x) => ({ title: x.title, url: x.url })),
+    ];
+
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+    localStorage.setItem("into_group", into_group);
+    localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
+    sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
+
+    jest.clearAllMocks();
+
+    AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
+
+    expect(chromeTabsRemove).not.toHaveBeenCalled();
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    expect(mockSet).not.toHaveBeenCalled();
+
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
+
+    expect(alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded by");
+    expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
   });
 });
 
@@ -510,6 +626,10 @@ describe("addGroup", () => {
   });
 
   it("adjusts the groups if limit is not exceeded", () => {
+    jest.useFakeTimers(); // do to setTimeout
+    global.scrollTo = jest.fn();
+    Object.defineProperty(document.body, "scrollHeight", { writable: true, configurable: true, value: 1000 });
+
     delete init_groups["group-11"];
     localStorage.setItem("groups", JSON.stringify(init_groups));
 
@@ -527,6 +647,25 @@ describe("addGroup", () => {
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(groups));
+
+    jest.advanceTimersByTime(51); // setTimeout is 50ms, must advance it to 51ms to see the call
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenCalledWith(0, document.body.scrollHeight);
+  });
+});
+
+describe("openAllTabs", () => {
+  it("sets the local storage item correctly", () => {
+    document.body.innerHTML = '<div><a class="a-tab" href="www.abc.com"></a></div>';
+    var expected_ls = { remove: [null, location.href + "www.abc.com"] };
+
+    chromeLocalSetSpy.mockClear();
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+
+    AppFunc.openAllTabs();
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, anything);
   });
 });
 
@@ -534,18 +673,10 @@ describe("deleteAllGroups", () => {
   it("adjusts local storage to a default group only", () => {
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
 
-    var new_entry = {
-      "group-0": {
-        color: "#dedede",
-        created: AppHelper.getTimestamp(),
-        tabs: [],
-        title: "Title",
-      },
-    };
+    var new_entry = { "group-0": default_group };
+    new_entry["group-0"].created = AppHelper.getTimestamp();
 
-    chromeSyncGetSpy.mockClear();
-    chromeLocalSetSpy.mockClear();
-    mockSet.mockClear();
+    jest.clearAllMocks();
 
     AppFunc.deleteAllGroups(mockSet, mockSet);
 
@@ -582,35 +713,65 @@ describe("regexSearchForTab", () => {
   it("does nothing when no value is supplied (after backspace)", () => {
     // need a change to happen
     fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "a" } });
-
     fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "" } });
   });
 });
 
 describe("importJSON", () => {
-  it("alerts on wrong non json inupt", () => {
+  it("alerts on wrong non json input", () => {
     global.alert = jest.fn();
+    const input = { target: { files: [{ type: "application/pdf" }] } };
+    jest.clearAllMocks();
 
-    const input = {
-      target: {
-        files: [{ type: "application/pdf" }],
-      },
-    };
+    AppFunc.importJSON(input, mockSet, mockSet);
 
-    fireEvent.change(container.querySelector("#import-input"), input);
+    expect(chromeSyncSetSpy).not.toHaveBeenCalled();
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    expect(mockSet).not.toHaveBeenCalled();
 
     expect(alert).toHaveBeenCalledTimes(1);
-
     expect(alert.mock.calls.pop()[0]).toContain("You must import a JSON file (.json extension)!");
   });
 
-  // it("updates sync and local storage on json input (valid)", () => {});
+  it("updates sync and local storage on valid input", () => {
+    const fakeFile = new File([JSON.stringify(exportedVal)], "file.json", { type: "application/json" });
+    const input = { target: { files: [fakeFile] } };
+
+    jest.spyOn(global, "FileReader").mockImplementation(function () {
+      this.readAsText = jest.fn(() => (this.result = JSON.stringify(exportedVal)));
+    });
+    jest.clearAllMocks();
+
+    AppFunc.importJSON(input, mockSet, mockSet);
+
+    expect(FileReader).toHaveBeenCalledTimes(1);
+    const reader = FileReader.mock.instances[0];
+    act(() => reader.onload());
+
+    expect(reader.readAsText).toHaveBeenCalledTimes(1);
+    expect(reader.readAsText).toHaveBeenCalledWith(fakeFile);
+    expect(reader.onload).toEqual(expect.any(Function));
+
+    expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: exportedVal.settings }, anything);
+
+    delete exportedVal.settings;
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: exportedVal }, anything);
+
+    expect(mockSet).toHaveBeenCalledTimes(2);
+    expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(exportedVal));
+    expect(mockSet).toHaveBeenNthCalledWith(2, 14);
+  });
 });
 
+// not sure how to check that the anchor attributes were set, it was clicked, and removed
 describe("exportJSON", () => {
   it("correctly exports a JSON file of the current configuration", () => {
-    chromeLocalGetSpy.mockClear();
-    chromeSyncGetSpy.mockClear();
+    var anchorSpy = jest.spyOn(document, "createElement");
+
+    jest.clearAllMocks();
 
     AppFunc.exportJSON();
 
@@ -619,6 +780,9 @@ describe("exportJSON", () => {
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+    expect(anchorSpy).toHaveBeenCalledTimes(1);
+    expect(anchorSpy).toHaveBeenCalledWith("a");
   });
 });
 

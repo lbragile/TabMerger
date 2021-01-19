@@ -14,5 +14,5 @@ module.exports = {
   testPathIgnorePatterns: ignore_arr,
   coveragePathIgnorePatterns: ignore_arr,
   verbose: true,
-  coverageThreshold: { global: { statements: 84, branches: 84, functions: 84, lines: 84 } },
+  coverageThreshold: { global: { statements: 95, branches: 95, functions: 95, lines: 95 } },
 };

@@ -139,7 +139,7 @@ export function syncRead(sync_node, setGroups, setTabTotal) {
  * @param {Function} setGroups For re-rendering the groups
  */
 export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
-  if (namespace === "local" && changes.remove && changes.remove.newValue) {
+  if (namespace === "local" && changes?.remove?.newValue?.length > 0) {
     // extract and remove the button type from array
     var group_id = changes.remove.newValue[0];
     changes.remove.newValue.splice(0, 1);
@@ -201,12 +201,7 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  * @see ITEM_STORAGE_LIMIT in App.js
  */
 export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
-  if (
-    namespace === "local" &&
-    changes.merged_tabs &&
-    changes.merged_tabs.newValue &&
-    changes.merged_tabs.newValue.length !== 0
-  ) {
+  if (namespace === "local" && changes?.merged_tabs?.newValue?.length > 0) {
     chrome.storage.local.get(["merged_tabs", "into_group", "groups"], (local) => {
       var into_group = local.into_group, merged_tabs = local.merged_tabs; // prettier-ignore
       var group_blocks = local.groups;
@@ -225,16 +220,11 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
           chrome.tabs.remove(merged_tabs.map((x) => x.id));
 
           var tabs_arr = [...this_group.tabs, ...merged_tabs];
-          tabs_arr = tabs_arr.map((x) => ({
-            title: x.title,
-            url: x.url,
-          }));
-
+          tabs_arr = tabs_arr.map((x) => ({ title: x.title, url: x.url }));
           group_blocks[into_group].tabs = tabs_arr;
 
           chrome.storage.local.set({ groups: group_blocks }, () => {
-            var current = document.querySelectorAll(".draggable");
-            setTabTotal(current.length + merged_tabs.length);
+            setTabTotal(AppHelper.updateTabTotal(group_blocks));
             setGroups(JSON.stringify(group_blocks));
           });
         } else {
@@ -256,7 +246,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
       }
 
       // remove to be able to detect changes again (even for same tabs)
-      chrome.storage.local.remove(["into_group", "merged_tabs"]);
+      chrome.storage.local.remove(["into_group", "merged_tabs"], () => {});
     });
   }
 }
@@ -272,6 +262,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
  * @return If "groups" is defined - array of group components which include the correct number of tab components inside each.
  * Else - null
  */
+/* istanbul ignore next */
 export function groupFormation(groups, item_limit) {
   if (groups) {
     var parsed_groups = JSON.parse(groups);
@@ -366,7 +357,7 @@ export function deleteAllGroups(setTabTotal, setGroups) {
       },
     };
     chrome.storage.local.set({ groups: new_entry }, () => {
-      setTabTotal(0);
+      setTabTotal(AppHelper.updateTabTotal(new_entry));
       setGroups(JSON.stringify(new_entry));
     });
   });

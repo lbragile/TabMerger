@@ -92,7 +92,7 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("Change Group Color", () => {
+describe("setGroupBackground", () => {
   it("opens color input on click", () => {
     var spy = jest.spyOn(GroupFunc, "setGroupBackground");
     fireEvent.click(container.querySelector(".input-color"));
@@ -100,11 +100,13 @@ describe("Change Group Color", () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it("calls setGroupBackground on change", () => {
+  it("opens colorpicker on change", () => {
     var spy = jest.spyOn(GroupFunc, "setGroupBackground");
     jest.clearAllMocks();
 
-    fireEvent.change(container.querySelector("input[type='color'"), {
+    init_groups["group-0"].color = "#000000";
+
+    fireEvent.change(container.querySelector("input[type='color']"), {
       target: { value: "#000" },
     });
 
@@ -113,7 +115,6 @@ describe("Change Group Color", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    init_groups["group-0"].color = "#000000";
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, anything);
   });
 });
