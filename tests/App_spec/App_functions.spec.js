@@ -626,7 +626,7 @@ describe("addGroup", () => {
   });
 
   it("adjusts the groups if limit is not exceeded", () => {
-    jest.useFakeTimers(); // do to setTimeout
+    jest.useFakeTimers(); // due to setTimeout
     global.scrollTo = jest.fn();
     Object.defineProperty(document.body, "scrollHeight", { writable: true, configurable: true, value: 1000 });
 
@@ -692,28 +692,60 @@ describe("deleteAllGroups", () => {
   });
 });
 
-// IN PROGRESS
 describe("regexSearchForTab", () => {
-  it("works for group search", () => {
+  beforeEach(() => {
     document.body.innerHTML =
-      '<div class="group-item"><input class="title-edit-input">aaaaa</input><p>aaaaa</p></div>' +
-      '<div class="group-item"><input class="title-edit-input">bbbbb</input><p>bbbbb</p></div>';
-
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#a" } });
+      `<div class="group-item">` +
+      `  <input class="title-edit-input" value="aaaaa"/>` +
+      `  <div class="draggable">` +
+      `    <a href="#" class="a-tab">aaaaa</a>` +
+      `  </div>` +
+      `</div>` +
+      `<div class="group-item">` +
+      `  <input class="title-edit-input" value="bbbbb"/>` +
+      `  <div class="draggable">` +
+      `    <a href="#" class="a-tab">bbbbb</a>` +
+      `  </div>` +
+      `</div>`;
   });
 
-  it("works for tab search", () => {
-    document.body.innerHTML =
-      '<div class="group-item"><input class="title-edit-input">aaaaa</input><div class="draggable"><p>a</p><a href="a">aaaaa</a></div></div>' +
-      '<div class="group-item"><input class="title-edit-input">bbbbb</input><div class="draggable"><p>b</p><a href="b">bbbbb</a></div></div>';
+  it("works for group search - NO match", () => {
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#c" } });
 
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "a" } });
+    [...document.body.querySelectorAll(".group-item")].forEach((group) => {
+      expect(group.style.display).toBe("none");
+    });
+  });
+
+  it("works for group search - match", () => {
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#a" } });
+
+    const group_displays = [...document.body.querySelectorAll(".group-item")].map((x) => x.style.display);
+    expect(group_displays).toStrictEqual(["", "none"]);
+  });
+
+  it("works for tab search - NO match", () => {
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "c" } });
+
+    [...document.body.querySelectorAll(".draggable")].forEach((tab) => {
+      expect(tab.style.display).toBe("none");
+    });
+  });
+
+  it("works for tab search - match", () => {
+    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "b" } });
+
+    const tab_displays = [...document.body.querySelectorAll(".draggable")].map((x) => x.style.display);
+    expect(tab_displays).toStrictEqual(["none", ""]);
   });
 
   it("does nothing when no value is supplied (after backspace)", () => {
-    // need a change to happen
     fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "a" } });
     fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "" } });
+
+    [...document.body.querySelectorAll(".group-item")].forEach((group) => {
+      expect(group.style.display).toBe("");
+    });
   });
 });
 
@@ -762,14 +794,30 @@ describe("importJSON", () => {
 
     expect(mockSet).toHaveBeenCalledTimes(2);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(exportedVal));
-    expect(mockSet).toHaveBeenNthCalledWith(2, 14);
+    expect(mockSet).toHaveBeenNthCalledWith(2, 12);
   });
 });
 
-// not sure how to check that the anchor attributes were set, it was clicked, and removed
 describe("exportJSON", () => {
   it("correctly exports a JSON file of the current configuration", () => {
-    var anchorSpy = jest.spyOn(document, "createElement");
+    function makeAnchor(target) {
+      return {
+        target,
+        setAttribute: jest.fn((key, value) => (target[key] = value)),
+        click: jest.fn(),
+        remove: jest.fn(),
+      };
+    }
+
+    var anchor = makeAnchor({ href: "#", download: "" });
+    var createElementMock = jest.spyOn(document, "createElement").mockReturnValue(anchor);
+    var setAttributeSpy = jest.spyOn(anchor, "setAttribute");
+    var clickSpy = jest.spyOn(anchor, "click");
+    var removeSpy = jest.spyOn(anchor, "remove");
+
+    var group_blocks = JSON.parse(localStorage.getItem("groups"));
+    group_blocks["settings"] = JSON.parse(sessionStorage.getItem("settings"));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
 
     jest.clearAllMocks();
 
@@ -781,8 +829,17 @@ describe("exportJSON", () => {
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
-    expect(anchorSpy).toHaveBeenCalledTimes(1);
-    expect(anchorSpy).toHaveBeenCalledWith("a");
+    expect(document.createElement).toHaveBeenCalledTimes(1);
+    expect(document.createElement).toHaveBeenCalledWith("a");
+
+    expect(setAttributeSpy).toHaveBeenCalledTimes(2);
+    expect(setAttributeSpy).toHaveBeenNthCalledWith(1, "href", dataStr);
+    expect(setAttributeSpy).toHaveBeenNthCalledWith(2, "download", AppHelper.outputFileName() + ".json");
+
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(removeSpy).toHaveBeenCalledTimes(1);
+
+    createElementMock.mockRestore();
   });
 });
 

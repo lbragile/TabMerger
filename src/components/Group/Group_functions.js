@@ -49,7 +49,7 @@ export function setGroupBackground(e, id) {
 
   chrome.storage.local.get("groups", (local) => {
     // this has to do with deleteAll reseting ID, so can ignore this as it works
-    // istanbul ignore next
+    // istanbul ignore else
     if (local.groups[id]) {
       local.groups[id].color = color;
     }

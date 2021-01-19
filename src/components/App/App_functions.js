@@ -376,44 +376,34 @@ export function deleteAllGroups(setTabTotal, setGroups) {
  * @param {HTMLElement} e Node corresponding to the search filter
  */
 export function regexSearchForTab(e) {
-  var sections, titles, match, tab_items, search_type, no_match, keep_sections = []; // prettier-ignore
-  sections = document.querySelectorAll(".group-item");
+  var titles, match, tab_items, no_match;
+  const sections = document.querySelectorAll(".group-item");
+  var keep_sections = [];
 
   if (e.target.value[0] === "#") {
+    // GROUP
     titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
     match = e.target.value.substr(1).toLowerCase();
-    search_type = "group";
-  } else if (e.target.value !== "") {
-    tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
-    titles = tab_items.map((x) => {
-      return x.map((y) => y.lastChild.textContent.toLowerCase());
-    });
 
-    match = e.target.value.toLowerCase();
-    search_type = "tab";
-  } else {
-    // no typing? show all groups and tabs
-    sections.forEach((x) => (x.style.display = ""));
-    [...document.querySelectorAll(".draggable")].forEach((x) => (x.style.display = ""));
-  }
-
-  if (search_type === "group") {
     titles.forEach((x, i) => {
       no_match = x.toLowerCase().indexOf(match) === -1;
       sections[i].style.display = no_match ? "none" : "";
     });
-  } else if (search_type === "tab") {
+  } else if (e.target.value !== "") {
+    // TAB
+    tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
+    titles = tab_items.map((x) => {
+      return x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase());
+    });
+
+    match = e.target.value.toLowerCase();
+
     titles.forEach((title, i) => {
       // individual tabs where a group has 1 tab matching
       title.forEach((x, j) => {
-        // maintain a list of groups to keep since
-        // they contain at least one match
+        // maintain a list of groups to keep since they contain at least one match
         no_match = x.indexOf(match) === -1;
-
-        if (!no_match) {
-          keep_sections.push(i);
-        }
-
+        if (!no_match) keep_sections.push(i);
         tab_items[i][j].style.display = no_match ? "none" : "";
       });
     });
@@ -422,6 +412,10 @@ export function regexSearchForTab(e) {
     sections.forEach((x, i) => {
       x.style.display = !keep_sections.includes(i) ? "none" : "";
     });
+  } else {
+    // NO TYPING - show all groups and tabs
+    sections.forEach((x) => (x.style.display = ""));
+    [...document.querySelectorAll(".draggable")].forEach((x) => (x.style.display = ""));
   }
 }
 

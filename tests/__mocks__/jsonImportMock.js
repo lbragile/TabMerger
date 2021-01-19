@@ -82,17 +82,8 @@ export var exportedVal = {
         url: "https://www.youtube.com/",
       },
       {
-        title: "reactjs - Testing useContext() with the react-testing-library - Stack Overflow",
-        url: "https://stackoverflow.com/questions/56828017/testing-usecontext-with-the-react-testing-library",
-      },
-      {
         title: "API | Testing Library",
         url: "https://testing-library.com/docs/react-testing-library/api/#cleanup",
-      },
-      {
-        title: "Code coverage report for App/App_functions.js",
-        url:
-          "file:///C:/Users/Lior%20Bragilevsky/Desktop/websites/TabMerger/coverage/lcov-report/App/App_functions.js.html",
       },
     ],
     title: "Other",
