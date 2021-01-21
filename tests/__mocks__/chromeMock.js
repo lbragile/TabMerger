@@ -4,12 +4,14 @@ global.chrome = {
       addListener: function () {},
     },
   },
+  commands: {
+    onCommand: {
+      addListener: function () {},
+    },
+  },
   contextMenus: {
     create: function () {},
     onClicked: {
-      addListener: function () {},
-    },
-    onCommand: {
       addListener: function () {},
     },
   },

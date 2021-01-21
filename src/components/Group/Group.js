@@ -27,10 +27,10 @@ import * as GroupFunc from "./Group_functions";
 import { translate } from "../App/App_functions";
 import { AppContext } from "../../context/AppContext";
 
-import { BiColorFill } from "react-icons/bi";
+import MergeBtns from "../Button/MergeBtns";
+import GroupTitleBtns from "../Button/GroupTitleBtns";
 
-import Button from "../Button/Button.js";
-import { GROUP_TITLE_BUTTONS, MERGE_BUTTONS } from "../Button/button_details";
+import { BiColorFill } from "react-icons/bi";
 
 import "./Group.css";
 import "../Button/Button.css";
@@ -76,21 +76,7 @@ export default function Group(props) {
           defaultValue={props.title}
         />
 
-        <div className="title-btn-containter row">
-          {GROUP_TITLE_BUTTONS(hide, setHide, setTabTotal, setGroups).map((x) => {
-            return (
-              <Button
-                classes={x.classes}
-                translate={x.translate}
-                tooltip={"tiptext-group-title"}
-                onClick={x.clickFn}
-                key={Math.random()}
-              >
-                {x.icon}
-              </Button>
-            );
-          })}
-        </div>
+        <GroupTitleBtns hide={hide} setHide={setHide} setTabTotal={setTabTotal} setGroups={setGroups} />
       </div>
 
       <div id={props.id} className="group" onDragOver={GroupFunc.dragOver}>
@@ -98,23 +84,7 @@ export default function Group(props) {
           <b>{translate("created")}:</b> <span>{props.created}</span>
         </div>
 
-        <div className="merging-container float-right">
-          <div className="d-flex flex-column">
-            {MERGE_BUTTONS(props.id).map((x) => {
-              return (
-                <Button
-                  classes={x.classes}
-                  translate={x.translate}
-                  tooltip={"tiptext-group-merge"}
-                  onClick={x.clickFn}
-                  key={Math.random()}
-                >
-                  {x.icon}
-                </Button>
-              );
-            })}
-          </div>
-        </div>
+        <MergeBtns id={props.id} />
 
         {props.children}
       </div>
