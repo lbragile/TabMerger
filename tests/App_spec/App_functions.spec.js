@@ -259,7 +259,7 @@ describe("openOrRemoveTabs", () => {
       expect(chromeTabsMove).not.toHaveBeenCalled();
 
       expect(chromeTabsCreate).toHaveBeenCalledTimes(1);
-      expect(chromeTabsCreate).toHaveBeenCalledWith({ url: tab_single, active: false });
+      expect(chromeTabsCreate).toHaveBeenCalledWith({ url: tab_single, active: false }, anything);
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
@@ -286,7 +286,7 @@ describe("openOrRemoveTabs", () => {
 
       expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_group.length);
       tab_group.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false });
+        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false }, anything);
       });
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -314,7 +314,7 @@ describe("openOrRemoveTabs", () => {
 
       expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_all.length);
       tab_all.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false });
+        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false }, anything);
       });
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -346,7 +346,7 @@ describe("openOrRemoveTabs", () => {
       expect(chromeTabsMove).not.toHaveBeenCalled();
 
       expect(chromeTabsCreate).toHaveBeenCalledTimes(1);
-      expect(chromeTabsCreate).toHaveBeenCalledWith({ url: tab_single, active: false });
+      expect(chromeTabsCreate).toHaveBeenCalledWith({ url: tab_single, active: false }, anything);
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
@@ -382,7 +382,7 @@ describe("openOrRemoveTabs", () => {
 
       expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_group.length);
       tab_group.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false });
+        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false }, anything);
       });
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -422,7 +422,7 @@ describe("openOrRemoveTabs", () => {
 
       expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_all.length);
       tab_all.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false });
+        expect(chromeTabsCreate).toHaveBeenCalledWith({ url, active: false }, anything);
       });
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);

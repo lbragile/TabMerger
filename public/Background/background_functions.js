@@ -30,13 +30,15 @@ import { filterTabs, findExtTabAndSwitch, excludeSite } from "./background_helpe
 var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
 
 /**
- * extension click from toolbar - open TabMerger with or without merging tabs (according to settings)
+ * Extension click from toolbar - open TabMerger with or without merging tabs (according to settings).
+ * Will always navigate to TabMerger's extension page first.
  */
 export function handleBrowserIconClick() {
-  chrome.storage.sync.get("settings", async (result) => {
-    result.settings === undefined || result.settings.open === "without"
-      ? await findExtTabAndSwitch()
-      : await filterTabs(info, tab);
+  chrome.storage.sync.get("settings", async (sync) => {
+    await findExtTabAndSwitch();
+    if (sync.settings.open === "with") {
+      await filterTabs(info, tab);
+    }
   });
 }
 
@@ -46,12 +48,17 @@ export function handleBrowserIconClick() {
  * @param {{msg: string, id: string}} request Contains information regarding
  * which way to merge and the calling tab's id
  */
-export function extensionMessage(request) {
-  info.which = request.msg;
+export async function extensionMessage(request) {
   var queryOpts = { currentWindow: true, active: true };
-  chrome.tabs.query(queryOpts, async (tabs) => {
-    await filterTabs(info, tabs[0], request.id);
+  info.which = request.msg;
+
+  var tab = await new Promise((resolve) => {
+    chrome.tabs.query(queryOpts, (tabs) => {
+      resolve(tabs[0]);
+    });
   });
+
+  await filterTabs(info, tab, request.id);
 }
 
 /**

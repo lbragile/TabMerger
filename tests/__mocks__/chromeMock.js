@@ -111,10 +111,12 @@ global.chrome = {
     },
   },
   tabs: {
-    create: function (obj) {
+    create: function (obj, cb) {
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
       open_tabs.push(obj);
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
+
+      cb();
     },
     move: function (id, _) {
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
@@ -125,8 +127,11 @@ global.chrome = {
 
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
     },
-    query: function (_, cb) {
-      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+    query: function (opts, cb) {
+      var open_tabs =
+        opts.active || opts.title === "TabMerger"
+          ? [{ title: "TabMerger", url: "https://github.com/lbragile/TabMerger" }]
+          : JSON.parse(sessionStorage.getItem("open_tabs"));
       cb(open_tabs);
     },
     remove: function (ids) {
@@ -136,8 +141,12 @@ global.chrome = {
     },
     update: function () {},
     onUpdated: {
-      addListener: function () {},
-      removeListener: function () {},
+      addListener: function (cb) {
+        cb();
+      },
+      removeListener: function (cb) {
+        cb();
+      },
     },
   },
 };

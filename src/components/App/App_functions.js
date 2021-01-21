@@ -152,7 +152,7 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
         if (same_tab[0]) {
           chrome.tabs.move(same_tab[0].id, { index: -1 });
         } else {
-          chrome.tabs.create({ url: tab_url, active: false });
+          chrome.tabs.create({ url: tab_url, active: false }, () => {});
         }
       }
 

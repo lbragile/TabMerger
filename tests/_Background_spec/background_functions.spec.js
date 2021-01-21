@@ -45,10 +45,19 @@ beforeEach(() => {
 });
 
 describe("handleBrowserIconClick", () => {
-  it("calls findExtTabAndSwitch => without", () => {
-    var chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-    var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockImplementation(() => {});
+  var findExtTabAndSwitchSpy, filterTabsSpy;
 
+  beforeAll(() => {
+    findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValue(0);
+    filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockResolvedValue(0);
+  });
+
+  afterAll(() => {
+    findExtTabAndSwitchSpy.mockRestore();
+    filterTabsSpy.mockRestore();
+  });
+
+  it("calls findExtTabAndSwitch and not filterTabs", () => {
     sessionStorage.setItem("settings", JSON.stringify({ open: "without" }));
     jest.clearAllMocks();
 
@@ -60,56 +69,37 @@ describe("handleBrowserIconClick", () => {
     expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
     expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
 
-    findExtTabAndSwitchSpy.mockRestore();
+    expect(filterTabsSpy).not.toHaveBeenCalled();
   });
 
-  // needs work
-  it.skip("calls findExtTabAndSwitch => undefined", () => {
-    var chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-    var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockImplementation(() => {});
-
-    sessionStorage.setItem("settings", undefined);
-    jest.clearAllMocks();
-
-    BackgroundFunc.handleBrowserIconClick();
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", expect.anything());
-
-    expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-    expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
-
-    findExtTabAndSwitchSpy.mockRestore();
-  });
-
-  it("calls filterTabs", () => {
-    var chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-    var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementation(() => {});
-
+  it("calls filterTabs", async () => {
     sessionStorage.setItem("settings", JSON.stringify({ open: "with" }));
     jest.clearAllMocks();
 
     BackgroundFunc.handleBrowserIconClick();
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", expect.anything());
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
     expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-    expect(findExtTabAndSwitchSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0 });
+    expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(anything);
 
-    findExtTabAndSwitchSpy.mockRestore();
+    await waitFor(() => {
+      expect(filterTabsSpy).toHaveBeenCalledTimes(1);
+      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0 });
+    });
+
+    expect.assertions(7);
   });
 });
 
-// NEEDS WORK
 describe("extensionMessage", () => {
   it("queries current tabs and filters them as needed", async () => {
     const request = { msg: "TabMerger is awesome!", id: 100 };
     const tab = { title: "TabMerger", url: "https://github.com/lbragile/TabMerger" };
 
-    // cannot really mock this and expect to see filterTabs be called. Need to implement in chrome mock.
-    var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query").mockResolvedValue([tab]);
-    var filterTabs = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementation(() => {});
+    var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
+    var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockResolvedValue(0);
     jest.clearAllMocks();
 
     BackgroundFunc.extensionMessage(request);
@@ -117,15 +107,13 @@ describe("extensionMessage", () => {
     expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
     expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ currentWindow: true, active: true }, expect.any(Function));
 
-    // await waitFor(() => {
-    //   expect(filterTabs).toHaveBeenCalledTimes(1);
-    //   expect(filterTabs).toHaveBeenCalledWith({ which: request.msg }, chromeTabsQuerySpy(), request.id);
-    // });
+    await waitFor(() => {
+      expect(filterTabsSpy).toHaveBeenCalledTimes(1);
+      expect(filterTabsSpy).toHaveBeenCalledWith({ which: request.msg }, tab, request.id);
+    });
 
-    // expect.assertions(4);
-
-    chromeTabsQuerySpy.mockRestore();
-    filterTabs.mockRestore();
+    expect.assertions(5);
+    filterTabsSpy.mockRestore();
   });
 });
 

@@ -36,9 +36,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @param {string?} group_id the group to merge into (if merge button from one of TabMerger's groups is used)
  */
 export async function filterTabs(info, tab, group_id) {
-  // navigate to TabMerger before proceeding
-  await findExtTabAndSwitch();
-
   chrome.tabs.query({ currentWindow: true }, (tabs) => {
     // filter based on user's merge button click
     tabs = tabs.filter((x) => x.title !== "TabMerger");
@@ -94,7 +91,7 @@ export async function filterTabs(info, tab, group_id) {
           // apply above filter
           tabs = tabs.filter((x) => !filter_vals.includes(x.title) && !filter_vals.includes(x.url));
 
-          // make sure original merge has no duplicated values obtain offending indicies
+          // make sure original merge has no duplicated values and obtain offending indicies
           var prev_urls = [], indicies = []; // prettier-ignore
           tabs.forEach((x, i) => (prev_urls.includes(x.url) ? indicies.push(i) : prev_urls.push(x.url)));
 
