@@ -24,8 +24,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 window.React = React;
 
-import * as BackgroundFunc from "../../src/Background/background_functions.js";
-import * as BackgroundHelper from "../../src/Background/background_helpers.js";
+import * as BackgroundFunc from "../../public/background/background_functions.js";
+import * as BackgroundHelper from "../../public/background/background_helpers.js";
 
 import { waitFor } from "@testing-library/react";
 

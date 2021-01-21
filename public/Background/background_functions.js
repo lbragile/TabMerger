@@ -22,9 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
- * @module Background/Background_functions
- * @note This is duplicated in `../public/background.js` since `import` is not allowed outside of modules.
- * Thus, this file serves its purpose for testing only.
+ * @module __Script/Background_functions
  */
 
 import { filterTabs, findExtTabAndSwitch, excludeSite } from "./background_helpers.js";
@@ -34,13 +32,13 @@ var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
 /**
  * extension click from toolbar - open TabMerger with or without merging tabs (according to settings)
  */
-export const handleBrowserIconClick = () => {
+export function handleBrowserIconClick() {
   chrome.storage.sync.get("settings", async (result) => {
     result.settings === undefined || result.settings.open === "without"
       ? await findExtTabAndSwitch()
       : await filterTabs(info, tab);
   });
-};
+}
 
 /**
  * Fired when an extension merge button is clicked.
@@ -48,13 +46,13 @@ export const handleBrowserIconClick = () => {
  * @param {{msg: string, id: string}} request Contains information regarding
  * which way to merge and the calling tab's id
  */
-export const extensionMessage = (request) => {
+export function extensionMessage(request) {
   info.which = request.msg;
   var queryOpts = { currentWindow: true, active: true };
   chrome.tabs.query(queryOpts, async (tabs) => {
     await filterTabs(info, tabs[0], request.id);
   });
-};
+}
 
 /**
  * Helper function for creating a contextMenu (right click) item.
@@ -74,7 +72,7 @@ export function createContextMenu(id, title, type) {
  * @param {{url: string, title: string, id: string?}} tab The tab for which the event occured.
  * Used when determining which tabs to merge
  */
-export const contextMenuOrShortCut = async (info, tab) => {
+export async function contextMenuOrShortCut(info, tab) {
   // need to alter the info object if it comes from a keyboard shortcut event
   if (typeof info === "string") {
     info = { which: "all", command: info };
@@ -117,4 +115,24 @@ export const contextMenuOrShortCut = async (info, tab) => {
       await filterTabs(info, tab);
       break;
   }
-};
+}
+
+/**
+ * Checks if a translation for a specific key is available and returns the translation.
+ * @param {string} msg The key specified in the "_locales" folder corresponding to a translation from English
+ *
+ * @see ```./public/_locales/``` For key/value translation pairs
+ *
+ * @return {string} If key exists - translation from English to the corresponding language (based on user's Chrome Language settings),
+ * Else - the original message
+ *
+ */
+// was tested in App component but need here to avoid import outside module
+/* istanbul ignore next */
+export function translate(msg) {
+  try {
+    return chrome.i18n.getMessage(msg);
+  } catch (err) {
+    return msg;
+  }
+}

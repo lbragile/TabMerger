@@ -24,7 +24,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 window.React = React;
 
-import * as BackgroundHelper from "../../src/Background/background_helpers.js";
+import * as BackgroundHelper from "../../public/background/background_helpers.js";
 
 var mockSet, anything;
 var chromeSyncGetSpy, chromeSyncSetSpy;

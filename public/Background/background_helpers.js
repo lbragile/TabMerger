@@ -22,99 +22,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
- * @module __Script/Background
+ * @module __Script/Background_helpers
+
  */
 
-var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
-
-/**
- * extension click from toolbar - open TabMerger with or without merging tabs (according to settings)
- */
-const handleBrowserIconClick = () => {
-  chrome.storage.sync.get("settings", async (result) => {
-    result.settings === undefined || result.settings.open === "without"
-      ? await findExtTabAndSwitch()
-      : await filterTabs(info, tab);
-  });
-};
-
-/**
- * Fired when an extension merge button is clicked.
- * Filters the tabs in the current window to prepare for the merging process.
- * @param {{msg: string, id: string}} request Contains information regarding
- * which way to merge and the calling tab's id
- */
-const extensionMessage = (request) => {
-  info.which = request.msg;
-  var queryOpts = { currentWindow: true, active: true };
-  chrome.tabs.query(queryOpts, async (tabs) => {
-    await filterTabs(info, tabs[0], request.id);
-  });
-};
-
-/**
- * Helper function for creating a contextMenu (right click) item.
- * @param {string} id unique value for locating each contextMenu item added
- * @param {string} title the contextMenu's item title
- * @param {string} type "separator" or "normal" (default)
- */
-function createContextMenu(id, title, type) {
-  chrome.contextMenus.create({ id, title, type });
-}
-
-/**
- * Handles contextMenu item clicks or keyboard shortcut events for both merging actions and
- * other actions like excluding from visibility, opening TabMerger, visiting help site, etc.
- * @param {{which: string, command: string?, menuItemId: string?}} info Indicates merging direction,
- * keyboard command, and/or the contextMenu item that was clicked
- * @param {{url: string, title: string, id: string?}} tab The tab for which the event occured.
- * Used when determining which tabs to merge
- */
-const contextMenuOrShortCut = async (info, tab) => {
-  // need to alter the info object if it comes from a keyboard shortcut event
-  if (typeof info === "string") {
-    info = { which: "all", command: info };
-  }
-
-  switch (info.menuItemId || info.command) {
-    case "aopen-tabmerger":
-      await findExtTabAndSwitch();
-      break;
-    case "merge-left-menu":
-      info.which = "left";
-      await filterTabs(info, tab);
-      break;
-    case "merge-right-menu":
-      info.which = "right";
-      await filterTabs(info, tab);
-      break;
-    case "merge-xcluding-menu":
-      info.which = "excluding";
-      await filterTabs(info, tab);
-      break;
-    case "merge-snly-menu":
-      info.which = "only";
-      await filterTabs(info, tab);
-      break;
-    case "remove-visibility":
-      excludeSite(tab);
-      break;
-    case "zdl-instructions":
-      var dest_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
-      chrome.tabs.create({ active: true, url: dest_url });
-      break;
-    case "dl-contact":
-      var dest_url = "https://lbragile.github.io/TabMerger-Extension/contact";
-      chrome.tabs.create({ active: true, url: dest_url });
-      break;
-
-    default:
-      info.which = "all";
-      await filterTabs(info, tab);
-      break;
-  }
-};
-/************************************** HELPERS **********************************************/
 /**
  * Filters a list of tabs according to the merging information provided in the parameters.
  * Sets the local storage item corresponding to the group to merge into and the tabs to merge.
@@ -124,7 +35,7 @@ const contextMenuOrShortCut = async (info, tab) => {
  * @param {{title: string, url: string, id: string?}} tab indicates where the merging call originated from
  * @param {string?} group_id the group to merge into (if merge button from one of TabMerger's groups is used)
  */
-async function filterTabs(info, tab, group_id) {
+export async function filterTabs(info, tab, group_id) {
   // navigate to TabMerger before proceeding
   await findExtTabAndSwitch();
 
@@ -208,7 +119,7 @@ async function filterTabs(info, tab, group_id) {
  *
  * @return A promise which should be awaited. Resolve value is insignificant
  */
-function findExtTabAndSwitch() {
+export function findExtTabAndSwitch() {
   var query = { title: "TabMerger", currentWindow: true };
   var exists = { highlighted: true, active: true };
   var not_exist = { url: "index.html", active: true };
@@ -234,61 +145,9 @@ function findExtTabAndSwitch() {
  * This means that it will be ignored even when other tabs are merged in.
  * @param {object} tab The tab which should be excluded from TabMerger's merging visibility
  */
-function excludeSite(tab) {
+export function excludeSite(tab) {
   chrome.storage.sync.get("settings", (result) => {
     result.settings.blacklist += result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
     chrome.storage.sync.set({ settings: result.settings }, () => {});
   });
 }
-
-/********************************* EXTRA (FROM APP) ******************************************/
-/**
- * Checks if a translation for a specific key is available and returns the translation.
- * @param {string} msg The key specified in the "_locales" folder corresponding to a translation from English
- *
- * @see ```./public/_locales/``` For key/value translation pairs
- *
- * @return {string} If key exists - translation from English to the corresponding language (based on user's Chrome Language settings),
- * Else - the original message
- *
- */
-function translate(msg) {
-  try {
-    return chrome.i18n.getMessage(msg);
-  } catch (err) {
-    return msg;
-  }
-}
-
-/*************************************** MAIN ************************************************/
-// ask the user to take a survey to figure out why they removed TabMerger
-chrome.runtime.setUninstallURL("https://lbragile.github.io/TabMerger-Extension/survey");
-
-// when the user clicks the TabMerger icons in the browser's toolbar
-chrome.browserAction.onClicked.addListener(handleBrowserIconClick);
-
-// contextMenu creation
-createContextMenu("aopen-tabmerger", translate("bgOpen"));
-//--------------------------//
-createContextMenu("first-separator", "separator", "separator");
-createContextMenu("merge-all-menu", translate("bgAll"));
-createContextMenu("merge-left-menu", translate("bgLeft"));
-createContextMenu("merge-right-menu", translate("bgRight"));
-createContextMenu("merge-xcluding-menu", translate("bgExclude"));
-createContextMenu("merge-snly-menu", translate("bgOnly"));
-//--------------------------//
-createContextMenu("second-separator", "separator", "separator");
-createContextMenu("remove-visibility", translate("bgSiteExclude"));
-//--------------------------//
-createContextMenu("third-separator", "separator", "separator");
-createContextMenu("zdl-instructions", translate("bgInstructions"));
-createContextMenu("dl-contact", translate("bgContact"));
-
-// merge button clicks
-chrome.runtime.onMessage.addListener(extensionMessage);
-
-// context menu actions
-chrome.contextMenus.onClicked.addListener(contextMenuOrShortCut);
-
-// shortcut keyboard
-chrome.commands.onCommand.addListener(contextMenuOrShortCut);
