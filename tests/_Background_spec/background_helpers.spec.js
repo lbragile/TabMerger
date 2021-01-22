@@ -47,19 +47,20 @@ beforeEach(() => {
 // NEEDS WORK
 describe("filterTabs", () => {
   const merge_tabs = [
-    { id: 0, url: "https://abc.com/", title: "ABC" },
-    { id: 1, url: "https://def.com/", title: "DEF" },
-    { id: 2, url: "https://lichess.org/", title: "lichess.org" },
-    { id: 3, url: "https://www.chess.com/", title: "Chess.com" },
-    { id: 4, url: "https://www.twitch.tv/", title: "Twitch" },
-    { id: 5, url: "https://www.ghi.com/", title: "GHI" },
-    { id: 6, url: "https://www.jkl.com/", title: "JKL" },
-    { id: 7, url: "https://www.jkl.com/", title: "JKL" }, // duplicate on purpose
+    { id: 0, index: 0, url: "https://www.abc.com/", title: "ABC" },
+    { id: 1, index: 1, url: "https://www.def.com/", title: "DEF" },
+    { id: 2, index: 2, url: "https://lichess.org/", title: "lichess.org" },
+    { id: 3, index: 3, url: "https://www.chess.com/", title: "Chess.com" },
+    { id: 4, index: 4, url: "https://www.twitch.tv/", title: "Twitch" },
+    { id: 5, index: 5, url: "https://www.ghi.com/", title: "GHI" },
+    { id: 6, index: 6, url: "https://www.jkl.com/", title: "JKL" },
+    { id: 7, index: 7, url: "https://www.jkl.com/", title: "JKL" }, // duplicate on purpose
   ];
 
+  localStorage.setItem("groups", JSON.stringify(init_groups));
+  sessionStorage.setItem("open_tabs", JSON.stringify(merge_tabs));
+
   beforeEach(() => {
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    sessionStorage.setItem("open_tabs", JSON.stringify(merge_tabs));
     jest.clearAllMocks();
   });
 
@@ -70,15 +71,38 @@ describe("filterTabs", () => {
     [{ which: "left" }, { index: 3 }, undefined],
     [{ which: "left" }, { index: 0 }, undefined],
     [{ which: "left" }, { index: 7 }, undefined],
-    [{ which: "excluding" }, { index: 3 }, "group-1"],
-    [{ which: "only" }, { index: 3 }, "group-2"],
+    [{ which: "excluding" }, { index: 1 }, "group-1"],
+    [{ which: "only" }, { index: 6 }, "group-2"],
     [{ which: "all" }, { index: 0 }, "group-3"],
   ])("%o, %o, %s", async (info, tab, group_id) => {
-    var num_merge_count = info.which === "only" ? 1 : merge_tabs.length - (tab.index + 1);
-    var tabs_to_be_merged = merge_tabs.splice(tab.index, num_merge_count);
+    var tabs_to_be_merged;
+    if (info.which === "right") {
+      if (tab.index === 3) {
+        tabs_to_be_merged = merge_tabs.slice(5, 7);
+      } else if (tab.index === 0) {
+        tabs_to_be_merged = [...merge_tabs.slice(1, 2), ...merge_tabs.slice(5, 7)];
+      } else {
+        tabs_to_be_merged = [];
+      }
+    } else if (info.which === "left") {
+      if (tab.index === 3) {
+        tabs_to_be_merged = merge_tabs.slice(0, 2);
+      } else if (tab.index === 0) {
+        tabs_to_be_merged = [];
+      } else {
+        tabs_to_be_merged = [...merge_tabs.slice(0, 2), ...merge_tabs.slice(5, 7)];
+      }
+    } else if (info.which === "excluding") {
+      tabs_to_be_merged = [...merge_tabs.slice(0, 1), ...merge_tabs.slice(5, 7)];
+    } else if (info.which === "only") {
+      tabs_to_be_merged = [merge_tabs[tab.index]];
+    } else {
+      tabs_to_be_merged = [...merge_tabs.slice(0, 2), ...merge_tabs.slice(5, 7)];
+    }
+
     var into_group = group_id ? group_id : "group-0";
 
-    jest.useFakeTimers(); // due to setTimeout
+    jest.useFakeTimers();
     BackgroundHelper.filterTabs(info, tab, group_id);
     jest.advanceTimersByTime(101);
 
@@ -92,12 +116,17 @@ describe("filterTabs", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ into_group, merged_tabs: tabs_to_be_merged }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith(
+      { into_group, merged_tabs: tabs_to_be_merged.map((x) => ({ id: x.id, title: x.title, url: x.url })) },
+      anything
+    );
   });
 });
 
 describe("findExtTabAndSwitch", () => {
   var chromeTabsUpdateSpy, chromeTabsCreateSpy, chromeTabsOnUpdatedAdd, chromeTabsOnUpdatedRemove;
+  const expected_query = { title: "TabMerger", currentWindow: true };
+  const id = 99;
 
   beforeAll(() => {
     chromeTabsUpdateSpy = jest.spyOn(chrome.tabs, "update");
@@ -111,30 +140,53 @@ describe("findExtTabAndSwitch", () => {
   });
 
   it("TabMerger page is already open", () => {
-    var expected_query = { title: "TabMerger", currentWindow: true };
-    var expected_exists = { highlighted: true, active: true };
-    var expected_not_exist = { url: "index.html", active: true };
+    const expected_exists = { highlighted: true, active: true };
 
     BackgroundHelper.findExtTabAndSwitch();
 
     expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
     expect(chromeTabsQuerySpy).toHaveBeenCalledWith(expected_query, anything);
+
+    expect(chromeTabsUpdateSpy).toHaveBeenCalledTimes(1);
+    expect(chromeTabsUpdateSpy).toHaveBeenCalledWith(id, expected_exists, anything);
   });
 
-  it("TabMerger page is NOT already open", () => {
-    var expected_query = { title: "TEMP", currentWindow: true };
-    var expected_exists = { highlighted: true, active: true };
-    var expected_not_exist = { url: "index.html", active: true };
+  describe("TabMerger page is NOT already open", () => {
+    const expected_not_exist = { url: "index.html", active: true };
 
-    chromeTabsQuerySpy.mockImplementation((_, cb) => cb([]));
+    beforeAll(() => {
+      chromeTabsQuerySpy.mockImplementation((_, cb) => cb([]));
+      chromeTabsCreateSpy.mockImplementation((_, cb) => cb({ id }));
+    });
 
-    jest.clearAllMocks();
-    BackgroundHelper.findExtTabAndSwitch();
+    afterAll(() => {
+      chromeTabsQuerySpy.mockRestore();
+      chromeTabsCreateSpy.mockRestore();
+      chromeTabsOnUpdatedAdd.mockRestore();
+    });
 
-    expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
-    expect(chromeTabsQuerySpy).toHaveBeenCalledWith(expected_query, anything);
+    test.each([["complete"], ["incomplete"]])("%s", (type) => {
+      chromeTabsOnUpdatedAdd.mockImplementation((cb) => cb(id, { status: type }));
+      jest.clearAllMocks();
 
-    chromeTabsQuerySpy.mockRestore();
+      BackgroundHelper.findExtTabAndSwitch();
+
+      expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
+      expect(chromeTabsQuerySpy).toHaveBeenCalledWith(expected_query, anything);
+
+      expect(chromeTabsCreateSpy).toHaveBeenCalledTimes(1);
+      expect(chromeTabsCreateSpy).toHaveBeenCalledWith(expected_not_exist, anything);
+
+      expect(chromeTabsOnUpdatedAdd).toHaveBeenCalledTimes(1);
+      expect(chromeTabsOnUpdatedAdd).toHaveBeenCalledWith(expect.any(Function));
+
+      if (type === "complete") {
+        expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledTimes(1);
+        expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledWith(expect.any(Function));
+      } else {
+        expect(chromeTabsOnUpdatedRemove).not.toHaveBeenCalled();
+      }
+    });
   });
 });
 

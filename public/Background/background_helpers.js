@@ -127,8 +127,8 @@ export function findExtTabAndSwitch() {
         : chrome.tabs.create(not_exist, (newTab) => {
             function listener(tabId, changeInfo) {
               if (changeInfo.status === "complete" && tabId === newTab.id) {
-                chrome.tabs.onUpdated.removeListener(listener);
                 resolve(0);
+                chrome.tabs.onUpdated.removeListener(listener);
               }
             }
             chrome.tabs.onUpdated.addListener(listener);

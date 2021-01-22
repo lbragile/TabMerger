@@ -96,7 +96,7 @@ describe("handleBrowserIconClick", () => {
 describe("extensionMessage", () => {
   it("queries current tabs and filters them as needed", async () => {
     const request = { msg: "TabMerger is awesome!", id: 100 };
-    const tab = { title: "TabMerger", url: "https://github.com/lbragile/TabMerger" };
+    const tab = { title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 };
 
     var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
     var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockResolvedValue(0);
@@ -163,15 +163,23 @@ describe("contextMenuOrShortCut", () => {
     ["zdl-instructions", ""],
     ["dl-contact", ""],
     ["merge-all-menu", "all"],
-  ])("%s", (menuItemId, which) => {
+  ])("%s", async (menuItemId, which) => {
     BackgroundFunc.contextMenuOrShortCut({ menuItemId }, tab);
 
     if (menuItemId === "aopen-tabmerger") {
-      expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-      expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
+      await waitFor(() => {
+        expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
+        expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
+      });
+      expect.hasAssertions();
     } else if (menuItemId.includes("merge")) {
-      expect(filterTabsSpy).toHaveBeenCalledTimes(1);
-      expect(filterTabsSpy).toHaveBeenCalledWith({ which, menuItemId }, tab);
+      await waitFor(() => {
+        expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
+        expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
+        expect(filterTabsSpy).toHaveBeenCalledTimes(1);
+        expect(filterTabsSpy).toHaveBeenCalledWith({ which, menuItemId }, tab);
+      });
+      expect.hasAssertions();
     } else if (menuItemId === "remove-visibility") {
       expect(excludeSiteSpy).toHaveBeenCalledTimes(1);
       expect(excludeSiteSpy).toHaveBeenCalledWith(tab);
@@ -188,11 +196,15 @@ describe("contextMenuOrShortCut", () => {
     expect.hasAssertions();
   });
 
-  test("typeof info === string", () => {
+  test("typeof info === string", async () => {
     const info = "merge-left-menu";
     BackgroundFunc.contextMenuOrShortCut(info, tab);
 
-    expect(filterTabsSpy).toHaveBeenCalledTimes(1);
-    expect(filterTabsSpy).toHaveBeenCalledWith({ which: "left", command: info }, tab);
+    await waitFor(() => {
+      expect(filterTabsSpy).toHaveBeenCalledTimes(1);
+      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "left", command: info }, tab);
+    });
+
+    expect.hasAssertions();
   });
 });

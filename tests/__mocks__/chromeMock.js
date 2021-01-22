@@ -130,16 +130,19 @@ global.chrome = {
     query: function (opts, cb) {
       var open_tabs =
         opts.active || opts.title === "TabMerger"
-          ? [{ title: "TabMerger", url: "https://github.com/lbragile/TabMerger" }]
+          ? [{ title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 }]
           : JSON.parse(sessionStorage.getItem("open_tabs"));
       cb(open_tabs);
     },
     remove: function (ids) {
+      ids = Array.isArray(ids) ? ids : [ids];
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
       var remain_open_tabs = open_tabs.filter((x) => !ids.includes(x.id));
       sessionStorage.setItem("open_tabs", JSON.stringify(remain_open_tabs));
     },
-    update: function () {},
+    update: function (_, __, cb) {
+      cb();
+    },
     onUpdated: {
       addListener: function (cb) {
         cb();
