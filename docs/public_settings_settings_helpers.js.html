@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/components/Tab/Tab_helpers.js</title>
+    <title>JSDoc: Source: public/settings/settings_helpers.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/components/Tab/Tab_helpers.js</h1>
+    <h1 class="page-title">Source: public/settings/settings_helpers.js</h1>
 
     
 
@@ -26,7 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* 
+            <pre class="prettyprint source linenums"><code>/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -50,22 +50,46 @@ TabMerger team at &lt;https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
- * @module Tab/Tab_helpers
+ * @module __Script/Settings_helpers
  */
 
 /**
- * Used to retrieve FavIconURL from a given domain
- * @param {string} url Full URL of the tab for which the FavIconURL is required
- * @return {string} The tab's FavIconURL in the form of a google API call.
- *
- * @note Only the domain of a given URL is used, not the full URL.
+ * On different browsers, this generates the corresponding link to the browser's webstore
+ * where TabMerger can be downloaded.
  */
-export function getFavIconURL(url) {
-  // domain will be null if no match is found
-  var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
-  var domain = matches &amp;&amp; matches[1];
+export function setTabMergerLink() {
+  var link;
+  var isOpera = navigator.userAgent.indexOf(" OPR/") >= 0;
+  var isFirefox = typeof InstallTrigger !== "undefined";
+  var isIE = /*@cc_on!@*/ false || !!document.documentMode;
+  var isEdge = !isIE &amp;&amp; !!window.StyleMedia;
+  var isChrome = !!window.chrome &amp;&amp; !!window.chrome.runtime;
+  var isEdgeChromium = isChrome &amp;&amp; navigator.userAgent.indexOf("Edg") !== -1;
 
-  return "http://www.google.com/s2/favicons?domain=" + domain;
+  if (isIE || isEdge || isEdgeChromium) {
+    link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
+  } else if (isFirefox) {
+    link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
+  } else if (isChrome || isOpera) {
+    link = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
+  }
+
+  document.getElementById("logo-img").parentNode.href = link;
+}
+
+/**
+ * Sets the settings item in sync storage according to the current configuration in TabMerger
+ */
+export function setSync() {
+  var color = document.getElementById("options-default-color").value;
+  var title = document.getElementById("options-default-title").value;
+  var restore = document.querySelector("input[name='restore-tabs']:checked").value;
+  var open = document.querySelector("input[name='ext-open']:checked").value;
+  var blacklist = document.getElementById("options-blacklist").value;
+  var dark = document.getElementById("darkMode").checked;
+
+  var store_val = { open, color, title, restore, blacklist, dark };
+  chrome.storage.sync.set({ settings: store_val });
 }
 </code></pre>
         </article>

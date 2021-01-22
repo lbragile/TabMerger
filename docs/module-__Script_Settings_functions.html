@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: Tab/Tab_helpers</title>
+    <title>JSDoc: Module: __Script/Settings_functions</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: Tab/Tab_helpers</h1>
+    <h1 class="page-title">Module: __Script/Settings_functions</h1>
 
     
 
@@ -64,7 +64,7 @@
     
 
     
-    <h4 class="name" id=".getFavIconURL"><span class="type-signature">(static) </span>getFavIconURL<span class="signature">(url)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id=".resetOptions"><span class="type-signature">(static) </span>resetOptions<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -72,8 +72,182 @@
 
 
 <div class="description">
-    <p>Used to retrieve FavIconURL from a given domain</p>
+    <p>If you want to quickly reset all the default options, this does it for you.</p>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_settings_settings_functions.js.html">public/settings/settings_functions.js</a>, <a href="public_settings_settings_functions.js.html#line91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".restoreOptions"><span class="type-signature">(static) </span>restoreOptions<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Once a user changes the settings, they are saved in sync storage and reloaded
+each time the page refreshes using this function. This prevents the settings from
+every changing back to default without user input.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_settings_settings_functions.js.html">public/settings/settings_functions.js</a>, <a href="public_settings_settings_functions.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".saveOptions"><span class="type-signature">(static) </span>saveOptions<span class="signature">(e)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
 
 
 
@@ -108,13 +282,13 @@
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>e</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -124,7 +298,7 @@
 
             
 
-            <td class="description last"><p>Full URL of the tab for which the FavIconURL is required</p></td>
+            <td class="description last"><p>Node representing the &quot;Save&quot; button at the bottom of the settings page</p></td>
         </tr>
 
     
@@ -165,7 +339,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_helpers.js.html">src/components/Tab/Tab_helpers.js</a>, <a href="src_components_Tab_Tab_helpers.js.html#line35">line 35</a>
+        <a href="public_settings_settings_functions.js.html">public/settings/settings_functions.js</a>, <a href="public_settings_settings_functions.js.html#line74">line 74</a>
     </li></ul></dd>
     
 
@@ -190,28 +364,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>The tab's FavIconURL in the form of a google API call.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 

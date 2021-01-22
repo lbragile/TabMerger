@@ -91,18 +91,22 @@ export async function contextMenuOrShortCut(info, tab) {
       break;
     case "merge-left-menu":
       info.which = "left";
+      await findExtTabAndSwitch();
       await filterTabs(info, tab);
       break;
     case "merge-right-menu":
       info.which = "right";
+      await findExtTabAndSwitch();
       await filterTabs(info, tab);
       break;
     case "merge-xcluding-menu":
       info.which = "excluding";
+      await findExtTabAndSwitch();
       await filterTabs(info, tab);
       break;
     case "merge-snly-menu":
       info.which = "only";
+      await findExtTabAndSwitch();
       await filterTabs(info, tab);
       break;
     case "remove-visibility":
@@ -119,6 +123,7 @@ export async function contextMenuOrShortCut(info, tab) {
 
     default:
       info.which = "all";
+      await findExtTabAndSwitch();
       await filterTabs(info, tab);
       break;
   }

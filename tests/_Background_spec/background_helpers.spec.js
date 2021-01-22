@@ -44,7 +44,6 @@ beforeEach(() => {
   sessionStorage.setItem("settings", JSON.stringify(default_settings));
 });
 
-// NEEDS WORK
 describe("filterTabs", () => {
   const merge_tabs = [
     { id: 0, index: 0, url: "https://www.abc.com/", title: "ABC" },

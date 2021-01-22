@@ -30,7 +30,8 @@
     "test-tab": "npm run test -- ./tests/Tab_spec/",
     "test-group": "npm run test -- ./tests/Group_spec/",
     "test-app": "npm run test -- ./tests/App_spec/",
-    "test-background": "npm run test -- ./tests/_Background_spec/"
+    "test-background": "npm run test -- ./tests/_Background_spec/",
+    "test-settings": "npm run test -- ./tests/_Settings_spec/"
   },
   "babel": {
     "presets": [

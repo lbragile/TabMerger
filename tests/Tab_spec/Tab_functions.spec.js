@@ -83,14 +83,14 @@ describe("setInitTabs", () => {
     });
   });
 
-  // this now happens with css so the title does not physically get shortened in TabMerger (just visually)
-  describe.skip("Title Shortening", () => {
-    it("shortens the title if above the limit and adds ...", () => {
-      var received_text = container.querySelector("a").textContent;
-      expect(received_text.length).toEqual(73);
-      expect(received_text).toContain("aaa...");
-    });
-  });
+  // // this now happens with css so the title does not physically get shortened in TabMerger (just visually)
+  // describe.skip("Title Shortening", () => {
+  //   it("shortens the title if above the limit and adds ...", () => {
+  //     var received_text = container.querySelector("a").textContent;
+  //     expect(received_text.length).toEqual(73);
+  //     expect(received_text).toContain("aaa...");
+  //   });
+  // });
 });
 
 describe("dragStart", () => {
