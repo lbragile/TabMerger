@@ -48,7 +48,7 @@ export default function App() {
   const defaultSettings = useRef({ blacklist: "", color: "#dedede", dark: true, open: "without", restore: "keep", title: "Title" }); // prettier-ignore
 
   const [tabTotal, setTabTotal] = useState(0);
-  const [groups, setGroups] = useState();
+  const [groups, setGroups] = useState(null);
 
   const toggleSyncTimestamp = useCallback(
     (positive) => {
@@ -78,6 +78,14 @@ export default function App() {
       chrome.storage.onChanged.removeListener(checkMerging);
     };
   }, []);
+
+  useEffect(async () => {
+    chrome.storage.local.get("scroll", (local) => {
+      setTimeout(() => {
+        document.documentElement.scrollTop = local.scroll || 0;
+      }, 50);
+    });
+  }, [groups]);
 
   return (
     <div id="app-wrapper" className="text-center">

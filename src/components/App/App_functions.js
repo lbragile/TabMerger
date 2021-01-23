@@ -60,7 +60,7 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
       var ls_entry = local.groups || { "group-0": default_group };
 
       chrome.storage.local.remove(["groups"], () => {
-        chrome.storage.local.set({ groups: ls_entry }, () => {
+        chrome.storage.local.set({ groups: ls_entry, scroll: document.documentElement.scrollTop }, () => {
           setGroups(JSON.stringify(ls_entry));
           setTabTotal(AppHelper.updateTabTotal(ls_entry));
         });
@@ -117,7 +117,7 @@ export function syncRead(sync_node, setGroups, setTabTotal) {
           remove_keys.push(key);
         });
 
-        chrome.storage.local.set({ groups: new_ls }, () => {
+        chrome.storage.local.set({ groups: new_ls, scroll: document.documentElement.scrollTop }, () => {
           chrome.storage.sync.remove(remove_keys, () => {
             AppHelper.toggleSyncTimestamp(false, sync_node);
             setGroups(JSON.stringify(new_ls));
@@ -171,7 +171,7 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
               });
             }
 
-            chrome.storage.local.set({ groups: group_blocks }, () => {
+            chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
               setTabTotal(AppHelper.updateTabTotal(group_blocks));
               setGroups(JSON.stringify(group_blocks));
             });
@@ -223,7 +223,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
           tabs_arr = tabs_arr.map((x) => ({ title: x.title, url: x.url }));
           group_blocks[into_group].tabs = tabs_arr;
 
-          chrome.storage.local.set({ groups: group_blocks }, () => {
+          chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
             setTabTotal(AppHelper.updateTabTotal(group_blocks));
             setGroups(JSON.stringify(group_blocks));
           });
@@ -311,12 +311,8 @@ export function addGroup(num_group_limit, setGroups) {
           tabs: [],
           title: sync.settings.title,
         };
-        chrome.storage.local.set({ groups: current_groups }, () => {
+        chrome.storage.local.set({ groups: current_groups, scroll: document.body.scrollHeight }, () => {
           setGroups(JSON.stringify(current_groups));
-
-          setTimeout(() => {
-            window.scrollTo(0, document.body.scrollHeight);
-          }, 50);
         });
       });
     } else {
@@ -356,7 +352,7 @@ export function deleteAllGroups(setTabTotal, setGroups) {
         title: sync.settings.title,
       },
     };
-    chrome.storage.local.set({ groups: new_entry }, () => {
+    chrome.storage.local.set({ groups: new_entry, scroll: document.documentElement.scrollTop }, () => {
       setTabTotal(AppHelper.updateTabTotal(new_entry));
       setGroups(JSON.stringify(new_entry));
     });
@@ -452,7 +448,7 @@ export function importJSON(e, setGroups, setTabTotal) {
 
       chrome.storage.sync.set({ settings: fileContent.settings }, () => {
         delete fileContent.settings;
-        chrome.storage.local.set({ groups: fileContent }, () => {
+        chrome.storage.local.set({ groups: fileContent, scroll: document.documentElement.scrollTop }, () => {
           // reset the file input so it can trigger again
           e.target.value = "";
 

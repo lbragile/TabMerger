@@ -94,7 +94,7 @@ export function dragEnd(e, item_limit, setGroups) {
       });
 
       // update the groups
-      chrome.storage.local.set({ groups }, () => {
+      chrome.storage.local.set({ groups, scroll: document.documentElement.scrollTop }, () => {
         setGroups(JSON.stringify(groups));
       });
     } else {
@@ -127,7 +127,7 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
   chrome.storage.local.get("groups", (local) => {
     var group_blocks = local.groups;
     group_blocks[group_id].tabs = tabs.filter((x) => x.url !== url);
-    chrome.storage.local.set({ groups: group_blocks }, () => {
+    chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
       setTabs(group_blocks[group_id].tabs);
       setTabTotal(document.querySelectorAll(".draggable").length);
       setGroups(JSON.stringify(group_blocks));

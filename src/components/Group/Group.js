@@ -36,7 +36,7 @@ import "./Group.css";
 import "../Button/Button.css";
 
 export default function Group(props) {
-  const TITLE_TRIM_LIMIT = useRef(30);
+  const TITLE_TRIM_LIMIT = useRef(50);
   const [hide, setHide] = useState(false);
 
   const { setTabTotal, setGroups } = useContext(AppContext);

@@ -87,7 +87,7 @@ describe("storageInit", () => {
     expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group } }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, scroll: 0 }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(2);
   });
@@ -109,7 +109,7 @@ describe("storageInit", () => {
     AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, scroll: 0 }, anything);
     expect(mockSet).toHaveBeenCalledTimes(2);
   });
 });
@@ -208,7 +208,7 @@ describe("syncRead", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_ss_item }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_ss_item, scroll: 0 }, anything);
     expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], anything);
   });
 });
@@ -355,7 +355,7 @@ describe("openOrRemoveTabs", () => {
       expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
       expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups }, anything);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
 
       expect(mockSet).toHaveBeenCalledTimes(2);
       expect(mockSet).toHaveBeenNthCalledWith(1, 6);
@@ -392,7 +392,7 @@ describe("openOrRemoveTabs", () => {
       expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
       expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups }, anything);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
 
       expect(mockSet).toHaveBeenCalledTimes(2);
       expect(mockSet).toHaveBeenNthCalledWith(1, 4);
@@ -432,7 +432,7 @@ describe("openOrRemoveTabs", () => {
       expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
       expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups }, anything);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
 
       expect(mockSet).toHaveBeenCalledTimes(2);
       expect(mockSet).toHaveBeenNthCalledWith(1, 0);
@@ -524,7 +524,7 @@ describe("checkMerging", () => {
     expect(chromeTabsRemove).toHaveBeenCalledWith([0, 1, 2]);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(2);
     expect(mockSet).toHaveBeenNthCalledWith(1, 10);
@@ -605,9 +605,7 @@ describe("checkMerging", () => {
 
 describe("addGroup", () => {
   beforeEach(() => {
-    chromeLocalGetSpy.mockClear();
-    chromeLocalSetSpy.mockClear();
-    chromeSyncGetSpy.mockClear();
+    jest.clearAllMocks();
   });
 
   it("warns if group limit exceeded", () => {
@@ -626,8 +624,6 @@ describe("addGroup", () => {
   });
 
   it("adjusts the groups if limit is not exceeded", () => {
-    jest.useFakeTimers(); // due to setTimeout
-    global.scrollTo = jest.fn();
     Object.defineProperty(document.body, "scrollHeight", { writable: true, configurable: true, value: 1000 });
 
     delete init_groups["group-11"];
@@ -643,14 +639,10 @@ describe("addGroup", () => {
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups, scroll: document.body.scrollHeight }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(groups));
-
-    jest.advanceTimersByTime(51); // setTimeout is 50ms, must advance it to 51ms to see the call
-    expect(scrollTo).toHaveBeenCalledTimes(1);
-    expect(scrollTo).toHaveBeenCalledWith(0, document.body.scrollHeight);
   });
 });
 
@@ -684,7 +676,7 @@ describe("deleteAllGroups", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledTimes(2);
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, scroll: 0 }, anything);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
     expect(mockSet).toHaveBeenCalledWith(0);
@@ -790,7 +782,7 @@ describe("importJSON", () => {
     delete exportedVal.settings;
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: exportedVal }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: exportedVal, scroll: 0 }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(2);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(exportedVal));

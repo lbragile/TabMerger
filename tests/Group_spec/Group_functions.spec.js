@@ -141,7 +141,7 @@ describe("setTitle", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, scroll: 0 }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(init_groups));
@@ -278,7 +278,7 @@ describe("deleteGroup", () => {
 
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups, scroll: 0 }, anything);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
     expect(mockSet).toHaveBeenNthCalledWith(2, 5);
   });
@@ -294,7 +294,7 @@ describe("deleteGroup", () => {
 
     GroupFunc.deleteGroup(mock_target("group-0"), mockSet, mockSet);
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups, scroll: 0 }, anything);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
     expect(mockSet).toHaveBeenNthCalledWith(2, 0);
   });
@@ -315,7 +315,7 @@ describe("deleteGroup", () => {
     jest.clearAllMocks();
 
     GroupFunc.deleteGroup(mock_target("group-1"), mockSet, mockSet);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups, scroll: 0 }, anything);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(groups));
     expect(mockSet).toHaveBeenNthCalledWith(2, 5);
   });

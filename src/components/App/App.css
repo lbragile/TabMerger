@@ -31,10 +31,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 .container-fluid {
   position: relative;
   left: calc(var(--sidebar-width) + 5%);

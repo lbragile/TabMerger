@@ -69,7 +69,7 @@ export function setTitle(e, setGroups) {
 
     current_groups[group_id].title = e.target.value;
 
-    chrome.storage.local.set({ groups: current_groups }, () => {
+    chrome.storage.local.set({ groups: current_groups, scroll: document.documentElement.scrollTop }, () => {
       setGroups(JSON.stringify(current_groups));
     });
   });
@@ -170,7 +170,7 @@ export function deleteGroup(e, setTabTotal, setGroups) {
         }
       }
 
-      chrome.storage.local.set({ groups: group_blocks }, () => {
+      chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
         setGroups(JSON.stringify(group_blocks));
         setTabTotal(updateTabTotal(group_blocks));
       });

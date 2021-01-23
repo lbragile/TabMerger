@@ -178,7 +178,7 @@ describe("dragEnd", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: orig_groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: orig_groups, scroll: 0 }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(orig_groups));
@@ -224,7 +224,7 @@ describe("dragEnd", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: orig_groups }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: orig_groups, scroll: 0 }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(orig_groups));
