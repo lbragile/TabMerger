@@ -36,7 +36,7 @@ import "./Group.css";
 import "../Button/Button.css";
 
 export default function Group(props) {
-  const TITLE_TRIM_LIMIT = useRef(15);
+  const TITLE_TRIM_LIMIT = useRef(30);
   const [hide, setHide] = useState(false);
 
   const { setTabTotal, setGroups } = useContext(AppContext);
@@ -57,9 +57,7 @@ export default function Group(props) {
     <div className={"group-item " + (props.id === "group-0" ? "mt-0" : "mt-2")}>
       <div className="group-title d-flex flex-row justify-content-center">
         <div className="title-count-color-container row">
-          <h5 className="group-count">
-            <span style={{ left: props.num_tabs > 9 ? "-1px" : "0" }}>{props.num_tabs}</span>
-          </h5>
+          <h5 className="group-count">{props.num_tabs}</h5>
           <div className="group-color tip p-0">
             <BiColorFill className="input-color" onClick={(e) => e.target.closest("div").nextSibling.click()} />
             <span className="tiptext-group-color">{translate("pickColor")}</span>

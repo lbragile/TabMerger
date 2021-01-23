@@ -51,24 +51,15 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /* GROUP TAB COUNTER */
 .group-count {
-  margin: 3px 10px 0 0;
-  padding: 2px 3px;
+  margin: 4px 10px 0 0;
+  padding: 0 3px 2px 0;
 
   min-width: 26px;
   height: 26px;
   text-align: center;
 
-  border: 2px solid black;
-  border-radius: 50%;
-
   font-weight: bold;
   color: black;
-}
-
-.group-count span {
-  position: relative;
-  top: -4px;
-  left: -1px;
 }
 
 /* TIMESTAMP */
@@ -97,11 +88,12 @@ input[type="color"] {
 
 /* GROUP TITLE */
 .title-edit-input {
-  max-width: 190px;
+  width: 70%;
   text-align: center;
   padding: 0;
   background: none;
   border: none;
+  text-overflow: ellipsis;
 }
 
 .title-edit-input:focus {
@@ -117,12 +109,20 @@ input[type="color"] {
 }
 
 @media only screen and (max-width: 1200px) {
+  .title-edit-input {
+    width: 65%;
+  }
+
   .group-title {
     width: 50%;
   }
 }
 
 @media only screen and (max-width: 991px) {
+  .title-edit-input {
+    width: 60%;
+  }
+
   .group-title {
     width: 55%;
   }

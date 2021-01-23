@@ -73,9 +73,9 @@ export async function filterTabs(info, tab, group_id) {
 
           // apply blacklist items
           tabs = tabs.filter((x) => {
-            var bl_sites = sync.settings.blacklist.replace(/\\s/g, "").split(",");
+            var bl_sites = sync.settings.blacklist.split(", ").filter((x) => x !== "");
             bl_sites = bl_sites.map((site) => site.toLowerCase());
-            return !bl_sites.includes(x.url);
+            return !bl_sites.includes(x.url.toLowerCase());
           });
 
           // remove unnecessary information from each tab
@@ -144,7 +144,7 @@ export function findExtTabAndSwitch() {
  */
 export function excludeSite(tab) {
   chrome.storage.sync.get("settings", (result) => {
-    result.settings.blacklist += result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
+    result.settings.blacklist += `${tab.url}, `;
     chrome.storage.sync.set({ settings: result.settings }, () => {});
   });
 }

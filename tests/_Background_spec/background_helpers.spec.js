@@ -40,10 +40,6 @@ beforeAll(() => {
   chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
 });
 
-beforeEach(() => {
-  sessionStorage.setItem("settings", JSON.stringify(default_settings));
-});
-
 describe("filterTabs", () => {
   const merge_tabs = [
     { id: 0, index: 0, url: "https://www.abc.com/", title: "ABC" },
@@ -54,10 +50,15 @@ describe("filterTabs", () => {
     { id: 5, index: 5, url: "https://www.ghi.com/", title: "GHI" },
     { id: 6, index: 6, url: "https://www.jkl.com/", title: "JKL" },
     { id: 7, index: 7, url: "https://www.jkl.com/", title: "JKL" }, // duplicate on purpose
+    { id: 8, index: 8, url: "https://www.blacklisted.com/", title: "blacklisted" },
   ];
 
   localStorage.setItem("groups", JSON.stringify(init_groups));
   sessionStorage.setItem("open_tabs", JSON.stringify(merge_tabs));
+
+  default_settings.blacklist = "https://www.blacklisted.com/, ";
+  sessionStorage.setItem("settings", JSON.stringify(default_settings));
+  default_settings.blacklist = "";
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -190,32 +191,16 @@ describe("findExtTabAndSwitch", () => {
 });
 
 describe("excludeSite", () => {
-  it("adjusts sync storage correctly - empty", () => {
-    const url = "www.google.com";
+  const original_url = "www.facebook.com";
+  const url = "www.google.com";
 
+  it.each([["empty"], ["NOT empty"]])("adjusts sync storage correctly - %s", (type) => {
+    default_settings.blacklist = type === "empty" ? "" : original_url + ", ";
+    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+    default_settings.blacklist = "";
     var expected_settings = JSON.parse(sessionStorage.getItem("settings"));
-    expected_settings.blacklist = url;
-    jest.clearAllMocks();
+    expected_settings.blacklist += url + ", ";
 
-    BackgroundHelper.excludeSite({ url });
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-    expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: expected_settings }, anything);
-  });
-
-  it("adjusts sync storage correctly - NOT empty", () => {
-    const original_url = "www.facebook.com";
-    const url = "www.google.com";
-
-    var current_settings = JSON.parse(sessionStorage.getItem("settings"));
-    current_settings.blacklist = original_url;
-    sessionStorage.setItem("settings", JSON.stringify(current_settings));
-
-    var expected_settings = current_settings;
-    current_settings.blacklist = original_url + ", " + url;
     jest.clearAllMocks();
 
     BackgroundHelper.excludeSite({ url });

@@ -245,10 +245,6 @@ hr {
     border: none !important;
   }
 
-  .group-count span {
-    top: -1px !important;
-  }
-
   .draggable a {
     width: 92.5% !important;
     text-decoration: none !important;
