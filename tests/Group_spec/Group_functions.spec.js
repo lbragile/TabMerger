@@ -55,6 +55,10 @@ var mockSet, container, anything;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 
+beforeAll(() => {
+  console.error = jest.fn();
+});
+
 beforeEach(() => {
   Object.keys(init_groups).forEach((key) => {
     sessionStorage.setItem(key, JSON.stringify(init_groups[key]));

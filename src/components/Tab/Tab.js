@@ -29,48 +29,53 @@ import { AppContext } from "../../context/AppContext";
 
 import { TiDelete } from "react-icons/ti";
 import { AiOutlineMenu } from "react-icons/ai";
+import { ImPushpin } from "react-icons/im";
 
 import "./Tab.css";
 
-export default function Tab(props) {
+export default function Tab({ id, item_limit, hidden }) {
   const [tabs, setTabs] = useState([]);
   const { setTabTotal, setGroups } = useContext(AppContext);
 
   useEffect(() => {
-    TabFunc.setInitTabs(setTabs, props.id);
-  }, [props.id]);
+    TabFunc.setInitTabs(setTabs, id);
+  }, [id]);
 
   return (
     <div className="d-flex flex-column mx-0 tabs-container">
       {tabs.map((tab) => {
         return (
           <div
-            className="row draggable p-0 mx-0 "
+            className={"row draggable p-0 mx-0 " + (hidden ? "d-none" : "")}
             draggable
             onDragStart={(e) => TabFunc.dragStart(e)}
-            onDragEnd={(e) => TabFunc.dragEnd(e, props.item_limit, setGroups)}
+            onDragEnd={(e) => TabFunc.dragEnd(e, item_limit, setGroups)}
             key={Math.random()}
           >
             <p
-              className="close-tab mr-2"
+              className="close-tab"
               draggable={false}
               onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, setTabTotal, setGroups)}
             >
               <TiDelete size="1.2rem" color="black" />
             </p>
-            <p className="move-tab mr-2">
+            <p className="move-tab mx-1">
               <AiOutlineMenu size="1.2rem" color="black" />
             </p>
-            <img className="img-tab mr-2" src={TabHelper.getFavIconURL(tab.url)} alt="icon" draggable={false} />
+            <img className="img-tab" src={TabHelper.getFavIconURL(tab.url)} alt="icon" draggable={false} />
             <a
               href={tab.url}
-              className="a-tab"
+              className="a-tab mx-1"
               target="_blank"
               rel="noreferrer"
               draggable={false}
-              onClick={(e) => TabFunc.handleTabClick(e)}
+              contentEditable={true}
+              onMouseUp={(e) => TabFunc.handleTabClick(e)}
+              onKeyPress={(e) => TabFunc.handleTabTitleChange(e)}
+              onBlur={(e) => TabFunc.handleTabTitleChange(e)}
             >
               {tab.title}
+              {tab.pinned && <ImPushpin className="pin ml-1" color="black" size="0.6rem" />}
             </a>
           </div>
         );

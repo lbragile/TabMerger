@@ -70,3 +70,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.a-tab:hover {
+  cursor: pointer;
+}
+
+.a-tab:focus {
+  cursor: text;
+}

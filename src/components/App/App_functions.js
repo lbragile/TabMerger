@@ -140,40 +140,50 @@ export function syncRead(sync_node, setGroups, setTabTotal) {
  */
 export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
   if (namespace === "local" && changes?.remove?.newValue?.length > 0) {
-    // extract and remove the button type from array
-    var group_id = changes.remove.newValue[0];
-    changes.remove.newValue.splice(0, 1);
+    chrome.storage.sync.get("settings", (sync) => {
+      chrome.storage.local.get("groups", (local) => {
+        // extract and remove the button type from array
+        var group_id = changes.remove.newValue[0];
+        changes.remove.newValue.splice(0, 1);
 
-    // try to not open tabs if it is already open
-    chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
-      for (var i = 0; i < changes.remove.newValue.length; i++) {
-        var tab_url = changes.remove.newValue[i];
-        var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
-        if (same_tab[0]) {
-          chrome.tabs.move(same_tab[0].id, { index: -1 });
+        var tabs;
+        if (group_id) {
+          tabs = local.groups[group_id].tabs;
         } else {
-          chrome.tabs.create({ url: tab_url, active: false }, () => {});
+          Object.values(local.groups).forEach((x) => {
+            tabs = tabs ? [...tabs, ...x.tabs] : [...x.tabs];
+          });
         }
-      }
 
-      // remove tab if needed
-      chrome.storage.sync.get("settings", (sync) => {
-        chrome.storage.local.get("groups", (local) => {
-          var group_blocks = local.groups;
+        // try to not open tabs if it is already open
+        chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
+          for (var i = 0; i < changes.remove.newValue.length; i++) {
+            var tab_url = changes.remove.newValue[i];
+
+            var tab_obj = tabs.filter((x) => x.url === tab_url)[0];
+            delete tab_obj.title;
+            var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
+
+            if (same_tab[0] && !same_tab.pinned) {
+              chrome.tabs.move(same_tab[0].id, { index: -1 });
+            } else {
+              chrome.tabs.create({ ...tab_obj, active: false }, () => {});
+            }
+          }
+
+          var groups = local.groups;
           if (sync.settings.restore !== "keep") {
             if (group_id) {
-              group_blocks[group_id].tabs = group_blocks[group_id].tabs.filter(
-                (x) => !changes.remove.newValue.includes(x.url)
-              );
+              groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
             } else {
-              Object.keys(group_blocks).forEach((key) => {
-                group_blocks[key].tabs = [];
+              Object.keys(groups).forEach((key) => {
+                groups[key].tabs = [];
               });
             }
 
-            chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
-              setTabTotal(AppHelper.updateTabTotal(group_blocks));
-              setGroups(JSON.stringify(group_blocks));
+            chrome.storage.local.set({ groups, scroll: document.documentElement.scrollTop }, () => {
+              setTabTotal(AppHelper.updateTabTotal(groups));
+              setGroups(JSON.stringify(groups));
             });
           }
 
@@ -202,51 +212,68 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  */
 export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
   if (namespace === "local" && changes?.merged_tabs?.newValue?.length > 0) {
-    chrome.storage.local.get(["merged_tabs", "into_group", "groups"], (local) => {
-      var into_group = local.into_group, merged_tabs = local.merged_tabs; // prettier-ignore
-      var group_blocks = local.groups;
-      var merged_bytes = JSON.stringify(merged_tabs).length;
+    chrome.storage.sync.get("settings", (sync) => {
+      chrome.storage.local.get(["merged_tabs", "into_group", "groups"], (local) => {
+        var into_group = local.into_group, merged_tabs = local.merged_tabs; // prettier-ignore
+        var group_blocks = local.groups;
+        var merged_bytes = JSON.stringify(merged_tabs).length;
+        var sync_bytes = JSON.stringify(group_blocks).length + merged_bytes;
 
-      var sync_bytes = JSON.stringify(group_blocks).length + merged_bytes;
+        if (sync_bytes < sync_limit) {
+          // add new group at top ("merging group") if context menu is used
+          // to avoid merging into group with existing tabs
+          if (!into_group.includes("group")) {
+            into_group = "group-0";
+            console.log(group_blocks);
+            const group_values = Object.values(group_blocks);
+            group_blocks[into_group] = {
+              color: sync.settings.color,
+              created: AppHelper.getTimestamp(),
+              hidden: false,
+              tabs: [],
+              title: sync.settings.title,
+            };
 
-      if (sync_bytes < sync_limit) {
-        var this_group = group_blocks[into_group];
-        var item_bytes = JSON.stringify(this_group).length + merged_bytes;
+            group_values.forEach((val, i) => {
+              group_blocks["group-" + (i + 1)] = val;
+            });
+            console.log(group_blocks);
+          }
 
-        // console.log(item_bytes, "item", sync_bytes, "sync", merged_bytes, "merge");
+          var item_bytes = JSON.stringify(group_blocks[into_group]).length + merged_bytes;
 
-        if (item_bytes < item_limit) {
-          // close tabs to avoid leaving some open
-          chrome.tabs.remove(merged_tabs.map((x) => x.id));
+          if (item_bytes < item_limit) {
+            // close tabs that are being merged
+            chrome.tabs.remove(merged_tabs.map((x) => x.id));
 
-          var tabs_arr = [...this_group.tabs, ...merged_tabs];
-          tabs_arr = tabs_arr.map((x) => ({ title: x.title, url: x.url }));
-          group_blocks[into_group].tabs = tabs_arr;
+            const new_tabs = [...group_blocks[into_group].tabs, ...merged_tabs];
+            group_blocks[into_group].tabs = new_tabs.map((x) => ({ title: x.title, url: x.url, pinned: x.pinned }));
 
-          chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
-            setTabTotal(AppHelper.updateTabTotal(group_blocks));
-            setGroups(JSON.stringify(group_blocks));
-          });
+            chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
+              setTabTotal(AppHelper.updateTabTotal(group_blocks));
+              setGroups(JSON.stringify(group_blocks));
+            });
+          } else {
+            alert(
+              `Group's syncing capacity exceeded by ${item_bytes - item_limit} bytes.\n\nPlease do one of the following:
+      1. Create a new group and merge new tabs into it;
+      2. Remove some tabs from this group;
+      3. Merge less tabs into this group (each tab is ~100-300 bytes).`
+            );
+          }
         } else {
           alert(
-            `Group's syncing capacity exceeded by ${item_bytes - item_limit} bytes.\n\nPlease do one of the following:
-    1. Create a new group and merge new tabs into it;
-    2. Remove some tabs from this group;
-    3. Merge less tabs into this group (each tab is ~100-300 bytes).`
+            `Total syncing capacity exceeded by ${sync_bytes - sync_limit} bytes.\n\nPlease do one of the following:
+      1. Remove some tabs from any group;
+      2. Delete a group that is no longer needed;
+      3. Merge less tabs into this group (each tab is ~100-300 bytes).
+      \nMake sure to Export JSON or PDF to have a backup copy!`
           );
         }
-      } else {
-        alert(
-          `Total syncing capacity exceeded by ${sync_bytes - sync_limit} bytes.\n\nPlease do one of the following:
-    1. Remove some tabs from any group;
-    2. Delete a group that is no longer needed;
-    3. Merge less tabs into this group (each tab is ~100-300 bytes).
-    \nMake sure to Export JSON or PDF to have a backup copy!`
-        );
-      }
 
-      // remove to be able to detect changes again (even for same tabs)
-      chrome.storage.local.remove(["into_group", "merged_tabs"], () => {});
+        // remove to be able to detect changes again (even for same tabs)
+        chrome.storage.local.remove(["into_group", "merged_tabs"], () => {});
+      });
     });
   }
 }
@@ -278,9 +305,10 @@ export function groupFormation(groups, item_limit) {
           color={x.color || "#dedede"}
           created={x.created || AppHelper.getTimestamp()}
           num_tabs={(x.tabs && x.tabs.length) || 0}
+          hidden={x.hidden}
           key={Math.random()}
         >
-          <Tab id={id} item_limit={item_limit} />
+          <Tab id={id} item_limit={item_limit} hidden={x.hidden} />
         </Group>
       );
     });
@@ -310,6 +338,7 @@ export function addGroup(num_group_limit, setGroups) {
           created: AppHelper.getTimestamp(),
           tabs: [],
           title: sync.settings.title,
+          hidden: false,
         };
         chrome.storage.local.set({ groups: current_groups, scroll: document.body.scrollHeight }, () => {
           setGroups(JSON.stringify(current_groups));
@@ -350,6 +379,7 @@ export function deleteAllGroups(setTabTotal, setGroups) {
         created: AppHelper.getTimestamp(),
         tabs: [],
         title: sync.settings.title,
+        hidden: false,
       },
     };
     chrome.storage.local.set({ groups: new_entry, scroll: document.documentElement.scrollTop }, () => {

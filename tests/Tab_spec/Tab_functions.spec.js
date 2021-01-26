@@ -47,6 +47,10 @@ function addIdAndClassToGroup(container, id, class_name) {
 var mockSet, container, anything;
 var chromeLocalGetSpy, chromeLocalSetSpy;
 
+beforeAll(() => {
+  console.error = jest.fn();
+});
+
 beforeEach(() => {
   anything = expect.anything();
   chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
@@ -149,15 +153,15 @@ describe("dragEnd", () => {
   it("works for same group", () => {
     // set local storage to original
     orig_groups["group-0"].tabs = [
-      { title: "b", url: location.href + "#b" },
-      { title: "a", url: location.href + "#a" },
-      { title: "c", url: location.href + "#c" },
+      { title: "b", url: location.href + "#b", pinned: true },
+      { title: "a", url: location.href + "#a", pinned: false },
+      { title: "c", url: location.href + "#c", pinned: false },
     ];
 
     orig_groups["group-1"].tabs = [
-      { title: "d", url: location.href + "#d" },
-      { title: "e", url: location.href + "#e" },
-      { title: "f", url: location.href + "#f" },
+      { title: "d", url: location.href + "#d", pinned: false },
+      { title: "e", url: location.href + "#e", pinned: false },
+      { title: "f", url: location.href + "#f", pinned: true },
     ];
 
     localStorage.setItem("groups", JSON.stringify(orig_groups));
@@ -169,9 +173,9 @@ describe("dragEnd", () => {
 
     // expected order after drag end
     orig_groups["group-0"].tabs = [
-      { title: "a", url: location.href + "#a" },
-      { title: "b", url: location.href + "#b" },
-      { title: "c", url: location.href + "#c" },
+      { title: "a", url: location.href + "#a", pinned: false },
+      { title: "b", url: location.href + "#b", pinned: true },
+      { title: "c", url: location.href + "#c", pinned: false },
     ];
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);

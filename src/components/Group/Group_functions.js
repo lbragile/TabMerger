@@ -94,11 +94,13 @@ export function blurOnEnter(e) {
  */
 export const dragOver = (e) => {
   e.preventDefault();
-  var group_block = e.target.closest(".group");
-  const afterElement = getDragAfterElement(group_block, e.clientY);
+
   const currentElement = document.querySelector(".dragging");
+  var group_block = e.target.closest(".group");
   var location = group_block.querySelector(".tabs-container");
-  if (afterElement == null) {
+
+  const afterElement = getDragAfterElement(group_block, e.clientY);
+  if (!afterElement) {
     location.appendChild(currentElement);
   } else {
     location.insertBefore(currentElement, afterElement);
@@ -143,6 +145,7 @@ export function deleteGroup(e, setTabTotal, setGroups) {
           created: getTimestamp(),
           tabs: [],
           title: sync.settings.title,
+          hidden: false,
         };
       } else {
         // must rename all keys for the groups above deleted group item
@@ -184,16 +187,16 @@ export function deleteGroup(e, setTabTotal, setGroups) {
  * The user can also re-click the toggle button to expand the tabs of a collapsed group.
  * @param {HTMLElement} e Node corresponding to the group whose tabs will be collapsed/expanded.
  * @param {boolean} hide Whether the group's tabs are visible or hidden
- * @param {Function} setHide For re-rendering the group's visible/hidden state
+ * @param {Function} setGroups For re-rendering the group's visible/hidden state
  */
-/* istanbul ignore next */
-export function toggleGroup(e, hide, setHide) {
-  var tabs = e.target.closest(".group-title").nextSibling.querySelectorAll(".draggable");
-  tabs.forEach((tab) => {
-    tab.style.display = hide ? "" : "none";
+export function toggleGroup(e, hidden, setGroups) {
+  const id = e.target.closest(".group-title").nextSibling.id;
+  chrome.storage.local.get("groups", (local) => {
+    local.groups[id].hidden = !hidden;
+    chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
+      setGroups(JSON.stringify(local.groups));
+    });
   });
-
-  setHide(!hide);
 }
 
 /**

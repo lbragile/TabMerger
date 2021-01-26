@@ -74,12 +74,12 @@ export const GLOBAL_BUTTONS = (sync_node, group_limit, setTabTotal, setGroups) =
   ];
 };
 
-export const GROUP_TITLE_BUTTONS = (hide, setHide, setTabTotal, setGroups) => {
+export const GROUP_TITLE_BUTTONS = (hidden, setTabTotal, setGroups) => {
   return [
     {
       classes: "show-hide-btn btn-in-group-title",
-      translate: hide ? AppFunc.translate("showTabs") : AppFunc.translate("hideTabs"),
-      clickFn: (e) => GroupFunc.toggleGroup(e, hide, setHide),
+      translate: hidden ? AppFunc.translate("showTabs") : AppFunc.translate("hideTabs"),
+      clickFn: (e) => GroupFunc.toggleGroup(e, hidden, setGroups),
       icon: <AiOutlineMinus />,
     },
     {

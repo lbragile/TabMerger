@@ -21,7 +21,7 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
+import React, { useEffect, useRef, useCallback, useContext } from "react";
 
 import * as GroupFunc from "./Group_functions";
 import { translate } from "../App/App_functions";
@@ -30,61 +30,61 @@ import { AppContext } from "../../context/AppContext";
 import MergeBtns from "../Button/MergeBtns";
 import GroupTitleBtns from "../Button/GroupTitleBtns";
 
-import { BiColorFill } from "react-icons/bi";
+import { BiColorFill, BiHide } from "react-icons/bi";
 
 import "./Group.css";
 import "../Button/Button.css";
 
-export default function Group(props) {
+export default function Group({ id, title, color, created, num_tabs, hidden, children }) {
   const TITLE_TRIM_LIMIT = useRef(50);
-  const [hide, setHide] = useState(false);
 
   const { setTabTotal, setGroups } = useContext(AppContext);
 
   const setGroupBackground = useCallback(
     (e) => {
-      GroupFunc.setGroupBackground(e, props.id);
+      GroupFunc.setGroupBackground(e, id);
     },
-    [props.id]
+    [id]
   );
 
   useEffect(() => {
-    var group = document.getElementById(props.id);
+    var group = document.getElementById(id);
     setGroupBackground(group);
-  }, [props.id, setGroupBackground]);
+  }, [id, setGroupBackground]);
 
   return (
-    <div className={"group-item " + (props.id === "group-0" ? "mt-0" : "mt-2")}>
+    <div className={"group-item " + (id === "group-0" ? "mt-0" : "mt-2")}>
       <div className="group-title d-flex flex-row justify-content-center">
         <div className="title-count-color-container row">
-          <h5 className="group-count">{props.num_tabs}</h5>
+          <h5 className="group-count">{num_tabs}</h5>
           <div className="group-color tip p-0">
             <BiColorFill className="input-color" onClick={(e) => e.target.closest("div").nextSibling.click()} />
             <span className="tiptext-group-color">{translate("pickColor")}</span>
           </div>
-          <input type="color" defaultValue={props.color} onChange={(e) => setGroupBackground(e)} />
+          <input type="color" defaultValue={color} onChange={(e) => setGroupBackground(e)} />
         </div>
 
         <input
           className="title-edit-input font-weight-bold mb-0"
           onFocus={(e) => e.target.select()}
-          onBlur={(e) => GroupFunc.setTitle(e, setGroups, props.title)}
+          onBlur={(e) => GroupFunc.setTitle(e, setGroups, title)}
           onKeyDown={(e) => GroupFunc.blurOnEnter(e)}
           maxLength={TITLE_TRIM_LIMIT.current}
-          defaultValue={props.title}
+          defaultValue={title}
         />
 
-        <GroupTitleBtns hide={hide} setHide={setHide} setTabTotal={setTabTotal} setGroups={setGroups} />
+        <GroupTitleBtns hidden={hidden} setTabTotal={setTabTotal} setGroups={setGroups} />
       </div>
 
-      <div id={props.id} className="group" onDragOver={GroupFunc.dragOver}>
+      <div id={id} className="group" onDragOver={GroupFunc.dragOver}>
         <div className="created mr-1">
-          <b>{translate("created")}:</b> <span>{props.created}</span>
+          <b>{translate("created")}:</b> <span>{created}</span>
         </div>
 
-        <MergeBtns id={props.id} />
+        <MergeBtns id={id} />
 
-        {props.children}
+        {hidden && <BiHide className="hidden-symbol" color="black" size="1.6rem" />}
+        {children}
       </div>
     </div>
   );

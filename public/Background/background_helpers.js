@@ -79,7 +79,7 @@ export async function filterTabs(info, tab, group_id) {
           });
 
           // remove unnecessary information from each tab
-          tabs = tabs.map((x) => ({ title: x.title, url: x.url, id: x.id }));
+          tabs = tabs.map((x) => ({ title: x.title, url: x.url, id: x.id, pinned: x.pinned }));
 
           // duplicates (already in TabMerger) can be removed
           var duplicates = tabs.filter((x) => {
@@ -101,7 +101,7 @@ export async function filterTabs(info, tab, group_id) {
           // filter out offending indicies
           tabs = tabs.filter((_, i) => !indicies.includes(i));
 
-          var whichGroup = group_id ? group_id : "group-0";
+          var whichGroup = group_id ? group_id : "contextMenu";
           chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs }, () => {});
         });
       });

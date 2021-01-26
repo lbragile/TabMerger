@@ -70,7 +70,7 @@ export function dragEnd(e, item_limit, setGroups) {
   const origin_id = drag_origin.id;
 
   var anchor = tab.querySelector("a");
-  var tab_bytes = JSON.stringify({ title: anchor.innerText, url: anchor.href }).length;
+  var tab_bytes = JSON.stringify({ title: anchor.textContent, url: anchor.href, pinned: !!anchor.querySelector("svg") }).length; // prettier-ignore
 
   chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
@@ -83,14 +83,14 @@ export function dragEnd(e, item_limit, setGroups) {
       if (origin_id !== closest_group.id) {
         // remove tab from group that originated the drag
         groups[origin_id].tabs = groups[origin_id].tabs.filter((group_tab) => {
-          return group_tab.url !== tab.lastChild.href;
+          return group_tab.url !== anchor.href;
         });
       }
 
       // reorder tabs based on current positions
       groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
         const anchor = x.querySelector("a");
-        return { title: anchor.textContent, url: anchor.href };
+        return { title: anchor.textContent, url: anchor.href, pinned: !!anchor.querySelector("svg") };
       });
 
       // update the groups
@@ -142,5 +142,40 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
  */
 export function handleTabClick(e) {
   e.preventDefault();
-  chrome.storage.local.set({ remove: [e.target.closest(".group").id, e.target.href] }, () => {});
+  if (e.button === 0) {
+    // left
+    chrome.storage.local.set({ remove: [e.target.closest(".group").id, e.target.href] }, () => {
+      e.target.click();
+    });
+  } else if (e.button === 1) {
+    // middle
+    e.target.focus();
+  }
+}
+
+/**
+ * Updates the local storage with the new title of the tab for the correct group.
+ * @param {HTMLElement} e Node representing the tab that was clicked
+ */
+export function handleTabTitleChange(e) {
+  if (e.which === 13 || e.keyCode === 13) {
+    e.preventDefault();
+  } else {
+    const group_id = e.target.closest(".group").id;
+    chrome.storage.local.get("groups", (local) => {
+      var tabs = local.groups[group_id].tabs;
+
+      // update the tab's title
+      tabs = tabs.map((x) => {
+        if (x.url === e.target.href) {
+          x.title = e.target.textContent;
+        }
+        return x;
+      });
+
+      local.groups[group_id].tabs = tabs;
+
+      chrome.storage.local.set({ groups: local.groups }, () => {});
+    });
+  }
 }

@@ -49,6 +49,17 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   top: 3px;
 }
 
+[contenteditable]:focus {
+  outline: 0px solid transparent;
+}
+
+.hidden-symbol {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
 /* GROUP TAB COUNTER */
 .group-count {
   margin: 3px 10px 0 0;

@@ -3,10 +3,10 @@ import React from "react";
 import Button from "./Button";
 import { GROUP_TITLE_BUTTONS } from "./button_details";
 
-export default function GroupTitleBtns({ hide, setHide, setTabTotal, setGroups }) {
+export default function GroupTitleBtns({ hidden, setTabTotal, setGroups }) {
   return (
     <div className="title-btn-containter row">
-      {GROUP_TITLE_BUTTONS(hide, setHide, setTabTotal, setGroups).map((x) => {
+      {GROUP_TITLE_BUTTONS(hidden, setTabTotal, setGroups).map((x) => {
         return (
           <Button
             classes={x.classes}

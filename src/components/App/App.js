@@ -44,7 +44,7 @@ export default function App() {
   const NUM_GROUP_LIMIT = useRef(100); // 3 for testing - 100 for production
 
   var syncTimestamp = useRef();
-  const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), tabs: [], title: "Title" });
+  const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), tabs: [], title: "Title", hidden: false }); // prettier-ignore
   const defaultSettings = useRef({ blacklist: "", color: "#dedede", dark: true, open: "without", restore: "keep", title: "Title" }); // prettier-ignore
 
   const [tabTotal, setTabTotal] = useState(0);
@@ -79,7 +79,7 @@ export default function App() {
     };
   }, []);
 
-  useEffect(async () => {
+  useEffect(() => {
     chrome.storage.local.get("scroll", (local) => {
       setTimeout(() => {
         document.documentElement.scrollTop = local.scroll || 0;
