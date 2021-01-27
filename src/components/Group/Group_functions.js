@@ -92,26 +92,47 @@ export function blurOnEnter(e) {
  * Also scrolls the window while dragging, as necessary, to improve user experience.
  * @param {HTMLElement} e This corresponds to the node that currently has the dragged tab above it
  */
-export const dragOver = (e) => {
+export function tabDragOver(e) {
+  e.preventDefault();
+  if (document.querySelector(".dragging").className !== "draggable-group") {
+    const currentElement = document.querySelector(".dragging");
+    var group_block = e.target.closest(".group");
+    var location = group_block.querySelector(".tabs-container");
+
+    const afterElement = getDragAfterElement(group_block, e.clientY);
+    if (!afterElement) {
+      location.appendChild(currentElement);
+    } else {
+      location.insertBefore(currentElement, afterElement);
+    }
+
+    // allow scrolling while dragging with a 10px offset from top/bottom
+    const offset = 10;
+    if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
+      window.scrollTo(0, e.clientY);
+    }
+  }
+}
+
+/**
+ *
+ * @param {HTMLElement} e The group that is being dragged
+ */
+export function groupDragStart(e) {
+  e.preventDefault();
+  console.log("HERE");
+  e.target.closest(".group").classList.add(".dragging");
+}
+
+/**
+ *
+ * @param {HTMLElement} e The group that is being dragged
+ */
+export function groupDragEnd(e) {
   e.preventDefault();
 
-  const currentElement = document.querySelector(".dragging");
-  var group_block = e.target.closest(".group");
-  var location = group_block.querySelector(".tabs-container");
-
-  const afterElement = getDragAfterElement(group_block, e.clientY);
-  if (!afterElement) {
-    location.appendChild(currentElement);
-  } else {
-    location.insertBefore(currentElement, afterElement);
-  }
-
-  // allow scrolling while dragging with a 10px offset from top/bottom
-  const offset = 10;
-  if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
-    window.scrollTo(0, e.clientY);
-  }
-};
+  console.log("group drag end");
+}
 
 /**
  * Sets Chrome's local storage with an array (["group id", ... url_links ...]) consisting
@@ -143,9 +164,9 @@ export function deleteGroup(e, setTabTotal, setGroups) {
         group_blocks["group-0"] = {
           color: sync.settings.color,
           created: getTimestamp(),
+          hidden: false,
           tabs: [],
           title: sync.settings.title,
-          hidden: false,
         };
       } else {
         // must rename all keys for the groups above deleted group item

@@ -42,7 +42,7 @@ export function setInitTabs(setTabs, id) {
  * Adds necessary classes to the tab element once a drag event is initialized
  * @param {HTMLElement} e The tab which will be dragged within the same group or across groups
  */
-export function dragStart(e) {
+export function tabDragStart(e) {
   var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
   target.classList.add("dragging");
   target.closest(".group").classList.add("drag-origin");
@@ -57,7 +57,7 @@ export function dragStart(e) {
  *
  * @see ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value
  */
-export function dragEnd(e, item_limit, setGroups) {
+export function tabDragEnd(e, item_limit, setGroups) {
   e.stopPropagation();
   e.target.classList.remove("dragging");
 
@@ -70,7 +70,7 @@ export function dragEnd(e, item_limit, setGroups) {
   const origin_id = drag_origin.id;
 
   var anchor = tab.querySelector("a");
-  var tab_bytes = JSON.stringify({ title: anchor.textContent, url: anchor.href, pinned: !!anchor.querySelector("svg") }).length; // prettier-ignore
+  var tab_bytes = JSON.stringify({ pinned: !!anchor.querySelector("svg"), title: anchor.textContent, url: anchor.href }).length; // prettier-ignore
 
   chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
@@ -90,7 +90,7 @@ export function dragEnd(e, item_limit, setGroups) {
       // reorder tabs based on current positions
       groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
         const anchor = x.querySelector("a");
-        return { title: anchor.textContent, url: anchor.href, pinned: !!anchor.querySelector("svg") };
+        return { pinned: !!anchor.querySelector("svg"), title: anchor.textContent, url: anchor.href };
       });
 
       // update the groups

@@ -30,7 +30,8 @@ import { AppContext } from "../../context/AppContext";
 import MergeBtns from "../Button/MergeBtns";
 import GroupTitleBtns from "../Button/GroupTitleBtns";
 
-import { BiColorFill, BiHide } from "react-icons/bi";
+import { BiColorFill, BiHide, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
+import { BsStarFill, BsStar } from "react-icons/bs";
 
 import "./Group.css";
 import "../Button/Button.css";
@@ -54,7 +55,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
 
   return (
     <div className={"group-item " + (id === "group-0" ? "mt-0" : "mt-2")}>
-      <div className="group-title d-flex flex-row justify-content-center">
+      <div className="group-title d-flex flex-row justify-content-center" draggable={false}>
         <div className="title-count-color-container row">
           <h5 className="group-count">{num_tabs}</h5>
           <div className="group-color tip p-0">
@@ -71,12 +72,32 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
           onKeyDown={(e) => GroupFunc.blurOnEnter(e)}
           maxLength={TITLE_TRIM_LIMIT.current}
           defaultValue={title}
+          onDragStart={(e) => e.preventDefault()}
         />
 
         <GroupTitleBtns hidden={hidden} setTabTotal={setTabTotal} setGroups={setGroups} />
       </div>
 
-      <div id={id} className="group" onDragOver={GroupFunc.dragOver}>
+      <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => GroupFunc.tabDragOver(e)}>
+        <div className="move-lock-star-container">
+          <div
+            className="move-group"
+            draggable={true}
+            onDragStart={(e) => GroupFunc.groupDragStart(e)}
+            onDragEnd={(e) => GroupFunc.groupDragEnd(e)}
+          >
+            <BiGridSmall color="black" size="1.6rem" />
+          </div>
+
+          <div className="lock-group">
+            <BiLockOpen color="black" size="1.3rem" />
+          </div>
+
+          <div className="star-group">
+            <BsStar color="black" size="1.1rem" />
+          </div>
+        </div>
+
         <div className="created mr-1">
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>

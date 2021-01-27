@@ -30,7 +30,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @param {HTMLElement} container The group which the dragged tab is above
  * @param {number} y The tab's y coordinate in the window
  *
- * @see dragOver in Group_helpers.js
+ * @see tabDragOver in Group_helpers.js
  * @link modified from https://github.com/WebDevSimplified/Drag-And-Drop
  *
  * @return The tab element immediately after the current position of the dragged tab.

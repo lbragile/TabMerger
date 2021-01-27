@@ -56,8 +56,27 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 .hidden-symbol {
   position: absolute;
   top: 50%;
-  left: 20px;
-  transform: translateY(-50%);
+  left: 20%;
+  transform: translate(-50%, -50%);
+}
+
+.move-lock-star-container {
+  position: absolute;
+  left: 0px;
+  top: -2px;
+}
+
+.move-group {
+  z-index: 10;
+}
+
+.move-group:hover {
+  cursor: move;
+}
+
+.lock-group:hover,
+.star-group:hover {
+  cursor: pointer;
 }
 
 /* GROUP TAB COUNTER */

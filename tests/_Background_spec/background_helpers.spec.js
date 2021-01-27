@@ -67,11 +67,11 @@ describe("filterTabs", () => {
 
   test.each([
     [{ which: "right" }, { index: 3 }, undefined],
-    [{ which: "right" }, { index: 0 }, undefined],
-    [{ which: "right" }, { index: 7 }, undefined],
+    [{ which: "right" }, { index: 0 }, "group-0"],
+    [{ which: "right" }, { index: 7 }, "group-1"],
     [{ which: "left" }, { index: 3 }, undefined],
-    [{ which: "left" }, { index: 0 }, undefined],
-    [{ which: "left" }, { index: 7 }, undefined],
+    [{ which: "left" }, { index: 0 }, "group-0"],
+    [{ which: "left" }, { index: 7 }, "group-1"],
     [{ which: "excluding" }, { index: 1 }, "group-1"],
     [{ which: "only" }, { index: 6 }, "group-2"],
     [{ which: "all" }, { index: 0 }, "group-3"],
@@ -101,7 +101,7 @@ describe("filterTabs", () => {
       tabs_to_be_merged = [...merge_tabs.slice(0, 2), ...merge_tabs.slice(5, 7)];
     }
 
-    var into_group = group_id ? group_id : "group-0";
+    var into_group = group_id ? group_id : "contextMenu";
 
     jest.useFakeTimers();
     BackgroundHelper.filterTabs(info, tab, group_id);

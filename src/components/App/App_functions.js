@@ -247,7 +247,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
             chrome.tabs.remove(merged_tabs.map((x) => x.id));
 
             const new_tabs = [...group_blocks[into_group].tabs, ...merged_tabs];
-            group_blocks[into_group].tabs = new_tabs.map((x) => ({ title: x.title, url: x.url, pinned: x.pinned }));
+            group_blocks[into_group].tabs = new_tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url }));
 
             chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
               setTabTotal(AppHelper.updateTabTotal(group_blocks));
@@ -336,9 +336,9 @@ export function addGroup(num_group_limit, setGroups) {
         current_groups["group-" + num_keys] = {
           color: sync.settings.color,
           created: AppHelper.getTimestamp(),
+          hidden: false,
           tabs: [],
           title: sync.settings.title,
-          hidden: false,
         };
         chrome.storage.local.set({ groups: current_groups, scroll: document.body.scrollHeight }, () => {
           setGroups(JSON.stringify(current_groups));
@@ -372,21 +372,24 @@ export function openAllTabs() {
  * @param {Function} setGroups For re-rendering the groups
  */
 export function deleteAllGroups(setTabTotal, setGroups) {
-  chrome.storage.sync.get("settings", (sync) => {
-    var new_entry = {
-      "group-0": {
-        color: sync.settings.color,
-        created: AppHelper.getTimestamp(),
-        tabs: [],
-        title: sync.settings.title,
-        hidden: false,
-      },
-    };
-    chrome.storage.local.set({ groups: new_entry, scroll: document.documentElement.scrollTop }, () => {
-      setTabTotal(AppHelper.updateTabTotal(new_entry));
-      setGroups(JSON.stringify(new_entry));
+  const response = window.confirm("Are you sure?\n\nThis action will delete all groups/tabs that are not \"locked\".\nMake sure you have a backup!"); // prettier-ignore
+  if (response) {
+    chrome.storage.sync.get("settings", (sync) => {
+      var new_entry = {
+        "group-0": {
+          color: sync.settings.color,
+          created: AppHelper.getTimestamp(),
+          hidden: false,
+          tabs: [],
+          title: sync.settings.title,
+        },
+      };
+      chrome.storage.local.set({ groups: new_entry, scroll: document.documentElement.scrollTop }, () => {
+        setTabTotal(AppHelper.updateTabTotal(new_entry));
+        setGroups(JSON.stringify(new_entry));
+      });
     });
-  });
+  }
 }
 
 /**

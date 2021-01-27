@@ -79,7 +79,7 @@ export async function filterTabs(info, tab, group_id) {
           });
 
           // remove unnecessary information from each tab
-          tabs = tabs.map((x) => ({ title: x.title, url: x.url, id: x.id, pinned: x.pinned }));
+          tabs = tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url, id: x.id }));
 
           // duplicates (already in TabMerger) can be removed
           var duplicates = tabs.filter((x) => {

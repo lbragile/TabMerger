@@ -101,7 +101,7 @@ describe("dragStart", () => {
   var dragStartSpy, draggable;
 
   beforeEach(() => {
-    dragStartSpy = jest.spyOn(TabFunc, "dragStart");
+    dragStartSpy = jest.spyOn(TabFunc, "tabDragStart");
     addIdAndClassToGroup(container, "group-0", "group");
   });
 
@@ -153,15 +153,15 @@ describe("dragEnd", () => {
   it("works for same group", () => {
     // set local storage to original
     orig_groups["group-0"].tabs = [
-      { title: "b", url: location.href + "#b", pinned: true },
-      { title: "a", url: location.href + "#a", pinned: false },
-      { title: "c", url: location.href + "#c", pinned: false },
+      { pinned: true, title: "b", url: location.href + "#b" },
+      { pinned: false, title: "a", url: location.href + "#a" },
+      { pinned: false, title: "c", url: location.href + "#c" },
     ];
 
     orig_groups["group-1"].tabs = [
-      { title: "d", url: location.href + "#d", pinned: false },
-      { title: "e", url: location.href + "#e", pinned: false },
-      { title: "f", url: location.href + "#f", pinned: true },
+      { pinned: false, title: "d", url: location.href + "#d" },
+      { pinned: false, title: "e", url: location.href + "#e" },
+      { pinned: true, title: "f", url: location.href + "#f" },
     ];
 
     localStorage.setItem("groups", JSON.stringify(orig_groups));
@@ -169,13 +169,13 @@ describe("dragEnd", () => {
     stub.target.closest = jest.fn(() => document.querySelector("#group-0"));
     jest.clearAllMocks();
 
-    TabFunc.dragEnd(stub, 8000, mockSet);
+    TabFunc.tabDragEnd(stub, 8000, mockSet);
 
     // expected order after drag end
     orig_groups["group-0"].tabs = [
-      { title: "a", url: location.href + "#a", pinned: false },
-      { title: "b", url: location.href + "#b", pinned: true },
-      { title: "c", url: location.href + "#c", pinned: false },
+      { pinned: false, title: "a", url: location.href + "#a" },
+      { pinned: true, title: "b", url: location.href + "#b" },
+      { pinned: false, title: "c", url: location.href + "#c" },
     ];
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -191,15 +191,15 @@ describe("dragEnd", () => {
   it("works for different group", () => {
     // set local storage to original
     orig_groups["group-0"].tabs = [
-      { title: "a", url: location.href + "#a" },
-      { title: "b", url: location.href + "#b" },
-      { title: "c", url: location.href + "#c" },
+      { pinned: false, title: "a", url: location.href + "#a" },
+      { pinned: false, title: "b", url: location.href + "#b" },
+      { pinned: false, title: "c", url: location.href + "#c" },
     ];
 
     orig_groups["group-1"].tabs = [
-      { title: "d", url: location.href + "#d" },
-      { title: "e", url: location.href + "#e" },
-      { title: "f", url: location.href + "#f" },
+      { pinned: false, title: "d", url: location.href + "#d" },
+      { pinned: false, title: "e", url: location.href + "#e" },
+      { pinned: false, title: "f", url: location.href + "#f" },
     ];
 
     localStorage.setItem("groups", JSON.stringify(orig_groups));
@@ -207,21 +207,21 @@ describe("dragEnd", () => {
 
     jest.clearAllMocks();
 
-    TabFunc.dragEnd(stub, 8000, mockSet);
+    TabFunc.tabDragEnd(stub, 8000, mockSet);
 
     // expected order after drag end
     // note that since dragOver isn't applied we just expect
     // the tab to be removed from origin group. As long as drag over works,
     // we can be confident that this also works.
     orig_groups["group-0"].tabs = [
-      { title: "b", url: location.href + "#b" },
-      { title: "c", url: location.href + "#c" },
+      { pinned: false, title: "b", url: location.href + "#b" },
+      { pinned: false, title: "c", url: location.href + "#c" },
     ];
 
     orig_groups["group-1"].tabs = [
-      { title: "d", url: location.href + "#d" },
-      { title: "e", url: location.href + "#e" },
-      { title: "f", url: location.href + "#f" },
+      { pinned: false, title: "d", url: location.href + "#d" },
+      { pinned: false, title: "e", url: location.href + "#e" },
+      { pinned: false, title: "f", url: location.href + "#f" },
     ];
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -252,7 +252,7 @@ describe("dragEnd", () => {
     // stub the document
     document.getElementsByClassName = jest.fn(() => [container.querySelector(".draggable").closest(".group")]);
 
-    TabFunc.dragEnd(stub, 100, mockSet);
+    TabFunc.tabDragEnd(stub, 100, mockSet);
 
     expect(window.alert).toHaveBeenCalledTimes(1);
     expect(window.alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded");
@@ -269,10 +269,12 @@ describe("removeTab", () => {
     var removeTabSpy = jest.spyOn(TabFunc, "removeTab");
     const expected_tabs = [
       {
+        pinned: false,
         title: "lichess.org • Free Online Chess",
         url: "https://lichess.org/",
       },
       {
+        pinned: false,
         title: "Chess.com - Play Chess Online - Free Games",
         url: "https://www.chess.com/",
       },

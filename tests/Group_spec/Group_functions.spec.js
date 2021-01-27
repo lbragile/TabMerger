@@ -178,7 +178,7 @@ describe("dragOver", () => {
       return document.querySelector(".draggable:nth-child(3)");
     });
 
-    GroupFunc.dragOver(stub);
+    GroupFunc.tabDragOver(stub);
 
     const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
     expect(tabs_text).toEqual(["b", "a", "c"]);
@@ -195,7 +195,7 @@ describe("dragOver", () => {
     // to avoid scrolling
     stub.clientY = 20;
 
-    GroupFunc.dragOver(stub);
+    GroupFunc.tabDragOver(stub);
 
     const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
     expect(tabs_text).toEqual(["b", "c", "a"]);
@@ -211,7 +211,7 @@ describe("dragOver", () => {
     // scroll up
     stub.clientY = 0;
 
-    GroupFunc.dragOver(stub);
+    GroupFunc.tabDragOver(stub);
 
     const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
     expect(tabs_text).toEqual(["a", "b", "c"]);

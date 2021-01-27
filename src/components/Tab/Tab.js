@@ -48,8 +48,8 @@ export default function Tab({ id, item_limit, hidden }) {
           <div
             className={"row draggable p-0 mx-0 " + (hidden ? "d-none" : "")}
             draggable
-            onDragStart={(e) => TabFunc.dragStart(e)}
-            onDragEnd={(e) => TabFunc.dragEnd(e, item_limit, setGroups)}
+            onDragStart={(e) => TabFunc.tabDragStart(e)}
+            onDragEnd={(e) => TabFunc.tabDragEnd(e, item_limit, setGroups)}
             key={Math.random()}
           >
             <p
