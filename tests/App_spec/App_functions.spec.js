@@ -34,7 +34,7 @@ import { exportedVal } from "../__mocks__/jsonImportMock";
 
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
-var mockSet, container, new_item, sync_node, sync_container, anything;
+var mockSet, container, sync_node, anything;
 
 beforeEach(() => {
   mockSet = jest.fn(); // mock for setState hooks
@@ -42,9 +42,7 @@ beforeEach(() => {
 
   container = render(<App />).container;
   sync_node = container.querySelector("#sync-text span");
-  sync_container = sync_node.parentNode;
 
-  new_item = init_groups["group-0"];
   Object.keys(init_groups).forEach((key) => {
     sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
   });
@@ -215,12 +213,12 @@ describe("syncRead", () => {
 
 describe("openOrRemoveTabs", () => {
   var chromeTabsMove, chromeTabsCreate;
-  var tab_single = "https://stackoverflow.com/";
-  var tab_group = ["https://stackoverflow.com/", "https://lichess.org/", "https://www.chess.com/"];
+  var tab_single = ["https://stackoverflow.com/"];
+  var tab_group = [...tab_single, "https://lichess.org/", "https://www.chess.com/"];
   var tab_all = [...tab_group, "https://www.twitch.tv/", "https://www.reddit.com/", "https://www.a.com/", "https://www.b.com/"]; // prettier-ignore
+  const tab_arr_map = { SINGLE: tab_single, GROUP: tab_group, ALL: tab_all };
 
   var open_tabs;
-
   beforeEach(() => {
     open_tabs = [
       { active: true, id: 0, pinned: false, url: location.href + "a" },
@@ -249,225 +247,88 @@ describe("openOrRemoveTabs", () => {
     expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
   });
 
-  describe("settings.restore === 'keep'", () => {
-    it("opens the correct tab WITHOUT removing - tab isn't open / single", () => {
-      var stub = { remove: { newValue: ["group-0", tab_single] } };
-      jest.clearAllMocks();
+  test.each([
+    ["KEEP", "WITHOUT", "SINGLE"],
+    ["KEEP", "WITHOUT", "GROUP"],
+    ["KEEP", "WITHOUT", "ALL"],
+    ["REMOVE", "WITH", "SINGLE"],
+    ["REMOVE", "WITH", "GROUP"],
+    ["REMOVE", "WITH", "ALL"],
+  ])("settings.restore === '%s' - opens the correct tab %s removing - tab isn't open / %s", (keepOrRemove, _, type) => {
+    // ARRANGE
+    var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
+    var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
 
-      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
+    sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove.toLowerCase() }));
 
-      expect(chromeTabsMove).not.toHaveBeenCalled();
-
-      expect(chromeTabsCreate).toHaveBeenCalledTimes(1);
-      expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url: tab_single }, anything);
-
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
-
-      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
-
-      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual([...open_tabs, {active:false, pinned: false, url: tab_single}]) // prettier-ignore
-    });
-
-    it("opens the correct tab WITHOUT removing - tab isn't open / group", () => {
-      var expect_open_tabs = [...open_tabs, ...tab_group.map((url) => ({ active: false, pinned: false, url }))];
-      var stub = { remove: { newValue: ["group-0", ...tab_group] } };
-      jest.clearAllMocks();
-
-      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
-
-      expect(chromeTabsMove).not.toHaveBeenCalled();
-
-      expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_group.length);
-      tab_group.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
-      });
-
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
-
-      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
-
-      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs);
-    });
-
-    it("opens the correct tab WITHOUT removing - tab isn't open / all", () => {
-      var expect_open_tabs = [...open_tabs, ...tab_all.map((url) => ({ active: false, pinned: false, url }))];
-      var stub = { remove: { newValue: [null, ...tab_all] } };
-      jest.clearAllMocks();
-
-      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
-
-      expect(chromeTabsMove).not.toHaveBeenCalled();
-
-      expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_all.length);
-      tab_all.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
-      });
-
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
-
-      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
-
-      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs);
-    });
-  });
-
-  describe("settings.restore !== 'keep'", () => {
-    it("opens the correct tabs AND removes them - tab isn't open / single", () => {
-      var stub = { remove: { newValue: ["group-0", tab_single] } };
-
-      sessionStorage.setItem("settings", JSON.stringify({ restore: "remove" }));
-      jest.clearAllMocks();
-
-      var expected_groups = JSON.parse(localStorage.getItem("groups"));
-      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
+    var expected_groups = JSON.parse(localStorage.getItem("groups")); // only used in remove case
+    if (type === "SINGLE") {
       expected_groups["group-0"].tabs.shift();
-
-      expect(chromeTabsMove).not.toHaveBeenCalled();
-
-      expect(chromeTabsCreate).toHaveBeenCalledTimes(1);
-      expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url: tab_single }, anything);
-
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
-
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
-
-      expect(mockSet).toHaveBeenCalledTimes(2);
-      expect(mockSet).toHaveBeenNthCalledWith(1, 6);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
-
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
-
-      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual([...open_tabs, { active: false, pinned: false, url: tab_single }]) // prettier-ignore
-    });
-
-    it("opens the correct tabs AND removes them - tab isn't open / group", () => {
-      var expect_open_tabs = [...open_tabs, ...tab_group.map((url) => ({ active: false, pinned: false, url }))];
-      var stub = { remove: { newValue: ["group-0", ...tab_group] } };
-
-      sessionStorage.setItem("settings", JSON.stringify({ restore: "remove" }));
-      jest.clearAllMocks();
-
-      var expected_groups = JSON.parse(localStorage.getItem("groups"));
-      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
+    } else if (type === "GROUP") {
       expected_groups["group-0"].tabs = [];
-
-      expect(chromeTabsMove).not.toHaveBeenCalled();
-
-      expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_group.length);
-      tab_group.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
-      });
-
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
-
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
-
-      expect(mockSet).toHaveBeenCalledTimes(2);
-      expect(mockSet).toHaveBeenNthCalledWith(1, 4);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
-
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
-
-      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs) // prettier-ignore
-    });
-
-    it("opens the correct tabs AND removes them - tab isn't open / all", () => {
-      var expect_open_tabs = [...open_tabs, ...tab_all.map((url) => ({ active: false, pinned: false, url }))];
-      var stub = { remove: { newValue: [null, ...tab_all] } };
-
-      sessionStorage.setItem("settings", JSON.stringify({ restore: "remove" }));
-      jest.clearAllMocks();
-
-      var expected_groups = JSON.parse(localStorage.getItem("groups"));
-      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
-
+    } else {
       Object.keys(expected_groups).forEach((key) => {
         expected_groups[key].tabs = [];
       });
+    }
 
-      expect(chromeTabsMove).not.toHaveBeenCalled();
+    jest.clearAllMocks();
 
-      expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_all.length);
-      tab_all.forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
-      });
+    // ACT
+    AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
 
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+    // ASSERT
+    expect(chromeTabsMove).not.toHaveBeenCalled();
 
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_arr_map[type].length);
+    tab_arr_map[type].forEach((url) => {
+      expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
+    });
 
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    if (keepOrRemove === "KEEP") {
+      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    } else {
       expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
 
       expect(mockSet).toHaveBeenCalledTimes(2);
-      expect(mockSet).toHaveBeenNthCalledWith(1, 0);
+      expect(mockSet).toHaveBeenNthCalledWith(1, tab_arr_map["ALL"].length - tab_arr_map[type].length);
       expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
+    }
 
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
 
-      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs) // prettier-ignore
-    });
+    expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs);
   });
 
-  describe("restore already open (forcing it to move)", () => {
-    it("opens the correct tabs MOVING them to correct position in array", () => {
-      var expect_open_tabs = [open_tabs[2], open_tabs[0], open_tabs[1]];
-      var stub = { remove: { newValue: ["group-0", open_tabs[0].url, open_tabs[1].url] } };
+  test("restore already open - opens the correct tabs MOVING them to correct position in array", () => {
+    var expect_open_tabs = [open_tabs[2], open_tabs[0], open_tabs[1]];
+    var stub = { remove: { newValue: ["group-0", open_tabs[0].url, open_tabs[1].url] } };
 
-      sessionStorage.setItem("settings", JSON.stringify({ restore: "remove" }));
+    sessionStorage.setItem("settings", JSON.stringify({ restore: "remove" }));
 
-      // add new tabs that are also open
-      var current_groups = JSON.parse(localStorage.getItem("groups"));
-      current_groups["group-0"].tabs.push({ url: open_tabs[0].url, title: "already open a" });
-      current_groups["group-0"].tabs.push({ url: open_tabs[1].url, title: "already open b" });
-      localStorage.setItem("groups", JSON.stringify(current_groups));
+    // add new tabs that are also open
+    var current_groups = JSON.parse(localStorage.getItem("groups"));
+    current_groups["group-0"].tabs.push({ url: open_tabs[0].url, title: "already open a" });
+    current_groups["group-0"].tabs.push({ url: open_tabs[1].url, title: "already open b" });
+    localStorage.setItem("groups", JSON.stringify(current_groups));
 
-      jest.clearAllMocks();
+    jest.clearAllMocks();
 
-      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
+    AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
 
-      expect(chromeTabsMove).toHaveBeenCalledTimes(2);
-      expect(chromeTabsMove).toHaveBeenNthCalledWith(1, 0, { index: -1 });
-      expect(chromeTabsMove).toHaveBeenNthCalledWith(2, 1, { index: -1 });
+    expect(chromeTabsMove).toHaveBeenCalledTimes(2);
+    expect(chromeTabsMove).toHaveBeenNthCalledWith(1, 0, { index: -1 });
+    expect(chromeTabsMove).toHaveBeenNthCalledWith(2, 1, { index: -1 });
 
-      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs) // prettier-ignore
-    });
+    expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs) // prettier-ignore
   });
 });
 
@@ -498,14 +359,14 @@ describe("checkMerging", () => {
     expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
   });
 
-  test("merge all and none exist in TabMerger - no exceeding limit", () => {
+  test.each([["NOT"], ["SYNC"], ["ITEM"]])("merge all and none exist in TabMerger - %s exceeding limit", (type) => {
     var stub = { merged_tabs: { newValue: merge_all } };
     const into_group = "group-1";
 
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
     expected_groups[into_group].tabs = [
       ...expected_groups[into_group].tabs,
-      ...merge_all.map((x) => ({ title: x.title, url: x.url })),
+      ...merge_all.map((x) => ({ pinned: false, title: x.title, url: x.url })),
     ];
 
     localStorage.setItem("groups", JSON.stringify(init_groups));
@@ -515,91 +376,45 @@ describe("checkMerging", () => {
 
     jest.clearAllMocks();
 
-    AppFunc.checkMerging(stub, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
+    if (type === "NOT") {
+      AppFunc.checkMerging(stub, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
+    } else if (type === "SYNC") {
+      AppFunc.checkMerging(stub, "local", 100, ITEM_LIMIT, mockSet, mockSet);
+    } else {
+      AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet);
+    }
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
 
-    expect(chromeTabsRemove).toHaveBeenCalledTimes(1);
-    expect(chromeTabsRemove).toHaveBeenCalledWith([0, 1, 2]);
+    if (type === "NOT") {
+      expect(chromeTabsRemove).toHaveBeenCalledTimes(1);
+      expect(chromeTabsRemove).toHaveBeenCalledWith([0, 1, 2]);
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
 
-    expect(mockSet).toHaveBeenCalledTimes(2);
-    expect(mockSet).toHaveBeenNthCalledWith(1, 10);
-    expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
-
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
-
-    expect(sessionStorage.getItem("open_tabs")).toBe("[]");
-  });
-
-  test("merge all and none exist in TabMerger - exceeding SYNC limit", () => {
-    var stub = { merged_tabs: { newValue: merge_all } };
-    const into_group = "group-1";
-
-    var expected_groups = JSON.parse(localStorage.getItem("groups"));
-    expected_groups[into_group].tabs = [
-      ...expected_groups[into_group].tabs,
-      ...merge_all.map((x) => ({ title: x.title, url: x.url })),
-    ];
-
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    localStorage.setItem("into_group", into_group);
-    localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
-    sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
-
-    jest.clearAllMocks();
-
-    AppFunc.checkMerging(stub, "local", 100, ITEM_LIMIT, mockSet, mockSet);
-
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
-
-    expect(chromeTabsRemove).not.toHaveBeenCalled();
-    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-    expect(mockSet).not.toHaveBeenCalled();
+      expect(mockSet).toHaveBeenCalledTimes(2);
+      expect(mockSet).toHaveBeenNthCalledWith(1, 10);
+      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
+    } else {
+      expect(chromeTabsRemove).not.toHaveBeenCalled();
+      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+      expect(mockSet).not.toHaveBeenCalled();
+    }
 
     expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
 
-    expect(alert.mock.calls.pop()[0]).toContain("Total syncing capacity exceeded by");
-    expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
-  });
-
-  test("merge all and none exist in TabMerger - exceeding ITEM limit", () => {
-    var stub = { merged_tabs: { newValue: merge_all } };
-    const into_group = "group-1";
-
-    var expected_groups = JSON.parse(localStorage.getItem("groups"));
-    expected_groups[into_group].tabs = [
-      ...expected_groups[into_group].tabs,
-      ...merge_all.map((x) => ({ title: x.title, url: x.url })),
-    ];
-
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    localStorage.setItem("into_group", into_group);
-    localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
-    sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
-
-    jest.clearAllMocks();
-
-    AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet);
-
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
-
-    expect(chromeTabsRemove).not.toHaveBeenCalled();
-    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-    expect(mockSet).not.toHaveBeenCalled();
-
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
-
-    expect(alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded by");
-    expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
+    if (type === "NOT") {
+      expect(sessionStorage.getItem("open_tabs")).toBe("[]");
+    } else if (type === "SYNC") {
+      expect(alert.mock.calls.pop()[0]).toContain("Total syncing capacity exceeded by");
+      expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
+    } else {
+      expect(alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded by");
+      expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
+    }
   });
 });
 
@@ -708,6 +523,7 @@ describe("deleteAllGroups", () => {
 });
 
 describe("regexSearchForTab", () => {
+  var input;
   beforeEach(() => {
     document.body.innerHTML =
       `<div class="group-item">` +
@@ -722,45 +538,26 @@ describe("regexSearchForTab", () => {
       `    <a href="#" class="a-tab">bbbbb</a>` +
       `  </div>` +
       `</div>`;
+
+    input = container.querySelector(".search-filter input");
   });
 
-  it("works for group search - NO match", () => {
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#c" } });
+  it.each([
+    ["group", "NO", "#c", ["none", "none"]],
+    ["group", "YES", "#a", ["", "none"]],
+    ["tab", "NO", "c", ["none", "none"]],
+    ["tab", "YES", "b", ["none", ""]],
+    ["blank", "BACKSPACE_BLANK", "", ["", ""]],
+  ])("works for %s search - %s match", (type, match, value, expect_arr) => {
+    if (match !== "BACKSPACE_BLANK") {
+      fireEvent.change(input, { target: { value } });
+    } else {
+      fireEvent.change(input, { target: { value: "random" } });
+      fireEvent.change(input, { target: { value } });
+    }
 
-    [...document.body.querySelectorAll(".group-item")].forEach((group) => {
-      expect(group.style.display).toBe("none");
-    });
-  });
-
-  it("works for group search - match", () => {
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "#a" } });
-
-    const group_displays = [...document.body.querySelectorAll(".group-item")].map((x) => x.style.display);
-    expect(group_displays).toStrictEqual(["", "none"]);
-  });
-
-  it("works for tab search - NO match", () => {
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "c" } });
-
-    [...document.body.querySelectorAll(".draggable")].forEach((tab) => {
-      expect(tab.style.display).toBe("none");
-    });
-  });
-
-  it("works for tab search - match", () => {
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "b" } });
-
-    const tab_displays = [...document.body.querySelectorAll(".draggable")].map((x) => x.style.display);
-    expect(tab_displays).toStrictEqual(["none", ""]);
-  });
-
-  it("does nothing when no value is supplied (after backspace)", () => {
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "a" } });
-    fireEvent.change(container.querySelector(".search-filter input"), { target: { value: "" } });
-
-    [...document.body.querySelectorAll(".group-item")].forEach((group) => {
-      expect(group.style.display).toBe("");
-    });
+    const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable" : ".group-item")];
+    expect(targets.map((x) => x.style.display)).toStrictEqual(expect_arr);
   });
 });
 

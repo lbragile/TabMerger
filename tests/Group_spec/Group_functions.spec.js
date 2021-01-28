@@ -52,8 +52,7 @@ function alterGroups(remove) {
 }
 
 var mockSet, container, anything;
-var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
-var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
+var chromeLocalSetSpy, chromeLocalGetSpy, chromeSyncGetSpy;
 
 beforeAll(() => {
   console.error = jest.fn();
@@ -72,22 +71,26 @@ beforeEach(() => {
     <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
       <Group
         id="group-0"
-        title="Title"
+        title="GROUP A"
         color="#dedede"
         created="11/11/2020 @ 11:11:11"
+        num_tabs={0}
+        key={Math.random()}
+      ></Group>
+      <Group
+        id="group-1"
+        title="GROUP B"
+        color="#c7eeff"
+        created="22/22/2020 @ 22:22:22"
         num_tabs={0}
         key={Math.random()}
       ></Group>
     </AppProvider>
   ).container;
 
-  chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
   chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeSyncRemoveSpy = jest.spyOn(chrome.storage.sync, "remove");
-
   chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
   chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-  chromeLocalRemoveSpy = jest.spyOn(chrome.storage.local, "remove");
 });
 
 afterEach(() => {
@@ -152,7 +155,7 @@ describe("setTitle", () => {
   });
 });
 
-describe("dragOver", () => {
+describe("tabDragOver", () => {
   var drag_elem, stub;
 
   beforeEach(() => {
@@ -173,51 +176,29 @@ describe("dragOver", () => {
     global.scrollTo = jest.fn();
   });
 
-  it("finds the correct after element -> start/middle", () => {
-    jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
-      return document.querySelector(".draggable:nth-child(3)");
+  it.each([
+    ["START/MIDDLE", 2, window.innerHeight, ["b", "a", "c"]],
+    ["END", 3, 20, ["b", "c", "a"]],
+    ["AFTER=DRAG", 0, 0, ["a", "b", "c"]],
+  ])("finds the correct after element -> %s", (type, tab_num, scroll, expect_result) => {
+    var GroupHelperSpy = jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
+      return document.querySelectorAll(".draggable")[tab_num];
     });
+    stub.clientY = scroll;
 
     GroupFunc.tabDragOver(stub);
 
     const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
-    expect(tabs_text).toEqual(["b", "a", "c"]);
+    expect(tabs_text).toEqual(expect_result);
 
-    expect(global.scrollTo).toHaveBeenCalled();
-    expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
-  });
+    if (type === "END") {
+      expect(global.scrollTo).not.toHaveBeenCalled();
+    } else {
+      expect(global.scrollTo).toHaveBeenCalled();
+      expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
+    }
 
-  it("finds the correct after element -> end", () => {
-    jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
-      return document.querySelector(".draggable:nth-child(4)");
-    });
-
-    // to avoid scrolling
-    stub.clientY = 20;
-
-    GroupFunc.tabDragOver(stub);
-
-    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
-    expect(tabs_text).toEqual(["b", "c", "a"]);
-
-    expect(global.scrollTo).not.toHaveBeenCalled();
-  });
-
-  it("does nothing if after element = dragging element", () => {
-    jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
-      return document.querySelector(".draggable:nth-child(1)");
-    });
-
-    // scroll up
-    stub.clientY = 0;
-
-    GroupFunc.tabDragOver(stub);
-
-    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
-    expect(tabs_text).toEqual(["a", "b", "c"]);
-
-    expect(global.scrollTo).toHaveBeenCalled();
-    expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
+    GroupHelperSpy.mockRestore();
   });
 });
 
@@ -325,26 +306,43 @@ describe("deleteGroup", () => {
   });
 });
 
+describe("toggleGroup", () => {
+  test.each([[false], [true]])("hidden === %s", (hidden) => {
+    var stub = { target: { closest: jest.fn(() => ({ nextSibling: { id: "group-0" } })) } };
+    var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    expect_groups[stub.target.closest().nextSibling.id].hidden = !hidden;
+    jest.clearAllMocks();
+
+    GroupFunc.toggleGroup(stub, hidden, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expect_groups, scroll: 0 }, anything);
+
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(JSON.stringify(expect_groups));
+  });
+});
+
 describe("sendMessage", () => {
-  var spy, id;
+  var spy = jest.spyOn(chrome.runtime, "sendMessage");
 
   beforeEach(() => {
-    spy = jest.spyOn(chrome.runtime, "sendMessage");
-    id = chrome.runtime.id;
+    jest.clearAllMocks();
   });
 
-  it("sends a message to background script with correct parameters -> all", () => {
-    fireEvent.click(container.querySelector(".merge-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "all", id: "group-0" });
-  });
-
-  it("sends a message to background script with correct parameters -> left", () => {
-    fireEvent.click(container.querySelector(".merge-left-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "left", id: "group-0" });
-  });
-
-  it("sends a message to background script with correct parameters -> right", () => {
-    fireEvent.click(container.querySelector(".merge-right-btn"));
-    expect(spy).toHaveBeenCalledWith(id, { msg: "right", id: "group-0" });
+  it.each([
+    ["all", 0],
+    ["all", 1],
+    ["left", 0],
+    ["left", 1],
+    ["right", 0],
+    ["right", 1],
+  ])("sends a message to background script with correct parameters -> %s (id: %i)", (dir, id) => {
+    var selector = `.merge-${dir}-btn`.replace("all-", "");
+    fireEvent.click(container.querySelectorAll(selector)[id]);
+    expect(spy).toHaveBeenCalledWith(chrome.runtime.id, { msg: dir, id: "group-" + id });
   });
 });

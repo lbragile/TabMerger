@@ -1,7 +1,9 @@
 .env
+.stryker-tmp
 debug.log
 build_*.zip
 
 node_modules/
 coverage/
+reports/
 build/

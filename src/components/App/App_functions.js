@@ -224,7 +224,6 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
           // to avoid merging into group with existing tabs
           if (!into_group.includes("group")) {
             into_group = "group-0";
-            console.log(group_blocks);
             const group_values = Object.values(group_blocks);
             group_blocks[into_group] = {
               color: sync.settings.color,
@@ -237,7 +236,6 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
             group_values.forEach((val, i) => {
               group_blocks["group-" + (i + 1)] = val;
             });
-            console.log(group_blocks);
           }
 
           var item_bytes = JSON.stringify(group_blocks[into_group]).length + merged_bytes;

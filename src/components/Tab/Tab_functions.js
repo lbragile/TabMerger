@@ -34,7 +34,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 export function setInitTabs(setTabs, id) {
   chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
-    setTabs((groups && groups[id] && groups[id].tabs) || []);
+    setTabs((groups && groups[id]?.tabs) || []);
   });
 }
 
