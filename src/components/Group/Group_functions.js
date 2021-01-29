@@ -32,7 +32,7 @@ import { getTimestamp, updateTabTotal } from "../App/App_helpers";
  * @param {HTMLElement} e Either the group's color picker value or the group container
  * @param {string} id Used to find the group whose background needs to be set
  */
-export function setGroupBackground(e, id) {
+export function setBGColor(e, id) {
   var color, target;
   if (e.target) {
     color = e.target.value;
@@ -42,8 +42,23 @@ export function setGroupBackground(e, id) {
     color = group_title.querySelector("input[type='color']").value;
     target = e;
   }
+
+  const adjusted_text_color = color > "#777777" ? "black" : "white";
   [...target.parentNode.children].forEach((child) => {
     child.style.background = color;
+    const selectors = ".title-edit-input, .group-count, .hidden-symbol, .btn-in-group-title svg, .group-color svg, .draggable svg, .a-tab"; // prettier-ignore
+    [...child.querySelectorAll(selectors)].forEach((x) => {
+      if (x.classList.contains("a-tab")) {
+        x.classList.value = x.classList.value.split(" ").filter((cl) => !cl.includes("text-")).join(" "); // prettier-ignore
+        x.classList.add("text-" + (adjusted_text_color === "black" ? "primary" : "light"));
+      } else {
+        x.style.color = adjusted_text_color;
+      }
+    });
+
+    if (child.classList.contains("group-title")) {
+      child.style.borderBottom = "1px dashed " + adjusted_text_color;
+    }
   });
 
   chrome.storage.local.get("groups", (local) => {
@@ -53,6 +68,18 @@ export function setGroupBackground(e, id) {
       local.groups[id].color = color;
     }
     chrome.storage.local.set({ groups: local.groups }, () => {});
+  });
+}
+
+/**
+ * Update the group text color to make it high contrast regardless of background color
+ * @param {Function} setGroups For state updates of the current groups
+ */
+export function updateTextColor(setGroups) {
+  chrome.storage.local.get("groups", (local) => {
+    chrome.storage.local.set({ scroll: document.documentElement.scrollTop }, () => {
+      setGroups(JSON.stringify(local.groups));
+    });
   });
 }
 

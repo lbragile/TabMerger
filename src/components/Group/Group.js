@@ -40,17 +40,17 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
 
   const { setTabTotal, setGroups } = useContext(AppContext);
 
-  const setGroupBackground = useCallback(
+  const setBGColor = useCallback(
     (e) => {
-      GroupFunc.setGroupBackground(e, id);
+      GroupFunc.setBGColor(e, id);
     },
     [id]
   );
 
   useEffect(() => {
     var group = document.getElementById(id);
-    setGroupBackground(group);
-  }, [id, setGroupBackground]);
+    setBGColor(group);
+  }, [id, setBGColor]);
 
   return (
     <div
@@ -76,7 +76,8 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
           <BiColorFill className="input-color" onClick={(e) => e.target.closest("div").nextSibling.click()} />
           <span className="tiptext-group-color">{translate("pickColor")}</span>
         </div>
-        <input type="color" defaultValue={color} onChange={(e) => setGroupBackground(e)} />
+        {/*prettier-ignore*/}
+        <input type="color" defaultValue={color} onChange={(e) => setBGColor(e)} onBlur={() => GroupFunc.updateTextColor()} />
 
         <GroupTitleBtns hidden={hidden} setTabTotal={setTabTotal} setGroups={setGroups} />
       </div>

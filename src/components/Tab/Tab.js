@@ -33,7 +33,7 @@ import { TiDelete } from "react-icons/ti";
 
 import "./Tab.css";
 
-export default function Tab({ id, item_limit, hidden }) {
+export default function Tab({ id, item_limit, hidden, textColor }) {
   const [tabs, setTabs] = useState([]);
   const { setTabTotal, setGroups } = useContext(AppContext);
 
@@ -57,15 +57,15 @@ export default function Tab({ id, item_limit, hidden }) {
               draggable={false}
               onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, setTabTotal, setGroups)}
             >
-              <TiDelete size="1rem" color="black" />
+              <TiDelete size="1rem" color={textColor === "light" ? "white" : "black"} />
             </p>
             <p className="move-tab">
-              <BiGridSmall size="1.5rem" color="black" />
+              <BiGridSmall size="1.5rem" color={textColor === "light" ? "white" : "black"} />
             </p>
             <img className="img-tab" src={TabHelper.getFavIconURL(tab.url)} alt="icon" draggable={false} />
             <a
               href={tab.url}
-              className="a-tab mx-1"
+              className={"a-tab mx-1 text-" + textColor}
               target="_blank"
               rel="noreferrer"
               draggable={false}

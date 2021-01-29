@@ -296,7 +296,8 @@ export function groupFormation(groups, item_limit) {
     var sorted_vals = group_values.length > 10 ? AppHelper.sortByKey(parsed_groups) : group_values;
 
     return sorted_vals.map((x, i) => {
-      var id = "group-" + i;
+      const id = "group-" + i;
+      const textColor = x.color > "#777777" ? "primary" : "light";
       return (
         <Group
           id={id}
@@ -307,7 +308,7 @@ export function groupFormation(groups, item_limit) {
           hidden={x.hidden}
           key={Math.random()}
         >
-          <Tab id={id} item_limit={item_limit} hidden={x.hidden} />
+          <Tab id={id} item_limit={item_limit} hidden={x.hidden} textColor={textColor} />
         </Group>
       );
     });

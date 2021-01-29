@@ -59,6 +59,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 /* TAB URL */
 .a-tab {
   font-size: 0.95rem;
+  font-weight: bold;
   max-width: 85%;
   text-align: left;
   vertical-align: middle;
