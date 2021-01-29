@@ -64,334 +64,6 @@
     
 
     
-    <h4 class="name" id=".dragEnd"><span class="type-signature">(static) </span>dragEnd<span class="signature">(e, item_limit, setGroups)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Handles the drop event once a drag is finished. Needs to re-order tabs accordingly and
-check for sync limit violations - warning the user accordingly.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>e</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">HTMLElement</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The dragged tab</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>item_limit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Group based sync limit</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>setGroups</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>For re-rendering the groups</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line60">line 60</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value</li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".dragStart"><span class="type-signature">(static) </span>dragStart<span class="signature">(e)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Adds necessary classes to the tab element once a drag event is initialized</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>e</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">HTMLElement</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The tab which will be dragged within the same group or across groups</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line45">line 45</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
     <h4 class="name" id=".handleTabClick"><span class="type-signature">(static) </span>handleTabClick<span class="signature">(e)</span><span class="type-signature"></span></h4>
     
 
@@ -495,6 +167,143 @@ of the tab to consider for removal after a user clicks to restore it.</p>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line143">line 143</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".handleTabTitleChange"><span class="type-signature">(static) </span>handleTabTitleChange<span class="signature">(e)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Updates the local storage with the new title of the tab for the correct group.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Node representing the tab that was clicked</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -915,6 +724,334 @@ If Chrome's local storage is empty, this is set to an empty array.</p>
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id=".tabDragEnd"><span class="type-signature">(static) </span>tabDragEnd<span class="signature">(e, item_limit, setGroups)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Handles the drop event once a drag is finished. Needs to re-order tabs accordingly and
+check for sync limit violations - warning the user accordingly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The dragged tab</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>item_limit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Group based sync limit</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>setGroups</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For re-rendering the groups</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".tabDragStart"><span class="type-signature">(static) </span>tabDragStart<span class="signature">(e)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Adds necessary classes to the tab element once a drag event is initialized</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tab which will be dragged within the same group or across groups</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
@@ -930,13 +1067,13 @@ If Chrome's local storage is empty, this is set to an empty array.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-__Script_Background_functions.html">__Script/Background_functions</a></li><li><a href="module-__Script_Background_helpers.html">__Script/Background_helpers</a></li><li><a href="module-__Script_Settings_functions.html">__Script/Settings_functions</a></li><li><a href="module-__Script_Settings_helpers.html">__Script/Settings_helpers</a></li><li><a href="module-App_App_functions.html">App/App_functions</a></li><li><a href="module-App_App_helpers.html">App/App_helpers</a></li><li><a href="module-Group_Group_functions.html">Group/Group_functions</a></li><li><a href="module-Group_Group_helpers.html">Group/Group_helpers</a></li><li><a href="module-Tab_Tab_functions.html">Tab/Tab_functions</a></li><li><a href="module-Tab_Tab_helpers.html">Tab/Tab_helpers</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-__CONSTANTS.html">__CONSTANTS</a></li><li><a href="module-__Script_Background_functions.html">__Script/Background_functions</a></li><li><a href="module-__Script_Background_helpers.html">__Script/Background_helpers</a></li><li><a href="module-__Script_Settings_functions.html">__Script/Settings_functions</a></li><li><a href="module-__Script_Settings_helpers.html">__Script/Settings_helpers</a></li><li><a href="module-App_App_functions.html">App/App_functions</a></li><li><a href="module-App_App_helpers.html">App/App_helpers</a></li><li><a href="module-Group_Group_functions.html">Group/Group_functions</a></li><li><a href="module-Tab_Tab_functions.html">Tab/Tab_functions</a></li><li><a href="module-Tab_Tab_helpers.html">Tab/Tab_helpers</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Jan 21 2021 23:06:18 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 12:48:44 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

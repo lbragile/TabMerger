@@ -62,7 +62,7 @@ TabMerger team at &lt;https://lbragile.github.io/TabMerger-Extension/contact/>
 export function setInitTabs(setTabs, id) {
   chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
-    setTabs((groups &amp;&amp; groups[id] &amp;&amp; groups[id].tabs) || []);
+    setTabs((groups &amp;&amp; groups[id]?.tabs) || []);
   });
 }
 
@@ -70,7 +70,7 @@ export function setInitTabs(setTabs, id) {
  * Adds necessary classes to the tab element once a drag event is initialized
  * @param {HTMLElement} e The tab which will be dragged within the same group or across groups
  */
-export function dragStart(e) {
+export function tabDragStart(e) {
   var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
   target.classList.add("dragging");
   target.closest(".group").classList.add("drag-origin");
@@ -85,7 +85,7 @@ export function dragStart(e) {
  *
  * @see ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value
  */
-export function dragEnd(e, item_limit, setGroups) {
+export function tabDragEnd(e, item_limit, setGroups) {
   e.stopPropagation();
   e.target.classList.remove("dragging");
 
@@ -98,7 +98,7 @@ export function dragEnd(e, item_limit, setGroups) {
   const origin_id = drag_origin.id;
 
   var anchor = tab.querySelector("a");
-  var tab_bytes = JSON.stringify({ title: anchor.innerText, url: anchor.href }).length;
+  var tab_bytes = JSON.stringify({ pinned: !!anchor.querySelector("svg"), title: anchor.textContent, url: anchor.href }).length; // prettier-ignore
 
   chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
@@ -111,18 +111,18 @@ export function dragEnd(e, item_limit, setGroups) {
       if (origin_id !== closest_group.id) {
         // remove tab from group that originated the drag
         groups[origin_id].tabs = groups[origin_id].tabs.filter((group_tab) => {
-          return group_tab.url !== tab.lastChild.href;
+          return group_tab.url !== anchor.href;
         });
       }
 
       // reorder tabs based on current positions
       groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
         const anchor = x.querySelector("a");
-        return { title: anchor.textContent, url: anchor.href };
+        return { pinned: !!anchor.querySelector("svg"), title: anchor.textContent, url: anchor.href };
       });
 
       // update the groups
-      chrome.storage.local.set({ groups }, () => {
+      chrome.storage.local.set({ groups, scroll: document.documentElement.scrollTop }, () => {
         setGroups(JSON.stringify(groups));
       });
     } else {
@@ -155,7 +155,7 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
   chrome.storage.local.get("groups", (local) => {
     var group_blocks = local.groups;
     group_blocks[group_id].tabs = tabs.filter((x) => x.url !== url);
-    chrome.storage.local.set({ groups: group_blocks }, () => {
+    chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
       setTabs(group_blocks[group_id].tabs);
       setTabTotal(document.querySelectorAll(".draggable").length);
       setGroups(JSON.stringify(group_blocks));
@@ -170,7 +170,48 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
  */
 export function handleTabClick(e) {
   e.preventDefault();
-  chrome.storage.local.set({ remove: [e.target.closest(".group").id, e.target.href] }, () => {});
+
+  // can only left click when not editing the tab title
+  if (e.button === 0 &amp;&amp; !e.target.classList.contains("edit-tab-title")) {
+    // left
+    chrome.storage.local.set({ remove: [e.target.closest(".group").id, e.target.href] }, () => {
+      e.target.click();
+      e.target.blur();
+    });
+  } else if (e.button === 1) {
+    // middle
+    e.target.focus();
+    e.target.classList.add("edit-tab-title");
+  }
+}
+
+/**
+ * Updates the local storage with the new title of the tab for the correct group.
+ * @param {HTMLElement} e Node representing the tab that was clicked
+ */
+export function handleTabTitleChange(e) {
+  e.target.classList.remove("edit-tab-title");
+
+  if (e.which === 13 || e.keyCode === 13) {
+    e.preventDefault();
+  } else {
+    const group_id = e.target.closest(".group").id;
+    chrome.storage.local.get("groups", (local) => {
+      var tabs = local.groups[group_id].tabs;
+
+      // update the tab's title
+      tabs = tabs.map((x) => {
+        if (x.url === e.target.href) {
+          x.title = e.target.textContent;
+        }
+        return x;
+      });
+
+      local.groups[group_id].tabs = tabs;
+
+      chrome.storage.local.set({ groups: local.groups }, () => {});
+    });
+  }
 }
 </code></pre>
         </article>
@@ -182,13 +223,13 @@ export function handleTabClick(e) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-__Script_Background_functions.html">__Script/Background_functions</a></li><li><a href="module-__Script_Background_helpers.html">__Script/Background_helpers</a></li><li><a href="module-__Script_Settings_functions.html">__Script/Settings_functions</a></li><li><a href="module-__Script_Settings_helpers.html">__Script/Settings_helpers</a></li><li><a href="module-App_App_functions.html">App/App_functions</a></li><li><a href="module-App_App_helpers.html">App/App_helpers</a></li><li><a href="module-Group_Group_functions.html">Group/Group_functions</a></li><li><a href="module-Group_Group_helpers.html">Group/Group_helpers</a></li><li><a href="module-Tab_Tab_functions.html">Tab/Tab_functions</a></li><li><a href="module-Tab_Tab_helpers.html">Tab/Tab_helpers</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-__CONSTANTS.html">__CONSTANTS</a></li><li><a href="module-__Script_Background_functions.html">__Script/Background_functions</a></li><li><a href="module-__Script_Background_helpers.html">__Script/Background_helpers</a></li><li><a href="module-__Script_Settings_functions.html">__Script/Settings_functions</a></li><li><a href="module-__Script_Settings_helpers.html">__Script/Settings_helpers</a></li><li><a href="module-App_App_functions.html">App/App_functions</a></li><li><a href="module-App_App_helpers.html">App/App_helpers</a></li><li><a href="module-Group_Group_functions.html">Group/Group_functions</a></li><li><a href="module-Tab_Tab_functions.html">Tab/Tab_functions</a></li><li><a href="module-Tab_Tab_helpers.html">Tab/Tab_helpers</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Jan 21 2021 23:06:18 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 12:48:44 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -35,7 +35,7 @@ import { BiColorFill, BiHide } from "react-icons/bi";
 import "./Group.css";
 import "../Button/Button.css";
 
-export default function Group({ id, title, color, created, num_tabs, hidden, children }) {
+export default function Group({ id, title, color, created, num_tabs, hidden, locked, starred, children }) {
   const TITLE_TRIM_LIMIT = useRef(50);
 
   const { setTabTotal, setGroups } = useContext(AppContext);
@@ -54,7 +54,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
 
   return (
     <div
-      className={"group-item " + (id === "group-0" ? "mt-0" : "mt-2")}
+      className={"group-item mt-2"}
       draggable={true}
       onDragStart={(e) => GroupFunc.groupDragStart(e)}
       onDragEnd={(e) => GroupFunc.groupDragEnd(e, setGroups)}
@@ -79,7 +79,8 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
         {/*prettier-ignore*/}
         <input type="color" defaultValue={color} onChange={(e) => setBGColor(e)} onBlur={() => GroupFunc.updateTextColor()} />
 
-        <GroupTitleBtns hidden={hidden} setTabTotal={setTabTotal} setGroups={setGroups} />
+        {/*prettier-ignore*/}
+        <GroupTitleBtns hidden={hidden} locked={locked} starred={starred} setTabTotal={setTabTotal} setGroups={setGroups} />
       </div>
 
       <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => dragOver(e, "tab")}>

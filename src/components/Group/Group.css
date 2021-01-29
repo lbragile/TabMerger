@@ -21,6 +21,11 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+.group-item {
+  position: relative;
+  transform: translateZ(0); /* This prevents grabbing pixels above when dragging*/
+}
+
 .group-title {
   width: 40%;
   margin: 0;
@@ -82,7 +87,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 /* COLOR PICKER (GROUP) */
 .input-color {
   position: absolute;
-  left: 90%;
+  right: -30px;
   top: 4px;
   width: 22px;
   height: 22px;

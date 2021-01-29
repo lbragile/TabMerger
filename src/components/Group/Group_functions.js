@@ -25,7 +25,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Group/Group_functions
  */
 
-import { getTimestamp, updateTabTotal } from "../App/App_helpers";
+import { getTimestamp, updateTabTotal, sortByKey } from "../App/App_helpers";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -130,6 +130,7 @@ export function groupDragEnd(e, setGroups) {
   e.preventDefault();
 
   if (e.target.classList.contains("dragging-group")) {
+    e.target.classList.remove("dragging-group");
     var group_items = document.querySelectorAll(".group-item");
     var new_groups = {};
     group_items.forEach((x, i) => {
@@ -137,6 +138,8 @@ export function groupDragEnd(e, setGroups) {
         color: x.querySelector("input[type='color']").value,
         created: x.querySelector(".created span").textContent,
         hidden: !!x.querySelector(".hidden-symbol"),
+        locked: x.querySelector(".lock-group-btn .tiptext-group-title").textContent.includes("Unlock"),
+        starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
         tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
           const a = tab.querySelector("a");
           return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
@@ -145,7 +148,6 @@ export function groupDragEnd(e, setGroups) {
       };
     });
 
-    console.log(JSON.stringify(new_groups, null, 2));
     chrome.storage.local.set({ groups: new_groups, scroll: document.documentElement.scrollTop }, () => {
       setGroups(JSON.stringify(new_groups));
     });
@@ -176,64 +178,109 @@ export function deleteGroup(e, setTabTotal, setGroups) {
     chrome.storage.sync.get("settings", (sync) => {
       var target = e.target.closest(".group-title").nextSibling;
       var group_blocks = local.groups;
+      if (!group_blocks[target.id].locked) {
+        // if removed the only existing group
+        if (Object.keys(group_blocks).length === 1) {
+          group_blocks["group-0"] = {
+            color: sync.settings.color,
+            created: getTimestamp(),
+            hidden: false,
+            locked: false,
+            starred: false,
+            tabs: [],
+            title: sync.settings.title,
+          };
+        } else {
+          // must rename all keys for the groups above deleted group item
+          var group_names = []; // need to change these
+          var index_deleted = target.id.split("-")[1];
+          Object.keys(group_blocks).forEach((key) => {
+            if (parseInt(key.split("-")[1]) > parseInt(index_deleted)) {
+              group_names.push(key);
+            }
+          });
 
-      // if removed the only existing group
-      if (Object.keys(group_blocks).length === 1) {
-        group_blocks["group-0"] = {
-          color: sync.settings.color,
-          created: getTimestamp(),
-          hidden: false,
-          tabs: [],
-          title: sync.settings.title,
-        };
-      } else {
-        // must rename all keys for the groups above deleted group item
-        var group_names = []; // need to change these
-        var index_deleted = target.id.split("-")[1];
-        Object.keys(group_blocks).forEach((key) => {
-          if (parseInt(key.split("-")[1]) > parseInt(index_deleted)) {
-            group_names.push(key);
+          // perform the renaming of items
+          var group_blocks_str = JSON.stringify(group_blocks);
+          group_names.forEach((key) => {
+            var new_name = "group-" + (parseInt(key.split("-")[1]) - 1);
+            group_blocks_str = group_blocks_str.replace(key, new_name);
+          });
+
+          // get back json object with new item key names
+          group_blocks = JSON.parse(group_blocks_str);
+
+          // if group to be deleted is last - must only delete it
+          if (!group_names[0]) {
+            delete group_blocks["group-" + index_deleted];
           }
-        });
-
-        // perform the renaming of items
-        var group_blocks_str = JSON.stringify(group_blocks);
-        group_names.forEach((key) => {
-          var new_name = "group-" + (parseInt(key.split("-")[1]) - 1);
-          group_blocks_str = group_blocks_str.replace(key, new_name);
-        });
-
-        // get back json object with new item key names
-        group_blocks = JSON.parse(group_blocks_str);
-
-        // if group to be deleted is last - must only delete it
-        if (!group_names[0]) {
-          delete group_blocks["group-" + index_deleted];
         }
-      }
 
-      chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
-        setGroups(JSON.stringify(group_blocks));
-        setTabTotal(updateTabTotal(group_blocks));
-      });
+        chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
+          setGroups(JSON.stringify(group_blocks));
+          setTabTotal(updateTabTotal(group_blocks));
+        });
+      } else {
+        alert("This group is locked and thus cannot be deleted. Press the lock symbol to first unlock and then retry deleting it!"); // prettier-ignore
+      }
     });
   });
 }
 
 /**
- * Allows the user to collapse the tabs in the corresponding group,
+ * Lock -> locks/unlocks a given group. A locked group will not be deleted if a user accidently causes a
+ * delete action to be performed. Thus, important tabs should go in locked groups when backups are not made.
+ *
+ * Star -> starring a given group moving it to the top below other starred groups.
+ * A starred group will also be locked automatically to prevent accidental deletion.
+ * Staring a group can be useful to avoid long drag and drop operations when many groups are present
+ *
+ * Hide -> Allows the user to collapse the tabs in the corresponding group,
  * reducing how much space the group takes up. Note that this is not persistent currently.
  * The user can also re-click the toggle button to expand the tabs of a collapsed group.
- * @param {HTMLElement} e Node corresponding to the group whose tabs will be collapsed/expanded.
- * @param {boolean} hide Whether the group's tabs are visible or hidden
+ *
+ * @param {HTMLElement} e Node corresponding to the group that will be locked/unlocked.
+ * @param {"visibility"|"lock"|"star"} toggle_type Type of operation to perform on a group.
  * @param {Function} setGroups For re-rendering the group's visible/hidden state
  */
-export function toggleGroup(e, hidden, setGroups) {
+export function toggleGroup(e, toggle_type, setGroups) {
   const id = e.target.closest(".group-title").nextSibling.id;
+  var scroll = document.documentElement.scrollTop;
+  var groups = {};
+
   chrome.storage.local.get("groups", (local) => {
-    local.groups[id].hidden = !hidden;
-    chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
-      setGroups(JSON.stringify(local.groups));
+    switch (toggle_type) {
+      case "visibility":
+        local.groups[id].hidden = !local.groups[id].hidden;
+        groups = local.groups;
+        break;
+      case "lock":
+        local.groups[id].locked = !local.groups[id].locked;
+        groups = local.groups;
+        break;
+
+      default:
+        scroll = 0;
+        groups = local.groups;
+        local.groups[id].starred = !local.groups[id].starred;
+
+        if (local.groups[id].starred) {
+          local.groups[id].locked = true;
+
+          const starred_val = local.groups[id];
+          delete local.groups[id];
+          const other_vals = sortByKey(local.groups);
+
+          groups["group-" + 0] = starred_val;
+          other_vals.forEach((val, i) => {
+            groups["group-" + (i + 1)] = val;
+          });
+        }
+        break;
+    }
+
+    chrome.storage.local.set({ groups, scroll }, () => {
+      setGroups(JSON.stringify(groups));
     });
   });
 }

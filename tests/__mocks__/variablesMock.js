@@ -77,6 +77,8 @@ global.default_group = {
   color: "#dedede",
   created: "",
   hidden: false,
+  locked: false,
+  starred: false,
   tabs: [],
   title: "Title",
 };

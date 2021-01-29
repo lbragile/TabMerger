@@ -73,13 +73,13 @@ export async function filterTabs(info, tab, group_id) {
 
           // apply blacklist items
           tabs = tabs.filter((x) => {
-            var bl_sites = sync.settings.blacklist.replace(/\\s/g, "").split(",");
+            var bl_sites = sync.settings.blacklist.split(", ").filter((x) => x !== "");
             bl_sites = bl_sites.map((site) => site.toLowerCase());
-            return !bl_sites.includes(x.url);
+            return !bl_sites.includes(x.url.toLowerCase());
           });
 
           // remove unnecessary information from each tab
-          tabs = tabs.map((x) => ({ title: x.title, url: x.url, id: x.id }));
+          tabs = tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url, id: x.id }));
 
           // duplicates (already in TabMerger) can be removed
           var duplicates = tabs.filter((x) => {
@@ -101,7 +101,7 @@ export async function filterTabs(info, tab, group_id) {
           // filter out offending indicies
           tabs = tabs.filter((_, i) => !indicies.includes(i));
 
-          var whichGroup = group_id ? group_id : "group-0";
+          var whichGroup = group_id ? group_id : "contextMenu";
           chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs }, () => {});
         });
       });
@@ -144,7 +144,7 @@ export function findExtTabAndSwitch() {
  */
 export function excludeSite(tab) {
   chrome.storage.sync.get("settings", (result) => {
-    result.settings.blacklist += result.settings.blacklist === "" ? `${tab.url}` : `, ${tab.url}`;
+    result.settings.blacklist += `${tab.url}, `;
     chrome.storage.sync.set({ settings: result.settings }, () => {});
   });
 }

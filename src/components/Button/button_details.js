@@ -74,27 +74,29 @@ export const GLOBAL_BUTTONS = (sync_node, group_limit, setTabTotal, setGroups) =
   ];
 };
 
-export const GROUP_TITLE_BUTTONS = (hidden, setTabTotal, setGroups) => {
+export const GROUP_TITLE_BUTTONS = (hidden, locked, starred, setTabTotal, setGroups) => {
   return [
     {
       classes: "move-group-btn btn-in-group-title",
-      translate: "Move Group",
-      icon: <BiGridSmall color="black" size="1.6rem" />,
+      translate: null,
+      icon: <BiGridSmall size="1.6rem" />,
     },
     {
       classes: "lock-group-btn btn-in-group-title",
-      translate: "Lock Group",
-      icon: <BiLockOpen color="black" size="1.3rem" />,
+      translate: locked ? "Unlock Group" : "Lock Group",
+      icon: locked ? <BiLock size="1.3rem" /> : <BiLockOpen size="1.3rem" />,
+      clickFn: (e) => GroupFunc.toggleGroup(e, "lock", setGroups),
     },
     {
       classes: "star-group-btn btn-in-group-title",
-      translate: "Star Group",
-      icon: <BsStar color="black" size="1.1rem" />,
+      translate: starred ? "Unstar Group" : "Star Group",
+      icon: starred ? <BsStarFill size="1.1rem" /> : <BsStar size="1.1rem" />,
+      clickFn: (e) => GroupFunc.toggleGroup(e, "star", setGroups),
     },
     {
       classes: "show-hide-btn btn-in-group-title",
       translate: hidden ? AppFunc.translate("showTabs") : AppFunc.translate("hideTabs"),
-      clickFn: (e) => GroupFunc.toggleGroup(e, hidden, setGroups),
+      clickFn: (e) => GroupFunc.toggleGroup(e, "visibility", setGroups),
       icon: <AiOutlineMinus />,
     },
     {

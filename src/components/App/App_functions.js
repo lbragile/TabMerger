@@ -230,6 +230,8 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
               color: sync.settings.color,
               created: AppHelper.getTimestamp(),
               hidden: false,
+              locked: false,
+              starred: false,
               tabs: [],
               title: sync.settings.title,
             };
@@ -306,6 +308,8 @@ export function groupFormation(groups, item_limit) {
           created={x.created || AppHelper.getTimestamp()}
           num_tabs={(x.tabs && x.tabs.length) || 0}
           hidden={x.hidden}
+          locked={x.locked}
+          starred={x.starred}
           key={Math.random()}
         >
           <Tab id={id} item_limit={item_limit} hidden={x.hidden} textColor={textColor} />
@@ -337,6 +341,8 @@ export function addGroup(num_group_limit, setGroups) {
           color: sync.settings.color,
           created: AppHelper.getTimestamp(),
           hidden: false,
+          locked: false,
+          starred: false,
           tabs: [],
           title: sync.settings.title,
         };
@@ -365,8 +371,8 @@ export function openAllTabs() {
 }
 
 /**
- * Allows the user to delete every group (including tabs) inside TabMerger.
- * A default group is formed to allow for re-merging after deletion.
+ * Allows the user to delete every UNLOCKED group (including tabs) inside TabMerger.
+ * A default group is formed above all locked groups to allow for re-merging after deletion.
  * The default group has title & color matching settings parameter and a creation timestamp.
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setGroups For re-rendering the groups
@@ -375,15 +381,37 @@ export function deleteAllGroups(setTabTotal, setGroups) {
   const response = window.confirm("Are you sure?\n\nThis action will delete all groups/tabs that are not \"locked\".\nMake sure you have a backup!"); // prettier-ignore
   if (response) {
     chrome.storage.sync.get("settings", (sync) => {
-      var new_entry = {
-        "group-0": {
-          color: sync.settings.color,
-          created: AppHelper.getTimestamp(),
-          hidden: false,
-          tabs: [],
-          title: sync.settings.title,
-        },
+      var new_entry = {};
+      var locked_counter = 0;
+      document.querySelectorAll(".group-item").forEach((x) => {
+        if (x.querySelector(".tiptext-group-title").textContent.includes("Unlock")) {
+          new_entry["group-" + locked_counter] = {
+            color: x.querySelector("input[type='color']").value,
+            created: x.querySelector(".created span").textContent,
+            hidden: !!x.querySelector(".hidden-symbol"),
+            locked: true,
+            starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
+            tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
+              const a = tab.querySelector("a");
+              return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
+            }),
+            title: x.querySelector(".title-edit-input").value,
+          };
+
+          locked_counter++;
+        }
+      });
+
+      new_entry["group-" + locked_counter] = {
+        color: sync.settings.color,
+        created: AppHelper.getTimestamp(),
+        hidden: false,
+        locked: false,
+        starred: false,
+        tabs: [],
+        title: sync.settings.title,
       };
+
       chrome.storage.local.set({ groups: new_entry, scroll: document.documentElement.scrollTop }, () => {
         setTabTotal(AppHelper.updateTabTotal(new_entry));
         setGroups(JSON.stringify(new_entry));
