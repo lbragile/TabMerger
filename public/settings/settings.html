@@ -36,25 +36,34 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
     <link rel="stylesheet" href="settings.css" />
   </head>
   <body>
-    <div class="container my-auto">
-      <a href="#">
-        <img id="logo-img" class="mt-4 mb-2" src="../images/logo-full-rescale.PNG" alt="TabMerger Logo" />
-      </a>
-      <div class="title d-flex flex-row align-items-end">
-        <h2>Settings</h2>
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="darkMode" />
-          <label class="custom-control-label" for="darkMode">🌗</label>
+    <nav class="sidebar">
+      <div id="sidebar-container">
+        <a href="#">
+          <img id="logo-img" src="../images/logo-full-rescale.PNG" alt="TabMerger Logo" />
+        </a>
+        <div class="title d-flex flex-column align-items-center">
+          <h2 class="text-white my-5">Settings</h2>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="darkMode" />
+            <label class="custom-control-label" for="darkMode">🌗</label>
+          </div>
+        </div>
+
+        <div class="my-5 d-flex flex-column align-items-center justify-content-center">
+          <button class="option-btn btn btn-primary" id="save-btn">Save</button>
+          <button class="option-btn btn btn-secondary my-5" id="reset-btn">Reset</button>
+          <button class="option-btn btn btn-light" id="home-btn">Home</button>
         </div>
       </div>
+    </nav>
 
-      <hr />
+    <div class="container">
       <div class="row">
-        <div class="col-6">
+        <div class="col-lg-6">
           <section>
             <div class="row mx-0">
               <h5 class="mr-2 mb-0">Default Group Color:</h5>
-              <input type="color" value="#DEDEDE" id="options-default-color" />
+              <input type="color" value="#dedede" id="options-default-color" />
             </div>
 
             <div>
@@ -65,7 +74,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
           <section>
             <div class="row mx-0">
               <h5 class="mr-2 mb-0">Default Group Title:</h5>
-              <input class="px-1 w-10" type="text" value="Title" maxlength="15" id="options-default-title" />
+              <input class="px-1 w-10" type="text" value="Title" maxlength="50" id="options-default-title" />
             </div>
             <div>
               <small>This will only be applied on new groups formed after settings are saved!</small>
@@ -89,16 +98,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               </div>
               <textarea
                 class="px-1 mt-2"
-                rows="4"
+                rows="12"
                 id="options-blacklist"
-                placeholder="http://www.google.com, https://www.facebook.com"
+                placeholder="http://www.google.com, https://www.facebook.com, etc."
                 maxlength="1000"
               ></textarea>
             </div>
           </section>
         </div>
 
-        <div class="col-6">
+        <div class="col-lg-6">
           <section>
             <div>
               <h5 class="mb-0">Extension Opening Behavior:</h5>
@@ -122,10 +131,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               <label for="remove" class="mb-0">Open & Merge</label>
               <div class="ml-3 text-justify">
                 <small
-                  >Same as above but <b>with</b> merging. The merged tabs will be grouped into the top group. Thus, the
-                  user will then be able to sort the tabs along various groups via the drag-and-drop feature. This
-                  behavior is desireable when the user wants to avoid opening an extra tab (TabMerger) prior to
-                  merging.</small
+                  >Same as above but <b>with</b> merging. The merged tabs will be grouped into a new group. Thus, the
+                  user will then be able to sort the tabs among various groups or simply sort the groups via the
+                  drag-and-drop feature. This behavior is desireable when the user wants to avoid opening an extra tab
+                  (TabMerger) prior to merging.</small
                 >
               </div>
             </div>
@@ -156,12 +165,33 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               </div>
             </div>
           </section>
+
+          <section>
+            <div>
+              <h5 class="mb-0">Pinned Tab Merge Behavior:</h5>
+              <small>This is considered when merging tabs into TabMerger.</small>
+            </div>
+
+            <div class="my-2">
+              <input type="radio" id="merge-pin" name="pin-tabs" value="include" checked />
+              <label for="include" class="mb-0">Include Pinned Tabs When Merging (<i>default</i>)</label>
+              <div class="ml-3 mt-0">
+                <small>TabMerger also allows you to toggle the tab's pin status directly.</small>
+              </div>
+            </div>
+
+            <div>
+              <input type="radio" id="dont-merge-pin" name="pin-tabs" value="avoid" />
+              <label for="avoid" class="mb-0">Avoid Pinned Tabs When Merging</label>
+              <div class="ml-3">
+                <small
+                  >Your pinned tabs will not be merged. Only regular tabs (unpinned) are considered in the merging
+                  process.
+                </small>
+              </div>
+            </div>
+          </section>
         </div>
-      </div>
-      <div class="mx-0 d-flex flex-row align-items-center">
-        <button class="option-btn btn btn-primary" id="save-btn">Save</button>
-        <button class="option-btn btn btn-secondary ml-1 mr-4" id="reset-btn">Reset</button>
-        <button class="option-btn btn btn-light ml-4" id="home-btn">Home</button>
       </div>
     </div>
 

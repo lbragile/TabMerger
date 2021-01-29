@@ -30,7 +30,6 @@ var mockSet, anything;
 var chromeSyncGetSpy, chromeSyncSetSpy, chromeLocalGetSpy, chromeLocalSetSpy, chromeTabsQuerySpy;
 
 beforeAll(() => {
-  console.error = jest.fn();
   mockSet = jest.fn();
   anything = expect.anything();
 

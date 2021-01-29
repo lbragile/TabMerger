@@ -34,7 +34,6 @@ var chromeSyncGetSpy, chromeSyncSetSpy;
 
 beforeAll(() => {
   mockSet = jest.fn();
-  console.error = jest.fn();
   anything = expect.anything();
 
   chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");

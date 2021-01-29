@@ -101,6 +101,11 @@ export async function filterTabs(info, tab, group_id) {
           // filter out offending indicies
           tabs = tabs.filter((_, i) => !indicies.includes(i));
 
+          // ignore pinned tabs if needed
+          if (sync.settings.pin === "avoid") {
+            tabs = tabs.filter((x) => !x.pinned);
+          }
+
           var whichGroup = group_id ? group_id : "contextMenu";
           chrome.storage.local.set({ into_group: whichGroup, merged_tabs: tabs }, () => {});
         });

@@ -31,7 +31,6 @@ import Tab from "../../src/components/Tab/Tab";
 
 import { AppProvider } from "../../src/context/AppContext";
 
-console.error = jest.fn();
 var anything = expect.anything();
 var mockSet = jest.fn();
 var chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
@@ -42,7 +41,7 @@ beforeEach(() => {
   localStorage.setItem("groups", JSON.stringify(init_groups));
   container = render(
     <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
-      <div class="group" id="group-0">
+      <div className="group" id="group-0">
         <Tab id="group-0" item_limit={8000} hidden={false} />
       </div>
     </AppProvider>

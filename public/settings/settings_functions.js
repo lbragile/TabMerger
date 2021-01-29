@@ -27,6 +27,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import { setTabMergerLink, setSync } from "./settings_helpers.js";
 
+const DEFAULT_SETTINGS = { blacklist: "", color: "#dedede", dark: true, open: "without", pin: "include", restore: "keep", title: "Title" }; // prettier-ignore
+
 /**
  * Once a user changes the settings, they are saved in sync storage and reloaded
  * each time the page refreshes using this function. This prevents the settings from
@@ -36,30 +38,36 @@ export function restoreOptions() {
   setTabMergerLink();
 
   var body = document.querySelector("body");
-  var hr = document.querySelector("hr");
   var code_block = document.querySelector("code");
+  var nav = document.querySelector("nav");
 
-  chrome.storage.sync.get("settings", (result) => {
-    var settings = result.settings;
-    document.getElementById("options-default-color").value = settings.color;
-    document.getElementById("options-default-title").value = settings.title;
+  chrome.storage.sync.get("settings", (sync) => {
+    if (!sync.settings) {
+      sync.settings = DEFAULT_SETTINGS;
+    }
+
+    document.getElementById("options-default-color").value = sync.settings.color;
+    document.getElementById("options-default-title").value = sync.settings.title;
     document.querySelectorAll("input[name='restore-tabs']").forEach((x) => {
-      x.checked = x.value === settings.restore;
+      x.checked = x.value === sync.settings.restore;
     });
     document.querySelectorAll("input[name='ext-open']").forEach((x) => {
-      x.checked = x.value === settings.open;
+      x.checked = x.value === sync.settings.open;
     });
-    document.getElementById("options-blacklist").value = settings.blacklist;
+    document.querySelectorAll("input[name='pin-tabs']").forEach((x) => {
+      x.checked = x.value === sync.settings.pin;
+    });
+    document.getElementById("options-blacklist").value = sync.settings.blacklist;
 
     // dark mode adjustments
-    body.style.background = settings.dark ? "rgb(52, 58, 64)" : "white";
-    body.style.color = settings.dark ? "white" : "black";
-    hr.style.borderTop = settings.dark ? "1px white solid" : "1px rgba(0,0,0,.1) solid";
-    code_block.style.color = settings.dark ? "white" : "black";
-    code_block.style.border = settings.dark ? "1px white solid" : "1px black solid";
+    body.style.background = sync.settings.dark ? "rgb(52, 58, 64)" : "white";
+    body.style.color = sync.settings.dark ? "white" : "black";
+    code_block.style.color = sync.settings.dark ? "white" : "black";
+    code_block.style.border = sync.settings.dark ? "1px white solid" : "1px black solid";
+    nav.style.background = sync.settings.dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 
     var darkMode = document.getElementById("darkMode");
-    darkMode.checked = settings.dark;
+    darkMode.checked = sync.settings.dark;
     darkMode.addEventListener("change", () => {
       setSync();
       window.location.reload();
@@ -89,11 +97,9 @@ export function saveOptions(e) {
  * If you want to quickly reset all the default options, this does it for you.
  */
 export function resetOptions() {
-  var default_settings = { blacklist: "", color: "#dedede", dark: true, open: "without", restore: "keep", title: "Title" }; // prettier-ignore
-
   chrome.storage.sync.get("settings", (sync) => {
-    if (JSON.stringify(sync.settings) !== JSON.stringify(default_settings)) {
-      chrome.storage.sync.set({ settings: default_settings }, () => {
+    if (JSON.stringify(sync.settings) !== JSON.stringify(DEFAULT_SETTINGS)) {
+      chrome.storage.sync.set({ settings: DEFAULT_SETTINGS }, () => {
         window.location.reload();
       });
     }

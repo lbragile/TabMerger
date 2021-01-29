@@ -57,9 +57,10 @@ export function setSync() {
   var title = document.getElementById("options-default-title").value;
   var restore = document.querySelector("input[name='restore-tabs']:checked").value;
   var open = document.querySelector("input[name='ext-open']:checked").value;
+  var pin = document.querySelector("input[name='pin-tabs']:checked").value;
   var blacklist = document.getElementById("options-blacklist").value;
   var dark = document.getElementById("darkMode").checked;
 
-  var store_val = { open, color, title, restore, blacklist, dark };
+  var store_val = { blacklist, color, dark, pin, open, title, restore };
   chrome.storage.sync.set({ settings: store_val }, () => {});
 }

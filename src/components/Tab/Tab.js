@@ -28,7 +28,7 @@ import * as TabHelper from "./Tab_helpers";
 import { AppContext } from "../../context/AppContext";
 
 import { BiGridSmall } from "react-icons/bi";
-import { ImPushpin } from "react-icons/im";
+import { RiPushpinLine, RiPushpinFill } from "react-icons/ri";
 import { TiDelete } from "react-icons/ti";
 
 import "./Tab.css";
@@ -70,14 +70,24 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
               rel="noreferrer"
               draggable={false}
               contentEditable={true}
+              suppressContentEditableWarning={true}
               spellCheck={false}
               onMouseUp={(e) => TabFunc.handleTabClick(e)}
               onKeyPress={(e) => TabFunc.handleTabTitleChange(e)}
               onBlur={(e) => TabFunc.handleTabTitleChange(e)}
             >
               {tab.title}
-              {tab.pinned && <ImPushpin className="pin ml-1" color="black" size="0.6rem" />}
             </a>
+            <span
+              className={"pin-tab " + (tab.pinned ? "pinned" : "")}
+              onClick={(e) => TabFunc.handlePinClick(e, setGroups)}
+            >
+              {tab.pinned ? (
+                <RiPushpinFill className="m-0 pb-1" color={textColor === "primary" ? "black" : "white"} />
+              ) : (
+                <RiPushpinLine className="m-0 pb-1" color={textColor === "primary" ? "black" : "white"} />
+              )}
+            </span>
           </div>
         );
       })}

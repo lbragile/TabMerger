@@ -142,7 +142,7 @@ export function groupDragEnd(e, setGroups) {
         starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
         tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
           const a = tab.querySelector("a");
-          return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
+          return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
         }),
         title: x.querySelector(".title-edit-input").value,
       };

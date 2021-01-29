@@ -77,3 +77,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 .a-tab:focus {
   cursor: text;
 }
+
+/* TAB PIN */
+.pin-tab:hover {
+  cursor: pointer;
+}

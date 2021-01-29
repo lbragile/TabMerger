@@ -90,7 +90,7 @@ export function tabDragEnd(e, item_limit, setGroups) {
       // reorder tabs based on current positions
       groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
         const anchor = x.querySelector("a");
-        return { pinned: !!anchor.querySelector("svg"), title: anchor.textContent, url: anchor.href };
+        return { pinned: !!x.querySelector(".pinned"), title: anchor.textContent, url: anchor.href };
       });
 
       // update the groups
@@ -184,4 +184,30 @@ export function handleTabTitleChange(e) {
       chrome.storage.local.set({ groups: local.groups }, () => {});
     });
   }
+}
+
+/**
+ * Pins or unpins a tab that is inside TabMerger. This avoids the need for opening a tab
+ * in order to pin/unpin it and re-merge into TabMerger.
+ * @param {HTMLElement} e Node representing the tab's pin that was clicked
+ */
+export function handlePinClick(e, setGroups) {
+  e.target.closest(".pin-tab svg").classList.toggle("pinned");
+
+  const id = e.target.closest(".group").id;
+  const url = e.target.closest(".pin-tab").previousSibling.href;
+
+  chrome.storage.local.get("groups", (local) => {
+    // adjust the pin status of the correct tab
+    local.groups[id].tabs = local.groups[id].tabs.map((x) => {
+      if (x.url === url) {
+        x.pinned = e.target.classList.contains("pinned");
+      }
+      return x;
+    });
+
+    chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
+      setGroups(JSON.stringify(local.groups));
+    });
+  });
 }

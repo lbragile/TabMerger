@@ -161,8 +161,10 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
           for (var i = 0; i < changes.remove.newValue.length; i++) {
             var tab_url = changes.remove.newValue[i];
 
+            // eslint-disable-next-line
             var tab_obj = tabs.filter((x) => x.url === tab_url)[0];
             delete tab_obj.title;
+            // eslint-disable-next-line
             var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
 
             if (same_tab[0] && !same_tab.pinned) {

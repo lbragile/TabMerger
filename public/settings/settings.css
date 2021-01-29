@@ -20,11 +20,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
+:root {
+  --sidebar-width: 245px;
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* SIDEBAR */
+.sidebar {
+  height: 100%;
+  width: var(--sidebar-width);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background-color: rgb(27, 27, 27);
+  padding-top: 12.5vh;
 }
 
 section {
@@ -35,21 +50,25 @@ textarea {
   width: 100%;
 }
 
-hr {
-  margin: 0;
+#sidebar-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.container,
-.title {
+.container {
   position: relative;
+  margin-left: calc(var(--sidebar-width) + 5%);
+  margin-top: 7.5%;
+}
+
+#logo-img {
+  transform: scale(0.6);
+  padding: 0;
 }
 
 /* DARK MODE SWITCH */
-.custom-control {
-  position: absolute;
-  right: 0;
-}
-
 .custom-control-label:hover,
 .custom-control-label::before,
 .custom-control-label::after {
@@ -83,4 +102,10 @@ small {
 
 .btn:focus {
   box-shadow: none;
+}
+
+@media only screen and (max-width: 992px) {
+  .container {
+    margin: 2.5% 0 2.5% calc(var(--sidebar-width));
+  }
 }
