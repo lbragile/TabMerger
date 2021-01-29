@@ -522,6 +522,53 @@ describe("deleteAllGroups", () => {
   });
 });
 
+describe("dragOver", () => {
+  var drag_elem, stub;
+
+  beforeEach(() => {
+    document.body.innerHTML =
+      `<div class="group">` +
+      `  <div class="tabs-container">` +
+      `    <div class="draggable">a</div>` +
+      `    <div class="draggable">b</div>` +
+      `    <div class="draggable">c</div>` +
+      `  </div>` +
+      `</div>`;
+
+    drag_elem = document.querySelector(".draggable");
+    drag_elem.classList.add("dragging");
+
+    stub = { preventDefault: jest.fn(), clientY: window.innerHeight, target: drag_elem };
+
+    global.scrollTo = jest.fn();
+  });
+
+  it.each([
+    ["START/MIDDLE", 2, window.innerHeight, ["b", "a", "c"]],
+    ["END", 3, 20, ["b", "c", "a"]],
+    ["AFTER=DRAG", 0, 0, ["a", "b", "c"]],
+  ])("finds the correct after element -> %s", (type, tab_num, scroll, expect_result) => {
+    var getDragAfterElementSpy = jest.spyOn(AppHelper, "getDragAfterElement").mockImplementation(() => {
+      return document.querySelectorAll(".draggable")[tab_num];
+    });
+    stub.clientY = scroll;
+
+    AppFunc.dragOver(stub);
+
+    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
+    expect(tabs_text).toEqual(expect_result);
+
+    if (type === "END") {
+      expect(global.scrollTo).not.toHaveBeenCalled();
+    } else {
+      expect(global.scrollTo).toHaveBeenCalled();
+      expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
+    }
+
+    getDragAfterElementSpy.mockRestore();
+  });
+});
+
 describe("regexSearchForTab", () => {
   var input;
   beforeEach(() => {

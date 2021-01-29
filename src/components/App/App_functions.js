@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import * as AppHelper from "./App_helpers";
+import { getDragAfterElement } from "../App/App_helpers";
 
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
@@ -387,6 +388,41 @@ export function deleteAllGroups(setTabTotal, setGroups) {
         setGroups(JSON.stringify(new_entry));
       });
     });
+  }
+}
+
+/**
+ * Allows the user to drag and drop an entire group with tabs inside.
+ * @param {HTMLElement} e The group node being dragged.
+ * @param {string} type Either group or tab, corresponding to the dragging operation.
+ *
+ */
+export function dragOver(e, type) {
+  e.preventDefault();
+  const selector = type === "group" ? ".dragging-group" : ".dragging";
+  if (document.querySelector(selector)) {
+    const currentElement = document.querySelector(selector);
+
+    var location, group_block;
+    if (type === "group") {
+      location = e.target.closest("#tabmerger-container");
+    } else {
+      group_block = e.target.closest(".group");
+      location = group_block.querySelector(".tabs-container");
+    }
+
+    const afterElement = getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
+    if (!afterElement) {
+      location.appendChild(currentElement);
+    } else {
+      location.insertBefore(currentElement, afterElement);
+    }
+
+    // allow scrolling while dragging with a 10px offset from top/bottom
+    const offset = 10;
+    if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
+      window.scrollTo(0, e.clientY);
+    }
   }
 }
 

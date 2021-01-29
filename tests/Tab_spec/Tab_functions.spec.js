@@ -221,10 +221,21 @@ describe("removeTab", () => {
 
 describe("handleTabClick", () => {
   const url = "https://stackoverflow.com/";
+  var classList_arr = [];
 
   var stub = {
     preventDefault: jest.fn(),
-    target: { closest: jest.fn(() => ({ id: "group-0" })), href: url, click: jest.fn(), focus: jest.fn() },
+    target: {
+      closest: jest.fn(() => ({ id: "group-0" })),
+      href: url,
+      click: jest.fn(),
+      focus: jest.fn(),
+      blur: jest.fn(),
+      classList: {
+        contains: jest.fn((arg) => classList_arr.includes(arg)),
+        add: jest.fn((arg) => classList_arr.push(arg)),
+      },
+    },
     button: 0,
   };
 
@@ -263,10 +274,18 @@ describe("handleTabTitleChange", () => {
   const url = "https://stackoverflow.com/";
 
   var stub;
+
   beforeEach(() => {
     stub = {
       preventDefault: jest.fn(),
-      target: { closest: jest.fn(() => ({ id: "group-0" })), href: url, textContent: "AAA" },
+      target: {
+        closest: jest.fn(() => ({ id: "group-0" })),
+        href: url,
+        textContent: "AAA",
+        classList: {
+          remove: jest.fn(),
+        },
+      },
       which: 0,
       keyCode: 0,
     };
@@ -291,6 +310,9 @@ describe("handleTabTitleChange", () => {
 
     jest.clearAllMocks();
     TabFunc.handleTabTitleChange(stub);
+
+    expect(stub.target.classList.remove).toHaveBeenCalledTimes(1);
+    expect(stub.target.classList.remove).toHaveBeenCalledWith("edit-tab-title");
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);

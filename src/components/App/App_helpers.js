@@ -177,3 +177,32 @@ export function findSameTab(tab_list, match_url) {
 export function outputFileName() {
   return `TabMerger [${getTimestamp()}]`;
 }
+
+/**
+ * USed to determine the element after the current one when dragging a tab.
+ * @param {HTMLElement} container The group which the dragged tab is above
+ * @param {number} y The tab's y coordinate in the window
+ *
+ * @see dragOver in App_functions.js
+ * @link modified from https://github.com/WebDevSimplified/Drag-And-Drop
+ *
+ * @return The tab element immediately after the current position of the dragged tab.
+ */
+/* istanbul ignore next */
+export function getDragAfterElement(container, y, type) {
+  const selector = type === "tab" ? ".draggable:not(.dragging)" : ".group-item:not(.dragging-group)";
+  const draggableElements = [...container.querySelectorAll(selector)];
+
+  return draggableElements.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    },
+    { offset: Number.NEGATIVE_INFINITY }
+  ).element;
+}

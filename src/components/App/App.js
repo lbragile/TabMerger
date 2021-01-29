@@ -105,7 +105,7 @@ export default function App() {
       </nav>
 
       <AppProvider value={{ setGroups, setTabTotal }}>
-        <div className="container-fluid col" id="tabmerger-container">
+        <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current)}
         </div>
       </AppProvider>

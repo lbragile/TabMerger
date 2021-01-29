@@ -24,14 +24,13 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React, { useEffect, useRef, useCallback, useContext } from "react";
 
 import * as GroupFunc from "./Group_functions";
-import { translate } from "../App/App_functions";
+import { translate, dragOver } from "../App/App_functions";
 import { AppContext } from "../../context/AppContext";
 
 import MergeBtns from "../Button/MergeBtns";
 import GroupTitleBtns from "../Button/GroupTitleBtns";
 
-import { BiColorFill, BiHide, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
-import { BsStarFill, BsStar } from "react-icons/bs";
+import { BiColorFill, BiHide } from "react-icons/bi";
 
 import "./Group.css";
 import "../Button/Button.css";
@@ -54,16 +53,14 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
   }, [id, setGroupBackground]);
 
   return (
-    <div className={"group-item " + (id === "group-0" ? "mt-0" : "mt-2")}>
+    <div
+      className={"group-item " + (id === "group-0" ? "mt-0" : "mt-2")}
+      draggable={true}
+      onDragStart={(e) => GroupFunc.groupDragStart(e)}
+      onDragEnd={(e) => GroupFunc.groupDragEnd(e, setGroups)}
+    >
       <div className="group-title d-flex flex-row justify-content-center" draggable={false}>
-        <div className="title-count-color-container row">
-          <h5 className="group-count">{num_tabs}</h5>
-          <div className="group-color tip p-0">
-            <BiColorFill className="input-color" onClick={(e) => e.target.closest("div").nextSibling.click()} />
-            <span className="tiptext-group-color">{translate("pickColor")}</span>
-          </div>
-          <input type="color" defaultValue={color} onChange={(e) => setGroupBackground(e)} />
-        </div>
+        <h5 className="group-count">{num_tabs}</h5>
 
         <input
           className="title-edit-input font-weight-bold mb-0"
@@ -75,30 +72,17 @@ export default function Group({ id, title, color, created, num_tabs, hidden, chi
           onDragStart={(e) => e.preventDefault()}
         />
 
+        <div className="group-color tip p-0">
+          <BiColorFill className="input-color" onClick={(e) => e.target.closest("div").nextSibling.click()} />
+          <span className="tiptext-group-color">{translate("pickColor")}</span>
+        </div>
+        <input type="color" defaultValue={color} onChange={(e) => setGroupBackground(e)} />
+
         <GroupTitleBtns hidden={hidden} setTabTotal={setTabTotal} setGroups={setGroups} />
       </div>
 
-      <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => GroupFunc.tabDragOver(e)}>
-        <div className="move-lock-star-container">
-          <div
-            className="move-group"
-            draggable={true}
-            onDragStart={(e) => GroupFunc.groupDragStart(e)}
-            onDragEnd={(e) => GroupFunc.groupDragEnd(e)}
-          >
-            <BiGridSmall color="black" size="1.6rem" />
-          </div>
-
-          <div className="lock-group">
-            <BiLockOpen color="black" size="1.3rem" />
-          </div>
-
-          <div className="star-group">
-            <BsStar color="black" size="1.1rem" />
-          </div>
-        </div>
-
-        <div className="created mr-1">
+      <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => dragOver(e, "tab")}>
+        <div className="created mr-1" draggable={false}>
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>
 

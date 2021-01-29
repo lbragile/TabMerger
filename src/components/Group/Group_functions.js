@@ -26,7 +26,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  */
 
 import { getTimestamp, updateTabTotal } from "../App/App_helpers";
-import { getDragAfterElement } from "./Group_helpers";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -87,30 +86,12 @@ export function blurOnEnter(e) {
 }
 
 /**
- * Handles dynamic tab re-ordering while a dragging event is in progress.
- * Shows the tab that is being dragged "move around" in real time.
- * Also scrolls the window while dragging, as necessary, to improve user experience.
- * @param {HTMLElement} e This corresponds to the node that currently has the dragged tab above it
+ *
+ * @param {HTMLElement} e The group that is being dragged
  */
-export function tabDragOver(e) {
-  e.preventDefault();
-  if (document.querySelector(".dragging").className !== "draggable-group") {
-    const currentElement = document.querySelector(".dragging");
-    var group_block = e.target.closest(".group");
-    var location = group_block.querySelector(".tabs-container");
-
-    const afterElement = getDragAfterElement(group_block, e.clientY);
-    if (!afterElement) {
-      location.appendChild(currentElement);
-    } else {
-      location.insertBefore(currentElement, afterElement);
-    }
-
-    // allow scrolling while dragging with a 10px offset from top/bottom
-    const offset = 10;
-    if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
-      window.scrollTo(0, e.clientY);
-    }
+export function groupDragStart(e) {
+  if (!e.target.closest(".draggable")) {
+    e.target.closest(".group-item").classList.add("dragging-group");
   }
 }
 
@@ -118,20 +99,30 @@ export function tabDragOver(e) {
  *
  * @param {HTMLElement} e The group that is being dragged
  */
-export function groupDragStart(e) {
-  e.preventDefault();
-  console.log("HERE");
-  e.target.closest(".group").classList.add(".dragging");
-}
-
-/**
- *
- * @param {HTMLElement} e The group that is being dragged
- */
-export function groupDragEnd(e) {
+export function groupDragEnd(e, setGroups) {
   e.preventDefault();
 
-  console.log("group drag end");
+  if (e.target.classList.contains("dragging-group")) {
+    var group_items = document.querySelectorAll(".group-item");
+    var new_groups = {};
+    group_items.forEach((x, i) => {
+      new_groups["group-" + i] = {
+        color: x.querySelector("input[type='color']").value,
+        created: x.querySelector(".created span").textContent,
+        hidden: !!x.querySelector(".hidden-symbol"),
+        tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
+          const a = tab.querySelector("a");
+          return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
+        }),
+        title: x.querySelector(".title-edit-input").value,
+      };
+    });
+
+    console.log(JSON.stringify(new_groups, null, 2));
+    chrome.storage.local.set({ groups: new_groups, scroll: document.documentElement.scrollTop }, () => {
+      setGroups(JSON.stringify(new_groups));
+    });
+  }
 }
 
 /**

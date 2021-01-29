@@ -38,15 +38,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   border-radius: 5px;
 }
 
-.title-count-color-container {
-  position: absolute;
-  left: 20px;
-}
-
 .title-btn-containter {
   position: absolute;
   right: 20px;
   top: 3px;
+  width: 100%;
 }
 
 [contenteditable]:focus {
@@ -60,27 +56,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   transform: translate(-50%, -50%);
 }
 
-.move-lock-star-container {
-  position: absolute;
-  left: 0px;
-  top: -2px;
-}
-
-.move-group {
-  z-index: 10;
-}
-
-.move-group:hover {
-  cursor: move;
-}
-
-.lock-group:hover,
-.star-group:hover {
-  cursor: pointer;
-}
-
 /* GROUP TAB COUNTER */
 .group-count {
+  position: absolute;
+  left: 5px;
   margin: 3px 10px 0 0;
   padding: 0 3px 2px 0;
 
@@ -102,10 +81,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /* COLOR PICKER (GROUP) */
 .input-color {
-  position: relative;
-  top: -3px;
-  width: 24px;
-  height: 24px;
+  position: absolute;
+  left: 90%;
+  top: 4px;
+  width: 22px;
+  height: 22px;
+  z-index: 5;
 }
 
 .input-color:hover {
@@ -125,6 +106,7 @@ input[type="color"] {
   background: none;
   border: none;
   text-overflow: ellipsis;
+  z-index: 5;
 }
 
 .title-edit-input:focus {

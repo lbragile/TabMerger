@@ -24,28 +24,25 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 /* ENTIRE TAB */
 .draggable {
   position: relative;
-  left: 25px;
-  width: 95%;
-  margin: 4px 0;
+  left: 10px;
+  max-width: 95%;
+  margin: 1px 0;
 }
 
 /* X */
 .close-tab {
-  font-weight: bold;
-  padding: 0;
   margin: 0;
-  margin-bottom: 2px;
-  height: 20px;
+  height: 16px;
 }
 
 .close-tab:hover {
   cursor: pointer;
-  fill: red;
 }
 
 /* MENU */
 .move-tab {
-  margin-bottom: 2px;
+  margin-bottom: 1px;
+  height: 16px;
 }
 
 .move-tab:hover {
@@ -54,14 +51,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /* TAB ICON */
 .img-tab {
-  margin-top: 3px;
-  width: 20px;
-  height: 20px;
+  margin: 4px 4px 0 2px;
+  width: 16px;
+  height: 16px;
 }
 
 /* TAB URL */
 .a-tab {
-  margin-top: 1px;
+  font-size: 0.95rem;
   max-width: 85%;
   text-align: left;
   vertical-align: middle;
@@ -73,6 +70,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 .a-tab:hover {
   cursor: pointer;
+  text-decoration: none;
 }
 
 .a-tab:focus {

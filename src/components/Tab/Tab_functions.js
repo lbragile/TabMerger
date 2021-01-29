@@ -142,14 +142,18 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
  */
 export function handleTabClick(e) {
   e.preventDefault();
-  if (e.button === 0) {
+
+  // can only left click when not editing the tab title
+  if (e.button === 0 && !e.target.classList.contains("edit-tab-title")) {
     // left
     chrome.storage.local.set({ remove: [e.target.closest(".group").id, e.target.href] }, () => {
       e.target.click();
+      e.target.blur();
     });
   } else if (e.button === 1) {
     // middle
     e.target.focus();
+    e.target.classList.add("edit-tab-title");
   }
 }
 
@@ -158,6 +162,8 @@ export function handleTabClick(e) {
  * @param {HTMLElement} e Node representing the tab that was clicked
  */
 export function handleTabTitleChange(e) {
+  e.target.classList.remove("edit-tab-title");
+
   if (e.which === 13 || e.keyCode === 13) {
     e.preventDefault();
   } else {

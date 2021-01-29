@@ -1,6 +1,6 @@
 import { AiOutlineMinus, AiOutlineClose } from "react-icons/ai";
-import { BiArrowToRight, BiExport, BiPrinter } from "react-icons/bi";
-import { BsCloudUpload, BsCloudDownload } from "react-icons/bs";
+import { BiArrowToRight, BiExport, BiPrinter, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
+import { BsCloudUpload, BsCloudDownload, BsStarFill, BsStar } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
@@ -76,6 +76,21 @@ export const GLOBAL_BUTTONS = (sync_node, group_limit, setTabTotal, setGroups) =
 
 export const GROUP_TITLE_BUTTONS = (hidden, setTabTotal, setGroups) => {
   return [
+    {
+      classes: "move-group-btn btn-in-group-title",
+      translate: "Move Group",
+      icon: <BiGridSmall color="black" size="1.6rem" />,
+    },
+    {
+      classes: "lock-group-btn btn-in-group-title",
+      translate: "Lock Group",
+      icon: <BiLockOpen color="black" size="1.3rem" />,
+    },
+    {
+      classes: "star-group-btn btn-in-group-title",
+      translate: "Star Group",
+      icon: <BsStar color="black" size="1.1rem" />,
+    },
     {
       classes: "show-hide-btn btn-in-group-title",
       translate: hidden ? AppFunc.translate("showTabs") : AppFunc.translate("hideTabs"),

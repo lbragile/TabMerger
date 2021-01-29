@@ -123,6 +123,32 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   left: -8px;
 }
 
+.move-group-btn,
+.lock-group-btn,
+.star-group-btn,
+.open-group-btn,
+.delete-group-btn,
+.show-hide-btn {
+  position: relative;
+  left: 30px;
+  top: -1px;
+}
+
+.open-group-btn,
+.delete-group-btn,
+.show-hide-btn {
+  left: 77.5%;
+}
+
+.move-group-btn:hover {
+  cursor: move !important;
+}
+
+.lock-group-btn:hover,
+.star-group-btn:hover {
+  cursor: pointer;
+}
+
 #contact-btn svg,
 #need-btn svg,
 #donate-btn svg,

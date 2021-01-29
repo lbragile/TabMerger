@@ -27,9 +27,9 @@ import * as TabFunc from "./Tab_functions";
 import * as TabHelper from "./Tab_helpers";
 import { AppContext } from "../../context/AppContext";
 
-import { TiDelete } from "react-icons/ti";
-import { AiOutlineMenu } from "react-icons/ai";
+import { BiGridSmall } from "react-icons/bi";
 import { ImPushpin } from "react-icons/im";
+import { TiDelete } from "react-icons/ti";
 
 import "./Tab.css";
 
@@ -47,7 +47,7 @@ export default function Tab({ id, item_limit, hidden }) {
         return (
           <div
             className={"row draggable p-0 mx-0 " + (hidden ? "d-none" : "")}
-            draggable
+            draggable={true}
             onDragStart={(e) => TabFunc.tabDragStart(e)}
             onDragEnd={(e) => TabFunc.tabDragEnd(e, item_limit, setGroups)}
             key={Math.random()}
@@ -57,10 +57,10 @@ export default function Tab({ id, item_limit, hidden }) {
               draggable={false}
               onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, setTabTotal, setGroups)}
             >
-              <TiDelete size="1.2rem" color="black" />
+              <TiDelete size="1rem" color="black" />
             </p>
-            <p className="move-tab mx-1">
-              <AiOutlineMenu size="1.2rem" color="black" />
+            <p className="move-tab">
+              <BiGridSmall size="1.5rem" color="black" />
             </p>
             <img className="img-tab" src={TabHelper.getFavIconURL(tab.url)} alt="icon" draggable={false} />
             <a
@@ -70,6 +70,7 @@ export default function Tab({ id, item_limit, hidden }) {
               rel="noreferrer"
               draggable={false}
               contentEditable={true}
+              spellCheck={false}
               onMouseUp={(e) => TabFunc.handleTabClick(e)}
               onKeyPress={(e) => TabFunc.handleTabTitleChange(e)}
               onBlur={(e) => TabFunc.handleTabTitleChange(e)}

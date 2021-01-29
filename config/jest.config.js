@@ -1,6 +1,6 @@
 const ignore_arr = [
   "(<rootDir>/)(?=(node_modules|build|(public/)(?!(.+js$))|(tests/__.+)))",
-  "(<rootDir>/src/(components|context)/)(?!(App/App_|Group/Group_f|Tab/Tab_))",
+  "(<rootDir>/src/(components|context)/)(?!(App/App_|Group/Group_|Tab/Tab_))",
 ];
 
 module.exports = {

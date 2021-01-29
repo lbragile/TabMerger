@@ -26,12 +26,10 @@ window.React = React;
 
 import { fireEvent, render } from "@testing-library/react";
 
-import { getTimestamp } from "../../src/components/App/App_helpers";
 import * as GroupFunc from "../../src/components/Group/Group_functions";
-import * as GroupHelper from "../../src/components/Group/Group_helpers";
-
 import Group from "../../src/components/Group/Group";
 
+import { getTimestamp } from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
 
 /**
@@ -152,53 +150,6 @@ describe("setTitle", () => {
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(init_groups));
-  });
-});
-
-describe("tabDragOver", () => {
-  var drag_elem, stub;
-
-  beforeEach(() => {
-    document.body.innerHTML =
-      `<div class="group">` +
-      `  <div class="tabs-container">` +
-      `    <div class="draggable">a</div>` +
-      `    <div class="draggable">b</div>` +
-      `    <div class="draggable">c</div>` +
-      `  </div>` +
-      `</div>`;
-
-    drag_elem = document.querySelector(".draggable");
-    drag_elem.classList.add("dragging");
-
-    stub = { preventDefault: jest.fn(), clientY: window.innerHeight, target: drag_elem };
-
-    global.scrollTo = jest.fn();
-  });
-
-  it.each([
-    ["START/MIDDLE", 2, window.innerHeight, ["b", "a", "c"]],
-    ["END", 3, 20, ["b", "c", "a"]],
-    ["AFTER=DRAG", 0, 0, ["a", "b", "c"]],
-  ])("finds the correct after element -> %s", (type, tab_num, scroll, expect_result) => {
-    var GroupHelperSpy = jest.spyOn(GroupHelper, "getDragAfterElement").mockImplementation(() => {
-      return document.querySelectorAll(".draggable")[tab_num];
-    });
-    stub.clientY = scroll;
-
-    GroupFunc.tabDragOver(stub);
-
-    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
-    expect(tabs_text).toEqual(expect_result);
-
-    if (type === "END") {
-      expect(global.scrollTo).not.toHaveBeenCalled();
-    } else {
-      expect(global.scrollTo).toHaveBeenCalled();
-      expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
-    }
-
-    GroupHelperSpy.mockRestore();
   });
 });
 
