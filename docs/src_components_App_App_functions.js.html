@@ -72,6 +72,7 @@ import Group from "../Group/Group.js";
  * @see defaultGroup in App.js
  */
 export function storageInit(default_settings, default_group, sync_node, setGroups, setTabTotal) {
+  const scroll = document.documentElement.scrollTop;
   chrome.storage.sync.get(null, (sync) => {
     if (!sync.settings) {
       chrome.storage.sync.set({ settings: default_settings }, () => {});
@@ -89,7 +90,7 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
       var ls_entry = local.groups || { "group-0": default_group };
 
       chrome.storage.local.remove(["groups"], () => {
-        chrome.storage.local.set({ groups: ls_entry, scroll: document.documentElement.scrollTop }, () => {
+        chrome.storage.local.set({ groups: ls_entry, groups_copy: [], scroll }, () => {
           setGroups(JSON.stringify(ls_entry));
           setTabTotal(AppHelper.updateTabTotal(ls_entry));
         });
@@ -189,8 +190,10 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
           for (var i = 0; i &lt; changes.remove.newValue.length; i++) {
             var tab_url = changes.remove.newValue[i];
 
+            // eslint-disable-next-line
             var tab_obj = tabs.filter((x) => x.url === tab_url)[0];
             delete tab_obj.title;
+            // eslint-disable-next-line
             var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
 
             if (same_tab[0] &amp;&amp; !same_tab.pinned) {
@@ -406,46 +409,74 @@ export function openAllTabs() {
  * @param {Function} setGroups For re-rendering the groups
  */
 export function deleteAllGroups(setTabTotal, setGroups) {
+  const scroll = document.documentElement.scrollTop;
   const response = window.confirm("Are you sure?\n\nThis action will delete all groups/tabs that are not \"locked\".\nMake sure you have a backup!"); // prettier-ignore
   if (response) {
-    chrome.storage.sync.get("settings", (sync) => {
-      var new_entry = {};
-      var locked_counter = 0;
-      document.querySelectorAll(".group-item").forEach((x) => {
-        if (x.querySelector(".tiptext-group-title").textContent.includes("Unlock")) {
-          new_entry["group-" + locked_counter] = {
-            color: x.querySelector("input[type='color']").value,
-            created: x.querySelector(".created span").textContent,
-            hidden: !!x.querySelector(".hidden-symbol"),
-            locked: true,
-            starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
-            tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
-              const a = tab.querySelector("a");
-              return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
-            }),
-            title: x.querySelector(".title-edit-input").value,
-          };
+    chrome.storage.local.get(["groups", "groups_copy"], (local) => {
+      chrome.storage.sync.get("settings", (sync) => {
+        var { groups_copy, groups } = local;
+        groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups);
 
-          locked_counter++;
-        }
-      });
+        groups = {};
+        var locked_counter = 0;
+        document.querySelectorAll(".group-item").forEach((x) => {
+          if (x.querySelector(".tiptext-group-title").textContent.includes("Unlock")) {
+            groups["group-" + locked_counter] = {
+              color: x.querySelector("input[type='color']").value,
+              created: x.querySelector(".created span").textContent,
+              hidden: !!x.querySelector(".hidden-symbol"),
+              locked: true,
+              starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
+              tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
+                const a = tab.querySelector("a");
+                return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
+              }),
+              title: x.querySelector(".title-edit-input").value,
+            };
 
-      new_entry["group-" + locked_counter] = {
-        color: sync.settings.color,
-        created: AppHelper.getTimestamp(),
-        hidden: false,
-        locked: false,
-        starred: false,
-        tabs: [],
-        title: sync.settings.title,
-      };
+            locked_counter++;
+          }
+        });
 
-      chrome.storage.local.set({ groups: new_entry, scroll: document.documentElement.scrollTop }, () => {
-        setTabTotal(AppHelper.updateTabTotal(new_entry));
-        setGroups(JSON.stringify(new_entry));
+        groups["group-" + locked_counter] = {
+          color: sync.settings.color,
+          created: AppHelper.getTimestamp(),
+          hidden: false,
+          locked: false,
+          starred: false,
+          tabs: [],
+          title: sync.settings.title,
+        };
+
+        chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
+          setTabTotal(AppHelper.updateTabTotal(groups));
+          setGroups(JSON.stringify(groups));
+        });
       });
     });
   }
+}
+
+/**
+ * If a user accidently removes a tab, group, or everything. They can press the "Undo"
+ * button to restore the previous configuration.
+ *
+ * @param {Function} setGroups for re-rendering the groups after they are reset
+ * @note Up to 10 states are stored.
+ */
+export function undoDestructiveAction(setGroups) {
+  chrome.storage.local.get(["groups", "groups_copy"], (local) => {
+    if (local.groups_copy.length >= 1) {
+      const scroll = document.documentElement.scrollTop;
+      const prev_group = local.groups_copy.pop();
+
+      chrome.storage.local.set({ groups: prev_group, groups_copy: local.groups_copy, scroll }, () => {
+        setGroups(JSON.stringify(prev_group));
+      });
+    } else {
+      alert("There are no more states to undo");
+    }
+  });
 }
 
 /**
@@ -675,7 +706,7 @@ export function translate(msg) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 12:48:44 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 21:48:38 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

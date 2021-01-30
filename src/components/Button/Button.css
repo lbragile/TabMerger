@@ -47,9 +47,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   margin: 0;
 }
 
-#options-btn {
+/* #options-btn {
   margin-top: 20px;
-}
+} */
 
 #open-all-btn svg,
 #delete-all-btn svg,

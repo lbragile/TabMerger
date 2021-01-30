@@ -188,7 +188,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line166">line 166</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -396,7 +396,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line177">line 177</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -502,7 +502,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Unsorted object containing the group key/value pairs which will get sorted.</p></td>
         </tr>
 
     
@@ -543,7 +543,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line125">line 125</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line123">line 123</a>
     </li></ul></dd>
     
 
@@ -597,6 +597,240 @@
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>"group-0", ..., "group-9", "group-10", ... ✅"group-0", "group-1", "group-10", ..., "group-9", ... ❌</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".storeDestructiveAction"><span class="type-signature">(static) </span>storeDestructiveAction<span class="signature">(groups_copy, groups, NUM_UNDO_STATES<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {Array.&lt;object>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>If a user accidently removes a tab, group, or everything. They can press the &quot;Undo&quot;
+button to restore the previous configuration.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>groups_copy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;object></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>All the stored states up to now</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>groups</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The current state which will be stored</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>NUM_UNDO_STATES</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>for re-rendering the groups after they are reset</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line220">line 220</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The new group state array which includes the latest state at the front.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
 
 
@@ -1083,7 +1317,7 @@ Sync items are updated only when they change and only changed items are overwrit
     
 
     
-    <h4 class="name" id=".updateTabTotal"><span class="type-signature">(static) </span>updateTabTotal<span class="signature">(ls_entry)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".updateTabTotal"><span class="type-signature">(static) </span>updateTabTotal<span class="signature">(ls_entry)</span><span class="type-signature"> &rarr; {Number}</span></h4>
     
 
     
@@ -1184,7 +1418,7 @@ Sync items are updated only when they change and only changed items are overwrit
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line149">line 149</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line147">line 147</a>
     </li></ul></dd>
     
 
@@ -1209,6 +1443,28 @@ Sync items are updated only when they change and only changed items are overwrit
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The total number of tabs currently present in TabMerger</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1236,7 +1492,7 @@ Sync items are updated only when they change and only changed items are overwrit
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 12:48:44 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 21:48:38 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

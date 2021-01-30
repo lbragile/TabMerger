@@ -9,12 +9,12 @@ import ImportBtn from "./ImportBtn.js";
 export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, setGroups }) {
   return (
     <div className="global-btn-row col">
-      <p className="mx-auto alert alert-danger" id="sync-text">
+      <p className="mx-auto d-block mb-3 alert alert-danger" id="sync-text">
         <b>{translate("sync").substr(0, 4)}:</b> <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
       </p>
 
       {GLOBAL_BUTTONS(syncTimestamp.current, group_limit, setTabTotal, setGroups).map((x, i) => {
-        if (i !== 6) {
+        if (i !== 7) {
           return (
             <span key={Math.random()}>
               <Button
@@ -27,7 +27,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
               >
                 {x.icon}
               </Button>
-              {i === 3 && <div />}
+              {i === 4 && <div />}
             </span>
           );
         } else {

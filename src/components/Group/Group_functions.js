@@ -195,29 +195,14 @@ export function deleteGroup(e, setTabTotal, setGroups) {
             title: sync.settings.title,
           };
         } else {
-          // must rename all keys for the groups above deleted group item
-          var group_names = []; // need to change these
-          var index_deleted = target.id.split("-")[1];
-          Object.keys(groups).forEach((key) => {
-            if (parseInt(key.split("-")[1]) > parseInt(index_deleted)) {
-              group_names.push(key);
-            }
+          delete groups[target.id];
+
+          // order the groups correctly
+          const ordered_vals = sortByKey(groups);
+          groups = {};
+          ordered_vals.forEach((val, i) => {
+            groups["group-" + i] = val;
           });
-
-          // perform the renaming of items
-          var group_blocks_str = JSON.stringify(groups);
-          group_names.forEach((key) => {
-            var new_name = "group-" + (parseInt(key.split("-")[1]) - 1);
-            group_blocks_str = group_blocks_str.replace(key, new_name);
-          });
-
-          // get back json object with new item key names
-          groups = JSON.parse(group_blocks_str);
-
-          // if group to be deleted is last - must only delete it
-          if (!group_names[0]) {
-            delete groups["group-" + index_deleted];
-          }
         }
 
         chrome.storage.local.set({ groups, groups_copy, scroll }, () => {

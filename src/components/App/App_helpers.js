@@ -116,11 +116,9 @@ export function updateGroupItem(key, value) {
  * @example
  * "group-0", ..., "group-9", "group-10", ... ✅
  * "group-0", "group-1", "group-10", ..., "group-9", ... ❌
- * @param {object} json
+ * @param {object} json Unsorted object containing the group key/value pairs which will get sorted.
  *
  * @return {object[]} Values from the sorted groups
- *
- * @note Exported for testing purposes
  */
 export function sortByKey(json) {
   var sortedArray = [];
@@ -144,7 +142,7 @@ export function sortByKey(json) {
  * @param {{groups: {"group-id": {color: string, created: string, tabs:
  *  Array.<{title: string, url: string}>, title: string}}}} ls_entry current group information
  *
- * @note Exported for testing purposes
+ * @return {Number} The total number of tabs currently present in TabMerger
  */
 export function updateTabTotal(ls_entry) {
   var num_tabs = 0;
@@ -211,8 +209,13 @@ export function getDragAfterElement(container, y, type) {
  * If a user accidently removes a tab, group, or everything. They can press the "Undo"
  * button to restore the previous configuration.
  *
- * @param {Function} group_copy for re-rendering the groups after they are reset
+ * @param {object[]} groups_copy All the stored states up to now
+ * @param {object} groups The current state which will be stored
+ * @param {Number?} NUM_UNDO_STATES for re-rendering the groups after they are reset
+ *
  * @note Up to 15 states are stored.
+ *
+ * @return {object[]} The new group state array which includes the latest state at the front.
  */
 export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15) {
   if (groups_copy.length <= NUM_UNDO_STATES) {
@@ -223,7 +226,12 @@ export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15
     }
     groups_copy.push(JSON.parse(JSON.stringify(groups))); // deep copy
   } else {
-    alert("This destructive action was not stored!");
+    const response = window.confirm(
+      "This destructive action was not stored!\nWant to clear the state storage container?"
+    );
+    if (response) {
+      groups_copy = [];
+    }
   }
 
   return groups_copy;
