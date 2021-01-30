@@ -103,10 +103,16 @@ describe("setSync", () => {
     });
 
     document.querySelector = jest.fn((sel) => {
-      return { value: sel === "input[name='restore-tabs']:checked" ? "remove" : "with" };
+      if (sel.includes("restore-tabs")) {
+        return { value: "remove" };
+      } else if (sel.includes("ext-open")) {
+        return { value: "with" };
+      } else if (sel.includes("pin-tabs")) {
+        return { value: "include" };
+      }
     });
 
-    const expected_sync = {open: "with", color: "#000000", title: "Default", restore: "remove", blacklist: "https://www.google.com", dark: true}; // prettier-ignore
+    const expected_sync = {blacklist: "https://www.google.com", color: "#000000", dark: true, open: "with", pin: "include", title: "Default", restore: "remove", }; // prettier-ignore
 
     SettingsHelper.setSync();
 

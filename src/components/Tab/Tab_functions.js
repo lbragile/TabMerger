@@ -25,6 +25,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Tab/Tab_functions
  */
 
+import { updateTabTotal, storeDestructiveAction } from "../App/App_helpers";
+
 /**
  * Sets the initial tabs based on Chrome's local storage upon initial render.
  * If Chrome's local storage is empty, this is set to an empty array.
@@ -124,14 +126,22 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
   url = tab.querySelector("a").href;
   group_id = tab.closest(".group").id;
 
-  chrome.storage.local.get("groups", (local) => {
-    var group_blocks = local.groups;
-    group_blocks[group_id].tabs = tabs.filter((x) => x.url !== url);
-    chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
-      setTabs(group_blocks[group_id].tabs);
-      setTabTotal(document.querySelectorAll(".draggable").length);
-      setGroups(JSON.stringify(group_blocks));
-    });
+  chrome.storage.local.get(["groups", "groups_copy"], (local) => {
+    var { groups, groups_copy } = local;
+
+    if (!groups[group_id].locked) {
+      const scroll = document.documentElement.scrollTop;
+      groups_copy = storeDestructiveAction(groups_copy, groups);
+
+      groups[group_id].tabs = tabs.filter((x) => x.url !== url);
+      chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
+        setTabs(groups[group_id].tabs);
+        setTabTotal(updateTabTotal(groups));
+        setGroups(JSON.stringify(groups));
+      });
+    } else {
+      alert("This group is locked and thus tabs inside cannot be deleted. Press the lock symbol to first unlock and then retry deleting the tab again!"); // prettier-ignore
+    }
   });
 }
 

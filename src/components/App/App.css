@@ -213,16 +213,37 @@ hr {
     padding-top: 7.5% !important;
   }
 
+  .container-fluid {
+    margin: 0;
+  }
+
+  .group-item {
+    break-inside: avoid;
+  }
+
   .group-title {
-    width: 50% !important;
+    width: 65% !important;
+  }
+
+  .group,
+  .group-title {
+    border: 1px solid black !important;
+  }
+
+  .group-title {
+    border-bottom: none !important;
   }
 
   .group-color,
+  .lock-group-btn,
+  .move-group-btn,
+  .star-group-btn,
   .show-hide-btn,
   .open-group-btn,
   .delete-group-btn,
   .close-tab,
   .move-tab,
+  .pin-tab,
   #sync-text,
   .btn-for-merging,
   .created,

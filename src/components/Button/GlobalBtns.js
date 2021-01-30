@@ -14,7 +14,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       </p>
 
       {GLOBAL_BUTTONS(syncTimestamp.current, group_limit, setTabTotal, setGroups).map((x, i) => {
-        if (i <= 4 || i >= 6) {
+        if (i !== 6) {
           return (
             <span key={Math.random()}>
               <Button

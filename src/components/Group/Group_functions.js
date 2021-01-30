@@ -25,7 +25,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Group/Group_functions
  */
 
-import { getTimestamp, updateTabTotal, sortByKey } from "../App/App_helpers";
+import { getTimestamp, updateTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -174,14 +174,18 @@ export function openGroup(e) {
  * @param {Function} setGroups For re-rendering the groups based on their new id
  */
 export function deleteGroup(e, setTabTotal, setGroups) {
-  chrome.storage.local.get("groups", (local) => {
+  chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     chrome.storage.sync.get("settings", (sync) => {
+      const scroll = document.documentElement.scrollTop;
       var target = e.target.closest(".group-title").nextSibling;
-      var group_blocks = local.groups;
-      if (!group_blocks[target.id].locked) {
+
+      var { groups, groups_copy } = local;
+      if (!groups[target.id].locked) {
+        groups_copy = storeDestructiveAction(groups_copy, groups);
+
         // if removed the only existing group
-        if (Object.keys(group_blocks).length === 1) {
-          group_blocks["group-0"] = {
+        if (Object.keys(groups).length === 1) {
+          groups["group-0"] = {
             color: sync.settings.color,
             created: getTimestamp(),
             hidden: false,
@@ -194,31 +198,31 @@ export function deleteGroup(e, setTabTotal, setGroups) {
           // must rename all keys for the groups above deleted group item
           var group_names = []; // need to change these
           var index_deleted = target.id.split("-")[1];
-          Object.keys(group_blocks).forEach((key) => {
+          Object.keys(groups).forEach((key) => {
             if (parseInt(key.split("-")[1]) > parseInt(index_deleted)) {
               group_names.push(key);
             }
           });
 
           // perform the renaming of items
-          var group_blocks_str = JSON.stringify(group_blocks);
+          var group_blocks_str = JSON.stringify(groups);
           group_names.forEach((key) => {
             var new_name = "group-" + (parseInt(key.split("-")[1]) - 1);
             group_blocks_str = group_blocks_str.replace(key, new_name);
           });
 
           // get back json object with new item key names
-          group_blocks = JSON.parse(group_blocks_str);
+          groups = JSON.parse(group_blocks_str);
 
           // if group to be deleted is last - must only delete it
           if (!group_names[0]) {
-            delete group_blocks["group-" + index_deleted];
+            delete groups["group-" + index_deleted];
           }
         }
 
-        chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
-          setGroups(JSON.stringify(group_blocks));
-          setTabTotal(updateTabTotal(group_blocks));
+        chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
+          setGroups(JSON.stringify(groups));
+          setTabTotal(updateTabTotal(groups));
         });
       } else {
         alert("This group is locked and thus cannot be deleted. Press the lock symbol to first unlock and then retry deleting it!"); // prettier-ignore

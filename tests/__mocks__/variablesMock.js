@@ -69,6 +69,7 @@ global.default_settings = {
   color: "#dedede",
   dark: true,
   open: "without",
+  pin: "include",
   restore: "keep",
   title: "Title",
 };

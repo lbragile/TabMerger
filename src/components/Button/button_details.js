@@ -2,6 +2,7 @@ import { AiOutlineMinus, AiOutlineClose } from "react-icons/ai";
 import { BiArrowToRight, BiExport, BiPrinter, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
 import { BsCloudUpload, BsCloudDownload, BsStarFill, BsStar } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
+import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 import { MdVerticalAlignCenter } from "react-icons/md";
@@ -14,10 +15,17 @@ export const GLOBAL_BUTTONS = (sync_node, group_limit, setTabTotal, setGroups) =
   return [
     {
       id: "options-btn",
-      classes: "mx-auto d-block",
+      classes: "mx-1",
       translate: AppFunc.translate("settings"),
       btnFn: () => window.location.assign("/settings/settings.html"),
       icon: <FiSettings color="black" size="1.6rem" />,
+    },
+    {
+      id: "undo-btn",
+      classes: "mx-1",
+      translate: "Undo Action",
+      btnFn: () => AppFunc.undoDestructiveAction(setGroups),
+      icon: <FaUndo color="black" size="1.2rem" />,
     },
     {
       id: "open-all-btn",

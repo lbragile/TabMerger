@@ -42,7 +42,7 @@ beforeAll(() => {
 });
 
 describe("restoreOptions", () => {
-  var expected_sync = { color: "#111111", title: "Random", blacklist: "Not TabMerger", restore: "remove", open: "with", dark: false }; // prettier-ignore
+  var expected_sync = {  blacklist: "Not TabMerger", color: "#111111", dark: false, open: "with", pin: "include", restore: "remove", title: "Random" }; // prettier-ignore
   document.body.innerHTML =
     `<div><hr/><code></code></div>` +
     `<input id="options-default-color"></input>` +
@@ -51,14 +51,27 @@ describe("restoreOptions", () => {
     `<input name="restore-tabs" value="remove"></input>` +
     `<input name="ext-open" value="without" checked></input>` +
     `<input name="ext-open" value="with"></input>` +
+    `<input name="pin-tabs" value="include" checked></input>` +
+    `<input name="pin-tabs" value="avoid"></input>` +
     `<input id="darkMode"></input>` +
+    `<nav></nav>` +
     `<textarea id="options-blacklist"></textarea>`;
 
-  it.each([[true], [false]])("calls setTabMergerLink and chrome.storage.sync.get - dark %s", (test_dark) => {
+  it.each([
+    [true, "empty"],
+    [false, "empty"],
+    [true, "full"],
+    [false, "full"],
+  ])("calls setTabMergerLink and chrome.storage.sync.get - dark %s (settings: %s)", (test_dark, settings) => {
+    if (settings === "empty") {
+      sessionStorage.removeItem("settings");
+    } else {
+      expected_sync.dark = test_dark;
+      sessionStorage.setItem("settings", JSON.stringify(expected_sync));
+    }
+
     const { reload } = window.location;
 
-    expected_sync.dark = test_dark;
-    sessionStorage.setItem("settings", JSON.stringify(expected_sync));
     var setTabMergerLinkSpy = jest.spyOn(SettingsHelper, "setTabMergerLink").mockImplementation(() => {});
     var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
 

@@ -206,3 +206,25 @@ export function getDragAfterElement(container, y, type) {
     { offset: Number.NEGATIVE_INFINITY }
   ).element;
 }
+
+/**
+ * If a user accidently removes a tab, group, or everything. They can press the "Undo"
+ * button to restore the previous configuration.
+ *
+ * @param {Function} group_copy for re-rendering the groups after they are reset
+ * @note Up to 15 states are stored.
+ */
+export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15) {
+  if (groups_copy.length <= NUM_UNDO_STATES) {
+    if (groups_copy.length === NUM_UNDO_STATES) {
+      alert(
+        "Cannot store any more destructive actions!\nPlease make a backup, undo some actions using the UNDO button, and retry to store successfully."
+      );
+    }
+    groups_copy.push(JSON.parse(JSON.stringify(groups))); // deep copy
+  } else {
+    alert("This destructive action was not stored!");
+  }
+
+  return groups_copy;
+}
