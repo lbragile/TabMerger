@@ -42,14 +42,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   padding-top: 12.5vh;
 }
 
-section {
-  margin: 10px 0 20px 0;
-}
-
-textarea {
-  width: 100%;
-}
-
 #sidebar-container {
   position: absolute;
   top: 50%;
@@ -57,10 +49,18 @@ textarea {
   transform: translate(-50%, -50%);
 }
 
+section {
+  margin: 5px 0 10px 0;
+}
+
+textarea {
+  width: 100%;
+}
+
 .container {
   position: relative;
-  margin-left: calc(var(--sidebar-width) + 5%);
-  margin-top: 7.5%;
+  margin-left: calc(var(--sidebar-width) + 10%);
+  margin-top: 1.5%;
 }
 
 #logo-img {

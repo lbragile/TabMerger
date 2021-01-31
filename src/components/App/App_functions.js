@@ -72,6 +72,42 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
 }
 
 /**
+ * Displays the tab & group information in the badge icon. Also adjusts the background color and text as needed.
+ *
+ * @param {number} tabTotal The current total tab count
+ * @param {number?} STEP_SIZE Break point for color changes (number of tabs before color changes)
+ * @param {{"green": string, "yellow": string, "orange": string, "red": string }?} COLORS The colors as hex strings of form "#FF7700"
+ */
+// prettier-ignore
+export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
+  chrome.storage.sync.get("settings", (sync) => {
+    chrome.storage.local.get("groups", (local) => {
+      if (local.groups) {
+        const num_groups = Object.keys(local.groups).length;
+        var color;
+        if (tabTotal >= 0 && tabTotal < STEP_SIZE) {
+          color = COLORS.green;
+        } else if (tabTotal < STEP_SIZE * 2) {
+          color = COLORS.yellow;
+        } else if (tabTotal < STEP_SIZE * 3) {
+          color = COLORS.orange;
+        } else {
+          color = COLORS.red;
+        }
+
+        const showInfo = sync.settings.badgeInfo === "display";
+        const text = showInfo && tabTotal > 0 ? `${tabTotal}|${num_groups}` : "";
+        const title = tabTotal > 0 ? `You currently have ${tabTotal} ${tabTotal === 1? "tab" : "tabs"} in ${num_groups} ${num_groups === 1? "group" : "groups"}` : "Merge your tabs into groups";
+
+        chrome.browserAction.setBadgeText({ text }, () => {});
+        chrome.browserAction.setBadgeBackgroundColor({ color }, () => {});
+        chrome.browserAction.setTitle({ title }, () => {});
+      }
+    });
+  });
+}
+
+/**
  * Updates the sync items - only those that have changes are overwritten
  * @param {HTMLElement} sync_node Node corresponding to the "Last Sync:" timestamp
  *
@@ -247,8 +283,10 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
           var item_bytes = JSON.stringify(group_blocks[into_group]).length + merged_bytes;
 
           if (item_bytes < item_limit) {
-            // close tabs that are being merged
-            chrome.tabs.remove(merged_tabs.map((x) => x.id));
+            // close tabs that are being merged (if settings is set to do so)
+            if (sync.settings.merge === "merge") {
+              chrome.tabs.remove(merged_tabs.map((x) => x.id));
+            }
 
             const new_tabs = [...group_blocks[into_group].tabs, ...merged_tabs];
             group_blocks[into_group].tabs = new_tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url }));

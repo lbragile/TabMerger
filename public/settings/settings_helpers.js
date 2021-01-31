@@ -53,14 +53,16 @@ export function setTabMergerLink() {
  * Sets the settings item in sync storage according to the current configuration in TabMerger
  */
 export function setSync() {
-  var color = document.getElementById("options-default-color").value;
-  var title = document.getElementById("options-default-title").value;
-  var restore = document.querySelector("input[name='restore-tabs']:checked").value;
-  var open = document.querySelector("input[name='ext-open']:checked").value;
-  var pin = document.querySelector("input[name='pin-tabs']:checked").value;
-  var blacklist = document.getElementById("options-blacklist").value;
-  var dark = document.getElementById("darkMode").checked;
+  const badgeInfo = document.querySelector("input[name='badge-view']:checked").value;
+  const blacklist = document.getElementById("options-blacklist").value;
+  const color = document.getElementById("options-default-color").value;
+  const dark = document.getElementById("darkMode").checked;
+  const pin = document.querySelector("input[name='pin-tabs']:checked").value;
+  const merge = document.querySelector("input[name='merge-tabs']:checked").value;
+  const open = document.querySelector("input[name='ext-open']:checked").value;
+  const restore = document.querySelector("input[name='restore-tabs']:checked").value;
+  const title = document.getElementById("options-default-title").value;
 
-  var store_val = { blacklist, color, dark, pin, open, title, restore };
-  chrome.storage.sync.set({ settings: store_val }, () => {});
+  const settings = { badgeInfo, blacklist, color, dark, pin, merge, open, restore, title };
+  chrome.storage.sync.set({ settings }, () => {});
 }

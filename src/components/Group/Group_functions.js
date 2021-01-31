@@ -120,42 +120,50 @@ export function blurOnEnter(e) {
  *
  * @param {HTMLElement} e The input field where the tab data was dropped
  * @param {Function} setGroups For re-rendering the groups once the operation is complete
+ * @param {Function} setTabTotal For re-rendering the total tab counter
  */
-export function addTabFromURL(e, setGroups) {
+export function addTabFromURL(e, setGroups, setTabTotal) {
   const url = e.target.value;
   const id = e.target.closest(".group").id;
 
-  chrome.storage.local.get("groups", (local) => {
-    // match against exsiting urls to avoid duplicates
-    var current_urls = [];
-    Object.values(local.groups).forEach((val) => {
-      current_urls = [...current_urls, ...val.tabs.map((x) => x.url)];
-    });
-
-    if (!current_urls.includes(url) && (url.includes("http://") || url.includes("https://"))) {
-      // query open tabs to get the title from the tab which has a matching url
-      chrome.tabs.query({ currentWindow: true }, (tabs) => {
-        var new_tab, remove_id;
-        tabs.forEach((tab) => {
-          if (tab.url === url) {
-            new_tab = { pinned: tab.pinned, title: tab.title, url };
-            remove_id = tab.id;
-          }
-        });
-
-        chrome.tabs.remove(remove_id);
-        local.groups[id].tabs = [...local.groups[id].tabs, new_tab];
-        chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
-          setGroups(JSON.stringify(local.groups));
-        });
+  chrome.storage.sync.get("settings", (sync) => {
+    chrome.storage.local.get("groups", (local) => {
+      // match against exsiting urls to avoid duplicates
+      var current_urls = [];
+      Object.values(local.groups).forEach((val) => {
+        current_urls = [...current_urls, ...val.tabs.map((x) => x.url)];
       });
-    } else {
-      e.target.value = "";
-      e.target.blur();
-      setTimeout(() => {
-        alert("That tab is already in TabMerger!");
-      }, 50);
-    }
+
+      if (!current_urls.includes(url) && (url.includes("http://") || url.includes("https://"))) {
+        // query open tabs to get the title from the tab which has a matching url
+        chrome.tabs.query({ currentWindow: true }, (tabs) => {
+          var new_tab, remove_id;
+          tabs.forEach((tab) => {
+            if (tab.url === url) {
+              new_tab = { pinned: tab.pinned, title: tab.title, url };
+              remove_id = tab.id;
+            }
+          });
+
+          // determine if need to close the merged tab
+          if (sync.settings.merge === "merge") {
+            chrome.tabs.remove(remove_id);
+          }
+
+          local.groups[id].tabs = [...local.groups[id].tabs, new_tab];
+          chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
+            setTabTotal(updateTabTotal(local.groups));
+            setGroups(JSON.stringify(local.groups));
+          });
+        });
+      } else {
+        e.target.value = "";
+        e.target.blur();
+        setTimeout(() => {
+          alert("That tab is already in TabMerger!");
+        }, 50);
+      }
+    });
   });
 }
 

@@ -62,7 +62,7 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
             <p className="move-tab">
               <BiGridSmall size="1.5rem" color={textColor === "light" ? "white" : "black"} />
             </p>
-            <img className="img-tab" src={TabHelper.getFavIconURL(tab.url)} alt="icon" draggable={false} />
+            <img className="img-tab" src={TabHelper.getFavIconURL(tab.url)} alt="" draggable={false} />
             <a
               href={tab.url}
               className={"a-tab mx-1 text-" + textColor}

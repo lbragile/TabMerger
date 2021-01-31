@@ -54,8 +54,8 @@ export default function App() {
 
   /** @constant {Object} defaultGroup @default { color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" } */
   const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" }); // prettier-ignore
-  /** @constant {Object} defaultSettings @default { blacklist: "", color: "#dedede", dark: true, open: "without", restore: "keep", title: "Title" } */
-  const defaultSettings = useRef({ blacklist: "", color: "#dedede", dark: true, open: "without", restore: "keep", title: "Title" }); // prettier-ignore
+  /** @constant {Object} defaultSettings @default { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title" } */
+  const defaultSettings = useRef({ badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title" }); // prettier-ignore
 
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
@@ -88,6 +88,10 @@ export default function App() {
       chrome.storage.onChanged.removeListener(checkMerging);
     };
   }, []);
+
+  useEffect(() => {
+    AppFunc.badgeIconInfo(tabTotal);
+  }, [tabTotal, groups]);
 
   useEffect(() => {
     chrome.storage.local.get("scroll", (local) => {

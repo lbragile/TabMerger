@@ -105,6 +105,33 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               ></textarea>
             </div>
           </section>
+
+          <section>
+            <div>
+              <h5 class="mb-0">Badge Appearance:</h5>
+              <small>Whether or not information is displayed on TabMerger's extension badge.</small>
+            </div>
+
+            <div class="my-2">
+              <input type="radio" id="display-info" name="badge-view" value="display" checked />
+              <label for="display-info" class="mb-0">Display Badge Level Information (<i>default</i>)</label>
+              <div class="ml-3 mt-0">
+                <small
+                  >Shows relevant information about number of tabs and groups inside TabMerger at any moment. Shown as
+                  {#tabs}|{#groups} with a background color corresponding to number of tabs. The user can hover over the
+                  icon to see these numbers in a clear sentence.
+                </small>
+              </div>
+            </div>
+
+            <div>
+              <input type="radio" id="hide-info" name="badge-view" value="hide" />
+              <label for="hide-info" class="mb-0">Hide Badge Level Information</label>
+              <div class="ml-3">
+                <small>No extra information is displayed on top of the badge icon. </small>
+              </div>
+            </div>
+          </section>
         </div>
 
         <div class="col-lg-6">
@@ -142,25 +169,29 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
           <section>
             <div>
-              <h5 class="mb-0">Restoring Behavior:</h5>
-              <small>This applies to both group and global actions.</small>
+              <h5 class="mb-0">General Merge Behaviour:</h5>
+              <small>This is considered when merging any tab into TabMerger.</small>
             </div>
 
             <div class="my-2">
-              <input type="radio" id="keep-tabs" name="restore-tabs" value="keep" checked />
-              <label for="keep" class="mb-0">Keep in TabMerger (<i>default</i>)</label>
+              <input type="radio" id="merge-any" name="merge-tabs" value="merge" checked />
+              <label for="include" class="mb-0">Merge & Close (<i>default</i>)</label>
               <div class="ml-3 mt-0">
-                <small>You can still manually delete tabs by the delete tab, group, or all actions. </small>
+                <small
+                  >Will close any merged tabs to reduce the load on your system. These tabs can be accessed from
+                  TabMerger at any time.</small
+                >
               </div>
             </div>
 
             <div>
-              <input type="radio" id="remove-tabs" value="remove" name="restore-tabs" />
-              <label for="remove" class="mb-0">Remove from TabMerger</label>
+              <input type="radio" id="dont-merge-any" name="merge-tabs" value="leave" />
+              <label for="avoid" class="mb-0">Merge Without Closing</label>
               <div class="ml-3">
                 <small
-                  >Opening a tab (<i>Click</i> on it) will remove that tab from TabMerger's page. This holds for any
-                  other opening action (<i>group</i> or <i>all</i>).
+                  >Will not close merged tabs while still storing them in TabMerger. This is desireable when the user
+                  would like to continue working on the current tab(s) but wants to ensure that they are saved in
+                  TabMerger for restoration at a later time.
                 </small>
               </div>
             </div>
@@ -169,7 +200,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
           <section>
             <div>
               <h5 class="mb-0">Pinned Tab Merge Behavior:</h5>
-              <small>This is considered when merging tabs into TabMerger.</small>
+              <small>This is considered when merging <b>pinned</b> tabs into TabMerger.</small>
             </div>
 
             <div class="my-2">
@@ -185,8 +216,34 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               <label for="avoid" class="mb-0">Avoid Pinned Tabs When Merging</label>
               <div class="ml-3">
                 <small
-                  >Your pinned tabs will not be merged. Only regular tabs (unpinned) are considered in the merging
-                  process.
+                  >Your pinned tabs will <b>NOT</b> be merged. Only regular tabs (unpinned) are considered in the
+                  merging process.
+                </small>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div>
+              <h5 class="mb-0">Restoring Behavior:</h5>
+              <small>This applies to both group and global actions.</small>
+            </div>
+
+            <div class="my-2">
+              <input type="radio" id="keep-tabs" name="restore-tabs" value="keep" checked />
+              <label for="keep" class="mb-0">Keep in TabMerger (<i>default</i>)</label>
+              <div class="ml-3 mt-0">
+                <small>You can still manually delete tabs by the delete tab, group, or all actions. </small>
+              </div>
+            </div>
+
+            <div>
+              <input type="radio" id="remove-tabs" name="restore-tabs" value="remove" />
+              <label for="remove" class="mb-0">Remove from TabMerger</label>
+              <div class="ml-3">
+                <small
+                  >Opening a tab (<i>Click</i> on it) will remove that tab from TabMerger's page. This holds for any
+                  other opening action (<i>group</i> or <i>all</i>).
                 </small>
               </div>
             </div>
