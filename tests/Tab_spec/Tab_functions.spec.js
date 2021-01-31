@@ -29,6 +29,8 @@ import { render, fireEvent } from "@testing-library/react";
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
 import Tab from "../../src/components/Tab/Tab";
 
+import * as AppHelper from "../../src/components/App/App_helpers";
+
 import { AppProvider } from "../../src/context/AppContext";
 
 var anything = expect.anything();
@@ -102,7 +104,7 @@ describe("tabDragEnd", () => {
       `<div class="group drag-origin" id="group-0">` +
       `  <div class="tabs-container">` +
       `    <div class="draggable dragging"><a href="${location.href}#a">a</a></div>` +
-      `    <div class="draggable"><a href="${location.href}#b">b<svg/></a></div>` +
+      `    <div class="draggable"><a href="${location.href}#b">b</a><span class="pinned"/></div>` +
       `    <div class="draggable"><a href="${location.href}#c">c</a></div>` +
       `  </div>` +
       `</div>` +
@@ -110,7 +112,7 @@ describe("tabDragEnd", () => {
       `  <div class="tabs-container">` +
       `    <div class="draggable"><a href="${location.href}#d">d</a></div>` +
       `    <div class="draggable"><a href="${location.href}#e">e</a></div>` +
-      `    <div class="draggable"><a href="${location.href}#f">f<svg/></a></div>` +
+      `    <div class="draggable"><a href="${location.href}#f">f</a><span class="pinned"/></div>` +
       `  </div>` +
       `</div>`;
 
@@ -201,20 +203,44 @@ describe("tabDragEnd", () => {
 });
 
 describe("removeTab", () => {
+  var storeDestructiveActionSpy;
+  beforeEach(() => {
+    storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups) => [groups]); // prettier-ignore
+  });
+
+  afterEach(() => {
+    storeDestructiveActionSpy.mockRestore();
+  });
+
   it("correctly adjusts storage when a tab is removed", () => {
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    localStorage.setItem("groups_copy", JSON.stringify([]));
     expected_groups["group-0"].tabs = expected_groups["group-0"].tabs.slice(1, 3);
     jest.clearAllMocks();
 
     fireEvent.click(container.querySelector(".close-tab"));
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
 
     expect(JSON.parse(localStorage.getItem("groups"))["group-0"].tabs).toStrictEqual(expected_groups["group-0"].tabs);
+  });
+
+  it("alerts if group is locked", () => {
+    global.alert = jest.fn();
+
+    var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    expected_groups["group-0"].locked = true;
+    localStorage.setItem("groups", JSON.stringify(expected_groups));
+    jest.clearAllMocks();
+
+    fireEvent.click(container.querySelector(".close-tab"));
+
+    expect(alert).toHaveBeenCalledTimes(1);
+    expect(alert.mock.calls.pop()[0]).toContain("This group is locked and thus tabs inside cannot be deleted.");
   });
 });
 
@@ -321,4 +347,38 @@ describe("handleTabTitleChange", () => {
   });
 
   test.todo("does nothing when title is focused but not changed");
+});
+
+describe("handlePinClick", () => {
+  const url = "https://www.twitch.tv/";
+
+  var stub;
+  beforeEach(() => {
+    stub = {
+      target: {
+        closest: jest.fn(() => ({ classList: { toggle: jest.fn() }, id: "group-1", previousSibling: { href: url } })),
+        classList: { contains: jest.fn() },
+      },
+    };
+  });
+
+  it.each([
+    ["PINNED", "NOT", true],
+    ["UNPINNED", "", false],
+  ])("sets the tab to be %s when it was %s pinned", (_, __, type) => {
+    stub.target.classList = { contains: jest.fn(() => type) };
+    var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    expect_groups[stub.target.closest().id].tabs[0].pinned = type;
+    jest.clearAllMocks();
+    TabFunc.handlePinClick(stub, mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expect_groups, scroll: 0 }, anything);
+
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith(JSON.stringify(expect_groups));
+  });
 });

@@ -42,39 +42,48 @@ beforeAll(() => {
 
 describe("filterTabs", () => {
   const merge_tabs = [
-    { id: 0, index: 0, url: "https://www.abc.com/", title: "ABC" },
-    { id: 1, index: 1, url: "https://www.def.com/", title: "DEF" },
-    { id: 2, index: 2, url: "https://lichess.org/", title: "lichess.org" },
-    { id: 3, index: 3, url: "https://www.chess.com/", title: "Chess.com" },
-    { id: 4, index: 4, url: "https://www.twitch.tv/", title: "Twitch" },
-    { id: 5, index: 5, url: "https://www.ghi.com/", title: "GHI" },
-    { id: 6, index: 6, url: "https://www.jkl.com/", title: "JKL" },
-    { id: 7, index: 7, url: "https://www.jkl.com/", title: "JKL" }, // duplicate on purpose
-    { id: 8, index: 8, url: "https://www.blacklisted.com/", title: "blacklisted" },
+    { id: 0, index: 0, pinned: true, url: "https://www.abc.com/", title: "ABC" },
+    { id: 1, index: 1, pinned: false, url: "https://www.def.com/", title: "DEF" },
+    { id: 2, index: 2, pinned: false, url: "https://lichess.org/", title: "lichess.org" },
+    { id: 3, index: 3, pinned: false, url: "https://www.chess.com/", title: "Chess.com" },
+    { id: 4, index: 4, pinned: true, url: "https://www.twitch.tv/", title: "Twitch" },
+    { id: 5, index: 5, pinned: false, url: "https://www.ghi.com/", title: "GHI" },
+    { id: 6, index: 6, pinned: false, url: "https://www.jkl.com/", title: "JKL" },
+    { id: 7, index: 7, pinned: false, url: "https://www.jkl.com/", title: "JKL" }, // duplicate on purpose
+    { id: 8, index: 8, pinned: true, url: "https://www.blacklisted.com/", title: "blacklisted" },
   ];
 
-  localStorage.setItem("groups", JSON.stringify(init_groups));
-  sessionStorage.setItem("open_tabs", JSON.stringify(merge_tabs));
-
-  default_settings.blacklist = "https://www.blacklisted.com/, ";
-  sessionStorage.setItem("settings", JSON.stringify(default_settings));
-  default_settings.blacklist = "";
-
   beforeEach(() => {
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+    sessionStorage.setItem("open_tabs", JSON.stringify(merge_tabs));
+
+    default_settings.blacklist = "https://www.blacklisted.com/, ";
+    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+    default_settings.blacklist = "";
     jest.clearAllMocks();
   });
 
   test.each([
-    [{ which: "right" }, { index: 3 }, undefined],
-    [{ which: "right" }, { index: 0 }, "group-0"],
-    [{ which: "right" }, { index: 7 }, "group-1"],
-    [{ which: "left" }, { index: 3 }, undefined],
-    [{ which: "left" }, { index: 0 }, "group-0"],
-    [{ which: "left" }, { index: 7 }, "group-1"],
-    [{ which: "excluding" }, { index: 1 }, "group-1"],
-    [{ which: "only" }, { index: 6 }, "group-2"],
-    [{ which: "all" }, { index: 0 }, "group-3"],
-  ])("%o, %o, %s", async (info, tab, group_id) => {
+    [{ which: "right" }, { index: 3 }, undefined, "include"],
+    [{ which: "right" }, { index: 0 }, "group-0", "include"],
+    [{ which: "right" }, { index: 7 }, "group-1", "include"],
+    [{ which: "right" }, { index: 7 }, "group-1", "avoid"],
+    [{ which: "left" }, { index: 3 }, undefined, "include"],
+    [{ which: "left" }, { index: 0 }, "group-0", "include"],
+    [{ which: "left" }, { index: 7 }, "group-1", "include"],
+    [{ which: "excluding" }, { index: 1 }, "group-1", "include"],
+    [{ which: "excluding" }, { index: 1 }, "group-1", "avoid"],
+    [{ which: "only" }, { index: 6 }, "group-2", "include"],
+    [{ which: "all" }, { index: 0 }, "group-3", "include"],
+    [{ which: "all" }, { index: 0 }, "group-3", "avoid"],
+  ])("%o, %o, %s, %s", (info, tab, group_id, pinned) => {
+    if (pinned === "avoid") {
+      var new_settings = JSON.parse(sessionStorage.getItem("settings"));
+      new_settings.pin = pinned;
+      sessionStorage.setItem("settings", JSON.stringify(new_settings));
+      jest.clearAllMocks();
+    }
+
     var tabs_to_be_merged;
     if (info.which === "right") {
       if (tab.index === 3) {
@@ -100,7 +109,17 @@ describe("filterTabs", () => {
       tabs_to_be_merged = [...merge_tabs.slice(0, 2), ...merge_tabs.slice(5, 7)];
     }
 
-    var into_group = group_id ? group_id : "contextMenu";
+    const into_group = group_id ? group_id : "contextMenu";
+    var merged_tabs = [];
+    tabs_to_be_merged.forEach((x) => {
+      if (pinned === "avoid") {
+        if (!x.pinned) {
+          merged_tabs = [...merged_tabs, { id: x.id, pinned: false, title: x.title, url: x.url }];
+        }
+      } else {
+        merged_tabs = [...merged_tabs, { id: x.id, pinned: x.pinned, title: x.title, url: x.url }];
+      }
+    });
 
     jest.useFakeTimers();
     BackgroundHelper.filterTabs(info, tab, group_id);
@@ -116,10 +135,7 @@ describe("filterTabs", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith(
-      { into_group, merged_tabs: tabs_to_be_merged.map((x) => ({ id: x.id, title: x.title, url: x.url })) },
-      anything
-    );
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ into_group, merged_tabs }, anything);
   });
 });
 

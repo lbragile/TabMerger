@@ -87,6 +87,8 @@ describe("setTabMergerLink", () => {
 
 describe("setSync", () => {
   it("sets sync storage according to the user selected values", () => {
+    const expected_sync = {badgeInfo: "display", blacklist: "https://www.google.com", color: "#000000", dark: true, merge: "merge", open: "with", pin: "include", title: "Default", restore: "remove" }; // prettier-ignore
+
     document.getElementById = jest.fn((id) => {
       switch (id) {
         case "options-default-color":
@@ -104,15 +106,17 @@ describe("setSync", () => {
 
     document.querySelector = jest.fn((sel) => {
       if (sel.includes("restore-tabs")) {
-        return { value: "remove" };
+        return { value: expected_sync.restore };
       } else if (sel.includes("ext-open")) {
-        return { value: "with" };
+        return { value: expected_sync.open };
       } else if (sel.includes("pin-tabs")) {
-        return { value: "include" };
+        return { value: expected_sync.pin };
+      } else if (sel.includes("merge-tabs")) {
+        return { value: expected_sync.merge };
+      } else if (sel.includes("badge-view")) {
+        return { value: expected_sync.badgeInfo };
       }
     });
-
-    const expected_sync = {blacklist: "https://www.google.com", color: "#000000", dark: true, open: "with", pin: "include", title: "Default", restore: "remove", }; // prettier-ignore
 
     SettingsHelper.setSync();
 

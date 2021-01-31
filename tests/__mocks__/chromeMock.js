@@ -3,6 +3,9 @@ global.chrome = {
     onClicked: {
       addListener: function () {},
     },
+    setBadgeText: function () {},
+    setBadgeBackgroundColor: function () {},
+    setTitle: function () {},
   },
   commands: {
     onCommand: {

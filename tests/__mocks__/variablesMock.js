@@ -65,9 +65,11 @@ global.init_groups = {
 };
 
 global.default_settings = {
+  badgeInfo: "display",
   blacklist: "",
   color: "#dedede",
   dark: true,
+  merge: "merge",
   open: "without",
   pin: "include",
   restore: "keep",

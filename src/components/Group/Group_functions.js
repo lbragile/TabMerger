@@ -136,7 +136,7 @@ export function addTabFromURL(e, setGroups, setTabTotal) {
 
       if (!current_urls.includes(url) && (url.includes("http://") || url.includes("https://"))) {
         // query open tabs to get the title from the tab which has a matching url
-        chrome.tabs.query({ currentWindow: true }, (tabs) => {
+        chrome.tabs.query({ status: "complete" }, (tabs) => {
           var new_tab, remove_id;
           tabs.forEach((tab) => {
             if (tab.url === url) {

@@ -42,7 +42,7 @@ beforeAll(() => {
 });
 
 describe("restoreOptions", () => {
-  var expected_sync = {  blacklist: "Not TabMerger", color: "#111111", dark: false, open: "with", pin: "include", restore: "remove", title: "Random" }; // prettier-ignore
+  var expected_sync = { badgeIcon: "display", blacklist: "Not TabMerger", color: "#111111", dark: false, merge: "merge", open: "with", pin: "include", restore: "remove", title: "Random" }; // prettier-ignore
   document.body.innerHTML =
     `<div><hr/><code></code></div>` +
     `<input id="options-default-color"></input>` +
@@ -53,6 +53,10 @@ describe("restoreOptions", () => {
     `<input name="ext-open" value="with"></input>` +
     `<input name="pin-tabs" value="include" checked></input>` +
     `<input name="pin-tabs" value="avoid"></input>` +
+    `<input name="badge-view" value="display" checked></input>` +
+    `<input name="badge-view" value="hide"></input>` +
+    `<input name="merge-tabs" value="merge" checked></input>` +
+    `<input name="merge-tabs" value="leave"></input>` +
     `<input id="darkMode"></input>` +
     `<nav></nav>` +
     `<textarea id="options-blacklist"></textarea>`;

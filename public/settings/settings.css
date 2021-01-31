@@ -30,6 +30,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   box-sizing: border-box;
 }
 
+.container-fluid {
+  width: 80%;
+  margin: 3% 0 3% calc(var(--sidebar-width) + 2.5%);
+}
+
 /* SIDEBAR */
 .sidebar {
   height: 100%;
@@ -55,12 +60,6 @@ section {
 
 textarea {
   width: 100%;
-}
-
-.container {
-  position: relative;
-  margin-left: calc(var(--sidebar-width) + 10%);
-  margin-top: 1.5%;
 }
 
 #logo-img {
@@ -105,7 +104,8 @@ small {
 }
 
 @media only screen and (max-width: 992px) {
-  .container {
-    margin: 2.5% 0 2.5% calc(var(--sidebar-width));
+  .container-fluid {
+    width: 75%;
+    margin: 2% 0 2% calc(var(--sidebar-width));
   }
 }
