@@ -113,7 +113,54 @@ export function blurOnEnter(e) {
 }
 
 /**
+ * Allows the user to drag a tab's URL address icon directly into TabMerger.
+ * Once this is done, the URL is converted into the appropriate tab row.
+ * This is useful if the user wants to avoid using the merge buttons or simply
+ * merge directly into a specific group from outside of TabMerger.
  *
+ * @param {HTMLElement} e The input field where the tab data was dropped
+ * @param {Function} setGroups For re-rendering the groups once the operation is complete
+ */
+export function addTabFromURL(e, setGroups) {
+  const url = e.target.value;
+  const id = e.target.closest(".group").id;
+
+  chrome.storage.local.get("groups", (local) => {
+    // match against exsiting urls to avoid duplicates
+    var current_urls = [];
+    Object.values(local.groups).forEach((val) => {
+      current_urls = [...current_urls, ...val.tabs.map((x) => x.url)];
+    });
+
+    if (!current_urls.includes(url) && (url.includes("http://") || url.includes("https://"))) {
+      // query open tabs to get the title from the tab which has a matching url
+      chrome.tabs.query({ currentWindow: true }, (tabs) => {
+        var new_tab, remove_id;
+        tabs.forEach((tab) => {
+          if (tab.url === url) {
+            new_tab = { pinned: tab.pinned, title: tab.title, url };
+            remove_id = tab.id;
+          }
+        });
+
+        chrome.tabs.remove(remove_id);
+        local.groups[id].tabs = [...local.groups[id].tabs, new_tab];
+        chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
+          setGroups(JSON.stringify(local.groups));
+        });
+      });
+    } else {
+      e.target.value = "";
+      e.target.blur();
+      setTimeout(() => {
+        alert("That tab is already in TabMerger!");
+      }, 50);
+    }
+  });
+}
+
+/**
+ * Adds the necessary classes to corresponding components when a group drag is initiated
  * @param {HTMLElement} e The group that is being dragged
  */
 export function groupDragStart(e) {
@@ -123,7 +170,8 @@ export function groupDragStart(e) {
 }
 
 /**
- *
+ * When a group's drag operation is finished, need to re-order all other groups and assign
+ * appropriate group-id to each.
  * @param {HTMLElement} e The group that is being dragged
  */
 export function groupDragEnd(e, setGroups) {
@@ -235,31 +283,30 @@ export function deleteGroup(e, setTabTotal, setGroups) {
 export function toggleGroup(e, toggle_type, setGroups) {
   const id = e.target.closest(".group-title").nextSibling.id;
   var scroll = document.documentElement.scrollTop;
-  var groups = {};
 
   chrome.storage.local.get("groups", (local) => {
+    var groups = local.groups;
+
     switch (toggle_type) {
       case "visibility":
-        local.groups[id].hidden = !local.groups[id].hidden;
-        groups = local.groups;
+        groups[id].hidden = !groups[id].hidden;
         break;
       case "lock":
-        local.groups[id].locked = !local.groups[id].locked;
-        groups = local.groups;
+        groups[id].locked = !groups[id].locked;
         break;
 
       default:
         scroll = 0;
-        groups = local.groups;
-        local.groups[id].starred = !local.groups[id].starred;
+        groups[id].starred = !groups[id].starred;
 
-        if (local.groups[id].starred) {
-          local.groups[id].locked = true;
+        if (groups[id].starred) {
+          groups[id].locked = true;
 
-          const starred_val = local.groups[id];
-          delete local.groups[id];
-          const other_vals = sortByKey(local.groups);
+          const starred_val = groups[id];
+          delete groups[id];
+          const other_vals = sortByKey(groups);
 
+          groups = {};
           groups["group-" + 0] = starred_val;
           other_vals.forEach((val, i) => {
             groups["group-" + (i + 1)] = val;

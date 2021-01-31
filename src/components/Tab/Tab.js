@@ -75,6 +75,7 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
               onMouseUp={(e) => TabFunc.handleTabClick(e)}
               onKeyPress={(e) => TabFunc.handleTabTitleChange(e)}
               onBlur={(e) => TabFunc.handleTabTitleChange(e)}
+              onDrop={(e) => e.preventDefault()}
             >
               {tab.title}
             </a>
@@ -83,9 +84,9 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
               onClick={(e) => TabFunc.handlePinClick(e, setGroups)}
             >
               {tab.pinned ? (
-                <RiPushpinFill className="m-0 pb-1" color={textColor === "primary" ? "black" : "white"} />
+                <RiPushpinFill className="m-0" color={textColor === "primary" ? "black" : "white"} />
               ) : (
-                <RiPushpinLine className="m-0 pb-1" color={textColor === "primary" ? "black" : "white"} />
+                <RiPushpinLine className="m-0" color={textColor === "primary" ? "black" : "white"} />
               )}
             </span>
           </div>

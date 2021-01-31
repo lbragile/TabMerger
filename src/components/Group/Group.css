@@ -76,6 +76,24 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   color: black;
 }
 
+/* URL DRAG INPUT */
+.url-drag-input {
+  border: none;
+  background: inherit;
+  position: absolute;
+  border-radius: inherit;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  caret-color: transparent;
+}
+
+.url-drag-input:focus {
+  outline: none;
+}
+
 /* TIMESTAMP */
 .created {
   background: none !important;

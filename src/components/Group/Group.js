@@ -70,6 +70,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           maxLength={TITLE_TRIM_LIMIT.current}
           defaultValue={title}
           onDragStart={(e) => e.preventDefault()}
+          onDrop={(e) => e.preventDefault()}
         />
 
         <div className="group-color tip p-0">
@@ -87,6 +88,15 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
         <div className="created mr-1" draggable={false}>
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>
+
+        <input
+          className="url-drag-input"
+          type="text"
+          name="url-drag"
+          onChange={(e) => GroupFunc.addTabFromURL(e, setGroups)}
+          onKeyDown={(e) => e.preventDefault()}
+          onClick={(e) => e.target.blur()}
+        />
 
         <MergeBtns id={id} />
 

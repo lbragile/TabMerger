@@ -25,8 +25,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 .draggable {
   position: relative;
   left: 10px;
+  width: fit-content;
   max-width: 95%;
   margin: 1px 0;
+  z-index: 2;
 }
 
 /* X */
@@ -59,8 +61,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 /* TAB URL */
 .a-tab {
   font-size: 0.95rem;
+  max-width: 90%;
   font-weight: bold;
-  max-width: 85%;
   text-align: left;
   vertical-align: middle;
   display: inline-block;
@@ -79,6 +81,15 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 }
 
 /* TAB PIN */
+.pin-tab {
+  position: relative;
+  top: -1px;
+}
+
+.pin-tab svg {
+  padding-bottom: 2px;
+}
+
 .pin-tab:hover {
   cursor: pointer;
 }

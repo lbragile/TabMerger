@@ -96,6 +96,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   margin-top: 2px;
 }
 
+.btn-for-merging {
+  z-index: 2;
+}
+
 .btn-for-merging svg {
   position: relative;
   left: -10px;

@@ -7,7 +7,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 
 export default function TabSearch() {
   return (
-    <div className="input-group search-filter my-3 mx-auto">
+    <div className="input-group search-filter my-3 mx-auto" onDrop={(e) => e.preventDefault()}>
       <div className="input-group-prepend">
         <span className="input-group-text">
           <AiOutlineSearch color="white" />
