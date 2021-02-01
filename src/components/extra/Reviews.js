@@ -22,7 +22,7 @@ export default function Reviews() {
                 <AiFillStar color="goldenrod" key={Math.random()} />
               ))}
             </p>
-            <p className="text-center px-1 my-0">{review}</p>
+            <p className="text-center text-white px-1 my-0">{review}</p>
           </span>
         );
       })}

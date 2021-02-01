@@ -3,9 +3,15 @@ global.chrome = {
     onClicked: {
       addListener: function () {},
     },
-    setBadgeText: function () {},
-    setBadgeBackgroundColor: function () {},
-    setTitle: function () {},
+    setBadgeText: function (_, cb) {
+      cb();
+    },
+    setBadgeBackgroundColor: function (_, cb) {
+      cb();
+    },
+    setTitle: function (_, cb) {
+      cb();
+    },
   },
   commands: {
     onCommand: {

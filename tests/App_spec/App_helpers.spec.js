@@ -187,3 +187,44 @@ describe("outputFileName", () => {
     expect(AppHelper.outputFileName()).toBe(correct_output);
   });
 });
+
+describe("storeDestructiveAction", () => {
+  beforeEach(() => {
+    localStorage.setItem("groups_copy", JSON.stringify([init_groups]));
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    alert.mockRestore();
+    confirm.mockRestore();
+  });
+
+  it("states < NUM_UNDO_STATES", () => {
+    const groups_copy = AppHelper.storeDestructiveAction([init_groups], {});
+
+    expect(groups_copy).toStrictEqual([init_groups, {}]);
+  });
+
+  it("states === NUM_UNDO_STATES", () => {
+    global.alert = jest.fn();
+
+    const groups_copy = AppHelper.storeDestructiveAction([init_groups], {}, 1);
+
+    expect(alert).toHaveBeenCalledTimes(1);
+    expect(alert.mock.calls.pop()[0]).toContain("Cannot store any more destructive actions!");
+
+    expect(groups_copy).toStrictEqual([init_groups, {}]);
+  });
+
+  it.each([[true], [false]])("states > NUM_UNDO_STATES - response = %s", (response) => {
+    global.confirm = jest.fn().mockImplementation(() => response);
+    jest.clearAllMocks();
+
+    const groups_copy = AppHelper.storeDestructiveAction([init_groups], {}, 0);
+
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(confirm.mock.calls.pop()[0]).toContain("This destructive action was not stored!");
+
+    expect(groups_copy).toStrictEqual(response ? [] : [init_groups]);
+  });
+});

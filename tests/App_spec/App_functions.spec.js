@@ -64,6 +64,66 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+describe("badgeIconInfo", () => {
+  var chromeBrowserActionSetBadgeTextSpy = jest.spyOn(chrome.browserAction, "setBadgeText");
+  var chromeBrowserActionSetBadgeBackgroundColorSpy = jest.spyOn(chrome.browserAction, "setBadgeBackgroundColor");
+  var chromeBrowserActionSetTitleSpy = jest.spyOn(chrome.browserAction, "setTitle");
+
+  const COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
+
+  test.each([
+    [1, COLORS.green, false],
+    [20, COLORS.green, false],
+    [40, COLORS.yellow, false],
+    [60, COLORS.orange, false],
+    [80, COLORS.red, false],
+    [80, COLORS.red, true],
+  ])("color, text, and title are correct for %s tabs", (num_tabs, color, one_group) => {
+    const expected_title = `You currently have ${num_tabs} ${num_tabs === 1 ? "tab" : "tabs"} in ${one_group ? 1 + " group" : 4 + " groups"}`; // prettier-ignore
+    const expected_text = `${num_tabs}|${one_group ? 1 : 4}`;
+
+    if (one_group) {
+      localStorage.setItem("groups", JSON.stringify({ "group-0": default_group }));
+    }
+
+    jest.clearAllMocks();
+
+    AppFunc.badgeIconInfo(num_tabs);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledWith({ text: expected_text }, anything);
+
+    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).toHaveBeenCalledWith({ color }, anything);
+
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledWith({ title: expected_title }, anything);
+  });
+
+  it("does nothing if there are no groups in local storage", () => {
+    localStorage.removeItem("groups");
+    jest.clearAllMocks();
+
+    AppFunc.badgeIconInfo(10);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    expect(chromeBrowserActionSetBadgeTextSpy).not.toHaveBeenCalled();
+    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).not.toHaveBeenCalled();
+    expect(chromeBrowserActionSetTitleSpy).not.toHaveBeenCalled();
+  });
+});
+
 describe("storageInit", () => {
   test("sync settings are null & local groups are null", () => {
     sessionStorage.clear();
@@ -85,7 +145,7 @@ describe("storageInit", () => {
     expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, scroll: 0 }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, groups_copy: [], scroll: 0 }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(2);
   });
@@ -107,7 +167,7 @@ describe("storageInit", () => {
     AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, scroll: 0 }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0 }, anything);
     expect(mockSet).toHaveBeenCalledTimes(2);
   });
 });
@@ -479,6 +539,8 @@ describe("openAllTabs", () => {
 describe("deleteAllGroups", () => {
   it("adjusts local storage to a default group only if user accepts", () => {
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
+    localStorage.setItem("groups_copy", JSON.stringify([]));
+    localStorage.setItem("groups", JSON.stringify(init_groups));
 
     window.confirm = jest.fn().mockImplementation(() => true);
 
@@ -490,11 +552,10 @@ describe("deleteAllGroups", () => {
     AppFunc.deleteAllGroups(mockSet, mockSet);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledTimes(2);
-
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, scroll: 0 }, anything);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, groups_copy: [init_groups], scroll: 0 }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(2);
     expect(mockSet).toHaveBeenNthCalledWith(1, 0);
@@ -519,6 +580,41 @@ describe("deleteAllGroups", () => {
     expect(window.confirm).toHaveBeenCalledTimes(1);
     expect(window.confirm.mock.calls.pop()[0]).toContain("Are you sure?");
     window.confirm.mockRestore();
+  });
+});
+
+describe("undoDestructiveAction", () => {
+  beforeEach(() => {
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+  });
+
+  test("can undo a state", () => {
+    localStorage.setItem("groups_copy", JSON.stringify([init_groups]));
+    jest.clearAllMocks();
+
+    AppFunc.undoDestructiveAction(mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0 }, anything); // prettier-ignore
+  });
+
+  test("can NOT undo a state", () => {
+    localStorage.setItem("groups_copy", JSON.stringify([]));
+    global.alert = jest.fn();
+    jest.clearAllMocks();
+
+    AppFunc.undoDestructiveAction(mockSet);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
+
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+
+    expect(alert).toHaveBeenCalledTimes(1);
+    expect(alert.mock.calls.pop()[0]).toBe("There are no more states to undo");
   });
 });
 

@@ -2,6 +2,9 @@ global.init_groups = {
   "group-0": {
     color: "#d6ffe0",
     created: "11/12/2020 @ 22:13:24",
+    hidden: false,
+    locked: false,
+    starred: false,
     tabs: [
       {
         pinned: false,
@@ -24,6 +27,9 @@ global.init_groups = {
   "group-1": {
     color: "#c7eeff",
     created: "11/12/2020 @ 22:15:11",
+    hidden: false,
+    locked: false,
+    starred: false,
     tabs: [
       {
         pinned: false,
@@ -41,6 +47,9 @@ global.init_groups = {
   "group-10": {
     color: "#123123",
     created: "01/01/2021 @ 12:34:56",
+    hidden: false,
+    locked: false,
+    starred: false,
     tabs: [
       {
         pinned: false,
@@ -53,6 +62,9 @@ global.init_groups = {
   "group-9": {
     color: "#456456",
     created: "10/09/2021 @ 12:11:10",
+    hidden: false,
+    locked: false,
+    starred: false,
     tabs: [
       {
         pinned: false,
