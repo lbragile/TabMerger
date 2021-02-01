@@ -592,7 +592,7 @@ describe("undoDestructiveAction", () => {
     localStorage.setItem("groups_copy", JSON.stringify([init_groups]));
     jest.clearAllMocks();
 
-    AppFunc.undoDestructiveAction(mockSet);
+    AppFunc.undoDestructiveAction(mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
@@ -606,7 +606,7 @@ describe("undoDestructiveAction", () => {
     global.alert = jest.fn();
     jest.clearAllMocks();
 
-    AppFunc.undoDestructiveAction(mockSet);
+    AppFunc.undoDestructiveAction(mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);

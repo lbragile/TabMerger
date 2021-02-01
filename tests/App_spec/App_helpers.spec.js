@@ -69,7 +69,7 @@ describe("toggleDarkMode", () => {
 
   beforeEach(() => {
     body = container.querySelector(".container-fluid").closest("body");
-    sidebar = container.querySelector("nav.sidebar");
+    sidebar = container.querySelector("#sidebar");
   });
 
   test("light mode", () => {

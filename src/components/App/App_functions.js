@@ -21,8 +21,7 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import * as AppHelper from "./App_helpers";
-import { getDragAfterElement } from "../App/App_helpers";
+import * as AppHelper from "../App/App_helpers";
 
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
@@ -471,16 +470,18 @@ export function deleteAllGroups(setTabTotal, setGroups) {
  * If a user accidently removes a tab, group, or everything. They can press the "Undo"
  * button to restore the previous configuration.
  *
- * @param {Function} setGroups for re-rendering the groups after they are reset
+ * @param {Function} setGroups For re-rendering the groups after they are reset
+ * @param {Function} setTabTotal For re-rendering the tab total counter
  * @note Up to 10 states are stored.
  */
-export function undoDestructiveAction(setGroups) {
+export function undoDestructiveAction(setGroups, setTabTotal) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     if (local.groups_copy.length >= 1) {
       const scroll = document.documentElement.scrollTop;
       const prev_group = local.groups_copy.pop();
 
       chrome.storage.local.set({ groups: prev_group, groups_copy: local.groups_copy, scroll }, () => {
+        setTabTotal(AppHelper.updateTabTotal(prev_group));
         setGroups(JSON.stringify(prev_group));
       });
     } else {
@@ -510,7 +511,7 @@ export function dragOver(e, type) {
         location = group_block.querySelector(".tabs-container");
       }
 
-      const afterElement = getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
+      const afterElement = AppHelper.getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
       if (!afterElement) {
         location.appendChild(currentElement);
       } else {

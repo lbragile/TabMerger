@@ -47,10 +47,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   margin: 0;
 }
 
-/* #options-btn {
-  margin-top: 20px;
-} */
-
 #open-all-btn svg,
 #delete-all-btn svg,
 #import-btn svg,
@@ -81,6 +77,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   position: relative;
   left: 0px;
   top: -2px;
+}
+
+#undo-btn svg {
+  position: relative;
+  left: 1px;
+  top: -1px;
 }
 
 /* MERGE BUTTONS */

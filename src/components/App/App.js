@@ -103,15 +103,19 @@ export default function App() {
 
   return (
     <div id="app-wrapper" className="text-center">
-      <nav id="mySidebar" className="sidebar">
+      <nav id="sidebar">
         <Header total={tabTotal} />
-        <TabSearch />
-        <hr className="mx-auto" />
+        <hr className="mx-auto d-none shown-in-print" />
         <Reviews />
 
-        {/* prettier-ignore */}
-        <GlobalBtns syncTimestamp={syncTimestamp} group_limit={NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups}/>
-        <Links />
+        <div id="global-action-container">
+          <TabSearch />
+          <hr className="mx-auto hidden-in-print" />
+
+          {/* prettier-ignore */}
+          <GlobalBtns syncTimestamp={syncTimestamp} group_limit={NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups}/>
+          <Links />
+        </div>
 
         <div id="copyright" className="mt-4">
           Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky

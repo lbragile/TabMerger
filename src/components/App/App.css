@@ -34,14 +34,26 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 .container-fluid {
   position: relative;
   left: calc(var(--sidebar-width) + 5%);
-  margin: 50px 0 40px 0;
+  margin: 25px 0;
   width: calc(90% - var(--sidebar-width));
 }
 
-.subtitle {
+#global-action-container {
   position: relative;
-  width: 100%;
+  top: 35%;
+  transform: translateY(-50%);
+}
+
+.subtitle {
   color: white;
+}
+
+#logo-img {
+  width: 90%;
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #sync-text {
@@ -51,21 +63,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   font-size: 0.95rem;
 }
 
-.subtitle > h2,
-#logo-img {
-  margin-bottom: 32px;
-}
-
-#logo-img {
-  width: 90%;
-}
-
 hr {
   margin: 20px 0 !important;
 }
 
 /* SIDEBAR */
-.sidebar {
+#sidebar {
   height: 100%;
   width: var(--sidebar-width);
   position: fixed;
@@ -145,6 +148,7 @@ hr {
   font-size: 0.9rem;
   position: absolute;
   left: 50%;
+  bottom: 25px;
   transform: translateX(-50%);
   white-space: nowrap;
   color: white;
@@ -177,10 +181,6 @@ hr {
     width: calc(96% - var(--sidebar-width));
   }
 
-  .sidebar {
-    padding-top: 7vh;
-  }
-
   .subtitle > h2,
   #logo-img {
     margin-bottom: 28px;
@@ -208,13 +208,8 @@ hr {
     -webkit-print-color-adjust: exact;
   }
 
-  .sidebar {
+  #sidebar {
     background: rgb(27, 27, 27) !important;
-    padding-top: 7.5% !important;
-  }
-
-  .container-fluid {
-    margin: 0;
   }
 
   .group-item {
@@ -232,6 +227,11 @@ hr {
 
   .group-title {
     border-bottom: none !important;
+  }
+
+  #global-action-container {
+    position: relative !important;
+    top: 80px !important;
   }
 
   .lock-group-btn,
@@ -252,10 +252,17 @@ hr {
     display: none !important;
   }
 
-  #reviews-img {
+  #reviews {
     display: block !important;
-    margin: 0 auto !important;
     font-size: 0.9rem !important;
+  }
+
+  .hidden-in-print {
+    display: none !important;
+  }
+
+  .shown-in-print {
+    display: block !important;
   }
 
   .group-count {
