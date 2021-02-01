@@ -30,7 +30,7 @@ import { getTimestamp, updateTabTotal, sortByKey, storeDestructiveAction } from 
 /**
  * Sets the background color of each group according to what the user chose.
  * @param {HTMLElement} e Either the group's color picker value or the group container
- * @param {string} id Used to find the group whose background needs to be set
+ * @param {string?} id Used to find the group whose background needs to be set
  */
 export function setBGColor(e, id) {
   var color, target;
@@ -38,15 +38,14 @@ export function setBGColor(e, id) {
     color = e.target.value;
     target = e.target.closest(".group-title");
   } else {
-    var group_title = e.previousSibling;
-    color = group_title.querySelector("input[type='color']").value;
-    target = e;
+    color = e.previousSibling.querySelector("input[type='color']").value;
+    target = e.previousSibling;
   }
 
   const adjusted_text_color = color > "#777777" ? "black" : "white";
   [...target.parentNode.children].forEach((child) => {
     child.style.background = color;
-    const selectors = ".title-edit-input, .group-count, .hidden-symbol, .btn-in-group-title svg, .group-color svg, .draggable svg, .a-tab"; // prettier-ignore
+    const selectors = ".title-edit-input, .group-count, .hidden-symbol, .btn-in-group-title svg, .color-group-btn svg, .draggable svg, .a-tab"; // prettier-ignore
     [...child.querySelectorAll(selectors)].forEach((x) => {
       if (x.classList.contains("a-tab")) {
         x.classList.value = x.classList.value.split(" ").filter((cl) => !cl.includes("text-")).join(" "); // prettier-ignore
@@ -61,12 +60,12 @@ export function setBGColor(e, id) {
     }
   });
 
+  if (!id) {
+    id = target.nextSibling.id;
+  }
+
   chrome.storage.local.get("groups", (local) => {
-    // this has to do with deleteAll reseting ID, so can ignore this as it works
-    // istanbul ignore else
-    if (local.groups[id]) {
-      local.groups[id].color = color;
-    }
+    local.groups[id].color = color;
     chrome.storage.local.set({ groups: local.groups }, () => {});
   });
 }

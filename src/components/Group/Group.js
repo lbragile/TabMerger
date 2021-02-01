@@ -30,7 +30,7 @@ import { AppContext } from "../../context/AppContext";
 import MergeBtns from "../Button/MergeBtns";
 import GroupTitleBtns from "../Button/GroupTitleBtns";
 
-import { BiColorFill, BiHide } from "react-icons/bi";
+import { BiHide } from "react-icons/bi";
 
 import "./Group.css";
 import "../Button/Button.css";
@@ -64,24 +64,17 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
 
         <input
           className="title-edit-input font-weight-bold mb-0"
+          maxLength={TITLE_TRIM_LIMIT.current}
+          defaultValue={title}
           onFocus={(e) => e.target.select()}
           onBlur={(e) => GroupFunc.setTitle(e, setGroups, title)}
           onKeyDown={(e) => GroupFunc.blurOnEnter(e)}
-          maxLength={TITLE_TRIM_LIMIT.current}
-          defaultValue={title}
           onDragStart={(e) => e.preventDefault()}
           onDrop={(e) => e.preventDefault()}
         />
 
-        <div className="group-color tip p-0">
-          <BiColorFill className="input-color" onClick={(e) => e.target.closest("div").nextSibling.click()} />
-          <span className="tiptext-group-color">{translate("pickColor")}</span>
-        </div>
         {/*prettier-ignore*/}
-        <input type="color" defaultValue={color} onChange={(e) => setBGColor(e)} onBlur={() => GroupFunc.updateTextColor()} />
-
-        {/*prettier-ignore*/}
-        <GroupTitleBtns hidden={hidden} locked={locked} starred={starred} setTabTotal={setTabTotal} setGroups={setGroups} />
+        <GroupTitleBtns color={color} hidden={hidden} locked={locked} starred={starred} setTabTotal={setTabTotal} setGroups={setGroups} />
       </div>
 
       <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => dragOver(e, "tab")}>

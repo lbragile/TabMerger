@@ -91,9 +91,11 @@ describe("toggleDarkMode", () => {
 
 describe("toggleSyncTimestampHelper", () => {
   it("turns green and has right timestamp when sync is on", () => {
+    const timestamp1 = AppHelper.getTimestamp();
     AppHelper.toggleSyncTimestamp(true, sync_node);
+    const timestamp2 = AppHelper.getTimestamp();
 
-    expect(sync_node.innerText).toBe(AppHelper.getTimestamp());
+    expect([timestamp1, timestamp2]).toContain(sync_node.innerText);
     expect(sync_container.classList).not.toContain("alert-danger");
     expect(sync_container.classList).toContain("alert-success");
   });

@@ -93,3 +93,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 .pin-tab:hover {
   cursor: pointer;
 }
+
+/* Responsive Adjustments for Laptops */
+@media only screen and (max-width: 1300px) {
+  .a-tab {
+    max-width: 85%;
+  }
+}

@@ -27,7 +27,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 }
 
 .group-title {
-  width: 40%;
+  width: 52.5%;
   margin: 0;
   position: relative;
   left: 10px;
@@ -59,6 +59,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   top: 50%;
   left: 20%;
   transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 /* GROUP TAB COUNTER */
@@ -102,29 +103,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   right: 0;
 }
 
-/* COLOR PICKER (GROUP) */
-.input-color {
-  position: absolute;
-  right: -30px;
-  top: 4px;
-  width: 22px;
-  height: 22px;
-  z-index: 5;
-}
-
-.input-color:hover {
-  cursor: pointer;
-}
-
-input[type="color"] {
-  display: none;
-}
-
 /* GROUP TITLE */
 .title-edit-input {
-  width: 65%;
+  width: 67.5%;
   height: 30px;
   text-align: center;
+  margin-left: 3px;
   padding: 0;
   background: none;
   border: none;
@@ -139,29 +123,45 @@ input[type="color"] {
 
 /* Responsive Adjustments for Laptops */
 @media only screen and (max-width: 1600px) {
+  .title-edit-input {
+    width: 60%;
+    font-size: 1.2rem;
+    margin-left: 4px;
+  }
+
   .group-title {
-    width: 45%;
+    width: 60%;
   }
 }
 
 @media only screen and (max-width: 1200px) {
   .title-edit-input {
-    font-size: 1.15rem;
-    width: 60%;
+    width: 59%;
+    font-size: 1.1rem;
+    margin-left: 6px;
+  }
+
+  .created {
+    font-size: 0.95rem;
   }
 
   .group-title {
-    width: 52.5%;
+    width: 65%;
   }
 }
 
 @media only screen and (max-width: 991px) {
   .title-edit-input {
-    font-size: 1.05rem;
     width: 55%;
+    font-size: 1.05rem;
+    margin-left: 5px;
+  }
+
+  .created {
+    font-size: 0.9rem;
   }
 
   .group-title {
-    width: 55%;
+    width: 65%;
   }
 }

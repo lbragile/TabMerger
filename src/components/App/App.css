@@ -234,11 +234,11 @@ hr {
     border-bottom: none !important;
   }
 
-  .group-color,
   .lock-group-btn,
   .move-group-btn,
   .star-group-btn,
-  .show-hide-btn,
+  .color-group-btn,
+  .visibility-group-btn,
   .open-group-btn,
   .delete-group-btn,
   .close-tab,
@@ -262,9 +262,13 @@ hr {
     border: none !important;
   }
 
-  .draggable a {
-    width: 92.5% !important;
+  .draggable {
+    width: 100% !important;
+  }
+
+  .a-tab {
     text-decoration: none !important;
+    width: 95% !important;
   }
 
   @page {

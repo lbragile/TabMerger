@@ -121,18 +121,34 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   transform: rotate(180deg);
 }
 
+/* COLOR PICKER (GROUP) */
+.input-color {
+  width: 22px;
+  height: 22px;
+}
+
+.input-color:hover {
+  cursor: pointer;
+}
+
+input[type="color"] {
+  display: none;
+}
+
+/* OTHER GROUP TITLE BUTTONS */
 .open-group-btn svg,
 .delete-group-btn svg,
-.show-hide-btn svg {
+.visibility-group-btn svg {
   left: -8px;
 }
 
 .move-group-btn,
 .lock-group-btn,
 .star-group-btn,
+.color-group-btn,
 .open-group-btn,
 .delete-group-btn,
-.show-hide-btn {
+.visibility-group-btn {
   position: absolute;
   top: -1px;
 }
@@ -147,7 +163,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   left: 80px;
 }
 
-.show-hide-btn {
+.color-group-btn {
+  right: 65px;
+}
+.visibility-group-btn {
   right: 40px;
 }
 .open-group-btn {

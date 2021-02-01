@@ -31,10 +31,10 @@ import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
 
 import GlobalBtns from "../Button/GlobalBtns.js";
-import Header from "../extra/Header.js";
-import TabSearch from "../extra/TabSearch.js";
-import Reviews from "../extra/Reviews.js";
-import Links from "../extra/Links.js";
+import Header from "../Extra/Header.js";
+import TabSearch from "../Extra/TabSearch.js";
+import Reviews from "../Extra/Reviews.js";
+import Links from "../Extra/Links.js";
 
 import { AppProvider } from "../../context/AppContext";
 
