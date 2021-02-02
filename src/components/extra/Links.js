@@ -33,9 +33,11 @@ export default function Links() {
 
       <hr className="mx-auto" />
 
-      {LINKS.current.slice(5).map((x) => {
-        return <LinkBtn text={x.text} url={x.url} icon={x.icon} key={Math.random()} />;
-      })}
+      <div id="my-links">
+        {LINKS.current.slice(5).map((x) => {
+          return <LinkBtn text={x.text} url={x.url} icon={x.icon} key={Math.random()} />;
+        })}
+      </div>
     </React.Fragment>
   );
 }

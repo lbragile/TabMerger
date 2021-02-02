@@ -34,7 +34,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 .container-fluid {
   position: relative;
   left: calc(var(--sidebar-width) + 5%);
-  margin: 25px 0;
+  margin: 50px 0 25px 0;
   width: calc(90% - var(--sidebar-width));
 }
 
@@ -206,6 +206,10 @@ hr {
 @media print {
   * {
     -webkit-print-color-adjust: exact;
+  }
+
+  .container-fluid {
+    margin: 25px 0 !important;
   }
 
   #sidebar {

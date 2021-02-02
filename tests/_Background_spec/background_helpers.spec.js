@@ -168,7 +168,7 @@ describe("findExtTabAndSwitch", () => {
   });
 
   describe("TabMerger page is NOT already open", () => {
-    const expected_not_exist = { url: "index.html", active: true };
+    const expected_not_exist = { url: "../index.html", active: true };
 
     beforeAll(() => {
       chromeTabsQuerySpy.mockImplementation((_, cb) => cb([]));

@@ -5,7 +5,7 @@ import { translate, getTabMergerLink } from "../App/App_functions";
 export default function Header({ total }) {
   return (
     <React.Fragment>
-      <a href={getTabMergerLink(false)}>
+      <a href={getTabMergerLink(false)} target="_blank" rel="noreferrer">
         <img id="logo-img" src="./images/logo-full-rescale.PNG" alt="TabMerger Logo" />
       </a>
       <div className="subtitle">

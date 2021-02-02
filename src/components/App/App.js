@@ -26,15 +26,17 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  */
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Tour from "reactour";
 
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
 
-import GlobalBtns from "../Button/GlobalBtns.js";
-import Header from "../Extra/Header.js";
-import TabSearch from "../Extra/TabSearch.js";
-import Reviews from "../Extra/Reviews.js";
-import Links from "../Extra/Links.js";
+import GlobalBtns from "../Button/GlobalBtns";
+import Header from "../Extra/Header";
+import TabSearch from "../Extra/TabSearch";
+import Reviews from "../Extra/Reviews";
+import Links from "../Extra/Links";
+import { TOUR_STEPS } from "../Extra/Tutorial";
 
 import { AppProvider } from "../../context/AppContext";
 
@@ -59,6 +61,7 @@ export default function App() {
 
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
+  const [tour, setTour] = useState(null);
 
   const toggleSyncTimestamp = useCallback(
     (positive) => {
@@ -68,7 +71,7 @@ export default function App() {
   );
 
   useEffect(() => {
-    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setGroups, setTabTotal);
+    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setTour, setGroups, setTabTotal); // prettier-ignore
   }, [toggleSyncTimestamp]);
 
   useEffect(() => {
@@ -103,6 +106,24 @@ export default function App() {
 
   return (
     <div id="app-wrapper" className="text-center">
+      {tour && (
+        <Tour
+          steps={TOUR_STEPS}
+          isOpen={tour}
+          onRequestClose={() => setTour(false)}
+          badgeContent={(current, total) => `Step ${current}/${total}`}
+          closeWithMask={false}
+          showNavigationNumber={false}
+          disableFocusLock={true}
+          rounded={5}
+          /* prettier-ignore */
+          prevButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3c;</button>}
+          /* prettier-ignore */
+          nextButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3e;</button>}
+          lastStepNextButton={<button className="btn btn-dark">🏁</button>}
+        />
+      )}
+
       <nav id="sidebar">
         <Header total={tabTotal} />
         <hr className="mx-auto d-none shown-in-print" />

@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import * as AppHelper from "../App/App_helpers";
+import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
@@ -42,7 +43,7 @@ import Group from "../Group/Group.js";
  * @see defaultSettings in App.js
  * @see defaultGroup in App.js
  */
-export function storageInit(default_settings, default_group, sync_node, setGroups, setTabTotal) {
+export function storageInit(default_settings, default_group, sync_node, setTour, setGroups, setTabTotal) {
   const scroll = document.documentElement.scrollTop;
   chrome.storage.sync.get(null, (sync) => {
     if (!sync.settings) {
@@ -57,13 +58,15 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
     }
 
     delete sync.settings;
-    chrome.storage.local.get("groups", (local) => {
-      var ls_entry = local.groups || { "group-0": default_group };
+    chrome.storage.local.get(["groups", "tour_needed"], (local) => {
+      const tour_needed = local.tour_needed === undefined;
+      const groups = tour_needed ? TUTORIAL_GROUP : local.groups || { "group-0": default_group };
 
       chrome.storage.local.remove(["groups"], () => {
-        chrome.storage.local.set({ groups: ls_entry, groups_copy: [], scroll }, () => {
-          setGroups(JSON.stringify(ls_entry));
-          setTabTotal(AppHelper.updateTabTotal(ls_entry));
+        chrome.storage.local.set({ groups, groups_copy: [], scroll, tour_needed }, () => {
+          setTour(tour_needed);
+          setGroups(JSON.stringify(groups));
+          setTabTotal(AppHelper.updateTabTotal(groups));
         });
       });
     });

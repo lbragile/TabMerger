@@ -130,7 +130,7 @@ describe("storageInit", () => {
     localStorage.clear();
     jest.clearAllMocks();
 
-    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
+    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
@@ -139,22 +139,22 @@ describe("storageInit", () => {
     expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: default_settings }, anything);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "tour_needed"], anything);
 
     expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, groups_copy: [], scroll: 0 }, anything); // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, groups_copy: [], scroll: 0, tour_needed: false }, anything); // prettier-ignore
 
-    expect(mockSet).toHaveBeenCalledTimes(2);
+    expect(mockSet).toHaveBeenCalledTimes(3);
   });
 
   test("sync settings exist & sync group-0 is null", () => {
     sessionStorage.setItem("settings", 1);
     jest.clearAllMocks();
 
-    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
+    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
   });
@@ -164,11 +164,11 @@ describe("storageInit", () => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
     jest.clearAllMocks();
 
-    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet);
+    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0 }, anything);
-    expect(mockSet).toHaveBeenCalledTimes(2);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0, tour_needed: false}, anything); // prettier-ignore
+    expect(mockSet).toHaveBeenCalledTimes(3);
   });
 });
 
@@ -538,18 +538,15 @@ describe("openAllTabs", () => {
 
 describe("deleteAllGroups", () => {
   it("adjusts local storage to a default group only if user accepts", () => {
+    var new_entry = { "group-0": default_group };
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
     localStorage.setItem("groups_copy", JSON.stringify([]));
     localStorage.setItem("groups", JSON.stringify(init_groups));
-
     window.confirm = jest.fn().mockImplementation(() => true);
-
-    var new_entry = { "group-0": default_group };
-    new_entry["group-0"].created = AppHelper.getTimestamp();
-
     jest.clearAllMocks();
 
     AppFunc.deleteAllGroups(mockSet, mockSet);
+    new_entry["group-0"].created = AppHelper.getTimestamp();
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
