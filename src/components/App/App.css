@@ -31,6 +31,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   box-sizing: border-box;
 }
 
+/* TOUR HELPER */
+.reactour__helper {
+  max-width: 550px !important;
+}
+
+.reactour__helper img {
+  max-width: 100% !important;
+}
+
+/* TABMERGER */
 .container-fluid {
   position: relative;
   left: calc(var(--sidebar-width) + 5%);
@@ -46,6 +56,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 .subtitle {
   color: white;
+  position: absolute;
+  top: 17.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #logo-img {
@@ -217,11 +231,10 @@ hr {
   }
 
   .group-item {
+    margin: 4px 0;
     break-inside: avoid;
-  }
-
-  .group-title {
-    width: 65% !important;
+    position: relative;
+    left: -50px;
   }
 
   .group,
@@ -230,7 +243,28 @@ hr {
   }
 
   .group-title {
+    width: 77% !important;
     border-bottom: none !important;
+  }
+
+  .group {
+    width: 117.5% !important;
+  }
+
+  .title-edit-input {
+    width: 90% !important;
+    position: relative;
+    left: -5px;
+  }
+
+  .group-count,
+  .title-edit-input {
+    font-size: 1.05rem !important;
+  }
+
+  .group-count {
+    position: relative;
+    top: 2px;
   }
 
   #global-action-container {
@@ -254,6 +288,10 @@ hr {
   .search-filter,
   .global-btn-row {
     display: none !important;
+  }
+
+  .subtitle {
+    top: 8%;
   }
 
   #reviews {
@@ -280,6 +318,10 @@ hr {
   .a-tab {
     text-decoration: none !important;
     width: 95% !important;
+  }
+
+  #___reactour {
+    display: none !important;
   }
 
   @page {

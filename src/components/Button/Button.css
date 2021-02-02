@@ -157,6 +157,7 @@ input[type="color"] {
 
 .move-group-btn {
   left: 30px;
+  top: 0;
 }
 .lock-group-btn {
   left: 55px;

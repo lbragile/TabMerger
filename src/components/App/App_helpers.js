@@ -36,7 +36,7 @@ export function getTimestamp() {
 
   // dd/mm/yyyy @ hh:mm:ss
   date_parts[0] = date_parts[1] + "/";
-  date_parts[1] = ("0" + new Date().getMonth() + 1).slice(-2) + "/";
+  date_parts[1] = ("0" + (new Date().getMonth() + 1)).slice(-2) + "/";
   date_parts[2] += " @ ";
 
   return date_parts.join("");

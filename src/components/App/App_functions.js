@@ -74,6 +74,19 @@ export function storageInit(default_settings, default_group, sync_node, setTour,
 }
 
 /**
+ * Allows the user to view the tutorial again or navigate to the official homepage.
+ * Choosing OK plays the tutorial, choosing Cancel navigates to the official homepage.
+ * If a tutorial is replayed, the current configuration is not changed to avoid data loss!
+ *
+ * @param {string} url Link to TabMerger's official homepage
+ * @param {Function} setTour For re-rendering the tour
+ */
+export function resetTutorialChoice(url, setTour) {
+  const response = window.confirm("Press OK to see tutorial OR Cancel to visit TabMerger's official homepage!");
+  response ? setTour(true) : window.open(url, "_blank", "noreferrer");
+}
+
+/**
  * Displays the tab & group information in the badge icon. Also adjusts the background color and text as needed.
  *
  * @param {number} tabTotal The current total tab count

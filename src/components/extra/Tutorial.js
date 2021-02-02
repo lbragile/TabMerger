@@ -7,16 +7,16 @@ export const TOUR_STEPS = [
       <div className="text-dark my-2">
         Before we begin, please note that you can click this button to replay the tutorial at any time. <br />
         <br />
-        Simply click the button and select <b>View Tutorial</b>. <br />
+        Simply click this button and select <b>OK</b> in the confirmation window. <br />
         <br />
-        Selecting <i>Homepage</i> will take you to TabMerger's official instructions website.
+        Selecting <i>Cancel</i> will take you to TabMerger's official instructions website.
         <br />
         <br />
-        You can use the <u>left</u> and <u>right</u> keyboard keys to navigate back and forth between steps,
+        You can use the <b>left</b> and <b>right</b> keyboard keys to navigate back and forth between steps,
         respectively.
       </div>
     ),
-    position: "bottom",
+    position: [75, document.documentElement.clientHeight / 2],
   },
   {
     selector: "#logo-img",
@@ -39,15 +39,18 @@ export const TOUR_STEPS = [
     selector: ".search-filter",
     content: (
       <div className="text-dark my-2">
-        This can be used to filter tabs by group name or directly. <br />
+        This can be used to filter tabs by group name or directly. The match happen anywhere in the word (not just start
+        or end) and is not case sensitive.
         <br />
-        Try it now:
+        <br />
+        <b>Try it now:</b>
         <ul className="ml-4">
           <li>
-            Type <b>#</b> followed by a group name to filter tabs based on their group name.
+            Type <kbd>#</kbd> followed by a group name to filter tabs based on their group name. <i>Try "#b"</i>
           </li>
           <li>
-            Type a tab's name (without the preceeding <i>#</i>) to filter tabs (and groups) based on that name.
+            Type a tab's name (without the preceeding <kbd style={{ marginRight: "2px" }}>#</kbd>) to filter tabs (and
+            groups) based on that name. <i>Try "Tab e"</i>
           </li>
         </ul>
       </div>
@@ -61,6 +64,7 @@ export const TOUR_STEPS = [
         These buttons affect <b>GLOBAL</b> actions!
       </div>
     ),
+    stepInteraction: false,
   },
   {
     selector: "#options-btn",
@@ -70,7 +74,7 @@ export const TOUR_STEPS = [
         <a href="/settings/settings.html" target="_blank" rel="noreferrer">
           settings page
         </a>{" "}
-        where you can set TabMerger specific settings on this page.
+        where you can configure TabMerger to your needs.
       </div>
     ),
     position: "bottom",
@@ -81,12 +85,12 @@ export const TOUR_STEPS = [
       <div className="text-dark my-2" style={{ fontSize: "0.95rem" }}>
         Allows you to generate a print friendly PDF page. <br />
         <br />
-        Due to the tutorial window, this action will not look "great" right now, but rest assured that under normal
-        TabMerger operation, the output is clean. <br />
-        <br />
         <b>Note:</b> To have clickable links in the output PDF file, you must select "Save as PDF" for the{" "}
         <i>Destination</i> drop down in the print preview menu. We recommend checking the "Headers and footers" option
         while unchecking the "Background graphics" option.
+        <br />
+        <br />
+        <b>Try it now!</b>
       </div>
     ),
     position: "bottom",
@@ -119,7 +123,9 @@ export const TOUR_STEPS = [
     content: (
       <div className="text-dark my-2">
         Generates a JSON file which contains TabMerger's current configuration. This file can be used to restore a given
-        configuration at any time as shown next.
+        configuration at any time as shown next. <br />
+        <br />
+        <b>Click it</b> to generate a JSON file.
       </div>
     ),
     position: "bottom",
@@ -130,6 +136,12 @@ export const TOUR_STEPS = [
       <div className="text-dark my-2">
         Accepts a JSON file whose structure matches the structure which TabMerger accepts. This is used to restore a
         given configuration from a backup file, but is not necessary for normal operation.
+        <br />
+        <br />
+        <b>Try</b> uploading the JSON file you might have downloaded from the previous step.
+        <br />
+        <br /> You could also try to upload a file that is not JSON to see what happens. Note that since nothing changed
+        in TabMerger, you won't see a difference when you upload.
       </div>
     ),
     position: "bottom",
@@ -173,7 +185,7 @@ export const TOUR_STEPS = [
         <br />
         This only applies to "destructive" actions which change tabs in one or many groups. <br />
         <br />
-        Note that up to 15 undo states are stored and warnings are provided when the limit is reached.
+        Note that <b>up to 15</b> undo states are stored and warnings are provided when the limit is reached.
       </div>
     ),
     position: "bottom",
@@ -184,6 +196,13 @@ export const TOUR_STEPS = [
       <div className="text-dark my-2">
         When tabs differ from others in a group, it is better to split them into different groups. This allows you to
         generate a new group, into which you can then merge or drag and drop new tabs (as shown later).
+        <br />
+        <br />
+        Note that both the default group color and title can be configured in TabMerger's{" "}
+        <a href="/settings/settings.html" target="_blank" rel="noreferrer">
+          settings page
+        </a>
+        .
         <br />
         <br />
         <b>Try clicking it!</b>
@@ -198,6 +217,7 @@ export const TOUR_STEPS = [
         This is a <b>GROUP</b>. All your merged tabs eventually end up in one of these.
       </div>
     ),
+    stepInteraction: false,
   },
   {
     selector: ".group-title",
@@ -207,6 +227,7 @@ export const TOUR_STEPS = [
         merging.
       </div>
     ),
+    stepInteraction: false,
   },
   {
     selector: ".merging-container",
@@ -216,6 +237,7 @@ export const TOUR_STEPS = [
         corresponding group.
       </div>
     ),
+    stepInteraction: false,
   },
   {
     selector: ".group-count",
@@ -229,9 +251,12 @@ export const TOUR_STEPS = [
   {
     selector: ".move-group-btn",
     content: (
-      <div className="text-dark my-2">
-        Allows you to <b>Drag and Drop</b> a group in order to reorder tabs on a group-level.
-      </div>
+      <>
+        <div className="text-dark my-2">
+          Allows you to <b>Drag and Drop</b> a group in order to reorder tabs on a group-level.
+        </div>
+        <img src="https://i.imgur.com/L8mSFS3.gif" alt="Drag and drop for groups in TabMerger" />
+      </>
     ),
     position: "bottom",
   },
@@ -251,12 +276,15 @@ export const TOUR_STEPS = [
   {
     selector: ".star-group-btn",
     content: (
-      <div className="text-dark my-2">
-        Staring a group will automatically lock it and move it to the top of the page. This is useful when you have many
-        groups and want to avoid having to drag and drop. <br />
-        <br /> When clicked, the star will be filled. Clicking again will simply unstar the group without any further
-        logic being applied.
-      </div>
+      <>
+        <div className="text-dark my-2">
+          Staring a group will automatically lock it and move it to the top of the page. This is useful when you have
+          many groups and want to avoid having to drag and drop. <br />
+          <br /> When clicked, the star will be filled. Clicking again will simply unstar the group without any further
+          logic being applied.
+        </div>
+        <img src="https://i.imgur.com/ZLMpCwm.gif" alt="Starring a group in TabMerger" />
+      </>
     ),
     position: "bottom",
   },
@@ -367,30 +395,35 @@ export const TOUR_STEPS = [
     ),
   },
   {
-    selector: ".merging-container",
+    selector: "",
     content: (
-      <div className="text-dark my-2">
-        Note that another global feature is provided to achieve similar results. <br />
-        If you right click anywhere on any page you will see a menu, known as the <i>Context Menu</i>.<br />
-        <br />
-        In the menu, you will find TabMerger's context menu options which include the above and a few more merging
-        abilities.
-        <br />
-        <br />
-        Any merging action performed by the context menu will be added a new group to the very top of TabMerger's page.
-        <br />
-        <br />
-        You can then sort this group using the group drag and drop shown previously. <br />
-        <br />
-        Additionally, TabMerger provides equivalent shortcut keys (<i>chrome://extensions/shortcuts</i> in Chrome) which
-        function exactly like the context menu.
-        <br />
-        <br />
-        <b>Try it now!</b> <br />
-        Right click anywhere on this page and you will see TabMerger's context menu. Then, hover over TabMerger's row to
-        see its options.
-      </div>
+      <>
+        <div className="text-dark my-2">
+          Another global feature is provided to achieve similar results. <br />
+          If you right click anywhere on any page you will see a menu, known as the <i>Context Menu</i>.<br />
+          <br />
+          In the menu, you will find TabMerger's context menu options which include the above and a few more merging
+          abilities.
+          <br />
+          <br />
+          Any merging action performed by the context menu will be added a new group to the very top of TabMerger's
+          page.
+          <br />
+          <br />
+          You can then sort this group using the group drag and drop shown previously. <br />
+          <br />
+          Additionally, TabMerger provides equivalent shortcut keys (<i>chrome://extensions/shortcuts</i> in Chrome)
+          which function exactly like the context menu.
+          <br />
+          <br />
+          <b>Try it now!</b> <br />
+          Right click anywhere on this page and you will see TabMerger's context menu. Then, hover over TabMerger's row
+          to see its options.
+        </div>
+        <img src="https://i.imgur.com/tLKbsLS.gif" alt="TabMerger's context menu" />
+      </>
     ),
+    position: "center",
   },
   {
     selector: ".draggable",
@@ -400,6 +433,7 @@ export const TOUR_STEPS = [
       </div>
     ),
     position: "right",
+    stepInteraction: false,
   },
   {
     selector: ".close-tab",
@@ -413,10 +447,13 @@ export const TOUR_STEPS = [
   {
     selector: ".move-tab",
     content: (
-      <div className="text-dark my-2">
-        Enables you to drag and drop tabs within groups or from one group to another to re-order/organize your tabs just
-        how you like them to be.
-      </div>
+      <>
+        <div className="text-dark my-2">
+          Enables you to drag and drop tabs within groups or from one group to another to re-order/organize your tabs
+          just how you like them to be.
+        </div>
+        <img src="https://i.imgur.com/aQMcL4C.gif" alt="Drag and drop for tabs in TabMerger" />
+      </>
     ),
     position: "bottom",
   },
@@ -433,8 +470,6 @@ export const TOUR_STEPS = [
             Restore a tab (<b>LEFT</b> mouse click).
           </li>
         </ul>
-        <br />
-        <br />
         <b>Give both a try!</b>
       </div>
     ),
@@ -509,7 +544,7 @@ export const TOUR_STEPS = [
         can be contacted from.
       </div>
     ),
-    position: "top",
+    position: "right",
   },
   {
     selector: "",
@@ -525,7 +560,6 @@ export const TOUR_STEPS = [
         <br /> Cheers!
       </div>
     ),
-    position: "top",
   },
 ];
 
@@ -535,7 +569,7 @@ export const TUTORIAL_GROUP = {
     created: "",
     hidden: false,
     locked: false,
-    starred: false,
+    starred: true,
     tabs: [
       {
         pinned: false,
@@ -555,7 +589,7 @@ export const TUTORIAL_GROUP = {
           "https://www.google.com/search?q=c&oq=c&aqs=chrome..69i57j35i39j69i59j69i60l5.696j1j4&sourceid=chrome&ie=UTF-8",
       },
     ],
-    title: "Tutorial Group A",
+    title: "Tutorial Group A (Initially STARRED but UNLOCKED)",
   },
   "group-1": {
     color: "#fff36b",
@@ -610,5 +644,35 @@ export const TUTORIAL_GROUP = {
       },
     ],
     title: "Tutorial Group C (Initially LOCKED & 'HIDDEN')",
+  },
+  "group-3": {
+    color: "#dedede",
+    created: "",
+    hidden: false,
+    locked: false,
+    starred: false,
+    tabs: [],
+    title: "Tutorial Group D (No Tabs - Default Color)",
+  },
+  "group-4": {
+    color: "#000000",
+    created: "",
+    hidden: false,
+    locked: false,
+    starred: false,
+    tabs: [
+      {
+        pinned: true,
+        title: "TAB I",
+        url:
+          "https://www.google.com/search?q=i&oq=i&aqs=chrome..69i57j69i59j69i60l4j5l2.1228j1j4&sourceid=chrome&ie=UTF-8",
+      },
+      {
+        pinned: false,
+        title: "TAB J",
+        url: "https://www.google.com/search?q=j&oq=j&aqs=chrome..69i57j35i39j69i60l6.702j1j9&sourceid=chrome&ie=UTF-8",
+      },
+    ],
+    title: "Tutorial Group E (Showing High Contrast)",
   },
 };

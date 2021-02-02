@@ -27,7 +27,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   left: 10px;
   width: fit-content;
   max-width: 95%;
-  margin: 1px 0;
+  margin: 0;
   z-index: 2;
 }
 
@@ -53,7 +53,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /* TAB ICON */
 .img-tab {
-  margin: 4px 4px 0 2px;
+  margin: 6px 4px 0 2px;
   width: 16px;
   height: 16px;
 }
@@ -69,6 +69,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 2px;
 }
 
 .a-tab:hover {
@@ -83,7 +84,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 /* TAB PIN */
 .pin-tab {
   position: relative;
-  top: -1px;
+  top: 1px;
 }
 
 .pin-tab svg {

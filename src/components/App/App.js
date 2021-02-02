@@ -59,9 +59,13 @@ export default function App() {
   /** @constant {Object} defaultSettings @default { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title" } */
   const defaultSettings = useRef({ badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title" }); // prettier-ignore
 
+  // app parameters
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
-  const [tour, setTour] = useState(null);
+
+  // tutorial parameters
+  const [tour, setTour] = useState(false);
+  const startStep = useRef(0);
 
   const toggleSyncTimestamp = useCallback(
     (positive) => {
@@ -106,23 +110,24 @@ export default function App() {
 
   return (
     <div id="app-wrapper" className="text-center">
-      {tour && (
-        <Tour
-          steps={TOUR_STEPS}
-          isOpen={tour}
-          onRequestClose={() => setTour(false)}
-          badgeContent={(current, total) => `Step ${current}/${total}`}
-          closeWithMask={false}
-          showNavigationNumber={false}
-          disableFocusLock={true}
-          rounded={5}
-          /* prettier-ignore */
-          prevButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3c;</button>}
-          /* prettier-ignore */
-          nextButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3e;</button>}
-          lastStepNextButton={<button className="btn btn-dark">🏁</button>}
-        />
-      )}
+      <Tour
+        steps={TOUR_STEPS}
+        isOpen={tour}
+        onRequestClose={() => setTour(false)}
+        badgeContent={(current, total) => `Step ${current}/${total}`}
+        closeWithMask={false}
+        showNavigationNumber={false}
+        disableFocusLock={true}
+        disableKeyboardNavigation={["esc"]}
+        getCurrentStep={(step_num) => (startStep.current = step_num)}
+        startAt={startStep.current}
+        rounded={5}
+        /* prettier-ignore */
+        prevButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3c;</button>}
+        /* prettier-ignore */
+        nextButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3e;</button>}
+        lastStepNextButton={<button className="btn btn-dark">🏁</button>}
+      />
 
       <nav id="sidebar">
         <Header total={tabTotal} />
@@ -135,7 +140,7 @@ export default function App() {
 
           {/* prettier-ignore */}
           <GlobalBtns syncTimestamp={syncTimestamp} group_limit={NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups}/>
-          <Links />
+          <Links setTour={setTour} />
         </div>
 
         <div id="copyright" className="mt-4">
