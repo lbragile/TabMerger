@@ -18,13 +18,13 @@ export default function GroupTitleBtns({ color, hidden, locked, starred, setTabT
     },
     {
       classes: "lock-group-btn btn-in-group-title",
-      translate: locked ? "Unlock Group" : "Lock Group",
+      translate: AppFunc.translate(locked ? "unlock" : "lock") + " " + AppFunc.translate("group"),
       icon: locked ? <BiLock size="1.3rem" /> : <BiLockOpen size="1.3rem" />,
       clickFn: (e) => GroupFunc.toggleGroup(e, "lock", setGroups),
     },
     {
       classes: "star-group-btn btn-in-group-title",
-      translate: starred ? "Unstar Group" : "Star Group",
+      translate: AppFunc.translate(starred ? "unstar" : "star") + " " + AppFunc.translate("group"),
       icon: starred ? <BsStarFill size="1.1rem" /> : <BsStar size="1.1rem" />,
       clickFn: (e) => GroupFunc.toggleGroup(e, "star", setGroups),
     },
@@ -37,7 +37,7 @@ export default function GroupTitleBtns({ color, hidden, locked, starred, setTabT
     },
     {
       classes: "visibility-group-btn btn-in-group-title",
-      translate: hidden ? AppFunc.translate("showTabs") : AppFunc.translate("hideTabs"),
+      translate: AppFunc.translate(hidden ? "showTabs" : "hideTabs"),
       clickFn: (e) => GroupFunc.toggleGroup(e, "visibility", setGroups),
       icon: <AiOutlineMinus />,
     },

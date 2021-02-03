@@ -48,5 +48,12 @@
   "exportJSON": { "message": "Eksporter JSON" },
   "importJSON": { "message": "Importér JSON" },
   "supportUs": { "message": "Støt os" },
-  "title": { "message": "Titel" }
+  "title": { "message": "Titel" },
+  "lock": { "message": "Låse" },
+  "unlock": { "message": "Lås" },
+  "star": { "message": "Stjerne" },
+  "unstar": { "message": "Fjern stjernemarkering" },
+  "groups": { "message": "grupper" },
+  "undo": { "message": "Fortryd" },
+  "action": { "message": "Handling" }
 }

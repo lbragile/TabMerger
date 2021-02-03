@@ -48,5 +48,12 @@
   "importJSON": { "message": "استيراد JSON" },
   "showTabs": { "message": "إظهار علامات التبويب" },
   "supportUs": { "message": "ادعمنا" },
-  "title": { "message": "عنوان" }
+  "title": { "message": "عنوان" },
+  "lock": { "message": "قفل" },
+  "unlock": { "message": "الغاء القفل" },
+  "star": { "message": "نجمة" },
+  "unstar": { "message": "إلغاء التمييز بنجمة" },
+  "groups": { "message": "مجموعات" },
+  "undo": { "message": "الغاء التحميل" },
+  "action": { "message": "عمل" }
 }

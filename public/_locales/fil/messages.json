@@ -52,5 +52,12 @@
   "importJSON": { "message": "I-import si JSON" },
   "showTabs": { "message": "Ipakita ang Mga Tab" },
   "supportUs": { "message": "Suportahan Kami" },
-  "title": { "message": "Pamagat" }
+  "title": { "message": "Pamagat" },
+  "lock": { "message": "magkandado" },
+  "unlock": { "message": "ibukas" },
+  "star": { "message": "bituin" },
+  "unstar": { "message": "alisan ng star" },
+  "groups": { "message": "Grupo" },
+  "undo": { "message": "Pawalang-bisa" },
+  "action": { "message": "aksyon" }
 }

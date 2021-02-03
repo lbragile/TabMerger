@@ -42,5 +42,12 @@
   "importJSON": { "message": "นำเข้า JSON" },
   "showTabs": { "message": "แสดงแท็บ" },
   "supportUs": { "message": "สนับสนุนเรา" },
-  "title": { "message": "หัวข้อ" }
+  "title": { "message": "หัวข้อ" },
+  "lock": { "message": "ล็อค" },
+  "unlock": { "message": "ปลดล็อค" },
+  "star": { "message": "ดาว" },
+  "unstar": { "message": "ยกเลิกการติดดาว" },
+  "groups": { "message": "กลุ่ม" },
+  "undo": { "message": "เลิกทำ" },
+  "action": { "message": "หนังบู๊" }
 }

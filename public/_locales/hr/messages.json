@@ -50,5 +50,12 @@
   "importJSON": { "message": "Uvezi JSON" },
   "showTabs": { "message": "Prikaži kartice" },
   "supportUs": { "message": "Podržite nas" },
-  "title": { "message": "Titula" }
+  "title": { "message": "Titula" },
+  "lock": { "message": "zaključati" },
+  "unlock": { "message": "Otključati" },
+  "star": { "message": "Zvijezda" },
+  "unstar": { "message": "Ukloni zvjezdicu" },
+  "groups": { "message": "grupe" },
+  "undo": { "message": "Poništi" },
+  "action": { "message": "Akcijski" }
 }

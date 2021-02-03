@@ -46,5 +46,12 @@
   "importJSON": { "message": "Importovať JSON" },
   "showTabs": { "message": "Zobraziť karty" },
   "supportUs": { "message": "Podpor nás" },
-  "title": { "message": "Názov" }
+  "title": { "message": "Názov" },
+  "lock": { "message": "Zamknúť" },
+  "unlock": { "message": "Odomknúť" },
+  "star": { "message": "Hviezda" },
+  "unstar": { "message": "Odstrániť hviezdičku" },
+  "groups": { "message": "Skupiny" },
+  "undo": { "message": "Vrátenie späť" },
+  "action": { "message": "Akčné" }
 }

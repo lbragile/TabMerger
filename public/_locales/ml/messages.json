@@ -50,5 +50,12 @@
   "importJSON": { "message": "JSON ഇറക്കുമതി ചെയ്യുക" },
   "showTabs": { "message": "ടാബുകൾ കാണിക്കുക" },
   "supportUs": { "message": "ഞങ്ങളെ പിന്തുണയ്ക്കുക" },
-  "title": { "message": "ശീർഷകം" }
+  "title": { "message": "ശീർഷകം" },
+  "lock": { "message": "ലോക്ക്" },
+  "unlock": { "message": "അൺലോക്ക്" },
+  "star": { "message": "സ്റ്റാർ" },
+  "unstar": { "message": "നക്ഷത്രചിഹ്നമില്ലാതാക്കുക" },
+  "groups": { "message": "ഗ്രൂപ്പുകൾ" },
+  "undo": { "message": "പഴയപടിയാക്കൽ" },
+  "action": { "message": "ആക്ഷൻ" }
 }

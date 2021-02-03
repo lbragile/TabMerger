@@ -50,5 +50,12 @@
   "importJSON": { "message": "Nhập JSON" },
   "showTabs": { "message": "Hiển thị các tab" },
   "supportUs": { "message": "Hỗ trợ chúng tôi" },
-  "title": { "message": "Tiêu đề" }
+  "title": { "message": "Tiêu đề" },
+  "lock": { "message": "Khóa" },
+  "unlock": { "message": "Mở khóa" },
+  "star": { "message": "Ngôi sao" },
+  "unstar": { "message": "Bỏ dấu sao" },
+  "groups": { "message": "Các nhóm" },
+  "undo": { "message": "Hoàn tác" },
+  "action": { "message": "Hoạt động" }
 }

@@ -46,5 +46,12 @@
   "importJSON": { "message": "Importar JSON" },
   "showTabs": { "message": "Mostrar abas" },
   "supportUs": { "message": "Apoie-nos" },
-  "title": { "message": "Título" }
+  "title": { "message": "Título" },
+  "lock": { "message": "bloqueio" },
+  "unlock": { "message": "Desbloquear" },
+  "star": { "message": "Estrela" },
+  "unstar": { "message": "Remover estrela" },
+  "groups": { "message": "grupos" },
+  "undo": { "message": "Desfazer" },
+  "action": { "message": "Açao" }
 }

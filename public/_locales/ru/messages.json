@@ -7,9 +7,9 @@
   "donate": { "message": "жертвовать" },
   "copyright": { "message": "авторское право" },
   "tabs": { "message": "Вкладки" },
-  "tab": { "message": "табуляция" },
+  "tab": { "message": "Вкладка" },
   "searchForTabs": { "message": "Поиск вкладок" },
-  "group": { "message": "группа" },
+  "group": { "message": "Группа" },
   "write": { "message": "Написать" },
   "read": { "message": "Читать" },
   "sync": { "message": "Синхронизировать" },
@@ -28,14 +28,14 @@
     "message": "Объединить вкладки СПРАВА от текущей вкладки в этом окне"
   },
   "bgSiteExclude": {
-    "message": "Объединить ТОЛЬКО текущую вкладку в этом окне"
+    "message": "Добавить ТОЛЬКО текущую вкладку в этом окне"
   },
   "created": { "message": "Создано" },
   "deleteAll": { "message": "Удалить все" },
   "deleteGroup": { "message": "Удалить группу" },
   "hideTabs": { "message": "Скрыть вкладки" },
   "mergeALLtabs": { "message": "Объединить ВСЕ вкладки" },
-  "mergeLEFTtabs": { "message": "Объединить левые вкладки" },
+  "mergeLEFTtabs": { "message": "Объединить ЛЕВЫЕ вкладки" },
   "mergeRIGHTtabs": { "message": "Объединить ПРАВЫЕ вкладки" },
   "needHelp": { "message": "Нужна помощь?" },
   "openAll": { "message": "Открыть все" },
@@ -44,9 +44,16 @@
   "quickDemo": { "message": "Быстрая демонстрация" },
   "settings": { "message": "Настройки" },
   "darkMode": { "message": "Темный режим" },
-  "exportJSON": { "message": "Экспорт JSON" },
-  "importJSON": { "message": "Импортировать JSON" },
+  "exportJSON": { "message": "Экспорт в JSON" },
+  "importJSON": { "message": "Импортировать из JSON" },
   "showTabs": { "message": "Показать вкладки" },
-  "supportUs": { "message": "Поддерживать нас" },
-  "title": { "message": "заглавие" }
+  "supportUs": { "message": "Поддержите нас" },
+  "title": { "message": "Заголовок" },
+  "lock": { "message": "Замок" },
+  "unlock": { "message": "Разблокировать" },
+  "star": { "message": "Отмечать" },
+  "unstar": { "message": "Снять отметку" },
+  "groups": { "message": "Группы" },
+  "undo": { "message": "Отменить" },
+  "action": { "message": "Действие" }
 }

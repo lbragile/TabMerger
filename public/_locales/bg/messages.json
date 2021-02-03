@@ -48,5 +48,12 @@
   "importJSON": { "message": "Импортиране на JSON" },
   "showTabs": { "message": "Показване на раздели" },
   "supportUs": { "message": "Подкрепи ни" },
-  "title": { "message": "Заглавие" }
+  "title": { "message": "Заглавие" },
+  "lock": { "message": "Ключалка" },
+  "unlock": { "message": "Отключи" },
+  "star": { "message": "звезда" },
+  "unstar": { "message": "Премахване на звездата" },
+  "groups": { "message": "Групи" },
+  "undo": { "message": "ундо" },
+  "action": { "message": "действие" }
 }

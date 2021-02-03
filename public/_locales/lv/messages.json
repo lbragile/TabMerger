@@ -46,5 +46,12 @@
   "importJSON": { "message": "Importēt JSON" },
   "showTabs": { "message": "Rādīt cilnes" },
   "supportUs": { "message": "Atbalsti mūs" },
-  "title": { "message": "Nosaukums" }
+  "title": { "message": "Nosaukums" },
+  "lock": { "message": "Bloķēt" },
+  "unlock": { "message": "Atbloķējiet" },
+  "star": { "message": "Zvaigzne" },
+  "unstar": { "message": "Noņemt zvaigznīti" },
+  "groups": { "message": "Grupas" },
+  "undo": { "message": "Atsaukt" },
+  "action": { "message": "Darbība" }
 }

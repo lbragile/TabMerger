@@ -42,5 +42,12 @@
   "importJSON": { "message": "JSON አስመጣ" },
   "showTabs": { "message": "ትሮችን አሳይ" },
   "supportUs": { "message": "እኛን ይደግፉ" },
-  "title": { "message": "ርዕስ" }
+  "title": { "message": "ርዕስ" },
+  "lock": { "message": "ቆልፍ" },
+  "unlock": { "message": "ማስከፈት" },
+  "star": { "message": "ኮከብ" },
+  "unstar": { "message": "ኮከቡን አንሳ" },
+  "groups": { "message": "ቡድኖች" },
+  "undo": { "message": "ቀልብስ" },
+  "action": { "message": "አክሽን" }
 }

@@ -52,5 +52,12 @@
   "importJSON": { "message": "Εισαγωγή JSON" },
   "showTabs": { "message": "Εμφάνιση καρτελών" },
   "supportUs": { "message": "Υποστήριξε μας" },
-  "title": { "message": "Τίτλος" }
+  "title": { "message": "Τίτλος" },
+  "lock": { "message": "Κλειδαριά" },
+  "unlock": { "message": "Ξεκλείδωμα" },
+  "star": { "message": "Αστέρι" },
+  "unstar": { "message": "Κατάργηση αστεριού" },
+  "groups": { "message": "ομάδες" },
+  "undo": { "message": "Ξεκάνω" },
+  "action": { "message": "Δράση" }
 }

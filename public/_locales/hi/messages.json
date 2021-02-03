@@ -42,5 +42,12 @@
   "importJSON": { "message": "आयात JSON" },
   "showTabs": { "message": "टैब दिखाएं" },
   "supportUs": { "message": "हमें सहयोग दीजिये" },
-  "title": { "message": "शीर्षक" }
+  "title": { "message": "शीर्षक" },
+  "lock": { "message": "ताला" },
+  "unlock": { "message": "अनलॉक" },
+  "star": { "message": "तारा" },
+  "unstar": { "message": "अतारांकित" },
+  "groups": { "message": "समूह" },
+  "undo": { "message": "पूर्ववत करें" },
+  "action": { "message": "कार्य" }
 }

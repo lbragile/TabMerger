@@ -48,5 +48,12 @@
   "importJSON": { "message": "Import JSON" },
   "showTabs": { "message": "Tunjukkan Tab" },
   "supportUs": { "message": "Sokong Kami" },
-  "title": { "message": "Tajuk" }
+  "title": { "message": "Tajuk" },
+  "lock": { "message": "Kunci" },
+  "unlock": { "message": "Buka kunci" },
+  "star": { "message": "Bintang" },
+  "unstar": { "message": "Nyahbintang" },
+  "groups": { "message": "Kumpulan" },
+  "undo": { "message": "Batal" },
+  "action": { "message": "Tindakan" }
 }

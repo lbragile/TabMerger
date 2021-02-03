@@ -50,5 +50,12 @@
   "importJSON": { "message": "JSON আমদানি করুন" },
   "showTabs": { "message": "ট্যাবগুলি দেখান" },
   "supportUs": { "message": "ভগ" },
-  "title": { "message": "শিরোনাম" }
+  "title": { "message": "শিরোনাম" },
+  "lock": { "message": "লক" },
+  "unlock": { "message": "আনলক" },
+  "star": { "message": "তারকা" },
+  "unstar": { "message": "তারকামুক্ত" },
+  "groups": { "message": "গ্রুপ" },
+  "undo": { "message": "পূর্বাবস্থায় ফিরুন" },
+  "action": { "message": "কর্ম" }
 }

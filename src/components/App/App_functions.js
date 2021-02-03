@@ -112,7 +112,9 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
 
         const showInfo = sync.settings.badgeInfo === "display";
         const text = showInfo && tabTotal > 0 ? `${tabTotal}|${num_groups}` : "";
-        const title = tabTotal > 0 ? `You currently have ${tabTotal} ${tabTotal === 1? "tab" : "tabs"} in ${num_groups} ${num_groups === 1? "group" : "groups"}` : "Merge your tabs into groups";
+        const tab_translate = translate(tabTotal === 1 ? "tab" : "tabs").toLocaleLowerCase();
+        const group_translate = translate(num_groups === 1 ? "group" : "groups").toLocaleLowerCase();
+        const title = tabTotal > 0 ? `You currently have ${tabTotal} ${tab_translate} in ${num_groups} ${group_translate}` : "Merge your tabs into groups";
 
         chrome.browserAction.setBadgeText({ text }, () => {});
         chrome.browserAction.setBadgeBackgroundColor({ color }, () => {});
@@ -421,9 +423,12 @@ export function addGroup(num_group_limit, setGroups) {
  * of all the tabs in TabMerger to consider for removal.
  */
 export function openAllTabs() {
-  var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
-  tab_links.unshift(null);
-  chrome.storage.local.set({ remove: tab_links }, () => {});
+  const response = window.confirm("Are you sure you want to open ALL your tabs at once?\n\nWe do not recommend opening more than 100 tabs at once as it may overload your system!"); // prettier-ignore
+  if (response) {
+    var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+    tab_links.unshift(null);
+    chrome.storage.local.set({ remove: tab_links }, () => {});
+  }
 }
 
 /**
@@ -445,13 +450,13 @@ export function deleteAllGroups(setTabTotal, setGroups) {
         groups = {};
         var locked_counter = 0;
         document.querySelectorAll(".group-item").forEach((x) => {
-          if (x.querySelector(".tiptext-group-title").textContent.includes("Unlock")) {
+          if (x.querySelector(".tiptext-group-title").textContent.includes(translate("unlock"))) {
             groups["group-" + locked_counter] = {
               color: x.querySelector("input[type='color']").value,
               created: x.querySelector(".created span").textContent,
               hidden: !!x.querySelector(".hidden-symbol"),
               locked: true,
-              starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
+              starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
               tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
                 const a = tab.querySelector("a");
                 return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };

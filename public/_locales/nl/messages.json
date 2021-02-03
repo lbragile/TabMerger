@@ -52,5 +52,12 @@
   "importJSON": { "message": "Importeer JSON" },
   "showTabs": { "message": "Tabbladen weergeven" },
   "supportUs": { "message": "Steun ons" },
-  "title": { "message": "Titel" }
+  "title": { "message": "Titel" },
+  "lock": { "message": "Slot" },
+  "unlock": { "message": "Ontgrendelen" },
+  "star": { "message": "Ster" },
+  "unstar": { "message": "Ster verwijderen" },
+  "groups": { "message": "Groepen" },
+  "undo": { "message": "Ontdoen" },
+  "action": { "message": "Actie" }
 }

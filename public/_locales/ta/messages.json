@@ -50,5 +50,12 @@
   "importJSON": { "message": "JSON ஐ இறக்குமதி செய்க" },
   "showTabs": { "message": "தாவல்களைக் காட்டு" },
   "supportUs": { "message": "எங்களை ஆதரியுங்கள்" },
-  "title": { "message": "தலைப்பு" }
+  "title": { "message": "தலைப்பு" },
+  "lock": { "message": "பூட்டு" },
+  "unlock": { "message": "திறத்தல்" },
+  "star": { "message": "நட்சத்திரம்" },
+  "unstar": { "message": "நட்சத்திரமிடாதே" },
+  "groups": { "message": "குழுக்கள்" },
+  "undo": { "message": "செயல்தவிர்" },
+  "action": { "message": "அதிரடி" }
 }

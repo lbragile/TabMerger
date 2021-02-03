@@ -48,5 +48,12 @@
   "importJSON": { "message": "JSONをインポートする" },
   "showTabs": { "message": "タブを表示" },
   "supportUs": { "message": "私たちを応援してください" },
-  "title": { "message": "題名" }
+  "title": { "message": "題名" },
+  "lock": { "message": "ロック" },
+  "unlock": { "message": "ロック解除" },
+  "star": { "message": "星" },
+  "unstar": { "message": "スターをはずします" },
+  "groups": { "message": "グループ" },
+  "undo": { "message": "元に戻します" },
+  "action": { "message": "アクション" }
 }

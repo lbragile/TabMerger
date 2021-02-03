@@ -52,5 +52,12 @@
   "importJSON": { "message": "Ingiza JSON" },
   "showTabs": { "message": "Onyesha Tabo" },
   "supportUs": { "message": "Tusaidie" },
-  "title": { "message": "Kichwa" }
+  "title": { "message": "Kichwa" },
+  "lock": { "message": "Kufuli" },
+  "unlock": { "message": "Kufungua" },
+  "star": { "message": "Nyota" },
+  "unstar": { "message": "Ondoa nyota" },
+  "groups": { "message": "Vikundi" },
+  "undo": { "message": "Tendua" },
+  "action": { "message": "Hatua" }
 }

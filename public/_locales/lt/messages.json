@@ -48,5 +48,12 @@
   "importJSON": { "message": "Importuoti JSON" },
   "showTabs": { "message": "Rodyti skirtukus" },
   "supportUs": { "message": "Paremkite mus" },
-  "title": { "message": "Pavadinimas" }
+  "title": { "message": "Pavadinimas" },
+  "lock": { "message": "Užrakinti" },
+  "unlock": { "message": "Atrakinti" },
+  "star": { "message": "žvaigždė" },
+  "unstar": { "message": "nuimti žymėjimą" },
+  "groups": { "message": "grupės" },
+  "undo": { "message": "Atšaukti" },
+  "action": { "message": "veiksmas" }
 }

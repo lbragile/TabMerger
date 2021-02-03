@@ -50,5 +50,12 @@
   "importJSON": { "message": "Importați JSON" },
   "showTabs": { "message": "Afișați filele" },
   "supportUs": { "message": "Ajuta-ne" },
-  "title": { "message": "Titlu" }
+  "title": { "message": "Titlu" },
+  "lock": { "message": "Lacăt" },
+  "unlock": { "message": "Deblocare" },
+  "star": { "message": "Stea" },
+  "unstar": { "message": "Eliminați steaua" },
+  "groups": { "message": "Grupuri" },
+  "undo": { "message": "Anula" },
+  "action": { "message": "Acțiune" }
 }

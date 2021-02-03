@@ -48,5 +48,12 @@
   "importJSON": { "message": "Uvozi JSON" },
   "showTabs": { "message": "Pokaži zavihke" },
   "supportUs": { "message": "Podprite nas" },
-  "title": { "message": "Naslov" }
+  "title": { "message": "Naslov" },
+  "lock": { "message": "Zakleni" },
+  "unlock": { "message": "Odkleni" },
+  "star": { "message": "Xvezda" },
+  "unstar": { "message": "Odstrani zvezdico" },
+  "groups": { "message": "Skupine" },
+  "undo": { "message": "Razveljavi" },
+  "action": { "message": "Ukrep" }
 }

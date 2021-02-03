@@ -48,5 +48,12 @@
   "importJSON": { "message": "JSON importálása" },
   "showTabs": { "message": "Fülek megjelenítése" },
   "supportUs": { "message": "Támogass minket" },
-  "title": { "message": "Cím" }
+  "title": { "message": "Cím" },
+  "lock": { "message": "Zár" },
+  "unlock": { "message": "Kinyit" },
+  "star": { "message": "Csillag" },
+  "unstar": { "message": "Csillag törlése" },
+  "groups": { "message": "csoportok" },
+  "undo": { "message": "Visszavonás" },
+  "action": { "message": "Akció" }
 }

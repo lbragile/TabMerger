@@ -398,19 +398,14 @@ export const TOUR_STEPS = [
     selector: "",
     content: (
       <>
-        <div className="text-dark my-2">
+        <div className="text-dark my-2" style={{ fontSize: "0.95rem" }}>
           Another global feature is provided to achieve similar results. <br />
-          If you right click anywhere on any page you will see a menu, known as the <i>Context Menu</i>.<br />
-          <br />
-          In the menu, you will find TabMerger's context menu options which include the above and a few more merging
-          abilities.
+          If you right click anywhere on any page you will see a menu, known as the <i>Context Menu</i>. In the menu,
+          you will find TabMerger's context menu options which include the above and a few more merging abilities.
           <br />
           <br />
           Any merging action performed by the context menu will be added a new group to the very top of TabMerger's
-          page.
-          <br />
-          <br />
-          You can then sort this group using the group drag and drop shown previously. <br />
+          page. You can then sort this group using the group drag and drop shown previously. <br />
           <br />
           Additionally, TabMerger provides equivalent shortcut keys (<i>chrome://extensions/shortcuts</i> in Chrome)
           which function exactly like the context menu.
@@ -423,7 +418,7 @@ export const TOUR_STEPS = [
         <img src="https://i.imgur.com/tLKbsLS.gif" alt="TabMerger's context menu" />
       </>
     ),
-    position: "center",
+    position: [document.documentElement.clientWidth / 3, document.documentElement.clientHeight / 4],
   },
   {
     selector: ".draggable",

@@ -42,5 +42,12 @@
   "bgOnly": { "message": "Merge ONLY current tab in this window" },
   "bgSiteExclude": { "message": "Exclude site from TabMerger's visibility" },
   "bgInstructions": { "message": "Instructions" },
-  "bgContact": { "message": "Contact Us" }
+  "bgContact": { "message": "Contact Us" },
+  "lock": { "message": "Lock" },
+  "unlock": { "message": "Unlock" },
+  "star": { "message": "Star" },
+  "unstar": { "message": "Unstar" },
+  "groups": { "message": "Groups" },
+  "undo": { "message": "Undo" },
+  "action": { "message": "Action" }
 }

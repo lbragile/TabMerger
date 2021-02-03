@@ -48,5 +48,12 @@
   "importJSON": { "message": "Tuo JSON" },
   "showTabs": { "message": "Näytä välilehdet" },
   "supportUs": { "message": "Tue meitä" },
-  "title": { "message": "Otsikko" }
+  "title": { "message": "Otsikko" },
+  "lock": { "message": "Lukko" },
+  "unlock": { "message": "Avata" },
+  "star": { "message": "Tähti" },
+  "unstar": { "message": "Poista tähti" },
+  "groups": { "message": "ryhmät" },
+  "undo": { "message": "Kumoa" },
+  "action": { "message": "Toiminta" }
 }

@@ -41,5 +41,12 @@
   "exportJSON": { "message": "汇出JSON" },
   "importJSON": { "message": "导入JSON" },
   "showTabs": { "message": "显示标签" },
-  "title": { "message": "标题" }
+  "title": { "message": "标题" },
+  "lock": { "message": "锁" },
+  "unlock": { "message": "开锁" },
+  "star": { "message": "星" },
+  "unstar": { "message": "取消星号标记" },
+  "groups": { "message": "组" },
+  "undo": { "message": "撤消" },
+  "action": { "message": "行动" }
 }

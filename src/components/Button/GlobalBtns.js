@@ -44,7 +44,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
     {
       id: "undo-btn",
       classes: "",
-      translate: "Undo Action",
+      translate: AppFunc.translate("undo") + " " + AppFunc.translate("action"),
       btnFn: () => AppFunc.undoDestructiveAction(setGroups, setTabTotal),
       icon: <FaUndo color="black" size="1.2rem" />,
     },

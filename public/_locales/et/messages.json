@@ -48,5 +48,12 @@
   "importJSON": { "message": "Importige JSON" },
   "showTabs": { "message": "Kuva vahelehed" },
   "supportUs": { "message": "Toeta meid" },
-  "title": { "message": "Pealkiri" }
+  "title": { "message": "Pealkiri" },
+  "lock": { "message": "Lukusta" },
+  "unlock": { "message": "Ava" },
+  "star": { "message": "täht" },
+  "unstar": { "message": "eemalda tärn" },
+  "groups": { "message": "grupid" },
+  "undo": { "message": "tagasi võtma" },
+  "action": { "message": "tegevus" }
 }

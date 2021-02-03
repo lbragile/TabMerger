@@ -44,5 +44,12 @@
   "importJSON": { "message": "JSON आयात करा" },
   "showTabs": { "message": "टॅब दर्शवा" },
   "supportUs": { "message": "आम्हाला पाठिंबा द्या" },
-  "title": { "message": "शीर्षक" }
+  "title": { "message": "शीर्षक" },
+  "lock": { "message": "लॉक" },
+  "unlock": { "message": "अनलॉक" },
+  "star": { "message": "तारा" },
+  "unstar": { "message": "अतारांकित" },
+  "groups": { "message": "गट" },
+  "undo": { "message": "पूर्ववत करा" },
+  "action": { "message": "कृती" }
 }

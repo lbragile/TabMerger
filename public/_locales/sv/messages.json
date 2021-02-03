@@ -50,5 +50,12 @@
   "importJSON": { "message": "Importera JSON" },
   "showTabs": { "message": "Visa flikar" },
   "supportUs": { "message": "Stöd oss" },
-  "title": { "message": "Titel" }
+  "title": { "message": "Titel" },
+  "lock": { "message": "Låsa" },
+  "unlock": { "message": "Låsa upp" },
+  "star": { "message": "Stjärna" },
+  "unstar": { "message": "Ta bort stjärnmärkning" },
+  "groups": { "message": "Grupper" },
+  "undo": { "message": "Ångra" },
+  "action": { "message": "Handling" }
 }

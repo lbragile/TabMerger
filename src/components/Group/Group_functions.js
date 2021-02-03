@@ -26,6 +26,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  */
 
 import { getTimestamp, updateTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
+import { translate } from "../App/App_functions";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -193,8 +194,8 @@ export function groupDragEnd(e, setGroups) {
         color: x.querySelector("input[type='color']").value,
         created: x.querySelector(".created span").textContent,
         hidden: !!x.querySelector(".hidden-symbol"),
-        locked: x.querySelector(".lock-group-btn .tiptext-group-title").textContent.includes("Unlock"),
-        starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
+        locked: x.querySelector(".lock-group-btn .tiptext-group-title").textContent.includes(translate("unlock")),
+        starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")),
         tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
           const a = tab.querySelector("a");
           return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };

@@ -25,7 +25,7 @@
     "build": "react-scripts build",
     "build:firefox": "node misc/adjust_manifest.js firefox && npm run build && node misc/zip.js firefox",
     "build:chrome": "node misc/adjust_manifest.js chrome && npm run build && node misc/zip.js chrome",
-    "build:all": "npm run build:firefox && npm run build:chrome",
+    "build:all": "npm run build:firefox && npm run build:chrome && git restore public/manifest.json",
     "eject": "react-scripts eject",
     "test": "jest --coverage --config ./config/jest.config.js",
     "test:watch": "npm run test --watchAll",

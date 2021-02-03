@@ -50,5 +50,12 @@
   "importJSON": { "message": "JSON ను దిగుమతి చేయండి" },
   "showTabs": { "message": "ట్యాబ్‌లను చూపించు" },
   "supportUs": { "message": "మాకు మద్దతు ఇవ్వండి" },
-  "title": { "message": "శీర్షిక" }
+  "title": { "message": "శీర్షిక" },
+  "lock": { "message": "లాక్" },
+  "unlock": { "message": "అన్లాక్" },
+  "star": { "message": "స్టార్" },
+  "unstar": { "message": "నక్షత్రం తీసి" },
+  "groups": { "message": "గుంపులు" },
+  "undo": { "message": "అన్డు" },
+  "action": { "message": "యాక్షన్" }
 }

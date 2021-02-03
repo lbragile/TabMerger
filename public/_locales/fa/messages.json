@@ -46,5 +46,12 @@
   "importJSON": { "message": "JSON را وارد کنید" },
   "showTabs": { "message": "نمایش برگه ها" },
   "supportUs": { "message": "از ما حمایت کنید" },
-  "title": { "message": "عنوان" }
+  "title": { "message": "عنوان" },
+  "lock": { "message": "فل کردن" },
+  "unlock": { "message": "از کردن" },
+  "star": { "message": "تاره" },
+  "unstar": { "message": "ذف ستاره" },
+  "groups": { "message": "روه ها" },
+  "undo": { "message": "اگرد" },
+  "action": { "message": "مل" }
 }

@@ -42,5 +42,12 @@
   "importJSON": { "message": "JSON 가져 오기" },
   "showTabs": { "message": "탭 표시" },
   "supportUs": { "message": "당신의 도움이 필요합니다" },
-  "title": { "message": "표제" }
+  "title": { "message": "표제" },
+  "lock": { "message": "자물쇠" },
+  "unlock": { "message": "터놓다" },
+  "star": { "message": "별" },
+  "unstar": { "message": "별표 표시 취소" },
+  "groups": { "message": "여러 떼" },
+  "undo": { "message": "실행 취소" },
+  "action": { "message": "동작" }
 }

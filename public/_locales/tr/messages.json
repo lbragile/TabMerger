@@ -50,5 +50,12 @@
   "importJSON": { "message": "JSON'u içe aktar" },
   "showTabs": { "message": "Sekmeleri Göster" },
   "supportUs": { "message": "Bizi destekle" },
-  "title": { "message": "Başlık" }
+  "title": { "message": "Başlık" },
+  "lock": { "message": "Kilit" },
+  "unlock": { "message": "Kilidini aç" },
+  "star": { "message": "Yıldız" },
+  "unstar": { "message": "Yıldızı kaldır" },
+  "groups": { "message": "Gruplar" },
+  "undo": { "message": "Geri alma" },
+  "action": { "message": "Aksiyon" }
 }

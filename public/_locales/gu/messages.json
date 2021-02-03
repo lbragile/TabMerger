@@ -48,5 +48,12 @@
   "importJSON": { "message": "આયાત કરો JSON" },
   "showTabs": { "message": "ટsબ્સ બતાવો" },
   "supportUs": { "message": "અમારો સપોર્ટ કરો" },
-  "title": { "message": "શીર્ષક" }
+  "title": { "message": "શીર્ષક" },
+  "lock": { "message": "લોક" },
+  "unlock": { "message": "અનલૉક" },
+  "star": { "message": "સ્ટાર" },
+  "unstar": { "message": "બિનતારાંકિત" },
+  "groups": { "message": "જૂથો" },
+  "undo": { "message": "પૂર્વવત્ કરો" },
+  "action": { "message": "ક્રિયા" }
 }

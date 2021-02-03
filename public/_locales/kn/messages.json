@@ -52,5 +52,12 @@
   "importJSON": { "message": "JSON ಅನ್ನು ಆಮದು ಮಾಡಿ" },
   "showTabs": { "message": "ಟ್ಯಾಬ್‌ಗಳನ್ನು ತೋರಿಸಿ" },
   "supportUs": { "message": "ನಮಗೆ ಬೆಂಬಲ ನೀಡಿ" },
-  "title": { "message": "ಶೀರ್ಷಿಕೆ" }
+  "title": { "message": "ಶೀರ್ಷಿಕೆ" },
+  "lock": { "message": "ಲಾಕ್" },
+  "unlock": { "message": "ಅನ್ಲಾಕ್" },
+  "star": { "message": "ಸ್ಟಾರ್" },
+  "unstar": { "message": "ನಕ್ಷತ್ರ ತೆಗೆಯಿರಿ" },
+  "groups": { "message": "ಗುಂಪುಗಳು" },
+  "undo": { "message": "ರದ್ದುಗೊಳಿಸಿ" },
+  "action": { "message": "ಕ್ರಿಯೆ" }
 }

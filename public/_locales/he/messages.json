@@ -42,5 +42,12 @@
   "importJSON": { "message": "ייבא את JSON" },
   "showTabs": { "message": "הצג כרטיסיות" },
   "supportUs": { "message": "תמכו בנו" },
-  "title": { "message": "כותרת" }
+  "title": { "message": "כותרת" },
+  "lock": { "message": "נעול" },
+  "unlock": { "message": "בטל נעילה" },
+  "star": { "message": "וכב" },
+  "unstar": { "message": "טל כוכב" },
+  "groups": { "message": "בוצות" },
+  "undo": { "message": "בטל" },
+  "action": { "message": "עולה" }
 }
