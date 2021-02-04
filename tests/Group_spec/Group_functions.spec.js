@@ -55,20 +55,28 @@ beforeEach(() => {
         title="GROUP A"
         color="#dedede"
         created="11/11/2020 @ 11:11:11"
-        num_tabs={0}
+        num_tabs={1}
         key={Math.random()}
       >
-        <a className="a-tab" />
+        <div className="draggable">
+          <a className="a-tab" href="tab_a_url">
+            <span>Tab A</span>
+          </a>
+        </div>
       </Group>
       <Group
         id="group-1"
         title="GROUP B"
         color="#c7eeff"
         created="22/22/2020 @ 22:22:22"
-        num_tabs={0}
+        num_tabs={1}
         key={Math.random()}
       >
-        <a className="a-tab" />
+        <div className="draggable">
+          <a className="a-tab" href="tab_b_url">
+            <span className="pinned">Tab B</span>
+          </a>
+        </div>
       </Group>
     </AppProvider>
   ).container;
@@ -164,36 +172,72 @@ describe("setTitle", () => {
 
 describe("addTabFromURL", () => {
   it.each([
-    ["NOT", "https://www.google.com"],
-    ["", "https://stackoverflow.com/"],
-  ])("adds the tab to the correct group when URL does %s exist", (type, url) => {
-    var stub = { target: { value: url, closest: jest.fn(() => ({ id: "group-0" })), blur: jest.fn() } };
-    var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query").mockImplementation((_, cb) => cb(init_groups[stub.target.closest().id].tabs)); // prettier-ignore
+    ["FAIL", "www.lichess.org/", "leave"],
+    ["NOT", "https://stackoverflow.com/", "merge"],
+    ["NOT", "https://stackoverflow.com/", "leave"],
+    ["", "https://lichess.org/", "merge"],
+    ["", "https://lichess.org/", "leave"],
+  ])(
+    "adds the tab to the correct group when URL does %s exist: %s (settings.merge === %s)",
+    (type, url, merge_setting) => {
+      var stub = { target: { value: url, closest: jest.fn(() => ({ id: "group-0" })), blur: jest.fn() } };
+      var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
+      var chromeTabsRemoveSpy = jest.spyOn(chrome.tabs, "remove");
 
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
-    sessionStorage.setItem("open_tabs", JSON.stringify([]));
+      // move first tab to end to get expected result
+      var expected_group = JSON.parse(localStorage.getItem("groups"));
+      const last_tab = expected_group[stub.target.closest().id].tabs.shift();
+      expected_group[stub.target.closest().id].tabs.push(last_tab);
 
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    global.alert = jest.fn();
-    jest.clearAllMocks();
+      // local must be different from chrome.tabs.query
+      var current_groups = JSON.parse(localStorage.getItem("groups"));
+      current_groups[stub.target.closest().id].tabs.shift();
+      localStorage.setItem("groups", JSON.stringify(current_groups));
 
-    jest.useFakeTimers();
-    GroupFunc.addTabFromURL(stub, mockSet, mockSet);
-    jest.advanceTimersByTime(51);
+      const partial_expected_tabs = init_groups[stub.target.closest().id].tabs;
+      const open_tabs = partial_expected_tabs.map((x, i) => ({ ...x, id: i }));
+      sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
+      sessionStorage.setItem("settings", JSON.stringify(default_settings));
 
-    if (type === "") {
-      expect(stub.target.value).toBe("");
-      expect(stub.target.blur).toHaveBeenCalledTimes(1);
+      if (merge_setting !== "merge") {
+        var current_settings = JSON.parse(sessionStorage.getItem("settings"));
+        current_settings.merge = merge_setting;
+        sessionStorage.setItem("settings", JSON.stringify(current_settings));
+      }
 
-      expect(alert).toHaveBeenCalledTimes(1);
-      expect(alert.mock.calls.pop()[0]).toContain("That tab is already in TabMerger!");
-    } else {
-      expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
-      expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ status: "complete" }, anything);
+      global.alert = jest.fn();
+      jest.clearAllMocks();
+
+      jest.useFakeTimers();
+      GroupFunc.addTabFromURL(stub, mockSet, mockSet);
+      jest.advanceTimersByTime(51);
+
+      if (type === "" || type === "FAIL") {
+        expect(stub.target.value).toBe("");
+        expect(stub.target.blur).toHaveBeenCalledTimes(1);
+
+        expect(alert).toHaveBeenCalledTimes(1);
+        expect(alert.mock.calls.pop()[0]).toContain("That tab is already in TabMerger!");
+      } else {
+        expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
+        expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ status: "complete" }, anything);
+
+        expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_group, scroll: 0 }, anything);
+
+        expect(mockSet).toHaveBeenCalledTimes(2);
+        expect(mockSet).toHaveBeenNthCalledWith(1, 7);
+        expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_group));
+      }
+
+      if (merge_setting === "merge" && type === "NOT") {
+        expect(chromeTabsRemoveSpy).toHaveBeenCalledTimes(1);
+        expect(chromeTabsRemoveSpy).toHaveBeenCalledWith(0);
+      } else {
+        expect(chromeTabsRemoveSpy).not.toHaveBeenCalled();
+      }
     }
-
-    chromeTabsQuerySpy.mockRestore();
-  });
+  );
 
   test.todo("ensure the above works for separate windows");
   test.todo("above works with open_tabs not empty");
@@ -214,7 +258,52 @@ describe("groupDragStart", () => {
   });
 });
 
-// describe.skip("groupDragEnd", () => {});
+describe("groupDragEnd", () => {
+  it.each([[true], [false]])("Drag operation is group === %s", (group_drag) => {
+    const stub = {
+      preventDefault: jest.fn(),
+      target: { classList: { contains: jest.fn(() => group_drag), remove: jest.fn() } },
+    };
+
+    const expected_groups = {
+      "group-0": {
+        color: "#dedede",
+        created: "11/11/2020 @ 11:11:11",
+        hidden: false,
+        locked: false,
+        starred: false,
+        tabs: [{ pinned: false, title: "Tab A", url: location.href + "tab_a_url" }],
+        title: "GROUP A",
+      },
+      "group-1": {
+        color: "#c7eeff",
+        created: "22/22/2020 @ 22:22:22",
+        hidden: false,
+        locked: false,
+        starred: false,
+        tabs: [{ pinned: true, title: "Tab B", url: location.href + "tab_b_url" }],
+        title: "GROUP B",
+      },
+    };
+
+    document.querySelectorAll = jest.fn((arg) => container.querySelectorAll(arg));
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+    jest.clearAllMocks();
+
+    GroupFunc.groupDragEnd(stub, mockSet);
+
+    if (group_drag) {
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
+
+      expect(mockSet).toHaveBeenCalledTimes(1);
+      expect(mockSet).toHaveBeenCalledWith(JSON.stringify(expected_groups));
+    } else {
+      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+      expect(mockSet).not.toHaveBeenCalled();
+    }
+  });
+});
 
 describe("openGroup", () => {
   it("forms an array that matches ['group-id', ..., tab_links, ...]", () => {

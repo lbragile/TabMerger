@@ -66,7 +66,10 @@ export function setBGColor(e, id) {
   }
 
   chrome.storage.local.get("groups", (local) => {
-    local.groups[id].color = color;
+    // istanbul ignore else
+    if (local.groups[id]) {
+      local.groups[id].color = color;
+    }
     chrome.storage.local.set({ groups: local.groups }, () => {});
   });
 }

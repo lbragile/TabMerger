@@ -64,6 +64,192 @@
     
 
     
+    <h4 class="name" id=".addTabFromURL"><span class="type-signature">(static) </span>addTabFromURL<span class="signature">(e, setGroups, setTabTotal)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Allows the user to drag a tab's URL address icon directly into TabMerger.
+Once this is done, the URL is converted into the appropriate tab row.
+This is useful if the user wants to avoid using the merge buttons or simply
+merge directly into a specific group from outside of TabMerger.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The input field where the tab data was dropped</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>setGroups</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For re-rendering the groups once the operation is complete</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>setTabTotal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For re-rendering the total tab counter</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line128">line 128</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id=".deleteGroup"><span class="type-signature">(static) </span>deleteGroup<span class="signature">(e, setTabTotal, setGroups)</span><span class="type-signature"></span></h4>
     
 
@@ -212,7 +398,7 @@ by changing their &quot;group id&quot; value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line176">line 176</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line235">line 235</a>
     </li></ul></dd>
     
 
@@ -255,6 +441,11 @@ by changing their &quot;group id&quot; value.</p>
 
 
 
+<div class="description">
+    <p>When a group's drag operation is finished, need to re-order all other groups and assign
+appropriate group-id to each.</p>
+</div>
+
 
 
 
@@ -345,7 +536,7 @@ by changing their &quot;group id&quot; value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line129">line 129</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line188">line 188</a>
     </li></ul></dd>
     
 
@@ -388,6 +579,10 @@ by changing their &quot;group id&quot; value.</p>
 
 
 
+<div class="description">
+    <p>Adds the necessary classes to corresponding components when a group drag is initiated</p>
+</div>
+
 
 
 
@@ -478,7 +673,7 @@ by changing their &quot;group id&quot; value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line119">line 119</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line177">line 177</a>
     </li></ul></dd>
     
 
@@ -616,7 +811,7 @@ of the group's tabs to consider for removal.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line162">line 162</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line221">line 221</a>
     </li></ul></dd>
     
 
@@ -754,7 +949,7 @@ how to merge and into which group.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line282">line 282</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line340">line 340</a>
     </li></ul></dd>
     
 
@@ -790,7 +985,7 @@ how to merge and into which group.</p>
     
 
     
-    <h4 class="name" id=".setBGColor"><span class="type-signature">(static) </span>setBGColor<span class="signature">(e, id)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".setBGColor"><span class="type-signature">(static) </span>setBGColor<span class="signature">(e, id<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -822,6 +1017,8 @@ how to merge and into which group.</p>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -847,6 +1044,14 @@ how to merge and into which group.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -869,6 +1074,16 @@ how to merge and into which group.</p>
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
             
 
             
@@ -914,7 +1129,7 @@ how to merge and into which group.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line35">line 35</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -1074,7 +1289,7 @@ how to merge and into which group.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line91">line 91</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -1270,7 +1485,7 @@ The user can also re-click the toggle button to expand the tabs of a collapsed g
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line235">line 235</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line294">line 294</a>
     </li></ul></dd>
     
 
@@ -1407,7 +1622,7 @@ The user can also re-click the toggle button to expand the tabs of a collapsed g
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line78">line 78</a>
+        <a href="src_components_Group_Group_functions.js.html">src/components/Group/Group_functions.js</a>, <a href="src_components_Group_Group_functions.js.html#line81">line 81</a>
     </li></ul></dd>
     
 
@@ -1459,7 +1674,7 @@ The user can also re-click the toggle button to expand the tabs of a collapsed g
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 21:48:38 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Feb 03 2021 16:05:54 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -49,8 +49,8 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at &lt;https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import * as AppHelper from "./App_helpers";
-import { getDragAfterElement } from "../App/App_helpers";
+import * as AppHelper from "../App/App_helpers";
+import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
@@ -65,13 +65,14 @@ import Group from "../Group/Group.js";
  *  open: "with" | "without", restore: "keep" | "remove", title: string}} default_settings TabMerger's original default settings
  * @param {{color: string, created: string, tabs: object[], title: string}} default_group TabMerger's original default group (with up-to-date timestamp)
  * @param {HTMLElement} sync_node Node indicating the "Last Sync" time
+ * @param {Function} setTour For re-rendering the tutorial walkthrough
  * @param {Function} setGroups For re-rendering the initial groups
  * @param {Function} setTabTotal For re-rendering the total tab counter
  *
  * @see defaultSettings in App.js
  * @see defaultGroup in App.js
  */
-export function storageInit(default_settings, default_group, sync_node, setGroups, setTabTotal) {
+export function storageInit(default_settings, default_group, sync_node, setTour, setGroups, setTabTotal) {
   const scroll = document.documentElement.scrollTop;
   chrome.storage.sync.get(null, (sync) => {
     if (!sync.settings) {
@@ -86,15 +87,69 @@ export function storageInit(default_settings, default_group, sync_node, setGroup
     }
 
     delete sync.settings;
-    chrome.storage.local.get("groups", (local) => {
-      var ls_entry = local.groups || { "group-0": default_group };
+    chrome.storage.local.get(["groups", "tour_needed"], (local) => {
+      const tour_needed = local.tour_needed === undefined;
+      // istanbul ignore next
+      const groups = tour_needed ? TUTORIAL_GROUP : local.groups || { "group-0": default_group };
 
       chrome.storage.local.remove(["groups"], () => {
-        chrome.storage.local.set({ groups: ls_entry, groups_copy: [], scroll }, () => {
-          setGroups(JSON.stringify(ls_entry));
-          setTabTotal(AppHelper.updateTabTotal(ls_entry));
+        chrome.storage.local.set({ groups, groups_copy: [], scroll, tour_needed }, () => {
+          setTour(tour_needed);
+          setGroups(JSON.stringify(groups));
+          setTabTotal(AppHelper.updateTabTotal(groups));
         });
       });
+    });
+  });
+}
+
+/**
+ * Allows the user to view the tutorial again or navigate to the official homepage.
+ * Choosing OK plays the tutorial, choosing Cancel navigates to the official homepage.
+ * If a tutorial is replayed, the current configuration is not changed to avoid data loss!
+ *
+ * @param {string} url Link to TabMerger's official homepage
+ * @param {Function} setTour For re-rendering the tour
+ */
+export function resetTutorialChoice(url, setTour) {
+  const response = window.confirm("Press OK to see tutorial OR Cancel to visit TabMerger's official homepage!");
+  response ? setTour(true) : window.open(url, "_blank", "noreferrer");
+}
+
+/**
+ * Displays the tab &amp; group information in the badge icon. Also adjusts the background color and text as needed.
+ *
+ * @param {number} tabTotal The current total tab count
+ * @param {number?} STEP_SIZE Break point for color changes (number of tabs before color changes)
+ * @param {{"green": string, "yellow": string, "orange": string, "red": string }?} COLORS The colors as hex strings of form "#FF7700"
+ */
+// prettier-ignore
+export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
+  chrome.storage.sync.get("settings", (sync) => {
+    chrome.storage.local.get("groups", (local) => {
+      if (local.groups) {
+        const num_groups = Object.keys(local.groups).length;
+        var color;
+        if (tabTotal >= 0 &amp;&amp; tabTotal &lt; STEP_SIZE) {
+          color = COLORS.green;
+        } else if (tabTotal &lt; STEP_SIZE * 2) {
+          color = COLORS.yellow;
+        } else if (tabTotal &lt; STEP_SIZE * 3) {
+          color = COLORS.orange;
+        } else {
+          color = COLORS.red;
+        }
+
+        const showInfo = sync.settings.badgeInfo === "display";
+        const text = showInfo &amp;&amp; tabTotal > 0 ? `${tabTotal}|${num_groups}` : "";
+        const tab_translate = translate(tabTotal === 1 ? "tab" : "tabs").toLocaleLowerCase();
+        const group_translate = translate(num_groups === 1 ? "group" : "groups").toLocaleLowerCase();
+        const title = tabTotal > 0 ? `You currently have ${tabTotal} ${tab_translate} in ${num_groups} ${group_translate}` : "Merge your tabs into groups";
+
+        chrome.browserAction.setBadgeText({ text }, () => {});
+        chrome.browserAction.setBadgeBackgroundColor({ color }, () => {});
+        chrome.browserAction.setTitle({ title }, () => {});
+      }
     });
   });
 }
@@ -275,8 +330,10 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
           var item_bytes = JSON.stringify(group_blocks[into_group]).length + merged_bytes;
 
           if (item_bytes &lt; item_limit) {
-            // close tabs that are being merged
-            chrome.tabs.remove(merged_tabs.map((x) => x.id));
+            // close tabs that are being merged (if settings is set to do so)
+            if (sync.settings.merge === "merge") {
+              chrome.tabs.remove(merged_tabs.map((x) => x.id));
+            }
 
             const new_tabs = [...group_blocks[into_group].tabs, ...merged_tabs];
             group_blocks[into_group].tabs = new_tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url }));
@@ -396,9 +453,12 @@ export function addGroup(num_group_limit, setGroups) {
  * of all the tabs in TabMerger to consider for removal.
  */
 export function openAllTabs() {
-  var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
-  tab_links.unshift(null);
-  chrome.storage.local.set({ remove: tab_links }, () => {});
+  const response = window.confirm("Are you sure you want to open ALL your tabs at once?\n\nWe do not recommend opening more than 100 tabs at once as it may overload your system!"); // prettier-ignore
+  if (response) {
+    var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+    tab_links.unshift(null);
+    chrome.storage.local.set({ remove: tab_links }, () => {});
+  }
 }
 
 /**
@@ -420,16 +480,16 @@ export function deleteAllGroups(setTabTotal, setGroups) {
         groups = {};
         var locked_counter = 0;
         document.querySelectorAll(".group-item").forEach((x) => {
-          if (x.querySelector(".tiptext-group-title").textContent.includes("Unlock")) {
+          if (x.querySelector(".tiptext-group-title").textContent.includes(translate("unlock"))) {
             groups["group-" + locked_counter] = {
               color: x.querySelector("input[type='color']").value,
               created: x.querySelector(".created span").textContent,
               hidden: !!x.querySelector(".hidden-symbol"),
               locked: true,
-              starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes("Unstar"),
+              starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
               tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
                 const a = tab.querySelector("a");
-                return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
+                return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
               }),
               title: x.querySelector(".title-edit-input").value,
             };
@@ -461,16 +521,18 @@ export function deleteAllGroups(setTabTotal, setGroups) {
  * If a user accidently removes a tab, group, or everything. They can press the "Undo"
  * button to restore the previous configuration.
  *
- * @param {Function} setGroups for re-rendering the groups after they are reset
+ * @param {Function} setGroups For re-rendering the groups after they are reset
+ * @param {Function} setTabTotal For re-rendering the tab total counter
  * @note Up to 10 states are stored.
  */
-export function undoDestructiveAction(setGroups) {
+export function undoDestructiveAction(setGroups, setTabTotal) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     if (local.groups_copy.length >= 1) {
       const scroll = document.documentElement.scrollTop;
       const prev_group = local.groups_copy.pop();
 
       chrome.storage.local.set({ groups: prev_group, groups_copy: local.groups_copy, scroll }, () => {
+        setTabTotal(AppHelper.updateTabTotal(prev_group));
         setGroups(JSON.stringify(prev_group));
       });
     } else {
@@ -486,25 +548,13 @@ export function undoDestructiveAction(setGroups) {
  *
  */
 export function dragOver(e, type) {
-  e.preventDefault();
-  const selector = type === "group" ? ".dragging-group" : ".dragging";
-  if (document.querySelector(selector)) {
-    const currentElement = document.querySelector(selector);
-
-    var location, group_block;
-    if (type === "group") {
-      location = e.target.closest("#tabmerger-container");
-    } else {
-      group_block = e.target.closest(".group");
-      location = group_block.querySelector(".tabs-container");
-    }
-
-    const afterElement = getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
-    if (!afterElement) {
-      location.appendChild(currentElement);
-    } else {
-      location.insertBefore(currentElement, afterElement);
-    }
+  const currentElement = document.querySelector(type === "group" ? ".dragging-group" : ".dragging");
+  if (currentElement) {
+    e.preventDefault();
+    var group_block = e.target.closest(".group");
+    var location = type === "group" ? e.target.closest("#tabmerger-container") : group_block.querySelector(".tabs-container"); // prettier-ignore
+    const afterElement = AppHelper.getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
+    !afterElement ? location?.appendChild(currentElement) : location?.insertBefore(currentElement, afterElement);
 
     // allow scrolling while dragging with a 10px offset from top/bottom
     const offset = 10;
@@ -706,7 +756,7 @@ export function translate(msg) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Jan 29 2021 21:48:38 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Feb 03 2021 16:05:54 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

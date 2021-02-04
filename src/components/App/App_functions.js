@@ -37,6 +37,7 @@ import Group from "../Group/Group.js";
  *  open: "with" | "without", restore: "keep" | "remove", title: string}} default_settings TabMerger's original default settings
  * @param {{color: string, created: string, tabs: object[], title: string}} default_group TabMerger's original default group (with up-to-date timestamp)
  * @param {HTMLElement} sync_node Node indicating the "Last Sync" time
+ * @param {Function} setTour For re-rendering the tutorial walkthrough
  * @param {Function} setGroups For re-rendering the initial groups
  * @param {Function} setTabTotal For re-rendering the total tab counter
  *
@@ -60,6 +61,7 @@ export function storageInit(default_settings, default_group, sync_node, setTour,
     delete sync.settings;
     chrome.storage.local.get(["groups", "tour_needed"], (local) => {
       const tour_needed = local.tour_needed === undefined;
+      // istanbul ignore next
       const groups = tour_needed ? TUTORIAL_GROUP : local.groups || { "group-0": default_group };
 
       chrome.storage.local.remove(["groups"], () => {
@@ -459,7 +461,7 @@ export function deleteAllGroups(setTabTotal, setGroups) {
               starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
               tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
                 const a = tab.querySelector("a");
-                return { pinned: !!a.querySelector("svg"), title: a.textContent, url: a.href };
+                return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
               }),
               title: x.querySelector(".title-edit-input").value,
             };
@@ -518,32 +520,18 @@ export function undoDestructiveAction(setGroups, setTabTotal) {
  *
  */
 export function dragOver(e, type) {
-  if (document.querySelector(".dragging-group") || document.querySelector(".dragging")) {
+  const currentElement = document.querySelector(type === "group" ? ".dragging-group" : ".dragging");
+  if (currentElement) {
     e.preventDefault();
-    const selector = type === "group" ? ".dragging-group" : ".dragging";
-    if (document.querySelector(selector)) {
-      const currentElement = document.querySelector(selector);
+    var group_block = e.target.closest(".group");
+    var location = type === "group" ? e.target.closest("#tabmerger-container") : group_block.querySelector(".tabs-container"); // prettier-ignore
+    const afterElement = AppHelper.getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
+    !afterElement ? location?.appendChild(currentElement) : location?.insertBefore(currentElement, afterElement);
 
-      var location, group_block;
-      if (type === "group") {
-        location = e.target.closest("#tabmerger-container");
-      } else {
-        group_block = e.target.closest(".group");
-        location = group_block.querySelector(".tabs-container");
-      }
-
-      const afterElement = AppHelper.getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
-      if (!afterElement) {
-        location.appendChild(currentElement);
-      } else {
-        location.insertBefore(currentElement, afterElement);
-      }
-
-      // allow scrolling while dragging with a 10px offset from top/bottom
-      const offset = 10;
-      if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
-        window.scrollTo(0, e.clientY);
-      }
+    // allow scrolling while dragging with a 10px offset from top/bottom
+    const offset = 10;
+    if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
+      window.scrollTo(0, e.clientY);
     }
   }
 }

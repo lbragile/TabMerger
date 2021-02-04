@@ -172,6 +172,34 @@ describe("storageInit", () => {
   });
 });
 
+describe("resetTutorialChoice", () => {
+  it.each([[true], [false]])(
+    "sets the tour state properly or opens official homepage correctly - confirm === %s",
+    (response) => {
+      global.confirm = jest.fn(() => response);
+      global.open = jest.fn();
+
+      const url = "TabMerger_Site";
+      AppFunc.resetTutorialChoice(url, mockSet);
+
+      expect(confirm).toHaveBeenCalledTimes(1);
+      expect(confirm.mock.calls.pop()[0]).toBe("Press OK to see tutorial OR Cancel to visit TabMerger's official homepage!"); // prettier-ignore
+
+      if (response) {
+        expect(mockSet).toHaveBeenCalledTimes(1);
+        expect(mockSet).toHaveBeenCalledWith(true);
+
+        expect(open).not.toHaveBeenCalled();
+      } else {
+        expect(mockSet).not.toHaveBeenCalled();
+
+        expect(open).toHaveBeenCalledTimes(1);
+        expect(open).toHaveBeenCalledWith(url, "_blank", "noreferrer");
+      }
+    }
+  );
+});
+
 describe("syncWrite", () => {
   it("does nothing when no groups in local storage", () => {
     jest.clearAllMocks();
@@ -419,63 +447,100 @@ describe("checkMerging", () => {
     expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
   });
 
-  test.each([["NOT"], ["SYNC"], ["ITEM"]])("merge all and none exist in TabMerger - %s exceeding limit", (type) => {
-    var stub = { merged_tabs: { newValue: merge_all } };
-    const into_group = "group-1";
+  test.each([
+    ["NOT", "merge", "group-1"],
+    ["NOT", "leave", "group-1"],
+    ["NOT", "leave", "context"],
+    ["SYNC", "merge", "group-1"],
+    ["ITEM", "merge", "group-1"],
+  ])(
+    "merge all and none exist in TabMerger - %s exceeding limit (merge: %s, into: %s)",
+    (type, merge_setting, into_group) => {
+      var stub = { merged_tabs: { newValue: merge_all } };
 
-    var expected_groups = JSON.parse(localStorage.getItem("groups"));
-    expected_groups[into_group].tabs = [
-      ...expected_groups[into_group].tabs,
-      ...merge_all.map((x) => ({ pinned: false, title: x.title, url: x.url })),
-    ];
+      localStorage.setItem("groups", JSON.stringify(init_groups));
+      localStorage.setItem("into_group", into_group);
+      localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
+      sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
 
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    localStorage.setItem("into_group", into_group);
-    localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
-    sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
+      var expected_groups = JSON.parse(localStorage.getItem("groups"));
+      if (into_group.includes("group")) {
+        expected_groups[into_group].tabs = [
+          ...expected_groups[into_group].tabs,
+          ...merge_all.map((x) => ({ pinned: false, title: x.title, url: x.url })),
+        ];
+      } else {
+        into_group = "group-0";
+        const group_values = Object.values(expected_groups);
+        expected_groups[into_group] = {
+          color: default_settings.color,
+          created: AppHelper.getTimestamp(),
+          hidden: false,
+          locked: false,
+          starred: false,
+          tabs: merge_all.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url })),
+          title: default_settings.title,
+        };
 
-    jest.clearAllMocks();
+        group_values.forEach((val, i) => {
+          expected_groups["group-" + (i + 1)] = val;
+        });
+      }
 
-    if (type === "NOT") {
-      AppFunc.checkMerging(stub, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
-    } else if (type === "SYNC") {
-      AppFunc.checkMerging(stub, "local", 100, ITEM_LIMIT, mockSet, mockSet);
-    } else {
-      AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet);
+      var expected_tabs_num = 0;
+      Object.values(expected_groups).forEach((val) => {
+        expected_tabs_num += val.tabs.length;
+      });
+
+      var current_settings = JSON.parse(sessionStorage.getItem("settings"));
+      current_settings.merge = merge_setting;
+      sessionStorage.setItem("settings", JSON.stringify(current_settings));
+
+      jest.clearAllMocks();
+
+      if (type === "NOT") {
+        AppFunc.checkMerging(stub, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
+      } else if (type === "SYNC") {
+        AppFunc.checkMerging(stub, "local", 100, ITEM_LIMIT, mockSet, mockSet);
+      } else {
+        AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet);
+      }
+
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
+
+      if (type === "NOT") {
+        if (merge_setting === "merge") {
+          expect(chromeTabsRemove).toHaveBeenCalledTimes(1);
+          expect(chromeTabsRemove).toHaveBeenCalledWith([0, 1, 2]);
+        }
+
+        expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
+
+        expect(mockSet).toHaveBeenCalledTimes(2);
+        expect(mockSet).toHaveBeenNthCalledWith(1, expected_tabs_num);
+        expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
+      } else {
+        expect(chromeTabsRemove).not.toHaveBeenCalled();
+        expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+        expect(mockSet).not.toHaveBeenCalled();
+      }
+
+      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
+
+      if (type === "NOT") {
+        expect(sessionStorage.getItem("open_tabs")).toBe(merge_setting === "merge" ? "[]" : JSON.stringify(merge_all));
+      } else if (type === "SYNC") {
+        expect(alert.mock.calls.pop()[0]).toContain("Total syncing capacity exceeded by");
+        expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
+      } else {
+        expect(alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded by");
+        expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
+      }
     }
-
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
-
-    if (type === "NOT") {
-      expect(chromeTabsRemove).toHaveBeenCalledTimes(1);
-      expect(chromeTabsRemove).toHaveBeenCalledWith([0, 1, 2]);
-
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
-
-      expect(mockSet).toHaveBeenCalledTimes(2);
-      expect(mockSet).toHaveBeenNthCalledWith(1, 10);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
-    } else {
-      expect(chromeTabsRemove).not.toHaveBeenCalled();
-      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-      expect(mockSet).not.toHaveBeenCalled();
-    }
-
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
-
-    if (type === "NOT") {
-      expect(sessionStorage.getItem("open_tabs")).toBe("[]");
-    } else if (type === "SYNC") {
-      expect(alert.mock.calls.pop()[0]).toContain("Total syncing capacity exceeded by");
-      expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
-    } else {
-      expect(alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded by");
-      expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
-    }
-  });
+  );
 });
 
 describe("addGroup", () => {
@@ -522,7 +587,9 @@ describe("addGroup", () => {
 });
 
 describe("openAllTabs", () => {
-  it("sets the local storage item correctly", () => {
+  it.each([[true], [false]])("sets the local storage item correctly - confirm === %s", (response) => {
+    global.confirm = jest.fn(() => response);
+
     document.body.innerHTML = '<div><a class="a-tab" href="www.abc.com"></a></div>';
     var expected_ls = { remove: [null, location.href + "www.abc.com"] };
 
@@ -531,39 +598,91 @@ describe("openAllTabs", () => {
 
     AppFunc.openAllTabs();
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, anything);
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(confirm.mock.calls.pop()[0]).toContain("Are you sure you want to open ALL your tabs at once?");
+
+    if (response) {
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, anything);
+    } else {
+      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    }
   });
 });
 
 describe("deleteAllGroups", () => {
-  it("adjusts local storage to a default group only if user accepts", () => {
-    var new_entry = { "group-0": default_group };
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
-    localStorage.setItem("groups_copy", JSON.stringify([]));
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    window.confirm = jest.fn().mockImplementation(() => true);
-    jest.clearAllMocks();
+  it.each([[true], [false]])(
+    "adjusts local storage to only have locked group and default group underneath if user accepts - groups locked = %s",
+    (locked) => {
+      document.body.innerHTML =
+        `<div class="group-item">` +
+        `  <div class="tiptext-group-title">${locked ? "unlock" : "lock"}</div>` +
+        `  <input type='color' value='#000000'/>` +
+        `  <div class="created"><span>11/11/2011 @ 11:11:11</span></div>` +
+        `  <div class="star-group-btn"><span class="tiptext-group-title"></span>Star</div>` +
+        `  <div class="draggable">` +
+        `    <a href="https://www.github.com/lbragile/TabMerger">TabMerger</a>` +
+        `  </div>` +
+        `  <input class="title-edit-input" value='Group Title'/>` +
+        `</div>`;
 
-    AppFunc.deleteAllGroups(mockSet, mockSet);
-    new_entry["group-0"].created = AppHelper.getTimestamp();
+      sessionStorage.setItem("settings", JSON.stringify(default_settings));
+      localStorage.setItem("groups_copy", JSON.stringify([]));
 
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+      var expected_groups = init_groups;
+      if (locked) {
+        expected_groups = JSON.parse(localStorage.getItem("groups"));
+        expected_groups["group-0"].locked;
+        delete expected_groups["group-10"];
+        delete expected_groups["group-9"];
+      }
+      localStorage.setItem("groups", JSON.stringify(expected_groups));
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, groups_copy: [init_groups], scroll: 0 }, anything); // prettier-ignore
+      var new_entry = locked
+        ? {
+            "group-0": {
+              color: "#000000",
+              created: "11/11/2011 @ 11:11:11",
+              hidden: false,
+              locked: true,
+              starred: false,
+              tabs: [{ pinned: false, title: "TabMerger", url: "https://www.github.com/lbragile/TabMerger" }],
+              title: "Group Title",
+            },
+            "group-1": default_group,
+          }
+        : { "group-0": default_group };
 
-    expect(mockSet).toHaveBeenCalledTimes(2);
-    expect(mockSet).toHaveBeenNthCalledWith(1, 0);
-    expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(new_entry));
+      window.confirm = jest.fn().mockImplementation(() => true);
+      jest.clearAllMocks();
 
-    expect(window.confirm).toHaveBeenCalledTimes(1);
-    expect(window.confirm.mock.calls.pop()[0]).toContain("Are you sure?");
-    window.confirm.mockRestore();
-  });
+      new_entry["group-" + +locked].created = AppHelper.getTimestamp();
+      AppFunc.deleteAllGroups(mockSet, mockSet);
 
-  it("adjusts local storage to a default group only", () => {
+      // helps prevent flaky tests
+      const new_timestamp = AppHelper.getTimestamp();
+      if (new_entry["group-" + +locked].created !== new_timestamp) {
+        new_entry["group-" + +locked].created = new_timestamp;
+      }
+
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
+
+      expect(mockSet).toHaveBeenCalledTimes(2);
+      expect(mockSet).toHaveBeenNthCalledWith(1, +locked);
+      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(new_entry));
+
+      expect(window.confirm).toHaveBeenCalledTimes(1);
+      expect(window.confirm.mock.calls.pop()[0]).toContain("Are you sure?");
+
+      window.confirm.mockRestore();
+    }
+  );
+
+  it("does nothing if user rejects", () => {
     window.confirm = jest.fn().mockImplementation(() => false);
 
     jest.clearAllMocks();
@@ -616,55 +735,85 @@ describe("undoDestructiveAction", () => {
 });
 
 describe("dragOver", () => {
-  var drag_elem, stub;
-
-  beforeEach(() => {
+  it.each([
+    ["URL_BAR", "URL", 1, window.innerHeight, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
+    ["START_MIDDLE", "GROUP", 1, window.innerHeight, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
+    ["END", "GROUP", 2, window.innerHeight / 2, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
+    ["AFTER", "GROUP", 0, 0, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
+    ["START_MIDDLE", "TAB", 1, window.innerHeight, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
+    ["END", "TAB", 2, window.innerHeight / 2, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
+    ["AFTER", "TAB", 0, 0, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
+  ])("finds the correct after element -> %s, %s", (where, type, tab_num, scroll, expect_result) => {
     document.body.innerHTML =
-      `<div class="group">` +
-      `  <div class="tabs-container">` +
-      `    <div class="draggable">a</div>` +
-      `    <div class="draggable">b</div>` +
-      `    <div class="draggable">c</div>` +
+      `<div id="#tabmerger-container">` +
+      `  <div class="group ${type === "GROUP" ? "dragging-group" : ""} id="group-0">` +
+      `    <div class="tabs-container">` +
+      `      <div class="draggable ${type === "TAB" ? "dragging" : ""}">a</div>` +
+      `      <div class="draggable">b</div>` +
+      `      <div class="draggable">c</div>` +
+      `    </div>` +
+      `  </div>` +
+      `  <div class="group" id="group-1">` +
+      `    <div class="tabs-container">` +
+      `      <div class="draggable">d</div>` +
+      `      <div class="draggable">e</div>` +
+      `      <div class="draggable">f</div>` +
+      `    </div>` +
+      `  </div>` +
+      `  <div class="group" id="group-2">` +
+      `    <div class="tabs-container">` +
+      `      <div class="draggable">g</div>` +
+      `      <div class="draggable">h</div>` +
+      `      <div class="draggable">i</div>` +
+      `    </div>` +
       `  </div>` +
       `</div>`;
 
-    drag_elem = document.querySelector(".draggable");
-    drag_elem.classList.add("dragging");
-
-    stub = { preventDefault: jest.fn(), clientY: window.innerHeight, target: drag_elem };
-
     global.scrollTo = jest.fn();
-  });
 
-  it.each([
-    ["START/MIDDLE", 2, window.innerHeight, ["b", "a", "c"]],
-    ["END", 3, 20, ["b", "c", "a"]],
-    ["AFTER=DRAG", 0, 0, ["a", "b", "c"]],
-  ])("finds the correct after element -> %s", (type, tab_num, scroll, expect_result) => {
     var getDragAfterElementSpy = jest.spyOn(AppHelper, "getDragAfterElement").mockImplementation(() => {
-      return document.querySelectorAll(".draggable")[tab_num];
+      return where !== "AFTER" ? document.querySelectorAll(type === "GROUP" ? ".group" : ".draggable")[tab_num] : null;
     });
-    stub.clientY = scroll;
 
-    AppFunc.dragOver(stub);
+    var stub = {
+      preventDefault: jest.fn(),
+      clientY: scroll,
+      target: document.querySelector(type === "GROUP" ? ".group" : ".draggable"),
+    };
 
     const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
+    const expected_drag_container = stub.target.closest(type === "GROUP" ? "#tabmerger-container" : ".group");
+    AppFunc.dragOver(stub, type.toLowerCase());
+
     expect(tabs_text).toEqual(expect_result);
 
-    if (type === "END") {
-      expect(global.scrollTo).not.toHaveBeenCalled();
+    if (type !== "URL") {
+      if (where === "END") {
+        expect(global.scrollTo).not.toHaveBeenCalled();
+      } else {
+        expect(global.scrollTo).toHaveBeenCalled();
+        expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
+      }
+      expect(getDragAfterElementSpy).toHaveBeenCalledWith(expected_drag_container, stub.clientY, type.toLowerCase());
     } else {
-      expect(global.scrollTo).toHaveBeenCalled();
-      expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
+      expect(global.scrollTo).not.toHaveBeenCalled();
+      expect(getDragAfterElementSpy).not.toHaveBeenCalled();
     }
 
     getDragAfterElementSpy.mockRestore();
   });
+
+  test.todo("check ofr actual tab and group manipulation");
 });
 
 describe("regexSearchForTab", () => {
-  var input;
-  beforeEach(() => {
+  it.each([
+    ["group", "NO", "#c", ["none", "none"]],
+    ["group", "YES", "#a", ["", "none"]],
+    ["tab", "NO", "c", ["none", "none"]],
+    ["tab", "YES", "b", ["none", ""]],
+    ["blank", "BACKSPACE_BLANK", "", ["", ""]],
+  ])("works for %s search - %s match", (type, match, value, expect_arr) => {
     document.body.innerHTML =
       `<div class="group-item">` +
       `  <input class="title-edit-input" value="aaaaa"/>` +
@@ -679,16 +828,8 @@ describe("regexSearchForTab", () => {
       `  </div>` +
       `</div>`;
 
-    input = container.querySelector(".search-filter input");
-  });
+    var input = container.querySelector(".search-filter input");
 
-  it.each([
-    ["group", "NO", "#c", ["none", "none"]],
-    ["group", "YES", "#a", ["", "none"]],
-    ["tab", "NO", "c", ["none", "none"]],
-    ["tab", "YES", "b", ["none", ""]],
-    ["blank", "BACKSPACE_BLANK", "", ["", ""]],
-  ])("works for %s search - %s match", (type, match, value, expect_arr) => {
     if (match !== "BACKSPACE_BLANK") {
       fireEvent.change(input, { target: { value } });
     } else {

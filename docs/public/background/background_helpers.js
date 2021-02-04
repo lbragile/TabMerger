@@ -124,7 +124,7 @@ export async function filterTabs(info, tab, group_id) {
 export function findExtTabAndSwitch() {
   var query = { title: "TabMerger", currentWindow: true };
   var exists = { highlighted: true, active: true };
-  var not_exist = { url: "index.html", active: true };
+  var not_exist = { url: "../index.html", active: true };
   return new Promise((resolve) => {
     chrome.tabs.query(query, (tabMergerTabs) => {
       tabMergerTabs[0]
