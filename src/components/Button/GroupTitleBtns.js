@@ -64,12 +64,72 @@ export default function GroupTitleBtns({ color, hidden, locked, starred, setTabT
               {x.icon}
             </Button>
             {x.id && (
-              <input
-                type="color"
-                defaultValue={color}
-                onChange={(e) => GroupFunc.setBGColor(e)}
-                onBlur={() => GroupFunc.updateTextColor()}
-              />
+              <React.Fragment>
+                <input
+                  type="color"
+                  defaultValue={color}
+                  list="presetColors"
+                  onChange={(e) => GroupFunc.setBGColor(e)}
+                  onBlur={() => GroupFunc.updateTextColor()}
+                />
+                <datalist id="presetColors">
+                  {/* RED */}
+                  <option>#ff9999</option>
+                  <option>#ff6666</option>
+                  <option>#ff3333</option>
+                  <option>#ff0000</option>
+                  <option>#cc0000</option>
+
+                  {/* ORANGE */}
+                  <option>#ffdb99</option>
+                  <option>#ffa366</option>
+                  <option>#ff8533</option>
+                  <option>#ff6600</option>
+                  <option>#cc5200</option>
+
+                  {/* YELLOW */}
+                  <option>#ffff99</option>
+                  <option>#ffff66</option>
+                  <option>#ffff33</option>
+                  <option>#ffff00</option>
+                  <option>#cccc00</option>
+
+                  {/* GREEN */}
+                  <option>#99ff99</option>
+                  <option>#66ff66</option>
+                  <option>#33ff33</option>
+                  <option>#00ff00</option>
+                  <option>#00cc00</option>
+
+                  {/* BLUE */}
+                  <option>#9999ff</option>
+                  <option>#6666ff</option>
+                  <option>#3333ff</option>
+                  <option>#0000ff</option>
+                  <option>#0000cc</option>
+
+                  {/* PINK */}
+                  <option>#ff99ff</option>
+                  <option>#ff66ff</option>
+                  <option>#ff33ff</option>
+                  <option>#ff00ff</option>
+                  <option>#cc00cc</option>
+
+                  {/* GREY */}
+                  <option>#dedede</option>
+                  <option>#b3b3b3</option>
+                  <option>#999999</option>
+                  <option>#808080</option>
+                  <option>#666666</option>
+
+                  {/* BLACK */}
+                  <option>#666666</option>
+                  <option>#4d4d4d</option>
+                  <option>#333333</option>
+                  <option>#1a1a1a</option>
+                  <option>#000000</option>
+                </datalist>
+              </React.Fragment>
             )}
           </React.Fragment>
         );

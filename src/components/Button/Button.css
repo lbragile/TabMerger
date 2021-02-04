@@ -134,7 +134,13 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 }
 
 input[type="color"] {
-  display: none;
+  visibility: hidden;
+  position: absolute;
+  right: 80px;
+  top: 25px;
+  width: 0;
+  height: 0;
+  z-index: -1;
 }
 
 /* OTHER GROUP TITLE BUTTONS */

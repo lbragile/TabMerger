@@ -37,20 +37,10 @@ import "../Button/Button.css";
 
 export default function Group({ id, title, color, created, num_tabs, hidden, locked, starred, children }) {
   const TITLE_TRIM_LIMIT = useRef(50);
-
   const { setTabTotal, setGroups } = useContext(AppContext);
 
-  const setBGColor = useCallback(
-    (e) => {
-      GroupFunc.setBGColor(e, id);
-    },
-    [id]
-  );
-
-  useEffect(() => {
-    var group = document.getElementById(id);
-    setBGColor(group);
-  }, [id, setBGColor]);
+  const setBGColor = useCallback((e) => GroupFunc.setBGColor(e, id), [id]);
+  useEffect(() => setBGColor(document.getElementById(id)), [id, setBGColor]);
 
   return (
     <div
@@ -73,8 +63,14 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           onDrop={(e) => e.preventDefault()}
         />
 
-        {/*prettier-ignore*/}
-        <GroupTitleBtns color={color} hidden={hidden} locked={locked} starred={starred} setTabTotal={setTabTotal} setGroups={setGroups} />
+        <GroupTitleBtns
+          color={color}
+          hidden={hidden}
+          locked={locked}
+          starred={starred}
+          setTabTotal={setTabTotal}
+          setGroups={setGroups}
+        />
       </div>
 
       <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => dragOver(e, "tab")}>

@@ -30,6 +30,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   box-sizing: border-box;
 }
 
+input:hover {
+  cursor: pointer;
+}
+
+input[type="text"]:hover {
+  cursor: text;
+}
+
 .container-fluid {
   width: 80%;
   margin: 3% 0 3% calc(var(--sidebar-width) + 2.5%);

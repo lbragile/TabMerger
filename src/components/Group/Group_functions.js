@@ -34,13 +34,11 @@ import { translate } from "../App/App_functions";
  * @param {string?} id Used to find the group whose background needs to be set
  */
 export function setBGColor(e, id) {
-  var color, target;
-  if (e.target) {
-    color = e.target.value;
-    target = e.target.closest(".group-title");
-  } else {
-    color = e.previousSibling.querySelector("input[type='color']").value;
-    target = e.previousSibling;
+  const color = e.target ? e.target.value : e.previousSibling.querySelector("input[type='color']").value;
+  const target = e.target ? e.target.closest(".group-title") : e.previousSibling;
+
+  if (!id) {
+    id = target.nextSibling.id;
   }
 
   const adjusted_text_color = color > "#777777" ? "black" : "white";
@@ -60,10 +58,6 @@ export function setBGColor(e, id) {
       child.style.borderBottom = "1px dashed " + adjusted_text_color;
     }
   });
-
-  if (!id) {
-    id = target.nextSibling.id;
-  }
 
   chrome.storage.local.get("groups", (local) => {
     // istanbul ignore else
