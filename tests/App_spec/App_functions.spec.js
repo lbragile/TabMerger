@@ -354,65 +354,84 @@ describe("openOrRemoveTabs", () => {
   });
 
   test.each([
-    ["KEEP", "WITHOUT", "SINGLE"],
-    ["KEEP", "WITHOUT", "GROUP"],
-    ["KEEP", "WITHOUT", "ALL"],
-    ["REMOVE", "WITH", "SINGLE"],
-    ["REMOVE", "WITH", "GROUP"],
-    ["REMOVE", "WITH", "ALL"],
-  ])("settings.restore === '%s' - opens the correct tab %s removing - tab isn't open / %s", (keepOrRemove, _, type) => {
-    // ARRANGE
-    var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
-    var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
+    ["KEEP", "WITHOUT", "UNLOCKED", "SINGLE", 7],
+    ["KEEP", "WITHOUT", "UNLOCKED", "GROUP", 7],
+    ["KEEP", "WITHOUT", "UNLOCKED", "ALL", 7],
+    ["REMOVE", "WITH", "LOCKED", "SINGLE", 7],
+    ["REMOVE", "WITH", "LOCKED", "GROUP", 7],
+    ["REMOVE", "WITH", "LOCKED", "ALL", 3],
+    ["REMOVE", "WITH", "UNLOCKED", "SINGLE", 6],
+    ["REMOVE", "WITH", "UNLOCKED", "GROUP", 4],
+    ["REMOVE", "WITH", "UNLOCKED", "ALL", 0],
+  ])(
+    "opens the correct tab (not open) | restore = %s | %s removing | locked = %s | %s",
+    (keepOrRemove, _, locked, type, expected_tabs_left) => {
+      // ARRANGE
+      var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
+      var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
 
-    sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove.toLowerCase() }));
+      sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove.toLowerCase() }));
 
-    var expected_groups = JSON.parse(localStorage.getItem("groups")); // only used in remove case
-    if (type === "SINGLE") {
-      expected_groups["group-0"].tabs.shift();
-    } else if (type === "GROUP") {
-      expected_groups["group-0"].tabs = [];
-    } else {
-      Object.keys(expected_groups).forEach((key) => {
-        expected_groups[key].tabs = [];
+      var expected_groups = JSON.parse(localStorage.getItem("groups")); // only used in remove case
+      expected_groups["group-0"].locked = locked === "LOCKED";
+      localStorage.setItem("groups", JSON.stringify(expected_groups));
+      if (locked === "UNLOCKED") {
+        if (type === "SINGLE") {
+          expected_groups["group-0"].tabs.shift();
+        } else if (type === "GROUP") {
+          expected_groups["group-0"].tabs = [];
+        } else {
+          Object.keys(expected_groups).forEach((key) => {
+            expected_groups[key].tabs = [];
+          });
+        }
+      } else {
+        // only group-0 is locked
+        if (type === "ALL") {
+          Object.keys(expected_groups).forEach((key) => {
+            if (key !== "group-0") {
+              expected_groups[key].tabs = [];
+            }
+          });
+        }
+      }
+
+      jest.clearAllMocks();
+
+      // ACT
+      AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
+
+      // ASSERT
+      expect(chromeTabsMove).not.toHaveBeenCalled();
+
+      expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_arr_map[type].length);
+      tab_arr_map[type].forEach((url) => {
+        expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
       });
+
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+      if (keepOrRemove === "KEEP") {
+        expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+      } else {
+        expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
+
+        expect(mockSet).toHaveBeenCalledTimes(2);
+        expect(mockSet).toHaveBeenNthCalledWith(1, expected_tabs_left);
+        expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
+      }
+
+      expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
+
+      expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs);
     }
-
-    jest.clearAllMocks();
-
-    // ACT
-    AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
-
-    // ASSERT
-    expect(chromeTabsMove).not.toHaveBeenCalled();
-
-    expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_arr_map[type].length);
-    tab_arr_map[type].forEach((url) => {
-      expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
-    });
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
-
-    if (keepOrRemove === "KEEP") {
-      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-    } else {
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
-
-      expect(mockSet).toHaveBeenCalledTimes(2);
-      expect(mockSet).toHaveBeenNthCalledWith(1, tab_arr_map["ALL"].length - tab_arr_map[type].length);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
-    }
-
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["remove"], anything);
-
-    expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs);
-  });
+  );
 
   test("restore already open - opens the correct tabs MOVING them to correct position in array", () => {
     var expect_open_tabs = [open_tabs[2], open_tabs[0], open_tabs[1]];

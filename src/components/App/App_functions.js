@@ -90,7 +90,7 @@ export function resetTutorialChoice(e, url, setTour, setDialog) {
   var observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
       // istanbul ignore else
-      if (mutation.type == "attributes") {
+      if (mutation.type === "attributes") {
         element.getAttribute("response") === "positive" ? setTour(true) : window.open(url, "_blank", "noreferrer");
       }
     });
@@ -244,28 +244,25 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
         // try to not open tabs if it is already open
         chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
           for (var i = 0; i < changes.remove.newValue.length; i++) {
-            var tab_url = changes.remove.newValue[i];
-
-            // eslint-disable-next-line
-            var tab_obj = tabs.filter((x) => x.url === tab_url)[0];
-            delete tab_obj.title;
-            // eslint-disable-next-line
-            var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
-
+            const tab_url = changes.remove.newValue[i];
+            const same_tab = AppHelper.findSameTab(windowTabs, tab_url);
             if (same_tab[0] && !same_tab.pinned) {
               chrome.tabs.move(same_tab[0].id, { index: -1 });
             } else {
-              chrome.tabs.create({ ...tab_obj, active: false }, () => {});
+              const tab_obj = tabs.filter((x) => x.url === tab_url)[0];
+              chrome.tabs.create({ pinned: tab_obj.pinned, url: tab_obj.url, active: false }, () => {});
             }
           }
 
           var groups = local.groups;
           if (sync.settings.restore !== "keep") {
             if (group_id) {
-              groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
+              if (!groups[group_id].locked) {
+                groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
+              }
             } else {
               Object.keys(groups).forEach((key) => {
-                groups[key].tabs = [];
+                groups[key].tabs = !groups[key].locked ? [] : groups[key].tabs;
               });
             }
 
@@ -505,7 +502,7 @@ export function openAllTabs(e, setDialog) {
   var element = e.target.closest("#open-all-btn");
   var observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
-      if (mutation.type == "attributes" && element.getAttribute("response") === "positive") {
+      if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
         var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
         tab_links.unshift(null);
         chrome.storage.local.set({ remove: tab_links }, () => {});
@@ -547,7 +544,7 @@ export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
   var element = e.target.closest("#delete-all-btn");
   var observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
-      if (mutation.type == "attributes" && element.getAttribute("response") === "positive") {
+      if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
         chrome.storage.local.get(["groups", "groups_copy"], (local) => {
           chrome.storage.sync.get("settings", (sync) => {
             var { groups_copy, groups } = local;
