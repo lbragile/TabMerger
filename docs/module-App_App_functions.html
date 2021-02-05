@@ -64,7 +64,7 @@
     
 
     
-    <h4 class="name" id=".addGroup"><span class="type-signature">(static) </span>addGroup<span class="signature">(num_group_limit, setGroups)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".addGroup"><span class="type-signature">(static) </span>addGroup<span class="signature">(num_group_limit, setGroups, setDialog)</span><span class="type-signature"></span></h4>
     
 
     
@@ -153,6 +153,29 @@ down so that the new group is in full view to the user.</p>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>setDialog</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For rendering a warning/error message</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -190,7 +213,7 @@ down so that the new group is in full view to the user.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line393">line 393</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line454">line 454</a>
     </li></ul></dd>
     
 
@@ -410,7 +433,7 @@ down so that the new group is in full view to the user.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line99">line 99</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line128">line 128</a>
     </li></ul></dd>
     
 
@@ -446,7 +469,7 @@ down so that the new group is in full view to the user.</p>
     
 
     
-    <h4 class="name" id=".checkMerging"><span class="type-signature">(static) </span>checkMerging<span class="signature">(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".checkMerging"><span class="type-signature">(static) </span>checkMerging<span class="signature">(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups, setDialog)</span><span class="type-signature"></span></h4>
     
 
     
@@ -628,6 +651,29 @@ and the user is given a warning with instructions.</p>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>setDialog</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For rendering a warning/error message</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -665,7 +711,7 @@ and the user is given a warning with instructions.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line272">line 272</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line302">line 302</a>
     </li></ul></dd>
     
 
@@ -710,7 +756,7 @@ and the user is given a warning with instructions.</p>
     
 
     
-    <h4 class="name" id=".deleteAllGroups"><span class="type-signature">(static) </span>deleteAllGroups<span class="signature">(setTabTotal, setGroups)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".deleteAllGroups"><span class="type-signature">(static) </span>deleteAllGroups<span class="signature">(e, setTabTotal, setGroups, setDialog)</span><span class="type-signature"></span></h4>
     
 
     
@@ -752,6 +798,29 @@ The default group has title &amp; color matching settings parameter and a creati
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Button corresponding to the delete all operation</p></td>
+        </tr>
+
     
 
         <tr>
@@ -799,6 +868,29 @@ The default group has title &amp; color matching settings parameter and a creati
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>setDialog</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For rendering the confirmation dialog</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -836,7 +928,7 @@ The default group has title &amp; color matching settings parameter and a creati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line443">line 443</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line545">line 545</a>
     </li></ul></dd>
     
 
@@ -996,7 +1088,7 @@ The default group has title &amp; color matching settings parameter and a creati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line522">line 522</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line663">line 663</a>
     </li></ul></dd>
     
 
@@ -1084,7 +1176,7 @@ The default group has title &amp; color matching settings parameter and a creati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line649">line 649</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line803">line 803</a>
     </li></ul></dd>
     
 
@@ -1120,7 +1212,7 @@ The default group has title &amp; color matching settings parameter and a creati
     
 
     
-    <h4 class="name" id=".importJSON"><span class="type-signature">(static) </span>importJSON<span class="signature">(e, setGroups, setTabTotal)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".importJSON"><span class="type-signature">(static) </span>importJSON<span class="signature">(e, setGroups, setTabTotal, setDialog)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1233,6 +1325,29 @@ file is uploaded.</p>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>setDialog</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For rendering a warning/error message</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1270,7 +1385,7 @@ file is uploaded.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line619">line 619</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line761">line 761</a>
     </li></ul></dd>
     
 
@@ -1306,7 +1421,7 @@ file is uploaded.</p>
     
 
     
-    <h4 class="name" id=".openAllTabs"><span class="type-signature">(static) </span>openAllTabs<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".openAllTabs"><span class="type-signature">(static) </span>openAllTabs<span class="signature">(e, setDialog)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1324,6 +1439,78 @@ of all the tabs in TabMerger to consider for removal.</p>
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Representing the Open All button</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>setDialog</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For rendering a warning/error message</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1359,7 +1546,7 @@ of all the tabs in TabMerger to consider for removal.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line427">line 427</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line504">line 504</a>
     </li></ul></dd>
     
 
@@ -1567,7 +1754,7 @@ also need to be removed.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line198">line 198</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line227">line 227</a>
     </li></ul></dd>
     
 
@@ -1708,7 +1895,7 @@ removed from TabMerger and thus the counts (group and global) are not updated.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line551">line 551</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line692">line 692</a>
     </li></ul></dd>
     
 
@@ -1749,7 +1936,7 @@ removed from TabMerger and thus the counts (group and global) are not updated.</
     
 
     
-    <h4 class="name" id=".resetTutorialChoice"><span class="type-signature">(static) </span>resetTutorialChoice<span class="signature">(url, setTour)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".resetTutorialChoice"><span class="type-signature">(static) </span>resetTutorialChoice<span class="signature">(e, url, setTour, setDialog)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1791,6 +1978,29 @@ If a tutorial is replayed, the current configuration is not changed to avoid dat
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The help button which was clicked</p></td>
+        </tr>
+
     
 
         <tr>
@@ -1838,6 +2048,29 @@ If a tutorial is replayed, the current configuration is not changed to avoid dat
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>setDialog</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For rendering a confirmation message</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1875,7 +2108,7 @@ If a tutorial is replayed, the current configuration is not changed to avoid dat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line86">line 86</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line88">line 88</a>
     </li></ul></dd>
     
 
@@ -2320,7 +2553,7 @@ This action overwrites local storage accordingly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line165">line 165</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line194">line 194</a>
     </li></ul></dd>
     
 
@@ -2462,7 +2695,7 @@ This action overwrites local storage accordingly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line135">line 135</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line164">line 164</a>
     </li></ul></dd>
     
 
@@ -2606,7 +2839,7 @@ This action overwrites local storage accordingly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line708">line 708</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line862">line 862</a>
     </li></ul></dd>
     
 
@@ -2672,7 +2905,7 @@ Else - the original message</p>
     
 
     
-    <h4 class="name" id=".undoDestructiveAction"><span class="type-signature">(static) </span>undoDestructiveAction<span class="signature">(setGroups, setTabTotal)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".undoDestructiveAction"><span class="type-signature">(static) </span>undoDestructiveAction<span class="signature">(setGroups, setTabTotal, setDialog)</span><span class="type-signature"></span></h4>
     
 
     
@@ -2760,6 +2993,29 @@ button to restore the previous configuration.</p>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>setDialog</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For rendering a warning/error message</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2797,7 +3053,7 @@ button to restore the previous configuration.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line500">line 500</a>
+        <a href="src_components_App_App_functions.js.html">src/components/App/App_functions.js</a>, <a href="src_components_App_App_functions.js.html#line629">line 629</a>
     </li></ul></dd>
     
 
@@ -2849,7 +3105,7 @@ button to restore the previous configuration.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Feb 03 2021 16:05:54 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Feb 04 2021 16:23:18 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

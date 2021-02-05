@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/components/Tab/Tab_helpers.js</title>
+    <title>JSDoc: Source: src/components/Extra/Dialog.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/components/Tab/Tab_helpers.js</h1>
+    <h1 class="page-title">Source: src/components/Extra/Dialog.js</h1>
 
     
 
@@ -26,46 +26,44 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* 
-TabMerger as the name implies merges your tabs into one location to save
-memory usage and increase your productivity.
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import { Modal, Button } from "react-bootstrap";
 
-Copyright (C) 2021  Lior Bragilevsky
+export default function Dialog({ element, show, title, msg, reject_btn_text, accept_btn_text, setDialog }) {
+  /**
+   * Stores the response in localStorage when dialog is confirmation type
+   *
+   * @param {HTMLElement} e Button that was pressed in the dialog box
+   */
+  function saveConfirmAnswer(e) {
+    if (reject_btn_text) {
+      element.setAttribute("response", e.target.value);
+    }
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+    // need a delay to prevent disruption to mutation listener of element above
+    setTimeout(() => {
+      setDialog({ show: false });
+    }, 100);
+  }
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;https://www.gnu.org/licenses/>.
-
-If you have any questions, comments, or concerns you can contact the
-TabMerger team at &lt;https://lbragile.github.io/TabMerger-Extension/contact/>
-*/
-
-/**
- * @module Tab/Tab_helpers
- */
-
-/**
- * Used to retrieve FavIconURL from a given domain
- * @param {string} url Full URL of the tab for which the FavIconURL is required
- * @return {string} The tab's FavIconURL in the form of a google API call.
- *
- * @note Only the domain of a given URL is used, not the full URL.
- */
-export function getFavIconURL(url) {
-  // domain will be null if no match is found
-  var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
-  var domain = matches &amp;&amp; matches[1];
-
-  return "http://www.google.com/s2/favicons?domain=" + domain;
+  return (
+    &lt;Modal className="text-dark" show={show} backdrop="static" keyboard={false} centered>
+      &lt;Modal.Header style={{ backgroundColor: "#f7f7f7" }}>
+        &lt;Modal.Title>{title}&lt;/Modal.Title>
+      &lt;/Modal.Header>
+      &lt;Modal.Body>{msg}&lt;/Modal.Body>
+      &lt;Modal.Footer style={{ backgroundColor: "#f7f7f7" }}>
+        &lt;Button className="text-primary" variant="primary" value="positive" onClick={(e) => saveConfirmAnswer(e)}>
+          {accept_btn_text}
+        &lt;/Button>
+        {reject_btn_text &amp;&amp; (
+          &lt;Button className="text-dark" variant="secondary" value="negative" onClick={(e) => saveConfirmAnswer(e)}>
+            {reject_btn_text}
+          &lt;/Button>
+        )}
+      &lt;/Modal.Footer>
+    &lt;/Modal>
+  );
 }
 </code></pre>
         </article>

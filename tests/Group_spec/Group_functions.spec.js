@@ -209,15 +209,22 @@ describe("addTabFromURL", () => {
       jest.clearAllMocks();
 
       jest.useFakeTimers();
-      GroupFunc.addTabFromURL(stub, mockSet, mockSet);
+      GroupFunc.addTabFromURL(stub, mockSet, mockSet, mockSet);
       jest.advanceTimersByTime(51);
 
       if (type === "" || type === "FAIL") {
         expect(stub.target.value).toBe("");
         expect(stub.target.blur).toHaveBeenCalledTimes(1);
 
-        expect(alert).toHaveBeenCalledTimes(1);
-        expect(alert.mock.calls.pop()[0]).toContain("That tab is already in TabMerger!");
+        expect(mockSet).toHaveBeenCalledTimes(1);
+        expect(mockSet.mock.calls.pop()[0]).toEqual(
+          expect.objectContaining({
+            show: true,
+            title: "❕ TabMerger Information ❕",
+            accept_btn_text: "OK",
+            reject_btn_text: null,
+          })
+        );
       } else {
         expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
         expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ status: "complete" }, anything);
@@ -332,16 +339,7 @@ describe("openGroup", () => {
 });
 
 describe("deleteGroup", () => {
-  var mock_target;
-
-  var storeDestructiveActionSpy;
-  beforeAll(() => {
-    storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups)=> [groups]); // prettier-ignore
-  });
-
-  beforeEach(() => {
-    mock_target = (group_id) => ({ target: { closest: jest.fn(() => ({ nextSibling: { id: group_id } })) } });
-  });
+  var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups)=> [groups]); // prettier-ignore
 
   afterAll(() => {
     storeDestructiveActionSpy.mockRestore();
@@ -352,6 +350,8 @@ describe("deleteGroup", () => {
     ["unlocked", "group-9", undefined],
     ["unlocked", "group-0", true],
   ])("%s group | id: %s | single group === %s", (locked, group_id, single_group) => {
+    var mock_target = (group_id) => ({ target: { closest: jest.fn(() => ({ nextSibling: { id: group_id } })) } });
+
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
     delete expected_groups["group-10"];
@@ -377,7 +377,7 @@ describe("deleteGroup", () => {
 
     jest.clearAllMocks();
 
-    GroupFunc.deleteGroup(mock_target(group_id), mockSet, mockSet);
+    GroupFunc.deleteGroup(mock_target(group_id), mockSet, mockSet, mockSet);
 
     if (locked !== "locked") {
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -395,8 +395,15 @@ describe("deleteGroup", () => {
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalSetSpy).not.toHaveBeenCalled();
 
-      expect(alert).toHaveBeenCalledTimes(1);
-      expect(alert.mock.calls.pop()[0]).toContain("This group is locked and thus cannot be deleted.");
+      expect(mockSet).toHaveBeenCalledTimes(1);
+      expect(mockSet.mock.calls.pop()[0]).toEqual(
+        expect.objectContaining({
+          show: true,
+          title: "❕ TabMerger Information ❕",
+          accept_btn_text: "OK",
+          reject_btn_text: null,
+        })
+      );
     }
   });
 });

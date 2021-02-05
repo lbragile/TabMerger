@@ -211,28 +211,18 @@ export function getDragAfterElement(container, y, type) {
  *
  * @param {object[]} groups_copy All the stored states up to now
  * @param {object} groups The current state which will be stored
- * @param {Number?} NUM_UNDO_STATES for re-rendering the groups after they are reset
+ * @param {Number?} NUM_UNDO_STATES The number of undo's allowed
  *
  * @note Up to 15 states are stored.
  *
  * @return {object[]} The new group state array which includes the latest state at the front.
  */
 export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15) {
-  if (groups_copy.length <= NUM_UNDO_STATES) {
-    if (groups_copy.length === NUM_UNDO_STATES) {
-      alert(
-        "Cannot store any more destructive actions!\nPlease make a backup, undo some actions using the UNDO button, and retry to store successfully."
-      );
-    }
-    groups_copy.push(JSON.parse(JSON.stringify(groups))); // deep copy
-  } else {
-    const response = window.confirm(
-      "This destructive action was not stored!\nWant to clear the state storage container?"
-    );
-    if (response) {
-      groups_copy = [];
-    }
+  // shift down one to stay below NUM_UNDO_STATES
+  if (groups_copy.length === NUM_UNDO_STATES) {
+    groups_copy.shift();
   }
+  groups_copy.push(JSON.parse(JSON.stringify(groups))); // deep copy
 
   return groups_copy;
 }

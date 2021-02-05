@@ -22,7 +22,7 @@ const LINKS = [
   { url: "https://www.reddit.com/user/lbragile_dev", text: "Reddit", icon: <FaReddit color="black" /> },
 ];
 
-export default function Links({ setTour }) {
+export default function Links({ setTour, setDialog }) {
   return (
     <React.Fragment>
       <hr className="mx-auto" />
@@ -37,6 +37,7 @@ export default function Links({ setTour }) {
             onClickFn={i === 0}
             resetTutorialChoice={resetTutorialChoice}
             setTour={setTour}
+            setDialog={setDialog}
             key={Math.random()}
           />
         );

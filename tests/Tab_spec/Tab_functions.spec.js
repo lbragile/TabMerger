@@ -75,14 +75,12 @@ describe("setInitTabs", () => {
 });
 
 describe("tabDragStart", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   test.each([["draggable"], ["tab link"]])(
     "adds the appropriate classes to the draggable and container -> %s click",
     (type) => {
       var elem = container.querySelector(type === "draggable" ? ".draggable" : ".move-tab");
+      jest.clearAllMocks();
+
       fireEvent.dragStart(elem);
 
       expect(type === "draggable" ? elem.classList : elem.parentNode.classList).toContain("dragging");
@@ -138,7 +136,7 @@ describe("tabDragEnd", () => {
     stub.target.closest = jest.fn(() => document.querySelector("#group-0"));
     jest.clearAllMocks();
 
-    TabFunc.tabDragEnd(stub, 8000, mockSet);
+    TabFunc.tabDragEnd(stub, 8000, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
@@ -155,7 +153,7 @@ describe("tabDragEnd", () => {
 
     jest.clearAllMocks();
 
-    TabFunc.tabDragEnd(stub, 8000, mockSet);
+    TabFunc.tabDragEnd(stub, 8000, mockSet, mockSet);
 
     // note that since dragOver isn't applied we just expect the tab to be removed from
     // origin group. As long as drag over works, we can be confident that this also works.
@@ -175,13 +173,6 @@ describe("tabDragEnd", () => {
   });
 
   it("fails when limit is exceeded", () => {
-    const { location, alert } = window;
-    delete window.location;
-    delete window.alert;
-
-    window.location = { reload: jest.fn() };
-    window.alert = jest.fn();
-
     var stub = {
       stopPropagation: jest.fn(),
       target: container.querySelectorAll("#group-0 .draggable")[1],
@@ -190,15 +181,18 @@ describe("tabDragEnd", () => {
     // stub the document
     document.getElementsByClassName = jest.fn(() => [container.querySelector(".draggable").closest(".group")]);
 
-    TabFunc.tabDragEnd(stub, 100, mockSet);
+    const ITEM_LIMIT = 100;
+    TabFunc.tabDragEnd(stub, ITEM_LIMIT, mockSet, mockSet);
 
-    expect(window.alert).toHaveBeenCalledTimes(1);
-    expect(window.alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded");
-
-    expect(window.location.reload).toHaveBeenCalled();
-
-    window.location = location;
-    window.alert = alert;
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet.mock.calls.pop()[0]).toEqual(
+      expect.objectContaining({
+        show: true,
+        title: "⚠ TabMerger Alert ⚠",
+        accept_btn_text: "OK",
+        reject_btn_text: null,
+      })
+    );
   });
 });
 
@@ -230,17 +224,31 @@ describe("removeTab", () => {
   });
 
   it("alerts if group is locked", () => {
-    global.alert = jest.fn();
+    var stub = {
+      target: {
+        closest: jest.fn(() => ({
+          querySelector: jest.fn(() => container.querySelector(".draggable a").href),
+          closest: jest.fn(() => ({ id: "group-0" })),
+        })),
+      },
+    };
 
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
     expected_groups["group-0"].locked = true;
     localStorage.setItem("groups", JSON.stringify(expected_groups));
     jest.clearAllMocks();
 
-    fireEvent.click(container.querySelector(".close-tab"));
+    TabFunc.removeTab(stub, init_groups["group-0"].tabs, mockSet, mockSet, mockSet, mockSet);
 
-    expect(alert).toHaveBeenCalledTimes(1);
-    expect(alert.mock.calls.pop()[0]).toContain("This group is locked and thus tabs inside cannot be deleted.");
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet.mock.calls.pop()[0]).toEqual(
+      expect.objectContaining({
+        show: true,
+        title: "❕ TabMerger Information ❕",
+        accept_btn_text: "OK",
+        reject_btn_text: null,
+      })
+    );
   });
 });
 

@@ -28,11 +28,20 @@ export const TOUR_STEPS = [
     selector: "#need-btn",
     content: (
       <div className="text-dark my-2">
-        Before we begin, please note that you can click this button to replay the tutorial at any time. <br />
+        <b style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", fontSize: "1.2rem" }}>
+          Welcome To TabMerger!
+        </b>
         <br />
-        Simply click this button and select <b>OK</b> in the confirmation window. <br />
         <br />
-        Selecting <i>Cancel</i> will take you to TabMerger's official instructions website.
+        We are super excited to have you onboard and know that you will absolutely love TabMerger. 🤗
+        <br />
+        <br />
+        Before we begin this tutorial/walkthrough, please note that you can click this button to replay the tutorial at
+        any time. <br />
+        <br />
+        Simply click this button and select <b>VIEW TUTORIAL</b> in the <i>TabMerger Question</i> dialog window. <br />
+        <br />
+        Selecting <b>GO TO SITE</b> will take you to TabMerger's official instructions website.
         <br />
         <br />
         You can use the <b>left</b> and <b>right</b> keyboard keys to navigate back and forth between steps,

@@ -35,7 +35,7 @@ import "./Tab.css";
 
 export default function Tab({ id, item_limit, hidden, textColor }) {
   const [tabs, setTabs] = useState([]);
-  const { setTabTotal, setGroups } = useContext(AppContext);
+  const { setTabTotal, setGroups, setDialog } = useContext(AppContext);
 
   useEffect(() => {
     TabFunc.setInitTabs(setTabs, id);
@@ -49,13 +49,13 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
             className={"row draggable p-0 mx-0 " + (hidden ? "d-none" : "")}
             draggable={true}
             onDragStart={(e) => TabFunc.tabDragStart(e)}
-            onDragEnd={(e) => TabFunc.tabDragEnd(e, item_limit, setGroups)}
+            onDragEnd={(e) => TabFunc.tabDragEnd(e, item_limit, setGroups, setDialog)}
             key={Math.random()}
           >
             <p
               className="close-tab"
               draggable={false}
-              onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, setTabTotal, setGroups)}
+              onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, setTabTotal, setGroups, setDialog)}
             >
               <TiDelete size="1rem" color={textColor === "light" ? "white" : "black"} />
             </p>

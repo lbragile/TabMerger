@@ -24,7 +24,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 window.React = React;
 
-import { render, waitFor, fireEvent, act } from "@testing-library/react";
+import { render, waitFor, fireEvent, act, wait } from "@testing-library/react";
 
 import * as AppFunc from "../../src/components/App/App_functions";
 import * as AppHelper from "../../src/components/App/App_helpers";
@@ -174,28 +174,46 @@ describe("storageInit", () => {
 
 describe("resetTutorialChoice", () => {
   it.each([[true], [false]])(
-    "sets the tour state properly or opens official homepage correctly - confirm === %s",
-    (response) => {
-      global.confirm = jest.fn(() => response);
+    "sets the tour state properly or opens official homepage correctly - response === %s",
+    async (response) => {
+      document.body.innerHTML = `<div id="need-btn" response=${response ? "negative" : "positive"}/div>`;
+      var element = document.querySelector("#need-btn");
+      var stub = { target: { closest: jest.fn(() => element) } };
+      const url = "TabMerger_Site";
+      const mockSetTour = jest.fn(), mockSetDialog = jest.fn(); // prettier-ignore
       global.open = jest.fn();
 
-      const url = "TabMerger_Site";
-      AppFunc.resetTutorialChoice(url, mockSet);
+      AppFunc.resetTutorialChoice(stub, url, mockSetTour, mockSetDialog);
+      element.setAttribute("response", response ? "positive" : "negative");
 
-      expect(confirm).toHaveBeenCalledTimes(1);
-      expect(confirm.mock.calls.pop()[0]).toBe("Press OK to see tutorial OR Cancel to visit TabMerger's official homepage!"); // prettier-ignore
+      expect(mockSetDialog).toHaveBeenCalledWith({
+        element,
+        show: true,
+        title: "❔ TabMerger Question ❔",
+        msg: (
+          <div>
+            Press <b>VIEW TUTORIAL</b> to get a walkthrough of TabMerger's main features{" "}
+            <u>
+              <i>OR</i>
+            </u>{" "}
+            <b>GO TO SITE</b> to visit TabMerger's official homepage!
+          </div>
+        ),
+        accept_btn_text: "VIEW TUTORIAL",
+        reject_btn_text: "GO TO SITE",
+      });
 
-      if (response) {
-        expect(mockSet).toHaveBeenCalledTimes(1);
-        expect(mockSet).toHaveBeenCalledWith(true);
+      await waitFor(() => {
+        if (element.getAttribute("response") === "positive") {
+          expect(mockSetTour).toHaveBeenCalledWith(true);
+          expect(open).not.toHaveBeenCalled();
+        } else {
+          expect(mockSetTour).not.toHaveBeenCalled();
+          expect(open).toHaveBeenCalledWith(url, "_blank", "noreferrer");
+        }
+      });
 
-        expect(open).not.toHaveBeenCalled();
-      } else {
-        expect(mockSet).not.toHaveBeenCalled();
-
-        expect(open).toHaveBeenCalledTimes(1);
-        expect(open).toHaveBeenCalledWith(url, "_blank", "noreferrer");
-      }
+      expect.assertions(response ? 4 : 5);
     }
   );
 });
@@ -433,7 +451,6 @@ describe("checkMerging", () => {
   ];
 
   beforeEach(() => {
-    global.alert = jest.fn();
     chromeTabsRemove = jest.spyOn(chrome.tabs, "remove");
     jest.clearAllMocks();
   });
@@ -496,14 +513,15 @@ describe("checkMerging", () => {
       current_settings.merge = merge_setting;
       sessionStorage.setItem("settings", JSON.stringify(current_settings));
 
+      var mockSetDialog = jest.fn();
       jest.clearAllMocks();
 
       if (type === "NOT") {
-        AppFunc.checkMerging(stub, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
+        AppFunc.checkMerging(stub, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet, mockSetDialog);
       } else if (type === "SYNC") {
-        AppFunc.checkMerging(stub, "local", 100, ITEM_LIMIT, mockSet, mockSet);
+        AppFunc.checkMerging(stub, "local", 100, ITEM_LIMIT, mockSet, mockSet, mockSetDialog);
       } else {
-        AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet);
+        AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet, mockSetDialog);
       }
 
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -532,11 +550,15 @@ describe("checkMerging", () => {
 
       if (type === "NOT") {
         expect(sessionStorage.getItem("open_tabs")).toBe(merge_setting === "merge" ? "[]" : JSON.stringify(merge_all));
-      } else if (type === "SYNC") {
-        expect(alert.mock.calls.pop()[0]).toContain("Total syncing capacity exceeded by");
-        expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
-      } else {
-        expect(alert.mock.calls.pop()[0]).toContain("Group's syncing capacity exceeded by");
+      } else if (type === "SYNC" || type === "ITEM") {
+        expect(mockSetDialog.mock.calls.pop()[0]).toStrictEqual(
+          expect.objectContaining({
+            show: true,
+            title: "⚠ TabMerger Alert ⚠",
+            accept_btn_text: "OK",
+            reject_btn_text: null,
+          })
+        );
         expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
       }
     }
@@ -549,12 +571,27 @@ describe("addGroup", () => {
   });
 
   it("warns if group limit exceeded", () => {
-    global.alert = jest.fn();
+    AppFunc.addGroup(1, mockSet, mockSet);
 
-    AppFunc.addGroup(1, mockSet);
-
-    expect(alert).toHaveBeenCalledTimes(1);
-    expect(alert.mock.calls.pop()[0]).toContain("Number of groups exceeded.");
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet.mock.calls.pop()[0]).toEqual({
+      show: true,
+      title: "⚠ TabMerger Alert ⚠",
+      msg: (
+        <div>
+          Number of groups exceeded (more than <b>100</b>).
+          <br />
+          <br />
+          Please do <b>one</b> of the following:
+          <ul style={{ marginLeft: "25px" }}>
+            <li>Delete a group that is no longer needed;</li>
+            <li>Merge tabs into another existing group.</li>
+          </ul>
+        </div>
+      ),
+      accept_btn_text: "OK",
+      reject_btn_text: null,
+    });
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
@@ -587,35 +624,75 @@ describe("addGroup", () => {
 });
 
 describe("openAllTabs", () => {
-  it.each([[true], [false]])("sets the local storage item correctly - confirm === %s", (response) => {
-    global.confirm = jest.fn(() => response);
+  it.each([[true], [false]])("sets the local storage item correctly - response === %s", async (response) => {
+    document.body.innerHTML =
+      `<div id="open-all-btn" response=${response ? "negative" : "positive"}>` +
+      `  <a class="a-tab" href="www.abc.com"/>` +
+      `</div>`;
+    var element = document.querySelector("#open-all-btn");
+    var stub = { target: { closest: jest.fn(() => element) } };
 
-    document.body.innerHTML = '<div><a class="a-tab" href="www.abc.com"></a></div>';
     var expected_ls = { remove: [null, location.href + "www.abc.com"] };
 
     chromeLocalSetSpy.mockClear();
     localStorage.setItem("groups", JSON.stringify(init_groups));
 
-    AppFunc.openAllTabs();
+    AppFunc.openAllTabs(stub, mockSet);
+    element.setAttribute("response", response ? "positive" : "negative"); // cause a mutation on the element
 
-    expect(confirm).toHaveBeenCalledTimes(1);
-    expect(confirm.mock.calls.pop()[0]).toContain("Are you sure you want to open ALL your tabs at once?");
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet).toHaveBeenCalledWith({
+      element,
+      show: true,
+      title: "✔ TabMerger Confirmation Request ❌",
+      msg: (
+        <div>
+          Are you sure you want to open <b>ALL</b> your tabs at once?
+          <br />
+          <br></br>We do <b>not</b> recommend opening <u>more than 100 tabs</u> at once as it may overload your system!
+        </div>
+      ),
+      accept_btn_text: "YES, OPEN ALL",
+      reject_btn_text: "CANCEL",
+    });
 
-    if (response) {
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, anything);
-    } else {
-      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-    }
+    await waitFor(() => {
+      if (element.getAttribute("response") === "positive") {
+        expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, anything);
+      } else {
+        expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+      }
+    });
+
+    expect.assertions(response ? 5 : 3);
   });
 });
 
 describe("deleteAllGroups", () => {
+  const dialogObj = (element) => ({
+    element,
+    show: true,
+    title: "✔ TabMerger Confirmation Request ❌",
+    msg: (
+      <div>
+        Are you sure?
+        <br />
+        <br />
+        This action will delete <b>ALL</b> groups/tabs that are <u>not locked</u>.<br />
+        <br />
+        Make sure you have a backup!
+      </div>
+    ),
+    accept_btn_text: "YES, DELETE ALL",
+    reject_btn_text: "CANCEL",
+  });
+
   it.each([[true], [false]])(
     "adjusts local storage to only have locked group and default group underneath if user accepts - groups locked = %s",
-    (locked) => {
+    async (locked) => {
       document.body.innerHTML =
-        `<div class="group-item">` +
+        `<div id="delete-all-btn" class="group-item" response="negative">` +
         `  <div class="tiptext-group-title">${locked ? "unlock" : "lock"}</div>` +
         `  <input type='color' value='#000000'/>` +
         `  <div class="created"><span>11/11/2011 @ 11:11:11</span></div>` +
@@ -629,9 +706,8 @@ describe("deleteAllGroups", () => {
       sessionStorage.setItem("settings", JSON.stringify(default_settings));
       localStorage.setItem("groups_copy", JSON.stringify([]));
 
-      var expected_groups = init_groups;
+      var expected_groups = JSON.parse(localStorage.getItem("groups"));
       if (locked) {
-        expected_groups = JSON.parse(localStorage.getItem("groups"));
         expected_groups["group-0"].locked;
         delete expected_groups["group-10"];
         delete expected_groups["group-9"];
@@ -653,49 +729,56 @@ describe("deleteAllGroups", () => {
           }
         : { "group-0": default_group };
 
-      window.confirm = jest.fn().mockImplementation(() => true);
+      var element = document.querySelector("#delete-all-btn");
+      var stub = { target: { closest: jest.fn(() => element) } };
       jest.clearAllMocks();
 
       new_entry["group-" + +locked].created = AppHelper.getTimestamp();
-      AppFunc.deleteAllGroups(mockSet, mockSet);
+      AppFunc.deleteAllGroups(stub, mockSet, mockSet, mockSet);
+      element.setAttribute("response", "positive"); // cause mutation change on element
 
       // helps prevent flaky tests
       const new_timestamp = AppHelper.getTimestamp();
       if (new_entry["group-" + +locked].created !== new_timestamp) {
         new_entry["group-" + +locked].created = new_timestamp;
       }
+      expected_groups["group-4"].created = JSON.parse(localStorage.getItem("groups"))["group-4"].created;
 
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+      await waitFor(() => {
+        expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
-      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
+        expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
 
-      expect(mockSet).toHaveBeenCalledTimes(2);
-      expect(mockSet).toHaveBeenNthCalledWith(1, +locked);
-      expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(new_entry));
+        expect(mockSet).toHaveBeenCalledTimes(3);
+        expect(mockSet).toHaveBeenNthCalledWith(1, dialogObj(element));
+        expect(mockSet).toHaveBeenNthCalledWith(2, +locked);
+        expect(mockSet).toHaveBeenNthCalledWith(3, JSON.stringify(new_entry));
+      });
 
-      expect(window.confirm).toHaveBeenCalledTimes(1);
-      expect(window.confirm.mock.calls.pop()[0]).toContain("Are you sure?");
-
-      window.confirm.mockRestore();
+      expect.hasAssertions();
     }
   );
 
-  it("does nothing if user rejects", () => {
-    window.confirm = jest.fn().mockImplementation(() => false);
-
+  it("does nothing if user rejects", async () => {
+    document.body.innerHTML = `<div id="delete-all-btn" class="group-item" response="positive"/>`;
+    var element = document.querySelector("#delete-all-btn");
+    var stub = { target: { closest: jest.fn(() => element) } };
     jest.clearAllMocks();
 
-    AppFunc.deleteAllGroups(mockSet, mockSet);
+    AppFunc.deleteAllGroups(stub, mockSet, mockSet, mockSet);
+    element.setAttribute("response", "negative");
 
-    expect(chromeSyncGetSpy).not.toHaveBeenCalled();
-    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-    expect(mockSet).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(chromeSyncGetSpy).not.toHaveBeenCalled();
+      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
 
-    expect(window.confirm).toHaveBeenCalledTimes(1);
-    expect(window.confirm.mock.calls.pop()[0]).toContain("Are you sure?");
-    window.confirm.mockRestore();
+      expect(mockSet).toHaveBeenCalledTimes(1);
+      expect(mockSet).toHaveBeenCalledWith(dialogObj(element));
+    });
+
+    expect.hasAssertions();
   });
 });
 
@@ -708,7 +791,7 @@ describe("undoDestructiveAction", () => {
     localStorage.setItem("groups_copy", JSON.stringify([init_groups]));
     jest.clearAllMocks();
 
-    AppFunc.undoDestructiveAction(mockSet, mockSet);
+    AppFunc.undoDestructiveAction(mockSet, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
@@ -719,18 +802,29 @@ describe("undoDestructiveAction", () => {
 
   test("can NOT undo a state", () => {
     localStorage.setItem("groups_copy", JSON.stringify([]));
-    global.alert = jest.fn();
     jest.clearAllMocks();
 
-    AppFunc.undoDestructiveAction(mockSet, mockSet);
+    AppFunc.undoDestructiveAction(mockSet, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
 
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
 
-    expect(alert).toHaveBeenCalledTimes(1);
-    expect(alert.mock.calls.pop()[0]).toBe("There are no more states to undo");
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(mockSet.mock.calls.pop()[0]).toStrictEqual({
+      show: true,
+      title: "❕ TabMerger Information ❕",
+      msg: (
+        <div>
+          There are <b>no more</b> states to undo. <br />
+          <br />
+          States are created with <u>destructive actions</u>!
+        </div>
+      ),
+      accept_btn_text: "OK",
+      reject_btn_text: null,
+    });
   });
 });
 
@@ -845,17 +939,34 @@ describe("regexSearchForTab", () => {
 describe("importJSON", () => {
   it("alerts on wrong non json input", () => {
     global.alert = jest.fn();
+    var mockSetDialog = jest.fn();
     const input = { target: { files: [{ type: "application/pdf" }] } };
     jest.clearAllMocks();
 
-    AppFunc.importJSON(input, mockSet, mockSet);
+    AppFunc.importJSON(input, mockSet, mockSet, mockSetDialog);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
     expect(mockSet).not.toHaveBeenCalled();
 
-    expect(alert).toHaveBeenCalledTimes(1);
-    expect(alert.mock.calls.pop()[0]).toContain("You must import a JSON file (.json extension)!");
+    expect(mockSetDialog).toHaveBeenCalledTimes(1);
+    expect(mockSetDialog.mock.calls.pop()[0]).toStrictEqual({
+      show: true,
+      title: <p><span style={{color: "red"}}>‼</span> TabMerger Warning <span Warning span style={{color: "red"}}>‼</span></p>, // prettier-ignore
+      msg: (
+        <div>
+          You must import a JSON file <i>(.json extension)</i>!<br />
+          <br />
+          These can be generated via the <b>Export JSON</b> button.
+          <br />
+          <br />
+          <b>Be careful</b>, <u>only import JSON files generated by TabMerger</u>, otherwise you risk losing your
+          current configuration!
+        </div>
+      ),
+      accept_btn_text: "OK",
+      reject_btn_text: null,
+    });
   });
 
   it("updates sync and local storage on valid input", () => {

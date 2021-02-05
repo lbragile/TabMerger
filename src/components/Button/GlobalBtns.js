@@ -11,7 +11,7 @@ import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 
-export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, setGroups }) {
+export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, setGroups, setDialog }) {
   const GLOBAL_BUTTONS = [
     {
       id: "options-btn",
@@ -24,7 +24,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       id: "open-all-btn",
       classes: "mx-2",
       translate: AppFunc.translate("openAll"),
-      btnFn: () => AppFunc.openAllTabs(),
+      btnFn: (e) => AppFunc.openAllTabs(e, setDialog),
       icon: <GiExpand color="black" />,
     },
     {
@@ -45,7 +45,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       id: "undo-btn",
       classes: "",
       translate: AppFunc.translate("undo") + " " + AppFunc.translate("action"),
-      btnFn: () => AppFunc.undoDestructiveAction(setGroups, setTabTotal),
+      btnFn: () => AppFunc.undoDestructiveAction(setGroups, setTabTotal, setDialog),
       icon: <FaUndo color="black" size="1.2rem" />,
     },
     {
@@ -59,7 +59,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       id: "delete-all-btn",
       classes: "",
       translate: AppFunc.translate("deleteAll"),
-      btnFn: () => AppFunc.deleteAllGroups(setTabTotal, setGroups),
+      btnFn: (e) => AppFunc.deleteAllGroups(e, setTabTotal, setGroups, setDialog),
       icon: <GrClear color="black" />,
     },
     {
@@ -76,7 +76,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       id: "add-group-btn",
       classes: "",
       translate: AppFunc.translate("addGroup"),
-      btnFn: () => AppFunc.addGroup(group_limit, setGroups),
+      btnFn: () => AppFunc.addGroup(group_limit, setGroups, setDialog),
       icon: <GrAddCircle color="black" size="1.5rem" />,
     },
   ];
@@ -88,25 +88,23 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       </p>
 
       {GLOBAL_BUTTONS.map((x, i) => {
-        if (i !== 7) {
-          return (
-            <span key={Math.random()}>
-              <Button
-                id={x.id}
-                classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
-                translate={x.translate}
-                tooltip={"tiptext-global"}
-                onClick={x.btnFn}
-                key={Math.random()}
-              >
-                {x.icon}
-              </Button>
-              {i === 4 && <div />}
-            </span>
-          );
-        } else {
-          return <ImportBtn setTabTotal={setTabTotal} setGroups={setGroups} key={Math.random()} />;
-        }
+        return i !== 7 ? (
+          <span key={Math.random()}>
+            <Button
+              id={x.id}
+              classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
+              translate={x.translate}
+              tooltip={"tiptext-global"}
+              onClick={x.btnFn}
+              key={Math.random()}
+            >
+              {x.icon}
+            </Button>
+            {i === 4 && <div />}
+          </span>
+        ) : (
+          <ImportBtn setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog} key={Math.random()} />
+        );
       })}
     </div>
   );

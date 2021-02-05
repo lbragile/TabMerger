@@ -36,6 +36,7 @@ import Header from "../Extra/Header";
 import TabSearch from "../Extra/TabSearch";
 import Reviews from "../Extra/Reviews";
 import Links from "../Extra/Links";
+import Dialog from "../Extra/Dialog";
 import { TOUR_STEPS } from "../Extra/Tutorial";
 
 import { AppProvider } from "../../context/AppContext";
@@ -62,6 +63,7 @@ export default function App() {
   // app parameters
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
+  const [dialog, setDialog] = useState({ show: false });
 
   // tutorial parameters
   const [tour, setTour] = useState(false);
@@ -84,7 +86,7 @@ export default function App() {
     };
 
     const checkMerging = (changes, namespace) => {
-      AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups); // prettier-ignore
+      AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups, setDialog); // prettier-ignore
     };
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
@@ -110,6 +112,8 @@ export default function App() {
 
   return (
     <div id="app-wrapper" className="text-center">
+      <Dialog {...dialog} setDialog={setDialog} />
+
       <Tour
         steps={TOUR_STEPS}
         isOpen={tour}
@@ -139,8 +143,8 @@ export default function App() {
           <hr className="mx-auto hidden-in-print" />
 
           {/* prettier-ignore */}
-          <GlobalBtns syncTimestamp={syncTimestamp} group_limit={NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups}/>
-          <Links setTour={setTour} />
+          <GlobalBtns syncTimestamp={syncTimestamp} group_limit={NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
+          <Links setTour={setTour} setDialog={setDialog} />
         </div>
 
         <div id="copyright" className="mt-4">
@@ -148,7 +152,7 @@ export default function App() {
         </div>
       </nav>
 
-      <AppProvider value={{ setGroups, setTabTotal }}>
+      <AppProvider value={{ setGroups, setTabTotal, setDialog }}>
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current)}
         </div>

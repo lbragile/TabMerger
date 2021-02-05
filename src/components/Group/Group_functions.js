@@ -118,8 +118,9 @@ export function blurOnEnter(e) {
  * @param {HTMLElement} e The input field where the tab data was dropped
  * @param {Function} setGroups For re-rendering the groups once the operation is complete
  * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {Function} setDialog For rendering a warning/error message
  */
-export function addTabFromURL(e, setGroups, setTabTotal) {
+export function addTabFromURL(e, setGroups, setTabTotal, setDialog) {
   const url = e.target.value;
   const id = e.target.closest(".group").id;
 
@@ -157,7 +158,13 @@ export function addTabFromURL(e, setGroups, setTabTotal) {
         e.target.value = "";
         e.target.blur();
         setTimeout(() => {
-          alert("That tab is already in TabMerger!");
+          setDialog({
+            show: true,
+            title: "❕ TabMerger Information ❕",
+            msg: <div>That tab is already in TabMerger!</div>,
+            accept_btn_text: "OK",
+            reject_btn_text: null,
+          });
         }, 50);
       }
     });
@@ -225,8 +232,9 @@ export function openGroup(e) {
  * @param {HTMLElement} e Node corresponding to the group to be deleted
  * @param {Function} setTabTotal For re-rendering the global tab counter
  * @param {Function} setGroups For re-rendering the groups based on their new id
+ * @param {Function} setDialog For rendering a warning/error message
  */
-export function deleteGroup(e, setTabTotal, setGroups) {
+export function deleteGroup(e, setTabTotal, setGroups, setDialog) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     chrome.storage.sync.get("settings", (sync) => {
       const scroll = document.documentElement.scrollTop;
@@ -263,7 +271,18 @@ export function deleteGroup(e, setTabTotal, setGroups) {
           setTabTotal(updateTabTotal(groups));
         });
       } else {
-        alert("This group is locked and thus cannot be deleted. Press the lock symbol to first unlock and then retry deleting it!"); // prettier-ignore
+        setDialog({
+          show: true,
+          title: "❕ TabMerger Information ❕",
+          msg: (
+            <div>
+              This group is <b>locked</b>, thus it cannot be deleted. <br />
+              <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting it again!
+            </div>
+          ),
+          accept_btn_text: "OK",
+          reject_btn_text: null,
+        });
       }
     });
   });

@@ -56,10 +56,11 @@ export function tabDragStart(e) {
  * @param {HTMLElement} e  The dragged tab
  * @param {number} item_limit Group based sync limit
  * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setDialog For rendering a warning/error message
  *
  * @see ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value
  */
-export function tabDragEnd(e, item_limit, setGroups) {
+export function tabDragEnd(e, item_limit, setGroups, setDialog) {
   e.stopPropagation();
   e.target.classList.remove("dragging");
 
@@ -100,13 +101,27 @@ export function tabDragEnd(e, item_limit, setGroups) {
         setGroups(JSON.stringify(groups));
       });
     } else {
-      alert(`Group's syncing capacity exceeded by ${
-        newBytesInUse - item_limit
-      } bytes.\n\nPlease do one of the following:
-          1. Create a new group and merge new tabs into it;
-          2. Remove some tabs from this group;
-          3. Merge less tabs into this group (each tab is ~100-300 bytes).`);
-      window.location.reload();
+      setDialog({
+        show: true,
+        title: "⚠ TabMerger Alert ⚠",
+        msg: (
+          <div>
+            <u>Group's</u> syncing capacity exceeded by <b>{newBytesInUse - item_limit}</b> bytes.
+            <br />
+            <br />
+            Please do <b>one</b> of the following:
+            <ul style={{ marginLeft: "25px" }}>
+              <li>Create a new group and merge new tabs into it;</li>
+              <li>Remove some tabs from this group;</li>
+              <li>
+                Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
+              </li>
+            </ul>
+          </div>
+        ),
+        accept_btn_text: "OK",
+        reject_btn_text: null,
+      });
     }
   });
 }
@@ -118,13 +133,12 @@ export function tabDragEnd(e, item_limit, setGroups) {
  * @param {function} setTabs For re-rendering the group's tabs
  * @param {function} setTabTotal For re-rendering the total number of groups
  * @param {function} setGroups For re-rendering the overall groups
+ * @param {Function} setDialog For rendering a warning/error message
  */
-export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
-  var tab, url, group_id;
-
-  tab = e.target.closest(".draggable");
-  url = tab.querySelector("a").href;
-  group_id = tab.closest(".group").id;
+export function removeTab(e, tabs, setTabs, setTabTotal, setGroups, setDialog) {
+  const tab = e.target.closest(".draggable");
+  const url = tab.querySelector("a").href;
+  const group_id = tab.closest(".group").id;
 
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     var { groups, groups_copy } = local;
@@ -140,7 +154,18 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups) {
         setGroups(JSON.stringify(groups));
       });
     } else {
-      alert("This group is locked and thus tabs inside cannot be deleted. Press the lock symbol to first unlock and then retry deleting the tab again!"); // prettier-ignore
+      setDialog({
+        show: true,
+        title: "❕ TabMerger Information ❕",
+        msg: (
+          <div>
+            This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
+            <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
+          </div>
+        ),
+        accept_btn_text: "OK",
+        reject_btn_text: null,
+      });
     }
   });
 }

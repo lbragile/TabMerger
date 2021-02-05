@@ -80,12 +80,41 @@ export function storageInit(default_settings, default_group, sync_node, setTour,
  * Choosing OK plays the tutorial, choosing Cancel navigates to the official homepage.
  * If a tutorial is replayed, the current configuration is not changed to avoid data loss!
  *
+ * @param {HTMLElement} e The help button which was clicked
  * @param {string} url Link to TabMerger's official homepage
  * @param {Function} setTour For re-rendering the tour
+ * @param {Function} setDialog For rendering a confirmation message
  */
-export function resetTutorialChoice(url, setTour) {
-  const response = window.confirm("Press OK to see tutorial OR Cancel to visit TabMerger's official homepage!");
-  response ? setTour(true) : window.open(url, "_blank", "noreferrer");
+export function resetTutorialChoice(e, url, setTour, setDialog) {
+  var element = e.target.closest("#need-btn");
+  var observer = new MutationObserver((mutations, observer) => {
+    mutations.forEach((mutation) => {
+      // istanbul ignore else
+      if (mutation.type == "attributes") {
+        element.getAttribute("response") === "positive" ? setTour(true) : window.open(url, "_blank", "noreferrer");
+      }
+    });
+    observer.disconnect();
+  });
+
+  observer.observe(element, { attributes: true });
+
+  setDialog({
+    element,
+    show: true,
+    title: "❔ TabMerger Question ❔",
+    msg: (
+      <div>
+        Press <b>VIEW TUTORIAL</b> to get a walkthrough of TabMerger's main features{" "}
+        <u>
+          <i>OR</i>
+        </u>{" "}
+        <b>GO TO SITE</b> to visit TabMerger's official homepage!
+      </div>
+    ),
+    accept_btn_text: "VIEW TUTORIAL",
+    reject_btn_text: "GO TO SITE",
+  });
 }
 
 /**
@@ -265,11 +294,12 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  * @param {number} item_limit Limit for each group with regards to sync item storage - only contains group related details
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setDialog For rendering a warning/error message
  *
  * @see SYNC_STORAGE_LIMIT in App.js
  * @see ITEM_STORAGE_LIMIT in App.js
  */
-export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups) {
+export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups, setDialog) {
   if (namespace === "local" && changes?.merged_tabs?.newValue?.length > 0) {
     chrome.storage.sync.get("settings", (sync) => {
       chrome.storage.local.get(["merged_tabs", "into_group", "groups"], (local) => {
@@ -315,21 +345,51 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
               setGroups(JSON.stringify(group_blocks));
             });
           } else {
-            alert(
-              `Group's syncing capacity exceeded by ${item_bytes - item_limit} bytes.\n\nPlease do one of the following:
-      1. Create a new group and merge new tabs into it;
-      2. Remove some tabs from this group;
-      3. Merge less tabs into this group (each tab is ~100-300 bytes).`
-            );
+            setDialog({
+              show: true,
+              title: "⚠ TabMerger Alert ⚠",
+              msg: (
+                <div>
+                  <u>Group's</u> syncing capacity exceeded by <b>{item_bytes - item_limit}</b> bytes.
+                  <br />
+                  <br />
+                  Please do <b>one</b> of the following:
+                  <ul style={{ marginLeft: "25px" }}>
+                    <li>Create a new group and merge new tabs into it;</li>
+                    <li>Remove some tabs from this group;</li>
+                    <li>
+                      Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
+                    </li>
+                  </ul>
+                </div>
+              ),
+              accept_btn_text: "OK",
+              reject_btn_text: null,
+            });
           }
         } else {
-          alert(
-            `Total syncing capacity exceeded by ${sync_bytes - sync_limit} bytes.\n\nPlease do one of the following:
-      1. Remove some tabs from any group;
-      2. Delete a group that is no longer needed;
-      3. Merge less tabs into this group (each tab is ~100-300 bytes).
-      \nMake sure to Export JSON or PDF to have a backup copy!`
-          );
+          setDialog({
+            show: true,
+            title: "⚠ TabMerger Alert ⚠",
+            msg: (
+              <div>
+                `<u>Total</u> syncing capacity exceeded by <b>{sync_bytes - sync_limit}</b> bytes.
+                <br />
+                <br />
+                Please do <b>one</b> of the following:
+                <ul style={{ marginLeft: "25px" }}>
+                  <li>Remove some tabs from any group;</li>
+                  <li>Delete a group that is no longer needed;</li>
+                  <li>
+                    Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
+                  </li>
+                </ul>
+                Make sure to Export JSON or PDF to have a backup copy!
+              </div>
+            ),
+            accept_btn_text: "OK",
+            reject_btn_text: null,
+          });
         }
 
         // remove to be able to detect changes again (even for same tabs)
@@ -387,10 +447,11 @@ export function groupFormation(groups, item_limit) {
  * down so that the new group is in full view to the user.
  * @param {number} num_group_limit an upper limit on the number of groups that can be created
  * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setDialog For rendering a warning/error message
  *
  * @see NUM_GROUP_LIMIT in App.js
  */
-export function addGroup(num_group_limit, setGroups) {
+export function addGroup(num_group_limit, setGroups, setDialog) {
   chrome.storage.local.get("groups", (local) => {
     var current_groups = local.groups;
     var num_keys = Object.keys(current_groups).length;
@@ -411,11 +472,24 @@ export function addGroup(num_group_limit, setGroups) {
         });
       });
     } else {
-      alert(
-        `Number of groups exceeded.\n\nPlease do one of the following:
-  1. Delete a group that is no longer needed;
-  2. Merge tabs into another existing group.`
-      );
+      setDialog({
+        show: true,
+        title: "⚠ TabMerger Alert ⚠",
+        msg: (
+          <div>
+            Number of groups exceeded (more than <b>100</b>).
+            <br />
+            <br />
+            Please do <b>one</b> of the following:
+            <ul style={{ marginLeft: "25px" }}>
+              <li>Delete a group that is no longer needed;</li>
+              <li>Merge tabs into another existing group.</li>
+            </ul>
+          </div>
+        ),
+        accept_btn_text: "OK",
+        reject_btn_text: null,
+      });
     }
   });
 }
@@ -423,70 +497,123 @@ export function addGroup(num_group_limit, setGroups) {
 /**
  * Sets Chrome's local storage with an array ([null, ... url_links ...]) consisting
  * of all the tabs in TabMerger to consider for removal.
+ *
+ * @param {HTMLElement} e Representing the Open All button
+ * @param {Function} setDialog For rendering a warning/error message
  */
-export function openAllTabs() {
-  const response = window.confirm("Are you sure you want to open ALL your tabs at once?\n\nWe do not recommend opening more than 100 tabs at once as it may overload your system!"); // prettier-ignore
-  if (response) {
-    var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
-    tab_links.unshift(null);
-    chrome.storage.local.set({ remove: tab_links }, () => {});
-  }
+export function openAllTabs(e, setDialog) {
+  var element = e.target.closest("#open-all-btn");
+  var observer = new MutationObserver((mutations, observer) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type == "attributes" && element.getAttribute("response") === "positive") {
+        var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+        tab_links.unshift(null);
+        chrome.storage.local.set({ remove: tab_links }, () => {});
+      }
+    });
+    observer.disconnect();
+  });
+
+  observer.observe(element, { attributes: true });
+
+  setDialog({
+    element,
+    show: true,
+    title: "✔ TabMerger Confirmation Request ❌",
+    msg: (
+      <div>
+        Are you sure you want to open <b>ALL</b> your tabs at once?
+        <br />
+        <br></br>We do <b>not</b> recommend opening <u>more than 100 tabs</u> at once as it may overload your system!
+      </div>
+    ),
+    accept_btn_text: "YES, OPEN ALL",
+    reject_btn_text: "CANCEL",
+  });
 }
 
 /**
  * Allows the user to delete every UNLOCKED group (including tabs) inside TabMerger.
  * A default group is formed above all locked groups to allow for re-merging after deletion.
  * The default group has title & color matching settings parameter and a creation timestamp.
+ *
+ * @param {HTMLElement} e Button corresponding to the delete all operation
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setDialog For rendering the confirmation dialog
  */
-export function deleteAllGroups(setTabTotal, setGroups) {
+export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
   const scroll = document.documentElement.scrollTop;
-  const response = window.confirm("Are you sure?\n\nThis action will delete all groups/tabs that are not \"locked\".\nMake sure you have a backup!"); // prettier-ignore
-  if (response) {
-    chrome.storage.local.get(["groups", "groups_copy"], (local) => {
-      chrome.storage.sync.get("settings", (sync) => {
-        var { groups_copy, groups } = local;
-        groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups);
+  var element = e.target.closest("#delete-all-btn");
+  var observer = new MutationObserver((mutations, observer) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type == "attributes" && element.getAttribute("response") === "positive") {
+        chrome.storage.local.get(["groups", "groups_copy"], (local) => {
+          chrome.storage.sync.get("settings", (sync) => {
+            var { groups_copy, groups } = local;
+            groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups);
 
-        groups = {};
-        var locked_counter = 0;
-        document.querySelectorAll(".group-item").forEach((x) => {
-          if (x.querySelector(".tiptext-group-title").textContent.includes(translate("unlock"))) {
+            groups = {};
+            var locked_counter = 0;
+            document.querySelectorAll(".group-item").forEach((x) => {
+              if (x.querySelector(".tiptext-group-title").textContent.includes(translate("unlock"))) {
+                groups["group-" + locked_counter] = {
+                  color: x.querySelector("input[type='color']").value,
+                  created: x.querySelector(".created span").textContent,
+                  hidden: !!x.querySelector(".hidden-symbol"),
+                  locked: true,
+                  starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
+                  tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
+                    const a = tab.querySelector("a");
+                    return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
+                  }),
+                  title: x.querySelector(".title-edit-input").value,
+                };
+
+                locked_counter++;
+              }
+            });
+
             groups["group-" + locked_counter] = {
-              color: x.querySelector("input[type='color']").value,
-              created: x.querySelector(".created span").textContent,
-              hidden: !!x.querySelector(".hidden-symbol"),
-              locked: true,
-              starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
-              tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
-                const a = tab.querySelector("a");
-                return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
-              }),
-              title: x.querySelector(".title-edit-input").value,
+              color: sync.settings.color,
+              created: AppHelper.getTimestamp(),
+              hidden: false,
+              locked: false,
+              starred: false,
+              tabs: [],
+              title: sync.settings.title,
             };
 
-            locked_counter++;
-          }
+            chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
+              setTabTotal(AppHelper.updateTabTotal(groups));
+              setGroups(JSON.stringify(groups));
+            });
+          });
         });
-
-        groups["group-" + locked_counter] = {
-          color: sync.settings.color,
-          created: AppHelper.getTimestamp(),
-          hidden: false,
-          locked: false,
-          starred: false,
-          tabs: [],
-          title: sync.settings.title,
-        };
-
-        chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
-          setTabTotal(AppHelper.updateTabTotal(groups));
-          setGroups(JSON.stringify(groups));
-        });
-      });
+      }
     });
-  }
+    observer.disconnect();
+  });
+
+  observer.observe(element, { attributes: true });
+
+  setDialog({
+    element,
+    show: true,
+    title: "✔ TabMerger Confirmation Request ❌",
+    msg: (
+      <div>
+        Are you sure?
+        <br />
+        <br />
+        This action will delete <b>ALL</b> groups/tabs that are <u>not locked</u>.<br />
+        <br />
+        Make sure you have a backup!
+      </div>
+    ),
+    accept_btn_text: "YES, DELETE ALL",
+    reject_btn_text: "CANCEL",
+  });
 }
 
 /**
@@ -495,9 +622,11 @@ export function deleteAllGroups(setTabTotal, setGroups) {
  *
  * @param {Function} setGroups For re-rendering the groups after they are reset
  * @param {Function} setTabTotal For re-rendering the tab total counter
+ * @param {Function} setDialog For rendering a warning/error message
+ *
  * @note Up to 10 states are stored.
  */
-export function undoDestructiveAction(setGroups, setTabTotal) {
+export function undoDestructiveAction(setGroups, setTabTotal, setDialog) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     if (local.groups_copy.length >= 1) {
       const scroll = document.documentElement.scrollTop;
@@ -508,7 +637,19 @@ export function undoDestructiveAction(setGroups, setTabTotal) {
         setGroups(JSON.stringify(prev_group));
       });
     } else {
-      alert("There are no more states to undo");
+      setDialog({
+        show: true,
+        title: "❕ TabMerger Information ❕",
+        msg: (
+          <div>
+            There are <b>no more</b> states to undo. <br />
+            <br />
+            States are created with <u>destructive actions</u>!
+          </div>
+        ),
+        accept_btn_text: "OK",
+        reject_btn_text: null,
+      });
     }
   });
 }
@@ -615,8 +756,9 @@ export function resetSearch(e) {
  * @param {HTMLElement} e Node corresponding to the input file field
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {Function} setDialog For rendering a warning/error message
  */
-export function importJSON(e, setGroups, setTabTotal) {
+export function importJSON(e, setGroups, setTabTotal, setDialog) {
   if (e.target.files[0].type === "application/json") {
     var reader = new FileReader();
     reader.readAsText(e.target.files[0]);
@@ -635,11 +777,23 @@ export function importJSON(e, setGroups, setTabTotal) {
       });
     };
   } else {
-    alert(
-      `You must import a JSON file (.json extension)!\n
-These can be generated via the "Export JSON" button.\n\n
-Be careful, only import JSON files generated by TabMerger, otherwise you risk losing your current configuration!`
-    );
+    setDialog({
+      show: true,
+      title: <p><span style={{color: "red"}}>‼</span> TabMerger Warning <span Warning span style={{color: "red"}}>‼</span></p>, // prettier-ignore
+      msg: (
+        <div>
+          You must import a JSON file <i>(.json extension)</i>!<br />
+          <br />
+          These can be generated via the <b>Export JSON</b> button.
+          <br />
+          <br />
+          <b>Be careful</b>, <u>only import JSON files generated by TabMerger</u>, otherwise you risk losing your
+          current configuration!
+        </div>
+      ),
+      accept_btn_text: "OK",
+      reject_btn_text: null,
+    });
   }
 }
 
