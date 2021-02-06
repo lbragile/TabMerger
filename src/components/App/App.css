@@ -33,7 +33,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /* TOUR HELPER */
 .reactour__helper {
-  max-width: 550px !important;
+  max-width: 500px !important;
 }
 
 .reactour__helper img {
@@ -223,7 +223,7 @@ hr {
   }
 
   .container-fluid {
-    margin: 25px 0 !important;
+    margin: 0 !important;
   }
 
   #sidebar {

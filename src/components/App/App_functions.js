@@ -60,8 +60,7 @@ export function storageInit(default_settings, default_group, sync_node, setTour,
 
     delete sync.settings;
     chrome.storage.local.get(["groups", "tour_needed"], (local) => {
-      const tour_needed = local.tour_needed === undefined;
-      // istanbul ignore next
+      const tour_needed = !local.tour_needed && !local.groups;
       const groups = tour_needed ? TUTORIAL_GROUP : local.groups || { "group-0": default_group };
 
       chrome.storage.local.remove(["groups"], () => {

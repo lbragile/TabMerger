@@ -44,7 +44,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
 
   return (
     <div
-      className={"group-item mt-2"}
+      className={"group-item mt-2" + (hidden ? " hidden" : "") + (num_tabs > 0 ? "" : " empty")}
       draggable={true}
       onDragStart={(e) => GroupFunc.groupDragStart(e)}
       onDragEnd={(e) => GroupFunc.groupDragEnd(e, setGroups)}

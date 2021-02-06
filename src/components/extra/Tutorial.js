@@ -48,7 +48,8 @@ export const TOUR_STEPS = [
         respectively.
       </div>
     ),
-    position: [75, document.documentElement.clientHeight / 2],
+    position: "right",
+    stepInteraction: false,
   },
   {
     selector: "#logo-img",
@@ -110,6 +111,7 @@ export const TOUR_STEPS = [
       </div>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: "#print-btn",
@@ -119,13 +121,14 @@ export const TOUR_STEPS = [
         <br />
         <b>Note:</b> To have clickable links in the output PDF file, you must select "Save as PDF" for the{" "}
         <i>Destination</i> drop down in the print preview menu. We recommend checking the "Headers and footers" option
-        while unchecking the "Background graphics" option.
+        while unchecking the "Background graphics" option. Also, <i>hidden</i> <u>and</u> <i>empty</i> (no tabs inside)
+        groups are ignored during the printing process, but restored once the print preview is exited.
         <br />
         <br />
         <b>Try it now!</b>
       </div>
     ),
-    position: "bottom",
+    position: "top",
   },
   {
     selector: "#open-all-btn",
@@ -139,6 +142,7 @@ export const TOUR_STEPS = [
       </div>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: "#delete-all-btn",
@@ -148,7 +152,8 @@ export const TOUR_STEPS = [
         <br /> A default group is created at the bottom of the page to allow direct merging into it (as shown later).
       </div>
     ),
-    position: "bottom",
+    position: "top",
+    stepInteraction: false,
   },
   {
     selector: "#export-btn",
@@ -176,7 +181,7 @@ export const TOUR_STEPS = [
         in TabMerger, you won't see a difference when you upload.
       </div>
     ),
-    position: "bottom",
+    position: "top",
   },
   {
     selector: "#sync-write-btn",
@@ -206,7 +211,7 @@ export const TOUR_STEPS = [
         <b>Give it a try!</b>
       </div>
     ),
-    position: "bottom",
+    position: "top",
   },
   {
     selector: "#undo-btn",
@@ -221,6 +226,7 @@ export const TOUR_STEPS = [
       </div>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: "#add-group-btn",
@@ -240,7 +246,7 @@ export const TOUR_STEPS = [
         <b>Try clicking it!</b>
       </div>
     ),
-    position: "bottom",
+    position: "top",
   },
   {
     selector: ".group-item",
@@ -291,6 +297,7 @@ export const TOUR_STEPS = [
       </>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: ".lock-group-btn",
@@ -383,6 +390,7 @@ export const TOUR_STEPS = [
       </div>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: ".title-edit-input",
@@ -456,7 +464,7 @@ export const TOUR_STEPS = [
         <img src="https://i.imgur.com/tLKbsLS.gif" alt="TabMerger's context menu" />
       </>
     ),
-    position: [document.documentElement.clientWidth / 3, document.documentElement.clientHeight / 4],
+    position: "top",
   },
   {
     selector: ".draggable",
@@ -476,6 +484,7 @@ export const TOUR_STEPS = [
       </div>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: ".move-tab",
@@ -489,6 +498,7 @@ export const TOUR_STEPS = [
       </>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: ".a-tab",
@@ -516,7 +526,8 @@ export const TOUR_STEPS = [
         pinned/unpinned depending on the state shown in TabMerger.
       </div>
     ),
-    position: "bottom",
+    position: "right",
+    stepInteraction: false,
   },
   {
     selector: "#need-btn",
@@ -530,6 +541,7 @@ export const TOUR_STEPS = [
       </div>
     ),
     position: "bottom",
+    stepInteraction: false,
   },
   {
     selector: "#quick-btn",
@@ -598,7 +610,7 @@ export const TOUR_STEPS = [
 
 export const TUTORIAL_GROUP = {
   "group-0": {
-    color: "#a4ff91",
+    color: "#99ff99",
     created: "",
     hidden: false,
     locked: false,
@@ -625,7 +637,7 @@ export const TUTORIAL_GROUP = {
     title: "Tutorial Group A (Initially STARRED but UNLOCKED)",
   },
   "group-1": {
-    color: "#fff36b",
+    color: "#ffff99",
     created: "",
     hidden: false,
     locked: true,
@@ -652,7 +664,7 @@ export const TUTORIAL_GROUP = {
     title: "Tutorial Group B (Initially LOCKED)",
   },
   "group-2": {
-    color: "#ff756b",
+    color: "#ff9999",
     created: "",
     hidden: true,
     locked: true,

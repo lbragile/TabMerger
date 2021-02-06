@@ -24,30 +24,27 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 window.React = React;
 
-import { render, waitFor, fireEvent, act, wait } from "@testing-library/react";
+import { render, waitFor, act } from "@testing-library/react";
 
 import * as AppFunc from "../../src/components/App/App_functions";
 import * as AppHelper from "../../src/components/App/App_helpers";
 
+import * as GroupFunc from "../../src/components/Group/Group_functions";
+
 import App from "../../src/components/App/App";
 import { exportedVal } from "../__mocks__/jsonImportMock";
+import { TUTORIAL_GROUP } from "../../src/components/Extra/Tutorial";
 
 var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
 var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
-var mockSet, container, sync_node, anything;
+var mockSet, container, sync_node, anything, setBGColor;
 
-beforeEach(() => {
+beforeAll(() => {
   mockSet = jest.fn(); // mock for setState hooks
   anything = expect.anything();
-
-  container = render(<App />).container;
-  sync_node = container.querySelector("#sync-text span");
-
-  Object.keys(init_groups).forEach((key) => {
-    sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
-  });
-
-  localStorage.setItem("groups", JSON.stringify(init_groups));
+  console.error = jest.fn();
+  console.warn = jest.fn();
+  setBGColor = jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
 
   chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
   chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
@@ -56,6 +53,19 @@ beforeEach(() => {
   chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
   chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
   chromeLocalRemoveSpy = jest.spyOn(chrome.storage.local, "remove");
+
+  jest.clearAllMocks();
+});
+
+beforeEach(() => {
+  container = render(<App />).container;
+  sync_node = container.querySelector("#sync-text span");
+
+  Object.keys(init_groups).forEach((key) => {
+    sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
+  });
+
+  localStorage.setItem("groups", JSON.stringify(init_groups));
 });
 
 afterEach(() => {
@@ -128,9 +138,11 @@ describe("storageInit", () => {
   test("sync settings are null & local groups are null", () => {
     sessionStorage.clear();
     localStorage.clear();
+    localStorage.setItem("tour_needed", true);
     jest.clearAllMocks();
 
     AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
+    localStorage.removeItem("tour_needed");
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
@@ -148,6 +160,18 @@ describe("storageInit", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, groups_copy: [], scroll: 0, tour_needed: false }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(3);
+  });
+
+  test("tour is needed", () => {
+    localStorage.removeItem("groups");
+    localStorage.setItem("tour_needed", false);
+    jest.clearAllMocks();
+
+    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
+    localStorage.setItem("tour_needed", true);
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: TUTORIAL_GROUP, groups_copy: [], scroll: 0, tour_needed: true }, anything); // prettier-ignore
   });
 
   test("sync settings exist & sync group-0 is null", () => {
@@ -941,13 +965,11 @@ describe("regexSearchForTab", () => {
       `  </div>` +
       `</div>`;
 
-    var input = container.querySelector(".search-filter input");
-
     if (match !== "BACKSPACE_BLANK") {
-      fireEvent.change(input, { target: { value } });
+      AppFunc.regexSearchForTab({ target: { value } });
     } else {
-      fireEvent.change(input, { target: { value: "random" } });
-      fireEvent.change(input, { target: { value } });
+      AppFunc.regexSearchForTab({ target: { value: "random" } });
+      AppFunc.regexSearchForTab({ target: { value } });
     }
 
     const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable" : ".group-item")];

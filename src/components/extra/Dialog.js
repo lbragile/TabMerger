@@ -19,8 +19,15 @@ export default function Dialog({ element, show, title, msg, reject_btn_text, acc
   }
 
   return (
-    <Modal className="text-dark" show={show} backdrop="static" keyboard={false} centered>
-      <Modal.Header style={{ backgroundColor: "#f7f7f7" }}>
+    <Modal
+      className="text-dark"
+      show={show}
+      backdrop="static"
+      keyboard={false}
+      onHide={() => setDialog({ show: false })}
+      centered
+    >
+      <Modal.Header style={{ backgroundColor: "#f7f7f7" }} closeButton={!!title?.includes("Question")}>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{msg}</Modal.Body>

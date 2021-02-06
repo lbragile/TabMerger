@@ -53,7 +53,7 @@ export default function App() {
   /** @constant {Number} NUM_GROUP_LIMIT @default 100 (3 for testing) */
   const NUM_GROUP_LIMIT = useRef(100);
 
-  var syncTimestamp = useRef();
+  var syncTimestamp = useRef("--/--/---- @ --:--:--");
 
   /** @constant {Object} defaultGroup @default { color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" } */
   const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" }); // prettier-ignore
@@ -89,12 +89,20 @@ export default function App() {
       AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups, setDialog); // prettier-ignore
     };
 
+    function toggleHiddenOrEmptyGroups(type) {
+      document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = type === "before" ? "none" : ""));
+    }
+
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
+    window.addEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before"));
+    window.addEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after"));
 
     return () => {
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
+      window.removeEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before"));
+      window.removeEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after"));
     };
   }, []);
 
@@ -116,7 +124,7 @@ export default function App() {
 
       <Tour
         steps={TOUR_STEPS}
-        isOpen={tour}
+        isOpen={!!tour}
         onRequestClose={() => setTour(false)}
         badgeContent={(current, total) => `Step ${current}/${total}`}
         closeWithMask={false}
@@ -126,10 +134,6 @@ export default function App() {
         getCurrentStep={(step_num) => (startStep.current = step_num)}
         startAt={startStep.current}
         rounded={5}
-        /* prettier-ignore */
-        prevButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3c;</button>}
-        /* prettier-ignore */
-        nextButton={<button type="button" className="btn btn-primary text-primary font-weight-bold">&#x3e;</button>}
         lastStepNextButton={<button className="btn btn-dark">🏁</button>}
       />
 
