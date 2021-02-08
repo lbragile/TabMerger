@@ -37,9 +37,12 @@
     "test:app": "npm run test -- ./tests/App_spec/",
     "test:background": "npm run test -- ./tests/_Background_spec/",
     "test:settings": "npm run test -- ./tests/_Settings_spec/",
+    "mutate:all": "npx stryker run -m src/components/Tab/Tab_*.js,src/components/Group/Group_*.js,src/components/App/App_*.js ./config/stryker.conf.js All",
+    "mutate:tab": "npx stryker run -m src/components/Tab/Tab_*.js ./config/stryker.conf.js Tab",
     "mutate:tab-func": "npx stryker run -m src/components/Tab/Tab_functions.js ./config/stryker.conf.js",
     "mutate:tab-helper": "npx stryker run -m src/components/Tab/Tab_helpers.js ./config/stryker.conf.js",
-    "mutate:group-func": "npx stryker run -m src/components/Group/Group_functions.js ./config/stryker.conf.js",
+    "mutate:group-func": "npx stryker run -m src/components/Group/Group_functions.js ./config/stryker.conf.js Group",
+    "mutate:app": "npx stryker run -m src/components/App/App_*.js ./config/stryker.conf.js App",
     "mutate:app-func": "npx stryker run -m src/components/App/App_functions.js ./config/stryker.conf.js",
     "mutate:app-helper": "npx stryker run -m src/components/App/App_helpers.js ./config/stryker.conf.js"
   },

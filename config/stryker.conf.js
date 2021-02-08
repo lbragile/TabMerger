@@ -18,5 +18,6 @@ module.exports = {
     version: "master",
     baseUrl: "https://dashboard.stryker-mutator.io/api/reports",
     reportType: "full",
+    module: process.argv[process.argv.length - 1],
   },
 };

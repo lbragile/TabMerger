@@ -68,6 +68,6 @@ jobs:
         run: npm i
 
       - name: Stryker Mutation Testing
-        run: npm run mutate:tab-helper
+        run: npm run mutate:all
         env:
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
