@@ -64,6 +64,13 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+describe("getTimestamp", () => {
+  it("returns the correct timestamp in format dd/mm/yyyy @ hh:mm:ss", () => {
+    const result = AppHelper.getTimestamp(["11", "12", "2021", "11:11:11"]);
+    expect(result).toBe("12/11/2021 @ 11:11:11");
+  });
+});
+
 describe("toggleDarkMode", () => {
   var body, sidebar;
 

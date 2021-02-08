@@ -304,6 +304,7 @@ describe("syncWrite", () => {
 });
 
 describe("syncRead", () => {
+  var toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp");
   beforeEach(() => {
     jest.clearAllMocks();
     sessionStorage.clear();
@@ -314,6 +315,9 @@ describe("syncRead", () => {
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
+
+    expect(mockSet).not.toHaveBeenCalled();
+    expect(toggleSyncTimestampSpy).not.toHaveBeenCalled();
   });
 
   it("calls the correct functions", () => {
@@ -338,6 +342,13 @@ describe("syncRead", () => {
 
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_ss_item, scroll: 0 }, anything);
     expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], anything);
+
+    expect(toggleSyncTimestampSpy).toHaveBeenCalledTimes(1);
+    expect(toggleSyncTimestampSpy).toHaveBeenCalledWith(false, sync_node);
+
+    expect(mockSet).toHaveBeenCalledTimes(2);
+    expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(new_ss_item));
+    expect(mockSet).toHaveBeenNthCalledWith(2, AppHelper.updateTabTotal(new_ss_item));
   });
 });
 
@@ -594,14 +605,43 @@ describe("checkMerging", () => {
       if (type === "NOT") {
         expect(sessionStorage.getItem("open_tabs")).toBe(merge_setting === "merge" ? "[]" : JSON.stringify(merge_all));
       } else if (type === "SYNC" || type === "ITEM") {
-        expect(mockSetDialog.mock.calls.pop()[0]).toStrictEqual(
-          expect.objectContaining({
-            show: true,
-            title: "⚠ TabMerger Alert ⚠",
-            accept_btn_text: "OK",
-            reject_btn_text: null,
-          })
-        );
+        expect(mockSetDialog.mock.calls.pop()[0]).toStrictEqual({
+          show: true,
+          title: "⚠ TabMerger Alert ⚠",
+          msg:
+            type === "ITEM" ? (
+              <div>
+                <u>Group's</u> syncing capacity exceeded by <b>{411}</b> bytes.
+                <br />
+                <br />
+                Please do <b>one</b> of the following:
+                <ul style={{ marginLeft: "25px" }}>
+                  <li>Create a new group and merge new tabs into it;</li>
+                  <li>Remove some tabs from this group;</li>
+                  <li>
+                    Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
+                  </li>
+                </ul>
+              </div>
+            ) : (
+              <div>
+                <u>Total</u> syncing capacity exceeded by <b>{1364}</b> bytes.
+                <br />
+                <br />
+                Please do <b>one</b> of the following:
+                <ul style={{ marginLeft: "25px" }}>
+                  <li>Remove some tabs from any group;</li>
+                  <li>Delete a group that is no longer needed;</li>
+                  <li>
+                    Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
+                  </li>
+                </ul>
+                Make sure to Export JSON or PDF to have a backup copy!
+              </div>
+            ),
+          accept_btn_text: "OK",
+          reject_btn_text: null,
+        });
         expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
       }
     }
@@ -673,7 +713,7 @@ describe("openAllTabs", () => {
       `  <a class="a-tab" href="www.abc.com"/>` +
       `</div>`;
     var element = document.querySelector("#open-all-btn");
-    var stub = { target: { closest: jest.fn(() => element) } };
+    var stub = { target: { closest: (arg) => arg !== "" && element } };
 
     var expected_ls = { remove: [null, location.href + "www.abc.com"] };
 
@@ -773,7 +813,7 @@ describe("deleteAllGroups", () => {
         : { "group-0": default_group };
 
       var element = document.querySelector("#delete-all-btn");
-      var stub = { target: { closest: jest.fn(() => element) } };
+      var stub = { target: { closest: (arg) => arg !== "" && element } };
       jest.clearAllMocks();
 
       new_entry["group-" + +locked].created = AppHelper.getTimestamp();
@@ -841,6 +881,10 @@ describe("undoDestructiveAction", () => {
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0 }, anything); // prettier-ignore
+
+    expect(mockSet).toHaveBeenCalledTimes(2);
+    expect(mockSet).toHaveBeenNthCalledWith(1, AppHelper.updateTabTotal(init_groups));
+    expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(init_groups));
   });
 
   test("can NOT undo a state", () => {

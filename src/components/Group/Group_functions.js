@@ -102,7 +102,6 @@ export function setTitle(e, setGroups) {
  * Allows the user to use enter key to exit title editing mode.
  * @param {HTMLElement} e Node corresponding to the group whose title is being changed
  */
-/* istanbul ignore next */
 export function blurOnEnter(e) {
   if (e.keyCode === 13) {
     e.target.blur();

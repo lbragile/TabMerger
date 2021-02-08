@@ -184,14 +184,27 @@ describe("tabDragEnd", () => {
     TabFunc.tabDragEnd(stub, ITEM_LIMIT, mockSet, mockSet);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet.mock.calls.pop()[0]).toEqual(
-      expect.objectContaining({
-        show: true,
-        title: "⚠ TabMerger Alert ⚠",
-        accept_btn_text: "OK",
-        reject_btn_text: null,
-      })
-    );
+    expect(mockSet.mock.calls.pop()[0]).toStrictEqual({
+      show: true,
+      title: "⚠ TabMerger Alert ⚠",
+      msg: (
+        <div>
+          <u>Group's</u> syncing capacity exceeded by <b>{194}</b> bytes.
+          <br />
+          <br />
+          Please do <b>one</b> of the following:
+          <ul style={{ marginLeft: "25px" }}>
+            <li>Create a new group and merge new tabs into it;</li>
+            <li>Remove some tabs from this group;</li>
+            <li>
+              Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
+            </li>
+          </ul>
+        </div>
+      ),
+      accept_btn_text: "OK",
+      reject_btn_text: null,
+    });
   });
 });
 
@@ -201,10 +214,11 @@ describe("removeTab", () => {
     storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups) => [groups]); // prettier-ignore
     stub = {
       target: {
-        closest: () => ({
-          querySelector: () => ({ href: "https://stackoverflow.com/" }),
-          closest: () => ({ id: "group-0" }),
-        }),
+        closest: (arg) =>
+          arg !== "" && {
+            querySelector: (arg) => arg !== "" && { href: "https://stackoverflow.com/" },
+            closest: (arg) => arg !== "" && { id: "group-0" },
+          },
       },
     };
   });
@@ -242,14 +256,18 @@ describe("removeTab", () => {
     TabFunc.removeTab(stub, init_groups["group-0"].tabs, mockSet, mockSet, mockSet, mockSet);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet.mock.calls.pop()[0]).toEqual(
-      expect.objectContaining({
-        show: true,
-        title: "❕ TabMerger Information ❕",
-        accept_btn_text: "OK",
-        reject_btn_text: null,
-      })
-    );
+    expect(mockSet.mock.calls.pop()[0]).toStrictEqual({
+      show: true,
+      title: "❕ TabMerger Information ❕",
+      msg: (
+        <div>
+          This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
+          <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
+        </div>
+      ),
+      accept_btn_text: "OK",
+      reject_btn_text: null,
+    });
   });
 });
 
@@ -260,14 +278,14 @@ describe("handleTabClick", () => {
   var stub = {
     preventDefault: () => {},
     target: {
-      closest: () => ({ id: "group-0" }),
+      closest: (arg) => arg !== "" && { id: "group-0" },
       href: url,
       click: jest.fn(),
       focus: jest.fn(),
       blur: jest.fn(),
       classList: {
-        contains: (arg) => classList_arr.includes(arg),
-        add: (arg) => classList_arr.push(arg),
+        contains: (arg) => arg !== "" && classList_arr.includes(arg),
+        add: (arg) => arg !== "" && classList_arr.push(arg),
       },
     },
     button: 0,
@@ -313,7 +331,7 @@ describe("handleTabTitleChange", () => {
     stub = {
       preventDefault: jest.fn(),
       target: {
-        closest: () => ({ id: "group-0" }),
+        closest: (arg) => arg !== "" && { id: "group-0" },
         href: url,
         textContent: "AAA",
         classList: { remove: jest.fn() },
@@ -363,8 +381,7 @@ describe("handlePinClick", () => {
   beforeEach(() => {
     stub = {
       target: {
-        closest: () => ({ classList: { toggle: () => {} }, id: "group-1", previousSibling: { href: url } }),
-        classList: { contains: () => {} },
+        closest: (arg) => arg !== "" && { classList: { toggle: (arg) => arg !== "" }, id: "group-1", previousSibling: { href: url } }, // prettier-ignore
       },
     };
   });
@@ -373,7 +390,7 @@ describe("handlePinClick", () => {
     ["PINNED", "NOT", true],
     ["UNPINNED", "", false],
   ])("sets the tab to be %s when it was %s pinned", (_, __, type) => {
-    stub.target.classList = { contains: () => type };
+    stub.target.classList = { contains: (arg) => arg !== "" && type };
     var expect_groups = JSON.parse(localStorage.getItem("groups"));
     expect_groups[stub.target.closest().id].tabs[0].pinned = type;
     jest.clearAllMocks();

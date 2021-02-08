@@ -27,16 +27,17 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /**
  * Produces a timestamp which is added to newly formed groups
+ * @param {string[]?} date_arr Used in testing to inject a predefined date
  *
  * @return ```dd/mm/yyyy @ hh:mm:ss```
  */
-export function getTimestamp() {
-  var date_parts = new Date(Date.now()).toString().split(" ");
-  date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
+export function getTimestamp(date_arr) {
+  var date_parts = date_arr || new Date(Date.now()).toString().split(" ");
+  date_parts = !date_arr ? date_parts.filter((_, i) => 0 < i && i <= 4) : JSON.parse(JSON.stringify(date_arr));
 
   // dd/mm/yyyy @ hh:mm:ss
   date_parts[0] = date_parts[1] + "/";
-  date_parts[1] = ("0" + (new Date().getMonth() + 1)).slice(-2) + "/";
+  date_parts[1] = (!date_arr ? ("0" + (new Date().getMonth() + 1)).slice(-2) : date_arr[0]) + "/";
   date_parts[2] += " @ ";
 
   return date_parts.join("");

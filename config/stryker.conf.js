@@ -10,7 +10,7 @@ module.exports = {
   coverageAnalysis: "off",
   jest: { enableFindRelatedTests: false, config: require("./jest.config.js") },
   dryRunTimeoutMinutes: 1,
-  timeoutMS: 30000,
+  timeoutMS: 45 * 1000,
   timeoutFactor: 4,
   thresholds: { high: 90, low: 70, break: 50 },
   dashboard: {
@@ -18,6 +18,5 @@ module.exports = {
     version: "master",
     baseUrl: "https://dashboard.stryker-mutator.io/api/reports",
     reportType: "full",
-    module: process.argv[process.argv.length - 1],
   },
 };

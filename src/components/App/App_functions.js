@@ -369,7 +369,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
             title: "⚠ TabMerger Alert ⚠",
             msg: (
               <div>
-                `<u>Total</u> syncing capacity exceeded by <b>{sync_bytes - sync_limit}</b> bytes.
+                <u>Total</u> syncing capacity exceeded by <b>{sync_bytes - sync_limit}</b> bytes.
                 <br />
                 <br />
                 Please do <b>one</b> of the following:

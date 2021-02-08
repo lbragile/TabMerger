@@ -148,9 +148,7 @@ describe("setTitle", () => {
 
     var target_mock = {
       target: {
-        closest: jest.fn(() => {
-          return { nextSibling: { id: "group-0" } };
-        }),
+        closest: (arg) => arg !== "" && { nextSibling: { id: "group-0" } },
         nextSibling: { style: { visibility: "" } },
         value: "Chess",
       },
@@ -170,6 +168,21 @@ describe("setTitle", () => {
   });
 });
 
+describe("blurOnEnter", () => {
+  test.each([[13], [1]])("keycode === %s", (keyCode) => {
+    var stub = { target: { blur: jest.fn() }, keyCode };
+    jest.clearAllMocks();
+
+    GroupFunc.blurOnEnter(stub);
+
+    if (keyCode === 13) {
+      expect(stub.target.blur).toHaveBeenCalledTimes(1);
+    } else {
+      expect(stub.target.blur).not.toHaveBeenCalled();
+    }
+  });
+});
+
 describe("addTabFromURL", () => {
   it.each([
     ["FAIL", "www.lichess.org/", "leave"],
@@ -180,7 +193,7 @@ describe("addTabFromURL", () => {
   ])(
     "adds the tab to the correct group when URL does %s exist: %s (settings.merge === %s)",
     (type, url, merge_setting) => {
-      var stub = { target: { value: url, closest: jest.fn(() => ({ id: "group-0" })), blur: jest.fn() } };
+      var stub = { target: { value: url, closest: (arg) => arg !== "" && { id: "group-0" }, blur: jest.fn() } };
       var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
       var chromeTabsRemoveSpy = jest.spyOn(chrome.tabs, "remove");
 
@@ -211,6 +224,12 @@ describe("addTabFromURL", () => {
       jest.useFakeTimers();
       GroupFunc.addTabFromURL(stub, mockSet, mockSet, mockSet);
       jest.advanceTimersByTime(51);
+
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
       if (type === "" || type === "FAIL") {
         expect(stub.target.value).toBe("");
@@ -256,7 +275,9 @@ describe("groupDragStart", () => {
   });
   it.each([[true], [false]])("adds class to correct element - tab dragging === %s", (val) => {
     var stub = (ret_val) => ({
-      target: { closest: jest.fn((type) => (type === ".draggable" ? ret_val : document.querySelector(".group-item"))) },
+      target: {
+        closest: (arg) => (arg !== "" && arg === ".draggable" ? ret_val : document.querySelector(".group-item")),
+      },
     });
 
     GroupFunc.groupDragStart(stub(val));
@@ -268,8 +289,13 @@ describe("groupDragStart", () => {
 describe("groupDragEnd", () => {
   it.each([[true], [false]])("Drag operation is group === %s", (group_drag) => {
     const stub = {
-      preventDefault: jest.fn(),
-      target: { classList: { contains: jest.fn(() => group_drag), remove: jest.fn() } },
+      preventDefault: () => {},
+      target: {
+        classList: {
+          contains: (arg) => arg !== "" && group_drag,
+          remove: (arg) => arg !== "",
+        },
+      },
     };
 
     const expected_groups = {
@@ -293,7 +319,7 @@ describe("groupDragEnd", () => {
       },
     };
 
-    document.querySelectorAll = jest.fn((arg) => container.querySelectorAll(arg));
+    document.querySelectorAll = (arg) => container.querySelectorAll(arg);
     localStorage.setItem("groups", JSON.stringify(init_groups));
     jest.clearAllMocks();
 
@@ -318,16 +344,10 @@ describe("openGroup", () => {
 
     var stub = {
       target: {
-        closest: jest.fn(() => {
-          return {
-            nextSibling: {
-              querySelectorAll: jest.fn(() => {
-                return [{ href: "aaa" }, { href: "bbb" }];
-              }),
-              id: "group-0",
-            },
-          };
-        }),
+        closest: (arg) =>
+          arg !== "" && {
+            nextSibling: { querySelectorAll: (arg) => arg !== "" && [{ href: "aaa" }, { href: "bbb" }], id: "group-0" },
+          },
       },
     };
 
@@ -350,7 +370,7 @@ describe("deleteGroup", () => {
     ["unlocked", "group-9", undefined],
     ["unlocked", "group-0", true],
   ])("%s group | id: %s | single group === %s", (locked, group_id, single_group) => {
-    var mock_target = (group_id) => ({ target: { closest: jest.fn(() => ({ nextSibling: { id: group_id } })) } });
+    var mock_target = (group_id) => ({ target: { closest: (arg) => arg !== "" && { nextSibling: { id: group_id } } } });
 
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
@@ -415,7 +435,7 @@ describe("toggleGroup", () => {
     ["star", true],
     ["star", false],
   ])("type === %s | value === %s", (type, value) => {
-    var stub = { target: { closest: jest.fn(() => ({ nextSibling: { id: "group-0" } })) } };
+    var stub = { target: { closest: (arg) => arg !== "" && { nextSibling: { id: "group-0" } } } };
     var expect_groups = JSON.parse(localStorage.getItem("groups"));
     if (type === "visibility") {
       expect_groups[stub.target.closest().nextSibling.id].hidden = value;
@@ -442,6 +462,9 @@ describe("toggleGroup", () => {
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expect_groups, scroll: 0 }, anything);
+
+    expect(mockSet).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(mockSet.mock.calls.pop()[0])).toStrictEqual(expect_groups);
   });
 });
 
