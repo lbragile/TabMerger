@@ -41,7 +41,7 @@
     "mutate:tab-func": "npx stryker run -m src/components/Tab/Tab_functions.js ./config/stryker.conf.js",
     "mutate:group-func": "npx stryker run -m src/components/Group/Group_functions.js ./config/stryker.conf.js",
     "mutate:app-func": "npx stryker run -m src/components/App/App_functions.js ./config/stryker.conf.js",
-    "mutate:app-helper": "npx stryker run -m src/components/App/App_helpers.js ./config/stryker.conf.js"
+    "mutate:app-help": "npx stryker run -m src/components/App/App_helpers.js ./config/stryker.conf.js"
   },
   "babel": {
     "presets": [

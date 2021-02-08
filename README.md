@@ -2,11 +2,14 @@
 
 [![Coverage][Coverage]](https://app.codecov.io/gh/lbragile/TabMerger/) [![Mutation Testing][Stryker]](https://dashboard.stryker-mutator.io/reports/github.com/lbragile/TabMerger/master) [![Build][Build Status]](https://github.com/lbragile/TabMerger/actions) [![Issues][GH Issues]](https://github.com/lbragile/TabMerger/issues) [![Pull Request][GH PR]](https://github.com/lbragile/TabMerger/pulls) [![Forks][GH Forks]](https://github.com/lbragile/TabMerger) [![Stars][GH Stars]](https://github.com/lbragile/TabMerger) [![Contributors][GH Contributors]](https://github.com/lbragile/TabMerger) [![Release Date][Release Date]](https://github.com/lbragile/TabMerger/releases/) [![Last Commit][Last Commit]](https://github.com/lbragile/TabMerger/releases/) [![Commits Since Latest][Commits Since Latest]](https://github.com/lbragile/TabMerger/commits/master) [![Chrome Users][chromeUsers]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Chrome Rating][chromeRating]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Firefox Users][firefoxUsers]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Rating][firefoxRating]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Downloads][firefoxDownloads]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![YouTube Views][YouTube Views]](https://youtu.be/9eXmYE49jxA) [![YouTube Votes][YouTube Votes]](https://youtu.be/9eXmYE49jxA) [![contributions Welcome][Contributions]](https://github.com/lbragile/TabMerger) [![Docs Available][Docs]](https://lbragile.github.io/TabMerger/) [![Active Development][Maintenance]](https://github.com/lbragile/TabMerger) [![Code Size][Code Size]](https://github.com/lbragile/TabMerger/) [![License][License]](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
 
-[<img src="https://i.imgur.com/NKFtwOA.png" alt="Chrome" width="42px" height="42px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) <span style="margin: 0 10px 0 0"></span>[<img src="https://i.imgur.com/YTz727e.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) [<img src="https://i.imgur.com/YQR2RYd.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn)
+[<img src="https://i.imgur.com/NKFtwOA.png" alt="Chrome" width="42px" height="42px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) <span style="margin: 0 10px 0 0"></span>[<img src="https://i.imgur.com/YTz727e.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) [<img src="https://i.imgur.com/YQR2RYd.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn) 
+
+<a href="https://www.producthunt.com/posts/tabmerger?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-tabmerger" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=283682&theme=light" alt="TabMerger - Stores tabs to save memory and increase productivity. | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 ### Merges your tabs into one location to save memory usage and increase your productivity.
 
-[![TabMerger v1.5.0 Sample Use Case](https://i.imgur.com/0tZnkmu.gif)](https://youtu.be/zkI0T-GzmzQ)
+<a href="https://www.youtube.com/watch?v=4eCzD8a0UKI&feature=youtu.be&hd=1" target="_blank" rel="noreferrer">
+<img src="https://i.imgur.com/fqxhHhS.png" alt="TabMerger v1.6.0 New Feature Demonstration" width="100%"/></a>
 
 ## Table of Contents 📃
 1. [Description](#description-)
@@ -18,6 +21,7 @@
 7. [Test](#test-)
     - [Writing Tests](#not-sure-how-to-write-tests-)
     - [Code Coverage](#checking-your-tests-)
+    - [Mutation Testing](#mutation-testing-)
 8. [Contact](#contact-)
 9. [Donate](#donate-)
 10. [License](#license-)
@@ -39,6 +43,8 @@ Contributions are more than welcomed here, but first please refer to the [CONTRI
 Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/) | [Firefox Browser Add-ons](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn).
 
 ## Leave A Review ⭐⭐⭐⭐⭐
+
+<a href="https://www.producthunt.com/posts/tabmerger?utm_source=badge-review&utm_medium=badge&utm_souce=badge-tabmerger#discussion-body" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/review.svg?post_id=283682&theme=light" alt="TabMerger - Stores tabs to save memory and increase productivity. | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 Was TabMerger useful to you?
 If so, consider leaving a positive & meaningful review ([Chrome](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews) | [Firefox](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) | [Edge](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn))
@@ -63,7 +69,7 @@ Or in terms of files:
 
 Note that `adjust_manifest.js` simply manipulates the template manifest file in order to create the correct manifest. Namely, the keys: `incognito` and `browser_specific_settings` are modified or removed as needed per browser.
 
-Use command: `npm run build-all` to create zipped build folders for all browsers (Chrome & Edge are identical).
+Use command: `npm run build:all` to create zipped build folders for all browsers (Chrome & Edge are identical).
 
 ## Test ✅
 
@@ -78,9 +84,13 @@ Simply ask for my help as an issue or direct message prior to making a pull requ
 #### Checking Your Tests 👑
 
 Many scripts are provided to check your test scripts. For example:
-`npm run test` will check all the test scripts at once, while `npm run test-app` will only check the test scripts of the `App` component.
+`npm run test` will check all the test scripts at once, while `npm run test:app` will only check the test scripts of the `App` component.
 
 In all cases, code coverage is collected and displayed at the end of the run, as well as a detailed list of passing/failing tests is provided. Furthermore, a `<rootDir>/coverage/` folder is created to highlight important details in an HTML format (viewable on the internet). 
+
+#### Mutation Testing 🖤
+
+TabMerger also makes use of [mutation testing](https://en.wikipedia.org/wiki/Mutation_testing) using [Stryker Mutator](https://stryker-mutator.io/) which conviniently generates mutation reports through the use of our GitHub workflow scripts. However, mutation tests can take a **VERY long time** (more than 3 hours) to complete, thus to avoid them add `SKIP MUTATE` to your commit message. That being said, for you Pull Request to be accepted and merged, it <u>must</u> pass all mutation testing criteria (score **above 90%**).
 
 ## Contact 📞
 
@@ -90,14 +100,17 @@ If you have any more suggestions please send me a message on GitHub, lbragile@gm
 
 As a recent graduate during the COVID-19 pandemic, I would greatly appreciate any financial support you are able/willing to provide. Your contribution would allow me to focus on developing more useful tools like TabMerger that many users can enjoy and use in their day to day life.
 
-| [![buy me a coffee][buyCoffee]](https://www.buymeacoffee.com/lbragile)       | [![github sponsors](https://i.imgur.com/tW6vjns.png)](https://github.com/sponsors/lbragile)          | [<img src="https://i.imgur.com/3GXxHo8.png" alt="paypal" width="200px"/>](https://www.paypal.com/donate/?hosted_button_id=X3EYMX8CVA4SY&source=url)  |
-| ------------- |:-------------:| -----:|
+[![buy me a coffee][buyCoffee]](https://www.buymeacoffee.com/lbragile) [![GH Sponsor][GH Sponsor]](https://github.com/sponsors/lbragile) [![Paypal][Paypal]](https://www.paypal.com/donate/?hosted_button_id=X3EYMX8CVA4SY&source=url)  
 
 ## License 🚓
 
 TabMerger is open source and GPLv3 licensed, thus it is not intented for commercial use! However, if you would like to use TabMerger commercially, we do offer a commercial license. Simply contact TabMerger's creator/author using one of the methods desribed in the [contact](#contact-) section above.
 
 [buyCoffee]: https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=lbragile&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff
+
+[GH Sponsor]: https://i.imgur.com/tZ2e1GN.png
+
+[Paypal]: https://i.imgur.com/SRKZXfY.png
 
 <!-- Badgest -->
 [Coverage]: https://img.shields.io/codecov/c/github/lbragile/TabMerger?label=Coverage&style=flat-square&logo=codecov
@@ -115,7 +128,6 @@ TabMerger is open source and GPLv3 licensed, thus it is not intented for commerc
 [GH Stars]: https://img.shields.io/github/stars/lbragile/TabMerger?label=Stars&style=flat-square&logo=github
   
 [GH Contributors]:https://img.shields.io/github/contributors/lbragile/TabMerger?label=Contributors&logo=github&style=flat-square
-   
    
 [Release Date]: https://img.shields.io/github/release-date/lbragile/TabMerger?color=blue&label=Release%20Date&logo=github&style=flat-square
 
