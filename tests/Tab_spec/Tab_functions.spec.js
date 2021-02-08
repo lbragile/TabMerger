@@ -94,7 +94,7 @@ describe("tabDragEnd", () => {
   var stub, orig_groups;
   beforeEach(() => {
     stub = {
-      stopPropagation: jest.fn(),
+      stopPropagation: () => {},
       target: document.querySelector(".draggable"),
     };
 
@@ -133,7 +133,7 @@ describe("tabDragEnd", () => {
   });
 
   it("works for same group", () => {
-    stub.target.closest = jest.fn(() => document.querySelector("#group-0"));
+    stub.target.closest = () => document.querySelector("#group-0");
     jest.clearAllMocks();
 
     TabFunc.tabDragEnd(stub, 8000, mockSet, mockSet);
@@ -149,8 +149,7 @@ describe("tabDragEnd", () => {
   });
 
   it("works for different group", () => {
-    stub.target.closest = jest.fn(() => document.querySelector("#group-1"));
-
+    stub.target.closest = () => document.querySelector("#group-1");
     jest.clearAllMocks();
 
     TabFunc.tabDragEnd(stub, 8000, mockSet, mockSet);
@@ -174,12 +173,12 @@ describe("tabDragEnd", () => {
 
   it("fails when limit is exceeded", () => {
     var stub = {
-      stopPropagation: jest.fn(),
+      stopPropagation: () => {},
       target: container.querySelectorAll("#group-0 .draggable")[1],
     };
 
     // stub the document
-    document.getElementsByClassName = jest.fn(() => [container.querySelector(".draggable").closest(".group")]);
+    document.getElementsByClassName = () => [container.querySelector(".draggable").closest(".group")];
 
     const ITEM_LIMIT = 100;
     TabFunc.tabDragEnd(stub, ITEM_LIMIT, mockSet, mockSet);
@@ -197,9 +196,17 @@ describe("tabDragEnd", () => {
 });
 
 describe("removeTab", () => {
-  var storeDestructiveActionSpy;
+  var stub, storeDestructiveActionSpy;
   beforeEach(() => {
     storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups) => [groups]); // prettier-ignore
+    stub = {
+      target: {
+        closest: () => ({
+          querySelector: () => ({ href: "https://stackoverflow.com/" }),
+          closest: () => ({ id: "group-0" }),
+        }),
+      },
+    };
   });
 
   afterEach(() => {
@@ -212,7 +219,7 @@ describe("removeTab", () => {
     expected_groups["group-0"].tabs = expected_groups["group-0"].tabs.slice(1, 3);
     jest.clearAllMocks();
 
-    fireEvent.click(container.querySelector(".close-tab"));
+    TabFunc.removeTab(stub, init_groups["group-0"].tabs, mockSet, mockSet, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
@@ -220,19 +227,13 @@ describe("removeTab", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
 
-    expect(JSON.parse(localStorage.getItem("groups"))["group-0"].tabs).toStrictEqual(expected_groups["group-0"].tabs);
+    expect(mockSet).toHaveBeenCalledTimes(3);
+    expect(mockSet).toHaveBeenNthCalledWith(1, expected_groups["group-0"].tabs);
+    expect(mockSet).toHaveBeenNthCalledWith(2, AppHelper.updateTabTotal(expected_groups));
+    expect(mockSet).toHaveBeenNthCalledWith(3, JSON.stringify(expected_groups));
   });
 
   it("alerts if group is locked", () => {
-    var stub = {
-      target: {
-        closest: jest.fn(() => ({
-          querySelector: jest.fn(() => container.querySelector(".draggable a").href),
-          closest: jest.fn(() => ({ id: "group-0" })),
-        })),
-      },
-    };
-
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
     expected_groups["group-0"].locked = true;
     localStorage.setItem("groups", JSON.stringify(expected_groups));
@@ -257,16 +258,16 @@ describe("handleTabClick", () => {
   var classList_arr = [];
 
   var stub = {
-    preventDefault: jest.fn(),
+    preventDefault: () => {},
     target: {
-      closest: jest.fn(() => ({ id: "group-0" })),
+      closest: () => ({ id: "group-0" }),
       href: url,
       click: jest.fn(),
       focus: jest.fn(),
       blur: jest.fn(),
       classList: {
-        contains: jest.fn((arg) => classList_arr.includes(arg)),
-        add: jest.fn((arg) => classList_arr.push(arg)),
+        contains: (arg) => classList_arr.includes(arg),
+        add: (arg) => classList_arr.push(arg),
       },
     },
     button: 0,
@@ -312,12 +313,10 @@ describe("handleTabTitleChange", () => {
     stub = {
       preventDefault: jest.fn(),
       target: {
-        closest: jest.fn(() => ({ id: "group-0" })),
+        closest: () => ({ id: "group-0" }),
         href: url,
         textContent: "AAA",
-        classList: {
-          remove: jest.fn(),
-        },
+        classList: { remove: jest.fn() },
       },
       which: 0,
       keyCode: 0,
@@ -364,8 +363,8 @@ describe("handlePinClick", () => {
   beforeEach(() => {
     stub = {
       target: {
-        closest: jest.fn(() => ({ classList: { toggle: jest.fn() }, id: "group-1", previousSibling: { href: url } })),
-        classList: { contains: jest.fn() },
+        closest: () => ({ classList: { toggle: () => {} }, id: "group-1", previousSibling: { href: url } }),
+        classList: { contains: () => {} },
       },
     };
   });
@@ -374,7 +373,7 @@ describe("handlePinClick", () => {
     ["PINNED", "NOT", true],
     ["UNPINNED", "", false],
   ])("sets the tab to be %s when it was %s pinned", (_, __, type) => {
-    stub.target.classList = { contains: jest.fn(() => type) };
+    stub.target.classList = { contains: () => type };
     var expect_groups = JSON.parse(localStorage.getItem("groups"));
     expect_groups[stub.target.closest().id].tabs[0].pinned = type;
     jest.clearAllMocks();

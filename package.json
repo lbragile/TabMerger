@@ -16,6 +16,8 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "@stryker-mutator/core": "^4.4.1",
+    "@stryker-mutator/jest-runner": "^4.4.1",
     "@testing-library/react": "^11.2.2",
     "jsdoc": "^3.6.6",
     "zip-a-folder": "0.0.12"
@@ -34,7 +36,12 @@
     "test:group": "npm run test -- ./tests/Group_spec/",
     "test:app": "npm run test -- ./tests/App_spec/",
     "test:background": "npm run test -- ./tests/_Background_spec/",
-    "test:settings": "npm run test -- ./tests/_Settings_spec/"
+    "test:settings": "npm run test -- ./tests/_Settings_spec/",
+    "mutate:tab-func": "npx stryker run -m src/components/Tab/Tab_functions.js ./config/stryker.conf.js",
+    "mutate:tab-helper": "npx stryker run -m src/components/Tab/Tab_helpers.js ./config/stryker.conf.js",
+    "mutate:group-func": "npx stryker run -m src/components/Group/Group_functions.js ./config/stryker.conf.js",
+    "mutate:app-func": "npx stryker run -m src/components/App/App_functions.js ./config/stryker.conf.js",
+    "mutate:app-helper": "npx stryker run -m src/components/App/App_helpers.js ./config/stryker.conf.js"
   },
   "babel": {
     "presets": [

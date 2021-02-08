@@ -3,8 +3,14 @@ const ignore_arr = [
   "(<rootDir>/src/(components|context)/)(?!(App/App_|Group/Group_|Tab/Tab_))",
 ];
 
+// set jest or styker variables
+const jest = process.argv.some((x) => x.includes("jest"));
+const rootDir = jest ? "../" : ".";
+const roots = jest ? ["tests/"] : ["src/", "tests/"];
+
 module.exports = {
-  rootDir: "../",
+  rootDir,
+  roots,
   moduleNameMapper: {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
       "<rootDir>/tests/__mocks__/fileMock.js",
