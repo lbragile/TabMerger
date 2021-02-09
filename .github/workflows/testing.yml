@@ -44,6 +44,8 @@ jobs:
   mutation-testing:
     runs-on: windows-latest
     if: "!contains(github.event.head_commit.message, 'SKIP MUTATION')"
+    env:
+      STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 
     steps:
       - uses: actions/checkout@v2
@@ -87,6 +89,3 @@ jobs:
       - name: Stryker Mutation Testing -> APP-HELP
         if: "contains(github.event.head_commit.message, 'MUTATE APP-HELP')"
         run: npm run mutate:app-help
-
-        env:
-          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
