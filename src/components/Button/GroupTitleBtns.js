@@ -9,7 +9,7 @@ import { BiColorFill, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { VscChromeRestore } from "react-icons/vsc";
 
-export default function GroupTitleBtns({ color, hidden, locked, starred, setTabTotal, setGroups, setDialog }) {
+export default function GroupTitleBtns({ id, color, hidden, locked, starred, setTabTotal, setGroups, setDialog }) {
   const GROUP_TITLE_BUTTONS = [
     {
       classes: "move-group-btn btn-in-group-title",
@@ -69,7 +69,7 @@ export default function GroupTitleBtns({ color, hidden, locked, starred, setTabT
                   type="color"
                   defaultValue={color}
                   list="presetColors"
-                  onChange={(e) => GroupFunc.setBGColor(e)}
+                  onChange={(e) => GroupFunc.setBGColor(e, id)}
                   onBlur={() => GroupFunc.updateTextColor()}
                 />
                 <PresetColors />

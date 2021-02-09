@@ -135,6 +135,12 @@ describe("badgeIconInfo", () => {
 });
 
 describe("storageInit", () => {
+  var toggleDarkModeSpy, toggleSyncTimestampSpy;
+  beforeEach(() => {
+    toggleDarkModeSpy = jest.spyOn(AppHelper, "toggleDarkMode");
+    toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp");
+  });
+
   test("sync settings are null & local groups are null", () => {
     sessionStorage.clear();
     localStorage.clear();
@@ -160,6 +166,9 @@ describe("storageInit", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, groups_copy: [], scroll: 0, tour_needed: false }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(3);
+
+    expect(toggleDarkModeSpy).toHaveBeenCalledTimes(1);
+    expect(toggleDarkModeSpy).toHaveBeenCalledWith(true);
   });
 
   test("tour is needed", () => {
@@ -175,12 +184,18 @@ describe("storageInit", () => {
   });
 
   test("sync settings exist & sync group-0 is null", () => {
-    sessionStorage.setItem("settings", 1);
+    sessionStorage.setItem("group-0", null);
+    sessionStorage.setItem("settings", JSON.stringify({ dark: true }));
     jest.clearAllMocks();
 
     AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
+
+    expect(toggleDarkModeSpy).toHaveBeenCalledTimes(1);
+    expect(toggleDarkModeSpy).toHaveBeenCalledWith(true);
+
+    expect(toggleSyncTimestampSpy).not.toHaveBeenCalled();
   });
 
   test("sync group-0 exists & local groups exist", () => {
@@ -193,6 +208,9 @@ describe("storageInit", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0, tour_needed: false}, anything); // prettier-ignore
     expect(mockSet).toHaveBeenCalledTimes(3);
+
+    expect(toggleSyncTimestampSpy).toHaveBeenCalledTimes(1);
+    expect(toggleSyncTimestampSpy).toHaveBeenCalledWith(true, sync_node);
   });
 });
 
@@ -202,7 +220,7 @@ describe("resetTutorialChoice", () => {
     async (response) => {
       document.body.innerHTML = `<div id="need-btn" response=${response ? "negative" : "positive"}/div>`;
       var element = document.querySelector("#need-btn");
-      var stub = { target: { closest: jest.fn(() => element) } };
+      var stub = { target: { closest: (arg) => arg !== "" && element } };
       const url = "TabMerger_Site";
       const mockSetTour = jest.fn(), mockSetDialog = jest.fn(); // prettier-ignore
       global.open = jest.fn();
@@ -260,43 +278,35 @@ describe("syncWrite", () => {
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
   });
 
-  it("calls the correct functions when less groups", async () => {
-    // to simulate having to remove extras, since less groups now
-    localStorage.setItem("groups", JSON.stringify({ "group-0": init_groups["group-0"] }));
+  it.each([["less"], ["more"]])("calls the correct functions when %s groups", async (num_groups) => {
+    var toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp");
+
+    if (num_groups === "more") {
+      init_groups["group-11"] = default_group;
+      localStorage.setItem("groups", JSON.stringify(init_groups));
+    } else {
+      // to simulate having to remove extras, since less groups now
+      localStorage.setItem("groups", JSON.stringify({ "group-0": init_groups["group-0"] }));
+    }
     jest.clearAllMocks();
 
     AppFunc.syncWrite(sync_node);
 
     await waitFor(() => {
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(2);
-      expect(chromeSyncGetSpy).toHaveBeenNthCalledWith(1, "group-0", anything); // await AppHelper.updateGroupItem
-      expect(chromeSyncGetSpy).toHaveBeenNthCalledWith(2, null, anything);
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
-      expect(chromeSyncSetSpy).not.toHaveBeenCalled();
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(num_groups === "more" ? 6 : 2);
+      expect(chromeSyncGetSpy).toHaveBeenNthCalledWith(1, "group-0", anything);
+      expect(chromeSyncGetSpy).toHaveBeenNthCalledWith(num_groups === "more" ? 6 : 2, null, anything);
 
-      expect(chromeSyncRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncRemoveSpy).toHaveBeenCalledWith(Object.keys(init_groups).splice(1), anything);
-    });
-
-    expect.hasAssertions();
-  });
-
-  it("calls the correct functions when more groups", async () => {
-    init_groups["group-11"] = default_group;
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    jest.clearAllMocks();
-
-    AppFunc.syncWrite(sync_node);
-
-    await waitFor(() => {
-      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(6);
-      expect(chromeSyncGetSpy).toHaveBeenNthCalledWith(1, "group-0", anything); // await AppHelper.updateGroupItem
-      expect(chromeSyncGetSpy).toHaveBeenNthCalledWith(6, null, anything);
-
-      expect(chromeSyncSetSpy).toHaveBeenCalled();
+      num_groups === "more" ? expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1): expect(chromeSyncSetSpy).not.toHaveBeenCalled(); // prettier-ignore
 
       expect(chromeSyncRemoveSpy).toHaveBeenCalledTimes(1);
-      expect(chromeSyncRemoveSpy).toHaveBeenCalledWith([], anything);
+      expect(chromeSyncRemoveSpy).toHaveBeenCalledWith(num_groups === "more" ? [] : Object.keys(init_groups).splice(1), anything); // prettier-ignore
+
+      expect(toggleSyncTimestampSpy).toHaveBeenCalledTimes(1);
+      expect(toggleSyncTimestampSpy).toHaveBeenCalledWith(true, sync_node);
     });
 
     expect.hasAssertions();
@@ -402,6 +412,7 @@ describe("openOrRemoveTabs", () => {
     "opens the correct tab (not open) | restore = %s | %s removing | locked = %s | %s",
     (keepOrRemove, _, locked, type, expected_tabs_left) => {
       // ARRANGE
+      var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
       var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
       var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
 
@@ -449,6 +460,9 @@ describe("openOrRemoveTabs", () => {
 
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+      expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
+      expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ currentWindow: true }, anything);
 
       if (keepOrRemove === "KEEP") {
         expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -577,6 +591,9 @@ describe("checkMerging", () => {
       } else {
         AppFunc.checkMerging(stub, "local", SYNC_LIMIT, 100, mockSet, mockSet, mockSetDialog);
       }
+
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups"], anything);
@@ -1129,6 +1146,49 @@ describe("exportJSON", () => {
     expect(removeSpy).toHaveBeenCalledTimes(1);
 
     createElementMock.mockRestore();
+  });
+});
+
+describe("getTabMergerLink", () => {
+  const chrome_url = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
+  const firefox_url = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
+  const edge_url = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
+
+  const prevChrome = global.chrome;
+
+  afterAll(() => {
+    global.chrome = prevChrome;
+  });
+
+  /**
+   * Allows to change "browser" by specifying the correct userAgent string.
+   * @param {string} return_val The value which navigator.userAgent string will be set to.
+   * @return navigator.userAgent = return_val
+   */
+  function changeUserAgent(return_val) {
+    navigator.__defineGetter__("userAgent", function () {
+      return return_val;
+    });
+  }
+
+  test.each([
+    ["Edge", edge_url],
+    ["Chrome", chrome_url],
+    ["Firefox", firefox_url],
+    ["Opera", undefined],
+  ])("correctly sets the link of the TabMerger logo - %s", (browser, expect_link) => {
+    if (["Edge", "Chrome"].includes(browser)) {
+      changeUserAgent(browser === "Edge" ? "Edg" : "");
+    } else if (browser === "Firefox") {
+      global.InstallTrigger = "temp";
+    } else {
+      delete global.InstallTrigger;
+      changeUserAgent("RANDOM");
+      global.chrome = false;
+    }
+
+    expect(AppFunc.getTabMergerLink(false)).toBe(expect_link);
+    expect(AppFunc.getTabMergerLink(true)).toBe(expect_link + (browser !== "Firefox" ? "/reviews/" : ""));
   });
 });
 

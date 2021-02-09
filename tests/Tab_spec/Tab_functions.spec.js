@@ -180,8 +180,7 @@ describe("tabDragEnd", () => {
     // stub the document
     document.getElementsByClassName = () => [container.querySelector(".draggable").closest(".group")];
 
-    const ITEM_LIMIT = 100;
-    TabFunc.tabDragEnd(stub, ITEM_LIMIT, mockSet, mockSet);
+    TabFunc.tabDragEnd(stub, 100, mockSet, mockSet);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet.mock.calls.pop()[0]).toStrictEqual({
@@ -305,15 +304,27 @@ describe("handleTabClick", () => {
 
   it("focuses on item on middle click", () => {
     stub.button = 1;
+    jest.clearAllMocks();
+
     TabFunc.handleTabClick(stub);
 
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
     expect(stub.target.focus).toHaveBeenCalledTimes(1);
     expect(stub.target.focus).not.toHaveBeenCalledWith(anything);
+
+    expect(classList_arr).toEqual(["edit-tab-title"]);
   });
 
-  it("does nothing on another button click", () => {
-    stub.button = 2;
+  it.each([[true], [false]])("does nothing on another button click - contains edit-tab-title = %s", (contains) => {
+    if (contains) {
+      stub.button = 0;
+      classList_arr = ["edit-tab-title"];
+    } else {
+      stub.button = 2;
+      classList_arr = [];
+    }
+    jest.clearAllMocks();
+
     TabFunc.handleTabClick(stub);
 
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -377,11 +388,19 @@ describe("handleTabTitleChange", () => {
 describe("handlePinClick", () => {
   const url = "https://www.twitch.tv/";
 
-  var stub;
+  var stub, classList_arr;
   beforeEach(() => {
+    classList_arr = ["pinned"];
+
     stub = {
       target: {
-        closest: (arg) => arg !== "" && { classList: { toggle: (arg) => arg !== "" }, id: "group-1", previousSibling: { href: url } }, // prettier-ignore
+        classList: { contains: () => {} },
+        closest: (arg) =>
+          arg !== "" && {
+            classList: { toggle: (arg) => arg === "pinned" && classList_arr.shift() },
+            id: "group-1",
+            previousSibling: { href: url },
+          },
       },
     };
   });
@@ -390,11 +409,14 @@ describe("handlePinClick", () => {
     ["PINNED", "NOT", true],
     ["UNPINNED", "", false],
   ])("sets the tab to be %s when it was %s pinned", (_, __, type) => {
-    stub.target.classList = { contains: (arg) => arg !== "" && type };
+    stub.target.classList.contains = (arg) => arg !== "" && type;
     var expect_groups = JSON.parse(localStorage.getItem("groups"));
     expect_groups[stub.target.closest().id].tabs[0].pinned = type;
     jest.clearAllMocks();
+
     TabFunc.handlePinClick(stub, mockSet);
+
+    expect(classList_arr).toEqual([]);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);

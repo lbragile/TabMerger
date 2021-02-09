@@ -88,8 +88,7 @@ export function storageInit(default_settings, default_group, sync_node, setTour,
 
     delete sync.settings;
     chrome.storage.local.get(["groups", "tour_needed"], (local) => {
-      const tour_needed = local.tour_needed === undefined;
-      // istanbul ignore next
+      const tour_needed = !local.tour_needed &amp;&amp; !local.groups;
       const groups = tour_needed ? TUTORIAL_GROUP : local.groups || { "group-0": default_group };
 
       chrome.storage.local.remove(["groups"], () => {
@@ -118,7 +117,7 @@ export function resetTutorialChoice(e, url, setTour, setDialog) {
   var observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
       // istanbul ignore else
-      if (mutation.type == "attributes") {
+      if (mutation.type === "attributes") {
         element.getAttribute("response") === "positive" ? setTour(true) : window.open(url, "_blank", "noreferrer");
       }
     });
@@ -272,28 +271,25 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
         // try to not open tabs if it is already open
         chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
           for (var i = 0; i &lt; changes.remove.newValue.length; i++) {
-            var tab_url = changes.remove.newValue[i];
-
-            // eslint-disable-next-line
-            var tab_obj = tabs.filter((x) => x.url === tab_url)[0];
-            delete tab_obj.title;
-            // eslint-disable-next-line
-            var same_tab = AppHelper.findSameTab(windowTabs, tab_url);
-
+            const tab_url = changes.remove.newValue[i];
+            const same_tab = AppHelper.findSameTab(windowTabs, tab_url);
             if (same_tab[0] &amp;&amp; !same_tab.pinned) {
               chrome.tabs.move(same_tab[0].id, { index: -1 });
             } else {
-              chrome.tabs.create({ ...tab_obj, active: false }, () => {});
+              const tab_obj = tabs.filter((x) => x.url === tab_url)[0];
+              chrome.tabs.create({ pinned: tab_obj.pinned, url: tab_obj.url, active: false }, () => {});
             }
           }
 
           var groups = local.groups;
           if (sync.settings.restore !== "keep") {
             if (group_id) {
-              groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
+              if (!groups[group_id].locked) {
+                groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
+              }
             } else {
               Object.keys(groups).forEach((key) => {
-                groups[key].tabs = [];
+                groups[key].tabs = !groups[key].locked ? [] : groups[key].tabs;
               });
             }
 
@@ -401,7 +397,7 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
             title: "⚠ TabMerger Alert ⚠",
             msg: (
               &lt;div>
-                `&lt;u>Total&lt;/u> syncing capacity exceeded by &lt;b>{sync_bytes - sync_limit}&lt;/b> bytes.
+                &lt;u>Total&lt;/u> syncing capacity exceeded by &lt;b>{sync_bytes - sync_limit}&lt;/b> bytes.
                 &lt;br />
                 &lt;br />
                 Please do &lt;b>one&lt;/b> of the following:
@@ -533,7 +529,7 @@ export function openAllTabs(e, setDialog) {
   var element = e.target.closest("#open-all-btn");
   var observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
-      if (mutation.type == "attributes" &amp;&amp; element.getAttribute("response") === "positive") {
+      if (mutation.type === "attributes" &amp;&amp; element.getAttribute("response") === "positive") {
         var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
         tab_links.unshift(null);
         chrome.storage.local.set({ remove: tab_links }, () => {});
@@ -575,7 +571,7 @@ export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
   var element = e.target.closest("#delete-all-btn");
   var observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
-      if (mutation.type == "attributes" &amp;&amp; element.getAttribute("response") === "positive") {
+      if (mutation.type === "attributes" &amp;&amp; element.getAttribute("response") === "positive") {
         chrome.storage.local.get(["groups", "groups_copy"], (local) => {
           chrome.storage.sync.get("settings", (sync) => {
             var { groups_copy, groups } = local;
@@ -852,10 +848,8 @@ export function exportJSON() {
  *
  * @return A URL link to TabMerger's webstore (or reviews) page
  */
-/* istanbul ignore next */
 export function getTabMergerLink(reviews) {
   var link;
-  var isOpera = navigator.userAgent.indexOf(" OPR/") >= 0;
   var isFirefox = typeof InstallTrigger !== "undefined";
   var isIE = /*@cc_on!@*/ false || !!document.documentMode;
   var isEdge = !isIE &amp;&amp; !!window.StyleMedia;
@@ -866,7 +860,7 @@ export function getTabMergerLink(reviews) {
     link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {
     link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
-  } else if (isChrome || isOpera) {
+  } else if (isChrome) {
     link = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
   }
 
@@ -910,7 +904,7 @@ export function translate(msg) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Feb 04 2021 16:23:18 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Feb 08 2021 23:19:49 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

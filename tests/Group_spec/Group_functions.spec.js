@@ -59,7 +59,8 @@ beforeEach(() => {
         key={Math.random()}
       >
         <div className="draggable">
-          <a className="a-tab" href="tab_a_url">
+          <svg />
+          <a className="a-tab mx-1 text-black" href="tab_a_url">
             <span>Tab A</span>
           </a>
         </div>
@@ -73,7 +74,8 @@ beforeEach(() => {
         key={Math.random()}
       >
         <div className="draggable">
-          <a className="a-tab" href="tab_b_url">
+          <svg />
+          <a className="a-tab mx-1 text-black" href="tab_b_url">
             <span className="pinned">Tab B</span>
           </a>
         </div>
@@ -120,6 +122,41 @@ describe("setBGColor", () => {
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups }, anything);
+  });
+
+  it.each([
+    ["#00FF00", true],
+    ["#777777", true],
+    ["#FF00FF", true],
+    ["#000000", false],
+  ])("maintains bg color based on existing group bg color (%s) - exists = %s", (color, group_exists) => {
+    var stub = {
+      previousSibling: {
+        querySelector: (arg) => arg !== "" && { value: color },
+        parentNode: { children: container.querySelectorAll(".group-title, .group") },
+      },
+    };
+
+    var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    if (group_exists) {
+      expect_groups["group-0"].color = color;
+    }
+
+    jest.clearAllMocks();
+
+    GroupFunc.setBGColor(stub, group_exists ? "group-0" : "group-11");
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    if (group_exists) {
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expect_groups }, anything);
+    } else {
+      expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    }
+
+    expect(container).toMatchSnapshot();
   });
 });
 
@@ -270,13 +307,12 @@ describe("addTabFromURL", () => {
 });
 
 describe("groupDragStart", () => {
-  beforeEach(() => {
-    document.body.innerHTML = `<div class="group-item"></div>`;
-  });
   it.each([[true], [false]])("adds class to correct element - tab dragging === %s", (val) => {
+    document.body.innerHTML = `<div class="group-item"></div>`;
+
     var stub = (ret_val) => ({
       target: {
-        closest: (arg) => (arg !== "" && arg === ".draggable" ? ret_val : document.querySelector(".group-item")),
+        closest: (arg) => (arg === "" || arg === ".draggable" ? ret_val : document.querySelector(".group-item")),
       },
     });
 
@@ -288,12 +324,13 @@ describe("groupDragStart", () => {
 
 describe("groupDragEnd", () => {
   it.each([[true], [false]])("Drag operation is group === %s", (group_drag) => {
+    var classList_arr = ["dragging-group"];
     const stub = {
       preventDefault: () => {},
       target: {
         classList: {
           contains: (arg) => arg !== "" && group_drag,
-          remove: (arg) => arg !== "",
+          remove: (arg) => arg !== "" && classList_arr.shift(),
         },
       },
     };
@@ -326,6 +363,8 @@ describe("groupDragEnd", () => {
     GroupFunc.groupDragEnd(stub, mockSet);
 
     if (group_drag) {
+      expect(classList_arr).toEqual([]);
+
       expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
 

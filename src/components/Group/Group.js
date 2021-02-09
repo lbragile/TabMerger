@@ -40,7 +40,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
   const { setTabTotal, setGroups, setDialog } = useContext(AppContext);
 
   const setBGColor = useCallback((e) => GroupFunc.setBGColor(e, id), [id]);
-  useEffect(() => setBGColor(document.getElementById(id)), [id, setBGColor]);
+  useEffect(() => setBGColor(document.getElementById(id), id), [id, setBGColor]);
 
   return (
     <div
@@ -64,6 +64,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
         />
 
         <GroupTitleBtns
+          id={id}
           color={color}
           hidden={hidden}
           locked={locked}

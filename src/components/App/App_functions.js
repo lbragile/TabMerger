@@ -820,10 +820,8 @@ export function exportJSON() {
  *
  * @return A URL link to TabMerger's webstore (or reviews) page
  */
-/* istanbul ignore next */
 export function getTabMergerLink(reviews) {
   var link;
-  var isOpera = navigator.userAgent.indexOf(" OPR/") >= 0;
   var isFirefox = typeof InstallTrigger !== "undefined";
   var isIE = /*@cc_on!@*/ false || !!document.documentMode;
   var isEdge = !isIE && !!window.StyleMedia;
@@ -834,7 +832,7 @@ export function getTabMergerLink(reviews) {
     link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {
     link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
-  } else if (isChrome || isOpera) {
+  } else if (isChrome) {
     link = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
   }
 

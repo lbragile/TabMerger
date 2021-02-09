@@ -37,18 +37,15 @@ export function setBGColor(e, id) {
   const color = e.target ? e.target.value : e.previousSibling.querySelector("input[type='color']").value;
   const target = e.target ? e.target.closest(".group-title") : e.previousSibling;
 
-  if (!id) {
-    id = target.nextSibling.id;
-  }
-
-  const adjusted_text_color = color > "#777777" ? "black" : "white";
+  const threshold_passed = color > "#777777";
+  const adjusted_text_color = threshold_passed ? "black" : "white";
   [...target.parentNode.children].forEach((child) => {
     child.style.background = color;
     const selectors = ".title-edit-input, .group-count, .hidden-symbol, .btn-in-group-title svg, .color-group-btn svg, .draggable svg, .a-tab"; // prettier-ignore
     [...child.querySelectorAll(selectors)].forEach((x) => {
       if (x.classList.contains("a-tab")) {
         x.classList.value = x.classList.value.split(" ").filter((cl) => !cl.includes("text-")).join(" "); // prettier-ignore
-        x.classList.add("text-" + (adjusted_text_color === "black" ? "primary" : "light"));
+        x.classList.add("text-" + (threshold_passed ? "primary" : "light"));
       } else {
         x.style.color = adjusted_text_color;
       }
@@ -60,11 +57,11 @@ export function setBGColor(e, id) {
   });
 
   chrome.storage.local.get("groups", (local) => {
-    // istanbul ignore else
-    if (local.groups[id]) {
-      local.groups[id].color = color;
+    var groups = local.groups;
+    if (groups[id]) {
+      groups[id].color = color;
+      chrome.storage.local.set({ groups }, () => {});
     }
-    chrome.storage.local.set({ groups: local.groups }, () => {});
   });
 }
 
@@ -243,8 +240,10 @@ export function deleteGroup(e, setTabTotal, setGroups, setDialog) {
       if (!groups[target.id].locked) {
         groups_copy = storeDestructiveAction(groups_copy, groups);
 
+        delete groups[target.id];
+
         // if removed the only existing group
-        if (Object.keys(groups).length === 1) {
+        if (Object.keys(groups).length === 0) {
           groups["group-0"] = {
             color: sync.settings.color,
             created: getTimestamp(),
@@ -255,8 +254,6 @@ export function deleteGroup(e, setTabTotal, setGroups, setDialog) {
             title: sync.settings.title,
           };
         } else {
-          delete groups[target.id];
-
           // order the groups correctly
           const ordered_vals = sortByKey(groups);
           groups = {};

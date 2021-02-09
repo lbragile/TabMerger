@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-  mutator: { excludedMutations: ["ObjectLiteral", "ArithmeticOperator", "ArrayDeclaration"] },
+  // mutator: { excludedMutations: ["ObjectLiteral", "ArithmeticOperator", "ArrayDeclaration"] },
   packageManager: "npm",
   reporters: ["html", "clear-text", "progress", "dots", "dashboard", "json"],
   testRunner: "jest",

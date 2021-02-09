@@ -90,7 +90,7 @@ In all cases, code coverage is collected and displayed at the end of the run, as
 
 #### Mutation Testing 🖤
 
-TabMerger also makes use of [mutation testing](https://en.wikipedia.org/wiki/Mutation_testing) using [Stryker Mutator](https://stryker-mutator.io/) which conviniently generates mutation reports through the use of our GitHub workflow scripts. However, mutation tests can take a **VERY long time** (more than 3 hours) to complete, thus to avoid them add `SKIP MUTATE` to your commit message. That being said, for you Pull Request to be accepted and merged, it <u>must</u> pass all mutation testing criteria (score **above 90%**).
+TabMerger also makes use of [mutation testing](https://en.wikipedia.org/wiki/Mutation_testing) using [Stryker Mutator](https://stryker-mutator.io/) which conviniently generates mutation reports through the use of our GitHub workflow scripts. However, mutation tests can take a **VERY long time** (more than 3 hours) to complete, thus to avoid them add `SKIP MUTATION` to your commit message. That being said, for you Pull Request to be accepted and merged, it <u>must</u> pass all mutation testing criteria (score **above 90%**).
 
 ## Contact 📞
 
