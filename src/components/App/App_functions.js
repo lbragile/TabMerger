@@ -86,17 +86,11 @@ export function storageInit(default_settings, default_group, sync_node, setTour,
  */
 export function resetTutorialChoice(e, url, setTour, setDialog) {
   var element = e.target.closest("#need-btn");
-  var observer = new MutationObserver((mutations, observer) => {
-    mutations.forEach((mutation) => {
-      // istanbul ignore else
-      if (mutation.type === "attributes") {
-        element.getAttribute("response") === "positive" ? setTour(true) : window.open(url, "_blank", "noreferrer");
-      }
-    });
-    observer.disconnect();
+  AppHelper.elementMutationListener(element, (mutation) => {
+    if (mutation.type === "attributes") {
+      element.getAttribute("response") === "positive" ? setTour(true) : window.open(url, "_blank", "noreferrer");
+    }
   });
-
-  observer.observe(element, { attributes: true });
 
   setDialog({
     element,
@@ -130,7 +124,7 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
       if (local.groups) {
         const num_groups = Object.keys(local.groups).length;
         var color;
-        if (tabTotal >= 0 && tabTotal < STEP_SIZE) {
+        if (tabTotal < STEP_SIZE) {
           color = COLORS.green;
         } else if (tabTotal < STEP_SIZE * 2) {
           color = COLORS.yellow;
@@ -406,7 +400,6 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
  * @return If "groups" is defined - array of group components which include the correct number of tab components inside each.
  * Else - null
  */
-/* istanbul ignore next */
 export function groupFormation(groups, item_limit) {
   if (groups) {
     var parsed_groups = JSON.parse(groups);
@@ -499,18 +492,13 @@ export function addGroup(num_group_limit, setGroups, setDialog) {
  */
 export function openAllTabs(e, setDialog) {
   var element = e.target.closest("#open-all-btn");
-  var observer = new MutationObserver((mutations, observer) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
-        var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
-        tab_links.unshift(null);
-        chrome.storage.local.set({ remove: tab_links }, () => {});
-      }
-    });
-    observer.disconnect();
+  AppHelper.elementMutationListener(element, (mutation) => {
+    if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
+      var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+      tab_links.unshift(null);
+      chrome.storage.local.set({ remove: tab_links }, () => {});
+    }
   });
-
-  observer.observe(element, { attributes: true });
 
   setDialog({
     element,
@@ -541,57 +529,52 @@ export function openAllTabs(e, setDialog) {
 export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
   const scroll = document.documentElement.scrollTop;
   var element = e.target.closest("#delete-all-btn");
-  var observer = new MutationObserver((mutations, observer) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
-        chrome.storage.local.get(["groups", "groups_copy"], (local) => {
-          chrome.storage.sync.get("settings", (sync) => {
-            var { groups_copy, groups } = local;
-            groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups);
+  AppHelper.elementMutationListener(element, (mutation) => {
+    if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
+      chrome.storage.local.get(["groups", "groups_copy"], (local) => {
+        chrome.storage.sync.get("settings", (sync) => {
+          var { groups_copy, groups } = local;
+          groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups);
 
-            groups = {};
-            var locked_counter = 0;
-            document.querySelectorAll(".group-item").forEach((x) => {
-              if (x.querySelector(".tiptext-group-title").textContent.includes(translate("unlock"))) {
-                groups["group-" + locked_counter] = {
-                  color: x.querySelector("input[type='color']").value,
-                  created: x.querySelector(".created span").textContent,
-                  hidden: !!x.querySelector(".hidden-symbol"),
-                  locked: true,
-                  starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
-                  tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
-                    const a = tab.querySelector("a");
-                    return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
-                  }),
-                  title: x.querySelector(".title-edit-input").value,
-                };
+          groups = {};
+          var locked_counter = 0;
+          document.querySelectorAll(".group-item").forEach((x) => {
+            if (x.querySelector(".tiptext-group-title").textContent.includes(translate("unlock"))) {
+              groups["group-" + locked_counter] = {
+                color: x.querySelector("input[type='color']").value,
+                created: x.querySelector(".created span").textContent,
+                hidden: !!x.querySelector(".hidden-symbol"),
+                locked: true,
+                starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
+                tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
+                  const a = tab.querySelector("a");
+                  return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
+                }),
+                title: x.querySelector(".title-edit-input").value,
+              };
 
-                locked_counter++;
-              }
-            });
+              locked_counter++;
+            }
+          });
 
-            groups["group-" + locked_counter] = {
-              color: sync.settings.color,
-              created: AppHelper.getTimestamp(),
-              hidden: false,
-              locked: false,
-              starred: false,
-              tabs: [],
-              title: sync.settings.title,
-            };
+          groups["group-" + locked_counter] = {
+            color: sync.settings.color,
+            created: AppHelper.getTimestamp(),
+            hidden: false,
+            locked: false,
+            starred: false,
+            tabs: [],
+            title: sync.settings.title,
+          };
 
-            chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
-              setTabTotal(AppHelper.updateTabTotal(groups));
-              setGroups(JSON.stringify(groups));
-            });
+          chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
+            setTabTotal(AppHelper.updateTabTotal(groups));
+            setGroups(JSON.stringify(groups));
           });
         });
-      }
-    });
-    observer.disconnect();
+      });
+    }
   });
-
-  observer.observe(element, { attributes: true });
 
   setDialog({
     element,
@@ -736,7 +719,6 @@ export function regexSearchForTab(e) {
  *
  * @note The timeout is added to allow operations like opening a tab
  */
-/* istanbul ignore next */
 export function resetSearch(e) {
   setTimeout(() => {
     e.target.value = "";

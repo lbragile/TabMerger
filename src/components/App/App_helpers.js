@@ -227,3 +227,21 @@ export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15
 
   return groups_copy;
 }
+
+/**
+ * Certain actions require user confirmation. In such cases an element (the button which was pressed) is assigned a new attribute
+ * which holds the user's response - mutation. This function listens for this mutation and responds accordingly.
+ *
+ * @param {HTMLElement} element The button which was pressed
+ * @param {Function} cb Corresponding action if a mutation is detected on the element
+ */
+export function elementMutationListener(element, cb) {
+  var observer = new MutationObserver((mutations, observer) => {
+    mutations.forEach((mutation) => {
+      cb(mutation);
+    });
+    observer.disconnect();
+  });
+
+  observer.observe(element, { attributes: true, childList: false, subtree: false });
+}

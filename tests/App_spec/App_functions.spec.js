@@ -32,6 +32,9 @@ import * as AppHelper from "../../src/components/App/App_helpers";
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 
 import App from "../../src/components/App/App";
+import Group from "../../src/components/Group/Group";
+import Tab from "../../src/components/Tab/Tab";
+
 import { exportedVal } from "../__mocks__/jsonImportMock";
 import { TUTORIAL_GROUP } from "../../src/components/Extra/Tutorial";
 
@@ -57,20 +60,25 @@ describe("badgeIconInfo", () => {
   const COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
 
   test.each([
-    [1, COLORS.green, false],
-    [20, COLORS.green, false],
-    [40, COLORS.yellow, false],
-    [60, COLORS.orange, false],
-    [80, COLORS.red, false],
-    [80, COLORS.red, true],
-  ])("color, text, and title are correct for %s tabs", (num_tabs, color, one_group) => {
-    const expected_title = `You currently have ${num_tabs} ${num_tabs === 1 ? "tab" : "tabs"} in ${one_group ? 1 + " group" : 4 + " groups"}`; // prettier-ignore
-    const expected_text = `${num_tabs}|${one_group ? 1 : 4}`;
+    [0, COLORS.green, false, false],
+    [0, COLORS.green, false, true],
+    [1, COLORS.green, false, false],
+    [20, COLORS.green, false, false],
+    [25, COLORS.yellow, false, false],
+    [40, COLORS.yellow, false, false],
+    [50, COLORS.orange, false, false],
+    [60, COLORS.orange, false, false],
+    [75, COLORS.red, false, false],
+    [80, COLORS.red, false, true],
+    [80, COLORS.red, true, false],
+  ])("color, text, and title are correct for %s tabs", (num_tabs, color, one_group, display) => {
+    const expected_text = display && num_tabs > 0 ? `${num_tabs}|${one_group ? 1 : 4}` : "";
+    const expected_title = num_tabs > 0 ? `You currently have ${num_tabs} ${num_tabs === 1 ? "tab" : "tabs"} in ${one_group ? 1 + " group" : 4 + " groups"}`: "Merge your tabs into groups"; // prettier-ignore
 
     if (one_group) {
       localStorage.setItem("groups", JSON.stringify({ "group-0": default_group }));
     }
-
+    sessionStorage.setItem("settings", JSON.stringify({ badgeInfo: display ? "display" : "hide" }));
     jest.clearAllMocks();
 
     AppFunc.badgeIconInfo(num_tabs);
@@ -184,7 +192,10 @@ describe("storageInit", () => {
 });
 
 describe("resetTutorialChoice", () => {
-  it.each([[true], [false]])(
+  var elementMutationListenerSpy;
+  afterAll(() => elementMutationListenerSpy.mockRestore());
+
+  it.each([[true], [false], [null]])(
     "sets the tour state properly or opens official homepage correctly - response === %s",
     async (response) => {
       document.body.innerHTML = `<div id="need-btn" response=${response ? "negative" : "positive"}/div>`;
@@ -194,8 +205,19 @@ describe("resetTutorialChoice", () => {
       const mockSetTour = jest.fn(), mockSetDialog = jest.fn(); // prettier-ignore
       global.open = jest.fn();
 
+      // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
+      if (response === null) {
+        elementMutationListenerSpy = jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
+          var mutation = {};
+          mutation.type = { attributes: false, childList: true, subtree: false };
+          cb(mutation);
+        });
+      }
+
       AppFunc.resetTutorialChoice(stub, url, mockSetTour, mockSetDialog);
-      element.setAttribute("response", response ? "positive" : "negative");
+      if (response !== null) {
+        element.setAttribute("response", response ? "positive" : "negative");
+      }
 
       expect(mockSetDialog).toHaveBeenCalledWith({
         element,
@@ -218,13 +240,16 @@ describe("resetTutorialChoice", () => {
         if (element.getAttribute("response") === "positive") {
           expect(mockSetTour).toHaveBeenCalledWith(true);
           expect(open).not.toHaveBeenCalled();
-        } else {
+        } else if (response !== null) {
           expect(mockSetTour).not.toHaveBeenCalled();
           expect(open).toHaveBeenCalledWith(url, "_blank", "noreferrer");
+        } else {
+          expect(mockSetTour).not.toHaveBeenCalled();
+          expect(open).not.toHaveBeenCalled();
         }
       });
 
-      expect.assertions(response ? 4 : 5);
+      expect.assertions(response ? 4 : response === false ? 5 : 3);
     }
   );
 });
@@ -249,8 +274,9 @@ describe("syncWrite", () => {
 
   it.each([["less"], ["more"]])("calls the correct functions when %s groups", async (num_groups) => {
     if (num_groups === "more") {
-      init_groups["group-11"] = default_group;
-      localStorage.setItem("groups", JSON.stringify(init_groups));
+      var current_groups = JSON.parse(localStorage.getItem("groups"));
+      current_groups["group-4"] = default_group;
+      localStorage.setItem("groups", JSON.stringify(current_groups));
     } else {
       // to simulate having to remove extras, since less groups now
       localStorage.setItem("groups", JSON.stringify({ "group-0": init_groups["group-0"] }));
@@ -596,7 +622,7 @@ describe("checkMerging", () => {
               </div>
             ) : (
               <div>
-                <u>Total</u> syncing capacity exceeded by <b>{1363}</b> bytes.
+                <u>Total</u> syncing capacity exceeded by <b>{1247}</b> bytes.
                 <br />
                 <br />
                 Please do <b>one</b> of the following:
@@ -619,13 +645,106 @@ describe("checkMerging", () => {
   );
 });
 
+describe("groupFormation", () => {
+  it("returns null when group is undefined", () => {
+    const result = AppFunc.groupFormation(undefined, ITEM_LIMIT);
+
+    expect(result).toBeNull();
+  });
+
+  it.each([
+    ["start", 15],
+    ["middle", 15],
+    ["end", 15],
+    ["start", 10],
+    [null, 4],
+  ])(
+    "return the correct group components when inputs are defined - defaults exist = %s (num_groups = %s)",
+    (defaults_available, num_groups) => {
+      Math.random = jest.fn(() => 0.5);
+      var result, current_groups;
+      if (num_groups >= 10) {
+        current_groups = JSON.parse(localStorage.getItem("groups"));
+        for (var i = 4; i < num_groups; i++) {
+          var new_default_group = JSON.parse(JSON.stringify(default_group));
+          if (defaults_available === "start") {
+            new_default_group.title = "start";
+            new_default_group.color = "#777777";
+            new_default_group.created = "11/11/2011 @ 12:12:12";
+            new_default_group.tabs = [1];
+            new_default_group.name = null;
+          } else if (defaults_available === "middle") {
+            new_default_group.title = null;
+            new_default_group.name = "middle";
+          } else {
+            new_default_group.title = null;
+            new_default_group.name = null;
+            new_default_group.color = null;
+          }
+          current_groups["group-" + i] = new_default_group;
+        }
+      } else {
+        current_groups = JSON.parse(JSON.stringify(init_groups));
+      }
+      result = AppFunc.groupFormation(JSON.stringify(current_groups), ITEM_LIMIT);
+
+      const expected_result = [
+        /* prettier-ignore */
+        <Group id="group-0" title="Chess" color="#d6ffe0" created="11/12/2020 @ 22:13:24" num_tabs={3} hidden={false} locked={false} starred={false} key={Math.random()}>
+          <Tab id="group-0" item_limit={8000}hidden={false} textColor="primary" />
+        </Group>,
+        /* prettier-ignore */
+        <Group id="group-1" title="Social" color="#c7eeff" created="11/12/2020 @ 22:15:11" num_tabs={2} hidden={false} locked={false} starred={false} key={Math.random()}>
+          <Tab id="group-1" item_limit={8000} hidden={false} textColor="primary" />
+        </Group>,
+        /* prettier-ignore */
+        <Group id="group-2" title={num_groups > 10 ? "B" : "A"} color={num_groups > 10 ? "#456456" : "#123123"} created={num_groups > 10 ? "10/09/2021 @ 12:11:10" : "01/01/2021 @ 12:34:56"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}>
+          <Tab id="group-2" item_limit={8000} hidden={false} textColor="light" />
+        </Group>,
+        /* prettier-ignore */
+        <Group id="group-3" title={num_groups > 10 ? "A" : "B"} color={num_groups > 10 ? "#123123" : "#456456"} created={num_groups > 10 ? "01/01/2021 @ 12:34:56" : "10/09/2021 @ 12:11:10"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}> 
+          <Tab id="group-3" item_limit={8000} hidden={false} textColor="light" />
+        </Group>,
+      ];
+
+      if (num_groups >= 10) {
+        for (var i = 4; i < num_groups; i++) {
+          expected_result.push(
+            <Group
+              id={"group-" + i}
+              title={defaults_available !== "end" ? defaults_available : "Title"}
+              color={defaults_available === "start" ? "#777777" : "#dedede"}
+              created={defaults_available === "start" ? "11/11/2011 @ 12:12:12" : AppHelper.getTimestamp()}
+              num_tabs={defaults_available === "start" ? 1 : 0}
+              hidden={false}
+              locked={false}
+              starred={false}
+              key={Math.random()}
+            >
+              <Tab
+                id={"group-" + i}
+                item_limit={8000}
+                hidden={false}
+                textColor={["start", "end"].includes(defaults_available) ? "light" : "primary"}
+              />
+            </Group>
+          );
+        }
+      }
+
+      expect(result.length).toBe(num_groups);
+      expect(JSON.stringify(result)).toBe(JSON.stringify(expected_result));
+    }
+  );
+});
+
 describe("addGroup", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("warns if group limit exceeded", () => {
-    AppFunc.addGroup(1, mockSet, mockSet);
+  it.each([[1], [4]])("warns if group limit exceeded", (NUM_GROUP_LIMIT) => {
+    AppFunc.addGroup(NUM_GROUP_LIMIT, mockSet, mockSet);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet.mock.calls.pop()[0]).toEqual({
@@ -657,10 +776,9 @@ describe("addGroup", () => {
   it("adjusts the groups if limit is not exceeded", () => {
     Object.defineProperty(document.body, "scrollHeight", { writable: true, configurable: true, value: 1000 });
 
-    delete init_groups["group-11"];
     localStorage.setItem("groups", JSON.stringify(init_groups));
 
-    var groups = init_groups;
+    var groups = JSON.parse(JSON.stringify(init_groups));
     default_group.created = AppHelper.getTimestamp();
     groups["group-4"] = default_group;
 
@@ -742,7 +860,10 @@ describe("deleteAllGroups", () => {
     reject_btn_text: "CANCEL",
   });
 
-  it.each([[true], [false]])(
+  var elementMutationListenerSpy;
+  afterAll(() => elementMutationListenerSpy.mockRestore());
+
+  it.each([[true], [false], [null]])(
     "adjusts local storage to only have locked group and default group underneath if user accepts - groups locked = %s",
     async (locked) => {
       document.body.innerHTML =
@@ -785,31 +906,56 @@ describe("deleteAllGroups", () => {
 
       var element = document.querySelector("#delete-all-btn");
       var stub = { target: { closest: (arg) => arg !== "" && element } };
-      jest.clearAllMocks();
+
+      // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
+      if (locked === null) {
+        elementMutationListenerSpy = jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
+          var mutation = {};
+          mutation.type = { attributes: false, childList: true, subtree: false };
+          cb(mutation);
+        });
+      }
 
       new_entry["group-" + +locked].created = AppHelper.getTimestamp();
+      jest.clearAllMocks();
+
       AppFunc.deleteAllGroups(stub, mockSet, mockSet, mockSet);
-      element.setAttribute("response", "positive"); // cause mutation change on element
+      if (locked !== null) {
+        element.setAttribute("response", "positive"); // cause mutation change on element
+      }
 
       // helps prevent flaky tests
       const new_timestamp = AppHelper.getTimestamp();
       if (new_entry["group-" + +locked].created !== new_timestamp) {
         new_entry["group-" + +locked].created = new_timestamp;
       }
-      expected_groups["group-4"].created = JSON.parse(localStorage.getItem("groups"))["group-4"].created;
 
-      await waitFor(() => {
-        expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-        expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+      if (locked !== null) {
+        await waitFor(() => {
+          expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+          expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
 
-        expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-        expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
+          expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+          expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
-        expect(mockSet).toHaveBeenCalledTimes(3);
-        expect(mockSet).toHaveBeenNthCalledWith(1, dialogObj(element));
-        expect(mockSet).toHaveBeenNthCalledWith(2, +locked);
-        expect(mockSet).toHaveBeenNthCalledWith(3, JSON.stringify(new_entry));
-      });
+          expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+          expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: new_entry, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
+
+          expect(mockSet).toHaveBeenCalledTimes(3);
+          expect(mockSet).toHaveBeenNthCalledWith(1, dialogObj(element));
+          expect(mockSet).toHaveBeenNthCalledWith(2, +locked);
+          expect(mockSet).toHaveBeenNthCalledWith(3, JSON.stringify(new_entry));
+        });
+      } else {
+        await waitFor(() => {
+          expect(chromeLocalGetSpy).not.toHaveBeenCalled();
+          expect(chromeSyncGetSpy).not.toHaveBeenCalled();
+          expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+
+          expect(mockSet).toHaveBeenCalledTimes(1);
+          expect(mockSet).toHaveBeenCalledWith(dialogObj(element));
+        });
+      }
 
       expect.hasAssertions();
     }
@@ -992,6 +1138,18 @@ describe("regexSearchForTab", () => {
   });
 });
 
+describe("resetSearch", () => {
+  it("calls timeout and resets the target's value before calling regexSearchForTab", () => {
+    var stub = { target: { value: "NOT EMPTY" } };
+    jest.useFakeTimers();
+
+    AppFunc.resetSearch(stub);
+    jest.advanceTimersByTime(101);
+
+    expect(stub.target.value).toBe("");
+  });
+});
+
 describe("importJSON", () => {
   it("alerts on wrong non json input", () => {
     global.alert = jest.fn();
@@ -1108,10 +1266,12 @@ describe("getTabMergerLink", () => {
   const firefox_url = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
   const edge_url = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
 
+  console.error = jest.fn(); // will get error that chrome.storage cannot be called since chrome is set to undefined, but this is expected in this test
   const prevChrome = chrome;
 
   afterAll(() => {
     chrome = prevChrome;
+    console.error.restoreMock();
   });
 
   /**
