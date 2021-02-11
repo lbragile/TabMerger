@@ -24,10 +24,24 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { getFavIconURL } from "../../src/components/Tab/Tab_helpers";
 
 describe("getFavIconURL", () => {
+  const base = "http://www.google.com/s2/favicons?domain=";
   it("returns the API call with just domain name", () => {
-    var base = "http://www.google.com/s2/favicons?domain=";
     var url = "https://www.google.com/";
     var domain = "www.google.com";
     expect(getFavIconURL(url)).toBe(base + domain);
+
+    url = "http://www.google.com/";
+    expect(getFavIconURL(url)).toBe(base + domain);
+
+    url = "http://www.google.com";
+    expect(getFavIconURL(url)).toBe(base + domain);
+  });
+
+  it("return null if pattern doesn't match", () => {
+    var url = "chrome://www.google.com/";
+    expect(getFavIconURL(url)).toBe(base + null);
+
+    url = "xhttp://www.google.com/";
+    expect(getFavIconURL(url)).toBe(base + null);
   });
 });

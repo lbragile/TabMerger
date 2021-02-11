@@ -140,7 +140,6 @@ export async function contextMenuOrShortCut(info, tab) {
  *
  */
 // was tested in App component but need here to avoid import outside module
-/* istanbul ignore next */
 export function translate(msg) {
   try {
     return chrome.i18n.getMessage(msg);

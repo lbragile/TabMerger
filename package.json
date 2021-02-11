@@ -37,11 +37,20 @@
     "test:app": "npm run test -- ./tests/App_spec/",
     "test:background": "npm run test -- ./tests/_Background_spec/",
     "test:settings": "npm run test -- ./tests/_Settings_spec/",
-    "mutate:all": "npx stryker run -m src/components/Tab/Tab_functions.js,src/components/Group/Group_functions.js,src/components/App/App_*.js ./config/stryker.conf.js",
+    "mutate": "npx stryker run -m src/components/Tab/Tab_*.js,src/components/Group/Group_*.js,src/components/App/App_*.js,public/Background/background_*.js,public/settings/settings_*.js ./config/stryker.conf.js",
+    "mutate:tab": "npx stryker run -m src/components/Tab/Tab_*.js ./config/stryker.conf.js",
+    "mutate:tab-help": "npx stryker run -m src/components/Tab/Tab_helpers.js ./config/stryker.conf.js",
     "mutate:tab-func": "npx stryker run -m src/components/Tab/Tab_functions.js ./config/stryker.conf.js",
-    "mutate:group-func": "npx stryker run -m src/components/Group/Group_functions.js ./config/stryker.conf.js",
+    "mutate:group": "npx stryker run -m src/components/Group/Group_*.js ./config/stryker.conf.js",
+    "mutate:app": "npx stryker run -m src/components/App/App_*.js ./config/stryker.conf.js",
+    "mutate:app-help": "npx stryker run -m src/components/App/App_helpers.js ./config/stryker.conf.js",
     "mutate:app-func": "npx stryker run -m src/components/App/App_functions.js ./config/stryker.conf.js",
-    "mutate:app-help": "npx stryker run -m src/components/App/App_helpers.js ./config/stryker.conf.js"
+    "mutate:background": "npx stryker run -m public/Background/background_*.js ./config/stryker.conf.js",
+    "mutate:background-help": "npx stryker run -m public/Background/background_helpers.js ./config/stryker.conf.js",
+    "mutate:background-func": "npx stryker run -m public/Background/background_functions.js ./config/stryker.conf.js",
+    "mutate:settings": "npx stryker run -m public/settings/settings_*.js ./config/stryker.conf.js",
+    "mutate:settings-help": "npx stryker run -m public/settings/settings_helpers.js ./config/stryker.conf.js",
+    "mutate:settings-func": "npx stryker run -m public/settings/settings_functions.js ./config/stryker.conf.js"
   },
   "babel": {
     "presets": [

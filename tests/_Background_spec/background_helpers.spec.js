@@ -26,19 +26,7 @@ window.React = React;
 
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
 
-var mockSet, anything;
-var chromeSyncGetSpy, chromeSyncSetSpy, chromeLocalGetSpy, chromeLocalSetSpy, chromeTabsQuerySpy;
-
-beforeAll(() => {
-  mockSet = jest.fn();
-  anything = expect.anything();
-
-  chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
-  chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-  chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
-  chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
-});
+const anything = expect.anything();
 
 describe("filterTabs", () => {
   const merge_tabs = [
@@ -140,16 +128,8 @@ describe("filterTabs", () => {
 });
 
 describe("findExtTabAndSwitch", () => {
-  var chromeTabsUpdateSpy, chromeTabsCreateSpy, chromeTabsOnUpdatedAdd, chromeTabsOnUpdatedRemove;
   const expected_query = { title: "TabMerger", currentWindow: true };
   const id = 99;
-
-  beforeAll(() => {
-    chromeTabsUpdateSpy = jest.spyOn(chrome.tabs, "update");
-    chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create");
-    chromeTabsOnUpdatedAdd = jest.spyOn(chrome.tabs.onUpdated, "addListener");
-    chromeTabsOnUpdatedRemove = jest.spyOn(chrome.tabs.onUpdated, "removeListener");
-  });
 
   beforeEach(() => {
     jest.clearAllMocks();

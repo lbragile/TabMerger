@@ -27,39 +27,30 @@ window.React = React;
 import * as SettingsFunc from "../../public/settings/settings_functions.js";
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 
-var mockSet, anything;
-var chromeSyncGetSpy, chromeSyncSetSpy, chromeLocalGetSpy, chromeLocalSetSpy, chromeTabsQuerySpy;
-
-beforeAll(() => {
-  mockSet = jest.fn();
-  anything = expect.anything();
-
-  chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
-  chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-  chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
-  chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
-});
+const anything = expect.anything();
 
 describe("restoreOptions", () => {
-  var expected_sync = { badgeIcon: "display", blacklist: "Not TabMerger", color: "#111111", dark: false, merge: "merge", open: "with", pin: "include", restore: "remove", title: "Random" }; // prettier-ignore
-  document.body.innerHTML =
-    `<div><hr/><code></code></div>` +
-    `<input id="options-default-color"></input>` +
-    `<input id="options-default-title"></input>` +
-    `<input name="restore-tabs" value="keep" checked></input>` +
-    `<input name="restore-tabs" value="remove"></input>` +
-    `<input name="ext-open" value="without" checked></input>` +
-    `<input name="ext-open" value="with"></input>` +
-    `<input name="pin-tabs" value="include" checked></input>` +
-    `<input name="pin-tabs" value="avoid"></input>` +
-    `<input name="badge-view" value="display" checked></input>` +
-    `<input name="badge-view" value="hide"></input>` +
-    `<input name="merge-tabs" value="merge" checked></input>` +
-    `<input name="merge-tabs" value="leave"></input>` +
-    `<input id="darkMode"></input>` +
-    `<nav></nav>` +
-    `<textarea id="options-blacklist"></textarea>`;
+  var expected_sync = { badgeInfo: "display", blacklist: "Not TabMerger", color: "#111111", dark: false, merge: "merge", open: "with", pin: "include", restore: "remove", title: "Random" }; // prettier-ignore
+
+  beforeEach(() => {
+    document.body.innerHTML =
+      `<div><hr/><code></code></div>` +
+      `<input type="color" id="options-default-color"></input>` +
+      `<input type="text" id="options-default-title"></input>` +
+      `<input type="radio" name="restore-tabs" value="keep"></input>` +
+      `<input type="radio" name="restore-tabs" value="remove"></input>` +
+      `<input type="radio" name="ext-open" value="without"></input>` +
+      `<input type="radio" name="ext-open" value="with"></input>` +
+      `<input type="radio" name="pin-tabs" value="include"></input>` +
+      `<input type="radio" name="pin-tabs" value="avoid"></input>` +
+      `<input type="radio" name="badge-view" value="display"></input>` +
+      `<input type="radio" name="badge-view" value="hide"></input>` +
+      `<input type="radio" name="merge-tabs" value="merge"></input>` +
+      `<input type="radio" name="merge-tabs" value="leave"></input>` +
+      `<input type="checkbox" id="darkMode"></input>` +
+      `<nav></nav>` +
+      `<textarea id="options-blacklist"></textarea>`;
+  });
 
   it.each([
     [true, "empty"],
@@ -79,9 +70,7 @@ describe("restoreOptions", () => {
     var setTabMergerLinkSpy = jest.spyOn(SettingsHelper, "setTabMergerLink").mockImplementation(() => {});
     var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
 
-    document.querySelector("#darkMode").addEventListener = jest.fn((_, cb) => {
-      cb();
-    });
+    document.querySelector("#darkMode").addEventListener = jest.fn((_, cb) => cb());
 
     Object.defineProperty(window, "location", {
       writable: true,
@@ -91,6 +80,22 @@ describe("restoreOptions", () => {
     jest.clearAllMocks();
 
     SettingsFunc.restoreOptions();
+
+    expect([...document.querySelectorAll("input[name='badge-view']")].map((x) => x.checked)).toEqual([true, false]);
+    expect([...document.querySelectorAll("input[name='ext-open']")].map((x) => x.checked)).toEqual(settings === "empty" ? [true, false] : [false,true]); // prettier-ignore
+    expect([...document.querySelectorAll("input[name='merge-tabs']")].map((x) => x.checked)).toEqual([true, false]);
+    expect([...document.querySelectorAll("input[name='pin-tabs']")].map((x) => x.checked)).toEqual([true, false]);
+    expect([...document.querySelectorAll("input[name='restore-tabs']")].map((x) => x.checked)).toEqual(settings === "empty" ? [true, false] : [false,true]); // prettier-ignore
+    expect(document.getElementById("options-blacklist").value).toBe(settings === "empty" ? "" : "Not TabMerger");
+    expect(document.getElementById("options-default-color").value).toBe(settings === "empty" ? "#dedede" : "#111111");
+    expect(document.getElementById("options-default-title").value).toBe(settings === "empty" ? "Title" : "Random");
+
+    const ss_dark = test_dark || settings === "empty";
+    expect(document.body.style._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "white");
+    expect(document.body.style._values.color).toBe(ss_dark ? "white" : "black");
+    expect(document.querySelector("code").style._values.color).toBe(ss_dark ? "white" : "black");
+    expect(document.querySelector("code").style._values.border).toBe("1px solid " + (ss_dark ? "white" : "black")); // prettier-ignore
+    expect(document.querySelector("nav").style._values.background).toBe(ss_dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)"); // prettier-ignore
 
     expect(setTabMergerLinkSpy).toHaveBeenCalledTimes(1);
     expect(setTabMergerLinkSpy).not.toHaveBeenCalledWith(anything);
@@ -103,6 +108,8 @@ describe("restoreOptions", () => {
 
     expect(location.reload).toHaveBeenCalledTimes(1);
     expect(location.reload).not.toHaveBeenCalledWith(anything);
+
+    expect(document.querySelector("#darkMode").addEventListener).toHaveBeenCalledWith("change", anything);
 
     // restore all mocks
     setTabMergerLinkSpy.mockRestore();
@@ -117,7 +124,6 @@ describe("saveOptions", () => {
     var stub = { target: { classList: { replace: jest.fn() }, innerText: "", disabled: null } };
 
     var classListSpy = jest.spyOn(stub.target.classList, "replace");
-
     var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
 
     sessionStorage.setItem("settings", JSON.stringify(default_settings));

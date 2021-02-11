@@ -35,26 +35,11 @@ import App from "../../src/components/App/App";
 import { exportedVal } from "../__mocks__/jsonImportMock";
 import { TUTORIAL_GROUP } from "../../src/components/Extra/Tutorial";
 
-var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
-var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
-var mockSet, container, sync_node, anything, setBGColor;
+var container, sync_node;
+const anything = expect.anything();
 
 beforeAll(() => {
-  mockSet = jest.fn(); // mock for setState hooks
-  anything = expect.anything();
-  console.error = jest.fn();
-  console.warn = jest.fn();
-  setBGColor = jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
-
-  chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
-  chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeSyncRemoveSpy = jest.spyOn(chrome.storage.sync, "remove");
-
-  chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
-  chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-  chromeLocalRemoveSpy = jest.spyOn(chrome.storage.local, "remove");
-
-  jest.clearAllMocks();
+  jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
 });
 
 beforeEach(() => {
@@ -68,17 +53,7 @@ beforeEach(() => {
   localStorage.setItem("groups", JSON.stringify(init_groups));
 });
 
-afterEach(() => {
-  sessionStorage.clear();
-  localStorage.clear();
-  jest.clearAllMocks();
-});
-
 describe("badgeIconInfo", () => {
-  var chromeBrowserActionSetBadgeTextSpy = jest.spyOn(chrome.browserAction, "setBadgeText");
-  var chromeBrowserActionSetBadgeBackgroundColorSpy = jest.spyOn(chrome.browserAction, "setBadgeBackgroundColor");
-  var chromeBrowserActionSetTitleSpy = jest.spyOn(chrome.browserAction, "setTitle");
-
   const COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
 
   test.each([
@@ -135,12 +110,6 @@ describe("badgeIconInfo", () => {
 });
 
 describe("storageInit", () => {
-  var toggleDarkModeSpy, toggleSyncTimestampSpy;
-  beforeEach(() => {
-    toggleDarkModeSpy = jest.spyOn(AppHelper, "toggleDarkMode");
-    toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp");
-  });
-
   test("sync settings are null & local groups are null", () => {
     sessionStorage.clear();
     localStorage.clear();
@@ -279,8 +248,6 @@ describe("syncWrite", () => {
   });
 
   it.each([["less"], ["more"]])("calls the correct functions when %s groups", async (num_groups) => {
-    var toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp");
-
     if (num_groups === "more") {
       init_groups["group-11"] = default_group;
       localStorage.setItem("groups", JSON.stringify(init_groups));
@@ -314,13 +281,10 @@ describe("syncWrite", () => {
 });
 
 describe("syncRead", () => {
-  var toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp");
-  beforeEach(() => {
-    jest.clearAllMocks();
-    sessionStorage.clear();
-  });
-
   it("does nothing when no groups in sync storage", () => {
+    sessionStorage.clear();
+    jest.clearAllMocks();
+
     AppFunc.syncRead(sync_node, mockSet, mockSet);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -336,8 +300,9 @@ describe("syncRead", () => {
       "group-1": init_groups["group-1"],
     };
 
-    sessionStorage.setItem("group-0", JSON.stringify(new_ss_item["group-0"]));
-    sessionStorage.setItem("group-1", JSON.stringify(new_ss_item["group-1"]));
+    sessionStorage.clear();
+    sessionStorage.setItem("group-0", JSON.stringify(init_groups["group-0"]));
+    sessionStorage.setItem("group-1", JSON.stringify(init_groups["group-1"]));
 
     jest.clearAllMocks();
 
@@ -363,7 +328,6 @@ describe("syncRead", () => {
 });
 
 describe("openOrRemoveTabs", () => {
-  var chromeTabsMove, chromeTabsCreate;
   var tab_single = ["https://stackoverflow.com/"];
   var tab_group = [...tab_single, "https://lichess.org/", "https://www.chess.com/"];
   var tab_all = [...tab_group, "https://www.twitch.tv/", "https://www.reddit.com/", "https://www.a.com/", "https://www.b.com/"]; // prettier-ignore
@@ -378,8 +342,6 @@ describe("openOrRemoveTabs", () => {
     ];
     sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
 
-    chromeTabsMove = jest.spyOn(chrome.tabs, "move");
-    chromeTabsCreate = jest.spyOn(chrome.tabs, "create");
     jest.clearAllMocks();
   });
 
@@ -390,8 +352,8 @@ describe("openOrRemoveTabs", () => {
   it("does nothing when namespace is not 'local'", () => {
     AppFunc.openOrRemoveTabs({}, "sync", mockSet, mockSet);
 
-    expect(chromeTabsMove).not.toHaveBeenCalled();
-    expect(chromeTabsCreate).not.toHaveBeenCalled();
+    expect(chromeTabsMoveSpy).not.toHaveBeenCalled();
+    expect(chromeTabsCreateSpy).not.toHaveBeenCalled();
     expect(chromeSyncGetSpy).not.toHaveBeenCalled();
     expect(chromeLocalGetSpy).not.toHaveBeenCalled();
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -412,7 +374,6 @@ describe("openOrRemoveTabs", () => {
     "opens the correct tab (not open) | restore = %s | %s removing | locked = %s | %s",
     (keepOrRemove, _, locked, type, expected_tabs_left) => {
       // ARRANGE
-      var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
       var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
       var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
 
@@ -448,11 +409,11 @@ describe("openOrRemoveTabs", () => {
       AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
 
       // ASSERT
-      expect(chromeTabsMove).not.toHaveBeenCalled();
+      expect(chromeTabsMoveSpy).not.toHaveBeenCalled();
 
-      expect(chromeTabsCreate).toHaveBeenCalledTimes(tab_arr_map[type].length);
+      expect(chromeTabsCreateSpy).toHaveBeenCalledTimes(tab_arr_map[type].length);
       tab_arr_map[type].forEach((url) => {
-        expect(chromeTabsCreate).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
+        expect(chromeTabsCreateSpy).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
       });
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -498,9 +459,9 @@ describe("openOrRemoveTabs", () => {
 
     AppFunc.openOrRemoveTabs(stub, "local", mockSet, mockSet);
 
-    expect(chromeTabsMove).toHaveBeenCalledTimes(2);
-    expect(chromeTabsMove).toHaveBeenNthCalledWith(1, 0, { index: -1 });
-    expect(chromeTabsMove).toHaveBeenNthCalledWith(2, 1, { index: -1 });
+    expect(chromeTabsMoveSpy).toHaveBeenCalledTimes(2);
+    expect(chromeTabsMoveSpy).toHaveBeenNthCalledWith(1, 0, { index: -1 });
+    expect(chromeTabsMoveSpy).toHaveBeenNthCalledWith(2, 1, { index: -1 });
 
     expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs) // prettier-ignore
   });
@@ -508,27 +469,19 @@ describe("openOrRemoveTabs", () => {
 
 // note that duplicate removal is made in background script!
 describe("checkMerging", () => {
-  var chromeTabsRemove;
-  const SYNC_LIMIT = 102000;
-  const ITEM_LIMIT = 8000;
-
   var merge_all = [
     { id: 0, pinned: false, title: "merged tab a", url: location.href + "a" },
     { id: 1, pinned: false, title: "merged tab b", url: location.href + "b" },
     { id: 2, pinned: false, title: "merged tab c", url: location.href + "c" },
   ];
 
-  beforeEach(() => {
-    chromeTabsRemove = jest.spyOn(chrome.tabs, "remove");
-    jest.clearAllMocks();
-  });
-
   it("does nothing when namespace is not 'local'", () => {
+    jest.clearAllMocks();
     AppFunc.checkMerging({}, "sync", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).not.toHaveBeenCalled();
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
-    expect(chromeTabsRemove).not.toHaveBeenCalled();
+    expect(chromeTabsRemoveSpy).not.toHaveBeenCalled();
     expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
   });
 
@@ -547,6 +500,7 @@ describe("checkMerging", () => {
       localStorage.setItem("into_group", into_group);
       localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
       sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
+      sessionStorage.setItem("settings", JSON.stringify({ color: default_settings.color, title: default_settings.title, merge: merge_setting })); // prettier-ignore
 
       var expected_groups = JSON.parse(localStorage.getItem("groups"));
       if (into_group.includes("group")) {
@@ -600,8 +554,8 @@ describe("checkMerging", () => {
 
       if (type === "NOT") {
         if (merge_setting === "merge") {
-          expect(chromeTabsRemove).toHaveBeenCalledTimes(1);
-          expect(chromeTabsRemove).toHaveBeenCalledWith([0, 1, 2]);
+          expect(chromeTabsRemoveSpy).toHaveBeenCalledTimes(1);
+          expect(chromeTabsRemoveSpy).toHaveBeenCalledWith([0, 1, 2]);
         }
 
         expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
@@ -611,7 +565,7 @@ describe("checkMerging", () => {
         expect(mockSet).toHaveBeenNthCalledWith(1, expected_tabs_num);
         expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
       } else {
-        expect(chromeTabsRemove).not.toHaveBeenCalled();
+        expect(chromeTabsRemoveSpy).not.toHaveBeenCalled();
         expect(chromeLocalSetSpy).not.toHaveBeenCalled();
         expect(mockSet).not.toHaveBeenCalled();
       }
@@ -642,7 +596,7 @@ describe("checkMerging", () => {
               </div>
             ) : (
               <div>
-                <u>Total</u> syncing capacity exceeded by <b>{1364}</b> bytes.
+                <u>Total</u> syncing capacity exceeded by <b>{1363}</b> bytes.
                 <br />
                 <br />
                 Please do <b>one</b> of the following:
@@ -734,8 +688,8 @@ describe("openAllTabs", () => {
 
     var expected_ls = { remove: [null, location.href + "www.abc.com"] };
 
-    chromeLocalSetSpy.mockClear();
     localStorage.setItem("groups", JSON.stringify(init_groups));
+    jest.clearAllMocks();
 
     AppFunc.openAllTabs(stub, mockSet);
     element.setAttribute("response", response ? "positive" : "negative"); // cause a mutation on the element
@@ -1154,10 +1108,10 @@ describe("getTabMergerLink", () => {
   const firefox_url = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
   const edge_url = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
 
-  const prevChrome = global.chrome;
+  const prevChrome = chrome;
 
   afterAll(() => {
-    global.chrome = prevChrome;
+    chrome = prevChrome;
   });
 
   /**
@@ -1184,7 +1138,7 @@ describe("getTabMergerLink", () => {
     } else {
       delete global.InstallTrigger;
       changeUserAgent("RANDOM");
-      global.chrome = false;
+      chrome = undefined;
     }
 
     expect(AppFunc.getTabMergerLink(false)).toBe(expect_link);

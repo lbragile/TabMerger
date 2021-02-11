@@ -30,44 +30,33 @@ import * as AppHelper from "../../src/components/App/App_helpers";
 
 import App from "../../src/components/App/App";
 
-var chromeSyncSetSpy, chromeSyncGetSpy, chromeSyncRemoveSpy;
-var chromeLocalSetSpy, chromeLocalGetSpy, chromeLocalRemoveSpy;
-var mockSet, container, new_item, current_key_order, current_val, response;
-var tabs, matcher, sync_node, sync_container, anything;
+const anything = expect.anything();
+var new_item = init_groups["group-0"];
 
+var container, sync_node, sync_container;
 beforeEach(() => {
-  mockSet = jest.fn(); // mock for setState hooks
-  anything = expect.anything();
-
   container = render(<App />).container;
   sync_node = container.querySelector("#sync-text span");
   sync_container = sync_node.parentNode;
-
-  new_item = init_groups["group-0"];
-  Object.keys(init_groups).forEach((key) => {
-    sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
-    localStorage.setItem(key, JSON.stringify(init_groups[key]));
-  });
-
-  chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
-  chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeSyncRemoveSpy = jest.spyOn(chrome.storage.sync, "remove");
-
-  chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
-  chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-  chromeLocalRemoveSpy = jest.spyOn(chrome.storage.local, "remove");
 });
 
-afterEach(() => {
-  sessionStorage.clear();
-  localStorage.clear();
-  jest.clearAllMocks();
+beforeAll(() => {
+  Object.keys(init_groups).forEach((key) => {
+    sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
+  });
+
+  localStorage.setItem("groups", JSON.stringify(init_groups));
 });
 
 describe("getTimestamp", () => {
   it("returns the correct timestamp in format dd/mm/yyyy @ hh:mm:ss", () => {
-    const result = AppHelper.getTimestamp(["11", "12", "2021", "11:11:11"]);
-    expect(result).toBe("12/11/2021 @ 11:11:11");
+    const result = AppHelper.getTimestamp("Tue Feb 09 2021 22:07:40 GMT-0800 (Pacific Standard Time)");
+    expect(result).toBe("09/02/2021 @ 22:07:40");
+  });
+
+  it("returns something if argument is empty", () => {
+    const result = AppHelper.getTimestamp();
+    expect(result.length).toBe(21);
   });
 });
 
@@ -148,11 +137,11 @@ describe("updateGroupItem", () => {
 
 describe("sortByKey", () => {
   it("returns the input json's values, but sorted by key indicies", () => {
-    current_key_order = ["group-0", "group-1", "group-10", "group-9"];
-    current_val = Object.values(init_groups);
+    var current_key_order = ["group-0", "group-1", "group-3", "group-2"];
+    var current_val = Object.values(init_groups);
     expect(Object.keys(init_groups)).toEqual(current_key_order);
 
-    response = AppHelper.sortByKey(init_groups);
+    var response = AppHelper.sortByKey(init_groups);
 
     // swap group-9 & group-10
     [current_val[2], current_val[3]] = [current_val[3], current_val[2]];
@@ -174,18 +163,18 @@ describe("updateTabTotal", () => {
 
 describe("findSameTab", () => {
   it("returns correct tab when match is found", () => {
-    tabs = init_groups["group-0"].tabs;
-    matcher = tabs[0].url;
+    var tabs = init_groups["group-0"].tabs;
+    var matcher = tabs[0].url;
 
-    response = AppHelper.findSameTab(tabs, matcher);
+    var response = AppHelper.findSameTab(tabs, matcher);
     expect(response).toEqual([tabs[0]]);
   });
 
   it("return empty array if no match is found", () => {
-    tabs = init_groups["group-0"].tabs;
-    matcher = null;
+    var tabs = init_groups["group-0"].tabs;
+    var matcher = null;
 
-    response = AppHelper.findSameTab(tabs, matcher);
+    var response = AppHelper.findSameTab(tabs, matcher);
     expect(response).toEqual([]);
   });
 });

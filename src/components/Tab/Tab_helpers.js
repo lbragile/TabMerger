@@ -34,8 +34,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  */
 export function getFavIconURL(url) {
   // domain will be null if no match is found
-  var matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
-  var domain = matches && matches[1];
+  const matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
+  const domain = matches && matches[1];
 
   return "http://www.google.com/s2/favicons?domain=" + domain;
 }

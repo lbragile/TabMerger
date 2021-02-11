@@ -37,19 +37,7 @@ function changeUserAgent(return_val) {
   });
 }
 
-var mockSet, anything;
-var chromeSyncGetSpy, chromeSyncSetSpy, chromeLocalGetSpy, chromeLocalSetSpy, chromeTabsQuerySpy;
-
-beforeAll(() => {
-  mockSet = jest.fn();
-  anything = expect.anything();
-
-  chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
-  chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-  chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
-  chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
-});
+const anything = expect.anything();
 
 describe("setTabMergerLink", () => {
   const chrome_url = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
@@ -58,10 +46,10 @@ describe("setTabMergerLink", () => {
 
   document.body.innerHTML = `<a href="#"><img id="logo-img"></img></a>`;
 
-  const prevChrome = global.chrome;
+  const prevChrome = chrome;
 
   afterAll(() => {
-    global.chrome = prevChrome;
+    chrome = prevChrome;
   });
 
   test.each([
@@ -77,7 +65,7 @@ describe("setTabMergerLink", () => {
     } else {
       delete global.InstallTrigger;
       changeUserAgent("RANDOM");
-      global.chrome = false;
+      chrome = undefined;
     }
 
     SettingsHelper.setTabMergerLink();

@@ -32,21 +32,14 @@ import Group from "../../src/components/Group/Group";
 import * as AppHelper from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
 
-var mockSet, container, anything;
-var chromeLocalSetSpy, chromeLocalGetSpy, chromeSyncGetSpy;
+var container;
 
-beforeAll(() => {
-  global.alert = jest.fn();
-});
-
+const anything = expect.anything();
 beforeEach(() => {
   Object.keys(init_groups).forEach((key) => {
     sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
   });
   localStorage.setItem("groups", JSON.stringify(init_groups));
-
-  mockSet = jest.fn();
-  anything = expect.anything();
 
   container = render(
     <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
@@ -82,20 +75,6 @@ beforeEach(() => {
       </Group>
     </AppProvider>
   ).container;
-
-  chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
-  chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-});
-
-afterEach(() => {
-  sessionStorage.clear();
-  localStorage.clear();
-  jest.clearAllMocks();
-});
-
-afterAll(() => {
-  alert.mockRestore();
 });
 
 describe("setBGColor", () => {
@@ -231,8 +210,6 @@ describe("addTabFromURL", () => {
     "adds the tab to the correct group when URL does %s exist: %s (settings.merge === %s)",
     (type, url, merge_setting) => {
       var stub = { target: { value: url, closest: (arg) => arg !== "" && { id: "group-0" }, blur: jest.fn() } };
-      var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
-      var chromeTabsRemoveSpy = jest.spyOn(chrome.tabs, "remove");
 
       // move first tab to end to get expected result
       var expected_group = JSON.parse(localStorage.getItem("groups"));
@@ -312,7 +289,13 @@ describe("groupDragStart", () => {
 
     var stub = (ret_val) => ({
       target: {
-        closest: (arg) => (arg === "" || arg === ".draggable" ? ret_val : document.querySelector(".group-item")),
+        closest: (arg) => {
+          if (arg === ".draggable") {
+            return ret_val;
+          } else if (arg === ".group-item") {
+            return document.querySelector(".group-item");
+          }
+        },
       },
     });
 
@@ -405,16 +388,14 @@ describe("deleteGroup", () => {
   });
 
   it.each([
-    ["locked", "group-9", undefined],
-    ["unlocked", "group-9", undefined],
+    ["locked", "group-1", false],
+    ["unlocked", "group-1", false],
     ["unlocked", "group-0", true],
   ])("%s group | id: %s | single group === %s", (locked, group_id, single_group) => {
     var mock_target = (group_id) => ({ target: { closest: (arg) => arg !== "" && { nextSibling: { id: group_id } } } });
 
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
-    var expected_groups = JSON.parse(localStorage.getItem("groups"));
-    delete expected_groups["group-10"];
-
+    var expected_groups = JSON.parse(JSON.stringify(init_groups));
     if (single_group) {
       expected_groups = {};
       expected_groups[group_id] = {
@@ -427,11 +408,20 @@ describe("deleteGroup", () => {
         title: default_settings.title,
       };
     }
+
     expected_groups[group_id].locked = locked === "locked";
+    var expected_groups_copy = [JSON.parse(JSON.stringify(expected_groups))];
+
     localStorage.setItem("groups", JSON.stringify(expected_groups));
     localStorage.setItem("groups_copy", JSON.stringify(expected_groups));
-    if (!single_group) {
+    if (!single_group && locked === "unlocked") {
       delete expected_groups[group_id];
+      expected_groups_copy = [JSON.parse(JSON.stringify(expected_groups))];
+      const ordered_vals = AppHelper.sortByKey(expected_groups);
+      expected_groups = {};
+      ordered_vals.forEach((val, i) => {
+        expected_groups["group-" + i] = val;
+      });
     }
 
     jest.clearAllMocks();
@@ -446,9 +436,8 @@ describe("deleteGroup", () => {
 
       expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
       expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, groups_copy: [expected_groups], scroll: 0 }, anything); // prettier-ignore
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, groups_copy: expected_groups_copy, scroll: 0 }, anything); // prettier-ignore
       expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(expected_groups));
-      // expect(mockSet).toHaveBeenNthCalledWith(2, 5);
     } else {
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -508,12 +497,6 @@ describe("toggleGroup", () => {
 });
 
 describe("sendMessage", () => {
-  var spy = jest.spyOn(chrome.runtime, "sendMessage");
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it.each([
     ["all", 0],
     ["all", 1],
@@ -523,7 +506,10 @@ describe("sendMessage", () => {
     ["right", 1],
   ])("sends a message to background script with correct parameters -> %s (id: %i)", (dir, id) => {
     var selector = `.merge-${dir}-btn`.replace("all-", "");
+    jest.clearAllMocks();
+
     fireEvent.click(container.querySelectorAll(selector)[id]);
-    expect(spy).toHaveBeenCalledWith(chrome.runtime.id, { msg: dir, id: "group-" + id });
+
+    expect(chromeRuntimeSendMessageSpy).toHaveBeenCalledWith(chrome.runtime.id, { msg: dir, id: "group-" + id });
   });
 });

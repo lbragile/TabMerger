@@ -71,7 +71,7 @@ export function restoreOptions() {
     body.style.background = sync.settings.dark ? "rgb(52, 58, 64)" : "white";
     body.style.color = sync.settings.dark ? "white" : "black";
     code_block.style.color = sync.settings.dark ? "white" : "black";
-    code_block.style.border = sync.settings.dark ? "1px white solid" : "1px black solid";
+    code_block.style.border = "1px solid " + (sync.settings.dark ? "white" : "black");
     nav.style.background = sync.settings.dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 
     var darkMode = document.getElementById("darkMode");

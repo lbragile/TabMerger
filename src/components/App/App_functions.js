@@ -823,12 +823,10 @@ export function exportJSON() {
 export function getTabMergerLink(reviews) {
   var link;
   var isFirefox = typeof InstallTrigger !== "undefined";
-  var isIE = /*@cc_on!@*/ false || !!document.documentMode;
-  var isEdge = !isIE && !!window.StyleMedia;
-  var isChrome = !!window.chrome && !!window.chrome.runtime;
-  var isEdgeChromium = isChrome && navigator.userAgent.indexOf("Edg") !== -1;
+  var isChrome = !!chrome && !!chrome.runtime;
+  var isEdge = isChrome && navigator.userAgent.indexOf("Edg") !== -1;
 
-  if (isIE || isEdge || isEdgeChromium) {
+  if (isEdge) {
     link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {
     link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";

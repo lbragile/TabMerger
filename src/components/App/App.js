@@ -70,9 +70,7 @@ export default function App() {
   const startStep = useRef(0);
 
   const toggleSyncTimestamp = useCallback(
-    (positive) => {
-      AppHelper.toggleSyncTimestamp(positive, syncTimestamp.current);
-    },
+    (positive) => AppHelper.toggleSyncTimestamp(positive, syncTimestamp.current),
     [syncTimestamp]
   );
 
@@ -81,13 +79,13 @@ export default function App() {
   }, [toggleSyncTimestamp]);
 
   useEffect(() => {
-    const openOrRemoveTabs = (changes, namespace) => {
+    function openOrRemoveTabs(changes, namespace) {
       AppFunc.openOrRemoveTabs(changes, namespace, setTabTotal, setGroups);
-    };
+    }
 
-    const checkMerging = (changes, namespace) => {
+    function checkMerging(changes, namespace) {
       AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups, setDialog); // prettier-ignore
-    };
+    }
 
     function toggleHiddenOrEmptyGroups(type) {
       document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = type === "before" ? "none" : ""));
@@ -106,15 +104,11 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => {
-    AppFunc.badgeIconInfo(tabTotal);
-  }, [tabTotal, groups]);
+  useEffect(() => AppFunc.badgeIconInfo(tabTotal), [tabTotal, groups]);
 
   useEffect(() => {
     chrome.storage.local.get("scroll", (local) => {
-      setTimeout(() => {
-        document.documentElement.scrollTop = local.scroll || 0;
-      }, 50);
+      setTimeout(() => (document.documentElement.scrollTop = local.scroll || 0), 50);
     });
   }, [groups]);
 

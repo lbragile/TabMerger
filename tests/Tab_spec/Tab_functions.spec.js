@@ -33,10 +33,7 @@ import * as AppHelper from "../../src/components/App/App_helpers";
 
 import { AppProvider } from "../../src/context/AppContext";
 
-var anything = expect.anything();
-var mockSet = jest.fn();
-var chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-var chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
+const anything = expect.anything();
 
 var container;
 beforeEach(() => {
@@ -48,11 +45,6 @@ beforeEach(() => {
       </div>
     </AppProvider>
   ).container;
-});
-
-afterEach(() => {
-  localStorage.clear();
-  jest.clearAllMocks();
 });
 
 describe("setInitTabs", () => {
@@ -177,8 +169,8 @@ describe("tabDragEnd", () => {
       target: container.querySelectorAll("#group-0 .draggable")[1],
     };
 
-    // stub the document
     document.getElementsByClassName = () => [container.querySelector(".draggable").closest(".group")];
+    jest.clearAllMocks();
 
     TabFunc.tabDragEnd(stub, 100, mockSet, mockSet);
 

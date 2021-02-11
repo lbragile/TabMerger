@@ -90,7 +90,11 @@ In all cases, code coverage is collected and displayed at the end of the run, as
 
 #### Mutation Testing 🖤
 
-TabMerger also makes use of [mutation testing](https://en.wikipedia.org/wiki/Mutation_testing) using [Stryker Mutator](https://stryker-mutator.io/) which conviniently generates mutation reports through the use of our GitHub workflow scripts. However, mutation tests can take a **VERY long time** (more than 3 hours) to complete, thus to avoid them add `SKIP MUTATION` to your commit message. That being said, for you Pull Request to be accepted and merged, it <u>must</u> pass all mutation testing criteria (score **above 90%**).
+TabMerger also makes use of [mutation testing](https://en.wikipedia.org/wiki/Mutation_testing) using [Stryker Mutator](https://stryker-mutator.io/) which conviniently generates mutation reports through the use of our GitHub workflow scripts. You can use `npm run mutate` to mutate all relevant components or `npm run mutate:{{component_name}}` to mutate a specific component - e.g `npm run mutate:tab` would mutate the `<Tab />` component.
+
+Note that mutation tests can take a **VERY long time** (more than 3 hours) to complete, thus to avoid uncessarily running the workflow add `SKIP MUTATION` to your commit message. You would still need to add one of `MUTATE ALL|APP|GROUP|TAB|SETTINGS|BACKGROUND` to your commit message to run one of the mutation scripts - this is intentionally done to avoid accidently running these time consuming scripts.
+
+For you Pull Request to be accepted and merged, it <u>must</u> pass all mutation testing criteria (score **above 90%**).
 
 ## Contact 📞
 

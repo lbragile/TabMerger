@@ -29,16 +29,7 @@ import * as BackgroundHelper from "../../public/background/background_helpers.js
 
 import { waitFor } from "@testing-library/react";
 
-var mockSet, anything;
-var chromeSyncGetSpy, chromeSyncSetSpy;
-
-beforeAll(() => {
-  mockSet = jest.fn();
-  anything = expect.anything();
-
-  chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-  chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
-});
+const anything = expect.anything();
 
 beforeEach(() => {
   sessionStorage.setItem("settings", JSON.stringify(default_settings));
@@ -98,7 +89,6 @@ describe("extensionMessage", () => {
     const request = { msg: "TabMerger is awesome!", id: 100 };
     const tab = { title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 };
 
-    var chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
     var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockResolvedValue(0);
     jest.clearAllMocks();
 
@@ -119,27 +109,24 @@ describe("extensionMessage", () => {
 
 describe("createContextMenu", () => {
   it("calls the chrome.contextMenus.create API with correct parameters", () => {
-    var spy = jest.spyOn(chrome.contextMenus, "create").mockImplementation(() => {});
     jest.clearAllMocks();
 
     BackgroundFunc.createContextMenu(0, "TabMerger", "normal");
 
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith({ id: 0, title: "TabMerger", type: "normal" });
-
-    spy.mockRestore();
+    expect(chromeContextMenusCeateSpy).toHaveBeenCalledTimes(1);
+    expect(chromeContextMenusCeateSpy).toHaveBeenCalledWith({ id: 0, title: "TabMerger", type: "normal" });
   });
 });
 
 describe("contextMenuOrShortCut", () => {
   const tab = { index: 0 };
-  var findExtTabAndSwitchSpy, filterTabsSpy, excludeSiteSpy, chromeTabCreateSpy;
+  var findExtTabAndSwitchSpy, filterTabsSpy, excludeSiteSpy;
 
   beforeAll(() => {
     findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockImplementation(() => {});
     filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementation(() => {});
     excludeSiteSpy = jest.spyOn(BackgroundHelper, "excludeSite").mockImplementation(() => {});
-    chromeTabCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementation(() => {});
+    chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementation(() => {});
   });
 
   beforeEach(() => {
@@ -150,7 +137,7 @@ describe("contextMenuOrShortCut", () => {
     findExtTabAndSwitchSpy.mockRestore();
     filterTabsSpy.mockRestore();
     excludeSiteSpy.mockRestore();
-    chromeTabCreateSpy.mockRestore();
+    chromeTabsCreateSpy.mockRestore();
   });
 
   test.each([
@@ -186,11 +173,8 @@ describe("contextMenuOrShortCut", () => {
     } else if (menuItemId.includes("dl-")) {
       const inst_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
       const contact_url = "https://lbragile.github.io/TabMerger-Extension/contact";
-      expect(chromeTabCreateSpy).toHaveBeenCalledTimes(1);
-      expect(chromeTabCreateSpy).toHaveBeenCalledWith({
-        active: true,
-        url: menuItemId.includes("instructions") ? inst_url : contact_url,
-      });
+      expect(chromeTabsCreateSpy).toHaveBeenCalledTimes(1);
+      expect(chromeTabsCreateSpy).toHaveBeenCalledWith({ active: true, url: menuItemId.includes("instructions") ? inst_url : contact_url }); // prettier-ignore
     }
 
     expect.hasAssertions();
@@ -206,5 +190,15 @@ describe("contextMenuOrShortCut", () => {
     });
 
     expect.hasAssertions();
+  });
+});
+
+describe("translate", () => {
+  it("returns a translation if avaiable", () => {
+    expect(BackgroundFunc.translate("Title")).toEqual("титул");
+  });
+
+  it("returns original msg if translation is not available", () => {
+    expect(BackgroundFunc.translate("random")).toEqual("random");
   });
 });

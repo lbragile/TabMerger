@@ -44,6 +44,7 @@ jobs:
   mutation-testing:
     runs-on: windows-latest
     if: "!contains(github.event.head_commit.message, 'SKIP MUTATION')"
+    needs: unit-testing
     env:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 
@@ -72,20 +73,24 @@ jobs:
 
       - name: Stryker Mutation Testing -> ALL
         if: "contains(github.event.head_commit.message, 'MUTATE ALL')"
-        run: npm run mutate:all
+        run: npm run mutate
 
-      - name: Stryker Mutation Testing -> TAB-FUNC
-        if: "contains(github.event.head_commit.message, 'MUTATE TAB-FUNC')"
-        run: npm run mutate:tab-func
+      - name: Stryker Mutation Testing -> TAB
+        if: "contains(github.event.head_commit.message, 'MUTATE TAB')"
+        run: npm run mutate:tab
 
-      - name: Stryker Mutation Testing -> GROUP-FUNC
-        if: "contains(github.event.head_commit.message, 'MUTATE GROUP-FUNC')"
-        run: npm run mutate:group-func
+      - name: Stryker Mutation Testing -> GROUP
+        if: "contains(github.event.head_commit.message, 'MUTATE GROUP')"
+        run: npm run mutate:group
 
-      - name: Stryker Mutation Testing -> APP-FUNC
-        if: "contains(github.event.head_commit.message, 'MUTATE APP-FUNC')"
-        run: npm run mutate:app-func
+      - name: Stryker Mutation Testing -> APP
+        if: "contains(github.event.head_commit.message, 'MUTATE APP')"
+        run: npm run mutate:app
 
-      - name: Stryker Mutation Testing -> APP-HELP
-        if: "contains(github.event.head_commit.message, 'MUTATE APP-HELP')"
-        run: npm run mutate:app-help
+      - name: Stryker Mutation Testing -> SETTINGS
+        if: "contains(github.event.head_commit.message, 'MUTATE SETTINGS')"
+        run: npm run mutate:settings
+
+      - name: Stryker Mutation Testing -> BACKGROUND
+        if: "contains(github.event.head_commit.message, 'MUTATE BACKGROUND')"
+        run: npm run mutate:background
