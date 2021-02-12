@@ -1190,6 +1190,11 @@ describe("importJSON", () => {
     jest.spyOn(global, "FileReader").mockImplementation(function () {
       this.readAsText = jest.fn(() => (this.result = JSON.stringify(exportedVal)));
     });
+
+    var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation(function () {
+      return [init_groups];
+    });
+
     jest.clearAllMocks();
 
     AppFunc.importJSON(input, mockSet, mockSet);
@@ -1202,17 +1207,22 @@ describe("importJSON", () => {
     expect(reader.readAsText).toHaveBeenCalledWith(fakeFile);
     expect(reader.onload).toEqual(expect.any(Function));
 
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
+
     expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: exportedVal.settings }, anything);
 
     delete exportedVal.settings;
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: exportedVal, scroll: 0 }, anything);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: exportedVal, groups_copy: [init_groups], scroll: 0 }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(2);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(exportedVal));
     expect(mockSet).toHaveBeenNthCalledWith(2, 12);
+
+    storeDestructiveActionSpy.mockRestore();
   });
 });
 

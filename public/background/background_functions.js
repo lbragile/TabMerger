@@ -82,7 +82,7 @@ export function createContextMenu(id, title, type) {
 export async function contextMenuOrShortCut(info, tab) {
   // need to alter the info object if it comes from a keyboard shortcut event
   if (typeof info === "string") {
-    info = { which: "all", command: info };
+    info = { command: info };
   }
 
   switch (info.menuItemId || info.command) {

@@ -95,19 +95,11 @@ export function toggleSyncTimestamp(positive, sync_node) {
 export function updateGroupItem(key, value) {
   return new Promise((resolve) => {
     chrome.storage.sync.get(key, (x) => {
-      if (
-        !x[key] ||
-        x[key].color !== value.color ||
-        x[key].created !== value.created ||
-        x[key].title !== value.title ||
-        JSON.stringify(x[key].tabs) !== JSON.stringify(value.tabs)
-      ) {
-        chrome.storage.sync.set({ [key]: value }, () => {
-          resolve(0);
-        });
-      } else {
-        resolve(0);
+      if (JSON.stringify(x[key]) !== JSON.stringify(value)) {
+        chrome.storage.sync.set({ [key]: value }, () => {});
       }
+
+      resolve(0);
     });
   });
 }
@@ -178,32 +170,28 @@ export function outputFileName() {
 }
 
 /**
- * USed to determine the element after the current one when dragging a tab.
- * @param {HTMLElement} container The group which the dragged tab is above
- * @param {number} y The tab's y coordinate in the window
+ * USed to determine the element after the current one when dragging a tab/group/url.
+ * @param {HTMLElement} container The group/app body which the dragged tab is above
+ * @param {number} y_pos The tab's/group's y coordinate in the window
+ * @param {"tab" | "group"} type Whether the dragging element is a "tab" or a "group"
  *
  * @see dragOver in App_functions.js
  * @link modified from https://github.com/WebDevSimplified/Drag-And-Drop
  *
- * @return The tab element immediately after the current position of the dragged tab.
+ * @return {HTMLElement} The tab/group element immediately after the current position of the dragged element.
  */
-/* istanbul ignore next */
-export function getDragAfterElement(container, y, type) {
+export function getDragAfterElement(container, y_pos, type) {
   const selector = type === "tab" ? ".draggable:not(.dragging)" : ".group-item:not(.dragging-group)";
-  const draggableElements = [...container.querySelectorAll(selector)];
-
-  return draggableElements.reduce(
-    (closest, child) => {
-      const box = child.getBoundingClientRect();
-      const offset = y - box.top - box.height / 2;
-      if (offset < 0 && offset > closest.offset) {
-        return { offset: offset, element: child };
-      } else {
-        return closest;
-      }
+  const afterElement = [...container.querySelectorAll(selector)].reduce(
+    (closest, element) => {
+      const { top, height } = element.getBoundingClientRect();
+      const offset = y_pos - top - height / (type === "tab" ? 2 : 3);
+      return closest.offset < offset && offset < 0 ? { offset, element } : closest;
     },
-    { offset: Number.NEGATIVE_INFINITY }
-  ).element;
+    { offset: Number.NEGATIVE_INFINITY, element: null }
+  );
+
+  return afterElement.element;
 }
 
 /**

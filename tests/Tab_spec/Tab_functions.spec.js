@@ -39,7 +39,7 @@ var container;
 beforeEach(() => {
   localStorage.setItem("groups", JSON.stringify(init_groups));
   container = render(
-    <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet }}>
+    <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet, setDialog: mockSet }}>
       <div className="group" id="group-0">
         <Tab id="group-0" item_limit={8000} hidden={false} />
       </div>
@@ -124,34 +124,23 @@ describe("tabDragEnd", () => {
     localStorage.setItem("groups", JSON.stringify(orig_groups));
   });
 
-  it("works for same group", () => {
-    stub.target.closest = () => document.querySelector("#group-0");
+  it.each([
+    [true, 8000],
+    [false, 8000],
+  ])("works for same group = %s (limit = %s)", (same, LIMIT) => {
+    stub.target.closest = () => document.querySelector("#group-" + +!same);
     jest.clearAllMocks();
 
-    TabFunc.tabDragEnd(stub, 8000, mockSet, mockSet);
+    if (!same) {
+      // note that since dragOver isn't applied we just expect the tab to be removed from
+      // origin group. As long as drag over works, we can be confident that this also works.
+      orig_groups["group-0"].tabs = [
+        { pinned: true, title: "b", url: location.href + "#b" },
+        { pinned: false, title: "c", url: location.href + "#c" },
+      ];
+    }
 
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
-
-    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: orig_groups, scroll: 0 }, anything);
-
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith(JSON.stringify(orig_groups));
-  });
-
-  it("works for different group", () => {
-    stub.target.closest = () => document.querySelector("#group-1");
-    jest.clearAllMocks();
-
-    TabFunc.tabDragEnd(stub, 8000, mockSet, mockSet);
-
-    // note that since dragOver isn't applied we just expect the tab to be removed from
-    // origin group. As long as drag over works, we can be confident that this also works.
-    orig_groups["group-0"].tabs = [
-      { pinned: true, title: "b", url: location.href + "#b" },
-      { pinned: false, title: "c", url: location.href + "#c" },
-    ];
+    TabFunc.tabDragEnd(stub, LIMIT, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);

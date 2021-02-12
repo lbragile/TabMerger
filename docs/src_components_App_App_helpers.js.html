@@ -55,17 +55,17 @@ TabMerger team at &lt;https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /**
  * Produces a timestamp which is added to newly formed groups
- * @param {string[]?} date_arr Used in testing to inject a predefined date
+ * @param {string?} date_str Used in testing to inject a predefined date
  *
  * @return ```dd/mm/yyyy @ hh:mm:ss```
  */
-export function getTimestamp(date_arr) {
-  var date_parts = date_arr || new Date(Date.now()).toString().split(" ");
-  date_parts = !date_arr ? date_parts.filter((_, i) => 0 &lt; i &amp;&amp; i &lt;= 4) : JSON.parse(JSON.stringify(date_arr));
+export function getTimestamp(date_str) {
+  var date_parts = date_str?.split(" ") || new Date(Date.now()).toString().split(" ");
+  date_parts = date_parts.filter((_, i) => 0 &lt; i &amp;&amp; i &lt;= 4);
 
   // dd/mm/yyyy @ hh:mm:ss
   date_parts[0] = date_parts[1] + "/";
-  date_parts[1] = (!date_arr ? ("0" + (new Date().getMonth() + 1)).slice(-2) : date_arr[0]) + "/";
+  date_parts[1] = ("0" + (new Date().getMonth() + 1)).slice(-2) + "/";
   date_parts[2] += " @ ";
 
   return date_parts.join("");
@@ -123,19 +123,11 @@ export function toggleSyncTimestamp(positive, sync_node) {
 export function updateGroupItem(key, value) {
   return new Promise((resolve) => {
     chrome.storage.sync.get(key, (x) => {
-      if (
-        !x[key] ||
-        x[key].color !== value.color ||
-        x[key].created !== value.created ||
-        x[key].title !== value.title ||
-        JSON.stringify(x[key].tabs) !== JSON.stringify(value.tabs)
-      ) {
-        chrome.storage.sync.set({ [key]: value }, () => {
-          resolve(0);
-        });
-      } else {
-        resolve(0);
+      if (JSON.stringify(x[key]) !== JSON.stringify(value)) {
+        chrome.storage.sync.set({ [key]: value }, () => {});
       }
+
+      resolve(0);
     });
   });
 }
@@ -206,32 +198,28 @@ export function outputFileName() {
 }
 
 /**
- * USed to determine the element after the current one when dragging a tab.
- * @param {HTMLElement} container The group which the dragged tab is above
- * @param {number} y The tab's y coordinate in the window
+ * USed to determine the element after the current one when dragging a tab/group/url.
+ * @param {HTMLElement} container The group/app body which the dragged tab is above
+ * @param {number} y_pos The tab's/group's y coordinate in the window
+ * @param {"tab" | "group"} type Whether the dragging element is a "tab" or a "group"
  *
  * @see dragOver in App_functions.js
  * @link modified from https://github.com/WebDevSimplified/Drag-And-Drop
  *
- * @return The tab element immediately after the current position of the dragged tab.
+ * @return {HTMLElement} The tab/group element immediately after the current position of the dragged element.
  */
-/* istanbul ignore next */
-export function getDragAfterElement(container, y, type) {
+export function getDragAfterElement(container, y_pos, type) {
   const selector = type === "tab" ? ".draggable:not(.dragging)" : ".group-item:not(.dragging-group)";
-  const draggableElements = [...container.querySelectorAll(selector)];
-
-  return draggableElements.reduce(
-    (closest, child) => {
-      const box = child.getBoundingClientRect();
-      const offset = y - box.top - box.height / 2;
-      if (offset &lt; 0 &amp;&amp; offset > closest.offset) {
-        return { offset: offset, element: child };
-      } else {
-        return closest;
-      }
+  const afterElement = [...container.querySelectorAll(selector)].reduce(
+    (closest, element) => {
+      const { top, height } = element.getBoundingClientRect();
+      const offset = y_pos - top - height / (type === "tab" ? 2 : 3);
+      return closest.offset &lt; offset &amp;&amp; offset &lt; 0 ? { offset, element } : closest;
     },
-    { offset: Number.NEGATIVE_INFINITY }
-  ).element;
+    { offset: Number.NEGATIVE_INFINITY, element: null }
+  );
+
+  return afterElement.element;
 }
 
 /**
@@ -255,6 +243,24 @@ export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15
 
   return groups_copy;
 }
+
+/**
+ * Certain actions require user confirmation. In such cases an element (the button which was pressed) is assigned a new attribute
+ * which holds the user's response - mutation. This function listens for this mutation and responds accordingly.
+ *
+ * @param {HTMLElement} element The button which was pressed
+ * @param {Function} cb Corresponding action if a mutation is detected on the element
+ */
+export function elementMutationListener(element, cb) {
+  var observer = new MutationObserver((mutations, observer) => {
+    mutations.forEach((mutation) => {
+      cb(mutation);
+    });
+    observer.disconnect();
+  });
+
+  observer.observe(element, { attributes: true, childList: false, subtree: false });
+}
 </code></pre>
         </article>
     </section>
@@ -271,7 +277,7 @@ export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Feb 08 2021 23:19:49 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Feb 11 2021 22:28:48 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

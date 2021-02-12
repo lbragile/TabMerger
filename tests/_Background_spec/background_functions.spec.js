@@ -48,39 +48,35 @@ describe("handleBrowserIconClick", () => {
     filterTabsSpy.mockRestore();
   });
 
-  it("calls findExtTabAndSwitch and not filterTabs", () => {
-    sessionStorage.setItem("settings", JSON.stringify({ open: "without" }));
+  it.each([
+    ["without", "✅", "❌"],
+    ["with", "❌", "✅"],
+  ])("settings.open = %s - calls findExtTabAndSwitch %s and filterTabs %s", async (open) => {
+    sessionStorage.removeItem("settings");
+    sessionStorage.setItem("settings", JSON.stringify({ open }));
     jest.clearAllMocks();
 
     BackgroundFunc.handleBrowserIconClick();
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", expect.anything());
-
-    expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-    expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
-
-    expect(filterTabsSpy).not.toHaveBeenCalled();
-  });
-
-  it("calls filterTabs", async () => {
-    sessionStorage.setItem("settings", JSON.stringify({ open: "with" }));
-    jest.clearAllMocks();
-
-    BackgroundFunc.handleBrowserIconClick();
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-    expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-    expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(anything);
 
     await waitFor(() => {
-      expect(filterTabsSpy).toHaveBeenCalledTimes(1);
-      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0 });
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+      expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
+      expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(anything);
+
+      if (open === "with") {
+        expect(filterTabsSpy).toHaveBeenCalledTimes(1);
+        expect(filterTabsSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0 });
+      }
     });
 
-    expect.assertions(7);
+    // cannot be inside await since this is a NOT statement
+    if (open === "without") {
+      expect(filterTabsSpy).not.toHaveBeenCalled();
+    }
+
+    expect.assertions(open === "without" ? 5 : 5 + 6);
   });
 });
 
@@ -121,16 +117,14 @@ describe("createContextMenu", () => {
 describe("contextMenuOrShortCut", () => {
   const tab = { index: 0 };
   var findExtTabAndSwitchSpy, filterTabsSpy, excludeSiteSpy;
+  const inst_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
+  const contact_url = "https://lbragile.github.io/TabMerger-Extension/contact";
 
   beforeAll(() => {
     findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockImplementation(() => {});
     filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementation(() => {});
     excludeSiteSpy = jest.spyOn(BackgroundHelper, "excludeSite").mockImplementation(() => {});
     chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementation(() => {});
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
   });
 
   afterAll(() => {
@@ -151,42 +145,49 @@ describe("contextMenuOrShortCut", () => {
     ["dl-contact", ""],
     ["merge-all-menu", "all"],
   ])("%s", async (menuItemId, which) => {
+    jest.clearAllMocks();
+
     BackgroundFunc.contextMenuOrShortCut({ menuItemId }, tab);
 
     if (menuItemId === "aopen-tabmerger") {
       await waitFor(() => {
         expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-        expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
+        expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(anything);
       });
-      expect.hasAssertions();
+
+      // switch statement can be empty (without break) which would cause it to go
+      // to next item. This has to be outside of await as it is a NOT called statement
+      expect(filterTabsSpy).not.toHaveBeenCalled();
+
+      expect.assertions(3);
     } else if (menuItemId.includes("merge")) {
       await waitFor(() => {
         expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-        expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(expect.anything());
+        expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(anything);
         expect(filterTabsSpy).toHaveBeenCalledTimes(1);
         expect(filterTabsSpy).toHaveBeenCalledWith({ which, menuItemId }, tab);
       });
-      expect.hasAssertions();
+      expect.assertions(7);
     } else if (menuItemId === "remove-visibility") {
       expect(excludeSiteSpy).toHaveBeenCalledTimes(1);
       expect(excludeSiteSpy).toHaveBeenCalledWith(tab);
+      expect.assertions(2);
     } else if (menuItemId.includes("dl-")) {
-      const inst_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
-      const contact_url = "https://lbragile.github.io/TabMerger-Extension/contact";
       expect(chromeTabsCreateSpy).toHaveBeenCalledTimes(1);
       expect(chromeTabsCreateSpy).toHaveBeenCalledWith({ active: true, url: menuItemId.includes("instructions") ? inst_url : contact_url }); // prettier-ignore
+      expect.assertions(2);
     }
-
-    expect.hasAssertions();
   });
 
   test("typeof info === string", async () => {
-    const info = "merge-left-menu";
-    BackgroundFunc.contextMenuOrShortCut(info, tab);
+    const command = "merge-left-menu";
+    jest.clearAllMocks();
+
+    BackgroundFunc.contextMenuOrShortCut(command, tab);
 
     await waitFor(() => {
       expect(filterTabsSpy).toHaveBeenCalledTimes(1);
-      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "left", command: info }, tab);
+      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "left", command }, tab);
     });
 
     expect.hasAssertions();

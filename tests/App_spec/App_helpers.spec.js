@@ -137,15 +137,21 @@ describe("updateGroupItem", () => {
 
 describe("sortByKey", () => {
   it("returns the input json's values, but sorted by key indicies", () => {
+    var localeCompareSpy = jest.spyOn(String.prototype, "localeCompare");
+
     var current_key_order = ["group-0", "group-1", "group-3", "group-2"];
     var current_val = Object.values(init_groups);
     expect(Object.keys(init_groups)).toEqual(current_key_order);
 
+    // swap group-2 & group-3
+    [current_val[2], current_val[3]] = [current_val[3], current_val[2]];
+
+    jest.clearAllMocks();
     var response = AppHelper.sortByKey(init_groups);
 
-    // swap group-9 & group-10
-    [current_val[2], current_val[3]] = [current_val[3], current_val[2]];
     expect(response).toEqual(current_val);
+    expect(localeCompareSpy).toHaveBeenCalledTimes(5);
+    expect(localeCompareSpy).toHaveBeenCalledWith(expect.any(String), undefined, { numeric: true, sensitivity: "base" }); // prettier-ignore
   });
 });
 
@@ -183,6 +189,36 @@ describe("outputFileName", () => {
   it("returns output filename with correct format and timestamp", () => {
     var correct_output = `TabMerger [${AppHelper.getTimestamp()}]`;
     expect(AppHelper.outputFileName()).toBe(correct_output);
+  });
+});
+
+describe("getDragAfterElement", () => {
+  const top = 50, height = 60, smaller_num = (top + height) / 2; // prettier-ignore
+  var getBoundingClientRectSpy = jest.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(() => ({ top, height })); // prettier-ignore
+
+  afterAll(() => {
+    getBoundingClientRectSpy.mockRestore();
+  });
+
+  it.each([
+    [true, smaller_num],
+    [true, top + height / 2],
+    [true, Number.NEGATIVE_INFINITY],
+    [true, Number.NEGATIVE_INFINITY + top + height / 2],
+    [false, smaller_num],
+    [false, top + height / 3],
+    [false, Number.NEGATIVE_INFINITY],
+    [false, Number.NEGATIVE_INFINITY + top + height / 3],
+  ])("dragging element is tab = %s, y_pos = %s", (tab, y_pos) => {
+    const result = AppHelper.getDragAfterElement(container.querySelector(tab ? ".group" : "#tabmerger-container"), y_pos, tab ? "tab" : "group"); // prettier-ignore
+
+    const { top, height } = getBoundingClientRectSpy();
+    const adjustment = top + height / (tab ? 2 : 3);
+    if (y_pos === adjustment || y_pos === Number.NEGATIVE_INFINITY + adjustment) {
+      expect(result).toBeNull();
+    } else {
+      expect(result).toBeTruthy();
+    }
   });
 });
 

@@ -738,22 +738,25 @@ export function resetSearch(e) {
  */
 export function importJSON(e, setGroups, setTabTotal, setDialog) {
   if (e.target.files[0].type === "application/json") {
-    var reader = new FileReader();
-    reader.readAsText(e.target.files[0]);
-    reader.onload = () => {
-      var fileContent = JSON.parse(reader.result);
+    chrome.storage.local.get(["groups", "groups_copy"], (local) => {
+      const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups);
+      const scroll = document.documentElement.scrollTop;
 
-      chrome.storage.sync.set({ settings: fileContent.settings }, () => {
-        delete fileContent.settings;
-        chrome.storage.local.set({ groups: fileContent, scroll: document.documentElement.scrollTop }, () => {
-          // reset the file input so it can trigger again
-          e.target.value = "";
+      var reader = new FileReader();
+      reader.readAsText(e.target.files[0]);
+      reader.onload = () => {
+        var fileContent = JSON.parse(reader.result);
 
-          setGroups(JSON.stringify(fileContent));
-          setTabTotal(AppHelper.updateTabTotal(fileContent));
+        chrome.storage.sync.set({ settings: fileContent.settings }, () => {
+          delete fileContent.settings;
+          chrome.storage.local.set({ groups: fileContent, groups_copy, scroll }, () => {
+            e.target.value = ""; // reset the file input so it can trigger again
+            setGroups(JSON.stringify(fileContent));
+            setTabTotal(AppHelper.updateTabTotal(fileContent));
+          });
         });
-      });
-    };
+      };
+    });
   } else {
     setDialog({
       show: true,

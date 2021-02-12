@@ -64,6 +64,167 @@
     
 
     
+    <h4 class="name" id=".elementMutationListener"><span class="type-signature">(static) </span>elementMutationListener<span class="signature">(element, cb)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Certain actions require user confirmation. In such cases an element (the button which was pressed) is assigned a new attribute
+which holds the user's response - mutation. This function listens for this mutation and responds accordingly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The button which was pressed</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cb</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Corresponding action if a mutation is detected on the element</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line226">line 226</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id=".findSameTab"><span class="type-signature">(static) </span>findSameTab<span class="signature">(tab_list, match_url)</span><span class="type-signature"> &rarr; {Array.&lt;object>}</span></h4>
     
 
@@ -188,7 +349,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line165">line 165</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line157">line 157</a>
     </li></ul></dd>
     
 
@@ -246,7 +407,222 @@
     
 
     
-    <h4 class="name" id=".getTimestamp"><span class="type-signature">(static) </span>getTimestamp<span class="signature">(date_arr<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".getDragAfterElement"><span class="type-signature">(static) </span>getDragAfterElement<span class="signature">(container, y_pos, type)</span><span class="type-signature"> &rarr; {HTMLElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>USed to determine the element after the current one when dragging a tab/group/url.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>container</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The group/app body which the dragged tab is above</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y_pos</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tab's/group's y coordinate in the window</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">"tab"</span>
+|
+
+<span class="param-type">"group"</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether the dragging element is a &quot;tab&quot; or a &quot;group&quot;</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line183">line 183</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>dragOver in App_functions.js</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The tab/group element immediately after the current position of the dragged element.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">HTMLElement</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getTimestamp"><span class="type-signature">(static) </span>getTimestamp<span class="signature">(date_str<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -292,13 +668,13 @@
 
         <tr>
             
-                <td class="name"><code>date_arr</code></td>
+                <td class="name"><code>date_str</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;string></span>
+<span class="param-type">string</span>
 
 
             
@@ -457,7 +833,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line176">line 176</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line168">line 168</a>
     </li></ul></dd>
     
 
@@ -604,7 +980,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line124">line 124</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -843,7 +1219,7 @@ button to restore the previous configuration.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line221">line 221</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line209">line 209</a>
     </li></ul></dd>
     
 
@@ -1479,7 +1855,7 @@ Sync items are updated only when they change and only changed items are overwrit
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line148">line 148</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -1553,7 +1929,7 @@ Sync items are updated only when they change and only changed items are overwrit
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Feb 08 2021 23:19:49 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Feb 11 2021 22:28:48 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
