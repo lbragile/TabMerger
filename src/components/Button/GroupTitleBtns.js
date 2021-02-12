@@ -9,7 +9,8 @@ import { BiColorFill, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { VscChromeRestore } from "react-icons/vsc";
 
-export default function GroupTitleBtns({ id, color, hidden, locked, starred, setTabTotal, setGroups, setDialog }) {
+// prettier-ignore
+export default function GroupTitleBtns({ id, color, hidden, locked, starred, tooltip, setTabTotal, setGroups, setDialog }) {
   const GROUP_TITLE_BUTTONS = [
     {
       classes: "move-group-btn btn-in-group-title",
@@ -60,7 +61,7 @@ export default function GroupTitleBtns({ id, color, hidden, locked, starred, set
       {GROUP_TITLE_BUTTONS.map((x) => {
         return (
           <React.Fragment key={Math.random()}>
-            <Button classes={x.classes} translate={x.translate} tooltip={"tiptext-group-title"} onClick={x.clickFn}>
+            <Button classes={x.classes} translate={x.translate} tooltip={tooltip} onClick={x.clickFn}>
               {x.icon}
             </Button>
             {x.id && (

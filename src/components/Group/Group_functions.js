@@ -189,8 +189,8 @@ export function groupDragEnd(e, setGroups) {
         color: x.querySelector("input[type='color']").value,
         created: x.querySelector(".created span").textContent,
         hidden: !!x.querySelector(".hidden-symbol"),
-        locked: x.querySelector(".lock-group-btn .tiptext-group-title").textContent.includes(translate("unlock")),
-        starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")),
+        locked: x.querySelector(".lock-group-btn span").textContent.includes(translate("unlock")),
+        starred: x.querySelector(".star-group-btn span").textContent.includes(translate("unstar")),
         tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
           const a = tab.querySelector("a");
           return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };

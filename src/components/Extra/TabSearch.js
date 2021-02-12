@@ -25,7 +25,7 @@ export default function TabSearch() {
         <span className="input-group-text">
           <div className="tip">
             <BsInfoCircle color="white" size="1rem" />
-            <span className="tiptext-global-white text-left">
+            <span className="tiptext-global text-left">
               #___ &rarr; {translate("group")}
               <br />
               ___ &rarr; {translate("tab")}

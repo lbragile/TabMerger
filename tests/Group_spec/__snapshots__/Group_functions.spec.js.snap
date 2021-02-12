@@ -69,7 +69,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               lock group
             </span>
@@ -98,7 +98,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               star group
             </span>
@@ -126,7 +126,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               pickColor
             </span>
@@ -312,7 +312,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               hideTabs
             </span>
@@ -344,7 +344,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               openGroup
             </span>
@@ -371,7 +371,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               deleteGroup
             </span>
@@ -1096,7 +1096,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               lock group
             </span>
@@ -1125,7 +1125,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               star group
             </span>
@@ -1153,7 +1153,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               pickColor
             </span>
@@ -1339,7 +1339,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               hideTabs
             </span>
@@ -1371,7 +1371,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               openGroup
             </span>
@@ -1398,7 +1398,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               deleteGroup
             </span>
@@ -2123,7 +2123,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               lock group
             </span>
@@ -2152,7 +2152,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               star group
             </span>
@@ -2180,7 +2180,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               pickColor
             </span>
@@ -2366,7 +2366,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               hideTabs
             </span>
@@ -2398,7 +2398,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               openGroup
             </span>
@@ -2425,7 +2425,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               deleteGroup
             </span>
@@ -3150,7 +3150,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               lock group
             </span>
@@ -3179,7 +3179,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               star group
             </span>
@@ -3207,7 +3207,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               pickColor
             </span>
@@ -3393,7 +3393,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               hideTabs
             </span>
@@ -3425,7 +3425,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               openGroup
             </span>
@@ -3452,7 +3452,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               />
             </svg>
             <span
-              class="tiptext-group-title"
+              class="tiptext-group-title-bottom"
             >
               deleteGroup
             </span>

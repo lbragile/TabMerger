@@ -284,7 +284,7 @@ export const TOUR_STEPS = [
         Displays the number of tabs in a given group. This is continuously updated as the group changes.
       </div>
     ),
-    position: "bottom",
+    position: "right",
   },
   {
     selector: ".move-group-btn",
@@ -296,7 +296,7 @@ export const TOUR_STEPS = [
         <img src="https://i.imgur.com/L8mSFS3.gif" alt="Drag and drop for groups in TabMerger" />
       </>
     ),
-    position: "bottom",
+    position: "right",
     stepInteraction: false,
   },
   {
@@ -310,7 +310,7 @@ export const TOUR_STEPS = [
         displayed.
       </div>
     ),
-    position: "bottom",
+    position: "right",
   },
   {
     selector: ".star-group-btn",
@@ -325,7 +325,7 @@ export const TOUR_STEPS = [
         <img src="https://i.imgur.com/ZLMpCwm.gif" alt="Starring a group in TabMerger" />
       </>
     ),
-    position: "bottom",
+    position: "right",
   },
   {
     selector: ".color-group-btn",
@@ -341,7 +341,7 @@ export const TOUR_STEPS = [
         <b>Give it a try!</b>
       </div>
     ),
-    position: "bottom",
+    position: "left",
   },
   {
     selector: ".visibility-group-btn",
@@ -355,7 +355,7 @@ export const TOUR_STEPS = [
         <br />A symbol will be shown to indicate hidden groups.
       </div>
     ),
-    position: "bottom",
+    position: "left",
   },
   {
     selector: ".open-group-btn",
@@ -375,7 +375,7 @@ export const TOUR_STEPS = [
         .
       </div>
     ),
-    position: "bottom",
+    position: "left",
   },
   {
     selector: ".delete-group-btn",
@@ -389,7 +389,7 @@ export const TOUR_STEPS = [
         .
       </div>
     ),
-    position: "bottom",
+    position: "left",
     stepInteraction: false,
   },
   {
@@ -421,6 +421,7 @@ export const TOUR_STEPS = [
         this a try.
       </div>
     ),
+    position: "bottom",
   },
   {
     selector: ".merge-left-btn",
@@ -430,6 +431,7 @@ export const TOUR_STEPS = [
         open tabs, go ahead and give this a try.
       </div>
     ),
+    position: "bottom",
   },
   {
     selector: ".merge-right-btn",
@@ -439,9 +441,10 @@ export const TOUR_STEPS = [
         open tabs, go ahead and give this a try.
       </div>
     ),
+    position: "bottom",
   },
   {
-    selector: "",
+    selector: ".merging-container",
     content: (
       <>
         <div className="text-dark my-2" style={{ fontSize: "0.95rem" }}>
@@ -464,7 +467,7 @@ export const TOUR_STEPS = [
         <img src="https://i.imgur.com/tLKbsLS.gif" alt="TabMerger's context menu" />
       </>
     ),
-    position: "top",
+    position: "left",
   },
   {
     selector: ".draggable",
@@ -611,7 +614,7 @@ export const TOUR_STEPS = [
 export const TUTORIAL_GROUP = {
   "group-0": {
     color: "#99ff99",
-    created: "",
+    created: "31/12/2020 @ 23:59:59",
     hidden: false,
     locked: false,
     starred: true,
@@ -638,7 +641,7 @@ export const TUTORIAL_GROUP = {
   },
   "group-1": {
     color: "#ffff99",
-    created: "",
+    created: "01/01/2021 @ 00:00:00",
     hidden: false,
     locked: true,
     starred: false,
@@ -665,7 +668,7 @@ export const TUTORIAL_GROUP = {
   },
   "group-2": {
     color: "#ff9999",
-    created: "",
+    created: "02/01/2021 @ 11:11:11",
     hidden: true,
     locked: true,
     starred: false,
@@ -692,7 +695,7 @@ export const TUTORIAL_GROUP = {
   },
   "group-3": {
     color: "#dedede",
-    created: "",
+    created: "02/02/2021 @ 07:04:02",
     hidden: false,
     locked: false,
     starred: false,
@@ -701,7 +704,7 @@ export const TUTORIAL_GROUP = {
   },
   "group-4": {
     color: "#000000",
-    created: "",
+    created: "11/02/2021 @ 17:51:13",
     hidden: false,
     locked: false,
     starred: false,

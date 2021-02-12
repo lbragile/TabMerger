@@ -235,33 +235,63 @@ input[type="color"] {
   bottom: 90% !important;
 }
 
+.tiptext-group-title-bottom {
+  bottom: -220% !important;
+  z-index: 5 !important;
+}
+
 .tiptext-group-color {
   bottom: 95% !important;
 }
 
 .tiptext-group-merge {
-  bottom: 130% !important;
-  left: 0% !important;
+  bottom: -50% !important;
+  left: -200% !important;
+  margin-right: 10px;
 }
 
-.tiptext-json {
+.tiptext-json,
+.tiptext-json-bottom {
   left: 22% !important;
+}
+
+.tiptext-global-bottom {
+  bottom: -210% !important;
+}
+
+.tiptext-json-bottom {
+  bottom: -190% !important;
 }
 
 .tip span::after {
   content: "";
   border-width: 5px;
   border-style: solid;
-  border-color: black transparent transparent transparent;
-
+  border-color: #989898 transparent transparent transparent;
   position: absolute;
   top: 100%;
   left: 48%;
   transform: translateX(-50%);
 }
 
-.tiptext-global-white::after {
-  border-color: white transparent transparent transparent !important;
+.tiptext-group-merge::after {
+  top: 50% !important;
+  left: 100% !important;
+  border-top-color: transparent !important;
+  border-left-color: #989898 !important;
+  transform: translateY(-40%) !important;
+}
+
+.tiptext-global-bottom::after,
+.tiptext-json-bottom::after,
+.tiptext-group-title-bottom::after {
+  top: -18% !important;
+  border-top-color: transparent !important;
+  border-bottom-color: #989898 !important;
+}
+
+.tiptext-json-bottom::after {
+  top: -20% !important;
 }
 
 .tip:hover span {

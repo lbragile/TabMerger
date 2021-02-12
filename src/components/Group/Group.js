@@ -69,6 +69,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           hidden={hidden}
           locked={locked}
           starred={starred}
+          tooltip={"tiptext-group-title" + (id === "group-0" ? "-bottom" : "")}
           setTabTotal={setTabTotal}
           setGroups={setGroups}
           setDialog={setDialog}

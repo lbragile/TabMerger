@@ -94,7 +94,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
               id={x.id}
               classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
               translate={x.translate}
-              tooltip={"tiptext-global"}
+              tooltip={"tiptext-global" + (i > 4 ? "-bottom" : "")}
               onClick={x.btnFn}
               key={Math.random()}
             >

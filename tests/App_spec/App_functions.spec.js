@@ -868,10 +868,10 @@ describe("deleteAllGroups", () => {
     async (locked) => {
       document.body.innerHTML =
         `<div id="delete-all-btn" class="group-item" response="negative">` +
-        `  <div class="tiptext-group-title">${locked ? "unlock" : "lock"}</div>` +
+        `  <div class="lock-group-btn"><span>${locked ? "unlock" : "lock"}</span></div>` +
         `  <input type='color' value='#000000'/>` +
         `  <div class="created"><span>11/11/2011 @ 11:11:11</span></div>` +
-        `  <div class="star-group-btn"><span class="tiptext-group-title"></span>Star</div>` +
+        `  <div class="star-group-btn"><span>Star</span></div>` +
         `  <div class="draggable">` +
         `    <a href="https://www.github.com/lbragile/TabMerger">TabMerger</a>` +
         `  </div>` +
