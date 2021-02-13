@@ -21,9 +21,6 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
-
 import { fireEvent, render } from "@testing-library/react";
 
 import * as GroupFunc from "../../src/components/Group/Group_functions";
@@ -32,9 +29,9 @@ import Group from "../../src/components/Group/Group";
 import * as AppHelper from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
 
+const anything = expect.any(Function);
 var container;
 
-const anything = expect.anything();
 beforeEach(() => {
   Object.keys(init_groups).forEach((key) => {
     sessionStorage.setItem(key, JSON.stringify(init_groups[key]));

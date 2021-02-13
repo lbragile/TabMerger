@@ -21,9 +21,6 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
-
 import { render, fireEvent } from "@testing-library/react";
 
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
@@ -33,7 +30,7 @@ import * as AppHelper from "../../src/components/App/App_helpers";
 
 import { AppProvider } from "../../src/context/AppContext";
 
-const anything = expect.anything();
+const anything = expect.any(Function);
 
 var container;
 beforeEach(() => {

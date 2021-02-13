@@ -21,12 +21,11 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
+import { waitFor } from "@testing-library/react";
 
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
 
-const anything = expect.anything();
+const anything = expect.any(Function);
 
 describe("filterTabs", () => {
   const merge_tabs = [
@@ -39,32 +38,36 @@ describe("filterTabs", () => {
     { id: 6, index: 6, pinned: false, url: "https://www.jkl.com/", title: "JKL" },
     { id: 7, index: 7, pinned: false, url: "https://www.jkl.com/", title: "JKL" }, // duplicate on purpose
     { id: 8, index: 8, pinned: true, url: "https://www.blacklisted.com/", title: "blacklisted" },
+    { id: 9, index: 9, pinned: false, url: "chrome-extension://inmiajapbpafmhjleiebcamfhkfnlgoc/index.html", title: "TabMerger" }, // prettier-ignore
+    { id: 10, index: 10, pinned: false, url: "chrome://extensions/newtab", title: "New Tab" },
+    { id: 11, index: 11, pinned: false, url: "chrome://extensions/", title: "Extensions" },
+    { id: 12, index: 12, pinned: false, url: "about:addons", title: "Add-ons Manager" },
   ];
 
   beforeEach(() => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
     sessionStorage.setItem("open_tabs", JSON.stringify(merge_tabs));
 
-    default_settings.blacklist = "https://www.blacklisted.com/, ";
+    default_settings.blacklist = ", https://www.blacklisted.com/, ";
     sessionStorage.setItem("settings", JSON.stringify(default_settings));
     default_settings.blacklist = "";
     jest.clearAllMocks();
   });
 
   test.each([
-    [{ which: "right" }, { index: 3 }, undefined, "include"],
+    [{ which: "right" }, { index: 4 }, undefined, "include"],
     [{ which: "right" }, { index: 0 }, "group-0", "include"],
-    [{ which: "right" }, { index: 7 }, "group-1", "include"],
-    [{ which: "right" }, { index: 7 }, "group-1", "avoid"],
-    [{ which: "left" }, { index: 3 }, undefined, "include"],
+    [{ which: "right" }, { index: 12 }, "group-1", "include"],
+    [{ which: "right" }, { index: 12 }, "group-1", "avoid"],
+    [{ which: "left" }, { index: 4 }, undefined, "include"],
     [{ which: "left" }, { index: 0 }, "group-0", "include"],
-    [{ which: "left" }, { index: 7 }, "group-1", "include"],
+    [{ which: "left" }, { index: 12 }, "group-1", "include"],
     [{ which: "excluding" }, { index: 1 }, "group-1", "include"],
     [{ which: "excluding" }, { index: 1 }, "group-1", "avoid"],
     [{ which: "only" }, { index: 6 }, "group-2", "include"],
     [{ which: "all" }, { index: 0 }, "group-3", "include"],
     [{ which: "all" }, { index: 0 }, "group-3", "avoid"],
-  ])("%o, %o, %s, %s", (info, tab, group_id, pinned) => {
+  ])("%o, %o, %s, %s", async (info, tab, group_id, pinned) => {
     if (pinned === "avoid") {
       var new_settings = JSON.parse(sessionStorage.getItem("settings"));
       new_settings.pin = pinned;
@@ -74,7 +77,7 @@ describe("filterTabs", () => {
 
     var tabs_to_be_merged;
     if (info.which === "right") {
-      if (tab.index === 3) {
+      if (tab.index === 4) {
         tabs_to_be_merged = merge_tabs.slice(5, 7);
       } else if (tab.index === 0) {
         tabs_to_be_merged = [...merge_tabs.slice(1, 2), ...merge_tabs.slice(5, 7)];
@@ -82,7 +85,7 @@ describe("filterTabs", () => {
         tabs_to_be_merged = [];
       }
     } else if (info.which === "left") {
-      if (tab.index === 3) {
+      if (tab.index === 4) {
         tabs_to_be_merged = merge_tabs.slice(0, 2);
       } else if (tab.index === 0) {
         tabs_to_be_merged = [];
@@ -113,76 +116,101 @@ describe("filterTabs", () => {
     BackgroundHelper.filterTabs(info, tab, group_id);
     jest.advanceTimersByTime(101);
 
-    expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
-    expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ currentWindow: true }, anything);
+    await waitFor(() => {
+      expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
+      expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ currentWindow: true }, anything);
 
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
-    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ into_group, merged_tabs }, anything);
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ into_group, merged_tabs }, anything);
+
+      if (
+        !(info.which === "right" && tab.index === 12) &&
+        !(info.which === "left" && [0, 4].includes(tab.index)) &&
+        !(info.which === "only" && tab.index === 6)
+      ) {
+        expect(chromeTabsRemoveSpy).toHaveBeenCalledTimes(2);
+        if (
+          (info.which === "right" && tab.index === 0) ||
+          (info.which === "left" && [4, 12].includes(tab.index)) ||
+          ["excluding", "all"].includes(info.which)
+        ) {
+          expect(chromeTabsRemoveSpy).toHaveBeenNthCalledWith(1, tab.index === 12 ? [2, 3, 4, 10, 11]: [2, 3, 4, 10, 11, 12]); // prettier-ignore
+        } else {
+          expect(chromeTabsRemoveSpy).toHaveBeenNthCalledWith(1, tab.index === 12 ? [10, 11] : [10, 11, 12]);
+        }
+        expect(chromeTabsRemoveSpy).toHaveBeenNthCalledWith(2, 7);
+      } else {
+        expect(chromeTabsRemoveSpy).toHaveBeenCalledTimes(1);
+        expect(chromeTabsRemoveSpy).toHaveBeenCalledWith(info.which === "left" && tab.index === 4 ? [2, 3] : []);
+      }
+    });
+
+    expect.hasAssertions();
   });
 });
 
 describe("findExtTabAndSwitch", () => {
   const expected_query = { title: "TabMerger", currentWindow: true };
-  const id = 99;
+  const expected_exists = { highlighted: true, active: true };
+  const expected_not_exist = { url: "../index.html", active: true };
+  const tab_id = 99;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  afterAll(() => {
+    chromeTabsQuerySpy.mockRestore();
+    chromeTabsCreateSpy.mockRestore();
+    chromeTabsOnUpdatedAdd.mockRestore();
   });
 
-  it("TabMerger page is already open", () => {
-    const expected_exists = { highlighted: true, active: true };
+  test("TabMerger page is already open", async () => {
+    jest.clearAllMocks();
 
-    BackgroundHelper.findExtTabAndSwitch();
+    const result = await BackgroundHelper.findExtTabAndSwitch();
+
+    expect(result).toBe(0);
 
     expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
     expect(chromeTabsQuerySpy).toHaveBeenCalledWith(expected_query, anything);
 
     expect(chromeTabsUpdateSpy).toHaveBeenCalledTimes(1);
-    expect(chromeTabsUpdateSpy).toHaveBeenCalledWith(id, expected_exists, anything);
+    expect(chromeTabsUpdateSpy).toHaveBeenCalledWith(tab_id, expected_exists, anything);
   });
 
-  describe("TabMerger page is NOT already open", () => {
-    const expected_not_exist = { url: "../index.html", active: true };
+  test.each([
+    ["complete", true],
+    ["complete", false],
+    ["incomplete", true],
+    ["incomplete", false],
+  ])("TabMerger page is NOT already open - (loading = %s, match_id = %s)", async (type, id_match) => {
+    chromeTabsQuerySpy.mockImplementation((_, cb) => cb([]));
+    chromeTabsCreateSpy.mockImplementation((_, cb) => cb({ id: id_match ? tab_id : tab_id - 1 }));
+    chromeTabsOnUpdatedAdd.mockImplementation((cb) => cb(tab_id, { status: type }));
+    jest.clearAllMocks();
 
-    beforeAll(() => {
-      chromeTabsQuerySpy.mockImplementation((_, cb) => cb([]));
-      chromeTabsCreateSpy.mockImplementation((_, cb) => cb({ id }));
-    });
+    const result = await BackgroundHelper.findExtTabAndSwitch();
 
-    afterAll(() => {
-      chromeTabsQuerySpy.mockRestore();
-      chromeTabsCreateSpy.mockRestore();
-      chromeTabsOnUpdatedAdd.mockRestore();
-    });
+    expect(result).toBe(0);
 
-    test.each([["complete"], ["incomplete"]])("%s", (type) => {
-      chromeTabsOnUpdatedAdd.mockImplementation((cb) => cb(id, { status: type }));
-      jest.clearAllMocks();
+    expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
+    expect(chromeTabsQuerySpy).toHaveBeenCalledWith(expected_query, anything);
 
-      BackgroundHelper.findExtTabAndSwitch();
+    expect(chromeTabsCreateSpy).toHaveBeenCalledTimes(1);
+    expect(chromeTabsCreateSpy).toHaveBeenCalledWith(expected_not_exist, anything);
 
-      expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
-      expect(chromeTabsQuerySpy).toHaveBeenCalledWith(expected_query, anything);
+    expect(chromeTabsOnUpdatedAdd).toHaveBeenCalledTimes(1);
+    expect(chromeTabsOnUpdatedAdd).toHaveBeenCalledWith(anything);
 
-      expect(chromeTabsCreateSpy).toHaveBeenCalledTimes(1);
-      expect(chromeTabsCreateSpy).toHaveBeenCalledWith(expected_not_exist, anything);
-
-      expect(chromeTabsOnUpdatedAdd).toHaveBeenCalledTimes(1);
-      expect(chromeTabsOnUpdatedAdd).toHaveBeenCalledWith(expect.any(Function));
-
-      if (type === "complete") {
-        expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledTimes(1);
-        expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledWith(expect.any(Function));
-      } else {
-        expect(chromeTabsOnUpdatedRemove).not.toHaveBeenCalled();
-      }
-    });
+    if (type === "complete" && id_match) {
+      expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledTimes(1);
+      expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledWith(anything);
+    } else {
+      expect(chromeTabsOnUpdatedRemove).not.toHaveBeenCalled();
+    }
   });
 });
 

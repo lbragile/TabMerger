@@ -21,16 +21,13 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
-
 import { render } from "@testing-library/react";
 
 import * as AppHelper from "../../src/components/App/App_helpers";
 
 import App from "../../src/components/App/App";
 
-const anything = expect.anything();
+const anything = expect.any(Function);
 var new_item = init_groups["group-0"];
 
 var container, sync_node, sync_container;

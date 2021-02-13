@@ -21,15 +21,12 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
-
 import * as BackgroundFunc from "../../public/background/background_functions.js";
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
 
 import { waitFor } from "@testing-library/react";
 
-const anything = expect.anything();
+const anything = expect.any(Function);
 
 beforeEach(() => {
   sessionStorage.setItem("settings", JSON.stringify(default_settings));

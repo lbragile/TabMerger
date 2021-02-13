@@ -21,13 +21,10 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
-
 import * as SettingsFunc from "../../public/settings/settings_functions.js";
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 
-const anything = expect.anything();
+const anything = expect.any(Function);
 
 describe("restoreOptions", () => {
   var expected_sync = { badgeInfo: "display", blacklist: "Not TabMerger", color: "#111111", dark: false, merge: "merge", open: "with", pin: "include", restore: "remove", title: "Random" }; // prettier-ignore

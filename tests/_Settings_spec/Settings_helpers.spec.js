@@ -21,9 +21,6 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
-
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 
 /**
@@ -37,7 +34,7 @@ function changeUserAgent(return_val) {
   });
 }
 
-const anything = expect.anything();
+const anything = expect.any(Function);
 
 describe("setTabMergerLink", () => {
   const chrome_url = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";

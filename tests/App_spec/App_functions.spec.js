@@ -21,9 +21,6 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React from "react";
-window.React = React;
-
 import { render, waitFor, act } from "@testing-library/react";
 
 import * as AppFunc from "../../src/components/App/App_functions";
@@ -35,25 +32,26 @@ import App from "../../src/components/App/App";
 import Group from "../../src/components/Group/Group";
 import Tab from "../../src/components/Tab/Tab";
 
-import { exportedVal } from "../__mocks__/jsonImportMock";
 import { TUTORIAL_GROUP } from "../../src/components/Extra/Tutorial";
 
+const anything = expect.any(Function);
 var container, sync_node;
-const anything = expect.anything();
 
 beforeAll(() => {
   jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
 });
 
 beforeEach(() => {
-  container = render(<App />).container;
-  sync_node = container.querySelector("#sync-text span");
-
   Object.keys(init_groups).forEach((key) => {
     sessionStorage.setItem(key, JSON.stringify(init_groups[key]));
   });
 
   localStorage.setItem("groups", JSON.stringify(init_groups));
+
+  container = render(<App />).container;
+  sync_node = container.querySelector("#sync-text span");
+
+  jest.clearAllMocks();
 });
 
 describe("badgeIconInfo", () => {
@@ -1184,11 +1182,11 @@ describe("importJSON", () => {
   });
 
   it("updates sync and local storage on valid input", () => {
-    const fakeFile = new File([JSON.stringify(exportedVal)], "file.json", { type: "application/json" });
+    const fakeFile = new File([JSON.stringify(exportedJSON)], "file.json", { type: "application/json" });
     const input = { target: { files: [fakeFile] } };
 
     jest.spyOn(global, "FileReader").mockImplementation(function () {
-      this.readAsText = jest.fn(() => (this.result = JSON.stringify(exportedVal)));
+      this.readAsText = jest.fn(() => (this.result = JSON.stringify(exportedJSON)));
     });
 
     var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation(function () {
@@ -1211,16 +1209,16 @@ describe("importJSON", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
 
     expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: exportedVal.settings }, anything);
+    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: exportedJSON.settings }, anything);
 
-    delete exportedVal.settings;
+    delete exportedJSON.settings;
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: exportedVal, groups_copy: [init_groups], scroll: 0 }, anything); // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: exportedJSON, groups_copy: [init_groups], scroll: 0 }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(2);
-    expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(exportedVal));
-    expect(mockSet).toHaveBeenNthCalledWith(2, 12);
+    expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(exportedJSON));
+    expect(mockSet).toHaveBeenNthCalledWith(2, 20);
 
     storeDestructiveActionSpy.mockRestore();
   });
