@@ -181,11 +181,13 @@ export function outputFileName() {
  * @return {HTMLElement} The tab/group element immediately after the current position of the dragged element.
  */
 export function getDragAfterElement(container, y_pos, type) {
-  const selector = type === "tab" ? ".draggable:not(.dragging)" : ".group-item:not(.dragging-group)";
-  const afterElement = [...container.querySelectorAll(selector)].reduce(
+  const selector = type === "tab" ? ".draggable:not(.dragging)" : type === "group" ? ".group-item:not(.dragging-group)" : null; // prettier-ignore
+  const elements = selector ? [...container.querySelectorAll(selector)] : [];
+  const coef = type === "tab" ? 2 : type === "group" ? 3 : null;
+  const afterElement = elements.reduce(
     (closest, element) => {
       const { top, height } = element.getBoundingClientRect();
-      const offset = y_pos - top - height / (type === "tab" ? 2 : 3);
+      const offset = y_pos - top - height / coef;
       return closest.offset < offset && offset < 0 ? { offset, element } : closest;
     },
     { offset: Number.NEGATIVE_INFINITY, element: null }
@@ -231,5 +233,5 @@ export function elementMutationListener(element, cb) {
     observer.disconnect();
   });
 
-  observer.observe(element, { attributes: true, childList: false, subtree: false });
+  observer.observe(element, { attributes: true });
 }

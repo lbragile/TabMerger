@@ -206,15 +206,15 @@ describe("getDragAfterElement", () => {
     [false, top + height / 3],
     [false, Number.NEGATIVE_INFINITY],
     [false, Number.NEGATIVE_INFINITY + top + height / 3],
-  ])("dragging element is tab = %s, y_pos = %s", (tab, y_pos) => {
-    const result = AppHelper.getDragAfterElement(container.querySelector(tab ? ".group" : "#tabmerger-container"), y_pos, tab ? "tab" : "group"); // prettier-ignore
+    [null, 0],
+  ])("dragging element is tab = %s, y_pos = %i", (tab, y_pos) => {
+    const result = AppHelper.getDragAfterElement(container.querySelector(tab ? ".group" : "#tabmerger-container"), y_pos, tab ? "tab" : tab === false ? "group" : null); // prettier-ignore
 
-    const { top, height } = getBoundingClientRectSpy();
     const adjustment = top + height / (tab ? 2 : 3);
-    if (y_pos === adjustment || y_pos === Number.NEGATIVE_INFINITY + adjustment) {
+    if (tab === null || y_pos >= adjustment || y_pos <= Number.NEGATIVE_INFINITY + adjustment) {
       expect(result).toBeNull();
     } else {
-      expect(result).toBeTruthy();
+      expect(result.classList).toContain(tab ? "draggable" : "group-item");
     }
   });
 });

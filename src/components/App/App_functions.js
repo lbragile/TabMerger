@@ -662,53 +662,41 @@ export function dragOver(e, type) {
  * This action is non-persistent and will reset once the page reloads or a re-render occurs.
  * Tabs/Groups are simply hidden from the user once a filter is applied, that is they are not
  * removed from TabMerger and thus the counts (group and global) are not updated.
+ *
  * @example
- * #chess ➡ Group Search
- * chess ➡ Tab Search
+ * #TabMerger ➡ "Group Level Search (by group title)"
+ * TabMerger ➡ "Tab Level Search (by tab title)"
  *
  * @param {HTMLElement} e Node corresponding to the search filter
  */
 export function regexSearchForTab(e) {
-  var titles, match, tab_items, no_match;
-  const sections = document.querySelectorAll(".group-item");
-  var keep_sections = [];
+  var sections = document.querySelectorAll(".group-item");
+  var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
+  var titles, match;
   if (e.target.value[0] === "#") {
     // GROUP
     titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
     match = e.target.value.substr(1).toLowerCase();
-
-    titles.forEach((x, i) => {
-      no_match = x.toLowerCase().indexOf(match) === -1;
-      sections[i].style.display = no_match ? "none" : "";
-    });
-  } else if (e.target.value !== "") {
+    titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
+  } else if (e.target.value.length > 0) {
     // TAB
-    tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
-    titles = tab_items.map((x) => {
-      return x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase());
-    });
-
+    titles = tab_items.map((x) => x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase()));
     match = e.target.value.toLowerCase();
 
     titles.forEach((title, i) => {
-      // individual tabs where a group has 1 tab matching
-      title.forEach((x, j) => {
-        // maintain a list of groups to keep since they contain at least one match
-        no_match = x.indexOf(match) === -1;
-        if (!no_match) keep_sections.push(i);
-        tab_items[i][j].style.display = no_match ? "none" : "";
-      });
-    });
-
-    // remove groups based on above calculations
-    sections.forEach((x, i) => {
-      x.style.display = !keep_sections.includes(i) ? "none" : "";
+      if (title.some((x) => x.indexOf(match) !== -1)) {
+        sections[i].style.display = "";
+        title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) === -1 ? "none" : ""));
+      } else {
+        sections[i].style.display = "none";
+        tab_items[i].forEach((x) => (x.style.display = "none"));
+      }
     });
   } else {
     // NO TYPING - show all groups and tabs
     sections.forEach((x) => (x.style.display = ""));
-    [...document.querySelectorAll(".draggable")].forEach((x) => (x.style.display = ""));
+    tab_items.forEach((tabs) => tabs.forEach((tab) => (tab.style.display = "")));
   }
 }
 

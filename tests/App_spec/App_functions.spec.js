@@ -489,6 +489,28 @@ describe("openOrRemoveTabs", () => {
 
     expect(JSON.parse(sessionStorage.getItem("open_tabs"))).toStrictEqual(expect_open_tabs) // prettier-ignore
   });
+
+  it.each([
+    ["✅", "❌", true],
+    ["❌", "✅", false],
+  ])("does nothing for namespace %s, changes length %s violation", (_, __, namespace_violation) => {
+    jest.clearAllMocks();
+
+    if (namespace_violation) {
+      AppFunc.openOrRemoveTabs({ remove: { newValue: [1] } }, "sync", mockSet, mockSet);
+    } else {
+      AppFunc.openOrRemoveTabs({ remove: { newValue: [] } }, "local", mockSet, mockSet);
+    }
+
+    expect(chromeSyncGetSpy).not.toHaveBeenCalled();
+    expect(chromeLocalGetSpy).not.toHaveBeenCalled();
+    expect(chromeTabsQuerySpy).not.toHaveBeenCalled();
+    expect(chromeTabsMoveSpy).not.toHaveBeenCalled();
+    expect(chromeTabsCreateSpy).not.toHaveBeenCalled();
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    expect(mockSet).not.toHaveBeenCalled();
+    expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
+  });
 });
 
 // note that duplicate removal is made in background script!
@@ -499,14 +521,23 @@ describe("checkMerging", () => {
     { id: 2, pinned: false, title: "merged tab c", url: location.href + "c" },
   ];
 
-  it("does nothing when namespace is not 'local'", () => {
+  it.each([
+    ["✅", "❌", true],
+    ["❌", "✅", false],
+  ])("does nothing for namespace %s, changes length %s violation", (_, __, namespace_violation) => {
     jest.clearAllMocks();
-    AppFunc.checkMerging({}, "sync", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet);
+
+    if (namespace_violation) {
+      AppFunc.checkMerging({ merged_tabs: { newValue: [1] } }, "sync", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet, mockSet); // prettier-ignore
+    } else {
+      AppFunc.checkMerging({ merged_tabs: { newValue: [] } }, "local", SYNC_LIMIT, ITEM_LIMIT, mockSet, mockSet, mockSet); // prettier-ignore
+    }
 
     expect(chromeLocalGetSpy).not.toHaveBeenCalled();
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
     expect(chromeTabsRemoveSpy).not.toHaveBeenCalled();
     expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
+    expect(mockSet).not.toHaveBeenCalled();
   });
 
   test.each([
@@ -1105,31 +1136,30 @@ describe("dragOver", () => {
 describe("regexSearchForTab", () => {
   it.each([
     ["group", "NO", "#c", ["none", "none"]],
-    ["group", "YES", "#a", ["", "none"]],
-    ["tab", "NO", "c", ["none", "none"]],
-    ["tab", "YES", "b", ["none", ""]],
+    ["group", "YES", "#GROUP a", ["", "none"]],
+    ["group", "YES", "#group b", ["none", ""]],
+    ["group", "YES", "#group", ["", ""]],
+    ["tab", "NO", "x", ["none", "none", "none", "none"]],
+    ["tab", "YES", "tab A", ["", "none", "none", "none"]],
+    ["tab", "YES", "tab B", ["none", "", "none", "none"]],
+    ["tab", "YES", "tab C", ["none", "none", "", "none"]],
+    ["tab", "YES", "tab D", ["none", "none", "none", ""]],
+    ["tab", "YES", "tab", ["", "", "", ""]],
     ["blank", "BACKSPACE_BLANK", "", ["", ""]],
-  ])("works for %s search - %s match", (type, match, value, expect_arr) => {
+  ])("works for %s search - %s match (value %s)", (type, _, value, expect_arr) => {
     document.body.innerHTML =
       `<div class="group-item">` +
-      `  <input class="title-edit-input" value="aaaaa"/>` +
-      `  <div class="draggable">` +
-      `    <a href="#" class="a-tab">aaaaa</a>` +
-      `  </div>` +
+      `  <input class="title-edit-input" value="GROUP A"/>` +
+      `  <div class="draggable"><a href="#" class="a-tab">TAB A</a></div>` +
+      `  <div class="draggable"><a href="#" class="a-tab">TAB B</a></div>` +
       `</div>` +
       `<div class="group-item">` +
-      `  <input class="title-edit-input" value="bbbbb"/>` +
-      `  <div class="draggable">` +
-      `    <a href="#" class="a-tab">bbbbb</a>` +
-      `  </div>` +
+      `  <input class="title-edit-input" value="GROUP B"/>` +
+      `  <div class="draggable"><a href="#" class="a-tab">TAB C</a></div>` +
+      `  <div class="draggable"><a href="#" class="a-tab">TAB D</a></div>` +
       `</div>`;
 
-    if (match !== "BACKSPACE_BLANK") {
-      AppFunc.regexSearchForTab({ target: { value } });
-    } else {
-      AppFunc.regexSearchForTab({ target: { value: "random" } });
-      AppFunc.regexSearchForTab({ target: { value } });
-    }
+    AppFunc.regexSearchForTab({ target: { value } });
 
     const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable" : ".group-item")];
     expect(targets.map((x) => x.style.display)).toStrictEqual(expect_arr);
@@ -1219,6 +1249,8 @@ describe("importJSON", () => {
     expect(mockSet).toHaveBeenCalledTimes(2);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(exportedJSON));
     expect(mockSet).toHaveBeenNthCalledWith(2, 20);
+
+    expect(input.target.value).toBe("");
 
     storeDestructiveActionSpy.mockRestore();
   });
