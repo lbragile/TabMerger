@@ -156,16 +156,16 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
  */
 export function syncWrite(sync_node) {
   chrome.storage.local.get("groups", async (local) => {
-    var current_groups = local.groups;
-    if (current_groups && (current_groups["group-0"].tabs.length > 0 || Object.keys(current_groups).length > 1)) {
-      for (var key of Object.keys(current_groups)) {
-        await AppHelper.updateGroupItem(key, current_groups[key]);
+    var groups = local.groups;
+    if (Object.values(groups).some((val) => val.tabs.length > 0)) {
+      for (var key of Object.keys(groups)) {
+        await AppHelper.updateGroupItem(key, groups[key]);
       }
 
       // remove extras from previous sync
       chrome.storage.sync.get(null, (sync) => {
         delete sync.settings;
-        var remove_keys = Object.keys(sync).filter((key) => !Object.keys(current_groups).includes(key));
+        var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
         chrome.storage.sync.remove(remove_keys, () => {
           AppHelper.toggleSyncTimestamp(true, sync_node);
         });
@@ -637,9 +637,9 @@ export function undoDestructiveAction(setGroups, setTabTotal, setDialog) {
  * Allows the user to drag and drop an entire group with tabs inside.
  * @param {HTMLElement} e The group node being dragged.
  * @param {string} type Either group or tab, corresponding to the dragging operation.
- *
+ * @param {string?} offset Number of pixels from the top/bottom of the screen to wait for mouse position to hit, prior to scrolling
  */
-export function dragOver(e, type) {
+export function dragOver(e, type, offset = 10) {
   const currentElement = document.querySelector(type === "group" ? ".dragging-group" : ".dragging");
   if (currentElement) {
     e.preventDefault();
@@ -649,7 +649,6 @@ export function dragOver(e, type) {
     !afterElement ? location?.appendChild(currentElement) : location?.insertBefore(currentElement, afterElement);
 
     // allow scrolling while dragging with a 10px offset from top/bottom
-    const offset = 10;
     if (e.clientY < offset || e.clientY > window.innerHeight - offset) {
       window.scrollTo(0, e.clientY);
     }
@@ -664,8 +663,8 @@ export function dragOver(e, type) {
  * removed from TabMerger and thus the counts (group and global) are not updated.
  *
  * @example
- * #TabMerger ➡ "Group Level Search (by group title)"
- * TabMerger ➡ "Tab Level Search (by tab title)"
+ * "#TabMerger (or `@TabMerger`) ➡ Group Level Search (by group title)"
+ * "TabMerger ➡ Tab Level Search (by tab title)"
  *
  * @param {HTMLElement} e Node corresponding to the search filter
  */
@@ -674,12 +673,12 @@ export function regexSearchForTab(e) {
   var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
   var titles, match;
-  if (e.target.value[0] === "#") {
+  if (e.target.value.match(/^[#@]/)) {
     // GROUP
     titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
     match = e.target.value.substr(1).toLowerCase();
     titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
-  } else if (e.target.value.length > 0) {
+  } else {
     // TAB
     titles = tab_items.map((x) => x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase()));
     match = e.target.value.toLowerCase();
@@ -687,16 +686,12 @@ export function regexSearchForTab(e) {
     titles.forEach((title, i) => {
       if (title.some((x) => x.indexOf(match) !== -1)) {
         sections[i].style.display = "";
-        title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) === -1 ? "none" : ""));
+        title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
       } else {
+        // no need to hide tabs if group is hidden
         sections[i].style.display = "none";
-        tab_items[i].forEach((x) => (x.style.display = "none"));
       }
     });
-  } else {
-    // NO TYPING - show all groups and tabs
-    sections.forEach((x) => (x.style.display = ""));
-    tab_items.forEach((tabs) => tabs.forEach((tab) => (tab.style.display = "")));
   }
 }
 

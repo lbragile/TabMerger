@@ -229,7 +229,6 @@ describe("addTabFromURL", () => {
         sessionStorage.setItem("settings", JSON.stringify(current_settings));
       }
 
-      global.alert = jest.fn();
       jest.clearAllMocks();
 
       jest.useFakeTimers();

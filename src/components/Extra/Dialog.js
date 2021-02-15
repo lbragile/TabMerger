@@ -24,6 +24,7 @@ export default function Dialog({ element, show, title, msg, reject_btn_text, acc
       show={show}
       backdrop="static"
       keyboard={false}
+      animation={false}
       onHide={() => setDialog({ show: false })}
       centered
     >

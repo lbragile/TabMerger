@@ -825,7 +825,10 @@ describe("addGroup", () => {
 });
 
 describe("openAllTabs", () => {
-  it.each([[true], [false]])("sets the local storage item correctly - response === %s", async (response) => {
+  var elementMutationListenerSpy;
+  afterAll(() => elementMutationListenerSpy.mockRestore());
+
+  it.each([[true], [false], [null]])("sets the local storage item correctly - response === %s", async (response) => {
     document.body.innerHTML =
       `<div id="open-all-btn" response=${response ? "negative" : "positive"}>` +
       `  <a class="a-tab" href="www.abc.com"/>` +
@@ -836,10 +839,22 @@ describe("openAllTabs", () => {
     var expected_ls = { remove: [null, location.href + "www.abc.com"] };
 
     localStorage.setItem("groups", JSON.stringify(init_groups));
+
+    // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
+    if (response === null) {
+      elementMutationListenerSpy = jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
+        var mutation = {};
+        mutation.type = { attributes: false, childList: true, subtree: false };
+        cb(mutation);
+      });
+    }
+
     jest.clearAllMocks();
 
     AppFunc.openAllTabs(stub, mockSet);
-    element.setAttribute("response", response ? "positive" : "negative"); // cause a mutation on the element
+    if (response !== null) {
+      element.setAttribute("response", response ? "positive" : "negative"); // cause a mutation on the element
+    }
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith({
@@ -858,7 +873,7 @@ describe("openAllTabs", () => {
     });
 
     await waitFor(() => {
-      if (element.getAttribute("response") === "positive") {
+      if (response !== null && element.getAttribute("response") === "positive") {
         expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
         expect(chromeLocalSetSpy).toHaveBeenCalledWith(expected_ls, anything);
       } else {
@@ -1062,17 +1077,21 @@ describe("undoDestructiveAction", () => {
 });
 
 describe("dragOver", () => {
+  const offset = 10;
   it.each([
-    ["URL_BAR", "URL", 1, window.innerHeight, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
-    ["START_MIDDLE", "GROUP", 1, window.innerHeight, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
-    ["END", "GROUP", 2, window.innerHeight / 2, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
-    ["AFTER", "GROUP", 0, 0, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
-    ["START_MIDDLE", "TAB", 1, window.innerHeight, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
-    ["END", "TAB", 2, window.innerHeight / 2, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
-    ["AFTER", "TAB", 0, 0, ["a", "b", "c", "d", "e", "f", "g", "h", "i"]],
-  ])("finds the correct after element -> %s, %s", (where, type, tab_num, scroll, expect_result) => {
+    ["URL_BAR", "URL", 1, window.innerHeight],
+    ["START_MIDDLE", "GROUP", 1, window.innerHeight],
+    ["END", "GROUP", 2, window.innerHeight / 2],
+    ["AFTER", "GROUP", 0, 0],
+    ["START_MIDDLE", "TAB", 1, window.innerHeight],
+    ["END", "TAB", 2, window.innerHeight / 2],
+    ["AFTER", "TAB", 0, 0],
+    ["END", "TAB", 0, offset],
+    ["END", "TAB", 0, window.innerHeight - offset],
+    ["START_MIDDLE", "TAB", 0, null],
+  ])("finds the correct after element -> %s, %s", (where, type, tab_num, scroll) => {
     document.body.innerHTML =
-      `<div id="#tabmerger-container">` +
+      `<div id="tabmerger-container">` +
       `  <div class="group ${type === "GROUP" ? "dragging-group" : ""} id="group-0">` +
       `    <div class="tabs-container">` +
       `      <div class="draggable ${type === "TAB" ? "dragging" : ""}">a</div>` +
@@ -1103,27 +1122,32 @@ describe("dragOver", () => {
     });
 
     var stub = {
-      preventDefault: jest.fn(),
+      preventDefault: () => {},
       clientY: scroll,
       target: document.querySelector(type === "GROUP" ? ".group" : ".draggable"),
     };
 
-    const tabs_text = [...document.querySelectorAll(".draggable")].map((x) => x.textContent);
     const expected_drag_container = stub.target.closest(type === "GROUP" ? "#tabmerger-container" : ".group");
-    AppFunc.dragOver(stub, type.toLowerCase());
 
-    expect(tabs_text).toEqual(expect_result);
+    jest.clearAllMocks();
+
+    AppFunc.dragOver(stub, type.toLowerCase(), scroll ? offset : undefined);
 
     if (type !== "URL") {
       if (where === "END") {
-        expect(global.scrollTo).not.toHaveBeenCalled();
+        expect(scrollTo).not.toHaveBeenCalled();
       } else {
-        expect(global.scrollTo).toHaveBeenCalled();
-        expect(global.scrollTo).toHaveBeenCalledWith(0, stub.clientY);
+        expect(scrollTo).toHaveBeenCalled();
+        expect(scrollTo).toHaveBeenCalledWith(0, stub.clientY);
       }
       expect(getDragAfterElementSpy).toHaveBeenCalledWith(expected_drag_container, stub.clientY, type.toLowerCase());
+      if (where !== "AFTER") {
+        expect(getDragAfterElementSpy().classList).toContain(type === "GROUP" ? "group" : "draggable");
+      } else {
+        expect(getDragAfterElementSpy).toHaveReturnedWith(null);
+      }
     } else {
-      expect(global.scrollTo).not.toHaveBeenCalled();
+      expect(scrollTo).not.toHaveBeenCalled();
       expect(getDragAfterElementSpy).not.toHaveBeenCalled();
     }
 
@@ -1139,13 +1163,14 @@ describe("regexSearchForTab", () => {
     ["group", "YES", "#GROUP a", ["", "none"]],
     ["group", "YES", "#group b", ["none", ""]],
     ["group", "YES", "#group", ["", ""]],
-    ["tab", "NO", "x", ["none", "none", "none", "none"]],
-    ["tab", "YES", "tab A", ["", "none", "none", "none"]],
-    ["tab", "YES", "tab B", ["none", "", "none", "none"]],
-    ["tab", "YES", "tab C", ["none", "none", "", "none"]],
-    ["tab", "YES", "tab D", ["none", "none", "none", ""]],
-    ["tab", "YES", "tab", ["", "", "", ""]],
+    ["tab", "NO", "x", ["none", "", "", "none", "", ""]],
+    ["tab", "YES", "tab A", ["", "", "none", "none", "", ""]],
+    ["tab", "YES", "tab B", ["", "none", "", "none", "", ""]],
+    ["tab", "YES", "tab C", ["none", "", "", "", "", "none"]],
+    ["tab", "YES", "tab D", ["none", "", "", "", "none", ""]],
+    ["tab", "YES", "tab", ["", "", "", "", "", ""]],
     ["blank", "BACKSPACE_BLANK", "", ["", ""]],
+    ["improper", "IMPORPER_SYMBOL", "!", ["none", "none"]],
   ])("works for %s search - %s match (value %s)", (type, _, value, expect_arr) => {
     document.body.innerHTML =
       `<div class="group-item">` +
@@ -1159,9 +1184,13 @@ describe("regexSearchForTab", () => {
       `  <div class="draggable"><a href="#" class="a-tab">TAB D</a></div>` +
       `</div>`;
 
+    // need to type first to have the input change
+    if (type === "blank") {
+      AppFunc.regexSearchForTab({ target: { value: "random" } });
+    }
     AppFunc.regexSearchForTab({ target: { value } });
 
-    const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable" : ".group-item")];
+    const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable, .group-item" : ".group-item")];
     expect(targets.map((x) => x.style.display)).toStrictEqual(expect_arr);
   });
 });
@@ -1180,7 +1209,6 @@ describe("resetSearch", () => {
 
 describe("importJSON", () => {
   it("alerts on wrong non json input", () => {
-    global.alert = jest.fn();
     var mockSetDialog = jest.fn();
     const input = { target: { files: [{ type: "application/pdf" }] } };
     jest.clearAllMocks();
