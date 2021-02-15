@@ -299,24 +299,27 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
         var sync_bytes = JSON.stringify(group_blocks).length + merged_bytes;
 
         if (sync_bytes < sync_limit) {
-          // add new group at top ("merging group") if context menu is used
-          // to avoid merging into group with existing tabs
+          // IF top group has tabs - add new group at top ("merging group")
+          // if context menu is used to avoid merging into group with existing tabs.
+          // Else - add tabs to the top group. This allows the user to star a group and then merge into it.
           if (!into_group.includes("group")) {
             into_group = "group-0";
-            const group_values = Object.values(group_blocks);
-            group_blocks[into_group] = {
-              color: sync.settings.color,
-              created: AppHelper.getTimestamp(),
-              hidden: false,
-              locked: false,
-              starred: false,
-              tabs: [],
-              title: sync.settings.title,
-            };
+            if (group_blocks[into_group].tabs.length > 0) {
+              const group_values = AppHelper.sortByKey(group_blocks);
+              group_blocks[into_group] = {
+                color: sync.settings.color,
+                created: AppHelper.getTimestamp(),
+                hidden: false,
+                locked: false,
+                starred: false,
+                tabs: [],
+                title: sync.settings.title,
+              };
 
-            group_values.forEach((val, i) => {
-              group_blocks["group-" + (i + 1)] = val;
-            });
+              group_values.forEach((val, i) => {
+                group_blocks["group-" + (i + 1)] = val;
+              });
+            }
           }
 
           var item_bytes = JSON.stringify(group_blocks[into_group]).length + merged_bytes;

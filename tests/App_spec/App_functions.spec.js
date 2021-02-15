@@ -541,17 +541,23 @@ describe("checkMerging", () => {
   });
 
   test.each([
-    ["NOT", "merge", "group-1"],
-    ["NOT", "leave", "group-1"],
-    ["NOT", "leave", "context"],
-    ["SYNC", "merge", "group-1"],
-    ["ITEM", "merge", "group-1"],
+    ["NOT", "merge", "group-1", "full"],
+    ["NOT", "leave", "group-1", "full"],
+    ["NOT", "leave", "context", "full"],
+    ["NOT", "leave", "context", "empty"],
+    ["SYNC", "merge", "group-1", "full"],
+    ["ITEM", "merge", "group-1", "full"],
   ])(
-    "merge all and none exist in TabMerger - %s exceeding limit (merge: %s, into: %s)",
-    (type, merge_setting, into_group) => {
+    "merge all and none exist in TabMerger - %s exceeding limit (merge: %s, into: %s, group-0: %s)",
+    (type, merge_setting, into_group, top_group) => {
       var stub = { merged_tabs: { newValue: merge_all } };
 
-      localStorage.setItem("groups", JSON.stringify(init_groups));
+      var current_groups = JSON.parse(JSON.stringify(init_groups));
+      if (top_group === "empty") {
+        current_groups["group-0"].tabs = [];
+      }
+
+      localStorage.setItem("groups", JSON.stringify(current_groups));
       localStorage.setItem("into_group", into_group);
       localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
       sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
@@ -565,20 +571,24 @@ describe("checkMerging", () => {
         ];
       } else {
         into_group = "group-0";
-        const group_values = Object.values(expected_groups);
-        expected_groups[into_group] = {
-          color: default_settings.color,
-          created: AppHelper.getTimestamp(),
-          hidden: false,
-          locked: false,
-          starred: false,
-          tabs: merge_all.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url })),
-          title: default_settings.title,
-        };
+        if (top_group !== "empty") {
+          const group_values = AppHelper.sortByKey(expected_groups);
+          expected_groups[into_group] = {
+            color: default_settings.color,
+            created: AppHelper.getTimestamp(),
+            hidden: false,
+            locked: false,
+            starred: false,
+            tabs: merge_all.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url })),
+            title: default_settings.title,
+          };
 
-        group_values.forEach((val, i) => {
-          expected_groups["group-" + (i + 1)] = val;
-        });
+          group_values.forEach((val, i) => {
+            expected_groups["group-" + (i + 1)] = val;
+          });
+        } else {
+          expected_groups["group-0"].tabs = merge_all.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url }));
+        }
       }
 
       var expected_tabs_num = 0;
