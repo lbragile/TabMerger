@@ -149,7 +149,7 @@ export function resetTutorialChoice(e, url, setTour, setDialog) {
 export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
   chrome.storage.sync.get("settings", (sync) => {
     chrome.storage.local.get("groups", (local) => {
-      if (local.groups) {
+      if (local.groups &amp;&amp; sync.settings) {
         const num_groups = Object.keys(local.groups).length;
         var color;
         if (tabTotal &lt; STEP_SIZE) {
@@ -184,16 +184,16 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
  */
 export function syncWrite(sync_node) {
   chrome.storage.local.get("groups", async (local) => {
-    var current_groups = local.groups;
-    if (current_groups &amp;&amp; (current_groups["group-0"].tabs.length > 0 || Object.keys(current_groups).length > 1)) {
-      for (var key of Object.keys(current_groups)) {
-        await AppHelper.updateGroupItem(key, current_groups[key]);
+    var groups = local.groups;
+    if (Object.values(groups).some((val) => val.tabs.length > 0)) {
+      for (var key of Object.keys(groups)) {
+        await AppHelper.updateGroupItem(key, groups[key]);
       }
 
       // remove extras from previous sync
       chrome.storage.sync.get(null, (sync) => {
         delete sync.settings;
-        var remove_keys = Object.keys(sync).filter((key) => !Object.keys(current_groups).includes(key));
+        var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
         chrome.storage.sync.remove(remove_keys, () => {
           AppHelper.toggleSyncTimestamp(true, sync_node);
         });
@@ -327,24 +327,27 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
         var sync_bytes = JSON.stringify(group_blocks).length + merged_bytes;
 
         if (sync_bytes &lt; sync_limit) {
-          // add new group at top ("merging group") if context menu is used
-          // to avoid merging into group with existing tabs
+          // IF top group has tabs - add new group at top ("merging group")
+          // if context menu is used to avoid merging into group with existing tabs.
+          // Else - add tabs to the top group. This allows the user to star a group and then merge into it.
           if (!into_group.includes("group")) {
             into_group = "group-0";
-            const group_values = Object.values(group_blocks);
-            group_blocks[into_group] = {
-              color: sync.settings.color,
-              created: AppHelper.getTimestamp(),
-              hidden: false,
-              locked: false,
-              starred: false,
-              tabs: [],
-              title: sync.settings.title,
-            };
+            if (group_blocks[into_group].tabs.length > 0) {
+              const group_values = AppHelper.sortByKey(group_blocks);
+              group_blocks[into_group] = {
+                color: sync.settings.color,
+                created: AppHelper.getTimestamp(),
+                hidden: false,
+                locked: false,
+                starred: false,
+                tabs: [],
+                title: sync.settings.title,
+              };
 
-            group_values.forEach((val, i) => {
-              group_blocks["group-" + (i + 1)] = val;
-            });
+              group_values.forEach((val, i) => {
+                group_blocks["group-" + (i + 1)] = val;
+              });
+            }
           }
 
           var item_bytes = JSON.stringify(group_blocks[into_group]).length + merged_bytes;
@@ -567,13 +570,13 @@ export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
           groups = {};
           var locked_counter = 0;
           document.querySelectorAll(".group-item").forEach((x) => {
-            if (x.querySelector(".tiptext-group-title").textContent.includes(translate("unlock"))) {
+            if (x.querySelector(".lock-group-btn span").textContent.includes(translate("unlock"))) {
               groups["group-" + locked_counter] = {
                 color: x.querySelector("input[type='color']").value,
                 created: x.querySelector(".created span").textContent,
                 hidden: !!x.querySelector(".hidden-symbol"),
                 locked: true,
-                starred: x.querySelector(".star-group-btn .tiptext-group-title").textContent.includes(translate("unstar")), // prettier-ignore
+                starred: x.querySelector(".star-group-btn span").textContent.includes(translate("unstar")),
                 tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
                   const a = tab.querySelector("a");
                   return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
@@ -665,9 +668,9 @@ export function undoDestructiveAction(setGroups, setTabTotal, setDialog) {
  * Allows the user to drag and drop an entire group with tabs inside.
  * @param {HTMLElement} e The group node being dragged.
  * @param {string} type Either group or tab, corresponding to the dragging operation.
- *
+ * @param {string?} offset Number of pixels from the top/bottom of the screen to wait for mouse position to hit, prior to scrolling
  */
-export function dragOver(e, type) {
+export function dragOver(e, type, offset = 10) {
   const currentElement = document.querySelector(type === "group" ? ".dragging-group" : ".dragging");
   if (currentElement) {
     e.preventDefault();
@@ -677,7 +680,6 @@ export function dragOver(e, type) {
     !afterElement ? location?.appendChild(currentElement) : location?.insertBefore(currentElement, afterElement);
 
     // allow scrolling while dragging with a 10px offset from top/bottom
-    const offset = 10;
     if (e.clientY &lt; offset || e.clientY > window.innerHeight - offset) {
       window.scrollTo(0, e.clientY);
     }
@@ -690,53 +692,37 @@ export function dragOver(e, type) {
  * This action is non-persistent and will reset once the page reloads or a re-render occurs.
  * Tabs/Groups are simply hidden from the user once a filter is applied, that is they are not
  * removed from TabMerger and thus the counts (group and global) are not updated.
+ *
  * @example
- * #chess ➡ Group Search
- * chess ➡ Tab Search
+ * "#TabMerger (or `@TabMerger`) ➡ Group Level Search (by group title)"
+ * "TabMerger ➡ Tab Level Search (by tab title)"
  *
  * @param {HTMLElement} e Node corresponding to the search filter
  */
 export function regexSearchForTab(e) {
-  var titles, match, tab_items, no_match;
-  const sections = document.querySelectorAll(".group-item");
-  var keep_sections = [];
+  var sections = document.querySelectorAll(".group-item");
+  var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
-  if (e.target.value[0] === "#") {
+  var titles, match;
+  if (e.target.value.match(/^[#@]/)) {
     // GROUP
     titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
     match = e.target.value.substr(1).toLowerCase();
-
-    titles.forEach((x, i) => {
-      no_match = x.toLowerCase().indexOf(match) === -1;
-      sections[i].style.display = no_match ? "none" : "";
-    });
-  } else if (e.target.value !== "") {
+    titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
+  } else {
     // TAB
-    tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
-    titles = tab_items.map((x) => {
-      return x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase());
-    });
-
+    titles = tab_items.map((x) => x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase()));
     match = e.target.value.toLowerCase();
 
     titles.forEach((title, i) => {
-      // individual tabs where a group has 1 tab matching
-      title.forEach((x, j) => {
-        // maintain a list of groups to keep since they contain at least one match
-        no_match = x.indexOf(match) === -1;
-        if (!no_match) keep_sections.push(i);
-        tab_items[i][j].style.display = no_match ? "none" : "";
-      });
+      if (title.some((x) => x.indexOf(match) !== -1)) {
+        sections[i].style.display = "";
+        title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
+      } else {
+        // no need to hide tabs if group is hidden
+        sections[i].style.display = "none";
+      }
     });
-
-    // remove groups based on above calculations
-    sections.forEach((x, i) => {
-      x.style.display = !keep_sections.includes(i) ? "none" : "";
-    });
-  } else {
-    // NO TYPING - show all groups and tabs
-    sections.forEach((x) => (x.style.display = ""));
-    [...document.querySelectorAll(".draggable")].forEach((x) => (x.style.display = ""));
   }
 }
 
@@ -887,7 +873,7 @@ export function translate(msg) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Feb 11 2021 22:28:48 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 16 2021 12:25:57 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
