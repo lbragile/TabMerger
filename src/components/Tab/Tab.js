@@ -39,6 +39,7 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
 
   useEffect(() => {
     TabFunc.setInitTabs(setTabs, id);
+    TabFunc.applyTitleStyles(id);
   }, [id]);
 
   return (
@@ -65,6 +66,7 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
             <img className="img-tab" src={TabHelper.getFavIconURL(tab.url)} alt="" draggable={false} />
             <a
               href={tab.url}
+              title={tab.url}
               className={"a-tab mx-1 text-" + textColor}
               target="_blank"
               rel="noreferrer"

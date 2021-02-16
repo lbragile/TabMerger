@@ -121,7 +121,7 @@ export function resetTutorialChoice(e, url, setTour, setDialog) {
 export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
   chrome.storage.sync.get("settings", (sync) => {
     chrome.storage.local.get("groups", (local) => {
-      if (local.groups) {
+      if (local.groups && sync.settings) {
         const num_groups = Object.keys(local.groups).length;
         var color;
         if (tabTotal < STEP_SIZE) {

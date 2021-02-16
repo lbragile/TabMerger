@@ -98,16 +98,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   margin-top: 2px;
 }
 
-.btn-for-merging {
-  z-index: 2;
-}
-
-.btn-for-merging svg {
-  position: relative;
-  left: -10px;
-  top: -10px;
-}
-
 .btn-in-group-title {
   margin: 0;
   padding: 0 2px;
@@ -115,12 +105,25 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   background: none !important;
 }
 
-.merge-btn svg {
-  transform: rotate(90deg);
+.btn-for-merging {
+  z-index: 2;
 }
 
-.merge-right-btn svg {
-  transform: rotate(180deg);
+.btn-for-merging svg {
+  position: relative;
+  left: -10px;
+  top: -9px;
+  height: 20px;
+  width: 20px;
+}
+
+.merge-left-svg {
+  left: -11px !important;
+}
+
+.merge-right-svg {
+  left: -8px !important;
+  transform: rotateY(180deg);
 }
 
 /* COLOR PICKER (GROUP) */

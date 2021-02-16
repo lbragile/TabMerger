@@ -103,10 +103,6 @@ small {
 }
 
 /* BUTTONS */
-#home-btn {
-  border: 1px solid black;
-}
-
 .btn:focus {
   box-shadow: none;
 }

@@ -416,19 +416,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -444,19 +493,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -472,19 +552,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -926,19 +1037,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -954,19 +1114,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -982,19 +1173,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -1443,19 +1665,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -1471,19 +1742,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -1499,19 +1801,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -1953,19 +2286,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -1981,19 +2363,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -2009,19 +2422,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -2470,19 +2914,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -2498,19 +2991,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -2526,19 +3050,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -2980,19 +3535,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -3008,19 +3612,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -3036,19 +3671,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -3497,19 +4163,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -3525,19 +4240,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -3553,19 +4299,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -4007,19 +4784,68 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-all-svg"
+                height="32"
+                viewBox="-0.5 -0.5 165 155"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 39 29.6 L 60.5 29.8 Q 82 30 81.62 65.91 L 81.24 101.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="29.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.82 L 73.29 97.74 L 81.24 101.82 L 89.29 97.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 123 29.11 L 102.5 29.3 Q 82 29.5 81.62 65.41 L 81.24 101.32"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="134"
+                    cy="29"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 113.32 L 73.29 97.24 L 81.24 101.32 L 89.29 97.41 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -4035,19 +4861,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-left-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"
@@ -4063,19 +4920,50 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
               class="tip"
             >
               <svg
-                color="black"
-                fill="currentColor"
-                height="1.3rem"
-                stroke="currentColor"
-                stroke-width="0"
-                style="color: black;"
-                viewBox="0 0 24 24"
-                width="1.3rem"
+                aria-labelledby="title"
+                class="merge-right-svg"
+                height="32"
+                viewBox="-0.5 -0.5 117 154"
+                width="32"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  d="M18 6H20V18H18zM4 13L12.586 13 8.293 17.293 9.707 18.707 16.414 12 9.707 5.293 8.293 6.707 12.586 11 4 11z"
-                />
+                <defs />
+                <g>
+                  <path
+                    d="M 110 125 L 110 13"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 39 28.6 L 60.5 28.8 Q 82 29 81.62 64.91 L 81.24 100.82"
+                    fill="none"
+                    pointer-events="stroke"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                  <ellipse
+                    cx="28"
+                    cy="28.5"
+                    fill="none"
+                    pointer-events="all"
+                    rx="11"
+                    ry="11"
+                    stroke="#000000"
+                    stroke-width="10"
+                  />
+                  <path
+                    d="M 81.12 112.82 L 73.29 96.74 L 81.24 100.82 L 89.29 96.91 Z"
+                    fill="#000000"
+                    pointer-events="all"
+                    stroke="#000000"
+                    stroke-miterlimit="10"
+                    stroke-width="10"
+                  />
+                </g>
               </svg>
               <span
                 class="tiptext-group-merge"

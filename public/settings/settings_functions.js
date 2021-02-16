@@ -27,7 +27,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import { setTabMergerLink, setSync } from "./settings_helpers.js";
 
-const DEFAULT_SETTINGS = { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title" }; // prettier-ignore
+const DEFAULT_SETTINGS = { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, font: "Arial", merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title", weight: "Normal" }; // prettier-ignore
 
 /**
  * Once a user changes the settings, they are saved in sync storage and reloaded
@@ -48,6 +48,8 @@ export function restoreOptions() {
 
     document.getElementById("options-default-color").value = sync.settings.color;
     document.getElementById("options-default-title").value = sync.settings.title;
+    document.getElementById("tab-font").value = sync.settings.font;
+    document.getElementById("tab-weight").value = sync.settings.weight;
 
     document.querySelectorAll("input[name='badge-view']").forEach((x) => {
       x.checked = x.value === sync.settings.badgeInfo;

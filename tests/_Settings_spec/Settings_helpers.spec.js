@@ -72,7 +72,7 @@ describe("setTabMergerLink", () => {
 
 describe("setSync", () => {
   it("sets sync storage according to the user selected values", () => {
-    const expected_sync = {badgeInfo: "display", blacklist: "https://www.google.com", color: "#000000", dark: true, merge: "merge", open: "with", pin: "include", title: "Default", restore: "remove" }; // prettier-ignore
+    const expected_sync = {badgeInfo: "display", blacklist: "https://www.google.com", color: "#000000", dark: true, font: "Arial", merge: "merge", open: "with", pin: "include", title: "Default", restore: "remove", weight: "Normal" }; // prettier-ignore
 
     document.getElementById = jest.fn((id) => {
       switch (id) {
@@ -84,8 +84,10 @@ describe("setSync", () => {
           return { value: "https://www.google.com" };
         case "darkMode":
           return { checked: true };
-        default:
-          break;
+        case "tab-font":
+          return { value: "Arial" };
+        case "tab-weight":
+          return { value: "Normal" };
       }
     });
 

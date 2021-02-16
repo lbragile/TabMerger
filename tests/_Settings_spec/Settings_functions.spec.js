@@ -27,26 +27,28 @@ import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 const anything = expect.any(Function);
 
 describe("restoreOptions", () => {
-  var expected_sync = { badgeInfo: "display", blacklist: "Not TabMerger", color: "#111111", dark: false, merge: "merge", open: "with", pin: "include", restore: "remove", title: "Random" }; // prettier-ignore
+  var expected_sync = { badgeInfo: "display", blacklist: "Not TabMerger", color: "#111111", dark: false, font: "Times New Roman", merge: "merge", open: "with", pin: "include", restore: "remove", title: "Random", weight: "Bold" }; // prettier-ignore
 
   beforeEach(() => {
     document.body.innerHTML =
-      `<div><hr/><code></code></div>` +
-      `<input type="color" id="options-default-color"></input>` +
-      `<input type="text" id="options-default-title"></input>` +
-      `<input type="radio" name="restore-tabs" value="keep"></input>` +
-      `<input type="radio" name="restore-tabs" value="remove"></input>` +
-      `<input type="radio" name="ext-open" value="without"></input>` +
-      `<input type="radio" name="ext-open" value="with"></input>` +
-      `<input type="radio" name="pin-tabs" value="include"></input>` +
-      `<input type="radio" name="pin-tabs" value="avoid"></input>` +
-      `<input type="radio" name="badge-view" value="display"></input>` +
-      `<input type="radio" name="badge-view" value="hide"></input>` +
-      `<input type="radio" name="merge-tabs" value="merge"></input>` +
-      `<input type="radio" name="merge-tabs" value="leave"></input>` +
-      `<input type="checkbox" id="darkMode"></input>` +
-      `<nav></nav>` +
-      `<textarea id="options-blacklist"></textarea>`;
+      `<div><hr /><code /></div>` +
+      `<input type="color" id="options-default-color" />` +
+      `<input type="text" id="options-default-title" />` +
+      `<input type="radio" name="restore-tabs" value="keep" />` +
+      `<input type="radio" name="restore-tabs" value="remove" />` +
+      `<input type="radio" name="ext-open" value="without" />` +
+      `<input type="radio" name="ext-open" value="with" />` +
+      `<input type="radio" name="pin-tabs" value="include" />` +
+      `<input type="radio" name="pin-tabs" value="avoid" />` +
+      `<input type="radio" name="badge-view" value="display" />` +
+      `<input type="radio" name="badge-view" value="hide" />` +
+      `<input type="radio" name="merge-tabs" value="merge" />` +
+      `<input type="radio" name="merge-tabs" value="leave" />` +
+      `<input type="checkbox" id="darkMode" />` +
+      `<div id="tab-weight" value="Normal" />` +
+      `<div id="tab-font" value="Arial" />` +
+      `<nav />` +
+      `<textarea id="options-blacklist" />`;
   });
 
   it.each([
@@ -86,6 +88,8 @@ describe("restoreOptions", () => {
     expect(document.getElementById("options-blacklist").value).toBe(settings === "empty" ? "" : "Not TabMerger");
     expect(document.getElementById("options-default-color").value).toBe(settings === "empty" ? "#dedede" : "#111111");
     expect(document.getElementById("options-default-title").value).toBe(settings === "empty" ? "Title" : "Random");
+    expect(document.getElementById("tab-font").value).toBe(settings === "empty" ? "Arial" : "Times New Roman");
+    expect(document.getElementById("tab-weight").value).toBe(settings === "empty" ? "Normal" : "Bold");
 
     const ss_dark = test_dark || settings === "empty";
     expect(document.body.style._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "white");

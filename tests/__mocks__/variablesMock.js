@@ -336,11 +336,13 @@ global.exportedJSON = {
     blacklist: "",
     color: "#dedede",
     dark: true,
+    font: "Arial",
     merge: "merge",
     open: "without",
     pin: "include",
     restore: "keep",
     title: "Title",
+    weight: "Normal",
   },
 };
 
@@ -349,11 +351,13 @@ global.default_settings = {
   blacklist: "",
   color: "#dedede",
   dark: true,
+  font: "Arial",
   merge: "merge",
   open: "without",
   pin: "include",
   restore: "keep",
   title: "Title",
+  weight: "Normal",
 };
 
 global.default_group = {

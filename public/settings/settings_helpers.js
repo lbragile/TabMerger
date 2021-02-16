@@ -54,12 +54,14 @@ export function setSync() {
   const blacklist = document.getElementById("options-blacklist").value;
   const color = document.getElementById("options-default-color").value;
   const dark = document.getElementById("darkMode").checked;
+  const font = document.getElementById("tab-font").value;
   const pin = document.querySelector("input[name='pin-tabs']:checked").value;
   const merge = document.querySelector("input[name='merge-tabs']:checked").value;
   const open = document.querySelector("input[name='ext-open']:checked").value;
   const restore = document.querySelector("input[name='restore-tabs']:checked").value;
   const title = document.getElementById("options-default-title").value;
+  const weight = document.getElementById("tab-weight").value;
 
-  const settings = { badgeInfo, blacklist, color, dark, pin, merge, open, restore, title };
+  const settings = { badgeInfo, blacklist, color, dark, font, pin, merge, open, restore, title, weight };
   chrome.storage.sync.set({ settings }, () => {});
 }
