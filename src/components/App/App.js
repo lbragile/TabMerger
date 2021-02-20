@@ -25,7 +25,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module __CONSTANTS
  */
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Tour from "reactour";
 
 import * as AppFunc from "./App_functions";
@@ -39,9 +39,7 @@ import Links from "../Extra/Links";
 import Dialog from "../Extra/Dialog";
 import Button from "../Button/Button";
 import { TOUR_STEPS } from "../Extra/Tutorial";
-
 import { AppProvider } from "../../context/AppContext";
-
 import { BiCheckCircle } from "react-icons/bi";
 
 import "./App.css";
@@ -123,7 +121,6 @@ export default function App() {
   return (
     <div id="app-wrapper" className="text-center">
       <Dialog {...dialog} setDialog={setDialog} />
-
       <Tour
         steps={TOUR_STEPS}
         isOpen={!!tour}
@@ -138,7 +135,6 @@ export default function App() {
         rounded={5}
         lastStepNextButton={<button className="btn btn-dark">🏁</button>}
       />
-
       <nav id="sidebar">
         <Header total={tabTotal} />
         <hr className="mx-auto d-none shown-in-print" />
@@ -157,8 +153,7 @@ export default function App() {
         <Button
           classes="p-0 btn-in-global"
           id="subscription-btn"
-          translate="Activate Subscription"
-          tooltip={"tiptext-global"}
+          translate="Activate Tier"
           onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
         >
           {<BiCheckCircle color="black" size="1.5rem" />}
@@ -168,7 +163,6 @@ export default function App() {
           Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
         </div>
       </nav>
-
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current)}

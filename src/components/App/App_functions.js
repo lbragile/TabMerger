@@ -624,13 +624,13 @@ export function deleteAllGroups(e, user, setTabTotal, setGroups, setDialog) {
           groups = {};
           var locked_counter = 0;
           document.querySelectorAll(".group-item").forEach((x) => {
-            if (x.querySelector(".lock-group-btn span").textContent.includes(translate("unlock"))) {
+            if (x.querySelector(".lock-group-btn").getAttribute("data-tip").includes(translate("unlock"))) {
               groups["group-" + locked_counter] = {
                 color: x.querySelector("input[type='color']").value,
                 created: x.querySelector(".created span").textContent,
                 hidden: !!x.querySelector(".hidden-symbol"),
                 locked: true,
-                starred: x.querySelector(".star-group-btn span").textContent.includes(translate("unstar")),
+                starred: x.querySelector(".star-group-btn").getAttribute("data-tip").includes(translate("unstar")),
                 tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
                   const a = tab.querySelector("a");
                   return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };

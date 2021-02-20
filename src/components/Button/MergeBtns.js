@@ -37,13 +37,7 @@ export default function MergeBtns({ id }) {
       <div className="d-flex flex-column">
         {MERGE_BUTTONS.map((x) => {
           return (
-            <Button
-              classes={x.classes}
-              translate={x.translate}
-              tooltip={"tiptext-group-merge"}
-              onClick={x.clickFn}
-              key={Math.random()}
-            >
+            <Button classes={x.classes} translate={x.translate} onClick={x.clickFn} key={Math.random()}>
               <svg
                 className={x.svg_class}
                 xmlns="http://www.w3.org/2000/svg"

@@ -22,15 +22,12 @@ export default function TabSearch({ user, setDialog }) {
         onBlur={(e) => resetSearch(e)}
       />
       <div className="input-group-append">
-        <span className="input-group-text">
-          <div className="tip">
-            <BsInfoCircle color="white" size="1rem" />
-            <span className="tiptext-global text-left">
-              #___ &rarr; {translate("group")}
-              <br />
-              ___ &rarr; {translate("tab")}
-            </span>
-          </div>
+        <span
+          className="input-group-text"
+          data-tip={`#___ → ${translate("group")}<br />___ → ${translate("tab")}`}
+          data-for="search-tooltip"
+        >
+          <BsInfoCircle color="white" size="1rem" />
         </span>
       </div>
     </div>

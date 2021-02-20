@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
@@ -10,8 +10,11 @@ import { FiSettings } from "react-icons/fi";
 import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
+import ReactTooltip from "react-tooltip";
 
 export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups, setDialog }) {
+  useEffect(() => ReactTooltip.rebuild());
+
   var NUM_GROUP_LIMIT;
   switch (user.tier) {
     case "Free":
@@ -31,7 +34,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
   const GLOBAL_BUTTONS = [
     {
       id: "options-btn",
-      classes: "",
+      classes: "options-btn-class",
       translate: AppFunc.translate("settings"),
       btnFn: () => window.location.assign("/settings/settings.html"),
       icon: <FiSettings color="black" size="1.6rem" />,
@@ -66,7 +69,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
     },
     {
       id: "print-btn",
-      classes: "mr-2",
+      classes: "mr-2 print-btn-class",
       translate: AppFunc.translate("print"),
       btnFn: () => window.print(),
       icon: <BiPrinter color="black" size="1.5rem" />,
@@ -110,10 +113,10 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
               id={x.id}
               classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
               translate={x.translate}
-              tooltip={"tiptext-global" + (i > 4 ? "-bottom" : "")}
               onClick={x.btnFn}
               key={Math.random()}
               disabled={(!user.paid && [2, 3, 8].includes(i)) || (user.tier === "Basic" && i === 2)}
+              place={i > 4 ? "bottom" : "top"}
             >
               {x.icon}
             </Button>
@@ -129,6 +132,60 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
           />
         );
       })}
+
+      <ReactTooltip
+        id="btn-tooltip"
+        multiline={true}
+        className="font-weight-bold text-center rounded border border-white tooltip-popup"
+        effect="solid"
+        arrowColor="white"
+        backgroundColor="black"
+        textColor="white"
+      />
+
+      <ReactTooltip
+        id="smaller-btn-tooltip"
+        multiline={true}
+        className="font-weight-bold text-center rounded border border-white smaller-tooltip-popup"
+        effect="solid"
+        arrowColor="white"
+        backgroundColor="black"
+        textColor="white"
+      />
+
+      <ReactTooltip
+        id="merge-btn-tooltip"
+        multiline={true}
+        className="font-weight-bold text-center rounded border border-white tooltip-popup"
+        effect="solid"
+        arrowColor="black"
+        backgroundColor="black"
+        textColor="white"
+        place="left"
+      />
+
+      <ReactTooltip
+        id="group-title-btn-tooltip"
+        multiline={true}
+        className="font-weight-bold text-center rounded border border-white tooltip-popup"
+        effect="solid"
+        arrowColor="black"
+        backgroundColor="black"
+        textColor="white"
+        place="top"
+      />
+
+      <ReactTooltip
+        id="search-tooltip"
+        multiline={true}
+        className="font-weight-bold text-left rounded border border-white search-tooltip-popup"
+        effect="solid"
+        arrowColor="white"
+        backgroundColor="black"
+        textColor="white"
+        place="top"
+        offset={{ top: -13 }}
+      />
     </div>
   );
 }
