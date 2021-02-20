@@ -11,7 +11,7 @@ import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 
-export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, setGroups, setDialog }) {
+export default function GlobalBtns({ user, syncTimestamp, group_limit, setTabTotal, setGroups, setDialog }) {
   const GLOBAL_BUTTONS = [
     {
       id: "options-btn",
@@ -31,14 +31,14 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       id: "export-btn",
       classes: "",
       translate: AppFunc.translate("exportJSON"),
-      btnFn: () => AppFunc.exportJSON(),
+      btnFn: () => AppFunc.exportJSON(user, setDialog),
       icon: <BiExport color="black" size="1.4rem" />,
     },
     {
       id: "sync-write-btn",
       classes: "mx-2",
       translate: AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("write"),
-      btnFn: () => AppFunc.syncWrite(syncTimestamp.current),
+      btnFn: () => AppFunc.syncWrite(syncTimestamp.current, user, setDialog),
       icon: <BsCloudUpload color="black" size="1.5rem" />,
     },
     {
@@ -69,7 +69,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
       id: "sync-read-btn",
       classes: "mr-2",
       translate: AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("read"),
-      btnFn: () => AppFunc.syncRead(syncTimestamp.current, setGroups, setTabTotal),
+      btnFn: () => AppFunc.syncRead(syncTimestamp.current, user, setGroups, setTabTotal, setDialog),
       icon: <BsCloudDownload color="black" size="1.5rem" />,
     },
     {
@@ -89,7 +89,7 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
 
       {GLOBAL_BUTTONS.map((x, i) => {
         return i !== 7 ? (
-          <span key={Math.random()}>
+          <React.Fragment key={Math.random()}>
             <Button
               id={x.id}
               classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
@@ -97,11 +97,12 @@ export default function GlobalBtns({ syncTimestamp, group_limit, setTabTotal, se
               tooltip={"tiptext-global" + (i > 4 ? "-bottom" : "")}
               onClick={x.btnFn}
               key={Math.random()}
+              disabled={!user.paid && [2, 3, 8].includes(i)}
             >
               {x.icon}
             </Button>
             {i === 4 && <div />}
-          </span>
+          </React.Fragment>
         ) : (
           <ImportBtn setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog} key={Math.random()} />
         );

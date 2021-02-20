@@ -23,9 +23,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 
-export default function Button({ id, classes, children, onClick, tooltip, translate }) {
+export default function Button({ id, classes, children, onClick, tooltip, translate, disabled }) {
   return (
-    <button id={id} className={classes + " btn"} onClick={onClick}>
+    <button id={id} className={classes + " btn" + (disabled ? " disabled-btn" : "")} onClick={onClick}>
       <div className="tip">
         {children}
         {translate && <span className={tooltip}>{translate}</span>}

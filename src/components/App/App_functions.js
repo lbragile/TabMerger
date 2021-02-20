@@ -24,12 +24,48 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import * as AppHelper from "../App/App_helpers";
 import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 
+import axios from "axios";
+
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
 
 /**
  * @module App/App_functions
  */
+
+const SUBSCRIPTION_DIALOG = {
+  show: true,
+  title: "❕ TabMerger Information ❕",
+  msg: (
+    <div>
+      To use this feature, you are required to have an <b>active subscription</b> with TabMerger.
+      <br />
+      <br />
+      Please visit our official homepage's{" "}
+      <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+        Subscriptions & Pricing
+      </a>{" "}
+      page for more information.
+    </div>
+  ),
+  accept_btn_text: "OK",
+  reject_btn_text: null,
+};
+
+/**
+ * Checks and updates a user's status to know if they are a paid or free user.
+ * The information is stored in an external (encrypted) database.
+ *
+ * @param {string} email The user's email that was used when paying for a TabMerger subscription
+ * @param {string} password The user's password for their TabMerger subscription account
+ * @param {Function} setUser For re-rendering the user's payment/subscription information
+ */
+export async function checkUserStatus(email, password, setUser) {
+  var response = await axios.get("http://localhost:5000/v1/customer/" + JSON.stringify({ password, email }));
+  if (response.data) {
+    setUser(response.data);
+  }
+}
 
 /**
  * Initialize the local & sync storage when the user first installs TabMerger.
@@ -154,24 +190,28 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
  *
  * @see defaultGroup in App.js
  */
-export function syncWrite(sync_node) {
-  chrome.storage.local.get("groups", async (local) => {
-    var groups = local.groups;
-    if (Object.values(groups).some((val) => val.tabs.length > 0)) {
-      for (var key of Object.keys(groups)) {
-        await AppHelper.updateGroupItem(key, groups[key]);
-      }
+export function syncWrite(sync_node, user, setDialog) {
+  if (!user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
+  } else {
+    chrome.storage.local.get("groups", async (local) => {
+      var groups = local.groups;
+      if (Object.values(groups).some((val) => val.tabs.length > 0)) {
+        for (var key of Object.keys(groups)) {
+          await AppHelper.updateGroupItem(key, groups[key]);
+        }
 
-      // remove extras from previous sync
-      chrome.storage.sync.get(null, (sync) => {
-        delete sync.settings;
-        var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
-        chrome.storage.sync.remove(remove_keys, () => {
-          AppHelper.toggleSyncTimestamp(true, sync_node);
+        // remove extras from previous sync
+        chrome.storage.sync.get(null, (sync) => {
+          delete sync.settings;
+          var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
+          chrome.storage.sync.remove(remove_keys, () => {
+            AppHelper.toggleSyncTimestamp(true, sync_node);
+          });
         });
-      });
-    }
-  });
+      }
+    });
+  }
 }
 
 /**
@@ -184,28 +224,32 @@ export function syncWrite(sync_node) {
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab count
  */
-export function syncRead(sync_node, setGroups, setTabTotal) {
-  chrome.storage.sync.get(null, (sync) => {
-    if (sync["group-0"]) {
-      delete sync.settings;
-      chrome.storage.local.remove(["groups"], () => {
-        var new_ls = {};
-        var remove_keys = [];
-        Object.keys(sync).forEach((key) => {
-          new_ls[key] = sync[key];
-          remove_keys.push(key);
-        });
+export function syncRead(sync_node, user, setGroups, setTabTotal, setDialog) {
+  if (!user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
+  } else {
+    chrome.storage.sync.get(null, (sync) => {
+      if (sync["group-0"]) {
+        delete sync.settings;
+        chrome.storage.local.remove(["groups"], () => {
+          var new_ls = {};
+          var remove_keys = [];
+          Object.keys(sync).forEach((key) => {
+            new_ls[key] = sync[key];
+            remove_keys.push(key);
+          });
 
-        chrome.storage.local.set({ groups: new_ls, scroll: document.documentElement.scrollTop }, () => {
-          chrome.storage.sync.remove(remove_keys, () => {
-            AppHelper.toggleSyncTimestamp(false, sync_node);
-            setGroups(JSON.stringify(new_ls));
-            setTabTotal(AppHelper.updateTabTotal(new_ls));
+          chrome.storage.local.set({ groups: new_ls, scroll: document.documentElement.scrollTop }, () => {
+            chrome.storage.sync.remove(remove_keys, () => {
+              AppHelper.toggleSyncTimestamp(false, sync_node);
+              setGroups(JSON.stringify(new_ls));
+              setTabTotal(AppHelper.updateTabTotal(new_ls));
+            });
           });
         });
-      });
-    }
-  });
+      }
+    });
+  }
 }
 
 /**
@@ -469,13 +513,20 @@ export function addGroup(num_group_limit, setGroups, setDialog) {
         title: "⚠ TabMerger Alert ⚠",
         msg: (
           <div>
-            Number of groups exceeded (more than <b>100</b>).
+            Number of groups exceeded (more than <b>{num_group_limit}</b>).
             <br />
             <br />
             Please do <b>one</b> of the following:
             <ul style={{ marginLeft: "25px" }}>
               <li>Delete a group that is no longer needed;</li>
               <li>Merge tabs into another existing group.</li>
+              <li>
+                Upgrade your TabMerger subscription (
+                <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+                  Subscriptions & Pricing
+                </a>
+                ).
+              </li>
             </ul>
           </div>
         ),
@@ -767,21 +818,25 @@ export function importJSON(e, setGroups, setTabTotal, setDialog) {
 /**
  * Allows the user to export TabMerger's current configuration (including settings).
  */
-export function exportJSON() {
-  chrome.storage.local.get("groups", (local) => {
-    var group_blocks = local.groups;
-    chrome.storage.sync.get("settings", (sync) => {
-      group_blocks["settings"] = sync.settings;
+export function exportJSON(user, setDialog) {
+  if (!user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
+  } else {
+    chrome.storage.local.get("groups", (local) => {
+      var group_blocks = local.groups;
+      chrome.storage.sync.get("settings", (sync) => {
+        group_blocks["settings"] = sync.settings;
 
-      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
 
-      var anchor = document.createElement("a");
-      anchor.setAttribute("href", dataStr);
-      anchor.setAttribute("download", AppHelper.outputFileName() + ".json");
-      anchor.click();
-      anchor.remove();
+        var anchor = document.createElement("a");
+        anchor.setAttribute("href", dataStr);
+        anchor.setAttribute("download", AppHelper.outputFileName() + ".json");
+        anchor.click();
+        anchor.remove();
+      });
     });
-  });
+  }
 }
 
 /**

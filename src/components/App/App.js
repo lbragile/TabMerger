@@ -64,6 +64,7 @@ export default function App() {
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
   const [dialog, setDialog] = useState({ show: false });
+  const [user, setUser] = useState({ paid: false, tier: "Free" });
 
   // tutorial parameters
   const [tour, setTour] = useState(false);
@@ -89,6 +90,10 @@ export default function App() {
 
     function toggleHiddenOrEmptyGroups(type) {
       document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = type === "before" ? "none" : ""));
+    }
+
+    if (process.env.NODE_ENV !== "test") {
+      AppFunc.checkUserStatus("lbragile.masc@gmail.com", "XwEXeIo4fzuv9-e", setUser);
     }
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
@@ -141,7 +146,7 @@ export default function App() {
           <hr className="mx-auto hidden-in-print" />
 
           {/* prettier-ignore */}
-          <GlobalBtns syncTimestamp={syncTimestamp} group_limit={NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
+          <GlobalBtns user={user} syncTimestamp={syncTimestamp} group_limit={!user.paid? 5: NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
 

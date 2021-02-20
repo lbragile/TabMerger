@@ -21,6 +21,11 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+/* DISABLED BUTTONS */
+.disabled-btn {
+  opacity: 0.5;
+}
+
 /* FOCUS & BACKGROUND */
 .btn:focus {
   outline: none;
