@@ -225,7 +225,7 @@ export function openGroup(e) {
  * @param {Function} setGroups For re-rendering the groups based on their new id
  * @param {Function} setDialog For rendering a warning/error message
  */
-export function deleteGroup(e, setTabTotal, setGroups, setDialog) {
+export function deleteGroup(e, user, setTabTotal, setGroups, setDialog) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     chrome.storage.sync.get("settings", (sync) => {
       const scroll = document.documentElement.scrollTop;
@@ -233,7 +233,7 @@ export function deleteGroup(e, setTabTotal, setGroups, setDialog) {
 
       var { groups, groups_copy } = local;
       if (!groups[target.id].locked) {
-        groups_copy = storeDestructiveAction(groups_copy, groups);
+        groups_copy = storeDestructiveAction(groups_copy, groups, user);
 
         delete groups[target.id];
 

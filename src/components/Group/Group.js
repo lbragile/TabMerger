@@ -37,7 +37,7 @@ import "../Button/Button.css";
 
 export default function Group({ id, title, color, created, num_tabs, hidden, locked, starred, children }) {
   const TITLE_TRIM_LIMIT = useRef(50);
-  const { setTabTotal, setGroups, setDialog } = useContext(AppContext);
+  const { user, setTabTotal, setGroups, setDialog } = useContext(AppContext);
 
   const setBGColor = useCallback((e) => GroupFunc.setBGColor(e, id), [id]);
   useEffect(() => setBGColor(document.getElementById(id), id), [id, setBGColor]);
@@ -70,6 +70,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           locked={locked}
           starred={starred}
           tooltip={"tiptext-group-title" + (id === "group-0" ? "-bottom" : "")}
+          user={user}
           setTabTotal={setTabTotal}
           setGroups={setGroups}
           setDialog={setDialog}

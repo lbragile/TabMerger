@@ -35,7 +35,7 @@ import "./Tab.css";
 
 export default function Tab({ id, item_limit, hidden, textColor }) {
   const [tabs, setTabs] = useState([]);
-  const { setTabTotal, setGroups, setDialog } = useContext(AppContext);
+  const { user, setTabTotal, setGroups, setDialog } = useContext(AppContext);
 
   useEffect(() => {
     TabFunc.setInitTabs(setTabs, id);
@@ -56,7 +56,7 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
             <p
               className="close-tab"
               draggable={false}
-              onClick={(e) => TabFunc.removeTab(e, tabs, setTabs, setTabTotal, setGroups, setDialog)}
+              onClick={(e) => TabFunc.removeTab(e, tabs, user, setTabs, setTabTotal, setGroups, setDialog)}
             >
               <TiDelete size="1rem" color={textColor === "light" ? "white" : "black"} />
             </p>

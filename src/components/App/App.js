@@ -25,7 +25,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module __CONSTANTS
  */
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Tour from "reactour";
 
 import * as AppFunc from "./App_functions";
@@ -37,9 +37,12 @@ import TabSearch from "../Extra/TabSearch";
 import Reviews from "../Extra/Reviews";
 import Links from "../Extra/Links";
 import Dialog from "../Extra/Dialog";
+import Button from "../Button/Button";
 import { TOUR_STEPS } from "../Extra/Tutorial";
 
 import { AppProvider } from "../../context/AppContext";
+
+import { BiCheckCircle } from "react-icons/bi";
 
 import "./App.css";
 import "../Button/Button.css";
@@ -64,6 +67,8 @@ export default function App() {
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
   const [dialog, setDialog] = useState({ show: false });
+
+  // activation parameters
   const [user, setUser] = useState({ paid: false, tier: "Free" });
 
   // tutorial parameters
@@ -93,7 +98,7 @@ export default function App() {
     }
 
     if (process.env.NODE_ENV !== "test") {
-      AppFunc.checkUserStatus("lbragile.masc@gmail.com", "XwEXeIo4fzuv9-e", setUser);
+      AppFunc.checkUserStatus(setUser);
     }
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
@@ -150,12 +155,23 @@ export default function App() {
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
 
+        {/* Verify/activate account button*/}
+        <Button
+          classes="p-0 btn-in-global"
+          id="subscription-btn"
+          translate="Activate Subscription"
+          tooltip={"tiptext-global"}
+          onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
+        >
+          {<BiCheckCircle color="black" size="1.5rem" />}
+        </Button>
+
         <div id="copyright" className="mt-4">
           Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
         </div>
       </nav>
 
-      <AppProvider value={{ setGroups, setTabTotal, setDialog }}>
+      <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current)}
         </div>

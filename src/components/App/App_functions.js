@@ -52,19 +52,49 @@ const SUBSCRIPTION_DIALOG = {
   reject_btn_text: null,
 };
 
+export function setUserStatus(setUser, setDialog) {
+  setDialog({
+    show: true,
+    title: "🔐 TabMerger Product Activation 🔐",
+    msg: (
+      <div>
+        <label>
+          <b>Email:</b>
+          <span style={{ color: "red" }}>*</span>
+        </label>
+        <br />
+        <input type="email" autoFocus autoComplete className="p-1" placeholder="Email you used in Stripe checkout..." />
+        <br />
+        <br />
+        <label>
+          <b>Password:</b>
+          <span style={{ color: "red" }}>*</span>
+        </label>
+        <br />
+        <input type="password" className="p-1" placeholder="From our email or your own if changed..." />
+      </div>
+    ),
+    accept_btn_text: "Activate",
+    reject_btn_text: null,
+    setUser,
+    checkUserStatus,
+  });
+}
+
 /**
  * Checks and updates a user's status to know if they are a paid or free user.
  * The information is stored in an external (encrypted) database.
- *
- * @param {string} email The user's email that was used when paying for a TabMerger subscription
- * @param {string} password The user's password for their TabMerger subscription account
  * @param {Function} setUser For re-rendering the user's payment/subscription information
  */
-export async function checkUserStatus(email, password, setUser) {
-  var response = await axios.get("http://localhost:5000/v1/customer/" + JSON.stringify({ password, email }));
-  if (response.data) {
-    setUser(response.data);
-  }
+export function checkUserStatus(setUser) {
+  chrome.storage.local.get(["client_details", "verified"], async (local) => {
+    const { email, password } = local.client_details;
+    var response = await axios.get("http://localhost:5000/v1/customer/" + JSON.stringify({ password, email }));
+    if (response.data) {
+      chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } });
+      setUser(response.data);
+    }
+  });
 }
 
 /**
@@ -580,7 +610,7 @@ export function openAllTabs(e, setDialog) {
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setDialog For rendering the confirmation dialog
  */
-export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
+export function deleteAllGroups(e, user, setTabTotal, setGroups, setDialog) {
   const scroll = document.documentElement.scrollTop;
   var element = e.target.closest("#delete-all-btn");
   AppHelper.elementMutationListener(element, (mutation) => {
@@ -588,7 +618,7 @@ export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
       chrome.storage.local.get(["groups", "groups_copy"], (local) => {
         chrome.storage.sync.get("settings", (sync) => {
           var { groups_copy, groups } = local;
-          groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups);
+          groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups, user);
 
           groups = {};
           var locked_counter = 0;
@@ -657,7 +687,7 @@ export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
  * @param {Function} setTabTotal For re-rendering the tab total counter
  * @param {Function} setDialog For rendering a warning/error message
  *
- * @note Up to 10 states are stored.
+ * @note The number of states stored are based on user tier { Free: 2, Basic: 5, Standard: 10, Premium: 15 }.
  */
 export function undoDestructiveAction(setGroups, setTabTotal, setDialog) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
@@ -773,10 +803,10 @@ export function resetSearch(e) {
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setDialog For rendering a warning/error message
  */
-export function importJSON(e, setGroups, setTabTotal, setDialog) {
+export function importJSON(e, user, setGroups, setTabTotal, setDialog) {
   if (e.target.files[0].type === "application/json") {
     chrome.storage.local.get(["groups", "groups_copy"], (local) => {
-      const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups);
+      const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups, user);
       const scroll = document.documentElement.scrollTop;
 
       var reader = new FileReader();

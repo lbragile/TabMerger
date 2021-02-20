@@ -202,13 +202,30 @@ export function getDragAfterElement(container, y_pos, type) {
  *
  * @param {object[]} groups_copy All the stored states up to now
  * @param {object} groups The current state which will be stored
- * @param {Number?} NUM_UNDO_STATES The number of undo's allowed
  *
  * @note Up to 15 states are stored.
  *
  * @return {object[]} The new group state array which includes the latest state at the front.
  */
-export function storeDestructiveAction(groups_copy, groups, NUM_UNDO_STATES = 15) {
+export function storeDestructiveAction(groups_copy, groups, user) {
+  var NUM_UNDO_STATES;
+  switch (user.tier) {
+    case "Free":
+      NUM_UNDO_STATES = 2;
+      break;
+    case "Basic":
+      NUM_UNDO_STATES = 5;
+      break;
+    case "Standard":
+      NUM_UNDO_STATES = 10;
+      break;
+    case "Premium":
+      NUM_UNDO_STATES = 15;
+      break;
+    default:
+      break;
+  }
+
   // shift down one to stay below NUM_UNDO_STATES
   if (groups_copy.length === NUM_UNDO_STATES) {
     groups_copy.shift();

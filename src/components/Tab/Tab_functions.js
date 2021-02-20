@@ -199,7 +199,7 @@ export function tabDragEnd(e, item_limit, setGroups, setDialog) {
  * @param {function} setGroups For re-rendering the overall groups
  * @param {Function} setDialog For rendering a warning/error message
  */
-export function removeTab(e, tabs, setTabs, setTabTotal, setGroups, setDialog) {
+export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups, setDialog) {
   const tab = e.target.closest(".draggable");
   const url = tab.querySelector("a").href;
   const group_id = tab.closest(".group").id;
@@ -209,7 +209,7 @@ export function removeTab(e, tabs, setTabs, setTabTotal, setGroups, setDialog) {
 
     if (!groups[group_id].locked) {
       const scroll = document.documentElement.scrollTop;
-      groups_copy = storeDestructiveAction(groups_copy, groups);
+      groups_copy = storeDestructiveAction(groups_copy, groups, user);
 
       groups[group_id].tabs = tabs.filter((x) => x.url !== url);
       chrome.storage.local.set({ groups, groups_copy, scroll }, () => {

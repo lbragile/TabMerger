@@ -40,6 +40,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   max-width: 100% !important;
 }
 
+/* ACTIVATION INPUTS */
+input[type="email"],
+input[type="password"] {
+  width: 350px;
+}
+
 /* TABMERGER */
 .container-fluid {
   position: relative;

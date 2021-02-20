@@ -59,7 +59,7 @@ export default function GlobalBtns({ user, syncTimestamp, group_limit, setTabTot
       id: "delete-all-btn",
       classes: "",
       translate: AppFunc.translate("deleteAll"),
-      btnFn: (e) => AppFunc.deleteAllGroups(e, setTabTotal, setGroups, setDialog),
+      btnFn: (e) => AppFunc.deleteAllGroups(e, user, setTabTotal, setGroups, setDialog),
       icon: <GrClear color="black" />,
     },
     {
@@ -104,7 +104,13 @@ export default function GlobalBtns({ user, syncTimestamp, group_limit, setTabTot
             {i === 4 && <div />}
           </React.Fragment>
         ) : (
-          <ImportBtn setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog} key={Math.random()} />
+          <ImportBtn
+            user={user}
+            setTabTotal={setTabTotal}
+            setGroups={setGroups}
+            setDialog={setDialog}
+            key={Math.random()}
+          />
         );
       })}
     </div>
