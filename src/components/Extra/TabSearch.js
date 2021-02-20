@@ -5,7 +5,7 @@ import { translate, regexSearchForTab, resetSearch } from "../App/App_functions"
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";
 
-export default function TabSearch() {
+export default function TabSearch({ user, setDialog }) {
   return (
     <div className="input-group search-filter my-3 mx-auto" onDrop={(e) => e.preventDefault()}>
       <div className="input-group-prepend">
@@ -18,7 +18,7 @@ export default function TabSearch() {
         name="search-group"
         maxLength={20}
         placeholder={translate("searchForTabs") + "..."}
-        onChange={(e) => regexSearchForTab(e)}
+        onChange={(e) => regexSearchForTab(e, user, setDialog)}
         onBlur={(e) => resetSearch(e)}
       />
       <div className="input-group-append">

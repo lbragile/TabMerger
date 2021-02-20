@@ -53,8 +53,6 @@ export default function App() {
   const ITEM_STORAGE_LIMIT = useRef(8000);
   /** @constant {Number} SYNC_STORAGE_LIMIT @default 102000 (1000 for testing) */
   const SYNC_STORAGE_LIMIT = useRef(102000);
-  /** @constant {Number} NUM_GROUP_LIMIT @default 100 (3 for testing) */
-  const NUM_GROUP_LIMIT = useRef(100);
 
   var syncTimestamp = useRef("--/--/---- @ --:--:--");
 
@@ -114,7 +112,7 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => AppFunc.badgeIconInfo(tabTotal), [tabTotal, groups]);
+  useEffect(() => AppFunc.badgeIconInfo(tabTotal, user), [groups, tabTotal, user]);
 
   useEffect(() => {
     chrome.storage.local.get("scroll", (local) => {
@@ -147,11 +145,11 @@ export default function App() {
         <Reviews />
 
         <div id="global-action-container">
-          <TabSearch />
+          <TabSearch user={user} setDialog={setDialog} />
           <hr className="mx-auto hidden-in-print" />
 
           {/* prettier-ignore */}
-          <GlobalBtns user={user} syncTimestamp={syncTimestamp} group_limit={!user.paid? 5: NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
+          <GlobalBtns user={user} syncTimestamp={syncTimestamp} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
 

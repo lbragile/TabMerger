@@ -26,7 +26,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  */
 
 import { getTimestamp, updateTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
-import { translate } from "../App/App_functions";
+import { SUBSCRIPTION_DIALOG, translate } from "../App/App_functions";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -116,50 +116,54 @@ export function blurOnEnter(e) {
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setDialog For rendering a warning/error message
  */
-export function addTabFromURL(e, setGroups, setTabTotal, setDialog) {
-  const url = e.target.value;
-  const id = e.target.closest(".group").id;
+export function addTabFromURL(e, user, setGroups, setTabTotal, setDialog) {
+  if (!user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
+  } else {
+    const url = e.target.value;
+    const id = e.target.closest(".group").id;
 
-  chrome.storage.sync.get("settings", (sync) => {
-    chrome.storage.local.get("groups", (local) => {
-      var url_exists = Object.values(local.groups).some((val) => val.tabs.map((x) => x.url).includes(url));
-      if (!url_exists && url.match(/http.+\/\//)) {
-        // query open tabs to get the title from the tab which has a matching url
-        chrome.tabs.query({ status: "complete" }, (tabs) => {
-          var new_tab, remove_id;
-          tabs.forEach((tab) => {
-            if (tab.url === url) {
-              new_tab = { pinned: tab.pinned, title: tab.title, url };
-              remove_id = tab.id;
+    chrome.storage.sync.get("settings", (sync) => {
+      chrome.storage.local.get("groups", (local) => {
+        var url_exists = Object.values(local.groups).some((val) => val.tabs.map((x) => x.url).includes(url));
+        if (!url_exists && url.match(/http.+\/\//)) {
+          // query open tabs to get the title from the tab which has a matching url
+          chrome.tabs.query({ status: "complete" }, (tabs) => {
+            var new_tab, remove_id;
+            tabs.forEach((tab) => {
+              if (tab.url === url) {
+                new_tab = { pinned: tab.pinned, title: tab.title, url };
+                remove_id = tab.id;
+              }
+            });
+
+            // determine if need to close the merged tab
+            if (sync.settings.merge === "merge") {
+              chrome.tabs.remove(remove_id);
             }
-          });
 
-          // determine if need to close the merged tab
-          if (sync.settings.merge === "merge") {
-            chrome.tabs.remove(remove_id);
-          }
-
-          local.groups[id].tabs = [...local.groups[id].tabs, new_tab];
-          chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
-            setTabTotal(updateTabTotal(local.groups));
-            setGroups(JSON.stringify(local.groups));
+            local.groups[id].tabs = [...local.groups[id].tabs, new_tab];
+            chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
+              setTabTotal(updateTabTotal(local.groups));
+              setGroups(JSON.stringify(local.groups));
+            });
           });
-        });
-      } else {
-        e.target.value = "";
-        e.target.blur();
-        setTimeout(() => {
-          setDialog({
-            show: true,
-            title: "❕ TabMerger Information ❕",
-            msg: <div>That tab is already in TabMerger!</div>,
-            accept_btn_text: "OK",
-            reject_btn_text: null,
-          });
-        }, 50);
-      }
+        } else {
+          e.target.value = "";
+          e.target.blur();
+          setTimeout(() => {
+            setDialog({
+              show: true,
+              title: "❕ TabMerger Information ❕",
+              msg: <div>That tab is already in TabMerger!</div>,
+              accept_btn_text: "OK",
+              reject_btn_text: null,
+            });
+          }, 50);
+        }
+      });
     });
-  });
+  }
 }
 
 /**

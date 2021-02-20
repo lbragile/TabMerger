@@ -11,7 +11,23 @@ import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 
-export default function GlobalBtns({ user, syncTimestamp, group_limit, setTabTotal, setGroups, setDialog }) {
+export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups, setDialog }) {
+  var NUM_GROUP_LIMIT;
+  switch (user.tier) {
+    case "Free":
+      NUM_GROUP_LIMIT = 5;
+      break;
+    case "Basic":
+      NUM_GROUP_LIMIT = 15;
+      break;
+    case "Standard":
+      NUM_GROUP_LIMIT = 50;
+      break;
+    case "Premium":
+      NUM_GROUP_LIMIT = 100;
+      break;
+  }
+
   const GLOBAL_BUTTONS = [
     {
       id: "options-btn",
@@ -76,7 +92,7 @@ export default function GlobalBtns({ user, syncTimestamp, group_limit, setTabTot
       id: "add-group-btn",
       classes: "",
       translate: AppFunc.translate("addGroup"),
-      btnFn: () => AppFunc.addGroup(group_limit, setGroups, setDialog),
+      btnFn: () => AppFunc.addGroup(NUM_GROUP_LIMIT, setGroups, setDialog),
       icon: <GrAddCircle color="black" size="1.5rem" />,
     },
   ];
@@ -97,7 +113,7 @@ export default function GlobalBtns({ user, syncTimestamp, group_limit, setTabTot
               tooltip={"tiptext-global" + (i > 4 ? "-bottom" : "")}
               onClick={x.btnFn}
               key={Math.random()}
-              disabled={!user.paid && [2, 3, 8].includes(i)}
+              disabled={(!user.paid && [2, 3, 8].includes(i)) || (user.tier === "Basic" && i === 2)}
             >
               {x.icon}
             </Button>

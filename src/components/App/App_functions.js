@@ -33,12 +33,12 @@ import Group from "../Group/Group.js";
  * @module App/App_functions
  */
 
-const SUBSCRIPTION_DIALOG = {
+export const SUBSCRIPTION_DIALOG = {
   show: true,
   title: "❕ TabMerger Information ❕",
   msg: (
     <div>
-      To use this feature, you are required to have an <b>active subscription</b> with TabMerger.
+      To use this feature, you need to <b>upgrade</b> your TabMerger subscription.
       <br />
       <br />
       Please visit our official homepage's{" "}
@@ -60,7 +60,6 @@ export function setUserStatus(setUser, setDialog) {
       <div>
         <label>
           <b>Email:</b>
-          <span style={{ color: "red" }}>*</span>
         </label>
         <br />
         <input type="email" autoFocus autoComplete className="p-1" placeholder="Email you used in Stripe checkout..." />
@@ -68,7 +67,6 @@ export function setUserStatus(setUser, setDialog) {
         <br />
         <label>
           <b>Password:</b>
-          <span style={{ color: "red" }}>*</span>
         </label>
         <br />
         <input type="password" className="p-1" placeholder="From our email or your own if changed..." />
@@ -184,10 +182,10 @@ export function resetTutorialChoice(e, url, setTour, setDialog) {
  * @param {{"green": string, "yellow": string, "orange": string, "red": string }?} COLORS The colors as hex strings of form "#FF7700"
  */
 // prettier-ignore
-export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
+export function badgeIconInfo(tabTotal, user, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
   chrome.storage.sync.get("settings", (sync) => {
     chrome.storage.local.get("groups", (local) => {
-      if (local.groups && sync.settings) {
+      if (local.groups && sync.settings && ["Standard", "Premium"].includes(user.tier)) {
         const num_groups = Object.keys(local.groups).length;
         var color;
         if (tabTotal < STEP_SIZE) {
@@ -209,6 +207,9 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
         chrome.browserAction.setBadgeText({ text }, () => {});
         chrome.browserAction.setBadgeBackgroundColor({ color }, () => {});
         chrome.browserAction.setTitle({ title }, () => {});
+      }else{
+        chrome.browserAction.setBadgeText({ text: "" }, () => {});
+        chrome.browserAction.setTitle({ title: "Merge your tabs into groups" }, () => {});
       }
     });
   });
@@ -752,30 +753,34 @@ export function dragOver(e, type, offset = 10) {
  *
  * @param {HTMLElement} e Node corresponding to the search filter
  */
-export function regexSearchForTab(e) {
-  var sections = document.querySelectorAll(".group-item");
-  var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
-
-  var titles, match;
-  if (e.target.value.match(/^[#@]/)) {
-    // GROUP
-    titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
-    match = e.target.value.substr(1).toLowerCase();
-    titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
+export function regexSearchForTab(e, user, setDialog) {
+  if (!user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
   } else {
-    // TAB
-    titles = tab_items.map((x) => x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase()));
-    match = e.target.value.toLowerCase();
+    var sections = document.querySelectorAll(".group-item");
+    var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
-    titles.forEach((title, i) => {
-      if (title.some((x) => x.indexOf(match) !== -1)) {
-        sections[i].style.display = "";
-        title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
-      } else {
-        // no need to hide tabs if group is hidden
-        sections[i].style.display = "none";
-      }
-    });
+    var titles, match;
+    if (e.target.value.match(/^[#@]/)) {
+      // GROUP
+      titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
+      match = e.target.value.substr(1).toLowerCase();
+      titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
+    } else {
+      // TAB
+      titles = tab_items.map((x) => x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase()));
+      match = e.target.value.toLowerCase();
+
+      titles.forEach((title, i) => {
+        if (title.some((x) => x.indexOf(match) !== -1)) {
+          sections[i].style.display = "";
+          title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
+        } else {
+          // no need to hide tabs if group is hidden
+          sections[i].style.display = "none";
+        }
+      });
+    }
   }
 }
 
@@ -849,7 +854,7 @@ export function importJSON(e, user, setGroups, setTabTotal, setDialog) {
  * Allows the user to export TabMerger's current configuration (including settings).
  */
 export function exportJSON(user, setDialog) {
-  if (!user.paid) {
+  if (["Free", "Basic"].includes(user.tier)) {
     setDialog(SUBSCRIPTION_DIALOG);
   } else {
     chrome.storage.local.get("groups", (local) => {

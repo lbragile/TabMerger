@@ -86,7 +86,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           className="url-drag-input"
           type="text"
           name="url-drag"
-          onChange={(e) => GroupFunc.addTabFromURL(e, setGroups, setTabTotal, setDialog)}
+          onChange={(e) => GroupFunc.addTabFromURL(e, user, setGroups, setTabTotal, setDialog)}
           onKeyDown={(e) => e.preventDefault()}
           onClick={(e) => e.target.blur()}
         />
