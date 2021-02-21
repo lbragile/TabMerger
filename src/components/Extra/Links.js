@@ -31,7 +31,7 @@ export default function Links({ setTour, setDialog }) {
 
       {LINKS.slice(0, 6).map((x, i) => {
         return (
-          <React.Fragment>
+          <React.Fragment key={Math.random()}>
             <LinkBtn
               text={x.text}
               url={x.url}
@@ -42,7 +42,6 @@ export default function Links({ setTour, setDialog }) {
               resetTutorialChoice={resetTutorialChoice}
               setTour={setTour}
               setDialog={setDialog}
-              key={Math.random()}
             />
             {i === 2 && <div className="my-2" />}
           </React.Fragment>

@@ -72,8 +72,10 @@ export function toggleSyncTimestamp(positive, sync_node) {
   var sync_container = sync_node.parentNode;
 
   if (positive) {
-    sync_node.innerText = getTimestamp();
-    sync_container.classList.replace("alert-danger", "alert-success");
+    chrome.storage.local.get("last_sync", (local) => {
+      sync_node.innerText = local.last_sync;
+      sync_container.classList.replace("alert-danger", "alert-success");
+    });
   } else {
     sync_node.innerText = "--/--/---- @ --:--:--";
     sync_container.classList.replace("alert-success", "alert-danger");
@@ -221,8 +223,6 @@ export function storeDestructiveAction(groups_copy, groups, user) {
       break;
     case "Premium":
       NUM_UNDO_STATES = 15;
-      break;
-    default:
       break;
   }
 

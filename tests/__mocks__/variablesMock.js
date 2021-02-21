@@ -65,6 +65,8 @@ global.mockSet = jest.fn();
 global.SYNC_LIMIT = 102000;
 global.ITEM_LIMIT = 8000;
 
+global.user = { paid: true, tier: "Premium" }; // will check this in integration tests
+
 /*  COMMON VARIABLES & DEFAULT VALUES */
 global.init_groups = {
   "group-0": {

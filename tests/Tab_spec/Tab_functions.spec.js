@@ -273,7 +273,7 @@ describe("removeTab", () => {
     expected_groups["group-0"].tabs = expected_groups["group-0"].tabs.slice(1, 3);
     jest.clearAllMocks();
 
-    TabFunc.removeTab(stub, init_groups["group-0"].tabs, mockSet, mockSet, mockSet, mockSet);
+    TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
@@ -293,7 +293,7 @@ describe("removeTab", () => {
     localStorage.setItem("groups", JSON.stringify(expected_groups));
     jest.clearAllMocks();
 
-    TabFunc.removeTab(stub, init_groups["group-0"].tabs, mockSet, mockSet, mockSet, mockSet);
+    TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet, mockSet);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet.mock.calls.pop()[0]).toStrictEqual({

@@ -79,7 +79,7 @@ describe("badgeIconInfo", () => {
     sessionStorage.setItem("settings", JSON.stringify({ badgeInfo: display ? "display" : "hide" }));
     jest.clearAllMocks();
 
-    AppFunc.badgeIconInfo(num_tabs);
+    AppFunc.badgeIconInfo(num_tabs, user);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
@@ -101,7 +101,7 @@ describe("badgeIconInfo", () => {
     localStorage.removeItem("groups");
     jest.clearAllMocks();
 
-    AppFunc.badgeIconInfo(10);
+    AppFunc.badgeIconInfo(10, user);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
@@ -109,9 +109,13 @@ describe("badgeIconInfo", () => {
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
 
-    expect(chromeBrowserActionSetBadgeTextSpy).not.toHaveBeenCalled();
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledWith({ text: "" }, anything);
+
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledWith({ title: "Merge your tabs into groups" }, anything);
+
     expect(chromeBrowserActionSetBadgeBackgroundColorSpy).not.toHaveBeenCalled();
-    expect(chromeBrowserActionSetTitleSpy).not.toHaveBeenCalled();
   });
 });
 
@@ -256,7 +260,7 @@ describe("syncWrite", () => {
   it("does nothing when no groups in local storage", () => {
     jest.clearAllMocks();
 
-    AppFunc.syncWrite(sync_node);
+    AppFunc.syncWrite(sync_node, user, mockSet);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
   });
@@ -265,7 +269,7 @@ describe("syncWrite", () => {
     localStorage.setItem("groups", JSON.stringify({ "group-0": default_group }));
     jest.clearAllMocks();
 
-    AppFunc.syncWrite(sync_node);
+    AppFunc.syncWrite(sync_node, user, mockSet);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
   });
@@ -281,11 +285,12 @@ describe("syncWrite", () => {
     }
     jest.clearAllMocks();
 
-    AppFunc.syncWrite(sync_node);
+    AppFunc.syncWrite(sync_node, user, mockSet);
 
     await waitFor(() => {
-      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-      expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(2);
+      expect(chromeLocalGetSpy).toHaveBeenNthCalledWith(1, "groups", anything);
+      expect(chromeLocalGetSpy).toHaveBeenNthCalledWith(2, "last_sync", anything); // from App_helpers.js (toggleSyncTimestamp)
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(num_groups === "more" ? 6 : 2);
       expect(chromeSyncGetSpy).toHaveBeenNthCalledWith(1, "group-0", anything);
@@ -295,6 +300,9 @@ describe("syncWrite", () => {
 
       expect(chromeSyncRemoveSpy).toHaveBeenCalledTimes(1);
       expect(chromeSyncRemoveSpy).toHaveBeenCalledWith(num_groups === "more" ? [] : Object.keys(init_groups).splice(1), anything); // prettier-ignore
+
+      expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalSetSpy).toHaveBeenCalledWith({ last_sync: expect.any(String) }, anything);
 
       expect(toggleSyncTimestampSpy).toHaveBeenCalledTimes(1);
       expect(toggleSyncTimestampSpy).toHaveBeenCalledWith(true, sync_node);
@@ -309,7 +317,7 @@ describe("syncRead", () => {
     sessionStorage.clear();
     jest.clearAllMocks();
 
-    AppFunc.syncRead(sync_node, mockSet, mockSet);
+    AppFunc.syncRead(sync_node, user, mockSet, mockSet, mockSet);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
@@ -330,7 +338,7 @@ describe("syncRead", () => {
 
     jest.clearAllMocks();
 
-    AppFunc.syncRead(sync_node, mockSet, mockSet);
+    AppFunc.syncRead(sync_node, user, mockSet, mockSet, mockSet);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncRemoveSpy).toHaveBeenCalledTimes(1);
@@ -791,13 +799,20 @@ describe("addGroup", () => {
       title: "⚠ TabMerger Alert ⚠",
       msg: (
         <div>
-          Number of groups exceeded (more than <b>100</b>).
+          Number of groups exceeded (more than <b>{NUM_GROUP_LIMIT}</b>).
           <br />
           <br />
           Please do <b>one</b> of the following:
           <ul style={{ marginLeft: "25px" }}>
             <li>Delete a group that is no longer needed;</li>
             <li>Merge tabs into another existing group.</li>
+            <li>
+              Upgrade your TabMerger subscription (
+              <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+                Subscriptions & Pricing
+              </a>
+              ).
+            </li>
           </ul>
         </div>
       ),
@@ -922,10 +937,10 @@ describe("deleteAllGroups", () => {
     async (locked) => {
       document.body.innerHTML =
         `<div id="delete-all-btn" class="group-item" response="negative">` +
-        `  <div class="lock-group-btn"><span>${locked ? "unlock" : "lock"}</span></div>` +
+        `  <div class="lock-group-btn" data-tip='${locked ? "unlock" : "lock"}' />` +
         `  <input type='color' value='#000000'/>` +
         `  <div class="created"><span>11/11/2011 @ 11:11:11</span></div>` +
-        `  <div class="star-group-btn"><span>Star</span></div>` +
+        `  <div class="star-group-btn" data-tip="Star" />` +
         `  <div class="draggable">` +
         `    <a href="https://www.github.com/lbragile/TabMerger">TabMerger</a>` +
         `  </div>` +
@@ -973,7 +988,7 @@ describe("deleteAllGroups", () => {
       new_entry["group-" + +locked].created = AppHelper.getTimestamp();
       jest.clearAllMocks();
 
-      AppFunc.deleteAllGroups(stub, mockSet, mockSet, mockSet);
+      AppFunc.deleteAllGroups(stub, user, mockSet, mockSet, mockSet);
       if (locked !== null) {
         element.setAttribute("response", "positive"); // cause mutation change on element
       }
@@ -1021,7 +1036,7 @@ describe("deleteAllGroups", () => {
     var stub = { target: { closest: jest.fn(() => element) } };
     jest.clearAllMocks();
 
-    AppFunc.deleteAllGroups(stub, mockSet, mockSet, mockSet);
+    AppFunc.deleteAllGroups(stub, user, mockSet, mockSet, mockSet);
     element.setAttribute("response", "negative");
 
     await waitFor(() => {
@@ -1196,9 +1211,9 @@ describe("regexSearchForTab", () => {
 
     // need to type first to have the input change
     if (type === "blank") {
-      AppFunc.regexSearchForTab({ target: { value: "random" } });
+      AppFunc.regexSearchForTab({ target: { value: "random" } }, user);
     }
-    AppFunc.regexSearchForTab({ target: { value } });
+    AppFunc.regexSearchForTab({ target: { value } }, user);
 
     const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable, .group-item" : ".group-item")];
     expect(targets.map((x) => x.style.display)).toStrictEqual(expect_arr);
@@ -1223,7 +1238,7 @@ describe("importJSON", () => {
     const input = { target: { files: [{ type: "application/pdf" }] } };
     jest.clearAllMocks();
 
-    AppFunc.importJSON(input, mockSet, mockSet, mockSetDialog);
+    AppFunc.importJSON(input, user, mockSet, mockSet, mockSetDialog);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -1263,7 +1278,7 @@ describe("importJSON", () => {
 
     jest.clearAllMocks();
 
-    AppFunc.importJSON(input, mockSet, mockSet);
+    AppFunc.importJSON(input, user, mockSet, mockSet);
 
     expect(FileReader).toHaveBeenCalledTimes(1);
     const reader = FileReader.mock.instances[0];
@@ -1317,7 +1332,7 @@ describe("exportJSON", () => {
 
     jest.clearAllMocks();
 
-    AppFunc.exportJSON();
+    AppFunc.exportJSON(user, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);

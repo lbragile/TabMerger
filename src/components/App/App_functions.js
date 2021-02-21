@@ -52,6 +52,13 @@ export const SUBSCRIPTION_DIALOG = {
   reject_btn_text: null,
 };
 
+/**
+ * Allows the user to activate their subscription by providing their credentials.
+ * Once the button is pressed, the credentials are verified in the external database
+ * and corresponding TabMerger functionality is unlocked.
+ * @param {Function} setUser Re-renders the user's subscription details { paid: boolean, tier: string }
+ * @param {Function} setDialog Shows the modal for inputing the user's credentials.
+ */
 export function setUserStatus(setUser, setDialog) {
   setDialog({
     show: true,
@@ -237,7 +244,9 @@ export function syncWrite(sync_node, user, setDialog) {
           delete sync.settings;
           var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
           chrome.storage.sync.remove(remove_keys, () => {
-            AppHelper.toggleSyncTimestamp(true, sync_node);
+            chrome.storage.local.set({ last_sync: AppHelper.getTimestamp() }, () => {
+              AppHelper.toggleSyncTimestamp(true, sync_node);
+            });
           });
         });
       }
@@ -752,16 +761,20 @@ export function dragOver(e, type, offset = 10) {
  * "TabMerger ➡ Tab Level Search (by tab title)"
  *
  * @param {HTMLElement} e Node corresponding to the search filter
+ * @param {object?} user Contains information about the user's subscription
+ * @param {Function?} setDialog For re-rendering the subscription dialog
  */
 export function regexSearchForTab(e, user, setDialog) {
-  if (!user.paid) {
+  if (user && !user.paid) {
     setDialog(SUBSCRIPTION_DIALOG);
   } else {
     var sections = document.querySelectorAll(".group-item");
     var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
     var titles, match;
-    if (e.target.value.match(/^[#@]/)) {
+    if (e.target.value === "") {
+      sections.forEach((section) => (section.style.display = ""));
+    } else if (e.target.value.match(/^[#@]/)) {
       // GROUP
       titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
       match = e.target.value.substr(1).toLowerCase();

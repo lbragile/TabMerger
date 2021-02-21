@@ -232,7 +232,7 @@ describe("addTabFromURL", () => {
       jest.clearAllMocks();
 
       jest.useFakeTimers();
-      GroupFunc.addTabFromURL(stub, mockSet, mockSet, mockSet);
+      GroupFunc.addTabFromURL(stub, user, mockSet, mockSet, mockSet);
       jest.advanceTimersByTime(51);
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -422,7 +422,7 @@ describe("deleteGroup", () => {
 
     jest.clearAllMocks();
 
-    GroupFunc.deleteGroup(mock_target(group_id), mockSet, mockSet, mockSet);
+    GroupFunc.deleteGroup(mock_target(group_id), user, mockSet, mockSet, mockSet);
 
     if (locked !== "locked") {
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);

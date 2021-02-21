@@ -24,7 +24,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { render } from "@testing-library/react";
 
 import * as AppHelper from "../../src/components/App/App_helpers";
-
 import App from "../../src/components/App/App";
 
 const anything = expect.any(Function);
@@ -84,13 +83,18 @@ describe("toggleDarkMode", () => {
 
 describe("toggleSyncTimestampHelper", () => {
   it("turns green and has right timestamp when sync is on", () => {
-    const timestamp1 = AppHelper.getTimestamp();
-    AppHelper.toggleSyncTimestamp(true, sync_node);
-    const timestamp2 = AppHelper.getTimestamp();
+    const timestamp = "11/11/2011 @ 11:11:11";
+    localStorage.setItem("last_sync", timestamp);
+    jest.clearAllMocks();
 
-    expect([timestamp1, timestamp2]).toContain(sync_node.innerText);
+    AppHelper.toggleSyncTimestamp(true, sync_node);
+
+    expect(sync_node.innerText).toBe(timestamp);
     expect(sync_container.classList).not.toContain("alert-danger");
     expect(sync_container.classList).toContain("alert-success");
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("last_sync", anything);
   });
 
   it("turns red and has no timestamp when sync is off", () => {
@@ -221,11 +225,12 @@ describe("getDragAfterElement", () => {
 
 describe("storeDestructiveAction", () => {
   it.each([[true], [false]])("adjusts the states array - full = %s", (full) => {
-    localStorage.setItem("groups_copy", JSON.stringify([init_groups]));
+    var groups_copy = [init_groups, init_groups];
+    localStorage.setItem("groups_copy", JSON.stringify(groups_copy));
     jest.clearAllMocks();
 
-    const groups_copy = AppHelper.storeDestructiveAction([init_groups], {}, full ? 1 : undefined);
+    groups_copy = AppHelper.storeDestructiveAction(groups_copy, {}, full ? { tier: "Free" } : user);
 
-    expect(groups_copy).toStrictEqual(full ? [{}] : [init_groups, {}]);
+    expect(groups_copy).toStrictEqual(full ? [init_groups, {}] : groups_copy);
   });
 });

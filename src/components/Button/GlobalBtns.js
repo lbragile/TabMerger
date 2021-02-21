@@ -133,59 +133,63 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
         );
       })}
 
-      <ReactTooltip
-        id="btn-tooltip"
-        multiline={true}
-        className="font-weight-bold text-center rounded border border-white tooltip-popup"
-        effect="solid"
-        arrowColor="white"
-        backgroundColor="black"
-        textColor="white"
-      />
+      {process.env.NODE_ENV !== "test" && (
+        <React.Fragment>
+          <ReactTooltip
+            id="btn-tooltip"
+            multiline={true}
+            className="font-weight-bold text-center rounded border border-white tooltip-popup"
+            effect="solid"
+            arrowColor="white"
+            backgroundColor="black"
+            textColor="white"
+          />
 
-      <ReactTooltip
-        id="smaller-btn-tooltip"
-        multiline={true}
-        className="font-weight-bold text-center rounded border border-white smaller-tooltip-popup"
-        effect="solid"
-        arrowColor="white"
-        backgroundColor="black"
-        textColor="white"
-      />
+          <ReactTooltip
+            id="smaller-btn-tooltip"
+            multiline={true}
+            className="font-weight-bold text-center rounded border border-white smaller-tooltip-popup"
+            effect="solid"
+            arrowColor="white"
+            backgroundColor="black"
+            textColor="white"
+          />
 
-      <ReactTooltip
-        id="merge-btn-tooltip"
-        multiline={true}
-        className="font-weight-bold text-center rounded border border-white tooltip-popup"
-        effect="solid"
-        arrowColor="black"
-        backgroundColor="black"
-        textColor="white"
-        place="left"
-      />
+          <ReactTooltip
+            id="merge-btn-tooltip"
+            multiline={true}
+            className="font-weight-bold text-center rounded border border-white tooltip-popup"
+            effect="solid"
+            arrowColor="black"
+            backgroundColor="black"
+            textColor="white"
+            place="left"
+          />
 
-      <ReactTooltip
-        id="group-title-btn-tooltip"
-        multiline={true}
-        className="font-weight-bold text-center rounded border border-white tooltip-popup"
-        effect="solid"
-        arrowColor="black"
-        backgroundColor="black"
-        textColor="white"
-        place="top"
-      />
+          <ReactTooltip
+            id="group-title-btn-tooltip"
+            multiline={true}
+            className="font-weight-bold text-center rounded border border-white tooltip-popup"
+            effect="solid"
+            arrowColor="black"
+            backgroundColor="black"
+            textColor="white"
+            place="top"
+          />
 
-      <ReactTooltip
-        id="search-tooltip"
-        multiline={true}
-        className="font-weight-bold text-left rounded border border-white search-tooltip-popup"
-        effect="solid"
-        arrowColor="white"
-        backgroundColor="black"
-        textColor="white"
-        place="top"
-        offset={{ top: -13 }}
-      />
+          <ReactTooltip
+            id="search-tooltip"
+            multiline={true}
+            className="font-weight-bold text-left rounded border border-white search-tooltip-popup"
+            effect="solid"
+            arrowColor="white"
+            backgroundColor="black"
+            textColor="white"
+            place="top"
+            offset={{ top: -13 }}
+          />
+        </React.Fragment>
+      )}
     </div>
   );
 }

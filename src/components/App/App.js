@@ -52,7 +52,7 @@ export default function App() {
   /** @constant {Number} SYNC_STORAGE_LIMIT @default 102000 (1000 for testing) */
   const SYNC_STORAGE_LIMIT = useRef(102000);
 
-  var syncTimestamp = useRef("--/--/---- @ --:--:--");
+  var syncTimestamp = useRef();
 
   /** @constant {Object} defaultGroup @default { color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" } */
   const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" }); // prettier-ignore
@@ -71,15 +71,6 @@ export default function App() {
   const [tour, setTour] = useState(false);
   const startStep = useRef(0);
 
-  const toggleSyncTimestamp = useCallback(
-    (positive) => AppHelper.toggleSyncTimestamp(positive, syncTimestamp.current),
-    [syncTimestamp]
-  );
-
-  useEffect(() => {
-    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setTour, setGroups, setTabTotal); // prettier-ignore
-  }, [toggleSyncTimestamp]);
-
   useEffect(() => {
     function openOrRemoveTabs(changes, namespace) {
       AppFunc.openOrRemoveTabs(changes, namespace, setTabTotal, setGroups);
@@ -94,8 +85,14 @@ export default function App() {
     }
 
     if (process.env.NODE_ENV !== "test") {
-      AppFunc.checkUserStatus(setUser);
+      chrome.storage.local.get("client_details", (local) => {
+        if (local.client_details) {
+          AppFunc.checkUserStatus(setUser);
+        }
+      });
     }
+
+    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setTour, setGroups, setTabTotal); // prettier-ignore
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
