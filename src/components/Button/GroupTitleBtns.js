@@ -1,4 +1,5 @@
 import React from "react";
+import ReactTooltip from "react-tooltip";
 
 import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
@@ -51,7 +52,7 @@ export default function GroupTitleBtns({ id, color, hidden, locked, starred, too
     {
       classes: "delete-group-btn btn-in-group-title",
       translate: AppFunc.translate("deleteGroup"),
-      clickFn: (e) => GroupFunc.deleteGroup(e, user, setTabTotal, setGroups, setDialog),
+      clickFn: (e) => {ReactTooltip.hide(); GroupFunc.deleteGroup(e, user, setTabTotal, setGroups, setDialog)},
       icon: <AiOutlineClose />,
     },
   ];

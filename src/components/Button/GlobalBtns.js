@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import ReactTooltip from "react-tooltip";
 
 import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
@@ -10,7 +11,6 @@ import { FiSettings } from "react-icons/fi";
 import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
-import ReactTooltip from "react-tooltip";
 
 export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups, setDialog }) {
   useEffect(() => ReactTooltip.rebuild());
@@ -71,7 +71,10 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "print-btn",
       classes: "mr-2 print-btn-class",
       translate: AppFunc.translate("print"),
-      btnFn: () => window.print(),
+      btnFn: () => {
+        ReactTooltip.hide();
+        setTimeout(() => window.print(), 50);
+      },
       icon: <BiPrinter color="black" size="1.5rem" />,
     },
     {

@@ -52,12 +52,120 @@ TabMerger team at &lt;https://lbragile.github.io/TabMerger-Extension/contact/>
 import * as AppHelper from "../App/App_helpers";
 import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 
+import axios from "axios";
+
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
 
 /**
  * @module App/App_functions
  */
+
+export const SUBSCRIPTION_DIALOG = {
+  show: true,
+  title: "❕ TabMerger Information ❕",
+  msg: (
+    &lt;div>
+      To use this feature, you need to &lt;b>upgrade&lt;/b> your TabMerger subscription.
+      &lt;br />
+      &lt;br />
+      Please visit our official homepage's{" "}
+      &lt;a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+        Subscriptions &amp; Pricing
+      &lt;/a>{" "}
+      page for more information.
+    &lt;/div>
+  ),
+  accept_btn_text: "OK",
+  reject_btn_text: null,
+};
+
+/**
+ * Allows the user to activate their subscription by providing their credentials.
+ * Once the button is pressed, the credentials are verified in the external database
+ * and corresponding TabMerger functionality is unlocked.
+ * @param {Function} setUser Re-renders the user's subscription details { paid: boolean, tier: string }
+ * @param {Function} setDialog Shows the modal for inputing the user's credentials.
+ */
+export function setUserStatus(setUser, setDialog) {
+  setDialog({
+    show: true,
+    title: "🔐 TabMerger Product Activation 🔐",
+    msg: (
+      &lt;div>
+        &lt;form
+          id="activation-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            chrome.storage.local.set(
+              {
+                client_details: {
+                  email: e.target.querySelector("input[type='email']").value,
+                  password: e.target.querySelector("input[type='password']").value,
+                },
+              },
+              () => {
+                checkUserStatus(setUser); // authenticate the user
+                setDialog({ show: false }); // close modal
+              }
+            );
+          }}
+        >
+          &lt;label>
+            &lt;b>Email:&lt;/b>
+          &lt;/label>
+          &lt;br />
+          &lt;input
+            type="email"
+            name="email"
+            className="p-1"
+            placeholder="Email you used in Stripe checkout..."
+            autoFocus
+            autoComplete
+            required
+          />
+          &lt;br />
+          &lt;br />
+          &lt;label>
+            &lt;b>Password:&lt;/b>
+          &lt;/label>
+          &lt;br />
+          &lt;input
+            type="password"
+            name="password"
+            className="p-1"
+            placeholder="From our email or your own if changed..."
+            minLength={6}
+            required
+          />
+          &lt;br />
+          &lt;br />
+          &lt;button type="submit" className="btn btn-outline-primary text-primary">
+            Activate
+          &lt;/button>
+        &lt;/form>
+      &lt;/div>
+    ),
+    accept_btn_text: null,
+    reject_btn_text: null,
+  });
+}
+
+/**
+ * Checks and updates a user's status to know if they are a paid or free user.
+ * The information is stored in an external (encrypted) database.
+ * @param {Function} setUser For re-rendering the user's payment/subscription information
+ */
+export function checkUserStatus(setUser) {
+  chrome.storage.local.get("client_details", async (local) => {
+    const { email, password } = local.client_details;
+    var response = await axios.get("http://localhost:5000/v1/customer/" + JSON.stringify({ password, email }));
+    if (response.data) {
+      chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } });
+      setUser(response.data);
+    }
+  });
+}
 
 /**
  * Initialize the local &amp; sync storage when the user first installs TabMerger.
@@ -146,10 +254,10 @@ export function resetTutorialChoice(e, url, setTour, setDialog) {
  * @param {{"green": string, "yellow": string, "orange": string, "red": string }?} COLORS The colors as hex strings of form "#FF7700"
  */
 // prettier-ignore
-export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
+export function badgeIconInfo(tabTotal, user, STEP_SIZE = 25, COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" }) { 
   chrome.storage.sync.get("settings", (sync) => {
     chrome.storage.local.get("groups", (local) => {
-      if (local.groups &amp;&amp; sync.settings) {
+      if (local.groups &amp;&amp; sync.settings &amp;&amp; ["Standard", "Premium"].includes(user.tier)) {
         const num_groups = Object.keys(local.groups).length;
         var color;
         if (tabTotal &lt; STEP_SIZE) {
@@ -171,6 +279,9 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
         chrome.browserAction.setBadgeText({ text }, () => {});
         chrome.browserAction.setBadgeBackgroundColor({ color }, () => {});
         chrome.browserAction.setTitle({ title }, () => {});
+      }else{
+        chrome.browserAction.setBadgeText({ text: "" }, () => {});
+        chrome.browserAction.setTitle({ title: "Merge your tabs into groups" }, () => {});
       }
     });
   });
@@ -182,24 +293,30 @@ export function badgeIconInfo(tabTotal, STEP_SIZE = 25, COLORS = { green: "#060"
  *
  * @see defaultGroup in App.js
  */
-export function syncWrite(sync_node) {
-  chrome.storage.local.get("groups", async (local) => {
-    var groups = local.groups;
-    if (Object.values(groups).some((val) => val.tabs.length > 0)) {
-      for (var key of Object.keys(groups)) {
-        await AppHelper.updateGroupItem(key, groups[key]);
-      }
+export function syncWrite(sync_node, user, setDialog) {
+  if (!user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
+  } else {
+    chrome.storage.local.get("groups", async (local) => {
+      var groups = local.groups;
+      if (Object.values(groups).some((val) => val.tabs.length > 0)) {
+        for (var key of Object.keys(groups)) {
+          await AppHelper.updateGroupItem(key, groups[key]);
+        }
 
-      // remove extras from previous sync
-      chrome.storage.sync.get(null, (sync) => {
-        delete sync.settings;
-        var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
-        chrome.storage.sync.remove(remove_keys, () => {
-          AppHelper.toggleSyncTimestamp(true, sync_node);
+        // remove extras from previous sync
+        chrome.storage.sync.get(null, (sync) => {
+          delete sync.settings;
+          var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
+          chrome.storage.sync.remove(remove_keys, () => {
+            chrome.storage.local.set({ last_sync: AppHelper.getTimestamp() }, () => {
+              AppHelper.toggleSyncTimestamp(true, sync_node);
+            });
+          });
         });
-      });
-    }
-  });
+      }
+    });
+  }
 }
 
 /**
@@ -212,28 +329,32 @@ export function syncWrite(sync_node) {
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab count
  */
-export function syncRead(sync_node, setGroups, setTabTotal) {
-  chrome.storage.sync.get(null, (sync) => {
-    if (sync["group-0"]) {
-      delete sync.settings;
-      chrome.storage.local.remove(["groups"], () => {
-        var new_ls = {};
-        var remove_keys = [];
-        Object.keys(sync).forEach((key) => {
-          new_ls[key] = sync[key];
-          remove_keys.push(key);
-        });
+export function syncRead(sync_node, user, setGroups, setTabTotal, setDialog) {
+  if (!user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
+  } else {
+    chrome.storage.sync.get(null, (sync) => {
+      if (sync["group-0"]) {
+        delete sync.settings;
+        chrome.storage.local.remove(["groups"], () => {
+          var new_ls = {};
+          var remove_keys = [];
+          Object.keys(sync).forEach((key) => {
+            new_ls[key] = sync[key];
+            remove_keys.push(key);
+          });
 
-        chrome.storage.local.set({ groups: new_ls, scroll: document.documentElement.scrollTop }, () => {
-          chrome.storage.sync.remove(remove_keys, () => {
-            AppHelper.toggleSyncTimestamp(false, sync_node);
-            setGroups(JSON.stringify(new_ls));
-            setTabTotal(AppHelper.updateTabTotal(new_ls));
+          chrome.storage.local.set({ groups: new_ls, scroll: document.documentElement.scrollTop }, () => {
+            chrome.storage.sync.remove(remove_keys, () => {
+              AppHelper.toggleSyncTimestamp(false, sync_node);
+              setGroups(JSON.stringify(new_ls));
+              setTabTotal(AppHelper.updateTabTotal(new_ls));
+            });
           });
         });
-      });
-    }
-  });
+      }
+    });
+  }
 }
 
 /**
@@ -497,13 +618,20 @@ export function addGroup(num_group_limit, setGroups, setDialog) {
         title: "⚠ TabMerger Alert ⚠",
         msg: (
           &lt;div>
-            Number of groups exceeded (more than &lt;b>100&lt;/b>).
+            Number of groups exceeded (more than &lt;b>{num_group_limit}&lt;/b>).
             &lt;br />
             &lt;br />
             Please do &lt;b>one&lt;/b> of the following:
             &lt;ul style={{ marginLeft: "25px" }}>
               &lt;li>Delete a group that is no longer needed;&lt;/li>
               &lt;li>Merge tabs into another existing group.&lt;/li>
+              &lt;li>
+                Upgrade your TabMerger subscription (
+                &lt;a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+                  Subscriptions &amp; Pricing
+                &lt;/a>
+                ).
+              &lt;/li>
             &lt;/ul>
           &lt;/div>
         ),
@@ -557,7 +685,7 @@ export function openAllTabs(e, setDialog) {
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setDialog For rendering the confirmation dialog
  */
-export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
+export function deleteAllGroups(e, user, setTabTotal, setGroups, setDialog) {
   const scroll = document.documentElement.scrollTop;
   var element = e.target.closest("#delete-all-btn");
   AppHelper.elementMutationListener(element, (mutation) => {
@@ -565,18 +693,18 @@ export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
       chrome.storage.local.get(["groups", "groups_copy"], (local) => {
         chrome.storage.sync.get("settings", (sync) => {
           var { groups_copy, groups } = local;
-          groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups);
+          groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups, user);
 
           groups = {};
           var locked_counter = 0;
           document.querySelectorAll(".group-item").forEach((x) => {
-            if (x.querySelector(".lock-group-btn span").textContent.includes(translate("unlock"))) {
+            if (x.querySelector(".lock-group-btn").getAttribute("data-tip").includes(translate("unlock"))) {
               groups["group-" + locked_counter] = {
                 color: x.querySelector("input[type='color']").value,
                 created: x.querySelector(".created span").textContent,
                 hidden: !!x.querySelector(".hidden-symbol"),
                 locked: true,
-                starred: x.querySelector(".star-group-btn span").textContent.includes(translate("unstar")),
+                starred: x.querySelector(".star-group-btn").getAttribute("data-tip").includes(translate("unstar")),
                 tabs: [...x.querySelectorAll(".draggable")].map((tab) => {
                   const a = tab.querySelector("a");
                   return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
@@ -634,7 +762,7 @@ export function deleteAllGroups(e, setTabTotal, setGroups, setDialog) {
  * @param {Function} setTabTotal For re-rendering the tab total counter
  * @param {Function} setDialog For rendering a warning/error message
  *
- * @note Up to 10 states are stored.
+ * @note The number of states stored are based on user tier { Free: 2, Basic: 5, Standard: 10, Premium: 15 }.
  */
 export function undoDestructiveAction(setGroups, setTabTotal, setDialog) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
@@ -698,31 +826,39 @@ export function dragOver(e, type, offset = 10) {
  * "TabMerger ➡ Tab Level Search (by tab title)"
  *
  * @param {HTMLElement} e Node corresponding to the search filter
+ * @param {object?} user Contains information about the user's subscription
+ * @param {Function?} setDialog For re-rendering the subscription dialog
  */
-export function regexSearchForTab(e) {
-  var sections = document.querySelectorAll(".group-item");
-  var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
-
-  var titles, match;
-  if (e.target.value.match(/^[#@]/)) {
-    // GROUP
-    titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
-    match = e.target.value.substr(1).toLowerCase();
-    titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
+export function regexSearchForTab(e, user, setDialog) {
+  if (user &amp;&amp; !user.paid) {
+    setDialog(SUBSCRIPTION_DIALOG);
   } else {
-    // TAB
-    titles = tab_items.map((x) => x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase()));
-    match = e.target.value.toLowerCase();
+    var sections = document.querySelectorAll(".group-item");
+    var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
-    titles.forEach((title, i) => {
-      if (title.some((x) => x.indexOf(match) !== -1)) {
-        sections[i].style.display = "";
-        title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
-      } else {
-        // no need to hide tabs if group is hidden
-        sections[i].style.display = "none";
-      }
-    });
+    var titles, match;
+    if (e.target.value === "") {
+      sections.forEach((section) => (section.style.display = ""));
+    } else if (e.target.value.match(/^[#@]/)) {
+      // GROUP
+      titles = [...sections].map((x) => x.querySelector(".title-edit-input").value);
+      match = e.target.value.substr(1).toLowerCase();
+      titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
+    } else {
+      // TAB
+      titles = tab_items.map((x) => x.map((y) => y.querySelector(".a-tab").textContent.toLowerCase()));
+      match = e.target.value.toLowerCase();
+
+      titles.forEach((title, i) => {
+        if (title.some((x) => x.indexOf(match) !== -1)) {
+          sections[i].style.display = "";
+          title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
+        } else {
+          // no need to hide tabs if group is hidden
+          sections[i].style.display = "none";
+        }
+      });
+    }
   }
 }
 
@@ -750,10 +886,10 @@ export function resetSearch(e) {
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setDialog For rendering a warning/error message
  */
-export function importJSON(e, setGroups, setTabTotal, setDialog) {
+export function importJSON(e, user, setGroups, setTabTotal, setDialog) {
   if (e.target.files[0].type === "application/json") {
     chrome.storage.local.get(["groups", "groups_copy"], (local) => {
-      const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups);
+      const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups, user);
       const scroll = document.documentElement.scrollTop;
 
       var reader = new FileReader();
@@ -795,21 +931,25 @@ export function importJSON(e, setGroups, setTabTotal, setDialog) {
 /**
  * Allows the user to export TabMerger's current configuration (including settings).
  */
-export function exportJSON() {
-  chrome.storage.local.get("groups", (local) => {
-    var group_blocks = local.groups;
-    chrome.storage.sync.get("settings", (sync) => {
-      group_blocks["settings"] = sync.settings;
+export function exportJSON(user, setDialog) {
+  if (["Free", "Basic"].includes(user.tier)) {
+    setDialog(SUBSCRIPTION_DIALOG);
+  } else {
+    chrome.storage.local.get("groups", (local) => {
+      var group_blocks = local.groups;
+      chrome.storage.sync.get("settings", (sync) => {
+        group_blocks["settings"] = sync.settings;
 
-      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
 
-      var anchor = document.createElement("a");
-      anchor.setAttribute("href", dataStr);
-      anchor.setAttribute("download", AppHelper.outputFileName() + ".json");
-      anchor.click();
-      anchor.remove();
+        var anchor = document.createElement("a");
+        anchor.setAttribute("href", dataStr);
+        anchor.setAttribute("download", AppHelper.outputFileName() + ".json");
+        anchor.click();
+        anchor.remove();
+      });
     });
-  });
+  }
 }
 
 /**
@@ -873,7 +1013,7 @@ export function translate(msg) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 16 2021 12:25:57 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Feb 20 2021 22:21:56 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

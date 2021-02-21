@@ -80,10 +80,6 @@ export default function App() {
       AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups, setDialog); // prettier-ignore
     }
 
-    function toggleHiddenOrEmptyGroups(type) {
-      document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = type === "before" ? "none" : ""));
-    }
-
     if (process.env.NODE_ENV !== "test") {
       chrome.storage.local.get("client_details", (local) => {
         if (local.client_details) {
@@ -96,16 +92,52 @@ export default function App() {
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
-    window.addEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before"));
-    window.addEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after"));
 
     return () => {
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
-      window.removeEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before"));
-      window.removeEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after"));
     };
   }, []);
+
+  useEffect(() => {
+    function toggleHiddenOrEmptyGroups(type, user) {
+      const display_type = type === "before" ? "none" : "";
+
+      // remove ads for correct user type
+      if (["Standard", "Premium"].includes(user.tier)) {
+        if (type === "before") {
+          localStorage.setItem("container_pos", document.querySelector(".container-fluid").style.left);
+          localStorage.setItem(
+            "logo_pos",
+            JSON.stringify({
+              left: document.querySelector("#logo-img").style.left,
+              top: document.querySelector("#logo-img").style.top,
+            })
+          );
+        }
+
+        document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = display_type));
+        document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "visible";
+        document.querySelector("#logo-img").style.visibility = "visible";
+        document.querySelector("#logo-img").style.left = type === "before" ? "875px": JSON.parse(localStorage.getItem("logo_pos")).left; // prettier-ignore
+        document.querySelector("#logo-img").style.top = type === "before" ? "0px": JSON.parse(localStorage.getItem("logo_pos")).top; // prettier-ignore
+        document.querySelector(".container-fluid").style.left = type === "before" ? "50px" : localStorage.getItem("container_pos"); // prettier-ignore
+
+        if (type === "after") {
+          localStorage.removeItem("container_pos");
+          localStorage.removeItem("logo_pos");
+        }
+      }
+    }
+
+    window.addEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before", user));
+    window.addEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after", user));
+
+    return () => {
+      window.removeEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before", user));
+      window.removeEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after", user));
+    };
+  }, [user]);
 
   useEffect(() => AppFunc.badgeIconInfo(tabTotal, user), [groups, tabTotal, user]);
 

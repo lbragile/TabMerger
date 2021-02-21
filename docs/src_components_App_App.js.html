@@ -65,9 +65,10 @@ import TabSearch from "../Extra/TabSearch";
 import Reviews from "../Extra/Reviews";
 import Links from "../Extra/Links";
 import Dialog from "../Extra/Dialog";
+import Button from "../Button/Button";
 import { TOUR_STEPS } from "../Extra/Tutorial";
-
 import { AppProvider } from "../../context/AppContext";
+import { BiCheckCircle } from "react-icons/bi";
 
 import "./App.css";
 import "../Button/Button.css";
@@ -78,10 +79,8 @@ export default function App() {
   const ITEM_STORAGE_LIMIT = useRef(8000);
   /** @constant {Number} SYNC_STORAGE_LIMIT @default 102000 (1000 for testing) */
   const SYNC_STORAGE_LIMIT = useRef(102000);
-  /** @constant {Number} NUM_GROUP_LIMIT @default 100 (3 for testing) */
-  const NUM_GROUP_LIMIT = useRef(100);
 
-  var syncTimestamp = useRef("--/--/---- @ --:--:--");
+  var syncTimestamp = useRef();
 
   /** @constant {Object} defaultGroup @default { color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" } */
   const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" }); // prettier-ignore
@@ -93,18 +92,12 @@ export default function App() {
   const [groups, setGroups] = useState(null);
   const [dialog, setDialog] = useState({ show: false });
 
+  // activation parameters
+  const [user, setUser] = useState({ paid: false, tier: "Free" });
+
   // tutorial parameters
   const [tour, setTour] = useState(false);
   const startStep = useRef(0);
-
-  const toggleSyncTimestamp = useCallback(
-    (positive) => AppHelper.toggleSyncTimestamp(positive, syncTimestamp.current),
-    [syncTimestamp]
-  );
-
-  useEffect(() => {
-    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setTour, setGroups, setTabTotal); // prettier-ignore
-  }, [toggleSyncTimestamp]);
 
   useEffect(() => {
     function openOrRemoveTabs(changes, namespace) {
@@ -115,24 +108,66 @@ export default function App() {
       AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups, setDialog); // prettier-ignore
     }
 
-    function toggleHiddenOrEmptyGroups(type) {
-      document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = type === "before" ? "none" : ""));
+    if (process.env.NODE_ENV !== "test") {
+      chrome.storage.local.get("client_details", (local) => {
+        if (local.client_details) {
+          AppFunc.checkUserStatus(setUser);
+        }
+      });
     }
+
+    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setTour, setGroups, setTabTotal); // prettier-ignore
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
-    window.addEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before"));
-    window.addEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after"));
 
     return () => {
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
-      window.removeEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before"));
-      window.removeEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after"));
     };
   }, []);
 
-  useEffect(() => AppFunc.badgeIconInfo(tabTotal), [tabTotal, groups]);
+  useEffect(() => {
+    function toggleHiddenOrEmptyGroups(type, user) {
+      const display_type = type === "before" ? "none" : "";
+
+      // remove ads for correct user type
+      if (["Standard", "Premium"].includes(user.tier)) {
+        if (type === "before") {
+          localStorage.setItem("container_pos", document.querySelector(".container-fluid").style.left);
+          localStorage.setItem(
+            "logo_pos",
+            JSON.stringify({
+              left: document.querySelector("#logo-img").style.left,
+              top: document.querySelector("#logo-img").style.top,
+            })
+          );
+        }
+
+        document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = display_type));
+        document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "visible";
+        document.querySelector("#logo-img").style.visibility = "visible";
+        document.querySelector("#logo-img").style.left = type === "before" ? "875px": JSON.parse(localStorage.getItem("logo_pos")).left; // prettier-ignore
+        document.querySelector("#logo-img").style.top = type === "before" ? "0px": JSON.parse(localStorage.getItem("logo_pos")).top; // prettier-ignore
+        document.querySelector(".container-fluid").style.left = type === "before" ? "50px" : localStorage.getItem("container_pos"); // prettier-ignore
+
+        if (type === "after") {
+          localStorage.removeItem("container_pos");
+          localStorage.removeItem("logo_pos");
+        }
+      }
+    }
+
+    window.addEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before", user));
+    window.addEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after", user));
+
+    return () => {
+      window.removeEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before", user));
+      window.removeEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after", user));
+    };
+  }, [user]);
+
+  useEffect(() => AppFunc.badgeIconInfo(tabTotal, user), [groups, tabTotal, user]);
 
   useEffect(() => {
     chrome.storage.local.get("scroll", (local) => {
@@ -143,7 +178,6 @@ export default function App() {
   return (
     &lt;div id="app-wrapper" className="text-center">
       &lt;Dialog {...dialog} setDialog={setDialog} />
-
       &lt;Tour
         steps={TOUR_STEPS}
         isOpen={!!tour}
@@ -158,27 +192,35 @@ export default function App() {
         rounded={5}
         lastStepNextButton={&lt;button className="btn btn-dark">🏁&lt;/button>}
       />
-
       &lt;nav id="sidebar">
         &lt;Header total={tabTotal} />
         &lt;hr className="mx-auto d-none shown-in-print" />
         &lt;Reviews />
 
         &lt;div id="global-action-container">
-          &lt;TabSearch />
+          &lt;TabSearch user={user} setDialog={setDialog} />
           &lt;hr className="mx-auto hidden-in-print" />
 
           {/* prettier-ignore */}
-          &lt;GlobalBtns syncTimestamp={syncTimestamp} group_limit={NUM_GROUP_LIMIT.current} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
+          &lt;GlobalBtns user={user} syncTimestamp={syncTimestamp} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
           &lt;Links setTour={setTour} setDialog={setDialog} />
         &lt;/div>
+
+        {/* Verify/activate account button*/}
+        &lt;Button
+          classes="p-0 btn-in-global"
+          id="subscription-btn"
+          translate="Activate Tier"
+          onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
+        >
+          {&lt;BiCheckCircle color="black" size="1.5rem" />}
+        &lt;/Button>
 
         &lt;div id="copyright" className="mt-4">
           Copyright &amp;copy; {new Date().getFullYear()} Lior Bragilevsky
         &lt;/div>
       &lt;/nav>
-
-      &lt;AppProvider value={{ setGroups, setTabTotal, setDialog }}>
+      &lt;AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
         &lt;div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current)}
         &lt;/div>
@@ -202,7 +244,7 @@ export default function App() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 16 2021 12:25:57 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Feb 20 2021 22:21:56 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

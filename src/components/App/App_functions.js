@@ -65,24 +65,61 @@ export function setUserStatus(setUser, setDialog) {
     title: "🔐 TabMerger Product Activation 🔐",
     msg: (
       <div>
-        <label>
-          <b>Email:</b>
-        </label>
-        <br />
-        <input type="email" autoFocus autoComplete className="p-1" placeholder="Email you used in Stripe checkout..." />
-        <br />
-        <br />
-        <label>
-          <b>Password:</b>
-        </label>
-        <br />
-        <input type="password" className="p-1" placeholder="From our email or your own if changed..." />
+        <form
+          id="activation-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            chrome.storage.local.set(
+              {
+                client_details: {
+                  email: e.target.querySelector("input[type='email']").value,
+                  password: e.target.querySelector("input[type='password']").value,
+                },
+              },
+              () => {
+                checkUserStatus(setUser); // authenticate the user
+                setDialog({ show: false }); // close modal
+              }
+            );
+          }}
+        >
+          <label>
+            <b>Email:</b>
+          </label>
+          <br />
+          <input
+            type="email"
+            name="email"
+            className="p-1"
+            placeholder="Email you used in Stripe checkout..."
+            autoFocus
+            autoComplete
+            required
+          />
+          <br />
+          <br />
+          <label>
+            <b>Password:</b>
+          </label>
+          <br />
+          <input
+            type="password"
+            name="password"
+            className="p-1"
+            placeholder="From our email or your own if changed..."
+            minLength={6}
+            required
+          />
+          <br />
+          <br />
+          <button type="submit" className="btn btn-outline-primary text-primary">
+            Activate
+          </button>
+        </form>
       </div>
     ),
-    accept_btn_text: "Activate",
+    accept_btn_text: null,
     reject_btn_text: null,
-    setUser,
-    checkUserStatus,
   });
 }
 
@@ -92,7 +129,7 @@ export function setUserStatus(setUser, setDialog) {
  * @param {Function} setUser For re-rendering the user's payment/subscription information
  */
 export function checkUserStatus(setUser) {
-  chrome.storage.local.get(["client_details", "verified"], async (local) => {
+  chrome.storage.local.get("client_details", async (local) => {
     const { email, password } = local.client_details;
     var response = await axios.get("http://localhost:5000/v1/customer/" + JSON.stringify({ password, email }));
     if (response.data) {
