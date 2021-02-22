@@ -23,12 +23,35 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 :root {
   --sidebar-width: 245px;
+  --sync-warn-indicator-color: rgb(255, 89, 89);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* SYNC INDICATORS */
+.sync-group-exceed-indicator {
+  color: var(--sync-warn-indicator-color);
+  position: absolute;
+  top: -44px;
+  left: -15px;
+  font-size: 2rem;
+}
+
+#sync-total-exceed-indicator {
+  color: var(--sync-warn-indicator-color);
+  position: absolute;
+  top: 15px;
+  left: calc(var(--sidebar-width) + 10%);
+  font-size: 2rem;
+}
+
+/* TOASTS */
+.Toastify__toast--default {
+  color: black;
 }
 
 /* TOUR HELPER */
@@ -289,6 +312,8 @@ hr {
   .move-tab,
   .pin-tab,
   #sync-text,
+  #sync-total-exceed-indicator,
+  .sync-group-exceed-indicator,
   .btn-for-merging,
   .created,
   .search-filter,

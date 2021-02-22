@@ -23,6 +23,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import * as AppHelper from "../App/App_helpers";
 import { TUTORIAL_GROUP } from "../Extra/Tutorial";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 
@@ -33,24 +34,18 @@ import Group from "../Group/Group.js";
  * @module App/App_functions
  */
 
-export const SUBSCRIPTION_DIALOG = {
-  show: true,
-  title: "❕ TabMerger Information ❕",
-  msg: (
-    <div>
-      To use this feature, you need to <b>upgrade</b> your TabMerger subscription.
-      <br />
-      <br />
-      Please visit our official homepage's{" "}
-      <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
-        Subscriptions & Pricing
-      </a>{" "}
-      page for more information.
-    </div>
-  ),
-  accept_btn_text: "OK",
-  reject_btn_text: null,
-};
+export const SUBSCRIPTION_DIALOG = (
+  <div className="text-left">
+    To use this feature, you need to <b>upgrade</b> your TabMerger subscription.
+    <br />
+    <br />
+    Please visit our official homepage's{" "}
+    <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+      Subscriptions & Pricing
+    </a>{" "}
+    page for more information.
+  </div>
+);
 
 /**
  * Allows the user to activate their subscription by providing their credentials.
@@ -140,6 +135,79 @@ export function checkUserStatus(setUser) {
 }
 
 /**
+ * Displays helpful warning symbols above group for item level sync exceeding groups
+ * or TabMerger for total level sync exceeding configurations.
+ */
+export function syncLimitIndication(ITEM_STORAGE_LIMIT, SYNC_STORAGE_LIMIT) {
+  chrome.storage.local.get(["groups", "scroll", "client_details"], (local) => {
+    const { groups, scroll, client_details } = local;
+    setTimeout(() => {
+      document.documentElement.scrollTop = scroll ?? 0;
+
+      if (client_details.paid) {
+        var disable_sync = false;
+        // group sync
+        Object.keys(groups).forEach((key) => {
+          if (JSON.stringify(groups[key]).length > ITEM_STORAGE_LIMIT.current) {
+            document.querySelector("#" + key + " .sync-group-exceed-indicator").classList.remove("d-none");
+            disable_sync = true;
+          }
+        });
+
+        // total sync
+        if (JSON.stringify(groups).length > SYNC_STORAGE_LIMIT.current) {
+          document.querySelector("#sync-total-exceed-indicator").classList.remove("d-none");
+          disable_sync = true;
+        } else {
+          document.querySelector("#sync-total-exceed-indicator").classList.add("d-none");
+        }
+
+        if (disable_sync) {
+          document.querySelector("#sync-write-btn").classList.add("disabled-btn");
+        }
+      }
+    }, 100);
+  });
+}
+
+/**
+ * Re-arranges TabMerger's page before the printing process is initiated.
+ * Takes into account the user's subscription to hide/show ads on the side.
+ * Restores original configuration once the printing process is done.
+ * @param {string} type Whether it is before or after the printing process
+ * @param {object} user The user's subscription details
+ */
+export function toggleHiddenOrEmptyGroups(type, user) {
+  const display_type = type === "before" ? "none" : "";
+
+  // remove ads for correct user type
+  if (["Standard", "Premium"].includes(user.tier)) {
+    if (type === "before") {
+      localStorage.setItem("container_pos", document.querySelector(".container-fluid").style.left);
+      localStorage.setItem(
+        "logo_pos",
+        JSON.stringify({
+          left: document.querySelector("#logo-img").style.left,
+          top: document.querySelector("#logo-img").style.top,
+        })
+      );
+    }
+
+    document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = display_type));
+    document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "visible";
+    document.querySelector("#logo-img").style.visibility = "visible";
+    document.querySelector("#logo-img").style.left = type === "before" ? "875px": JSON.parse(localStorage.getItem("logo_pos")).left; // prettier-ignore
+    document.querySelector("#logo-img").style.top = type === "before" ? "0px": JSON.parse(localStorage.getItem("logo_pos")).top; // prettier-ignore
+    document.querySelector(".container-fluid").style.left = type === "before" ? "50px" : localStorage.getItem("container_pos"); // prettier-ignore
+
+    if (type === "after") {
+      localStorage.removeItem("container_pos");
+      localStorage.removeItem("logo_pos");
+    }
+  }
+}
+
+/**
  * Initialize the local & sync storage when the user first installs TabMerger.
  * @param {{blacklist: string, color: string, dark: boolean,
  *  open: "with" | "without", restore: "keep" | "remove", title: string}} default_settings TabMerger's original default settings
@@ -203,7 +271,7 @@ export function resetTutorialChoice(e, url, setTour, setDialog) {
   setDialog({
     element,
     show: true,
-    title: "❔ TabMerger Question ❔",
+    title: "✋ TabMerger Question ❔",
     msg: (
       <div>
         Press <b>VIEW TUTORIAL</b> to get a walkthrough of TabMerger's main features{" "}
@@ -265,9 +333,23 @@ export function badgeIconInfo(tabTotal, user, STEP_SIZE = 25, COLORS = { green: 
  *
  * @see defaultGroup in App.js
  */
-export function syncWrite(sync_node, user, setDialog) {
+export function syncWrite(e, sync_node, user) {
   if (!user.paid) {
-    setDialog(SUBSCRIPTION_DIALOG);
+    toast(SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" });
+  } else if (e.target.closest("#sync-write-btn").classList.contains("disabled-btn")) {
+    toast(
+      <div className="text-left">
+        Either one (or more) of your groups exceed(s) their respective sync limit <u>or</u> the total sync limit is
+        exceeded - see TabMerger's sync indicators. <br /> <br />
+        Please adjust these as needed by doing <b>one or both</b> of the following:
+        <ul style={{ marginLeft: "25px" }}>
+          <li>Delete tabs that are no longer important/relevant to you;</li>
+          <li>Delete some tab groups for the same reasoning as above.</li>
+        </ul>
+        Perform these actions until the corresponding indicators are no longer visible in TabMerger.
+      </div>,
+      { toastId: "syncWrite_exceed" }
+    );
   } else {
     chrome.storage.local.get("groups", async (local) => {
       var groups = local.groups;
@@ -301,9 +383,9 @@ export function syncWrite(sync_node, user, setDialog) {
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab count
  */
-export function syncRead(sync_node, user, setGroups, setTabTotal, setDialog) {
+export function syncRead(sync_node, user, setGroups, setTabTotal) {
   if (!user.paid) {
-    setDialog(SUBSCRIPTION_DIALOG);
+    toast(SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" });
   } else {
     chrome.storage.sync.get(null, (sync) => {
       if (sync["group-0"]) {
@@ -342,17 +424,18 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
   if (namespace === "local" && changes?.remove?.newValue?.length > 0) {
     chrome.storage.sync.get("settings", (sync) => {
       chrome.storage.local.get("groups", (local) => {
+        const scroll = document.documentElement.scrollTop;
+        var groups = local.groups;
+
         // extract and remove the button type from array
         var group_id = changes.remove.newValue[0];
         changes.remove.newValue.splice(0, 1);
 
         var tabs;
         if (group_id) {
-          tabs = local.groups[group_id].tabs;
+          tabs = groups[group_id].tabs;
         } else {
-          Object.values(local.groups).forEach((x) => {
-            tabs = tabs ? [...tabs, ...x.tabs] : [...x.tabs];
-          });
+          Object.values(groups).forEach((x) => (tabs = tabs ? [...tabs, ...x.tabs] : [...x.tabs]));
         }
 
         // try to not open tabs if it is already open
@@ -368,19 +451,16 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
             }
           }
 
-          var groups = local.groups;
           if (sync.settings.restore !== "keep") {
             if (group_id) {
               if (!groups[group_id].locked) {
                 groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
               }
             } else {
-              Object.keys(groups).forEach((key) => {
-                groups[key].tabs = !groups[key].locked ? [] : groups[key].tabs;
-              });
+              Object.keys(groups).forEach((key) => (groups[key].tabs = !groups[key].locked ? [] : groups[key].tabs));
             }
 
-            chrome.storage.local.set({ groups, scroll: document.documentElement.scrollTop }, () => {
+            chrome.storage.local.set({ groups, scroll }, () => {
               setTabTotal(AppHelper.updateTabTotal(groups));
               setGroups(JSON.stringify(groups));
             });
@@ -401,33 +481,49 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  * and the user is given a warning with instructions.
  * @param {object} changes contains the changed keys and they old & new values
  * @param {string} namespace local or sync storage type
- * @param {number} sync_limit Limit for overall sync storage - includes all groups, tabs, settings, etc.
- * @param {number} item_limit Limit for each group with regards to sync item storage - only contains group related details
  * @param {Function} setTabTotal For re-rendering the total tab counter
  * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setDialog For rendering a warning/error message
  *
  * @see SYNC_STORAGE_LIMIT in App.js
  * @see ITEM_STORAGE_LIMIT in App.js
  */
-export function checkMerging(changes, namespace, sync_limit, item_limit, setTabTotal, setGroups, setDialog) {
+export function checkMerging(changes, namespace, setTabTotal, setGroups) {
   if (namespace === "local" && changes?.merged_tabs?.newValue?.length > 0) {
     chrome.storage.sync.get("settings", (sync) => {
-      chrome.storage.local.get(["merged_tabs", "into_group", "groups"], (local) => {
-        var into_group = local.into_group, merged_tabs = local.merged_tabs; // prettier-ignore
-        var group_blocks = local.groups;
-        var merged_bytes = JSON.stringify(merged_tabs).length;
-        var sync_bytes = JSON.stringify(group_blocks).length + merged_bytes;
+      chrome.storage.local.get(["merged_tabs", "into_group", "groups", "client_details"], (local) => {
+        var { into_group, merged_tabs, groups, client_details } = local;
+        const scroll = document.documentElement.scrollTop;
 
-        if (sync_bytes < sync_limit) {
+        var NUM_TAB_LIMIT;
+        switch (client_details.tier) {
+          case "Free":
+            NUM_TAB_LIMIT = 50;
+            break;
+          case "Basic":
+            NUM_TAB_LIMIT = 250;
+            break;
+          case "Standard":
+            NUM_TAB_LIMIT = 2500;
+            break;
+          case "Premium":
+            NUM_TAB_LIMIT = 10000;
+            break;
+        }
+
+        var current_num_tabs = 0;
+        Object.values(groups).forEach((val) => {
+          current_num_tabs += val.tabs.length;
+        });
+
+        if (current_num_tabs + merged_tabs.length <= NUM_TAB_LIMIT) {
           // IF top group has tabs - add new group at top ("merging group")
           // if context menu is used to avoid merging into group with existing tabs.
           // Else - add tabs to the top group. This allows the user to star a group and then merge into it.
           if (!into_group.includes("group")) {
             into_group = "group-0";
-            if (group_blocks[into_group].tabs.length > 0) {
-              const group_values = AppHelper.sortByKey(group_blocks);
-              group_blocks[into_group] = {
+            if (groups[into_group].tabs.length > 0) {
+              const group_values = AppHelper.sortByKey(groups);
+              groups[into_group] = {
                 color: sync.settings.color,
                 created: AppHelper.getTimestamp(),
                 hidden: false,
@@ -438,72 +534,42 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
               };
 
               group_values.forEach((val, i) => {
-                group_blocks["group-" + (i + 1)] = val;
+                groups["group-" + (i + 1)] = val;
               });
             }
           }
 
-          var item_bytes = JSON.stringify(group_blocks[into_group]).length + merged_bytes;
-
-          if (item_bytes < item_limit) {
-            // close tabs that are being merged (if settings is set to do so)
-            if (sync.settings.merge === "merge") {
-              chrome.tabs.remove(merged_tabs.map((x) => x.id));
-            }
-
-            const new_tabs = [...group_blocks[into_group].tabs, ...merged_tabs];
-            group_blocks[into_group].tabs = new_tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url }));
-
-            chrome.storage.local.set({ groups: group_blocks, scroll: document.documentElement.scrollTop }, () => {
-              setTabTotal(AppHelper.updateTabTotal(group_blocks));
-              setGroups(JSON.stringify(group_blocks));
-            });
-          } else {
-            setDialog({
-              show: true,
-              title: "⚠ TabMerger Alert ⚠",
-              msg: (
-                <div>
-                  <u>Group's</u> syncing capacity exceeded by <b>{item_bytes - item_limit}</b> bytes.
-                  <br />
-                  <br />
-                  Please do <b>one</b> of the following:
-                  <ul style={{ marginLeft: "25px" }}>
-                    <li>Create a new group and merge new tabs into it;</li>
-                    <li>Remove some tabs from this group;</li>
-                    <li>
-                      Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
-                    </li>
-                  </ul>
-                </div>
-              ),
-              accept_btn_text: "OK",
-              reject_btn_text: null,
-            });
+          // close tabs that are being merged (if settings is set to do so)
+          if (sync.settings.merge === "merge") {
+            chrome.tabs.remove(merged_tabs.map((x) => x.id));
           }
-        } else {
-          setDialog({
-            show: true,
-            title: "⚠ TabMerger Alert ⚠",
-            msg: (
-              <div>
-                <u>Total</u> syncing capacity exceeded by <b>{sync_bytes - sync_limit}</b> bytes.
-                <br />
-                <br />
-                Please do <b>one</b> of the following:
-                <ul style={{ marginLeft: "25px" }}>
-                  <li>Remove some tabs from any group;</li>
-                  <li>Delete a group that is no longer needed;</li>
-                  <li>
-                    Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
-                  </li>
-                </ul>
-                Make sure to Export JSON or PDF to have a backup copy!
-              </div>
-            ),
-            accept_btn_text: "OK",
-            reject_btn_text: null,
+
+          const new_tabs = [...groups[into_group].tabs, ...merged_tabs];
+          groups[into_group].tabs = new_tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url }));
+
+          chrome.storage.local.set({ groups, scroll }, () => {
+            setTabTotal(AppHelper.updateTabTotal(groups));
+            setGroups(JSON.stringify(groups));
           });
+        } else {
+          toast(
+            <div className="text-left">
+              This would exceed your plan's ({client_details.tier} Tier) tab limit of <b>{NUM_TAB_LIMIT}</b>!<br />
+              <br />
+              To successfully execute this action you should do <b>one</b> of the following:
+              <ul style={{ marginLeft: "25px" }}>
+                <li>If you are merging tabs into TabMerger, try to merge less tabs;</li>
+                <li>Remove a few tabs that are not as important/relevant to you anymore;</li>
+                <li>
+                  Upgrade your subscription by visiting our official homepage's{" "}
+                  <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+                    Subscriptions & Pricing
+                  </a>
+                </li>
+              </ul>
+            </div>,
+            { toastId: "tabExceed_toast" }
+          );
         }
 
         // remove to be able to detect changes again (even for same tabs)
@@ -517,14 +583,13 @@ export function checkMerging(changes, namespace, sync_limit, item_limit, setTabT
  * Forms the group components with tab draggable tab components inside.
  * Each formed group has correct & up-to-date information.
  * @param {string} groups A stringified object consisting of TabMerger's current group information
- * @param {number} item_limit Limit for each group with regards to sync item storage - only contains group related details
  *
  * @see ITEM_STORAGE_LIMIT in App.js
  *
  * @return If "groups" is defined - array of group components which include the correct number of tab components inside each.
  * Else - null
  */
-export function groupFormation(groups, item_limit) {
+export function groupFormation(groups) {
   if (groups) {
     var parsed_groups = JSON.parse(groups);
     var group_values = Object.values(parsed_groups);
@@ -545,7 +610,7 @@ export function groupFormation(groups, item_limit) {
           starred={x.starred}
           key={Math.random()}
         >
-          <Tab id={id} item_limit={item_limit} hidden={x.hidden} textColor={textColor} />
+          <Tab id={id} hidden={x.hidden} textColor={textColor} />
         </Group>
       );
     });
@@ -585,31 +650,25 @@ export function addGroup(num_group_limit, setGroups, setDialog) {
         });
       });
     } else {
-      setDialog({
-        show: true,
-        title: "⚠ TabMerger Alert ⚠",
-        msg: (
-          <div>
-            Number of groups exceeded (more than <b>{num_group_limit}</b>).
-            <br />
-            <br />
-            Please do <b>one</b> of the following:
-            <ul style={{ marginLeft: "25px" }}>
-              <li>Delete a group that is no longer needed;</li>
-              <li>Merge tabs into another existing group.</li>
-              <li>
-                Upgrade your TabMerger subscription (
-                <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
-                  Subscriptions & Pricing
-                </a>
-                ).
-              </li>
-            </ul>
-          </div>
-        ),
-        accept_btn_text: "OK",
-        reject_btn_text: null,
-      });
+      toast(
+        <div className="text-left">
+          Number of groups exceeded (more than <b>{num_group_limit}</b>).
+          <br />
+          <br />
+          Please do <b>one</b> of the following:
+          <ul style={{ marginLeft: "25px" }}>
+            <li>Delete a group that is no longer needed;</li>
+            <li>Merge tabs into another existing group;</li>
+            <li>
+              Upgrade your TabMerger subscription (
+              <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+                Subscriptions & Pricing
+              </a>
+              ).
+            </li>
+          </ul>
+        </div>
+      );
     }
   });
 }
@@ -732,11 +791,10 @@ export function deleteAllGroups(e, user, setTabTotal, setGroups, setDialog) {
  *
  * @param {Function} setGroups For re-rendering the groups after they are reset
  * @param {Function} setTabTotal For re-rendering the tab total counter
- * @param {Function} setDialog For rendering a warning/error message
  *
  * @note The number of states stored are based on user tier { Free: 2, Basic: 5, Standard: 10, Premium: 15 }.
  */
-export function undoDestructiveAction(setGroups, setTabTotal, setDialog) {
+export function undoDestructiveAction(setGroups, setTabTotal) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     if (local.groups_copy.length >= 1) {
       const scroll = document.documentElement.scrollTop;
@@ -747,19 +805,13 @@ export function undoDestructiveAction(setGroups, setTabTotal, setDialog) {
         setGroups(JSON.stringify(prev_group));
       });
     } else {
-      setDialog({
-        show: true,
-        title: "❕ TabMerger Information ❕",
-        msg: (
-          <div>
-            There are <b>no more</b> states to undo. <br />
-            <br />
-            States are created with <u>destructive actions</u>!
-          </div>
-        ),
-        accept_btn_text: "OK",
-        reject_btn_text: null,
-      });
+      toast(
+        <div className="text-left">
+          There are <b>no more</b> states to undo. <br />
+          <br />
+          States are created with <u>destructive actions</u>!
+        </div>
+      );
     }
   });
 }
@@ -799,11 +851,10 @@ export function dragOver(e, type, offset = 10) {
  *
  * @param {HTMLElement} e Node corresponding to the search filter
  * @param {object?} user Contains information about the user's subscription
- * @param {Function?} setDialog For re-rendering the subscription dialog
  */
-export function regexSearchForTab(e, user, setDialog) {
+export function regexSearchForTab(e, user) {
   if (user && !user.paid) {
-    setDialog(SUBSCRIPTION_DIALOG);
+    toast(SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" });
   } else {
     var sections = document.querySelectorAll(".group-item");
     var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
@@ -880,32 +931,26 @@ export function importJSON(e, user, setGroups, setTabTotal, setDialog) {
       };
     });
   } else {
-    setDialog({
-      show: true,
-      title: <p><span style={{color: "red"}}>‼</span> TabMerger Warning <span Warning span style={{color: "red"}}>‼</span></p>, // prettier-ignore
-      msg: (
-        <div>
-          You must import a JSON file <i>(.json extension)</i>!<br />
-          <br />
-          These can be generated via the <b>Export JSON</b> button.
-          <br />
-          <br />
-          <b>Be careful</b>, <u>only import JSON files generated by TabMerger</u>, otherwise you risk losing your
-          current configuration!
-        </div>
-      ),
-      accept_btn_text: "OK",
-      reject_btn_text: null,
-    });
+    toast(
+      <div className="text-left">
+        You must import a JSON file <i>(.json extension)</i>!<br />
+        <br />
+        These can be generated via the <b>Export JSON</b> button.
+        <br />
+        <br />
+        <b>Be careful</b>, <u>only import JSON files generated by TabMerger</u>, otherwise you risk losing your current
+        configuration!
+      </div>
+    );
   }
 }
 
 /**
  * Allows the user to export TabMerger's current configuration (including settings).
  */
-export function exportJSON(user, setDialog) {
+export function exportJSON(user) {
   if (["Free", "Basic"].includes(user.tier)) {
-    setDialog(SUBSCRIPTION_DIALOG);
+    toast(SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" });
   } else {
     chrome.storage.local.get("groups", (local) => {
       var group_blocks = local.groups;

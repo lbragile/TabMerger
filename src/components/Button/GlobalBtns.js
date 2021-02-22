@@ -50,21 +50,21 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "export-btn",
       classes: "",
       translate: AppFunc.translate("exportJSON"),
-      btnFn: () => AppFunc.exportJSON(user, setDialog),
+      btnFn: () => AppFunc.exportJSON(user),
       icon: <BiExport color="black" size="1.4rem" />,
     },
     {
       id: "sync-write-btn",
       classes: "mx-2",
       translate: AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("write"),
-      btnFn: () => AppFunc.syncWrite(syncTimestamp.current, user, setDialog),
+      btnFn: (e) => AppFunc.syncWrite(e, syncTimestamp.current, user),
       icon: <BsCloudUpload color="black" size="1.5rem" />,
     },
     {
       id: "undo-btn",
       classes: "",
       translate: AppFunc.translate("undo") + " " + AppFunc.translate("action"),
-      btnFn: () => AppFunc.undoDestructiveAction(setGroups, setTabTotal, setDialog),
+      btnFn: () => AppFunc.undoDestructiveAction(setGroups, setTabTotal),
       icon: <FaUndo color="black" size="1.2rem" />,
     },
     {
@@ -91,7 +91,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "sync-read-btn",
       classes: "mr-2",
       translate: AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("read"),
-      btnFn: () => AppFunc.syncRead(syncTimestamp.current, user, setGroups, setTabTotal, setDialog),
+      btnFn: () => AppFunc.syncRead(syncTimestamp.current, user, setGroups, setTabTotal),
       icon: <BsCloudDownload color="black" size="1.5rem" />,
     },
     {

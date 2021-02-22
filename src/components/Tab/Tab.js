@@ -33,9 +33,9 @@ import { TiDelete } from "react-icons/ti";
 
 import "./Tab.css";
 
-export default function Tab({ id, item_limit, hidden, textColor }) {
+export default function Tab({ id, hidden, textColor }) {
   const [tabs, setTabs] = useState([]);
-  const { user, setTabTotal, setGroups, setDialog } = useContext(AppContext);
+  const { user, setTabTotal, setGroups } = useContext(AppContext);
 
   useEffect(() => {
     TabFunc.setInitTabs(setTabs, id);
@@ -50,13 +50,13 @@ export default function Tab({ id, item_limit, hidden, textColor }) {
             className={"row draggable p-0 mx-0 " + (hidden ? "d-none" : "")}
             draggable={true}
             onDragStart={(e) => TabFunc.tabDragStart(e)}
-            onDragEnd={(e) => TabFunc.tabDragEnd(e, item_limit, setGroups, setDialog)}
+            onDragEnd={(e) => TabFunc.tabDragEnd(e, setGroups)}
             key={Math.random()}
           >
             <p
               className="close-tab"
               draggable={false}
-              onClick={(e) => TabFunc.removeTab(e, tabs, user, setTabs, setTabTotal, setGroups, setDialog)}
+              onClick={(e) => TabFunc.removeTab(e, tabs, user, setTabs, setTabTotal, setGroups)}
             >
               <TiDelete size="1rem" color={textColor === "light" ? "white" : "black"} />
             </p>

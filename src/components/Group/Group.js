@@ -47,7 +47,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
       className={"group-item mt-2" + (hidden ? " hidden" : "") + (num_tabs > 0 ? "" : " empty")}
       draggable={true}
       onDragStart={(e) => GroupFunc.groupDragStart(e)}
-      onDragEnd={(e) => GroupFunc.groupDragEnd(e, setGroups)}
+      onDragEnd={(e) => GroupFunc.groupDragEnd(e)}
     >
       <div className="group-title d-flex flex-row justify-content-center" draggable={false}>
         <h5 className="group-count">{num_tabs}</h5>
@@ -57,7 +57,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           maxLength={TITLE_TRIM_LIMIT.current}
           defaultValue={title}
           onFocus={(e) => e.target.select()}
-          onBlur={(e) => GroupFunc.setTitle(e, setGroups, title)}
+          onBlur={(e) => GroupFunc.setTitle(e)}
           onKeyDown={(e) => GroupFunc.blurOnEnter(e)}
           onDragStart={(e) => e.preventDefault()}
           onDrop={(e) => e.preventDefault()}
@@ -81,11 +81,13 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>
 
+        <div className="sync-group-exceed-indicator d-none">●</div>
+
         <input
           className="url-drag-input"
           type="text"
           name="url-drag"
-          onChange={(e) => GroupFunc.addTabFromURL(e, user, setGroups, setTabTotal, setDialog)}
+          onChange={(e) => GroupFunc.addTabFromURL(e, user, setGroups, setTabTotal)}
           onKeyDown={(e) => e.preventDefault()}
           onClick={(e) => e.target.blur()}
         />

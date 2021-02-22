@@ -26,6 +26,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  */
 
 import { updateTabTotal, storeDestructiveAction } from "../App/App_helpers";
+import { toast } from "react-toastify";
 
 /**
  * Sets the initial tabs based on Chrome's local storage upon initial render.
@@ -118,75 +119,36 @@ export function tabDragStart(e) {
  * Handles the drop event once a drag is finished. Needs to re-order tabs accordingly and
  * check for sync limit violations - warning the user accordingly.
  * @param {HTMLElement} e  The dragged tab
- * @param {number} item_limit Group based sync limit
  * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setDialog For rendering a warning/error message
  *
  * @see ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value
  */
-export function tabDragEnd(e, item_limit, setGroups, setDialog) {
+export function tabDragEnd(e, setGroups) {
   e.stopPropagation();
+
+  var closest_group = e.target.closest(".group");
+  var drag_origin = document.getElementsByClassName("drag-origin")[0];
+
+  drag_origin.classList.remove("drag-origin");
   e.target.classList.remove("dragging");
 
-  const tab = e.target;
-  var closest_group = tab.closest(".group");
-
-  var drag_origin = document.getElementsByClassName("drag-origin")[0];
-  drag_origin.classList.remove("drag-origin");
-
-  const origin_id = drag_origin.id;
-
-  var anchor = tab.querySelector("a");
-  var tab_bytes = JSON.stringify({ pinned: !!anchor.querySelector("svg"), title: anchor.textContent, url: anchor.href }).length; // prettier-ignore
-
+  const scroll = document.documentElement.scrollTop;
   chrome.storage.local.get("groups", (local) => {
     var groups = local.groups;
-    var itemBytesInUse = JSON.stringify(groups[closest_group.id]).length;
 
-    // moving into same group should not increase number of bytes
-    var newBytesInUse = origin_id !== closest_group.id ? itemBytesInUse + tab_bytes : itemBytesInUse;
-
-    if (newBytesInUse < item_limit) {
-      if (origin_id !== closest_group.id) {
-        // remove tab from group that originated the drag
-        groups[origin_id].tabs = groups[origin_id].tabs.filter((group_tab) => {
-          return group_tab.url !== anchor.href;
-        });
-      }
-
-      // reorder tabs based on current positions
-      groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
-        const anchor = x.querySelector("a");
-        return { pinned: !!x.querySelector(".pinned"), title: anchor.textContent, url: anchor.href };
-      });
-
-      // update the groups
-      chrome.storage.local.set({ groups, scroll: document.documentElement.scrollTop }, () => {
-        setGroups(JSON.stringify(groups));
-      });
-    } else {
-      setDialog({
-        show: true,
-        title: "⚠ TabMerger Alert ⚠",
-        msg: (
-          <div>
-            <u>Group's</u> syncing capacity exceeded by <b>{newBytesInUse - item_limit}</b> bytes.
-            <br />
-            <br />
-            Please do <b>one</b> of the following:
-            <ul style={{ marginLeft: "25px" }}>
-              <li>Create a new group and merge new tabs into it;</li>
-              <li>Remove some tabs from this group;</li>
-              <li>
-                Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
-              </li>
-            </ul>
-          </div>
-        ),
-        accept_btn_text: "OK",
-        reject_btn_text: null,
-      });
+    if (drag_origin.id !== closest_group.id) {
+      // remove tab from group that originated the drag
+      groups[drag_origin.id].tabs = groups[drag_origin.id].tabs.filter((x) => x.url !== e.target.querySelector("a").href); // prettier-ignore
     }
+
+    // reorder tabs based on current positions
+    groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
+      const anchor = x.querySelector("a");
+      return { pinned: !!x.querySelector(".pinned"), title: anchor.textContent, url: anchor.href };
+    });
+
+    // update the groups
+    chrome.storage.local.set({ groups, scroll }, () => setGroups(JSON.stringify(groups)));
   });
 }
 
@@ -197,9 +159,8 @@ export function tabDragEnd(e, item_limit, setGroups, setDialog) {
  * @param {function} setTabs For re-rendering the group's tabs
  * @param {function} setTabTotal For re-rendering the total number of groups
  * @param {function} setGroups For re-rendering the overall groups
- * @param {Function} setDialog For rendering a warning/error message
  */
-export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups, setDialog) {
+export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups) {
   const tab = e.target.closest(".draggable");
   const url = tab.querySelector("a").href;
   const group_id = tab.closest(".group").id;
@@ -218,18 +179,13 @@ export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups, setDia
         setGroups(JSON.stringify(groups));
       });
     } else {
-      setDialog({
-        show: true,
-        title: "❕ TabMerger Information ❕",
-        msg: (
-          <div>
-            This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
-            <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
-          </div>
-        ),
-        accept_btn_text: "OK",
-        reject_btn_text: null,
-      });
+      toast(
+        <div className="text-left">
+          This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
+          <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
+        </div>,
+        { toastId: "removeTab_toast" }
+      );
     }
   });
 }

@@ -27,6 +27,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import { getTimestamp, updateTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
 import { SUBSCRIPTION_DIALOG, translate } from "../App/App_functions";
+import { toast } from "react-toastify";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -80,18 +81,15 @@ export function updateTextColor(setGroups) {
 /**
  * Sets the title of a given group in order for it to persist across reloads.
  * @param {HTMLElement} e The group node whose title was changed
- * @param {Function} setGroups For re-rendering the groups once the title is changed
  */
-export function setTitle(e, setGroups) {
+export function setTitle(e) {
   chrome.storage.local.get("groups", (local) => {
+    const scroll = document.documentElement.scrollTop;
     var group_id = e.target.closest(".group-title").nextSibling.id;
-    var current_groups = local.groups;
+    var groups = local.groups;
+    groups[group_id].title = e.target.value;
 
-    current_groups[group_id].title = e.target.value;
-
-    chrome.storage.local.set({ groups: current_groups, scroll: document.documentElement.scrollTop }, () => {
-      setGroups(JSON.stringify(current_groups));
-    });
+    chrome.storage.local.set({ groups, scroll }, () => {});
   });
 }
 
@@ -114,18 +112,20 @@ export function blurOnEnter(e) {
  * @param {HTMLElement} e The input field where the tab data was dropped
  * @param {Function} setGroups For re-rendering the groups once the operation is complete
  * @param {Function} setTabTotal For re-rendering the total tab counter
- * @param {Function} setDialog For rendering a warning/error message
  */
-export function addTabFromURL(e, user, setGroups, setTabTotal, setDialog) {
+export function addTabFromURL(e, user, setGroups, setTabTotal) {
   if (!user.paid) {
-    setDialog(SUBSCRIPTION_DIALOG);
+    toast(SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" });
   } else {
     const url = e.target.value;
     const id = e.target.closest(".group").id;
 
     chrome.storage.sync.get("settings", (sync) => {
       chrome.storage.local.get("groups", (local) => {
-        var url_exists = Object.values(local.groups).some((val) => val.tabs.map((x) => x.url).includes(url));
+        const scroll = document.documentElement.scrollTop;
+        var groups = local.groups;
+
+        var url_exists = Object.values(groups).some((val) => val.tabs.map((x) => x.url).includes(url));
         if (!url_exists && url.match(/http.+\/\//)) {
           // query open tabs to get the title from the tab which has a matching url
           chrome.tabs.query({ status: "complete" }, (tabs) => {
@@ -142,24 +142,22 @@ export function addTabFromURL(e, user, setGroups, setTabTotal, setDialog) {
               chrome.tabs.remove(remove_id);
             }
 
-            local.groups[id].tabs = [...local.groups[id].tabs, new_tab];
-            chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
-              setTabTotal(updateTabTotal(local.groups));
-              setGroups(JSON.stringify(local.groups));
+            groups[id].tabs = [...groups[id].tabs, new_tab];
+            chrome.storage.local.set({ groups, scroll }, () => {
+              setTabTotal(updateTabTotal(groups));
+              setGroups(JSON.stringify(groups));
             });
           });
         } else {
           e.target.value = "";
           e.target.blur();
-          setTimeout(() => {
-            setDialog({
-              show: true,
-              title: "❕ TabMerger Information ❕",
-              msg: <div>That tab is already in TabMerger!</div>,
-              accept_btn_text: "OK",
-              reject_btn_text: null,
-            });
-          }, 50);
+          setTimeout(
+            () =>
+              toast(<div className="text-left">That tab is already in TabMerger!</div>, {
+                toastId: "addTabFromURL_toast",
+              }),
+            50
+          );
         }
       });
     });
@@ -181,15 +179,16 @@ export function groupDragStart(e) {
  * appropriate group-id to each.
  * @param {HTMLElement} e The group that is being dragged
  */
-export function groupDragEnd(e, setGroups) {
+export function groupDragEnd(e) {
   e.preventDefault();
+  const scroll = document.documentElement.scrollTop;
 
   if (e.target.classList.contains("dragging-group")) {
     e.target.classList.remove("dragging-group");
     var group_items = document.querySelectorAll(".group-item");
-    var new_groups = {};
+    var groups = {};
     group_items.forEach((x, i) => {
-      new_groups["group-" + i] = {
+      groups["group-" + i] = {
         color: x.querySelector("input[type='color']").value,
         created: x.querySelector(".created span").textContent,
         hidden: !!x.querySelector(".hidden-symbol"),
@@ -203,9 +202,10 @@ export function groupDragEnd(e, setGroups) {
       };
     });
 
-    chrome.storage.local.set({ groups: new_groups, scroll: document.documentElement.scrollTop }, () => {
-      setGroups(JSON.stringify(new_groups));
-    });
+    // adjust the group ids manually since no re-rendering occurs
+    [...document.querySelectorAll(".group")].forEach((x, i) => (x.id = "group-" + i));
+
+    chrome.storage.local.set({ groups, scroll }, () => {});
   }
 }
 
@@ -226,8 +226,8 @@ export function openGroup(e) {
  * by changing their "group id" value.
  * @param {HTMLElement} e Node corresponding to the group to be deleted
  * @param {Function} setTabTotal For re-rendering the global tab counter
- * @param {Function} setGroups For re-rendering the groups based on their new id
- * @param {Function} setDialog For rendering a warning/error message
+ * @param {Function} setGroups For re-rendering the groups after deletion
+ * @param {Function} setDialog For re-rendering a warning/error message
  */
 export function deleteGroup(e, user, setTabTotal, setGroups, setDialog) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
@@ -238,7 +238,6 @@ export function deleteGroup(e, user, setTabTotal, setGroups, setDialog) {
       var { groups, groups_copy } = local;
       if (!groups[target.id].locked) {
         groups_copy = storeDestructiveAction(groups_copy, groups, user);
-
         delete groups[target.id];
 
         // if removed the only existing group
@@ -256,9 +255,7 @@ export function deleteGroup(e, user, setTabTotal, setGroups, setDialog) {
           // order the groups correctly
           const ordered_vals = sortByKey(groups);
           groups = {};
-          ordered_vals.forEach((val, i) => {
-            groups["group-" + i] = val;
-          });
+          ordered_vals.forEach((val, i) => (groups["group-" + i] = val));
         }
 
         chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
@@ -266,18 +263,13 @@ export function deleteGroup(e, user, setTabTotal, setGroups, setDialog) {
           setTabTotal(updateTabTotal(groups));
         });
       } else {
-        setDialog({
-          show: true,
-          title: "❕ TabMerger Information ❕",
-          msg: (
-            <div>
-              This group is <b>locked</b>, thus it cannot be deleted. <br />
-              <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting it again!
-            </div>
-          ),
-          accept_btn_text: "OK",
-          reject_btn_text: null,
-        });
+        toast(
+          <div className="text-left">
+            This group is <b>locked</b>, thus it cannot be deleted. <br />
+            <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting it again!
+          </div>,
+          { toastId: "deleteGroup_toast" }
+        );
       }
     });
   });

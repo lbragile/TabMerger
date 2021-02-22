@@ -25,8 +25,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module __CONSTANTS
  */
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Tour from "reactour";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
@@ -48,9 +50,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function App() {
   /** @constant {Number} ITEM_STORAGE_LIMIT @default 8000 (500 for testing) */
-  const ITEM_STORAGE_LIMIT = useRef(8000);
+  const ITEM_STORAGE_LIMIT = useRef(400);
   /** @constant {Number} SYNC_STORAGE_LIMIT @default 102000 (1000 for testing) */
-  const SYNC_STORAGE_LIMIT = useRef(102000);
+  const SYNC_STORAGE_LIMIT = useRef(1000);
 
   var syncTimestamp = useRef();
 
@@ -77,7 +79,7 @@ export default function App() {
     }
 
     function checkMerging(changes, namespace) {
-      AppFunc.checkMerging(changes, namespace, SYNC_STORAGE_LIMIT.current, ITEM_STORAGE_LIMIT.current, setTabTotal, setGroups, setDialog); // prettier-ignore
+      AppFunc.checkMerging(changes, namespace, setTabTotal, setGroups);
     }
 
     if (process.env.NODE_ENV !== "test") {
@@ -100,52 +102,17 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    function toggleHiddenOrEmptyGroups(type, user) {
-      const display_type = type === "before" ? "none" : "";
-
-      // remove ads for correct user type
-      if (["Standard", "Premium"].includes(user.tier)) {
-        if (type === "before") {
-          localStorage.setItem("container_pos", document.querySelector(".container-fluid").style.left);
-          localStorage.setItem(
-            "logo_pos",
-            JSON.stringify({
-              left: document.querySelector("#logo-img").style.left,
-              top: document.querySelector("#logo-img").style.top,
-            })
-          );
-        }
-
-        document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = display_type));
-        document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "visible";
-        document.querySelector("#logo-img").style.visibility = "visible";
-        document.querySelector("#logo-img").style.left = type === "before" ? "875px": JSON.parse(localStorage.getItem("logo_pos")).left; // prettier-ignore
-        document.querySelector("#logo-img").style.top = type === "before" ? "0px": JSON.parse(localStorage.getItem("logo_pos")).top; // prettier-ignore
-        document.querySelector(".container-fluid").style.left = type === "before" ? "50px" : localStorage.getItem("container_pos"); // prettier-ignore
-
-        if (type === "after") {
-          localStorage.removeItem("container_pos");
-          localStorage.removeItem("logo_pos");
-        }
-      }
-    }
-
-    window.addEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before", user));
-    window.addEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after", user));
+    window.addEventListener("beforeprint", () => AppFunc.toggleHiddenOrEmptyGroups("before", user));
+    window.addEventListener("afterprint", () => AppFunc.toggleHiddenOrEmptyGroups("after", user));
 
     return () => {
-      window.removeEventListener("beforeprint", () => toggleHiddenOrEmptyGroups("before", user));
-      window.removeEventListener("afterprint", () => toggleHiddenOrEmptyGroups("after", user));
+      window.removeEventListener("beforeprint", () => AppFunc.toggleHiddenOrEmptyGroups("before", user));
+      window.removeEventListener("afterprint", () => AppFunc.toggleHiddenOrEmptyGroups("after", user));
     };
   }, [user]);
 
   useEffect(() => AppFunc.badgeIconInfo(tabTotal, user), [groups, tabTotal, user]);
-
-  useEffect(() => {
-    chrome.storage.local.get("scroll", (local) => {
-      setTimeout(() => (document.documentElement.scrollTop = local.scroll || 0), 50);
-    });
-  }, [groups]);
+  useEffect(() => AppFunc.syncLimitIndication(ITEM_STORAGE_LIMIT, SYNC_STORAGE_LIMIT), [groups, dialog, user]);
 
   return (
     <div id="app-wrapper" className="text-center">
@@ -167,36 +134,49 @@ export default function App() {
       <nav id="sidebar">
         <Header total={tabTotal} />
         <hr className="mx-auto d-none shown-in-print" />
-        <Reviews />
-
+        <Reviews /> {/* Only visible in print mode for Free and Basic Tier users */}
         <div id="global-action-container">
-          <TabSearch user={user} setDialog={setDialog} />
+          <TabSearch user={user} />
           <hr className="mx-auto hidden-in-print" />
 
           {/* prettier-ignore */}
           <GlobalBtns user={user} syncTimestamp={syncTimestamp} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
-
+        <div id="sync-total-exceed-indicator" className="d-none">
+          ▲
+        </div>
         {/* Verify/activate account button*/}
         <Button
           classes="p-0 btn-in-global"
           id="subscription-btn"
-          translate="Activate Tier"
+          translate="Activate Plan"
           onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
         >
           {<BiCheckCircle color="black" size="1.5rem" />}
         </Button>
-
         <div id="copyright" className="mt-4">
           Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
         </div>
       </nav>
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
-          {AppFunc.groupFormation(groups, ITEM_STORAGE_LIMIT.current)}
+          {AppFunc.groupFormation(groups)}
         </div>
       </AppProvider>
+
+      <ToastContainer
+        position="top-center"
+        hideProgressBar={false}
+        autoClose={5000}
+        pauseOnHover={true}
+        newestOnTop={true}
+        closeOnClick={false}
+        draggable={false}
+        pauseOnFocusLoss={false}
+        rtl={false}
+        style={{ width: "500px" }}
+      />
     </div>
   );
 }

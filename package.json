@@ -10,6 +10,7 @@
     "react-dom": "^17.0.1",
     "react-icons": "^3.11.0",
     "react-scripts": "^4.0.2",
+    "react-toastify": "^7.0.3",
     "react-tooltip": "^4.2.14",
     "reactour": "^1.18.0",
     "styled-components": "^4.0.0"
