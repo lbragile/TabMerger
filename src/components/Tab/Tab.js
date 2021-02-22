@@ -55,12 +55,13 @@ export default function Tab({ id, hidden, textColor }) {
           >
             <p
               className="close-tab"
+              title="lets you remove this tab!"
               draggable={false}
               onClick={(e) => TabFunc.removeTab(e, tabs, user, setTabs, setTabTotal, setGroups)}
             >
               <TiDelete size="1rem" color={textColor === "light" ? "white" : "black"} />
             </p>
-            <p className="move-tab">
+            <p className="move-tab" title="allows you to drag and drop a tab">
               <BiGridSmall size="1.5rem" color={textColor === "light" ? "white" : "black"} />
             </p>
             <img className="img-tab" src={TabHelper.getFavIconURL(tab.url)} alt="" draggable={false} />
@@ -84,6 +85,7 @@ export default function Tab({ id, hidden, textColor }) {
             <span
               className={"pin-tab " + (tab.pinned ? "pinned" : "")}
               onClick={(e) => TabFunc.handlePinClick(e, setGroups)}
+              title="enables you to pin/unpin from here!"
             >
               {tab.pinned ? (
                 <RiPushpinFill className="m-0" color={textColor === "primary" ? "black" : "white"} />

@@ -245,6 +245,7 @@ export function handleTabTitleChange(e) {
  * Pins or unpins a tab that is inside TabMerger. This avoids the need for opening a tab
  * in order to pin/unpin it and re-merge into TabMerger.
  * @param {HTMLElement} e Node representing the tab's pin that was clicked
+ * @param {Function} setGroups For re-rendering the groups to show the update
  */
 export function handlePinClick(e, setGroups) {
   e.target.closest(".pin-tab svg").classList.toggle("pinned");
@@ -253,16 +254,18 @@ export function handlePinClick(e, setGroups) {
   const url = e.target.closest(".pin-tab").previousSibling.href;
 
   chrome.storage.local.get("groups", (local) => {
+    const scroll = document.documentElement.scrollTop;
+    var groups = local.groups;
     // adjust the pin status of the correct tab
-    local.groups[id].tabs = local.groups[id].tabs.map((x) => {
+    groups[id].tabs = groups[id].tabs.map((x) => {
       if (x.url === url) {
         x.pinned = e.target.classList.contains("pinned");
       }
       return x;
     });
 
-    chrome.storage.local.set({ groups: local.groups, scroll: document.documentElement.scrollTop }, () => {
-      setGroups(JSON.stringify(local.groups));
+    chrome.storage.local.set({ groups, scroll }, () => {
+      setGroups(JSON.stringify(groups));
     });
   });
 }

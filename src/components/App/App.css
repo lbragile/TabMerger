@@ -41,12 +41,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   font-size: 2rem;
 }
 
-#sync-total-exceed-indicator {
-  color: var(--sync-warn-indicator-color);
-  position: absolute;
-  top: 15px;
-  left: calc(var(--sidebar-width) + 10%);
-  font-size: 2rem;
+.sync-group-exceed-indicator:hover {
+  cursor: help;
 }
 
 /* TOASTS */
@@ -164,7 +160,7 @@ hr {
 }
 
 .input-group-append > span:hover {
-  cursor: pointer;
+  cursor: help;
 }
 
 hr {
@@ -312,7 +308,6 @@ hr {
   .move-tab,
   .pin-tab,
   #sync-text,
-  #sync-total-exceed-indicator,
   .sync-group-exceed-indicator,
   .btn-for-merging,
   .created,

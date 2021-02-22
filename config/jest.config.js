@@ -16,7 +16,11 @@ module.exports = {
       "<rootDir>/tests/__mocks__/fileMock.js",
     "\\.(css|less)$": "<rootDir>/tests/__mocks__/styleMock.js",
   },
-  setupFiles: ["<rootDir>/tests/__mocks__/chromeMock.js", "<rootDir>/tests/__mocks__/variablesMock.js"],
+  setupFiles: [
+    "<rootDir>/tests/__mocks__/chromeMock.js",
+    "<rootDir>/tests/__mocks__/variablesMock.js",
+    "<rootDir>/tests/__mocks__/moduleMock.js",
+  ],
   testPathIgnorePatterns: ignore_arr,
   coveragePathIgnorePatterns: ignore_arr,
   verbose: true,

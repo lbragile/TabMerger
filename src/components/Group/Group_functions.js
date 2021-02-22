@@ -227,9 +227,8 @@ export function openGroup(e) {
  * @param {HTMLElement} e Node corresponding to the group to be deleted
  * @param {Function} setTabTotal For re-rendering the global tab counter
  * @param {Function} setGroups For re-rendering the groups after deletion
- * @param {Function} setDialog For re-rendering a warning/error message
  */
-export function deleteGroup(e, user, setTabTotal, setGroups, setDialog) {
+export function deleteGroup(e, user, setTabTotal, setGroups) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     chrome.storage.sync.get("settings", (sync) => {
       const scroll = document.documentElement.scrollTop;

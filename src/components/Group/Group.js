@@ -54,6 +54,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
 
         <input
           className="title-edit-input font-weight-bold mb-0"
+          title="can be modified to give the group a meaningful name"
           maxLength={TITLE_TRIM_LIMIT.current}
           defaultValue={title}
           onFocus={(e) => e.target.select()}
@@ -72,7 +73,6 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           user={user}
           setTabTotal={setTabTotal}
           setGroups={setGroups}
-          setDialog={setDialog}
         />
       </div>
 
@@ -81,7 +81,9 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>
 
-        <div className="sync-group-exceed-indicator d-none">●</div>
+        <div className="sync-group-exceed-indicator d-none" title="indicates that the group's sync limit is exceeded">
+          ●
+        </div>
 
         <input
           className="url-drag-input"

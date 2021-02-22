@@ -11,7 +11,7 @@ import { BsStarFill, BsStar } from "react-icons/bs";
 import { VscChromeRestore } from "react-icons/vsc";
 
 // prettier-ignore
-export default function GroupTitleBtns({ id, color, hidden, locked, starred, tooltip, user, setTabTotal, setGroups, setDialog }) {
+export default function GroupTitleBtns({ id, color, hidden, locked, starred, tooltip, user, setTabTotal, setGroups }) {
   const GROUP_TITLE_BUTTONS = [
     {
       classes: "move-group-btn btn-in-group-title",
@@ -52,7 +52,7 @@ export default function GroupTitleBtns({ id, color, hidden, locked, starred, too
     {
       classes: "delete-group-btn btn-in-group-title",
       translate: AppFunc.translate("deleteGroup"),
-      clickFn: (e) => {ReactTooltip.hide(); GroupFunc.deleteGroup(e, user, setTabTotal, setGroups, setDialog)},
+      clickFn: (e) => {ReactTooltip.hide(); GroupFunc.deleteGroup(e, user, setTabTotal, setGroups)},
       icon: <AiOutlineClose />,
     },
   ];

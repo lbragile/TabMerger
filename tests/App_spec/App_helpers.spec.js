@@ -224,12 +224,17 @@ describe("getDragAfterElement", () => {
 });
 
 describe("storeDestructiveAction", () => {
-  it.each([[true], [false]])("adjusts the states array - full = %s", (full) => {
+  it.each([
+    [true, "Free"],
+    [false, "Basic"],
+    [false, "Standard"],
+    [false, "Premium"],
+  ])("adjusts the states array - full = %s", (full, tier) => {
     var groups_copy = [init_groups, init_groups];
     localStorage.setItem("groups_copy", JSON.stringify(groups_copy));
     jest.clearAllMocks();
 
-    groups_copy = AppHelper.storeDestructiveAction(groups_copy, {}, full ? { tier: "Free" } : user);
+    groups_copy = AppHelper.storeDestructiveAction(groups_copy, {}, { tier });
 
     expect(groups_copy).toStrictEqual(full ? [init_groups, {}] : groups_copy);
   });

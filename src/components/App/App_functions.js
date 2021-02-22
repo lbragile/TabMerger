@@ -128,8 +128,9 @@ export function checkUserStatus(setUser) {
     const { email, password } = local.client_details;
     var response = await axios.get("http://localhost:5000/v1/customer/" + JSON.stringify({ password, email }));
     if (response.data) {
-      chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } });
-      setUser(response.data);
+      chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } }, () => {
+        setUser(response.data);
+      });
     }
   });
 }
@@ -140,33 +141,35 @@ export function checkUserStatus(setUser) {
  */
 export function syncLimitIndication(ITEM_STORAGE_LIMIT, SYNC_STORAGE_LIMIT) {
   chrome.storage.local.get(["groups", "scroll", "client_details"], (local) => {
-    const { groups, scroll, client_details } = local;
-    setTimeout(() => {
-      document.documentElement.scrollTop = scroll ?? 0;
+    chrome.storage.sync.get("settings", (sync) => {
+      const { groups, scroll, client_details } = local;
+      setTimeout(() => {
+        document.documentElement.scrollTop = scroll ?? 0;
 
-      if (client_details.paid) {
-        var disable_sync = false;
-        // group sync
-        Object.keys(groups).forEach((key) => {
-          if (JSON.stringify(groups[key]).length > ITEM_STORAGE_LIMIT.current) {
-            document.querySelector("#" + key + " .sync-group-exceed-indicator").classList.remove("d-none");
+        if (client_details.paid) {
+          var disable_sync = false;
+          // group sync
+          Object.keys(groups).forEach((key) => {
+            if (JSON.stringify(groups[key]).length > ITEM_STORAGE_LIMIT.current) {
+              document.querySelector("#" + key + " .sync-group-exceed-indicator").classList.remove("d-none");
+              disable_sync = true;
+            }
+          });
+
+          // total sync (all groups + settings)
+          if (JSON.stringify(groups).length + JSON.stringify(sync.settings).length > SYNC_STORAGE_LIMIT.current) {
+            document.querySelector("#sync-text").style.border = "1px solid red";
             disable_sync = true;
+          } else {
+            document.querySelector("#sync-text").style.border = "none";
           }
-        });
 
-        // total sync
-        if (JSON.stringify(groups).length > SYNC_STORAGE_LIMIT.current) {
-          document.querySelector("#sync-total-exceed-indicator").classList.remove("d-none");
-          disable_sync = true;
-        } else {
-          document.querySelector("#sync-total-exceed-indicator").classList.add("d-none");
+          if (disable_sync) {
+            document.querySelector("#sync-write-btn").classList.add("disabled-btn");
+          }
         }
-
-        if (disable_sync) {
-          document.querySelector("#sync-write-btn").classList.add("disabled-btn");
-        }
-      }
-    }, 100);
+      }, 100);
+    });
   });
 }
 
@@ -625,11 +628,10 @@ export function groupFormation(groups) {
  * down so that the new group is in full view to the user.
  * @param {number} num_group_limit an upper limit on the number of groups that can be created
  * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setDialog For rendering a warning/error message
  *
  * @see NUM_GROUP_LIMIT in App.js
  */
-export function addGroup(num_group_limit, setGroups, setDialog) {
+export function addGroup(num_group_limit, setGroups) {
   chrome.storage.local.get("groups", (local) => {
     var current_groups = local.groups;
     var num_keys = Object.keys(current_groups).length;
@@ -667,7 +669,8 @@ export function addGroup(num_group_limit, setGroups, setDialog) {
               ).
             </li>
           </ul>
-        </div>
+        </div>,
+        { toastId: "addGroup_toast" }
       );
     }
   });
@@ -809,8 +812,17 @@ export function undoDestructiveAction(setGroups, setTabTotal) {
         <div className="text-left">
           There are <b>no more</b> states to undo. <br />
           <br />
-          States are created with <u>destructive actions</u>!
-        </div>
+          States are created with <u>destructive actions</u>! <br />
+          <br />
+          Upgrading your subscription will increase the number of undos that can be performed. <br />
+          <br />
+          Please visit our official homepage's{" "}
+          <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
+            Subscriptions & Pricing
+          </a>{" "}
+          page for more information.
+        </div>,
+        { toastId: "undoStates_toast" }
       );
     }
   });
@@ -907,9 +919,8 @@ export function resetSearch(e) {
  * @param {HTMLElement} e Node corresponding to the input file field
  * @param {Function} setGroups For re-rendering the groups
  * @param {Function} setTabTotal For re-rendering the total tab counter
- * @param {Function} setDialog For rendering a warning/error message
  */
-export function importJSON(e, user, setGroups, setTabTotal, setDialog) {
+export function importJSON(e, user, setGroups, setTabTotal) {
   if (e.target.files[0].type === "application/json") {
     chrome.storage.local.get(["groups", "groups_copy"], (local) => {
       const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups, user);
@@ -940,7 +951,8 @@ export function importJSON(e, user, setGroups, setTabTotal, setDialog) {
         <br />
         <b>Be careful</b>, <u>only import JSON files generated by TabMerger</u>, otherwise you risk losing your current
         configuration!
-      </div>
+      </div>,
+      { toastId: "importJSON_toast" }
     );
   }
 }

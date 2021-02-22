@@ -98,7 +98,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "add-group-btn",
       classes: "",
       translate: AppFunc.translate("addGroup"),
-      btnFn: () => AppFunc.addGroup(NUM_GROUP_LIMIT, setGroups, setDialog),
+      btnFn: () => AppFunc.addGroup(NUM_GROUP_LIMIT, setGroups),
       icon: <GrAddCircle color="black" size="1.5rem" />,
     },
   ];
@@ -126,13 +126,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
             {i === 4 && <div />}
           </React.Fragment>
         ) : (
-          <ImportBtn
-            user={user}
-            setTabTotal={setTabTotal}
-            setGroups={setGroups}
-            setDialog={setDialog}
-            key={Math.random()}
-          />
+          <ImportBtn user={user} setTabTotal={setTabTotal} setGroups={setGroups} key={Math.random()} />
         );
       })}
 

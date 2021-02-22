@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import { render, fireEvent } from "@testing-library/react";
+import { toast } from "react-toastify";
 
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
 import Tab from "../../src/components/Tab/Tab";
@@ -181,10 +182,7 @@ describe("tabDragEnd", () => {
     localStorage.setItem("groups", JSON.stringify(orig_groups));
   });
 
-  it.each([
-    [true, 8000],
-    [false, 8000],
-  ])("works for same group = %s (limit = %s)", (same, LIMIT) => {
+  it.each([[true], [false]])("works for same group = %s", (same) => {
     stub.target.closest = () => document.querySelector("#group-" + +!same);
     jest.clearAllMocks();
 
@@ -197,7 +195,7 @@ describe("tabDragEnd", () => {
       ];
     }
 
-    TabFunc.tabDragEnd(stub, LIMIT, mockSet, mockSet);
+    TabFunc.tabDragEnd(stub, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
@@ -207,44 +205,6 @@ describe("tabDragEnd", () => {
 
     expect(mockSet).toHaveBeenCalledTimes(1);
     expect(mockSet).toHaveBeenCalledWith(JSON.stringify(orig_groups));
-  });
-
-  it("fails when limit is exceeded", () => {
-    var stub = {
-      stopPropagation: () => {},
-      target: container.querySelectorAll("#group-0 .draggable")[1],
-    };
-
-    const previousGetElementsByClassName = document.getElementsByClassName;
-    document.getElementsByClassName = () => [container.querySelector(".draggable").closest(".group")];
-    jest.clearAllMocks();
-
-    TabFunc.tabDragEnd(stub, 100, mockSet, mockSet);
-
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet.mock.calls.pop()[0]).toStrictEqual({
-      show: true,
-      title: "⚠ TabMerger Alert ⚠",
-      msg: (
-        <div>
-          <u>Group's</u> syncing capacity exceeded by <b>{194}</b> bytes.
-          <br />
-          <br />
-          Please do <b>one</b> of the following:
-          <ul style={{ marginLeft: "25px" }}>
-            <li>Create a new group and merge new tabs into it;</li>
-            <li>Remove some tabs from this group;</li>
-            <li>
-              Merge less tabs into this group (each tab is <u>~100-300</u> bytes).
-            </li>
-          </ul>
-        </div>
-      ),
-      accept_btn_text: "OK",
-      reject_btn_text: null,
-    });
-
-    document.getElementsByClassName = previousGetElementsByClassName;
   });
 });
 
@@ -273,7 +233,7 @@ describe("removeTab", () => {
     expected_groups["group-0"].tabs = expected_groups["group-0"].tabs.slice(1, 3);
     jest.clearAllMocks();
 
-    TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet, mockSet);
+    TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "groups_copy"], anything);
@@ -287,27 +247,26 @@ describe("removeTab", () => {
     expect(mockSet).toHaveBeenNthCalledWith(3, JSON.stringify(expected_groups));
   });
 
-  it("alerts if group is locked", () => {
+  it("alerts if group is locked", async () => {
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
     expected_groups["group-0"].locked = true;
     localStorage.setItem("groups", JSON.stringify(expected_groups));
+    var toastCalls = [];
+    const toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
+
     jest.clearAllMocks();
 
-    TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet, mockSet);
+    TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet);
 
-    expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet.mock.calls.pop()[0]).toStrictEqual({
-      show: true,
-      title: "❕ TabMerger Information ❕",
-      msg: (
-        <div>
-          This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
-          <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
-        </div>
-      ),
-      accept_btn_text: "OK",
-      reject_btn_text: null,
-    });
+    expect(mockSet).not.toHaveBeenCalled();
+    expect(toastSpy).toHaveBeenCalledTimes(1);
+    expect(toastCalls[0]).toEqual([
+      <div className="text-left">
+        This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
+        <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
+      </div>,
+      { toastId: "removeTab_toast" },
+    ]);
   });
 });
 

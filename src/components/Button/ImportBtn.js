@@ -3,7 +3,7 @@ import { BiImport } from "react-icons/bi";
 
 import { translate, importJSON } from "../App/App_functions";
 
-export default function ImportBtn({ user, setGroups, setTabTotal, setDialog }) {
+export default function ImportBtn({ user, setGroups, setTabTotal }) {
   return (
     <React.Fragment>
       <label
@@ -20,7 +20,7 @@ export default function ImportBtn({ user, setGroups, setTabTotal, setDialog }) {
         id="import-input"
         type="file"
         accept=".json"
-        onChange={(e) => importJSON(e, user, setGroups, setTabTotal, setDialog)}
+        onChange={(e) => importJSON(e, user, setGroups, setTabTotal)}
       ></input>
     </React.Fragment>
   );

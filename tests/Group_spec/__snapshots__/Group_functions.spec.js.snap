@@ -21,6 +21,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: white;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP A"
       />
       <div
@@ -360,6 +361,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           11/11/2020 @ 11:11:11
         </span>
       </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
+      </div>
       <input
         class="url-drag-input"
         name="url-drag"
@@ -586,6 +593,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: white;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP B"
       />
       <div
@@ -924,6 +932,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         <span>
           22/22/2020 @ 22:22:22
         </span>
+      </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
       </div>
       <input
         class="url-drag-input"
@@ -1158,6 +1172,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: white;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP A"
       />
       <div
@@ -1497,6 +1512,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           11/11/2020 @ 11:11:11
         </span>
       </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
+      </div>
       <input
         class="url-drag-input"
         name="url-drag"
@@ -1723,6 +1744,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: white;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP B"
       />
       <div
@@ -2061,6 +2083,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         <span>
           22/22/2020 @ 22:22:22
         </span>
+      </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
       </div>
       <input
         class="url-drag-input"
@@ -2295,6 +2323,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: white;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP A"
       />
       <div
@@ -2634,6 +2663,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           11/11/2020 @ 11:11:11
         </span>
       </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
+      </div>
       <input
         class="url-drag-input"
         name="url-drag"
@@ -2860,6 +2895,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: white;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP B"
       />
       <div
@@ -3198,6 +3234,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         <span>
           22/22/2020 @ 22:22:22
         </span>
+      </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
       </div>
       <input
         class="url-drag-input"
@@ -3432,6 +3474,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: black;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP A"
       />
       <div
@@ -3771,6 +3814,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           11/11/2020 @ 11:11:11
         </span>
       </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
+      </div>
       <input
         class="url-drag-input"
         name="url-drag"
@@ -3997,6 +4046,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         class="title-edit-input font-weight-bold mb-0"
         maxlength="50"
         style="color: black;"
+        title="can be modified to give the group a meaningful name"
         value="GROUP B"
       />
       <div
@@ -4335,6 +4385,12 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         <span>
           22/22/2020 @ 22:22:22
         </span>
+      </div>
+      <div
+        class="sync-group-exceed-indicator d-none"
+        title="indicates that the group's sync limit is exceeded"
+      >
+        ●
       </div>
       <input
         class="url-drag-input"
