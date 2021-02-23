@@ -24,7 +24,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { waitFor } from "@testing-library/react";
 
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
-import * as CONSTANTS from "../../src/constants/constants";
 
 const anything = expect.any(Function);
 

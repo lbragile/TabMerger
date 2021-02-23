@@ -23,7 +23,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import { fireEvent, render } from "@testing-library/react";
 import { toast } from "react-toastify";
-import * as CONSTANTS from "../../src/constants/constants";
 
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 import Group from "../../src/components/Group/Group";

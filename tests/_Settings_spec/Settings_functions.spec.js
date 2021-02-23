@@ -23,7 +23,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import * as SettingsFunc from "../../public/settings/settings_functions.js";
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
-import * as CONSTANTS from "../../src/constants/constants";
 
 const anything = expect.any(Function);
 
@@ -35,6 +34,9 @@ describe("restoreOptions", () => {
       `<div><hr /><code /></div>` +
       `<input type="color" id="options-default-color" />` +
       `<input type="text" id="options-default-title" />` +
+      `<input type="number" name="period-backup" />` +
+      `<input type="text" name="relative-path-backup" />` +
+      `<input type="number" name="sync-backup" />` +
       `<input type="radio" name="restore-tabs" value="keep" />` +
       `<input type="radio" name="restore-tabs" value="remove" />` +
       `<input type="radio" name="ext-open" value="without" />` +

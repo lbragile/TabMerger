@@ -8,7 +8,7 @@
   "homepage_url": "https://lbragile.github.io/TabMerger-Extension/",
   "background": { "page": "background/background.html", "persistent": true },
   "options_ui": { "page": "settings/settings.html", "open_in_tab": true },
-  "permissions": ["tabs", "contextMenus", "storage"],
+  "permissions": ["tabs", "contextMenus", "storage", "alarms", "downloads", "downloads.shelf"],
   "icons": { "16": "images/logo16.png", "48": "images/logo48.png", "128": "images/logo128.png" },
   "browser_action": { "default_icon": "images/logo128.png", "default_title": "Merge your tabs into groups" },
   "incognito": "split",

@@ -27,7 +27,22 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import { setTabMergerLink, setSync } from "./settings_helpers.js";
 
-const DEFAULT_SETTINGS = { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, font: "Arial", merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title", weight: "Normal" }; // prettier-ignore
+const DEFAULT_SETTINGS = {
+  badgeInfo: "display",
+  blacklist: "",
+  color: "#dedede",
+  dark: true,
+  font: "Arial",
+  merge: "merge",
+  open: "without",
+  periodBackup: 12 * 60,
+  pin: "include",
+  relativePathBackup: "TabMerger/",
+  restore: "keep",
+  syncPeriodBackup: 12 * 60,
+  title: "Title",
+  weight: "Normal",
+};
 
 /**
  * Once a user changes the settings, they are saved in sync storage and reloaded
@@ -50,6 +65,9 @@ export function restoreOptions() {
     document.getElementById("options-default-title").value = sync.settings.title;
     document.getElementById("tab-font").value = sync.settings.font;
     document.getElementById("tab-weight").value = sync.settings.weight;
+    document.querySelector("input[name='period-backup']").value = sync.settings.periodBackup;
+    document.querySelector("input[name='relative-path-backup']").value = sync.settings.relativePathBackup;
+    document.querySelector("input[name='sync-backup']").value = sync.settings.syncPeriodBackup;
 
     document.querySelectorAll("input[name='badge-view']").forEach((x) => {
       x.checked = x.value === sync.settings.badgeInfo;

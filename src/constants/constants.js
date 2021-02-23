@@ -100,6 +100,8 @@ export const DEFAULT_GROUP = {
   title: DEFAULT_GROUP_TITLE,
 };
 
+export const DEFAULT_BACKUP_PERIOD_IN_MINUTES = 12 * 60;
+
 /** @constant {Object} DEFAULT_SETTINGS @default { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, font: "Arial", merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title", weight: "Normal" } */
 export const DEFAULT_SETTINGS = {
   badgeInfo: "display",
@@ -109,8 +111,11 @@ export const DEFAULT_SETTINGS = {
   font: "Arial",
   merge: "merge",
   open: "without",
+  periodBackup: DEFAULT_BACKUP_PERIOD_IN_MINUTES,
   pin: "include",
+  relativePathBackup: "TabMerger/",
   restore: "keep",
+  syncPeriodBackup: DEFAULT_BACKUP_PERIOD_IN_MINUTES,
   title: DEFAULT_GROUP_TITLE,
   weight: "Normal",
 };
@@ -289,3 +294,24 @@ export const RESET_TUTORIAL_CHOICE_DIALOG = (element) => ({
   accept_btn_text: "VIEW TUTORIAL",
   reject_btn_text: "GO TO SITE",
 });
+
+export const DOWNLOAD_ERROR_TOAST = [
+  <div className="text-left">
+    The <b>relative path</b> you have set in the settings is <b>not valid</b>, please adjust it.
+  </div>,
+  { toastId: "relativePathError_toast" },
+];
+
+export const JSON_AUTOBACKUP_OFF_TOAST = [
+  <div className="text-left">
+    Automatic JSON file generation/backup was turned off since the saving period was set to 0 minutes.
+  </div>,
+  { toastId: "automaticBackupOff_toast" },
+];
+
+export const SYNC_AUTOBACKUP_OFF_TOAST = [
+  <div className="text-left">
+    Automatic sync write backup was turned off since the saving period was set to 0 minutes.
+  </div>,
+  { toastId: "automaticBackupOff_toast" },
+];

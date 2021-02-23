@@ -27,9 +27,7 @@ import { toast } from "react-toastify";
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
 import Tab from "../../src/components/Tab/Tab";
 
-import * as CONSTANTS from "../../src/constants/constants";
 import * as AppHelper from "../../src/components/App/App_helpers";
-
 import { AppProvider } from "../../src/context/AppContext";
 
 const anything = expect.any(Function);

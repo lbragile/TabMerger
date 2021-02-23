@@ -34,7 +34,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "export-btn",
       classes: "",
       translate: AppFunc.translate("exportJSON"),
-      btnFn: () => AppFunc.exportJSON(user),
+      btnFn: () => AppFunc.exportJSON(true, true, ""),
       icon: <BiExport color="black" size="1.4rem" />,
     },
     {

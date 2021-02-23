@@ -33,6 +33,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -54,6 +55,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -75,6 +77,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -99,6 +102,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -279,6 +283,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -300,6 +305,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -326,6 +332,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -605,6 +612,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -626,6 +634,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -647,6 +656,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -671,6 +681,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -851,6 +862,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -872,6 +884,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -898,6 +911,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1184,6 +1198,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -1205,6 +1220,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -1226,6 +1242,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -1250,6 +1267,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1430,6 +1448,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1451,6 +1470,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1477,6 +1497,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1756,6 +1777,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -1777,6 +1799,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -1798,6 +1821,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -1822,6 +1846,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2002,6 +2027,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2023,6 +2049,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2049,6 +2076,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2335,6 +2363,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -2356,6 +2385,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -2377,6 +2407,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -2401,6 +2432,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2581,6 +2613,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2602,6 +2635,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2628,6 +2662,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2907,6 +2942,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -2928,6 +2964,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -2949,6 +2986,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -2973,6 +3011,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3153,6 +3192,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3174,6 +3214,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3200,6 +3241,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3486,6 +3528,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -3507,6 +3550,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -3528,6 +3572,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -3552,6 +3597,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3732,6 +3778,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3753,6 +3800,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3779,6 +3827,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4058,6 +4107,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-offset="{'top': -10}"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -4079,6 +4129,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="lock group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -4100,6 +4151,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="star group"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -4124,6 +4176,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         >
           <svg
             class="input-color"
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4304,6 +4357,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="hideTabs"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4325,6 +4379,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="openGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4351,6 +4406,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-tip="deleteGroup"
         >
           <svg
+            color="white"
             fill="currentColor"
             height="1em"
             stroke="currentColor"

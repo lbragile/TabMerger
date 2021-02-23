@@ -21,7 +21,7 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Tour from "reactour";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -76,13 +76,16 @@ export default function App() {
     }
 
     AppFunc.storageInit(syncTimestamp.current, setTour, setGroups, setTabTotal);
+    AppFunc.createAutoBackUpAlarm();
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
+    chrome.alarms.onAlarm.addListener((alarm) => AppFunc.performAutoBackUp(alarm, syncTimestamp.current));
 
     return () => {
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
+      chrome.alarms.onAlarm.removeListener((alarm) => AppFunc.performAutoBackUp(alarm, syncTimestamp.current));
     };
   }, []);
 
@@ -98,6 +101,9 @@ export default function App() {
 
   useEffect(() => AppFunc.badgeIconInfo(tabTotal, user), [groups, tabTotal, user]);
   useEffect(() => AppFunc.syncLimitIndication(), [groups, dialog, user]);
+
+  // only re-render groups when they change
+  const memoizedGroupFormation = useMemo(() => AppFunc.groupFormation(groups), [groups]);
 
   return (
     <div id="app-wrapper" className="text-center">
@@ -153,7 +159,7 @@ export default function App() {
       </nav>
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
-          {AppFunc.groupFormation(groups)}
+          {memoizedGroupFormation}
         </div>
       </AppProvider>
 
@@ -167,7 +173,7 @@ export default function App() {
         draggable={false}
         pauseOnFocusLoss={false}
         rtl={false}
-        style={{ width: "500px" }}
+        style={{ width: "550px" }}
       />
     </div>
   );

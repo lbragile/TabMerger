@@ -22,9 +22,15 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React from "react";
-global.React = React;
+
+import * as CONSTANTS from "../../src/constants/constants";
+import { TUTORIAL_GROUP } from "../../src/components/Extra/Tutorial";
 
 import * as AppHelper from "../../src/components/App/App_helpers";
+
+global.React = React;
+global.CONSTANTS = CONSTANTS;
+global.TUTORIAL_GROUP = TUTORIAL_GROUP;
 
 /*  CHROME SYNC STORAGE API SPIES */
 global.chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");

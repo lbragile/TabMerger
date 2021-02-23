@@ -135,7 +135,7 @@ export function syncLimitIndication() {
       setTimeout(() => {
         document.documentElement.scrollTop = scroll ?? 0;
 
-        if (client_details.paid) {
+        if (client_details?.paid) {
           var disable_sync = false;
           // group sync
           Object.keys(groups).forEach((key) => {
@@ -196,6 +196,41 @@ export function toggleHiddenOrEmptyGroups(type, user) {
       localStorage.removeItem("container_pos");
       localStorage.removeItem("logo_pos");
     }
+  }
+}
+
+/**
+ * Creates alarms that trigger automatic backups in the form of JSON and Sync Write, respectively.
+ * Alarms are based on the settings configured by the user.
+ */
+export function createAutoBackUpAlarm() {
+  chrome.storage.local.get("client_details", (local) => {
+    if (local.client_details?.tier === "Premium") {
+      chrome.storage.sync.get("settings", (sync) => {
+        // JSON auto backup alarm
+        AppHelper.alarmGenerator(parseInt(sync.settings?.periodBackup), "json_backup", CONSTANTS.JSON_AUTOBACKUP_OFF_TOAST); // prettier-ignore
+
+        // sync write auto backup alarm
+        AppHelper.alarmGenerator(parseInt(sync.settings?.syncPeriodBackup), "sync_backup", CONSTANTS.SYNC_AUTOBACKUP_OFF_TOAST); // prettier-ignore
+      });
+    }
+  });
+}
+
+/**
+ * Actually performs the automatic backup action based on the triggered alarm.
+ * @param {object} alarm The alarm for which the backup is to be performed.
+ * @param {HTMLElement} sync_node Needed for sync backups to update the sync text indicator
+ */
+export function performAutoBackUp(alarm, sync_node) {
+  if (alarm.name === "json_backup") {
+    exportJSON(false, false);
+  }
+
+  if (alarm.name === "sync_backup") {
+    chrome.storage.local.get("client_details", (local) => {
+      syncWrite({ target: document.getElementById("sync-write-btn") }, sync_node, local.client_details);
+    });
   }
 }
 
@@ -300,7 +335,9 @@ export function badgeIconInfo(tabTotal, user, STEP_SIZE = CONSTANTS.BADGE_ICON_S
 
 /**
  * Updates the sync items - only those that have changes are overwritten
+ * @param {HTMLElement} e Node representing the global sync write button
  * @param {HTMLElement} sync_node Node corresponding to the "Last Sync:" timestamp
+ * @param {object} user The user's subscription details
  */
 export function syncWrite(e, sync_node, user) {
   if (!user.paid) {
@@ -519,6 +556,7 @@ export function groupFormation(groups) {
         <Group
           id={id}
           title={x.title || x.name || CONSTANTS.DEFAULT_GROUP_TITLE}
+          textColor={textColor}
           color={x.color || CONSTANTS.DEFAULT_GROUP_COLOR}
           created={x.created || AppHelper.getTimestamp()}
           num_tabs={(x.tabs && x.tabs.length) || 0}
@@ -546,7 +584,7 @@ export function addGroup(setGroups) {
   chrome.storage.local.get(["groups", "client_details"], (local) => {
     var { groups, client_details } = local;
     const scroll = document.body.scrollHeight;
-    const NUM_GROUP_LIMIT = CONSTANTS.USER[client_details.tier].NUM_GROUP_LIMIT;
+    const NUM_GROUP_LIMIT = CONSTANTS.USER[client_details?.tier]?.NUM_GROUP_LIMIT ?? CONSTANTS.USER.Free.NUM_GROUP_LIMIT; // prettier-ignore
 
     var num_keys = Object.keys(groups).length;
     if (num_keys < NUM_GROUP_LIMIT) {
@@ -796,26 +834,48 @@ export function importJSON(e, user, setGroups, setTabTotal) {
 
 /**
  * Allows the user to export TabMerger's current configuration (including settings).
+ * @param {boolean} showSaveAsDialog Whether or not to show the saveAs dialog box. Can be configured in settings.
+ * @param {boolean} showGrayDownloadShelf Whether or not a download will show up at the bottom of the screen (pop-up). False for auto-backup
+ * @param {string} relativePath A path relative to the Downloads folder which will contain the generated file. Cannot include "../", "./", or absolute paths.
  */
-export function exportJSON(user) {
-  if (["Free", "Basic"].includes(user.tier)) {
-    toast(...CONSTANTS.SUBSCRIPTION_TOAST);
-  } else {
-    chrome.storage.local.get("groups", (local) => {
-      var group_blocks = local.groups;
-      chrome.storage.sync.get("settings", (sync) => {
-        group_blocks["settings"] = sync.settings;
+export function exportJSON(showSaveAsDialog, showGrayDownloadShelf, relativePath) {
+  chrome.storage.local.get(["groups", "client_details"], (local) => {
+    var { groups, client_details } = local;
+    if (client_details) {
+      if (["Free", "Basic"].includes(client_details.tier)) {
+        toast(...CONSTANTS.SUBSCRIPTION_TOAST);
+      } else {
+        chrome.storage.sync.get("settings", (sync) => {
+          groups["settings"] = sync.settings;
 
-        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
+          var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
 
-        var anchor = document.createElement("a");
-        anchor.setAttribute("href", dataStr);
-        anchor.setAttribute("download", AppHelper.outputFileName() + ".json");
-        anchor.click();
-        anchor.remove();
-      });
-    });
-  }
+          // enable or disable the download gray shelf at the bottom of the window which notifies of the download.
+          // For auto-backups this is disabled and saveas menu is not shown (it is configured in settings)
+          chrome.downloads.setShelfEnabled(showGrayDownloadShelf);
+
+          chrome.downloads.download(
+            {
+              url: dataStr,
+              filename:
+                (relativePath ? relativePath : sync.settings.relativePathBackup) +
+                AppHelper.outputFileName().replace(/\:|\//g, "_") +
+                ".json",
+              conflictAction: "uniquify",
+              saveAs: showSaveAsDialog,
+            },
+            (downloadId) => {
+              if (!chrome.runtime.lastError) {
+                console.log(`[INFO] Started downloading file id: ${downloadId} - ${AppHelper.getTimestamp()}`);
+              } else {
+                toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST);
+              }
+            }
+          );
+        });
+      }
+    }
+  });
 }
 
 /**

@@ -148,6 +148,66 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
           <section>
             <div>
+              <h5 class="mb-0">Automatic JSON Backup:</h5>
+              <small
+                >Will automatically generate a JSON configuration file relative to the Downloads folder. Only applies to
+                users with
+                <b>Premium</b>
+                <a
+                  href="https://lbragile.github.io/TabMerger-Extension/pricing"
+                  target="_blank"
+                  rel="noreferrer"
+                  style="color: rgb(101, 211, 255)"
+                  >subscriptions</a
+                >.</small
+              >
+            </div>
+            <div>
+              <div class="row mx-0 mt-3">
+                <p class="mr-2 mb-0 font-weight-bold">Relative Path:</p>
+                <input class="px-1 col-7" name="relative-path-backup" type="text" value="TabMerger/" />
+              </div>
+              <small
+                >This is a path relative to the <u>Downloads</u> directory. For example, "TabMerger/" would generate
+                files in "Downloads/TabMerger/". <b>Must not contain "../", "./", or absolute paths!</b></small
+              >
+            </div>
+            <div>
+              <div class="row mx-0 mt-3">
+                <p class="mr-2 mb-0 font-weight-bold">Save Every ___ Minute(s):</p>
+                <input class="px-1" name="period-backup" type="number" min="0" max="1440" value="720" />
+              </div>
+              <small>Minimum 0 minutes (disable automatic backup), maximum 1 day (1440 minutes)</small>
+            </div>
+          </section>
+
+          <section>
+            <div>
+              <h5 class="mb-0">Automatic Sync Backup:</h5>
+              <small
+                >Will automatically sync (write) your TabMerger configuration. Only applies to users with
+                <b>Premium</b>
+                <a
+                  href="https://lbragile.github.io/TabMerger-Extension/pricing"
+                  target="_blank"
+                  rel="noreferrer"
+                  style="color: rgb(101, 211, 255)"
+                  >subscriptions</a
+                >.</small
+              >
+            </div>
+
+            <div>
+              <div class="row mx-0 mt-3">
+                <p class="mr-2 mb-0 font-weight-bold">Sync Every ___ Minute(s):</p>
+                <input class="px-1" name="sync-backup" type="number" min="0" max="1440" value="720" />
+              </div>
+              <small>Minimum 0 minutes (disable automatic backup), maximum 1 day (1440 minutes)</small>
+            </div>
+          </section>
+
+          <section>
+            <div>
               <h5 class="mb-0">Badge Appearance:</h5>
               <small
                 >Whether or not information is displayed on TabMerger's extension badge. Only visible to users with

@@ -26,15 +26,11 @@ import { toast } from "react-toastify";
 
 import * as AppFunc from "../../src/components/App/App_functions";
 import * as AppHelper from "../../src/components/App/App_helpers";
-
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 
 import App from "../../src/components/App/App";
 import Group from "../../src/components/Group/Group";
 import Tab from "../../src/components/Tab/Tab";
-
-import * as CONSTANTS from "../../src/constants/constants";
-import { TUTORIAL_GROUP } from "../../src/components/Extra/Tutorial";
 
 const anything = expect.any(Function);
 var container, sync_node, syncLimitIndicationSpy, toastSpy;
@@ -730,29 +726,31 @@ describe("groupFormation", () => {
 
       const expected_result = [
         /* prettier-ignore */
-        <Group id="group-0" title="Chess" color="#d6ffe0" created="11/12/2020 @ 22:13:24" num_tabs={3} hidden={false} locked={false} starred={false} key={Math.random()}>
+        <Group id="group-0" title="Chess" textColor="primary" color="#d6ffe0" created="11/12/2020 @ 22:13:24" num_tabs={3} hidden={false} locked={false} starred={false} key={Math.random()}>
           <Tab id="group-0" hidden={false} textColor="primary" />
         </Group>,
         /* prettier-ignore */
-        <Group id="group-1" title="Social" color="#c7eeff" created="11/12/2020 @ 22:15:11" num_tabs={2} hidden={false} locked={false} starred={false} key={Math.random()}>
+        <Group id="group-1" title="Social" textColor="primary" color="#c7eeff" created="11/12/2020 @ 22:15:11" num_tabs={2} hidden={false} locked={false} starred={false} key={Math.random()}>
           <Tab id="group-1" hidden={false} textColor="primary" />
         </Group>,
         /* prettier-ignore */
-        <Group id="group-2" title={num_groups > 10 ? "B" : "A"} color={num_groups > 10 ? "#456456" : "#123123"} created={num_groups > 10 ? "10/09/2021 @ 12:11:10" : "01/01/2021 @ 12:34:56"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}>
+        <Group id="group-2" title={num_groups > 10 ? "B" : "A"} textColor="light" color={num_groups > 10 ? "#456456" : "#123123"} created={num_groups > 10 ? "10/09/2021 @ 12:11:10" : "01/01/2021 @ 12:34:56"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}>
           <Tab id="group-2" hidden={false} textColor="light" />
         </Group>,
         /* prettier-ignore */
-        <Group id="group-3" title={num_groups > 10 ? "A" : "B"} color={num_groups > 10 ? "#123123" : "#456456"} created={num_groups > 10 ? "01/01/2021 @ 12:34:56" : "10/09/2021 @ 12:11:10"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}> 
+        <Group id="group-3" title={num_groups > 10 ? "A" : "B"} textColor="light" color={num_groups > 10 ? "#123123" : "#456456"} created={num_groups > 10 ? "01/01/2021 @ 12:34:56" : "10/09/2021 @ 12:11:10"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}> 
           <Tab id="group-3" hidden={false} textColor="light" />
         </Group>,
       ];
 
       if (num_groups >= 10) {
         for (var i = 4; i < num_groups; i++) {
+          const textColor = ["start", "end"].includes(defaults_available) ? "light" : "primary";
           expected_result.push(
             <Group
               id={"group-" + i}
               title={defaults_available !== "end" ? defaults_available : "Title"}
+              textColor={textColor}
               color={defaults_available === "start" ? CONSTANTS.GROUP_COLOR_THRESHOLD : CONSTANTS.DEFAULT_GROUP_COLOR}
               created={defaults_available === "start" ? "11/11/2011 @ 12:12:12" : AppHelper.getTimestamp()}
               num_tabs={defaults_available === "start" ? 1 : 0}
@@ -761,11 +759,7 @@ describe("groupFormation", () => {
               starred={false}
               key={Math.random()}
             >
-              <Tab
-                id={"group-" + i}
-                hidden={false}
-                textColor={["start", "end"].includes(defaults_available) ? "light" : "primary"}
-              />
+              <Tab id={"group-" + i} hidden={false} textColor={textColor} />
             </Group>
           );
         }
@@ -1233,46 +1227,36 @@ describe("importJSON", () => {
 
 describe("exportJSON", () => {
   it("correctly exports a JSON file of the current configuration", () => {
-    function makeAnchor(target) {
-      return {
-        target,
-        setAttribute: jest.fn((key, value) => (target[key] = value)),
-        click: jest.fn(),
-        remove: jest.fn(),
-      };
-    }
+    var chromeDownloadsSetShelfEnabledSpy = jest.spyOn(chrome.downloads, "setShelfEnabled");
+    var chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
 
-    var anchor = makeAnchor({ href: "#", download: "" });
-    var createElementMock = jest.spyOn(document, "createElement").mockReturnValue(anchor);
-    var setAttributeSpy = jest.spyOn(anchor, "setAttribute");
-    var clickSpy = jest.spyOn(anchor, "click");
-    var removeSpy = jest.spyOn(anchor, "remove");
+    var groups = JSON.parse(localStorage.getItem("groups"));
+    groups["settings"] = { ...JSON.parse(sessionStorage.getItem("settings")), relativePathBackup: "Random/" };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
+    sessionStorage.setItem("settings", JSON.stringify(groups["settings"]));
 
-    var group_blocks = JSON.parse(localStorage.getItem("groups"));
-    group_blocks["settings"] = JSON.parse(sessionStorage.getItem("settings"));
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(group_blocks, null, 2));
+    const expect_download_opts = {
+      url: dataStr,
+      filename: "Test/" + AppHelper.outputFileName().replace(/\:|\//g, "_") + ".json",
+      conflictAction: "uniquify",
+      saveAs: false,
+    };
 
     jest.clearAllMocks();
 
-    AppFunc.exportJSON(user, mockSet);
+    AppFunc.exportJSON(false, false, "Test/");
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details"], anything);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
-    expect(document.createElement).toHaveBeenCalledTimes(1);
-    expect(document.createElement).toHaveBeenCalledWith("a");
+    expect(chromeDownloadsSetShelfEnabledSpy).toHaveBeenCalledTimes(1);
+    expect(chromeDownloadsSetShelfEnabledSpy).toHaveBeenCalledWith(false);
 
-    expect(setAttributeSpy).toHaveBeenCalledTimes(2);
-    expect(setAttributeSpy).toHaveBeenNthCalledWith(1, "href", dataStr);
-    expect(setAttributeSpy).toHaveBeenNthCalledWith(2, "download", AppHelper.outputFileName() + ".json");
-
-    expect(clickSpy).toHaveBeenCalledTimes(1);
-    expect(removeSpy).toHaveBeenCalledTimes(1);
-
-    createElementMock.mockRestore();
+    expect(chromeDownloadsDownloadSpy).toHaveBeenCalledTimes(1);
+    expect(chromeDownloadsDownloadSpy).toHaveBeenCalledWith(expect_download_opts, anything);
   });
 });
 

@@ -26,6 +26,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  */
 
 import * as CONSTANTS from "../../constants/constants";
+import { toast } from "react-toastify";
 
 /**
  * Produces a timestamp which is added to newly formed groups
@@ -234,4 +235,27 @@ export function elementMutationListener(element, cb) {
   });
 
   observer.observe(element, { attributes: true });
+}
+
+/**
+ * Helps create alarms with similar logic (automatic backup of JSON/Sync functionality)
+ * @param {number} periodInMinutes The alarms period (how often it is called)
+ * @param {"sync_backup"|"json_backup"} alarm_name The alarms unique name
+ * @param {object} toast_val The toast message to show when the alarm is cleared
+ */
+export function alarmGenerator(periodInMinutes, alarm_name, toast_val) {
+  if (periodInMinutes > 0) {
+    chrome.alarms.get(alarm_name, (alarm) => {
+      // only create a new alarm if the existing alarms period does not match (user changed)
+      if (alarm?.periodInMinutes !== periodInMinutes) {
+        chrome.alarms.create(alarm_name, { when: Date.now() + 1000, periodInMinutes });
+      }
+    });
+  } else {
+    chrome.alarms.clear(alarm_name, (wasCleared) => {
+      if (wasCleared) {
+        toast(...toast_val);
+      }
+    });
+  }
 }

@@ -21,7 +21,7 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useEffect, useCallback, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import * as CONSTANTS from "../../constants/constants";
 
 import * as GroupFunc from "./Group_functions";
@@ -36,11 +36,10 @@ import { BiHide } from "react-icons/bi";
 import "./Group.css";
 import "../Button/Button.css";
 
-export default function Group({ id, title, color, created, num_tabs, hidden, locked, starred, children }) {
+export default function Group({ id, title, textColor, color, created, num_tabs, hidden, locked, starred, children }) {
   const { user, setTabTotal, setGroups } = useContext(AppContext);
 
-  const setBGColor = useCallback((e) => GroupFunc.setBGColor(e, id), [id]);
-  useEffect(() => setBGColor(document.getElementById(id), id), [id, setBGColor]);
+  useEffect(() => GroupFunc.setBGColor(document.getElementById(id), id), [id]);
 
   return (
     <div
@@ -71,6 +70,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
           locked={locked}
           starred={starred}
           user={user}
+          textColor={textColor}
           setTabTotal={setTabTotal}
           setGroups={setGroups}
         />

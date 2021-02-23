@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import { render } from "@testing-library/react";
+import { toast } from "react-toastify";
 
 import * as AppHelper from "../../src/components/App/App_helpers";
 import App from "../../src/components/App/App";
@@ -238,4 +239,44 @@ describe("storeDestructiveAction", () => {
 
     expect(groups_copy).toStrictEqual(full ? [{}] : groups_copy);
   });
+});
+
+describe("alarmGenerator", () => {
+  it.each([
+    [0, 0, true],
+    [0, 0, false],
+    [1, 1, false],
+    [1, 2, false],
+  ])(
+    "periodInMinutes = %s, alarm period = %s, wasCleared = %s",
+    (periodInMinutes, alarm_periodInMinutes, wasCleared, alarm_name = "alarm_name") => {
+      var chromeAlarmsGetSpy = jest.spyOn(chrome.alarms, "get").mockImplementation((_, cb) => cb({ periodInMinutes: alarm_periodInMinutes })); // prettier-ignore
+      var chromeAlarmsClearSpy = jest.spyOn(chrome.alarms, "clear").mockImplementation((_, cb) => cb(wasCleared));
+      var chromeAlarmsCreateSpy = jest.spyOn(chrome.alarms, "create");
+      var toastSpy = toast.mockImplementation((...args) => args);
+      jest.clearAllMocks();
+
+      AppHelper.alarmGenerator(periodInMinutes, alarm_name, [<div>test</div>, { toastId: "test" }]);
+
+      if (periodInMinutes > 0) {
+        expect(chromeAlarmsGetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeAlarmsGetSpy).toHaveBeenCalledWith(alarm_name, anything);
+        if (alarm_periodInMinutes !== periodInMinutes) {
+          expect(chromeAlarmsCreateSpy).toHaveBeenCalledTimes(1);
+          expect(chromeAlarmsCreateSpy).toHaveBeenCalledWith(alarm_name, expect.any(Object));
+        }
+      } else {
+        expect(chromeAlarmsClearSpy).toHaveBeenCalledTimes(1);
+        expect(chromeAlarmsClearSpy).toHaveBeenCalledWith(alarm_name, anything);
+        if (wasCleared) {
+          expect(toastSpy).toHaveBeenCalledTimes(1);
+          expect(toastSpy).toHaveReturnedWith([<div>test</div>, { toastId: "test" }]);
+        }
+      }
+
+      chromeAlarmsGetSpy.mockRestore();
+      chromeAlarmsCreateSpy.mockRestore();
+      toastSpy.mockRestore();
+    }
+  );
 });

@@ -22,6 +22,15 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 global.chrome = {
+  alarms: {
+    get: function () {},
+    clear: function () {},
+    create: function () {},
+    onAlarm: {
+      addListener: function () {},
+      removeListener: function () {},
+    },
+  },
   browserAction: {
     onClicked: {
       addListener: function () {},
@@ -46,6 +55,10 @@ global.chrome = {
     onClicked: {
       addListener: function () {},
     },
+  },
+  downloads: {
+    download: function () {},
+    setShelfEnabled: function () {},
   },
   i18n: {
     getMessage: function (msg) {

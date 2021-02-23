@@ -27,3 +27,9 @@ window.addEventListener("load", restoreOptions);
 document.getElementById("save-btn").addEventListener("click", saveOptions);
 document.getElementById("reset-btn").addEventListener("click", resetOptions);
 document.getElementById("home-btn").addEventListener("click", () => location.assign("/index.html"));
+
+[...document.querySelectorAll("input[type='number']")].forEach((x) => {
+  x.addEventListener("change", (e) => {
+    e.target.value = Math.max(0, Math.min(e.target.value, 24 * 60)); // clamp to 0 min - 1 day
+  });
+});

@@ -72,7 +72,22 @@ describe("setTabMergerLink", () => {
 
 describe("setSync", () => {
   it("sets sync storage according to the user selected values", () => {
-    const expected_sync = {badgeInfo: "display", blacklist: "https://www.google.com", color: "#000000", dark: true, font: "Arial", merge: "merge", open: "with", pin: "include", title: "Default", restore: "remove", weight: "Normal" }; // prettier-ignore
+    const expected_sync = {
+      badgeInfo: "display",
+      blacklist: "https://www.google.com",
+      color: "#000000",
+      dark: true,
+      font: "Arial",
+      merge: "merge",
+      open: "with",
+      periodBackup: 5,
+      pin: "include",
+      title: "Default",
+      relativePathBackup: "Test/",
+      restore: "remove",
+      syncPeriodBackup: 10,
+      weight: "Normal",
+    };
 
     document.getElementById = jest.fn((id) => {
       switch (id) {
@@ -102,6 +117,12 @@ describe("setSync", () => {
         return { value: expected_sync.merge };
       } else if (sel.includes("badge-view")) {
         return { value: expected_sync.badgeInfo };
+      } else if (sel.includes("period-backup")) {
+        return { value: expected_sync.periodBackup };
+      } else if (sel.includes("sync-backup")) {
+        return { value: expected_sync.syncPeriodBackup };
+      } else if (sel.includes("relative-path-backup")) {
+        return { value: expected_sync.relativePathBackup };
       }
     });
 
