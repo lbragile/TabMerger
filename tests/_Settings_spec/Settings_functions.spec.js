@@ -23,6 +23,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import * as SettingsFunc from "../../public/settings/settings_functions.js";
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
+import * as CONSTANTS from "../../src/constants/constants";
 
 const anything = expect.any(Function);
 
@@ -127,7 +128,7 @@ describe("saveOptions", () => {
     var classListSpy = jest.spyOn(stub.target.classList, "replace");
     var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
 
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+    sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
     jest.clearAllMocks();
 
     jest.useFakeTimers();
@@ -154,7 +155,7 @@ describe("saveOptions", () => {
 
 describe("resetOptions", () => {
   it("calls get and set sync storage correctly - same as default settings", () => {
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+    sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
     jest.clearAllMocks();
 
     SettingsFunc.resetOptions();
@@ -181,7 +182,7 @@ describe("resetOptions", () => {
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
     expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: default_settings }, anything);
+    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: CONSTANTS.DEFAULT_SETTINGS }, anything);
     expect(window.location.reload).toHaveBeenCalledTimes(1);
 
     window.location.reload = reload;

@@ -25,8 +25,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Tab/Tab_functions
  */
 
-import { updateTabTotal, storeDestructiveAction } from "../App/App_helpers";
+import { getTabTotal, storeDestructiveAction } from "../App/App_helpers";
 import { toast } from "react-toastify";
+import * as CONSTANTS from "../../constants/constants";
 
 /**
  * Sets the initial tabs based on Chrome's local storage upon initial render.
@@ -36,8 +37,7 @@ import { toast } from "react-toastify";
  */
 export function setInitTabs(setTabs, id) {
   chrome.storage.local.get("groups", (local) => {
-    var groups = local.groups;
-    setTabs((groups && groups[id]?.tabs) || []);
+    setTabs((local.groups && local.groups[id]?.tabs) || []);
   });
 }
 
@@ -49,58 +49,8 @@ export function applyTitleStyles(id) {
   chrome.storage.sync.get("settings", (sync) => {
     var tab_titles = document.querySelectorAll("#" + id + " .a-tab");
     tab_titles.forEach((x) => {
-      switch (sync.settings.weight) {
-        case "Bold":
-          x.style.fontWeight = "bold";
-          break;
-        case "Bolder":
-          x.style.fontWeight = "bolder";
-          break;
-        case "Lighter":
-          x.style.fontWeight = "lighter";
-          break;
-        case "Light":
-          x.style.fontWeight = "100";
-          break;
-
-        default:
-          x.style.fontWeight = "normal";
-          break;
-      }
-
-      switch (sync.settings.font) {
-        case "Arial":
-          x.style.fontFamily = "Arial, sans-serif";
-          break;
-        case "Verdana":
-          x.style.fontFamily = "Verdana, sans-serif";
-          break;
-        case "Helvetica":
-          x.style.fontFamily = "Helvetica, sans-serif";
-          break;
-        case "Tahoma":
-          x.style.fontFamily = "Tahoma, sans-serif";
-          break;
-        case "Trebuchet MS":
-          x.style.fontFamily = "'Trebuchet MS', sans-serif";
-          break;
-        case "Brush Script MT":
-          x.style.fontFamily = "'Brush Script MT', cursive";
-          break;
-        case "Georgia":
-          x.style.fontFamily = "Georgia, serif";
-          break;
-        case "Garamond":
-          x.style.fontFamily = "Garamond, serif";
-          break;
-        case "Courier New":
-          x.style.fontFamily = "'Courier New', monospace";
-          break;
-
-        default:
-          x.style.fontFamily = "'Times New Roman', serif";
-          break;
-      }
+      x.style.fontWeight = CONSTANTS.FONT_WEIGHT[sync.settings.weight];
+      x.style.fontFamily = CONSTANTS.FONT_FAMILY[sync.settings.font];
     });
   });
 }
@@ -120,8 +70,6 @@ export function tabDragStart(e) {
  * check for sync limit violations - warning the user accordingly.
  * @param {HTMLElement} e  The dragged tab
  * @param {Function} setGroups For re-rendering the groups
- *
- * @see ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value
  */
 export function tabDragEnd(e, setGroups) {
   e.stopPropagation();
@@ -175,17 +123,11 @@ export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups) {
       groups[group_id].tabs = tabs.filter((x) => x.url !== url);
       chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
         setTabs(groups[group_id].tabs);
-        setTabTotal(updateTabTotal(groups));
+        setTabTotal(getTabTotal(groups));
         setGroups(JSON.stringify(groups));
       });
     } else {
-      toast(
-        <div className="text-left">
-          This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
-          <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
-        </div>,
-        { toastId: "removeTab_toast" }
-      );
+      toast(...CONSTANTS.REMOVE_TAB_TOAST);
     }
   });
 }
@@ -264,8 +206,6 @@ export function handlePinClick(e, setGroups) {
       return x;
     });
 
-    chrome.storage.local.set({ groups, scroll }, () => {
-      setGroups(JSON.stringify(groups));
-    });
+    chrome.storage.local.set({ groups, scroll }, () => setGroups(JSON.stringify(groups)));
   });
 }

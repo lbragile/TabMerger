@@ -156,14 +156,14 @@ describe("sortByKey", () => {
   });
 });
 
-describe("updateTabTotal", () => {
+describe("getTabTotal", () => {
   it("calculates the number of tabs correctly when not empty", () => {
-    const result = AppHelper.updateTabTotal(init_groups);
+    const result = AppHelper.getTabTotal(init_groups);
     expect(result).toBe(7);
   });
 
   it("calculates the number of tabs correctly when empty", () => {
-    const result = AppHelper.updateTabTotal({});
+    const result = AppHelper.getTabTotal({});
     expect(result).toBe(0);
   });
 });
@@ -230,12 +230,12 @@ describe("storeDestructiveAction", () => {
     [false, "Standard"],
     [false, "Premium"],
   ])("adjusts the states array - full = %s", (full, tier) => {
-    var groups_copy = [init_groups, init_groups];
+    var groups_copy = [init_groups];
     localStorage.setItem("groups_copy", JSON.stringify(groups_copy));
     jest.clearAllMocks();
 
     groups_copy = AppHelper.storeDestructiveAction(groups_copy, {}, { tier });
 
-    expect(groups_copy).toStrictEqual(full ? [init_groups, {}] : groups_copy);
+    expect(groups_copy).toStrictEqual(full ? [{}] : groups_copy);
   });
 });

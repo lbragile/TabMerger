@@ -25,8 +25,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Group/Group_functions
  */
 
-import { getTimestamp, updateTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
-import { SUBSCRIPTION_DIALOG, translate } from "../App/App_functions";
+import * as CONSTANTS from "../../constants/constants";
+import { getTimestamp, getTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
+import { translate } from "../App/App_functions";
 import { toast } from "react-toastify";
 
 /**
@@ -38,7 +39,7 @@ export function setBGColor(e, id) {
   const color = e.target ? e.target.value : e.previousSibling.querySelector("input[type='color']").value;
   const target = e.target ? e.target.closest(".group-title") : e.previousSibling;
 
-  const threshold_passed = color > "#777777";
+  const threshold_passed = color > CONSTANTS.GROUP_COLOR_THRESHOLD;
   const adjusted_text_color = threshold_passed ? "black" : "white";
   [...target.parentNode.children].forEach((child) => {
     child.style.background = color;
@@ -115,7 +116,7 @@ export function blurOnEnter(e) {
  */
 export function addTabFromURL(e, user, setGroups, setTabTotal) {
   if (!user.paid) {
-    toast(SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" });
+    toast(...CONSTANTS.SUBSCRIPTION_TOAST);
   } else {
     const url = e.target.value;
     const id = e.target.closest(".group").id;
@@ -144,20 +145,14 @@ export function addTabFromURL(e, user, setGroups, setTabTotal) {
 
             groups[id].tabs = [...groups[id].tabs, new_tab];
             chrome.storage.local.set({ groups, scroll }, () => {
-              setTabTotal(updateTabTotal(groups));
+              setTabTotal(getTabTotal(groups));
               setGroups(JSON.stringify(groups));
             });
           });
         } else {
           e.target.value = "";
           e.target.blur();
-          setTimeout(
-            () =>
-              toast(<div className="text-left">That tab is already in TabMerger!</div>, {
-                toastId: "addTabFromURL_toast",
-              }),
-            50
-          );
+          setTimeout(() => toast(...CONSTANTS.ADD_TAB_FROM_URL_TOAST), 50);
         }
       });
     });
@@ -259,16 +254,10 @@ export function deleteGroup(e, user, setTabTotal, setGroups) {
 
         chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
           setGroups(JSON.stringify(groups));
-          setTabTotal(updateTabTotal(groups));
+          setTabTotal(getTabTotal(groups));
         });
       } else {
-        toast(
-          <div className="text-left">
-            This group is <b>locked</b>, thus it cannot be deleted. <br />
-            <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting it again!
-          </div>,
-          { toastId: "deleteGroup_toast" }
-        );
+        toast(...CONSTANTS.DELETE_GROUP_TOAST);
       }
     });
   });
@@ -325,9 +314,7 @@ export function toggleGroup(e, toggle_type, setGroups) {
         break;
     }
 
-    chrome.storage.local.set({ groups, scroll }, () => {
-      setGroups(JSON.stringify(groups));
-    });
+    chrome.storage.local.set({ groups, scroll }, () => setGroups(JSON.stringify(groups)));
   });
 }
 

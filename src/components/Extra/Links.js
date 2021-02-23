@@ -1,5 +1,6 @@
 import React from "react";
 
+import * as CONSTANTS from "../../constants/constants";
 import { translate, getTabMergerLink, resetTutorialChoice } from "../App/App_functions";
 import LinkBtn from "../Button/LinkBtn.js";
 
@@ -14,7 +15,7 @@ import { RiHandCoinLine } from "react-icons/ri";
 const LINKS = [
   { url: "https://lbragile.github.io/TabMerger-Extension/", text: translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
   { url: "https://lbragile.github.io/TabMerger-Extension/contact", text: translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
-  { url: "https://localhost:3000/TabMerger-Extension/pricing", text: "Choose Plan", icon: <MdPayment color="black" size="1.5rem" />}, // prettier-ignore
+  { url: CONSTANTS.SUBSCRIPTION_URL, text: "Choose Plan", icon: <MdPayment color="black" size="1.5rem" />}, // prettier-ignore
   { url: "https://youtu.be/zkI0T-GzmzQ", text: translate("quickDemo"), icon: <FiYoutube color="black" /> },
   { url: process.env.REACT_APP_PAYPAL_URL, text: translate("donate"), icon: <RiHandCoinLine color="black" /> },
   { url: getTabMergerLink(true), text: translate("leaveReview"), icon: <FiStar color="black" /> },

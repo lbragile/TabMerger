@@ -1,4 +1,6 @@
 .env
+.env*.local
+
 .stryker-tmp
 debug.log
 build_*.zip

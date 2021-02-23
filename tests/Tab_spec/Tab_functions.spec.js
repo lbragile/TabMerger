@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
 import Tab from "../../src/components/Tab/Tab";
 
+import * as CONSTANTS from "../../src/constants/constants";
 import * as AppHelper from "../../src/components/App/App_helpers";
 
 import { AppProvider } from "../../src/context/AppContext";
@@ -243,7 +244,7 @@ describe("removeTab", () => {
 
     expect(mockSet).toHaveBeenCalledTimes(3);
     expect(mockSet).toHaveBeenNthCalledWith(1, expected_groups["group-0"].tabs);
-    expect(mockSet).toHaveBeenNthCalledWith(2, AppHelper.updateTabTotal(expected_groups));
+    expect(mockSet).toHaveBeenNthCalledWith(2, AppHelper.getTabTotal(expected_groups));
     expect(mockSet).toHaveBeenNthCalledWith(3, JSON.stringify(expected_groups));
   });
 
@@ -260,13 +261,7 @@ describe("removeTab", () => {
 
     expect(mockSet).not.toHaveBeenCalled();
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toEqual([
-      <div className="text-left">
-        This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
-        <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
-      </div>,
-      { toastId: "removeTab_toast" },
-    ]);
+    expect(toastCalls[0]).toEqual([...CONSTANTS.REMOVE_TAB_TOAST]);
   });
 });
 

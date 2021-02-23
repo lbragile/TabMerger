@@ -24,6 +24,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { waitFor } from "@testing-library/react";
 
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
+import * as CONSTANTS from "../../src/constants/constants";
 
 const anything = expect.any(Function);
 
@@ -48,9 +49,9 @@ describe("filterTabs", () => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
     sessionStorage.setItem("open_tabs", JSON.stringify(merge_tabs));
 
-    default_settings.blacklist = ", https://www.blacklisted.com/, ";
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
-    default_settings.blacklist = "";
+    CONSTANTS.DEFAULT_SETTINGS.blacklist = ", https://www.blacklisted.com/, ";
+    sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
+    CONSTANTS.DEFAULT_SETTINGS.blacklist = "";
     jest.clearAllMocks();
   });
 
@@ -219,9 +220,9 @@ describe("excludeSite", () => {
   const url = "www.google.com";
 
   it.each([["empty"], ["NOT empty"]])("adjusts sync storage correctly - %s", (type) => {
-    default_settings.blacklist = type === "empty" ? "" : original_url + ", ";
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
-    default_settings.blacklist = "";
+    CONSTANTS.DEFAULT_SETTINGS.blacklist = type === "empty" ? "" : original_url + ", ";
+    sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
+    CONSTANTS.DEFAULT_SETTINGS.blacklist = "";
     var expected_settings = JSON.parse(sessionStorage.getItem("settings"));
     expected_settings.blacklist += url + ", ";
 

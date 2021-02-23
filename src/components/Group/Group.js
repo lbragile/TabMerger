@@ -21,7 +21,8 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import React, { useEffect, useRef, useCallback, useContext } from "react";
+import React, { useEffect, useCallback, useContext } from "react";
+import * as CONSTANTS from "../../constants/constants";
 
 import * as GroupFunc from "./Group_functions";
 import { translate, dragOver } from "../App/App_functions";
@@ -36,8 +37,7 @@ import "./Group.css";
 import "../Button/Button.css";
 
 export default function Group({ id, title, color, created, num_tabs, hidden, locked, starred, children }) {
-  const TITLE_TRIM_LIMIT = useRef(50);
-  const { user, setTabTotal, setGroups, setDialog } = useContext(AppContext);
+  const { user, setTabTotal, setGroups } = useContext(AppContext);
 
   const setBGColor = useCallback((e) => GroupFunc.setBGColor(e, id), [id]);
   useEffect(() => setBGColor(document.getElementById(id), id), [id, setBGColor]);
@@ -55,7 +55,7 @@ export default function Group({ id, title, color, created, num_tabs, hidden, loc
         <input
           className="title-edit-input font-weight-bold mb-0"
           title="can be modified to give the group a meaningful name"
-          maxLength={TITLE_TRIM_LIMIT.current}
+          maxLength={CONSTANTS.TITLE_TRIM_LIMIT}
           defaultValue={title}
           onFocus={(e) => e.target.select()}
           onBlur={(e) => GroupFunc.setTitle(e)}

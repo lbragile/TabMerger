@@ -33,15 +33,16 @@ import App from "../../src/components/App/App";
 import Group from "../../src/components/Group/Group";
 import Tab from "../../src/components/Tab/Tab";
 
+import * as CONSTANTS from "../../src/constants/constants";
 import { TUTORIAL_GROUP } from "../../src/components/Extra/Tutorial";
-import { SUBSCRIPTION_DIALOG } from "../../src/components/App/App_functions";
 
 const anything = expect.any(Function);
-var container, sync_node, syncLimitIndicationSpy;
+var container, sync_node, syncLimitIndicationSpy, toastSpy;
 
 beforeAll(() => {
   jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
   syncLimitIndicationSpy = jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
+  toastSpy = toast.mockImplementation((...args) => args);
 });
 
 beforeEach(() => {
@@ -55,6 +56,10 @@ beforeEach(() => {
   sync_node = container.querySelector("#sync-text span");
 
   jest.clearAllMocks();
+});
+
+afterAll(() => {
+  toastSpy.mockRestore();
 });
 
 describe("badgeIconInfo", () => {
@@ -77,7 +82,7 @@ describe("badgeIconInfo", () => {
     const expected_title = num_tabs > 0 ? `You currently have ${num_tabs} ${num_tabs === 1 ? "tab" : "tabs"} in ${one_group ? 1 + " group" : 4 + " groups"}`: "Merge your tabs into groups"; // prettier-ignore
 
     if (one_group) {
-      localStorage.setItem("groups", JSON.stringify({ "group-0": default_group }));
+      localStorage.setItem("groups", JSON.stringify({ "group-0": CONSTANTS.DEFAULT_GROUP }));
     }
     sessionStorage.setItem("settings", JSON.stringify({ badgeInfo: display ? "display" : "hide" }));
     jest.clearAllMocks();
@@ -129,14 +134,14 @@ describe("storageInit", () => {
     localStorage.setItem("tour_needed", true);
     jest.clearAllMocks();
 
-    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
+    AppFunc.storageInit(sync_node, mockSet, mockSet, mockSet);
     localStorage.removeItem("tour_needed");
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
 
     expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: default_settings }, anything);
+    expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: CONSTANTS.DEFAULT_SETTINGS }, anything);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "tour_needed"], anything);
@@ -145,7 +150,7 @@ describe("storageInit", () => {
     expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["groups"], anything);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": default_group }, groups_copy: [], scroll: 0, tour_needed: false }, anything); // prettier-ignore
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: { "group-0": CONSTANTS.DEFAULT_GROUP }, groups_copy: [], scroll: 0, tour_needed: false }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(3);
 
@@ -158,7 +163,7 @@ describe("storageInit", () => {
     localStorage.setItem("tour_needed", false);
     jest.clearAllMocks();
 
-    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
+    AppFunc.storageInit(sync_node, mockSet, mockSet, mockSet);
     localStorage.setItem("tour_needed", true);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
@@ -170,7 +175,7 @@ describe("storageInit", () => {
     sessionStorage.setItem("settings", JSON.stringify({ dark: true }));
     jest.clearAllMocks();
 
-    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
+    AppFunc.storageInit(sync_node, mockSet, mockSet, mockSet);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
 
@@ -185,7 +190,7 @@ describe("storageInit", () => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
     jest.clearAllMocks();
 
-    AppFunc.storageInit(default_settings, default_group, sync_node, mockSet, mockSet, mockSet);
+    AppFunc.storageInit(sync_node, mockSet, mockSet, mockSet);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0, tour_needed: false}, anything); // prettier-ignore
@@ -224,22 +229,7 @@ describe("resetTutorialChoice", () => {
         element.setAttribute("response", response ? "positive" : "negative");
       }
 
-      expect(mockSetDialog).toHaveBeenCalledWith({
-        element,
-        show: true,
-        title: "✋ TabMerger Question ❔",
-        msg: (
-          <div>
-            Press <b>VIEW TUTORIAL</b> to get a walkthrough of TabMerger's main features{" "}
-            <u>
-              <i>OR</i>
-            </u>{" "}
-            <b>GO TO SITE</b> to visit TabMerger's official homepage!
-          </div>
-        ),
-        accept_btn_text: "VIEW TUTORIAL",
-        reject_btn_text: "GO TO SITE",
-      });
+      expect(mockSetDialog).toHaveBeenCalledWith(CONSTANTS.RESET_TUTORIAL_CHOICE_DIALOG(element));
 
       await waitFor(() => {
         if (element.getAttribute("response") === "positive") {
@@ -260,16 +250,6 @@ describe("resetTutorialChoice", () => {
 });
 
 describe("syncWrite", () => {
-  var toastCalls, toastSpy;
-  beforeEach(() => {
-    toastCalls = [];
-    toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
-  });
-
-  afterEach(() => {
-    toastSpy.mockRestore();
-  });
-
   var stub = (ret_val) => ({
     target: {
       closest: (arg) =>
@@ -283,7 +263,7 @@ describe("syncWrite", () => {
     AppFunc.syncWrite(stub(false), sync_node, { paid: false });
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toEqual([SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" }]);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SUBSCRIPTION_TOAST]);
   });
 
   it("toasts if either sync limit is exceeded", () => {
@@ -292,19 +272,7 @@ describe("syncWrite", () => {
     AppFunc.syncWrite(stub(true), sync_node, user);
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toEqual([
-      <div className="text-left">
-        Either one (or more) of your groups exceed(s) their respective sync limit <u>or</u> the total sync limit is
-        exceeded - see TabMerger's sync indicators. <br /> <br />
-        Please adjust these as needed by doing <b>one or both</b> of the following:
-        <ul style={{ marginLeft: "25px" }}>
-          <li>Delete tabs that are no longer important/relevant to you;</li>
-          <li>Delete some tab groups for the same reasoning as above.</li>
-        </ul>
-        Perform these actions until the corresponding indicators are no longer visible in TabMerger.
-      </div>,
-      { toastId: "syncWrite_exceed" },
-    ]);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SYNC_WRITE_TOAST]);
   });
 
   it("does nothing when no groups in local storage", () => {
@@ -317,7 +285,7 @@ describe("syncWrite", () => {
   });
 
   it("does nothing when no tabs in TabMerger and only default group is made", () => {
-    localStorage.setItem("groups", JSON.stringify({ "group-0": default_group }));
+    localStorage.setItem("groups", JSON.stringify({ "group-0": CONSTANTS.DEFAULT_GROUP }));
     jest.clearAllMocks();
 
     AppFunc.syncWrite(stub(false), sync_node, user);
@@ -329,7 +297,7 @@ describe("syncWrite", () => {
   it.each([["less"], ["more"]])("calls the correct functions when %s groups", async (num_groups) => {
     if (num_groups === "more") {
       var current_groups = JSON.parse(localStorage.getItem("groups"));
-      current_groups["group-4"] = default_group;
+      current_groups["group-4"] = CONSTANTS.DEFAULT_GROUP;
       localStorage.setItem("groups", JSON.stringify(current_groups));
     } else {
       // to simulate having to remove extras, since less groups now
@@ -409,7 +377,7 @@ describe("syncRead", () => {
 
     expect(mockSet).toHaveBeenCalledTimes(2);
     expect(mockSet).toHaveBeenNthCalledWith(1, JSON.stringify(new_ss_item));
-    expect(mockSet).toHaveBeenNthCalledWith(2, AppHelper.updateTabTotal(new_ss_item));
+    expect(mockSet).toHaveBeenNthCalledWith(2, AppHelper.getTabTotal(new_ss_item));
   });
 });
 
@@ -587,9 +555,6 @@ describe("checkMerging", () => {
     ["✅", "❌", true],
     ["❌", "✅", false],
   ])("does nothing for namespace %s, changes length %s violation", (_, __, namespace_violation) => {
-    var toastCalls = [];
-    const toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
-
     localStorage.setItem("client_details", JSON.stringify(user));
     jest.clearAllMocks();
 
@@ -605,8 +570,6 @@ describe("checkMerging", () => {
     expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
     expect(mockSet).not.toHaveBeenCalled();
     expect(toastSpy).not.toHaveBeenCalled();
-
-    toastSpy.mockRestore();
   });
 
   test.each([
@@ -619,9 +582,6 @@ describe("checkMerging", () => {
   ])(
     "merge all and none exist in TabMerger - exceeding: %s, merge: %s, into: %s, group-0: %s",
     (exceeding, merge_setting, into_group, top_group) => {
-      var toastCalls = [];
-      const toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
-
       var stub = { merged_tabs: { newValue: merge_all } };
 
       var current_groups = JSON.parse(JSON.stringify(init_groups));
@@ -629,10 +589,10 @@ describe("checkMerging", () => {
         current_groups["group-0"].tabs = [];
       }
 
-      // need to have at least 50 tabs to exceed Free Tier
+      // need to have at least 15 tabs to exceed Free Tier
       if (exceeding) {
         var tabs_to_exceed = [];
-        for (var i = 0; i < 50; i++) {
+        for (var i = 0; i < 10; i++) {
           tabs_to_exceed.push({ pinned: false, title: "Extra Tab", url: "http://www.example.com" });
         }
         current_groups["group-1"].tabs = tabs_to_exceed;
@@ -643,7 +603,7 @@ describe("checkMerging", () => {
       localStorage.setItem("merged_tabs", JSON.stringify(merge_all));
       sessionStorage.setItem("open_tabs", JSON.stringify(merge_all));
       localStorage.setItem("client_details", JSON.stringify(!exceeding ? user : { tier: "Free" }));
-      sessionStorage.setItem("settings", JSON.stringify({ color: default_settings.color, title: default_settings.title, merge: merge_setting })); // prettier-ignore
+      sessionStorage.setItem("settings", JSON.stringify({ color: CONSTANTS.DEFAULT_GROUP_COLOR, title: CONSTANTS.DEFAULT_GROUP_TITLE, merge: merge_setting })); // prettier-ignore
 
       var expected_groups = JSON.parse(localStorage.getItem("groups"));
       if (into_group.includes("group")) {
@@ -656,13 +616,13 @@ describe("checkMerging", () => {
         if (top_group !== "empty") {
           const group_values = AppHelper.sortByKey(expected_groups);
           expected_groups[into_group] = {
-            color: default_settings.color,
+            color: CONSTANTS.DEFAULT_GROUP_COLOR,
             created: AppHelper.getTimestamp(),
             hidden: false,
             locked: false,
             starred: false,
             tabs: merge_all.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url })),
-            title: default_settings.title,
+            title: CONSTANTS.DEFAULT_GROUP_TITLE,
           };
 
           group_values.forEach((val, i) => {
@@ -714,30 +674,11 @@ describe("checkMerging", () => {
         expect(sessionStorage.getItem("open_tabs")).toBe(JSON.stringify(merge_all));
 
         expect(toastSpy).toHaveBeenCalledTimes(1);
-        expect(toastCalls[0]).toEqual([
-          <div className="text-left">
-            This would exceed your plan's ({"Free"} Tier) tab limit of <b>{50}</b>!<br />
-            <br />
-            To successfully execute this action you should do <b>one</b> of the following:
-            <ul style={{ marginLeft: "25px" }}>
-              <li>If you are merging tabs into TabMerger, try to merge less tabs;</li>
-              <li>Remove a few tabs that are not as important/relevant to you anymore;</li>
-              <li>
-                Upgrade your subscription by visiting our official homepage's{" "}
-                <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
-                  Subscriptions & Pricing
-                </a>
-              </li>
-            </ul>
-          </div>,
-          { toastId: "tabExceed_toast" },
-        ]);
+        expect(toastSpy).toHaveReturnedWith(CONSTANTS.CHECK_MERGING_TOAST(!exceeding ? user.tier : "Free"));
       }
 
       expect(chromeLocalRemoveSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalRemoveSpy).toHaveBeenCalledWith(["into_group", "merged_tabs"], anything);
-
-      toastSpy.mockRestore();
     }
   );
 });
@@ -763,10 +704,11 @@ describe("groupFormation", () => {
       if (num_groups >= 10) {
         current_groups = JSON.parse(localStorage.getItem("groups"));
         for (var i = 4; i < num_groups; i++) {
-          var new_default_group = JSON.parse(JSON.stringify(default_group));
+          var new_default_group = JSON.parse(JSON.stringify(CONSTANTS.DEFAULT_GROUP));
+          new_default_group.created = AppHelper.getTimestamp();
           if (defaults_available === "start") {
             new_default_group.title = "start";
-            new_default_group.color = "#777777";
+            new_default_group.color = CONSTANTS.GROUP_COLOR_THRESHOLD;
             new_default_group.created = "11/11/2011 @ 12:12:12";
             new_default_group.tabs = [1];
             new_default_group.name = null;
@@ -811,7 +753,7 @@ describe("groupFormation", () => {
             <Group
               id={"group-" + i}
               title={defaults_available !== "end" ? defaults_available : "Title"}
-              color={defaults_available === "start" ? "#777777" : "#dedede"}
+              color={defaults_available === "start" ? CONSTANTS.GROUP_COLOR_THRESHOLD : CONSTANTS.DEFAULT_GROUP_COLOR}
               created={defaults_available === "start" ? "11/11/2011 @ 12:12:12" : AppHelper.getTimestamp()}
               num_tabs={defaults_available === "start" ? 1 : 0}
               hidden={false}
@@ -836,44 +778,24 @@ describe("groupFormation", () => {
 });
 
 describe("addGroup", () => {
-  var toastCalls, toastSpy;
-  beforeEach(() => {
+  it.each([["equal"], ["more"]])("warns if group limit exceeded - %s", (type) => {
+    // free tier has group limit of 5
+    var groups = JSON.parse(JSON.stringify(init_groups));
+    groups["group-4"] = CONSTANTS.DEFAULT_GROUP;
+    if (type === "more") {
+      groups["group-5"] = CONSTANTS.DEFAULT_GROUP;
+    }
+    localStorage.setItem("groups", JSON.stringify(groups));
+    localStorage.setItem("client_details", JSON.stringify({ tier: "Free" }));
     jest.clearAllMocks();
-    toastCalls = [];
-    toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
-  });
 
-  afterEach(() => {
-    toastSpy.mockRestore();
-  });
-
-  it.each([[1], [4]])("warns if group limit exceeded", (NUM_GROUP_LIMIT) => {
-    AppFunc.addGroup(NUM_GROUP_LIMIT, mockSet);
+    AppFunc.addGroup(mockSet);
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toEqual([
-      <div className="text-left">
-        Number of groups exceeded (more than <b>{NUM_GROUP_LIMIT}</b>).
-        <br />
-        <br />
-        Please do <b>one</b> of the following:
-        <ul style={{ marginLeft: "25px" }}>
-          <li>Delete a group that is no longer needed;</li>
-          <li>Merge tabs into another existing group;</li>
-          <li>
-            Upgrade your TabMerger subscription (
-            <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
-              Subscriptions & Pricing
-            </a>
-            ).
-          </li>
-        </ul>
-      </div>,
-      { toastId: "addGroup_toast" },
-    ]);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.ADD_GROUP_TOAST(CONSTANTS.USER.Free.NUM_GROUP_LIMIT)]);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details"], anything);
 
     expect(chromeSyncGetSpy).not.toHaveBeenCalled();
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -883,12 +805,14 @@ describe("addGroup", () => {
     Object.defineProperty(document.body, "scrollHeight", { writable: true, configurable: true, value: 1000 });
 
     localStorage.setItem("groups", JSON.stringify(init_groups));
+    localStorage.setItem("client_details", JSON.stringify({ tier: "Premium" }));
 
     var groups = JSON.parse(JSON.stringify(init_groups));
-    default_group.created = AppHelper.getTimestamp();
-    groups["group-4"] = default_group;
+    groups["group-4"] = CONSTANTS.DEFAULT_GROUP;
+    groups["group-4"].created = AppHelper.getTimestamp();
+    jest.clearAllMocks();
 
-    AppFunc.addGroup(100, mockSet);
+    AppFunc.addGroup(mockSet);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
@@ -936,20 +860,7 @@ describe("openAllTabs", () => {
     }
 
     expect(mockSet).toHaveBeenCalledTimes(1);
-    expect(mockSet).toHaveBeenCalledWith({
-      element,
-      show: true,
-      title: "✔ TabMerger Confirmation Request ❌",
-      msg: (
-        <div>
-          Are you sure you want to open <b>ALL</b> your tabs at once?
-          <br />
-          <br></br>We do <b>not</b> recommend opening <u>more than 100 tabs</u> at once as it may overload your system!
-        </div>
-      ),
-      accept_btn_text: "YES, OPEN ALL",
-      reject_btn_text: "CANCEL",
-    });
+    expect(mockSet).toHaveBeenCalledWith(CONSTANTS.OPEN_ALL_DIALOG(element));
 
     await waitFor(() => {
       if (response !== null && element.getAttribute("response") === "positive") {
@@ -965,23 +876,7 @@ describe("openAllTabs", () => {
 });
 
 describe("deleteAllGroups", () => {
-  const dialogObj = (element) => ({
-    element,
-    show: true,
-    title: "✔ TabMerger Confirmation Request ❌",
-    msg: (
-      <div>
-        Are you sure?
-        <br />
-        <br />
-        This action will delete <b>ALL</b> groups/tabs that are <u>not locked</u>.<br />
-        <br />
-        Make sure you have a backup!
-      </div>
-    ),
-    accept_btn_text: "YES, DELETE ALL",
-    reject_btn_text: "CANCEL",
-  });
+  const dialogObj = (element) => CONSTANTS.DELETE_ALL_DIALOG(element);
 
   var elementMutationListenerSpy;
   afterAll(() => elementMutationListenerSpy.mockRestore());
@@ -1001,7 +896,7 @@ describe("deleteAllGroups", () => {
         `  <input class="title-edit-input" value='Group Title'/>` +
         `</div>`;
 
-      sessionStorage.setItem("settings", JSON.stringify(default_settings));
+      sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
       localStorage.setItem("groups_copy", JSON.stringify([]));
 
       var expected_groups = JSON.parse(localStorage.getItem("groups"));
@@ -1023,9 +918,9 @@ describe("deleteAllGroups", () => {
               tabs: [{ pinned: false, title: "TabMerger", url: "https://www.github.com/lbragile/TabMerger" }],
               title: "Group Title",
             },
-            "group-1": default_group,
+            "group-1": CONSTANTS.DEFAULT_GROUP,
           }
-        : { "group-0": default_group };
+        : { "group-0": CONSTANTS.DEFAULT_GROUP };
 
       var element = document.querySelector("#delete-all-btn");
       var stub = { target: { closest: (arg) => arg !== "" && element } };
@@ -1106,16 +1001,8 @@ describe("deleteAllGroups", () => {
 });
 
 describe("undoDestructiveAction", () => {
-  var toastCalls, toastSpy;
-
   beforeEach(() => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
-    toastCalls = [];
-    toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
-  });
-
-  afterEach(() => {
-    toastSpy.mockRestore();
   });
 
   test("can undo a state", () => {
@@ -1131,7 +1018,7 @@ describe("undoDestructiveAction", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: init_groups, groups_copy: [], scroll: 0 }, anything); // prettier-ignore
 
     expect(mockSet).toHaveBeenCalledTimes(2);
-    expect(mockSet).toHaveBeenNthCalledWith(1, AppHelper.updateTabTotal(init_groups));
+    expect(mockSet).toHaveBeenNthCalledWith(1, AppHelper.getTabTotal(init_groups));
     expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(init_groups));
   });
 
@@ -1147,22 +1034,7 @@ describe("undoDestructiveAction", () => {
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toStrictEqual([
-      <div className="text-left">
-        There are <b>no more</b> states to undo. <br />
-        <br />
-        States are created with <u>destructive actions</u>! <br />
-        <br />
-        Upgrading your subscription will increase the number of undos that can be performed. <br />
-        <br />
-        Please visit our official homepage's{" "}
-        <a href="http://localhost:3000/TabMerger-Extension/pricing" target="_blank" rel="noreferrer">
-          Subscriptions & Pricing
-        </a>{" "}
-        page for more information.
-      </div>,
-      { toastId: "undoStates_toast" },
-    ]);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.UNDO_DESTRUCTIVE_ACTION_TOAST]);
   });
 });
 
@@ -1298,16 +1170,6 @@ describe("resetSearch", () => {
 });
 
 describe("importJSON", () => {
-  var toastCalls, toastSpy;
-  beforeEach(() => {
-    toastCalls = [];
-    toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
-  });
-
-  afterEach(() => {
-    toastSpy.mockRestore();
-  });
-
   it("alerts on wrong non json input", () => {
     const input = { target: { files: [{ type: "application/pdf" }] } };
     jest.clearAllMocks();
@@ -1319,18 +1181,7 @@ describe("importJSON", () => {
     expect(mockSet).not.toHaveBeenCalled();
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toEqual([
-      <div className="text-left">
-        You must import a JSON file <i>(.json extension)</i>!<br />
-        <br />
-        These can be generated via the <b>Export JSON</b> button.
-        <br />
-        <br />
-        <b>Be careful</b>, <u>only import JSON files generated by TabMerger</u>, otherwise you risk losing your current
-        configuration!
-      </div>,
-      { toastId: "importJSON_toast" },
-    ]);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.IMPORT_JSON_TOAST]);
   });
 
   it("updates sync and local storage on valid input", () => {

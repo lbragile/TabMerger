@@ -15,22 +15,6 @@ import { GrClear, GrAddCircle } from "react-icons/gr";
 export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups, setDialog }) {
   useEffect(() => ReactTooltip.rebuild());
 
-  var NUM_GROUP_LIMIT;
-  switch (user.tier) {
-    case "Free":
-      NUM_GROUP_LIMIT = 5;
-      break;
-    case "Basic":
-      NUM_GROUP_LIMIT = 15;
-      break;
-    case "Standard":
-      NUM_GROUP_LIMIT = 50;
-      break;
-    case "Premium":
-      NUM_GROUP_LIMIT = 100;
-      break;
-  }
-
   const GLOBAL_BUTTONS = [
     {
       id: "options-btn",
@@ -98,7 +82,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "add-group-btn",
       classes: "",
       translate: AppFunc.translate("addGroup"),
-      btnFn: () => AppFunc.addGroup(NUM_GROUP_LIMIT, setGroups),
+      btnFn: () => AppFunc.addGroup(setGroups),
       icon: <GrAddCircle color="black" size="1.5rem" />,
     },
   ];

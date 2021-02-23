@@ -347,27 +347,3 @@ global.exportedJSON = {
     weight: "Normal",
   },
 };
-
-global.default_settings = {
-  badgeInfo: "display",
-  blacklist: "",
-  color: "#dedede",
-  dark: true,
-  font: "Arial",
-  merge: "merge",
-  open: "without",
-  pin: "include",
-  restore: "keep",
-  title: "Title",
-  weight: "Normal",
-};
-
-global.default_group = {
-  color: "#dedede",
-  created: "",
-  hidden: false,
-  locked: false,
-  starred: false,
-  tabs: [],
-  title: "Title",
-};

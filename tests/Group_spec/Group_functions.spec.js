@@ -23,16 +23,18 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import { fireEvent, render } from "@testing-library/react";
 import { toast } from "react-toastify";
+import * as CONSTANTS from "../../src/constants/constants";
 
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 import Group from "../../src/components/Group/Group";
 
 import * as AppHelper from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
-import { SUBSCRIPTION_DIALOG } from "../../src/components/App/App_functions";
 
 const anything = expect.any(Function);
 var container;
+
+const toastSpy = toast.mockImplementation((...args) => args);
 
 beforeEach(() => {
   Object.keys(init_groups).forEach((key) => {
@@ -76,6 +78,10 @@ beforeEach(() => {
   ).container;
 });
 
+afterAll(() => {
+  toastSpy.mockRestore();
+});
+
 describe("setBGColor", () => {
   var spy = jest.spyOn(GroupFunc, "setBGColor");
 
@@ -104,7 +110,7 @@ describe("setBGColor", () => {
 
   it.each([
     ["#00FF00", true],
-    ["#777777", true],
+    [CONSTANTS.GROUP_COLOR_THRESHOLD, true],
     ["#FF00FF", true],
     ["#000000", false],
   ])("maintains bg color based on existing group bg color (%s) - exists = %s", (color, group_exists) => {
@@ -205,9 +211,6 @@ describe("addTabFromURL", () => {
   ])(
     "adds the tab to the correct group when URL does %s exist: %s (settings.merge === %s)",
     (type, url, merge_setting) => {
-      var toastCalls = [];
-      const toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
-
       var stub = { target: { value: url, closest: (arg) => arg !== "" && { id: "group-0" }, blur: jest.fn() } };
 
       // move first tab to end to get expected result
@@ -223,7 +226,7 @@ describe("addTabFromURL", () => {
       const partial_expected_tabs = init_groups[stub.target.closest().id].tabs;
       const open_tabs = partial_expected_tabs.map((x, i) => ({ ...x, id: i }));
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
-      sessionStorage.setItem("settings", JSON.stringify(default_settings));
+      sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
 
       if (merge_setting !== "merge") {
         var current_settings = JSON.parse(sessionStorage.getItem("settings"));
@@ -248,12 +251,7 @@ describe("addTabFromURL", () => {
         expect(stub.target.blur).toHaveBeenCalledTimes(1);
 
         expect(toastSpy).toHaveBeenCalledTimes(1);
-        expect(toastCalls[0]).toEqual([
-          <div className="text-left">That tab is already in TabMerger!</div>,
-          {
-            toastId: "addTabFromURL_toast",
-          },
-        ]);
+        expect(toastSpy).toHaveReturnedWith([...CONSTANTS.ADD_TAB_FROM_URL_TOAST]);
       } else {
         expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
         expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ status: "complete" }, anything);
@@ -272,28 +270,22 @@ describe("addTabFromURL", () => {
       } else {
         expect(chromeTabsRemoveSpy).not.toHaveBeenCalled();
       }
-
-      toastSpy.mockRestore();
     }
   );
 
   it("toasts if user is Free Tier", () => {
-    var toastCalls = [];
-    var toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
     jest.clearAllMocks();
 
     GroupFunc.addTabFromURL({}, { paid: false }, mockSet, mockSet);
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toEqual([SUBSCRIPTION_DIALOG, { toastId: "subscription_toast" }]);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SUBSCRIPTION_TOAST]);
 
     expect(chromeLocalGetSpy).not.toHaveBeenCalled();
     expect(chromeSyncGetSpy).not.toHaveBeenCalled();
     expect(chromeTabsQuerySpy).not.toHaveBeenCalled();
     expect(chromeTabsRemoveSpy).not.toHaveBeenCalled();
     expect(mockSet).not.toHaveBeenCalled();
-
-    toastSpy.mockRestore();
   });
 
   test.todo("ensure the above works for separate windows");
@@ -399,25 +391,15 @@ describe("deleteGroup", () => {
     ["unlocked", "group-1", false],
     ["unlocked", "group-0", true],
   ])("%s group | id: %s | single group === %s", (locked, group_id, single_group) => {
-    var toastCalls = [];
-    const toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
     var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups)=> [groups]); // prettier-ignore
-
     var mock_target = (group_id) => ({ target: { closest: (arg) => arg !== "" && { nextSibling: { id: group_id } } } });
 
-    sessionStorage.setItem("settings", JSON.stringify(default_settings));
+    sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
     var expected_groups = JSON.parse(JSON.stringify(init_groups));
     if (single_group) {
       expected_groups = {};
-      expected_groups[group_id] = {
-        color: default_settings.color,
-        created: AppHelper.getTimestamp(),
-        hidden: false,
-        locked: false,
-        starred: false,
-        tabs: [],
-        title: default_settings.title,
-      };
+      expected_groups[group_id] = CONSTANTS.DEFAULT_GROUP;
+      expected_groups[group_id].created = AppHelper.getTimestamp();
     }
 
     expected_groups[group_id].locked = locked === "locked";
@@ -430,9 +412,7 @@ describe("deleteGroup", () => {
       expected_groups_copy = [JSON.parse(JSON.stringify(expected_groups))];
       const ordered_vals = AppHelper.sortByKey(expected_groups);
       expected_groups = {};
-      ordered_vals.forEach((val, i) => {
-        expected_groups["group-" + i] = val;
-      });
+      ordered_vals.forEach((val, i) => (expected_groups["group-" + i] = val));
     }
 
     jest.clearAllMocks();
@@ -455,17 +435,10 @@ describe("deleteGroup", () => {
       expect(chromeLocalSetSpy).not.toHaveBeenCalled();
 
       expect(toastSpy).toHaveBeenCalledTimes(1);
-      expect(toastCalls[0]).toEqual([
-        <div className="text-left">
-          This group is <b>locked</b>, thus it cannot be deleted. <br />
-          <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting it again!
-        </div>,
-        { toastId: "deleteGroup_toast" },
-      ]);
+      expect(toastSpy).toHaveReturnedWith([...CONSTANTS.DELETE_GROUP_TOAST]);
     }
 
     storeDestructiveActionSpy.mockRestore();
-    toastSpy.mockRestore();
   });
 });
 

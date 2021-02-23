@@ -23,13 +23,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import * as BackgroundFunc from "../../public/background/background_functions.js";
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
+import * as CONSTANTS from "../../src/constants/constants";
 
 import { waitFor } from "@testing-library/react";
 
 const anything = expect.any(Function);
 
 beforeEach(() => {
-  sessionStorage.setItem("settings", JSON.stringify(default_settings));
+  sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
 });
 
 describe("handleBrowserIconClick", () => {

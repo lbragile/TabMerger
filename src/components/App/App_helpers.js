@@ -25,6 +25,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module App/App_helpers
  */
 
+import * as CONSTANTS from "../../constants/constants";
+
 /**
  * Produces a timestamp which is added to newly formed groups
  * @param {string?} date_str Used in testing to inject a predefined date
@@ -139,11 +141,9 @@ export function sortByKey(json) {
  *
  * @return {Number} The total number of tabs currently present in TabMerger
  */
-export function updateTabTotal(ls_entry) {
+export function getTabTotal(ls_entry) {
   var num_tabs = 0;
-  Object.values(ls_entry).forEach((val) => {
-    num_tabs += val.tabs.length;
-  });
+  Object.values(ls_entry).forEach((val) => (num_tabs += val.tabs.length));
   return num_tabs;
 }
 
@@ -210,28 +210,11 @@ export function getDragAfterElement(container, y_pos, type) {
  * @return {object[]} The new group state array which includes the latest state at the front.
  */
 export function storeDestructiveAction(groups_copy, groups, user) {
-  var NUM_UNDO_STATES;
-  switch (user.tier) {
-    case "Free":
-      NUM_UNDO_STATES = 2;
-      break;
-    case "Basic":
-      NUM_UNDO_STATES = 5;
-      break;
-    case "Standard":
-      NUM_UNDO_STATES = 10;
-      break;
-    case "Premium":
-      NUM_UNDO_STATES = 15;
-      break;
-  }
-
   // shift down one to stay below NUM_UNDO_STATES
-  if (groups_copy.length === NUM_UNDO_STATES) {
+  if (groups_copy.length === CONSTANTS.USER[user.tier].NUM_UNDO_STATES) {
     groups_copy.shift();
   }
   groups_copy.push(JSON.parse(JSON.stringify(groups))); // deep copy
-
   return groups_copy;
 }
 

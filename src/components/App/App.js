@@ -21,17 +21,12 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-/**
- * @module __CONSTANTS
- */
-
 import React, { useState, useEffect, useRef } from "react";
 import Tour from "reactour";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as AppFunc from "./App_functions";
-import * as AppHelper from "./App_helpers";
 
 import GlobalBtns from "../Button/GlobalBtns";
 import Header from "../Extra/Header";
@@ -49,22 +44,11 @@ import "../Button/Button.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function App() {
-  /** @constant {Number} ITEM_STORAGE_LIMIT @default 8000 (500 for testing) */
-  const ITEM_STORAGE_LIMIT = useRef(400);
-  /** @constant {Number} SYNC_STORAGE_LIMIT @default 102000 (1000 for testing) */
-  const SYNC_STORAGE_LIMIT = useRef(1000);
-
-  var syncTimestamp = useRef();
-
-  /** @constant {Object} defaultGroup @default { color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" } */
-  const defaultGroup = useRef({ color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" }); // prettier-ignore
-  /** @constant {Object} defaultSettings @default { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, font: "Arial", merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title", weight: "Normal" } */
-  const defaultSettings = useRef({ badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, font: "Arial", merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title", weight: "Normal" }); // prettier-ignore
-
   // app parameters
   const [tabTotal, setTabTotal] = useState(0);
   const [groups, setGroups] = useState(null);
   const [dialog, setDialog] = useState({ show: false });
+  var syncTimestamp = useRef();
 
   // activation parameters
   const [user, setUser] = useState({ paid: false, tier: "Free" });
@@ -82,6 +66,7 @@ export default function App() {
       AppFunc.checkMerging(changes, namespace, setTabTotal, setGroups);
     }
 
+    // persist user's tier, this should only be checked when not testing to avoid database calls
     if (process.env.NODE_ENV !== "test") {
       chrome.storage.local.get("client_details", (local) => {
         if (local.client_details) {
@@ -90,7 +75,7 @@ export default function App() {
       });
     }
 
-    AppFunc.storageInit(defaultSettings.current, defaultGroup.current, syncTimestamp.current, setTour, setGroups, setTabTotal); // prettier-ignore
+    AppFunc.storageInit(syncTimestamp.current, setTour, setGroups, setTabTotal);
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
@@ -112,11 +97,12 @@ export default function App() {
   }, [user]);
 
   useEffect(() => AppFunc.badgeIconInfo(tabTotal, user), [groups, tabTotal, user]);
-  useEffect(() => AppFunc.syncLimitIndication(ITEM_STORAGE_LIMIT, SYNC_STORAGE_LIMIT), [groups, dialog, user]);
+  useEffect(() => AppFunc.syncLimitIndication(), [groups, dialog, user]);
 
   return (
     <div id="app-wrapper" className="text-center">
       <Dialog {...dialog} setDialog={setDialog} />
+
       <Tour
         steps={TOUR_STEPS}
         isOpen={!!tour}
@@ -131,6 +117,7 @@ export default function App() {
         rounded={5}
         lastStepNextButton={<button className="btn btn-dark">🏁</button>}
       />
+
       <nav id="sidebar">
         <Header total={tabTotal} />
         <hr className="mx-auto d-none shown-in-print" />
@@ -139,8 +126,13 @@ export default function App() {
           <TabSearch user={user} />
           <hr className="mx-auto hidden-in-print" />
 
-          {/* prettier-ignore */}
-          <GlobalBtns user={user} syncTimestamp={syncTimestamp} setTabTotal={setTabTotal} setGroups={setGroups} setDialog={setDialog}/>
+          <GlobalBtns
+            user={user}
+            syncTimestamp={syncTimestamp}
+            setTabTotal={setTabTotal}
+            setGroups={setGroups}
+            setDialog={setDialog}
+          />
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
         <div id="sync-total-exceed-indicator" className="d-none">
