@@ -27,7 +27,19 @@ import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 const anything = expect.any(Function);
 
 describe("restoreOptions", () => {
-  var expected_sync = { badgeInfo: "display", blacklist: "Not TabMerger", color: "#111111", dark: false, font: "Times New Roman", merge: "merge", open: "with", pin: "include", restore: "remove", title: "Random", weight: "Bold" }; // prettier-ignore
+  var expected_sync = {
+    badgeInfo: false,
+    blacklist: "Not TabMerger",
+    color: "#111111",
+    dark: false,
+    font: "Times New Roman",
+    merge: false,
+    open: false,
+    pin: false,
+    restore: false,
+    title: "Random",
+    weight: "Bold",
+  };
 
   beforeEach(() => {
     document.body.innerHTML =
@@ -37,6 +49,7 @@ describe("restoreOptions", () => {
       `<input type="number" name="period-backup" />` +
       `<input type="text" name="relative-path-backup" />` +
       `<input type="number" name="sync-backup" />` +
+      `<input type="number" name="json-file-limit" />` +
       `<input type="radio" name="restore-tabs" value="keep" />` +
       `<input type="radio" name="restore-tabs" value="remove" />` +
       `<input type="radio" name="ext-open" value="without" />` +
@@ -81,22 +94,25 @@ describe("restoreOptions", () => {
       value: { reload: jest.fn() },
     });
 
+    const expect_checked = settings === "empty";
+    const ss_dark = test_dark || expect_checked;
     jest.clearAllMocks();
 
     SettingsFunc.restoreOptions();
 
-    expect([...document.querySelectorAll("input[name='badge-view']")].map((x) => x.checked)).toEqual([true, false]);
-    expect([...document.querySelectorAll("input[name='ext-open']")].map((x) => x.checked)).toEqual(settings === "empty" ? [true, false] : [false,true]); // prettier-ignore
-    expect([...document.querySelectorAll("input[name='merge-tabs']")].map((x) => x.checked)).toEqual([true, false]);
-    expect([...document.querySelectorAll("input[name='pin-tabs']")].map((x) => x.checked)).toEqual([true, false]);
-    expect([...document.querySelectorAll("input[name='restore-tabs']")].map((x) => x.checked)).toEqual(settings === "empty" ? [true, false] : [false,true]); // prettier-ignore
-    expect(document.getElementById("options-blacklist").value).toBe(settings === "empty" ? "" : "Not TabMerger");
-    expect(document.getElementById("options-default-color").value).toBe(settings === "empty" ? "#dedede" : "#111111");
-    expect(document.getElementById("options-default-title").value).toBe(settings === "empty" ? "Title" : "Random");
-    expect(document.getElementById("tab-font").value).toBe(settings === "empty" ? "Arial" : "Times New Roman");
-    expect(document.getElementById("tab-weight").value).toBe(settings === "empty" ? "Normal" : "Bold");
+    expect(document.querySelector("input[name='badge-view']").checked).toEqual(expect_checked);
+    expect(document.querySelector("input[name='ext-open']").checked).toEqual(expect_checked);
+    expect(document.querySelector("input[name='merge-tabs']").checked).toEqual(expect_checked);
+    expect(document.querySelector("input[name='pin-tabs']").checked).toEqual(expect_checked);
+    expect(document.querySelector("input[name='restore-tabs']").checked).toEqual(expect_checked);
+    expect(document.getElementById("tooltip-visibility").checked).toEqual(expect_checked);
+    expect(document.getElementById("saveas-visibility").checked).toEqual(expect_checked);
+    expect(document.getElementById("options-blacklist").value).toBe(expect_checked ? "" : "Not TabMerger");
+    expect(document.getElementById("options-default-color").value).toBe(expect_checked ? "#dedede" : "#111111");
+    expect(document.getElementById("options-default-title").value).toBe(expect_checked ? "Title" : "Random");
+    expect(document.getElementById("tab-font").value).toBe(expect_checked ? "Arial" : "Times New Roman");
+    expect(document.getElementById("tab-weight").value).toBe(expect_checked ? "Normal" : "Bold");
 
-    const ss_dark = test_dark || settings === "empty";
     expect(document.body.style._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "white");
     expect(document.body.style._values.color).toBe(ss_dark ? "white" : "black");
     expect(document.querySelector("code").style._values.color).toBe(ss_dark ? "white" : "black");

@@ -55,20 +55,20 @@ describe("filterTabs", () => {
   });
 
   test.each([
-    [{ which: "right" }, { index: 4 }, undefined, "include"],
-    [{ which: "right" }, { index: 0 }, "group-0", "include"],
-    [{ which: "right" }, { index: 12 }, "group-1", "include"],
-    [{ which: "right" }, { index: 12 }, "group-1", "avoid"],
-    [{ which: "left" }, { index: 4 }, undefined, "include"],
-    [{ which: "left" }, { index: 0 }, "group-0", "include"],
-    [{ which: "left" }, { index: 12 }, "group-1", "include"],
-    [{ which: "excluding" }, { index: 1 }, "group-1", "include"],
-    [{ which: "excluding" }, { index: 1 }, "group-1", "avoid"],
-    [{ which: "only" }, { index: 6 }, "group-2", "include"],
-    [{ which: "all" }, { index: 0 }, "group-3", "include"],
-    [{ which: "all" }, { index: 0 }, "group-3", "avoid"],
+    [{ which: "right" }, { index: 4 }, undefined, true],
+    [{ which: "right" }, { index: 0 }, "group-0", true],
+    [{ which: "right" }, { index: 12 }, "group-1", true],
+    [{ which: "right" }, { index: 12 }, "group-1", false],
+    [{ which: "left" }, { index: 4 }, undefined, true],
+    [{ which: "left" }, { index: 0 }, "group-0", true],
+    [{ which: "left" }, { index: 12 }, "group-1", true],
+    [{ which: "excluding" }, { index: 1 }, "group-1", true],
+    [{ which: "excluding" }, { index: 1 }, "group-1", false],
+    [{ which: "only" }, { index: 6 }, "group-2", true],
+    [{ which: "all" }, { index: 0 }, "group-3", true],
+    [{ which: "all" }, { index: 0 }, "group-3", false],
   ])("%o, %o, %s, %s", async (info, tab, group_id, pinned) => {
-    if (pinned === "avoid") {
+    if (!pinned) {
       var new_settings = JSON.parse(sessionStorage.getItem("settings"));
       new_settings.pin = pinned;
       sessionStorage.setItem("settings", JSON.stringify(new_settings));
@@ -103,7 +103,7 @@ describe("filterTabs", () => {
     const into_group = group_id ? group_id : "contextMenu";
     var merged_tabs = [];
     tabs_to_be_merged.forEach((x) => {
-      if (pinned === "avoid") {
+      if (!pinned) {
         if (!x.pinned) {
           merged_tabs = [...merged_tabs, { id: x.id, pinned: false, title: x.title, url: x.url }];
         }

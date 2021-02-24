@@ -87,7 +87,7 @@ export async function filterTabs(info, tab, group_id) {
           indicies.forEach((i) => chrome.tabs.remove(tabs[i].id));
 
           // ignore pinned tabs if needed
-          if (sync.settings.pin === "avoid") {
+          if (!sync.settings.pin) {
             unique_tabs = unique_tabs.filter((x) => !x.pinned);
           }
 

@@ -122,19 +122,20 @@ export const DEFAULT_GROUP = {
 /** @constant {number} DEFAULT_BACKUP_PERIOD_IN_MINUTES @default 720 (12 hours) */
 export const DEFAULT_BACKUP_PERIOD_IN_MINUTES = 12 * 60;
 
-/** @constant {Object} DEFAULT_SETTINGS @default { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, font: "Arial", merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title", weight: "Normal" } */
+/** @constant {Object} DEFAULT_SETTINGS @default { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, fileLimitBackup: 100, font: "Arial", merge: "merge", open: "without", pin: "include", restore: "keep", title: "Title", weight: "Normal" } */
 export const DEFAULT_SETTINGS = {
-  badgeInfo: "display",
+  badgeInfo: true,
   blacklist: "",
   color: DEFAULT_GROUP_COLOR,
   dark: true,
+  fileLimitBackup: 100,
   font: "Arial",
-  merge: "merge",
-  open: "without",
+  merge: true,
+  open: true,
   periodBackup: DEFAULT_BACKUP_PERIOD_IN_MINUTES,
-  pin: "include",
+  pin: true,
   relativePathBackup: "TabMerger/",
-  restore: "keep",
+  restore: true,
   saveAsVisibility: true,
   syncPeriodBackup: DEFAULT_BACKUP_PERIOD_IN_MINUTES,
   title: DEFAULT_GROUP_TITLE,

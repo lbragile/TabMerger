@@ -28,17 +28,18 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { setTabMergerLink, setSync } from "./settings_helpers.js";
 
 const DEFAULT_SETTINGS = {
-  badgeInfo: "display",
+  badgeInfo: true,
   blacklist: "",
   color: "#dedede",
   dark: true,
+  fileLimitBackup: 100,
   font: "Arial",
-  merge: "merge",
-  open: "without",
+  merge: true,
+  open: true,
   periodBackup: 12 * 60,
-  pin: "include",
+  pin: true,
   relativePathBackup: "TabMerger/",
-  restore: "keep",
+  restore: true,
   saveAsVisibility: true,
   syncPeriodBackup: 12 * 60,
   title: "Title",
@@ -67,29 +68,19 @@ export function restoreOptions() {
     document.getElementById("options-default-title").value = sync.settings.title;
     document.getElementById("tab-font").value = sync.settings.font;
     document.getElementById("tab-weight").value = sync.settings.weight;
-    document.getElementById("saveas-visibility").checked = sync.settings.saveAsVisibility;
-    document.getElementById("tooltip-visibility").checked = sync.settings.tooltipVisibility;
     document.querySelector("input[name='period-backup']").value = sync.settings.periodBackup;
     document.querySelector("input[name='relative-path-backup']").value = sync.settings.relativePathBackup;
     document.querySelector("input[name='sync-backup']").value = sync.settings.syncPeriodBackup;
-
-    document.querySelectorAll("input[name='badge-view']").forEach((x) => {
-      x.checked = x.value === sync.settings.badgeInfo;
-    });
-    document.querySelectorAll("input[name='ext-open']").forEach((x) => {
-      x.checked = x.value === sync.settings.open;
-    });
-    document.querySelectorAll("input[name='merge-tabs']").forEach((x) => {
-      x.checked = x.value === sync.settings.merge;
-    });
-    document.querySelectorAll("input[name='pin-tabs']").forEach((x) => {
-      x.checked = x.value === sync.settings.pin;
-    });
-    document.querySelectorAll("input[name='restore-tabs']").forEach((x) => {
-      x.checked = x.value === sync.settings.restore;
-    });
-
+    document.querySelector("input[name='json-file-limit']").value = sync.settings.fileLimitBackup;
     document.getElementById("options-blacklist").value = sync.settings.blacklist;
+
+    document.getElementById("saveas-visibility").checked = sync.settings.saveAsVisibility;
+    document.getElementById("tooltip-visibility").checked = sync.settings.tooltipVisibility;
+    document.querySelector("input[name='badge-view']").checked = sync.settings.badgeInfo;
+    document.querySelector("input[name='ext-open']").checked = sync.settings.open;
+    document.querySelector("input[name='merge-tabs']").checked = sync.settings.merge;
+    document.querySelector("input[name='pin-tabs']").checked = sync.settings.pin;
+    document.querySelector("input[name='restore-tabs']").checked = sync.settings.restore;
 
     // dark mode adjustments
     body.style.background = sync.settings.dark ? "rgb(52, 58, 64)" : "white";

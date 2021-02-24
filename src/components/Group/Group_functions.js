@@ -139,7 +139,7 @@ export function addTabFromURL(e, user, setGroups, setTabTotal) {
             });
 
             // determine if need to close the merged tab
-            if (sync.settings.merge === "merge") {
+            if (sync.settings.merge) {
               chrome.tabs.remove(remove_id);
             }
 

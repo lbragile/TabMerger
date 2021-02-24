@@ -30,6 +30,13 @@ document.getElementById("home-btn").addEventListener("click", () => location.ass
 
 [...document.querySelectorAll("input[type='number']")].forEach((x) => {
   x.addEventListener("change", (e) => {
-    e.target.value = Math.max(0, Math.min(e.target.value, 24 * 60)); // clamp to 0 min - 1 day
+    e.target.value = Math.max(
+      +(e.target.name === "json-file-limit"),
+      Math.min(e.target.value, e.target.name !== "json-file-limit" ? 24 * 60 : 1000)
+    ); // clamp between these values (24 * 60 -> 1 day)
   });
 });
+
+[...document.querySelectorAll(".label-left")].forEach((x) =>
+  x.addEventListener("click", (e) => e.target.closest("div").querySelector(".custom-control-label").click())
+);

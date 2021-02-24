@@ -73,19 +73,20 @@ describe("setTabMergerLink", () => {
 describe("setSync", () => {
   it("sets sync storage according to the user selected values", () => {
     const expected_sync = {
-      badgeInfo: "display",
+      badgeInfo: true,
       blacklist: "https://www.google.com",
       color: "#000000",
       dark: true,
+      fileLimitBackup: 100,
       font: "Arial",
-      merge: "merge",
-      open: "with",
+      merge: true,
+      open: true,
       periodBackup: 5,
-      pin: "include",
+      pin: true,
       title: "Default",
       tooltipVisibility: true,
       relativePathBackup: "Test/",
-      restore: "remove",
+      restore: true,
       saveAsVisibility: false,
       syncPeriodBackup: 10,
       weight: "Normal",
@@ -114,21 +115,23 @@ describe("setSync", () => {
 
     document.querySelector = jest.fn((sel) => {
       if (sel.includes("restore-tabs")) {
-        return { value: expected_sync.restore };
+        return { checked: expected_sync.restore };
       } else if (sel.includes("ext-open")) {
-        return { value: expected_sync.open };
+        return { checked: expected_sync.open };
       } else if (sel.includes("pin-tabs")) {
-        return { value: expected_sync.pin };
+        return { checked: expected_sync.pin };
       } else if (sel.includes("merge-tabs")) {
-        return { value: expected_sync.merge };
+        return { checked: expected_sync.merge };
       } else if (sel.includes("badge-view")) {
-        return { value: expected_sync.badgeInfo };
+        return { checked: expected_sync.badgeInfo };
       } else if (sel.includes("period-backup")) {
         return { value: expected_sync.periodBackup };
       } else if (sel.includes("sync-backup")) {
         return { value: expected_sync.syncPeriodBackup };
       } else if (sel.includes("relative-path-backup")) {
         return { value: expected_sync.relativePathBackup };
+      } else if (sel.includes("json-file-limit")) {
+        return { value: expected_sync.fileLimitBackup };
       }
     });
 

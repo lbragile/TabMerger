@@ -39,6 +39,7 @@ beforeAll(() => {
   jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
   syncLimitIndicationSpy = jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
   toastSpy = toast.mockImplementation((...args) => args);
+  console.info = jest.fn();
 });
 
 beforeEach(() => {
@@ -81,7 +82,7 @@ describe("badgeIconInfo", () => {
     if (one_group) {
       localStorage.setItem("groups", JSON.stringify({ "group-0": CONSTANTS.DEFAULT_GROUP }));
     }
-    sessionStorage.setItem("settings", JSON.stringify({ badgeInfo: display ? "display" : "hide" }));
+    sessionStorage.setItem("settings", JSON.stringify({ badgeInfo: display }));
     jest.clearAllMocks();
 
     AppFunc.badgeIconInfo(num_tabs, user);
@@ -411,15 +412,15 @@ describe("openOrRemoveTabs", () => {
   });
 
   test.each([
-    ["KEEP", "WITHOUT", "UNLOCKED", "SINGLE", 7],
-    ["KEEP", "WITHOUT", "UNLOCKED", "GROUP", 7],
-    ["KEEP", "WITHOUT", "UNLOCKED", "ALL", 7],
-    ["REMOVE", "WITH", "LOCKED", "SINGLE", 7],
-    ["REMOVE", "WITH", "LOCKED", "GROUP", 7],
-    ["REMOVE", "WITH", "LOCKED", "ALL", 3],
-    ["REMOVE", "WITH", "UNLOCKED", "SINGLE", 6],
-    ["REMOVE", "WITH", "UNLOCKED", "GROUP", 4],
-    ["REMOVE", "WITH", "UNLOCKED", "ALL", 0],
+    [true, "WITHOUT", "UNLOCKED", "SINGLE", 7],
+    [true, "WITHOUT", "UNLOCKED", "GROUP", 7],
+    [true, "WITHOUT", "UNLOCKED", "ALL", 7],
+    [false, "WITH", "LOCKED", "SINGLE", 7],
+    [false, "WITH", "LOCKED", "GROUP", 7],
+    [false, "WITH", "LOCKED", "ALL", 3],
+    [false, "WITH", "UNLOCKED", "SINGLE", 6],
+    [false, "WITH", "UNLOCKED", "GROUP", 4],
+    [false, "WITH", "UNLOCKED", "ALL", 0],
   ])(
     "opens the correct tab (not open) | restore = %s | %s removing | locked = %s | %s",
     (keepOrRemove, _, locked, type, expected_tabs_left) => {
@@ -427,7 +428,7 @@ describe("openOrRemoveTabs", () => {
       var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
       var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
 
-      sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove.toLowerCase(), tooltipVisibility: false })); // prettier-ignore
+      sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove, tooltipVisibility: false })); // prettier-ignore
 
       var expected_groups = JSON.parse(localStorage.getItem("groups")); // only used in remove case
       expected_groups["group-0"].locked = locked === "LOCKED";
@@ -475,7 +476,7 @@ describe("openOrRemoveTabs", () => {
       expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
       expect(chromeTabsQuerySpy).toHaveBeenCalledWith({ currentWindow: true }, anything);
 
-      if (keepOrRemove === "KEEP") {
+      if (keepOrRemove) {
         expect(chromeLocalSetSpy).not.toHaveBeenCalled();
       } else {
         expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
@@ -497,7 +498,7 @@ describe("openOrRemoveTabs", () => {
     var expect_open_tabs = [open_tabs[2], open_tabs[0], open_tabs[1]];
     var stub = { remove: { newValue: ["group-0", open_tabs[0].url, open_tabs[1].url] } };
 
-    sessionStorage.setItem("settings", JSON.stringify({ restore: "remove" }));
+    sessionStorage.setItem("settings", JSON.stringify({ restore: false }));
 
     // add new tabs that are also open
     var current_groups = JSON.parse(localStorage.getItem("groups"));
@@ -569,12 +570,12 @@ describe("checkMerging", () => {
   });
 
   test.each([
-    [false, "merge", "group-1", "full"],
-    [false, "leave", "group-1", "full"],
-    [false, "leave", "context", "full"],
-    [false, "leave", "context", "empty"],
-    [true, "merge", "group-1", "full"],
-    [true, "merge", "group-1", "full"],
+    [false, true, "group-1", "full"],
+    [false, false, "group-1", "full"],
+    [false, false, "context", "full"],
+    [false, false, "context", "empty"],
+    [true, true, "group-1", "full"],
+    [true, true, "group-1", "full"],
   ])(
     "merge all and none exist in TabMerger - exceeding: %s, merge: %s, into: %s, group-0: %s",
     (exceeding, merge_setting, into_group, top_group) => {
@@ -649,7 +650,7 @@ describe("checkMerging", () => {
       expect(chromeLocalGetSpy).toHaveBeenCalledWith(["merged_tabs", "into_group", "groups", "client_details"], anything); // prettier-ignore
 
       if (!exceeding) {
-        if (merge_setting === "merge") {
+        if (merge_setting) {
           expect(chromeTabsRemoveSpy).toHaveBeenCalledTimes(1);
           expect(chromeTabsRemoveSpy).toHaveBeenCalledWith([0, 1, 2]);
         }
@@ -661,7 +662,7 @@ describe("checkMerging", () => {
         expect(mockSet).toHaveBeenNthCalledWith(1, expected_tabs_num);
         expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_groups));
 
-        expect(sessionStorage.getItem("open_tabs")).toBe(merge_setting === "merge" ? "[]" : JSON.stringify(merge_all));
+        expect(sessionStorage.getItem("open_tabs")).toBe(merge_setting ? "[]" : JSON.stringify(merge_all));
       } else {
         expect(chromeTabsRemoveSpy).not.toHaveBeenCalled();
         expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -1247,7 +1248,7 @@ describe("exportJSON", () => {
     AppFunc.exportJSON(false, false);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details"], anything);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details", "file_ids"], anything);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);

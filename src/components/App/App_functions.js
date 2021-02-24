@@ -75,7 +75,7 @@ export function setUserStatus(setUser, setDialog) {
             type="email"
             name="email"
             className="p-1"
-            placeholder="Email you used in Stripe checkout..."
+            placeholder="Email you used during checkout..."
             autoFocus
             autoComplete
             required
@@ -83,14 +83,14 @@ export function setUserStatus(setUser, setDialog) {
           <br />
           <br />
           <label>
-            <b>Password:</b>
+            <b>Activation Key:</b>
           </label>
           <br />
           <input
             type="password"
             name="password"
             className="p-1"
-            placeholder="From our email or your own if changed..."
+            placeholder="From our email..."
             minLength={6}
             required
           />
@@ -320,7 +320,7 @@ export function badgeIconInfo(tabTotal, user, STEP_SIZE = CONSTANTS.BADGE_ICON_S
           color = COLORS.red;
         }
 
-        const showInfo = sync.settings.badgeInfo === "display";
+        const showInfo = sync.settings.badgeInfo;
         const text = showInfo && tabTotal > 0 ? `${tabTotal}|${num_groups}` : "";
         const tab_translate = translate(tabTotal === 1 ? "tab" : "tabs").toLocaleLowerCase();
         const group_translate = translate(num_groups === 1 ? "group" : "groups").toLocaleLowerCase();
@@ -451,7 +451,7 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
             }
           }
 
-          if (sync.settings.restore !== "keep") {
+          if (!sync.settings.restore) {
             if (group_id) {
               if (!groups[group_id].locked) {
                 groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
@@ -494,7 +494,10 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
         var { into_group, merged_tabs, groups, client_details } = local;
         const scroll = document.documentElement.scrollTop;
 
-        if (AppHelper.getTabTotal(groups) + merged_tabs.length <= CONSTANTS.USER[client_details.tier].NUM_TAB_LIMIT) {
+        if (
+          AppHelper.getTabTotal(groups) + merged_tabs.length <=
+          CONSTANTS.USER[client_details?.tier ?? "Free"].NUM_TAB_LIMIT
+        ) {
           // IF top group has tabs - add new group at top ("merging group")
           // if context menu is used to avoid merging into group with existing tabs.
           // Else - add tabs to the top group. This allows the user to star a group and then merge into it.
@@ -519,7 +522,7 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
           }
 
           // close tabs that are being merged (if settings is set to do so)
-          if (sync.settings.merge === "merge") {
+          if (sync.settings.merge) {
             chrome.tabs.remove(merged_tabs.map((x) => x.id));
           }
 
@@ -531,7 +534,7 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
             setGroups(JSON.stringify(groups));
           });
         } else {
-          toast(...CONSTANTS.CHECK_MERGING_TOAST(client_details.tier));
+          toast(...CONSTANTS.CHECK_MERGING_TOAST(client_details?.tier ?? "Free"));
         }
 
         // remove to be able to detect changes again (even for same tabs)
@@ -845,8 +848,8 @@ export function importJSON(e, user, setGroups, setTabTotal) {
  * @param {string} relativePath A path relative to the Downloads folder which will contain the generated file. Cannot include "../", "./", or absolute paths.
  */
 export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath) {
-  chrome.storage.local.get(["groups", "client_details"], (local) => {
-    var { groups, client_details } = local;
+  chrome.storage.local.get(["groups", "client_details", "file_ids"], (local) => {
+    var { groups, client_details, file_ids } = local;
     if (!client_details || ["Free", "Basic"].includes(client_details.tier)) {
       toast(...CONSTANTS.SUBSCRIPTION_TOAST);
     } else {
@@ -869,6 +872,20 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
 
         chrome.downloads.download(download_opts, (downloadId) => {
           if (!chrome.runtime.lastError) {
+            // if automatic -> add to list so can keep track off how many and know which to delete later
+            // when this file would exceed limit, remove the oldest file
+            if (!showGrayDownloadShelf) {
+              file_ids = file_ids ?? [];
+              if (file_ids.length === parseInt(sync.settings?.fileLimitBackup)) {
+                const old_id = file_ids.shift();
+                chrome.downloads.removeFile(old_id, () => {
+                  if (!chrome.runtime.lastError) {
+                    console.info(`%c[TABMERGER INFO] %c deleted old backup file with id=${old_id} to make room for new files -  ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
+                  }
+                });
+              }
+              chrome.storage.local.set({ file_ids: [...file_ids, downloadId] }, () => {});
+            }
             console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file id: ${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
           } else {
             toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST);

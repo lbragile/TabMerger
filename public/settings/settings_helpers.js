@@ -50,17 +50,18 @@ export function setTabMergerLink() {
  * Sets the settings item in sync storage according to the current configuration in TabMerger
  */
 export function setSync() {
-  const badgeInfo = document.querySelector("input[name='badge-view']:checked").value;
+  const badgeInfo = document.querySelector("input[name='badge-view']").checked;
   const blacklist = document.getElementById("options-blacklist").value;
   const color = document.getElementById("options-default-color").value;
   const dark = document.getElementById("darkMode").checked;
+  const fileLimitBackup = document.querySelector("input[name='json-file-limit']").value;
   const font = document.getElementById("tab-font").value;
   const periodBackup = document.querySelector("input[name='period-backup']").value;
-  const pin = document.querySelector("input[name='pin-tabs']:checked").value;
-  const merge = document.querySelector("input[name='merge-tabs']:checked").value;
-  const open = document.querySelector("input[name='ext-open']:checked").value;
+  const pin = document.querySelector("input[name='pin-tabs']").checked;
+  const merge = document.querySelector("input[name='merge-tabs']").checked;
+  const open = document.querySelector("input[name='ext-open']").checked;
   const relativePathBackup = document.querySelector("input[name='relative-path-backup']").value;
-  const restore = document.querySelector("input[name='restore-tabs']:checked").value;
+  const restore = document.querySelector("input[name='restore-tabs']").checked;
   const saveAsVisibility = document.getElementById("saveas-visibility").checked;
   const syncPeriodBackup = document.querySelector("input[name='sync-backup']").value;
   const title = document.getElementById("options-default-title").value;
@@ -72,6 +73,7 @@ export function setSync() {
     blacklist,
     color,
     dark,
+    fileLimitBackup,
     font,
     periodBackup,
     pin,

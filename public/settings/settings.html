@@ -65,10 +65,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               <h5 class="mr-2 mb-0">Default Group Color:</h5>
               <input type="color" value="#dedede" id="options-default-color" />
             </div>
-
-            <div>
-              <small>This will only be applied on new groups formed after settings are saved!</small>
-            </div>
+            <small>This will only be applied on new groups formed after settings are saved!</small>
           </section>
 
           <section>
@@ -76,9 +73,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               <h5 class="mr-2 mb-0">Default Group Title:</h5>
               <input class="px-1 w-10" type="text" value="Title" maxlength="50" id="options-default-title" />
             </div>
-            <div>
-              <small>This will only be applied on new groups formed after settings are saved!</small>
-            </div>
+            <small>This will only be applied on new groups formed after settings are saved!</small>
           </section>
 
           <section>
@@ -97,9 +92,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
                 <option value="Brush Script MT">Brush Script MT</option>
               </select>
             </div>
-            <div>
-              <small>This will be applied directly upon saving!</small>
-            </div>
+            <small>This will be applied directly upon saving!</small>
           </section>
 
           <section>
@@ -113,61 +106,25 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
                 <option value="Light">Light</option>
               </select>
             </div>
-            <div>
-              <small>This will be applied directly upon saving!</small>
-            </div>
-          </section>
-
-          <section>
-            <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Tooltip Visibility:</h5>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="tooltip-visibility" checked />
-                <label class="custom-control-label" for="tooltip-visibility">Show (<i>default</i>)</label>
-              </div>
-            </div>
-            <div>
-              <small
-                >If you feel comfortable enough with TabMerger to not rely on tooltips to show you what each
-                button/feature does, you can turn this off.</small
-              >
-            </div>
-          </section>
-
-          <section>
-            <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Export JSON SaveAs Dialog Visibility:</h5>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="saveas-visibility" checked />
-                <label class="custom-control-label" for="saveas-visibility">Show (<i>default</i>)</label>
-              </div>
-            </div>
-            <div>
-              <small
-                >Turning this off will save to the Downloads folder, when you use the global Export JSON button, without
-                prompting you.</small
-              >
-            </div>
+            <small>This will be applied directly upon saving!</small>
           </section>
 
           <section>
             <div class="mx-0">
               <h5 class="mr-2 mb-0">Exclude Websites:</h5>
-              <div class="text-justify">
-                <small>
-                  Please enter the <i>full</i> website address of any website which you would like to not merge. This
-                  URL <b>must</b> begin with "http://" or "https://" - we recommend <i>copying</i> the link of the tab
-                  and <i>pasting</i> it here. You may enter multiple comma seperated values (include a space after each
-                  comma). <br />
-                  <b>Note:</b> TabMerger provides a menu for you to quickly do this, simply right click on any page you
-                  want to exclude, then in the <i>context menu</i> popup navigate to:
-                  <div class="my-1">
-                    <code>TabMerger > Exclude Site from TabMerger's Visibility</code>
-                  </div>
-                  This places the corresponding tab's URL here right away, without the need to navigate to this settings
-                  page.
-                </small>
-              </div>
+              <small>
+                Please enter the <i>full</i> website address of any website which you would like to not merge. This URL
+                <b>must</b> begin with "http://" or "https://" - we recommend <i>copying</i> the link of the tab and
+                <i>pasting</i> it here. You may enter multiple comma seperated values (include a space after each
+                comma). <br />
+                <b>Note:</b> TabMerger provides a menu for you to quickly do this, simply right click on any page you
+                want to exclude, then in the <i>context menu</i> popup navigate to:
+                <div class="my-1">
+                  <code>TabMerger > Exclude Site from TabMerger's Visibility</code>
+                </div>
+                This places the corresponding tab's URL here right away, without the need to navigate to this settings
+                page.
+              </small>
               <textarea
                 class="px-1 mt-2"
                 rows="6"
@@ -180,10 +137,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
           <section>
             <div>
-              <h5 class="mb-0">Automatic JSON Backup:</h5>
+              <h5 class="mb-0">Automatic Backup:</h5>
               <small
-                >Will automatically generate a JSON configuration file relative to the Downloads folder. Only applies to
-                users with
+                >Only applies to users with
                 <b>Premium</b>
                 <a
                   href="https://lbragile.github.io/TabMerger-Extension/pricing"
@@ -191,207 +147,175 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
                   rel="noreferrer"
                   style="color: rgb(101, 211, 255)"
                   >subscriptions</a
-                >.</small
+                >.Automatically generates JSON configuration files relative to the Downloads folder. Will automatically
+                sync (write) your TabMerger configuration.</small
               >
             </div>
             <div>
               <div class="row mx-0 mt-3">
-                <p class="mr-2 mb-0 font-weight-bold">Relative Path:</p>
+                <p class="mr-2 mb-0 font-weight-bold">Relative Path (JSON):</p>
                 <input class="px-1 col-7" name="relative-path-backup" type="text" value="TabMerger/" />
               </div>
               <small
-                >This is a path relative to the <u>Downloads</u> directory. For example, "TabMerger/" would generate
-                files in "Downloads/TabMerger/". <b>Must not contain "../", "./", or absolute paths!</b></small
+                >This is a path relative to the <u>Downloads</u> directory where the JSON file will be saved. For
+                example, "TabMerger/" would generate files in "Downloads/TabMerger/".
+                <b>Must not contain "../", "./", or absolute paths!</b></small
               >
-            </div>
-            <div>
               <div class="row mx-0 mt-3">
-                <p class="mr-2 mb-0 font-weight-bold">Save Every ___ Minute(s):</p>
+                <p class="mr-2 mb-0 font-weight-bold">Save JSON Every ___ Minute(s):</p>
                 <input class="px-1" name="period-backup" type="number" min="0" max="1440" value="720" />
               </div>
-              <small>Minimum 0 minutes (disable automatic backup), maximum 1 day (1440 minutes)</small>
-            </div>
-          </section>
 
-          <section>
-            <div>
-              <h5 class="mb-0">Automatic Sync Backup:</h5>
-              <small
-                >Will automatically sync (write) your TabMerger configuration. Only applies to users with
-                <b>Premium</b>
-                <a
-                  href="https://lbragile.github.io/TabMerger-Extension/pricing"
-                  target="_blank"
-                  rel="noreferrer"
-                  style="color: rgb(101, 211, 255)"
-                  >subscriptions</a
-                >.</small
-              >
-            </div>
-
-            <div>
               <div class="row mx-0 mt-3">
                 <p class="mr-2 mb-0 font-weight-bold">Sync Every ___ Minute(s):</p>
                 <input class="px-1" name="sync-backup" type="number" min="0" max="1440" value="720" />
               </div>
-              <small>Minimum 0 minutes (disable automatic backup), maximum 1 day (1440 minutes)</small>
+              <small
+                >For both JSON & Sync backups: minimum 0 minutes (disable automatic backup), maximum 1 day (1440
+                minutes).</small
+              >
+              <div class="row mx-0 mt-3">
+                <p class="mr-2 mb-0 font-weight-bold">Maximum Files To Save:</p>
+                <input class="px-1" name="json-file-limit" type="number" min="1" max="1000" value="100" />
+              </div>
+              <small
+                >Once the above number is reached, older files are deleted to avoid producing too many backup
+                files.</small
+              >
             </div>
           </section>
         </div>
 
         <div class="col-lg-6">
           <section>
-            <div>
-              <h5 class="mb-0">Badge Appearance:</h5>
-              <small
-                >Whether or not information is displayed on TabMerger's extension badge. Only visible to users with
-                <b>Standard</b> or <b>Premium</b>
-                <a
-                  href="https://lbragile.github.io/TabMerger-Extension/pricing"
-                  target="_blank"
-                  rel="noreferrer"
-                  style="color: rgb(101, 211, 255)"
-                  >subscriptions</a
-                >.</small
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Tooltip Visibility:</h5>
+              <span class="pr-2 label-left">Hide</span>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="tooltip-visibility" checked />
+                <label class="custom-control-label" for="tooltip-visibility">Show (<i>default</i>)</label>
+              </div>
+            </div>
+            <small
+              >Shown when you hover (mouse over) a button.<br /><b>ON</b> → Need some insights into what each button
+              does? Use this option. <br /><b>OFF</b> → If you feel comfortable enough with TabMerger to not rely on
+              tooltips to show you what each button/feature does.</small
+            >
+          </section>
+
+          <section>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Export JSON SaveAs Dialog Visibility:</h5>
+              <span class="pr-2 label-left">Hide</span>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="saveas-visibility" checked />
+                <label class="custom-control-label" for="saveas-visibility">Show (<i>default</i>)</label>
+              </div>
+            </div>
+            <small
+              >Menu which pops up when you use the global Export JSON button.<br /><b>ON</b> → A file picker menu is
+              shown so you can choose where to save and even adjust the filename. <br /><b>OFF</b> → Saves to the
+              Downloads folder without prompting you.</small
+            >
+          </section>
+
+          <section>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Badge Level Information:</h5>
+              <span class="pr-2 label-left">Hide</span>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="badge-view" name="badge-view" checked />
+                <label class="custom-control-label" for="badge-view">Show (<i>default</i>)</label>
+              </div>
+            </div>
+            <small
+              >Extra information on TabMerger's extension badge. Only visible to users with <b>Standard</b> or
+              <b>Premium</b>
+              <a
+                href="https://lbragile.github.io/TabMerger-Extension/pricing"
+                target="_blank"
+                rel="noreferrer"
+                style="color: rgb(101, 211, 255)"
+                >subscriptions</a
+              >. <br /><b>ON</b> → Shows relevant information, about number of tabs and groups inside TabMerger at any
+              moment, as {#tabs}|{#groups} with a background color corresponding to number of tabs. The user can hover
+              over the icon to see these numbers in a clear sentence. <br /><b>OFF</b> → No extra information is
+              displayed on top of the badge icon. However, the user can still hover over the badge icon to see the
+              relevant tab & group information.</small
+            >
+          </section>
+
+          <section>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Extension Opening Behavior:</h5>
+              <span class="pr-2 label-left">Open & Merge</span>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="ext-open" name="ext-open" checked />
+                <label class="custom-control-label" for="ext-open">Open Without Merging (<i>default</i>)</label>
+              </div>
+            </div>
+            <small
+              >Happens when TabMerger's extension icon is clicked. <br /><b>ON</b> → Will open (or switch if already
+              open) TabMerger's extensions page <b>without</b> merging the currently open tabs in the same window. The
+              user can then merge open tabs by using each group's merging buttons. Such behavior is desireable for full
+              control of the merging process. <br /><b>OFF</b> → Same as above but <b>with</b> merging. The merged tabs
+              will be grouped into a new group. Thus, the user will then be able to sort the tabs among various groups
+              or simply sort the groups via the drag-and-drop feature. This behavior is desireable when the user wants
+              to avoid opening an extra tab (TabMerger) prior to merging.</small
+            >
+          </section>
+
+          <section>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">General Merge Behaviour:</h5>
+              <span class="pr-2 label-left">Merge Without Closing</span>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="merge-tabs" name="merge-tabs" checked />
+                <label class="custom-control-label" for="merge-tabs">Merge & Close (<i>default</i>)</label>
+              </div>
+            </div>
+            <small
+              >Considered when merging any tab into TabMerger. <br /><b>ON</b> → Will close any merged tabs reducing
+              your system's load. These tabs can be accessed from TabMerger at any time. <br /><b>OFF</b> → Will not
+              close merged tabs while still storing them in TabMerger. This is desireable when the user would like to
+              continue working on the current tab(s) but wants to ensure that they are saved in TabMerger for
+              restoration at a later time.</small
+            >
+          </section>
+
+          <section>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Pinned Tab Merge Behavior:</h5>
+              <span class="pr-2 label-left">Exclude</span>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="pin-tabs" name="pin-tabs" checked />
+                <label class="custom-control-label" for="pin-tabs">Include (<i>default</i>)</label>
+              </div>
+            </div>
+            <small
+              >Considered when merging <b>pinned</b> tabs into TabMerger. <br /><b>ON</b> → Will merge pinned tabs in
+              addition to regular tabs. TabMerger also allows you to toggle the tab's pin status directly. <br /><b
+                >OFF</b
               >
-            </div>
-
-            <div class="my-2">
-              <input type="radio" id="display-info" name="badge-view" value="display" checked />
-              <label for="display-info" class="mb-0">Display Badge Level Information (<i>default</i>)</label>
-              <div class="ml-3 mt-0">
-                <small
-                  >Shows relevant information about number of tabs and groups inside TabMerger at any moment. Shown as
-                  {#tabs}|{#groups} with a background color corresponding to number of tabs. The user can hover over the
-                  icon to see these numbers in a clear sentence.
-                </small>
-              </div>
-            </div>
-
-            <div>
-              <input type="radio" id="hide-info" name="badge-view" value="hide" />
-              <label for="hide-info" class="mb-0">Hide Badge Level Information</label>
-              <div class="ml-3">
-                <small
-                  >No extra information is displayed on top of the badge icon. However, the user can still hover over
-                  the badge icon to see the relevant tab & group information.</small
-                >
-              </div>
-            </div>
+              → Your pinned tabs will <b>NOT</b> be merged. Only regular tabs (unpinned) are considered in the merging
+              process.</small
+            >
           </section>
 
           <section>
-            <div>
-              <h5 class="mb-0">Extension Opening Behavior:</h5>
-              <small>The following happens when TabMerger's extension icon is clicked.</small>
-            </div>
-
-            <div class="my-2">
-              <input type="radio" id="open-without" name="ext-open" value="without" checked />
-              <label for="keep" class="mb-0">Open Without Merging (<i>default</i>)</label>
-              <div class="ml-3 mt-0 text-justify">
-                <small
-                  >This will open (or switch if already open) TabMerger's extensions page <b>without</b> merging the
-                  currently open tabs in the same window. The user can then merge open tabs by using each group's
-                  merging buttons. Such behavior is desireable for full control of the merging process.
-                </small>
+            <div class="row mx-0">
+              <h5 class="mr-2 mb-0">Tab Restoring Behavior:</h5>
+              <span class="pr-2 label-left">Remove from TabMerger</span>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="restore-tabs" name="restore-tabs" checked />
+                <label class="custom-control-label" for="restore-tabs">Keep in TabMerger (<i>default</i>)</label>
               </div>
             </div>
-
-            <div>
-              <input type="radio" id="open-with" name="ext-open" value="with" />
-              <label for="remove" class="mb-0">Open & Merge</label>
-              <div class="ml-3 text-justify">
-                <small
-                  >Same as above but <b>with</b> merging. The merged tabs will be grouped into a new group. Thus, the
-                  user will then be able to sort the tabs among various groups or simply sort the groups via the
-                  drag-and-drop feature. This behavior is desireable when the user wants to avoid opening an extra tab
-                  (TabMerger) prior to merging.</small
-                >
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <div>
-              <h5 class="mb-0">General Merge Behaviour:</h5>
-              <small>This is considered when merging any tab into TabMerger.</small>
-            </div>
-
-            <div class="my-2">
-              <input type="radio" id="merge-any" name="merge-tabs" value="merge" checked />
-              <label for="include" class="mb-0">Merge & Close (<i>default</i>)</label>
-              <div class="ml-3 mt-0">
-                <small
-                  >Will close any merged tabs to reduce the load on your system. These tabs can be accessed from
-                  TabMerger at any time.</small
-                >
-              </div>
-            </div>
-
-            <div>
-              <input type="radio" id="dont-merge-any" name="merge-tabs" value="leave" />
-              <label for="avoid" class="mb-0">Merge Without Closing</label>
-              <div class="ml-3">
-                <small
-                  >Will not close merged tabs while still storing them in TabMerger. This is desireable when the user
-                  would like to continue working on the current tab(s) but wants to ensure that they are saved in
-                  TabMerger for restoration at a later time.
-                </small>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <div>
-              <h5 class="mb-0">Pinned Tab Merge Behavior:</h5>
-              <small>This is considered when merging <b>pinned</b> tabs into TabMerger.</small>
-            </div>
-
-            <div class="my-2">
-              <input type="radio" id="merge-pin" name="pin-tabs" value="include" checked />
-              <label for="include" class="mb-0">Include Pinned Tabs When Merging (<i>default</i>)</label>
-              <div class="ml-3 mt-0">
-                <small>TabMerger also allows you to toggle the tab's pin status directly.</small>
-              </div>
-            </div>
-
-            <div>
-              <input type="radio" id="dont-merge-pin" name="pin-tabs" value="avoid" />
-              <label for="avoid" class="mb-0">Avoid Pinned Tabs When Merging</label>
-              <div class="ml-3">
-                <small
-                  >Your pinned tabs will <b>NOT</b> be merged. Only regular tabs (unpinned) are considered in the
-                  merging process.
-                </small>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <div>
-              <h5 class="mb-0">Restoring Behavior:</h5>
-              <small>This applies to both group and global actions.</small>
-            </div>
-
-            <div class="my-2">
-              <input type="radio" id="keep-tabs" name="restore-tabs" value="keep" checked />
-              <label for="keep" class="mb-0">Keep in TabMerger (<i>default</i>)</label>
-              <div class="ml-3 mt-0">
-                <small>You can still manually delete tabs by the delete tab, group, or all actions. </small>
-              </div>
-            </div>
-
-            <div>
-              <input type="radio" id="remove-tabs" name="restore-tabs" value="remove" />
-              <label for="remove" class="mb-0">Remove from TabMerger</label>
-              <div class="ml-3">
-                <small
-                  >Opening a tab (<i>Click</i> on it) will remove that tab from TabMerger's page. This holds for any
-                  other opening action (<i>group</i> or <i>all</i>).
-                </small>
-              </div>
-            </div>
+            <small
+              >Applies to both group and global actions. <br /><b>ON</b> → You can still manually delete tabs by the
+              delete tab, group, or all actions.<br /><b>OFF</b> → Opening a tab (<i>Click</i> on it) will remove that
+              tab from TabMerger's page. This holds for any other opening action (<i>group</i> or <i>all</i>).</small
+            >
           </section>
         </div>
       </div>

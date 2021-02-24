@@ -46,8 +46,8 @@ describe("handleBrowserIconClick", () => {
   });
 
   it.each([
-    ["without", "✅", "❌"],
-    ["with", "❌", "✅"],
+    [false, "✅", "❌"],
+    [true, "❌", "✅"],
   ])("settings.open = %s - calls findExtTabAndSwitch %s and filterTabs %s", async (open) => {
     sessionStorage.removeItem("settings");
     sessionStorage.setItem("settings", JSON.stringify({ open }));
@@ -62,18 +62,18 @@ describe("handleBrowserIconClick", () => {
       expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
       expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(anything);
 
-      if (open === "with") {
+      if (open) {
         expect(filterTabsSpy).toHaveBeenCalledTimes(1);
         expect(filterTabsSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0 });
       }
     });
 
     // cannot be inside await since this is a NOT statement
-    if (open === "without") {
+    if (!open) {
       expect(filterTabsSpy).not.toHaveBeenCalled();
     }
 
-    expect.assertions(open === "without" ? 5 : 5 + 6);
+    expect.assertions(!open ? 5 : 5 + 6);
   });
 });
 

@@ -202,11 +202,11 @@ describe("blurOnEnter", () => {
 
 describe("addTabFromURL", () => {
   it.each([
-    ["FAIL", "www.lichess.org/", "leave"],
-    ["NOT", "https://stackoverflow.com/", "merge"],
-    ["NOT", "https://stackoverflow.com/", "leave"],
-    ["", "https://lichess.org/", "merge"],
-    ["", "https://lichess.org/", "leave"],
+    ["FAIL", "www.lichess.org/", false],
+    ["NOT", "https://stackoverflow.com/", true],
+    ["NOT", "https://stackoverflow.com/", false],
+    ["", "https://lichess.org/", true],
+    ["", "https://lichess.org/", false],
   ])(
     "adds the tab to the correct group when URL does %s exist: %s (settings.merge === %s)",
     (type, url, merge_setting) => {
@@ -227,7 +227,7 @@ describe("addTabFromURL", () => {
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
       sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
 
-      if (merge_setting !== "merge") {
+      if (!merge_setting) {
         var current_settings = JSON.parse(sessionStorage.getItem("settings"));
         current_settings.merge = merge_setting;
         sessionStorage.setItem("settings", JSON.stringify(current_settings));
@@ -263,7 +263,7 @@ describe("addTabFromURL", () => {
         expect(mockSet).toHaveBeenNthCalledWith(2, JSON.stringify(expected_group));
       }
 
-      if (merge_setting === "merge" && type === "NOT") {
+      if (merge_setting && type === "NOT") {
         expect(chromeTabsRemoveSpy).toHaveBeenCalledTimes(1);
         expect(chromeTabsRemoveSpy).toHaveBeenCalledWith(0);
       } else {
