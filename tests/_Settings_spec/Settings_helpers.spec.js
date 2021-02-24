@@ -83,8 +83,10 @@ describe("setSync", () => {
       periodBackup: 5,
       pin: "include",
       title: "Default",
+      tooltipVisibility: true,
       relativePathBackup: "Test/",
       restore: "remove",
+      saveAsVisibility: false,
       syncPeriodBackup: 10,
       weight: "Normal",
     };
@@ -103,6 +105,10 @@ describe("setSync", () => {
           return { value: "Arial" };
         case "tab-weight":
           return { value: "Normal" };
+        case "saveas-visibility":
+          return { checked: false };
+        case "tooltip-visibility":
+          return { checked: true };
       }
     });
 

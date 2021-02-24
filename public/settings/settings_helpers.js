@@ -61,8 +61,10 @@ export function setSync() {
   const open = document.querySelector("input[name='ext-open']:checked").value;
   const relativePathBackup = document.querySelector("input[name='relative-path-backup']").value;
   const restore = document.querySelector("input[name='restore-tabs']:checked").value;
+  const saveAsVisibility = document.getElementById("saveas-visibility").checked;
   const syncPeriodBackup = document.querySelector("input[name='sync-backup']").value;
   const title = document.getElementById("options-default-title").value;
+  const tooltipVisibility = document.getElementById("tooltip-visibility").checked;
   const weight = document.getElementById("tab-weight").value;
 
   const settings = {
@@ -77,8 +79,10 @@ export function setSync() {
     open,
     relativePathBackup,
     restore,
+    saveAsVisibility,
     syncPeriodBackup,
     title,
+    tooltipVisibility,
     weight,
   };
   chrome.storage.sync.set({ settings }, () => {});

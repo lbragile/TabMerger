@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 
 import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
+import * as CONSTANTS from "../../constants/constants";
 import ImportBtn from "./ImportBtn.js";
 
 import { BiExport, BiPrinter } from "react-icons/bi";
@@ -13,7 +14,15 @@ import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 
 export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups, setDialog }) {
+  const [tooltipVisibility, setTooltipVisibility] = useState(true);
+
   useEffect(() => ReactTooltip.rebuild());
+
+  useEffect(() => {
+    chrome.storage.sync.get("settings", (sync) => {
+      setTooltipVisibility(sync.settings?.tooltipVisibility ?? CONSTANTS.DEFAULT_SETTINGS.tooltipVisibility);
+    });
+  }, []);
 
   const GLOBAL_BUTTONS = [
     {
@@ -34,7 +43,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "export-btn",
       classes: "",
       translate: AppFunc.translate("exportJSON"),
-      btnFn: () => AppFunc.exportJSON(true, true, ""),
+      btnFn: () => AppFunc.exportJSON(true, undefined, " "),
       icon: <BiExport color="black" size="1.4rem" />,
     },
     {
@@ -114,7 +123,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
         );
       })}
 
-      {process.env.NODE_ENV !== "test" && (
+      {tooltipVisibility && process.env.NODE_ENV !== "test" && (
         <React.Fragment>
           <ReactTooltip
             id="btn-tooltip"

@@ -55,6 +55,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
+  syncLimitIndicationSpy.mockRestore();
   toastSpy.mockRestore();
 });
 
@@ -353,7 +354,6 @@ describe("syncRead", () => {
     sessionStorage.clear();
     sessionStorage.setItem("group-0", JSON.stringify(init_groups["group-0"]));
     sessionStorage.setItem("group-1", JSON.stringify(init_groups["group-1"]));
-
     jest.clearAllMocks();
 
     AppFunc.syncRead(sync_node, user, mockSet, mockSet, mockSet);
@@ -427,7 +427,7 @@ describe("openOrRemoveTabs", () => {
       var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
       var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
 
-      sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove.toLowerCase() }));
+      sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove.toLowerCase(), tooltipVisibility: false })); // prettier-ignore
 
       var expected_groups = JSON.parse(localStorage.getItem("groups")); // only used in remove case
       expected_groups["group-0"].locked = locked === "LOCKED";
@@ -1231,7 +1231,7 @@ describe("exportJSON", () => {
     var chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
 
     var groups = JSON.parse(localStorage.getItem("groups"));
-    groups["settings"] = { ...JSON.parse(sessionStorage.getItem("settings")), relativePathBackup: "Random/" };
+    groups["settings"] = { ...JSON.parse(sessionStorage.getItem("settings")), relativePathBackup: "Test/" };
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
     sessionStorage.setItem("settings", JSON.stringify(groups["settings"]));
 
@@ -1244,7 +1244,7 @@ describe("exportJSON", () => {
 
     jest.clearAllMocks();
 
-    AppFunc.exportJSON(false, false, "Test/");
+    AppFunc.exportJSON(false, false);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details"], anything);

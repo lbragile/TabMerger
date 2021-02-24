@@ -48,6 +48,8 @@ describe("restoreOptions", () => {
       `<input type="radio" name="merge-tabs" value="merge" />` +
       `<input type="radio" name="merge-tabs" value="leave" />` +
       `<input type="checkbox" id="darkMode" />` +
+      `<input type="checkbox" id="saveas-visibility" />` +
+      `<input type="checkbox" id="tooltip-visibility" />` +
       `<div id="tab-weight" value="Normal" />` +
       `<div id="tab-font" value="Arial" />` +
       `<nav />` +

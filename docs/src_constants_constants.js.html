@@ -1,4 +1,32 @@
-/* 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/constants/constants.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/constants/constants.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* 
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -15,10 +43,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program.  If not, see &lt;https://www.gnu.org/licenses/>.
 
 If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
+TabMerger team at &lt;https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
@@ -107,7 +135,7 @@ export const SYNC_STORAGE_LIMIT = process.env.REACT_APP_PRODUCTION ? 102000 : 10
 /** @constant {Number} TITLE_TRIM_LIMIT @default 50 */
 export const TITLE_TRIM_LIMIT = 50;
 
-/* DEFAULT GROUP & SETTINGS */
+/* DEFAULT GROUP &amp; SETTINGS */
 /** @constant {Object} DEFAULT_GROUP @default { color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" } */
 export const DEFAULT_GROUP = {
   color: DEFAULT_GROUP_COLOR,
@@ -142,223 +170,246 @@ export const DEFAULT_SETTINGS = {
   weight: "Normal",
 };
 
-/* DATABASE & SUBSCRIPTION LINKS */
+/* DATABASE &amp; SUBSCRIPTION LINKS */
 export const USER_STATUS_URL = process.env.REACT_APP_PRODUCTION ? "https://tabmerger-backend.herokuapp.com/v1/customer/" : "http://localhost:5000/v1/customer/"; // prettier-ignore
 export const SUBSCRIPTION_URL = process.env.REACT_APP_PRODUCTION ? "https://lbragile.github.io/TabMerger-Extension/pricing" : "http://localhost:3000/TabMerger-Extension/pricing"; // prettier-ignore
 
 /* TOASTS */
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} SUBSCRIPTION_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} SUBSCRIPTION_TOAST */
 export const SUBSCRIPTION_TOAST = [
-  <div className="text-left">
-    To use this feature, you need to <b>upgrade</b> your TabMerger subscription.
-    <br />
-    <br />
+  &lt;div className="text-left">
+    To use this feature, you need to &lt;b>upgrade&lt;/b> your TabMerger subscription.
+    &lt;br />
+    &lt;br />
     Please visit our official homepage's{" "}
-    <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
-      Subscriptions & Pricing
-    </a>{" "}
+    &lt;a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+      Subscriptions &amp; Pricing
+    &lt;/a>{" "}
     page for more information.
-  </div>,
+  &lt;/div>,
   { toastId: "subscription_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} SYNC_WRITE_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} SYNC_WRITE_TOAST */
 export const SYNC_WRITE_TOAST = [
-  <div className="text-left">
-    Either one (or more) of your groups exceed(s) their respective sync limit <u>or</u> the total sync limit is exceeded
-    - see TabMerger's sync indicators. <br /> <br />
-    Please adjust these as needed by doing <b>one or both</b> of the following:
-    <ul style={{ marginLeft: "25px" }}>
-      <li>Delete tabs that are no longer important/relevant to you;</li>
-      <li>Delete some tab groups for the same reasoning as above.</li>
-    </ul>
+  &lt;div className="text-left">
+    Either one (or more) of your groups exceed(s) their respective sync limit &lt;u>or&lt;/u> the total sync limit is exceeded
+    - see TabMerger's sync indicators. &lt;br /> &lt;br />
+    Please adjust these as needed by doing &lt;b>one or both&lt;/b> of the following:
+    &lt;ul style={{ marginLeft: "25px" }}>
+      &lt;li>Delete tabs that are no longer important/relevant to you;&lt;/li>
+      &lt;li>Delete some tab groups for the same reasoning as above.&lt;/li>
+    &lt;/ul>
     Perform these actions until the corresponding indicators are no longer visible in TabMerger.
-  </div>,
+  &lt;/div>,
   { toastId: "syncWrite_exceed" },
 ];
 
 /** @constant {Function} CHECK_MERGING_TOAST
- * @returns {Array.<HTMLDivElement, {toastId: string}>}
+ * @returns {Array.&lt;HTMLDivElement, {toastId: string}>}
  */
 export const CHECK_MERGING_TOAST = (tier) => [
-  <div className="text-left">
-    This would exceed your plan's ({tier} Tier) tab limit of <b>{USER[tier].NUM_TAB_LIMIT}</b>!<br />
-    <br />
-    To successfully execute this action you should do <b>one</b> of the following:
-    <ul style={{ marginLeft: "25px" }}>
-      <li>If you are merging tabs into TabMerger, try to merge less tabs;</li>
-      <li>Remove a few tabs that are not as important/relevant to you anymore;</li>
-      <li>
+  &lt;div className="text-left">
+    This would exceed your plan's ({tier} Tier) tab limit of &lt;b>{USER[tier].NUM_TAB_LIMIT}&lt;/b>!&lt;br />
+    &lt;br />
+    To successfully execute this action you should do &lt;b>one&lt;/b> of the following:
+    &lt;ul style={{ marginLeft: "25px" }}>
+      &lt;li>If you are merging tabs into TabMerger, try to merge less tabs;&lt;/li>
+      &lt;li>Remove a few tabs that are not as important/relevant to you anymore;&lt;/li>
+      &lt;li>
         Upgrade your subscription by visiting our official homepage's{" "}
-        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
-          Subscriptions & Pricing
-        </a>
-      </li>
-    </ul>
-  </div>,
+        &lt;a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          Subscriptions &amp; Pricing
+        &lt;/a>
+      &lt;/li>
+    &lt;/ul>
+  &lt;/div>,
   { toastId: "tabExceed_toast" },
 ];
 
 /** @constant {Function} ADD_GROUP_TOAST
- * @returns {Array.<HTMLDivElement, {toastId: string}>}
+ * @returns {Array.&lt;HTMLDivElement, {toastId: string}>}
  */
 export const ADD_GROUP_TOAST = (NUM_GROUP_LIMIT) => [
-  <div className="text-left">
-    Number of groups exceeded (more than <b>{NUM_GROUP_LIMIT}</b>).
-    <br />
-    <br />
-    Please do <b>one</b> of the following:
-    <ul style={{ marginLeft: "25px" }}>
-      <li>Delete a group that is no longer needed;</li>
-      <li>Merge tabs into another existing group;</li>
-      <li>
+  &lt;div className="text-left">
+    Number of groups exceeded (more than &lt;b>{NUM_GROUP_LIMIT}&lt;/b>).
+    &lt;br />
+    &lt;br />
+    Please do &lt;b>one&lt;/b> of the following:
+    &lt;ul style={{ marginLeft: "25px" }}>
+      &lt;li>Delete a group that is no longer needed;&lt;/li>
+      &lt;li>Merge tabs into another existing group;&lt;/li>
+      &lt;li>
         Upgrade your TabMerger subscription (
-        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
-          Subscriptions & Pricing
-        </a>
+        &lt;a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          Subscriptions &amp; Pricing
+        &lt;/a>
         ).
-      </li>
-    </ul>
-  </div>,
+      &lt;/li>
+    &lt;/ul>
+  &lt;/div>,
   { toastId: "addGroup_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} UNDO_DESTRUCTIVE_ACTION_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} UNDO_DESTRUCTIVE_ACTION_TOAST */
 export const UNDO_DESTRUCTIVE_ACTION_TOAST = [
-  <div className="text-left">
-    There are <b>no more</b> states to undo. <br />
-    <br />
-    States are created with <u>destructive actions</u>! <br />
-    <br />
-    Upgrading your subscription will increase the number of undos that can be performed. <br />
-    <br />
+  &lt;div className="text-left">
+    There are &lt;b>no more&lt;/b> states to undo. &lt;br />
+    &lt;br />
+    States are created with &lt;u>destructive actions&lt;/u>! &lt;br />
+    &lt;br />
+    Upgrading your subscription will increase the number of undos that can be performed. &lt;br />
+    &lt;br />
     Please visit our official homepage's{" "}
-    <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
-      Subscriptions & Pricing
-    </a>{" "}
+    &lt;a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+      Subscriptions &amp; Pricing
+    &lt;/a>{" "}
     page for more information.
-  </div>,
+  &lt;/div>,
   { toastId: "undoStates_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} IMPORT_JSON_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} IMPORT_JSON_TOAST */
 export const IMPORT_JSON_TOAST = [
-  <div className="text-left">
-    You must import a JSON file <i>(.json extension)</i>!<br />
-    <br />
-    These can be generated via the <b>Export JSON</b> button.
-    <br />
-    <br />
-    <b>Be careful</b>, <u>only import JSON files generated by TabMerger</u>, otherwise you risk losing your current
+  &lt;div className="text-left">
+    You must import a JSON file &lt;i>(.json extension)&lt;/i>!&lt;br />
+    &lt;br />
+    These can be generated via the &lt;b>Export JSON&lt;/b> button.
+    &lt;br />
+    &lt;br />
+    &lt;b>Be careful&lt;/b>, &lt;u>only import JSON files generated by TabMerger&lt;/u>, otherwise you risk losing your current
     configuration!
-  </div>,
+  &lt;/div>,
   { toastId: "importJSON_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} ADD_TAB_FROM_URL_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} ADD_TAB_FROM_URL_TOAST */
 export const ADD_TAB_FROM_URL_TOAST = [
-  <div className="text-left">That tab is already in TabMerger!</div>,
+  &lt;div className="text-left">That tab is already in TabMerger!&lt;/div>,
   { toastId: "addTabFromURL_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} DELETE_GROUP_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} DELETE_GROUP_TOAST */
 export const DELETE_GROUP_TOAST = [
-  <div className="text-left">
-    This group is <b>locked</b>, thus it cannot be deleted. <br />
-    <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting it again!
-  </div>,
+  &lt;div className="text-left">
+    This group is &lt;b>locked&lt;/b>, thus it cannot be deleted. &lt;br />
+    &lt;br /> Press the &lt;b>lock&lt;/b> symbol to first &lt;i>unlock&lt;/i> the group and then retry deleting it again!
+  &lt;/div>,
   { toastId: "deleteGroup_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} REMOVE_TAB_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} REMOVE_TAB_TOAST */
 export const REMOVE_TAB_TOAST = [
-  <div className="text-left">
-    This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
-    <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
-  </div>,
+  &lt;div className="text-left">
+    This group is &lt;b>locked&lt;/b> and thus tabs inside cannot be deleted. &lt;br />
+    &lt;br /> Press the &lt;b>lock&lt;/b> symbol to first &lt;i>unlock&lt;/i> the group and then retry deleting the tab again!
+  &lt;/div>,
   { toastId: "removeTab_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} DOWNLOAD_ERROR_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} DOWNLOAD_ERROR_TOAST */
 export const DOWNLOAD_ERROR_TOAST = [
-  <div className="text-left">
-    The <b>relative path</b> you have set in the settings is <b>not valid</b>, please adjust it.
-  </div>,
+  &lt;div className="text-left">
+    The &lt;b>relative path&lt;/b> you have set in the settings is &lt;b>not valid&lt;/b>, please adjust it.
+  &lt;/div>,
   { toastId: "relativePathError_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} JSON_AUTOBACKUP_OFF_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} JSON_AUTOBACKUP_OFF_TOAST */
 export const JSON_AUTOBACKUP_OFF_TOAST = [
-  <div className="text-left">
+  &lt;div className="text-left">
     Automatic JSON file generation/backup was turned off since the saving period was set to 0 minutes.
-  </div>,
+  &lt;/div>,
   { toastId: "automaticBackupOff_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} SYNC_AUTOBACKUP_OFF_TOAST */
+/** @constant {Array.&lt;HTMLDivElement, {toastId: string}>} SYNC_AUTOBACKUP_OFF_TOAST */
 export const SYNC_AUTOBACKUP_OFF_TOAST = [
-  <div className="text-left">
+  &lt;div className="text-left">
     Automatic sync write backup was turned off since the saving period was set to 0 minutes.
-  </div>,
+  &lt;/div>,
   { toastId: "automaticBackupOff_toast" },
 ];
 
 /* MODAL DIALOG */
 /** @constant {Function} OPEN_ALL_DIALOG
- * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
+ * @returns {Object.&lt;HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
 export const OPEN_ALL_DIALOG = (element) => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
   msg: (
-    <div>
-      Are you sure you want to open <b>ALL</b> your tabs at once?
-      <br />
-      <br></br>We do <b>not</b> recommend opening <u>more than 100 tabs</u> at once as it may overload your system!
-    </div>
+    &lt;div>
+      Are you sure you want to open &lt;b>ALL&lt;/b> your tabs at once?
+      &lt;br />
+      &lt;br>&lt;/br>We do &lt;b>not&lt;/b> recommend opening &lt;u>more than 100 tabs&lt;/u> at once as it may overload your system!
+    &lt;/div>
   ),
   accept_btn_text: "YES, OPEN ALL",
   reject_btn_text: "CANCEL",
 });
 
 /** @constant {Function} DELETE_ALL_DIALOG
- * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
+ * @returns {Object.&lt;HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
 export const DELETE_ALL_DIALOG = (element) => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
   msg: (
-    <div>
+    &lt;div>
       Are you sure?
-      <br />
-      <br />
-      This action will delete <b>ALL</b> groups/tabs that are <u>not locked</u>.<br />
-      <br />
+      &lt;br />
+      &lt;br />
+      This action will delete &lt;b>ALL&lt;/b> groups/tabs that are &lt;u>not locked&lt;/u>.&lt;br />
+      &lt;br />
       Make sure you have a backup!
-    </div>
+    &lt;/div>
   ),
   accept_btn_text: "YES, DELETE ALL",
   reject_btn_text: "CANCEL",
 });
 
 /** @constant {Function} RESET_TUTORIAL_CHOICE_DIALOG
- * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
+ * @returns {Object.&lt;HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
 export const RESET_TUTORIAL_CHOICE_DIALOG = (element) => ({
   element,
   show: true,
   title: "✋ TabMerger Question ❔",
   msg: (
-    <div>
-      Press <b>VIEW TUTORIAL</b> to get a walkthrough of TabMerger's main features{" "}
-      <u>
-        <i>OR</i>
-      </u>{" "}
-      <b>GO TO SITE</b> to visit TabMerger's official homepage!
-    </div>
+    &lt;div>
+      Press &lt;b>VIEW TUTORIAL&lt;/b> to get a walkthrough of TabMerger's main features{" "}
+      &lt;u>
+        &lt;i>OR&lt;/i>
+      &lt;/u>{" "}
+      &lt;b>GO TO SITE&lt;/b> to visit TabMerger's official homepage!
+    &lt;/div>
   ),
   accept_btn_text: "VIEW TUTORIAL",
   reject_btn_text: "GO TO SITE",
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-__CONSTANTS.html">__CONSTANTS</a></li><li><a href="module-__Script_Background_functions.html">__Script/Background_functions</a></li><li><a href="module-__Script_Background_helpers.html">__Script/Background_helpers</a></li><li><a href="module-__Script_Settings_functions.html">__Script/Settings_functions</a></li><li><a href="module-__Script_Settings_helpers.html">__Script/Settings_helpers</a></li><li><a href="module-App_App_functions.html">App/App_functions</a></li><li><a href="module-App_App_helpers.html">App/App_helpers</a></li><li><a href="module-Group_Group_functions.html">Group/Group_functions</a></li><li><a href="module-Tab_Tab_functions.html">Tab/Tab_functions</a></li><li><a href="module-Tab_Tab_helpers.html">Tab/Tab_helpers</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 23 2021 16:16:25 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

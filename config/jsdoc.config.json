@@ -2,10 +2,21 @@
   "source": {
     "includePattern": ".js$",
     "include": ["src", "public"],
-    "exclude": ["node_modules", "src/Button", "coverage", "build", "tests"]
+    "exclude": [
+      "node_modules",
+      "src/components/Button",
+      "src/components/Extra",
+      "src/constants/*",
+      "src/context/*",
+      "src/index.js",
+      "coverage",
+      "reports",
+      "build",
+      "tests"
+    ]
   },
+  "opts": { "destination": "./docs/", "readme": "./README.md", "recurse": true, "encoding": "utf8" },
   "recurseDepth": 5,
-  "opts": { "destination": "./docs/", "readme": "./README.md", "recurse": true },
   "plugins": ["plugins/markdown"],
   "templates": {
     "default": {
@@ -18,7 +29,11 @@
           "public/background.js",
           "public/index.html",
           "public/manifest.json",
-          "docs/"
+          "docs",
+          "coverage",
+          "reports",
+          "build",
+          "tests"
         ],
         "excludePattern": "^((?!public).)*$"
       }

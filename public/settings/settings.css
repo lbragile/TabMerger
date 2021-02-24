@@ -44,8 +44,8 @@ input[type="text"]:hover {
 }
 
 .container-fluid {
-  width: 80%;
-  margin: 3% 0 3% calc(var(--sidebar-width) + 2.5%);
+  width: 85%;
+  margin: 1% 0 1% calc(var(--sidebar-width) + 1%);
 }
 
 /* SIDEBAR */

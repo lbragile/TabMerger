@@ -165,7 +165,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line47">line 47</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -201,7 +201,7 @@
     
 
     
-    <h4 class="name" id=".handlePinClick"><span class="type-signature">(static) </span>handlePinClick<span class="signature">(e)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".handlePinClick"><span class="type-signature">(static) </span>handlePinClick<span class="signature">(e, setGroups)</span><span class="type-signature"></span></h4>
     
 
     
@@ -266,6 +266,29 @@ in order to pin/unpin it and re-merge into TabMerger.</p>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>setGroups</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>For re-rendering the groups to show the update</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -303,7 +326,7 @@ in order to pin/unpin it and re-merge into TabMerger.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line293">line 293</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -441,7 +464,7 @@ of the tab to consider for removal after a user clicks to restore it.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line242">line 242</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -578,7 +601,7 @@ of the tab to consider for removal after a user clicks to restore it.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line263">line 263</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -614,7 +637,7 @@ of the tab to consider for removal after a user clicks to restore it.</p>
     
 
     
-    <h4 class="name" id=".removeTab"><span class="type-signature">(static) </span>removeTab<span class="signature">(e, tabs, setTabs, setTabTotal, setGroups, setDialog)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".removeTab"><span class="type-signature">(static) </span>removeTab<span class="signature">(e, tabs, setTabs, setTabTotal, setGroups)</span><span class="type-signature"></span></h4>
     
 
     
@@ -770,29 +793,6 @@ of the tab to consider for removal after a user clicks to restore it.</p>
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>setDialog</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>For rendering a warning/error message</p></td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -830,7 +830,7 @@ of the tab to consider for removal after a user clicks to restore it.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line202">line 202</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line111">line 111</a>
     </li></ul></dd>
     
 
@@ -991,7 +991,7 @@ If Chrome's local storage is empty, this is set to an empty array.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line36">line 36</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -1027,7 +1027,7 @@ If Chrome's local storage is empty, this is set to an empty array.</p>
     
 
     
-    <h4 class="name" id=".tabDragEnd"><span class="type-signature">(static) </span>tabDragEnd<span class="signature">(e, item_limit, setGroups, setDialog)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".tabDragEnd"><span class="type-signature">(static) </span>tabDragEnd<span class="signature">(e, setGroups)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1095,29 +1095,6 @@ check for sync limit violations - warning the user accordingly.</p>
 
         <tr>
             
-                <td class="name"><code>item_limit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Group based sync limit</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>setGroups</code></td>
             
 
@@ -1135,29 +1112,6 @@ check for sync limit violations - warning the user accordingly.</p>
             
 
             <td class="description last"><p>For re-rendering the groups</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>setDialog</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>For rendering a warning/error message</p></td>
         </tr>
 
     
@@ -1198,19 +1152,12 @@ check for sync limit violations - warning the user accordingly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line127">line 127</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line74">line 74</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>ITEM_STORAGE_LIMIT in App.js for exact "item_limit" value</li>
-        </ul>
-    </dd>
     
 
     
@@ -1342,7 +1289,7 @@ check for sync limit violations - warning the user accordingly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line111">line 111</a>
+        <a href="src_components_Tab_Tab_functions.js.html">src/components/Tab/Tab_functions.js</a>, <a href="src_components_Tab_Tab_functions.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -1394,7 +1341,7 @@ check for sync limit violations - warning the user accordingly.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Feb 20 2021 22:21:56 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 23 2021 16:16:25 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

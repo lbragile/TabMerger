@@ -64,6 +64,192 @@
     
 
     
+    <h4 class="name" id=".alarmGenerator"><span class="type-signature">(static) </span>alarmGenerator<span class="signature">(periodInMinutes, alarm_name, toast_val)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Helps create alarms with similar logic (automatic backup of JSON/Sync functionality)</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>periodInMinutes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The alarms period (how often it is called)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>alarm_name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">"sync_backup"</span>
+|
+
+<span class="param-type">"json_backup"</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The alarms unique name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toast_val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The toast message to show when the alarm is cleared</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line246">line 246</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id=".elementMutationListener"><span class="type-signature">(static) </span>elementMutationListener<span class="signature">(element, cb)</span><span class="type-signature"></span></h4>
     
 
@@ -189,7 +375,7 @@ which holds the user's response - mutation. This function listens for this mutat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line245">line 245</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line229">line 229</a>
     </li></ul></dd>
     
 
@@ -349,7 +535,7 @@ which holds the user's response - mutation. This function listens for this mutat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line159">line 159</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line160">line 160</a>
     </li></ul></dd>
     
 
@@ -557,7 +743,7 @@ which holds the user's response - mutation. This function listens for this mutat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line185">line 185</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line186">line 186</a>
     </li></ul></dd>
     
 
@@ -605,6 +791,165 @@ which holds the user's response - mutation. This function listens for this mutat
     <dd>
         
 <span class="param-type">HTMLElement</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getTabTotal"><span class="type-signature">(static) </span>getTabTotal<span class="signature">(ls_entry)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Updates the total tab count based on tabs in all the groups inside TabMerger</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ls_entry</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>current group information</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line145">line 145</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The total number of tabs currently present in TabMerger</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
 
 
     </dd>
@@ -735,7 +1080,7 @@ which holds the user's response - mutation. This function listens for this mutat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line34">line 34</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -833,7 +1178,7 @@ which holds the user's response - mutation. This function listens for this mutat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line170">line 170</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line171">line 171</a>
     </li></ul></dd>
     
 
@@ -980,7 +1325,7 @@ which holds the user's response - mutation. This function listens for this mutat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line118">line 118</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line121">line 121</a>
     </li></ul></dd>
     
 
@@ -1168,7 +1513,7 @@ button to restore the previous configuration.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line212">line 212</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -1329,7 +1674,7 @@ In light mode, the exact opposite happens - light background with dark text.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line54">line 54</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -1489,7 +1834,7 @@ In light mode, the exact opposite happens - light background with dark text.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line71">line 71</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line74">line 74</a>
     </li></ul></dd>
     
 
@@ -1657,7 +2002,7 @@ Sync items are updated only when they change and only changed items are overwrit
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line97">line 97</a>
+        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -1698,165 +2043,6 @@ Sync items are updated only when they change and only changed items are overwrit
 
 
         
-            
-
-    
-
-    
-    <h4 class="name" id=".updateTabTotal"><span class="type-signature">(static) </span>updateTabTotal<span class="signature">(ls_entry)</span><span class="type-signature"> &rarr; {Number}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Updates the total tab count based on tabs in all the groups inside TabMerger</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>ls_entry</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>current group information</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_components_App_App_helpers.js.html">src/components/App/App_helpers.js</a>, <a href="src_components_App_App_helpers.js.html#line142">line 142</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>The total number of tabs currently present in TabMerger</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
     
 
     
@@ -1878,7 +2064,7 @@ Sync items are updated only when they change and only changed items are overwrit
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Feb 20 2021 22:21:56 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 23 2021 16:16:25 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -229,7 +229,11 @@ export function performAutoBackUp(alarm, sync_node) {
 
   if (alarm.name === "sync_backup") {
     chrome.storage.local.get("client_details", (local) => {
-      syncWrite({ target: document.getElementById("sync-write-btn") }, sync_node, local.client_details);
+      syncWrite(
+        { target: document.getElementById("sync-write-btn"), autoAction: true },
+        sync_node,
+        local.client_details
+      );
     });
   }
 }
@@ -364,6 +368,8 @@ export function syncWrite(e, sync_node, user) {
         });
       }
     });
+
+    console.info(`%c[TABMERGER INFO] %c${e.autoAction ? "automatic" : "manual"} sync performed - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
   }
 }
 
@@ -834,46 +840,41 @@ export function importJSON(e, user, setGroups, setTabTotal) {
 
 /**
  * Allows the user to export TabMerger's current configuration (including settings).
- * @param {boolean} showSaveAsDialog Whether or not to show the saveAs dialog box. Can be configured in settings.
  * @param {boolean} showGrayDownloadShelf Whether or not a download will show up at the bottom of the screen (pop-up). False for auto-backup
+ * @param {boolean} showSaveAsDialog Whether or not to show the saveAs dialog box. Can be configured in settings.
  * @param {string} relativePath A path relative to the Downloads folder which will contain the generated file. Cannot include "../", "./", or absolute paths.
  */
-export function exportJSON(showSaveAsDialog, showGrayDownloadShelf, relativePath) {
+export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath) {
   chrome.storage.local.get(["groups", "client_details"], (local) => {
     var { groups, client_details } = local;
-    if (client_details) {
-      if (["Free", "Basic"].includes(client_details.tier)) {
-        toast(...CONSTANTS.SUBSCRIPTION_TOAST);
-      } else {
-        chrome.storage.sync.get("settings", (sync) => {
-          groups["settings"] = sync.settings;
+    if (!client_details || ["Free", "Basic"].includes(client_details.tier)) {
+      toast(...CONSTANTS.SUBSCRIPTION_TOAST);
+    } else {
+      chrome.storage.sync.get("settings", (sync) => {
+        groups["settings"] = sync.settings;
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
+        const download_opts = {
+          url: dataStr,
+          filename:
+            (!!relativePath ? "" : sync.settings.relativePathBackup) +
+            AppHelper.outputFileName().replace(/\:|\//g, "_") +
+            ".json",
+          conflictAction: "uniquify",
+          saveAs: showSaveAsDialog === undefined ? sync.settings.saveAsVisibility : showSaveAsDialog,
+        };
 
-          var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
+        // enable or disable the download gray shelf at the bottom of the window which notifies of the download.
+        // For auto-backups this is disabled and saveas menu is not shown (it is configured in settings)
+        chrome.downloads.setShelfEnabled(showGrayDownloadShelf);
 
-          // enable or disable the download gray shelf at the bottom of the window which notifies of the download.
-          // For auto-backups this is disabled and saveas menu is not shown (it is configured in settings)
-          chrome.downloads.setShelfEnabled(showGrayDownloadShelf);
-
-          chrome.downloads.download(
-            {
-              url: dataStr,
-              filename:
-                (relativePath ? relativePath : sync.settings.relativePathBackup) +
-                AppHelper.outputFileName().replace(/\:|\//g, "_") +
-                ".json",
-              conflictAction: "uniquify",
-              saveAs: showSaveAsDialog,
-            },
-            (downloadId) => {
-              if (!chrome.runtime.lastError) {
-                console.log(`[INFO] Started downloading file id: ${downloadId} - ${AppHelper.getTimestamp()}`);
-              } else {
-                toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST);
-              }
-            }
-          );
+        chrome.downloads.download(download_opts, (downloadId) => {
+          if (!chrome.runtime.lastError) {
+            console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file id: ${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
+          } else {
+            toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST);
+          }
         });
-      }
+      });
     }
   });
 }

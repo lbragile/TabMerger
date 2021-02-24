@@ -39,8 +39,10 @@ const DEFAULT_SETTINGS = {
   pin: "include",
   relativePathBackup: "TabMerger/",
   restore: "keep",
+  saveAsVisibility: true,
   syncPeriodBackup: 12 * 60,
   title: "Title",
+  tooltipVisibility: true,
   weight: "Normal",
 };
 
@@ -65,6 +67,8 @@ export function restoreOptions() {
     document.getElementById("options-default-title").value = sync.settings.title;
     document.getElementById("tab-font").value = sync.settings.font;
     document.getElementById("tab-weight").value = sync.settings.weight;
+    document.getElementById("saveas-visibility").checked = sync.settings.saveAsVisibility;
+    document.getElementById("tooltip-visibility").checked = sync.settings.tooltipVisibility;
     document.querySelector("input[name='period-backup']").value = sync.settings.periodBackup;
     document.querySelector("input[name='relative-path-backup']").value = sync.settings.relativePathBackup;
     document.querySelector("input[name='sync-backup']").value = sync.settings.syncPeriodBackup;
