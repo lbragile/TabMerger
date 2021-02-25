@@ -36,7 +36,19 @@ import { BiHide } from "react-icons/bi";
 import "./Group.css";
 import "../Button/Button.css";
 
-export default function Group({ id, title, textColor, color, created, num_tabs, hidden, locked, starred, children }) {
+export default function Group({
+  id,
+  title,
+  textColor,
+  color,
+  created,
+  num_tabs,
+  hidden,
+  locked,
+  starred,
+  fontFamily,
+  children,
+}) {
   const { user, setTabTotal, setGroups } = useContext(AppContext);
 
   useEffect(() => GroupFunc.setBGColor(document.getElementById(id), id), [id]);
@@ -48,7 +60,7 @@ export default function Group({ id, title, textColor, color, created, num_tabs, 
       onDragStart={(e) => GroupFunc.groupDragStart(e)}
       onDragEnd={(e) => GroupFunc.groupDragEnd(e)}
     >
-      <div className="group-title d-flex flex-row justify-content-center" draggable={false}>
+      <div className="group-title d-flex flex-row justify-content-center" draggable={false} style={{ fontFamily }}>
         <h5 className="group-count">{num_tabs}</h5>
 
         <input
@@ -77,7 +89,7 @@ export default function Group({ id, title, textColor, color, created, num_tabs, 
       </div>
 
       <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => dragOver(e, "tab")}>
-        <div className="created mr-1" draggable={false}>
+        <div className="created mr-1" draggable={false} style={{ fontFamily }}>
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>
 

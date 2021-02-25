@@ -63,66 +63,6 @@ describe("setInitTabs", () => {
   });
 });
 
-describe("applyTitleStyles", () => {
-  test.each([["Bold"], ["Bolder"], ["Lighter"], ["Light"], ["Normal"]])("Font weight - %s", (weight) => {
-    const id = "group-0";
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    sessionStorage.setItem("settings", JSON.stringify({ weight }));
-
-    const prevQuerySelectorAll = document.querySelectorAll;
-    document.querySelectorAll = (arg) => container.querySelectorAll(arg);
-    jest.clearAllMocks();
-
-    TabFunc.applyTitleStyles(id);
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-    expect([...container.querySelectorAll("#" + id + " .a-tab")].map((x) => x.style.fontWeight)).toEqual(Array(init_groups[id].tabs.length).fill(weight !== "Light" ? weight.toLowerCase() : "100")); // prettier-ignore
-
-    document.querySelectorAll = prevQuerySelectorAll;
-    sessionStorage.removeItem("settings");
-  });
-
-  test.each([
-    ["Arial"],
-    ["Verdana"],
-    ["Helvetica"],
-    ["Tahoma"],
-    ["'Trebuchet MS'"],
-    ["'Brush Script MT'"],
-    ["Georgia"],
-    ["Garamond"],
-    ["'Courier New'"],
-    ["'Times New Roman'"],
-  ])("Font family - %s", (family) => {
-    const id = "group-0";
-    localStorage.setItem("groups", JSON.stringify(init_groups));
-    sessionStorage.setItem("settings", JSON.stringify({ font: family.replace(/\'/g, "") }));
-
-    var expect_family_val = family + (!["'Courier New'", "Garamond", "Georgia", "'Brush Script MT'", "'Times New Roman'"].includes(family)? ", sans-serif" : ", serif"); // prettier-ignore
-    if (family === "'Brush Script MT'") {
-      expect_family_val = "'Brush Script MT', cursive";
-    } else if (family === "'Courier New'") {
-      expect_family_val = "'Courier New', monospace";
-    }
-
-    const prevQuerySelectorAll = document.querySelectorAll;
-    document.querySelectorAll = (arg) => container.querySelectorAll(arg);
-    jest.clearAllMocks();
-
-    TabFunc.applyTitleStyles(id);
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-    expect([...container.querySelectorAll("#" + id + " .a-tab")].map((x) => x.style.fontFamily)).toEqual(Array(init_groups[id].tabs.length).fill(expect_family_val)); // prettier-ignore
-
-    document.querySelectorAll = prevQuerySelectorAll;
-    sessionStorage.removeItem("settings");
-  });
-});
-
 describe("tabDragStart", () => {
   test.each([["draggable"], ["tab link"]])(
     "adds the appropriate classes to the draggable and container -> %s click",

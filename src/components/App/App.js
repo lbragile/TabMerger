@@ -27,6 +27,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as AppFunc from "./App_functions";
+import * as CONSTANTS from "../../constants/constants";
 
 import GlobalBtns from "../Button/GlobalBtns";
 import Header from "../Extra/Header";
@@ -49,6 +50,7 @@ export default function App() {
   const [groups, setGroups] = useState(null);
   const [dialog, setDialog] = useState({ show: false });
   var syncTimestamp = useRef();
+  var textStyles = useRef({ fontFamily: "Arial", fontWeight: "Normal" });
 
   // activation parameters
   const [user, setUser] = useState({ paid: false, tier: "Free" });
@@ -101,9 +103,22 @@ export default function App() {
 
   useEffect(() => AppFunc.badgeIconInfo(tabTotal, user), [groups, tabTotal, user]);
   useEffect(() => AppFunc.syncLimitIndication(), [groups, dialog, user]);
+  useEffect(() => {
+    chrome.storage.sync.get("settings", (sync) => {
+      textStyles.current.fontWeight = CONSTANTS.FONT_WEIGHT[sync.settings?.weight ?? "Normal"];
+      textStyles.current.fontFamily = CONSTANTS.FONT_FAMILY[sync.settings?.font ?? "Arial"];
+    });
+  }, [groups]);
 
   // only re-render groups when they change
-  const memoizedGroupFormation = useMemo(() => AppFunc.groupFormation(groups), [groups]);
+  const memoizedGroupFormation = useMemo(
+    () =>
+      AppFunc.groupFormation(groups, {
+        fontFamily: textStyles.current.fontFamily,
+        fontWeight: textStyles.current.fontWeight,
+      }),
+    [groups]
+  );
 
   return (
     <div id="app-wrapper" className="text-center">
@@ -124,7 +139,7 @@ export default function App() {
         lastStepNextButton={<button className="btn btn-dark">🏁</button>}
       />
 
-      <nav id="sidebar">
+      <nav id="sidebar" style={{ fontFamily: textStyles.current.fontFamily }}>
         <Header total={tabTotal} />
         <hr className="mx-auto d-none shown-in-print" />
         <Reviews /> {/* Only visible in print mode for Free and Basic Tier users */}
@@ -141,9 +156,6 @@ export default function App() {
           />
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
-        <div id="sync-total-exceed-indicator" className="d-none">
-          ▲
-        </div>
         {/* Verify/activate account button*/}
         <Button
           classes="p-0 btn-in-global"
@@ -153,6 +165,11 @@ export default function App() {
         >
           {<BiCheckCircle color="black" size="1.5rem" />}
         </Button>
+        <div id="subscription-indicator">
+          <a href={CONSTANTS.SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+            Subscription: <b>{user.tier} Tier</b>
+          </a>
+        </div>
         <div id="copyright" className="mt-4">
           Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
         </div>

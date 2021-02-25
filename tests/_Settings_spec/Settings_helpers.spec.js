@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
+import * as CONSTANTS from "../../src/constants/constants";
 
 /**
  * Allows to change "browser" by specifying the correct userAgent string.
@@ -41,7 +42,7 @@ describe("setTabMergerLink", () => {
   const firefox_url = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
   const edge_url = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
 
-  document.body.innerHTML = `<a href="#"><img id="logo-img"></img></a>`;
+  document.body.innerHTML = `<a href="#"><img id="logo-img"/></a>`;
 
   const prevChrome = chrome;
 
@@ -73,47 +74,40 @@ describe("setTabMergerLink", () => {
 describe("setSync", () => {
   it("sets sync storage according to the user selected values", () => {
     const expected_sync = {
-      badgeInfo: true,
+      ...CONSTANTS.DEFAULT_SETTINGS,
       blacklist: "https://www.google.com",
       color: "#000000",
-      dark: true,
       fileLimitBackup: 100,
-      font: "Arial",
-      merge: true,
-      open: true,
       periodBackup: 5,
-      pin: true,
       title: "Default",
-      tooltipVisibility: true,
       relativePathBackup: "Test/",
-      restore: true,
-      saveAsVisibility: false,
       syncPeriodBackup: 10,
-      weight: "Normal",
     };
 
-    document.getElementById = jest.fn((id) => {
+    const { getElementById, querySelector } = document;
+
+    document.getElementById = (id) => {
       switch (id) {
         case "options-default-color":
-          return { value: "#000000" };
+          return { value: expected_sync.color };
         case "options-default-title":
-          return { value: "Default" };
+          return { value: expected_sync.title };
         case "options-blacklist":
-          return { value: "https://www.google.com" };
+          return { value: expected_sync.blacklist };
         case "darkMode":
-          return { checked: true };
+          return { checked: expected_sync.dark };
         case "tab-font":
-          return { value: "Arial" };
+          return { value: expected_sync.font };
         case "tab-weight":
-          return { value: "Normal" };
+          return { value: expected_sync.weight };
         case "saveas-visibility":
-          return { checked: false };
+          return { checked: expected_sync.saveAsVisibility };
         case "tooltip-visibility":
-          return { checked: true };
+          return { checked: expected_sync.tooltipVisibility };
       }
-    });
+    };
 
-    document.querySelector = jest.fn((sel) => {
+    document.querySelector = (sel) => {
       if (sel.includes("restore-tabs")) {
         return { checked: expected_sync.restore };
       } else if (sel.includes("ext-open")) {
@@ -124,6 +118,8 @@ describe("setSync", () => {
         return { checked: expected_sync.merge };
       } else if (sel.includes("badge-view")) {
         return { checked: expected_sync.badgeInfo };
+      } else if (sel.includes("randomize-group-color")) {
+        return { checked: expected_sync.randomizeColor };
       } else if (sel.includes("period-backup")) {
         return { value: expected_sync.periodBackup };
       } else if (sel.includes("sync-backup")) {
@@ -133,14 +129,14 @@ describe("setSync", () => {
       } else if (sel.includes("json-file-limit")) {
         return { value: expected_sync.fileLimitBackup };
       }
-    });
+    };
 
     SettingsHelper.setSync();
 
     expect(chromeSyncSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncSetSpy).toHaveBeenCalledWith({ settings: expected_sync }, anything);
 
-    document.getElementById.mockRestore();
-    document.querySelector.mockRestore();
+    document.querySelector = querySelector;
+    document.getElementById = getElementById;
   });
 });

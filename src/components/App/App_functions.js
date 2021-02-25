@@ -548,11 +548,12 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
  * Forms the group components with tab draggable tab components inside.
  * Each formed group has correct & up-to-date information.
  * @param {string} groups A stringified object consisting of TabMerger's current group information
+ * @param {{fontFamily: string, fontWeight: string}} textStyles Used to adjust the font family and weight of text in TabMerger
  *
  * @return If "groups" is defined - array of group components which include the correct number of tab components inside each.
  * Else - null
  */
-export function groupFormation(groups) {
+export function groupFormation(groups, textStyles) {
   if (groups) {
     var parsed_groups = JSON.parse(groups);
     var group_values = Object.values(parsed_groups);
@@ -572,9 +573,16 @@ export function groupFormation(groups) {
           hidden={x.hidden}
           locked={x.locked}
           starred={x.starred}
+          fontFamily={textStyles.fontFamily}
           key={Math.random()}
         >
-          <Tab id={id} hidden={x.hidden} textColor={textColor} />
+          <Tab
+            id={id}
+            hidden={x.hidden}
+            textColor={textColor}
+            fontWeight={textStyles.fontWeight}
+            fontFamily={textStyles.fontFamily}
+          />
         </Group>
       );
     });
@@ -598,8 +606,15 @@ export function addGroup(setGroups) {
     var num_keys = Object.keys(groups).length;
     if (num_keys < NUM_GROUP_LIMIT) {
       chrome.storage.sync.get("settings", (sync) => {
+        var color;
+        if (client_details?.tier === "Premium" && sync.settings.randomizeColor) {
+          color = CONSTANTS.RANDOM_COLOR_LIST[Math.floor(Math.random() * CONSTANTS.RANDOM_COLOR_LIST.length)];
+        } else {
+          color = sync.settings.color;
+        }
+
         groups["group-" + num_keys] = {
-          color: sync.settings.color,
+          color,
           created: AppHelper.getTimestamp(),
           hidden: false,
           locked: false,
@@ -843,6 +858,7 @@ export function importJSON(e, user, setGroups, setTabTotal) {
 
 /**
  * Allows the user to export TabMerger's current configuration (including settings).
+ * Also performs auto-backups by creating JSON files in a specific folder relative to the Downloads folder at user specific intervals.
  * @param {boolean} showGrayDownloadShelf Whether or not a download will show up at the bottom of the screen (pop-up). False for auto-backup
  * @param {boolean} showSaveAsDialog Whether or not to show the saveAs dialog box. Can be configured in settings.
  * @param {string} relativePath A path relative to the Downloads folder which will contain the generated file. Cannot include "../", "./", or absolute paths.
@@ -875,14 +891,20 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
             // if automatic -> add to list so can keep track off how many and know which to delete later
             // when this file would exceed limit, remove the oldest file
             if (!showGrayDownloadShelf) {
+              const current_limit = parseInt(sync.settings?.fileLimitBackup);
               file_ids = file_ids ?? [];
-              if (file_ids.length === parseInt(sync.settings?.fileLimitBackup)) {
-                const old_id = file_ids.shift();
-                chrome.downloads.removeFile(old_id, () => {
-                  if (!chrome.runtime.lastError) {
-                    console.info(`%c[TABMERGER INFO] %c deleted old backup file with id=${old_id} to make room for new files -  ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
-                  }
-                });
+
+              if (file_ids.length >= current_limit) {
+                // user can have limit at 5 then change to 4.
+                // This would cause TabMerger to keep 4 latest backups and delete the rest.
+                const ids_to_remove = file_ids.length > current_limit ? file_ids.splice(0, (file_ids.length - current_limit) + 1) : [file_ids.shift()]; // prettier-ignore
+                for (const old_id of ids_to_remove) {
+                  chrome.downloads.removeFile(old_id, () => {
+                    if (!chrome.runtime.lastError) {
+                      console.info(`%c[TABMERGER INFO] %c deleted old backup file with id=${old_id} to make room for new files -  ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
+                    }
+                  });
+                }
               }
               chrome.storage.local.set({ file_ids: [...file_ids, downloadId] }, () => {});
             }

@@ -33,14 +33,11 @@ import { TiDelete } from "react-icons/ti";
 
 import "./Tab.css";
 
-export default function Tab({ id, hidden, textColor }) {
+export default function Tab({ id, hidden, textColor, fontWeight, fontFamily }) {
   const [tabs, setTabs] = useState([]);
   const { user, setTabTotal, setGroups } = useContext(AppContext);
 
-  useEffect(() => {
-    TabFunc.setInitTabs(setTabs, id);
-    TabFunc.applyTitleStyles(id);
-  }, [id]);
+  useEffect(() => TabFunc.setInitTabs(setTabs, id), [id]);
 
   return (
     <div className="d-flex flex-column mx-0 tabs-container">
@@ -79,6 +76,7 @@ export default function Tab({ id, hidden, textColor }) {
               onKeyPress={(e) => TabFunc.handleTabTitleChange(e)}
               onBlur={(e) => TabFunc.handleTabTitleChange(e)}
               onDrop={(e) => e.preventDefault()}
+              style={{ fontWeight, fontFamily }}
             >
               {tab.title}
             </a>

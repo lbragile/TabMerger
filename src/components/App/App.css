@@ -182,8 +182,9 @@ hr {
   font-weight: bold;
 }
 
-/* COPYRIGHT NOTICE */
-#copyright {
+/* COPYRIGHT NOTICE & SUBSCRIPTION INDICATOR */
+#copyright,
+#subscription-indicator {
   font-size: 0.9rem;
   position: absolute;
   left: 50%;
@@ -191,6 +192,19 @@ hr {
   transform: translateX(-50%);
   white-space: nowrap;
   color: white;
+}
+
+#subscription-indicator {
+  bottom: 75px;
+}
+
+#subscription-indicator a {
+  color: white;
+}
+
+#subscription-indicator a:hover {
+  cursor: pointer;
+  text-decoration: none;
 }
 
 /* SCROLLBAR */

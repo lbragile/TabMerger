@@ -32,7 +32,7 @@ document.getElementById("home-btn").addEventListener("click", () => location.ass
   x.addEventListener("change", (e) => {
     e.target.value = Math.max(
       +(e.target.name === "json-file-limit"),
-      Math.min(e.target.value, e.target.name !== "json-file-limit" ? 24 * 60 : 1000)
+      Math.min(e.target.value, e.target.name !== "json-file-limit" ? 24 * 60 : 100)
     ); // clamp between these values (24 * 60 -> 1 day)
   });
 });

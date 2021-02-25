@@ -60,6 +60,7 @@ export function setSync() {
   const pin = document.querySelector("input[name='pin-tabs']").checked;
   const merge = document.querySelector("input[name='merge-tabs']").checked;
   const open = document.querySelector("input[name='ext-open']").checked;
+  const randomizeColor = document.querySelector("input[name='randomize-group-color']").checked;
   const relativePathBackup = document.querySelector("input[name='relative-path-backup']").value;
   const restore = document.querySelector("input[name='restore-tabs']").checked;
   const saveAsVisibility = document.getElementById("saveas-visibility").checked;
@@ -79,6 +80,7 @@ export function setSync() {
     pin,
     merge,
     open,
+    randomizeColor,
     relativePathBackup,
     restore,
     saveAsVisibility,

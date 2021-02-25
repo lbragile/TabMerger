@@ -39,8 +39,17 @@ input:hover {
   cursor: pointer;
 }
 
-input[type="text"]:hover {
+input[type="text"]:hover,
+input[type="number"]:hover {
   cursor: text;
+}
+
+select:hover {
+  cursor: pointer;
+}
+
+a {
+  color: rgb(97, 192, 255);
 }
 
 .container-fluid {

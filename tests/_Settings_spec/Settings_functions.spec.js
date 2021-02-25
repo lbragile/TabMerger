@@ -23,11 +23,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import * as SettingsFunc from "../../public/settings/settings_functions.js";
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
+import * as CONSTANTS from "../../src/constants/constants";
 
 const anything = expect.any(Function);
 
 describe("restoreOptions", () => {
+  // make them opposite of default to check in test if they are properly called
   var expected_sync = {
+    ...CONSTANTS.DEFAULT_SETTINGS,
     badgeInfo: false,
     blacklist: "Not TabMerger",
     color: "#111111",
@@ -36,8 +39,11 @@ describe("restoreOptions", () => {
     merge: false,
     open: false,
     pin: false,
+    randomizeColor: true,
     restore: false,
     title: "Random",
+    saveAsVisibility: false,
+    tooltipVisibility: false,
     weight: "Bold",
   };
 
@@ -45,6 +51,7 @@ describe("restoreOptions", () => {
     document.body.innerHTML =
       `<div><hr /><code /></div>` +
       `<input type="color" id="options-default-color" />` +
+      `<input type="checkbox" name="randomize-group-color" />` +
       `<input type="text" id="options-default-title" />` +
       `<input type="number" name="period-backup" />` +
       `<input type="text" name="relative-path-backup" />` +
@@ -105,6 +112,7 @@ describe("restoreOptions", () => {
     expect(document.querySelector("input[name='merge-tabs']").checked).toEqual(expect_checked);
     expect(document.querySelector("input[name='pin-tabs']").checked).toEqual(expect_checked);
     expect(document.querySelector("input[name='restore-tabs']").checked).toEqual(expect_checked);
+    expect(document.querySelector("input[name='randomize-group-color']").checked).toEqual(!expect_checked);
     expect(document.getElementById("tooltip-visibility").checked).toEqual(expect_checked);
     expect(document.getElementById("saveas-visibility").checked).toEqual(expect_checked);
     expect(document.getElementById("options-blacklist").value).toBe(expect_checked ? "" : "Not TabMerger");

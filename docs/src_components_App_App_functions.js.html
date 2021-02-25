@@ -103,7 +103,7 @@ export function setUserStatus(setUser, setDialog) {
             type="email"
             name="email"
             className="p-1"
-            placeholder="Email you used in Stripe checkout..."
+            placeholder="Email you used during checkout..."
             autoFocus
             autoComplete
             required
@@ -111,14 +111,14 @@ export function setUserStatus(setUser, setDialog) {
           &lt;br />
           &lt;br />
           &lt;label>
-            &lt;b>Password:&lt;/b>
+            &lt;b>Activation Key:&lt;/b>
           &lt;/label>
           &lt;br />
           &lt;input
             type="password"
             name="password"
             className="p-1"
-            placeholder="From our email or your own if changed..."
+            placeholder="From our email..."
             minLength={6}
             required
           />
@@ -348,7 +348,7 @@ export function badgeIconInfo(tabTotal, user, STEP_SIZE = CONSTANTS.BADGE_ICON_S
           color = COLORS.red;
         }
 
-        const showInfo = sync.settings.badgeInfo === "display";
+        const showInfo = sync.settings.badgeInfo;
         const text = showInfo &amp;&amp; tabTotal > 0 ? `${tabTotal}|${num_groups}` : "";
         const tab_translate = translate(tabTotal === 1 ? "tab" : "tabs").toLocaleLowerCase();
         const group_translate = translate(num_groups === 1 ? "group" : "groups").toLocaleLowerCase();
@@ -479,7 +479,7 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
             }
           }
 
-          if (sync.settings.restore !== "keep") {
+          if (!sync.settings.restore) {
             if (group_id) {
               if (!groups[group_id].locked) {
                 groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
@@ -522,7 +522,10 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
         var { into_group, merged_tabs, groups, client_details } = local;
         const scroll = document.documentElement.scrollTop;
 
-        if (AppHelper.getTabTotal(groups) + merged_tabs.length &lt;= CONSTANTS.USER[client_details.tier].NUM_TAB_LIMIT) {
+        if (
+          AppHelper.getTabTotal(groups) + merged_tabs.length &lt;=
+          CONSTANTS.USER[client_details?.tier ?? "Free"].NUM_TAB_LIMIT
+        ) {
           // IF top group has tabs - add new group at top ("merging group")
           // if context menu is used to avoid merging into group with existing tabs.
           // Else - add tabs to the top group. This allows the user to star a group and then merge into it.
@@ -547,7 +550,7 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
           }
 
           // close tabs that are being merged (if settings is set to do so)
-          if (sync.settings.merge === "merge") {
+          if (sync.settings.merge) {
             chrome.tabs.remove(merged_tabs.map((x) => x.id));
           }
 
@@ -559,7 +562,7 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
             setGroups(JSON.stringify(groups));
           });
         } else {
-          toast(...CONSTANTS.CHECK_MERGING_TOAST(client_details.tier));
+          toast(...CONSTANTS.CHECK_MERGING_TOAST(client_details?.tier ?? "Free"));
         }
 
         // remove to be able to detect changes again (even for same tabs)
@@ -573,11 +576,12 @@ export function checkMerging(changes, namespace, setTabTotal, setGroups) {
  * Forms the group components with tab draggable tab components inside.
  * Each formed group has correct &amp; up-to-date information.
  * @param {string} groups A stringified object consisting of TabMerger's current group information
+ * @param {{fontFamily: string, fontWeight: string}} textStyles Used to adjust the font family and weight of text in TabMerger
  *
  * @return If "groups" is defined - array of group components which include the correct number of tab components inside each.
  * Else - null
  */
-export function groupFormation(groups) {
+export function groupFormation(groups, textStyles) {
   if (groups) {
     var parsed_groups = JSON.parse(groups);
     var group_values = Object.values(parsed_groups);
@@ -597,9 +601,16 @@ export function groupFormation(groups) {
           hidden={x.hidden}
           locked={x.locked}
           starred={x.starred}
+          fontFamily={textStyles.fontFamily}
           key={Math.random()}
         >
-          &lt;Tab id={id} hidden={x.hidden} textColor={textColor} />
+          &lt;Tab
+            id={id}
+            hidden={x.hidden}
+            textColor={textColor}
+            fontWeight={textStyles.fontWeight}
+            fontFamily={textStyles.fontFamily}
+          />
         &lt;/Group>
       );
     });
@@ -623,8 +634,15 @@ export function addGroup(setGroups) {
     var num_keys = Object.keys(groups).length;
     if (num_keys &lt; NUM_GROUP_LIMIT) {
       chrome.storage.sync.get("settings", (sync) => {
+        var color;
+        if (client_details?.tier === "Premium" &amp;&amp; sync.settings.randomizeColor) {
+          color = CONSTANTS.RANDOM_COLOR_LIST[Math.floor(Math.random() * CONSTANTS.RANDOM_COLOR_LIST.length)];
+        } else {
+          color = sync.settings.color;
+        }
+
         groups["group-" + num_keys] = {
-          color: sync.settings.color,
+          color,
           created: AppHelper.getTimestamp(),
           hidden: false,
           locked: false,
@@ -868,13 +886,14 @@ export function importJSON(e, user, setGroups, setTabTotal) {
 
 /**
  * Allows the user to export TabMerger's current configuration (including settings).
+ * Also performs auto-backups by creating JSON files in a specific folder relative to the Downloads folder at user specific intervals.
  * @param {boolean} showGrayDownloadShelf Whether or not a download will show up at the bottom of the screen (pop-up). False for auto-backup
  * @param {boolean} showSaveAsDialog Whether or not to show the saveAs dialog box. Can be configured in settings.
  * @param {string} relativePath A path relative to the Downloads folder which will contain the generated file. Cannot include "../", "./", or absolute paths.
  */
 export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath) {
-  chrome.storage.local.get(["groups", "client_details"], (local) => {
-    var { groups, client_details } = local;
+  chrome.storage.local.get(["groups", "client_details", "file_ids"], (local) => {
+    var { groups, client_details, file_ids } = local;
     if (!client_details || ["Free", "Basic"].includes(client_details.tier)) {
       toast(...CONSTANTS.SUBSCRIPTION_TOAST);
     } else {
@@ -897,6 +916,26 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
 
         chrome.downloads.download(download_opts, (downloadId) => {
           if (!chrome.runtime.lastError) {
+            // if automatic -> add to list so can keep track off how many and know which to delete later
+            // when this file would exceed limit, remove the oldest file
+            if (!showGrayDownloadShelf) {
+              const current_limit = parseInt(sync.settings?.fileLimitBackup);
+              file_ids = file_ids ?? [];
+
+              if (file_ids.length >= current_limit) {
+                // user can have limit at 5 then change to 4.
+                // This would cause TabMerger to keep 4 latest backups and delete the rest.
+                const ids_to_remove = file_ids.length > current_limit ? file_ids.splice(0, (file_ids.length - current_limit) + 1) : [file_ids.shift()]; // prettier-ignore
+                for (const old_id of ids_to_remove) {
+                  chrome.downloads.removeFile(old_id, () => {
+                    if (!chrome.runtime.lastError) {
+                      console.info(`%c[TABMERGER INFO] %c deleted old backup file with id=${old_id} to make room for new files -  ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
+                    }
+                  });
+                }
+              }
+              chrome.storage.local.set({ file_ids: [...file_ids, downloadId] }, () => {});
+            }
             console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file id: ${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
           } else {
             toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST);
@@ -968,7 +1007,7 @@ export function translate(msg) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Feb 23 2021 16:16:25 GMT-0800 (Pacific Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Feb 24 2021 16:20:51 GMT-0800 (Pacific Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

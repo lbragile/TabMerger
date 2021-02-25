@@ -64,8 +64,22 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
             <div class="row mx-0">
               <h5 class="mr-2 mb-0">Default Group Color:</h5>
               <input type="color" value="#dedede" id="options-default-color" />
+              <div class="ml-4">
+                <input type="checkbox" id="randomize-group-color" name="randomize-group-color" />
+                <label for="randomize-group-color"
+                  >Randomize (<i><b>OFF</b> default</i>)</label
+                >
+              </div>
             </div>
-            <small>This will only be applied on new groups formed after settings are saved!</small>
+            <small
+              >Applied to new groups formed after settings are saved!<br />If you opt to randomize group colors, a
+              randomly selected color from a predefined list will be assigned to newly formed groups. Color
+              randomization only applies to users with
+              <b>Premium</b>
+              <a href="https://lbragile.github.io/TabMerger-Extension/pricing" target="_blank" rel="noreferrer"
+                >subscription</a
+              >.</small
+            >
           </section>
 
           <section>
@@ -73,12 +87,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               <h5 class="mr-2 mb-0">Default Group Title:</h5>
               <input class="px-1 w-10" type="text" value="Title" maxlength="50" id="options-default-title" />
             </div>
-            <small>This will only be applied on new groups formed after settings are saved!</small>
+            <small>Applied to new groups formed after settings are saved!</small>
           </section>
 
           <section>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Tab Title Font:</h5>
+              <h5 class="mr-2 mb-0">Global Font Family:</h5>
               <select name="tab-font" id="tab-font">
                 <option value="Arial" selected>Arial</option>
                 <option value="Verdana">Verdana</option>
@@ -92,12 +106,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
                 <option value="Brush Script MT">Brush Script MT</option>
               </select>
             </div>
-            <small>This will be applied directly upon saving!</small>
+            <small>Applied to everything in TabMerger directly upon saving!</small>
           </section>
 
           <section>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Tab Title Weight:</h5>
+              <h5 class="mr-2 mb-0">Tab Title Font Weight:</h5>
               <select name="tab-weight" id="tab-weight">
                 <option value="Bold">Bold</option>
                 <option value="Bolder">Bolder</option>
@@ -106,7 +120,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
                 <option value="Light">Light</option>
               </select>
             </div>
-            <small>This will be applied directly upon saving!</small>
+            <small>Applied only to the tab titles directly upon saving!</small>
           </section>
 
           <section>
@@ -127,7 +141,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               </small>
               <textarea
                 class="px-1 mt-2"
-                rows="6"
+                rows="5"
                 id="options-blacklist"
                 placeholder="http://www.google.com, https://www.facebook.com, etc."
                 maxlength="1000"
@@ -141,18 +155,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               <small
                 >Only applies to users with
                 <b>Premium</b>
-                <a
-                  href="https://lbragile.github.io/TabMerger-Extension/pricing"
-                  target="_blank"
-                  rel="noreferrer"
-                  style="color: rgb(101, 211, 255)"
-                  >subscriptions</a
-                >.Automatically generates JSON configuration files relative to the Downloads folder. Will automatically
+                <a href="https://lbragile.github.io/TabMerger-Extension/pricing" target="_blank" rel="noreferrer"
+                  >subscription</a
+                >. Automatically generates JSON configuration files relative to the Downloads folder. Will automatically
                 sync (write) your TabMerger configuration.</small
               >
             </div>
             <div>
-              <div class="row mx-0 mt-3">
+              <div class="row mx-0 mt-2">
                 <p class="mr-2 mb-0 font-weight-bold">Relative Path (JSON):</p>
                 <input class="px-1 col-7" name="relative-path-backup" type="text" value="TabMerger/" />
               </div>
@@ -161,26 +171,26 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
                 example, "TabMerger/" would generate files in "Downloads/TabMerger/".
                 <b>Must not contain "../", "./", or absolute paths!</b></small
               >
-              <div class="row mx-0 mt-3">
+              <div class="row mx-0 mt-2">
                 <p class="mr-2 mb-0 font-weight-bold">Save JSON Every ___ Minute(s):</p>
-                <input class="px-1" name="period-backup" type="number" min="0" max="1440" value="720" />
+                <input class="px-1" name="period-backup" type="number" min="0" max="1440" value="0" />
               </div>
 
-              <div class="row mx-0 mt-3">
+              <div class="row mx-0 mt-2">
                 <p class="mr-2 mb-0 font-weight-bold">Sync Every ___ Minute(s):</p>
-                <input class="px-1" name="sync-backup" type="number" min="0" max="1440" value="720" />
+                <input class="px-1" name="sync-backup" type="number" min="0" max="1440" value="0" />
               </div>
               <small
-                >For both JSON & Sync backups: minimum 0 minutes (disable automatic backup), maximum 1 day (1440
-                minutes).</small
+                >For both JSON & Sync backups: minimum 0 minutes (<i>default</i> - disable automatic backup), maximum 1
+                day (1440 minutes).</small
               >
-              <div class="row mx-0 mt-3">
+              <div class="row mx-0 mt-2">
                 <p class="mr-2 mb-0 font-weight-bold">Maximum Files To Save:</p>
-                <input class="px-1" name="json-file-limit" type="number" min="1" max="1000" value="100" />
+                <input class="px-1" name="json-file-limit" type="number" min="1" max="100" value="15" />
               </div>
               <small
-                >Once the above number is reached, older files are deleted to avoid producing too many backup
-                files.</small
+                >Minimum: 1, maximum: 100, <i>default</i>: 15. When reached, older files are deleted to avoid producing
+                too many backup files.</small
               >
             </div>
           </section>
@@ -231,11 +241,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
             <small
               >Extra information on TabMerger's extension badge. Only visible to users with <b>Standard</b> or
               <b>Premium</b>
-              <a
-                href="https://lbragile.github.io/TabMerger-Extension/pricing"
-                target="_blank"
-                rel="noreferrer"
-                style="color: rgb(101, 211, 255)"
+              <a href="https://lbragile.github.io/TabMerger-Extension/pricing" target="_blank" rel="noreferrer"
                 >subscriptions</a
               >. <br /><b>ON</b> → Shows relevant information, about number of tabs and groups inside TabMerger at any
               moment, as {#tabs}|{#groups} with a background color corresponding to number of tabs. The user can hover

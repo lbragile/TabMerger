@@ -682,7 +682,7 @@ describe("checkMerging", () => {
 
 describe("groupFormation", () => {
   it("returns null when group is undefined", () => {
-    const result = AppFunc.groupFormation(undefined);
+    const result = AppFunc.groupFormation(undefined, { fontFamily: "Arial", fontWeight: "Normal" });
 
     expect(result).toBeNull();
   });
@@ -723,24 +723,24 @@ describe("groupFormation", () => {
         current_groups = JSON.parse(JSON.stringify(init_groups));
       }
 
-      result = AppFunc.groupFormation(JSON.stringify(current_groups));
+      result = AppFunc.groupFormation(JSON.stringify(current_groups), { fontFamily: "Arial", fontWeight: "Normal" });
 
       const expected_result = [
         /* prettier-ignore */
-        <Group id="group-0" title="Chess" textColor="primary" color="#d6ffe0" created="11/12/2020 @ 22:13:24" num_tabs={3} hidden={false} locked={false} starred={false} key={Math.random()}>
-          <Tab id="group-0" hidden={false} textColor="primary" />
+        <Group id="group-0" title="Chess" textColor="primary" color="#d6ffe0" created="11/12/2020 @ 22:13:24" num_tabs={3} hidden={false} locked={false} starred={false} fontFamily="Arial" key={Math.random()}>
+          <Tab id="group-0" hidden={false} textColor="primary" fontWeight="Normal" fontFamily="Arial" />
         </Group>,
         /* prettier-ignore */
-        <Group id="group-1" title="Social" textColor="primary" color="#c7eeff" created="11/12/2020 @ 22:15:11" num_tabs={2} hidden={false} locked={false} starred={false} key={Math.random()}>
-          <Tab id="group-1" hidden={false} textColor="primary" />
+        <Group id="group-1" title="Social" textColor="primary" color="#c7eeff" created="11/12/2020 @ 22:15:11" num_tabs={2} hidden={false} locked={false} starred={false} fontFamily="Arial" key={Math.random()}>
+          <Tab id="group-1" hidden={false} textColor="primary" fontWeight="Normal" fontFamily="Arial" />
         </Group>,
         /* prettier-ignore */
-        <Group id="group-2" title={num_groups > 10 ? "B" : "A"} textColor="light" color={num_groups > 10 ? "#456456" : "#123123"} created={num_groups > 10 ? "10/09/2021 @ 12:11:10" : "01/01/2021 @ 12:34:56"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}>
-          <Tab id="group-2" hidden={false} textColor="light" />
+        <Group id="group-2" title={num_groups > 10 ? "B" : "A"} textColor="light" color={num_groups > 10 ? "#456456" : "#123123"} created={num_groups > 10 ? "10/09/2021 @ 12:11:10" : "01/01/2021 @ 12:34:56"} num_tabs={1} hidden={false} locked={false} starred={false} fontFamily="Arial" key={Math.random()}>
+          <Tab id="group-2" hidden={false} textColor="light" fontWeight="Normal" fontFamily="Arial" />
         </Group>,
         /* prettier-ignore */
-        <Group id="group-3" title={num_groups > 10 ? "A" : "B"} textColor="light" color={num_groups > 10 ? "#123123" : "#456456"} created={num_groups > 10 ? "01/01/2021 @ 12:34:56" : "10/09/2021 @ 12:11:10"} num_tabs={1} hidden={false} locked={false} starred={false} key={Math.random()}> 
-          <Tab id="group-3" hidden={false} textColor="light" />
+        <Group id="group-3" title={num_groups > 10 ? "A" : "B"} textColor="light" color={num_groups > 10 ? "#123123" : "#456456"} created={num_groups > 10 ? "01/01/2021 @ 12:34:56" : "10/09/2021 @ 12:11:10"} num_tabs={1} hidden={false} locked={false} starred={false} fontFamily="Arial" key={Math.random()}> 
+          <Tab id="group-3" hidden={false} textColor="light" fontWeight="Normal" fontFamily="Arial" />
         </Group>,
       ];
 
@@ -758,9 +758,10 @@ describe("groupFormation", () => {
               hidden={false}
               locked={false}
               starred={false}
+              fontFamily="Arial"
               key={Math.random()}
             >
-              <Tab id={"group-" + i} hidden={false} textColor={textColor} />
+              <Tab id={"group-" + i} hidden={false} textColor={textColor} fontWeight="Normal" fontFamily="Arial" />
             </Group>
           );
         }

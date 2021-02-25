@@ -42,20 +42,6 @@ export function setInitTabs(setTabs, id) {
 }
 
 /**
- * Allows the user to modify the tab title styles (font family & weight) according to the settings.
- * @param {string} id The group id corresponding to the tabs
- */
-export function applyTitleStyles(id) {
-  chrome.storage.sync.get("settings", (sync) => {
-    var tab_titles = document.querySelectorAll("#" + id + " .a-tab");
-    tab_titles.forEach((x) => {
-      x.style.fontWeight = CONSTANTS.FONT_WEIGHT[sync.settings.weight];
-      x.style.fontFamily = CONSTANTS.FONT_FAMILY[sync.settings.font];
-    });
-  });
-}
-
-/**
  * Adds necessary classes to the tab element once a drag event is initialized
  * @param {HTMLElement} e The tab which will be dragged within the same group or across groups
  */

@@ -32,16 +32,17 @@ const DEFAULT_SETTINGS = {
   blacklist: "",
   color: "#dedede",
   dark: true,
-  fileLimitBackup: 100,
+  fileLimitBackup: 15,
   font: "Arial",
   merge: true,
   open: true,
-  periodBackup: 12 * 60,
+  periodBackup: 0,
   pin: true,
+  randomizeColor: false,
   relativePathBackup: "TabMerger/",
   restore: true,
   saveAsVisibility: true,
-  syncPeriodBackup: 12 * 60,
+  syncPeriodBackup: 0,
   title: "Title",
   tooltipVisibility: true,
   weight: "Normal",
@@ -74,6 +75,7 @@ export function restoreOptions() {
     document.querySelector("input[name='json-file-limit']").value = sync.settings.fileLimitBackup;
     document.getElementById("options-blacklist").value = sync.settings.blacklist;
 
+    document.querySelector("input[name='randomize-group-color']").checked = sync.settings.randomizeColor;
     document.getElementById("saveas-visibility").checked = sync.settings.saveAsVisibility;
     document.getElementById("tooltip-visibility").checked = sync.settings.tooltipVisibility;
     document.querySelector("input[name='badge-view']").checked = sync.settings.badgeInfo;

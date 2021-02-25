@@ -98,7 +98,11 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
 
   return (
     <div className="global-btn-row col">
-      <p className="mx-auto d-block mb-3 alert alert-danger" id="sync-text">
+      <p
+        className="mx-auto d-block mb-3 alert alert-danger"
+        id="sync-text"
+        title="red/green with red border - sync isn't available, green without red border - sync available"
+      >
         <b>{AppFunc.translate("sync").substr(0, 4)}:</b> <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
       </p>
 
