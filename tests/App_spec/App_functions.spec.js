@@ -33,11 +33,11 @@ import Group from "../../src/components/Group/Group";
 import Tab from "../../src/components/Tab/Tab";
 
 const anything = expect.any(Function);
-var container, sync_node, syncLimitIndicationSpy, toastSpy;
+var container, sync_node, toastSpy;
 
 beforeAll(() => {
   jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
-  syncLimitIndicationSpy = jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
+  jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
   toastSpy = toast.mockImplementation((...args) => args);
   console.info = jest.fn();
 });
@@ -56,72 +56,157 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  syncLimitIndicationSpy.mockRestore();
   toastSpy.mockRestore();
+  jest.spyOn(AppFunc, "syncLimitIndication").mockRestore();
 });
 
-describe("badgeIconInfo", () => {
-  const COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
+describe("setUserStatus", () => {
+  var dialogMock = jest.fn();
+  AppFunc.setUserStatus(mockSet, dialogMock);
 
+  expect(dialogMock).toHaveBeenCalledTimes(1);
+  expect(JSON.stringify(dialogMock.mock.calls.pop()[0])).toBe(JSON.stringify(CONSTANTS.SET_USER_STATUS_DIALOG(mockSet, dialogMock))); // prettier-ignore
+});
+
+describe("storeUserDetailsPriorToCheck", () => {
+  var dialogMock = jest.fn();
+  const [email, password] = ["temp@gmail.com", "temp_pass"];
+  var checkUserStatusSpy = jest.spyOn(AppHelper, "checkUserStatus").mockImplementationOnce(() => {});
+
+  var stub = {
+    target: {
+      querySelectorAll: (arg) => arg === "input" && [{ value: email }, { value: password }],
+    },
+    preventDefault: () => {},
+  };
+
+  AppFunc.storeUserDetailsPriorToCheck(stub, mockSet, dialogMock);
+
+  expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+  expect(chromeLocalSetSpy).toHaveBeenCalledWith({ client_details: { email, password } }, anything);
+
+  expect(checkUserStatusSpy).toHaveBeenCalledTimes(1);
+  expect(checkUserStatusSpy).toHaveBeenCalledWith(mockSet);
+
+  expect(dialogMock).toHaveBeenCalledTimes(1);
+  expect(dialogMock).toHaveBeenCalledWith({ show: false });
+});
+
+describe("syncLimitIndication", () => {
   test.each([
-    [0, COLORS.green, false, false],
-    [0, COLORS.green, false, true],
-    [1, COLORS.green, false, false],
-    [20, COLORS.green, false, false],
-    [25, COLORS.yellow, false, false],
-    [40, COLORS.yellow, false, false],
-    [50, COLORS.orange, false, false],
-    [60, COLORS.orange, false, false],
-    [75, COLORS.red, false, false],
-    [80, COLORS.red, false, true],
-    [80, COLORS.red, true, false],
-  ])("color, text, and title are correct for %s tabs", (num_tabs, color, one_group, display) => {
-    const expected_text = display && num_tabs > 0 ? `${num_tabs}|${one_group ? 1 : 4}` : "";
-    const expected_title = num_tabs > 0 ? `You currently have ${num_tabs} ${num_tabs === 1 ? "tab" : "tabs"} in ${one_group ? 1 + " group" : 4 + " groups"}`: "Merge your tabs into groups"; // prettier-ignore
+    [null, 10000],
+    [100, 10000],
+    [439, 10000],
+    [1000, 10000],
+    [1000, 100],
+    [1000, 1452],
+    [1000, 10000],
+  ])("item limt = %s, sync limit = %s", (itemLimit, syncLimit) => {
+    jest.spyOn(AppFunc, "syncLimitIndication").mockRestore();
 
-    if (one_group) {
-      localStorage.setItem("groups", JSON.stringify({ "group-0": CONSTANTS.DEFAULT_GROUP }));
+    const querySelector = document.querySelector;
+    const prevItemLimit = CONSTANTS.ITEM_STORAGE_LIMIT;
+    const prevTotalLimit = CONSTANTS.SYNC_STORAGE_LIMIT;
+
+    localStorage.setItem("groups", JSON.stringify(init_groups));
+    localStorage.setItem("client_details", JSON.stringify({ paid: itemLimit && true }));
+    if (itemLimit < 1000) {
+      localStorage.setItem("scroll", 10);
+    } else {
+      localStorage.removeItem("scroll");
     }
-    sessionStorage.setItem("settings", JSON.stringify({ badgeInfo: display }));
+
+    CONSTANTS.ITEM_STORAGE_LIMIT = itemLimit;
+    CONSTANTS.SYNC_STORAGE_LIMIT = syncLimit;
     jest.clearAllMocks();
 
-    AppFunc.badgeIconInfo(num_tabs, user);
+    jest.useFakeTimers();
+    AppFunc.syncLimitIndication();
+    jest.advanceTimersByTime(101);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "scroll", "client_details"], anything);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(container).toMatchSnapshot();
 
-    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledTimes(1);
-    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledWith({ text: expected_text }, anything);
+    expect(document.documentElement.scrollTop).toEqual(itemLimit < 1000 ? 10 : 0);
 
-    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).toHaveBeenCalledTimes(1);
-    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).toHaveBeenCalledWith({ color }, anything);
+    document.querySelector = querySelector;
+    CONSTANTS.ITEM_STORAGE_LIMIT = prevItemLimit;
+    CONSTANTS.SYNC_STORAGE_LIMIT = prevTotalLimit;
+    jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
+  });
+});
 
-    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledTimes(1);
-    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledWith({ title: expected_title }, anything);
+describe("toggleHiddenOrEmptyGroups", () => {
+  test.each([["before"], ["after"]])("Free/Basic user - %s", (type) => {
+    jest.clearAllMocks();
+    AppFunc.toggleHiddenOrEmptyGroups(type, { tier: "Free" });
+
+    expect(container).toMatchSnapshot();
   });
 
-  it("does nothing if there are no groups in local storage", () => {
-    localStorage.removeItem("groups");
+  test.each([["before"], ["after"]])("Standard/Premium user - %s", (type) => {
+    if (type === "after") {
+      localStorage.setItem("container_pos", 100);
+      localStorage.setItem("logo_pos", JSON.stringify({ left: 100, top: 0 }));
+    }
+
+    var localStorageSetSpy = jest.spyOn(window.localStorage.__proto__, "setItem");
+    var localStorageRemoveSpy = jest.spyOn(window.localStorage.__proto__, "removeItem");
     jest.clearAllMocks();
 
-    AppFunc.badgeIconInfo(10, user);
+    AppFunc.toggleHiddenOrEmptyGroups(type, user);
+
+    if (type === "before") {
+      expect(localStorageSetSpy).toHaveBeenCalledWith("container_pos", expect.any(String));
+      expect(localStorageSetSpy).toHaveBeenCalledWith("logo_pos", expect.any(String));
+    } else {
+      expect(localStorageRemoveSpy).toHaveBeenCalledWith("container_pos");
+      expect(localStorageRemoveSpy).toHaveBeenCalledWith("logo_pos");
+    }
+
+    expect(container).toMatchSnapshot();
+  });
+});
+
+describe("createAutoBackUpAlarm", () => {
+  it("creates the sync and json alarms for premium members", () => {
+    var alarmGeneratorSpy = jest.spyOn(AppHelper, "alarmGenerator");
+
+    sessionStorage.setItem("settings", JSON.stringify({ periodBackup: 5, syncPeriodBackup: 10 }));
+    localStorage.setItem("client_details", JSON.stringify({ tier: "Premium" }));
+    jest.clearAllMocks();
+
+    AppFunc.createAutoBackUpAlarm();
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("client_details", anything);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
 
+    expect(alarmGeneratorSpy).toHaveBeenCalledTimes(2);
+    expect(alarmGeneratorSpy).toHaveBeenNthCalledWith(1, 5, "json_backup", CONSTANTS.JSON_AUTOBACKUP_OFF_TOAST);
+    expect(alarmGeneratorSpy).toHaveBeenNthCalledWith(2, 10, "sync_backup", CONSTANTS.SYNC_AUTOBACKUP_OFF_TOAST);
+  });
+
+  it("does nothing for non-premium members", () => {
+    var alarmGeneratorSpy = jest.spyOn(AppHelper, "alarmGenerator");
+
+    localStorage.setItem("client_details", null);
+    jest.clearAllMocks();
+
+    AppFunc.createAutoBackUpAlarm();
+
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("client_details", anything);
 
-    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledTimes(1);
-    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledWith({ text: "" }, anything);
-
-    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledTimes(1);
-    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledWith({ title: "Merge your tabs into groups" }, anything);
-
-    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).not.toHaveBeenCalled();
+    expect(chromeSyncGetSpy).not.toHaveBeenCalled();
+    expect(alarmGeneratorSpy).not.toHaveBeenCalled();
   });
 });
 
@@ -200,9 +285,6 @@ describe("storageInit", () => {
 });
 
 describe("resetTutorialChoice", () => {
-  var elementMutationListenerSpy;
-  afterAll(() => elementMutationListenerSpy.mockRestore());
-
   it.each([[true], [false], [null]])(
     "sets the tour state properly or opens official homepage correctly - response === %s",
     async (response) => {
@@ -215,13 +297,14 @@ describe("resetTutorialChoice", () => {
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (response === null) {
-        elementMutationListenerSpy = jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
+        jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
           var mutation = {};
           mutation.type = { attributes: false, childList: true, subtree: false };
           cb(mutation);
         });
       }
 
+      jest.clearAllMocks();
       AppFunc.resetTutorialChoice(stub, url, mockSetTour, mockSetDialog);
       if (response !== null) {
         element.setAttribute("response", response ? "positive" : "negative");
@@ -242,9 +325,76 @@ describe("resetTutorialChoice", () => {
         }
       });
 
-      expect.assertions(response ? 4 : response === false ? 5 : 3);
+      expect.assertions(response ? 5 : response === false ? 7 : 3);
+
+      jest.spyOn(AppHelper, "elementMutationListener").mockRestore();
     }
   );
+});
+
+describe("badgeIconInfo", () => {
+  const COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
+
+  test.each([
+    [0, COLORS.green, false, false],
+    [0, COLORS.green, false, true],
+    [1, COLORS.green, false, false],
+    [20, COLORS.green, false, false],
+    [25, COLORS.yellow, false, false],
+    [40, COLORS.yellow, false, false],
+    [50, COLORS.orange, false, false],
+    [60, COLORS.orange, false, false],
+    [75, COLORS.red, false, false],
+    [80, COLORS.red, false, true],
+    [80, COLORS.red, true, false],
+  ])("color, text, and title are correct for %s tabs", (num_tabs, color, one_group, display) => {
+    const expected_text = display && num_tabs > 0 ? `${num_tabs}|${one_group ? 1 : 4}` : "";
+    const expected_title = num_tabs > 0 ? `You currently have ${num_tabs} ${num_tabs === 1 ? "tab" : "tabs"} in ${one_group ? 1 + " group" : 4 + " groups"}`: "Merge your tabs into groups"; // prettier-ignore
+
+    if (one_group) {
+      localStorage.setItem("groups", JSON.stringify({ "group-0": CONSTANTS.DEFAULT_GROUP }));
+    }
+    sessionStorage.setItem("settings", JSON.stringify({ badgeInfo: display }));
+    jest.clearAllMocks();
+
+    AppFunc.badgeIconInfo(num_tabs, user);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledWith({ text: expected_text }, anything);
+
+    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).toHaveBeenCalledWith({ color }, anything);
+
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledWith({ title: expected_title }, anything);
+  });
+
+  it("does nothing if there are no groups in local storage", () => {
+    localStorage.removeItem("groups");
+    jest.clearAllMocks();
+
+    AppFunc.badgeIconInfo(10, user);
+
+    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
+
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetBadgeTextSpy).toHaveBeenCalledWith({ text: "" }, anything);
+
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledTimes(1);
+    expect(chromeBrowserActionSetTitleSpy).toHaveBeenCalledWith({ title: "Merge your tabs into groups" }, anything);
+
+    expect(chromeBrowserActionSetBadgeBackgroundColorSpy).not.toHaveBeenCalled();
+  });
 });
 
 describe("syncWrite", () => {
@@ -333,14 +483,24 @@ describe("syncWrite", () => {
 });
 
 describe("syncRead", () => {
-  it("does nothing when no groups in sync storage", () => {
+  it.each([["no groups in sync storage"], ["free user"]])("does nothing when %s", (test_type) => {
     sessionStorage.clear();
     jest.clearAllMocks();
 
-    AppFunc.syncRead(sync_node, user, mockSet, mockSet, mockSet);
+    AppFunc.syncRead(sync_node, test_type.includes("sync") ? user : { paid: false }, mockSet, mockSet, mockSet);
 
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
+    if ((sync_node, test_type.includes("sync"))) {
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
+    } else {
+      expect(chromeSyncGetSpy).not.toHaveBeenCalled();
+      expect(toastSpy).toHaveBeenCalledTimes(1);
+      expect(toastSpy).toHaveReturnedWith(CONSTANTS.SUBSCRIPTION_TOAST);
+    }
+
+    expect(chromeLocalRemoveSpy).not.toHaveBeenCalled();
+    expect(chromeLocalSetSpy).not.toHaveBeenCalled();
+    expect(chromeSyncRemoveSpy).not.toHaveBeenCalled();
 
     expect(mockSet).not.toHaveBeenCalled();
     expect(toggleSyncTimestampSpy).not.toHaveBeenCalled();
@@ -797,15 +957,27 @@ describe("addGroup", () => {
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
   });
 
-  it("adjusts the groups if limit is not exceeded", () => {
+  it.each([
+    [true, true],
+    [true, false],
+    [false, true],
+    [false, false],
+  ])("adjusts the groups if limit is not exceeded - premium=%s, randomize=%s", (premium, randomize) => {
+    if (premium && randomize) {
+      jest.spyOn(global.Math, "random").mockReturnValue(0.5);
+    }
+
+    sessionStorage.setItem("settings", JSON.stringify({ color: randomize ? "#FFE4B5": "#dedede", randomizeColor: randomize, title: "Title" })); // prettier-ignore
+
     Object.defineProperty(document.body, "scrollHeight", { writable: true, configurable: true, value: 1000 });
 
     localStorage.setItem("groups", JSON.stringify(init_groups));
-    localStorage.setItem("client_details", JSON.stringify({ tier: "Premium" }));
+    localStorage.setItem("client_details", JSON.stringify({ tier: premium ? "Premium" : "Standard" }));
 
     var groups = JSON.parse(JSON.stringify(init_groups));
     groups["group-4"] = CONSTANTS.DEFAULT_GROUP;
     groups["group-4"].created = AppHelper.getTimestamp();
+    groups["group-4"].color = randomize ? "#FFE4B5" : "#dedede";
     jest.clearAllMocks();
 
     AppFunc.addGroup(mockSet);
@@ -867,7 +1039,7 @@ describe("openAllTabs", () => {
       }
     });
 
-    expect.assertions(response ? 5 : 3);
+    expect.assertions(response ? 6 : 3);
   });
 });
 
@@ -1117,19 +1289,20 @@ describe("dragOver", () => {
 
 describe("regexSearchForTab", () => {
   it.each([
-    ["group", "NO", "#c", ["none", "none"]],
-    ["group", "YES", "#GROUP a", ["", "none"]],
-    ["group", "YES", "#group b", ["none", ""]],
-    ["group", "YES", "#group", ["", ""]],
-    ["tab", "NO", "x", ["none", "", "", "none", "", ""]],
-    ["tab", "YES", "tab A", ["", "", "none", "none", "", ""]],
-    ["tab", "YES", "tab B", ["", "none", "", "none", "", ""]],
-    ["tab", "YES", "tab C", ["none", "", "", "", "", "none"]],
-    ["tab", "YES", "tab D", ["none", "", "", "", "none", ""]],
-    ["tab", "YES", "tab", ["", "", "", "", "", ""]],
-    ["blank", "BACKSPACE_BLANK", "", ["", ""]],
-    ["improper", "IMPORPER_SYMBOL", "!", ["none", "none"]],
-  ])("works for %s search - %s match (value %s)", (type, _, value, expect_arr) => {
+    [true, "group", "NO", "#c", ["none", "none"]],
+    [false, "group", "NO", "#c", ["none", "none"]],
+    [true, "group", "YES", "#GROUP a", ["", "none"]],
+    [true, "group", "YES", "#group b", ["none", ""]],
+    [true, "group", "YES", "#group", ["", ""]],
+    [true, "tab", "NO", "x", ["none", "", "", "none", "", ""]],
+    [true, "tab", "YES", "tab A", ["", "", "none", "none", "", ""]],
+    [true, "tab", "YES", "tab B", ["", "none", "", "none", "", ""]],
+    [true, "tab", "YES", "tab C", ["none", "", "", "", "", "none"]],
+    [true, "tab", "YES", "tab D", ["none", "", "", "", "none", ""]],
+    [true, "tab", "YES", "tab", ["", "", "", "", "", ""]],
+    [true, "blank", "BACKSPACE_BLANK", "", ["", ""]],
+    [true, "improper", "IMPORPER_SYMBOL", "!", ["none", "none"]],
+  ])("works for %s search - %s match (value %s)", (paid, type, _, value, expect_arr) => {
     document.body.innerHTML =
       `<div class="group-item">` +
       `  <input class="title-edit-input" value="GROUP A"/>` +
@@ -1144,12 +1317,18 @@ describe("regexSearchForTab", () => {
 
     // need to type first to have the input change
     if (type === "blank") {
-      AppFunc.regexSearchForTab({ target: { value: "random" } }, user);
+      AppFunc.regexSearchForTab({ target: { value: "random" } }, paid ? user : { paid });
+      jest.clearAllMocks();
     }
-    AppFunc.regexSearchForTab({ target: { value } }, user);
+    AppFunc.regexSearchForTab({ target: { value } }, paid ? user : { paid });
 
-    const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable, .group-item" : ".group-item")];
-    expect(targets.map((x) => x.style.display)).toStrictEqual(expect_arr);
+    if (paid) {
+      const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable, .group-item" : ".group-item")];
+      expect(targets.map((x) => x.style.display)).toStrictEqual(expect_arr);
+    } else {
+      expect(toastSpy).toHaveBeenCalledTimes(1);
+      expect(toastSpy).toHaveReturnedWith(CONSTANTS.SUBSCRIPTION_TOAST);
+    }
   });
 });
 
@@ -1163,6 +1342,82 @@ describe("resetSearch", () => {
 
     expect(stub.target.value).toBe("");
   });
+});
+
+describe("exportJSON", () => {
+  it.each([[null], ["Free"], ["Basic"]])("shows toast for user=%s", (user_type) => {
+    localStorage.setItem("client_details", user_type && JSON.stringify({ tier: user_type }));
+
+    jest.clearAllMocks();
+    AppFunc.exportJSON(false, false);
+
+    expect(toastSpy).toHaveBeenCalledTimes(1);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SUBSCRIPTION_TOAST]);
+  });
+
+  it.each([
+    [1, true, true],
+    [1, false, false],
+    [1, false, true],
+    [15, true, true],
+    [15, false, false],
+    [15, false, true],
+  ])(
+    "correctly exports a JSON file of the current configuration, fileLimit=%s, lastError=%s, showShelf=%s",
+    (fileLimit, lastError, showShelf) => {
+      chrome.runtime.lastError = lastError ? jest.fn() : undefined;
+
+      var chromeDownloadsSetShelfEnabledSpy = jest.spyOn(chrome.downloads, "setShelfEnabled");
+      var chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
+      var chromeDownloadsRemoveFileSpy = jest.spyOn(chrome.downloads, "removeFile");
+
+      localStorage.setItem("groups", JSON.stringify(init_groups));
+      localStorage.setItem("client_details", JSON.stringify(user));
+      localStorage.setItem("file_ids", JSON.stringify(fileLimit === 1 ? [1] : []));
+
+      var groups = JSON.parse(localStorage.getItem("groups"));
+      groups["settings"] = { ...JSON.parse(sessionStorage.getItem("settings")), relativePathBackup: "Test/", fileLimitBackup: fileLimit }; // prettier-ignore
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
+      sessionStorage.setItem("settings", JSON.stringify(groups["settings"]));
+
+      const expect_download_opts = {
+        url: dataStr,
+        filename: "Test/" + AppHelper.outputFileName().replace(/\:|\//g, "_") + ".json",
+        conflictAction: "uniquify",
+        saveAs: false,
+      };
+
+      jest.clearAllMocks();
+
+      AppFunc.exportJSON(showShelf, false);
+
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details", "file_ids"], anything);
+
+      expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
+
+      expect(chromeDownloadsSetShelfEnabledSpy).toHaveBeenCalledTimes(1);
+      expect(chromeDownloadsSetShelfEnabledSpy).toHaveBeenCalledWith(showShelf);
+
+      if (!lastError) {
+        if (!showShelf) {
+          expect(chromeDownloadsDownloadSpy).toHaveBeenCalledTimes(1);
+          expect(chromeDownloadsDownloadSpy).toHaveBeenCalledWith(expect_download_opts, anything);
+
+          if (fileLimit > 1) {
+            expect(chromeDownloadsRemoveFileSpy).not.toHaveBeenCalled();
+          }
+
+          expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+          expect(chromeLocalSetSpy).toHaveBeenCalledWith({ file_ids: [2] }, anything);
+        }
+      } else {
+        expect(toastSpy).toHaveBeenCalledTimes(1);
+        expect(toastSpy).toHaveReturnedWith([...CONSTANTS.DOWNLOAD_ERROR_TOAST]);
+      }
+    }
+  );
 });
 
 describe("importJSON", () => {
@@ -1224,41 +1479,6 @@ describe("importJSON", () => {
     expect(input.target.value).toBe("");
 
     storeDestructiveActionSpy.mockRestore();
-  });
-});
-
-describe("exportJSON", () => {
-  it("correctly exports a JSON file of the current configuration", () => {
-    var chromeDownloadsSetShelfEnabledSpy = jest.spyOn(chrome.downloads, "setShelfEnabled");
-    var chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
-
-    var groups = JSON.parse(localStorage.getItem("groups"));
-    groups["settings"] = { ...JSON.parse(sessionStorage.getItem("settings")), relativePathBackup: "Test/" };
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
-    sessionStorage.setItem("settings", JSON.stringify(groups["settings"]));
-
-    const expect_download_opts = {
-      url: dataStr,
-      filename: "Test/" + AppHelper.outputFileName().replace(/\:|\//g, "_") + ".json",
-      conflictAction: "uniquify",
-      saveAs: false,
-    };
-
-    jest.clearAllMocks();
-
-    AppFunc.exportJSON(false, false);
-
-    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details", "file_ids"], anything);
-
-    expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
-    expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);
-
-    expect(chromeDownloadsSetShelfEnabledSpy).toHaveBeenCalledTimes(1);
-    expect(chromeDownloadsSetShelfEnabledSpy).toHaveBeenCalledWith(false);
-
-    expect(chromeDownloadsDownloadSpy).toHaveBeenCalledTimes(1);
-    expect(chromeDownloadsDownloadSpy).toHaveBeenCalledWith(expect_download_opts, anything);
   });
 });
 

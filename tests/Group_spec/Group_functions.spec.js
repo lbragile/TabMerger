@@ -42,7 +42,7 @@ beforeEach(() => {
   localStorage.setItem("groups", JSON.stringify(init_groups));
 
   container = render(
-    <AppProvider value={{ setTabTotal: mockSet, setGroups: mockSet, setDialog: mockSet }}>
+    <AppProvider value={{ user, setTabTotal: mockSet, setGroups: mockSet, setDialog: mockSet }}>
       <Group
         id="group-0"
         title="GROUP A"

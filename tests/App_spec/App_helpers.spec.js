@@ -21,21 +21,19 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { toast } from "react-toastify";
 
+import * as AppFunc from "../../src/components/App/App_functions";
 import * as AppHelper from "../../src/components/App/App_helpers";
 import App from "../../src/components/App/App";
+
+import axios from "axios";
 
 const anything = expect.any(Function);
 var new_item = init_groups["group-0"];
 
-var container, sync_node, sync_container;
-beforeEach(() => {
-  container = render(<App />).container;
-  sync_node = container.querySelector("#sync-text span");
-  sync_container = sync_node.parentNode;
-});
+var container, sync_node, sync_container, toastSpy;
 
 beforeAll(() => {
   Object.keys(init_groups).forEach((key) => {
@@ -43,12 +41,25 @@ beforeAll(() => {
   });
 
   localStorage.setItem("groups", JSON.stringify(init_groups));
+
+  toastSpy = toast.mockImplementation((...args) => args);
+  console.info = jest.fn();
+});
+
+beforeEach(() => {
+  container = render(<App />).container;
+  sync_node = container.querySelector("#sync-text span");
+  sync_container = sync_node.parentNode;
+});
+
+afterAll(() => {
+  toastSpy.mockRestore();
 });
 
 describe("getTimestamp", () => {
   it("returns the correct timestamp in format dd/mm/yyyy @ hh:mm:ss", () => {
-    const result = AppHelper.getTimestamp("Tue Feb 09 2021 22:07:40 GMT-0800 (Pacific Standard Time)");
-    expect(result).toBe("09/02/2021 @ 22:07:40");
+    const result = AppHelper.getTimestamp("Tue Mar 09 2021 22:07:40 GMT-0800 (Pacific Standard Time)");
+    expect(result).toBe("09/03/2021 @ 22:07:40");
   });
 
   it("returns something if argument is empty", () => {
@@ -253,7 +264,6 @@ describe("alarmGenerator", () => {
       var chromeAlarmsGetSpy = jest.spyOn(chrome.alarms, "get").mockImplementation((_, cb) => cb({ periodInMinutes: alarm_periodInMinutes })); // prettier-ignore
       var chromeAlarmsClearSpy = jest.spyOn(chrome.alarms, "clear").mockImplementation((_, cb) => cb(wasCleared));
       var chromeAlarmsCreateSpy = jest.spyOn(chrome.alarms, "create");
-      var toastSpy = toast.mockImplementation((...args) => args);
       jest.clearAllMocks();
 
       AppHelper.alarmGenerator(periodInMinutes, alarm_name, [<div>test</div>, { toastId: "test" }]);
@@ -276,7 +286,56 @@ describe("alarmGenerator", () => {
 
       chromeAlarmsGetSpy.mockRestore();
       chromeAlarmsCreateSpy.mockRestore();
-      toastSpy.mockRestore();
     }
   );
+});
+
+describe("checkUserStatus", () => {
+  it.each([[true], [false]])("sets the user details if database check passes, response = %s", async (response) => {
+    const client_details = { email: "test@emal.com", password: "test_pass" };
+    localStorage.setItem("client_details", JSON.stringify(client_details)); // prettier-ignore
+    jest.spyOn(axios, "get").mockResolvedValueOnce({ data: response && user });
+    jest.clearAllMocks();
+
+    AppHelper.checkUserStatus(mockSet);
+
+    await waitFor(() => {
+      expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+      expect(chromeLocalGetSpy).toHaveBeenCalledWith("client_details", anything);
+
+      if (response) {
+        expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+        expect(chromeLocalSetSpy).toHaveBeenCalledWith({ client_details: { ...client_details, ...user } }, anything);
+
+        expect(mockSet).toHaveBeenCalledTimes(1);
+        expect(mockSet).toHaveBeenCalledWith(user);
+      }
+    });
+
+    expect.hasAssertions();
+  });
+});
+
+describe("performAutoBackup", () => {
+  test("json alarm", () => {
+    var exportJSONSpy = jest.spyOn(AppFunc, "exportJSON");
+    AppHelper.performAutoBackUp({ name: "json_backup" }, sync_node);
+
+    expect(exportJSONSpy).toHaveBeenCalledTimes(1);
+    expect(exportJSONSpy).toHaveBeenCalledWith(false, false);
+  });
+
+  test("sync alarm", () => {
+    var syncWriteSpy = jest.spyOn(AppFunc, "syncWrite");
+
+    localStorage.setItem("client_details", JSON.stringify(user));
+    jest.clearAllMocks();
+    AppHelper.performAutoBackUp({ name: "sync_backup" }, sync_node);
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("client_details", anything);
+
+    expect(syncWriteSpy).toHaveBeenCalledTimes(1);
+    expect(syncWriteSpy).toHaveBeenCalledWith({target: container.querySelector("#sync-write-btn"), autoAction: true}, sync_node, user); // prettier-ignore
+  });
 });

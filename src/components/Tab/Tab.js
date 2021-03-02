@@ -76,7 +76,10 @@ export default function Tab({ id, hidden, textColor, fontWeight, fontFamily }) {
               onKeyPress={(e) => TabFunc.handleTabTitleChange(e)}
               onBlur={(e) => TabFunc.handleTabTitleChange(e)}
               onDrop={(e) => e.preventDefault()}
-              style={{ fontWeight, fontFamily }}
+              style={{
+                fontWeight: ["Standard", "Premium"].includes(user.tier) ? fontWeight : "Normal",
+                fontFamily: ["Standard", "Premium"].includes(user.tier) ? fontFamily : "Arial",
+              }}
             >
               {tab.title}
             </a>

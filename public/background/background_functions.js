@@ -53,9 +53,7 @@ export async function extensionMessage(request) {
   info.which = request.msg;
 
   var tab = await new Promise((resolve) => {
-    chrome.tabs.query(queryOpts, (tabs) => {
-      resolve(tabs[0]);
-    });
+    chrome.tabs.query(queryOpts, (tabs) => resolve(tabs[0]));
   });
 
   await filterTabs(info, tab, request.id);

@@ -60,7 +60,11 @@ export default function Group({
       onDragStart={(e) => GroupFunc.groupDragStart(e)}
       onDragEnd={(e) => GroupFunc.groupDragEnd(e)}
     >
-      <div className="group-title d-flex flex-row justify-content-center" draggable={false} style={{ fontFamily }}>
+      <div
+        className="group-title d-flex flex-row justify-content-center"
+        draggable={false}
+        style={{ fontFamily: ["Standard", "Premium"].includes(user.tier) ? fontFamily : "Arial" }}
+      >
         <h5 className="group-count">{num_tabs}</h5>
 
         <input
@@ -89,7 +93,11 @@ export default function Group({
       </div>
 
       <div id={id} className="group draggable-group" draggable={false} onDragOver={(e) => dragOver(e, "tab")}>
-        <div className="created mr-1" draggable={false} style={{ fontFamily }}>
+        <div
+          className="created mr-1"
+          draggable={false}
+          style={{ fontFamily: ["Standard", "Premium"].includes(user.tier) ? fontFamily : "Arial" }}
+        >
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>
 

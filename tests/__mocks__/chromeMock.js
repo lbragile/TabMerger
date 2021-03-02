@@ -57,7 +57,12 @@ global.chrome = {
     },
   },
   downloads: {
-    download: function () {},
+    download: function (_, cb) {
+      cb(2);
+    },
+    removeFile: function (_, cb) {
+      cb();
+    },
     setShelfEnabled: function () {},
   },
   i18n: {

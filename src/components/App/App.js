@@ -27,6 +27,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as AppFunc from "./App_functions";
+import * as AppHelper from "./App_helpers";
 import * as CONSTANTS from "../../constants/constants";
 
 import GlobalBtns from "../Button/GlobalBtns";
@@ -72,7 +73,7 @@ export default function App() {
     if (process.env.NODE_ENV !== "test") {
       chrome.storage.local.get("client_details", (local) => {
         if (local.client_details) {
-          AppFunc.checkUserStatus(setUser);
+          AppHelper.checkUserStatus(setUser);
         }
       });
     }
@@ -82,12 +83,12 @@ export default function App() {
 
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
-    chrome.alarms.onAlarm.addListener((alarm) => AppFunc.performAutoBackUp(alarm, syncTimestamp.current));
+    chrome.alarms.onAlarm.addListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestamp.current));
 
     return () => {
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
-      chrome.alarms.onAlarm.removeListener((alarm) => AppFunc.performAutoBackUp(alarm, syncTimestamp.current));
+      chrome.alarms.onAlarm.removeListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestamp.current));
     };
   }, []);
 
@@ -139,7 +140,10 @@ export default function App() {
         lastStepNextButton={<button className="btn btn-dark">🏁</button>}
       />
 
-      <nav id="sidebar" style={{ fontFamily: textStyles.current.fontFamily }}>
+      <nav
+        id="sidebar"
+        style={{ fontFamily: ["Standard", "Premium"].includes(user.tier) ? textStyles.current.fontFamily : "Arial" }}
+      >
         <Header total={tabTotal} />
         <hr className="mx-auto d-none shown-in-print" />
         <Reviews /> {/* Only visible in print mode for Free and Basic Tier users */}

@@ -55,7 +55,7 @@ export async function filterTabs(info, tab, group_id) {
     }
 
     // create duplicate title/url list & filter blacklisted sites
-    var filter_vals = ["New Tab", "Extensions", "Add-ons Manager"];
+    var filter_vals = ["New Tab", "Extensions", "Add-ons Manager", "about:home", "chrome:newtab"];
 
     setTimeout(() => {
       chrome.storage.sync.get("settings", (sync) => {

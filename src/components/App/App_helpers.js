@@ -25,8 +25,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module App/App_helpers
  */
 
+import * as AppFunc from "../../components/App/App_functions";
 import * as CONSTANTS from "../../constants/constants";
+
 import { toast } from "react-toastify";
+import axios from "axios";
 
 /**
  * Produces a timestamp which is added to newly formed groups
@@ -256,6 +259,44 @@ export function alarmGenerator(periodInMinutes, alarm_name, toast_val) {
       if (wasCleared) {
         toast(...toast_val);
       }
+    });
+  }
+}
+
+/**
+ * Checks and updates a user's status to know if they are a paid or free user.
+ * The information is stored in an external (encrypted) database.
+ * @param {Function} setUser For re-rendering the user's payment/subscription information
+ */
+export function checkUserStatus(setUser) {
+  chrome.storage.local.get("client_details", async (local) => {
+    const { email, password } = local.client_details;
+    var response = await axios.get(CONSTANTS.USER_STATUS_URL + JSON.stringify({ password, email }));
+    if (response.data) {
+      chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } }, () => {
+        setUser(response.data);
+      });
+    }
+  });
+}
+
+/**
+ * Actually performs the automatic backup action based on the triggered alarm.
+ * @param {object} alarm The alarm for which the backup is to be performed.
+ * @param {HTMLElement} sync_node Needed for sync backups to update the sync text indicator
+ */
+export function performAutoBackUp(alarm, sync_node) {
+  if (alarm.name === "json_backup") {
+    AppFunc.exportJSON(false, false);
+  }
+
+  if (alarm.name === "sync_backup") {
+    chrome.storage.local.get("client_details", (local) => {
+      AppFunc.syncWrite(
+        { target: document.getElementById("sync-write-btn"), autoAction: true },
+        sync_node,
+        local.client_details
+      );
     });
   }
 }

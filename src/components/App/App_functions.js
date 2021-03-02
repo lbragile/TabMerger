@@ -27,8 +27,6 @@ import * as CONSTANTS from "../../constants/constants";
 import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 import { toast } from "react-toastify";
 
-import axios from "axios";
-
 import Tab from "../Tab/Tab.js";
 import Group from "../Group/Group.js";
 
@@ -44,83 +42,21 @@ import Group from "../Group/Group.js";
  * @param {Function} setDialog Shows the modal for inputing the user's credentials.
  */
 export function setUserStatus(setUser, setDialog) {
-  setDialog({
-    show: true,
-    title: "🔐 TabMerger Product Activation 🔐",
-    msg: (
-      <div>
-        <form
-          id="activation-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            chrome.storage.local.set(
-              {
-                client_details: {
-                  email: e.target.querySelector("input[type='email']").value,
-                  password: e.target.querySelector("input[type='password']").value,
-                },
-              },
-              () => {
-                checkUserStatus(setUser); // authenticate the user
-                setDialog({ show: false }); // close modal
-              }
-            );
-          }}
-        >
-          <label>
-            <b>Email:</b>
-          </label>
-          <br />
-          <input
-            type="email"
-            name="email"
-            className="p-1"
-            placeholder="Email you used during checkout..."
-            autoFocus
-            autoComplete
-            required
-          />
-          <br />
-          <br />
-          <label>
-            <b>Activation Key:</b>
-          </label>
-          <br />
-          <input
-            type="password"
-            name="password"
-            className="p-1"
-            placeholder="From our email..."
-            minLength={6}
-            required
-          />
-          <br />
-          <br />
-          <button type="submit" className="btn btn-outline-primary text-primary">
-            Activate
-          </button>
-        </form>
-      </div>
-    ),
-    accept_btn_text: null,
-    reject_btn_text: null,
-  });
+  setDialog(CONSTANTS.SET_USER_STATUS_DIALOG(setUser, setDialog));
 }
 
 /**
- * Checks and updates a user's status to know if they are a paid or free user.
- * The information is stored in an external (encrypted) database.
- * @param {Function} setUser For re-rendering the user's payment/subscription information
+ * Stores the relevant details in local storage prior to checking if the user is authenticated
+ * @param {HTMLElement} e The submitted form (where user enters their email and activation key)
+ * @param {Function} setUser To re-render the user details and adjust buttons/features accordingly
+ * @param {Function} setDialog To close dialog when needed
  */
-export function checkUserStatus(setUser) {
-  chrome.storage.local.get("client_details", async (local) => {
-    const { email, password } = local.client_details;
-    var response = await axios.get(CONSTANTS.USER_STATUS_URL + JSON.stringify({ password, email }));
-    if (response.data) {
-      chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } }, () => {
-        setUser(response.data);
-      });
-    }
+export function storeUserDetailsPriorToCheck(e, setUser, setDialog) {
+  e.preventDefault();
+  var [email, password] = [...e.target.querySelectorAll("input")].map((x) => x.value);
+  chrome.storage.local.set({ client_details: { email, password } }, () => {
+    AppHelper.checkUserStatus(setUser); // authenticate the user
+    setDialog({ show: false }); // close modal
   });
 }
 
@@ -215,27 +151,6 @@ export function createAutoBackUpAlarm() {
       });
     }
   });
-}
-
-/**
- * Actually performs the automatic backup action based on the triggered alarm.
- * @param {object} alarm The alarm for which the backup is to be performed.
- * @param {HTMLElement} sync_node Needed for sync backups to update the sync text indicator
- */
-export function performAutoBackUp(alarm, sync_node) {
-  if (alarm.name === "json_backup") {
-    exportJSON(false, false);
-  }
-
-  if (alarm.name === "sync_backup") {
-    chrome.storage.local.get("client_details", (local) => {
-      syncWrite(
-        { target: document.getElementById("sync-write-btn"), autoAction: true },
-        sync_node,
-        local.client_details
-      );
-    });
-  }
 }
 
 /**
@@ -822,41 +737,6 @@ export function resetSearch(e) {
 }
 
 /**
- * Allows the user to import a JSON file which they exported previously.
- * This JSON file contains TabMerger's configuration and once uploaded
- * overwrites the current configuration. Checks are made to ensure a JSON
- * file is uploaded.
- * @param {HTMLElement} e Node corresponding to the input file field
- * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setTabTotal For re-rendering the total tab counter
- */
-export function importJSON(e, user, setGroups, setTabTotal) {
-  if (e.target.files[0].type === "application/json") {
-    chrome.storage.local.get(["groups", "groups_copy"], (local) => {
-      const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups, user);
-      const scroll = document.documentElement.scrollTop;
-
-      var reader = new FileReader();
-      reader.readAsText(e.target.files[0]);
-      reader.onload = () => {
-        var fileContent = JSON.parse(reader.result);
-
-        chrome.storage.sync.set({ settings: fileContent.settings }, () => {
-          delete fileContent.settings;
-          chrome.storage.local.set({ groups: fileContent, groups_copy, scroll }, () => {
-            e.target.value = ""; // reset the file input so it can trigger again
-            setGroups(JSON.stringify(fileContent));
-            setTabTotal(AppHelper.getTabTotal(fileContent));
-          });
-        });
-      };
-    });
-  } else {
-    toast(...CONSTANTS.IMPORT_JSON_TOAST);
-  }
-}
-
-/**
  * Allows the user to export TabMerger's current configuration (including settings).
  * Also performs auto-backups by creating JSON files in a specific folder relative to the Downloads folder at user specific intervals.
  * @param {boolean} showGrayDownloadShelf Whether or not a download will show up at the bottom of the screen (pop-up). False for auto-backup
@@ -901,14 +781,14 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
                 for (const old_id of ids_to_remove) {
                   chrome.downloads.removeFile(old_id, () => {
                     if (!chrome.runtime.lastError) {
-                      console.info(`%c[TABMERGER INFO] %c deleted old backup file with id=${old_id} to make room for new files -  ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
+                      console.info(`%c[TABMERGER INFO] %cdeleted old backup file with id=${old_id} to make room for new files - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
                     }
                   });
                 }
               }
               chrome.storage.local.set({ file_ids: [...file_ids, downloadId] }, () => {});
             }
-            console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file id: ${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
+            console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file with id=${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
           } else {
             toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST);
           }
@@ -916,6 +796,41 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
       });
     }
   });
+}
+
+/**
+ * Allows the user to import a JSON file which they exported previously.
+ * This JSON file contains TabMerger's configuration and once uploaded
+ * overwrites the current configuration. Checks are made to ensure a JSON
+ * file is uploaded.
+ * @param {HTMLElement} e Node corresponding to the input file field
+ * @param {Function} setGroups For re-rendering the groups
+ * @param {Function} setTabTotal For re-rendering the total tab counter
+ */
+export function importJSON(e, user, setGroups, setTabTotal) {
+  if (e.target.files[0].type === "application/json") {
+    chrome.storage.local.get(["groups", "groups_copy"], (local) => {
+      const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups, user);
+      const scroll = document.documentElement.scrollTop;
+
+      var reader = new FileReader();
+      reader.readAsText(e.target.files[0]);
+      reader.onload = () => {
+        var fileContent = JSON.parse(reader.result);
+
+        chrome.storage.sync.set({ settings: fileContent.settings }, () => {
+          delete fileContent.settings;
+          chrome.storage.local.set({ groups: fileContent, groups_copy, scroll }, () => {
+            e.target.value = ""; // reset the file input so it can trigger again
+            setGroups(JSON.stringify(fileContent));
+            setTabTotal(AppHelper.getTabTotal(fileContent));
+          });
+        });
+      };
+    });
+  } else {
+    toast(...CONSTANTS.IMPORT_JSON_TOAST);
+  }
 }
 
 /**

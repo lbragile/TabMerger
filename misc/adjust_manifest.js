@@ -15,9 +15,8 @@ fs.readFile(input_path, (err, data) => {
   // change content based on environment variable
   if (type === "firefox") {
     manifest.incognito = "spanning";
-    manifest["browser_specific_settings"] = {
-      gecko: { id: "{19feb84f-3a0b-4ca3-bbae-211b52eb158b}" },
-    };
+    manifest.permissions = ["tabs", "contextMenus", "storage", "alarms", "downloads"];
+    manifest["browser_specific_settings"] = { gecko: { id: "{19feb84f-3a0b-4ca3-bbae-211b52eb158b}" } };
   } else {
     // chrome or edge
     manifest.incognito = "split";
