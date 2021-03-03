@@ -22,6 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React from "react";
+import { SUBSCRIPTION_URL } from "../../constants/constants";
 
 export const TOUR_STEPS = [
   {
@@ -119,10 +120,18 @@ export const TOUR_STEPS = [
       <div className="text-dark my-2" style={{ fontSize: "0.95rem" }}>
         Allows you to generate a print friendly PDF page. <br />
         <br />
-        <b>Note:</b> To have clickable links in the output PDF file, you must select "Save as PDF" for the{" "}
+        <b>Note:</b> to have clickable links in the output PDF file, you must select "Save as PDF" for the{" "}
         <i>Destination</i> drop down in the print preview menu. We recommend checking the "Headers and footers" option
         while unchecking the "Background graphics" option. Also, <i>hidden</i> <u>and</u> <i>empty</i> (no tabs inside)
         groups are ignored during the printing process, but restored once the print preview is exited.
+        <br />
+        <br />
+        Additionally, the print menu is different depending on your{" "}
+        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          subscription tier
+        </a>
+        . Namely, Free & Basic users will see the TabMerger sidebar along with relevant reviews in their print preview
+        menu, while members with Standard & Premium subscription will not.
         <br />
         <br />
         <b>Try it now!</b>
@@ -159,10 +168,18 @@ export const TOUR_STEPS = [
     selector: "#export-btn",
     content: (
       <div className="text-dark my-2">
-        Generates a JSON file which contains TabMerger's current configuration. This file can be used to restore a given
-        configuration at any time as shown next. <br />
+        Generates a JSON file which contains TabMerger's current configuration. A saveAs dialog will appear to allow you
+        to save the file in a specific location. This can be turned off in the settings. The generated JSON file can be
+        used to restore a given configuration at any time as shown next. <br />
         <br />
-        <b>Click it</b> to generate a JSON file.
+        This feature is only available to users with Standard or Premium{" "}
+        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          subscription
+        </a>
+        .
+        <br />
+        <br />
+        If you have the correct subscription tier, <b>click it</b> to generate a JSON file.
       </div>
     ),
     position: "bottom",
@@ -177,8 +194,8 @@ export const TOUR_STEPS = [
         <br />
         <b>Try</b> uploading the JSON file you might have downloaded from the previous step.
         <br />
-        <br /> You could also try to upload a file that is not JSON to see what happens. Note that since nothing changed
-        in TabMerger, you won't see a difference when you upload.
+        <br /> You could also try to upload a file that is not JSON to see what happens. Though note that since nothing
+        changed in TabMerger since your file download, you won't see a difference when you upload.
       </div>
     ),
     position: "top",
@@ -193,7 +210,14 @@ export const TOUR_STEPS = [
         <span style={{ color: "green" }}>green</span> and will display the current timestamp. If already clicked, the
         timestamp will simply update. This provides the user with information regarding when they last synced. <br />
         <br />
-        <b>Give it a try!</b>
+        This feature is only available to users with a paid{" "}
+        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          subscription
+        </a>
+        .
+        <br />
+        <br />
+        If you have the correct subscription tier, <b>give it a try!</b>
       </div>
     ),
     position: "bottom",
@@ -208,7 +232,13 @@ export const TOUR_STEPS = [
         <span style={{ color: "red" }}>red</span> and will not show a timestamp. This lets the user know that syncing
         was not performed. <br />
         <br />
-        <b>Give it a try!</b>
+        This feature is only available to users with a paid{" "}
+        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          subscription
+        </a>
+        <br />
+        <br />
+        If you have the correct subscription tier, <b>give it a try!</b>
       </div>
     ),
     position: "top",
@@ -222,7 +252,11 @@ export const TOUR_STEPS = [
         <br />
         This only applies to "destructive" actions which change tabs in one or many groups. <br />
         <br />
-        Note that <b>up to 15</b> undo states are stored and warnings are provided when the limit is reached.
+        Note that <b>up to 20</b> undo states (depending on your{" "}
+        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          subscription tier
+        </a>
+        ) are stored and warnings are provided when there are no more undo states to perform/restore.
       </div>
     ),
     position: "bottom",
@@ -241,6 +275,14 @@ export const TOUR_STEPS = [
           settings page
         </a>
         .
+        <br />
+        <br />
+        Note that each{" "}
+        <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+          subscription tier
+        </a>{" "}
+        has a different limit on the number of groups that can be made. For users without a paid subscription, this
+        limit is <b>5</b>. Thus, if you press this button now, you might get a warning stating this fact.
         <br />
         <br />
         <b>Try clicking it!</b>
@@ -547,6 +589,23 @@ export const TOUR_STEPS = [
     stepInteraction: false,
   },
   {
+    selector: "#contact-btn",
+    content: (
+      <div className="text-dark my-2">
+        Direct navigation to TabMerger <b>support</b> page where an email can be sent to TabMerger's creator &
+        maintainer.
+      </div>
+    ),
+    position: "bottom",
+  },
+  {
+    selector: "#choose-btn",
+    content: (
+      <div className="text-dark my-2">Location where you can choose a subscription plan depending on your needs.</div>
+    ),
+    position: "bottom",
+  },
+  {
     selector: "#quick-btn",
     content: (
       <div className="text-dark my-2">
@@ -575,21 +634,25 @@ export const TOUR_STEPS = [
     position: "bottom",
   },
   {
-    selector: "#contact-btn",
-    content: (
-      <div className="text-dark my-2">
-        Direct navigation to TabMerger <b>support</b> page where an email can be sent to TabMerger's creator &
-        maintainer.
-      </div>
-    ),
-    position: "bottom",
-  },
-  {
     selector: "#my-links",
     content: (
       <div className="text-dark my-2">
         Relevant links to TabMerger's GitHub page along with other social media platforms that I am frequently on and
         can be contacted from.
+      </div>
+    ),
+    position: "right",
+  },
+  {
+    selector: "#subscription-btn",
+    content: (
+      <div className="text-dark my-2">
+        Once you chose a subscription plan, you can use this button to activate it by providing the email and activation
+        key that TabMerger sent to you.
+        <br />
+        <br />
+        When activated, the "Subscription: _____ Tier" below will update indicating your current subscription. Please
+        allow up to 30 seconds for this update to take effect.
       </div>
     ),
     position: "right",
@@ -605,7 +668,7 @@ export const TOUR_STEPS = [
         for more detailed information. <br />
         <br /> We hope that TabMerger can siginificantly reduce your tab clutter and drastically increase your
         productivity! <br />
-        <br /> Cheers!
+        <br /> Cheers 🥂
       </div>
     ),
   },

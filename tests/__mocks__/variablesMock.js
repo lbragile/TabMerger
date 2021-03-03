@@ -32,6 +32,9 @@ global.React = React;
 global.CONSTANTS = CONSTANTS;
 global.TUTORIAL_GROUP = TUTORIAL_GROUP;
 
+/* FOR DOWNLOADING */
+global.URL.createObjectURL = jest.fn((arg) => arg);
+
 /*  CHROME SYNC STORAGE API SPIES */
 global.chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
 global.chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");

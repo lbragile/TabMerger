@@ -751,9 +751,9 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
     } else {
       chrome.storage.sync.get("settings", (sync) => {
         groups["settings"] = sync.settings;
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
+        const dataBlob = new Blob([JSON.stringify(groups, null, 2)], { type: "text/json;charset=utf-8" });
         const download_opts = {
-          url: dataStr,
+          url: URL.createObjectURL(dataBlob),
           filename:
             (!!relativePath ? "" : sync.settings.relativePathBackup) +
             AppHelper.outputFileName().replace(/\:|\//g, "_") +
@@ -764,7 +764,9 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
 
         // enable or disable the download gray shelf at the bottom of the window which notifies of the download.
         // For auto-backups this is disabled and saveas menu is not shown (it is configured in settings)
-        chrome.downloads.setShelfEnabled(showGrayDownloadShelf);
+        if (chrome.runtime.getManifest().permissions.includes("downloads.shelf")) {
+          chrome.downloads.setShelfEnabled(showGrayDownloadShelf);
+        }
 
         chrome.downloads.download(download_opts, (downloadId) => {
           if (!chrome.runtime.lastError) {
@@ -790,7 +792,7 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
             }
             console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file with id=${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
           } else {
-            toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST);
+            chrome.runtime.lastError != "Error: Download canceled by the user" && toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST); // prettier-ignore
           }
         });
       });

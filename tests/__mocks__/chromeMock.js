@@ -57,7 +57,10 @@ global.chrome = {
   },
   runtime: {
     id: "ldhahppapilmnhocniaifnlieiofgnii",
-    getManifest: () => ({ version: "2.0.0" }),
+    getManifest: () => ({
+      version: "2.0.0",
+      permissions: ["tabs", "contextMenus", "storage", "alarms", "downloads", "downloads.shelf"],
+    }),
     setUninstallURL: () => {},
     sendMessage: () => {},
     onMessage: { addListener: () => {} },

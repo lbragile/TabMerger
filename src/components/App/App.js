@@ -176,7 +176,9 @@ export default function App() {
           <p>
             TabMerger: <b>v{chrome.runtime.getManifest().version}</b>
           </p>
-          <p className="mt-4">Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky</p>
+          <p className="mt-4" id="copyright">
+            Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
+          </p>
         </div>
       </nav>
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>

@@ -1223,6 +1223,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -5387,6 +5388,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -9552,6 +9554,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -13716,6 +13719,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -17880,6 +17884,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -22044,6 +22049,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -26208,6 +26214,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -30372,6 +30379,7 @@ exports[`toggleHiddenOrEmptyGroups Free/Basic user - after 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -34536,6 +34544,7 @@ exports[`toggleHiddenOrEmptyGroups Free/Basic user - before 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -38701,6 +38710,7 @@ exports[`toggleHiddenOrEmptyGroups Standard/Premium user - after 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021
@@ -42866,6 +42876,7 @@ exports[`toggleHiddenOrEmptyGroups Standard/Premium user - before 1`] = `
         </p>
         <p
           class="mt-4"
+          id="copyright"
         >
           Copyright © 
           2021

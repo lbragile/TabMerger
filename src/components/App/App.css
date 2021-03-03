@@ -325,7 +325,8 @@ hr {
   .btn-for-merging,
   .created,
   .search-filter,
-  .global-btn-row {
+  .global-btn-row,
+  #footer :not(#copyright) {
     display: none !important;
   }
 

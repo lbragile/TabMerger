@@ -1377,11 +1377,10 @@ describe("exportJSON", () => {
 
       var groups = JSON.parse(localStorage.getItem("groups"));
       groups["settings"] = { ...JSON.parse(sessionStorage.getItem("settings")), relativePathBackup: "Test/", fileLimitBackup: fileLimit }; // prettier-ignore
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(groups, null, 2));
       sessionStorage.setItem("settings", JSON.stringify(groups["settings"]));
 
       const expect_download_opts = {
-        url: dataStr,
+        url: new Blob([JSON.stringify(groups, null, 2)], { type: "text/json;charset=utf-8" }),
         filename: "Test/" + AppHelper.outputFileName().replace(/\:|\//g, "_") + ".json",
         conflictAction: "uniquify",
         saveAs: false,

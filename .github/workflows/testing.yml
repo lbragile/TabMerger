@@ -76,17 +76,17 @@ jobs:
         if: "contains(github.event.head_commit.message, 'MUTATE ALL')"
         run: npm run mutate
 
-      - name: Stryker Mutation Testing -> TAB
-        if: "contains(github.event.head_commit.message, 'MUTATE TAB')"
-        run: npm run mutate:tab
+      - name: Stryker Mutation Testing -> APP
+        if: "contains(github.event.head_commit.message, 'MUTATE APP')"
+        run: npm run mutate:app
 
       - name: Stryker Mutation Testing -> GROUP
         if: "contains(github.event.head_commit.message, 'MUTATE GROUP')"
         run: npm run mutate:group
 
-      - name: Stryker Mutation Testing -> APP
-        if: "contains(github.event.head_commit.message, 'MUTATE APP')"
-        run: npm run mutate:app
+      - name: Stryker Mutation Testing -> TAB
+        if: "contains(github.event.head_commit.message, 'MUTATE TAB')"
+        run: npm run mutate:tab
 
       - name: Stryker Mutation Testing -> SETTINGS
         if: "contains(github.event.head_commit.message, 'MUTATE SETTINGS')"
