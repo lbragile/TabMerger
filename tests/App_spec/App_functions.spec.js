@@ -142,34 +142,21 @@ describe("syncLimitIndication", () => {
 });
 
 describe("toggleHiddenOrEmptyGroups", () => {
-  test.each([["before"], ["after"]])("Free/Basic user - %s", (type) => {
-    jest.clearAllMocks();
-    AppFunc.toggleHiddenOrEmptyGroups(type, { tier: "Free" });
-
-    expect(container).toMatchSnapshot();
-  });
-
-  test.each([["before"], ["after"]])("Standard/Premium user - %s", (type) => {
-    if (type === "after") {
-      localStorage.setItem("container_pos", 100);
-      localStorage.setItem("logo_pos", JSON.stringify({ left: 100, top: 0 }));
-    }
-
-    var localStorageSetSpy = jest.spyOn(window.localStorage.__proto__, "setItem");
-    var localStorageRemoveSpy = jest.spyOn(window.localStorage.__proto__, "removeItem");
+  test.each([
+    ["Free/Basic", "before"],
+    ["Free/Basic", "after"],
+    ["Standard/Premium", "before"],
+    ["Standard/Premium", "after"],
+  ])("%s user - %s", (user_type, when) => {
+    document.body.innerHTML ="<div class='hidden'/><div class='empty'/><div class='container-fluid'/><div id='sidebar'/><div id='logo-img'/>"; // prettier-ignore
     jest.clearAllMocks();
 
-    AppFunc.toggleHiddenOrEmptyGroups(type, user);
+    AppFunc.toggleHiddenOrEmptyGroups(when, user_type.includes("Free") ? { tier: "Free" } : user);
 
-    if (type === "before") {
-      expect(localStorageSetSpy).toHaveBeenCalledWith("container_pos", expect.any(String));
-      expect(localStorageSetSpy).toHaveBeenCalledWith("logo_pos", expect.any(String));
-    } else {
-      expect(localStorageRemoveSpy).toHaveBeenCalledWith("container_pos");
-      expect(localStorageRemoveSpy).toHaveBeenCalledWith("logo_pos");
-    }
-
-    expect(container).toMatchSnapshot();
+    expect(document.querySelector(".hidden").style.display).toBe(when === "before" ? "none" : "");
+    expect(document.querySelector(".empty").style.display).toBe(when === "before" ? "none" : "");
+    expect(document.querySelector("#sidebar").style.visibility).toBe(when === "before" && !user_type.includes("Free") ? "hidden" : ""); // prettier-ignore
+    expect(document.querySelector("#logo-img").style.visibility).toBe(!user_type.includes("Free") ? "visible" : "");
   });
 });
 

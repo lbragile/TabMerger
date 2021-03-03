@@ -258,6 +258,11 @@ hr {
 @media print {
   * {
     -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  body {
+    background: none !important;
   }
 
   .container-fluid {

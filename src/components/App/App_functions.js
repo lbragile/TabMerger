@@ -106,32 +106,13 @@ export function syncLimitIndication() {
  * @param {object} user The user's subscription details
  */
 export function toggleHiddenOrEmptyGroups(type, user) {
-  const display_type = type === "before" ? "none" : "";
+  // do not show hidden or empty groups
+  document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = type === "before" ? "none" : ""));
 
-  // remove ads for correct user type
+  // remove "ads" for correct user type
   if (["Standard", "Premium"].includes(user.tier)) {
-    if (type === "before") {
-      localStorage.setItem("container_pos", document.querySelector(".container-fluid").style.left);
-      localStorage.setItem(
-        "logo_pos",
-        JSON.stringify({
-          left: document.querySelector("#logo-img").style.left,
-          top: document.querySelector("#logo-img").style.top,
-        })
-      );
-    }
-
-    document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = display_type));
-    document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "visible";
+    document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "";
     document.querySelector("#logo-img").style.visibility = "visible";
-    document.querySelector("#logo-img").style.left = type === "before" ? "875px": JSON.parse(localStorage.getItem("logo_pos")).left; // prettier-ignore
-    document.querySelector("#logo-img").style.top = type === "before" ? "0px": JSON.parse(localStorage.getItem("logo_pos")).top; // prettier-ignore
-    document.querySelector(".container-fluid").style.left = type === "before" ? "50px" : localStorage.getItem("container_pos"); // prettier-ignore
-
-    if (type === "after") {
-      localStorage.removeItem("container_pos");
-      localStorage.removeItem("logo_pos");
-    }
   }
 }
 
