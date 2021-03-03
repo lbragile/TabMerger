@@ -161,21 +161,22 @@ export default function App() {
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
         {/* Verify/activate account button*/}
-        <Button
-          classes="p-0 btn-in-global"
-          id="subscription-btn"
-          translate="Activate Plan"
-          onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
-        >
-          {<BiCheckCircle color="black" size="1.5rem" />}
-        </Button>
-        <div id="subscription-indicator">
+        <div id="footer">
+          <Button
+            classes="p-0 btn-in-global mx-auto mb-2 d-block"
+            id="subscription-btn"
+            translate="Activate Plan"
+            onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
+          >
+            {<BiCheckCircle color="black" size="1.5rem" />}
+          </Button>
           <a href={CONSTANTS.SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
             Subscription: <b>{user.tier} Tier</b>
           </a>
-        </div>
-        <div id="copyright" className="mt-4">
-          Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky
+          <p>
+            TabMerger: <b>v{chrome.runtime.getManifest().version}</b>
+          </p>
+          <p className="mt-4">Copyright &copy; {new Date().getFullYear()} Lior Bragilevsky</p>
         </div>
       </nav>
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>

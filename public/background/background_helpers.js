@@ -103,10 +103,10 @@ export async function filterTabs(info, tab, group_id) {
  * When TabMerger is open, this navigates to its tab if not on that tab already.
  * When TabMerger is not open, this opens its tab on the very right side.
  * Function ends when TabMerger's tab becomes active and its loading status is complete.
- *
+ * @param {Boolean?} testing Whether this is a testing call or a real call
  * @return A promise which should be awaited. Resolve value is insignificant
  */
-export function findExtTabAndSwitch() {
+export function findExtTabAndSwitch(testing) {
   var query = { title: "TabMerger", currentWindow: true };
   var exists = { highlighted: true, active: true };
   var not_exist = { url: "../index.html", active: true };
@@ -116,9 +116,15 @@ export function findExtTabAndSwitch() {
         ? chrome.tabs.update(tabMergerTabs[0].id, exists, () => resolve(0))
         : chrome.tabs.create(not_exist, (newTab) => {
             function listener(tabId, changeInfo) {
-              resolve(0);
-              if (changeInfo.status === "complete" && tabId === newTab.id) {
+              if (changeInfo?.status === "complete" && tabId === newTab.id) {
                 chrome.tabs.onUpdated.removeListener(listener);
+                resolve(0);
+              }
+
+              // during testing, need to check for tab not loading fully or id mismatch
+              // cannot use process.env.NODE_ENV === "test" since this is not a node/react environment -> dependency inject
+              if (testing) {
+                resolve(0);
               }
             }
             chrome.tabs.onUpdated.addListener(listener);

@@ -183,8 +183,7 @@ hr {
 }
 
 /* COPYRIGHT NOTICE & SUBSCRIPTION INDICATOR */
-#copyright,
-#subscription-indicator {
+#footer {
   font-size: 0.9rem;
   position: absolute;
   left: 50%;
@@ -194,15 +193,15 @@ hr {
   color: white;
 }
 
-#subscription-indicator {
-  bottom: 75px;
+#footer {
+  bottom: 10px;
 }
 
-#subscription-indicator a {
+#footer a {
   color: white;
 }
 
-#subscription-indicator a:hover {
+#footer a:hover {
   cursor: pointer;
   text-decoration: none;
 }

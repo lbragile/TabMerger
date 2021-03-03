@@ -23,50 +23,31 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 global.chrome = {
   alarms: {
-    get: function () {},
-    clear: function () {},
-    create: function () {},
-    onAlarm: {
-      addListener: function () {},
-      removeListener: function () {},
-    },
+    get: () => {},
+    clear: () => {},
+    create: () => {},
+    onAlarm: { addListener: () => {}, removeListener: () => {} },
   },
   browserAction: {
-    onClicked: {
-      addListener: function () {},
-    },
-    setBadgeText: function (_, cb) {
-      cb();
-    },
-    setBadgeBackgroundColor: function (_, cb) {
-      cb();
-    },
-    setTitle: function (_, cb) {
-      cb();
-    },
+    onClicked: { addListener: () => {} },
+    setBadgeText: (_, cb) => cb(),
+    setBadgeBackgroundColor: (_, cb) => cb(),
+    setTitle: (_, cb) => cb(),
   },
   commands: {
-    onCommand: {
-      addListener: function () {},
-    },
+    onCommand: { addListener: () => {} },
   },
   contextMenus: {
-    create: function () {},
-    onClicked: {
-      addListener: function () {},
-    },
+    create: () => {},
+    onClicked: { addListener: () => {} },
   },
   downloads: {
-    download: function (_, cb) {
-      cb(2);
-    },
-    removeFile: function (_, cb) {
-      cb();
-    },
-    setShelfEnabled: function () {},
+    download: (_, cb) => cb(2),
+    removeFile: (_, cb) => cb(),
+    setShelfEnabled: () => {},
   },
   i18n: {
-    getMessage: function (msg) {
+    getMessage: (msg) => {
       if (msg === "Title") {
         return "титул";
       } else {
@@ -76,15 +57,14 @@ global.chrome = {
   },
   runtime: {
     id: "ldhahppapilmnhocniaifnlieiofgnii",
-    setUninstallURL: function () {},
-    sendMessage: function () {},
-    onMessage: {
-      addListener: function () {},
-    },
+    getManifest: () => ({ version: "2.0.0" }),
+    setUninstallURL: () => {},
+    sendMessage: () => {},
+    onMessage: { addListener: () => {} },
   },
   storage: {
     local: {
-      get: function (keys, cb) {
+      get: (keys, cb) => {
         var item;
         if (keys) {
           var local = {};
@@ -107,7 +87,7 @@ global.chrome = {
           cb(item);
         }
       },
-      remove: function (keys, cb) {
+      remove: (keys, cb) => {
         if (Array.isArray(keys)) {
           keys.forEach((key) => {
             localStorage.removeItem(key);
@@ -118,14 +98,14 @@ global.chrome = {
 
         cb();
       },
-      set: function (obj, cb) {
+      set: (obj, cb) => {
         const key = Object.keys(obj)[0];
         localStorage.setItem(key, JSON.stringify(obj[key]));
         cb();
       },
     },
     sync: {
-      get: function (key, cb) {
+      get: (key, cb) => {
         var item;
         if (key) {
           item = JSON.parse(sessionStorage.getItem(key));
@@ -138,7 +118,7 @@ global.chrome = {
           cb(item);
         }
       },
-      remove: function (keys, cb) {
+      remove: (keys, cb) => {
         if (Array.isArray(keys)) {
           keys.forEach((key) => {
             sessionStorage.removeItem(key);
@@ -149,26 +129,23 @@ global.chrome = {
 
         cb();
       },
-      set: function (obj, cb) {
+      set: (obj, cb) => {
         const key = Object.keys(obj)[0];
         sessionStorage.setItem(key, JSON.stringify(obj[key]));
         cb();
       },
     },
-    onChanged: {
-      addListener: function () {},
-      removeListener: function () {},
-    },
+    onChanged: { addListener: () => {}, removeListener: () => {} },
   },
   tabs: {
-    create: function (obj, cb) {
+    create: (obj, cb) => {
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
       open_tabs.push(obj);
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
 
       cb();
     },
-    move: function (id, _) {
+    move: (id, _) => {
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
 
       var tab_to_move = open_tabs.filter((x) => x.id === id);
@@ -177,29 +154,20 @@ global.chrome = {
 
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
     },
-    query: function (opts, cb) {
+    query: (opts, cb) => {
       var open_tabs =
         opts.active || opts.title === "TabMerger"
           ? [{ title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 }]
           : JSON.parse(sessionStorage.getItem("open_tabs"));
       cb(open_tabs);
     },
-    remove: function (ids) {
+    remove: (ids) => {
       ids = Array.isArray(ids) ? ids : [ids];
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
       var remain_open_tabs = open_tabs.filter((x) => !ids.includes(x.id));
       sessionStorage.setItem("open_tabs", JSON.stringify(remain_open_tabs));
     },
-    update: function (_, __, cb) {
-      cb();
-    },
-    onUpdated: {
-      addListener: function (cb) {
-        cb();
-      },
-      removeListener: function (cb) {
-        cb();
-      },
-    },
+    update: (_, __, cb) => cb(),
+    onUpdated: { addListener: (cb) => cb(), removeListener: (cb) => cb() },
   },
 };

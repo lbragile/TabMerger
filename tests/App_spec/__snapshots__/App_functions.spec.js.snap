@@ -1174,35 +1174,35 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -1214,14 +1214,20 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -5332,35 +5338,35 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -5372,14 +5378,20 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -9491,35 +9503,35 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -9531,14 +9543,20 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -13649,35 +13667,35 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -13689,14 +13707,20 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -17807,35 +17831,35 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -17847,14 +17871,20 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -21965,35 +21995,35 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -22005,14 +22035,20 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -26123,35 +26159,35 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -26163,14 +26199,20 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -30281,35 +30323,35 @@ exports[`toggleHiddenOrEmptyGroups Free/Basic user - after 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -30321,14 +30363,20 @@ exports[`toggleHiddenOrEmptyGroups Free/Basic user - after 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -34439,35 +34487,35 @@ exports[`toggleHiddenOrEmptyGroups Free/Basic user - before 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -34479,14 +34527,20 @@ exports[`toggleHiddenOrEmptyGroups Free/Basic user - before 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -38598,35 +38652,35 @@ exports[`toggleHiddenOrEmptyGroups Standard/Premium user - after 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -38638,14 +38692,20 @@ exports[`toggleHiddenOrEmptyGroups Standard/Premium user - after 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div
@@ -42757,35 +42817,35 @@ exports[`toggleHiddenOrEmptyGroups Standard/Premium user - before 1`] = `
           </button>
         </div>
       </div>
-      <button
-        class="p-0 btn-in-global btn"
-        data-for="btn-tooltip"
-        data-offset="{'top': 0}"
-        data-tip="Activate Plan"
-        id="subscription-btn"
-      >
-        <svg
-          color="black"
-          fill="currentColor"
-          height="1.5rem"
-          stroke="currentColor"
-          stroke-width="0"
-          style="color: black;"
-          viewBox="0 0 24 24"
-          width="1.5rem"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
-          />
-          <path
-            d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
-          />
-        </svg>
-      </button>
       <div
-        id="subscription-indicator"
+        id="footer"
       >
+        <button
+          class="p-0 btn-in-global mx-auto mb-2 d-block btn"
+          data-for="btn-tooltip"
+          data-offset="{'top': 0}"
+          data-tip="Activate Plan"
+          id="subscription-btn"
+        >
+          <svg
+            color="black"
+            fill="currentColor"
+            height="1.5rem"
+            stroke="currentColor"
+            stroke-width="0"
+            style="color: black;"
+            viewBox="0 0 24 24"
+            width="1.5rem"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12,2C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z M12,20c-4.411,0-8-3.589-8-8s3.589-8,8-8 s8,3.589,8,8S16.411,20,12,20z"
+            />
+            <path
+              d="M9.999 13.587L7.7 11.292 6.288 12.708 10.001 16.413 16.707 9.707 15.293 8.293z"
+            />
+          </svg>
+        </button>
         <a
           href="http://localhost:3000/TabMerger-Extension/pricing"
           rel="noreferrer"
@@ -42797,14 +42857,20 @@ exports[`toggleHiddenOrEmptyGroups Standard/Premium user - before 1`] = `
              Tier
           </b>
         </a>
-      </div>
-      <div
-        class="mt-4"
-        id="copyright"
-      >
-        Copyright © 
-        2021
-         Lior Bragilevsky
+        <p>
+          TabMerger: 
+          <b>
+            v
+            2.0.0
+          </b>
+        </p>
+        <p
+          class="mt-4"
+        >
+          Copyright © 
+          2021
+           Lior Bragilevsky
+        </p>
       </div>
     </nav>
     <div

@@ -47,12 +47,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   height: 36px;
 }
 
-#subscription-btn {
-  position: absolute;
-  bottom: 100px;
-  left: 105px;
-}
-
 #import-btn,
 #export-btn {
   margin: 0;

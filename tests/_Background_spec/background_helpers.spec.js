@@ -161,12 +161,6 @@ describe("findExtTabAndSwitch", () => {
   const expected_not_exist = { url: "../index.html", active: true };
   const tab_id = 99;
 
-  afterAll(() => {
-    chromeTabsQuerySpy.mockRestore();
-    chromeTabsCreateSpy.mockRestore();
-    chromeTabsOnUpdatedAdd.mockRestore();
-  });
-
   test("TabMerger page is already open", async () => {
     jest.clearAllMocks();
 
@@ -187,12 +181,12 @@ describe("findExtTabAndSwitch", () => {
     ["incomplete", true],
     ["incomplete", false],
   ])("TabMerger page is NOT already open - (loading = %s, match_id = %s)", async (type, id_match) => {
-    chromeTabsQuerySpy.mockImplementation((_, cb) => cb([]));
-    chromeTabsCreateSpy.mockImplementation((_, cb) => cb({ id: id_match ? tab_id : tab_id - 1 }));
-    chromeTabsOnUpdatedAdd.mockImplementation((cb) => cb(tab_id, { status: type }));
+    chromeTabsQuerySpy.mockImplementationOnce((_, cb) => cb([]));
+    chromeTabsCreateSpy.mockImplementationOnce((_, cb) => cb({ id: id_match ? tab_id : tab_id - 1 }));
+    chromeTabsOnUpdatedAdd.mockImplementationOnce((cb) => cb(tab_id, { status: type }));
     jest.clearAllMocks();
 
-    const result = await BackgroundHelper.findExtTabAndSwitch();
+    const result = await BackgroundHelper.findExtTabAndSwitch(type !== "complete" || !id_match);
 
     expect(result).toBe(0);
 
