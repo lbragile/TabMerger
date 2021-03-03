@@ -9,6 +9,9 @@ on:
 jobs:
   unit-testing:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        unit_test_type: ["test:app", "test:group", "test:tab", "test:background", "test:settings"]
 
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +37,7 @@ jobs:
         run: npm i
 
       - name: Run Tests
-        run: npm run test
+        run: npm run ${{ matrix.unit_test_type }}
 
       - name: Upload Coverage Report to Codecov
         uses: codecov/codecov-action@v1
@@ -45,7 +48,20 @@ jobs:
     runs-on: windows-latest
     if: "!contains(github.event.head_commit.message, 'SKIP MUTATION')"
     needs: unit-testing
-    timeout-minutes: 1080
+    strategy:
+      matrix:
+        mutation_type:
+          [
+            "mutate:app-func",
+            "mutate:app-help",
+            "mutate:group",
+            "mutate:tab-func",
+            "mutate:tab-help",
+            "mutate:background-func",
+            "mutate:background-help",
+            "mutate:settings-func",
+            "mutate:settings-help",
+          ]
     env:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 
@@ -72,26 +88,5 @@ jobs:
       - name: Install Dependencies
         run: npm i
 
-      - name: Stryker Mutation Testing -> ALL
-        if: "contains(github.event.head_commit.message, 'MUTATE ALL')"
-        run: npm run mutate
-
-      - name: Stryker Mutation Testing -> APP
-        if: "contains(github.event.head_commit.message, 'MUTATE APP')"
-        run: npm run mutate:app
-
-      - name: Stryker Mutation Testing -> GROUP
-        if: "contains(github.event.head_commit.message, 'MUTATE GROUP')"
-        run: npm run mutate:group
-
-      - name: Stryker Mutation Testing -> TAB
-        if: "contains(github.event.head_commit.message, 'MUTATE TAB')"
-        run: npm run mutate:tab
-
-      - name: Stryker Mutation Testing -> SETTINGS
-        if: "contains(github.event.head_commit.message, 'MUTATE SETTINGS')"
-        run: npm run mutate:settings
-
-      - name: Stryker Mutation Testing -> BACKGROUND
-        if: "contains(github.event.head_commit.message, 'MUTATE BACKGROUND')"
-        run: npm run mutate:background
+      - name: Stryker Mutation Testing
+        run: npm run ${{ matrix.mutation_type }}
