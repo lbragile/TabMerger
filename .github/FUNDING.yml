@@ -1,2 +1,7 @@
 github: lbragile
-custom: "https://www.paypal.com/donate?hosted_button_id=X3EYMX8CVA4SY&source=url"
+custom:
+  [
+    "https://www.paypal.com/donate?hosted_button_id=X3EYMX8CVA4SY&source=url",
+    "https://www.buymeacoffee.com/lbragile",
+    "https://liberapay.com/lbragile/donate",
+  ]
