@@ -122,7 +122,7 @@ describe("tabDragEnd", () => {
   });
 
   it.each([[true], [false]])("works for same group = %s", (same) => {
-    stub.target.closest = () => document.querySelector("#group-" + +!same);
+    stub.target.closest = (arg) => arg === ".group" && document.querySelector("#group-" + +!same);
     jest.clearAllMocks();
 
     if (!same) {

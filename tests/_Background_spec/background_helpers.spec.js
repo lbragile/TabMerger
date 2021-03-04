@@ -184,11 +184,10 @@ describe("findExtTabAndSwitch", () => {
     chromeTabsQuerySpy.mockImplementationOnce((_, cb) => cb([]));
     chromeTabsCreateSpy.mockImplementationOnce((_, cb) => cb({ id: id_match ? tab_id : tab_id - 1 }));
     chromeTabsOnUpdatedAdd.mockImplementationOnce((cb) => cb(tab_id, { status: type }));
+    global.resolve = jest.fn((arg) => Promise.resolve(arg));
     jest.clearAllMocks();
 
     const result = await BackgroundHelper.findExtTabAndSwitch(type !== "complete" || !id_match);
-
-    expect(result).toBe(0);
 
     expect(chromeTabsQuerySpy).toHaveBeenCalledTimes(1);
     expect(chromeTabsQuerySpy).toHaveBeenCalledWith(expected_query, anything);
@@ -202,9 +201,13 @@ describe("findExtTabAndSwitch", () => {
     if (type === "complete" && id_match) {
       expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledTimes(1);
       expect(chromeTabsOnUpdatedRemove).toHaveBeenCalledWith(anything);
+      expect(result).toEqual(0);
     } else {
       expect(chromeTabsOnUpdatedRemove).not.toHaveBeenCalled();
+      expect(result).toEqual(1);
     }
+
+    resolve.mockRestore();
   });
 });
 

@@ -223,7 +223,9 @@ export const SYNC_WRITE_TOAST = [
   { toastId: "syncWrite_exceed" },
 ];
 
-/** @constant {Function} CHECK_MERGING_TOAST
+/**
+ * @constant {Function} CHECK_MERGING_TOAST
+ * @param {string} tier The user's subscription tier
  * @returns {Array.<HTMLDivElement, {toastId: string}>}
  */
 export const CHECK_MERGING_TOAST = (tier) => [
@@ -245,7 +247,9 @@ export const CHECK_MERGING_TOAST = (tier) => [
   { toastId: "tabExceed_toast" },
 ];
 
-/** @constant {Function} ADD_GROUP_TOAST
+/**
+ * @constant {Function} ADD_GROUP_TOAST
+ * @param {Number} NUM_GROUP_LIMIT number of groups that the user can make (based on subscription)
  * @returns {Array.<HTMLDivElement, {toastId: string}>}
  */
 export const ADD_GROUP_TOAST = (NUM_GROUP_LIMIT) => [
@@ -349,8 +353,45 @@ export const SYNC_AUTOBACKUP_OFF_TOAST = [
   { toastId: "automaticBackupOff_toast" },
 ];
 
+/**
+ * @constant {Function} UPDATE_TOAST
+ * @param {string} previousVersion The version of TabMerger prior to the update
+ * @param {string} currentVersion The version of TabMerger after the update
+ * @returns {Array.<HTMLDivElement, {toastId: string, autoClose: boolean}>}
+ */
+export const UPDATE_TOAST = (previousVersion, currentVersion) => [
+  <div className="text-left">
+    TabMerger was updated from <b>v{previousVersion}</b> to <b>v{currentVersion}</b>!
+    <br />
+    <br />
+    The current version contains paid subscription tiers, so as a token of appreciation to existing users, we provide a{" "}
+    <u>2 week free trial</u> of the <b>Standard Tier</b> 🤗. <br />
+    <br />
+    If you do not plan on continuing with a{" "}
+    <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
+      subscription
+    </a>{" "}
+    after these two weeks, we recommend performing the necessary backup actions, namely using the global{" "}
+    <b>Export JSON</b> button, as some features/actions are not available for all subscription tiers. <br />
+    <br />
+    You can use the following credentials to activate the subscription:
+    <br />
+    <br />
+    <b>Email</b>: tabmerger@email.com
+    <br />
+    <b>Password</b>: secure_password!
+    <br />
+    <br /> Make sure you note down these values prior to closing this notification!
+    <br />
+    <br /> Cheers 🥂
+  </div>,
+  { toastId: "update_toast", autoClose: false, position: "top-right" },
+];
+
 /* MODAL DIALOG */
-/** @constant {Function} OPEN_ALL_DIALOG
+/**
+ * @constant {Function} OPEN_ALL_DIALOG
+ * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
  * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
 export const OPEN_ALL_DIALOG = (element) => ({
@@ -368,7 +409,9 @@ export const OPEN_ALL_DIALOG = (element) => ({
   reject_btn_text: "CANCEL",
 });
 
-/** @constant {Function} DELETE_ALL_DIALOG
+/**
+ * @constant {Function} DELETE_ALL_DIALOG
+ * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
  * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
 export const DELETE_ALL_DIALOG = (element) => ({
@@ -389,7 +432,9 @@ export const DELETE_ALL_DIALOG = (element) => ({
   reject_btn_text: "CANCEL",
 });
 
-/** @constant {Function} RESET_TUTORIAL_CHOICE_DIALOG
+/**
+ * @constant {Function} RESET_TUTORIAL_CHOICE_DIALOG
+ * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
  * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
 export const RESET_TUTORIAL_CHOICE_DIALOG = (element) => ({
@@ -409,6 +454,12 @@ export const RESET_TUTORIAL_CHOICE_DIALOG = (element) => ({
   reject_btn_text: "GO TO SITE",
 });
 
+/**
+ * @constant {Function} SET_USER_STATUS_DIALOG
+ * @param {Function} setUser For re-rendering the user's subscription status
+ * @param {Function} setDialog For re-rendering the dialog menu (close/open)
+ * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
+ */
 export const SET_USER_STATUS_DIALOG = (setUser, setDialog) => ({
   show: true,
   title: "🔐 TabMerger Product Activation 🔐",

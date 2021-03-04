@@ -36,7 +36,7 @@ var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
 export function handleBrowserIconClick() {
   chrome.storage.sync.get("settings", async (sync) => {
     await findExtTabAndSwitch();
-    if (sync.settings.open) {
+    if (!sync.settings.open) {
       await filterTabs(info, tab);
     }
   });

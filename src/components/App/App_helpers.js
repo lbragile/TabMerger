@@ -271,7 +271,7 @@ export function alarmGenerator(periodInMinutes, alarm_name, toast_val) {
 export function checkUserStatus(setUser) {
   chrome.storage.local.get("client_details", async (local) => {
     const { email, password } = local.client_details;
-    var response = await axios.get(CONSTANTS.USER_STATUS_URL + JSON.stringify({ password, email }));
+    var response = await axios.get(CONSTANTS.USER_STATUS_URL + JSON.stringify({ email, password }));
     if (response.data) {
       chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } }, () => {
         setUser(response.data);

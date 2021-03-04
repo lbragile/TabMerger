@@ -62,18 +62,18 @@ describe("handleBrowserIconClick", () => {
       expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
       expect(findExtTabAndSwitchSpy).not.toHaveBeenCalledWith(anything);
 
-      if (open) {
+      if (!open) {
         expect(filterTabsSpy).toHaveBeenCalledTimes(1);
         expect(filterTabsSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0 });
       }
     });
 
     // cannot be inside await since this is a NOT statement
-    if (!open) {
+    if (open) {
       expect(filterTabsSpy).not.toHaveBeenCalled();
     }
 
-    expect.assertions(!open ? 5 : 5 + 6);
+    expect.assertions(open ? 5 : 5 + 6);
   });
 });
 

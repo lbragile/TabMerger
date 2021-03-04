@@ -197,6 +197,34 @@ describe("createAutoBackUpAlarm", () => {
   });
 });
 
+describe("handleUpdate", () => {
+  test.each([
+    [true, "2.0.0"],
+    [false, undefined],
+    [false, "0.0.0"],
+  ])("production=%s, previousVersion=%s", (production, previousVersion) => {
+    localStorage.setItem("ext_version", previousVersion);
+    const currentVersion = chrome.runtime.getManifest().version;
+    process.env.REACT_APP_PRODUCTION = production;
+    jest.clearAllMocks();
+
+    AppFunc.handleUpdate();
+
+    expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalGetSpy).toHaveBeenCalledWith("ext_version", anything);
+
+    if (previousVersion < currentVersion && currentVersion === "2.0.0") {
+      expect(toastSpy).toHaveBeenCalledTimes(1);
+      expect(toastSpy).toHaveReturnedWith(CONSTANTS.UPDATE_TOAST(previousVersion, currentVersion));
+    } else {
+      expect(toastSpy).not.toHaveBeenCalled();
+    }
+
+    expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    expect(chromeLocalSetSpy).toHaveBeenCalledWith({ ext_version: currentVersion }, anything);
+  });
+});
+
 describe("storageInit", () => {
   test("sync settings are null & local groups are null", () => {
     sessionStorage.clear();

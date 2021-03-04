@@ -80,15 +80,16 @@ export default function App() {
 
     AppFunc.storageInit(syncTimestamp.current, setTour, setGroups, setTabTotal);
     AppFunc.createAutoBackUpAlarm();
+    AppFunc.handleUpdate();
 
+    chrome.alarms.onAlarm.addListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestamp.current));
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
-    chrome.alarms.onAlarm.addListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestamp.current));
 
     return () => {
+      chrome.alarms.onAlarm.removeListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestamp.current));
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
-      chrome.alarms.onAlarm.removeListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestamp.current));
     };
   }, []);
 

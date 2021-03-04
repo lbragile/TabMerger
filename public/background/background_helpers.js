@@ -55,7 +55,7 @@ export async function filterTabs(info, tab, group_id) {
     }
 
     // create duplicate title/url list & filter blacklisted sites
-    var filter_vals = ["New Tab", "Extensions", "Add-ons Manager", "about:home", "chrome:newtab"];
+    var filter_vals = ["New Tab", "Extensions", "Add-ons Manager"];
 
     setTimeout(() => {
       chrome.storage.sync.get("settings", (sync) => {
@@ -124,7 +124,7 @@ export function findExtTabAndSwitch(testing) {
               // during testing, need to check for tab not loading fully or id mismatch
               // cannot use process.env.NODE_ENV === "test" since this is not a node/react environment -> dependency inject
               if (testing) {
-                resolve(0);
+                resolve(1);
               }
             }
             chrome.tabs.onUpdated.addListener(listener);

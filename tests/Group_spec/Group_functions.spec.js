@@ -358,6 +358,9 @@ describe("groupDragEnd", () => {
 
       expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expected_groups, scroll: 0 }, anything);
+
+      document.querySelectorAll(".group").forEach((x, i) => expect(x.id).toBe("group-" + i));
+      expect.assertions(Object.keys(expected_groups).length + 3);
     } else {
       expect(chromeLocalSetSpy).not.toHaveBeenCalled();
     }

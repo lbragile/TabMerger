@@ -135,6 +135,22 @@ export function createAutoBackUpAlarm() {
 }
 
 /**
+ * Handler for install events, mainly used to provide temporary access to a specific tier for existing users
+ * This functionality will change later (temporary)
+ */
+export function handleUpdate() {
+  chrome.storage.local.get("ext_version", (local) => {
+    const previousVersion = local.ext_version;
+    const currentVersion = process.env.REACT_APP_PRODUCTION ? chrome.runtime.getManifest().version : "1.0.0";
+    if (previousVersion < currentVersion && currentVersion === "2.0.0") {
+      toast(...CONSTANTS.UPDATE_TOAST(previousVersion, currentVersion));
+    }
+
+    chrome.storage.local.set({ ext_version: currentVersion }, () => {});
+  });
+}
+
+/**
  * Initialize the local & sync storage when the user first installs TabMerger.
  * @param {HTMLElement} sync_node Node indicating the "Last Sync" time
  * @param {Function} setTour For re-rendering the tutorial walkthrough
