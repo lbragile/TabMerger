@@ -10,6 +10,7 @@ jobs:
   unit-testing:
     runs-on: windows-latest
     strategy:
+      max-parallel: 5
       matrix:
         unit_test_type: ["test:app", "test:group", "test:tab", "test:background", "test:settings"]
 
@@ -48,7 +49,9 @@ jobs:
     runs-on: windows-latest
     if: "!contains(github.event.head_commit.message, 'SKIP MUTATION')"
     needs: unit-testing
+    timeout-minutes: 420
     strategy:
+      max-parallel: 9
       matrix:
         mutation_type:
           [
