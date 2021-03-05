@@ -35,6 +35,12 @@ import Tab from "../../src/components/Tab/Tab";
 const anything = expect.any(Function);
 var container, sync_node, toastSpy;
 
+const mutationMockFn = (_, cb) => {
+  var mutation = {};
+  mutation.type = { attributes: false, childList: true, subtree: false };
+  cb(mutation);
+};
+
 beforeAll(() => {
   jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
   jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
@@ -312,11 +318,7 @@ describe("resetTutorialChoice", () => {
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (response === null) {
-        jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
-          var mutation = {};
-          mutation.type = { attributes: false, childList: true, subtree: false };
-          cb(mutation);
-        });
+        jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
       }
 
       jest.clearAllMocks();
@@ -341,8 +343,6 @@ describe("resetTutorialChoice", () => {
       });
 
       expect.assertions(response ? 5 : response === false ? 7 : 3);
-
-      jest.spyOn(AppHelper, "elementMutationListener").mockRestore();
     }
   );
 });
@@ -1011,9 +1011,6 @@ describe("addGroup", () => {
 });
 
 describe("openAllTabs", () => {
-  var elementMutationListenerSpy;
-  afterAll(() => elementMutationListenerSpy.mockRestore());
-
   it.each([[true], [false], [null]])("sets the local storage item correctly - response === %s", async (response) => {
     document.body.innerHTML =
       `<div id="open-all-btn" response=${response ? "negative" : "positive"}>` +
@@ -1028,11 +1025,7 @@ describe("openAllTabs", () => {
 
     // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
     if (response === null) {
-      elementMutationListenerSpy = jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
-        var mutation = {};
-        mutation.type = { attributes: false, childList: true, subtree: false };
-        cb(mutation);
-      });
+      jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
     }
 
     jest.clearAllMocks();
@@ -1060,9 +1053,6 @@ describe("openAllTabs", () => {
 
 describe("deleteAllGroups", () => {
   const dialogObj = (element) => CONSTANTS.DELETE_ALL_DIALOG(element);
-
-  var elementMutationListenerSpy;
-  afterAll(() => elementMutationListenerSpy.mockRestore());
 
   it.each([[true], [false], [null]])(
     "adjusts local storage to only have locked group and default group underneath if user accepts - groups locked = %s",
@@ -1110,11 +1100,7 @@ describe("deleteAllGroups", () => {
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (locked === null) {
-        elementMutationListenerSpy = jest.spyOn(AppHelper, "elementMutationListener").mockImplementation((_, cb) => {
-          var mutation = {};
-          mutation.type = { attributes: false, childList: true, subtree: false };
-          cb(mutation);
-        });
+        jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
       }
 
       new_entry["group-" + +locked].created = AppHelper.getTimestamp();

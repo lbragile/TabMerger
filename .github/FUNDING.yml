@@ -1,7 +1,7 @@
 github: lbragile
+open_collective: tabmerger
+ko_fi: lbragile
+liberapay: lbragile
+issuehunt: lbragile
 custom:
-  [
-    "https://www.paypal.com/donate?hosted_button_id=X3EYMX8CVA4SY&source=url",
-    "https://www.buymeacoffee.com/lbragile",
-    "https://liberapay.com/lbragile/donate",
-  ]
+  ["https://www.paypal.com/donate?hosted_button_id=X3EYMX8CVA4SY&source=url", "https://www.buymeacoffee.com/lbragile"]
