@@ -507,6 +507,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
           >
             <span
               class="input-group-text"
+              data-class="text-nowrap"
               data-for="search-tooltip"
               data-tip="#___ → group<br />___ → tab"
             >
@@ -4672,6 +4673,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
           >
             <span
               class="input-group-text"
+              data-class="text-nowrap"
               data-for="search-tooltip"
               data-tip="#___ → group<br />___ → tab"
             >
@@ -8837,6 +8839,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
           >
             <span
               class="input-group-text"
+              data-class="text-nowrap"
               data-for="search-tooltip"
               data-tip="#___ → group<br />___ → tab"
             >
@@ -13003,6 +13006,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
           >
             <span
               class="input-group-text"
+              data-class="text-nowrap"
               data-for="search-tooltip"
               data-tip="#___ → group<br />___ → tab"
             >
@@ -17168,6 +17172,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
           >
             <span
               class="input-group-text"
+              data-class="text-nowrap"
               data-for="search-tooltip"
               data-tip="#___ → group<br />___ → tab"
             >
@@ -21333,6 +21338,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
           >
             <span
               class="input-group-text"
+              data-class="text-nowrap"
               data-for="search-tooltip"
               data-tip="#___ → group<br />___ → tab"
             >
@@ -25498,6 +25504,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
           >
             <span
               class="input-group-text"
+              data-class="text-nowrap"
               data-for="search-tooltip"
               data-tip="#___ → group<br />___ → tab"
             >

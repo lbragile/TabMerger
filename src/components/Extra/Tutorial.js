@@ -601,7 +601,9 @@ export const TOUR_STEPS = [
   {
     selector: "#choose-btn",
     content: (
-      <div className="text-dark my-2">Location where you can choose a subscription plan depending on your needs.</div>
+      <div className="text-dark my-2">
+        Location where you can choose a <b>subscription plan</b> depending on your needs.
+      </div>
     ),
     position: "bottom",
   },
@@ -612,7 +614,7 @@ export const TOUR_STEPS = [
         A <b>video walkthrough</b> with commentary, highlighting all of the above features.
       </div>
     ),
-    position: "bottom",
+    position: "top",
   },
   {
     selector: "#donate-btn",
@@ -621,7 +623,7 @@ export const TOUR_STEPS = [
         Where you can make a <b>donation</b> to TabMerger and show your support!
       </div>
     ),
-    position: "bottom",
+    position: "top",
   },
   {
     selector: "#leave-btn",
@@ -631,7 +633,7 @@ export const TOUR_STEPS = [
         users to see.
       </div>
     ),
-    position: "bottom",
+    position: "top",
   },
   {
     selector: "#my-links",

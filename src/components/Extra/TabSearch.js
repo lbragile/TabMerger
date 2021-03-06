@@ -25,6 +25,7 @@ export default function TabSearch({ user }) {
         <span
           className="input-group-text"
           data-tip={`#___ → ${translate("group")}<br />___ → ${translate("tab")}`}
+          data-class="text-nowrap"
           data-for="search-tooltip"
         >
           <BsInfoCircle color="white" size="1rem" />

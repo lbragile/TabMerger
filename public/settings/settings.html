@@ -59,7 +59,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-xl-6">
           <section>
             <div class="row mx-0">
               <h5 class="mr-2 mb-0">Default Group Color:</h5>
@@ -153,7 +153,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               </small>
               <textarea
                 class="px-1 mt-2"
-                rows="5"
+                rows="7"
                 id="options-blacklist"
                 placeholder="http://www.google.com, https://www.facebook.com, etc."
                 maxlength="1000"
@@ -208,10 +208,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
           </section>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-xl-6">
           <section>
-            <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Tooltip Visibility:</h5>
+            <h5 class="mr-2 mb-0">Tooltip Visibility:</h5>
+            <div class="row ml-0">
               <span class="pr-2 label-left">Hide</span>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="tooltip-visibility" checked />
@@ -226,8 +226,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
           </section>
 
           <section>
+            <h5 class="mr-2 mb-0">Export JSON SaveAs Dialog Visibility:</h5>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Export JSON SaveAs Dialog Visibility:</h5>
               <span class="pr-2 label-left">Hide</span>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="saveas-visibility" checked />
@@ -242,8 +242,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
           </section>
 
           <section>
+            <h5 class="mr-2 mb-0">Badge Level Information:</h5>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Badge Level Information:</h5>
               <span class="pr-2 label-left">Hide</span>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="badge-view" name="badge-view" checked />
@@ -255,17 +255,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               <b>Premium</b>
               <a href="https://lbragile.github.io/TabMerger-Extension/pricing" target="_blank" rel="noreferrer"
                 >subscription</a
-              >. <br /><b>ON</b> → Shows relevant information, about number of tabs and groups inside TabMerger at any
-              moment, as {#tabs}|{#groups} with a background color corresponding to number of tabs. The user can hover
-              over the icon to see these numbers in a clear sentence. <br /><b>OFF</b> → No extra information is
-              displayed on top of the badge icon. However, the user can still hover over the badge icon to see the
-              relevant tab & group information.</small
+              >. <br /><b>ON</b> → Shows relevant information about number of tabs/groups in TabMerger at any moment, as
+              {#tabs}|{#groups} with a background color corresponding to number of tabs. The user can hover over the
+              icon to see these numbers. <br /><b>OFF</b> → No extra information is displayed on top of the badge icon.
+              However, the user can still hover over the badge icon to see the relevant tab & group information.</small
             >
           </section>
 
           <section>
+            <h5 class="mr-2 mb-0">Extension Opening Behavior:</h5>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Extension Opening Behavior:</h5>
               <span class="pr-2 label-left">Open & Merge</span>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="ext-open" name="ext-open" checked />
@@ -273,19 +272,17 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               </div>
             </div>
             <small
-              >Happens when TabMerger's extension icon is clicked. <br /><b>ON</b> → Will open (or switch if already
-              open) TabMerger's extensions page <b>without</b> merging the currently open tabs in the same window. The
-              user can then merge open tabs by using each group's merging buttons. Such behavior is desireable for full
-              control of the merging process. <br /><b>OFF</b> → Same as above but <b>with</b> merging. The merged tabs
-              will be grouped into a new group. Thus, the user will then be able to sort the tabs among various groups
-              or simply sort the groups via the drag-and-drop feature. This behavior is desireable when the user wants
-              to avoid opening an extra tab (TabMerger) prior to merging.</small
+              >Happens when TabMerger's extension icon is clicked. <br /><b>ON</b> → Will open (or switch to, if already
+              open) TabMerger's extensions page <b>without</b> merging the currently open tabs in the same window. When
+              you want full control of the merging process. <br /><b>OFF</b> → Same as above but <b>with</b> merging.
+              The merged tabs are grouped into a new/empty top group. You can then sort the tabs via the drag-and-drop
+              feature. When you want to avoid opening an extra tab (TabMerger) prior to merging.</small
             >
           </section>
 
           <section>
+            <h5 class="mr-2 mb-0">General Merge Behaviour:</h5>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">General Merge Behaviour:</h5>
               <span class="pr-2 label-left">Merge Without Closing</span>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="merge-tabs" name="merge-tabs" checked />
@@ -302,8 +299,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
           </section>
 
           <section>
+            <h5 class="mr-2 mb-0">Pinned Tab Merge Behavior:</h5>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Pinned Tab Merge Behavior:</h5>
               <span class="pr-2 label-left">Exclude</span>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="pin-tabs" name="pin-tabs" checked />
@@ -321,8 +318,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
           </section>
 
           <section>
+            <h5 class="mr-2 mb-0">Tab Restoring Behavior:</h5>
             <div class="row mx-0">
-              <h5 class="mr-2 mb-0">Tab Restoring Behavior:</h5>
               <span class="pr-2 label-left">Remove from TabMerger</span>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="restore-tabs" name="restore-tabs" checked />
@@ -330,9 +327,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
               </div>
             </div>
             <small
-              >Applies to both group and global actions. <br /><b>ON</b> → You can still manually delete tabs by the
-              delete tab, group, or all actions.<br /><b>OFF</b> → Opening a tab (<i>Click</i> on it) will remove that
-              tab from TabMerger's page. This holds for any other opening action (<i>group</i> or <i>all</i>).</small
+              >Applies to tab, group, and global actions. <br /><b>ON</b> → You can still manually delete tabs by the
+              delete tab, group, or all actions.<br /><b>OFF</b> → Opening a tab (<i>click</i> on it, <i>group</i>, or
+              <i>all</i>) will remove that tab from TabMerger's page.</small
             >
           </section>
         </div>
