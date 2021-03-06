@@ -331,8 +331,14 @@ hr {
   .created,
   .search-filter,
   .global-btn-row,
+  .hidden,
+  .empty,
   #footer :not(#copyright) {
     display: none !important;
+  }
+
+  #logo-img {
+    visibility: visible;
   }
 
   .subtitle {

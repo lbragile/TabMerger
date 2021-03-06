@@ -121,7 +121,7 @@ describe("restoreOptions", () => {
     expect(document.getElementById("tab-font").value).toBe(expect_checked ? "Arial" : "Times New Roman");
     expect(document.getElementById("tab-weight").value).toBe(expect_checked ? "Normal" : "Bold");
 
-    expect(document.body.style._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "white");
+    expect(document.body.style._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)");
     expect(document.body.style._values.color).toBe(ss_dark ? "white" : "black");
     expect(document.querySelector("code").style._values.color).toBe(ss_dark ? "white" : "black");
     expect(document.querySelector("code").style._values.border).toBe("1px solid " + (ss_dark ? "white" : "black")); // prettier-ignore

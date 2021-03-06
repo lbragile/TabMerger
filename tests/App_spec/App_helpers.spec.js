@@ -70,27 +70,15 @@ describe("getTimestamp", () => {
 });
 
 describe("toggleDarkMode", () => {
-  var body, sidebar;
+  test.each([["light"], ["dark"]])("%s mode", (mode) => {
+    var body = container.querySelector(".container-fluid").closest("body");
+    var sidebar = container.querySelector("#sidebar");
 
-  beforeEach(() => {
-    body = container.querySelector(".container-fluid").closest("body");
-    sidebar = container.querySelector("#sidebar");
-  });
+    AppHelper.toggleDarkMode(mode === "dark");
 
-  test("light mode", () => {
-    AppHelper.toggleDarkMode(false);
-
-    expect(body.style.background).toEqual("white");
-    expect(body.style.color).toEqual("black");
-    expect(sidebar.style.background).toEqual("rgb(120, 120, 120)");
-  });
-
-  test("dark mode", () => {
-    AppHelper.toggleDarkMode(true);
-
-    expect(body.style.background).toEqual("rgb(52, 58, 64)");
-    expect(body.style.color).toEqual("white");
-    expect(sidebar.style.background).toEqual("rgb(27, 27, 27)");
+    expect(body.style.background).toEqual(mode === "light" ? "rgb(250, 250, 250)" : "rgb(52, 58, 64)");
+    expect(body.style.color).toEqual(mode === "light" ? "black" : "white");
+    expect(sidebar.style.background).toEqual(mode === "light" ? "rgb(120, 120, 120)" : "rgb(27, 27, 27)");
   });
 });
 

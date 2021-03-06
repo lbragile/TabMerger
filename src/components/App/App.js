@@ -72,9 +72,7 @@ export default function App() {
     // persist user's tier, this should only be checked when not testing to avoid database calls
     if (process.env.NODE_ENV !== "test") {
       chrome.storage.local.get("client_details", (local) => {
-        if (local.client_details) {
-          AppHelper.checkUserStatus(setUser);
-        }
+        local.client_details && AppHelper.checkUserStatus(setUser);
       });
     }
 
@@ -163,14 +161,16 @@ export default function App() {
         </div>
         {/* Verify/activate account button*/}
         <div id="footer">
-          <Button
-            classes="p-0 btn-in-global mx-auto mb-2 d-block"
-            id="subscription-btn"
-            translate="Activate Plan"
-            onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
-          >
-            {<BiCheckCircle color="black" size="1.5rem" />}
-          </Button>
+          {!user.paid && (
+            <Button
+              classes="p-0 btn-in-global mx-auto mb-2 d-block"
+              id="subscription-btn"
+              translate="Activate Plan"
+              onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
+            >
+              {<BiCheckCircle color="black" size="1.5rem" />}
+            </Button>
+          )}
           <a href={CONSTANTS.SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
             Subscription: <b>{user.tier} Tier</b>
           </a>

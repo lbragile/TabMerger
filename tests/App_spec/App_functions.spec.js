@@ -154,15 +154,12 @@ describe("toggleHiddenOrEmptyGroups", () => {
     ["Standard/Premium", "before"],
     ["Standard/Premium", "after"],
   ])("%s user - %s", (user_type, when) => {
-    document.body.innerHTML ="<div class='hidden'/><div class='empty'/><div class='container-fluid'/><div id='sidebar'/><div id='logo-img'/>"; // prettier-ignore
+    document.body.innerHTML = "<div id='sidebar'/>";
     jest.clearAllMocks();
 
     AppFunc.toggleHiddenOrEmptyGroups(when, user_type.includes("Free") ? { tier: "Free" } : user);
 
-    expect(document.querySelector(".hidden").style.display).toBe(when === "before" ? "none" : "");
-    expect(document.querySelector(".empty").style.display).toBe(when === "before" ? "none" : "");
     expect(document.querySelector("#sidebar").style.visibility).toBe(when === "before" && !user_type.includes("Free") ? "hidden" : ""); // prettier-ignore
-    expect(document.querySelector("#logo-img").style.visibility).toBe(!user_type.includes("Free") ? "visible" : "");
   });
 });
 

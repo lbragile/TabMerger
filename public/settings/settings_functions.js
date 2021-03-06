@@ -85,7 +85,7 @@ export function restoreOptions() {
     document.querySelector("input[name='restore-tabs']").checked = sync.settings.restore;
 
     // dark mode adjustments
-    body.style.background = sync.settings.dark ? "rgb(52, 58, 64)" : "white";
+    body.style.background = sync.settings.dark ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)";
     body.style.color = sync.settings.dark ? "white" : "black";
     code_block.style.color = sync.settings.dark ? "white" : "black";
     code_block.style.border = "1px solid " + (sync.settings.dark ? "white" : "black");

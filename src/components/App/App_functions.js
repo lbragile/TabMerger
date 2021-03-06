@@ -106,13 +106,8 @@ export function syncLimitIndication() {
  * @param {object} user The user's subscription details
  */
 export function toggleHiddenOrEmptyGroups(type, user) {
-  // do not show hidden or empty groups
-  document.querySelectorAll(".hidden, .empty").forEach((x) => (x.style.display = type === "before" ? "none" : ""));
-
-  // remove "ads" for correct user type
   if (["Standard", "Premium"].includes(user.tier)) {
     document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "";
-    document.querySelector("#logo-img").style.visibility = "visible";
   }
 }
 

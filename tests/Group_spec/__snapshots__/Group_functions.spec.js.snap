@@ -26,11 +26,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       />
       <div
         class="title-btn-containter row"
+        style="color: white;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -53,6 +55,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -75,6 +78,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -99,6 +103,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: white;"
         >
           <svg
             class="input-color"
@@ -119,6 +124,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         </button>
         <input
           list="presetColors"
+          style="color: white;"
           type="color"
           value="#dedede"
         />
@@ -281,6 +287,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -303,6 +310,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -330,6 +338,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -370,6 +379,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: white;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -377,24 +387,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: white;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: white;"
       >
         <div
           class="d-flex flex-column"
+          style="color: white;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -461,11 +476,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -514,11 +531,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -566,12 +585,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       </div>
       <div
         class="draggable"
+        style="color: white;"
       >
         <svg
           style="color: white;"
         />
         <a
-          class="a-tab mx-1 text-light"
+          class="a-tab mx-1 text-black text-light"
           href="tab_a_url"
         >
           <span>
@@ -605,11 +625,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       />
       <div
         class="title-btn-containter row"
+        style="color: white;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -632,6 +654,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -654,6 +677,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -678,6 +702,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: white;"
         >
           <svg
             class="input-color"
@@ -698,6 +723,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         </button>
         <input
           list="presetColors"
+          style="color: white;"
           type="color"
           value="#c7eeff"
         />
@@ -860,6 +886,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -882,6 +909,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -909,6 +937,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -949,6 +978,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: white;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -956,24 +986,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: white;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: white;"
       >
         <div
           class="d-flex flex-column"
+          style="color: white;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -1040,11 +1075,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -1093,11 +1130,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -1145,12 +1184,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       </div>
       <div
         class="draggable"
+        style="color: white;"
       >
         <svg
           style="color: white;"
         />
         <a
-          class="a-tab mx-1 text-light"
+          class="a-tab mx-1 text-black text-light"
           href="tab_b_url"
         >
           <span
@@ -1191,11 +1231,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       />
       <div
         class="title-btn-containter row"
+        style="color: white;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1218,6 +1260,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1240,6 +1283,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1264,6 +1308,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: white;"
         >
           <svg
             class="input-color"
@@ -1284,6 +1329,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         </button>
         <input
           list="presetColors"
+          style="color: white;"
           type="color"
           value="#dedede"
         />
@@ -1446,6 +1492,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1468,6 +1515,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1495,6 +1543,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1535,6 +1584,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: white;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -1542,24 +1592,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: white;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: white;"
       >
         <div
           class="d-flex flex-column"
+          style="color: white;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -1626,11 +1681,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -1679,11 +1736,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -1731,12 +1790,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       </div>
       <div
         class="draggable"
+        style="color: white;"
       >
         <svg
           style="color: white;"
         />
         <a
-          class="a-tab mx-1 text-light"
+          class="a-tab mx-1 text-black text-light"
           href="tab_a_url"
         >
           <span>
@@ -1770,11 +1830,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       />
       <div
         class="title-btn-containter row"
+        style="color: white;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1797,6 +1859,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1819,6 +1882,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -1843,6 +1907,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: white;"
         >
           <svg
             class="input-color"
@@ -1863,6 +1928,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         </button>
         <input
           list="presetColors"
+          style="color: white;"
           type="color"
           value="#c7eeff"
         />
@@ -2025,6 +2091,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2047,6 +2114,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2074,6 +2142,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2114,6 +2183,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: white;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -2121,24 +2191,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: white;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: white;"
       >
         <div
           class="d-flex flex-column"
+          style="color: white;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -2205,11 +2280,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -2258,11 +2335,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -2310,12 +2389,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       </div>
       <div
         class="draggable"
+        style="color: white;"
       >
         <svg
           style="color: white;"
         />
         <a
-          class="a-tab mx-1 text-light"
+          class="a-tab mx-1 text-black text-light"
           href="tab_b_url"
         >
           <span
@@ -2356,11 +2436,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       />
       <div
         class="title-btn-containter row"
+        style="color: white;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2383,6 +2465,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2405,6 +2488,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2429,6 +2513,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: white;"
         >
           <svg
             class="input-color"
@@ -2449,6 +2534,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         </button>
         <input
           list="presetColors"
+          style="color: white;"
           type="color"
           value="#dedede"
         />
@@ -2611,6 +2697,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2633,6 +2720,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2660,6 +2748,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2700,6 +2789,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: white;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -2707,24 +2797,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: white;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: white;"
       >
         <div
           class="d-flex flex-column"
+          style="color: white;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -2791,11 +2886,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -2844,11 +2941,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -2896,12 +2995,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       </div>
       <div
         class="draggable"
+        style="color: white;"
       >
         <svg
           style="color: white;"
         />
         <a
-          class="a-tab mx-1 text-light"
+          class="a-tab mx-1 text-black text-light"
           href="tab_a_url"
         >
           <span>
@@ -2935,11 +3035,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       />
       <div
         class="title-btn-containter row"
+        style="color: white;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2962,6 +3064,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -2984,6 +3087,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -3008,6 +3112,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: white;"
         >
           <svg
             class="input-color"
@@ -3028,6 +3133,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         </button>
         <input
           list="presetColors"
+          style="color: white;"
           type="color"
           value="#c7eeff"
         />
@@ -3190,6 +3296,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -3212,6 +3319,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -3239,6 +3347,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: white;"
         >
           <svg
             color="white"
@@ -3279,6 +3388,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: white;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -3286,24 +3396,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: white;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: white;"
       >
         <div
           class="d-flex flex-column"
+          style="color: white;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -3370,11 +3485,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -3423,11 +3540,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: white;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: white;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -3475,12 +3594,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       </div>
       <div
         class="draggable"
+        style="color: white;"
       >
         <svg
           style="color: white;"
         />
         <a
-          class="a-tab mx-1 text-light"
+          class="a-tab mx-1 text-black text-light"
           href="tab_b_url"
         >
           <span
@@ -3521,11 +3641,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       />
       <div
         class="title-btn-containter row"
+        style="color: black;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -3548,6 +3670,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -3570,6 +3693,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -3594,6 +3718,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: black;"
         >
           <svg
             class="input-color"
@@ -3614,6 +3739,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         </button>
         <input
           list="presetColors"
+          style="color: black;"
           type="color"
           value="#dedede"
         />
@@ -3776,6 +3902,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -3798,6 +3925,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -3825,6 +3953,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -3865,6 +3994,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: black;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -3872,24 +4002,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: black;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: black;"
       >
         <div
           class="d-flex flex-column"
+          style="color: black;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: black;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: black;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -3956,11 +4091,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: black;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: black;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -4009,11 +4146,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: black;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: black;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -4061,12 +4200,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       </div>
       <div
         class="draggable"
+        style="color: black;"
       >
         <svg
           style="color: black;"
         />
         <a
-          class="a-tab mx-1 text-primary"
+          class="a-tab mx-1 text-black text-primary"
           href="tab_a_url"
         >
           <span>
@@ -4100,11 +4240,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       />
       <div
         class="title-btn-containter row"
+        style="color: black;"
       >
         <button
           class="move-group-btn btn-in-group-title btn"
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -4127,6 +4269,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="lock group"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -4149,6 +4292,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="star group"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -4173,6 +4317,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="pickColor"
+          style="color: black;"
         >
           <svg
             class="input-color"
@@ -4193,6 +4338,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         </button>
         <input
           list="presetColors"
+          style="color: black;"
           type="color"
           value="#c7eeff"
         />
@@ -4355,6 +4501,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="hideTabs"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -4377,6 +4524,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="openGroup"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -4404,6 +4552,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           data-for="group-title-btn-tooltip"
           data-offset="{'top': -10}"
           data-tip="deleteGroup"
+          style="color: black;"
         >
           <svg
             color="white"
@@ -4444,6 +4593,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       </div>
       <div
         class="sync-group-exceed-indicator d-none"
+        style="color: black;"
         title="indicates that the group's sync limit is exceeded"
       >
         ●
@@ -4451,24 +4601,29 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       <input
         class="url-drag-input"
         name="url-drag"
+        style="color: black;"
         type="text"
       />
       <div
         class="merging-container float-right"
+        style="color: black;"
       >
         <div
           class="d-flex flex-column"
+          style="color: black;"
         >
           <button
             class="merge-btn btn-for-merging btn-outline-dark btn"
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeALLtabs"
+            style="color: black;"
           >
             <svg
               aria-labelledby="title"
               class="merge-all-svg"
               height="32"
+              style="color: black;"
               viewBox="-0.5 -0.5 165 155"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -4535,11 +4690,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeLEFTtabs"
+            style="color: black;"
           >
             <svg
               aria-labelledby="title"
               class="merge-left-svg"
               height="32"
+              style="color: black;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -4588,11 +4745,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
             data-for="merge-btn-tooltip"
             data-offset="{'left': -10}"
             data-tip="mergeRIGHTtabs"
+            style="color: black;"
           >
             <svg
               aria-labelledby="title"
               class="merge-right-svg"
               height="32"
+              style="color: black;"
               viewBox="-0.5 -0.5 117 154"
               width="32"
               xmlns="http://www.w3.org/2000/svg"
@@ -4640,12 +4799,13 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       </div>
       <div
         class="draggable"
+        style="color: black;"
       >
         <svg
           style="color: black;"
         />
         <a
-          class="a-tab mx-1 text-primary"
+          class="a-tab mx-1 text-black text-primary"
           href="tab_b_url"
         >
           <span

@@ -43,10 +43,10 @@ export function setBGColor(e, id) {
   const adjusted_text_color = threshold_passed ? "black" : "white";
   [...target.parentNode.children].forEach((child) => {
     child.style.background = color;
-    const selectors = ".title-edit-input, .group-count, .hidden-symbol, .btn-in-group-title svg, .color-group-btn svg, .draggable svg, .a-tab"; // prettier-ignore
-    [...child.querySelectorAll(selectors)].forEach((x) => {
+    child.querySelectorAll("* :not(.created, datalist, option, path, ellipse, g, defs, b, span, p)").forEach((x) => {
       if (x.classList.contains("a-tab")) {
-        x.classList.value = x.classList.value.split(" ").filter((cl) => !cl.includes("text-")).join(" "); // prettier-ignore
+        x.classList.remove("text-primary");
+        x.classList.remove("text-light");
         x.classList.add("text-" + (threshold_passed ? "primary" : "light"));
       } else {
         x.style.color = adjusted_text_color;

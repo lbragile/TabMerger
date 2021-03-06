@@ -61,7 +61,7 @@ export function toggleDarkMode(isChecked) {
   var body = document.querySelector("body");
   var sidebar = document.querySelector("#sidebar");
 
-  body.style.background = isChecked ? "rgb(52, 58, 64)" : "white";
+  body.style.background = isChecked ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)";
   body.style.color = isChecked ? "white" : "black";
   sidebar.style.background = isChecked ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 }
