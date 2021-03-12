@@ -28,14 +28,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { getTabTotal, storeDestructiveAction } from "../App/App_helpers";
 import { toast } from "react-toastify";
 import * as CONSTANTS from "../../constants/constants";
+import { TabState } from "./Tab";
+import React from "react";
 
 /**
  * Sets the initial tabs based on Chrome's local storage upon initial render.
  * If Chrome's local storage is empty, this is set to an empty array.
- * @param {function} setTabs For re-rendering the group's tabs
+ * @param {Function} setTabs For re-rendering the group's tabs
  * @param {string} id Used to get the correct group tabs
  */
-export function setInitTabs(setTabs, id) {
+export function setInitTabs(setTabs: React.Dispatch<React.SetStateAction<TabState[]>>, id: string): void {
   chrome.storage.local.get("groups", (local) => {
     setTabs((local.groups && local.groups[id]?.tabs) || []);
   });
@@ -43,10 +45,12 @@ export function setInitTabs(setTabs, id) {
 
 /**
  * Adds necessary classes to the tab element once a drag event is initialized
- * @param {HTMLElement} e The tab which will be dragged within the same group or across groups
+ * @param {DragEvent<HTMLDivElement>} e The tab which will be dragged within the same group or across groups
  */
-export function tabDragStart(e) {
-  var target = e.target.tagName === "DIV" ? e.target : e.target.parentNode;
+export function tabDragStart(e: React.DragEvent<HTMLDivElement>): void {
+  var target = ((<HTMLDivElement>e.target).tagName === "DIV"
+    ? e.target
+    : (<HTMLDivElement>e.target).parentNode) as HTMLDivElement;
   target.classList.add("dragging");
   target.closest(".group").classList.add("drag-origin");
 }
@@ -54,17 +58,21 @@ export function tabDragStart(e) {
 /**
  * Handles the drop event once a drag is finished. Needs to re-order tabs accordingly and
  * check for sync limit violations - warning the user accordingly.
- * @param {HTMLElement} e  The dragged tab
+ * @param {DragEvent<HTMLDivElement>} e  The dragged tab
  * @param {Function} setGroups For re-rendering the groups
  */
-export function tabDragEnd(e, setGroups) {
+export function tabDragEnd(
+  e: React.DragEvent<HTMLDivElement>,
+  setGroups: React.Dispatch<React.SetStateAction<string>>
+): void {
   e.stopPropagation();
+  var target = e.target as HTMLDivElement;
 
-  var closest_group = e.target.closest(".group");
+  var closest_group = target.closest(".group");
   var drag_origin = document.getElementsByClassName("drag-origin")[0];
 
   drag_origin.classList.remove("drag-origin");
-  e.target.classList.remove("dragging");
+  target.classList.remove("dragging");
 
   const scroll = document.documentElement.scrollTop;
   chrome.storage.local.get("groups", (local) => {
@@ -72,14 +80,16 @@ export function tabDragEnd(e, setGroups) {
 
     if (drag_origin.id !== closest_group.id) {
       // remove tab from group that originated the drag
-      groups[drag_origin.id].tabs = groups[drag_origin.id].tabs.filter((x) => x.url !== e.target.querySelector("a").href); // prettier-ignore
+      groups[drag_origin.id].tabs = groups[drag_origin.id].tabs.filter((x: TabState) => x.url !== target.querySelector("a").href); // prettier-ignore
     }
 
     // reorder tabs based on current positions
-    groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map((x) => {
-      const anchor = x.querySelector("a");
-      return { pinned: !!x.querySelector(".pinned"), title: anchor.textContent, url: anchor.href };
-    });
+    groups[closest_group.id].tabs = [...closest_group.querySelectorAll(".draggable")].map(
+      (x: Element): TabState => {
+        const anchor = x.querySelector("a");
+        return { pinned: !!x.querySelector(".pinned"), title: anchor.textContent, url: anchor.href };
+      }
+    );
 
     // update the groups
     chrome.storage.local.set({ groups, scroll }, () => setGroups(JSON.stringify(groups)));
@@ -88,14 +98,21 @@ export function tabDragEnd(e, setGroups) {
 
 /**
  * Removes a tab from the group and adjusts global & group counts.
- * @param {HTMLElement} e The "x" node element that user clicked on
- * @param {Array.<{title: string, url: string, id: string?}>} tabs The group's existing tabs (to find tab to remove)
+ * @param {React.MouseEvent<HTMLParagraphElement, MouseEvent>} e The "x" node element that user clicked on
+ * @param {object[]} tabs The group's existing tabs (to find tab to remove)
  * @param {function} setTabs For re-rendering the group's tabs
  * @param {function} setTabTotal For re-rendering the total number of groups
  * @param {function} setGroups For re-rendering the overall groups
  */
-export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups) {
-  const tab = e.target.closest(".draggable");
+export function removeTab(
+  e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
+  tabs: TabState[],
+  user: { tier: string; paid: string | boolean },
+  setTabs: React.Dispatch<React.SetStateAction<TabState[]>>,
+  setTabTotal: React.Dispatch<React.SetStateAction<number>>,
+  setGroups: React.Dispatch<React.SetStateAction<string>>
+): void {
+  const tab = (e.target as HTMLParagraphElement).closest(".draggable");
   const url = tab.querySelector("a").href;
   const group_id = tab.closest(".group").id;
 
@@ -106,7 +123,8 @@ export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups) {
       const scroll = document.documentElement.scrollTop;
       groups_copy = storeDestructiveAction(groups_copy, groups, user);
 
-      groups[group_id].tabs = tabs.filter((x) => x.url !== url);
+      /* @ts-ignore */
+      groups[group_id].tabs = tabs.filter((x: TabState): TabState => x.url !== url);
       chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
         setTabs(groups[group_id].tabs);
         setTabTotal(getTabTotal(groups));
@@ -121,46 +139,53 @@ export function removeTab(e, tabs, user, setTabs, setTabTotal, setGroups) {
 /**
  * Sets Chrome's local storage with an array (["group id", url_link]) consisting
  * of the tab to consider for removal after a user clicks to restore it.
- * @param {HTMLElement} e Node representing the tab that was clicked
+ * @param {MouseEvent<HTMLAnchorElement, MouseEvent>} e Node representing the tab that was clicked
  */
-export function handleTabClick(e) {
+export function handleTabClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void {
   e.preventDefault();
+  var target = e.target as HTMLAnchorElement;
 
   // can only left click when not editing the tab title
-  if (e.button === 0 && !e.target.classList.contains("edit-tab-title")) {
+  if (e.button === 0 && !target.classList.contains("edit-tab-title")) {
     // left
-    chrome.storage.local.set({ remove: [e.target.closest(".group").id, e.target.href] }, () => {
-      e.target.click();
-      e.target.blur();
+    chrome.storage.local.set({ remove: [target.closest(".group").id, target.href] }, () => {
+      target.click();
+      target.blur();
     });
   } else if (e.button === 1) {
     // middle
-    e.target.focus();
-    e.target.classList.add("edit-tab-title");
+    target.focus();
+    target.classList.add("edit-tab-title");
   }
 }
 
 /**
  * Updates the local storage with the new title of the tab for the correct group.
- * @param {HTMLElement} e Node representing the tab that was clicked
+ * @param {React.KeyboardEvent<HTMLAnchorElement> | React.FocusEvent<HTMLAnchorElement>} e Node representing the tab that was clicked
  */
-export function handleTabTitleChange(e) {
-  e.target.classList.remove("edit-tab-title");
+export function handleTabTitleChange(
+  e: React.KeyboardEvent<HTMLAnchorElement> | React.FocusEvent<HTMLAnchorElement>
+): void {
+  var target = e.target as HTMLAnchorElement;
+  target.classList.remove("edit-tab-title");
 
+  /* @ts-ignore */
   if (e.which === 13 || e.keyCode === 13) {
     e.preventDefault();
   } else {
-    const group_id = e.target.closest(".group").id;
+    const group_id = target.closest(".group").id;
     chrome.storage.local.get("groups", (local) => {
       var tabs = local.groups[group_id].tabs;
 
       // update the tab's title
-      tabs = tabs.map((x) => {
-        if (x.url === e.target.href) {
-          x.title = e.target.textContent;
+      tabs = tabs.map(
+        (x: TabState): TabState => {
+          if (x.url === target.href) {
+            x.title = target.textContent;
+          }
+          return x;
         }
-        return x;
-      });
+      );
 
       local.groups[group_id].tabs = tabs;
 
@@ -172,25 +197,32 @@ export function handleTabTitleChange(e) {
 /**
  * Pins or unpins a tab that is inside TabMerger. This avoids the need for opening a tab
  * in order to pin/unpin it and re-merge into TabMerger.
- * @param {HTMLElement} e Node representing the tab's pin that was clicked
+ * @param {MouseEvent<HTMLSpanElement, MouseEvent>} e Node representing the tab's pin that was clicked
  * @param {Function} setGroups For re-rendering the groups to show the update
  */
-export function handlePinClick(e, setGroups) {
-  e.target.closest(".pin-tab svg").classList.toggle("pinned");
+export function handlePinClick(
+  e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+  setGroups: React.Dispatch<React.SetStateAction<string>>
+): void {
+  var target = e.target as HTMLSpanElement;
+  target.closest(".pin-tab svg").classList.toggle("pinned");
 
-  const id = e.target.closest(".group").id;
-  const url = e.target.closest(".pin-tab").previousSibling.href;
+  const id = target.closest(".group").id;
+  // @ts-ignore
+  const url = target.closest(".pin-tab").previousSibling.href;
 
   chrome.storage.local.get("groups", (local) => {
     const scroll = document.documentElement.scrollTop;
     var groups = local.groups;
     // adjust the pin status of the correct tab
-    groups[id].tabs = groups[id].tabs.map((x) => {
-      if (x.url === url) {
-        x.pinned = e.target.classList.contains("pinned");
+    groups[id].tabs = groups[id].tabs.map(
+      (x: TabState): TabState => {
+        if (x.url === url) {
+          x.pinned = target.classList.contains("pinned");
+        }
+        return x;
       }
-      return x;
-    });
+    );
 
     chrome.storage.local.set({ groups, scroll }, () => setGroups(JSON.stringify(groups)));
   });

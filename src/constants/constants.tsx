@@ -30,8 +30,18 @@ import { getTimestamp } from "../components/App/App_helpers";
 import { storeUserDetailsPriorToCheck } from "../components/App/App_functions";
 
 /* USER TIER INFORMATION */
+export interface TIER_OPTIONS {
+  readonly NUM_TAB_LIMIT: number;
+  readonly NUM_GROUP_LIMIT: number;
+  readonly NUM_UNDO_STATES: number;
+}
+
+export interface TIERS {
+  [key: string]: TIER_OPTIONS;
+}
+
 /** @constant {object} USER @default { Free: { NUM_TAB_LIMIT: 50 (15 during development), NUM_GROUP_LIMIT: 5 (3 during development), NUM_UNDO_STATES: 2 (1 during development) }, Basic: { NUM_TAB_LIMIT: 250 (16 during development), NUM_GROUP_LIMIT: 15 (4 during development), NUM_UNDO_STATES: 5 (2 during development) }, Standard: { NUM_TAB_LIMIT: 2500 (17 during development), NUM_GROUP_LIMIT: 50 (5 during development), NUM_UNDO_STATES: 10 (3 during development) }, Premium: { NUM_TAB_LIMIT: 10000 (18 during development), NUM_GROUP_LIMIT: 100 (6 during development), NUM_UNDO_STATES: 15 (4 during development) } } */
-export const USER = {
+export const USER: TIERS = {
   Free: {
     NUM_TAB_LIMIT: process.env.REACT_APP_PRODUCTION ? 100 : 15,
     NUM_GROUP_LIMIT: process.env.REACT_APP_PRODUCTION ? 5 : 3,
@@ -55,8 +65,11 @@ export const USER = {
 };
 
 /* TAB FONT STYLES */
+export interface FontStyle {
+  [key: string]: string;
+}
 /** @constant {object} FONT_FAMILY @default { Arial: "Arial, sans-serif", Verdana: "Verdana, sans-serif", Helvetica: "Helvetica, sans-serif", Tahoma: "Tahoma, sans-serif", "Trebuchet MS": "'Trebuchet MS', sans-serif", "Brush Script MT": "'Brush Script MT', cursive", Georgia: "Georgia, serif", Garamond: "Garamond, serif","Courier New": "'Courier New', monospace","Times New Roman": "'Times New Roman', serif" } */
-export const FONT_FAMILY = {
+export const FONT_FAMILY: FontStyle = {
   Arial: "Arial, sans-serif",
   Verdana: "Verdana, sans-serif",
   Helvetica: "Helvetica, sans-serif",
@@ -70,7 +83,7 @@ export const FONT_FAMILY = {
 };
 
 /** @constant {object} FONT_WEIGHT @default { Bold: "bold",  Bolder: "bolder",  Normal: "normal",  Lighter: "lighter",  Light: "100" } */
-export const FONT_WEIGHT = {
+export const FONT_WEIGHT: FontStyle = {
   Bold: "bold",
   Bolder: "bolder",
   Normal: "normal",
@@ -80,39 +93,52 @@ export const FONT_WEIGHT = {
 
 /* GROUP RELATED DEFAULTS */
 /** @constant {string} DEFAULT_GROUP_TITLE @default "Title" */
-export const DEFAULT_GROUP_TITLE = "Title";
+export const DEFAULT_GROUP_TITLE: string = "Title";
 
 /** @constant {string} DEFAULT_GROUP_COLOR @default "#dedede" */
-export const DEFAULT_GROUP_COLOR = "#dedede";
+export const DEFAULT_GROUP_COLOR: string = "#dedede";
 
 /** @constant {string} GROUP_COLOR_THRESHOLD @default "#777777" */
-export const GROUP_COLOR_THRESHOLD = "#777777";
+export const GROUP_COLOR_THRESHOLD: string = "#777777";
 
 /* EXTENSION ICON DEFAULTS (BADGE ICON) */
 /** @constant {number} BADGE_ICON_STEP_SIZE @default 25 */
-export const BADGE_ICON_STEP_SIZE = 25;
+export const BADGE_ICON_STEP_SIZE: number = 25;
+
+export interface BadgeIconColors {
+  [key: string]: string;
+}
 
 /** @constant {object} BADGE_ICON_COLORS @default { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" } */
-export const BADGE_ICON_COLORS = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
+export const BADGE_ICON_COLORS: BadgeIconColors = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
 
 /** @constant {string} BADGE_ICON_DEFAULT_TITLE @default "Merge your tabs into groups" */
-export const BADGE_ICON_DEFAULT_TITLE = "Merge your tabs into groups";
+export const BADGE_ICON_DEFAULT_TITLE: string = "Merge your tabs into groups";
 
 /* STORAGE AND INPUT LIMITS */
 /** @constant {Number} ITEM_STORAGE_LIMIT @default 8000 (500 during developement/testing) */
-export const ITEM_STORAGE_LIMIT = process.env.REACT_APP_PRODUCTION ? 8000 : 500;
+export const ITEM_STORAGE_LIMIT: number = process.env.REACT_APP_PRODUCTION ? 8000 : 500;
 
 /** @constant {Number} SYNC_STORAGE_LIMIT @default 102000 (1000 during developement/testing) */
-export const SYNC_STORAGE_LIMIT = process.env.REACT_APP_PRODUCTION ? 102000 : 1000;
+export const SYNC_STORAGE_LIMIT: number = process.env.REACT_APP_PRODUCTION ? 102000 : 1000;
 
 /** @constant {Number} TITLE_TRIM_LIMIT @default 50 */
-export const TITLE_TRIM_LIMIT = 50;
+export const TITLE_TRIM_LIMIT: number = 50;
 
 /* DEFAULT GROUP & SETTINGS */
-/** @constant {Object} DEFAULT_GROUP @default { color: "#dedede", created: AppHelper.getTimestamp(), hidden: false, locked: false, starred: false, tabs: [], title: "Title" } */
-export const DEFAULT_GROUP = {
+export interface DefaultGroup {
+  color: string;
+  created: string;
+  hidden: boolean;
+  locked: boolean;
+  starred: boolean;
+  tabs: object[];
+  title: string;
+}
+
+export const DEFAULT_GROUP: DefaultGroup = {
   color: DEFAULT_GROUP_COLOR,
-  created: getTimestamp(),
+  created: getTimestamp(null),
   hidden: false,
   locked: false,
   starred: false,
@@ -122,7 +148,7 @@ export const DEFAULT_GROUP = {
 
 /** @constant {Array.<string>} RANDOM_COLOR_LIST @default "https://www.w3schools.com/colors/colors_groups.asp" */
 // prettier-ignore
-export const RANDOM_COLOR_LIST = [
+export const RANDOM_COLOR_LIST: string[] = [
   "#ff9999", "#ff6666", "#ff3333", "#ff0000", "#cc0000", // red
   "#ffdb99", "#ffa366", "#ff8533", "#ff6600", "#cc5200", // orange
   "#ffff99", "#ffff66", "#ffff33", "#ffff00", "#cccc00", // yellow
@@ -166,8 +192,28 @@ export const RANDOM_COLOR_LIST = [
 /** @constant {number} DEFAULT_BACKUP_PERIOD_IN_MINUTES @default 0 (disabled) */
 export const DEFAULT_BACKUP_PERIOD_IN_MINUTES = 0;
 
-/** @constant {Object} DEFAULT_SETTINGS @default { badgeInfo: "display", blacklist: "", color: "#dedede", dark: true, fileLimitBackup: 15, font: "Arial", merge: "merge", open: "without", periodBackup: 0, pin: "include", randomizeColor: false, relativePathBackup: "/TabMerger", restore: "keep", syncPeriodBackup: 0, title: "Title", weight: "Normal" } */
-export const DEFAULT_SETTINGS = {
+export interface DefaultSettings {
+  badgeInfo: boolean;
+  blacklist: string;
+  color: string;
+  dark: boolean;
+  fileLimitBackup: number;
+  font: string;
+  merge: true;
+  open: true;
+  periodBackup: number;
+  pin: boolean;
+  randomizeColor: boolean;
+  relativePathBackup: string;
+  restore: boolean;
+  saveAsVisibility: boolean;
+  syncPeriodBackup: number;
+  title: string;
+  tooltipVisibility: boolean;
+  weight: string;
+}
+
+export const DEFAULT_SETTINGS: DefaultSettings = {
   badgeInfo: true,
   blacklist: "",
   color: DEFAULT_GROUP_COLOR,
@@ -189,12 +235,18 @@ export const DEFAULT_SETTINGS = {
 };
 
 /* DATABASE & SUBSCRIPTION LINKS */
-export const USER_STATUS_URL = process.env.REACT_APP_PRODUCTION ? "https://tabmerger-backend.herokuapp.com/customer/" : "http://localhost:5000/customer/"; // prettier-ignore
-export const SUBSCRIPTION_URL = process.env.REACT_APP_PRODUCTION ? "https://lbragile.github.io/TabMerger-Extension/pricing" : "http://localhost:3000/TabMerger-Extension/pricing"; // prettier-ignore
+export const USER_STATUS_URL: string = process.env.REACT_APP_PRODUCTION ? "https://tabmerger-backend.herokuapp.com/customer/" : "http://localhost:5000/customer/"; // prettier-ignore
+export const SUBSCRIPTION_URL: string = process.env.REACT_APP_PRODUCTION ? "https://lbragile.github.io/TabMerger-Extension/pricing" : "http://localhost:3000/TabMerger-Extension/pricing"; // prettier-ignore
 
 /* TOASTS */
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} SUBSCRIPTION_TOAST */
-export const SUBSCRIPTION_TOAST = [
+export interface ToastId {
+  toastId: string;
+  [key: string]: string | boolean;
+}
+
+export type Toast = [JSX.Element, ToastId];
+
+export const SUBSCRIPTION_TOAST: Toast = [
   <div className="text-left">
     To use this feature, you need to <b>upgrade</b> your TabMerger subscription.
     <br />
@@ -208,8 +260,7 @@ export const SUBSCRIPTION_TOAST = [
   { toastId: "subscription_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} SYNC_WRITE_TOAST */
-export const SYNC_WRITE_TOAST = [
+export const SYNC_WRITE_TOAST: Toast = [
   <div className="text-left">
     Either one (or more) of your groups exceed(s) their respective sync limit <u>or</u> the total sync limit is exceeded
     - see TabMerger's sync indicators. <br /> <br />
@@ -228,7 +279,7 @@ export const SYNC_WRITE_TOAST = [
  * @param {string} tier The user's subscription tier
  * @returns {Array.<HTMLDivElement, {toastId: string}>}
  */
-export const CHECK_MERGING_TOAST = (tier) => [
+export const CHECK_MERGING_TOAST: Function = (tier: string): Toast => [
   <div className="text-left">
     This would exceed your plan's ({tier} Tier) tab limit of <b>{USER[tier].NUM_TAB_LIMIT}</b>!<br />
     <br />
@@ -252,7 +303,7 @@ export const CHECK_MERGING_TOAST = (tier) => [
  * @param {Number} NUM_GROUP_LIMIT number of groups that the user can make (based on subscription)
  * @returns {Array.<HTMLDivElement, {toastId: string}>}
  */
-export const ADD_GROUP_TOAST = (NUM_GROUP_LIMIT) => [
+export const ADD_GROUP_TOAST: Function = (NUM_GROUP_LIMIT: number): Toast => [
   <div className="text-left">
     Number of groups exceeded (more than <b>{NUM_GROUP_LIMIT}</b>).
     <br />
@@ -274,7 +325,7 @@ export const ADD_GROUP_TOAST = (NUM_GROUP_LIMIT) => [
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} UNDO_DESTRUCTIVE_ACTION_TOAST */
-export const UNDO_DESTRUCTIVE_ACTION_TOAST = [
+export const UNDO_DESTRUCTIVE_ACTION_TOAST: Toast = [
   <div className="text-left">
     There are <b>no more</b> states to undo. <br />
     <br />
@@ -292,7 +343,7 @@ export const UNDO_DESTRUCTIVE_ACTION_TOAST = [
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} IMPORT_JSON_TOAST */
-export const IMPORT_JSON_TOAST = [
+export const IMPORT_JSON_TOAST: Toast = [
   <div className="text-left">
     You must import a JSON file <i>(.json extension)</i>!<br />
     <br />
@@ -306,13 +357,13 @@ export const IMPORT_JSON_TOAST = [
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} ADD_TAB_FROM_URL_TOAST */
-export const ADD_TAB_FROM_URL_TOAST = [
+export const ADD_TAB_FROM_URL_TOAST: Toast = [
   <div className="text-left">That tab is already in TabMerger!</div>,
   { toastId: "addTabFromURL_toast" },
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} DELETE_GROUP_TOAST */
-export const DELETE_GROUP_TOAST = [
+export const DELETE_GROUP_TOAST: Toast = [
   <div className="text-left">
     This group is <b>locked</b>, thus it cannot be deleted. <br />
     <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting it again!
@@ -321,7 +372,7 @@ export const DELETE_GROUP_TOAST = [
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} REMOVE_TAB_TOAST */
-export const REMOVE_TAB_TOAST = [
+export const REMOVE_TAB_TOAST: Toast = [
   <div className="text-left">
     This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
     <br /> Press the <b>lock</b> symbol to first <i>unlock</i> the group and then retry deleting the tab again!
@@ -330,7 +381,7 @@ export const REMOVE_TAB_TOAST = [
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} DOWNLOAD_ERROR_TOAST */
-export const DOWNLOAD_ERROR_TOAST = [
+export const DOWNLOAD_ERROR_TOAST: Toast = [
   <div className="text-left">
     The <b>relative path</b> you have set in the settings is <b>not valid</b>, please adjust it.
   </div>,
@@ -338,7 +389,7 @@ export const DOWNLOAD_ERROR_TOAST = [
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} JSON_AUTOBACKUP_OFF_TOAST */
-export const JSON_AUTOBACKUP_OFF_TOAST = [
+export const JSON_AUTOBACKUP_OFF_TOAST: Toast = [
   <div className="text-left">
     Automatic JSON file generation/backup was turned off since the saving period was set to 0 minutes.
   </div>,
@@ -346,7 +397,7 @@ export const JSON_AUTOBACKUP_OFF_TOAST = [
 ];
 
 /** @constant {Array.<HTMLDivElement, {toastId: string}>} SYNC_AUTOBACKUP_OFF_TOAST */
-export const SYNC_AUTOBACKUP_OFF_TOAST = [
+export const SYNC_AUTOBACKUP_OFF_TOAST: Toast = [
   <div className="text-left">
     Automatic sync write backup was turned off since the saving period was set to 0 minutes.
   </div>,
@@ -359,7 +410,7 @@ export const SYNC_AUTOBACKUP_OFF_TOAST = [
  * @param {string} currentVersion The version of TabMerger after the update
  * @returns {Array.<HTMLDivElement, {toastId: string, autoClose: boolean}>}
  */
-export const UPDATE_TOAST = (previousVersion, currentVersion) => [
+export const UPDATE_TOAST: Function = (previousVersion: string, currentVersion: string): Toast => [
   <div className="text-left">
     TabMerger was updated from <b>v{previousVersion}</b> to <b>v{currentVersion}</b>!
     <br />
@@ -389,12 +440,16 @@ export const UPDATE_TOAST = (previousVersion, currentVersion) => [
 ];
 
 /* MODAL DIALOG */
-/**
- * @constant {Function} OPEN_ALL_DIALOG
- * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
- * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
- */
-export const OPEN_ALL_DIALOG = (element) => ({
+export interface DIALOG {
+  element: HTMLElement | null;
+  show: boolean;
+  title: string;
+  msg: JSX.Element;
+  accept_btn_text: string | null;
+  reject_btn_text: string | null;
+}
+
+export const OPEN_ALL_DIALOG: Function = (element: HTMLElement): DIALOG => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
@@ -414,7 +469,7 @@ export const OPEN_ALL_DIALOG = (element) => ({
  * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
  * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
-export const DELETE_ALL_DIALOG = (element) => ({
+export const DELETE_ALL_DIALOG: Function = (element: HTMLElement): DIALOG => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
@@ -437,7 +492,7 @@ export const DELETE_ALL_DIALOG = (element) => ({
  * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
  * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
-export const RESET_TUTORIAL_CHOICE_DIALOG = (element) => ({
+export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLElement): DIALOG => ({
   element,
   show: true,
   title: "✋ TabMerger Question ❔",
@@ -454,13 +509,8 @@ export const RESET_TUTORIAL_CHOICE_DIALOG = (element) => ({
   reject_btn_text: "GO TO SITE",
 });
 
-/**
- * @constant {Function} SET_USER_STATUS_DIALOG
- * @param {Function} setUser For re-rendering the user's subscription status
- * @param {Function} setDialog For re-rendering the dialog menu (close/open)
- * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
- */
-export const SET_USER_STATUS_DIALOG = (setUser, setDialog) => ({
+export const SET_USER_STATUS_DIALOG: Function = (setUser: Function, setDialog: Function): DIALOG => ({
+  element: null,
   show: true,
   title: "🔐 TabMerger Product Activation 🔐",
   msg: (
@@ -475,8 +525,8 @@ export const SET_USER_STATUS_DIALOG = (setUser, setDialog) => ({
           name="email"
           className="p-1"
           placeholder="Email you used during checkout..."
-          autoFocus
-          autoComplete
+          autoFocus={true}
+          autoComplete="true"
           required
         />
         <br />

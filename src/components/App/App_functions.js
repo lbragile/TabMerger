@@ -27,8 +27,8 @@ import * as CONSTANTS from "../../constants/constants";
 import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 import { toast } from "react-toastify";
 
-import Tab from "../Tab/Tab.js";
-import Group from "../Group/Group.js";
+import Tab from "../Tab/Tab";
+import Group from "../Group/Group";
 
 /**
  * @module App/App_functions
@@ -47,7 +47,7 @@ export function setUserStatus(setUser, setDialog) {
 
 /**
  * Stores the relevant details in local storage prior to checking if the user is authenticated
- * @param {HTMLElement} e The submitted form (where user enters their email and activation key)
+ * @param {FormEvent<HTMLFormElement>} e The submitted form (where user enters their email and activation key)
  * @param {Function} setUser To re-render the user details and adjust buttons/features accordingly
  * @param {Function} setDialog To close dialog when needed
  */

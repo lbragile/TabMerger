@@ -1859,7 +1859,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
                 href="https://stackoverflow.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://stackoverflow.com/"
               >
@@ -1953,7 +1953,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
                 href="https://lichess.org/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://lichess.org/"
               >
@@ -2047,7 +2047,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
                 href="https://www.chess.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.chess.com/"
               >
@@ -2707,7 +2707,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
                 href="https://www.twitch.tv/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.twitch.tv/"
               >
@@ -2801,7 +2801,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
                 href="https://www.reddit.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.reddit.com/"
               >
@@ -3461,7 +3461,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
                 href="https://www.b.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.b.com/"
               >
@@ -4121,7 +4121,7 @@ exports[`syncLimitIndication item limt = 100, sync limit = 10000 1`] = `
                 href="https://www.a.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.a.com/"
               >
@@ -6025,7 +6025,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
                 href="https://stackoverflow.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://stackoverflow.com/"
               >
@@ -6119,7 +6119,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
                 href="https://lichess.org/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://lichess.org/"
               >
@@ -6213,7 +6213,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
                 href="https://www.chess.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.chess.com/"
               >
@@ -6873,7 +6873,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
                 href="https://www.twitch.tv/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.twitch.tv/"
               >
@@ -6967,7 +6967,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
                 href="https://www.reddit.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.reddit.com/"
               >
@@ -7627,7 +7627,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
                 href="https://www.b.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.b.com/"
               >
@@ -8287,7 +8287,7 @@ exports[`syncLimitIndication item limt = 439, sync limit = 10000 1`] = `
                 href="https://www.a.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.a.com/"
               >
@@ -10192,7 +10192,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
                 href="https://stackoverflow.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://stackoverflow.com/"
               >
@@ -10286,7 +10286,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
                 href="https://lichess.org/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://lichess.org/"
               >
@@ -10380,7 +10380,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
                 href="https://www.chess.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.chess.com/"
               >
@@ -11040,7 +11040,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
                 href="https://www.twitch.tv/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.twitch.tv/"
               >
@@ -11134,7 +11134,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
                 href="https://www.reddit.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.reddit.com/"
               >
@@ -11794,7 +11794,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
                 href="https://www.b.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.b.com/"
               >
@@ -12454,7 +12454,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 100 1`] = `
                 href="https://www.a.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.a.com/"
               >
@@ -14358,7 +14358,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
                 href="https://stackoverflow.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://stackoverflow.com/"
               >
@@ -14452,7 +14452,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
                 href="https://lichess.org/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://lichess.org/"
               >
@@ -14546,7 +14546,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
                 href="https://www.chess.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.chess.com/"
               >
@@ -15206,7 +15206,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
                 href="https://www.twitch.tv/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.twitch.tv/"
               >
@@ -15300,7 +15300,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
                 href="https://www.reddit.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.reddit.com/"
               >
@@ -15960,7 +15960,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
                 href="https://www.b.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.b.com/"
               >
@@ -16620,7 +16620,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 1452 1`] = `
                 href="https://www.a.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.a.com/"
               >
@@ -18524,7 +18524,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
                 href="https://stackoverflow.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://stackoverflow.com/"
               >
@@ -18618,7 +18618,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
                 href="https://lichess.org/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://lichess.org/"
               >
@@ -18712,7 +18712,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
                 href="https://www.chess.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.chess.com/"
               >
@@ -19372,7 +19372,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
                 href="https://www.twitch.tv/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.twitch.tv/"
               >
@@ -19466,7 +19466,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
                 href="https://www.reddit.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.reddit.com/"
               >
@@ -20126,7 +20126,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
                 href="https://www.b.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.b.com/"
               >
@@ -20786,7 +20786,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 1`] = `
                 href="https://www.a.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.a.com/"
               >
@@ -22690,7 +22690,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
                 href="https://stackoverflow.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://stackoverflow.com/"
               >
@@ -22784,7 +22784,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
                 href="https://lichess.org/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://lichess.org/"
               >
@@ -22878,7 +22878,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
                 href="https://www.chess.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.chess.com/"
               >
@@ -23538,7 +23538,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
                 href="https://www.twitch.tv/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.twitch.tv/"
               >
@@ -23632,7 +23632,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
                 href="https://www.reddit.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.reddit.com/"
               >
@@ -24292,7 +24292,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
                 href="https://www.b.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.b.com/"
               >
@@ -24952,7 +24952,7 @@ exports[`syncLimitIndication item limt = 1000, sync limit = 10000 2`] = `
                 href="https://www.a.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.a.com/"
               >
@@ -26856,7 +26856,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
                 href="https://stackoverflow.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://stackoverflow.com/"
               >
@@ -26950,7 +26950,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
                 href="https://lichess.org/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://lichess.org/"
               >
@@ -27044,7 +27044,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
                 href="https://www.chess.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.chess.com/"
               >
@@ -27704,7 +27704,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
                 href="https://www.twitch.tv/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.twitch.tv/"
               >
@@ -27798,7 +27798,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
                 href="https://www.reddit.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.reddit.com/"
               >
@@ -28458,7 +28458,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
                 href="https://www.b.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.b.com/"
               >
@@ -29118,7 +29118,7 @@ exports[`syncLimitIndication item limt = null, sync limit = 10000 1`] = `
                 href="https://www.a.com/"
                 rel="noreferrer"
                 spellcheck="false"
-                style="font-weight: Normal; font-family: Arial;"
+                style="font-weight: normal; font-family: Arial;"
                 target="_blank"
                 title="https://www.a.com/"
               >

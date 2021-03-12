@@ -32,7 +32,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  *
  * @note Only the domain of a given URL is used, not the full URL.
  */
-export function getFavIconURL(url) {
+export function getFavIconURL(url: string): string {
   // domain will be null if no match is found
   const matches = url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i);
   const domain = matches && matches[1];
