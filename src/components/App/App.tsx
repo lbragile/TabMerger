@@ -29,6 +29,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
 import * as CONSTANTS from "../../constants/constants";
+import { userType } from "../Group/Group_functions";
 
 import GlobalBtns from "../Button/GlobalBtns";
 import Header from "../Extra/Header";
@@ -45,6 +46,10 @@ import "./App.css";
 import "../Button/Button.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+export interface IChanges {
+  [key: string]: any;
+}
+
 export default function App() {
   // app parameters
   const [tabTotal, setTabTotal] = useState(0);
@@ -54,18 +59,18 @@ export default function App() {
   var textStyles = useRef({ fontFamily: "Arial", fontWeight: "Normal" });
 
   // activation parameters
-  const [user, setUser] = useState({ paid: false, tier: "Free" });
+  const [user, setUser] = useState<userType>({ paid: false, tier: "Free" });
 
   // tutorial parameters
-  const [tour, setTour] = useState(false);
-  const startStep = useRef(0);
+  const [tour, setTour] = useState<boolean>(false);
+  const startStep = useRef<number>(0);
 
   useEffect(() => {
-    function openOrRemoveTabs(changes, namespace) {
+    function openOrRemoveTabs(changes: IChanges, namespace: string) {
       AppFunc.openOrRemoveTabs(changes, namespace, setTabTotal, setGroups);
     }
 
-    function checkMerging(changes, namespace) {
+    function checkMerging(changes: IChanges, namespace: string) {
       AppFunc.checkMerging(changes, namespace, setTabTotal, setGroups);
     }
 
@@ -123,9 +128,11 @@ export default function App() {
 
   return (
     <div id="app-wrapper" className="text-center">
+      {/* @ts-ignore */}
       <Dialog {...dialog} setDialog={setDialog} />
 
       <Tour
+        /* @ts-ignore */
         steps={TOUR_STEPS}
         isOpen={!!tour}
         onRequestClose={() => setTour(false)}
@@ -156,8 +163,11 @@ export default function App() {
             syncTimestamp={syncTimestamp}
             setTabTotal={setTabTotal}
             setGroups={setGroups}
+            /* @ts-ignore */
             setDialog={setDialog}
           />
+
+          {/* @ts-ignore */}
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
         {/* Verify/activate account button*/}
@@ -167,6 +177,7 @@ export default function App() {
               classes="p-0 btn-in-global mx-auto mb-2 d-block"
               id="subscription-btn"
               translate="Activate Plan"
+              /* @ts-ignore */
               onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
             >
               {<BiCheckCircle color="black" size="1.5rem" />}
@@ -183,7 +194,10 @@ export default function App() {
           </p>
         </div>
       </nav>
+
+      {/* @ts-ignore */}
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
+        {/* @ts-ignore */}
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {memoizedGroupFormation}
         </div>

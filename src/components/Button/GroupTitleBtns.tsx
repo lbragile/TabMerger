@@ -28,7 +28,7 @@ export interface GroupTitleButtonsProps {
   classes: string;
   translate?: string;
   icon: JSX.Element;
-  clickFn?: (e: HTMLElement | HTMLDivElement) => void;
+  clickFn?: (e: HTMLElement | HTMLDivElement | HTMLParagraphElement) => void;
 }
 
 export default function GroupTitleBtns({
@@ -93,6 +93,7 @@ export default function GroupTitleBtns({
       translate: AppFunc.translate("deleteGroup"),
       clickFn: (e) => {
         ReactTooltip.hide();
+        /* @ts-ignore */
         GroupFunc.deleteGroup(e, user, setTabTotal, setGroups);
       },
       icon: <AiOutlineClose color={textColor === "primary" ? "black" : "white"} />,

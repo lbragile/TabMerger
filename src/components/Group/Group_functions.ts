@@ -25,23 +25,36 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Group/Group_functions
  */
 
+import React from "react";
+import { toast } from "react-toastify";
+
 import * as CONSTANTS from "../../constants/constants";
 import { getTimestamp, getTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
 import { translate } from "../App/App_functions";
-import { toast } from "react-toastify";
+
+import { DefaultGroup } from "../../constants/constants";
+
+export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
+export type userType = { paid: string | boolean; tier: string };
 
 /**
  * Sets the background color of each group according to what the user chose.
  * @param {React.ChangeEvent<HTMLInputElement> | HTMLInputElement} e Either the group's color picker value or the group container
  * @param {string?} id Used to find the group whose background needs to be set
  */
-export function setBGColor(e, id) {
-  const color = e.target ? e.target.value : e.previousSibling.querySelector("input[type='color']").value;
-  const target = e.target ? e.target.closest(".group-title") : e.previousSibling;
+export function setBGColor(e: React.ChangeEvent<HTMLInputElement> | HTMLInputElement, id: string): void {
+  const color = (e as React.ChangeEvent<HTMLInputElement>).target
+    ? (e as React.ChangeEvent<HTMLInputElement>).target.value
+    : /* @ts-ignore */
+      (e as HTMLInputElement).previousSibling.querySelector("input[type='color']").value;
+  const target = (e as React.ChangeEvent<HTMLInputElement>).target
+    ? (e as React.ChangeEvent<HTMLInputElement>).target.closest(".group-title")
+    : (e as HTMLInputElement).previousSibling;
 
   const threshold_passed = color > CONSTANTS.GROUP_COLOR_THRESHOLD;
   const adjusted_text_color = threshold_passed ? "black" : "white";
   [...target.parentNode.children].forEach((child) => {
+    /* @ts-ignore */
     child.style.background = color;
     child.querySelectorAll("* :not(.created, datalist, option, path, ellipse, g, defs, b, span, p)").forEach((x) => {
       if (x.classList.contains("a-tab")) {
@@ -49,11 +62,13 @@ export function setBGColor(e, id) {
         x.classList.remove("text-light");
         x.classList.add("text-" + (threshold_passed ? "primary" : "light"));
       } else {
+        /* @ts-ignore */
         x.style.color = adjusted_text_color;
       }
     });
 
     if (child.classList.contains("group-title")) {
+      /* @ts-ignore */
       child.style.borderBottom = "1px dashed " + adjusted_text_color;
     }
   });
@@ -69,9 +84,9 @@ export function setBGColor(e, id) {
 
 /**
  * Update the group text color to make it high contrast regardless of background color
- * @param {Function} setGroups For state updates of the current groups
+ * @param {setStateType<string>} setGroups For state updates of the current groups
  */
-export function updateTextColor(setGroups) {
+export function updateTextColor(setGroups: setStateType<string>) {
   chrome.storage.local.get("groups", (local) => {
     chrome.storage.local.set({ scroll: document.documentElement.scrollTop }, () => {
       setGroups(JSON.stringify(local.groups));
@@ -83,9 +98,10 @@ export function updateTextColor(setGroups) {
  * Sets the title of a given group in order for it to persist across reloads.
  * @param {React.FocusEvent<HTMLInputElement>} e The group node whose title was changed
  */
-export function setTitle(e) {
+export function setTitle(e: React.FocusEvent<HTMLInputElement>) {
   chrome.storage.local.get("groups", (local) => {
     const scroll = document.documentElement.scrollTop;
+    /* @ts-ignore */
     var group_id = e.target.closest(".group-title").nextSibling.id;
     var groups = local.groups;
     groups[group_id].title = e.target.value;
@@ -98,8 +114,9 @@ export function setTitle(e) {
  * Allows the user to use enter key to exit title editing mode.
  * @param {React.KeyboardEvent<HTMLInputElement>} e Node corresponding to the group whose title is being changed
  */
-export function blurOnEnter(e) {
+export function blurOnEnter(e: React.KeyboardEvent<HTMLInputElement>) {
   if (e.keyCode === 13) {
+    /* @ts-ignore */
     e.target.blur();
   }
 }
@@ -111,10 +128,15 @@ export function blurOnEnter(e) {
  * merge directly into a specific group from outside of TabMerger.
  *
  * @param {React.ChangeEvent<HTMLInputElement>} e The input field where the tab data was dropped
- * @param {Function} setGroups For re-rendering the groups once the operation is complete
- * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {setStateType<string>} setGroups For re-rendering the groups once the operation is complete
+ * @param {setStateType<number>} setTabTotal For re-rendering the total tab counter
  */
-export function addTabFromURL(e, user, setGroups, setTabTotal) {
+export function addTabFromURL(
+  e: React.ChangeEvent<HTMLInputElement>,
+  user: userType,
+  setGroups: setStateType<string>,
+  setTabTotal: setStateType<number>
+) {
   if (!user.paid) {
     toast(...CONSTANTS.SUBSCRIPTION_TOAST);
   } else {
@@ -126,7 +148,8 @@ export function addTabFromURL(e, user, setGroups, setTabTotal) {
         const scroll = document.documentElement.scrollTop;
         var groups = local.groups;
 
-        var url_exists = Object.values(groups).some((val) => val.tabs.map((x) => x.url).includes(url));
+        /* @ts-ignore */
+        var url_exists = (Object.values(groups) as DefaultGroup[]).some((val) => val.tabs.map((x) => x.url).includes(url)); // prettier-ignore
         if (!url_exists && url.match(/http.+\/\//)) {
           // query open tabs to get the title from the tab which has a matching url
           chrome.tabs.query({ status: "complete" }, (tabs) => {
@@ -163,9 +186,9 @@ export function addTabFromURL(e, user, setGroups, setTabTotal) {
  * Adds the necessary classes to corresponding components when a group drag is initiated
  * @param {React.DragEvent<HTMLDivElement>} e The group that is being dragged
  */
-export function groupDragStart(e) {
-  if (!e.target.closest(".draggable")) {
-    e.target.closest(".group-item").classList.add("dragging-group");
+export function groupDragStart(e: React.DragEvent<HTMLDivElement>) {
+  if (!(e.target as HTMLElement).closest(".draggable")) {
+    (e.target as HTMLDivElement).closest(".group-item").classList.add("dragging-group");
   }
 }
 
@@ -174,17 +197,17 @@ export function groupDragStart(e) {
  * appropriate group-id to each.
  * @param {React.DragEvent<HTMLDivElement>} e The group that is being dragged
  */
-export function groupDragEnd(e) {
+export function groupDragEnd(e: React.DragEvent<HTMLDivElement>) {
   e.preventDefault();
   const scroll = document.documentElement.scrollTop;
 
-  if (e.target.classList.contains("dragging-group")) {
-    e.target.classList.remove("dragging-group");
+  if ((e.target as HTMLDivElement).classList.contains("dragging-group")) {
+    (e.target as HTMLDivElement).classList.remove("dragging-group");
     var group_items = document.querySelectorAll(".group-item");
-    var groups = {};
+    var groups: { [key: string]: DefaultGroup } = {};
     group_items.forEach((x, i) => {
       groups["group-" + i] = {
-        color: x.querySelector("input[type='color']").value,
+        color: (x.querySelector("input[type='color']") as HTMLInputElement).value,
         created: x.querySelector(".created span").textContent,
         hidden: !!x.querySelector(".hidden-symbol"),
         locked: x.querySelector(".lock-group-btn").getAttribute("data-tip").includes(translate("unlock")),
@@ -193,7 +216,7 @@ export function groupDragEnd(e) {
           const a = tab.querySelector("a");
           return { pinned: !!tab.querySelector(".pinned"), title: a.textContent, url: a.href };
         }),
-        title: x.querySelector(".title-edit-input").value,
+        title: (x.querySelector(".title-edit-input") as HTMLInputElement).value,
       };
     });
 
@@ -209,7 +232,8 @@ export function groupDragEnd(e) {
  * of the group's tabs to consider for removal.
  * @param {HTMLElement} e Node corresponding to the group that contains the tabs to be opened
  */
-export function openGroup(e) {
+export function openGroup(e: HTMLElement) {
+  /* @ts-ignore */
   var target = e.target.closest(".group-title").nextSibling;
   var tab_links = [...target.querySelectorAll(".a-tab")].map((x) => x.href);
   tab_links.unshift(target.id);
@@ -219,15 +243,21 @@ export function openGroup(e) {
 /**
  * Deletes a groups which the user selects to delete and reorders all the other groups accordingly
  * by changing their "group id" value.
- * @param {HTMLElement} e Node corresponding to the group to be deleted
- * @param {Function} setTabTotal For re-rendering the global tab counter
- * @param {Function} setGroups For re-rendering the groups after deletion
+ * @param {React.MouseEvent<HTMLParagraphElement>} e Node corresponding to the group to be deleted
+ * @param {setStateType<number>} setTabTotal For re-rendering the global tab counter
+ * @param {setStateType<string>} setGroups For re-rendering the groups after deletion
  */
-export function deleteGroup(e, user, setTabTotal, setGroups) {
+export function deleteGroup(
+  e: React.MouseEvent<HTMLParagraphElement>,
+  user: userType,
+  setTabTotal: setStateType<number>,
+  setGroups: setStateType<string>
+) {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     chrome.storage.sync.get("settings", (sync) => {
       const scroll = document.documentElement.scrollTop;
-      var target = e.target.closest(".group-title").nextSibling;
+      /* @ts-ignore */
+      var target: { id: string } = (e.target as HTMLParagraphElement).closest(".group-title").nextSibling;
 
       var { groups, groups_copy } = local;
       if (!groups[target.id].locked) {
@@ -277,9 +307,14 @@ export function deleteGroup(e, user, setTabTotal, setGroups) {
  *
  * @param {HTMLElement} e Node corresponding to the group that will be locked/unlocked.
  * @param {"visibility"|"lock"|"star"} toggle_type Type of operation to perform on a group.
- * @param {Function} setGroups For re-rendering the group's visible/hidden state
+ * @param {setStateType<string>} setGroups For re-rendering the group's visible/hidden state
  */
-export function toggleGroup(e, toggle_type, setGroups) {
+export function toggleGroup(
+  e: HTMLElement,
+  toggle_type: "visibility" | "lock" | "star",
+  setGroups: setStateType<string>
+) {
+  /* @ts-ignore */
   const id = e.target.closest(".group-title").nextSibling.id;
   var scroll = document.documentElement.scrollTop;
 
@@ -323,6 +358,6 @@ export function toggleGroup(e, toggle_type, setGroups) {
  * how to merge and into which group.
  * @param {{msg: string, id: string}} msg Contains merging directions and group id into which tabs are merged
  */
-export function sendMessage(msg) {
+export function sendMessage(msg: { msg: string; id: string }) {
   chrome.runtime.sendMessage(chrome.runtime.id, msg);
 }

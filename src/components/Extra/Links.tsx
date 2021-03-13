@@ -13,13 +13,13 @@ import { FiYoutube, FiStar } from "react-icons/fi";
 import { MdPayment } from "react-icons/md";
 import { RiHandCoinLine } from "react-icons/ri";
 
-export interface Links {
+export interface ILinks {
   url: string;
   text: string;
   icon: JSX.Element;
 }
 
-const LINKS: Array<Links> = [
+const LINKS: Array<ILinks> = [
   { url: "https://lbragile.github.io/TabMerger-Extension/", text: translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
   { url: "https://lbragile.github.io/TabMerger-Extension/contact", text: translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
   { url: CONSTANTS.SUBSCRIPTION_URL, text: "Choose Plan", icon: <MdPayment color="black" size="1.5rem" />}, // prettier-ignore

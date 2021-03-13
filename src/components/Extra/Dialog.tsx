@@ -2,8 +2,9 @@ import React from "react";
 import { Modal, Button } from "react-bootstrap";
 import { DialogConstantReturn } from "../../constants/constants";
 
+export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
 export interface DialogProps extends DialogConstantReturn {
-  setDialog: React.Dispatch<React.SetStateAction<{ show: boolean }>>;
+  setDialog: setStateType<{ show: boolean }>;
 }
 
 export default function Dialog({

@@ -8,8 +8,8 @@
 
 ### Merges your tabs into one location to save memory usage and increase your productivity.
 
-<a href="https://www.youtube.com/watch?v=4eCzD8a0UKI&feature=youtu.be&hd=1" target="_blank" rel="noreferrer">
-<img src="https://i.imgur.com/fqxhHhS.png" alt="TabMerger v1.6.0 New Feature Demonstration" width="100%"/></a>
+<a href="https://www.youtube.com/watch?v=buu6iot1wcg&feature=youtu.be&hd=1" target="_blank" rel="noreferrer">
+<img src="https://i.imgur.com/tjhu6OQ.png" alt="TabMerger v2.0.0 What's New?" width="100%"/></a>
 
 ## Table of Contents 📃
 1. [Description](#description-)

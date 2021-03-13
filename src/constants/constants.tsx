@@ -29,8 +29,12 @@ import React from "react";
 import { getTimestamp } from "../components/App/App_helpers";
 import { storeUserDetailsPriorToCheck } from "../components/App/App_functions";
 import { DialogProps } from "../components/Extra/Dialog";
+import { userType } from "../components/Group/Group_functions";
 
 /* USER TIER INFORMATION */
+
+export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
+
 export interface TierOptions {
   [key: string]: {
     readonly NUM_TAB_LIMIT: number;
@@ -39,7 +43,7 @@ export interface TierOptions {
   };
 }
 
-/** @constant {object} USER @default { Free: { NUM_TAB_LIMIT: 50 (15 during development), NUM_GROUP_LIMIT: 5 (3 during development), NUM_UNDO_STATES: 2 (1 during development) }, Basic: { NUM_TAB_LIMIT: 250 (16 during development), NUM_GROUP_LIMIT: 15 (4 during development), NUM_UNDO_STATES: 5 (2 during development) }, Standard: { NUM_TAB_LIMIT: 2500 (17 during development), NUM_GROUP_LIMIT: 50 (5 during development), NUM_UNDO_STATES: 10 (3 during development) }, Premium: { NUM_TAB_LIMIT: 10000 (18 during development), NUM_GROUP_LIMIT: 100 (6 during development), NUM_UNDO_STATES: 15 (4 during development) } } */
+/** @constant {TierOptions} USER @default { Free: { NUM_TAB_LIMIT: 50 (15 during development), NUM_GROUP_LIMIT: 5 (3 during development), NUM_UNDO_STATES: 2 (1 during development) }, Basic: { NUM_TAB_LIMIT: 250 (16 during development), NUM_GROUP_LIMIT: 15 (4 during development), NUM_UNDO_STATES: 5 (2 during development) }, Standard: { NUM_TAB_LIMIT: 2500 (17 during development), NUM_GROUP_LIMIT: 50 (5 during development), NUM_UNDO_STATES: 10 (3 during development) }, Premium: { NUM_TAB_LIMIT: 10000 (18 during development), NUM_GROUP_LIMIT: 100 (6 during development), NUM_UNDO_STATES: 15 (4 during development) } } */
 export const USER: TierOptions = {
   Free: {
     NUM_TAB_LIMIT: process.env.REACT_APP_PRODUCTION ? 100 : 15,
@@ -67,7 +71,7 @@ export const USER: TierOptions = {
 export interface FontStyle {
   [key: string]: string;
 }
-/** @constant {object} FONT_FAMILY @default { Arial: "Arial, sans-serif", Verdana: "Verdana, sans-serif", Helvetica: "Helvetica, sans-serif", Tahoma: "Tahoma, sans-serif", "Trebuchet MS": "'Trebuchet MS', sans-serif", "Brush Script MT": "'Brush Script MT', cursive", Georgia: "Georgia, serif", Garamond: "Garamond, serif","Courier New": "'Courier New', monospace","Times New Roman": "'Times New Roman', serif" } */
+/** @constant {FontStyle} FONT_FAMILY @default { Arial: "Arial, sans-serif", Verdana: "Verdana, sans-serif", Helvetica: "Helvetica, sans-serif", Tahoma: "Tahoma, sans-serif", "Trebuchet MS": "'Trebuchet MS', sans-serif", "Brush Script MT": "'Brush Script MT', cursive", Georgia: "Georgia, serif", Garamond: "Garamond, serif","Courier New": "'Courier New', monospace","Times New Roman": "'Times New Roman', serif" } */
 export const FONT_FAMILY: FontStyle = {
   Arial: "Arial, sans-serif",
   Verdana: "Verdana, sans-serif",
@@ -81,7 +85,7 @@ export const FONT_FAMILY: FontStyle = {
   "Times New Roman": "'Times New Roman', serif",
 };
 
-/** @constant {object} FONT_WEIGHT @default { Bold: "bold",  Bolder: "bolder",  Normal: "normal",  Lighter: "lighter",  Light: "100" } */
+/** @constant {FontStyle} FONT_WEIGHT @default { Bold: "bold",  Bolder: "bolder",  Normal: "normal",  Lighter: "lighter",  Light: "100" } */
 export const FONT_WEIGHT: FontStyle = {
   Bold: "bold",
   Bolder: "bolder",
@@ -108,7 +112,7 @@ export interface BadgeIconColors {
   [key: string]: string;
 }
 
-/** @constant {object} BADGE_ICON_COLORS @default { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" } */
+/** @constant {BadgeIconColors} BADGE_ICON_COLORS @default { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" } */
 export const BADGE_ICON_COLORS: BadgeIconColors = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
 
 /** @constant {string} BADGE_ICON_DEFAULT_TITLE @default "Merge your tabs into groups" */
@@ -509,8 +513,8 @@ export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLElement): Di
 });
 
 export const SET_USER_STATUS_DIALOG: Function = (
-  setUser: Function,
-  setDialog: React.Dispatch<React.SetStateAction<DialogProps>>
+  setUser: setStateType<userType>,
+  setDialog: setStateType<DialogProps>
 ): DialogConstantReturn => ({
   element: null,
   show: true,

@@ -25,11 +25,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module App/App_helpers
  */
 
-import * as AppFunc from "../../components/App/App_functions";
+import * as AppFunc from "./App_functions";
 import * as CONSTANTS from "../../constants/constants";
+import { DefaultGroup, Toast } from "../../constants/constants";
 
 import { toast } from "react-toastify";
 import axios from "axios";
+import { TabState } from "../Tab/Tab";
+import { setStateType, userType } from "../Group/Group_functions";
 
 /**
  * Produces a timestamp which is added to newly formed groups
@@ -37,7 +40,7 @@ import axios from "axios";
  *
  * @return ```dd/mm/yyyy @ hh:mm:ss```
  */
-export function getTimestamp(date_str) {
+export function getTimestamp(date_str?: string): string {
   var date_parts = date_str?.split(" ") || new Date(Date.now()).toString().split(" ");
   date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
 
@@ -57,12 +60,13 @@ export function getTimestamp(date_str) {
  *
  * @note Exported for testing purposes
  */
-export function toggleDarkMode(isChecked) {
+export function toggleDarkMode(isChecked: boolean): void {
   var body = document.querySelector("body");
   var sidebar = document.querySelector("#sidebar");
 
   body.style.background = isChecked ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)";
   body.style.color = isChecked ? "white" : "black";
+  /* @ts-ignore */
   sidebar.style.background = isChecked ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 }
 
@@ -74,8 +78,8 @@ export function toggleDarkMode(isChecked) {
  * @param {boolean} positive Whether a sync happened or not
  * @param {HTMLElement} sync_node Node that contains the sync time message
  */
-export function toggleSyncTimestamp(positive, sync_node) {
-  var sync_container = sync_node.parentNode;
+export function toggleSyncTimestamp(positive: boolean, sync_node: HTMLSpanElement) {
+  var sync_container = sync_node.parentNode as HTMLDivElement;
 
   if (positive) {
     chrome.storage.local.get("last_sync", (local) => {
@@ -94,13 +98,13 @@ export function toggleSyncTimestamp(positive, sync_node) {
  * Due to this and the fact that there is also a limit of sync write operations per minute,
  * Sync items are updated only when they change and only changed items are overwritten with new values.
  * @param {string} key Group id of an item that might need to be updated
- * @param {string} value Value corresponding to the above group id
+ * @param {DefaultGroup} value Value corresponding to the above group id
  *
  * @return Promise that resolves if sync is updated or no update is required
  *
  * @note Exported for testing purposes
  */
-export function updateGroupItem(key, value) {
+export function updateGroupItem(key: string, value: DefaultGroup) {
   return new Promise((resolve) => {
     chrome.storage.sync.get(key, (x) => {
       if (JSON.stringify(x[key]) !== JSON.stringify(value)) {
@@ -117,11 +121,11 @@ export function updateGroupItem(key, value) {
  * @example
  * "group-0", ..., "group-9", "group-10", ... ✅
  * "group-0", "group-1", "group-10", ..., "group-9", ... ❌
- * @param {object} json Unsorted object containing the group key/value pairs which will get sorted.
+ * @param {{ [key: string]: DefaultGroup }} json Unsorted object containing the group key/value pairs which will get sorted.
  *
- * @return {object[]} Values from the sorted groups
+ * @return {DefaultGroup[]} Values from the sorted groups
  */
-export function sortByKey(json) {
+export function sortByKey(json: { [key: string]: DefaultGroup }): DefaultGroup[] {
   var sortedArray = [];
 
   // Push each JSON Object entry in array by [key, value]
@@ -131,21 +135,22 @@ export function sortByKey(json) {
 
   var sorted_groups = sortedArray.sort((a, b) => {
     var opts = { numeric: true, sensitivity: "base" };
+    /* @ts-ignore */
     return a[0].localeCompare(b[0], undefined, opts);
   });
 
   // get the sorted values
+  /* @ts-ignore */
   return sorted_groups.map((x) => x[1]);
 }
 
 /**
  * Updates the total tab count based on tabs in all the groups inside TabMerger
- * @param {{groups: {"group-id": {color: string, created: string, tabs:
- *  Array.<{title: string, url: string}>, title: string}}}} ls_entry current group information
+ * @param {{ [key: string]: DefaultGroup }} ls_entry current group information
  *
- * @return {Number} The total number of tabs currently present in TabMerger
+ * @return {number} The total number of tabs currently present in TabMerger
  */
-export function getTabTotal(ls_entry) {
+export function getTabTotal(ls_entry: { [key: string]: DefaultGroup }): number {
   var num_tabs = 0;
   Object.values(ls_entry).forEach((val) => (num_tabs += val.tabs.length));
   return num_tabs;
@@ -153,14 +158,14 @@ export function getTabTotal(ls_entry) {
 
 /**
  * Given a list of tab objects, filters and returns a specific tab which contains the correct URL.
- * @param {object[]} tab_list All the tabs in the group that need to be filtered
+ * @param {TabState[]} tab_list All the tabs in the group that need to be filtered
  * @param {string} match_url The full URL that is being matched against
  *
- * @return {object[]} Tab that has a URL matching the match_url parameter
+ * @return {TabState[]} Tab that has a URL matching the match_url parameter
  *
  * @note Exported for testing purposes
  */
-export function findSameTab(tab_list, match_url) {
+export function findSameTab(tab_list: TabState[], match_url: string): TabState[] {
   return tab_list.filter((x) => x.url === match_url);
 }
 
@@ -171,22 +176,22 @@ export function findSameTab(tab_list, match_url) {
  *
  * @note Exported for testing purposes
  */
-export function outputFileName() {
+export function outputFileName(): string {
   return `TabMerger [${getTimestamp()}]`;
 }
 
 /**
  * USed to determine the element after the current one when dragging a tab/group/url.
- * @param {HTMLElement} container The group/app body which the dragged tab is above
+ * @param {HTMLDivElement} container The group/app body which the dragged tab is above
  * @param {number} y_pos The tab's/group's y coordinate in the window
  * @param {"tab" | "group"} type Whether the dragging element is a "tab" or a "group"
  *
  * @see dragOver in App_functions.js
  * @link modified from https://github.com/WebDevSimplified/Drag-And-Drop
  *
- * @return {HTMLElement} The tab/group element immediately after the current position of the dragged element.
+ * @return {HTMLDivElement} The tab/group element immediately after the current position of the dragged element.
  */
-export function getDragAfterElement(container, y_pos, type) {
+export function getDragAfterElement(container: HTMLDivElement, y_pos: number, type: "tab" | "group"): HTMLDivElement {
   const selector = type === "tab" ? ".draggable:not(.dragging)" : type === "group" ? ".group-item:not(.dragging-group)" : null; // prettier-ignore
   const elements = selector ? [...container.querySelectorAll(selector)] : [];
   const coef = type === "tab" ? 2 : type === "group" ? 3 : null;
@@ -206,14 +211,19 @@ export function getDragAfterElement(container, y_pos, type) {
  * If a user accidently removes a tab, group, or everything. They can press the "Undo"
  * button to restore the previous configuration.
  *
- * @param {object[]} groups_copy All the stored states up to now
- * @param {object} groups The current state which will be stored
+ * @param {Array<{ [key: string]: DefaultGroup }>} groups_copy All the stored states up to now
+ * @param {{ [key: string]: DefaultGroup }} groups The current state which will be stored
+ * @param {userType} user The user's subscription details
  *
- * @note Up to 15 states are stored.
+ * @note Up to 20 states are stored (for Premium members).
  *
- * @return {object[]} The new group state array which includes the latest state at the front.
+ * @return {Array<{ [key: string]: DefaultGroup }>} The new group state array which includes the latest state at the front.
  */
-export function storeDestructiveAction(groups_copy, groups, user) {
+export function storeDestructiveAction(
+  groups_copy: Array<{ [key: string]: DefaultGroup }>,
+  groups: { [key: string]: DefaultGroup },
+  user: userType
+): Array<{ [key: string]: DefaultGroup }> {
   // shift down one to stay below NUM_UNDO_STATES
   if (groups_copy.length === CONSTANTS.USER[user.tier].NUM_UNDO_STATES) {
     groups_copy.shift();
@@ -229,7 +239,7 @@ export function storeDestructiveAction(groups_copy, groups, user) {
  * @param {HTMLElement} element The button which was pressed
  * @param {Function} cb Corresponding action if a mutation is detected on the element
  */
-export function elementMutationListener(element, cb) {
+export function elementMutationListener(element: HTMLButtonElement, cb: (mutation: { type: string }) => void): void {
   var observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
       cb(mutation);
@@ -244,9 +254,13 @@ export function elementMutationListener(element, cb) {
  * Helps create alarms with similar logic (automatic backup of JSON/Sync functionality)
  * @param {number} periodInMinutes The alarms period (how often it is called)
  * @param {"sync_backup"|"json_backup"} alarm_name The alarms unique name
- * @param {object} toast_val The toast message to show when the alarm is cleared
+ * @param {Toast} toast_val The toast message to show when the alarm is cleared
  */
-export function alarmGenerator(periodInMinutes, alarm_name, toast_val) {
+export function alarmGenerator(
+  periodInMinutes: number,
+  alarm_name: "sync_backup" | "json_backup",
+  toast_val: Toast
+): void {
   if (periodInMinutes > 0) {
     chrome.alarms.get(alarm_name, (alarm) => {
       // only create a new alarm if the existing alarms period does not match (user changed)
@@ -266,9 +280,9 @@ export function alarmGenerator(periodInMinutes, alarm_name, toast_val) {
 /**
  * Checks and updates a user's status to know if they are a paid or free user.
  * The information is stored in an external (encrypted) database.
- * @param {Function} setUser For re-rendering the user's payment/subscription information
+ * @param {setStateType<userType>} setUser For re-rendering the user's payment/subscription information
  */
-export function checkUserStatus(setUser) {
+export function checkUserStatus(setUser: setStateType<userType>): void {
   chrome.storage.local.get("client_details", async (local) => {
     const { email, password } = local.client_details;
     var response = await axios.get(CONSTANTS.USER_STATUS_URL + JSON.stringify({ email, password }));
@@ -285,14 +299,16 @@ export function checkUserStatus(setUser) {
  * @param {object} alarm The alarm for which the backup is to be performed.
  * @param {HTMLElement} sync_node Needed for sync backups to update the sync text indicator
  */
-export function performAutoBackUp(alarm, sync_node) {
+export function performAutoBackUp(alarm: { name: string }, sync_node?: HTMLSpanElement): void {
   if (alarm.name === "json_backup") {
+    /* @ts-ignore */
     AppFunc.exportJSON(false, false);
   }
 
   if (alarm.name === "sync_backup") {
     chrome.storage.local.get("client_details", (local) => {
       AppFunc.syncWrite(
+        /* @ts-ignore */
         { target: document.getElementById("sync-write-btn"), autoAction: true },
         sync_node,
         local.client_details
