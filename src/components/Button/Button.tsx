@@ -23,7 +23,25 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 
-export default function Button({ id, classes, children, translate, onClick, disabled, place }) {
+export interface ButtonProps {
+  id?: string;
+  classes: string;
+  children: React.ReactChild;
+  translate: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
+  place?: string;
+}
+
+export default function Button({
+  id,
+  classes,
+  children,
+  translate,
+  onClick,
+  disabled,
+  place,
+}: ButtonProps): JSX.Element {
   return (
     <button
       id={id}

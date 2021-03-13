@@ -4,8 +4,16 @@ import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
 import * as GroupFunc from "../Group/Group_functions";
 
-export default function MergeBtns({ id }) {
-  const MERGE_BUTTONS = [
+export interface MergeButtons {
+  classes: string;
+  translate: string;
+  clickFn: () => void;
+  svg_class: string;
+  viewBox: string;
+  icon: JSX.Element;
+}
+export default function MergeBtns({ id }: { id: string }): JSX.Element {
+  const MERGE_BUTTONS: Array<MergeButtons> = [
     {
       classes: "merge-btn btn-for-merging btn-outline-dark",
       translate: AppFunc.translate("mergeALLtabs"),
@@ -35,29 +43,31 @@ export default function MergeBtns({ id }) {
   return (
     <div className="merging-container float-right">
       <div className="d-flex flex-column">
-        {MERGE_BUTTONS.map((x) => {
-          return (
-            <Button classes={x.classes} translate={x.translate} onClick={x.clickFn} key={Math.random()}>
-              <svg
-                className={x.svg_class}
-                xmlns="http://www.w3.org/2000/svg"
-                width={32}
-                height={32}
-                viewBox={x.viewBox}
-                aria-labelledby="title"
-              >
-                {x.icon}
-              </svg>
-            </Button>
-          );
-        })}
+        {MERGE_BUTTONS.map(
+          (x: MergeButtons): JSX.Element => {
+            return (
+              <Button classes={x.classes} translate={x.translate} onClick={x.clickFn} key={Math.random()}>
+                <svg
+                  className={x.svg_class}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={32}
+                  height={32}
+                  viewBox={x.viewBox}
+                  aria-labelledby="title"
+                >
+                  {x.icon}
+                </svg>
+              </Button>
+            );
+          }
+        )}
       </div>
     </div>
   );
 }
 
 const left_right_icon = (
-  <>
+  <React.Fragment>
     <defs />
     <g>
       <path
@@ -86,11 +96,11 @@ const left_right_icon = (
         pointerEvents="all"
       />
     </g>
-  </>
+  </React.Fragment>
 );
 
 const all_icon = (
-  <>
+  <React.Fragment>
     <defs />
     <g>
       <path
@@ -128,5 +138,5 @@ const all_icon = (
         pointerEvents="all"
       />
     </g>
-  </>
+  </React.Fragment>
 );

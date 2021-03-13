@@ -33,10 +33,10 @@
   },
   "scripts": {
     "docs": "./node_modules/.bin/jsdoc -c ./config/jsdoc.config.json",
-    "tsc": "tsc --project ./config/tsconfig.json",
+    "tsc": "tsc --project ./config/tsconfig.development.json",
     "start": "react-scripts start",
-    "build": "set REACT_APP_PRODUCTION=true&& react-scripts build",
-    "build:dev": "react-scripts build",
+    "build": "tsc && set REACT_APP_PRODUCTION=true&& react-scripts build",
+    "build:dev": "tsc && react-scripts build",
     "build:firefox": "node misc/adjust_manifest.js firefox && npm run build && node misc/zip.js firefox",
     "build:chrome": "node misc/adjust_manifest.js chrome && npm run build && node misc/zip.js chrome",
     "build:all": "npm run build:firefox && npm run build:chrome && git restore public/manifest.json",

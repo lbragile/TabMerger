@@ -5,7 +5,7 @@ import { translate, regexSearchForTab, resetSearch } from "../App/App_functions"
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";
 
-export default function TabSearch({ user }) {
+export default function TabSearch({ user }: { user: { paid: string | boolean; tier: string } }): JSX.Element {
   return (
     <div className="input-group search-filter my-3 mx-auto" onDrop={(e) => e.preventDefault()}>
       <div className="input-group-prepend">

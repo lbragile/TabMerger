@@ -4,7 +4,8 @@ import ReactTooltip from "react-tooltip";
 import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
 import * as CONSTANTS from "../../constants/constants";
-import ImportBtn from "./ImportBtn.js";
+import ImportBtn from "./ImportBtn";
+import { DialogProps } from "../Extra/Dialog";
 
 import { BiExport, BiPrinter } from "react-icons/bi";
 import { BsCloudUpload, BsCloudDownload } from "react-icons/bs";
@@ -13,9 +14,24 @@ import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 
-export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups, setDialog }) {
+export interface GlobalBtnsProps {
+  user: { paid: string | boolean; tier: string };
+  syncTimestamp: { current: HTMLSpanElement };
+  setTabTotal: React.Dispatch<React.SetStateAction<number>>;
+  setGroups: React.Dispatch<React.SetStateAction<string>>;
+  setDialog: React.Dispatch<React.SetStateAction<DialogProps>>;
+}
+
+export default function GlobalBtns({
+  user,
+  syncTimestamp,
+  setTabTotal,
+  setGroups,
+  setDialog,
+}: GlobalBtnsProps): JSX.Element {
   const [tooltipVisibility, setTooltipVisibility] = useState(true);
 
+  /* @ts-ignore */
   useEffect(() => ReactTooltip.rebuild());
 
   useEffect(() => {
@@ -36,7 +52,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "open-all-btn",
       classes: "mx-2",
       translate: AppFunc.translate("openAll"),
-      btnFn: (e) => AppFunc.openAllTabs(e, setDialog),
+      btnFn: (e: HTMLElement) => AppFunc.openAllTabs(e, setDialog),
       icon: <GiExpand color="black" />,
     },
     {
@@ -50,7 +66,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "sync-write-btn",
       classes: "mx-2",
       translate: AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("write"),
-      btnFn: (e) => AppFunc.syncWrite(e, syncTimestamp.current, user),
+      btnFn: (e: HTMLElement) => AppFunc.syncWrite(e, syncTimestamp.current, user),
       icon: <BsCloudUpload color="black" size="1.5rem" />,
     },
     {
@@ -74,7 +90,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
       id: "delete-all-btn",
       classes: "",
       translate: AppFunc.translate("deleteAll"),
-      btnFn: (e) => AppFunc.deleteAllGroups(e, user, setTabTotal, setGroups, setDialog),
+      btnFn: (e: HTMLElement) => AppFunc.deleteAllGroups(e, user, setTabTotal, setGroups, setDialog),
       icon: <GrClear color="black" />,
     },
     {
@@ -113,6 +129,7 @@ export default function GlobalBtns({ user, syncTimestamp, setTabTotal, setGroups
               id={x.id}
               classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
               translate={x.translate}
+              /* @ts-ignore */
               onClick={x.btnFn}
               key={Math.random()}
               disabled={(!user.paid && [2, 3, 8].includes(i)) || (user.tier === "Basic" && i === 2)}

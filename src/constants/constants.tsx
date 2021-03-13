@@ -28,20 +28,19 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 import { getTimestamp } from "../components/App/App_helpers";
 import { storeUserDetailsPriorToCheck } from "../components/App/App_functions";
+import { DialogProps } from "../components/Extra/Dialog";
 
 /* USER TIER INFORMATION */
-export interface TIER_OPTIONS {
-  readonly NUM_TAB_LIMIT: number;
-  readonly NUM_GROUP_LIMIT: number;
-  readonly NUM_UNDO_STATES: number;
-}
-
-export interface TIERS {
-  [key: string]: TIER_OPTIONS;
+export interface TierOptions {
+  [key: string]: {
+    readonly NUM_TAB_LIMIT: number;
+    readonly NUM_GROUP_LIMIT: number;
+    readonly NUM_UNDO_STATES: number;
+  };
 }
 
 /** @constant {object} USER @default { Free: { NUM_TAB_LIMIT: 50 (15 during development), NUM_GROUP_LIMIT: 5 (3 during development), NUM_UNDO_STATES: 2 (1 during development) }, Basic: { NUM_TAB_LIMIT: 250 (16 during development), NUM_GROUP_LIMIT: 15 (4 during development), NUM_UNDO_STATES: 5 (2 during development) }, Standard: { NUM_TAB_LIMIT: 2500 (17 during development), NUM_GROUP_LIMIT: 50 (5 during development), NUM_UNDO_STATES: 10 (3 during development) }, Premium: { NUM_TAB_LIMIT: 10000 (18 during development), NUM_GROUP_LIMIT: 100 (6 during development), NUM_UNDO_STATES: 15 (4 during development) } } */
-export const USER: TIERS = {
+export const USER: TierOptions = {
   Free: {
     NUM_TAB_LIMIT: process.env.REACT_APP_PRODUCTION ? 100 : 15,
     NUM_GROUP_LIMIT: process.env.REACT_APP_PRODUCTION ? 5 : 3,
@@ -440,7 +439,7 @@ export const UPDATE_TOAST: Function = (previousVersion: string, currentVersion: 
 ];
 
 /* MODAL DIALOG */
-export interface DIALOG {
+export interface DialogConstantReturn {
   element: HTMLElement | null;
   show: boolean;
   title: string;
@@ -449,7 +448,7 @@ export interface DIALOG {
   reject_btn_text: string | null;
 }
 
-export const OPEN_ALL_DIALOG: Function = (element: HTMLElement): DIALOG => ({
+export const OPEN_ALL_DIALOG: Function = (element: HTMLElement): DialogConstantReturn => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
@@ -469,7 +468,7 @@ export const OPEN_ALL_DIALOG: Function = (element: HTMLElement): DIALOG => ({
  * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
  * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
-export const DELETE_ALL_DIALOG: Function = (element: HTMLElement): DIALOG => ({
+export const DELETE_ALL_DIALOG: Function = (element: HTMLElement): DialogConstantReturn => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
@@ -492,7 +491,7 @@ export const DELETE_ALL_DIALOG: Function = (element: HTMLElement): DIALOG => ({
  * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
  * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
  */
-export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLElement): DIALOG => ({
+export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLElement): DialogConstantReturn => ({
   element,
   show: true,
   title: "✋ TabMerger Question ❔",
@@ -509,7 +508,10 @@ export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLElement): DI
   reject_btn_text: "GO TO SITE",
 });
 
-export const SET_USER_STATUS_DIALOG: Function = (setUser: Function, setDialog: Function): DIALOG => ({
+export const SET_USER_STATUS_DIALOG: Function = (
+  setUser: Function,
+  setDialog: React.Dispatch<React.SetStateAction<DialogProps>>
+): DialogConstantReturn => ({
   element: null,
   show: true,
   title: "🔐 TabMerger Product Activation 🔐",

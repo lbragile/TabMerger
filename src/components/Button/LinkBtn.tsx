@@ -1,6 +1,25 @@
 import React from "react";
 import Button from "./Button";
+import { DialogProps } from "../Extra/Dialog";
 
+export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
+
+export interface LinkBtnProps {
+  text: string;
+  url: string;
+  place?: string;
+  icon: JSX.Element;
+  tooltip?: boolean;
+  onClickFn?: boolean;
+  resetTutorialChoice?: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    url: string,
+    setTour: setStateType<boolean>,
+    setDialog: setStateType<DialogProps>
+  ) => void;
+  setTour?: setStateType<boolean>;
+  setDialog?: setStateType<DialogProps>;
+}
 export default function LinkBtn({
   text,
   url,
@@ -11,7 +30,7 @@ export default function LinkBtn({
   resetTutorialChoice,
   setTour,
   setDialog,
-}) {
+}: LinkBtnProps): JSX.Element {
   return (
     <Button
       id={text.split(" ")[0].toLowerCase() + "-btn"}

@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 
 /**
  * Sets the background color of each group according to what the user chose.
- * @param {HTMLElement} e Either the group's color picker value or the group container
+ * @param {React.ChangeEvent<HTMLInputElement> | HTMLInputElement} e Either the group's color picker value or the group container
  * @param {string?} id Used to find the group whose background needs to be set
  */
 export function setBGColor(e, id) {
@@ -81,7 +81,7 @@ export function updateTextColor(setGroups) {
 
 /**
  * Sets the title of a given group in order for it to persist across reloads.
- * @param {HTMLElement} e The group node whose title was changed
+ * @param {React.FocusEvent<HTMLInputElement>} e The group node whose title was changed
  */
 export function setTitle(e) {
   chrome.storage.local.get("groups", (local) => {
@@ -96,7 +96,7 @@ export function setTitle(e) {
 
 /**
  * Allows the user to use enter key to exit title editing mode.
- * @param {HTMLElement} e Node corresponding to the group whose title is being changed
+ * @param {React.KeyboardEvent<HTMLInputElement>} e Node corresponding to the group whose title is being changed
  */
 export function blurOnEnter(e) {
   if (e.keyCode === 13) {
@@ -110,7 +110,7 @@ export function blurOnEnter(e) {
  * This is useful if the user wants to avoid using the merge buttons or simply
  * merge directly into a specific group from outside of TabMerger.
  *
- * @param {HTMLElement} e The input field where the tab data was dropped
+ * @param {React.ChangeEvent<HTMLInputElement>} e The input field where the tab data was dropped
  * @param {Function} setGroups For re-rendering the groups once the operation is complete
  * @param {Function} setTabTotal For re-rendering the total tab counter
  */
@@ -161,7 +161,7 @@ export function addTabFromURL(e, user, setGroups, setTabTotal) {
 
 /**
  * Adds the necessary classes to corresponding components when a group drag is initiated
- * @param {HTMLElement} e The group that is being dragged
+ * @param {React.DragEvent<HTMLDivElement>} e The group that is being dragged
  */
 export function groupDragStart(e) {
   if (!e.target.closest(".draggable")) {
@@ -172,7 +172,7 @@ export function groupDragStart(e) {
 /**
  * When a group's drag operation is finished, need to re-order all other groups and assign
  * appropriate group-id to each.
- * @param {HTMLElement} e The group that is being dragged
+ * @param {React.DragEvent<HTMLDivElement>} e The group that is being dragged
  */
 export function groupDragEnd(e) {
   e.preventDefault();

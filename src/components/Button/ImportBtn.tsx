@@ -3,7 +3,13 @@ import { BiImport } from "react-icons/bi";
 
 import { translate, importJSON } from "../App/App_functions";
 
-export default function ImportBtn({ user, setGroups, setTabTotal }) {
+export interface ImportBtnProps {
+  user: { paid: string | boolean; tier: string };
+  setTabTotal: React.Dispatch<React.SetStateAction<number>>;
+  setGroups: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function ImportBtn({ user, setGroups, setTabTotal }: ImportBtnProps): JSX.Element {
   return (
     <React.Fragment>
       <label

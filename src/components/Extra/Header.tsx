@@ -2,7 +2,7 @@ import React from "react";
 
 import { translate, getTabMergerLink } from "../App/App_functions";
 
-export default function Header({ total }) {
+export default function Header({ total }: { total: number }): JSX.Element {
   return (
     <React.Fragment>
       <a href={getTabMergerLink(false)} target="_blank" rel="noreferrer">

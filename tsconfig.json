@@ -1,0 +1,9 @@
+{
+  "extends": "./config/tsconfig.development.json",
+  "compilerOptions": {
+    "watch": false,
+    "strict": true
+  },
+  "include": ["src", "public"],
+  "exclude": ["node_modules", "build", "test", "coverage", "reports"]
+}

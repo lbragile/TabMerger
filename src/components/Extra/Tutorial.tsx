@@ -22,7 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React from "react";
-import { SUBSCRIPTION_URL } from "../../constants/constants";
+import { DefaultGroup, SUBSCRIPTION_URL } from "../../constants/constants";
 
 export const TOUR_STEPS = [
   {
@@ -676,7 +676,7 @@ export const TOUR_STEPS = [
   },
 ];
 
-export const TUTORIAL_GROUP = {
+export const TUTORIAL_GROUP: { [key: string]: DefaultGroup } = {
   "group-0": {
     color: "#99ff99",
     created: "31/12/2020 @ 23:59:59",

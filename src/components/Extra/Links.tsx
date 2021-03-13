@@ -2,7 +2,8 @@ import React from "react";
 
 import * as CONSTANTS from "../../constants/constants";
 import { translate, getTabMergerLink, resetTutorialChoice } from "../App/App_functions";
-import LinkBtn from "../Button/LinkBtn.js";
+import LinkBtn from "../Button/LinkBtn";
+import { DialogProps } from "./Dialog";
 
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { BiHelpCircle } from "react-icons/bi";
@@ -12,7 +13,13 @@ import { FiYoutube, FiStar } from "react-icons/fi";
 import { MdPayment } from "react-icons/md";
 import { RiHandCoinLine } from "react-icons/ri";
 
-const LINKS = [
+export interface Links {
+  url: string;
+  text: string;
+  icon: JSX.Element;
+}
+
+const LINKS: Array<Links> = [
   { url: "https://lbragile.github.io/TabMerger-Extension/", text: translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
   { url: "https://lbragile.github.io/TabMerger-Extension/contact", text: translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
   { url: CONSTANTS.SUBSCRIPTION_URL, text: "Choose Plan", icon: <MdPayment color="black" size="1.5rem" />}, // prettier-ignore
@@ -25,7 +32,15 @@ const LINKS = [
   { url: "https://www.reddit.com/user/lbragile_dev", text: "Reddit", icon: <FaReddit color="black" /> },
 ];
 
-export default function Links({ setTour, setDialog }) {
+export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
+
+export default function Links({
+  setTour,
+  setDialog,
+}: {
+  setTour: setStateType<boolean>;
+  setDialog: setStateType<DialogProps>;
+}) {
   return (
     <React.Fragment>
       <hr className="mx-auto" />
@@ -40,6 +55,7 @@ export default function Links({ setTour, setDialog }) {
               tooltip={true}
               place={i <= 2 ? "top" : "bottom"}
               onClickFn={i === 0}
+              /* @ts-ignore */
               resetTutorialChoice={resetTutorialChoice}
               setTour={setTour}
               setDialog={setDialog}

@@ -11,19 +11,38 @@ import { BiColorFill, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { VscChromeRestore } from "react-icons/vsc";
 
+export interface GroupTitleBtnsProps {
+  id: string;
+  color: string;
+  hidden: boolean;
+  locked: boolean;
+  starred: boolean;
+  user: { paid: string | boolean; tier: string };
+  textColor: string;
+  setTabTotal: React.Dispatch<React.SetStateAction<number>>;
+  setGroups: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface GroupTitleButtonsProps {
+  id?: string;
+  classes: string;
+  translate?: string;
+  icon: JSX.Element;
+  clickFn?: (e: HTMLElement | HTMLDivElement) => void;
+}
+
 export default function GroupTitleBtns({
   id,
   color,
   hidden,
   locked,
   starred,
-  tooltip,
   user,
   textColor,
   setTabTotal,
   setGroups,
-}) {
-  const GROUP_TITLE_BUTTONS = [
+}: GroupTitleBtnsProps): JSX.Element {
+  const GROUP_TITLE_BUTTONS: Array<GroupTitleButtonsProps> = [
     {
       classes: "move-group-btn btn-in-group-title",
       translate: null,
@@ -54,6 +73,7 @@ export default function GroupTitleBtns({
       classes: "color-group-btn btn-in-group-title",
       translate: AppFunc.translate("pickColor"),
       icon: <BiColorFill className="input-color" color={textColor === "primary" ? "black" : "white"} />,
+      /* @ts-ignore */
       clickFn: (e) => e.target.closest("button").nextSibling.click(),
     },
     {
@@ -84,7 +104,8 @@ export default function GroupTitleBtns({
       {GROUP_TITLE_BUTTONS.map((x) => {
         return (
           <React.Fragment key={Math.random()}>
-            <Button classes={x.classes} translate={x.translate} tooltip={tooltip} onClick={x.clickFn}>
+            {/* @ts-ignore */}
+            <Button classes={x.classes} translate={x.translate} onClick={x.clickFn}>
               {x.icon}
             </Button>
             {x.id && (
@@ -94,7 +115,7 @@ export default function GroupTitleBtns({
                   defaultValue={color}
                   list="presetColors"
                   onChange={(e) => GroupFunc.setBGColor(e, id)}
-                  onBlur={() => GroupFunc.updateTextColor()}
+                  onBlur={() => GroupFunc.updateTextColor(setGroups)}
                 />
                 <datalist id="presetColors">
                   {CONSTANTS.RANDOM_COLOR_LIST.map(

@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 
 import Tab from "../Tab/Tab";
 import Group from "../Group/Group";
+import { DialogProps } from "../Extra/Dialog";
 
 /**
  * @module App/App_functions
@@ -39,7 +40,7 @@ import Group from "../Group/Group";
  * Once the button is pressed, the credentials are verified in the external database
  * and corresponding TabMerger functionality is unlocked.
  * @param {Function} setUser Re-renders the user's subscription details { paid: boolean, tier: string }
- * @param {Function} setDialog Shows the modal for inputing the user's credentials.
+ * @param {React.Dispatch<React.SetStateAction<DialogProps>>} setDialog Shows the modal for inputing the user's credentials.
  */
 export function setUserStatus(setUser, setDialog) {
   setDialog(CONSTANTS.SET_USER_STATUS_DIALOG(setUser, setDialog));
@@ -49,7 +50,7 @@ export function setUserStatus(setUser, setDialog) {
  * Stores the relevant details in local storage prior to checking if the user is authenticated
  * @param {FormEvent<HTMLFormElement>} e The submitted form (where user enters their email and activation key)
  * @param {Function} setUser To re-render the user details and adjust buttons/features accordingly
- * @param {Function} setDialog To close dialog when needed
+ * @param {React.Dispatch<React.SetStateAction<DialogProps>>} setDialog To close dialog when needed
  */
 export function storeUserDetailsPriorToCheck(e, setUser, setDialog) {
   e.preventDefault();
@@ -148,9 +149,9 @@ export function handleUpdate() {
 /**
  * Initialize the local & sync storage when the user first installs TabMerger.
  * @param {HTMLElement} sync_node Node indicating the "Last Sync" time
- * @param {Function} setTour For re-rendering the tutorial walkthrough
- * @param {Function} setGroups For re-rendering the initial groups
- * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} setTour For re-rendering the tutorial walkthrough
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the initial groups
+ * @param {React.Dispatch<React.SetStateAction<number>>} setTabTotal For re-rendering the total tab counter
  */
 export function storageInit(sync_node, setTour, setGroups, setTabTotal) {
   const scroll = document.documentElement.scrollTop;
@@ -189,8 +190,8 @@ export function storageInit(sync_node, setTour, setGroups, setTabTotal) {
  *
  * @param {HTMLElement} e The help button which was clicked
  * @param {string} url Link to TabMerger's official homepage
- * @param {Function} setTour For re-rendering the tour
- * @param {Function} setDialog For rendering a confirmation message
+ * @param {React.Dispatch<React.SetStateAction<boolean>>} setTour For re-rendering the tour
+ * @param {React.Dispatch<React.SetStateAction<DialogProps>>} setDialog For rendering a confirmation message
  */
 export function resetTutorialChoice(e, url, setTour, setDialog) {
   var element = e.target.closest("#need-btn");
@@ -287,8 +288,8 @@ export function syncWrite(e, sync_node, user) {
  * 1. "TabMerger <= uploaded # groups ➡ overwrite current"
  * 2. "TabMerger > uploaded # groups ➡ overwrite current & delete extra groups"
  * @param {HTMLElement} sync_node Node corresponding to the "Last Sync:" timestamp
- * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setTabTotal For re-rendering the total tab count
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the groups
+ * @param {React.Dispatch<React.SetStateAction<number>>} setTabTotal For re-rendering the total tab count
  */
 export function syncRead(sync_node, user, setGroups, setTabTotal) {
   if (!user.paid) {
@@ -324,8 +325,8 @@ export function syncRead(sync_node, user, setGroups, setTabTotal) {
  * also need to be removed.
  * @param {object} changes contains the changed keys and they old & new values
  * @param {string} namespace local or sync storage type
- * @param {Function} setTabTotal For re-rendering the total tab counter
- * @param {Function} setGroups For re-rendering the groups
+ * @param {React.Dispatch<React.SetStateAction<number>>} setTabTotal For re-rendering the total tab counter
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the groups
  */
 export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
   if (namespace === "local" && changes?.remove?.newValue?.length > 0) {
@@ -388,8 +389,8 @@ export function openOrRemoveTabs(changes, namespace, setTabTotal, setGroups) {
  * and the user is given a warning with instructions.
  * @param {object} changes contains the changed keys and they old & new values
  * @param {string} namespace local or sync storage type
- * @param {Function} setTabTotal For re-rendering the total tab counter
- * @param {Function} setGroups For re-rendering the groups
+ * @param {React.Dispatch<React.SetStateAction<number>>} setTabTotal For re-rendering the total tab counter
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the groups
  *
  * @see SYNC_STORAGE_LIMIT in App.js
  * @see ITEM_STORAGE_LIMIT in App.js
@@ -502,7 +503,7 @@ export function groupFormation(groups, textStyles) {
  * Allows the user to add a group with the default title & color chosen in the settings.
  * Each new group is always empty and has a creation timestamp. Also scrolls the page
  * down so that the new group is in full view to the user.
- * @param {Function} setGroups For re-rendering the groups
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the groups
  */
 export function addGroup(setGroups) {
   chrome.storage.local.get(["groups", "client_details"], (local) => {
@@ -542,7 +543,7 @@ export function addGroup(setGroups) {
  * of all the tabs in TabMerger to consider for removal.
  *
  * @param {HTMLElement} e Representing the Open All button
- * @param {Function} setDialog For rendering a warning/error message
+ * @param {React.Dispatch<React.SetStateAction<DialogProps>>} setDialog For rendering a warning/error message
  */
 export function openAllTabs(e, setDialog) {
   var element = e.target.closest("#open-all-btn");
@@ -563,9 +564,9 @@ export function openAllTabs(e, setDialog) {
  * The default group has title & color matching settings parameter and a creation timestamp.
  *
  * @param {HTMLElement} e Button corresponding to the delete all operation
- * @param {Function} setTabTotal For re-rendering the total tab counter
- * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setDialog For rendering the confirmation dialog
+ * @param {React.Dispatch<React.SetStateAction<number>>} setTabTotal For re-rendering the total tab counter
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the groups
+ * @param {React.Dispatch<React.SetStateAction<DialogProps>>} setDialog For rendering the confirmation dialog
  */
 export function deleteAllGroups(e, user, setTabTotal, setGroups, setDialog) {
   const scroll = document.documentElement.scrollTop;
@@ -624,8 +625,8 @@ export function deleteAllGroups(e, user, setTabTotal, setGroups, setDialog) {
  * If a user accidently removes a tab, group, or everything. They can press the "Undo"
  * button to restore the previous configuration.
  *
- * @param {Function} setGroups For re-rendering the groups after they are reset
- * @param {Function} setTabTotal For re-rendering the tab total counter
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the groups after they are reset
+ * @param {React.Dispatch<React.SetStateAction<number>>} setTabTotal For re-rendering the tab total counter
  *
  * @note The number of states stored are based on user tier { Free: 2, Basic: 5, Standard: 10, Premium: 15 }.
  */
@@ -647,7 +648,7 @@ export function undoDestructiveAction(setGroups, setTabTotal) {
 
 /**
  * Allows the user to drag and drop an entire group with tabs inside.
- * @param {HTMLElement} e The group node being dragged.
+ * @param {React.DragEvent<HTMLDivElement>} e The group node being dragged.
  * @param {string} type Either group or tab, corresponding to the dragging operation.
  * @param {string?} offset Number of pixels from the top/bottom of the screen to wait for mouse position to hit, prior to scrolling
  */
@@ -678,7 +679,7 @@ export function dragOver(e, type, offset = 10) {
  * "#TabMerger (or `@TabMerger`) ➡ Group Level Search (by group title)"
  * "TabMerger ➡ Tab Level Search (by tab title)"
  *
- * @param {HTMLElement} e Node corresponding to the search filter
+ * @param {React.ChangeEvent<HTMLInputElement>} e Node corresponding to the search filter
  * @param {object?} user Contains information about the user's subscription
  */
 export function regexSearchForTab(e, user) {
@@ -717,7 +718,7 @@ export function regexSearchForTab(e, user) {
 /**
  * Clears the tab search input field when the user exits it (onBlur).
  * Additionally, this will undo the search operation and display all the tabs & groups.
- * @param {HTMLElement} e Node corresponding to the tab search filter
+ * @param {React.FocusEvent<HTMLInputElement>} e Node corresponding to the tab search filter
  *
  * @note The timeout is added to allow operations like opening a tab
  */
@@ -748,7 +749,7 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
           url: URL.createObjectURL(dataBlob),
           filename:
             (!!relativePath ? "" : sync.settings.relativePathBackup) +
-            AppHelper.outputFileName().replace(/\:|\//g, "_") +
+            AppHelper.outputFileName().replace(/:|\//g, "_") +
             ".json",
           conflictAction: "uniquify",
           saveAs: showSaveAsDialog === undefined ? sync.settings.saveAsVisibility : showSaveAsDialog,
@@ -784,7 +785,7 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
             }
             console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file with id=${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
           } else {
-            chrome.runtime.lastError != "Error: Download canceled by the user" && toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST); // prettier-ignore
+            chrome.runtime.lastError.toString() !== "Error: Download canceled by the user" && toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST); // prettier-ignore
           }
         });
       });
@@ -797,9 +798,9 @@ export function exportJSON(showGrayDownloadShelf, showSaveAsDialog, relativePath
  * This JSON file contains TabMerger's configuration and once uploaded
  * overwrites the current configuration. Checks are made to ensure a JSON
  * file is uploaded.
- * @param {HTMLElement} e Node corresponding to the input file field
- * @param {Function} setGroups For re-rendering the groups
- * @param {Function} setTabTotal For re-rendering the total tab counter
+ * @param {React.ChangeEvent<HTMLInputElement>} e Node corresponding to the input file field
+ * @param {React.Dispatch<React.SetStateAction<string>>} setGroups For re-rendering the groups
+ * @param {React.Dispatch<React.SetStateAction<number>>} setTabTotal For re-rendering the total tab counter
  */
 export function importJSON(e, user, setGroups, setTabTotal) {
   if (e.target.files[0].type === "application/json") {

@@ -2,7 +2,7 @@ import React from "react";
 
 import { AiFillStar } from "react-icons/ai";
 
-export default function Reviews() {
+export default function Reviews(): JSX.Element {
   const REVIEWS = [
     "Found TabMerger really helpful in organizing tabs according to specific customizable categories, with cool colors, saving my time and memory.",
     "Aesthetically it looks nice and has a comfortable feel. there are clever implementations from within the TabMerger page itself, like changing the color and using the buttons to merge and add tabs.",

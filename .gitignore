@@ -12,3 +12,4 @@ build/
 
 # Used to clean up modules in Stryker dashboard (set STRYKER_DASHBOARD_API_KEY=API_KEY&& npm run mutate --files=temp_mutation.js MODULE_NAME)
 temp_mutation.js 
+src/react-app-env.d.ts

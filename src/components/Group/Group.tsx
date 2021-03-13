@@ -36,6 +36,20 @@ import { BiHide } from "react-icons/bi";
 import "./Group.css";
 import "../Button/Button.css";
 
+export interface GroupProps {
+  id: string;
+  title: string;
+  textColor: string;
+  color: string;
+  created: string;
+  num_tabs: number;
+  hidden: boolean;
+  locked: boolean;
+  starred: boolean;
+  fontFamily: string;
+  children: React.ReactChildren;
+}
+
 export default function Group({
   id,
   title,
@@ -48,10 +62,10 @@ export default function Group({
   starred,
   fontFamily,
   children,
-}) {
+}: GroupProps): JSX.Element {
   const { user, setTabTotal, setGroups } = useContext(AppContext);
 
-  useEffect(() => GroupFunc.setBGColor(document.getElementById(id), id), [id]);
+  useEffect(() => GroupFunc.setBGColor(document.getElementById(id) as HTMLInputElement, id), [id]);
 
   return (
     <div
@@ -111,6 +125,7 @@ export default function Group({
           name="url-drag"
           onChange={(e) => GroupFunc.addTabFromURL(e, user, setGroups, setTabTotal)}
           onKeyDown={(e) => e.preventDefault()}
+          /* @ts-ignore */
           onClick={(e) => e.target.blur()}
         />
 

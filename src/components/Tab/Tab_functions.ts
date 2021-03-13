@@ -45,12 +45,12 @@ export function setInitTabs(setTabs: React.Dispatch<React.SetStateAction<TabStat
 
 /**
  * Adds necessary classes to the tab element once a drag event is initialized
- * @param {DragEvent<HTMLDivElement>} e The tab which will be dragged within the same group or across groups
+ * @param {React.DragEvent<HTMLDivElement>} e The tab which will be dragged within the same group or across groups
  */
 export function tabDragStart(e: React.DragEvent<HTMLDivElement>): void {
-  var target = ((<HTMLDivElement>e.target).tagName === "DIV"
+  var target = ((e.target as HTMLDivElement).tagName === "DIV"
     ? e.target
-    : (<HTMLDivElement>e.target).parentNode) as HTMLDivElement;
+    : (e.target as HTMLDivElement).parentNode) as HTMLDivElement;
   target.classList.add("dragging");
   target.closest(".group").classList.add("drag-origin");
 }
