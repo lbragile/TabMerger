@@ -47,7 +47,7 @@ export interface GroupProps {
   locked: boolean;
   starred: boolean;
   fontFamily: string;
-  children: React.ReactChildren;
+  children: JSX.Element;
 }
 
 export default function Group({

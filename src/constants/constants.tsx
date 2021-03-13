@@ -22,7 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
- * @module __CONSTANTS
+ * @module CONSTANTS
  */
 
 import React from "react";
@@ -43,7 +43,34 @@ export interface TierOptions {
   };
 }
 
-/** @constant {TierOptions} USER @default { Free: { NUM_TAB_LIMIT: 50 (15 during development), NUM_GROUP_LIMIT: 5 (3 during development), NUM_UNDO_STATES: 2 (1 during development) }, Basic: { NUM_TAB_LIMIT: 250 (16 during development), NUM_GROUP_LIMIT: 15 (4 during development), NUM_UNDO_STATES: 5 (2 during development) }, Standard: { NUM_TAB_LIMIT: 2500 (17 during development), NUM_GROUP_LIMIT: 50 (5 during development), NUM_UNDO_STATES: 10 (3 during development) }, Premium: { NUM_TAB_LIMIT: 10000 (18 during development), NUM_GROUP_LIMIT: 100 (6 during development), NUM_UNDO_STATES: 15 (4 during development) } } */
+/**
+ * Subscription based limits on specific features
+ * @default
+ * ```json
+ *  {
+ *    Free: {
+ *      NUM_TAB_LIMIT: 50 (15 during development),
+ *      NUM_GROUP_LIMIT: 5 (3 during development),
+ *      NUM_UNDO_STATES: 2 (1 during development)
+ *    },
+ *    Basic: {
+ *      NUM_TAB_LIMIT: 250 (16 during development),
+ *      NUM_GROUP_LIMIT: 15 (4 during development),
+ *      NUM_UNDO_STATES: 5 (2 during development)
+ *    },
+ *    Standard: {
+ *      NUM_TAB_LIMIT: 2500 (17 during development),
+ *      NUM_GROUP_LIMIT: 50 (5 during development),
+ *      NUM_UNDO_STATES: 10 (3 during development)
+ *    },
+ *    Premium: {
+ *      NUM_TAB_LIMIT: 10000 (18 during development),
+ *      NUM_GROUP_LIMIT: 100 (6 during development),
+ *      NUM_UNDO_STATES: 15 (4 during development)
+ *    }
+ *  }
+ * ```
+ * */
 export const USER: TierOptions = {
   Free: {
     NUM_TAB_LIMIT: process.env.REACT_APP_PRODUCTION ? 100 : 15,
@@ -71,7 +98,24 @@ export const USER: TierOptions = {
 export interface FontStyle {
   [key: string]: string;
 }
-/** @constant {FontStyle} FONT_FAMILY @default { Arial: "Arial, sans-serif", Verdana: "Verdana, sans-serif", Helvetica: "Helvetica, sans-serif", Tahoma: "Tahoma, sans-serif", "Trebuchet MS": "'Trebuchet MS', sans-serif", "Brush Script MT": "'Brush Script MT', cursive", Georgia: "Georgia, serif", Garamond: "Garamond, serif","Courier New": "'Courier New', monospace","Times New Roman": "'Times New Roman', serif" } */
+/**
+ * Allows the font of all text in TabMerger to be changed to a list of predefined fonts.
+ * @default
+ * ```json
+ *  {
+ *    Arial: "Arial, sans-serif",
+ *    Verdana: "Verdana, sans-serif",
+ *    Helvetica: "Helvetica, sans-serif",
+ *    Tahoma: "Tahoma, sans-serif",
+ *    "Trebuchet MS": "'Trebuchet MS', sans-serif",
+ *    "Brush Script MT": "'Brush Script MT', cursive",
+ *    Georgia: "Georgia, serif",
+ *    Garamond: "Garamond, serif",
+ *    "Courier New": "'Courier New', monospace",
+ *    "Times New Roman": "'Times New Roman', serif"
+ *  }
+ * ```
+ */
 export const FONT_FAMILY: FontStyle = {
   Arial: "Arial, sans-serif",
   Verdana: "Verdana, sans-serif",
@@ -85,7 +129,19 @@ export const FONT_FAMILY: FontStyle = {
   "Times New Roman": "'Times New Roman', serif",
 };
 
-/** @constant {FontStyle} FONT_WEIGHT @default { Bold: "bold",  Bolder: "bolder",  Normal: "normal",  Lighter: "lighter",  Light: "100" } */
+/**
+ * Allows the thickness of tab titles to be adjusted.
+ * @default
+ * ```json
+ *  {
+ *    Bold: "bold",
+ *    Bolder: "bolder",
+ *    Normal: "normal",
+ *    Lighter: "lighter",
+ *    Light: "100"
+ *  }
+ * ```
+ */
 export const FONT_WEIGHT: FontStyle = {
   Bold: "bold",
   Bolder: "bolder",
@@ -95,37 +151,69 @@ export const FONT_WEIGHT: FontStyle = {
 };
 
 /* GROUP RELATED DEFAULTS */
-/** @constant {string} DEFAULT_GROUP_TITLE @default "Title" */
+/** The default group title seen in TabMerger before any configuration is done.
+ * @default "Title"
+ */
 export const DEFAULT_GROUP_TITLE: string = "Title";
 
-/** @constant {string} DEFAULT_GROUP_COLOR @default "#dedede" */
+/** The default group color seen in TabMerger before any configuration is done.
+ *  @default "#dedede"
+ */
 export const DEFAULT_GROUP_COLOR: string = "#dedede";
 
-/** @constant {string} GROUP_COLOR_THRESHOLD @default "#777777" */
+/**
+ * Used when determining if a group's theme should be toggled between dark & light mode.
+ * @default "#777777"
+ */
 export const GROUP_COLOR_THRESHOLD: string = "#777777";
 
 /* EXTENSION ICON DEFAULTS (BADGE ICON) */
-/** @constant {number} BADGE_ICON_STEP_SIZE @default 25 */
+/** How many tabs to consider before changing the background color of the extension button text
+ * @default 25
+ */
 export const BADGE_ICON_STEP_SIZE: number = 25;
 
 export interface BadgeIconColors {
   [key: string]: string;
 }
 
-/** @constant {BadgeIconColors} BADGE_ICON_COLORS @default { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" } */
+/**
+ * These are the background colors of the text shown on the extension icon
+ * @default
+ * ```json
+ *  {
+ *    green: "#060",
+ *    yellow: "#CC0",
+ *    orange: "#C70",
+ *    red: "#C00"
+ *  }
+ * ```
+ */
 export const BADGE_ICON_COLORS: BadgeIconColors = { green: "#060", yellow: "#CC0", orange: "#C70", red: "#C00" };
 
-/** @constant {string} BADGE_ICON_DEFAULT_TITLE @default "Merge your tabs into groups" */
+/**
+ * What the extension button says when you hover over it.
+ * @default "Merge your tabs into groups"
+ */
 export const BADGE_ICON_DEFAULT_TITLE: string = "Merge your tabs into groups";
 
 /* STORAGE AND INPUT LIMITS */
-/** @constant {Number} ITEM_STORAGE_LIMIT @default 8000 (500 during developement/testing) */
+/** Sync storage limit per group - JSON serialization of a group cannot be longer than this
+ *  @default 8000 (500 during developement/testing)
+ */
 export const ITEM_STORAGE_LIMIT: number = process.env.REACT_APP_PRODUCTION ? 8000 : 500;
 
-/** @constant {Number} SYNC_STORAGE_LIMIT @default 102000 (1000 during developement/testing) */
+/**
+ * Sync storage total limit - JSON serialization of TabMerger's configuration cannot be longer than this
+ * @default 102000 (1000 during developement/testing)
+ */
 export const SYNC_STORAGE_LIMIT: number = process.env.REACT_APP_PRODUCTION ? 102000 : 1000;
 
-/** @constant {Number} TITLE_TRIM_LIMIT @default 50 */
+/**
+ * The maximum length of a group title before the typing stops.
+ * @note Depending on screen size, you might see significantly less characters
+ * @default 50
+ */
 export const TITLE_TRIM_LIMIT: number = 50;
 
 /* DEFAULT GROUP & SETTINGS */
@@ -137,6 +225,7 @@ export interface DefaultGroup {
   starred: boolean;
   tabs: object[];
   title: string;
+  name?: string;
 }
 
 export const DEFAULT_GROUP: DefaultGroup = {
@@ -149,7 +238,9 @@ export const DEFAULT_GROUP: DefaultGroup = {
   title: DEFAULT_GROUP_TITLE,
 };
 
-/** @constant {Array.<string>} RANDOM_COLOR_LIST @default "https://www.w3schools.com/colors/colors_groups.asp" */
+/**
+ * For Premium members, this is the list from which the "randomizer" colors are chosen when forming a new group.
+ * @default Obtained from [w3schools](https://www.w3schools.com/colors/colors_groups.asp) */
 // prettier-ignore
 export const RANDOM_COLOR_LIST: string[] = [
   "#ff9999", "#ff6666", "#ff3333", "#ff0000", "#cc0000", // red
@@ -192,7 +283,9 @@ export const RANDOM_COLOR_LIST: string[] = [
   "#808080", "#778899", "#708090", "#2F4F4F"
 ];
 
-/** @constant {number} DEFAULT_BACKUP_PERIOD_IN_MINUTES @default 0 (disabled) */
+/**
+ * The frequency of JSON backup operations
+ * @default 0 (disabled) */
 export const DEFAULT_BACKUP_PERIOD_IN_MINUTES = 0;
 
 export interface DefaultSettings {
@@ -238,7 +331,15 @@ export const DEFAULT_SETTINGS: DefaultSettings = {
 };
 
 /* DATABASE & SUBSCRIPTION LINKS */
+/**
+ * The database user where users can have their subscriptions verified
+ */
 export const USER_STATUS_URL: string = process.env.REACT_APP_PRODUCTION ? "https://tabmerger-backend.herokuapp.com/customer/" : "http://localhost:5000/customer/"; // prettier-ignore
+
+/**
+ * TabMerger's pricing page
+ * @default [Official Homepage Pricing](https://lbragile.github.io/TabMerger-Extension/pricing)
+ */
 export const SUBSCRIPTION_URL: string = process.env.REACT_APP_PRODUCTION ? "https://lbragile.github.io/TabMerger-Extension/pricing" : "http://localhost:3000/TabMerger-Extension/pricing"; // prettier-ignore
 
 /* TOASTS */
@@ -249,6 +350,9 @@ export interface ToastId {
 
 export type Toast = [JSX.Element, ToastId];
 
+/**
+ * Whenever a user's subscription does not allow them to use a given feature.
+ */
 export const SUBSCRIPTION_TOAST: Toast = [
   <div className="text-left">
     To use this feature, you need to <b>upgrade</b> your TabMerger subscription.
@@ -263,6 +367,9 @@ export const SUBSCRIPTION_TOAST: Toast = [
   { toastId: "subscription_toast" },
 ];
 
+/**
+ * When a user tries to click the sync write button but they either cannot due to Sync restrictions or their current subscription.
+ */
 export const SYNC_WRITE_TOAST: Toast = [
   <div className="text-left">
     Either one (or more) of your groups exceed(s) their respective sync limit <u>or</u> the total sync limit is exceeded
@@ -278,9 +385,9 @@ export const SYNC_WRITE_TOAST: Toast = [
 ];
 
 /**
- * @constant {Function} CHECK_MERGING_TOAST
+ * Occurs during the merging process to provide warning to the user about exceeding their limits.
  * @param {string} tier The user's subscription tier
- * @returns {Array.<HTMLDivElement, {toastId: string}>}
+ * @returns {Toast} A toast message indicating that there is an issue and how to resolve it.
  */
 export const CHECK_MERGING_TOAST: Function = (tier: string): Toast => [
   <div className="text-left">
@@ -302,9 +409,9 @@ export const CHECK_MERGING_TOAST: Function = (tier: string): Toast => [
 ];
 
 /**
- * @constant {Function} ADD_GROUP_TOAST
+ * Shown when the user's group limit will be exceeded if the action is allowed.
  * @param {Number} NUM_GROUP_LIMIT number of groups that the user can make (based on subscription)
- * @returns {Array.<HTMLDivElement, {toastId: string}>}
+ * @returns {Toast} A toast message indicating that there is an issue and how to resolve it.
  */
 export const ADD_GROUP_TOAST: Function = (NUM_GROUP_LIMIT: number): Toast => [
   <div className="text-left">
@@ -327,7 +434,9 @@ export const ADD_GROUP_TOAST: Function = (NUM_GROUP_LIMIT: number): Toast => [
   { toastId: "addGroup_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} UNDO_DESTRUCTIVE_ACTION_TOAST */
+/**
+ * Shown when there are no more undo states left after a user clicks on the global Undo State button.
+ */
 export const UNDO_DESTRUCTIVE_ACTION_TOAST: Toast = [
   <div className="text-left">
     There are <b>no more</b> states to undo. <br />
@@ -345,7 +454,9 @@ export const UNDO_DESTRUCTIVE_ACTION_TOAST: Toast = [
   { toastId: "undoStates_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} IMPORT_JSON_TOAST */
+/**
+ * If a user imports an incorrect configuration file (wrong format).
+ */
 export const IMPORT_JSON_TOAST: Toast = [
   <div className="text-left">
     You must import a JSON file <i>(.json extension)</i>!<br />
@@ -359,13 +470,17 @@ export const IMPORT_JSON_TOAST: Toast = [
   { toastId: "importJSON_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} ADD_TAB_FROM_URL_TOAST */
+/**
+ * Drag and drop from URL address bar when the tab is already in TabMerger
+ */
 export const ADD_TAB_FROM_URL_TOAST: Toast = [
   <div className="text-left">That tab is already in TabMerger!</div>,
   { toastId: "addTabFromURL_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} DELETE_GROUP_TOAST */
+/**
+ * User attempts to delete a locked group
+ */
 export const DELETE_GROUP_TOAST: Toast = [
   <div className="text-left">
     This group is <b>locked</b>, thus it cannot be deleted. <br />
@@ -374,7 +489,9 @@ export const DELETE_GROUP_TOAST: Toast = [
   { toastId: "deleteGroup_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} REMOVE_TAB_TOAST */
+/**
+ * User attempts to delete a tab in a locked group
+ */
 export const REMOVE_TAB_TOAST: Toast = [
   <div className="text-left">
     This group is <b>locked</b> and thus tabs inside cannot be deleted. <br />
@@ -383,7 +500,9 @@ export const REMOVE_TAB_TOAST: Toast = [
   { toastId: "removeTab_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} DOWNLOAD_ERROR_TOAST */
+/**
+ * Incorrect/error in saving path for automatic JSON backup. Only applies to Premium members.
+ */
 export const DOWNLOAD_ERROR_TOAST: Toast = [
   <div className="text-left">
     The <b>relative path</b> you have set in the settings is <b>not valid</b>, please adjust it.
@@ -391,7 +510,9 @@ export const DOWNLOAD_ERROR_TOAST: Toast = [
   { toastId: "relativePathError_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} JSON_AUTOBACKUP_OFF_TOAST */
+/**
+ * Indicator that automatic JSON backup was turned off.
+ */
 export const JSON_AUTOBACKUP_OFF_TOAST: Toast = [
   <div className="text-left">
     Automatic JSON file generation/backup was turned off since the saving period was set to 0 minutes.
@@ -399,7 +520,9 @@ export const JSON_AUTOBACKUP_OFF_TOAST: Toast = [
   { toastId: "automaticBackupOff_toast" },
 ];
 
-/** @constant {Array.<HTMLDivElement, {toastId: string}>} SYNC_AUTOBACKUP_OFF_TOAST */
+/**
+ * Indication that Sync backup was turned off.
+ */
 export const SYNC_AUTOBACKUP_OFF_TOAST: Toast = [
   <div className="text-left">
     Automatic sync write backup was turned off since the saving period was set to 0 minutes.
@@ -408,36 +531,14 @@ export const SYNC_AUTOBACKUP_OFF_TOAST: Toast = [
 ];
 
 /**
- * @constant {Function} UPDATE_TOAST
+ * Whenever an update to TabMerger is published and the user opens it for the first time.
  * @param {string} previousVersion The version of TabMerger prior to the update
  * @param {string} currentVersion The version of TabMerger after the update
- * @returns {Array.<HTMLDivElement, {toastId: string, autoClose: boolean}>}
+ * @returns {Toast} A toast message indicating that there is an issue and how to resolve it.
  */
 export const UPDATE_TOAST: Function = (previousVersion: string, currentVersion: string): Toast => [
   <div className="text-left">
     TabMerger was updated from <b>v{previousVersion}</b> to <b>v{currentVersion}</b>!
-    <br />
-    <br />
-    The current version contains paid subscription tiers, so as a token of appreciation to existing users, we provide a{" "}
-    <u>2 week free trial</u> of the <b>Standard Tier</b> 🤗. <br />
-    <br />
-    If you do not plan on continuing with a{" "}
-    <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
-      subscription
-    </a>{" "}
-    after these two weeks, we recommend performing the necessary backup actions, namely using the global{" "}
-    <b>Export JSON</b> button, as some features/actions are not available for all subscription tiers. <br />
-    <br />
-    You can use the following credentials to activate the subscription:
-    <br />
-    <br />
-    <b>Email</b>: tabmerger@email.com
-    <br />
-    <b>Password</b>: secure_password!
-    <br />
-    <br /> Make sure you note down these values prior to closing this notification!
-    <br />
-    <br /> Cheers 🥂
   </div>,
   { toastId: "update_toast", autoClose: false, position: "top-right" },
 ];
@@ -452,7 +553,12 @@ export interface DialogConstantReturn {
   reject_btn_text: string | null;
 }
 
-export const OPEN_ALL_DIALOG: Function = (element: HTMLElement): DialogConstantReturn => ({
+/**
+ * When the user presses the global Open All button
+ * @param {HTMLButtonElement} element the button that was pressed (needed to set attribute of response)
+ * @returns {DialogConstantReturn} Confirmation request to perform the given action
+ */
+export const OPEN_ALL_DIALOG: Function = (element: HTMLButtonElement): DialogConstantReturn => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
@@ -468,11 +574,11 @@ export const OPEN_ALL_DIALOG: Function = (element: HTMLElement): DialogConstantR
 });
 
 /**
- * @constant {Function} DELETE_ALL_DIALOG
- * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
- * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
+ * When the user presses the global Delete All button
+ * @param {HTMLButtonElement} element the button that was pressed (needed to set attribute of response)
+ * @returns {DialogConstantReturn} Confirmation request to perform the given action
  */
-export const DELETE_ALL_DIALOG: Function = (element: HTMLElement): DialogConstantReturn => ({
+export const DELETE_ALL_DIALOG: Function = (element: HTMLButtonElement): DialogConstantReturn => ({
   element,
   show: true,
   title: "✔ TabMerger Confirmation Request ❌",
@@ -491,11 +597,11 @@ export const DELETE_ALL_DIALOG: Function = (element: HTMLElement): DialogConstan
 });
 
 /**
- * @constant {Function} RESET_TUTORIAL_CHOICE_DIALOG
- * @param {HTMLElement} element the button that was pressed (needed to set attribute of response)
- * @returns {Object.<HTMLElement, boolean, string, HTMLDivElement, string, string>}
+ * When the user clicks on the global Need Help button.
+ * @param {HTMLButtonElement} element the button that was pressed (needed to set attribute of response)
+ * @returns {DialogConstantReturn} A navigation proposal (tutorial or official homepage) that the user can select from
  */
-export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLElement): DialogConstantReturn => ({
+export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLButtonElement): DialogConstantReturn => ({
   element,
   show: true,
   title: "✋ TabMerger Question ❔",
@@ -512,6 +618,12 @@ export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLElement): Di
   reject_btn_text: "GO TO SITE",
 });
 
+/**
+ * Stores the user's credentials in TabMerger for later verification of their subscription.
+ * @param {setStateType<userType>} setUser For updating the user's credential information
+ * @param {setStateType<DialogProps>} setDialog For re-rendering the dialog message
+ * @returns {DialogConstantReturn} A form that can be filled out by the user to provide their credentials
+ */
 export const SET_USER_STATUS_DIALOG: Function = (
   setUser: setStateType<userType>,
   setDialog: setStateType<DialogProps>

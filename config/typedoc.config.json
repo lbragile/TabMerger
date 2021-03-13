@@ -1,0 +1,19 @@
+{
+  "out": "docs",
+  "entryPoints": [
+    "src/components/App",
+    "src/components/Group",
+    "src/components/Tab",
+    "public/background",
+    "public/settings",
+    "src/constants"
+  ],
+  "exclude": ["src/components/**/*.tsx", "public/background/background.js", "public/settings/settings.js"],
+  "name": "TabMerger",
+  "includeVersion": true,
+  "hideGenerator": true,
+  "media": "./public/images/",
+  "excludeProtected": true,
+  "excludePrivate": true,
+  "excludeInternal": true
+}

@@ -26,6 +26,9 @@ import Tour from "reactour";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import Tab from "../Tab/Tab";
+import Group from "../Group/Group";
+
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
 import * as CONSTANTS from "../../constants/constants";
@@ -119,10 +122,36 @@ export default function App() {
   // only re-render groups when they change
   const memoizedGroupFormation = useMemo(
     () =>
-      AppFunc.groupFormation(groups, {
-        fontFamily: textStyles.current.fontFamily,
-        fontWeight: textStyles.current.fontWeight,
-      }),
+      groups &&
+      AppHelper.sortByKey(JSON.parse(groups)).map(
+        (x, i): JSX.Element => {
+          const id = "group-" + i;
+          const textColor = x.color > CONSTANTS.GROUP_COLOR_THRESHOLD ? "primary" : "light";
+          return (
+            <Group
+              id={id}
+              title={x.title || x.name || CONSTANTS.DEFAULT_GROUP_TITLE}
+              textColor={textColor}
+              color={x.color || CONSTANTS.DEFAULT_GROUP_COLOR}
+              created={x.created || AppHelper.getTimestamp()}
+              num_tabs={(x.tabs && x.tabs.length) || 0}
+              hidden={x.hidden}
+              locked={x.locked}
+              starred={x.starred}
+              fontFamily={textStyles.current.fontFamily}
+              key={Math.random()}
+            >
+              <Tab
+                id={id}
+                hidden={x.hidden}
+                textColor={textColor}
+                fontWeight={textStyles.current.fontWeight}
+                fontFamily={textStyles.current.fontFamily}
+              />
+            </Group>
+          );
+        }
+      ),
     [groups]
   );
 
@@ -197,7 +226,6 @@ export default function App() {
 
       {/* @ts-ignore */}
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
-        {/* @ts-ignore */}
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {memoizedGroupFormation}
         </div>

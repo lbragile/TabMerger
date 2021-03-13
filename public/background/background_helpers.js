@@ -22,7 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
- * @module __Script/Background_helpers
+ * @module Background/Background_helpers
 
  */
 

@@ -22,7 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
- * @module __Script/Background_functions
+ * @module Background/Background_functions
  */
 
 import { filterTabs, findExtTabAndSwitch, excludeSite } from "./background_helpers.js";

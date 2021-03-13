@@ -22,7 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 /**
- * @module __Script/Settings_functions
+ * @module Settings/Settings_functions
  */
 
 import { setTabMergerLink, setSync } from "./settings_helpers.js";
