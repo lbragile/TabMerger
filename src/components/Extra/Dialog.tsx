@@ -1,8 +1,8 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-import { DialogConstantReturn } from "../../constants/constants";
+import { DialogConstantReturn } from "../../typings/common";
+import { setStateType } from "../../typings/common";
 
-export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
 export interface DialogProps extends DialogConstantReturn {
   setDialog: setStateType<{ show: boolean }>;
 }

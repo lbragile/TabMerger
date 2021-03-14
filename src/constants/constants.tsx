@@ -29,20 +29,20 @@ import React from "react";
 import { getTimestamp } from "../components/App/App_helpers";
 import { storeUserDetailsPriorToCheck } from "../components/App/App_functions";
 import { DialogProps } from "../components/Extra/Dialog";
-import { userType } from "../components/Group/Group_functions";
+
+import {
+  setStateType,
+  Toast,
+  userType,
+  TierOptions,
+  FontStyle,
+  BadgeIconColors,
+  DefaultGroup,
+  DefaultSettings,
+  DialogConstantReturn,
+} from "../typings/common";
 
 /* USER TIER INFORMATION */
-
-export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
-
-export interface TierOptions {
-  [key: string]: {
-    readonly NUM_TAB_LIMIT: number;
-    readonly NUM_GROUP_LIMIT: number;
-    readonly NUM_UNDO_STATES: number;
-  };
-}
-
 /**
  * Subscription based limits on specific features
  * @default
@@ -95,9 +95,6 @@ export const USER: TierOptions = {
 };
 
 /* TAB FONT STYLES */
-export interface FontStyle {
-  [key: string]: string;
-}
 /**
  * Allows the font of all text in TabMerger to be changed to a list of predefined fonts.
  * @default
@@ -173,10 +170,6 @@ export const GROUP_COLOR_THRESHOLD: string = "#777777";
  */
 export const BADGE_ICON_STEP_SIZE: number = 25;
 
-export interface BadgeIconColors {
-  [key: string]: string;
-}
-
 /**
  * These are the background colors of the text shown on the extension icon
  * @default
@@ -217,16 +210,6 @@ export const SYNC_STORAGE_LIMIT: number = process.env.REACT_APP_PRODUCTION ? 102
 export const TITLE_TRIM_LIMIT: number = 50;
 
 /* DEFAULT GROUP & SETTINGS */
-export interface DefaultGroup {
-  color: string;
-  created: string;
-  hidden: boolean;
-  locked: boolean;
-  starred: boolean;
-  tabs: object[];
-  title: string;
-  name?: string;
-}
 
 export const DEFAULT_GROUP: DefaultGroup = {
   color: DEFAULT_GROUP_COLOR,
@@ -286,28 +269,7 @@ export const RANDOM_COLOR_LIST: string[] = [
 /**
  * The frequency of JSON backup operations
  * @default 0 (disabled) */
-export const DEFAULT_BACKUP_PERIOD_IN_MINUTES = 0;
-
-export interface DefaultSettings {
-  badgeInfo: boolean;
-  blacklist: string;
-  color: string;
-  dark: boolean;
-  fileLimitBackup: number;
-  font: string;
-  merge: true;
-  open: true;
-  periodBackup: number;
-  pin: boolean;
-  randomizeColor: boolean;
-  relativePathBackup: string;
-  restore: boolean;
-  saveAsVisibility: boolean;
-  syncPeriodBackup: number;
-  title: string;
-  tooltipVisibility: boolean;
-  weight: string;
-}
+export const DEFAULT_BACKUP_PERIOD_IN_MINUTES: number = 0;
 
 export const DEFAULT_SETTINGS: DefaultSettings = {
   badgeInfo: true,
@@ -343,12 +305,6 @@ export const USER_STATUS_URL: string = process.env.REACT_APP_PRODUCTION ? "https
 export const SUBSCRIPTION_URL: string = process.env.REACT_APP_PRODUCTION ? "https://lbragile.github.io/TabMerger-Extension/pricing" : "http://localhost:3000/TabMerger-Extension/pricing"; // prettier-ignore
 
 /* TOASTS */
-export interface ToastId {
-  toastId: string;
-  [key: string]: string | boolean;
-}
-
-export type Toast = [JSX.Element, ToastId];
 
 /**
  * Whenever a user's subscription does not allow them to use a given feature.
@@ -410,7 +366,7 @@ export const CHECK_MERGING_TOAST: Function = (tier: string): Toast => [
 
 /**
  * Shown when the user's group limit will be exceeded if the action is allowed.
- * @param {Number} NUM_GROUP_LIMIT number of groups that the user can make (based on subscription)
+ * @param {number} NUM_GROUP_LIMIT number of groups that the user can make (based on subscription)
  * @returns {Toast} A toast message indicating that there is an issue and how to resolve it.
  */
 export const ADD_GROUP_TOAST: Function = (NUM_GROUP_LIMIT: number): Toast => [
@@ -544,15 +500,6 @@ export const UPDATE_TOAST: Function = (previousVersion: string, currentVersion: 
 ];
 
 /* MODAL DIALOG */
-export interface DialogConstantReturn {
-  element: HTMLElement | null;
-  show: boolean;
-  title: string;
-  msg: JSX.Element;
-  accept_btn_text: string | null;
-  reject_btn_text: string | null;
-}
-
 /**
  * When the user presses the global Open All button
  * @param {HTMLButtonElement} element the button that was pressed (needed to set attribute of response)

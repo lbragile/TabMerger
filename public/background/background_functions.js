@@ -35,9 +35,9 @@ var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
  */
 export function handleBrowserIconClick() {
   chrome.storage.sync.get("settings", async (sync) => {
-    await findExtTabAndSwitch();
+    await findExtTabAndSwitch(false);
     if (!sync.settings.open) {
-      await filterTabs(info, tab);
+      filterTabs(info, tab);
     }
   });
 }
@@ -48,22 +48,18 @@ export function handleBrowserIconClick() {
  * @param {{msg: string, id: string}} request Contains information regarding
  * which way to merge and the calling tab's id
  */
-export async function extensionMessage(request) {
+export function extensionMessage(request) {
   var queryOpts = { currentWindow: true, active: true };
   info.which = request.msg;
 
-  var tab = await new Promise((resolve) => {
-    chrome.tabs.query(queryOpts, (tabs) => resolve(tabs[0]));
-  });
-
-  await filterTabs(info, tab, request.id);
+  chrome.tabs.query(queryOpts, (tabs) => filterTabs(info, tabs[0], request.id));
 }
 
 /**
  * Helper function for creating a contextMenu (right click) item.
  * @param {string} id unique value for locating each contextMenu item added
  * @param {string} title the contextMenu's item title
- * @param {string} type "separator" or "normal" (default)
+ * @param {"separator" | "normal"} type The type of contextMenu item to use "separator" or "normal" (default)
  */
 export function createContextMenu(id, title, type) {
   chrome.contextMenus.create({ id, title, type });
@@ -85,27 +81,27 @@ export async function contextMenuOrShortCut(info, tab) {
 
   switch (info.menuItemId || info.command) {
     case "aopen-tabmerger":
-      await findExtTabAndSwitch();
+      await findExtTabAndSwitch(false);
       break;
     case "merge-left-menu":
       info.which = "left";
-      await findExtTabAndSwitch();
-      await filterTabs(info, tab);
+      await findExtTabAndSwitch(false);
+      filterTabs(info, tab, null);
       break;
     case "merge-right-menu":
       info.which = "right";
-      await findExtTabAndSwitch();
-      await filterTabs(info, tab);
+      await findExtTabAndSwitch(false);
+      filterTabs(info, tab, null);
       break;
     case "merge-xcluding-menu":
       info.which = "excluding";
-      await findExtTabAndSwitch();
-      await filterTabs(info, tab);
+      await findExtTabAndSwitch(false);
+      filterTabs(info, tab, null);
       break;
     case "merge-snly-menu":
       info.which = "only";
-      await findExtTabAndSwitch();
-      await filterTabs(info, tab);
+      await findExtTabAndSwitch(false);
+      filterTabs(info, tab, null);
       break;
     case "remove-visibility":
       excludeSite(tab);
@@ -121,8 +117,8 @@ export async function contextMenuOrShortCut(info, tab) {
 
     default:
       info.which = "all";
-      await findExtTabAndSwitch();
-      await filterTabs(info, tab);
+      await findExtTabAndSwitch(false);
+      filterTabs(info, tab, null);
       break;
   }
 }

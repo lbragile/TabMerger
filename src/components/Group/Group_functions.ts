@@ -32,10 +32,7 @@ import * as CONSTANTS from "../../constants/constants";
 import { getTimestamp, getTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
 import { translate } from "../App/App_functions";
 
-import { DefaultGroup } from "../../constants/constants";
-
-export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
-export type userType = { paid: string | boolean; tier: string };
+import { setStateType, userType, DefaultGroup } from "../../typings/common";
 
 /**
  * Sets the background color of each group according to what the user chose.
@@ -54,22 +51,19 @@ export function setBGColor(e: React.ChangeEvent<HTMLInputElement> | HTMLInputEle
   const threshold_passed = color > CONSTANTS.GROUP_COLOR_THRESHOLD;
   const adjusted_text_color = threshold_passed ? "black" : "white";
   [...target.parentNode.children].forEach((child) => {
-    /* @ts-ignore */
-    child.style.background = color;
+    (child as HTMLElement).style.background = color;
     child.querySelectorAll("* :not(.created, datalist, option, path, ellipse, g, defs, b, span, p)").forEach((x) => {
       if (x.classList.contains("a-tab")) {
         x.classList.remove("text-primary");
         x.classList.remove("text-light");
         x.classList.add("text-" + (threshold_passed ? "primary" : "light"));
       } else {
-        /* @ts-ignore */
-        x.style.color = adjusted_text_color;
+        (x as HTMLElement).style.color = adjusted_text_color;
       }
     });
 
     if (child.classList.contains("group-title")) {
-      /* @ts-ignore */
-      child.style.borderBottom = "1px dashed " + adjusted_text_color;
+      (child as HTMLElement).style.borderBottom = "1px dashed " + adjusted_text_color;
     }
   });
 
@@ -96,15 +90,15 @@ export function updateTextColor(setGroups: setStateType<string>) {
 
 /**
  * Sets the title of a given group in order for it to persist across reloads.
- * @param {React.FocusEvent<HTMLInputElement>} e The group node whose title was changed
+ * @param {React.FocusEvent<HTMLElement>} e The group node whose title was changed
  */
-export function setTitle(e: React.FocusEvent<HTMLInputElement>) {
+export function setTitle(e: React.FocusEvent<HTMLElement>) {
   chrome.storage.local.get("groups", (local) => {
+    const target = e.target as HTMLInputElement;
     const scroll = document.documentElement.scrollTop;
-    /* @ts-ignore */
-    var group_id = e.target.closest(".group-title").nextSibling.id;
+    var group_id = (target.closest(".group-title").nextSibling as HTMLDivElement).id;
     var groups = local.groups;
-    groups[group_id].title = e.target.value;
+    groups[group_id].title = target.value;
 
     chrome.storage.local.set({ groups, scroll }, () => {});
   });
@@ -115,9 +109,8 @@ export function setTitle(e: React.FocusEvent<HTMLInputElement>) {
  * @param {React.KeyboardEvent<HTMLInputElement>} e Node corresponding to the group whose title is being changed
  */
 export function blurOnEnter(e: React.KeyboardEvent<HTMLInputElement>) {
-  if (e.keyCode === 13) {
-    /* @ts-ignore */
-    e.target.blur();
+  if (e.code === "Enter") {
+    (e.target as HTMLInputElement).blur();
   }
 }
 
@@ -256,8 +249,7 @@ export function deleteGroup(
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     chrome.storage.sync.get("settings", (sync) => {
       const scroll = document.documentElement.scrollTop;
-      /* @ts-ignore */
-      var target: { id: string } = (e.target as HTMLParagraphElement).closest(".group-title").nextSibling;
+      var target: { id: string } = (e.target as HTMLParagraphElement).closest(".group-title").nextSibling as HTMLDivElement; // prettier-ignore
 
       var { groups, groups_copy } = local;
       if (!groups[target.id].locked) {
@@ -305,17 +297,16 @@ export function deleteGroup(
  * reducing how much space the group takes up. Note that this is not persistent currently.
  * The user can also re-click the toggle button to expand the tabs of a collapsed group.
  *
- * @param {HTMLElement} e Node corresponding to the group that will be locked/unlocked.
+ * @param {MouseEvent} e Node corresponding to the group that will be locked/unlocked.
  * @param {"visibility"|"lock"|"star"} toggle_type Type of operation to perform on a group.
  * @param {setStateType<string>} setGroups For re-rendering the group's visible/hidden state
  */
 export function toggleGroup(
-  e: HTMLElement,
+  e: MouseEvent,
   toggle_type: "visibility" | "lock" | "star",
   setGroups: setStateType<string>
 ) {
-  /* @ts-ignore */
-  const id = e.target.closest(".group-title").nextSibling.id;
+  const id = ((e.target as HTMLElement).closest(".group-title").nextSibling as HTMLElement).id;
   var scroll = document.documentElement.scrollTop;
 
   chrome.storage.local.get("groups", (local) => {

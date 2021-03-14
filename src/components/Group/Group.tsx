@@ -87,8 +87,8 @@ export default function Group({
           maxLength={CONSTANTS.TITLE_TRIM_LIMIT}
           defaultValue={title}
           onFocus={(e) => e.target.select()}
-          onBlur={(e) => GroupFunc.setTitle(e)}
-          onKeyDown={(e) => GroupFunc.blurOnEnter(e)}
+          onBlur={(e: React.FocusEvent<HTMLElement>) => GroupFunc.setTitle(e)}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => GroupFunc.blurOnEnter(e)}
           onDragStart={(e) => e.preventDefault()}
           onDrop={(e) => e.preventDefault()}
         />

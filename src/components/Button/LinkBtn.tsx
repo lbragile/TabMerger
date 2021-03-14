@@ -1,8 +1,7 @@
 import React from "react";
 import Button from "./Button";
 import { DialogProps } from "../Extra/Dialog";
-
-export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
+import { setStateType } from "../../typings/common";
 
 export interface LinkBtnProps {
   text: string;

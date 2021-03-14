@@ -31,12 +31,11 @@ import * as CONSTANTS from "../../constants/constants";
 import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 import { toast } from "react-toastify";
 
-import { TabState } from "../Tab/Tab";
 import { DialogProps } from "../Extra/Dialog";
-import { userType } from "../Group/Group_functions";
 import { IChanges } from "./App";
-
-export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
+import { DefaultGroup, setStateType, Toast, userType } from "../../typings/common";
+import { TabState } from "../../typings/Tab";
+import { MouseEvent } from "react";
 
 /**
  * Allows the user to activate their subscription by providing their credentials.
@@ -92,12 +91,10 @@ export function syncLimitIndication(): void {
 
           // total sync (all groups + settings)
           if (JSON.stringify(groups).length + JSON.stringify(sync.settings).length > CONSTANTS.SYNC_STORAGE_LIMIT) {
-            /* @ts-ignore */
-            document.querySelector("#sync-text").style.border = "1px solid red";
+            (document.querySelector("#sync-text") as HTMLSpanElement).style.border = "1px solid red";
             disable_sync = true;
           } else {
-            /* @ts-ignore */
-            document.querySelector("#sync-text").style.border = "none";
+            (document.querySelector("#sync-text") as HTMLSpanElement).style.border = "none";
           }
 
           if (disable_sync) {
@@ -118,8 +115,7 @@ export function syncLimitIndication(): void {
  */
 export function toggleHiddenOrEmptyGroups(type: "before" | "after", user: userType): void {
   if (["Standard", "Premium"].includes(user.tier)) {
-    /* @ts-ignore */
-    document.querySelector("#sidebar").style.visibility = type === "before" ? "hidden" : "";
+    (document.querySelector("#sidebar") as HTMLDivElement).style.visibility = type === "before" ? "hidden" : "";
   }
 }
 
@@ -150,8 +146,8 @@ export function handleUpdate(): void {
     const previousVersion = local.ext_version;
     const currentVersion = process.env.REACT_APP_PRODUCTION ? chrome.runtime.getManifest().version : "1.0.0";
     if (previousVersion < currentVersion && currentVersion === "2.0.0") {
-      /* @ts-ignore */
-      toast(...CONSTANTS.UPDATE_TOAST(previousVersion, currentVersion));
+      const toast_contents: Toast = CONSTANTS.UPDATE_TOAST(previousVersion, currentVersion);
+      toast(toast_contents[0], toast_contents[1]);
     }
 
     chrome.storage.local.set({ ext_version: currentVersion }, () => {});
@@ -205,19 +201,18 @@ export function storageInit(
  * Choosing OK plays the tutorial, choosing Cancel navigates to the official homepage.
  * If a tutorial is replayed, the current configuration is not changed to avoid data loss!
  *
- * @param {HTMLButtonElement} e The help button which was clicked
+ * @param {MouseEvent} e The help button which was clicked
  * @param {string} url Link to TabMerger's official homepage
  * @param {setStateType<boolean>} setTour For re-rendering the tour
  * @param {setStateType<DialogProps>} setDialog For rendering a confirmation message
  */
 export function resetTutorialChoice(
-  e: HTMLButtonElement,
+  e: MouseEvent,
   url: string,
   setTour: setStateType<boolean>,
   setDialog: setStateType<DialogProps>
 ): void {
-  /* @ts-ignore */
-  var element = e.target.closest("#need-btn");
+  var element = (e.target as HTMLElement).closest("#need-btn") as HTMLButtonElement;
   AppHelper.elementMutationListener(element, (mutation) => {
     if (mutation.type === "attributes") {
       element.getAttribute("response") === "positive" ? setTour(true) : window.open(url, "_blank", "noreferrer");
@@ -271,20 +266,18 @@ export function badgeIconInfo(tabTotal:number, user: userType, STEP_SIZE: number
 
 /**
  * Updates the sync items - only those that have changes are overwritten
- * @param {HTMLElement} e Node representing the global sync write button
+ * @param {MouseEvent} e Node representing the global sync write button
  * @param {HTMLSpanElement} sync_node Node corresponding to the "Last Sync:" timestamp
  * @param {userType} user The user's subscription details
  */
-export function syncWrite(e: HTMLElement, sync_node: HTMLSpanElement, user: userType) {
+export function syncWrite(e: MouseEvent, sync_node: HTMLSpanElement, user: userType) {
   if (!user.paid) {
     toast(...CONSTANTS.SUBSCRIPTION_TOAST);
-    // @ts-ignore
-  } else if (e.target.closest("#sync-write-btn").classList.contains("disabled-btn")) {
+  } else if ((e.target as HTMLButtonElement).closest("#sync-write-btn").classList.contains("disabled-btn")) {
     toast(...CONSTANTS.SYNC_WRITE_TOAST);
   } else {
     chrome.storage.local.get("groups", async (local) => {
-      var groups = local.groups;
-      /* @ts-ignore */
+      var groups = local.groups as { [key: string]: DefaultGroup };
       if (Object.values(groups).some((val) => val.tabs.length > 0)) {
         for (var key of Object.keys(groups)) {
           await AppHelper.updateGroupItem(key, groups[key]);
@@ -332,17 +325,14 @@ export function syncRead(
       if (sync["group-0"]) {
         delete sync.settings;
         chrome.storage.local.remove(["groups"], () => {
-          var new_ls = {};
-          /* @ts-ignore */
-          var remove_keys = [];
+          var new_ls: { [key: string]: DefaultGroup } = {};
+          var remove_keys: string[] = [];
           Object.keys(sync).forEach((key) => {
-            /* @ts-ignore */
             new_ls[key] = sync[key];
             remove_keys.push(key);
           });
 
           chrome.storage.local.set({ groups: new_ls, scroll: document.documentElement.scrollTop }, () => {
-            /* @ts-ignore */
             chrome.storage.sync.remove(remove_keys, () => {
               AppHelper.toggleSyncTimestamp(false, sync_node);
               setGroups(JSON.stringify(new_ls));
@@ -380,26 +370,24 @@ export function openOrRemoveTabs(
         var group_id = changes.remove.newValue[0];
         changes.remove.newValue.splice(0, 1);
 
-        var tabs: TabState;
+        var tabs: TabState[];
         if (group_id) {
           tabs = groups[group_id].tabs;
         } else {
-          /* @ts-ignore */
-          Object.values(groups).forEach((x) => (tabs = tabs ? [...tabs, ...x.tabs] : [...x.tabs]));
+          (Object.values(groups) as DefaultGroup[]).forEach((x) => {
+            tabs = (tabs ? [...tabs, ...x.tabs] : [...x.tabs]) as TabState[];
+          });
         }
 
         // try to not open tabs if it is already open
         chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
           for (var i = 0; i < changes.remove.newValue.length; i++) {
-            const tab_url = changes.remove.newValue[i];
+            const tab_url: string = changes.remove.newValue[i];
             /* @ts-ignore */
             const same_tab = AppHelper.findSameTab(windowTabs, tab_url);
-            /* @ts-ignore */
-            if (same_tab[0] && !same_tab.pinned) {
-              /* @ts-ignore */
+            if (same_tab[0] && !same_tab[0].pinned) {
               chrome.tabs.move(same_tab[0].id, { index: -1 });
             } else {
-              /* @ts-ignore */
               const tab_obj = tabs.filter((x) => x.url === tab_url)[0];
               chrome.tabs.create({ pinned: tab_obj.pinned, url: tab_obj.url, active: false }, () => {});
             }
@@ -408,7 +396,6 @@ export function openOrRemoveTabs(
           if (!sync.settings.restore) {
             if (group_id) {
               if (!groups[group_id].locked) {
-                /* @ts-ignore */
                 groups[group_id].tabs = tabs.filter((x) => !changes.remove.newValue.includes(x.url));
               }
             } else {
@@ -483,8 +470,7 @@ export function checkMerging(
 
           // close tabs that are being merged (if settings is set to do so)
           if (sync.settings.merge) {
-            /* @ts-ignore */
-            chrome.tabs.remove(merged_tabs.map((x) => x.id));
+            chrome.tabs.remove(merged_tabs.map((x: TabState): number => x.id));
           }
 
           const new_tabs = [...groups[into_group].tabs, ...merged_tabs];
@@ -495,8 +481,8 @@ export function checkMerging(
             setGroups(JSON.stringify(groups));
           });
         } else {
-          /* @ts-ignore */
-          toast(...CONSTANTS.CHECK_MERGING_TOAST(client_details?.tier ?? "Free"));
+          const toast_contents = CONSTANTS.CHECK_MERGING_TOAST(client_details?.tier ?? "Free");
+          toast(toast_contents[0], toast_contents[1]);
         }
 
         // remove to be able to detect changes again (even for same tabs)
@@ -540,8 +526,8 @@ export function addGroup(setGroups: setStateType<string>): void {
         chrome.storage.local.set({ groups, scroll }, () => setGroups(JSON.stringify(groups)));
       });
     } else {
-      /* @ts-ignore */
-      toast(...CONSTANTS.ADD_GROUP_TOAST(NUM_GROUP_LIMIT));
+      const toast_contents = CONSTANTS.ADD_GROUP_TOAST(NUM_GROUP_LIMIT);
+      toast(toast_contents[0], toast_contents[1]);
     }
   });
 }
@@ -550,16 +536,14 @@ export function addGroup(setGroups: setStateType<string>): void {
  * Sets Chrome's local storage with an array ([null, ... url_links ...]) consisting
  * of all the tabs in TabMerger to consider for removal.
  *
- * @param {HTMLElement} e Representing the Open All button
+ * @param {MouseEvent} e Representing the Open All button
  * @param {setStateType<DialogProps>} setDialog For rendering a warning/error message
  */
-export function openAllTabs(e: HTMLElement, setDialog: setStateType<DialogProps>): void {
-  /* @ts-ignore */
-  var element = e.target.closest("#open-all-btn");
+export function openAllTabs(e: MouseEvent, setDialog: setStateType<DialogProps>): void {
+  var element = (e.target as HTMLElement).closest("#open-all-btn") as HTMLButtonElement;
   AppHelper.elementMutationListener(element, (mutation) => {
     if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
-      /* @ts-ignore */
-      var tab_links = [...document.querySelectorAll(".a-tab")].map((x) => x.href);
+      var tab_links = ([...document.querySelectorAll(".a-tab")] as HTMLAnchorElement[]).map((x) => x.href);
       tab_links.unshift(null);
       chrome.storage.local.set({ remove: tab_links }, () => {});
     }
@@ -573,22 +557,21 @@ export function openAllTabs(e: HTMLElement, setDialog: setStateType<DialogProps>
  * A default group is formed above all locked groups to allow for re-merging after deletion.
  * The default group has title & color matching settings parameter and a creation timestamp.
  *
- * @param {HTMLElement} e Button corresponding to the delete all operation
+ * @param {MouseEvent} e Button corresponding to the delete all operation
  * @param {setStateType<number>} setTabTotal For re-rendering the total tab counter
  * @param {setStateType<string>} setGroups For re-rendering the groups
  * @param {setStateType<DialogProps>} setDialog For rendering the confirmation dialog
  */
 export function deleteAllGroups(
-  e: HTMLElement,
+  e: MouseEvent,
   user: userType,
   setTabTotal: setStateType<number>,
   setGroups: setStateType<string>,
   setDialog: setStateType<DialogProps>
 ): void {
   const scroll = document.documentElement.scrollTop;
-  /* @ts-ignore */
-  var element = e.target.closest("#delete-all-btn");
-  AppHelper.elementMutationListener(element as HTMLButtonElement, (mutation) => {
+  var element = (e.target as HTMLElement).closest("#delete-all-btn") as HTMLButtonElement;
+  AppHelper.elementMutationListener(element, (mutation) => {
     if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
       chrome.storage.local.get(["groups", "groups_copy"], (local) => {
         chrome.storage.sync.get("settings", (sync) => {
@@ -673,9 +656,8 @@ export function dragOver(e: React.DragEvent<HTMLDivElement>, type: "tab" | "grou
   const currentElement = document.querySelector(type === "group" ? ".dragging-group" : ".dragging");
   if (currentElement) {
     e.preventDefault();
-    var group_block = (e.target as HTMLElement).closest(".group");
-    var location = type === "group" ? (e.target as HTMLElement).closest("#tabmerger-container") : group_block.querySelector(".tabs-container"); // prettier-ignore
-    /* @ts-ignore */
+    var group_block: HTMLDivElement = (e.target as HTMLElement).closest(".group");
+    var location: HTMLDivElement = type === "group" ? (e.target as HTMLElement).closest("#tabmerger-container") : group_block.querySelector(".tabs-container"); // prettier-ignore
     const afterElement = AppHelper.getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
     !afterElement ? location?.appendChild(currentElement) : location?.insertBefore(currentElement, afterElement);
 
@@ -704,18 +686,17 @@ export function regexSearchForTab(e: React.ChangeEvent<HTMLInputElement>, user: 
   if (user && !user.paid) {
     toast(...CONSTANTS.SUBSCRIPTION_TOAST);
   } else {
-    var sections = document.querySelectorAll(".group-item");
-    var tab_items = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
+    var sections: NodeListOf<HTMLDivElement> = document.querySelectorAll(".group-item");
+    /* @ts-ignore */
+    var tab_items: HTMLDivElement[][] = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
     var titles: string[] | string[][], match: string;
     if (e.target.value === "") {
-      /* @ts-ignore */
       sections.forEach((section) => (section.style.display = ""));
     } else if (e.target.value.match(/^[#@]/)) {
       // GROUP
       titles = [...sections].map((x) => (x.querySelector(".title-edit-input") as HTMLInputElement).value);
       match = e.target.value.substr(1).toLowerCase();
-      /* @ts-ignore */
       titles.forEach((x, i) => (sections[i].style.display = x.toLowerCase().indexOf(match) === -1 ? "none" : ""));
     } else {
       // TAB
@@ -724,13 +705,10 @@ export function regexSearchForTab(e: React.ChangeEvent<HTMLInputElement>, user: 
 
       titles.forEach((title, i) => {
         if (title.some((x) => x.indexOf(match) !== -1)) {
-          /* @ts-ignore */
           sections[i].style.display = "";
-          /* @ts-ignore */
           title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
         } else {
           // no need to hide tabs if group is hidden
-          /* @ts-ignore */
           sections[i].style.display = "none";
         }
       });
@@ -840,8 +818,7 @@ export function importJSON(
       var reader = new FileReader();
       reader.readAsText(e.target.files[0]);
       reader.onload = () => {
-        /* @ts-ignore */
-        var fileContent = JSON.parse(reader.result);
+        var fileContent = JSON.parse(reader.result as string);
 
         chrome.storage.sync.set({ settings: fileContent.settings }, () => {
           delete fileContent.settings;

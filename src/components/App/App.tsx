@@ -32,7 +32,7 @@ import Group from "../Group/Group";
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
 import * as CONSTANTS from "../../constants/constants";
-import { userType } from "../Group/Group_functions";
+import { userType } from "../../typings/common";
 
 import GlobalBtns from "../Button/GlobalBtns";
 import Header from "../Extra/Header";

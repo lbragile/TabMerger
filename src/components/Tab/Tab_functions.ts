@@ -25,11 +25,13 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Tab/Tab_functions
  */
 
-import { getTabTotal, storeDestructiveAction } from "../App/App_helpers";
-import { toast } from "react-toastify";
-import * as CONSTANTS from "../../constants/constants";
-import { TabState } from "./Tab";
 import React from "react";
+import { toast } from "react-toastify";
+
+import * as CONSTANTS from "../../constants/constants";
+import { getTabTotal, storeDestructiveAction } from "../App/App_helpers";
+import { setStateType, userType } from "../../typings/common";
+import { TabState } from "../../typings/Tab";
 
 /**
  * Sets the initial tabs based on Chrome's local storage upon initial render.
@@ -37,7 +39,7 @@ import React from "react";
  * @param {Function} setTabs For re-rendering the group's tabs
  * @param {string} id Used to get the correct group tabs
  */
-export function setInitTabs(setTabs: React.Dispatch<React.SetStateAction<TabState[]>>, id: string): void {
+export function setInitTabs(setTabs: setStateType<TabState[]>, id: string): void {
   chrome.storage.local.get("groups", (local) => {
     setTabs((local.groups && local.groups[id]?.tabs) || []);
   });
@@ -61,10 +63,7 @@ export function tabDragStart(e: React.DragEvent<HTMLDivElement>): void {
  * @param {DragEvent<HTMLDivElement>} e  The dragged tab
  * @param {Function} setGroups For re-rendering the groups
  */
-export function tabDragEnd(
-  e: React.DragEvent<HTMLDivElement>,
-  setGroups: React.Dispatch<React.SetStateAction<string>>
-): void {
+export function tabDragEnd(e: React.DragEvent<HTMLDivElement>, setGroups: setStateType<string>): void {
   e.stopPropagation();
   var target = e.target as HTMLDivElement;
 
@@ -107,10 +106,10 @@ export function tabDragEnd(
 export function removeTab(
   e: React.MouseEvent<HTMLParagraphElement, MouseEvent>,
   tabs: TabState[],
-  user: { tier: string; paid: string | boolean },
-  setTabs: React.Dispatch<React.SetStateAction<TabState[]>>,
-  setTabTotal: React.Dispatch<React.SetStateAction<number>>,
-  setGroups: React.Dispatch<React.SetStateAction<string>>
+  user: userType,
+  setTabs: setStateType<TabState[]>,
+  setTabTotal: setStateType<number>,
+  setGroups: setStateType<string>
 ): void {
   const tab = (e.target as HTMLParagraphElement).closest(".draggable");
   const url = tab.querySelector("a").href;
@@ -161,16 +160,14 @@ export function handleTabClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent
 
 /**
  * Updates the local storage with the new title of the tab for the correct group.
- * @param {React.KeyboardEvent<HTMLAnchorElement> | React.FocusEvent<HTMLAnchorElement>} e Node representing the tab that was clicked
+ * @param {React.KeyboardEvent | React.FocusEvent} e Node representing the tab that was clicked
  */
-export function handleTabTitleChange(
-  e: React.KeyboardEvent<HTMLAnchorElement> | React.FocusEvent<HTMLAnchorElement>
-): void {
+export function handleTabTitleChange(e: React.KeyboardEvent | React.FocusEvent): void {
   var target = e.target as HTMLAnchorElement;
   target.classList.remove("edit-tab-title");
 
   /* @ts-ignore */
-  if (e.which === 13 || e.keyCode === 13) {
+  if (e instanceof FocusEvent || /*e instanceof KeyboardEvent &&*/ e.code === "Enter") {
     e.preventDefault();
   } else {
     const group_id = target.closest(".group").id;
@@ -202,14 +199,13 @@ export function handleTabTitleChange(
  */
 export function handlePinClick(
   e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-  setGroups: React.Dispatch<React.SetStateAction<string>>
+  setGroups: setStateType<string>
 ): void {
   var target = e.target as HTMLSpanElement;
   target.closest(".pin-tab svg").classList.toggle("pinned");
 
   const id = target.closest(".group").id;
-  // @ts-ignore
-  const url = target.closest(".pin-tab").previousSibling.href;
+  const url = (target.closest(".pin-tab").previousSibling as HTMLAnchorElement).href;
 
   chrome.storage.local.get("groups", (local) => {
     const scroll = document.documentElement.scrollTop;

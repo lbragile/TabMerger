@@ -1,12 +1,13 @@
 import React from "react";
 import { BiImport } from "react-icons/bi";
+import { userType, setStateType } from "../../typings/common";
 
 import { translate, importJSON } from "../App/App_functions";
 
 export interface ImportBtnProps {
-  user: { paid: string | boolean; tier: string };
-  setTabTotal: React.Dispatch<React.SetStateAction<number>>;
-  setGroups: React.Dispatch<React.SetStateAction<string>>;
+  user: userType;
+  setTabTotal: setStateType<number>;
+  setGroups: setStateType<string>;
 }
 
 export default function ImportBtn({ user, setGroups, setTabTotal }: ImportBtnProps): JSX.Element {

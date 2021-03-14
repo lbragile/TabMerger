@@ -270,7 +270,6 @@ describe("handleTabTitleChange", () => {
   const url = "https://stackoverflow.com/";
 
   var stub;
-
   beforeEach(() => {
     stub = {
       preventDefault: jest.fn(),
@@ -280,19 +279,15 @@ describe("handleTabTitleChange", () => {
         textContent: "AAA",
         classList: { remove: jest.fn() },
       },
-      which: 0,
-      keyCode: 0,
+      detail: 0,
+      code: 0,
     };
   });
 
-  it.each([["which"], ["keycode"]])("does nothing if enter is pressed - %s === 13", (type) => {
-    if (type === "which") {
-      stub.which = 13;
-    } else {
-      stub.keyCode = 13;
-    }
-
+  it("does nothing if enter is pressed", () => {
+    stub.code = "Enter";
     jest.clearAllMocks();
+
     TabFunc.handleTabTitleChange(stub);
 
     expect(stub.preventDefault).toHaveBeenCalledTimes(1);

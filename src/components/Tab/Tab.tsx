@@ -21,7 +21,7 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import { useState, useEffect, useContext, CSSProperties } from "react";
+import React, { useState, useEffect, useContext, CSSProperties } from "react";
 
 import * as TabFunc from "./Tab_functions";
 import * as TabHelper from "./Tab_helpers";
@@ -30,22 +30,8 @@ import { AppContext } from "../../context/AppContext";
 import { BiGridSmall } from "react-icons/bi";
 import { RiPushpinLine, RiPushpinFill } from "react-icons/ri";
 import { TiDelete } from "react-icons/ti";
-
+import { TabComponentProps, TabState } from "../../typings/Tab";
 import "./Tab.css";
-
-export interface TabComponentProps {
-  id: string;
-  hidden: boolean;
-  textColor: string;
-  fontWeight: string;
-  fontFamily: string;
-}
-
-export interface TabState {
-  pinned: boolean;
-  title: string;
-  url: string;
-}
 
 export default function Tab({ id, hidden, textColor, fontWeight, fontFamily }: TabComponentProps): JSX.Element {
   const [tabs, setTabs] = useState<TabState[]>([]);
@@ -92,9 +78,9 @@ export default function Tab({ id, hidden, textColor, fontWeight, fontFamily }: T
                 contentEditable={true}
                 suppressContentEditableWarning={true}
                 spellCheck={false}
-                onMouseUp={(e) => TabFunc.handleTabClick(e)}
-                onKeyPress={(e) => TabFunc.handleTabTitleChange(e)}
-                onBlur={(e) => TabFunc.handleTabTitleChange(e)}
+                onMouseUp={(e: React.MouseEvent<HTMLAnchorElement>) => TabFunc.handleTabClick(e)}
+                onKeyPress={(e: React.KeyboardEvent) => TabFunc.handleTabTitleChange(e)}
+                onBlur={(e: React.FocusEvent) => TabFunc.handleTabTitleChange(e)}
                 onDrop={(e) => e.preventDefault()}
                 style={TabTitleStyle}
               >

@@ -4,6 +4,7 @@ import * as CONSTANTS from "../../constants/constants";
 import { translate, getTabMergerLink, resetTutorialChoice } from "../App/App_functions";
 import LinkBtn from "../Button/LinkBtn";
 import { DialogProps } from "./Dialog";
+import { setStateType } from "../../typings/common";
 
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { BiHelpCircle } from "react-icons/bi";
@@ -19,7 +20,7 @@ export interface ILinks {
   icon: JSX.Element;
 }
 
-const LINKS: Array<ILinks> = [
+const LINKS: ILinks[] = [
   { url: "https://lbragile.github.io/TabMerger-Extension/", text: translate("needHelp"), icon: <BiHelpCircle color="black" /> }, // prettier-ignore
   { url: "https://lbragile.github.io/TabMerger-Extension/contact", text: translate("bgContact"), icon: <BsChat color="black" /> }, // prettier-ignore
   { url: CONSTANTS.SUBSCRIPTION_URL, text: "Choose Plan", icon: <MdPayment color="black" size="1.5rem" />}, // prettier-ignore
@@ -31,8 +32,6 @@ const LINKS: Array<ILinks> = [
   { url: "https://stackoverflow.com/users/4298115/lbragile", text: "StackOverflow", icon: <FaStackOverflow color="black" /> }, // prettier-ignore
   { url: "https://www.reddit.com/user/lbragile_dev", text: "Reddit", icon: <FaReddit color="black" /> },
 ];
-
-export type setStateType<T> = React.Dispatch<React.SetStateAction<T>>;
 
 export default function Links({
   setTour,

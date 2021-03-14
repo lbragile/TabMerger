@@ -101,20 +101,21 @@ export function restoreOptions() {
 }
 
 /**
- *
- * @param {HTMLElement} e Node representing the "Save" button at the bottom of the settings page
+ * Shows the save confrimation state by changing the buttons color
+ * @param {MouseEvent} e On node representing the "Save" button at the bottom of the settings page
  */
 export function saveOptions(e) {
-  e.target.classList.replace("btn-primary", "btn-success");
-  e.target.innerText = "Saved";
-  e.target.disabled = true;
+  var target = e.target;
+  target.classList.replace("btn-primary", "btn-success");
+  target.innerText = "Saved";
+  target.disabled = true;
 
   setSync();
 
   setTimeout(() => {
-    e.target.classList.replace("btn-success", "btn-primary");
-    e.target.innerText = "Save";
-    e.target.disabled = false;
+    target.classList.replace("btn-success", "btn-primary");
+    target.innerText = "Save";
+    target.disabled = false;
   }, 1500);
 }
 

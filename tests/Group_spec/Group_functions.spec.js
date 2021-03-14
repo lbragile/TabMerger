@@ -186,13 +186,13 @@ describe("setTitle", () => {
 });
 
 describe("blurOnEnter", () => {
-  test.each([[13], [1]])("keycode === %s", (keyCode) => {
-    var stub = { target: { blur: jest.fn() }, keyCode };
+  test.each([["Enter"], ["Temp"]])("keycode === %s", (code) => {
+    var stub = { target: { blur: jest.fn() }, code };
     jest.clearAllMocks();
 
     GroupFunc.blurOnEnter(stub);
 
-    if (keyCode === 13) {
+    if (code === "Enter") {
       expect(stub.target.blur).toHaveBeenCalledTimes(1);
     } else {
       expect(stub.target.blur).not.toHaveBeenCalled();

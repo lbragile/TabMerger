@@ -13,7 +13,7 @@ export interface MergeButtons {
   icon: JSX.Element;
 }
 export default function MergeBtns({ id }: { id: string }): JSX.Element {
-  const MERGE_BUTTONS: Array<MergeButtons> = [
+  const MERGE_BUTTONS: MergeButtons[] = [
     {
       classes: "merge-btn btn-for-merging btn-outline-dark",
       translate: AppFunc.translate("mergeALLtabs"),

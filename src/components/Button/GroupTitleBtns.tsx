@@ -5,6 +5,7 @@ import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
 import * as GroupFunc from "../Group/Group_functions";
 import * as CONSTANTS from "../../constants/constants";
+import { userType, setStateType } from "../../typings/common";
 
 import { AiOutlineMinus, AiOutlineClose } from "react-icons/ai";
 import { BiColorFill, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
@@ -17,10 +18,10 @@ export interface GroupTitleBtnsProps {
   hidden: boolean;
   locked: boolean;
   starred: boolean;
-  user: { paid: string | boolean; tier: string };
+  user: userType;
   textColor: string;
-  setTabTotal: React.Dispatch<React.SetStateAction<number>>;
-  setGroups: React.Dispatch<React.SetStateAction<string>>;
+  setTabTotal: setStateType<number>;
+  setGroups: setStateType<string>;
 }
 
 export interface GroupTitleButtonsProps {
@@ -42,7 +43,7 @@ export default function GroupTitleBtns({
   setTabTotal,
   setGroups,
 }: GroupTitleBtnsProps): JSX.Element {
-  const GROUP_TITLE_BUTTONS: Array<GroupTitleButtonsProps> = [
+  const GROUP_TITLE_BUTTONS: GroupTitleButtonsProps[] = [
     {
       classes: "move-group-btn btn-in-group-title",
       translate: null,
@@ -56,6 +57,7 @@ export default function GroupTitleBtns({
       ) : (
         <BiLockOpen size="1.3rem" color={textColor === "primary" ? "black" : "white"} />
       ),
+      /* @ts-ignore */
       clickFn: (e) => GroupFunc.toggleGroup(e, "lock", setGroups),
     },
     {
@@ -66,6 +68,7 @@ export default function GroupTitleBtns({
       ) : (
         <BsStar size="1.1rem" color={textColor === "primary" ? "black" : "white"} />
       ),
+      /* @ts-ignore */
       clickFn: (e) => GroupFunc.toggleGroup(e, "star", setGroups),
     },
     {
@@ -79,6 +82,7 @@ export default function GroupTitleBtns({
     {
       classes: "visibility-group-btn btn-in-group-title",
       translate: AppFunc.translate(hidden ? "showTabs" : "hideTabs"),
+      /* @ts-ignore */
       clickFn: (e) => GroupFunc.toggleGroup(e, "visibility", setGroups),
       icon: <AiOutlineMinus color={textColor === "primary" ? "black" : "white"} />,
     },

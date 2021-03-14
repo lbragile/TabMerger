@@ -1,11 +1,12 @@
 import React from "react";
 
 import { translate, regexSearchForTab, resetSearch } from "../App/App_functions";
+import { userType } from "../../typings/common";
 
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";
 
-export default function TabSearch({ user }: { user: { paid: string | boolean; tier: string } }): JSX.Element {
+export default function TabSearch({ user }: { user: userType }): JSX.Element {
   return (
     <div className="input-group search-filter my-3 mx-auto" onDrop={(e) => e.preventDefault()}>
       <div className="input-group-prepend">

@@ -13,13 +13,14 @@ import { FiSettings } from "react-icons/fi";
 import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
+import { setStateType, userType } from "../../typings/common";
 
 export interface GlobalBtnsProps {
-  user: { paid: string | boolean; tier: string };
+  user: userType;
   syncTimestamp: { current: HTMLSpanElement };
-  setTabTotal: React.Dispatch<React.SetStateAction<number>>;
-  setGroups: React.Dispatch<React.SetStateAction<string>>;
-  setDialog: React.Dispatch<React.SetStateAction<DialogProps>>;
+  setTabTotal: setStateType<number>;
+  setGroups: setStateType<string>;
+  setDialog: setStateType<DialogProps>;
 }
 
 export default function GlobalBtns({
@@ -52,7 +53,7 @@ export default function GlobalBtns({
       id: "open-all-btn",
       classes: "mx-2",
       translate: AppFunc.translate("openAll"),
-      btnFn: (e: HTMLElement) => AppFunc.openAllTabs(e, setDialog),
+      btnFn: (e: React.MouseEvent) => AppFunc.openAllTabs(e, setDialog),
       icon: <GiExpand color="black" />,
     },
     {
@@ -66,7 +67,7 @@ export default function GlobalBtns({
       id: "sync-write-btn",
       classes: "mx-2",
       translate: AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("write"),
-      btnFn: (e: HTMLElement) => AppFunc.syncWrite(e, syncTimestamp.current, user),
+      btnFn: (e: React.MouseEvent) => AppFunc.syncWrite(e, syncTimestamp.current, user),
       icon: <BsCloudUpload color="black" size="1.5rem" />,
     },
     {
@@ -90,7 +91,7 @@ export default function GlobalBtns({
       id: "delete-all-btn",
       classes: "",
       translate: AppFunc.translate("deleteAll"),
-      btnFn: (e: HTMLElement) => AppFunc.deleteAllGroups(e, user, setTabTotal, setGroups, setDialog),
+      btnFn: (e: React.MouseEvent) => AppFunc.deleteAllGroups(e, user, setTabTotal, setGroups, setDialog),
       icon: <GrClear color="black" />,
     },
     {
@@ -122,27 +123,29 @@ export default function GlobalBtns({
         <b>{AppFunc.translate("sync").substr(0, 4)}:</b> <span ref={syncTimestamp}>--/--/---- @ --:--:--</span>
       </p>
 
-      {GLOBAL_BUTTONS.map((x, i) => {
-        return i !== 7 ? (
-          <React.Fragment key={Math.random()}>
-            <Button
-              id={x.id}
-              classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
-              translate={x.translate}
-              /* @ts-ignore */
-              onClick={x.btnFn}
-              key={Math.random()}
-              disabled={(!user.paid && [2, 3, 8].includes(i)) || (user.tier === "Basic" && i === 2)}
-              place={i > 4 ? "bottom" : "top"}
-            >
-              {x.icon}
-            </Button>
-            {i === 4 && <div />}
-          </React.Fragment>
-        ) : (
-          <ImportBtn user={user} setTabTotal={setTabTotal} setGroups={setGroups} key={Math.random()} />
-        );
-      })}
+      {GLOBAL_BUTTONS.map(
+        (x, i): JSX.Element => {
+          return i !== 7 ? (
+            <React.Fragment key={Math.random()}>
+              <Button
+                id={x.id}
+                classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
+                translate={x.translate}
+                /* @ts-ignore */
+                onClick={x.btnFn}
+                key={Math.random()}
+                disabled={(!user.paid && [2, 3, 8].includes(i)) || (user.tier === "Basic" && i === 2)}
+                place={i > 4 ? "bottom" : "top"}
+              >
+                {x.icon}
+              </Button>
+              {i === 4 && <div />}
+            </React.Fragment>
+          ) : (
+            <ImportBtn user={user} setTabTotal={setTabTotal} setGroups={setGroups} key={Math.random()} />
+          );
+        }
+      )}
 
       {tooltipVisibility && process.env.NODE_ENV !== "test" && (
         <React.Fragment>

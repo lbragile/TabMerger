@@ -35,7 +35,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @param {{title: string, url: string, id: string?}} tab indicates where the merging call originated from
  * @param {string?} group_id the group to merge into (if merge button from one of TabMerger's groups is used)
  */
-export async function filterTabs(info, tab, group_id) {
+export function filterTabs(info, tab, group_id) {
   chrome.tabs.query({ currentWindow: true }, (tabs) => {
     // filter based on user's merge button click
     tabs = tabs.filter((x) => x.title !== "TabMerger");
@@ -103,7 +103,7 @@ export async function filterTabs(info, tab, group_id) {
  * When TabMerger is open, this navigates to its tab if not on that tab already.
  * When TabMerger is not open, this opens its tab on the very right side.
  * Function ends when TabMerger's tab becomes active and its loading status is complete.
- * @param {Boolean?} testing Whether this is a testing call or a real call
+ * @param {boolean?} testing Whether this is a testing call or a real call
  * @return A promise which should be awaited. Resolve value is insignificant
  */
 export function findExtTabAndSwitch(testing) {

@@ -30,21 +30,21 @@ chrome.runtime.setUninstallURL("https://lbragile.github.io/TabMerger-Extension/s
 chrome.browserAction.onClicked.addListener(handleBrowserIconClick);
 
 // contextMenu creation
-createContextMenu("aopen-tabmerger", translate("bgOpen"));
+createContextMenu("aopen-tabmerger", translate("bgOpen"), "normal");
 
 createContextMenu("first-separator", "separator", "separator");
-createContextMenu("merge-all-menu", translate("bgAll"));
-createContextMenu("merge-left-menu", translate("bgLeft"));
-createContextMenu("merge-right-menu", translate("bgRight"));
-createContextMenu("merge-xcluding-menu", translate("bgExclude"));
-createContextMenu("merge-snly-menu", translate("bgOnly"));
+createContextMenu("merge-all-menu", translate("bgAll"), "normal");
+createContextMenu("merge-left-menu", translate("bgLeft"), "normal");
+createContextMenu("merge-right-menu", translate("bgRight"), "normal");
+createContextMenu("merge-xcluding-menu", translate("bgExclude"), "normal");
+createContextMenu("merge-snly-menu", translate("bgOnly"), "normal");
 
 createContextMenu("second-separator", "separator", "separator");
-createContextMenu("remove-visibility", translate("bgSiteExclude"));
+createContextMenu("remove-visibility", translate("bgSiteExclude"), "normal");
 
 createContextMenu("third-separator", "separator", "separator");
-createContextMenu("zdl-instructions", translate("bgInstructions"));
-createContextMenu("dl-contact", translate("bgContact"));
+createContextMenu("zdl-instructions", translate("bgInstructions"), "normal");
+createContextMenu("dl-contact", translate("bgContact"), "normal");
 
 // merge button clicks
 chrome.runtime.onMessage.addListener(extensionMessage);
