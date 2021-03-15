@@ -6,9 +6,15 @@
     "src/components/Tab",
     "public/background",
     "public/settings",
-    "src/constants"
+    "src/constants",
+    "src/typings"
   ],
-  "exclude": ["src/components/**/*.tsx", "public/background/background.js", "public/settings/settings.js"],
+  "exclude": [
+    "src/components/**/*.tsx",
+    "public/background/background.js",
+    "public/settings/settings.js",
+    "src/typings/Group.d.ts"
+  ],
   "name": "TabMerger",
   "includeVersion": true,
   "hideGenerator": true,

@@ -1,3 +1,6 @@
+/**
+ * @module Types/Tab
+ */
 export interface TabComponentProps {
   id: string;
   hidden: boolean;
