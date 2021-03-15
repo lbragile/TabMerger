@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "./Button";
-import { DialogProps } from "../Extra/Dialog";
 import { setStateType } from "../../typings/common";
 
 export interface LinkBtnProps {
@@ -14,10 +13,10 @@ export interface LinkBtnProps {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     url: string,
     setTour: setStateType<boolean>,
-    setDialog: setStateType<DialogProps>
+    setDialog: setStateType<{ show: boolean }>
   ) => void;
   setTour?: setStateType<boolean>;
-  setDialog?: setStateType<DialogProps>;
+  setDialog?: setStateType<{ show: boolean }>;
 }
 export default function LinkBtn({
   text,

@@ -568,12 +568,12 @@ export const RESET_TUTORIAL_CHOICE_DIALOG: Function = (element: HTMLButtonElemen
 /**
  * Stores the user's credentials in TabMerger for later verification of their subscription.
  * @param {setStateType<userType>} setUser For updating the user's credential information
- * @param {setStateType<DialogProps>} setDialog For re-rendering the dialog message
+ * @param {setStateType<{ show: boolean }>} setDialog For re-rendering the dialog message
  * @returns {DialogConstantReturn} A form that can be filled out by the user to provide their credentials
  */
 export const SET_USER_STATUS_DIALOG: Function = (
   setUser: setStateType<userType>,
-  setDialog: setStateType<DialogProps>
+  setDialog: setStateType<{ show: boolean }>
 ): DialogConstantReturn => ({
   element: null,
   show: true,

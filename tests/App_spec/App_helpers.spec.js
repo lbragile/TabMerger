@@ -331,7 +331,7 @@ describe("performAutoBackup", () => {
     AppHelper.performAutoBackUp({ name: "json_backup" }, sync_node);
 
     expect(exportJSONSpy).toHaveBeenCalledTimes(1);
-    expect(exportJSONSpy).toHaveBeenCalledWith(false, false);
+    expect(exportJSONSpy).toHaveBeenCalledWith(false, false, null);
 
     expect(chromeLocalGetSpy).not.toHaveBeenCalledWith("client_details", anything);
     expect(syncWriteSpy).not.toHaveBeenCalled();

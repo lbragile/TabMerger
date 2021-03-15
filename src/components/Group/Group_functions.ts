@@ -25,7 +25,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Group/Group_functions
  */
 
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { toast } from "react-toastify";
 
 import * as CONSTANTS from "../../constants/constants";
@@ -33,20 +33,18 @@ import { getTimestamp, getTabTotal, sortByKey, storeDestructiveAction } from "..
 import { translate } from "../App/App_functions";
 
 import { setStateType, userType, DefaultGroup } from "../../typings/common";
+import { TabState } from "../../typings/Tab";
 
 /**
  * Sets the background color of each group according to what the user chose.
- * @param {React.ChangeEvent<HTMLInputElement> | HTMLInputElement} e Either the group's color picker value or the group container
+ * @param {ChangeEvent | HTMLInputElement} e Either the group's color picker value or the group container
  * @param {string?} id Used to find the group whose background needs to be set
  */
-export function setBGColor(e: React.ChangeEvent<HTMLInputElement> | HTMLInputElement, id: string): void {
-  const color = (e as React.ChangeEvent<HTMLInputElement>).target
-    ? (e as React.ChangeEvent<HTMLInputElement>).target.value
-    : /* @ts-ignore */
-      (e as HTMLInputElement).previousSibling.querySelector("input[type='color']").value;
-  const target = (e as React.ChangeEvent<HTMLInputElement>).target
-    ? (e as React.ChangeEvent<HTMLInputElement>).target.closest(".group-title")
-    : (e as HTMLInputElement).previousSibling;
+export function setBGColor(e: ChangeEvent | HTMLInputElement, id: string): void {
+  var target = (e as ChangeEvent).target as HTMLInputElement;
+  var prevSibling = (e as HTMLInputElement).previousSibling as HTMLElement;
+  const color = target ? target.value : (prevSibling.querySelector("input[type='color']") as HTMLInputElement).value;
+  target = (target ? target.closest(".group-title") : prevSibling) as HTMLInputElement;
 
   const threshold_passed = color > CONSTANTS.GROUP_COLOR_THRESHOLD;
   const adjusted_text_color = threshold_passed ? "black" : "white";
@@ -141,8 +139,7 @@ export function addTabFromURL(
         const scroll = document.documentElement.scrollTop;
         var groups = local.groups;
 
-        /* @ts-ignore */
-        var url_exists = (Object.values(groups) as DefaultGroup[]).some((val) => val.tabs.map((x) => x.url).includes(url)); // prettier-ignore
+        var url_exists = (Object.values(groups) as DefaultGroup[]).some((val) => (val.tabs as TabState[]).map((x) => x.url).includes(url)); // prettier-ignore
         if (!url_exists && url.match(/http.+\/\//)) {
           // query open tabs to get the title from the tab which has a matching url
           chrome.tabs.query({ status: "complete" }, (tabs) => {
@@ -223,12 +220,11 @@ export function groupDragEnd(e: React.DragEvent<HTMLDivElement>) {
 /**
  * Sets Chrome's local storage with an array (["group id", ... url_links ...]) consisting
  * of the group's tabs to consider for removal.
- * @param {HTMLElement} e Node corresponding to the group that contains the tabs to be opened
+ * @param {MouseEvent} e Node corresponding to the group that contains the tabs to be opened
  */
-export function openGroup(e: HTMLElement) {
-  /* @ts-ignore */
-  var target = e.target.closest(".group-title").nextSibling;
-  var tab_links = [...target.querySelectorAll(".a-tab")].map((x) => x.href);
+export function openGroup(e: MouseEvent) {
+  var target = (e.target as HTMLElement).closest(".group-title").nextSibling as HTMLDivElement;
+  var tab_links = ([...target.querySelectorAll(".a-tab")] as HTMLAnchorElement[]).map((x) => x.href);
   tab_links.unshift(target.id);
   chrome.storage.local.set({ remove: tab_links }, () => {});
 }
@@ -236,12 +232,12 @@ export function openGroup(e: HTMLElement) {
 /**
  * Deletes a groups which the user selects to delete and reorders all the other groups accordingly
  * by changing their "group id" value.
- * @param {React.MouseEvent<HTMLParagraphElement>} e Node corresponding to the group to be deleted
+ * @param {MouseEvent} e Node corresponding to the group to be deleted
  * @param {setStateType<number>} setTabTotal For re-rendering the global tab counter
  * @param {setStateType<string>} setGroups For re-rendering the groups after deletion
  */
 export function deleteGroup(
-  e: React.MouseEvent<HTMLParagraphElement>,
+  e: MouseEvent,
   user: userType,
   setTabTotal: setStateType<number>,
   setGroups: setStateType<string>

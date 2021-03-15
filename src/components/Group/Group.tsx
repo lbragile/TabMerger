@@ -125,8 +125,7 @@ export default function Group({
           name="url-drag"
           onChange={(e) => GroupFunc.addTabFromURL(e, user, setGroups, setTabTotal)}
           onKeyDown={(e) => e.preventDefault()}
-          /* @ts-ignore */
-          onClick={(e) => e.target.blur()}
+          onClick={(e) => (e.target as HTMLInputElement).blur()}
         />
 
         <MergeBtns id={id} />

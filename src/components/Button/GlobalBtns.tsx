@@ -20,7 +20,7 @@ export interface GlobalBtnsProps {
   syncTimestamp: { current: HTMLSpanElement };
   setTabTotal: setStateType<number>;
   setGroups: setStateType<string>;
-  setDialog: setStateType<DialogProps>;
+  setDialog: setStateType<{ show: boolean }>;
 }
 
 export default function GlobalBtns({
@@ -30,7 +30,7 @@ export default function GlobalBtns({
   setGroups,
   setDialog,
 }: GlobalBtnsProps): JSX.Element {
-  const [tooltipVisibility, setTooltipVisibility] = useState(true);
+  const [tooltipVisibility, setTooltipVisibility] = useState<boolean>(true);
 
   /* @ts-ignore */
   useEffect(() => ReactTooltip.rebuild());
@@ -131,7 +131,6 @@ export default function GlobalBtns({
                 id={x.id}
                 classes={"p-0 mt-2 btn-in-global d-inline-block " + x.classes}
                 translate={x.translate}
-                /* @ts-ignore */
                 onClick={x.btnFn}
                 key={Math.random()}
                 disabled={(!user.paid && [2, 3, 8].includes(i)) || (user.tier === "Basic" && i === 2)}

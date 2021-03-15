@@ -42,9 +42,9 @@ import { MouseEvent } from "react";
  * Once the button is pressed, the credentials are verified in the external database
  * and corresponding TabMerger functionality is unlocked.
  * @param {setStateType<userType>} setUser Re-renders the user's subscription details { paid: boolean, tier: string }
- * @param {setStateType<DialogProps>} setDialog Shows the modal for inputing the user's credentials.
+ * @param {setStateType<{show: boolean}>} setDialog Shows the modal for inputing the user's credentials.
  */
-export function setUserStatus(setUser: setStateType<userType>, setDialog: setStateType<DialogProps>): void {
+export function setUserStatus(setUser: setStateType<userType>, setDialog: setStateType<{ show: boolean }>): void {
   setDialog(CONSTANTS.SET_USER_STATUS_DIALOG(setUser, setDialog));
 }
 
@@ -57,13 +57,12 @@ export function setUserStatus(setUser: setStateType<userType>, setDialog: setSta
 export function storeUserDetailsPriorToCheck(
   e: React.FormEvent<HTMLFormElement>,
   setUser: setStateType<userType>,
-  setDialog: setStateType<DialogProps>
+  setDialog: setStateType<{ show: boolean }>
 ): void {
   e.preventDefault();
   var [email, password] = [...(e.target as HTMLButtonElement).querySelectorAll("input")].map((x) => x.value);
   chrome.storage.local.set({ client_details: { email, password } }, () => {
     AppHelper.checkUserStatus(setUser); // authenticate the user
-    /* @ts-ignore */
     setDialog({ show: false }); // close modal
   });
 }
@@ -204,13 +203,13 @@ export function storageInit(
  * @param {MouseEvent} e The help button which was clicked
  * @param {string} url Link to TabMerger's official homepage
  * @param {setStateType<boolean>} setTour For re-rendering the tour
- * @param {setStateType<DialogProps>} setDialog For rendering a confirmation message
+ * @param {setStateType<{show: boolean}>} setDialog For rendering a confirmation message
  */
 export function resetTutorialChoice(
   e: MouseEvent,
   url: string,
   setTour: setStateType<boolean>,
-  setDialog: setStateType<DialogProps>
+  setDialog: setStateType<{ show: boolean }>
 ): void {
   var element = (e.target as HTMLElement).closest("#need-btn") as HTMLButtonElement;
   AppHelper.elementMutationListener(element, (mutation) => {
@@ -383,8 +382,7 @@ export function openOrRemoveTabs(
         chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
           for (var i = 0; i < changes.remove.newValue.length; i++) {
             const tab_url: string = changes.remove.newValue[i];
-            /* @ts-ignore */
-            const same_tab = AppHelper.findSameTab(windowTabs, tab_url);
+            const same_tab = AppHelper.findSameTab(windowTabs as TabState[], tab_url);
             if (same_tab[0] && !same_tab[0].pinned) {
               chrome.tabs.move(same_tab[0].id, { index: -1 });
             } else {
@@ -537,9 +535,9 @@ export function addGroup(setGroups: setStateType<string>): void {
  * of all the tabs in TabMerger to consider for removal.
  *
  * @param {MouseEvent} e Representing the Open All button
- * @param {setStateType<DialogProps>} setDialog For rendering a warning/error message
+ * @param {setStateType<{show: boolean}>} setDialog For rendering a warning/error message
  */
-export function openAllTabs(e: MouseEvent, setDialog: setStateType<DialogProps>): void {
+export function openAllTabs(e: MouseEvent, setDialog: setStateType<{ show: boolean }>): void {
   var element = (e.target as HTMLElement).closest("#open-all-btn") as HTMLButtonElement;
   AppHelper.elementMutationListener(element, (mutation) => {
     if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
@@ -560,14 +558,14 @@ export function openAllTabs(e: MouseEvent, setDialog: setStateType<DialogProps>)
  * @param {MouseEvent} e Button corresponding to the delete all operation
  * @param {setStateType<number>} setTabTotal For re-rendering the total tab counter
  * @param {setStateType<string>} setGroups For re-rendering the groups
- * @param {setStateType<DialogProps>} setDialog For rendering the confirmation dialog
+ * @param {setStateType<{show: boolean}>} setDialog For rendering the confirmation dialog
  */
 export function deleteAllGroups(
   e: MouseEvent,
   user: userType,
   setTabTotal: setStateType<number>,
   setGroups: setStateType<string>,
-  setDialog: setStateType<DialogProps>
+  setDialog: setStateType<{ show: boolean }>
 ): void {
   const scroll = document.documentElement.scrollTop;
   var element = (e.target as HTMLElement).closest("#delete-all-btn") as HTMLButtonElement;
@@ -687,8 +685,7 @@ export function regexSearchForTab(e: React.ChangeEvent<HTMLInputElement>, user: 
     toast(...CONSTANTS.SUBSCRIPTION_TOAST);
   } else {
     var sections: NodeListOf<HTMLDivElement> = document.querySelectorAll(".group-item");
-    /* @ts-ignore */
-    var tab_items: HTMLDivElement[][] = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
+    var tab_items: Element[][] = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
     var titles: string[] | string[][], match: string;
     if (e.target.value === "") {
@@ -706,7 +703,7 @@ export function regexSearchForTab(e: React.ChangeEvent<HTMLInputElement>, user: 
       titles.forEach((title, i) => {
         if (title.some((x) => x.indexOf(match) !== -1)) {
           sections[i].style.display = "";
-          title.forEach((x, j) => (tab_items[i][j].style.display = x.indexOf(match) !== -1 ? "" : "none"));
+          title.forEach((x, j) => ((tab_items[i][j] as HTMLElement).style.display = x.indexOf(match) !== -1 ? "" : "none")); // prettier-ignore
         } else {
           // no need to hide tabs if group is hidden
           sections[i].style.display = "none";
@@ -844,8 +841,7 @@ export function importJSON(
  */
 export function getTabMergerLink(reviews: boolean): string {
   var link;
-  /* @ts-ignore */
-  var isFirefox = typeof InstallTrigger !== "undefined";
+  var isFirefox = "InstallTrigger" in window;
   var isChrome = !!chrome && !!chrome.runtime;
   var isEdge = isChrome && navigator.userAgent.indexOf("Edg") !== -1;
 

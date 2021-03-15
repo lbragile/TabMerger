@@ -63,11 +63,10 @@ export function getTimestamp(date_str?: string): string {
  */
 export function toggleDarkMode(isChecked: boolean): void {
   var body = document.querySelector("body");
-  var sidebar = document.querySelector("#sidebar");
+  var sidebar = document.querySelector("#sidebar") as HTMLDivElement;
 
   body.style.background = isChecked ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)";
   body.style.color = isChecked ? "white" : "black";
-  /* @ts-ignore */
   sidebar.style.background = isChecked ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 }
 
@@ -136,13 +135,11 @@ export function sortByKey(json: { [key: string]: DefaultGroup }): DefaultGroup[]
 
   var sorted_groups = sortedArray.sort((a, b) => {
     var opts = { numeric: true, sensitivity: "base" };
-    /* @ts-ignore */
-    return a[0].localeCompare(b[0], undefined, opts);
+    return (a[0] as string).localeCompare(b[0] as string, undefined, opts);
   });
 
   // get the sorted values
-  /* @ts-ignore */
-  return sorted_groups.map((x) => x[1]);
+  return sorted_groups.map((x) => x[1]) as DefaultGroup[];
 }
 
 /**
@@ -302,8 +299,7 @@ export function checkUserStatus(setUser: setStateType<userType>): void {
  */
 export function performAutoBackUp(alarm: { name: string }, sync_node?: HTMLSpanElement): void {
   if (alarm.name === "json_backup") {
-    /* @ts-ignore */
-    AppFunc.exportJSON(false, false);
+    AppFunc.exportJSON(false, false, null);
   }
 
   if (alarm.name === "sync_backup") {

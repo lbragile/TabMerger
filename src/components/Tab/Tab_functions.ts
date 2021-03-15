@@ -122,8 +122,7 @@ export function removeTab(
       const scroll = document.documentElement.scrollTop;
       groups_copy = storeDestructiveAction(groups_copy, groups, user);
 
-      /* @ts-ignore */
-      groups[group_id].tabs = tabs.filter((x: TabState): TabState => x.url !== url);
+      groups[group_id].tabs = tabs.filter((x: TabState) => x.url !== url);
       chrome.storage.local.set({ groups, groups_copy, scroll }, () => {
         setTabs(groups[group_id].tabs);
         setTabTotal(getTabTotal(groups));

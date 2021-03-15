@@ -22,7 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import Tour from "reactour";
+import Tour, { ReactourStep } from "reactour";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -32,7 +32,7 @@ import Group from "../Group/Group";
 import * as AppFunc from "./App_functions";
 import * as AppHelper from "./App_helpers";
 import * as CONSTANTS from "../../constants/constants";
-import { userType } from "../../typings/common";
+import { FontStyle, userType } from "../../typings/common";
 
 import GlobalBtns from "../Button/GlobalBtns";
 import Header from "../Extra/Header";
@@ -55,11 +55,11 @@ export interface IChanges {
 
 export default function App() {
   // app parameters
-  const [tabTotal, setTabTotal] = useState(0);
-  const [groups, setGroups] = useState(null);
-  const [dialog, setDialog] = useState({ show: false });
-  var syncTimestamp = useRef();
-  var textStyles = useRef({ fontFamily: "Arial", fontWeight: "Normal" });
+  const [tabTotal, setTabTotal] = useState<number>(0);
+  const [groups, setGroups] = useState<string>();
+  const [dialog, setDialog] = useState<{ show: boolean }>({ show: false });
+  var syncTimestamp = useRef<null>();
+  var textStyles = useRef<FontStyle>({ fontFamily: "Arial", fontWeight: "Normal" });
 
   // activation parameters
   const [user, setUser] = useState<userType>({ paid: false, tier: "Free" });
@@ -161,8 +161,7 @@ export default function App() {
       <Dialog {...dialog} setDialog={setDialog} />
 
       <Tour
-        /* @ts-ignore */
-        steps={TOUR_STEPS}
+        steps={TOUR_STEPS as ReactourStep[]}
         isOpen={!!tour}
         onRequestClose={() => setTour(false)}
         badgeContent={(current, total) => `Step ${current}/${total}`}
@@ -192,11 +191,9 @@ export default function App() {
             syncTimestamp={syncTimestamp}
             setTabTotal={setTabTotal}
             setGroups={setGroups}
-            /* @ts-ignore */
             setDialog={setDialog}
           />
 
-          {/* @ts-ignore */}
           <Links setTour={setTour} setDialog={setDialog} />
         </div>
         {/* Verify/activate account button*/}
@@ -206,7 +203,6 @@ export default function App() {
               classes="p-0 btn-in-global mx-auto mb-2 d-block"
               id="subscription-btn"
               translate="Activate Plan"
-              /* @ts-ignore */
               onClick={() => AppFunc.setUserStatus(setUser, setDialog)}
             >
               {<BiCheckCircle color="black" size="1.5rem" />}
@@ -224,7 +220,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* @ts-ignore */}
       <AppProvider value={{ user, setGroups, setTabTotal, setDialog }}>
         <div className="container-fluid col" id="tabmerger-container" onDragOver={(e) => AppFunc.dragOver(e, "group")}>
           {memoizedGroupFormation}

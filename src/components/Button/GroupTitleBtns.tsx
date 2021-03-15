@@ -29,7 +29,7 @@ export interface GroupTitleButtonsProps {
   classes: string;
   translate?: string;
   icon: JSX.Element;
-  clickFn?: (e: HTMLElement | HTMLDivElement | HTMLParagraphElement) => void;
+  clickFn?: (e: MouseEvent) => void;
 }
 
 export default function GroupTitleBtns({
@@ -57,7 +57,6 @@ export default function GroupTitleBtns({
       ) : (
         <BiLockOpen size="1.3rem" color={textColor === "primary" ? "black" : "white"} />
       ),
-      /* @ts-ignore */
       clickFn: (e) => GroupFunc.toggleGroup(e, "lock", setGroups),
     },
     {
@@ -68,7 +67,6 @@ export default function GroupTitleBtns({
       ) : (
         <BsStar size="1.1rem" color={textColor === "primary" ? "black" : "white"} />
       ),
-      /* @ts-ignore */
       clickFn: (e) => GroupFunc.toggleGroup(e, "star", setGroups),
     },
     {
@@ -76,13 +74,11 @@ export default function GroupTitleBtns({
       classes: "color-group-btn btn-in-group-title",
       translate: AppFunc.translate("pickColor"),
       icon: <BiColorFill className="input-color" color={textColor === "primary" ? "black" : "white"} />,
-      /* @ts-ignore */
-      clickFn: (e) => e.target.closest("button").nextSibling.click(),
+      clickFn: (e) => ((e.target as HTMLElement).closest("button").nextSibling as HTMLElement).click(), // prettier-ignore
     },
     {
       classes: "visibility-group-btn btn-in-group-title",
       translate: AppFunc.translate(hidden ? "showTabs" : "hideTabs"),
-      /* @ts-ignore */
       clickFn: (e) => GroupFunc.toggleGroup(e, "visibility", setGroups),
       icon: <AiOutlineMinus color={textColor === "primary" ? "black" : "white"} />,
     },
@@ -97,7 +93,6 @@ export default function GroupTitleBtns({
       translate: AppFunc.translate("deleteGroup"),
       clickFn: (e) => {
         ReactTooltip.hide();
-        /* @ts-ignore */
         GroupFunc.deleteGroup(e, user, setTabTotal, setGroups);
       },
       icon: <AiOutlineClose color={textColor === "primary" ? "black" : "white"} />,

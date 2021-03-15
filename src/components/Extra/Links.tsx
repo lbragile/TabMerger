@@ -3,7 +3,6 @@ import React from "react";
 import * as CONSTANTS from "../../constants/constants";
 import { translate, getTabMergerLink, resetTutorialChoice } from "../App/App_functions";
 import LinkBtn from "../Button/LinkBtn";
-import { DialogProps } from "./Dialog";
 import { setStateType } from "../../typings/common";
 
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
@@ -38,7 +37,7 @@ export default function Links({
   setDialog,
 }: {
   setTour: setStateType<boolean>;
-  setDialog: setStateType<DialogProps>;
+  setDialog: setStateType<{ show: boolean }>;
 }) {
   return (
     <React.Fragment>
@@ -54,7 +53,6 @@ export default function Links({
               tooltip={true}
               place={i <= 2 ? "top" : "bottom"}
               onClickFn={i === 0}
-              /* @ts-ignore */
               resetTutorialChoice={resetTutorialChoice}
               setTour={setTour}
               setDialog={setDialog}

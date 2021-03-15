@@ -1,9 +1,11 @@
 import React, { createContext } from "react";
+import { setStateType } from "../typings/common";
 
 interface AppContextInterface {
   user: { paid: string | boolean; tier: string };
-  setTabTotal: React.Dispatch<React.SetStateAction<number>>;
-  setGroups: React.Dispatch<React.SetStateAction<string>>;
+  setTabTotal: setStateType<number>;
+  setGroups: setStateType<string>;
+  setDialog?: setStateType<{ show: boolean }>;
 }
 
 export const AppContext = createContext<AppContextInterface>(undefined);

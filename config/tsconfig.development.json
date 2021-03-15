@@ -21,6 +21,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["../public/**/*/", "../src/**/*/", "../tests/**/*/"],
-  "exclude": ["../node_modules", "../build"]
+  "include": ["../public/**/*/", "../src/**/*/"],
+  "exclude": ["../node_modules", "../build", "../tests"]
 }
