@@ -157,7 +157,6 @@ export default function App() {
 
   return (
     <div id="app-wrapper" className="text-center">
-      {/* @ts-ignore */}
       <Dialog {...dialog} setDialog={setDialog} />
 
       <Tour

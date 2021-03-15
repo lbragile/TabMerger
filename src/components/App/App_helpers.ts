@@ -305,8 +305,7 @@ export function performAutoBackUp(alarm: { name: string }, sync_node?: HTMLSpanE
   if (alarm.name === "sync_backup") {
     chrome.storage.local.get("client_details", (local) => {
       AppFunc.syncWrite(
-        /* @ts-ignore */
-        { target: document.getElementById("sync-write-btn"), autoAction: true },
+        { target: document.getElementById("sync-write-btn") as HTMLButtonElement, autoAction: true },
         sync_node,
         local.client_details
       );

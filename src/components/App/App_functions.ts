@@ -36,6 +36,7 @@ import { IChanges } from "./App";
 import { DefaultGroup, setStateType, Toast, userType } from "../../typings/common";
 import { TabState } from "../../typings/Tab";
 import { MouseEvent } from "react";
+import { IMouseEvent } from "../../typings/App";
 
 /**
  * Allows the user to activate their subscription by providing their credentials.
@@ -265,11 +266,15 @@ export function badgeIconInfo(tabTotal:number, user: userType, STEP_SIZE: number
 
 /**
  * Updates the sync items - only those that have changes are overwritten
- * @param {MouseEvent} e Node representing the global sync write button
+ * @param {IMouseEvent | { target: HTMLButtonElement; autoAction: boolean }} e Node representing the global sync write button
  * @param {HTMLSpanElement} sync_node Node corresponding to the "Last Sync:" timestamp
  * @param {userType} user The user's subscription details
  */
-export function syncWrite(e: MouseEvent, sync_node: HTMLSpanElement, user: userType) {
+export function syncWrite(
+  e: IMouseEvent | { target: HTMLButtonElement; autoAction: boolean },
+  sync_node: HTMLSpanElement,
+  user: userType
+) {
   if (!user.paid) {
     toast(...CONSTANTS.SUBSCRIPTION_TOAST);
   } else if ((e.target as HTMLButtonElement).closest("#sync-write-btn").classList.contains("disabled-btn")) {
@@ -295,7 +300,6 @@ export function syncWrite(e: MouseEvent, sync_node: HTMLSpanElement, user: userT
       }
     });
 
-    /* @ts-ignore */
     console.info(`%c[TABMERGER INFO] %c${e.autoAction ? "automatic" : "manual"} sync performed - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
   }
 }

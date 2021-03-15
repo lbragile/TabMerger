@@ -62,10 +62,10 @@ export interface ToastId {
 }
 
 export interface DialogConstantReturn {
-  element: HTMLButtonElement | null;
+  element?: HTMLButtonElement;
+  title?: string;
+  msg?: JSX.Element;
+  accept_btn_text?: string;
+  reject_btn_text?: string;
   show: boolean;
-  title: string;
-  msg: JSX.Element;
-  accept_btn_text: string | null;
-  reject_btn_text: string | null;
 }

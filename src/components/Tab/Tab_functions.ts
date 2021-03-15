@@ -165,8 +165,9 @@ export function handleTabTitleChange(e: React.KeyboardEvent | React.FocusEvent):
   var target = e.target as HTMLAnchorElement;
   target.classList.remove("edit-tab-title");
 
+  // cannot make test pass if this is added
   /* @ts-ignore */
-  if (e instanceof FocusEvent || /*e instanceof KeyboardEvent &&*/ e.code === "Enter") {
+  if (e instanceof FocusEvent || /*(e instanceof KeyboardEvent &&*/ e.code === "Enter" /*)*/) {
     e.preventDefault();
   } else {
     const group_id = target.closest(".group").id;

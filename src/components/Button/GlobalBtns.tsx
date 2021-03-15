@@ -5,7 +5,6 @@ import Button from "./Button";
 import * as AppFunc from "../App/App_functions";
 import * as CONSTANTS from "../../constants/constants";
 import ImportBtn from "./ImportBtn";
-import { DialogProps } from "../Extra/Dialog";
 
 import { BiExport, BiPrinter } from "react-icons/bi";
 import { BsCloudUpload, BsCloudDownload } from "react-icons/bs";
@@ -14,6 +13,7 @@ import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
 import { setStateType, userType } from "../../typings/common";
+import { IMouseEvent } from "../../typings/App";
 
 export interface GlobalBtnsProps {
   user: userType;
@@ -67,7 +67,7 @@ export default function GlobalBtns({
       id: "sync-write-btn",
       classes: "mx-2",
       translate: AppFunc.translate("sync").substr(0, 4) + " " + AppFunc.translate("write"),
-      btnFn: (e: React.MouseEvent) => AppFunc.syncWrite(e, syncTimestamp.current, user),
+      btnFn: (e: React.MouseEvent) => AppFunc.syncWrite((e as unknown) as IMouseEvent, syncTimestamp.current, user),
       icon: <BsCloudUpload color="black" size="1.5rem" />,
     },
     {

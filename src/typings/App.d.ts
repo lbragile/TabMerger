@@ -1,1 +1,3 @@
-// currently empty
+export interface IMouseEvent extends MouseEvent {
+  autoAction: boolean;
+}
