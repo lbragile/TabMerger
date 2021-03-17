@@ -30,16 +30,15 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * where TabMerger can be downloaded.
  */
 export function setTabMergerLink() {
-  var link;
-  var isFirefox = typeof InstallTrigger !== "undefined";
-  var isChrome = !!chrome && !!chrome.runtime;
-  var isEdge = isChrome && navigator.userAgent.indexOf("Edg") !== -1;
+  var isFirefox = "InstallTrigger" in window;
+  var isEdge = !!chrome?.runtime && navigator.userAgent.indexOf("Edg") !== -1;
 
+  var link;
   if (isEdge) {
     link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {
     link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
-  } else if (isChrome) {
+  } else {
     link = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
   }
 

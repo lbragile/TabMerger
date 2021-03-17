@@ -25,6 +25,13 @@ import * as SettingsFunc from "../../public/settings/settings_functions.js";
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 import * as CONSTANTS from "../../src/constants/constants";
 
+const GLOBAL_OBJECT = (global as unknown) as {
+  chromeSyncGetSpy: Function;
+  chromeSyncSetSpy: Function;
+};
+
+const { chromeSyncGetSpy, chromeSyncSetSpy } = GLOBAL_OBJECT;
+
 const anything = expect.any(Function);
 
 describe("restoreOptions", () => {
@@ -94,7 +101,8 @@ describe("restoreOptions", () => {
     var setTabMergerLinkSpy = jest.spyOn(SettingsHelper, "setTabMergerLink").mockImplementation(() => {});
     var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
 
-    document.querySelector("#darkMode").addEventListener = jest.fn((_, cb) => cb());
+    /* @ts-ignore */
+    document.querySelector("#darkMode").addEventListener = jest.fn((_, cb: () => void) => cb());
 
     Object.defineProperty(window, "location", {
       writable: true,
@@ -107,24 +115,29 @@ describe("restoreOptions", () => {
 
     SettingsFunc.restoreOptions();
 
-    expect(document.querySelector("input[name='badge-view']").checked).toEqual(expect_checked);
-    expect(document.querySelector("input[name='ext-open']").checked).toEqual(expect_checked);
-    expect(document.querySelector("input[name='merge-tabs']").checked).toEqual(expect_checked);
-    expect(document.querySelector("input[name='pin-tabs']").checked).toEqual(expect_checked);
-    expect(document.querySelector("input[name='restore-tabs']").checked).toEqual(expect_checked);
-    expect(document.querySelector("input[name='randomize-group-color']").checked).toEqual(!expect_checked);
-    expect(document.getElementById("tooltip-visibility").checked).toEqual(expect_checked);
-    expect(document.getElementById("saveas-visibility").checked).toEqual(expect_checked);
-    expect(document.getElementById("options-blacklist").value).toBe(expect_checked ? "" : "Not TabMerger");
-    expect(document.getElementById("options-default-color").value).toBe(expect_checked ? "#dedede" : "#111111");
-    expect(document.getElementById("options-default-title").value).toBe(expect_checked ? "Title" : "Random");
-    expect(document.getElementById("tab-font").value).toBe(expect_checked ? "Arial" : "Times New Roman");
-    expect(document.getElementById("tab-weight").value).toBe(expect_checked ? "Normal" : "Bold");
+    expect((document.querySelector("input[name='badge-view']") as HTMLInputElement).checked).toEqual(expect_checked);
+    expect((document.querySelector("input[name='ext-open']") as HTMLInputElement).checked).toEqual(expect_checked);
+    expect((document.querySelector("input[name='merge-tabs']") as HTMLInputElement).checked).toEqual(expect_checked);
+    expect((document.querySelector("input[name='pin-tabs']") as HTMLInputElement).checked).toEqual(expect_checked);
+    expect((document.querySelector("input[name='restore-tabs']") as HTMLInputElement).checked).toEqual(expect_checked);
+    expect((document.querySelector("input[name='randomize-group-color']") as HTMLInputElement).checked).toEqual(!expect_checked); // prettier-ignore
+    expect((document.getElementById("tooltip-visibility") as HTMLInputElement).checked).toEqual(expect_checked);
+    expect((document.getElementById("saveas-visibility") as HTMLInputElement).checked).toEqual(expect_checked);
+    expect((document.getElementById("options-blacklist") as HTMLTextAreaElement).value).toBe(expect_checked ? "" : "Not TabMerger"); // prettier-ignore
+    expect((document.getElementById("options-default-color") as HTMLInputElement).value).toBe(expect_checked ? "#dedede" : "#111111"); // prettier-ignore
+    expect((document.getElementById("options-default-title") as HTMLInputElement).value).toBe(expect_checked ? "Title" : "Random"); // prettier-ignore
+    expect((document.getElementById("tab-font") as HTMLSelectElement).value).toBe(expect_checked ? "Arial" : "Times New Roman"); // prettier-ignore
+    expect((document.getElementById("tab-weight") as HTMLSelectElement).value).toBe(expect_checked ? "Normal" : "Bold");
 
+    /* @ts-ignore */
     expect(document.body.style._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)");
+    /* @ts-ignore */
     expect(document.body.style._values.color).toBe(ss_dark ? "white" : "black");
+    /* @ts-ignore */
     expect(document.querySelector("code").style._values.color).toBe(ss_dark ? "white" : "black");
+    /* @ts-ignore */
     expect(document.querySelector("code").style._values.border).toBe("1px solid " + (ss_dark ? "white" : "black")); // prettier-ignore
+    /* @ts-ignore */
     expect(document.querySelector("nav").style._values.background).toBe(ss_dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)"); // prettier-ignore
 
     expect(setTabMergerLinkSpy).toHaveBeenCalledTimes(1);
@@ -144,6 +157,7 @@ describe("restoreOptions", () => {
     // restore all mocks
     setTabMergerLinkSpy.mockRestore();
     setSyncSpy.mockRestore();
+    /* @ts-ignore */
     document.querySelector("#darkMode").addEventListener.mockRestore();
     window.location.reload = reload;
   });
@@ -151,6 +165,7 @@ describe("restoreOptions", () => {
 
 describe("saveOptions", () => {
   it("correctly sets the style of the save button and calls setSync", () => {
+    /* @ts-ignore */
     var stub = { target: { classList: { replace: jest.fn() }, innerText: "", disabled: null } };
 
     var classListSpy = jest.spyOn(stub.target.classList, "replace");
@@ -160,6 +175,7 @@ describe("saveOptions", () => {
     jest.clearAllMocks();
 
     jest.useFakeTimers();
+    /* @ts-ignore */
     SettingsFunc.saveOptions(stub);
 
     expect(stub.target.innerText).toBe("Saved");

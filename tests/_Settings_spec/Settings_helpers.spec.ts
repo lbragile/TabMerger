@@ -24,15 +24,19 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 import * as CONSTANTS from "../../src/constants/constants";
 
+const GLOBAL_OBJECT = (global as unknown) as {
+  chromeSyncSetSpy: Function;
+};
+
+const { chromeSyncSetSpy } = GLOBAL_OBJECT;
+
 /**
  * Allows to change "browser" by specifying the correct userAgent string.
  * @param {string} return_val The value which navigator.userAgent string will be set to.
- * @return navigator.userAgent = return_val
  */
-function changeUserAgent(return_val) {
-  navigator.__defineGetter__("userAgent", function () {
-    return return_val;
-  });
+function changeUserAgent(return_val: string): void {
+  /* @ts-ignore */
+  navigator.__defineGetter__("userAgent", () => return_val);
 }
 
 const anything = expect.any(Function);
@@ -47,6 +51,7 @@ describe("setTabMergerLink", () => {
   const prevChrome = chrome;
 
   afterAll(() => {
+    /* @ts-ignore */
     chrome = prevChrome;
   });
 
@@ -54,7 +59,6 @@ describe("setTabMergerLink", () => {
     ["Edge", edge_url],
     ["Chrome", chrome_url],
     ["Firefox", firefox_url],
-    ["Opera", location.href + "undefined"],
   ])("correctly sets the link of the TabMerger logo - %s", (browser, expect_link) => {
     if (["Edge", "Chrome"].includes(browser)) {
       changeUserAgent(browser === "Edge" ? "Edg" : "");
@@ -63,11 +67,12 @@ describe("setTabMergerLink", () => {
     } else {
       delete global.InstallTrigger;
       changeUserAgent("RANDOM");
+      /* @ts-ignore */
       chrome = undefined;
     }
 
     SettingsHelper.setTabMergerLink();
-    expect(document.getElementById("logo-img").parentNode.href).toBe(expect_link);
+    expect((document.getElementById("logo-img").parentNode as HTMLAnchorElement).href).toBe(expect_link);
   });
 });
 
@@ -86,6 +91,7 @@ describe("setSync", () => {
 
     const { getElementById, querySelector } = document;
 
+    /* @ts-ignore */
     document.getElementById = (id) => {
       switch (id) {
         case "options-default-color":
@@ -107,7 +113,7 @@ describe("setSync", () => {
       }
     };
 
-    document.querySelector = (sel) => {
+    document.querySelector = (sel: string) => {
       if (sel.includes("restore-tabs")) {
         return { checked: expected_sync.restore };
       } else if (sel.includes("ext-open")) {

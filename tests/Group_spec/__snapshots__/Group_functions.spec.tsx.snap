@@ -9,7 +9,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(0, 0, 0); border-bottom: 1px dashed white;"
+      style="font-family: Arial; background: rgb(0, 0, 0); border-bottom: 1px dashed white;"
     >
       <h5
         class="group-count"
@@ -35,7 +35,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -58,7 +58,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -81,7 +81,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -107,7 +107,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -290,7 +290,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -313,7 +313,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -341,7 +341,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -367,6 +367,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created
@@ -608,7 +609,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(0, 0, 0); border-bottom: 1px dashed white;"
+      style="font-family: Arial; background: rgb(0, 0, 0); border-bottom: 1px dashed white;"
     >
       <h5
         class="group-count"
@@ -634,7 +635,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -657,7 +658,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -680,7 +681,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -706,7 +707,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -889,7 +890,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -912,7 +913,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -940,7 +941,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -966,6 +967,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#000000
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created
@@ -1214,7 +1216,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(0, 255, 0); border-bottom: 1px dashed white;"
+      style="font-family: Arial; background: rgb(0, 255, 0); border-bottom: 1px dashed white;"
     >
       <h5
         class="group-count"
@@ -1240,7 +1242,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -1263,7 +1265,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -1286,7 +1288,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -1312,7 +1314,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1495,7 +1497,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1518,7 +1520,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1546,7 +1548,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -1572,6 +1574,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created
@@ -1813,7 +1816,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(0, 255, 0); border-bottom: 1px dashed white;"
+      style="font-family: Arial; background: rgb(0, 255, 0); border-bottom: 1px dashed white;"
     >
       <h5
         class="group-count"
@@ -1839,7 +1842,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -1862,7 +1865,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -1885,7 +1888,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -1911,7 +1914,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2094,7 +2097,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2117,7 +2120,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2145,7 +2148,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2171,6 +2174,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#00FF00
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created
@@ -2419,7 +2423,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(119, 119, 119); border-bottom: 1px dashed white;"
+      style="font-family: Arial; background: rgb(119, 119, 119); border-bottom: 1px dashed white;"
     >
       <h5
         class="group-count"
@@ -2445,7 +2449,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -2468,7 +2472,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -2491,7 +2495,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -2517,7 +2521,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2700,7 +2704,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2723,7 +2727,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2751,7 +2755,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -2777,6 +2781,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created
@@ -3018,7 +3023,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(119, 119, 119); border-bottom: 1px dashed white;"
+      style="font-family: Arial; background: rgb(119, 119, 119); border-bottom: 1px dashed white;"
     >
       <h5
         class="group-count"
@@ -3044,7 +3049,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -3067,7 +3072,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -3090,7 +3095,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -3116,7 +3121,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3299,7 +3304,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3322,7 +3327,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3350,7 +3355,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
           style="color: white;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3376,6 +3381,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#777777
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created
@@ -3624,7 +3630,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(255, 0, 255); border-bottom: 1px dashed black;"
+      style="font-family: Arial; background: rgb(255, 0, 255); border-bottom: 1px dashed black;"
     >
       <h5
         class="group-count"
@@ -3650,7 +3656,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -3673,7 +3679,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -3696,7 +3702,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -3722,7 +3728,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3905,7 +3911,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3928,7 +3934,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3956,7 +3962,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -3982,6 +3988,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created
@@ -4223,7 +4230,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
     <div
       class="group-title d-flex flex-row justify-content-center"
       draggable="false"
-      style="background: rgb(255, 0, 255); border-bottom: 1px dashed black;"
+      style="font-family: Arial; background: rgb(255, 0, 255); border-bottom: 1px dashed black;"
     >
       <h5
         class="group-count"
@@ -4249,7 +4256,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.6rem"
             stroke="currentColor"
@@ -4272,7 +4279,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.3rem"
             stroke="currentColor"
@@ -4295,7 +4302,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1.1rem"
             stroke="currentColor"
@@ -4321,7 +4328,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
         >
           <svg
             class="input-color"
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4504,7 +4511,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4527,7 +4534,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4555,7 +4562,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
           style="color: black;"
         >
           <svg
-            color="white"
+            color="black"
             fill="currentColor"
             height="1em"
             stroke="currentColor"
@@ -4581,6 +4588,7 @@ exports[`setBGColor maintains bg color based on existing group bg color (#FF00FF
       <div
         class="created mr-1"
         draggable="false"
+        style="font-family: Arial;"
       >
         <b>
           created

@@ -11,7 +11,8 @@ export interface TabComponentProps {
 
 export interface TabState {
   pinned: boolean;
-  title: string;
   url: string;
+  title?: string;
   id?: number;
+  active?: boolean;
 }

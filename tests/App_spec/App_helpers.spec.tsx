@@ -30,11 +30,32 @@ import * as CONSTANTS from "../../src/constants/constants";
 import App from "../../src/components/App/App";
 
 import axios from "axios";
+import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
+
+const GLOBAL_OBJECT = (global as unknown) as {
+  init_groups: { [key: string]: DefaultGroup };
+  user: userType;
+  mockSet: <T>() => setStateType<T>;
+  chromeLocalGetSpy: Function;
+  chromeLocalSetSpy: Function;
+  chromeSyncGetSpy: Function;
+  chromeSyncSetSpy: Function;
+};
+
+const {
+  init_groups,
+  chromeLocalGetSpy,
+  chromeLocalSetSpy,
+  chromeSyncGetSpy,
+  chromeSyncSetSpy,
+  mockSet,
+  user,
+} = GLOBAL_OBJECT;
 
 const anything = expect.any(Function);
 var new_item = init_groups["group-0"];
 
-var container, sync_node, sync_container, toastSpy;
+var container: HTMLElement, sync_node: HTMLSpanElement, sync_container: HTMLDivElement, toastSpy: Function;
 
 beforeAll(() => {
   Object.keys(init_groups).forEach((key) => {
@@ -43,6 +64,7 @@ beforeAll(() => {
 
   localStorage.setItem("groups", JSON.stringify(init_groups));
 
+  /* @ts-ignore */
   toastSpy = toast.mockImplementation((...args) => args);
   console.info = jest.fn();
 });
@@ -50,10 +72,11 @@ beforeAll(() => {
 beforeEach(() => {
   container = render(<App />).container;
   sync_node = container.querySelector("#sync-text span");
-  sync_container = sync_node.parentNode;
+  sync_container = sync_node.parentNode as HTMLDivElement;
 });
 
 afterAll(() => {
+  /* @ts-ignore */
   toastSpy.mockRestore();
 });
 
@@ -72,7 +95,7 @@ describe("getTimestamp", () => {
 describe("toggleDarkMode", () => {
   test.each([["light"], ["dark"]])("%s mode", (mode) => {
     var body = container.querySelector(".container-fluid").closest("body");
-    var sidebar = container.querySelector("#sidebar");
+    var sidebar = container.querySelector("#sidebar") as HTMLDivElement;
 
     AppHelper.toggleDarkMode(mode === "dark");
 
@@ -196,6 +219,7 @@ describe("outputFileName", () => {
 
 describe("getDragAfterElement", () => {
   const top = 50, height = 60, smaller_num = (top + height) / 2; // prettier-ignore
+  /* @ts-ignore */
   var getBoundingClientRectSpy = jest.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(() => ({ top, height })); // prettier-ignore
 
   afterAll(() => {
@@ -235,7 +259,7 @@ describe("storeDestructiveAction", () => {
     localStorage.setItem("groups_copy", JSON.stringify(groups_copy));
     jest.clearAllMocks();
 
-    groups_copy = AppHelper.storeDestructiveAction(groups_copy, {}, { tier });
+    groups_copy = AppHelper.storeDestructiveAction(groups_copy, {}, { paid: "paid", tier });
 
     expect(groups_copy).toStrictEqual(full ? [{}] : groups_copy);
   });
@@ -243,21 +267,24 @@ describe("storeDestructiveAction", () => {
 
 describe("alarmGenerator", () => {
   it.each([
-    [0, 0, true],
-    [0, 0, false],
-    [1, 1, false],
-    [1, 2, false],
+    [0, 0, true, "sync_backup"],
+    [0, 0, false, "sync_backup"],
+    [1, 1, false, "json_backup"],
+    [1, 2, false, "json_backup"],
   ])(
     "periodInMinutes = %s, alarm period = %s, wasCleared = %s",
-    (periodInMinutes, alarm_periodInMinutes, wasCleared, alarm_name = "alarm_name") => {
+    (periodInMinutes, alarm_periodInMinutes, wasCleared, alarm_name) => {
       const expectCreateReturn = { when: Math.floor((Date.now() + 1000) / 10) * 10, periodInMinutes }; // need to round to avoid flaky tests
       const expectToast = [<div>test</div>, { toastId: "test" }];
 
+      /* @ts-ignore */
       var chromeAlarmsGetSpy = jest.spyOn(chrome.alarms, "get").mockImplementation((_, cb) => cb({ periodInMinutes: alarm_periodInMinutes })); // prettier-ignore
+      /* @ts-ignore */
       var chromeAlarmsClearSpy = jest.spyOn(chrome.alarms, "clear").mockImplementation((_, cb) => cb(wasCleared));
       var chromeAlarmsCreateSpy = jest.spyOn(chrome.alarms, "create").mockImplementation((_, __) => expectCreateReturn); // prettier-ignore
       jest.clearAllMocks();
 
+      /* @ts-ignore */
       AppHelper.alarmGenerator(periodInMinutes, alarm_name, expectToast);
 
       if (periodInMinutes > 0) {

@@ -28,7 +28,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 import { getTimestamp } from "../components/App/App_helpers";
 import { storeUserDetailsPriorToCheck } from "../components/App/App_functions";
-import { DialogProps } from "../components/Extra/Dialog";
 
 import {
   setStateType,

@@ -2,6 +2,16 @@
  * @module Types/Common
  */
 
+import { TabState } from "./Tab";
+
+declare global {
+  namespace NodeJS {
+    interface Global {
+      [key: string]: any;
+    }
+  }
+}
+
 /**
  * TYPES
  */
@@ -34,7 +44,7 @@ export interface DefaultGroup {
   hidden: boolean;
   locked: boolean;
   starred: boolean;
-  tabs: object[];
+  tabs: TabState[];
   title: string;
   name?: string;
 }

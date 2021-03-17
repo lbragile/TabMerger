@@ -26,6 +26,15 @@ import * as BackgroundHelper from "../../public/background/background_helpers.js
 
 import { waitFor } from "@testing-library/react";
 
+const GLOBAL_OBJECT = (global as unknown) as {
+  CONSTANTS: any;
+  chromeSyncGetSpy: Function;
+  chromeTabsQuerySpy: Function;
+  chromeContextMenusCeateSpy: Function;
+};
+
+const { CONSTANTS, chromeSyncGetSpy, chromeTabsQuerySpy, chromeContextMenusCeateSpy } = GLOBAL_OBJECT;
+
 const anything = expect.any(Function);
 
 beforeEach(() => {
@@ -66,7 +75,7 @@ describe("handleBrowserIconClick", () => {
 
 describe("extensionMessage", () => {
   it("queries current tabs and filters them as needed", () => {
-    const request = { msg: "TabMerger is awesome!", id: 100 };
+    const request = { msg: "TabMerger is awesome!", id: "100" };
     const tab = { title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 };
 
     var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => {});
@@ -86,10 +95,10 @@ describe("createContextMenu", () => {
   it("calls the chrome.contextMenus.create API with correct parameters", () => {
     jest.clearAllMocks();
 
-    BackgroundFunc.createContextMenu(0, "TabMerger", "normal");
+    BackgroundFunc.createContextMenu("0", "TabMerger", "normal");
 
     expect(chromeContextMenusCeateSpy).toHaveBeenCalledTimes(1);
-    expect(chromeContextMenusCeateSpy).toHaveBeenCalledWith({ id: 0, title: "TabMerger", type: "normal" });
+    expect(chromeContextMenusCeateSpy).toHaveBeenCalledWith({ id: "0", title: "TabMerger", type: "normal" });
   });
 });
 
@@ -115,6 +124,7 @@ describe("contextMenuOrShortCut", () => {
     var chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementationOnce(() => {});
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     BackgroundFunc.contextMenuOrShortCut({ menuItemId }, tab);
 
     if (menuItemId === "aopen-tabmerger") {
@@ -154,6 +164,7 @@ describe("contextMenuOrShortCut", () => {
     var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     BackgroundFunc.contextMenuOrShortCut(command, tab);
 
     waitFor(() => {

@@ -29,21 +29,70 @@ import * as AppHelper from "../../src/components/App/App_helpers";
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 
 import App from "../../src/components/App/App";
-import Group from "../../src/components/Group/Group";
-import Tab from "../../src/components/Tab/Tab";
+import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
+import { TabState } from "../../src/typings/Tab";
+
+const GLOBAL_OBJECT = (global as unknown) as {
+  init_groups: { [key: string]: DefaultGroup };
+  user: userType;
+  CONSTANTS: any;
+  TUTORIAL_GROUP: { [key: string]: DefaultGroup };
+  exportedJSON: { [key: string]: DefaultGroup };
+  mockSet: <T>() => setStateType<T>;
+  chromeLocalGetSpy: Function;
+  chromeLocalSetSpy: Function;
+  chromeSyncGetSpy: Function;
+  chromeSyncSetSpy: Function;
+  chromeBrowserActionSetBadgeTextSpy: Function;
+  chromeBrowserActionSetBadgeBackgroundColorSpy: Function;
+  chromeBrowserActionSetTitleSpy: Function;
+  chromeLocalRemoveSpy: Function;
+  toggleDarkModeSpy: Function;
+  toggleSyncTimestampSpy: Function;
+  chromeSyncRemoveSpy: Function;
+  chromeTabsRemoveSpy: Function;
+  chromeTabsQuerySpy: Function;
+  chromeTabsCreateSpy: Function;
+  chromeTabsMoveSpy: Function;
+  chromeRuntimeSendMessageSpy: Function;
+};
+
+const {
+  init_groups,
+  mockSet,
+  user,
+  CONSTANTS,
+  TUTORIAL_GROUP,
+  exportedJSON,
+  toggleDarkModeSpy,
+  toggleSyncTimestampSpy,
+  chromeLocalGetSpy,
+  chromeLocalSetSpy,
+  chromeSyncGetSpy,
+  chromeSyncSetSpy,
+  chromeLocalRemoveSpy,
+  chromeSyncRemoveSpy,
+  chromeTabsRemoveSpy,
+  chromeTabsQuerySpy,
+  chromeTabsCreateSpy,
+  chromeTabsMoveSpy,
+  chromeBrowserActionSetTitleSpy,
+  chromeBrowserActionSetBadgeTextSpy,
+  chromeBrowserActionSetBadgeBackgroundColorSpy,
+} = GLOBAL_OBJECT;
 
 const anything = expect.any(Function);
-var container, sync_node, toastSpy;
+var container: HTMLElement, sync_node: HTMLSpanElement, toastSpy: Function;
 
-const mutationMockFn = (_, cb) => {
-  var mutation = {};
-  mutation.type = { attributes: false, childList: true, subtree: false };
+const mutationMockFn = (_: any, cb: (mutation: object) => void) => {
+  var mutation = { type: { attributes: false, childList: true, subtree: false } };
   cb(mutation);
 };
 
 beforeAll(() => {
   jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
   jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
+  /* @ts-ignore */
   toastSpy = toast.mockImplementation((...args) => args);
   console.info = jest.fn();
 });
@@ -62,6 +111,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
+  /* @ts-ignore */
   toastSpy.mockRestore();
   jest.spyOn(AppFunc, "syncLimitIndication").mockRestore();
 });
@@ -81,11 +131,12 @@ describe("storeUserDetailsPriorToCheck", () => {
 
   var stub = {
     target: {
-      querySelectorAll: (arg) => arg === "input" && [{ value: email }, { value: password }],
+      querySelectorAll: (arg: string) => arg === "input" && [{ value: email }, { value: password }],
     },
     preventDefault: () => {},
   };
 
+  /* @ts-ignore */
   AppFunc.storeUserDetailsPriorToCheck(stub, mockSet, dialogMock);
 
   expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
@@ -117,7 +168,7 @@ describe("syncLimitIndication", () => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
     localStorage.setItem("client_details", JSON.stringify({ paid: itemLimit && true }));
     if (itemLimit < 1000) {
-      localStorage.setItem("scroll", 10);
+      localStorage.setItem("scroll", "10");
     } else {
       localStorage.removeItem("scroll");
     }
@@ -149,17 +200,21 @@ describe("syncLimitIndication", () => {
 
 describe("toggleHiddenOrEmptyGroups", () => {
   test.each([
-    ["Free/Basic", "before"],
-    ["Free/Basic", "after"],
-    ["Standard/Premium", "before"],
-    ["Standard/Premium", "after"],
-  ])("%s user - %s", (user_type, when) => {
+    [{ paid: false, tier: "Free" }, "before"],
+    [{ paid: "paid", tier: "Basic" }, "after"],
+    [{ paid: "paid", tier: "Standard" }, "before"],
+    [{ paid: "paid", tier: "Premium" }, "after"],
+    /* @ts-ignore */
+  ])("%s user - %s", (user_type: userType, when: "before" | "after") => {
     document.body.innerHTML = "<div id='sidebar'/>";
     jest.clearAllMocks();
 
-    AppFunc.toggleHiddenOrEmptyGroups(when, user_type.includes("Free") ? { tier: "Free" } : user);
+    AppFunc.toggleHiddenOrEmptyGroups(
+      when,
+      JSON.stringify(user_type).includes("Free") ? { paid: "paid", tier: "Free" } : user
+    );
 
-    expect(document.querySelector("#sidebar").style.visibility).toBe(when === "before" && !user_type.includes("Free") ? "hidden" : ""); // prettier-ignore
+    expect((document.querySelector("#sidebar") as HTMLDivElement).style.visibility).toBe(when === "before" && !JSON.stringify(user_type).includes("Free") ? "hidden" : ""); // prettier-ignore
   });
 });
 
@@ -208,6 +263,7 @@ describe("handleUpdate", () => {
   ])("production=%s, previousVersion=%s", (production, previousVersion) => {
     localStorage.setItem("ext_version", previousVersion);
     const currentVersion = chrome.runtime.getManifest().version;
+    /* @ts-ignore */
     process.env.REACT_APP_PRODUCTION = production;
     jest.clearAllMocks();
 
@@ -232,7 +288,7 @@ describe("storageInit", () => {
   test("sync settings are null & local groups are null", () => {
     sessionStorage.clear();
     localStorage.clear();
-    localStorage.setItem("tour_needed", true);
+    localStorage.setItem("tour_needed", "true");
     jest.clearAllMocks();
 
     AppFunc.storageInit(sync_node, mockSet, mockSet, mockSet);
@@ -261,11 +317,11 @@ describe("storageInit", () => {
 
   test("tour is needed", () => {
     localStorage.removeItem("groups");
-    localStorage.setItem("tour_needed", false);
+    localStorage.setItem("tour_needed", "false");
     jest.clearAllMocks();
 
     AppFunc.storageInit(sync_node, mockSet, mockSet, mockSet);
-    localStorage.setItem("tour_needed", true);
+    localStorage.setItem("tour_needed", "true");
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: TUTORIAL_GROUP, groups_copy: [], scroll: 0, tour_needed: true }, anything); // prettier-ignore
@@ -287,7 +343,7 @@ describe("storageInit", () => {
   });
 
   test("sync group-0 exists & local groups exist", () => {
-    sessionStorage.setItem("group-0", 1);
+    sessionStorage.setItem("group-0", "1");
     localStorage.setItem("groups", JSON.stringify(init_groups));
     jest.clearAllMocks();
 
@@ -308,17 +364,19 @@ describe("resetTutorialChoice", () => {
     async (response) => {
       document.body.innerHTML = `<div id="need-btn" response=${response ? "negative" : "positive"}/div>`;
       var element = document.querySelector("#need-btn");
-      var stub = { target: { closest: (arg) => arg !== "" && element } };
+      var stub = { target: { closest: (arg: string) => arg !== "" && element } };
       const url = "TabMerger_Site";
       const mockSetTour = jest.fn(), mockSetDialog = jest.fn(); // prettier-ignore
       global.open = jest.fn();
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (response === null) {
+        /* @ts-ignore */
         jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
       }
 
       jest.clearAllMocks();
+      /* @ts-ignore */
       AppFunc.resetTutorialChoice(stub, url, mockSetTour, mockSetDialog);
       if (response !== null) {
         element.setAttribute("response", response ? "positive" : "negative");
@@ -410,17 +468,18 @@ describe("badgeIconInfo", () => {
 });
 
 describe("syncWrite", () => {
-  var stub = (ret_val) => ({
+  var stub = (ret_val: boolean) => ({
     target: {
-      closest: (arg) =>
-        arg === "#sync-write-btn" && { classList: { contains: (arg) => arg === "disabled-btn" && ret_val } },
+      closest: (arg: string) =>
+        arg === "#sync-write-btn" && { classList: { contains: (arg: string) => arg === "disabled-btn" && ret_val } },
     },
   });
 
   it("toasts if user subscription is Free Tier", () => {
     jest.clearAllMocks();
 
-    AppFunc.syncWrite(stub(false), sync_node, { paid: false });
+    /* @ts-ignore */
+    AppFunc.syncWrite(stub(false), sync_node, { paid: false, tier: "Free" });
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
     expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SUBSCRIPTION_TOAST]);
@@ -429,6 +488,7 @@ describe("syncWrite", () => {
   it("toasts if either sync limit is exceeded", () => {
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.syncWrite(stub(true), sync_node, user);
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
@@ -438,6 +498,7 @@ describe("syncWrite", () => {
   it("does nothing when no groups in local storage", () => {
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.syncWrite(stub(false), sync_node, user);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
@@ -448,6 +509,7 @@ describe("syncWrite", () => {
     localStorage.setItem("groups", JSON.stringify({ "group-0": CONSTANTS.DEFAULT_GROUP }));
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.syncWrite(stub(false), sync_node, user);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
@@ -465,6 +527,7 @@ describe("syncWrite", () => {
     }
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.syncWrite(stub(false), sync_node, user);
 
     await waitFor(() => {
@@ -499,9 +562,9 @@ describe("syncRead", () => {
     sessionStorage.clear();
     jest.clearAllMocks();
 
-    AppFunc.syncRead(sync_node, test_type.includes("sync") ? user : { paid: false }, mockSet, mockSet, mockSet);
+    AppFunc.syncRead(sync_node, test_type.includes("sync") ? user : { paid: false, tier: "Free" }, mockSet, mockSet);
 
-    if ((sync_node, test_type.includes("sync"))) {
+    if (test_type.includes("sync")) {
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeSyncGetSpy).toHaveBeenCalledWith(null, anything);
     } else {
@@ -529,7 +592,7 @@ describe("syncRead", () => {
     sessionStorage.setItem("group-1", JSON.stringify(init_groups["group-1"]));
     jest.clearAllMocks();
 
-    AppFunc.syncRead(sync_node, user, mockSet, mockSet, mockSet);
+    AppFunc.syncRead(sync_node, user, mockSet, mockSet);
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncRemoveSpy).toHaveBeenCalledTimes(1);
@@ -554,14 +617,14 @@ describe("openOrRemoveTabs", () => {
   var tab_single = ["https://stackoverflow.com/"];
   var tab_group = [...tab_single, "https://lichess.org/", "https://www.chess.com/"];
   var tab_all = [...tab_group, "https://www.twitch.tv/", "https://www.reddit.com/", "https://www.a.com/", "https://www.b.com/"]; // prettier-ignore
-  const tab_arr_map = { SINGLE: tab_single, GROUP: tab_group, ALL: tab_all };
+  const tab_arr_map: { [key: string]: string[] } = { SINGLE: tab_single, GROUP: tab_group, ALL: tab_all };
 
-  var open_tabs;
+  var open_tabs: TabState[];
   beforeEach(() => {
     open_tabs = [
-      { active: true, id: 0, pinned: false, url: location.href + "a" },
-      { active: false, id: 1, pinned: false, url: location.href + "b" },
-      { active: false, id: 2, pinned: false, url: location.href + "c" },
+      { active: true, id: 0, pinned: false, url: location.href + "a", title: "A" },
+      { active: false, id: 1, pinned: false, url: location.href + "b", title: "B" },
+      { active: false, id: 2, pinned: false, url: location.href + "c", title: "C" },
     ];
     sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
 
@@ -598,7 +661,10 @@ describe("openOrRemoveTabs", () => {
     (keepOrRemove, _, locked, type, expected_tabs_left) => {
       // ARRANGE
       var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
-      var expect_open_tabs = [...open_tabs, ...tab_arr_map[type].map((url) => ({ active: false, pinned: false, url }))];
+      var expect_open_tabs = [
+        ...open_tabs,
+        ...tab_arr_map[type].map((url: string) => ({ active: false, pinned: false, url })),
+      ];
 
       sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove, tooltipVisibility: false })); // prettier-ignore
 
@@ -635,8 +701,8 @@ describe("openOrRemoveTabs", () => {
       expect(chromeTabsMoveSpy).not.toHaveBeenCalled();
 
       expect(chromeTabsCreateSpy).toHaveBeenCalledTimes(tab_arr_map[type].length);
-      tab_arr_map[type].forEach((url) => {
-        expect(chromeTabsCreateSpy).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything);
+      tab_arr_map[type].forEach((url: string) => {
+        expect(chromeTabsCreateSpy).toHaveBeenCalledWith({ active: false, pinned: false, url }, anything); // prettier-ignore
       });
 
       expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
@@ -802,10 +868,7 @@ describe("checkMerging", () => {
         }
       }
 
-      var expected_tabs_num = 0;
-      Object.values(expected_groups).forEach((val) => {
-        expected_tabs_num += val.tabs.length;
-      });
+      var expected_tabs_num = AppHelper.getTabTotal(expected_groups);
 
       var current_settings = JSON.parse(sessionStorage.getItem("settings"));
       current_settings.merge = merge_setting;
@@ -921,7 +984,7 @@ describe("openAllTabs", () => {
       `  <a class="a-tab" href="www.abc.com"/>` +
       `</div>`;
     var element = document.querySelector("#open-all-btn");
-    var stub = { target: { closest: (arg) => arg !== "" && element } };
+    var stub = { target: { closest: (arg: string) => arg !== "" && element } };
 
     var expected_ls = { remove: [null, location.href + "www.abc.com"] };
 
@@ -929,11 +992,13 @@ describe("openAllTabs", () => {
 
     // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
     if (response === null) {
+      /* @ts-ignore */
       jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
     }
 
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.openAllTabs(stub, mockSet);
     if (response !== null) {
       element.setAttribute("response", response ? "positive" : "negative"); // cause a mutation on the element
@@ -956,7 +1021,7 @@ describe("openAllTabs", () => {
 });
 
 describe("deleteAllGroups", () => {
-  const dialogObj = (element) => CONSTANTS.DELETE_ALL_DIALOG(element);
+  const dialogObj = (element: HTMLButtonElement) => CONSTANTS.DELETE_ALL_DIALOG(element);
 
   it.each([[true], [false], [null]])(
     "adjusts local storage to only have locked group and default group underneath if user accepts - groups locked = %s",
@@ -984,7 +1049,7 @@ describe("deleteAllGroups", () => {
       }
       localStorage.setItem("groups", JSON.stringify(expected_groups));
 
-      var new_entry = locked
+      var new_entry: { [key: string]: DefaultGroup } = locked
         ? {
             "group-0": {
               color: "#000000",
@@ -999,17 +1064,19 @@ describe("deleteAllGroups", () => {
           }
         : { "group-0": CONSTANTS.DEFAULT_GROUP };
 
-      var element = document.querySelector("#delete-all-btn");
-      var stub = { target: { closest: (arg) => arg !== "" && element } };
+      var element = document.querySelector("#delete-all-btn") as HTMLButtonElement;
+      var stub = { target: { closest: (arg: string) => arg !== "" && element } };
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (locked === null) {
+        /* @ts-ignore */
         jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
       }
 
       new_entry["group-" + +locked].created = AppHelper.getTimestamp();
       jest.clearAllMocks();
 
+      /* @ts-ignore */
       AppFunc.deleteAllGroups(stub, user, mockSet, mockSet, mockSet);
       if (locked !== null) {
         element.setAttribute("response", "positive"); // cause mutation change on element
@@ -1054,10 +1121,11 @@ describe("deleteAllGroups", () => {
 
   it("does nothing if user rejects", async () => {
     document.body.innerHTML = `<div id="delete-all-btn" class="group-item" response="positive"/>`;
-    var element = document.querySelector("#delete-all-btn");
+    var element = document.querySelector("#delete-all-btn") as HTMLButtonElement;
     var stub = { target: { closest: jest.fn(() => element) } };
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.deleteAllGroups(stub, user, mockSet, mockSet, mockSet);
     element.setAttribute("response", "negative");
 
@@ -1152,8 +1220,11 @@ describe("dragOver", () => {
 
     global.scrollTo = jest.fn();
 
+    /* @ts-ignore */
     var getDragAfterElementSpy = jest.spyOn(AppHelper, "getDragAfterElement").mockImplementation(() => {
-      return where !== "AFTER" ? document.querySelectorAll(type === "GROUP" ? ".group" : ".draggable")[tab_num] : null;
+      return where !== "AFTER"
+        ? (document.querySelectorAll(type === "GROUP" ? ".group" : ".draggable")[tab_num] as HTMLElement)
+        : null;
     });
 
     var stub = {
@@ -1166,6 +1237,7 @@ describe("dragOver", () => {
 
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.dragOver(stub, type.toLowerCase(), scroll ? offset : undefined);
 
     if (type !== "URL") {
@@ -1177,6 +1249,7 @@ describe("dragOver", () => {
       }
       expect(getDragAfterElementSpy).toHaveBeenCalledWith(expected_drag_container, stub.clientY, type.toLowerCase());
       if (where !== "AFTER") {
+        /* @ts-ignore */
         expect(getDragAfterElementSpy().classList).toContain(type === "GROUP" ? "group" : "draggable");
       } else {
         expect(getDragAfterElementSpy).toHaveReturnedWith(null);
@@ -1222,14 +1295,16 @@ describe("regexSearchForTab", () => {
 
     // need to type first to have the input change
     if (type === "blank") {
+      /* @ts-ignore */
       AppFunc.regexSearchForTab({ target: { value: "random" } }, paid ? user : { paid });
       jest.clearAllMocks();
     }
+    /* @ts-ignore */
     AppFunc.regexSearchForTab({ target: { value } }, paid ? user : { paid });
 
     if (paid) {
       const targets = [...document.body.querySelectorAll(type === "tab" ? ".draggable, .group-item" : ".group-item")];
-      expect(targets.map((x) => x.style.display)).toStrictEqual(expect_arr);
+      expect(targets.map((x) => (x as HTMLElement).style.display)).toStrictEqual(expect_arr);
     } else {
       expect(toastSpy).toHaveBeenCalledTimes(1);
       expect(toastSpy).toHaveReturnedWith(CONSTANTS.SUBSCRIPTION_TOAST);
@@ -1240,8 +1315,9 @@ describe("regexSearchForTab", () => {
 describe("resetSearch", () => {
   it("calls timeout and resets the target's value before calling regexSearchForTab", () => {
     var stub = { target: { value: "NOT EMPTY" } };
-    jest.useFakeTimers();
 
+    jest.useFakeTimers();
+    /* @ts-ignore */
     AppFunc.resetSearch(stub);
     jest.advanceTimersByTime(101);
 
@@ -1254,7 +1330,7 @@ describe("exportJSON", () => {
     localStorage.setItem("client_details", user_type && JSON.stringify({ tier: user_type }));
 
     jest.clearAllMocks();
-    AppFunc.exportJSON(false, false);
+    AppFunc.exportJSON(false, false, null);
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
     expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SUBSCRIPTION_TOAST]);
@@ -1270,7 +1346,8 @@ describe("exportJSON", () => {
   ])(
     "correctly exports a JSON file of the current configuration, fileLimit=%s, lastError=%s, showShelf=%s",
     (fileLimit, lastError, showShelf) => {
-      chrome.runtime.lastError = lastError ? jest.fn() : undefined;
+      /* @ts-ignore */
+      chrome.runtime.lastError = lastError && jest.fn();
 
       var chromeDownloadsSetShelfEnabledSpy = jest.spyOn(chrome.downloads, "setShelfEnabled");
       var chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
@@ -1293,7 +1370,7 @@ describe("exportJSON", () => {
 
       jest.clearAllMocks();
 
-      AppFunc.exportJSON(showShelf, false);
+      AppFunc.exportJSON(showShelf, false, null);
 
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details", "file_ids"], anything);
@@ -1329,6 +1406,7 @@ describe("importJSON", () => {
     const input = { target: { files: [{ type: "application/pdf" }] } };
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.importJSON(input, user, mockSet, mockSet);
 
     expect(chromeSyncSetSpy).not.toHaveBeenCalled();
@@ -1343,19 +1421,20 @@ describe("importJSON", () => {
     const fakeFile = new File([JSON.stringify(exportedJSON)], "file.json", { type: "application/json" });
     const input = { target: { files: [fakeFile] } };
 
+    /* @ts-ignore */
     jest.spyOn(global, "FileReader").mockImplementation(function () {
       this.readAsText = jest.fn(() => (this.result = JSON.stringify(exportedJSON)));
     });
 
-    var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation(function () {
-      return [init_groups];
-    });
+    var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation(() => [init_groups]); // prettier-ignore
 
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     AppFunc.importJSON(input, user, mockSet, mockSet);
 
     expect(FileReader).toHaveBeenCalledTimes(1);
+    /* @ts-ignore */
     const reader = FileReader.mock.instances[0];
     act(() => reader.onload());
 
@@ -1380,6 +1459,7 @@ describe("importJSON", () => {
 
     expect(toastSpy).not.toHaveBeenCalled();
 
+    /* @ts-ignore */
     expect(input.target.value).toBe("");
 
     storeDestructiveActionSpy.mockRestore();
@@ -1395,26 +1475,25 @@ describe("getTabMergerLink", () => {
   const prevChrome = chrome;
 
   afterAll(() => {
+    /* @ts-ignore */
     chrome = prevChrome;
+    /* @ts-ignore */
     console.error.restoreMock();
   });
 
   /**
    * Allows to change "browser" by specifying the correct userAgent string.
    * @param {string} return_val The value which navigator.userAgent string will be set to.
-   * @return navigator.userAgent = return_val
    */
-  function changeUserAgent(return_val) {
-    navigator.__defineGetter__("userAgent", function () {
-      return return_val;
-    });
+  function changeUserAgent(return_val: string): void {
+    /* @ts-ignore */
+    navigator.__defineGetter__("userAgent", () => return_val);
   }
 
   test.each([
     ["Edge", edge_url],
     ["Chrome", chrome_url],
     ["Firefox", firefox_url],
-    ["Opera", undefined],
   ])("correctly sets the link of the TabMerger logo - %s", (browser, expect_link) => {
     if (["Edge", "Chrome"].includes(browser)) {
       changeUserAgent(browser === "Edge" ? "Edg" : "");
@@ -1423,6 +1502,7 @@ describe("getTabMergerLink", () => {
     } else {
       delete global.InstallTrigger;
       changeUserAgent("RANDOM");
+      /* @ts-ignore */
       chrome = undefined;
     }
 

@@ -24,6 +24,38 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { waitFor } from "@testing-library/react";
 
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
+import { DefaultGroup, userType } from "../../src/typings/common.js";
+import { TabState } from "../../src/typings/Tab.js";
+
+const GLOBAL_OBJECT = (global as unknown) as {
+  init_groups: { [key: string]: DefaultGroup };
+  CONSTANTS: any;
+  chromeLocalGetSpy: Function;
+  chromeLocalSetSpy: Function;
+  chromeSyncGetSpy: Function;
+  chromeSyncSetSpy: Function;
+  chromeTabsOnUpdatedAdd: Function;
+  chromeTabsOnUpdatedRemove: Function;
+  chromeTabsCreateSpy: Function;
+  chromeTabsRemoveSpy: Function;
+  chromeTabsQuerySpy: Function;
+  chromeTabsUpdateSpy: Function;
+};
+
+const {
+  init_groups,
+  CONSTANTS,
+  chromeLocalGetSpy,
+  chromeLocalSetSpy,
+  chromeSyncGetSpy,
+  chromeSyncSetSpy,
+  chromeTabsOnUpdatedAdd,
+  chromeTabsOnUpdatedRemove,
+  chromeTabsQuerySpy,
+  chromeTabsCreateSpy,
+  chromeTabsRemoveSpy,
+  chromeTabsUpdateSpy,
+} = GLOBAL_OBJECT;
 
 const anything = expect.any(Function);
 
@@ -75,7 +107,7 @@ describe("filterTabs", () => {
       jest.clearAllMocks();
     }
 
-    var tabs_to_be_merged;
+    var tabs_to_be_merged: TabState[];
     if (info.which === "right") {
       if (tab.index === 4) {
         tabs_to_be_merged = merge_tabs.slice(5, 7);
@@ -101,7 +133,7 @@ describe("filterTabs", () => {
     }
 
     const into_group = group_id ? group_id : "contextMenu";
-    var merged_tabs = [];
+    var merged_tabs: TabState[] = [];
     tabs_to_be_merged.forEach((x) => {
       if (!pinned) {
         if (!x.pinned) {
@@ -113,6 +145,7 @@ describe("filterTabs", () => {
     });
 
     jest.useFakeTimers();
+    /* @ts-ignore */
     BackgroundHelper.filterTabs(info, tab, group_id);
     jest.advanceTimersByTime(101);
 
@@ -164,7 +197,7 @@ describe("findExtTabAndSwitch", () => {
   test("TabMerger page is already open", async () => {
     jest.clearAllMocks();
 
-    const result = await BackgroundHelper.findExtTabAndSwitch();
+    const result = await BackgroundHelper.findExtTabAndSwitch(true);
 
     expect(result).toBe(0);
 
@@ -181,10 +214,13 @@ describe("findExtTabAndSwitch", () => {
     ["incomplete", true],
     ["incomplete", false],
   ])("TabMerger page is NOT already open - (loading = %s, match_id = %s)", async (type, id_match) => {
-    chromeTabsQuerySpy.mockImplementationOnce((_, cb) => cb([]));
-    chromeTabsCreateSpy.mockImplementationOnce((_, cb) => cb({ id: id_match ? tab_id : tab_id - 1 }));
-    chromeTabsOnUpdatedAdd.mockImplementationOnce((cb) => cb(tab_id, { status: type }));
-    global.resolve = jest.fn((arg) => Promise.resolve(arg));
+    /* @ts-ignore */
+    chromeTabsQuerySpy.mockImplementationOnce((_, cb: ([]) => void) => cb([]));
+    /* @ts-ignore */
+    chromeTabsCreateSpy.mockImplementationOnce((_, cb: ({ id: number }) => void) => cb({ id: id_match ? tab_id : tab_id - 1 })); // prettier-ignore
+    /* @ts-ignore */
+    chromeTabsOnUpdatedAdd.mockImplementationOnce((cb: (tab_id: number, changeInfo: {status: string}) => void) => cb(tab_id, { status: type })); // prettier-ignore
+    global.resolve = jest.fn().mockImplementationOnce((arg) => Promise.resolve(arg));
     jest.clearAllMocks();
 
     const result = await BackgroundHelper.findExtTabAndSwitch(type !== "complete" || !id_match);
@@ -206,8 +242,6 @@ describe("findExtTabAndSwitch", () => {
       expect(chromeTabsOnUpdatedRemove).not.toHaveBeenCalled();
       expect(result).toEqual(1);
     }
-
-    resolve.mockRestore();
   });
 });
 

@@ -89,11 +89,13 @@ export default function App() {
     AppFunc.createAutoBackUpAlarm();
     AppFunc.handleUpdate();
 
+    /* @ts-ignore */
     chrome.alarms.onAlarm.addListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestampVal));
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
 
     return () => {
+      /* @ts-ignore */
       chrome.alarms.onAlarm.removeListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestampVal));
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);

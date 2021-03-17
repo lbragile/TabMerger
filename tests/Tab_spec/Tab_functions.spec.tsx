@@ -22,23 +22,35 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import { render, fireEvent } from "@testing-library/react";
-import { toast } from "react-toastify";
+import { Toast, toast } from "react-toastify";
 
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
 import Tab from "../../src/components/Tab/Tab";
 
 import * as AppHelper from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
+import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
+
+const GLOBAL_OBJECT = (global as unknown) as {
+  init_groups: { [key: string]: DefaultGroup };
+  user: userType;
+  CONSTANTS: any;
+  mockSet: <T>() => setStateType<T>;
+  chromeLocalGetSpy: Function;
+  chromeLocalSetSpy: Function;
+};
+
+const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, mockSet, user, CONSTANTS } = GLOBAL_OBJECT;
 
 const anything = expect.any(Function);
 
-var container;
+var container: HTMLElement;
 beforeEach(() => {
   localStorage.setItem("groups", JSON.stringify(init_groups));
   container = render(
     <AppProvider value={{ user, setTabTotal: mockSet, setGroups: mockSet, setDialog: mockSet }}>
       <div className="group" id="group-0">
-        <Tab id="group-0" item_limit={8000} hidden={false} />
+        <Tab id="group-0" hidden={false} textColor="primary" fontWeight="Normal" fontFamily="Arial" />
       </div>
     </AppProvider>
   ).container;
@@ -72,7 +84,7 @@ describe("tabDragStart", () => {
 
       fireEvent.dragStart(elem);
 
-      expect(type === "draggable" ? elem.classList : elem.parentNode.classList).toContain("dragging");
+      expect(type === "draggable" ? elem.classList : (elem.parentNode as HTMLElement).classList).toContain("dragging");
       expect(container.querySelector(".group").classList).toContain("drag-origin");
     }
   );
@@ -80,7 +92,7 @@ describe("tabDragStart", () => {
 
 // Note that tabs are not actually dragged, need puppeteer to test this
 describe("tabDragEnd", () => {
-  var stub, orig_groups;
+  var stub: object, orig_groups: { [key: string]: DefaultGroup };
   beforeEach(() => {
     stub = {
       stopPropagation: () => {},
@@ -122,7 +134,8 @@ describe("tabDragEnd", () => {
   });
 
   it.each([[true], [false]])("works for same group = %s", (same) => {
-    stub.target.closest = (arg) => arg === ".group" && document.querySelector("#group-" + +!same);
+    /* @ts-ignore */
+    stub.target.closest = (arg: string) => arg === ".group" && document.querySelector("#group-" + +!same);
     jest.clearAllMocks();
 
     if (!same) {
@@ -134,6 +147,7 @@ describe("tabDragEnd", () => {
       ];
     }
 
+    /* @ts-ignore */
     TabFunc.tabDragEnd(stub, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -148,22 +162,18 @@ describe("tabDragEnd", () => {
 });
 
 describe("removeTab", () => {
-  var stub, storeDestructiveActionSpy;
+  var stub: object;
   beforeEach(() => {
-    storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups) => [groups]); // prettier-ignore
+    jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementationOnce((_, groups) => [groups]); // prettier-ignore
     stub = {
       target: {
-        closest: (arg) =>
+        closest: (arg: string) =>
           arg !== "" && {
-            querySelector: (arg) => arg !== "" && { href: "https://stackoverflow.com/" },
-            closest: (arg) => arg !== "" && { id: "group-0" },
+            querySelector: (arg: string) => arg !== "" && { href: "https://stackoverflow.com/" },
+            closest: (arg: string) => arg !== "" && { id: "group-0" },
           },
       },
     };
-  });
-
-  afterEach(() => {
-    storeDestructiveActionSpy.mockRestore();
   });
 
   it("correctly adjusts storage when a tab is removed", () => {
@@ -172,6 +182,7 @@ describe("removeTab", () => {
     expected_groups["group-0"].tabs = expected_groups["group-0"].tabs.slice(1, 3);
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -190,43 +201,46 @@ describe("removeTab", () => {
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
     expected_groups["group-0"].locked = true;
     localStorage.setItem("groups", JSON.stringify(expected_groups));
-    var toastCalls = [];
-    const toastSpy = toast.mockImplementation((...args) => toastCalls.push(args));
+    /* @ts-ignore */
+    const toastSpy = toast.mockImplementationOnce((...args) => args);
 
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     TabFunc.removeTab(stub, init_groups["group-0"].tabs, user, mockSet, mockSet, mockSet);
 
     expect(mockSet).not.toHaveBeenCalled();
     expect(toastSpy).toHaveBeenCalledTimes(1);
-    expect(toastCalls[0]).toEqual([...CONSTANTS.REMOVE_TAB_TOAST]);
+    expect(toastSpy).toHaveReturnedWith([...CONSTANTS.REMOVE_TAB_TOAST]);
   });
 });
 
 describe("handleTabClick", () => {
   const url = "https://stackoverflow.com/";
-  var classList_arr = [];
+  var classList_arr: string[] = [];
 
   var stub = {
     preventDefault: () => {},
     target: {
-      closest: (arg) => arg !== "" && { id: "group-0" },
+      closest: (arg: string) => arg !== "" && { id: "group-0" },
       href: url,
       click: jest.fn(),
       focus: jest.fn(),
       blur: jest.fn(),
       classList: {
-        contains: (arg) => arg !== "" && classList_arr.includes(arg),
-        add: (arg) => arg !== "" && classList_arr.push(arg),
+        contains: (arg: string) => arg !== "" && classList_arr.includes(arg),
+        add: (arg: string) => arg !== "" && classList_arr.push(arg),
       },
     },
     button: 0,
   };
 
   it("adds a remove item of form ['tab', tab.href] to local storage on left click", () => {
+    /* @ts-ignore */
     TabFunc.handleTabClick(stub);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
+    /* @ts-ignore */
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ remove: [stub.target.closest().id, stub.target.href] }, anything);
 
     expect(stub.target.click).toHaveBeenCalledTimes(1);
@@ -239,6 +253,7 @@ describe("handleTabClick", () => {
     stub.button = 1;
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     TabFunc.handleTabClick(stub);
 
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -258,6 +273,7 @@ describe("handleTabClick", () => {
     }
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     TabFunc.handleTabClick(stub);
 
     expect(chromeLocalSetSpy).not.toHaveBeenCalled();
@@ -269,18 +285,18 @@ describe("handleTabClick", () => {
 describe("handleTabTitleChange", () => {
   const url = "https://stackoverflow.com/";
 
-  var stub;
+  var stub: { preventDefault: Function; target: object; detail: number; code: string };
   beforeEach(() => {
     stub = {
       preventDefault: jest.fn(),
       target: {
-        closest: (arg) => arg !== "" && { id: "group-0" },
+        closest: (arg: string) => arg !== "" && { id: "group-0" },
         href: url,
         textContent: "AAA",
         classList: { remove: jest.fn() },
       },
       detail: 0,
-      code: 0,
+      code: "Temp",
     };
   });
 
@@ -288,6 +304,7 @@ describe("handleTabTitleChange", () => {
     stub.code = "Enter";
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     TabFunc.handleTabTitleChange(stub);
 
     expect(stub.preventDefault).toHaveBeenCalledTimes(1);
@@ -295,13 +312,15 @@ describe("handleTabTitleChange", () => {
 
   it("changes the tab's title and sets local storage accordingly", () => {
     var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    /* @ts-ignore */
     expected_groups[stub.target.closest().id].tabs[0].title = stub.target.textContent;
 
     jest.clearAllMocks();
+    /* @ts-ignore */
     TabFunc.handleTabTitleChange(stub);
 
-    expect(stub.target.classList.remove).toHaveBeenCalledTimes(1);
-    expect(stub.target.classList.remove).toHaveBeenCalledWith("edit-tab-title");
+    expect((stub.target as HTMLElement).classList.remove).toHaveBeenCalledTimes(1);
+    expect((stub.target as HTMLElement).classList.remove).toHaveBeenCalledWith("edit-tab-title");
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeLocalGetSpy).toHaveBeenCalledWith("groups", anything);
@@ -316,16 +335,16 @@ describe("handleTabTitleChange", () => {
 describe("handlePinClick", () => {
   const url = "https://www.twitch.tv/";
 
-  var stub, classList_arr;
+  var stub: object, classList_arr: string[];
   beforeEach(() => {
     classList_arr = ["pinned"];
 
     stub = {
       target: {
         classList: { contains: () => {} },
-        closest: (arg) =>
+        closest: (arg: string) =>
           arg !== "" && {
-            classList: { toggle: (arg) => arg === "pinned" && classList_arr.shift() },
+            classList: { toggle: (arg: string) => arg === "pinned" && classList_arr.shift() },
             id: "group-1",
             previousSibling: { href: url },
           },
@@ -337,11 +356,14 @@ describe("handlePinClick", () => {
     ["PINNED", "NOT", true],
     ["UNPINNED", "", false],
   ])("sets the tab to be %s when it was %s pinned", (_, __, type) => {
-    stub.target.classList.contains = (arg) => arg !== "" && type;
+    /* @ts-ignore */
+    stub.target.classList.contains = (arg: string) => arg !== "" && type;
     var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    /* @ts-ignore */
     expect_groups[stub.target.closest().id].tabs[0].pinned = type;
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     TabFunc.handlePinClick(stub, mockSet);
 
     expect(classList_arr).toEqual([]);

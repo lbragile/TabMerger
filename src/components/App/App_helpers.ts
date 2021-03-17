@@ -294,10 +294,10 @@ export function checkUserStatus(setUser: setStateType<userType>): void {
 
 /**
  * Actually performs the automatic backup action based on the triggered alarm.
- * @param {object} alarm The alarm for which the backup is to be performed.
- * @param {HTMLElement} sync_node Needed for sync backups to update the sync text indicator
+ * @param {{ name: "json_backup" | "sync_backup" }} alarm The alarm for which the backup is to be performed.
+ * @param {HTMLSpanElement} sync_node Needed for sync backups to update the sync text indicator
  */
-export function performAutoBackUp(alarm: { name: string }, sync_node?: HTMLSpanElement): void {
+export function performAutoBackUp(alarm: { name: "json_backup" | "sync_backup" }, sync_node?: HTMLSpanElement): void {
   if (alarm.name === "json_backup") {
     AppFunc.exportJSON(false, false, null);
   }

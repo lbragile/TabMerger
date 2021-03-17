@@ -31,7 +31,6 @@ import * as CONSTANTS from "../../constants/constants";
 import { TUTORIAL_GROUP } from "../Extra/Tutorial";
 import { toast } from "react-toastify";
 
-import { DialogProps } from "../Extra/Dialog";
 import { IChanges } from "./App";
 import { DefaultGroup, setStateType, Toast, userType } from "../../typings/common";
 import { TabState } from "../../typings/Tab";
@@ -787,7 +786,7 @@ export function exportJSON(showGrayDownloadShelf: boolean, showSaveAsDialog: boo
             }
             console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file with id=${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
           } else {
-            chrome.runtime.lastError.toString() !== "Error: Download canceled by the user" && toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST); // prettier-ignore
+            chrome.runtime.lastError.message !== "Error: Download canceled by the user" && toast(...CONSTANTS.DOWNLOAD_ERROR_TOAST); // prettier-ignore
           }
         });
       });
@@ -844,16 +843,15 @@ export function importJSON(
  * @return {string} A URL link to TabMerger's webstore (or reviews) page
  */
 export function getTabMergerLink(reviews: boolean): string {
-  var link;
   var isFirefox = "InstallTrigger" in window;
-  var isChrome = !!chrome && !!chrome.runtime;
-  var isEdge = isChrome && navigator.userAgent.indexOf("Edg") !== -1;
+  var isEdge = !!chrome?.runtime && navigator.userAgent.indexOf("Edg") !== -1;
 
+  var link;
   if (isEdge) {
     link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {
     link = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
-  } else if (isChrome) {
+  } else {
     link = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
   }
 

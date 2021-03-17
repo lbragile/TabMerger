@@ -30,9 +30,39 @@ import Group from "../../src/components/Group/Group";
 import * as AppHelper from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
 
-const anything = expect.any(Function);
-var container;
+import React from "react";
+import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
 
+const GLOBAL_OBJECT = (global as unknown) as {
+  init_groups: { [key: string]: DefaultGroup };
+  user: userType;
+  CONSTANTS: any;
+  mockSet: <T>() => setStateType<T>;
+  chromeLocalGetSpy: Function;
+  chromeLocalSetSpy: Function;
+  chromeSyncGetSpy: Function;
+  chromeTabsQuerySpy: Function;
+  chromeTabsRemoveSpy: Function;
+  chromeRuntimeSendMessageSpy: Function;
+};
+
+const {
+  init_groups,
+  mockSet,
+  user,
+  CONSTANTS,
+  chromeLocalGetSpy,
+  chromeLocalSetSpy,
+  chromeSyncGetSpy,
+  chromeTabsQuerySpy,
+  chromeTabsRemoveSpy,
+  chromeRuntimeSendMessageSpy,
+} = GLOBAL_OBJECT;
+
+const anything = expect.any(Function);
+var container: HTMLElement;
+
+/* @ts-ignore */
 const toastSpy = toast.mockImplementation((...args) => args);
 
 beforeEach(() => {
@@ -43,36 +73,48 @@ beforeEach(() => {
 
   container = render(
     <AppProvider value={{ user, setTabTotal: mockSet, setGroups: mockSet, setDialog: mockSet }}>
-      <Group
-        id="group-0"
-        title="GROUP A"
-        color="#dedede"
-        created="11/11/2020 @ 11:11:11"
-        num_tabs={1}
-        key={Math.random()}
-      >
-        <div className="draggable">
-          <svg />
-          <a className="a-tab mx-1 text-black" href="tab_a_url">
-            <span>Tab A</span>
-          </a>
-        </div>
-      </Group>
-      <Group
-        id="group-1"
-        title="GROUP B"
-        color="#c7eeff"
-        created="22/22/2020 @ 22:22:22"
-        num_tabs={1}
-        key={Math.random()}
-      >
-        <div className="draggable">
-          <svg />
-          <a className="a-tab mx-1 text-black" href="tab_b_url">
-            <span className="pinned">Tab B</span>
-          </a>
-        </div>
-      </Group>
+      <React.Fragment>
+        <Group
+          id="group-0"
+          title="GROUP A"
+          textColor="primary"
+          color="#dedede"
+          created="11/11/2020 @ 11:11:11"
+          num_tabs={1}
+          hidden={false}
+          locked={false}
+          starred={false}
+          fontFamily="Arial"
+          key={Math.random()}
+        >
+          <div className="draggable">
+            <svg />
+            <a className="a-tab mx-1 text-black" href="tab_a_url">
+              <span>Tab A</span>
+            </a>
+          </div>
+        </Group>
+        <Group
+          id="group-1"
+          title="GROUP B"
+          textColor="primary"
+          color="#c7eeff"
+          created="22/22/2020 @ 22:22:22"
+          num_tabs={1}
+          hidden={false}
+          locked={false}
+          starred={false}
+          fontFamily="Arial"
+          key={Math.random()}
+        >
+          <div className="draggable">
+            <svg />
+            <a className="a-tab mx-1 text-black" href="tab_b_url">
+              <span className="pinned">Tab B</span>
+            </a>
+          </div>
+        </Group>
+      </React.Fragment>
     </AppProvider>
   ).container;
 });
@@ -115,7 +157,7 @@ describe("setBGColor", () => {
   ])("maintains bg color based on existing group bg color (%s) - exists = %s", (color, group_exists) => {
     var stub = {
       previousSibling: {
-        querySelector: (arg) => arg !== "" && { value: color },
+        querySelector: (arg: string) => arg !== "" && { value: color },
         parentNode: { children: container.querySelectorAll(".group-title, .group") },
       },
     };
@@ -127,6 +169,7 @@ describe("setBGColor", () => {
 
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     GroupFunc.setBGColor(stub, group_exists ? "group-0" : "group-11");
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -168,12 +211,13 @@ describe("setTitle", () => {
 
     var target_mock = {
       target: {
-        closest: (arg) => arg !== "" && { nextSibling: { id: "group-0" } },
+        closest: (arg: string) => arg !== "" && { nextSibling: { id: "group-0" } },
         nextSibling: { style: { visibility: "" } },
         value: "Chess",
       },
     };
 
+    /* @ts-ignore */
     GroupFunc.setTitle(target_mock);
     init_groups["group-0"].title = target_mock.target.value;
 
@@ -190,6 +234,7 @@ describe("blurOnEnter", () => {
     var stub = { target: { blur: jest.fn() }, code };
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     GroupFunc.blurOnEnter(stub);
 
     if (code === "Enter") {
@@ -210,19 +255,21 @@ describe("addTabFromURL", () => {
   ])(
     "adds the tab to the correct group when URL does %s exist: %s (settings.merge === %s)",
     (type, url, merge_setting) => {
-      var stub = { target: { value: url, closest: (arg) => arg !== "" && { id: "group-0" }, blur: jest.fn() } };
+      var stub = { target: { value: url, closest: (arg: string) => arg !== "" && { id: "group-0" }, blur: jest.fn() } };
 
       // move first tab to end to get expected result
+      /* @ts-ignore */
+      const id = (stub.target.closest() as HTMLDivElement).id;
       var expected_group = JSON.parse(localStorage.getItem("groups"));
-      const last_tab = expected_group[stub.target.closest().id].tabs.shift();
-      expected_group[stub.target.closest().id].tabs.push(last_tab);
+      const last_tab = expected_group[id].tabs.shift();
+      expected_group[id].tabs.push(last_tab);
 
       // local must be different from chrome.tabs.query
       var current_groups = JSON.parse(localStorage.getItem("groups"));
-      current_groups[stub.target.closest().id].tabs.shift();
+      current_groups[id].tabs.shift();
       localStorage.setItem("groups", JSON.stringify(current_groups));
 
-      const partial_expected_tabs = init_groups[stub.target.closest().id].tabs;
+      const partial_expected_tabs = init_groups[id].tabs;
       const open_tabs = partial_expected_tabs.map((x, i) => ({ ...x, id: i }));
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
       sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
@@ -236,6 +283,7 @@ describe("addTabFromURL", () => {
       jest.clearAllMocks();
 
       jest.useFakeTimers();
+      /* @ts-ignore */
       GroupFunc.addTabFromURL(stub, user, mockSet, mockSet);
       jest.advanceTimersByTime(51);
 
@@ -275,7 +323,8 @@ describe("addTabFromURL", () => {
   it("toasts if user is Free Tier", () => {
     jest.clearAllMocks();
 
-    GroupFunc.addTabFromURL({}, { paid: false }, mockSet, mockSet);
+    /* @ts-ignore */
+    GroupFunc.addTabFromURL({}, { paid: false, tier: "Free" }, mockSet, mockSet);
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
     expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SUBSCRIPTION_TOAST]);
@@ -295,9 +344,9 @@ describe("groupDragStart", () => {
   it.each([[true], [false]])("adds class to correct element - tab dragging === %s", (val) => {
     document.body.innerHTML = `<div class="group-item"></div>`;
 
-    var stub = (ret_val) => ({
+    var stub = (ret_val: HTMLDivElement) => ({
       target: {
-        closest: (arg) => {
+        closest: (arg: string) => {
           if (arg === ".draggable") {
             return ret_val;
           } else if (arg === ".group-item") {
@@ -307,6 +356,7 @@ describe("groupDragStart", () => {
       },
     });
 
+    /* @ts-ignore */
     GroupFunc.groupDragStart(stub(val));
 
     expect(document.querySelector(".group-item").classList.value).toBe("group-item" + (val ? "" : " dragging-group"));
@@ -320,8 +370,8 @@ describe("groupDragEnd", () => {
       preventDefault: () => {},
       target: {
         classList: {
-          contains: (arg) => arg !== "" && group_drag,
-          remove: (arg) => arg !== "" && classList_arr.shift(),
+          contains: (arg: string) => arg !== "" && group_drag,
+          remove: (arg: string) => arg !== "" && classList_arr.shift(),
         },
       },
     };
@@ -347,10 +397,11 @@ describe("groupDragEnd", () => {
       },
     };
 
-    document.querySelectorAll = (arg) => container.querySelectorAll(arg);
+    document.querySelectorAll = (arg: string) => container.querySelectorAll(arg);
     localStorage.setItem("groups", JSON.stringify(init_groups));
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     GroupFunc.groupDragEnd(stub);
 
     if (group_drag) {
@@ -369,17 +420,22 @@ describe("groupDragEnd", () => {
 
 describe("openGroup", () => {
   it("forms an array that matches ['group-id', ..., tab_links, ...]", () => {
+    /* @ts-ignore */
     chromeLocalSetSpy.mockClear();
 
     var stub = {
       target: {
-        closest: (arg) =>
+        closest: (arg: string) =>
           arg !== "" && {
-            nextSibling: { querySelectorAll: (arg) => arg !== "" && [{ href: "aaa" }, { href: "bbb" }], id: "group-0" },
+            nextSibling: {
+              querySelectorAll: (arg: string) => arg !== "" && [{ href: "aaa" }, { href: "bbb" }],
+              id: "group-0",
+            },
           },
       },
     };
 
+    /* @ts-ignore */
     GroupFunc.openGroup(stub);
 
     expect(chromeLocalSetSpy).toHaveBeenCalledTimes(1);
@@ -394,7 +450,9 @@ describe("deleteGroup", () => {
     ["unlocked", "group-0", true],
   ])("%s group | id: %s | single group === %s", (locked, group_id, single_group) => {
     var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups)=> [groups]); // prettier-ignore
-    var mock_target = (group_id) => ({ target: { closest: (arg) => arg !== "" && { nextSibling: { id: group_id } } } });
+    var mock_target = (group_id: string) => ({
+      target: { closest: (arg: string) => arg !== "" && { nextSibling: { id: group_id } } },
+    });
 
     sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
     var expected_groups = JSON.parse(JSON.stringify(init_groups));
@@ -419,6 +477,7 @@ describe("deleteGroup", () => {
 
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     GroupFunc.deleteGroup(mock_target(group_id), user, mockSet, mockSet);
 
     if (locked !== "locked") {
@@ -451,19 +510,21 @@ describe("toggleGroup", () => {
     ["star", true],
     ["star", false],
   ])("type === %s | value === %s", (type, value) => {
-    var stub = { target: { closest: (arg) => arg !== "" && { nextSibling: { id: "group-0" } } } };
+    var stub = { target: { closest: (arg: string) => arg !== "" && { nextSibling: { id: "group-0" } } } };
     var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    /* @ts-ignore */
+    const id = stub.target.closest().nextSibling.id;
     if (type === "visibility") {
-      expect_groups[stub.target.closest().nextSibling.id].hidden = value;
+      expect_groups[id].hidden = value;
     } else if (type === "lock") {
-      expect_groups[stub.target.closest().nextSibling.id].locked = value;
+      expect_groups[id].locked = value;
     } else {
-      expect_groups[stub.target.closest().nextSibling.id].starred = !value;
+      expect_groups[id].starred = !value;
       localStorage.setItem("groups", JSON.stringify(expect_groups));
-      expect_groups[stub.target.closest().nextSibling.id].starred = value;
+      expect_groups[id].starred = value;
 
       if (value) {
-        expect_groups[stub.target.closest().nextSibling.id].locked = true;
+        expect_groups[id].locked = true;
         const new_groups = JSON.stringify(expect_groups).replace("group-9", "group-2").replace("group-10", "group-3");
         expect_groups = JSON.parse(new_groups);
       }
@@ -471,6 +532,7 @@ describe("toggleGroup", () => {
 
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     GroupFunc.toggleGroup(stub, type, mockSet);
 
     expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
@@ -480,6 +542,7 @@ describe("toggleGroup", () => {
     expect(chromeLocalSetSpy).toHaveBeenCalledWith({ groups: expect_groups, scroll: 0 }, anything);
 
     expect(mockSet).toHaveBeenCalledTimes(1);
+    /* @ts-ignore */
     expect(JSON.parse(mockSet.mock.calls.pop()[0])).toStrictEqual(expect_groups);
   });
 });
