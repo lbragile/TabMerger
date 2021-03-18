@@ -29,33 +29,8 @@ import * as AppHelper from "../../src/components/App/App_helpers";
 import * as GroupFunc from "../../src/components/Group/Group_functions";
 
 import App from "../../src/components/App/App";
-import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
+import { DefaultGroup, userType } from "../../src/typings/common";
 import { TabState } from "../../src/typings/Tab";
-
-const GLOBAL_OBJECT = (global as unknown) as {
-  init_groups: { [key: string]: DefaultGroup };
-  user: userType;
-  CONSTANTS: any;
-  TUTORIAL_GROUP: { [key: string]: DefaultGroup };
-  exportedJSON: { [key: string]: DefaultGroup };
-  mockSet: <T>() => setStateType<T>;
-  chromeLocalGetSpy: Function;
-  chromeLocalSetSpy: Function;
-  chromeSyncGetSpy: Function;
-  chromeSyncSetSpy: Function;
-  chromeBrowserActionSetBadgeTextSpy: Function;
-  chromeBrowserActionSetBadgeBackgroundColorSpy: Function;
-  chromeBrowserActionSetTitleSpy: Function;
-  chromeLocalRemoveSpy: Function;
-  toggleDarkModeSpy: Function;
-  toggleSyncTimestampSpy: Function;
-  chromeSyncRemoveSpy: Function;
-  chromeTabsRemoveSpy: Function;
-  chromeTabsQuerySpy: Function;
-  chromeTabsCreateSpy: Function;
-  chromeTabsMoveSpy: Function;
-  chromeRuntimeSendMessageSpy: Function;
-};
 
 const {
   init_groups,
@@ -79,12 +54,12 @@ const {
   chromeBrowserActionSetTitleSpy,
   chromeBrowserActionSetBadgeTextSpy,
   chromeBrowserActionSetBadgeBackgroundColorSpy,
-} = GLOBAL_OBJECT;
+} = global;
 
 const anything = expect.any(Function);
 var container: HTMLElement, sync_node: HTMLSpanElement, toastSpy: Function;
 
-const mutationMockFn = (_: any, cb: (mutation: object) => void) => {
+const mutationMockFn = (_: any, cb: (mutation: object) => void): void => {
   var mutation = { type: { attributes: false, childList: true, subtree: false } };
   cb(mutation);
 };
@@ -111,8 +86,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  /* @ts-ignore */
-  toastSpy.mockRestore();
+  (toastSpy as jest.Mock).mockRestore();
   jest.spyOn(AppFunc, "syncLimitIndication").mockRestore();
 });
 
@@ -200,12 +174,11 @@ describe("syncLimitIndication", () => {
 
 describe("toggleHiddenOrEmptyGroups", () => {
   test.each([
-    [{ paid: false, tier: "Free" }, "before"],
-    [{ paid: "paid", tier: "Basic" }, "after"],
-    [{ paid: "paid", tier: "Standard" }, "before"],
-    [{ paid: "paid", tier: "Premium" }, "after"],
-    /* @ts-ignore */
-  ])("%s user - %s", (user_type: userType, when: "before" | "after") => {
+    ["before", { paid: false, tier: "Free" }],
+    ["after", { paid: "paid", tier: "Basic" }],
+    ["before", { paid: "paid", tier: "Standard" }],
+    ["after", { paid: "paid", tier: "Premium" }],
+  ])("%s user - %s", (when: string, user_type: userType) => {
     document.body.innerHTML = "<div id='sidebar'/>";
     jest.clearAllMocks();
 
@@ -263,8 +236,7 @@ describe("handleUpdate", () => {
   ])("production=%s, previousVersion=%s", (production, previousVersion) => {
     localStorage.setItem("ext_version", previousVersion);
     const currentVersion = chrome.runtime.getManifest().version;
-    /* @ts-ignore */
-    process.env.REACT_APP_PRODUCTION = production;
+    process.env.REACT_APP_PRODUCTION = production.toString();
     jest.clearAllMocks();
 
     AppFunc.handleUpdate();
@@ -371,8 +343,7 @@ describe("resetTutorialChoice", () => {
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (response === null) {
-        /* @ts-ignore */
-        jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
+        (jest.spyOn(AppHelper, "elementMutationListener") as jest.Mock).mockImplementationOnce(mutationMockFn);
       }
 
       jest.clearAllMocks();
@@ -992,8 +963,7 @@ describe("openAllTabs", () => {
 
     // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
     if (response === null) {
-      /* @ts-ignore */
-      jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
+      (jest.spyOn(AppHelper, "elementMutationListener") as jest.Mock).mockImplementationOnce(mutationMockFn);
     }
 
     jest.clearAllMocks();
@@ -1069,8 +1039,7 @@ describe("deleteAllGroups", () => {
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (locked === null) {
-        /* @ts-ignore */
-        jest.spyOn(AppHelper, "elementMutationListener").mockImplementationOnce(mutationMockFn);
+        (jest.spyOn(AppHelper, "elementMutationListener") as jest.Mock).mockImplementationOnce(mutationMockFn);
       }
 
       new_entry["group-" + +locked].created = AppHelper.getTimestamp();
@@ -1220,10 +1189,9 @@ describe("dragOver", () => {
 
     global.scrollTo = jest.fn();
 
-    /* @ts-ignore */
     var getDragAfterElementSpy = jest.spyOn(AppHelper, "getDragAfterElement").mockImplementation(() => {
       return where !== "AFTER"
-        ? (document.querySelectorAll(type === "GROUP" ? ".group" : ".draggable")[tab_num] as HTMLElement)
+        ? (document.querySelectorAll(type === "GROUP" ? ".group" : ".draggable")[tab_num] as HTMLDivElement)
         : null;
     });
 
@@ -1346,12 +1314,10 @@ describe("exportJSON", () => {
   ])(
     "correctly exports a JSON file of the current configuration, fileLimit=%s, lastError=%s, showShelf=%s",
     (fileLimit, lastError, showShelf) => {
-      /* @ts-ignore */
-      chrome.runtime.lastError = lastError && jest.fn();
-
       var chromeDownloadsSetShelfEnabledSpy = jest.spyOn(chrome.downloads, "setShelfEnabled");
       var chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
       var chromeDownloadsRemoveFileSpy = jest.spyOn(chrome.downloads, "removeFile");
+      chrome.runtime.lastError = lastError && jest.fn().mockImplementationOnce(() => ({message: "TabMerger Message"})) as object; // prettier-ignore
 
       localStorage.setItem("groups", JSON.stringify(init_groups));
       localStorage.setItem("client_details", JSON.stringify(user));
@@ -1471,15 +1437,10 @@ describe("getTabMergerLink", () => {
   const firefox_url = "https://addons.mozilla.org/en-CA/firefox/addon/tabmerger";
   const edge_url = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
 
-  console.error = jest.fn(); // will get error that chrome.storage cannot be called since chrome is set to undefined, but this is expected in this test
-  const prevChrome = chrome;
+  console.error = jest.fn() as jest.Mock; // will get error that chrome.storage cannot be called since chrome is set to undefined, but this is expected in this test
+  const prevChrome = global.chrome;
 
-  afterAll(() => {
-    /* @ts-ignore */
-    chrome = prevChrome;
-    /* @ts-ignore */
-    console.error.restoreMock();
-  });
+  afterAll(() => (global.chrome = prevChrome));
 
   /**
    * Allows to change "browser" by specifying the correct userAgent string.
@@ -1502,8 +1463,7 @@ describe("getTabMergerLink", () => {
     } else {
       delete global.InstallTrigger;
       changeUserAgent("RANDOM");
-      /* @ts-ignore */
-      chrome = undefined;
+      global.chrome = undefined;
     }
 
     expect(AppFunc.getTabMergerLink(false)).toBe(expect_link);

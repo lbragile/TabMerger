@@ -24,19 +24,17 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 import * as CONSTANTS from "../../src/constants/constants";
 
-const GLOBAL_OBJECT = (global as unknown) as {
-  chromeSyncSetSpy: Function;
-};
+const { chromeSyncSetSpy } = global;
 
-const { chromeSyncSetSpy } = GLOBAL_OBJECT;
-
+interface Navigator {
+  __defineGetter__: Function;
+}
 /**
  * Allows to change "browser" by specifying the correct userAgent string.
  * @param {string} return_val The value which navigator.userAgent string will be set to.
  */
 function changeUserAgent(return_val: string): void {
-  /* @ts-ignore */
-  navigator.__defineGetter__("userAgent", () => return_val);
+  ((navigator as unknown) as Navigator).__defineGetter__("userAgent", () => return_val);
 }
 
 const anything = expect.any(Function);
@@ -51,8 +49,7 @@ describe("setTabMergerLink", () => {
   const prevChrome = chrome;
 
   afterAll(() => {
-    /* @ts-ignore */
-    chrome = prevChrome;
+    global.chrome = prevChrome;
   });
 
   test.each([
@@ -67,8 +64,7 @@ describe("setTabMergerLink", () => {
     } else {
       delete global.InstallTrigger;
       changeUserAgent("RANDOM");
-      /* @ts-ignore */
-      chrome = undefined;
+      global.chrome = undefined;
     }
 
     SettingsHelper.setTabMergerLink();

@@ -65,9 +65,9 @@ To make life simpler, I created a few build scripts which can be used to generat
 
 Or in terms of files:
 
-`adjust_manifest.js -> npm run build -> zip.js`
+`adjust_manifest.ts -> npm run build -> zip.ts`
 
-Note that `adjust_manifest.js` simply manipulates the template manifest file in order to create the correct manifest. Namely, the keys: `incognito` and `browser_specific_settings` are modified or removed as needed per browser.
+Note that `adjust_manifest.ts` simply manipulates the template manifest file in order to create the correct manifest. Namely, the keys: `incognito` and `browser_specific_settings` are modified or removed as needed per browser.
 
 Use command: `npm run build:all` to create zipped build folders for all browsers (Chrome & Edge are identical).
 

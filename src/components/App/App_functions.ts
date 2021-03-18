@@ -109,12 +109,12 @@ export function syncLimitIndication(): void {
  * Re-arranges TabMerger's page before the printing process is initiated.
  * Takes into account the user's subscription to hide/show ads on the side.
  * Restores original configuration once the printing process is done.
- * @param {"before" | "after"} type Whether it is before or after the printing process
+ * @param {string} when Whether it is before or after the printing process
  * @param {userType} user The user's subscription details
  */
-export function toggleHiddenOrEmptyGroups(type: "before" | "after", user: userType): void {
+export function toggleHiddenOrEmptyGroups(when: string, user: userType): void {
   if (["Standard", "Premium"].includes(user.tier)) {
-    (document.querySelector("#sidebar") as HTMLDivElement).style.visibility = type === "before" ? "hidden" : "";
+    (document.querySelector("#sidebar") as HTMLDivElement).style.visibility = when === "before" ? "hidden" : "";
   }
 }
 

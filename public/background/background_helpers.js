@@ -32,7 +32,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * Avoids duplicates as much as possible. If duplicate tabs are merged, only a single copy of the
  * many duplicates is included in the merge (the other duplicate tabs are simply closed).
  * @param {{which: string}} info which direction to merge from
- * @param {{title: string, url: string, id: string?}} tab indicates where the merging call originated from
+ * @param {{index: number, title=: string, url=: string, id=: string}} tab indicates where the merging call originated from
  * @param {string?} group_id the group to merge into (if merge button from one of TabMerger's groups is used)
  */
 export function filterTabs(info, tab, group_id) {
@@ -103,7 +103,7 @@ export function filterTabs(info, tab, group_id) {
  * When TabMerger is open, this navigates to its tab if not on that tab already.
  * When TabMerger is not open, this opens its tab on the very right side.
  * Function ends when TabMerger's tab becomes active and its loading status is complete.
- * @param {boolean?} testing Whether this is a testing call or a real call
+ * @param {boolean=} testing Whether this is a testing call or a real call
  * @return A promise which should be awaited. Resolve value is insignificant
  */
 export function findExtTabAndSwitch(testing) {

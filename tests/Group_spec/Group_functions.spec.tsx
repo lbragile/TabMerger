@@ -31,20 +31,6 @@ import * as AppHelper from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
 
 import React from "react";
-import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
-
-const GLOBAL_OBJECT = (global as unknown) as {
-  init_groups: { [key: string]: DefaultGroup };
-  user: userType;
-  CONSTANTS: any;
-  mockSet: <T>() => setStateType<T>;
-  chromeLocalGetSpy: Function;
-  chromeLocalSetSpy: Function;
-  chromeSyncGetSpy: Function;
-  chromeTabsQuerySpy: Function;
-  chromeTabsRemoveSpy: Function;
-  chromeRuntimeSendMessageSpy: Function;
-};
 
 const {
   init_groups,
@@ -57,7 +43,7 @@ const {
   chromeTabsQuerySpy,
   chromeTabsRemoveSpy,
   chromeRuntimeSendMessageSpy,
-} = GLOBAL_OBJECT;
+} = global;
 
 const anything = expect.any(Function);
 var container: HTMLElement;

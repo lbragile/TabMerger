@@ -21,31 +21,43 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+import { DefaultGroup } from "../../src/typings/common";
+import { TabState } from "../../src/typings/Tab";
+
 global.chrome = {
+  /* @ts-ignore */
   alarms: {
     get: () => {},
     clear: () => {},
     create: () => {},
-    onAlarm: { addListener: () => {}, removeListener: () => {} },
+    onAlarm: ({
+      addListener: () => {},
+      removeListener: () => {},
+    } as unknown) as chrome.alarms.AlarmEvent,
   },
+  /* @ts-ignore */
   browserAction: {
-    onClicked: { addListener: () => {} },
+    onClicked: ({ addListener: () => {} } as unknown) as chrome.browserAction.BrowserClickedEvent,
     setBadgeText: (_, cb) => cb(),
     setBadgeBackgroundColor: (_, cb) => cb(),
     setTitle: (_, cb) => cb(),
   },
+  /* @ts-ignore */
   commands: {
-    onCommand: { addListener: () => {} },
+    onCommand: ({ addListener: () => {} } as unknown) as chrome.commands.CommandEvent,
   },
+  /* @ts-ignore */
   contextMenus: {
     create: () => {},
-    onClicked: { addListener: () => {} },
+    onClicked: ({ addListener: () => {} } as unknown) as chrome.contextMenus.MenuClickedEvent,
   },
+  /* @ts-ignore */
   downloads: {
     download: (_, cb) => cb(2),
     removeFile: (_, cb) => cb(),
     setShelfEnabled: () => {},
   },
+  /* @ts-ignore */
   i18n: {
     getMessage: (msg) => {
       if (msg === "Title") {
@@ -55,20 +67,24 @@ global.chrome = {
       }
     },
   },
+  /* @ts-ignore */
   runtime: {
     id: "ldhahppapilmnhocniaifnlieiofgnii",
-    getManifest: () => ({
+    getManifest: (): { version: string; permissions: string[]; manifest_version: number; name: string } => ({
       version: "2.0.0",
       permissions: ["tabs", "contextMenus", "storage", "alarms", "downloads", "downloads.shelf"],
+      manifest_version: 2,
+      name: "TabMerger",
     }),
     setUninstallURL: () => {},
     sendMessage: () => {},
-    onMessage: { addListener: () => {} },
+    onMessage: ({ addListener: () => {} } as unknown) as chrome.runtime.ExtensionMessageEvent,
   },
   storage: {
     local: {
-      get: (keys, cb) => {
-        var item;
+      /* @ts-ignore */
+      get: (keys: string | string[], cb: (local: {} | DefaultGroup) => void) => {
+        var item: { [key: string]: DefaultGroup };
         if (keys) {
           var local = {};
           // create array if not already
@@ -76,17 +92,18 @@ global.chrome = {
           keys.forEach((key) => {
             // can be a simple string or a stringify
             try {
+              /* @ts-ignore */
               local[key] = JSON.parse(localStorage.getItem(key));
             } catch (err) {
+              /* @ts-ignore */
               local[key] = localStorage.getItem(key);
             }
           });
           cb(local);
         } else {
           item = { ...localStorage };
-          Object.keys(item).forEach((key) => {
-            item[key] = JSON.parse(item[key]);
-          });
+          /* @ts-ignore */
+          Object.keys(item).forEach((key) => (item[key] = JSON.parse(item[key])));
           cb(item);
         }
       },
@@ -103,19 +120,24 @@ global.chrome = {
       },
       set: (obj, cb) => {
         const key = Object.keys(obj)[0];
+        /* @ts-ignore */
         localStorage.setItem(key, JSON.stringify(obj[key]));
         cb();
       },
     },
     sync: {
-      get: (key, cb) => {
-        var item;
+      /* @ts-ignore */
+      get: (key: string | string[], cb) => {
+        var item: { [key: string]: DefaultGroup };
         if (key) {
+          /* @ts-ignore */
           item = JSON.parse(sessionStorage.getItem(key));
+          /* @ts-ignore */
           cb({ [key]: item });
         } else {
           item = { ...sessionStorage };
           Object.keys(item).forEach((key) => {
+            /* @ts-ignore */
             item[key] = JSON.parse(item[key]);
           });
           cb(item);
@@ -134,43 +156,52 @@ global.chrome = {
       },
       set: (obj, cb) => {
         const key = Object.keys(obj)[0];
+        /* @ts-ignore */
         sessionStorage.setItem(key, JSON.stringify(obj[key]));
         cb();
       },
     },
-    onChanged: { addListener: () => {}, removeListener: () => {} },
+    onChanged: ({ addListener: () => {}, removeListener: () => {} } as unknown) as chrome.storage.StorageChangedEvent,
   },
   tabs: {
-    create: (obj, cb) => {
+    /* @ts-ignore */
+    create: (obj: TabState, cb: () => void) => {
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
       open_tabs.push(obj);
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
 
       cb();
     },
-    move: (id, _) => {
+    /* @ts-ignore */
+    move: (id: number, _moveProperties: chrome.tabs.MoveProperties) => {
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
 
-      var tab_to_move = open_tabs.filter((x) => x.id === id);
+      var tab_to_move = open_tabs.filter((x: TabState) => x.id === id);
       var index = open_tabs.indexOf(tab_to_move[0]);
       open_tabs.push(open_tabs.splice(index, 1)[0]); // move it to the end
 
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
     },
-    query: (opts, cb) => {
+    /* @ts-ignore */
+    query: (opts: { active: boolean; title: string }, cb: (open_tabs: TabState[]) => void) => {
       var open_tabs =
         opts.active || opts.title === "TabMerger"
           ? [{ title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 }]
           : JSON.parse(sessionStorage.getItem("open_tabs"));
       cb(open_tabs);
     },
-    remove: (ids) => {
+    /* @ts-ignore */
+    remove: (ids: number[]) => {
       ids = Array.isArray(ids) ? ids : [ids];
       var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
-      var remain_open_tabs = open_tabs.filter((x) => !ids.includes(x.id));
+      var remain_open_tabs = open_tabs.filter((x: TabState) => !ids.includes(x.id));
       sessionStorage.setItem("open_tabs", JSON.stringify(remain_open_tabs));
     },
-    update: (_, __, cb) => cb(),
-    onUpdated: { addListener: (cb) => cb(), removeListener: (cb) => cb() },
+    /* @ts-ignore */
+    update: (_tabId: number, _updateProperties: chrome.tabs.UpdateProperties, cb: () => void) => cb(),
+    onUpdated: ({
+      addListener: (cb: () => void) => cb(),
+      removeListener: (cb: () => void) => cb(),
+    } as unknown) as chrome.tabs.TabUpdatedEvent,
   },
 };

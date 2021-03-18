@@ -1,18 +1,17 @@
-const fs = require("fs");
 const path = require("path");
+var fs = require("fs");
 
 const input_path = path.join(__dirname, "mainfest_template.json");
 const output_path = path.join(__dirname, "../public/manifest.json");
 
 // firefox, chrome, edge
-const type = process.argv[process.argv.length - 1].toLowerCase();
+var type = process.argv[process.argv.length - 1].toLowerCase();
 
 fs.readFile(input_path, (err, data) => {
   if (err) throw err;
 
-  var manifest = JSON.parse(data);
-
   // change content based on environment variable
+  var manifest = JSON.parse(data);
   if (type === "firefox") {
     manifest.incognito = "spanning";
     manifest.permissions = ["tabs", "contextMenus", "storage", "alarms", "downloads"];

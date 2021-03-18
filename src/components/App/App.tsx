@@ -89,14 +89,12 @@ export default function App() {
     AppFunc.createAutoBackUpAlarm();
     AppFunc.handleUpdate();
 
-    /* @ts-ignore */
-    chrome.alarms.onAlarm.addListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestampVal));
+    chrome.alarms.onAlarm.addListener((alarm) => AppHelper.performAutoBackUp(alarm as { name: "json_backup" | "sync_backup" }, syncTimestampVal)); // prettier-ignore
     chrome.storage.onChanged.addListener(openOrRemoveTabs);
     chrome.storage.onChanged.addListener(checkMerging);
 
     return () => {
-      /* @ts-ignore */
-      chrome.alarms.onAlarm.removeListener((alarm) => AppHelper.performAutoBackUp(alarm, syncTimestampVal));
+      chrome.alarms.onAlarm.removeListener((alarm) => AppHelper.performAutoBackUp(alarm as { name: "json_backup" | "sync_backup" }, syncTimestampVal)); // prettier-ignore
       chrome.storage.onChanged.removeListener(openOrRemoveTabs);
       chrome.storage.onChanged.removeListener(checkMerging);
     };

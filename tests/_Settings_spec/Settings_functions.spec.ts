@@ -25,12 +25,7 @@ import * as SettingsFunc from "../../public/settings/settings_functions.js";
 import * as SettingsHelper from "../../public/settings/settings_helpers.js";
 import * as CONSTANTS from "../../src/constants/constants";
 
-const GLOBAL_OBJECT = (global as unknown) as {
-  chromeSyncGetSpy: Function;
-  chromeSyncSetSpy: Function;
-};
-
-const { chromeSyncGetSpy, chromeSyncSetSpy } = GLOBAL_OBJECT;
+const { chromeSyncGetSpy, chromeSyncSetSpy } = global;
 
 const anything = expect.any(Function);
 
@@ -101,8 +96,7 @@ describe("restoreOptions", () => {
     var setTabMergerLinkSpy = jest.spyOn(SettingsHelper, "setTabMergerLink").mockImplementation(() => {});
     var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
 
-    /* @ts-ignore */
-    document.querySelector("#darkMode").addEventListener = jest.fn((_, cb: () => void) => cb());
+    document.querySelector("#darkMode").addEventListener = jest.fn((_, cb: () => void) => cb()) as jest.Mock;
 
     Object.defineProperty(window, "location", {
       writable: true,
@@ -129,16 +123,11 @@ describe("restoreOptions", () => {
     expect((document.getElementById("tab-font") as HTMLSelectElement).value).toBe(expect_checked ? "Arial" : "Times New Roman"); // prettier-ignore
     expect((document.getElementById("tab-weight") as HTMLSelectElement).value).toBe(expect_checked ? "Normal" : "Bold");
 
-    /* @ts-ignore */
-    expect(document.body.style._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)");
-    /* @ts-ignore */
-    expect(document.body.style._values.color).toBe(ss_dark ? "white" : "black");
-    /* @ts-ignore */
-    expect(document.querySelector("code").style._values.color).toBe(ss_dark ? "white" : "black");
-    /* @ts-ignore */
-    expect(document.querySelector("code").style._values.border).toBe("1px solid " + (ss_dark ? "white" : "black")); // prettier-ignore
-    /* @ts-ignore */
-    expect(document.querySelector("nav").style._values.background).toBe(ss_dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)"); // prettier-ignore
+    expect((document.body.style as any)._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)");
+    expect((document.body.style as any)._values.color).toBe(ss_dark ? "white" : "black");
+    expect((document.querySelector("code").style as any)._values.color).toBe(ss_dark ? "white" : "black");
+    expect((document.querySelector("code").style as any)._values.border).toBe("1px solid " + (ss_dark ? "white" : "black")); // prettier-ignore
+    expect((document.querySelector("nav").style as any)._values.background).toBe(ss_dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)"); // prettier-ignore
 
     expect(setTabMergerLinkSpy).toHaveBeenCalledTimes(1);
     expect(setTabMergerLinkSpy).not.toHaveBeenCalledWith(anything);
@@ -157,8 +146,7 @@ describe("restoreOptions", () => {
     // restore all mocks
     setTabMergerLinkSpy.mockRestore();
     setSyncSpy.mockRestore();
-    /* @ts-ignore */
-    document.querySelector("#darkMode").addEventListener.mockRestore();
+    (document.querySelector("#darkMode").addEventListener as jest.Mock).mockRestore();
     window.location.reload = reload;
   });
 });

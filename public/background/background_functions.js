@@ -35,7 +35,7 @@ var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
  */
 export function handleBrowserIconClick() {
   chrome.storage.sync.get("settings", async (sync) => {
-    await findExtTabAndSwitch(false);
+    await findExtTabAndSwitch();
     if (!sync.settings.open) {
       filterTabs(info, tab);
     }
@@ -68,9 +68,9 @@ export function createContextMenu(id, title, type) {
 /**
  * Handles contextMenu item clicks or keyboard shortcut events for both merging actions and
  * other actions like excluding from visibility, opening TabMerger, visiting help site, etc.
- * @param {{which: string, command: string?, menuItemId: string?}} info Indicates merging direction,
+ * @param {{which=: string, command=: string, menuItemId=: string} | string} info Indicates merging direction,
  * keyboard command, and/or the contextMenu item that was clicked
- * @param {{url: string, title: string, id: string?}} tab The tab for which the event occured.
+ * @param {{index: number, url=: string, title=: string, id=: string}} tab The tab for which the event occured.
  * Used when determining which tabs to merge
  */
 export async function contextMenuOrShortCut(info, tab) {
@@ -81,26 +81,26 @@ export async function contextMenuOrShortCut(info, tab) {
 
   switch (info.menuItemId || info.command) {
     case "aopen-tabmerger":
-      await findExtTabAndSwitch(false);
+      await findExtTabAndSwitch();
       break;
     case "merge-left-menu":
       info.which = "left";
-      await findExtTabAndSwitch(false);
+      await findExtTabAndSwitch();
       filterTabs(info, tab, null);
       break;
     case "merge-right-menu":
       info.which = "right";
-      await findExtTabAndSwitch(false);
+      await findExtTabAndSwitch();
       filterTabs(info, tab, null);
       break;
     case "merge-xcluding-menu":
       info.which = "excluding";
-      await findExtTabAndSwitch(false);
+      await findExtTabAndSwitch();
       filterTabs(info, tab, null);
       break;
     case "merge-snly-menu":
       info.which = "only";
-      await findExtTabAndSwitch(false);
+      await findExtTabAndSwitch();
       filterTabs(info, tab, null);
       break;
     case "remove-visibility":
@@ -117,7 +117,7 @@ export async function contextMenuOrShortCut(info, tab) {
 
     default:
       info.which = "all";
-      await findExtTabAndSwitch(false);
+      await findExtTabAndSwitch();
       filterTabs(info, tab, null);
       break;
   }

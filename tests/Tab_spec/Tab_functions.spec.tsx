@@ -22,25 +22,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import { render, fireEvent } from "@testing-library/react";
-import { Toast, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import * as TabFunc from "../../src/components/Tab/Tab_functions";
 import Tab from "../../src/components/Tab/Tab";
 
 import * as AppHelper from "../../src/components/App/App_helpers";
 import { AppProvider } from "../../src/context/AppContext";
-import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
+import { DefaultGroup } from "../../src/typings/common";
 
-const GLOBAL_OBJECT = (global as unknown) as {
-  init_groups: { [key: string]: DefaultGroup };
-  user: userType;
-  CONSTANTS: any;
-  mockSet: <T>() => setStateType<T>;
-  chromeLocalGetSpy: Function;
-  chromeLocalSetSpy: Function;
-};
-
-const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, mockSet, user, CONSTANTS } = GLOBAL_OBJECT;
+const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, mockSet, user, CONSTANTS } = global;
 
 const anything = expect.any(Function);
 

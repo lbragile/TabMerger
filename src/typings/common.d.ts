@@ -7,7 +7,36 @@ import { TabState } from "./Tab";
 declare global {
   namespace NodeJS {
     interface Global {
-      [key: string]: any;
+      InstallTrigger: string;
+      resolve: () => void;
+      SYNC_LIMIT: readonly number;
+      ITEM_LIMIT: readonly number;
+      init_groups: { [key: string]: DefaultGroup };
+      user: userType;
+      CONSTANTS: any;
+      TUTORIAL_GROUP: { [key: string]: DefaultGroup };
+      exportedJSON: { settings: DefaultSettings; [key: string]: DefaultGroup };
+      mockSet: <T>() => setStateType<T>;
+      chromeLocalGetSpy: Function;
+      chromeLocalSetSpy: Function;
+      chromeSyncGetSpy: Function;
+      chromeSyncSetSpy: Function;
+      chromeBrowserActionSetBadgeTextSpy: Function;
+      chromeBrowserActionSetBadgeBackgroundColorSpy: Function;
+      chromeBrowserActionSetTitleSpy: Function;
+      chromeLocalRemoveSpy: Function;
+      toggleDarkModeSpy: Function;
+      toggleSyncTimestampSpy: Function;
+      chromeSyncRemoveSpy: Function;
+      chromeTabsRemoveSpy: Function;
+      chromeTabsQuerySpy: Function;
+      chromeTabsCreateSpy: Function;
+      chromeTabsMoveSpy: Function;
+      chromeRuntimeSendMessageSpy: Function;
+      chromeContextMenusCeateSpy: Function;
+      chromeTabsOnUpdatedAdd: Function;
+      chromeTabsOnUpdatedRemove: Function;
+      chromeTabsUpdateSpy: Function;
     }
   }
 }
@@ -56,8 +85,8 @@ export interface DefaultSettings {
   dark: boolean;
   fileLimitBackup: number;
   font: string;
-  merge: true;
-  open: true;
+  merge: boolean;
+  open: boolean;
   periodBackup: number;
   pin: boolean;
   randomizeColor: boolean;

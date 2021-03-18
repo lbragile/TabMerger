@@ -36,36 +36,36 @@ global.TUTORIAL_GROUP = TUTORIAL_GROUP;
 global.URL.createObjectURL = jest.fn((arg) => arg);
 
 /*  CHROME SYNC STORAGE API SPIES */
-global.chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set");
-global.chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get");
-global.chromeSyncRemoveSpy = jest.spyOn(chrome.storage.sync, "remove");
+global.chromeSyncSetSpy = jest.spyOn(chrome.storage.sync, "set") as jest.Mock;
+global.chromeSyncGetSpy = jest.spyOn(chrome.storage.sync, "get") as jest.Mock;
+global.chromeSyncRemoveSpy = jest.spyOn(chrome.storage.sync, "remove") as jest.Mock;
 
 /*  CHROME LOCAL STORAGE API SPIES */
-global.chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set");
-global.chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get");
-global.chromeLocalRemoveSpy = jest.spyOn(chrome.storage.local, "remove");
+global.chromeLocalSetSpy = jest.spyOn(chrome.storage.local, "set") as jest.Mock;
+global.chromeLocalGetSpy = jest.spyOn(chrome.storage.local, "get") as jest.Mock;
+global.chromeLocalRemoveSpy = jest.spyOn(chrome.storage.local, "remove") as jest.Mock;
 
 /*  CHROME BROWSER ACTION API SPIES */
-global.chromeBrowserActionSetBadgeTextSpy = jest.spyOn(chrome.browserAction, "setBadgeText");
-global.chromeBrowserActionSetBadgeBackgroundColorSpy = jest.spyOn(chrome.browserAction, "setBadgeBackgroundColor");
-global.chromeBrowserActionSetTitleSpy = jest.spyOn(chrome.browserAction, "setTitle");
+global.chromeBrowserActionSetBadgeTextSpy = jest.spyOn(chrome.browserAction, "setBadgeText") as jest.Mock;
+global.chromeBrowserActionSetBadgeBackgroundColorSpy = jest.spyOn(chrome.browserAction, "setBadgeBackgroundColor") as jest.Mock; // prettier-ignore
+global.chromeBrowserActionSetTitleSpy = jest.spyOn(chrome.browserAction, "setTitle") as jest.Mock;
 
 /*  CHROME TABS API SPIES */
-global.chromeTabsMoveSpy = jest.spyOn(chrome.tabs, "move");
-global.chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create");
-global.chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query");
-global.chromeTabsRemoveSpy = jest.spyOn(chrome.tabs, "remove");
-global.chromeTabsUpdateSpy = jest.spyOn(chrome.tabs, "update");
-global.chromeTabsOnUpdatedAdd = jest.spyOn(chrome.tabs.onUpdated, "addListener");
-global.chromeTabsOnUpdatedRemove = jest.spyOn(chrome.tabs.onUpdated, "removeListener");
+global.chromeTabsMoveSpy = jest.spyOn(chrome.tabs, "move") as jest.Mock;
+global.chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create") as jest.Mock;
+global.chromeTabsQuerySpy = jest.spyOn(chrome.tabs, "query") as jest.Mock;
+global.chromeTabsRemoveSpy = jest.spyOn(chrome.tabs, "remove") as jest.Mock;
+global.chromeTabsUpdateSpy = jest.spyOn(chrome.tabs, "update") as jest.Mock;
+global.chromeTabsOnUpdatedAdd = jest.spyOn(chrome.tabs.onUpdated, "addListener") as jest.Mock;
+global.chromeTabsOnUpdatedRemove = jest.spyOn(chrome.tabs.onUpdated, "removeListener") as jest.Mock;
 
 /*  CHROME CONTEXT MENU & RUNTIME API SPIES */
-global.chromeContextMenusCeateSpy = jest.spyOn(chrome.contextMenus, "create");
-global.chromeRuntimeSendMessageSpy = jest.spyOn(chrome.runtime, "sendMessage");
+global.chromeContextMenusCeateSpy = jest.spyOn(chrome.contextMenus, "create") as jest.Mock;
+global.chromeRuntimeSendMessageSpy = jest.spyOn(chrome.runtime, "sendMessage") as jest.Mock;
 
 /*  TABMERGER RELATED TOGGLE SPIES */
-global.toggleDarkModeSpy = jest.spyOn(AppHelper, "toggleDarkMode");
-global.toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp");
+global.toggleDarkModeSpy = jest.spyOn(AppHelper, "toggleDarkMode") as jest.Mock;
+global.toggleSyncTimestampSpy = jest.spyOn(AppHelper, "toggleSyncTimestamp") as jest.Mock;
 
 /*  MOCK FOR SETTING STATE HOOKS */
 global.mockSet = jest.fn();
@@ -343,16 +343,24 @@ global.exportedJSON = {
     title: "Other Projects I Made",
   },
   settings: {
-    badgeInfo: "display",
+    /* @ts-ignore */
+    badgeInfo: true,
     blacklist: "",
     color: "#dedede",
     dark: true,
+    fileLimitBackup: 15,
     font: "Arial",
-    merge: "merge",
-    open: "without",
-    pin: "include",
-    restore: "keep",
+    merge: true,
+    open: true,
+    periodBackup: 0,
+    pin: true,
+    randomizeColor: false,
+    relativePathBackup: "TabMerger/",
+    restore: true,
+    saveAsVisibility: true,
+    syncPeriodBackup: 0,
     title: "Title",
+    tooltipVisibility: true,
     weight: "Normal",
   },
 };

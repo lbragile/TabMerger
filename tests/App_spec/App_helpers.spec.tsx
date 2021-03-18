@@ -30,27 +30,8 @@ import * as CONSTANTS from "../../src/constants/constants";
 import App from "../../src/components/App/App";
 
 import axios from "axios";
-import { DefaultGroup, setStateType, userType } from "../../src/typings/common";
 
-const GLOBAL_OBJECT = (global as unknown) as {
-  init_groups: { [key: string]: DefaultGroup };
-  user: userType;
-  mockSet: <T>() => setStateType<T>;
-  chromeLocalGetSpy: Function;
-  chromeLocalSetSpy: Function;
-  chromeSyncGetSpy: Function;
-  chromeSyncSetSpy: Function;
-};
-
-const {
-  init_groups,
-  chromeLocalGetSpy,
-  chromeLocalSetSpy,
-  chromeSyncGetSpy,
-  chromeSyncSetSpy,
-  mockSet,
-  user,
-} = GLOBAL_OBJECT;
+const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, chromeSyncGetSpy, chromeSyncSetSpy, mockSet, user } = global;
 
 const anything = expect.any(Function);
 var new_item = init_groups["group-0"];

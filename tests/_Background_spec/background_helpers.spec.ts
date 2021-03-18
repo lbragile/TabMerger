@@ -24,23 +24,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { waitFor } from "@testing-library/react";
 
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
-import { DefaultGroup, userType } from "../../src/typings/common.js";
 import { TabState } from "../../src/typings/Tab.js";
-
-const GLOBAL_OBJECT = (global as unknown) as {
-  init_groups: { [key: string]: DefaultGroup };
-  CONSTANTS: any;
-  chromeLocalGetSpy: Function;
-  chromeLocalSetSpy: Function;
-  chromeSyncGetSpy: Function;
-  chromeSyncSetSpy: Function;
-  chromeTabsOnUpdatedAdd: Function;
-  chromeTabsOnUpdatedRemove: Function;
-  chromeTabsCreateSpy: Function;
-  chromeTabsRemoveSpy: Function;
-  chromeTabsQuerySpy: Function;
-  chromeTabsUpdateSpy: Function;
-};
 
 const {
   init_groups,
@@ -55,7 +39,7 @@ const {
   chromeTabsCreateSpy,
   chromeTabsRemoveSpy,
   chromeTabsUpdateSpy,
-} = GLOBAL_OBJECT;
+} = global;
 
 const anything = expect.any(Function);
 
@@ -145,7 +129,6 @@ describe("filterTabs", () => {
     });
 
     jest.useFakeTimers();
-    /* @ts-ignore */
     BackgroundHelper.filterTabs(info, tab, group_id);
     jest.advanceTimersByTime(101);
 
@@ -214,12 +197,9 @@ describe("findExtTabAndSwitch", () => {
     ["incomplete", true],
     ["incomplete", false],
   ])("TabMerger page is NOT already open - (loading = %s, match_id = %s)", async (type, id_match) => {
-    /* @ts-ignore */
-    chromeTabsQuerySpy.mockImplementationOnce((_, cb: ([]) => void) => cb([]));
-    /* @ts-ignore */
-    chromeTabsCreateSpy.mockImplementationOnce((_, cb: ({ id: number }) => void) => cb({ id: id_match ? tab_id : tab_id - 1 })); // prettier-ignore
-    /* @ts-ignore */
-    chromeTabsOnUpdatedAdd.mockImplementationOnce((cb: (tab_id: number, changeInfo: {status: string}) => void) => cb(tab_id, { status: type })); // prettier-ignore
+    (chromeTabsQuerySpy as jest.Mock).mockImplementationOnce((_, cb: ([]) => void) => cb([]));
+    (chromeTabsCreateSpy as jest.Mock).mockImplementationOnce((_, cb: (tab: {id: number}) => void) => cb({ id: id_match ? tab_id : tab_id - 1 })); // prettier-ignore
+    (chromeTabsOnUpdatedAdd as jest.Mock).mockImplementationOnce((cb: (tab_id: number, changeInfo: {status: string}) => void) => cb(tab_id, { status: type })); // prettier-ignore
     global.resolve = jest.fn().mockImplementationOnce((arg) => Promise.resolve(arg));
     jest.clearAllMocks();
 
