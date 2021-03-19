@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -26,7 +26,35 @@ import { waitFor } from "@testing-library/react";
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
 import { TabState } from "../../src/typings/Tab.js";
 
-const {
+interface DefaultGroup {
+  color: string;
+  created: string;
+  hidden: boolean;
+  locked: boolean;
+  starred: boolean;
+  tabs: TabState[];
+  title: string;
+  name?: string;
+}
+
+const GLOBAL_OBJECT = (global as unknown) as {
+  resolve: () => void;
+  init_groups: { [key: string]: DefaultGroup };
+  CONSTANTS: any;
+  chromeLocalGetSpy: Function;
+  chromeLocalSetSpy: Function;
+  chromeSyncGetSpy: Function;
+  chromeSyncSetSpy: Function;
+  chromeTabsOnUpdatedAdd: Function;
+  chromeTabsOnUpdatedRemove: Function;
+  chromeTabsQuerySpy: Function;
+  chromeTabsCreateSpy: Function;
+  chromeTabsRemoveSpy: Function;
+  chromeTabsUpdateSpy: Function;
+};
+
+var {
+  resolve,
   init_groups,
   CONSTANTS,
   chromeLocalGetSpy,
@@ -39,7 +67,7 @@ const {
   chromeTabsCreateSpy,
   chromeTabsRemoveSpy,
   chromeTabsUpdateSpy,
-} = global;
+} = GLOBAL_OBJECT;
 
 const anything = expect.any(Function);
 
@@ -200,7 +228,7 @@ describe("findExtTabAndSwitch", () => {
     (chromeTabsQuerySpy as jest.Mock).mockImplementationOnce((_, cb: ([]) => void) => cb([]));
     (chromeTabsCreateSpy as jest.Mock).mockImplementationOnce((_, cb: (tab: {id: number}) => void) => cb({ id: id_match ? tab_id : tab_id - 1 })); // prettier-ignore
     (chromeTabsOnUpdatedAdd as jest.Mock).mockImplementationOnce((cb: (tab_id: number, changeInfo: {status: string}) => void) => cb(tab_id, { status: type })); // prettier-ignore
-    global.resolve = jest.fn().mockImplementationOnce((arg) => Promise.resolve(arg));
+    resolve = jest.fn().mockImplementationOnce((arg) => Promise.resolve(arg));
     jest.clearAllMocks();
 
     const result = await BackgroundHelper.findExtTabAndSwitch(type !== "complete" || !id_match);

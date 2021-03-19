@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -130,7 +130,9 @@ export function sortByKey(json: { [key: string]: DefaultGroup }): DefaultGroup[]
 
   // Push each JSON Object entry in array by [key, value]
   for (var i in json) {
-    sortedArray.push([i, json[i]]);
+    if (json.hasOwnProperty(i)) {
+      sortedArray.push([i, json[i]]);
+    }
   }
 
   var sorted_groups = sortedArray.sort((a, b) => {

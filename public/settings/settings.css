@@ -30,11 +30,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   box-sizing: border-box;
 }
 
-small {
-  display: block;
-  text-align: justify;
-}
-
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   opacity: 1;
@@ -86,7 +81,7 @@ a {
 }
 
 section {
-  margin: 15px 0 10px 0;
+  margin: 15px 0 10px;
 }
 
 textarea {
@@ -122,6 +117,8 @@ code {
 
 /* NOTES UNDER TITLES */
 small {
+  display: block;
+  text-align: justify;
   font-size: 0.9rem;
 }
 

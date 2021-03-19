@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 

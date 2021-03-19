@@ -80,7 +80,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 #sync-btn svg {
   position: relative;
-  left: 0px;
+  left: 0;
   top: -2px;
 }
 
@@ -190,7 +190,7 @@ input[type="color"] {
   right: 20px;
 }
 .delete-group-btn {
-  right: 0px;
+  right: 0;
 }
 
 .move-group-btn:hover {

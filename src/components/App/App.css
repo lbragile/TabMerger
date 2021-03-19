@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -102,10 +102,6 @@ input[type="password"] {
   font-size: 0.95rem;
 }
 
-hr {
-  margin: 20px 0 !important;
-}
-
 /* SIDEBAR */
 #sidebar {
   height: 100%;
@@ -150,7 +146,7 @@ hr {
 
 .input-group-prepend > span {
   font-size: 1.3rem;
-  padding: 5px 0px;
+  padding: 5px 0;
   margin: 0;
   border-bottom: 1px solid rgb(192, 192, 192);
 }
@@ -164,7 +160,7 @@ hr {
 }
 
 hr {
-  margin: 0;
+  margin: 20px 0 !important;
   width: 95%;
   border-top: 1px solid white;
 }
@@ -191,10 +187,6 @@ hr {
   transform: translateX(-50%);
   white-space: nowrap;
   color: white;
-}
-
-#footer {
-  bottom: 10px;
 }
 
 #footer a {
@@ -308,6 +300,7 @@ hr {
   .group-count {
     position: relative;
     top: 2px;
+    border: none !important;
   }
 
   #global-action-container {
@@ -356,10 +349,6 @@ hr {
 
   .shown-in-print {
     display: block !important;
-  }
-
-  .group-count {
-    border: none !important;
   }
 
   .draggable {

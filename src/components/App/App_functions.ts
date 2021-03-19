@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -127,10 +127,10 @@ export function createAutoBackUpAlarm(): void {
     if (local.client_details?.tier === "Premium") {
       chrome.storage.sync.get("settings", (sync) => {
         // JSON auto backup alarm
-        AppHelper.alarmGenerator(parseInt(sync.settings?.periodBackup), "json_backup", CONSTANTS.JSON_AUTOBACKUP_OFF_TOAST); // prettier-ignore
+        AppHelper.alarmGenerator(parseInt(sync.settings?.periodBackup, 10), "json_backup", CONSTANTS.JSON_AUTOBACKUP_OFF_TOAST); // prettier-ignore
 
         // sync write auto backup alarm
-        AppHelper.alarmGenerator(parseInt(sync.settings?.syncPeriodBackup), "sync_backup", CONSTANTS.SYNC_AUTOBACKUP_OFF_TOAST); // prettier-ignore
+        AppHelper.alarmGenerator(parseInt(sync.settings?.syncPeriodBackup, 10), "sync_backup", CONSTANTS.SYNC_AUTOBACKUP_OFF_TOAST); // prettier-ignore
       });
     }
   });
@@ -143,8 +143,8 @@ export function createAutoBackUpAlarm(): void {
 export function handleUpdate(): void {
   chrome.storage.local.get("ext_version", (local) => {
     const previousVersion = local.ext_version;
-    const currentVersion = process.env.REACT_APP_PRODUCTION ? chrome.runtime.getManifest().version : "1.0.0";
-    if (previousVersion < currentVersion && currentVersion === "2.0.0") {
+    const currentVersion = chrome.runtime.getManifest().version;
+    if (previousVersion < currentVersion) {
       const toast_contents: Toast = CONSTANTS.UPDATE_TOAST(previousVersion, currentVersion);
       toast(toast_contents[0], toast_contents[1]);
     }
@@ -230,7 +230,7 @@ export function resetTutorialChoice(
  * @param {{"green": string, "yellow": string, "orange": string, "red": string }?} COLORS The colors as hex strings of form "#FF7700"
  */
 // prettier-ignore
-export function badgeIconInfo(tabTotal:number, user: userType, STEP_SIZE: number = CONSTANTS.BADGE_ICON_STEP_SIZE, COLORS = CONSTANTS.BADGE_ICON_COLORS) { 
+export function badgeIconInfo(tabTotal:number, user: userType, STEP_SIZE: number = CONSTANTS.BADGE_ICON_STEP_SIZE, COLORS = CONSTANTS.BADGE_ICON_COLORS) {
   chrome.storage.sync.get("settings", (sync) => {
     chrome.storage.local.get("groups", (local) => {
       if (local.groups && sync.settings && ["Standard", "Premium"].includes(user.tier)) {
@@ -767,7 +767,7 @@ export function exportJSON(showGrayDownloadShelf: boolean, showSaveAsDialog: boo
             // if automatic -> add to list so can keep track off how many and know which to delete later
             // when this file would exceed limit, remove the oldest file
             if (!showGrayDownloadShelf) {
-              const current_limit = parseInt(sync.settings?.fileLimitBackup);
+              const current_limit = parseInt(sync.settings?.fileLimitBackup, 10);
               file_ids = file_ids ?? [];
 
               if (file_ids.length >= current_limit) {

@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -51,7 +51,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 }
 
 [contenteditable]:focus {
-  outline: 0px solid transparent;
+  outline: 0 solid transparent;
 }
 
 .hidden-symbol {

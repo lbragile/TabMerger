@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -26,7 +26,14 @@ import * as BackgroundHelper from "../../public/background/background_helpers.js
 
 import { waitFor } from "@testing-library/react";
 
-const { CONSTANTS, chromeSyncGetSpy, chromeTabsQuerySpy, chromeContextMenusCeateSpy } = global;
+const GLOBAL_OBJECT = (global as unknown) as {
+  CONSTANTS: any;
+  chromeSyncGetSpy: Function;
+  chromeTabsQuerySpy: Function;
+  chromeContextMenusCeateSpy: Function;
+};
+
+const { CONSTANTS, chromeSyncGetSpy, chromeTabsQuerySpy, chromeContextMenusCeateSpy } = GLOBAL_OBJECT;
 
 const anything = expect.any(Function);
 
@@ -106,7 +113,6 @@ describe("contextMenuOrShortCut", () => {
     ["zdl-instructions", ""],
     ["dl-contact", ""],
     ["merge-all-menu", "all"],
-    ["string_type", "all"], // typeof info === "string"
   ])("%s", async (menuItemId, which) => {
     const tab = { index: 0 };
     const inst_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
@@ -118,7 +124,7 @@ describe("contextMenuOrShortCut", () => {
     var chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementationOnce(() => {});
     jest.clearAllMocks();
 
-    BackgroundFunc.contextMenuOrShortCut(menuItemId !== "string_type" ? { menuItemId } : "merge-all-menu", tab);
+    BackgroundFunc.contextMenuOrShortCut({ menuItemId }, tab);
 
     if (menuItemId === "aopen-tabmerger") {
       await waitFor(() => {
@@ -159,13 +165,15 @@ describe("contextMenuOrShortCut", () => {
 
     BackgroundFunc.contextMenuOrShortCut(command, tab);
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(findExtTabAndSwitchSpy).toHaveBeenCalledTimes(1);
-      expect(findExtTabAndSwitchSpy).toHaveBeenCalledWith(false);
-      expect(filterTabsSpy).toHaveBeenCalledTimes(1);
-      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "left", command }, tab, null);
+      expect(findExtTabAndSwitchSpy).toHaveBeenCalledWith();
     });
-    expect.hasAssertions();
+
+    expect(filterTabsSpy).toHaveBeenCalledTimes(1);
+    expect(filterTabsSpy).toHaveBeenCalledWith({ which: "left", command }, tab, null);
+
+    expect.assertions(4);
   });
 });
 

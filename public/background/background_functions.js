@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -74,7 +74,6 @@ export function createContextMenu(id, title, type) {
  * Used when determining which tabs to merge
  */
 export async function contextMenuOrShortCut(info, tab) {
-  // need to alter the info object if it comes from a keyboard shortcut event
   if (typeof info === "string") {
     info = { command: info };
   }
@@ -82,6 +81,11 @@ export async function contextMenuOrShortCut(info, tab) {
   switch (info.menuItemId || info.command) {
     case "aopen-tabmerger":
       await findExtTabAndSwitch();
+      break;
+    case "merge-all-menu":
+      info.which = "all";
+      await findExtTabAndSwitch();
+      filterTabs(info, tab, null);
       break;
     case "merge-left-menu":
       info.which = "left";
@@ -113,12 +117,6 @@ export async function contextMenuOrShortCut(info, tab) {
     case "dl-contact":
       var dest_url = "https://lbragile.github.io/TabMerger-Extension/contact";
       chrome.tabs.create({ active: true, url: dest_url });
-      break;
-
-    default:
-      info.which = "all";
-      await findExtTabAndSwitch();
-      filterTabs(info, tab, null);
       break;
   }
 }
