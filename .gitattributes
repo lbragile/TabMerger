@@ -1,0 +1,12 @@
+# WANT TO ONLY DETECT (LIST) TYPESCRIPT AS A LANGUAGE
+*.ts linguist-detectable=true
+
+# DON'T LIST OTHER LANGUAGES
+docs/**/**/.js linguist-detectable=false
+config/*.js linguist-detectable=false
+*.json linguist-detectable=false
+*.html linguist-detectable=false
+*.css linguist-detectable=false
+*.yaml linguist-detectable=false
+*.md linguist-detectable=false
+
