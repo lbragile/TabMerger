@@ -37,5 +37,6 @@ export interface TabState {
   url: string;
   title?: string;
   id?: number;
+  index?: number;
   active?: boolean;
 }

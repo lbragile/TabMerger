@@ -23,7 +23,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 .group-item {
   position: relative;
-  transform: translateZ(0); /* This prevents grabbing pixels above when dragging*/
+  transform: translateZ(0); /* This prevents grabbing pixels above when dragging */
 }
 
 .group-title {
@@ -68,11 +68,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   left: 5px;
   margin: 3px 10px 0 0;
   padding: 0 3px 2px 0;
-
   min-width: 26px;
   height: 26px;
   text-align: center;
-
   font-weight: bold;
   color: black;
 }

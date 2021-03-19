@@ -50,7 +50,9 @@ createContextMenu("dl-contact", translate("bgContact"), "normal");
 chrome.runtime.onMessage.addListener(extensionMessage);
 
 // context menu actions
+/* @ts-ignore */
 chrome.contextMenus.onClicked.addListener(contextMenuOrShortCut);
 
 // shortcut keyboard
+/* @ts-ignore */
 chrome.commands.onCommand.addListener(contextMenuOrShortCut);

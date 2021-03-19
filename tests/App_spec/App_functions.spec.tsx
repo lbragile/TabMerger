@@ -1329,7 +1329,7 @@ describe("exportJSON", () => {
 
       const expect_download_opts = {
         url: new Blob([JSON.stringify(groups, null, 2)], { type: "text/json;charset=utf-8" }),
-        filename: "Test/" + AppHelper.outputFileName().replace(/\:|\//g, "_") + ".json",
+        filename: "Test/" + AppHelper.outputFileName().replace(/:|\//g, "_") + ".json",
         conflictAction: "uniquify",
         saveAs: false,
       };

@@ -37,24 +37,7 @@ interface DefaultGroup {
   name?: string;
 }
 
-const GLOBAL_OBJECT = (global as unknown) as {
-  resolve: () => void;
-  init_groups: { [key: string]: DefaultGroup };
-  CONSTANTS: any;
-  chromeLocalGetSpy: Function;
-  chromeLocalSetSpy: Function;
-  chromeSyncGetSpy: Function;
-  chromeSyncSetSpy: Function;
-  chromeTabsOnUpdatedAdd: Function;
-  chromeTabsOnUpdatedRemove: Function;
-  chromeTabsQuerySpy: Function;
-  chromeTabsCreateSpy: Function;
-  chromeTabsRemoveSpy: Function;
-  chromeTabsUpdateSpy: Function;
-};
-
 var {
-  resolve,
   init_groups,
   CONSTANTS,
   chromeLocalGetSpy,
@@ -67,7 +50,7 @@ var {
   chromeTabsCreateSpy,
   chromeTabsRemoveSpy,
   chromeTabsUpdateSpy,
-} = GLOBAL_OBJECT;
+} = global;
 
 const anything = expect.any(Function);
 
@@ -157,6 +140,7 @@ describe("filterTabs", () => {
     });
 
     jest.useFakeTimers();
+    /* @ts-ignore */
     BackgroundHelper.filterTabs(info, tab, group_id);
     jest.advanceTimersByTime(101);
 
@@ -228,7 +212,6 @@ describe("findExtTabAndSwitch", () => {
     (chromeTabsQuerySpy as jest.Mock).mockImplementationOnce((_, cb: ([]) => void) => cb([]));
     (chromeTabsCreateSpy as jest.Mock).mockImplementationOnce((_, cb: (tab: {id: number}) => void) => cb({ id: id_match ? tab_id : tab_id - 1 })); // prettier-ignore
     (chromeTabsOnUpdatedAdd as jest.Mock).mockImplementationOnce((cb: (tab_id: number, changeInfo: {status: string}) => void) => cb(tab_id, { status: type })); // prettier-ignore
-    resolve = jest.fn().mockImplementationOnce((arg) => Promise.resolve(arg));
     jest.clearAllMocks();
 
     const result = await BackgroundHelper.findExtTabAndSwitch(type !== "complete" || !id_match);
@@ -266,7 +249,7 @@ describe("excludeSite", () => {
 
     jest.clearAllMocks();
 
-    BackgroundHelper.excludeSite({ url });
+    BackgroundHelper.excludeSite({ url, pinned: false });
 
     expect(chromeSyncGetSpy).toHaveBeenCalledTimes(1);
     expect(chromeSyncGetSpy).toHaveBeenCalledWith("settings", anything);

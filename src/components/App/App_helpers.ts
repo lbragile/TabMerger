@@ -126,22 +126,14 @@ export function updateGroupItem(key: string, value: DefaultGroup) {
  * @return {DefaultGroup[]} Values from the sorted groups
  */
 export function sortByKey(json: { [key: string]: DefaultGroup }): DefaultGroup[] {
-  var sortedArray = [];
-
-  // Push each JSON Object entry in array by [key, value]
-  for (var i in json) {
-    if (json.hasOwnProperty(i)) {
-      sortedArray.push([i, json[i]]);
-    }
-  }
-
-  var sorted_groups = sortedArray.sort((a, b) => {
+  var sortedArray: [string, DefaultGroup][] = Object.keys(json).map(key=>[key, json[key]]);
+  var sortedGroups = sortedArray.sort((a, b) => {
     var opts = { numeric: true, sensitivity: "base" };
     return (a[0] as string).localeCompare(b[0] as string, undefined, opts);
   });
 
   // get the sorted values
-  return sorted_groups.map((x) => x[1]) as DefaultGroup[];
+  return sortedGroups.map((x) => x[1]) as DefaultGroup[];
 }
 
 /**

@@ -42,31 +42,31 @@ export function setTabMergerLink() {
     link = "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc";
   }
 
-  document.getElementById("logo-img").parentNode.href = link;
+  (document.getElementById("logo-img").parentNode as HTMLAnchorElement).href = link;
 }
 
 /**
  * Sets the settings item in sync storage according to the current configuration in TabMerger
  */
 export function setSync() {
-  const badgeInfo = document.querySelector("input[name='badge-view']").checked;
-  const blacklist = document.getElementById("options-blacklist").value;
-  const color = document.getElementById("options-default-color").value;
-  const dark = document.getElementById("darkMode").checked;
-  const fileLimitBackup = document.querySelector("input[name='json-file-limit']").value;
-  const font = document.getElementById("tab-font").value;
-  const periodBackup = document.querySelector("input[name='period-backup']").value;
-  const pin = document.querySelector("input[name='pin-tabs']").checked;
-  const merge = document.querySelector("input[name='merge-tabs']").checked;
-  const open = document.querySelector("input[name='ext-open']").checked;
-  const randomizeColor = document.querySelector("input[name='randomize-group-color']").checked;
-  const relativePathBackup = document.querySelector("input[name='relative-path-backup']").value;
-  const restore = document.querySelector("input[name='restore-tabs']").checked;
-  const saveAsVisibility = document.getElementById("saveas-visibility").checked;
-  const syncPeriodBackup = document.querySelector("input[name='sync-backup']").value;
-  const title = document.getElementById("options-default-title").value;
-  const tooltipVisibility = document.getElementById("tooltip-visibility").checked;
-  const weight = document.getElementById("tab-weight").value;
+  const badgeInfo = (document.querySelector("input[name='badge-view']") as HTMLInputElement).checked;
+  const blacklist = (document.getElementById("options-blacklist") as HTMLInputElement).value;
+  const color = (document.getElementById("options-default-color") as HTMLInputElement).value;
+  const dark = (document.getElementById("darkMode") as HTMLInputElement).checked;
+  const fileLimitBackup = (document.querySelector("input[name='json-file-limit']") as HTMLInputElement).value;
+  const font = (document.getElementById("tab-font") as HTMLInputElement).value;
+  const periodBackup = (document.querySelector("input[name='period-backup']") as HTMLInputElement).value;
+  const pin = (document.querySelector("input[name='pin-tabs']") as HTMLInputElement).checked;
+  const merge = (document.querySelector("input[name='merge-tabs']") as HTMLInputElement).checked;
+  const open = (document.querySelector("input[name='ext-open']") as HTMLInputElement).checked;
+  const randomizeColor = (document.querySelector("input[name='randomize-group-color']") as HTMLInputElement).checked;
+  const relativePathBackup = (document.querySelector("input[name='relative-path-backup']") as HTMLInputElement).value;
+  const restore = (document.querySelector("input[name='restore-tabs']") as HTMLInputElement).checked;
+  const saveAsVisibility = (document.getElementById("saveas-visibility") as HTMLInputElement).checked;
+  const syncPeriodBackup = (document.querySelector("input[name='sync-backup']") as HTMLInputElement).value;
+  const title = (document.getElementById("options-default-title") as HTMLInputElement).value;
+  const tooltipVisibility = (document.getElementById("tooltip-visibility") as HTMLInputElement).checked;
+  const weight = (document.getElementById("tab-weight") as HTMLInputElement).value;
 
   const settings = {
     badgeInfo,

@@ -26,17 +26,19 @@ import { restoreOptions, saveOptions, resetOptions } from "./settings_functions.
 window.addEventListener("load", restoreOptions);
 document.getElementById("save-btn").addEventListener("click", saveOptions);
 document.getElementById("reset-btn").addEventListener("click", resetOptions);
-document.getElementById("home-btn").addEventListener("click", () => location.assign("/index.html"));
+document.getElementById("home-btn").addEventListener("click", () => window.location.assign("/index.html"));
 
 [...document.querySelectorAll("input[type='number']")].forEach((x) => {
   x.addEventListener("change", (e) => {
-    e.target.value = Math.max(
-      +(e.target.name === "json-file-limit"),
-      Math.min(e.target.value, e.target.name !== "json-file-limit" ? 24 * 60 : 100)
-    ); // clamp between these values (24 * 60 -> 1 day)
+    const target = e.target as HTMLInputElement;
+    const lowerBound = parseInt(target.name === "json-file-limit" ? "1" : "0", 10);
+    const upperBound = Math.min(parseInt(target.value, 10), target.name !== "json-file-limit" ? 24 * 60 : 100);
+    target.value = Math.max(lowerBound, upperBound).toString(); // clamp between these values (24 * 60 -> 1 day)
   });
 });
 
 [...document.querySelectorAll(".label-left")].forEach((x) =>
-  x.addEventListener("click", (e) => e.target.closest("div").querySelector(".custom-control-label").click())
+  x.addEventListener("click", (e) =>
+    ((e.target as HTMLElement).closest("div").querySelector(".custom-control-label") as HTMLInputElement).click()
+  )
 );

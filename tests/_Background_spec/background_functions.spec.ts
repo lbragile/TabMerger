@@ -26,14 +26,7 @@ import * as BackgroundHelper from "../../public/background/background_helpers.js
 
 import { waitFor } from "@testing-library/react";
 
-const GLOBAL_OBJECT = (global as unknown) as {
-  CONSTANTS: any;
-  chromeSyncGetSpy: Function;
-  chromeTabsQuerySpy: Function;
-  chromeContextMenusCeateSpy: Function;
-};
-
-const { CONSTANTS, chromeSyncGetSpy, chromeTabsQuerySpy, chromeContextMenusCeateSpy } = GLOBAL_OBJECT;
+const { CONSTANTS, chromeSyncGetSpy, chromeTabsQuerySpy, chromeContextMenusCeateSpy } = global;
 
 const anything = expect.any(Function);
 
@@ -64,7 +57,7 @@ describe("handleBrowserIconClick", () => {
 
     if (!open) {
       expect(filterTabsSpy).toHaveBeenCalledTimes(1);
-      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0 });
+      expect(filterTabsSpy).toHaveBeenCalledWith({ which: "all" }, { index: 0, pinned: false, url: "Temp" });
     } else {
       expect(filterTabsSpy).not.toHaveBeenCalled();
     }
@@ -124,6 +117,7 @@ describe("contextMenuOrShortCut", () => {
     var chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementationOnce(() => {});
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     BackgroundFunc.contextMenuOrShortCut({ menuItemId }, tab);
 
     if (menuItemId === "aopen-tabmerger") {
@@ -163,6 +157,7 @@ describe("contextMenuOrShortCut", () => {
     var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
     jest.clearAllMocks();
 
+    /* @ts-ignore */
     BackgroundFunc.contextMenuOrShortCut(command, tab);
 
     await waitFor(() => {

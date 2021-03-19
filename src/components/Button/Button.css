@@ -1,4 +1,4 @@
-/* 
+/*
 TabMerger as the name implies merges your tabs into one location to save
 memory usage and increase your productivity.
 
@@ -32,13 +32,13 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   box-shadow: none;
 }
 
-.btn:not(#need-help) {
-  background: white;
-}
-
 .btn:hover {
   background: white;
   cursor: pointer;
+}
+
+.btn:not(#need-help) {
+  background: white;
 }
 
 /* GLOBAL */
@@ -52,11 +52,25 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   margin: 0;
 }
 
+.btn-for-merging svg {
+  position: relative;
+  left: -10px;
+  top: -9px;
+  height: 20px;
+  width: 20px;
+}
+
+.open-group-btn svg,
+.delete-group-btn svg,
+.visibility-group-btn svg {
+  left: -8px;
+}
+
+.link-global svg,
 #open-all-btn svg,
 #delete-all-btn svg,
 #import-btn svg,
-#export-btn svg,
-.link-global svg {
+#export-btn svg {
   width: 22px;
   height: 22px;
   padding: 0;
@@ -114,14 +128,6 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
   z-index: 2;
 }
 
-.btn-for-merging svg {
-  position: relative;
-  left: -10px;
-  top: -9px;
-  height: 20px;
-  width: 20px;
-}
-
 .merge-left-svg {
   left: -11px !important;
 }
@@ -152,12 +158,6 @@ input[type="color"] {
 }
 
 /* OTHER GROUP TITLE BUTTONS */
-.open-group-btn svg,
-.delete-group-btn svg,
-.visibility-group-btn svg {
-  left: -8px;
-}
-
 .move-group-btn,
 .lock-group-btn,
 .star-group-btn,
@@ -173,9 +173,11 @@ input[type="color"] {
   left: 30px;
   top: 0;
 }
+
 .lock-group-btn {
   left: 55px;
 }
+
 .star-group-btn {
   left: 80px;
 }
@@ -183,12 +185,15 @@ input[type="color"] {
 .color-group-btn {
   right: 65px;
 }
+
 .visibility-group-btn {
   right: 40px;
 }
+
 .open-group-btn {
   right: 20px;
 }
+
 .delete-group-btn {
   right: 0;
 }

@@ -28,24 +28,31 @@
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
     "@types/reactour": "^1.18.1",
+    "eslint": "^7.22.0",
     "jsdoc": "^3.6.6",
+    "stylelint": "^13.12.0",
+    "stylelint-config-standard": "^21.0.0",
     "typedoc": "^0.20.30",
     "typescript": "^4.2.3",
     "zip-a-folder": "0.0.12"
   },
   "scripts": {
+    "lint": "npx eslint {src,public}/**/**/*.[jt]s -c config/.eslintrc.js --ignore-path .gitignore .",
+    "lint:style": "npx stylelint {src,public}/**/**/*.css --config config/.stylelintrc.json",
     "typedoc": "npx typedoc --options ./config/typedoc.config.json && move ./docs/media ./docs/public && cd ./docs/public && mkdir images && move *.PNG images && cd ../../",
     "jsdoc": "./node_modules/.bin/jsdoc -c ./config/jsdoc.config.json",
     "tsc": "tsc --project ./config/tsconfig.development.json",
+    "tsc:clean": "tsc -b src tests public --clean",
+    "tsc:watch": "tsc --watch",
     "start": "react-scripts start",
-    "build": "tsc && set REACT_APP_PRODUCTION=true&& react-scripts build",
-    "build:dev": "tsc && react-scripts build",
+    "build": "npm run tsc && set REACT_APP_PRODUCTION=true&& react-scripts build && npm run tsc:clean",
+    "build:dev": "npm run tsc && react-scripts build && npm run tsc:clean",
     "build:browser": "node misc/adjust_manifest.ts %npm_config_browser% && npm run build && node misc/zip.ts %npm_config_browser%",
-    "build:firefox": "npm run build:browser --browser=firefox",
-    "build:chrome": "npm run build:browser --browser=chrome",
-    "build:all": "npm run build:firefox && npm run build:chrome && git restore public/manifest.json",
-    "test": "jest --coverage --collectCoverageFrom %npm_config_covFrom% --config ./config/jest.config.js -- %npm_config_path%",
-    "test:all": "jest --coverage --config ./config/jest.config.js",
+    "build:firefox": "npm run build:browser --browser=firefox && npm run tsc:clean",
+    "build:chrome": "npm run build:browser --browser=chrome && npm run tsc:clean",
+    "build:all": "npm run build:firefox && npm run build:chrome && git restore public/manifest.json && npm run tsc:clean",
+    "test": "npm run tsc && jest --coverage --collectCoverageFrom %npm_config_covFrom% --config ./config/jest.config.js -- %npm_config_path% && npm run tsc:clean",
+    "test:all": "npm run tsc && jest --coverage --config ./config/jest.config.js && npm run tsc:clean",
     "test:app": "npm run test --covFrom=./src/components/App/App_*.spec.tsx --path=./tests/App_spec/",
     "test:group": "npm run test --covFrom=./src/components/Group/Group_*.spec.tsx --path=./tests/Group_spec/",
     "test:tab": "npm run test --covFrom=./src/components/Tab/Tab_*.spec.tsx --path=./tests/Tab_spec/",
@@ -83,12 +90,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "env": {
-      "webextensions": true
-    }
+      "./config/.eslintrc.js"
+    ]
   },
   "browserslist": {
     "production": [

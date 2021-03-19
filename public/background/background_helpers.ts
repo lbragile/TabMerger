@@ -21,6 +21,9 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+import { DefaultGroup } from "../../src/typings/common";
+import { TabState } from "../../src/typings/Tab";
+
 /**
  * @module Background/Background_helpers
 
@@ -32,10 +35,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * Avoids duplicates as much as possible. If duplicate tabs are merged, only a single copy of the
  * many duplicates is included in the merge (the other duplicate tabs are simply closed).
  * @param {{which: string}} info which direction to merge from
- * @param {{index: number, title=: string, url=: string, id=: string}} tab indicates where the merging call originated from
+ * @param {TabState} tab indicates where the merging call originated from
  * @param {string?} group_id the group to merge into (if merge button from one of TabMerger's groups is used)
  */
-export function filterTabs(info, tab, group_id) {
+export function filterTabs(info: { which: string }, tab: TabState, group_id?: string): void {
   chrome.tabs.query({ currentWindow: true }, (tabs) => {
     // filter based on user's merge button click
     tabs = tabs.filter((x) => x.title !== "TabMerger");
@@ -52,6 +55,8 @@ export function filterTabs(info, tab, group_id) {
       case "only":
         tabs = tabs.filter((x) => x.index === tab.index);
         break;
+
+      // no default
     }
 
     // create duplicate title/url list & filter blacklisted sites
@@ -61,15 +66,18 @@ export function filterTabs(info, tab, group_id) {
       chrome.storage.sync.get("settings", (sync) => {
         chrome.storage.local.get("groups", (local) => {
           // get a list of all the current tab titles and/or urls
-          Object.values(local.groups).forEach((val) => (filter_vals = filter_vals.concat(val.tabs.map((x) => x.url))));
+          (Object.values(local.groups) as DefaultGroup[]).forEach(
+            (val) => (filter_vals = filter_vals.concat(val.tabs.map((x) => x.url)))
+          );
 
           // apply blacklist items
           tabs = tabs.filter((x) => {
-            var bl_sites = sync.settings.blacklist.split(", ").map((site) => site.toLowerCase());
+            var bl_sites = (sync.settings.blacklist.split(", ") as string[]).map((site) => site.toLowerCase());
             return !bl_sites.includes(x.url.toLowerCase());
           });
 
           // remove unnecessary information from each tab
+          /* @ts-ignore */
           tabs = tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url, id: x.id }));
 
           // duplicates (already in TabMerger) can be removed
@@ -80,7 +88,8 @@ export function filterTabs(info, tab, group_id) {
           tabs = tabs.filter((x) => !filter_vals.includes(x.title) && !filter_vals.includes(x.url));
 
           // make sure original merge has no duplicated values and obtain offending indicies
-          var unique_tabs = [], indicies = []; // prettier-ignore
+          var unique_tabs: TabState[] = [], indicies: number[] = []; // prettier-ignore
+          /* @ts-ignore */
           tabs.forEach((x, i) => (unique_tabs.map((y) => y.url).includes(x.url) ? indicies.push(i) : unique_tabs.push(x))); // prettier-ignore
 
           // close duplicates in the merging process
@@ -106,7 +115,7 @@ export function filterTabs(info, tab, group_id) {
  * @param {boolean=} testing Whether this is a testing call or a real call
  * @return A promise which should be awaited. Resolve value is insignificant
  */
-export function findExtTabAndSwitch(testing) {
+export function findExtTabAndSwitch(testing?: boolean) {
   var query = { title: "TabMerger", currentWindow: true };
   var exists = { highlighted: true, active: true };
   var not_exist = { url: "../index.html", active: true };
@@ -115,8 +124,9 @@ export function findExtTabAndSwitch(testing) {
       tabMergerTabs[0]
         ? chrome.tabs.update(tabMergerTabs[0].id, exists, () => resolve(0))
         : chrome.tabs.create(not_exist, (newTab) => {
-            function listener(tabId, changeInfo) {
+            function listener(tabId: number, changeInfo: { status: string }, _tab: any | undefined) {
               if (changeInfo?.status === "complete" && tabId === newTab.id) {
+                /* @ts-ignore */
                 chrome.tabs.onUpdated.removeListener(listener);
                 resolve(0);
               }
@@ -127,6 +137,7 @@ export function findExtTabAndSwitch(testing) {
                 resolve(1);
               }
             }
+            /* @ts-ignore */
             chrome.tabs.onUpdated.addListener(listener);
           });
     });
@@ -136,9 +147,9 @@ export function findExtTabAndSwitch(testing) {
 /**
  * Any URL specified here will be excluded from TabMerger when a merging action is performed.
  * This means that it will be ignored even when other tabs are merged in.
- * @param {object} tab The tab which should be excluded from TabMerger's merging visibility
+ * @param {TabState} tab The tab which should be excluded from TabMerger's merging visibility
  */
-export function excludeSite(tab) {
+export function excludeSite(tab: TabState) {
   chrome.storage.sync.get("settings", (result) => {
     result.settings.blacklist += `${tab.url}, `;
     chrome.storage.sync.set({ settings: result.settings }, () => {});

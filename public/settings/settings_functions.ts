@@ -65,24 +65,24 @@ export function restoreOptions() {
       sync.settings = DEFAULT_SETTINGS;
     }
 
-    document.getElementById("options-default-color").value = sync.settings.color;
-    document.getElementById("options-default-title").value = sync.settings.title;
-    document.getElementById("tab-font").value = sync.settings.font;
-    document.getElementById("tab-weight").value = sync.settings.weight;
-    document.querySelector("input[name='period-backup']").value = sync.settings.periodBackup;
-    document.querySelector("input[name='relative-path-backup']").value = sync.settings.relativePathBackup;
-    document.querySelector("input[name='sync-backup']").value = sync.settings.syncPeriodBackup;
-    document.querySelector("input[name='json-file-limit']").value = sync.settings.fileLimitBackup;
-    document.getElementById("options-blacklist").value = sync.settings.blacklist;
+    (document.getElementById("options-default-color") as HTMLInputElement).value = sync.settings.color;
+    (document.getElementById("options-default-title") as HTMLInputElement).value = sync.settings.title;
+    (document.getElementById("tab-font") as HTMLInputElement).value = sync.settings.font;
+    (document.getElementById("tab-weight") as HTMLInputElement).value = sync.settings.weight;
+    (document.querySelector("input[name='period-backup']") as HTMLInputElement).value = sync.settings.periodBackup;
+    (document.querySelector("input[name='relative-path-backup']") as HTMLInputElement).value = sync.settings.relativePathBackup; // prettier-ignore
+    (document.querySelector("input[name='sync-backup']") as HTMLInputElement).value = sync.settings.syncPeriodBackup;
+    (document.querySelector("input[name='json-file-limit']") as HTMLInputElement).value = sync.settings.fileLimitBackup;
+    (document.getElementById("options-blacklist") as HTMLInputElement).value = sync.settings.blacklist;
 
-    document.querySelector("input[name='randomize-group-color']").checked = sync.settings.randomizeColor;
-    document.getElementById("saveas-visibility").checked = sync.settings.saveAsVisibility;
-    document.getElementById("tooltip-visibility").checked = sync.settings.tooltipVisibility;
-    document.querySelector("input[name='badge-view']").checked = sync.settings.badgeInfo;
-    document.querySelector("input[name='ext-open']").checked = sync.settings.open;
-    document.querySelector("input[name='merge-tabs']").checked = sync.settings.merge;
-    document.querySelector("input[name='pin-tabs']").checked = sync.settings.pin;
-    document.querySelector("input[name='restore-tabs']").checked = sync.settings.restore;
+    (document.querySelector("input[name='randomize-group-color']") as HTMLInputElement).checked = sync.settings.randomizeColor; // prettier-ignore
+    (document.getElementById("saveas-visibility") as HTMLInputElement).checked = sync.settings.saveAsVisibility;
+    (document.getElementById("tooltip-visibility") as HTMLInputElement).checked = sync.settings.tooltipVisibility;
+    (document.querySelector("input[name='badge-view']") as HTMLInputElement).checked = sync.settings.badgeInfo;
+    (document.querySelector("input[name='ext-open']") as HTMLInputElement).checked = sync.settings.open;
+    (document.querySelector("input[name='merge-tabs']") as HTMLInputElement).checked = sync.settings.merge;
+    (document.querySelector("input[name='pin-tabs']") as HTMLInputElement).checked = sync.settings.pin;
+    (document.querySelector("input[name='restore-tabs']") as HTMLInputElement).checked = sync.settings.restore;
 
     // dark mode adjustments
     body.style.background = sync.settings.dark ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)";
@@ -91,7 +91,7 @@ export function restoreOptions() {
     code_block.style.border = "1px solid " + (sync.settings.dark ? "white" : "black");
     nav.style.background = sync.settings.dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 
-    var darkMode = document.getElementById("darkMode");
+    var darkMode = document.getElementById("darkMode") as HTMLInputElement;
     darkMode.checked = sync.settings.dark;
     darkMode.addEventListener("change", () => {
       setSync();
@@ -104,8 +104,8 @@ export function restoreOptions() {
  * Shows the save confrimation state by changing the buttons color
  * @param {MouseEvent} e On node representing the "Save" button at the bottom of the settings page
  */
-export function saveOptions(e) {
-  var target = e.target;
+export function saveOptions(e: MouseEvent) {
+  var target = e.target as HTMLButtonElement;
   target.classList.replace("btn-primary", "btn-success");
   target.innerText = "Saved";
   target.disabled = true;

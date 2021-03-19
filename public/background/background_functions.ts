@@ -25,9 +25,18 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module Background/Background_functions
  */
 
+import { TabState } from "../../src/typings/Tab.js";
 import { filterTabs, findExtTabAndSwitch, excludeSite } from "./background_helpers.js";
 
-var info = { which: "all" }, tab = { index: 0 }; // prettier-ignore
+interface IContextInfo {
+  which?: string;
+  command?: string;
+  menuItemId?: string;
+}
+
+export type InfoType = IContextInfo | string;
+
+var info = { which: "all" }, tab: TabState = { index: 0, pinned: false, url: "Temp" }; // prettier-ignore
 
 /**
  * Extension click from toolbar - open TabMerger with or without merging tabs (according to settings).
@@ -48,10 +57,11 @@ export function handleBrowserIconClick() {
  * @param {{msg: string, id: string}} request Contains information regarding
  * which way to merge and the calling tab's id
  */
-export function extensionMessage(request) {
+export function extensionMessage(request: { msg: string; id: string }): void {
   var queryOpts = { currentWindow: true, active: true };
   info.which = request.msg;
 
+  /* @ts-ignore */
   chrome.tabs.query(queryOpts, (tabs) => filterTabs(info, tabs[0], request.id));
 }
 
@@ -61,23 +71,24 @@ export function extensionMessage(request) {
  * @param {string} title the contextMenu's item title
  * @param {"separator" | "normal"} type The type of contextMenu item to use "separator" or "normal" (default)
  */
-export function createContextMenu(id, title, type) {
+export function createContextMenu(id: string, title: string, type: "separator" | "normal"): void {
   chrome.contextMenus.create({ id, title, type });
 }
 
 /**
  * Handles contextMenu item clicks or keyboard shortcut events for both merging actions and
  * other actions like excluding from visibility, opening TabMerger, visiting help site, etc.
- * @param {{which=: string, command=: string, menuItemId=: string} | string} info Indicates merging direction,
+ * @param {InfoType} info Indicates merging direction,
  * keyboard command, and/or the contextMenu item that was clicked
- * @param {{index: number, url=: string, title=: string, id=: string}} tab The tab for which the event occured.
+ * @param {TabState} tab The tab for which the event occured.
  * Used when determining which tabs to merge
  */
-export async function contextMenuOrShortCut(info, tab) {
+export async function contextMenuOrShortCut(info: InfoType, tab: TabState): Promise<void> {
   if (typeof info === "string") {
     info = { command: info };
   }
 
+  var dest_url;
   switch (info.menuItemId || info.command) {
     case "aopen-tabmerger":
       await findExtTabAndSwitch();
@@ -85,39 +96,41 @@ export async function contextMenuOrShortCut(info, tab) {
     case "merge-all-menu":
       info.which = "all";
       await findExtTabAndSwitch();
-      filterTabs(info, tab, null);
+      filterTabs(info as { which: string }, tab, null);
       break;
     case "merge-left-menu":
       info.which = "left";
       await findExtTabAndSwitch();
-      filterTabs(info, tab, null);
+      filterTabs(info as { which: string }, tab, null);
       break;
     case "merge-right-menu":
       info.which = "right";
       await findExtTabAndSwitch();
-      filterTabs(info, tab, null);
+      filterTabs(info as { which: string }, tab, null);
       break;
     case "merge-xcluding-menu":
       info.which = "excluding";
       await findExtTabAndSwitch();
-      filterTabs(info, tab, null);
+      filterTabs(info as { which: string }, tab, null);
       break;
     case "merge-snly-menu":
       info.which = "only";
       await findExtTabAndSwitch();
-      filterTabs(info, tab, null);
+      filterTabs(info as { which: string }, tab, null);
       break;
     case "remove-visibility":
       excludeSite(tab);
       break;
     case "zdl-instructions":
-      var dest_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
+      dest_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
       chrome.tabs.create({ active: true, url: dest_url });
       break;
     case "dl-contact":
-      var dest_url = "https://lbragile.github.io/TabMerger-Extension/contact";
+      dest_url = "https://lbragile.github.io/TabMerger-Extension/contact";
       chrome.tabs.create({ active: true, url: dest_url });
       break;
+
+    // no default
   }
 }
 
@@ -132,7 +145,7 @@ export async function contextMenuOrShortCut(info, tab) {
  *
  */
 // was tested in App component but need here to avoid import outside module
-export function translate(msg) {
+export function translate(msg: string): string {
   try {
     return chrome.i18n.getMessage(msg);
   } catch (err) {
