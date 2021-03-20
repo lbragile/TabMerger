@@ -86,13 +86,13 @@
 					<a name="excludesite" class="tsd-anchor"></a>
 					<h3>exclude<wbr>Site</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">exclude<wbr>Site<span class="tsd-signature-symbol">(</span>tab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">exclude<wbr>Site<span class="tsd-signature-symbol">(</span>tab<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_tab.tabstate.html" class="tsd-signature-type" data-tsd-kind="Interface">TabState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_helpers.js#L141">public/background/background_helpers.js:141</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_helpers.ts#L157">public/background/background_helpers.ts:157</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -104,7 +104,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>tab: <span class="tsd-signature-type">object</span></h5>
+									<h5>tab: <a href="../interfaces/types_tab.tabstate.html" class="tsd-signature-type" data-tsd-kind="Interface">TabState</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The tab which should be excluded from TabMerger&#39;s merging visibility</p>
 									</div>
@@ -118,13 +118,13 @@
 					<a name="filtertabs" class="tsd-anchor"></a>
 					<h3>filter<wbr>Tabs</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">filter<wbr>Tabs<span class="tsd-signature-symbol">(</span>info<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>which<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span>, tab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span>, group_id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">filter<wbr>Tabs<span class="tsd-signature-symbol">(</span>info<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>which<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span>, tab<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_tab.tabstate.html" class="tsd-signature-type" data-tsd-kind="Interface">TabState</a>, group_id<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_helpers.js#L38">public/background/background_helpers.js:38</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_helpers.ts#L41">public/background/background_helpers.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -149,24 +149,13 @@
 									</ul>
 								</li>
 								<li>
-									<h5>tab: <span class="tsd-signature-symbol">{ </span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
+									<h5>tab: <a href="../interfaces/types_tab.tabstate.html" class="tsd-signature-type" data-tsd-kind="Interface">TabState</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>indicates where the merging call originated from</p>
 									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-										<li class="tsd-parameter">
-											<h5>title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-										<li class="tsd-parameter">
-											<h5>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
 								</li>
 								<li>
-									<h5>group_id: <span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> group_id: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>the group to merge into (if merge button from one of TabMerger&#39;s groups is used)</p>
 									</div>
@@ -180,13 +169,13 @@
 					<a name="findexttabandswitch" class="tsd-anchor"></a>
 					<h3>find<wbr>Ext<wbr>Tab<wbr>And<wbr>Switch</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">find<wbr>Ext<wbr>Tab<wbr>And<wbr>Switch<span class="tsd-signature-symbol">(</span>testing<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Ext<wbr>Tab<wbr>And<wbr>Switch<span class="tsd-signature-symbol">(</span>testing<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_helpers.js#L109">public/background/background_helpers.js:109</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_helpers.ts#L121">public/background/background_helpers.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -199,13 +188,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>testing: <span class="tsd-signature-type">boolean</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> testing: <span class="tsd-signature-type">boolean</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Whether this is a testing call or a real call</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A promise which should be awaited. Resolve value is insignificant</p>
 						</li>
 					</ul>

@@ -21,11 +21,11 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 /**
  * @module Background/Background_functions
  */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { TabState } from "../../src/typings/Tab.js";
 import { filterTabs, findExtTabAndSwitch, excludeSite } from "./background_helpers.js";

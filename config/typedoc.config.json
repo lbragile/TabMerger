@@ -11,8 +11,8 @@
   ],
   "exclude": [
     "src/components/**/*.tsx",
-    "public/background/background.js",
-    "public/settings/settings.js",
+    "public/background/background.ts",
+    "public/settings/settings.ts",
     "src/typings/Group.d.ts"
   ],
   "name": "TabMerger",

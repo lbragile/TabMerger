@@ -70,6 +70,12 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="background_background_functions.html#infotype" class="tsd-kind-icon">Info<wbr>Type</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="background_background_functions.html#contextmenuorshortcut" class="tsd-kind-icon">context<wbr>Menu<wbr>OrShort<wbr>Cut</a></li>
@@ -83,18 +89,31 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="infotype" class="tsd-anchor"></a>
+					<h3>Info<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">Info<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IContextInfo</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_functions.ts#L39">public/background/background_functions.ts:39</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="contextmenuorshortcut" class="tsd-anchor"></a>
 					<h3>context<wbr>Menu<wbr>OrShort<wbr>Cut</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">context<wbr>Menu<wbr>OrShort<wbr>Cut<span class="tsd-signature-symbol">(</span>info<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>command<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>menuItemId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>which<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span>, tab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">context<wbr>Menu<wbr>OrShort<wbr>Cut<span class="tsd-signature-symbol">(</span>info<span class="tsd-signature-symbol">: </span><a href="background_background_functions.html#infotype" class="tsd-signature-type" data-tsd-kind="Type alias">InfoType</a>, tab<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_tab.tabstate.html" class="tsd-signature-type" data-tsd-kind="Interface">TabState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_functions.js#L76">public/background/background_functions.js:76</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_functions.ts#L88">public/background/background_functions.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -106,40 +125,18 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>info: <span class="tsd-signature-symbol">{ </span>command<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>menuItemId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>which<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
+									<h5>info: <a href="background_background_functions.html#infotype" class="tsd-signature-type" data-tsd-kind="Type alias">InfoType</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Indicates merging direction,
 										keyboard command, and/or the contextMenu item that was clicked</p>
 									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>command<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-										<li class="tsd-parameter">
-											<h5>menu<wbr>Item<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-										<li class="tsd-parameter">
-											<h5>which<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
 								</li>
 								<li>
-									<h5>tab: <span class="tsd-signature-symbol">{ </span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
+									<h5>tab: <a href="../interfaces/types_tab.tabstate.html" class="tsd-signature-type" data-tsd-kind="Interface">TabState</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The tab for which the event occured.
 										Used when determining which tabs to merge</p>
 									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter">
-											<h5>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-										<li class="tsd-parameter">
-											<h5>title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-										<li class="tsd-parameter">
-											<h5>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-										</li>
-									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -156,7 +153,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_functions.js#L64">public/background/background_functions.js:64</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_functions.ts#L76">public/background/background_functions.ts:76</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -199,7 +196,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_functions.js#L51">public/background/background_functions.js:51</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_functions.ts#L62">public/background/background_functions.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -240,7 +237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_functions.js#L36">public/background/background_functions.js:36</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_functions.ts#L47">public/background/background_functions.ts:47</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -263,7 +260,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/0992be4/public/background/background_functions.js#L137">public/background/background_functions.js:137</a></li>
+									<li>Defined in <a href="https://github.com/lbragile/TabMerger/blob/7cbe2ee/public/background/background_functions.ts#L150">public/background/background_functions.ts:150</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -342,6 +339,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="background_background_functions.html#infotype" class="tsd-kind-icon">Info<wbr>Type</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="background_background_functions.html#contextmenuorshortcut" class="tsd-kind-icon">context<wbr>Menu<wbr>OrShort<wbr>Cut</a>
 					</li>

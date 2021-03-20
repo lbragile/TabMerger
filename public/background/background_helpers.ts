@@ -21,13 +21,13 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import { DefaultGroup } from "../../src/typings/common";
-import { TabState } from "../../src/typings/Tab";
-
 /**
  * @module Background/Background_helpers
 
  */
+
+import { DefaultGroup } from "../../src/typings/common";
+import { TabState } from "../../src/typings/Tab";
 
 /**
  * Filters a list of tabs according to the merging information provided in the parameters.
