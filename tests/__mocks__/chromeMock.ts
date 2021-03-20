@@ -21,6 +21,9 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-empty-function */
+
 import { DefaultGroup } from "../../src/typings/common";
 import { TabState } from "../../src/typings/Tab";
 
@@ -83,10 +86,10 @@ global.chrome = {
   storage: {
     local: {
       /* @ts-ignore */
-      get: (keys: string | string[], cb: (local: {} | DefaultGroup) => void) => {
-        var item: { [key: string]: DefaultGroup };
+      get: (keys: string | string[], cb: (local: unknown | DefaultGroup) => void) => {
+        let item: { [key: string]: DefaultGroup };
         if (keys) {
-          var local = {};
+          const local = {};
           // create array if not already
           keys = Array.isArray(keys) ? keys : [keys];
           keys.forEach((key) => {
@@ -128,7 +131,7 @@ global.chrome = {
     sync: {
       /* @ts-ignore */
       get: (key: string | string[], cb) => {
-        var item: { [key: string]: DefaultGroup };
+        let item: { [key: string]: DefaultGroup };
         if (key) {
           /* @ts-ignore */
           item = JSON.parse(sessionStorage.getItem(key));
@@ -166,25 +169,25 @@ global.chrome = {
   tabs: {
     /* @ts-ignore */
     create: (obj: TabState, cb: () => void) => {
-      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+      const open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
       open_tabs.push(obj);
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
 
       cb();
     },
     /* @ts-ignore */
-    move: (id: number, _moveProperties: chrome.tabs.MoveProperties) => {
-      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+    move: (id: number): void => {
+      const open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
 
-      var tab_to_move = open_tabs.filter((x: TabState) => x.id === id);
-      var index = open_tabs.indexOf(tab_to_move[0]);
+      const tab_to_move = open_tabs.filter((x: TabState) => x.id === id);
+      const index = open_tabs.indexOf(tab_to_move[0]);
       open_tabs.push(open_tabs.splice(index, 1)[0]); // move it to the end
 
       sessionStorage.setItem("open_tabs", JSON.stringify(open_tabs));
     },
     /* @ts-ignore */
     query: (opts: { active: boolean; title: string }, cb: (open_tabs: TabState[]) => void) => {
-      var open_tabs =
+      const open_tabs =
         opts.active || opts.title === "TabMerger"
           ? [{ title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 }]
           : JSON.parse(sessionStorage.getItem("open_tabs"));
@@ -193,8 +196,8 @@ global.chrome = {
     /* @ts-ignore */
     remove: (ids: number[]) => {
       ids = Array.isArray(ids) ? ids : [ids];
-      var open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
-      var remain_open_tabs = open_tabs.filter((x: TabState) => !ids.includes(x.id));
+      const open_tabs = JSON.parse(sessionStorage.getItem("open_tabs"));
+      const remain_open_tabs = open_tabs.filter((x: TabState) => !ids.includes(x.id));
       sessionStorage.setItem("open_tabs", JSON.stringify(remain_open_tabs));
     },
     /* @ts-ignore */

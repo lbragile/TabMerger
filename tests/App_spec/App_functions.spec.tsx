@@ -21,6 +21,9 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
+import React from "react";
 import { render, waitFor, act } from "@testing-library/react";
 import { toast } from "react-toastify";
 
@@ -57,16 +60,17 @@ const {
 } = global;
 
 const anything = expect.any(Function);
-var container: HTMLElement, sync_node: HTMLSpanElement, toastSpy: Function;
+let container: HTMLElement, sync_node: HTMLSpanElement, toastSpy: () => void;
 
-const mutationMockFn = (_: any, cb: (mutation: object) => void): void => {
-  var mutation = { type: { attributes: false, childList: true, subtree: false } };
+const mutationMockFn = (_: unknown, cb: (mutation: unknown) => void): void => {
+  const mutation = { type: { attributes: false, childList: true, subtree: false } };
   cb(mutation);
 };
 
 beforeAll(() => {
-  jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => {});
-  jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
+  jest.spyOn(Math, "random").mockReturnValue(0.5);
+  jest.spyOn(GroupFunc, "setBGColor").mockImplementation(() => undefined);
+  jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => undefined);
   /* @ts-ignore */
   toastSpy = toast.mockImplementation((...args) => args);
   console.info = jest.fn();
@@ -91,7 +95,7 @@ afterAll(() => {
 });
 
 describe("setUserStatus", () => {
-  var dialogMock = jest.fn();
+  const dialogMock = jest.fn();
   AppFunc.setUserStatus(mockSet, dialogMock);
 
   expect(dialogMock).toHaveBeenCalledTimes(1);
@@ -99,14 +103,15 @@ describe("setUserStatus", () => {
 });
 
 describe("storeUserDetailsPriorToCheck", () => {
-  var dialogMock = jest.fn();
+  const dialogMock = jest.fn();
   const [email, password] = ["temp@gmail.com", "temp_pass"];
-  var checkUserStatusSpy = jest.spyOn(AppHelper, "checkUserStatus").mockImplementationOnce(() => {});
+  const checkUserStatusSpy = jest.spyOn(AppHelper, "checkUserStatus").mockImplementationOnce(() => undefined);
 
-  var stub = {
+  const stub = {
     target: {
       querySelectorAll: (arg: string) => arg === "input" && [{ value: email }, { value: password }],
     },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     preventDefault: () => {},
   };
 
@@ -168,7 +173,7 @@ describe("syncLimitIndication", () => {
     document.querySelector = querySelector;
     CONSTANTS.ITEM_STORAGE_LIMIT = prevItemLimit;
     CONSTANTS.SYNC_STORAGE_LIMIT = prevTotalLimit;
-    jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => {});
+    jest.spyOn(AppFunc, "syncLimitIndication").mockImplementation(() => undefined);
   });
 });
 
@@ -193,7 +198,7 @@ describe("toggleHiddenOrEmptyGroups", () => {
 
 describe("createAutoBackUpAlarm", () => {
   it("creates the sync and json alarms for premium members", () => {
-    var alarmGeneratorSpy = jest.spyOn(AppHelper, "alarmGenerator");
+    const alarmGeneratorSpy = jest.spyOn(AppHelper, "alarmGenerator");
 
     sessionStorage.setItem("settings", JSON.stringify({ periodBackup: 5, syncPeriodBackup: 10 }));
     localStorage.setItem("client_details", JSON.stringify({ tier: "Premium" }));
@@ -213,7 +218,7 @@ describe("createAutoBackUpAlarm", () => {
   });
 
   it("does nothing for non-premium members", () => {
-    var alarmGeneratorSpy = jest.spyOn(AppHelper, "alarmGenerator");
+    const alarmGeneratorSpy = jest.spyOn(AppHelper, "alarmGenerator");
 
     localStorage.setItem("client_details", null);
     jest.clearAllMocks();
@@ -335,8 +340,8 @@ describe("resetTutorialChoice", () => {
     "sets the tour state properly or opens official homepage correctly - response === %s",
     async (response) => {
       document.body.innerHTML = `<div id="need-btn" response=${response ? "negative" : "positive"}/div>`;
-      var element = document.querySelector("#need-btn");
-      var stub = { target: { closest: (arg: string) => arg !== "" && element } };
+      const element = document.querySelector("#need-btn");
+      const stub = { target: { closest: (arg: string) => arg !== "" && element } };
       const url = "TabMerger_Site";
       const mockSetTour = jest.fn(), mockSetDialog = jest.fn(); // prettier-ignore
       global.open = jest.fn();
@@ -439,7 +444,7 @@ describe("badgeIconInfo", () => {
 });
 
 describe("syncWrite", () => {
-  var stub = (ret_val: boolean) => ({
+  const stub = (ret_val: boolean) => ({
     target: {
       closest: (arg: string) =>
         arg === "#sync-write-btn" && { classList: { contains: (arg: string) => arg === "disabled-btn" && ret_val } },
@@ -489,7 +494,7 @@ describe("syncWrite", () => {
 
   it.each([["less"], ["more"]])("calls the correct functions when %s groups", async (num_groups) => {
     if (num_groups === "more") {
-      var current_groups = JSON.parse(localStorage.getItem("groups"));
+      const current_groups = JSON.parse(localStorage.getItem("groups"));
       current_groups["group-4"] = CONSTANTS.DEFAULT_GROUP;
       localStorage.setItem("groups", JSON.stringify(current_groups));
     } else {
@@ -585,12 +590,12 @@ describe("syncRead", () => {
 });
 
 describe("openOrRemoveTabs", () => {
-  var tab_single = ["https://stackoverflow.com/"];
-  var tab_group = [...tab_single, "https://lichess.org/", "https://www.chess.com/"];
-  var tab_all = [...tab_group, "https://www.twitch.tv/", "https://www.reddit.com/", "https://www.a.com/", "https://www.b.com/"]; // prettier-ignore
+  const tab_single = ["https://stackoverflow.com/"];
+  const tab_group = [...tab_single, "https://lichess.org/", "https://www.chess.com/"];
+  const tab_all = [...tab_group, "https://www.twitch.tv/", "https://www.reddit.com/", "https://www.a.com/", "https://www.b.com/"]; // prettier-ignore
   const tab_arr_map: { [key: string]: string[] } = { SINGLE: tab_single, GROUP: tab_group, ALL: tab_all };
 
-  var open_tabs: TabState[];
+  let open_tabs: TabState[];
   beforeEach(() => {
     open_tabs = [
       { active: true, id: 0, pinned: false, url: location.href + "a", title: "A" },
@@ -631,15 +636,15 @@ describe("openOrRemoveTabs", () => {
     "opens the correct tab (not open) | restore = %s | %s removing | locked = %s | %s",
     (keepOrRemove, _, locked, type, expected_tabs_left) => {
       // ARRANGE
-      var stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
-      var expect_open_tabs = [
+      const stub = { remove: { newValue: [type !== "ALL" ? "group-0" : null, ...tab_arr_map[type]] } };
+      const expect_open_tabs = [
         ...open_tabs,
         ...tab_arr_map[type].map((url: string) => ({ active: false, pinned: false, url })),
       ];
 
       sessionStorage.setItem("settings", JSON.stringify({ restore: keepOrRemove, tooltipVisibility: false })); // prettier-ignore
 
-      var expected_groups = JSON.parse(localStorage.getItem("groups")); // only used in remove case
+      const expected_groups = JSON.parse(localStorage.getItem("groups")); // only used in remove case
       expected_groups["group-0"].locked = locked === "LOCKED";
       localStorage.setItem("groups", JSON.stringify(expected_groups));
       if (locked === "UNLOCKED") {
@@ -704,13 +709,13 @@ describe("openOrRemoveTabs", () => {
   );
 
   test("restore already open - opens the correct tabs MOVING them to correct position in array", () => {
-    var expect_open_tabs = [open_tabs[2], open_tabs[0], open_tabs[1]];
-    var stub = { remove: { newValue: ["group-0", open_tabs[0].url, open_tabs[1].url] } };
+    const expect_open_tabs = [open_tabs[2], open_tabs[0], open_tabs[1]];
+    const stub = { remove: { newValue: ["group-0", open_tabs[0].url, open_tabs[1].url] } };
 
     sessionStorage.setItem("settings", JSON.stringify({ restore: false }));
 
     // add new tabs that are also open
-    var current_groups = JSON.parse(localStorage.getItem("groups"));
+    const current_groups = JSON.parse(localStorage.getItem("groups"));
     current_groups["group-0"].tabs.push({ url: open_tabs[0].url, title: "already open a" });
     current_groups["group-0"].tabs.push({ url: open_tabs[1].url, title: "already open b" });
     localStorage.setItem("groups", JSON.stringify(current_groups));
@@ -751,7 +756,7 @@ describe("openOrRemoveTabs", () => {
 
 // note that duplicate removal is made in background script!
 describe("checkMerging", () => {
-  var merge_all = [
+  const merge_all = [
     { id: 0, pinned: false, title: "merged tab a", url: location.href + "a" },
     { id: 1, pinned: false, title: "merged tab b", url: location.href + "b" },
     { id: 2, pinned: false, title: "merged tab c", url: location.href + "c" },
@@ -788,17 +793,17 @@ describe("checkMerging", () => {
   ])(
     "merge all and none exist in TabMerger - exceeding: %s, merge: %s, into: %s, group-0: %s",
     (exceeding, merge_setting, into_group, top_group) => {
-      var stub = { merged_tabs: { newValue: merge_all } };
+      const stub = { merged_tabs: { newValue: merge_all } };
 
-      var current_groups = JSON.parse(JSON.stringify(init_groups));
+      const current_groups = JSON.parse(JSON.stringify(init_groups));
       if (top_group === "empty") {
         current_groups["group-0"].tabs = [];
       }
 
       // need to have at least 15 tabs to exceed Free Tier
       if (exceeding) {
-        var tabs_to_exceed = [];
-        for (var i = 0; i < 10; i++) {
+        const tabs_to_exceed = [];
+        for (let i = 0; i < 10; i++) {
           tabs_to_exceed.push({ pinned: false, title: "Extra Tab", url: "http://www.example.com" });
         }
         current_groups["group-1"].tabs = tabs_to_exceed;
@@ -811,7 +816,7 @@ describe("checkMerging", () => {
       localStorage.setItem("client_details", JSON.stringify(!exceeding ? user : { tier: "Free" }));
       sessionStorage.setItem("settings", JSON.stringify({ color: CONSTANTS.DEFAULT_GROUP_COLOR, title: CONSTANTS.DEFAULT_GROUP_TITLE, merge: merge_setting })); // prettier-ignore
 
-      var expected_groups = JSON.parse(localStorage.getItem("groups"));
+      const expected_groups = JSON.parse(localStorage.getItem("groups"));
       if (into_group.includes("group")) {
         expected_groups[into_group].tabs = [
           ...expected_groups[into_group].tabs,
@@ -839,9 +844,9 @@ describe("checkMerging", () => {
         }
       }
 
-      var expected_tabs_num = AppHelper.getTabTotal(expected_groups);
+      const expected_tabs_num = AppHelper.getTabTotal(expected_groups);
 
-      var current_settings = JSON.parse(sessionStorage.getItem("settings"));
+      const current_settings = JSON.parse(sessionStorage.getItem("settings"));
       current_settings.merge = merge_setting;
       sessionStorage.setItem("settings", JSON.stringify(current_settings));
 
@@ -889,7 +894,7 @@ describe("checkMerging", () => {
 describe("addGroup", () => {
   it.each([["equal"], ["more"]])("warns if group limit exceeded - %s", (type) => {
     // free tier has group limit of 5
-    var groups = JSON.parse(JSON.stringify(init_groups));
+    const groups = JSON.parse(JSON.stringify(init_groups));
     groups["group-4"] = CONSTANTS.DEFAULT_GROUP;
     if (type === "more") {
       groups["group-5"] = CONSTANTS.DEFAULT_GROUP;
@@ -927,7 +932,7 @@ describe("addGroup", () => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
     localStorage.setItem("client_details", JSON.stringify({ tier: premium ? "Premium" : "Standard" }));
 
-    var groups = JSON.parse(JSON.stringify(init_groups));
+    const groups = JSON.parse(JSON.stringify(init_groups));
     groups["group-4"] = CONSTANTS.DEFAULT_GROUP;
     groups["group-4"].created = AppHelper.getTimestamp();
     groups["group-4"].color = randomize ? "#FFE4B5" : "#dedede";
@@ -954,10 +959,10 @@ describe("openAllTabs", () => {
       `<div id="open-all-btn" response=${response ? "negative" : "positive"}>` +
       `  <a class="a-tab" href="www.abc.com"/>` +
       `</div>`;
-    var element = document.querySelector("#open-all-btn");
-    var stub = { target: { closest: (arg: string) => arg !== "" && element } };
+    const element = document.querySelector("#open-all-btn");
+    const stub = { target: { closest: (arg: string) => arg !== "" && element } };
 
-    var expected_ls = { remove: [null, location.href + "www.abc.com"] };
+    const expected_ls = { remove: [null, location.href + "www.abc.com"] };
 
     localStorage.setItem("groups", JSON.stringify(init_groups));
 
@@ -1011,7 +1016,7 @@ describe("deleteAllGroups", () => {
       sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
       localStorage.setItem("groups_copy", JSON.stringify([]));
 
-      var expected_groups = JSON.parse(localStorage.getItem("groups"));
+      const expected_groups = JSON.parse(localStorage.getItem("groups"));
       if (locked) {
         expected_groups["group-0"].locked;
         delete expected_groups["group-10"];
@@ -1019,7 +1024,7 @@ describe("deleteAllGroups", () => {
       }
       localStorage.setItem("groups", JSON.stringify(expected_groups));
 
-      var new_entry: { [key: string]: DefaultGroup } = locked
+      const new_entry: { [key: string]: DefaultGroup } = locked
         ? {
             "group-0": {
               color: "#000000",
@@ -1034,8 +1039,8 @@ describe("deleteAllGroups", () => {
           }
         : { "group-0": CONSTANTS.DEFAULT_GROUP };
 
-      var element = document.querySelector("#delete-all-btn") as HTMLButtonElement;
-      var stub = { target: { closest: (arg: string) => arg !== "" && element } };
+      const element = document.querySelector("#delete-all-btn") as HTMLButtonElement;
+      const stub = { target: { closest: (arg: string) => arg !== "" && element } };
 
       // if user clicks the modal's "x" then there is no response, in this case need to switch mutation type to avoid calling cb logical statement
       if (locked === null) {
@@ -1090,8 +1095,8 @@ describe("deleteAllGroups", () => {
 
   it("does nothing if user rejects", async () => {
     document.body.innerHTML = `<div id="delete-all-btn" class="group-item" response="positive"/>`;
-    var element = document.querySelector("#delete-all-btn") as HTMLButtonElement;
-    var stub = { target: { closest: jest.fn(() => element) } };
+    const element = document.querySelector("#delete-all-btn") as HTMLButtonElement;
+    const stub = { target: { closest: jest.fn(() => element) } };
     jest.clearAllMocks();
 
     /* @ts-ignore */
@@ -1189,13 +1194,14 @@ describe("dragOver", () => {
 
     global.scrollTo = jest.fn();
 
-    var getDragAfterElementSpy = jest.spyOn(AppHelper, "getDragAfterElement").mockImplementation(() => {
+    const getDragAfterElementSpy = jest.spyOn(AppHelper, "getDragAfterElement").mockImplementation(() => {
       return where !== "AFTER"
         ? (document.querySelectorAll(type === "GROUP" ? ".group" : ".draggable")[tab_num] as HTMLDivElement)
         : null;
     });
 
-    var stub = {
+    const stub = {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       preventDefault: () => {},
       clientY: scroll,
       target: document.querySelector(type === "GROUP" ? ".group" : ".draggable"),
@@ -1282,7 +1288,7 @@ describe("regexSearchForTab", () => {
 
 describe("resetSearch", () => {
   it("calls timeout and resets the target's value before calling regexSearchForTab", () => {
-    var stub = { target: { value: "NOT EMPTY" } };
+    const stub = { target: { value: "NOT EMPTY" } };
 
     jest.useFakeTimers();
     /* @ts-ignore */
@@ -1298,7 +1304,7 @@ describe("exportJSON", () => {
     localStorage.setItem("client_details", user_type && JSON.stringify({ tier: user_type }));
 
     jest.clearAllMocks();
-    AppFunc.exportJSON(false, false, null);
+    AppFunc.exportJSON(false, false);
 
     expect(toastSpy).toHaveBeenCalledTimes(1);
     expect(toastSpy).toHaveReturnedWith([...CONSTANTS.SUBSCRIPTION_TOAST]);
@@ -1314,16 +1320,16 @@ describe("exportJSON", () => {
   ])(
     "correctly exports a JSON file of the current configuration, fileLimit=%s, lastError=%s, showShelf=%s",
     (fileLimit, lastError, showShelf) => {
-      var chromeDownloadsSetShelfEnabledSpy = jest.spyOn(chrome.downloads, "setShelfEnabled");
-      var chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
-      var chromeDownloadsRemoveFileSpy = jest.spyOn(chrome.downloads, "removeFile");
-      chrome.runtime.lastError = lastError && jest.fn().mockImplementationOnce(() => ({message: "TabMerger Message"})) as object; // prettier-ignore
+      const chromeDownloadsSetShelfEnabledSpy = jest.spyOn(chrome.downloads, "setShelfEnabled");
+      const chromeDownloadsDownloadSpy = jest.spyOn(chrome.downloads, "download");
+      const chromeDownloadsRemoveFileSpy = jest.spyOn(chrome.downloads, "removeFile");
+      chrome.runtime.lastError = lastError && jest.fn().mockImplementationOnce(() => ({message: "TabMerger Message"})) as unknown; // prettier-ignore
 
       localStorage.setItem("groups", JSON.stringify(init_groups));
       localStorage.setItem("client_details", JSON.stringify(user));
       localStorage.setItem("file_ids", JSON.stringify(fileLimit === 1 ? [1] : []));
 
-      var groups = JSON.parse(localStorage.getItem("groups"));
+      const groups = JSON.parse(localStorage.getItem("groups"));
       groups["settings"] = { ...JSON.parse(sessionStorage.getItem("settings")), relativePathBackup: "Test/", fileLimitBackup: fileLimit }; // prettier-ignore
       sessionStorage.setItem("settings", JSON.stringify(groups["settings"]));
 
@@ -1336,7 +1342,7 @@ describe("exportJSON", () => {
 
       jest.clearAllMocks();
 
-      AppFunc.exportJSON(showShelf, false, null);
+      AppFunc.exportJSON(showShelf, false);
 
       expect(chromeLocalGetSpy).toHaveBeenCalledTimes(1);
       expect(chromeLocalGetSpy).toHaveBeenCalledWith(["groups", "client_details", "file_ids"], anything);
@@ -1392,7 +1398,7 @@ describe("importJSON", () => {
       this.readAsText = jest.fn(() => (this.result = JSON.stringify(exportedJSON)));
     });
 
-    var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation(() => [init_groups]); // prettier-ignore
+    const storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation(() => [init_groups]); // prettier-ignore
 
     jest.clearAllMocks();
 

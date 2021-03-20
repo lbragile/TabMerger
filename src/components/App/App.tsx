@@ -50,16 +50,16 @@ import "../Button/Button.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export interface IChanges {
-  [key: string]: any;
+  [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
-export default function App() {
+export default function App(): JSX.Element {
   // app parameters
   const [tabTotal, setTabTotal] = useState<number>(0);
   const [groups, setGroups] = useState<string>();
   const [dialog, setDialog] = useState<{ show: boolean }>({ show: false });
-  var syncTimestamp = useRef<null>();
-  var textStyles = useRef<FontStyle>({ fontFamily: "Arial", fontWeight: "Normal" });
+  const syncTimestamp = useRef<null>();
+  const textStyles = useRef<FontStyle>({ fontFamily: "Arial", fontWeight: "Normal" });
 
   // activation parameters
   const [user, setUser] = useState<userType>({ paid: false, tier: "Free" });
@@ -176,7 +176,10 @@ export default function App() {
 
       <nav
         id="sidebar"
-        style={{ fontFamily: ["Standard", "Premium"].includes(user.tier) ? textStyles.current.fontFamily : "Arial" }}
+        style={{
+          /* stylelint-disable font-family-no-missing-generic-family-keyword */
+          fontFamily: ["Standard", "Premium"].includes(user.tier) ? textStyles.current.fontFamily : "Arial",
+        }}
       >
         <Header total={tabTotal} />
         <hr className="mx-auto d-none shown-in-print" />

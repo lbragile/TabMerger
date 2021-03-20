@@ -31,7 +31,7 @@ const anything = expect.any(Function);
 
 describe("restoreOptions", () => {
   // make them opposite of default to check in test if they are properly called
-  var expected_sync = {
+  const expected_sync = {
     ...CONSTANTS.DEFAULT_SETTINGS,
     badgeInfo: false,
     blacklist: "Not TabMerger",
@@ -93,8 +93,8 @@ describe("restoreOptions", () => {
 
     const { reload } = window.location;
 
-    var setTabMergerLinkSpy = jest.spyOn(SettingsHelper, "setTabMergerLink").mockImplementation(() => {});
-    var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
+    const setTabMergerLinkSpy = jest.spyOn(SettingsHelper, "setTabMergerLink").mockImplementation(() => undefined);
+    const setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => undefined);
 
     document.querySelector("#darkMode").addEventListener = jest.fn((_, cb: () => void) => cb()) as jest.Mock;
 
@@ -123,10 +123,15 @@ describe("restoreOptions", () => {
     expect((document.getElementById("tab-font") as HTMLSelectElement).value).toBe(expect_checked ? "Arial" : "Times New Roman"); // prettier-ignore
     expect((document.getElementById("tab-weight") as HTMLSelectElement).value).toBe(expect_checked ? "Normal" : "Bold");
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((document.body.style as any)._values.background).toBe(ss_dark ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((document.body.style as any)._values.color).toBe(ss_dark ? "white" : "black");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((document.querySelector("code").style as any)._values.color).toBe(ss_dark ? "white" : "black");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((document.querySelector("code").style as any)._values.border).toBe("1px solid " + (ss_dark ? "white" : "black")); // prettier-ignore
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((document.querySelector("nav").style as any)._values.background).toBe(ss_dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)"); // prettier-ignore
 
     expect(setTabMergerLinkSpy).toHaveBeenCalledTimes(1);
@@ -153,16 +158,18 @@ describe("restoreOptions", () => {
 
 describe("saveOptions", () => {
   it("correctly sets the style of the save button and calls setSync", () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
-    var stub = { target: { classList: { replace: jest.fn() }, innerText: "", disabled: null } };
+    const stub = { target: { classList: { replace: jest.fn() }, innerText: "", disabled: null } };
 
-    var classListSpy = jest.spyOn(stub.target.classList, "replace");
-    var setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => {});
+    const classListSpy = jest.spyOn(stub.target.classList, "replace");
+    const setSyncSpy = jest.spyOn(SettingsHelper, "setSync").mockImplementation(() => undefined);
 
     sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
     jest.clearAllMocks();
 
     jest.useFakeTimers();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
     SettingsFunc.saveOptions(stub);
 

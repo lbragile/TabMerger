@@ -39,8 +39,8 @@ describe("handleBrowserIconClick", () => {
     [false, "✅", "❌"],
     [true, "❌", "✅"],
   ])("settings.open = %s - calls findExtTabAndSwitch %s and filterTabs %s", async (open) => {
-    var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
-    var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => {});
+    const findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
+    const filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => undefined);
     sessionStorage.removeItem("settings");
     sessionStorage.setItem("settings", JSON.stringify({ open }));
     jest.clearAllMocks();
@@ -71,7 +71,7 @@ describe("extensionMessage", () => {
     const request = { msg: "TabMerger is awesome!", id: "100" };
     const tab = { title: "TabMerger", url: "https://github.com/lbragile/TabMerger", id: 99 };
 
-    var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => {});
+    const filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => undefined);
     jest.clearAllMocks();
 
     BackgroundFunc.extensionMessage(request);
@@ -111,12 +111,13 @@ describe("contextMenuOrShortCut", () => {
     const inst_url = "https://lbragile.github.io/TabMerger-Extension/instructions";
     const contact_url = "https://lbragile.github.io/TabMerger-Extension/contact";
 
-    var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
-    var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => {});
-    var excludeSiteSpy = jest.spyOn(BackgroundHelper, "excludeSite").mockImplementationOnce(() => {});
-    var chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementationOnce(() => {});
+    const findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
+    const filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => undefined);
+    const excludeSiteSpy = jest.spyOn(BackgroundHelper, "excludeSite").mockImplementationOnce(() => undefined);
+    const chromeTabsCreateSpy = jest.spyOn(chrome.tabs, "create").mockImplementationOnce(() => undefined);
     jest.clearAllMocks();
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
     BackgroundFunc.contextMenuOrShortCut({ menuItemId }, tab);
 
@@ -153,10 +154,11 @@ describe("contextMenuOrShortCut", () => {
   test("typeof info === string", async () => {
     const tab = { index: 0 };
     const command = "merge-left-menu";
-    var filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => {});
-    var findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
+    const filterTabsSpy = jest.spyOn(BackgroundHelper, "filterTabs").mockImplementationOnce(() => undefined);
+    const findExtTabAndSwitchSpy = jest.spyOn(BackgroundHelper, "findExtTabAndSwitch").mockResolvedValueOnce(0);
     jest.clearAllMocks();
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
     BackgroundFunc.contextMenuOrShortCut(command, tab);
 

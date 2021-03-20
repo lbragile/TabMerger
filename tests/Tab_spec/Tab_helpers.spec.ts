@@ -26,8 +26,8 @@ import { getFavIconURL } from "../../src/components/Tab/Tab_helpers";
 describe("getFavIconURL", () => {
   const base = "http://www.google.com/s2/favicons?domain=";
   it("returns the API call with just domain name", () => {
-    var url = "https://www.google.com/";
-    var domain = "www.google.com";
+    let url = "https://www.google.com/";
+    const domain = "www.google.com";
     expect(getFavIconURL(url)).toBe(base + domain);
 
     url = "http://www.google.com/";
@@ -38,7 +38,7 @@ describe("getFavIconURL", () => {
   });
 
   it("return null if pattern doesn't match", () => {
-    var url = "chrome://www.google.com/";
+    let url = "chrome://www.google.com/";
     expect(getFavIconURL(url)).toBe(base + null);
 
     url = "xhttp://www.google.com/";

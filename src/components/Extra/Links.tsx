@@ -61,7 +61,7 @@ export default function Links({
 }: {
   setTour: setStateType<boolean>;
   setDialog: setStateType<{ show: boolean }>;
-}) {
+}): JSX.Element {
   return (
     <React.Fragment>
       <hr className="mx-auto" />

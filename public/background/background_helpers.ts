@@ -60,7 +60,7 @@ export function filterTabs(info: { which: string }, tab: TabState, group_id?: st
     }
 
     // create duplicate title/url list & filter blacklisted sites
-    var filter_vals = ["New Tab", "Extensions", "Add-ons Manager"];
+    let filter_vals = ["New Tab", "Extensions", "Add-ons Manager"];
 
     setTimeout(() => {
       chrome.storage.sync.get("settings", (sync) => {
@@ -72,11 +72,12 @@ export function filterTabs(info: { which: string }, tab: TabState, group_id?: st
 
           // apply blacklist items
           tabs = tabs.filter((x) => {
-            var bl_sites = (sync.settings.blacklist.split(", ") as string[]).map((site) => site.toLowerCase());
+            const bl_sites = (sync.settings.blacklist.split(", ") as string[]).map((site) => site.toLowerCase());
             return !bl_sites.includes(x.url.toLowerCase());
           });
 
           // remove unnecessary information from each tab
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           /* @ts-ignore */
           tabs = tabs.map((x) => ({ pinned: x.pinned, title: x.title, url: x.url, id: x.id }));
 
@@ -88,7 +89,9 @@ export function filterTabs(info: { which: string }, tab: TabState, group_id?: st
           tabs = tabs.filter((x) => !filter_vals.includes(x.title) && !filter_vals.includes(x.url));
 
           // make sure original merge has no duplicated values and obtain offending indicies
-          var unique_tabs: TabState[] = [], indicies: number[] = []; // prettier-ignore
+          let unique_tabs: TabState[] = [];
+          const indicies: number[] = [];
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           /* @ts-ignore */
           tabs.forEach((x, i) => (unique_tabs.map((y) => y.url).includes(x.url) ? indicies.push(i) : unique_tabs.push(x))); // prettier-ignore
 
@@ -101,7 +104,7 @@ export function filterTabs(info: { which: string }, tab: TabState, group_id?: st
           }
 
           const whichGroup = group_id ? group_id : "contextMenu";
-          chrome.storage.local.set({ into_group: whichGroup, merged_tabs: unique_tabs }, () => {});
+          chrome.storage.local.set({ into_group: whichGroup, merged_tabs: unique_tabs }, () => undefined);
         });
       });
     }, 100);
@@ -115,17 +118,18 @@ export function filterTabs(info: { which: string }, tab: TabState, group_id?: st
  * @param {boolean=} testing Whether this is a testing call or a real call
  * @return A promise which should be awaited. Resolve value is insignificant
  */
-export function findExtTabAndSwitch(testing?: boolean) {
-  var query = { title: "TabMerger", currentWindow: true };
-  var exists = { highlighted: true, active: true };
-  var not_exist = { url: "../index.html", active: true };
+export function findExtTabAndSwitch(testing?: boolean): Promise<number> {
+  const query = { title: "TabMerger", currentWindow: true };
+  const exists = { highlighted: true, active: true };
+  const not_exist = { url: "../index.html", active: true };
   return new Promise((resolve) => {
     chrome.tabs.query(query, (tabMergerTabs) => {
       tabMergerTabs[0]
         ? chrome.tabs.update(tabMergerTabs[0].id, exists, () => resolve(0))
         : chrome.tabs.create(not_exist, (newTab) => {
-            function listener(tabId: number, changeInfo: { status: string }, _tab: any | undefined) {
+            function listener(tabId: number, changeInfo: { status: string }) {
               if (changeInfo?.status === "complete" && tabId === newTab.id) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
                 chrome.tabs.onUpdated.removeListener(listener);
                 resolve(0);
@@ -137,6 +141,7 @@ export function findExtTabAndSwitch(testing?: boolean) {
                 resolve(1);
               }
             }
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             /* @ts-ignore */
             chrome.tabs.onUpdated.addListener(listener);
           });
@@ -149,9 +154,9 @@ export function findExtTabAndSwitch(testing?: boolean) {
  * This means that it will be ignored even when other tabs are merged in.
  * @param {TabState} tab The tab which should be excluded from TabMerger's merging visibility
  */
-export function excludeSite(tab: TabState) {
+export function excludeSite(tab: TabState): void {
   chrome.storage.sync.get("settings", (result) => {
     result.settings.blacklist += `${tab.url}, `;
-    chrome.storage.sync.set({ settings: result.settings }, () => {});
+    chrome.storage.sync.set({ settings: result.settings }, () => undefined);
   });
 }

@@ -36,30 +36,30 @@ declare global {
       ITEM_LIMIT: readonly number;
       init_groups: { [key: string]: DefaultGroup };
       user: userType;
-      CONSTANTS: any;
+      CONSTANTS: any; // eslint-disable-line @typescript-eslint/no-explicit-any
       TUTORIAL_GROUP: { [key: string]: DefaultGroup };
       exportedJSON: { settings: DefaultSettings; [key: string]: DefaultGroup };
       mockSet: <T>() => setStateType<T>;
-      chromeLocalGetSpy: Function;
-      chromeLocalSetSpy: Function;
-      chromeSyncGetSpy: Function;
-      chromeSyncSetSpy: Function;
-      chromeBrowserActionSetBadgeTextSpy: Function;
-      chromeBrowserActionSetBadgeBackgroundColorSpy: Function;
-      chromeBrowserActionSetTitleSpy: Function;
-      chromeLocalRemoveSpy: Function;
-      toggleDarkModeSpy: Function;
-      toggleSyncTimestampSpy: Function;
-      chromeSyncRemoveSpy: Function;
-      chromeTabsRemoveSpy: Function;
-      chromeTabsQuerySpy: Function;
-      chromeTabsCreateSpy: Function;
-      chromeTabsMoveSpy: Function;
-      chromeRuntimeSendMessageSpy: Function;
-      chromeContextMenusCeateSpy: Function;
-      chromeTabsOnUpdatedAdd: Function;
-      chromeTabsOnUpdatedRemove: Function;
-      chromeTabsUpdateSpy: Function;
+      chromeLocalGetSpy: () => void;
+      chromeLocalSetSpy: () => void;
+      chromeSyncGetSpy: () => void;
+      chromeSyncSetSpy: () => void;
+      chromeBrowserActionSetBadgeTextSpy: () => void;
+      chromeBrowserActionSetBadgeBackgroundColorSpy: () => void;
+      chromeBrowserActionSetTitleSpy: () => void;
+      chromeLocalRemoveSpy: () => void;
+      toggleDarkModeSpy: () => void;
+      toggleSyncTimestampSpy: () => void;
+      chromeSyncRemoveSpy: () => void;
+      chromeTabsRemoveSpy: () => void;
+      chromeTabsQuerySpy: () => void;
+      chromeTabsCreateSpy: () => void;
+      chromeTabsMoveSpy: () => void;
+      chromeRuntimeSendMessageSpy: () => void;
+      chromeContextMenusCeateSpy: () => void;
+      chromeTabsOnUpdatedAdd: () => void;
+      chromeTabsOnUpdatedRemove: () => void;
+      chromeTabsUpdateSpy: () => void;
     }
   }
 }

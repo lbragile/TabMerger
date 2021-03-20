@@ -43,7 +43,7 @@ export const TOUR_STEPS = [
         <br />
         Simply click this button and select <b>VIEW TUTORIAL</b> in the <i>TabMerger Question</i> dialog window. <br />
         <br />
-        Selecting <b>GO TO SITE</b> will take you to TabMerger's official instructions website.
+        Selecting <b>GO TO SITE</b> will take you to TabMerger&apos;s official instructions website.
         <br />
         <br />
         You can use the <b>left</b> and <b>right</b> keyboard keys to navigate back and forth between steps,
@@ -66,7 +66,7 @@ export const TOUR_STEPS = [
     content: (
       <div className="text-dark my-2">
         A global counter indicating the number of tabs that are currently in TabMerger. This will update when you
-        "merge" tabs into TabMerger (shown later).
+        &quot;merge&quot; tabs into TabMerger (shown later).
       </div>
     ),
   },
@@ -81,11 +81,12 @@ export const TOUR_STEPS = [
         <b>Try it now:</b>
         <ul className="ml-4">
           <li>
-            Type <kbd>#</kbd> followed by a group name to filter tabs based on their group name. <i>Try "#b"</i>
+            Type <kbd>#</kbd> followed by a group name to filter tabs based on their group name.{" "}
+            <i>Try &quot;#b&quot;</i>
           </li>
           <li>
-            Type a tab's name (without the preceeding <kbd style={{ marginRight: "2px" }}>#</kbd>) to filter tabs (and
-            groups) based on that name. <i>Try "Tab e"</i>
+            Type a tab&apos;s name (without the preceeding <kbd style={{ marginRight: "2px" }}>#</kbd>) to filter tabs
+            (and groups) based on that name. <i>Try &quot;Tab e&quot;</i>
           </li>
         </ul>
       </div>
@@ -121,10 +122,11 @@ export const TOUR_STEPS = [
       <div className="text-dark my-2" style={{ fontSize: "0.95rem" }}>
         Allows you to generate a print friendly PDF page. <br />
         <br />
-        <b>Note:</b> to have clickable links in the output PDF file, you must select "Save as PDF" for the{" "}
-        <i>Destination</i> drop down in the print preview menu. We recommend checking the "Headers and footers" option
-        while unchecking the "Background graphics" option. Also, <i>hidden</i> <u>and</u> <i>empty</i> (no tabs inside)
-        groups are ignored during the printing process, but restored once the print preview is exited.
+        <b>Note:</b> to have clickable links in the output PDF file, you must select &quot;Save as PDF&quot; for the{" "}
+        <i>Destination</i> drop down in the print preview menu. We recommend checking the &quot;Headers and
+        footers&quot; option while unchecking the &quot;Background graphics&quot; option. Also, <i>hidden</i> <u>and</u>{" "}
+        <i>empty</i> (no tabs inside) groups are ignored during the printing process, but restored once the print
+        preview is exited.
         <br />
         <br />
         Additionally, the print menu is different depending on your{" "}
@@ -169,9 +171,9 @@ export const TOUR_STEPS = [
     selector: "#export-btn",
     content: (
       <div className="text-dark my-2">
-        Generates a JSON file which contains TabMerger's current configuration. A saveAs dialog will appear to allow you
-        to save the file in a specific location. This can be turned off in the settings. The generated JSON file can be
-        used to restore a given configuration at any time as shown next. <br />
+        Generates a JSON file which contains TabMerger&apos;s current configuration. A saveAs dialog will appear to
+        allow you to save the file in a specific location. This can be turned off in the settings. The generated JSON
+        file can be used to restore a given configuration at any time as shown next. <br />
         <br />
         This feature is only available to users with Standard or Premium{" "}
         <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
@@ -196,7 +198,7 @@ export const TOUR_STEPS = [
         <b>Try</b> uploading the JSON file you might have downloaded from the previous step.
         <br />
         <br /> You could also try to upload a file that is not JSON to see what happens. Though note that since nothing
-        changed in TabMerger since your file download, you won't see a difference when you upload.
+        changed in TabMerger since your file download, you won&apos;t see a difference when you upload.
       </div>
     ),
     position: "top",
@@ -227,7 +229,7 @@ export const TOUR_STEPS = [
     selector: "#sync-read-btn",
     content: (
       <div className="text-dark my-2">
-        Restores TabMerger's configuration from a synced session. The <b>Sync</b> indicator above must be{" "}
+        Restores TabMerger&apos;s configuration from a synced session. The <b>Sync</b> indicator above must be{" "}
         <span style={{ color: "green" }}>green</span> in order for this to be executed. <br />
         <br /> Once clicked the indicator will change from <span style={{ color: "green" }}>green</span> to{" "}
         <span style={{ color: "red" }}>red</span> and will not show a timestamp. This lets the user know that syncing
@@ -248,10 +250,10 @@ export const TOUR_STEPS = [
     selector: "#undo-btn",
     content: (
       <div className="text-dark my-2">
-        Can be used to restore a given configuration if you accidently clicked on a "close" button which caused tabs to
-        be lost. <br />
+        Can be used to restore a given configuration if you accidently clicked on a &quot;close&quot; button which
+        caused tabs to be lost. <br />
         <br />
-        This only applies to "destructive" actions which change tabs in one or many groups. <br />
+        This only applies to &quot;destructive&quot; actions which change tabs in one or many groups. <br />
         <br />
         Note that <b>up to 20</b> undo states (depending on your{" "}
         <a href={SUBSCRIPTION_URL} target="_blank" rel="noreferrer">
@@ -271,7 +273,7 @@ export const TOUR_STEPS = [
         generate a new group, into which you can then merge or drag and drop new tabs (as shown later).
         <br />
         <br />
-        Note that both the default group color and title can be configured in TabMerger's{" "}
+        Note that both the default group color and title can be configured in TabMerger&apos;s{" "}
         <a href="/settings/settings.html" target="_blank" rel="noreferrer">
           settings page
         </a>
@@ -304,7 +306,7 @@ export const TOUR_STEPS = [
     selector: ".group-title",
     content: (
       <div className="text-dark my-2">
-        Buttons in the title mainly control the group's appearance/functionality but are <b>not</b> responsible for
+        Buttons in the title mainly control the group&apos;s appearance/functionality but are <b>not</b> responsible for
         merging.
       </div>
     ),
@@ -349,8 +351,8 @@ export const TOUR_STEPS = [
         Locking a group will prevent you from accidently deleting that group and the tabs inside. Once locked, the group
         (and its tabs) will not be deleted by <i>destructive</i> actions. <br />
         <br /> First lock the group by clicking the lock icon. This will change the current icon to one that is
-        "locked". Now that this group is locked, any attempt to delete it or one of its tabs will cause a warning to be
-        displayed.
+        &quot;locked&quot;. Now that this group is locked, any attempt to delete it or one of its tabs will cause a
+        warning to be displayed.
       </div>
     ),
     position: "right",
@@ -374,11 +376,11 @@ export const TOUR_STEPS = [
     selector: ".color-group-btn",
     content: (
       <div className="text-dark my-2">
-        This allows you to change the group's background.
+        This allows you to change the group&apos;s background.
         <br />
         <br />
         When clicked a listt of predefined colors is presented. If none of these colors are of interest to the user,
-        they can choose <i>"Other..."</i> to see a more advanced color picker for intuitive color selection.
+        they can choose <i>&quot;Other...&quot;</i> to see a more advanced color picker for intuitive color selection.
         <br />
         <br />
         <b>Give it a try!</b>
@@ -392,7 +394,7 @@ export const TOUR_STEPS = [
       <div className="text-dark my-2">
         Hides all the tabs inside the corresponding group.
         <br />
-        <br /> These tabs are still in TabMerger, but they are hidden to reduce the group's height. <br />
+        <br /> These tabs are still in TabMerger, but they are hidden to reduce the group&apos;s height. <br />
         <br />
         Other tabs can be dragged into the hidden group and even merged into it. <br />
         <br />A symbol will be shown to indicate hidden groups.
@@ -424,8 +426,8 @@ export const TOUR_STEPS = [
     selector: ".delete-group-btn",
     content: (
       <div className="text-dark my-2">
-        Deletes the group entirely along with all of it's tabs. If the deleted group is the only group in TabMerger, a
-        new <i>default</i> group is created using the values found in the{" "}
+        Deletes the group entirely along with all of it&apos;s tabs. If the deleted group is the only group in
+        TabMerger, a new <i>default</i> group is created using the values found in the{" "}
         <a href="/settings/settings.html" target="_blank" rel="noreferrer">
           settings page
         </a>
@@ -470,8 +472,8 @@ export const TOUR_STEPS = [
     selector: ".merge-left-btn",
     content: (
       <div className="text-dark my-2">
-        Will merge open tabs to the <b>LEFT</b> of TabMerger's tab within the window into this group. If you have any
-        open tabs, go ahead and give this a try.
+        Will merge open tabs to the <b>LEFT</b> of TabMerger&apos;s tab within the window into this group. If you have
+        any open tabs, go ahead and give this a try.
       </div>
     ),
     position: "bottom",
@@ -480,8 +482,8 @@ export const TOUR_STEPS = [
     selector: ".merge-right-btn",
     content: (
       <div className="text-dark my-2">
-        Will merge open tabs to the <b>RIGHT</b> of TabMerger's tab within the window into this group. If you have any
-        open tabs, go ahead and give this a try.
+        Will merge open tabs to the <b>RIGHT</b> of TabMerger&apos;s tab within the window into this group. If you have
+        any open tabs, go ahead and give this a try.
       </div>
     ),
     position: "bottom",
@@ -493,10 +495,10 @@ export const TOUR_STEPS = [
         <div className="text-dark my-2" style={{ fontSize: "0.95rem" }}>
           Another global feature is provided to achieve similar results. <br />
           If you right click anywhere on any page you will see a menu, known as the <i>Context Menu</i>. In the menu,
-          you will find TabMerger's context menu options which include the above and a few more merging abilities.
+          you will find TabMerger&apos;s context menu options which include the above and a few more merging abilities.
           <br />
           <br />
-          Any merging action performed by the context menu will be added a new group to the very top of TabMerger's
+          Any merging action performed by the context menu will be added a new group to the very top of TabMerger&apos;s
           page. You can then sort this group using the group drag and drop shown previously. <br />
           <br />
           Additionally, TabMerger provides equivalent shortcut keys (<i>chrome://extensions/shortcuts</i> in Chrome)
@@ -504,8 +506,8 @@ export const TOUR_STEPS = [
           <br />
           <br />
           <b>Try it now!</b> <br />
-          Right click anywhere on this page and you will see TabMerger's context menu. Then, hover over TabMerger's row
-          to see its options.
+          Right click anywhere on this page and you will see TabMerger&apos;s context menu. Then, hover over
+          TabMerger&apos;s row to see its options.
         </div>
         <img src="https://i.imgur.com/tLKbsLS.gif" alt="TabMerger's context menu" />
       </>
@@ -553,7 +555,7 @@ export const TOUR_STEPS = [
         Can be used to:
         <ul className="ml-4">
           <li>
-            Edit a tab's title within TabMerger (<b>MIDDLE</b> mouse click).
+            Edit a tab&apos;s title within TabMerger (<b>MIDDLE</b> mouse click).
           </li>
           <li>
             Restore a tab (<b>LEFT</b> mouse click).
@@ -579,7 +581,7 @@ export const TOUR_STEPS = [
     selector: "#need-btn",
     content: (
       <div className="text-dark my-2">
-        To replay the <b>tutorial</b> or visit TabMerger's{" "}
+        To replay the <b>tutorial</b> or visit TabMerger&apos;s{" "}
         <a href="https://lbragile.github.io/TabMerger-Extension/" target="_blank" rel="noreferrer">
           official homepage
         </a>{" "}
@@ -593,7 +595,7 @@ export const TOUR_STEPS = [
     selector: "#contact-btn",
     content: (
       <div className="text-dark my-2">
-        Direct navigation to TabMerger <b>support</b> page where an email can be sent to TabMerger's creator &
+        Direct navigation to TabMerger <b>support</b> page where an email can be sent to TabMerger&apos;s creator &
         maintainer.
       </div>
     ),
@@ -640,8 +642,8 @@ export const TOUR_STEPS = [
     selector: "#my-links",
     content: (
       <div className="text-dark my-2">
-        Relevant links to TabMerger's GitHub page along with other social media platforms that I am frequently on and
-        can be contacted from.
+        Relevant links to TabMerger&apos;s GitHub page along with other social media platforms that I am frequently on
+        and can be contacted from.
       </div>
     ),
     position: "right",
@@ -654,8 +656,8 @@ export const TOUR_STEPS = [
         key that TabMerger sent to you.
         <br />
         <br />
-        When activated, the "Subscription: _____ Tier" below will update indicating your current subscription. Please
-        allow up to 30 seconds for this update to take effect.
+        When activated, the &quot;Subscription: _____ Tier&quot; below will update indicating your current subscription.
+        Please allow up to 30 seconds for this update to take effect.
       </div>
     ),
     position: "right",
@@ -664,7 +666,8 @@ export const TOUR_STEPS = [
     selector: "",
     content: (
       <div className="text-dark my-2">
-        If you are a power user or this tutorial did not cover something you were looking for, please visit TabMerger's{" "}
+        If you are a power user or this tutorial did not cover something you were looking for, please visit
+        TabMerger&apos;s{" "}
         <a href="https://lbragile.github.io/TabMerger-Extension/" target="_blank" rel="noreferrer">
           official homepage
         </a>{" "}
@@ -757,7 +760,7 @@ export const TUTORIAL_GROUP: { [key: string]: DefaultGroup } = {
           "https://www.google.com/search?q=i&oq=i&aqs=chrome..69i57j35i39j69i59j69i60l5.696j1j4&sourceid=chrome&ie=UTF-8",
       },
     ],
-    title: "Tutorial Group C (Initially LOCKED & 'HIDDEN')",
+    title: "Tutorial Group C (Initially LOCKED & &apos;HIDDEN&apos;)",
   },
   "group-3": {
     color: "#dedede",

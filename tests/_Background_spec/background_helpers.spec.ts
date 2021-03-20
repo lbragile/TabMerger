@@ -26,18 +26,7 @@ import { waitFor } from "@testing-library/react";
 import * as BackgroundHelper from "../../public/background/background_helpers.js";
 import { TabState } from "../../src/typings/Tab.js";
 
-interface DefaultGroup {
-  color: string;
-  created: string;
-  hidden: boolean;
-  locked: boolean;
-  starred: boolean;
-  tabs: TabState[];
-  title: string;
-  name?: string;
-}
-
-var {
+const {
   init_groups,
   CONSTANTS,
   chromeLocalGetSpy,
@@ -96,13 +85,13 @@ describe("filterTabs", () => {
     [{ which: "all" }, { index: 0 }, "group-3", false],
   ])("%o, %o, %s, %s", async (info, tab, group_id, pinned) => {
     if (!pinned) {
-      var new_settings = JSON.parse(sessionStorage.getItem("settings"));
+      const new_settings = JSON.parse(sessionStorage.getItem("settings"));
       new_settings.pin = pinned;
       sessionStorage.setItem("settings", JSON.stringify(new_settings));
       jest.clearAllMocks();
     }
 
-    var tabs_to_be_merged: TabState[];
+    let tabs_to_be_merged: TabState[];
     if (info.which === "right") {
       if (tab.index === 4) {
         tabs_to_be_merged = merge_tabs.slice(5, 7);
@@ -128,7 +117,7 @@ describe("filterTabs", () => {
     }
 
     const into_group = group_id ? group_id : "contextMenu";
-    var merged_tabs: TabState[] = [];
+    let merged_tabs: TabState[] = [];
     tabs_to_be_merged.forEach((x) => {
       if (!pinned) {
         if (!x.pinned) {
@@ -140,6 +129,7 @@ describe("filterTabs", () => {
     });
 
     jest.useFakeTimers();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
     BackgroundHelper.filterTabs(info, tab, group_id);
     jest.advanceTimersByTime(101);
@@ -209,6 +199,7 @@ describe("findExtTabAndSwitch", () => {
     ["incomplete", true],
     ["incomplete", false],
   ])("TabMerger page is NOT already open - (loading = %s, match_id = %s)", async (type, id_match) => {
+    // eslint-disable-next-line no-empty-pattern
     (chromeTabsQuerySpy as jest.Mock).mockImplementationOnce((_, cb: ([]) => void) => cb([]));
     (chromeTabsCreateSpy as jest.Mock).mockImplementationOnce((_, cb: (tab: {id: number}) => void) => cb({ id: id_match ? tab_id : tab_id - 1 })); // prettier-ignore
     (chromeTabsOnUpdatedAdd as jest.Mock).mockImplementationOnce((cb: (tab_id: number, changeInfo: {status: string}) => void) => cb(tab_id, { status: type })); // prettier-ignore
@@ -244,7 +235,7 @@ describe("excludeSite", () => {
     CONSTANTS.DEFAULT_SETTINGS.blacklist = type === "empty" ? "" : original_url + ", ";
     sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
     CONSTANTS.DEFAULT_SETTINGS.blacklist = "";
-    var expected_settings = JSON.parse(sessionStorage.getItem("settings"));
+    const expected_settings = JSON.parse(sessionStorage.getItem("settings"));
     expected_settings.blacklist += url + ", ";
 
     jest.clearAllMocks();

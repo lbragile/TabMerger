@@ -29,11 +29,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * On different browsers, this generates the corresponding link to the browser's webstore
  * where TabMerger can be downloaded.
  */
-export function setTabMergerLink() {
-  var isFirefox = "InstallTrigger" in window;
-  var isEdge = !!chrome?.runtime && navigator.userAgent.indexOf("Edg") !== -1;
+export function setTabMergerLink(): void {
+  const isFirefox = "InstallTrigger" in window;
+  const isEdge = !!chrome?.runtime && navigator.userAgent.indexOf("Edg") !== -1;
 
-  var link;
+  let link;
   if (isEdge) {
     link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {
@@ -48,7 +48,7 @@ export function setTabMergerLink() {
 /**
  * Sets the settings item in sync storage according to the current configuration in TabMerger
  */
-export function setSync() {
+export function setSync(): void {
   const badgeInfo = (document.querySelector("input[name='badge-view']") as HTMLInputElement).checked;
   const blacklist = (document.getElementById("options-blacklist") as HTMLInputElement).value;
   const color = (document.getElementById("options-default-color") as HTMLInputElement).value;
@@ -88,5 +88,5 @@ export function setSync() {
     tooltipVisibility,
     weight,
   };
-  chrome.storage.sync.set({ settings }, () => {});
+  chrome.storage.sync.set({ settings }, () => undefined);
 }

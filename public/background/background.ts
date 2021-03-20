@@ -50,9 +50,11 @@ createContextMenu("dl-contact", translate("bgContact"), "normal");
 chrome.runtime.onMessage.addListener(extensionMessage);
 
 // context menu actions
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 /* @ts-ignore */
 chrome.contextMenus.onClicked.addListener(contextMenuOrShortCut);
 
 // shortcut keyboard
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 /* @ts-ignore */
 chrome.commands.onCommand.addListener(contextMenuOrShortCut);

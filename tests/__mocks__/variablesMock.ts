@@ -343,6 +343,7 @@ global.exportedJSON = {
     title: "Other Projects I Made",
   },
   settings: {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
     badgeInfo: true,
     blacklist: "",

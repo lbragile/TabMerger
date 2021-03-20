@@ -53,12 +53,12 @@ const DEFAULT_SETTINGS = {
  * each time the page refreshes using this function. This prevents the settings from
  * every changing back to default without user input.
  */
-export function restoreOptions() {
+export function restoreOptions(): void {
   setTabMergerLink();
 
-  var body = document.querySelector("body");
-  var code_block = document.querySelector("code");
-  var nav = document.querySelector("nav");
+  const body = document.querySelector("body");
+  const code_block = document.querySelector("code");
+  const nav = document.querySelector("nav");
 
   chrome.storage.sync.get("settings", (sync) => {
     if (!sync.settings) {
@@ -91,7 +91,7 @@ export function restoreOptions() {
     code_block.style.border = "1px solid " + (sync.settings.dark ? "white" : "black");
     nav.style.background = sync.settings.dark ? "rgb(27, 27, 27)" : "rgb(120, 120, 120)";
 
-    var darkMode = document.getElementById("darkMode") as HTMLInputElement;
+    const darkMode = document.getElementById("darkMode") as HTMLInputElement;
     darkMode.checked = sync.settings.dark;
     darkMode.addEventListener("change", () => {
       setSync();
@@ -104,8 +104,8 @@ export function restoreOptions() {
  * Shows the save confrimation state by changing the buttons color
  * @param {MouseEvent} e On node representing the "Save" button at the bottom of the settings page
  */
-export function saveOptions(e: MouseEvent) {
-  var target = e.target as HTMLButtonElement;
+export function saveOptions(e: MouseEvent): void {
+  const target = e.target as HTMLButtonElement;
   target.classList.replace("btn-primary", "btn-success");
   target.innerText = "Saved";
   target.disabled = true;
@@ -122,7 +122,7 @@ export function saveOptions(e: MouseEvent) {
 /**
  * If you want to quickly reset all the default options, this does it for you.
  */
-export function resetOptions() {
+export function resetOptions(): void {
   chrome.storage.sync.get("settings", (sync) => {
     if (JSON.stringify(sync.settings) !== JSON.stringify(DEFAULT_SETTINGS)) {
       chrome.storage.sync.set({ settings: DEFAULT_SETTINGS }, () => {

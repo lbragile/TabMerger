@@ -50,7 +50,7 @@ export function setInitTabs(setTabs: setStateType<TabState[]>, id: string): void
  * @param {React.DragEvent<HTMLDivElement>} e The tab which will be dragged within the same group or across groups
  */
 export function tabDragStart(e: React.DragEvent<HTMLDivElement>): void {
-  var target = ((e.target as HTMLDivElement).tagName === "DIV"
+  const target = ((e.target as HTMLDivElement).tagName === "DIV"
     ? e.target
     : (e.target as HTMLDivElement).parentNode) as HTMLDivElement;
   target.classList.add("dragging");
@@ -65,17 +65,17 @@ export function tabDragStart(e: React.DragEvent<HTMLDivElement>): void {
  */
 export function tabDragEnd(e: React.DragEvent<HTMLDivElement>, setGroups: setStateType<string>): void {
   e.stopPropagation();
-  var target = e.target as HTMLDivElement;
+  const target = e.target as HTMLDivElement;
 
-  var closest_group = target.closest(".group");
-  var drag_origin = document.getElementsByClassName("drag-origin")[0];
+  const closest_group = target.closest(".group");
+  const drag_origin = document.getElementsByClassName("drag-origin")[0];
 
   drag_origin.classList.remove("drag-origin");
   target.classList.remove("dragging");
 
   const scroll = document.documentElement.scrollTop;
   chrome.storage.local.get("groups", (local) => {
-    var groups = local.groups;
+    const groups = local.groups;
 
     if (drag_origin.id !== closest_group.id) {
       // remove tab from group that originated the drag
@@ -116,7 +116,8 @@ export function removeTab(
   const group_id = tab.closest(".group").id;
 
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
-    var { groups, groups_copy } = local;
+    // eslint-disable-next-line prefer-const
+    let { groups, groups_copy } = local;
 
     if (!groups[group_id].locked) {
       const scroll = document.documentElement.scrollTop;
@@ -141,7 +142,7 @@ export function removeTab(
  */
 export function handleTabClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void {
   e.preventDefault();
-  var target = e.target as HTMLAnchorElement;
+  const target = e.target as HTMLAnchorElement;
 
   // can only left click when not editing the tab title
   if (e.button === 0 && !target.classList.contains("edit-tab-title")) {
@@ -162,17 +163,18 @@ export function handleTabClick(e: React.MouseEvent<HTMLAnchorElement, MouseEvent
  * @param {React.KeyboardEvent | React.FocusEvent} e Node representing the tab that was clicked
  */
 export function handleTabTitleChange(e: React.KeyboardEvent | React.FocusEvent): void {
-  var target = e.target as HTMLAnchorElement;
+  const target = e.target as HTMLAnchorElement;
   target.classList.remove("edit-tab-title");
 
   // cannot make test pass if this is added
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   /* @ts-ignore */
   if (e instanceof FocusEvent || /*(e instanceof KeyboardEvent &&*/ e.code === "Enter" /*)*/) {
     e.preventDefault();
   } else {
     const group_id = target.closest(".group").id;
     chrome.storage.local.get("groups", (local) => {
-      var tabs = local.groups[group_id].tabs;
+      let tabs = local.groups[group_id].tabs;
 
       // update the tab's title
       tabs = tabs.map(
@@ -186,7 +188,7 @@ export function handleTabTitleChange(e: React.KeyboardEvent | React.FocusEvent):
 
       local.groups[group_id].tabs = tabs;
 
-      chrome.storage.local.set({ groups: local.groups }, () => {});
+      chrome.storage.local.set({ groups: local.groups }, () => undefined);
     });
   }
 }
@@ -201,7 +203,7 @@ export function handlePinClick(
   e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
   setGroups: setStateType<string>
 ): void {
-  var target = e.target as HTMLSpanElement;
+  const target = e.target as HTMLSpanElement;
   target.closest(".pin-tab svg").classList.toggle("pinned");
 
   const id = target.closest(".group").id;
@@ -209,7 +211,7 @@ export function handlePinClick(
 
   chrome.storage.local.get("groups", (local) => {
     const scroll = document.documentElement.scrollTop;
-    var groups = local.groups;
+    const groups = local.groups;
     // adjust the pin status of the correct tab
     groups[id].tabs = groups[id].tabs.map(
       (x: TabState): TabState => {

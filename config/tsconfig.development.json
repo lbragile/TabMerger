@@ -3,7 +3,7 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["dom", "dom.iterable", "es2017"],
-    "allowJs": true,
+    "allowJs": false,
     "watch": false,
     "jsx": "react-jsx",
     "sourceMap": false,
@@ -23,5 +23,5 @@
     "noEmitOnError": true
   },
   "include": ["../public", "../src", "../tests"],
-  "exclude": ["../node_modules", "../build"]
+  "exclude": ["../node_modules", "../build", "../misc"]
 }

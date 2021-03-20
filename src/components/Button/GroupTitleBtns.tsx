@@ -127,6 +127,7 @@ export default function GroupTitleBtns({
       {GROUP_TITLE_BUTTONS.map((x) => {
         return (
           <React.Fragment key={Math.random()}>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
             {/* @ts-ignore */}
             <Button classes={x.classes} translate={x.translate} onClick={x.clickFn}>
               {x.icon}

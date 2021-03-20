@@ -21,6 +21,8 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { fireEvent, render } from "@testing-library/react";
 import { toast } from "react-toastify";
 
@@ -46,7 +48,7 @@ const {
 } = global;
 
 const anything = expect.any(Function);
-var container: HTMLElement;
+let container: HTMLElement;
 
 /* @ts-ignore */
 const toastSpy = toast.mockImplementation((...args) => args);
@@ -110,7 +112,7 @@ afterAll(() => {
 });
 
 describe("setBGColor", () => {
-  var spy = jest.spyOn(GroupFunc, "setBGColor");
+  const spy = jest.spyOn(GroupFunc, "setBGColor");
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -141,14 +143,14 @@ describe("setBGColor", () => {
     ["#FF00FF", true],
     ["#000000", false],
   ])("maintains bg color based on existing group bg color (%s) - exists = %s", (color, group_exists) => {
-    var stub = {
+    const stub = {
       previousSibling: {
         querySelector: (arg: string) => arg !== "" && { value: color },
         parentNode: { children: container.querySelectorAll(".group-title, .group") },
       },
     };
 
-    var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    const expect_groups = JSON.parse(localStorage.getItem("groups"));
     if (group_exists) {
       expect_groups["group-0"].color = color;
     }
@@ -195,7 +197,7 @@ describe("setTitle", () => {
     localStorage.setItem("groups", JSON.stringify(init_groups));
     jest.clearAllMocks();
 
-    var target_mock = {
+    const target_mock = {
       target: {
         closest: (arg: string) => arg !== "" && { nextSibling: { id: "group-0" } },
         nextSibling: { style: { visibility: "" } },
@@ -217,7 +219,7 @@ describe("setTitle", () => {
 
 describe("blurOnEnter", () => {
   test.each([["Enter"], ["Temp"]])("keycode === %s", (code) => {
-    var stub = { target: { blur: jest.fn() }, code };
+    const stub = { target: { blur: jest.fn() }, code };
     jest.clearAllMocks();
 
     /* @ts-ignore */
@@ -241,17 +243,19 @@ describe("addTabFromURL", () => {
   ])(
     "adds the tab to the correct group when URL does %s exist: %s (settings.merge === %s)",
     (type, url, merge_setting) => {
-      var stub = { target: { value: url, closest: (arg: string) => arg !== "" && { id: "group-0" }, blur: jest.fn() } };
+      const stub = {
+        target: { value: url, closest: (arg: string) => arg !== "" && { id: "group-0" }, blur: jest.fn() },
+      };
 
       // move first tab to end to get expected result
       /* @ts-ignore */
       const id = (stub.target.closest() as HTMLDivElement).id;
-      var expected_group = JSON.parse(localStorage.getItem("groups"));
+      const expected_group = JSON.parse(localStorage.getItem("groups"));
       const last_tab = expected_group[id].tabs.shift();
       expected_group[id].tabs.push(last_tab);
 
       // local must be different from chrome.tabs.query
-      var current_groups = JSON.parse(localStorage.getItem("groups"));
+      const current_groups = JSON.parse(localStorage.getItem("groups"));
       current_groups[id].tabs.shift();
       localStorage.setItem("groups", JSON.stringify(current_groups));
 
@@ -261,7 +265,7 @@ describe("addTabFromURL", () => {
       sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
 
       if (!merge_setting) {
-        var current_settings = JSON.parse(sessionStorage.getItem("settings"));
+        const current_settings = JSON.parse(sessionStorage.getItem("settings"));
         current_settings.merge = merge_setting;
         sessionStorage.setItem("settings", JSON.stringify(current_settings));
       }
@@ -330,7 +334,7 @@ describe("groupDragStart", () => {
   it.each([[true], [false]])("adds class to correct element - tab dragging === %s", (val) => {
     document.body.innerHTML = `<div class="group-item"></div>`;
 
-    var stub = (ret_val: HTMLDivElement) => ({
+    const stub = (ret_val: HTMLDivElement) => ({
       target: {
         closest: (arg: string) => {
           if (arg === ".draggable") {
@@ -351,8 +355,9 @@ describe("groupDragStart", () => {
 
 describe("groupDragEnd", () => {
   it.each([[true], [false]])("Drag operation is group === %s", (group_drag) => {
-    var classList_arr = ["dragging-group"];
+    const classList_arr = ["dragging-group"];
     const stub = {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       preventDefault: () => {},
       target: {
         classList: {
@@ -409,7 +414,7 @@ describe("openGroup", () => {
     /* @ts-ignore */
     chromeLocalSetSpy.mockClear();
 
-    var stub = {
+    const stub = {
       target: {
         closest: (arg: string) =>
           arg !== "" && {
@@ -435,13 +440,13 @@ describe("deleteGroup", () => {
     ["unlocked", "group-1", false],
     ["unlocked", "group-0", true],
   ])("%s group | id: %s | single group === %s", (locked, group_id, single_group) => {
-    var storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups)=> [groups]); // prettier-ignore
-    var mock_target = (group_id: string) => ({
+    const storeDestructiveActionSpy = jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementation((_, groups)=> [groups]); // prettier-ignore
+    const mock_target = (group_id: string) => ({
       target: { closest: (arg: string) => arg !== "" && { nextSibling: { id: group_id } } },
     });
 
     sessionStorage.setItem("settings", JSON.stringify(CONSTANTS.DEFAULT_SETTINGS));
-    var expected_groups = JSON.parse(JSON.stringify(init_groups));
+    let expected_groups = JSON.parse(JSON.stringify(init_groups));
     if (single_group) {
       expected_groups = {};
       expected_groups[group_id] = CONSTANTS.DEFAULT_GROUP;
@@ -449,7 +454,7 @@ describe("deleteGroup", () => {
     }
 
     expected_groups[group_id].locked = locked === "locked";
-    var expected_groups_copy = [JSON.parse(JSON.stringify(expected_groups))];
+    let expected_groups_copy = [JSON.parse(JSON.stringify(expected_groups))];
 
     localStorage.setItem("groups", JSON.stringify(expected_groups));
     localStorage.setItem("groups_copy", JSON.stringify(expected_groups));
@@ -496,8 +501,8 @@ describe("toggleGroup", () => {
     ["star", true],
     ["star", false],
   ])("type === %s | value === %s", (type, value) => {
-    var stub = { target: { closest: (arg: string) => arg !== "" && { nextSibling: { id: "group-0" } } } };
-    var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    const stub = { target: { closest: (arg: string) => arg !== "" && { nextSibling: { id: "group-0" } } } };
+    let expect_groups = JSON.parse(localStorage.getItem("groups"));
     /* @ts-ignore */
     const id = stub.target.closest().nextSibling.id;
     if (type === "visibility") {
@@ -542,7 +547,7 @@ describe("sendMessage", () => {
     ["right", 0],
     ["right", 1],
   ])("sends a message to background script with correct parameters -> %s (id: %i)", (dir, id) => {
-    var selector = `.merge-${dir}-btn`.replace("all-", "");
+    const selector = `.merge-${dir}-btn`.replace("all-", "");
     jest.clearAllMocks();
 
     fireEvent.click(container.querySelectorAll(selector)[id]);

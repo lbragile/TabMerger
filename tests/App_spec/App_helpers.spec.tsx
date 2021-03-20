@@ -21,6 +21,9 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
+import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { toast } from "react-toastify";
 
@@ -34,9 +37,9 @@ import axios from "axios";
 const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, chromeSyncGetSpy, chromeSyncSetSpy, mockSet, user } = global;
 
 const anything = expect.any(Function);
-var new_item = init_groups["group-0"];
+const new_item = init_groups["group-0"];
 
-var container: HTMLElement, sync_node: HTMLSpanElement, sync_container: HTMLDivElement, toastSpy: Function;
+let container: HTMLElement, sync_node: HTMLSpanElement, sync_container: HTMLDivElement, toastSpy: () => void;
 
 beforeAll(() => {
   Object.keys(init_groups).forEach((key) => {
@@ -75,8 +78,8 @@ describe("getTimestamp", () => {
 
 describe("toggleDarkMode", () => {
   test.each([["light"], ["dark"]])("%s mode", (mode) => {
-    var body = container.querySelector(".container-fluid").closest("body");
-    var sidebar = container.querySelector("#sidebar") as HTMLDivElement;
+    const body = container.querySelector(".container-fluid").closest("body");
+    const sidebar = container.querySelector("#sidebar") as HTMLDivElement;
 
     AppHelper.toggleDarkMode(mode === "dark");
 
@@ -143,17 +146,17 @@ describe("updateGroupItem", () => {
 
 describe("sortByKey", () => {
   it("returns the input json's values, but sorted by key indicies", () => {
-    var localeCompareSpy = jest.spyOn(String.prototype, "localeCompare");
+    const localeCompareSpy = jest.spyOn(String.prototype, "localeCompare");
 
-    var current_key_order = ["group-0", "group-1", "group-3", "group-2"];
-    var current_val = Object.values(init_groups);
+    const current_key_order = ["group-0", "group-1", "group-3", "group-2"];
+    const current_val = Object.values(init_groups);
     expect(Object.keys(init_groups)).toEqual(current_key_order);
 
     // swap group-2 & group-3
     [current_val[2], current_val[3]] = [current_val[3], current_val[2]];
 
     jest.clearAllMocks();
-    var response = AppHelper.sortByKey(init_groups);
+    const response = AppHelper.sortByKey(init_groups);
 
     expect(response).toEqual(current_val);
     expect(localeCompareSpy).toHaveBeenCalledTimes(5);
@@ -175,25 +178,23 @@ describe("getTabTotal", () => {
 
 describe("findSameTab", () => {
   it("returns correct tab when match is found", () => {
-    var tabs = init_groups["group-0"].tabs;
-    var matcher = tabs[0].url;
+    const tabs = init_groups["group-0"].tabs;
+    const matcher = tabs[0].url;
 
-    var response = AppHelper.findSameTab(tabs, matcher);
+    const response = AppHelper.findSameTab(tabs, matcher);
     expect(response).toEqual([tabs[0]]);
   });
 
   it("return empty array if no match is found", () => {
-    var tabs = init_groups["group-0"].tabs;
-    var matcher = null;
-
-    var response = AppHelper.findSameTab(tabs, matcher);
+    const tabs = init_groups["group-0"].tabs;
+    const response = AppHelper.findSameTab(tabs, null);
     expect(response).toEqual([]);
   });
 });
 
 describe("outputFileName", () => {
   it("returns output filename with correct format and timestamp", () => {
-    var correct_output = `TabMerger [${AppHelper.getTimestamp()}]`;
+    const correct_output = `TabMerger [${AppHelper.getTimestamp()}]`;
     expect(AppHelper.outputFileName()).toBe(correct_output);
   });
 });
@@ -201,7 +202,7 @@ describe("outputFileName", () => {
 describe("getDragAfterElement", () => {
   const top = 50, height = 60, smaller_num = (top + height) / 2; // prettier-ignore
   /* @ts-ignore */
-  var getBoundingClientRectSpy = jest.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(() => ({ top, height })); // prettier-ignore
+  const getBoundingClientRectSpy = jest.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(() => ({ top, height })); // prettier-ignore
 
   afterAll(() => {
     getBoundingClientRectSpy.mockRestore();
@@ -236,7 +237,7 @@ describe("storeDestructiveAction", () => {
     [false, "Standard"],
     [false, "Premium"],
   ])("adjusts the states array - full = %s", (full, tier) => {
-    var groups_copy = [init_groups];
+    let groups_copy = [init_groups];
     localStorage.setItem("groups_copy", JSON.stringify(groups_copy));
     jest.clearAllMocks();
 
@@ -256,13 +257,13 @@ describe("alarmGenerator", () => {
     "periodInMinutes = %s, alarm period = %s, wasCleared = %s",
     (periodInMinutes, alarm_periodInMinutes, wasCleared, alarm_name) => {
       const expectCreateReturn = { when: Math.floor((Date.now() + 1000) / 10) * 10, periodInMinutes }; // need to round to avoid flaky tests
-      const expectToast = [<div>test</div>, { toastId: "test" }];
+      const expectToast = [<div key={Math.random()}>test</div>, { toastId: "test" }];
 
       /* @ts-ignore */
-      var chromeAlarmsGetSpy = jest.spyOn(chrome.alarms, "get").mockImplementation((_, cb) => cb({ periodInMinutes: alarm_periodInMinutes })); // prettier-ignore
+      const chromeAlarmsGetSpy = jest.spyOn(chrome.alarms, "get").mockImplementation((_, cb) => cb({ periodInMinutes: alarm_periodInMinutes })); // prettier-ignore
       /* @ts-ignore */
-      var chromeAlarmsClearSpy = jest.spyOn(chrome.alarms, "clear").mockImplementation((_, cb) => cb(wasCleared));
-      var chromeAlarmsCreateSpy = jest.spyOn(chrome.alarms, "create").mockImplementation((_, __) => expectCreateReturn); // prettier-ignore
+      const chromeAlarmsClearSpy = jest.spyOn(chrome.alarms, "clear").mockImplementation((_, cb) => cb(wasCleared));
+      const chromeAlarmsCreateSpy = jest.spyOn(chrome.alarms, "create").mockImplementation(() => expectCreateReturn);
       jest.clearAllMocks();
 
       /* @ts-ignore */
@@ -301,7 +302,7 @@ describe("checkUserStatus", () => {
   it.each([[true], [false]])("sets the user details if database check passes, response = %s", async (response) => {
     const client_details = { email: "test@emal.com", password: "test_pass" };
     localStorage.setItem("client_details", JSON.stringify(client_details));
-    var axiosGetMock = jest.spyOn(axios, "get").mockResolvedValueOnce({ data: response && user });
+    const axiosGetMock = jest.spyOn(axios, "get").mockResolvedValueOnce({ data: response && user });
     jest.clearAllMocks();
 
     AppHelper.checkUserStatus(mockSet);
@@ -331,15 +332,15 @@ describe("checkUserStatus", () => {
 });
 
 describe("performAutoBackup", () => {
-  var exportJSONSpy = jest.spyOn(AppFunc, "exportJSON");
-  var syncWriteSpy = jest.spyOn(AppFunc, "syncWrite");
+  const exportJSONSpy = jest.spyOn(AppFunc, "exportJSON");
+  const syncWriteSpy = jest.spyOn(AppFunc, "syncWrite");
 
   test("json alarm", () => {
     jest.clearAllMocks();
     AppHelper.performAutoBackUp({ name: "json_backup" }, sync_node);
 
     expect(exportJSONSpy).toHaveBeenCalledTimes(1);
-    expect(exportJSONSpy).toHaveBeenCalledWith(false, false, null);
+    expect(exportJSONSpy).toHaveBeenCalledWith(false, false);
 
     expect(chromeLocalGetSpy).not.toHaveBeenCalledWith("client_details", anything);
     expect(syncWriteSpy).not.toHaveBeenCalled();

@@ -33,6 +33,6 @@ interface AppContextInterface {
 
 export const AppContext = createContext<AppContextInterface>(undefined);
 
-export function AppProvider({ value, children }: { value: AppContextInterface; children: JSX.Element }) {
+export function AppProvider({ value, children }: { value: AppContextInterface; children: JSX.Element }): JSX.Element {
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

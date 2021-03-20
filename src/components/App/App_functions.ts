@@ -60,7 +60,7 @@ export function storeUserDetailsPriorToCheck(
   setDialog: setStateType<{ show: boolean }>
 ): void {
   e.preventDefault();
-  var [email, password] = [...(e.target as HTMLButtonElement).querySelectorAll("input")].map((x) => x.value);
+  const [email, password] = [...(e.target as HTMLButtonElement).querySelectorAll("input")].map((x) => x.value);
   chrome.storage.local.set({ client_details: { email, password } }, () => {
     AppHelper.checkUserStatus(setUser); // authenticate the user
     setDialog({ show: false }); // close modal
@@ -79,7 +79,7 @@ export function syncLimitIndication(): void {
         document.documentElement.scrollTop = scroll ?? 0;
 
         if (client_details?.paid) {
-          var disable_sync = false;
+          let disable_sync = false;
           // group sync
           Object.keys(groups).forEach((key) => {
             if (JSON.stringify(groups[key]).length > CONSTANTS.ITEM_STORAGE_LIMIT) {
@@ -149,7 +149,7 @@ export function handleUpdate(): void {
       toast(toast_contents[0], toast_contents[1]);
     }
 
-    chrome.storage.local.set({ ext_version: currentVersion }, () => {});
+    chrome.storage.local.set({ ext_version: currentVersion }, () => undefined);
   });
 }
 
@@ -169,7 +169,7 @@ export function storageInit(
   const scroll = document.documentElement.scrollTop;
   chrome.storage.sync.get(null, (sync) => {
     if (!sync.settings) {
-      chrome.storage.sync.set({ settings: CONSTANTS.DEFAULT_SETTINGS }, () => {});
+      chrome.storage.sync.set({ settings: CONSTANTS.DEFAULT_SETTINGS }, () => undefined);
       AppHelper.toggleDarkMode(true);
     } else {
       AppHelper.toggleDarkMode(sync.settings.dark);
@@ -211,7 +211,7 @@ export function resetTutorialChoice(
   setTour: setStateType<boolean>,
   setDialog: setStateType<{ show: boolean }>
 ): void {
-  var element = (e.target as HTMLElement).closest("#need-btn") as HTMLButtonElement;
+  const element = (e.target as HTMLElement).closest("#need-btn") as HTMLButtonElement;
   AppHelper.elementMutationListener(element, (mutation) => {
     if (mutation.type === "attributes") {
       element.getAttribute("response") === "positive" ? setTour(true) : window.open(url, "_blank", "noreferrer");
@@ -230,12 +230,12 @@ export function resetTutorialChoice(
  * @param {{"green": string, "yellow": string, "orange": string, "red": string }?} COLORS The colors as hex strings of form "#FF7700"
  */
 // prettier-ignore
-export function badgeIconInfo(tabTotal:number, user: userType, STEP_SIZE: number = CONSTANTS.BADGE_ICON_STEP_SIZE, COLORS = CONSTANTS.BADGE_ICON_COLORS) {
+export function badgeIconInfo(tabTotal:number, user: userType, STEP_SIZE: number = CONSTANTS.BADGE_ICON_STEP_SIZE, COLORS = CONSTANTS.BADGE_ICON_COLORS): void {
   chrome.storage.sync.get("settings", (sync) => {
     chrome.storage.local.get("groups", (local) => {
       if (local.groups && sync.settings && ["Standard", "Premium"].includes(user.tier)) {
         const num_groups = Object.keys(local.groups).length;
-        var color;
+        let color;
         if (tabTotal < STEP_SIZE) {
           color = COLORS.green;
         } else if (tabTotal < STEP_SIZE * 2) {
@@ -252,12 +252,12 @@ export function badgeIconInfo(tabTotal:number, user: userType, STEP_SIZE: number
         const group_translate = translate(num_groups === 1 ? "group" : "groups").toLocaleLowerCase();
         const title = tabTotal > 0 ? `You currently have ${tabTotal} ${tab_translate} in ${num_groups} ${group_translate}` : CONSTANTS.BADGE_ICON_DEFAULT_TITLE;
 
-        chrome.browserAction.setBadgeText({ text }, () => {});
-        chrome.browserAction.setBadgeBackgroundColor({ color }, () => {});
-        chrome.browserAction.setTitle({ title }, () => {});
+        chrome.browserAction.setBadgeText({ text }, () => undefined);
+        chrome.browserAction.setBadgeBackgroundColor({ color }, () => undefined);
+        chrome.browserAction.setTitle({ title }, () => undefined);
       }else{
-        chrome.browserAction.setBadgeText({ text: "" }, () => {});
-        chrome.browserAction.setTitle({ title: CONSTANTS.BADGE_ICON_DEFAULT_TITLE }, () => {});
+        chrome.browserAction.setBadgeText({ text: "" }, () => undefined);
+        chrome.browserAction.setTitle({ title: CONSTANTS.BADGE_ICON_DEFAULT_TITLE }, () => undefined);
       }
     });
   });
@@ -273,23 +273,23 @@ export function syncWrite(
   e: IMouseEvent | { target: HTMLButtonElement; autoAction: boolean },
   sync_node: HTMLSpanElement,
   user: userType
-) {
+): void {
   if (!user.paid) {
     toast(...CONSTANTS.SUBSCRIPTION_TOAST);
   } else if ((e.target as HTMLButtonElement).closest("#sync-write-btn").classList.contains("disabled-btn")) {
     toast(...CONSTANTS.SYNC_WRITE_TOAST);
   } else {
     chrome.storage.local.get("groups", async (local) => {
-      var groups = local.groups as { [key: string]: DefaultGroup };
+      const groups = local.groups as { [key: string]: DefaultGroup };
       if (Object.values(groups).some((val) => val.tabs.length > 0)) {
-        for (var key of Object.keys(groups)) {
+        for (const key of Object.keys(groups)) {
           await AppHelper.updateGroupItem(key, groups[key]);
         }
 
         // remove extras from previous sync
         chrome.storage.sync.get(null, (sync) => {
           delete sync.settings;
-          var remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
+          const remove_keys = Object.keys(sync).filter((key) => !Object.keys(groups).includes(key));
           chrome.storage.sync.remove(remove_keys, () => {
             chrome.storage.local.set({ last_sync: AppHelper.getTimestamp() }, () => {
               AppHelper.toggleSyncTimestamp(true, sync_node);
@@ -327,8 +327,8 @@ export function syncRead(
       if (sync["group-0"]) {
         delete sync.settings;
         chrome.storage.local.remove(["groups"], () => {
-          var new_ls: { [key: string]: DefaultGroup } = {};
-          var remove_keys: string[] = [];
+          const new_ls: { [key: string]: DefaultGroup } = {};
+          const remove_keys: string[] = [];
           Object.keys(sync).forEach((key) => {
             new_ls[key] = sync[key];
             remove_keys.push(key);
@@ -366,13 +366,13 @@ export function openOrRemoveTabs(
     chrome.storage.sync.get("settings", (sync) => {
       chrome.storage.local.get("groups", (local) => {
         const scroll = document.documentElement.scrollTop;
-        var groups = local.groups;
+        const groups = local.groups;
 
         // extract and remove the button type from array
-        var group_id = changes.remove.newValue[0];
+        const group_id = changes.remove.newValue[0];
         changes.remove.newValue.splice(0, 1);
 
-        var tabs: TabState[];
+        let tabs: TabState[];
         if (group_id) {
           tabs = groups[group_id].tabs;
         } else {
@@ -383,14 +383,14 @@ export function openOrRemoveTabs(
 
         // try to not open tabs if it is already open
         chrome.tabs.query({ currentWindow: true }, (windowTabs) => {
-          for (var i = 0; i < changes.remove.newValue.length; i++) {
+          for (let i = 0; i < changes.remove.newValue.length; i++) {
             const tab_url: string = changes.remove.newValue[i];
             const same_tab = AppHelper.findSameTab(windowTabs as TabState[], tab_url);
             if (same_tab[0] && !same_tab[0].pinned) {
               chrome.tabs.move(same_tab[0].id, { index: -1 });
             } else {
               const tab_obj = tabs.filter((x) => x.url === tab_url)[0];
-              chrome.tabs.create({ pinned: tab_obj.pinned, url: tab_obj.url, active: false }, () => {});
+              chrome.tabs.create({ pinned: tab_obj.pinned, url: tab_obj.url, active: false }, () => undefined);
             }
           }
 
@@ -410,7 +410,7 @@ export function openOrRemoveTabs(
           }
 
           // allow reopening same tab
-          chrome.storage.local.remove(["remove"], () => {});
+          chrome.storage.local.remove(["remove"], () => undefined);
         });
       });
     });
@@ -439,7 +439,8 @@ export function checkMerging(
   if (namespace === "local" && changes?.merged_tabs?.newValue?.length > 0) {
     chrome.storage.sync.get("settings", (sync) => {
       chrome.storage.local.get(["merged_tabs", "into_group", "groups", "client_details"], (local) => {
-        var { into_group, merged_tabs, groups, client_details } = local;
+        // eslint-disable-next-line prefer-const
+        let { into_group, merged_tabs, groups, client_details } = local;
         const scroll = document.documentElement.scrollTop;
 
         if (
@@ -487,7 +488,7 @@ export function checkMerging(
         }
 
         // remove to be able to detect changes again (even for same tabs)
-        chrome.storage.local.remove(["into_group", "merged_tabs"], () => {});
+        chrome.storage.local.remove(["into_group", "merged_tabs"], () => undefined);
       });
     });
   }
@@ -501,14 +502,14 @@ export function checkMerging(
  */
 export function addGroup(setGroups: setStateType<string>): void {
   chrome.storage.local.get(["groups", "client_details"], (local) => {
-    var { groups, client_details } = local;
+    const { groups, client_details } = local;
     const scroll = document.body.scrollHeight;
     const NUM_GROUP_LIMIT = CONSTANTS.USER[client_details?.tier]?.NUM_GROUP_LIMIT ?? CONSTANTS.USER.Free.NUM_GROUP_LIMIT; // prettier-ignore
 
-    var num_keys = Object.keys(groups).length;
+    const num_keys = Object.keys(groups).length;
     if (num_keys < NUM_GROUP_LIMIT) {
       chrome.storage.sync.get("settings", (sync) => {
-        var color;
+        let color;
         if (client_details?.tier === "Premium" && sync.settings.randomizeColor) {
           color = CONSTANTS.RANDOM_COLOR_LIST[Math.floor(Math.random() * CONSTANTS.RANDOM_COLOR_LIST.length)];
         } else {
@@ -541,12 +542,12 @@ export function addGroup(setGroups: setStateType<string>): void {
  * @param {setStateType<{show: boolean}>} setDialog For rendering a warning/error message
  */
 export function openAllTabs(e: MouseEvent, setDialog: setStateType<{ show: boolean }>): void {
-  var element = (e.target as HTMLElement).closest("#open-all-btn") as HTMLButtonElement;
+  const element = (e.target as HTMLElement).closest("#open-all-btn") as HTMLButtonElement;
   AppHelper.elementMutationListener(element, (mutation) => {
     if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
-      var tab_links = ([...document.querySelectorAll(".a-tab")] as HTMLAnchorElement[]).map((x) => x.href);
+      const tab_links = ([...document.querySelectorAll(".a-tab")] as HTMLAnchorElement[]).map((x) => x.href);
       tab_links.unshift(null);
-      chrome.storage.local.set({ remove: tab_links }, () => {});
+      chrome.storage.local.set({ remove: tab_links }, () => undefined);
     }
   });
 
@@ -571,16 +572,16 @@ export function deleteAllGroups(
   setDialog: setStateType<{ show: boolean }>
 ): void {
   const scroll = document.documentElement.scrollTop;
-  var element = (e.target as HTMLElement).closest("#delete-all-btn") as HTMLButtonElement;
+  const element = (e.target as HTMLElement).closest("#delete-all-btn") as HTMLButtonElement;
   AppHelper.elementMutationListener(element, (mutation) => {
     if (mutation.type === "attributes" && element.getAttribute("response") === "positive") {
       chrome.storage.local.get(["groups", "groups_copy"], (local) => {
         chrome.storage.sync.get("settings", (sync) => {
-          var { groups_copy, groups } = local;
+          let { groups_copy, groups } = local;
           groups_copy = AppHelper.storeDestructiveAction(groups_copy, groups, user);
 
           groups = {};
-          var locked_counter = 0;
+          let locked_counter = 0;
           document.querySelectorAll(".group-item").forEach((x) => {
             if (x.querySelector(".lock-group-btn").getAttribute("data-tip").includes(translate("unlock"))) {
               groups["group-" + locked_counter] = {
@@ -631,7 +632,7 @@ export function deleteAllGroups(
  *
  * @note The number of states stored are based on user tier { Free: 2, Basic: 5, Standard: 10, Premium: 15 }.
  */
-export function undoDestructiveAction(setGroups: setStateType<string>, setTabTotal: setStateType<number>) {
+export function undoDestructiveAction(setGroups: setStateType<string>, setTabTotal: setStateType<number>): void {
   chrome.storage.local.get(["groups", "groups_copy"], (local) => {
     if (local.groups_copy.length >= 1) {
       const scroll = document.documentElement.scrollTop;
@@ -653,12 +654,12 @@ export function undoDestructiveAction(setGroups: setStateType<string>, setTabTot
  * @param {"tab" | "group"} type Either group or tab, corresponding to the dragging operation.
  * @param {number?} offset Number of pixels from the top/bottom of the screen to wait for mouse position to hit, prior to scrolling
  */
-export function dragOver(e: React.DragEvent<HTMLDivElement>, type: "tab" | "group", offset: number = 10): void {
+export function dragOver(e: React.DragEvent<HTMLDivElement>, type: "tab" | "group", offset = 10): void {
   const currentElement = document.querySelector(type === "group" ? ".dragging-group" : ".dragging");
   if (currentElement) {
     e.preventDefault();
-    var group_block: HTMLDivElement = (e.target as HTMLElement).closest(".group");
-    var location: HTMLDivElement = type === "group" ? (e.target as HTMLElement).closest("#tabmerger-container") : group_block.querySelector(".tabs-container"); // prettier-ignore
+    const group_block: HTMLDivElement = (e.target as HTMLElement).closest(".group");
+    const location: HTMLDivElement = type === "group" ? (e.target as HTMLElement).closest("#tabmerger-container") : group_block.querySelector(".tabs-container"); // prettier-ignore
     const afterElement = AppHelper.getDragAfterElement(type === "group" ? location : group_block, e.clientY, type);
     !afterElement ? location?.appendChild(currentElement) : location?.insertBefore(currentElement, afterElement);
 
@@ -687,10 +688,10 @@ export function regexSearchForTab(e: React.ChangeEvent<HTMLInputElement>, user: 
   if (user && !user.paid) {
     toast(...CONSTANTS.SUBSCRIPTION_TOAST);
   } else {
-    var sections: NodeListOf<HTMLDivElement> = document.querySelectorAll(".group-item");
-    var tab_items: Element[][] = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
+    const sections: NodeListOf<HTMLDivElement> = document.querySelectorAll(".group-item");
+    const tab_items: Element[][] = [...sections].map((x) => [...x.querySelectorAll(".draggable")]);
 
-    var titles: string[] | string[][], match: string;
+    let titles: string[] | string[][], match: string;
     if (e.target.value === "") {
       sections.forEach((section) => (section.style.display = ""));
     } else if (e.target.value.match(/^[#@]/)) {
@@ -737,9 +738,10 @@ export function resetSearch(e: React.FocusEvent<HTMLInputElement>): void {
  * @param {boolean} showSaveAsDialog Whether or not to show the saveAs dialog box. Can be configured in settings.
  * @param {string?} relativePath A path relative to the Downloads folder which will contain the generated file. Cannot include "../", "./", or absolute paths.
  */
-export function exportJSON(showGrayDownloadShelf: boolean, showSaveAsDialog: boolean, relativePath: string | null) {
+export function exportJSON(showGrayDownloadShelf: boolean, showSaveAsDialog: boolean, relativePath?: string): void {
   chrome.storage.local.get(["groups", "client_details", "file_ids"], (local) => {
-    var { groups, client_details, file_ids } = local;
+    // eslint-disable-next-line prefer-const
+    let { groups, client_details, file_ids } = local;
     if (!client_details || ["Free", "Basic"].includes(client_details.tier)) {
       toast(...CONSTANTS.SUBSCRIPTION_TOAST);
     } else {
@@ -748,10 +750,7 @@ export function exportJSON(showGrayDownloadShelf: boolean, showSaveAsDialog: boo
         const dataBlob = new Blob([JSON.stringify(groups, null, 2)], { type: "text/json;charset=utf-8" });
         const download_opts = {
           url: URL.createObjectURL(dataBlob),
-          filename:
-            (!!relativePath ? "" : sync.settings.relativePathBackup) +
-            AppHelper.outputFileName().replace(/:|\//g, "_") +
-            ".json",
+          filename: (!relativePath ? sync.settings.relativePathBackup : "") + AppHelper.outputFileName().replace(/:|\//g, "_") + ".json", // prettier-ignore
           conflictAction: "uniquify",
           saveAs: showSaveAsDialog === undefined ? sync.settings.saveAsVisibility : showSaveAsDialog,
         };
@@ -782,7 +781,7 @@ export function exportJSON(showGrayDownloadShelf: boolean, showSaveAsDialog: boo
                   });
                 }
               }
-              chrome.storage.local.set({ file_ids: [...file_ids, downloadId] }, () => {});
+              chrome.storage.local.set({ file_ids: [...file_ids, downloadId] }, () => undefined);
             }
             console.info(`%c[TABMERGER INFO] %c${showGrayDownloadShelf ? "manual" : "automatic"} download of file with id=${downloadId} - ${AppHelper.getTimestamp()}`, "color: blue", "color: black"); // prettier-ignore
           } else {
@@ -815,10 +814,10 @@ export function importJSON(
       const groups_copy = AppHelper.storeDestructiveAction(local.groups_copy, local.groups, user);
       const scroll = document.documentElement.scrollTop;
 
-      var reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsText(e.target.files[0]);
       reader.onload = () => {
-        var fileContent = JSON.parse(reader.result as string);
+        const fileContent = JSON.parse(reader.result as string);
 
         chrome.storage.sync.set({ settings: fileContent.settings }, () => {
           delete fileContent.settings;
@@ -843,10 +842,10 @@ export function importJSON(
  * @return {string} A URL link to TabMerger's webstore (or reviews) page
  */
 export function getTabMergerLink(reviews: boolean): string {
-  var isFirefox = "InstallTrigger" in window;
-  var isEdge = !!chrome?.runtime && navigator.userAgent.indexOf("Edg") !== -1;
+  const isFirefox = "InstallTrigger" in window;
+  const isEdge = !!chrome?.runtime && navigator.userAgent.indexOf("Edg") !== -1;
 
-  var link;
+  let link;
   if (isEdge) {
     link = "https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn";
   } else if (isFirefox) {

@@ -27,13 +27,15 @@ import * as CONSTANTS from "../../src/constants/constants";
 const { chromeSyncSetSpy } = global;
 
 interface Navigator {
-  __defineGetter__: Function;
+  __defineGetter__: () => void;
 }
 /**
  * Allows to change "browser" by specifying the correct userAgent string.
  * @param {string} return_val The value which navigator.userAgent string will be set to.
  */
 function changeUserAgent(return_val: string): void {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   ((navigator as unknown) as Navigator).__defineGetter__("userAgent", () => return_val);
 }
 
@@ -87,6 +89,7 @@ describe("setSync", () => {
 
     const { getElementById, querySelector } = document;
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
     document.getElementById = (id) => {
       switch (id) {

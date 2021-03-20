@@ -55,6 +55,7 @@ export default function GlobalBtns({
 }: GlobalBtnsProps): JSX.Element {
   const [tooltipVisibility, setTooltipVisibility] = useState<boolean>(true);
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   /* @ts-ignore */
   useEffect(() => ReactTooltip.rebuild());
 

@@ -21,6 +21,9 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
+import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { toast } from "react-toastify";
 
@@ -35,7 +38,7 @@ const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, mockSet, user, CONSTA
 
 const anything = expect.any(Function);
 
-var container: HTMLElement;
+let container: HTMLElement;
 beforeEach(() => {
   localStorage.setItem("groups", JSON.stringify(init_groups));
   container = render(
@@ -70,7 +73,7 @@ describe("tabDragStart", () => {
   test.each([["draggable"], ["tab link"]])(
     "adds the appropriate classes to the draggable and container -> %s click",
     (type) => {
-      var elem = container.querySelector(type === "draggable" ? ".draggable" : ".move-tab");
+      const elem = container.querySelector(type === "draggable" ? ".draggable" : ".move-tab");
       jest.clearAllMocks();
 
       fireEvent.dragStart(elem);
@@ -83,9 +86,10 @@ describe("tabDragStart", () => {
 
 // Note that tabs are not actually dragged, need puppeteer to test this
 describe("tabDragEnd", () => {
-  var stub: object, orig_groups: { [key: string]: DefaultGroup };
+  let stub: { stopPropagation: () => void; target: HTMLDivElement }, orig_groups: { [key: string]: DefaultGroup };
   beforeEach(() => {
     stub = {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       stopPropagation: () => {},
       target: document.querySelector(".draggable"),
     };
@@ -153,7 +157,7 @@ describe("tabDragEnd", () => {
 });
 
 describe("removeTab", () => {
-  var stub: object;
+  let stub: { target: unknown };
   beforeEach(() => {
     jest.spyOn(AppHelper, "storeDestructiveAction").mockImplementationOnce((_, groups) => [groups]); // prettier-ignore
     stub = {
@@ -168,7 +172,7 @@ describe("removeTab", () => {
   });
 
   it("correctly adjusts storage when a tab is removed", () => {
-    var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    const expected_groups = JSON.parse(localStorage.getItem("groups"));
     localStorage.setItem("groups_copy", JSON.stringify([]));
     expected_groups["group-0"].tabs = expected_groups["group-0"].tabs.slice(1, 3);
     jest.clearAllMocks();
@@ -189,7 +193,7 @@ describe("removeTab", () => {
   });
 
   it("alerts if group is locked", async () => {
-    var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    const expected_groups = JSON.parse(localStorage.getItem("groups"));
     expected_groups["group-0"].locked = true;
     localStorage.setItem("groups", JSON.stringify(expected_groups));
     /* @ts-ignore */
@@ -208,9 +212,10 @@ describe("removeTab", () => {
 
 describe("handleTabClick", () => {
   const url = "https://stackoverflow.com/";
-  var classList_arr: string[] = [];
+  let classList_arr: string[] = [];
 
-  var stub = {
+  const stub = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     preventDefault: () => {},
     target: {
       closest: (arg: string) => arg !== "" && { id: "group-0" },
@@ -276,7 +281,7 @@ describe("handleTabClick", () => {
 describe("handleTabTitleChange", () => {
   const url = "https://stackoverflow.com/";
 
-  var stub: { preventDefault: Function; target: object; detail: number; code: string };
+  let stub: { preventDefault: () => void; target: unknown; detail: number; code: string };
   beforeEach(() => {
     stub = {
       preventDefault: jest.fn(),
@@ -302,7 +307,7 @@ describe("handleTabTitleChange", () => {
   });
 
   it("changes the tab's title and sets local storage accordingly", () => {
-    var expected_groups = JSON.parse(localStorage.getItem("groups"));
+    const expected_groups = JSON.parse(localStorage.getItem("groups"));
     /* @ts-ignore */
     expected_groups[stub.target.closest().id].tabs[0].title = stub.target.textContent;
 
@@ -326,12 +331,13 @@ describe("handleTabTitleChange", () => {
 describe("handlePinClick", () => {
   const url = "https://www.twitch.tv/";
 
-  var stub: object, classList_arr: string[];
+  let stub: { target: unknown }, classList_arr: string[];
   beforeEach(() => {
     classList_arr = ["pinned"];
 
     stub = {
       target: {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         classList: { contains: () => {} },
         closest: (arg: string) =>
           arg !== "" && {
@@ -349,7 +355,7 @@ describe("handlePinClick", () => {
   ])("sets the tab to be %s when it was %s pinned", (_, __, type) => {
     /* @ts-ignore */
     stub.target.classList.contains = (arg: string) => arg !== "" && type;
-    var expect_groups = JSON.parse(localStorage.getItem("groups"));
+    const expect_groups = JSON.parse(localStorage.getItem("groups"));
     /* @ts-ignore */
     expect_groups[stub.target.closest().id].tabs[0].pinned = type;
     jest.clearAllMocks();

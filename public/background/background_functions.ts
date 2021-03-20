@@ -21,6 +21,8 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 /**
  * @module Background/Background_functions
  */
@@ -36,13 +38,13 @@ interface IContextInfo {
 
 export type InfoType = IContextInfo | string;
 
-var info = { which: "all" }, tab: TabState = { index: 0, pinned: false, url: "Temp" }; // prettier-ignore
+const info = { which: "all" }, tab: TabState = { index: 0, pinned: false, url: "Temp" }; // prettier-ignore
 
 /**
  * Extension click from toolbar - open TabMerger with or without merging tabs (according to settings).
  * Will always navigate to TabMerger's extension page first.
  */
-export function handleBrowserIconClick() {
+export function handleBrowserIconClick(): void {
   chrome.storage.sync.get("settings", async (sync) => {
     await findExtTabAndSwitch();
     if (!sync.settings.open) {
@@ -58,7 +60,7 @@ export function handleBrowserIconClick() {
  * which way to merge and the calling tab's id
  */
 export function extensionMessage(request: { msg: string; id: string }): void {
-  var queryOpts = { currentWindow: true, active: true };
+  const queryOpts = { currentWindow: true, active: true };
   info.which = request.msg;
 
   /* @ts-ignore */
@@ -88,7 +90,7 @@ export async function contextMenuOrShortCut(info: InfoType, tab: TabState): Prom
     info = { command: info };
   }
 
-  var dest_url;
+  let dest_url;
   switch (info.menuItemId || info.command) {
     case "aopen-tabmerger":
       await findExtTabAndSwitch();

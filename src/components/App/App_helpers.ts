@@ -42,7 +42,7 @@ import { TabState } from "../../typings/Tab";
  * @return ```dd/mm/yyyy @ hh:mm:ss```
  */
 export function getTimestamp(date_str?: string): string {
-  var date_parts = date_str?.split(" ") || new Date(Date.now()).toString().split(" ");
+  let date_parts = date_str?.split(" ") || new Date(Date.now()).toString().split(" ");
   date_parts = date_parts.filter((_, i) => 0 < i && i <= 4);
 
   // dd/mm/yyyy @ hh:mm:ss
@@ -62,8 +62,8 @@ export function getTimestamp(date_str?: string): string {
  * @note Exported for testing purposes
  */
 export function toggleDarkMode(isChecked: boolean): void {
-  var body = document.querySelector("body");
-  var sidebar = document.querySelector("#sidebar") as HTMLDivElement;
+  const body = document.querySelector("body");
+  const sidebar = document.querySelector("#sidebar") as HTMLDivElement;
 
   body.style.background = isChecked ? "rgb(52, 58, 64)" : "rgb(250, 250, 250)";
   body.style.color = isChecked ? "white" : "black";
@@ -78,8 +78,8 @@ export function toggleDarkMode(isChecked: boolean): void {
  * @param {boolean} positive Whether a sync happened or not
  * @param {HTMLElement} sync_node Node that contains the sync time message
  */
-export function toggleSyncTimestamp(positive: boolean, sync_node: HTMLSpanElement) {
-  var sync_container = sync_node.parentNode as HTMLDivElement;
+export function toggleSyncTimestamp(positive: boolean, sync_node: HTMLSpanElement): void {
+  const sync_container = sync_node.parentNode as HTMLDivElement;
 
   if (positive) {
     chrome.storage.local.get("last_sync", (local) => {
@@ -104,11 +104,11 @@ export function toggleSyncTimestamp(positive: boolean, sync_node: HTMLSpanElemen
  *
  * @note Exported for testing purposes
  */
-export function updateGroupItem(key: string, value: DefaultGroup) {
+export function updateGroupItem(key: string, value: DefaultGroup): Promise<number> {
   return new Promise((resolve) => {
     chrome.storage.sync.get(key, (x) => {
       if (JSON.stringify(x[key]) !== JSON.stringify(value)) {
-        chrome.storage.sync.set({ [key]: value }, () => {});
+        chrome.storage.sync.set({ [key]: value }, () => undefined);
       }
 
       resolve(0);
@@ -126,9 +126,9 @@ export function updateGroupItem(key: string, value: DefaultGroup) {
  * @return {DefaultGroup[]} Values from the sorted groups
  */
 export function sortByKey(json: { [key: string]: DefaultGroup }): DefaultGroup[] {
-  var sortedArray: [string, DefaultGroup][] = Object.keys(json).map(key=>[key, json[key]]);
-  var sortedGroups = sortedArray.sort((a, b) => {
-    var opts = { numeric: true, sensitivity: "base" };
+  const sortedArray: [string, DefaultGroup][] = Object.keys(json).map((key) => [key, json[key]]);
+  const sortedGroups = sortedArray.sort((a, b) => {
+    const opts = { numeric: true, sensitivity: "base" };
     return (a[0] as string).localeCompare(b[0] as string, undefined, opts);
   });
 
@@ -143,7 +143,7 @@ export function sortByKey(json: { [key: string]: DefaultGroup }): DefaultGroup[]
  * @return {number} The total number of tabs currently present in TabMerger
  */
 export function getTabTotal(ls_entry: { [key: string]: DefaultGroup }): number {
-  var num_tabs = 0;
+  let num_tabs = 0;
   Object.values(ls_entry).forEach((val) => (num_tabs += val.tabs.length));
   return num_tabs;
 }
@@ -232,7 +232,7 @@ export function storeDestructiveAction(
  * @param {Function} cb Corresponding action if a mutation is detected on the element
  */
 export function elementMutationListener(element: HTMLButtonElement, cb: (mutation: { type: string }) => void): void {
-  var observer = new MutationObserver((mutations, observer) => {
+  const observer = new MutationObserver((mutations, observer) => {
     mutations.forEach((mutation) => {
       cb(mutation);
     });
@@ -277,7 +277,7 @@ export function alarmGenerator(
 export function checkUserStatus(setUser: setStateType<userType>): void {
   chrome.storage.local.get("client_details", async (local) => {
     const { email, password } = local.client_details;
-    var response = await axios.get(CONSTANTS.USER_STATUS_URL + JSON.stringify({ email, password }));
+    const response = await axios.get(CONSTANTS.USER_STATUS_URL + JSON.stringify({ email, password }));
     if (response.data) {
       chrome.storage.local.set({ client_details: { ...local.client_details, ...response.data } }, () => {
         setUser(response.data);
@@ -293,7 +293,7 @@ export function checkUserStatus(setUser: setStateType<userType>): void {
  */
 export function performAutoBackUp(alarm: { name: "json_backup" | "sync_backup" }, sync_node?: HTMLSpanElement): void {
   if (alarm.name === "json_backup") {
-    AppFunc.exportJSON(false, false, null);
+    AppFunc.exportJSON(false, false);
   }
 
   if (alarm.name === "sync_backup") {
