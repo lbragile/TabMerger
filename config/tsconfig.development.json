@@ -20,7 +20,20 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "baseUrl": "../",
+    "paths": {
+      "@App/*": ["src/components/App/*"],
+      "@Group/*": ["src/components/Group/*"],
+      "@Tab/*": ["src/components/Tab/*"],
+      "@Extra/*": ["src/components/Extra/*"],
+      "@Button/*": ["src/components/Button/*"],
+      "@Typings/*": ["src/typings/*"],
+      "@Constants/*": ["src/constants/*"],
+      "@Context/*": ["src/context/*"],
+      "@Settings/*": ["public/settings/*"],
+      "@Background/*": ["public/background/*"]
+    }
   },
   "include": ["../public", "../src", "../tests"],
   "exclude": ["../node_modules", "../build", "../misc"]

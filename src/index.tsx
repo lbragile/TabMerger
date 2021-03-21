@@ -23,7 +23,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./components/App/App";
+import App from "@App/App";
 
 ReactDOM.render(
   <React.StrictMode>

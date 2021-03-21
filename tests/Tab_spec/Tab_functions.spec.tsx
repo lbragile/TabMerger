@@ -27,12 +27,11 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { toast } from "react-toastify";
 
-import * as TabFunc from "../../src/components/Tab/Tab_functions";
-import Tab from "../../src/components/Tab/Tab";
-
-import * as AppHelper from "../../src/components/App/App_helpers";
-import { AppProvider } from "../../src/context/AppContext";
-import { DefaultGroup } from "../../src/typings/common";
+import * as AppHelper from "@App/App_helpers";
+import * as TabFunc from "@Tab/Tab_functions";
+import Tab from "@Tab/Tab";
+import { AppProvider } from "@Context/AppContext";
+import { DefaultGroup } from "@Typings/common";
 
 const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, mockSet, user, CONSTANTS } = global;
 

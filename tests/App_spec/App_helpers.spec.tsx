@@ -26,13 +26,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { toast } from "react-toastify";
-
-import * as AppFunc from "../../src/components/App/App_functions";
-import * as AppHelper from "../../src/components/App/App_helpers";
-import * as CONSTANTS from "../../src/constants/constants";
-import App from "../../src/components/App/App";
-
 import axios from "axios";
+
+import App from "@App/App";
+import * as AppFunc from "@App/App_functions";
+import * as AppHelper from "@App/App_helpers";
+import * as CONSTANTS from "@Constants/constants";
 
 const { init_groups, chromeLocalGetSpy, chromeLocalSetSpy, chromeSyncGetSpy, chromeSyncSetSpy, mockSet, user } = global;
 

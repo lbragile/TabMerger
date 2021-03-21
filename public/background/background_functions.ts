@@ -27,7 +27,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { TabState } from "../../src/typings/Tab.js";
+import { TabState } from "@Typings/Tab.js";
 import { filterTabs, findExtTabAndSwitch, excludeSite } from "./background_helpers.js";
 
 interface IContextInfo {

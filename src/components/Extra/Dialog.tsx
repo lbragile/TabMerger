@@ -23,8 +23,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-import { DialogConstantReturn } from "../../typings/common";
-import { setStateType } from "../../typings/common";
+import { DialogConstantReturn } from "@Typings/common";
+import { setStateType } from "@Typings/common";
 
 export interface DialogProps extends DialogConstantReturn {
   setDialog: setStateType<{ show: boolean }>;

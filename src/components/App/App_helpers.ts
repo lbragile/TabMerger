@@ -25,15 +25,14 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module App/App_helpers
  */
 
-import * as AppFunc from "./App_functions";
-import * as CONSTANTS from "../../constants/constants";
-import { DefaultGroup, Toast } from "../../typings/common";
-
 import { toast } from "react-toastify";
 import axios from "axios";
 
-import { setStateType, userType } from "../../typings/common";
-import { TabState } from "../../typings/Tab";
+import * as AppFunc from "@App/App_functions";
+import * as CONSTANTS from "@Constants/constants";
+import { DefaultGroup, Toast } from "@Typings/common";
+import { setStateType, userType } from "@Typings/common";
+import { TabState } from "@Typings/Tab";
 
 /**
  * Produces a timestamp which is added to newly formed groups

@@ -23,7 +23,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 
-import { translate, getTabMergerLink } from "../App/App_functions";
+import { translate, getTabMergerLink } from "@App/App_functions";
 
 export default function Header({ total }: { total: number }): JSX.Element {
   return (

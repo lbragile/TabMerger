@@ -2,9 +2,9 @@
 
 [![Coverage][coverage]](https://app.codecov.io/gh/lbragile/TabMerger/) [![Mutation Score][stryker]](https://dashboard.stryker-mutator.io/reports/github.com/lbragile/TabMerger/master) [![Code Quality][codefactor]](https://www.codefactor.io/repository/github/lbragile/tabmerger) [![Build][build status]](https://github.com/lbragile/TabMerger/actions) [![Issues][gh issues]](https://github.com/lbragile/TabMerger/issues) [![Pull Request][gh pr]](https://github.com/lbragile/TabMerger/pulls) [![Forks][gh forks]](https://github.com/lbragile/TabMerger) [![Stars][gh stars]](https://github.com/lbragile/TabMerger) [![Contributors][gh contributors]](https://github.com/lbragile/TabMerger) [![Release Date][release date]](https://github.com/lbragile/TabMerger/releases/) [![Last Commit][last commit]](https://github.com/lbragile/TabMerger/releases/) [![Commits Since Latest][commits since latest]](https://github.com/lbragile/TabMerger/commits/master) [![Release][release]](https://github.com/lbragile/TabMerger/releases/tag/v2.0.0) [![Chrome Users][chromeusers]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Chrome Rating][chromerating]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Firefox Users][firefoxusers]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Rating][firefoxrating]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Downloads][firefoxdownloads]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![YouTube Views][youtube views]](https://youtu.be/9eXmYE49jxA) [![YouTube Votes][youtube votes]](https://youtu.be/9eXmYE49jxA) [![contributions Welcome][contributions]](https://github.com/lbragile/TabMerger) [![Docs Available][docs]](https://lbragile.github.io/TabMerger/) [![Active Development][maintenance]](https://github.com/lbragile/TabMerger) [![Code Size][code size]](https://github.com/lbragile/TabMerger/) [![Donation Receive][liberpay receive]](https://liberapay.com/lbragile/donate) [![Donation Goal][liberpay goal]](https://liberapay.com/lbragile/donate) [![OC Backers][oc backers]](https://opencollective.com/tabmerger) [![OC Sponsors][oc sponsors]](https://opencollective.com/tabmerger) [![License][license]](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
 
-[<img src="https://i.imgur.com/NKFtwOA.png" alt="Chrome" width="42px" height="42px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) <span style="margin: 0 10px 0 0"></span>[<img src="https://i.imgur.com/YTz727e.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) [<img src="https://i.imgur.com/YQR2RYd.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn)
+[<img src="https://i.imgur.com/NKFtwOA.png" alt="Chrome" width="42px" height="42px" />](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) <span style="margin: 0 10px 0 0;"></span>[<img src="https://i.imgur.com/YTz727e.png" alt="Firefox" width="48px" height="48px" />](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) [<img src="https://i.imgur.com/YQR2RYd.png" alt="Edge" width="48px" height="48px" />](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn)
 
-<a href="https://www.producthunt.com/posts/tabmerger?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-tabmerger" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=283682&theme=light" alt="TabMerger - Stores tabs to save memory and increase productivity. | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+<a href="https://www.producthunt.com/posts/tabmerger?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-tabmerger" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=283682&theme=light" alt="TabMerger - Stores tabs to save memory and increase productivity. | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54"/></a>
 
 ### Merges your tabs into one location to save memory usage and increase your productivity.
 
@@ -17,15 +17,18 @@
 2. [Contributing](#contributing-)
 3. [Download](#download-)
 4. [Leave A Review](#leave-a-review-)
-5. [Todo](#todo-)
-6. [Build](#build-)
-7. [Test](#test-)
+5. [Documentation](#documentation-)
+   - [Code](#code-)
+   - [General & Instructions](#general-&-instructions-)
+6. [Todo](#todo-)
+7. [Build](#build-)
+8. [Test](#test-)
    - [Writing Tests](#not-sure-how-to-write-tests-)
    - [Code Coverage](#checking-your-tests-)
    - [Mutation Testing](#mutation-testing-)
-8. [Contact](#contact-)
-9. [Donate](#donate-)
-10. [License](#license-)
+9. [Contact](#contact-)
+10. [Donate](#donate-)
+11. [License](#license-)
 
 ## Description 🖋
 
@@ -52,6 +55,23 @@ If so, consider leaving a positive & meaningful review ([Chrome](https://chrome.
 
 👉 It would also mean a lot if you could 🌟 this repository on GitHub! 👈
 
+## Documentation 📄
+
+TabMerger has documentation for it's code base and additionally documents the general use cases and instructions.
+
+#### Code 💻
+
+TabMerger provides two scripts to generate documentation from the function signatures and associated comments:
+
+- `npm run jsdoc`
+- `npm run typedoc` (currently used)
+
+You can view the generated documentation [here](https://lbragile.github.io/TabMerger/) to become more familiar with the code base or simply cross-reference items that you find helpful/useful.
+
+#### General & Instructions 🕵️‍♂️
+
+Want extra use case details or just some more insight into all the features/functionality provided in TabMerger? These are avaialble on our [official homepage](https://lbragile.github.io/TabMerger-Extension/).
+
 ## Todo 📈
 
 The following lists the items which need to be crossed off of TabMerger's bucket list (and some that were recently completed/highlights) since the release of **v1.2.1**. See the full list in TabMerger's GitHub [Project Page](https://github.com/lbragile/TabMerger/projects/1).
@@ -62,11 +82,11 @@ Firefox requires the manifest to include a key named `browser_specific_settings`
 
 To make life simpler, I created a few build scripts which can be used to generate the build zip file for each browser. These are found in `<rootDir>/misc/`. The way these work is that they manipulate a `manifest_template.json` to create the correct `manifest.json` for each browser type and place it inside the `<rootDir>/public/` folder. Here is the workflow:
 
-`generate correct manifest.json -> npm run build -> make a zip folder`
+`generate correct manifest.json → npm run build → make a zip folder`
 
 Or in terms of files:
 
-`adjust_manifest.ts -> npm run build -> zip.ts`
+`adjust_manifest.ts → npm run build → zip.ts`
 
 Note that `adjust_manifest.ts` simply manipulates the template manifest file in order to create the correct manifest. Namely, the keys: `incognito` and `browser_specific_settings` are modified or removed as needed per browser.
 

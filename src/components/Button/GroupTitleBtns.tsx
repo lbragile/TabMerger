@@ -24,16 +24,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 import ReactTooltip from "react-tooltip";
 
-import Button from "./Button";
-import * as AppFunc from "../App/App_functions";
-import * as GroupFunc from "../Group/Group_functions";
-import * as CONSTANTS from "../../constants/constants";
-import { userType, setStateType } from "../../typings/common";
-
 import { AiOutlineMinus, AiOutlineClose } from "react-icons/ai";
 import { BiColorFill, BiGridSmall, BiLock, BiLockOpen } from "react-icons/bi";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import { VscChromeRestore } from "react-icons/vsc";
+
+import * as AppFunc from "@App/App_functions";
+import * as GroupFunc from "@Group/Group_functions";
+import * as CONSTANTS from "@Constants/constants";
+import Button from "@Button/Button";
+import { userType, setStateType } from "@Typings/common";
 
 export interface GroupTitleBtnsProps {
   id: string;

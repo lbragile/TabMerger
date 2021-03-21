@@ -21,9 +21,9 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import * as SettingsFunc from "../../public/settings/settings_functions.js";
-import * as SettingsHelper from "../../public/settings/settings_helpers.js";
-import * as CONSTANTS from "../../src/constants/constants";
+import * as SettingsFunc from "@Settings/settings_functions.js";
+import * as SettingsHelper from "@Settings/settings_helpers.js";
+import * as CONSTANTS from "@Constants/constants";
 
 const { chromeSyncGetSpy, chromeSyncSetSpy } = global;
 

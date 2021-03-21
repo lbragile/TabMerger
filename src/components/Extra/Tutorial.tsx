@@ -22,8 +22,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React from "react";
-import { SUBSCRIPTION_URL } from "../../constants/constants";
-import { DefaultGroup } from "../../typings/common";
+import { SUBSCRIPTION_URL } from "@Constants/constants";
+import { DefaultGroup } from "@Typings/common";
 
 export const TOUR_STEPS = [
   {

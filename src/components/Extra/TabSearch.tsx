@@ -23,8 +23,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 
-import { translate, regexSearchForTab, resetSearch } from "../App/App_functions";
-import { userType } from "../../typings/common";
+import { translate, regexSearchForTab, resetSearch } from "@App/App_functions";
+import { userType } from "@Typings/common";
 
 import { BsInfoCircle } from "react-icons/bs";
 import { AiOutlineSearch } from "react-icons/ai";

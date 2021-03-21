@@ -33,6 +33,7 @@
     "eslint": "^7.22.0",
     "eslint-plugin-react": "^7.22.0",
     "jsdoc": "^3.6.6",
+    "react-app-rewired": "^2.1.8",
     "stylelint": "^13.12.0",
     "stylelint-config-standard": "^21.0.0",
     "typedoc": "^0.20.30",
@@ -47,9 +48,9 @@
     "tsc": "tsc --project ./config/tsconfig.development.json",
     "tsc:clean": "tsc -b src tests public --clean",
     "tsc:watch": "tsc --watch",
-    "start": "react-scripts start",
-    "build": "npm run tsc && set REACT_APP_PRODUCTION=true&& react-scripts build && npm run tsc:clean",
-    "build:dev": "npm run tsc && react-scripts build && npm run tsc:clean",
+    "start": "react-app-rewired start",
+    "build": "npm run tsc && set REACT_APP_PRODUCTION=true&& react-app-rewired build && npm run tsc:clean",
+    "build:dev": "npm run tsc && react-app-rewired build && npm run tsc:clean",
     "build:browser": "npm run tsc && node misc/adjust_manifest.ts %npm_config_browser% && npm run build && node misc/zip.ts %npm_config_browser%",
     "build:firefox": "npm run build:browser --browser=firefox && npm run tsc:clean",
     "build:chrome": "npm run build:browser --browser=chrome && npm run tsc:clean",
@@ -78,23 +79,13 @@
     "mutate:settings-func": "npm run mutate --files=public/settings/settings_functions.js --module=Settings_Func"
   },
   "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ],
-      "@babel/preset-react",
-      "@babel/preset-typescript"
-    ]
+    "extends": "./config/.babelrc.json"
   },
   "eslintConfig": {
-    "extends": [
-      "./config/.eslintrc.js"
-    ]
+    "extends": "./config/.eslintrc.js"
+  },
+  "stylelint": {
+    "extends": "./config/.stylelintrc.json"
   },
   "browserslist": {
     "production": [

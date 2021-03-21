@@ -26,11 +26,11 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import { fireEvent, render } from "@testing-library/react";
 import { toast } from "react-toastify";
 
-import * as GroupFunc from "../../src/components/Group/Group_functions";
-import Group from "../../src/components/Group/Group";
+import * as GroupFunc from "@Group/Group_functions";
+import Group from "@Group/Group";
 
-import * as AppHelper from "../../src/components/App/App_helpers";
-import { AppProvider } from "../../src/context/AppContext";
+import * as AppHelper from "@App/App_helpers";
+import { AppProvider } from "@Context/AppContext";
 
 import React from "react";
 

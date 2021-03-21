@@ -23,8 +23,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import { waitFor } from "@testing-library/react";
 
-import * as BackgroundHelper from "../../public/background/background_helpers.js";
-import { TabState } from "../../src/typings/Tab.js";
+import * as BackgroundHelper from "@Background/background_helpers.js";
+import { TabState } from "@Typings/Tab";
 
 const {
   init_groups,

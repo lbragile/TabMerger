@@ -23,9 +23,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 
-import Button from "./Button";
-import * as AppFunc from "../App/App_functions";
-import * as GroupFunc from "../Group/Group_functions";
+import Button from "@Button/Button";
+import * as AppFunc from "@App/App_functions";
+import * as GroupFunc from "@Group/Group_functions";
 
 export interface MergeButtons {
   classes: string;

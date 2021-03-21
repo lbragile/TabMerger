@@ -27,13 +27,13 @@ import React from "react";
 import { render, waitFor, act } from "@testing-library/react";
 import { toast } from "react-toastify";
 
-import * as AppFunc from "../../src/components/App/App_functions";
-import * as AppHelper from "../../src/components/App/App_helpers";
-import * as GroupFunc from "../../src/components/Group/Group_functions";
+import App from "@App/App";
+import * as AppFunc from "@App/App_functions";
+import * as AppHelper from "@App/App_helpers";
+import * as GroupFunc from "@Group/Group_functions";
 
-import App from "../../src/components/App/App";
-import { DefaultGroup, userType } from "../../src/typings/common";
-import { TabState } from "../../src/typings/Tab";
+import { DefaultGroup, userType } from "@Typings/common";
+import { TabState } from "@Typings/Tab";
 
 const {
   init_groups,

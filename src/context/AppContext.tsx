@@ -22,7 +22,7 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React, { createContext } from "react";
-import { setStateType } from "../typings/common";
+import { setStateType } from "@Typings/common";
 
 interface AppContextInterface {
   user: { paid: string | boolean; tier: string };

@@ -21,7 +21,7 @@ If you have any questions, comments, or concerns you can contact the
 TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
-import { getFavIconURL } from "../../src/components/Tab/Tab_helpers";
+import { getFavIconURL } from "@Tab/Tab_helpers";
 
 describe("getFavIconURL", () => {
   const base = "http://www.google.com/s2/favicons?domain=";

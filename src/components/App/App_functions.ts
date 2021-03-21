@@ -25,17 +25,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
  * @module App/App_functions
  */
 
-import * as AppHelper from "./App_helpers";
-import * as CONSTANTS from "../../constants/constants";
-
-import { TUTORIAL_GROUP } from "../Extra/Tutorial";
+import { MouseEvent } from "react";
 import { toast } from "react-toastify";
 
-import { IChanges } from "./App";
-import { DefaultGroup, setStateType, Toast, userType } from "../../typings/common";
-import { TabState } from "../../typings/Tab";
-import { MouseEvent } from "react";
-import { IMouseEvent } from "../../typings/App";
+import { IChanges } from "@App/App";
+import * as AppHelper from "@App/App_helpers";
+import * as CONSTANTS from "@Constants/constants";
+import { TUTORIAL_GROUP } from "@Extra/Tutorial";
+import { DefaultGroup, setStateType, Toast, userType } from "@Typings/common";
+import { TabState } from "@Typings/Tab";
+import { IMouseEvent } from "@Typings/App";
 
 /**
  * Allows the user to activate their subscription by providing their credentials.

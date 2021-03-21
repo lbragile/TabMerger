@@ -26,8 +26,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
  */
 
-import { DefaultGroup } from "../../src/typings/common";
-import { TabState } from "../../src/typings/Tab";
+import { DefaultGroup } from "@Typings/common";
+import { TabState } from "@Typings/Tab";
 
 /**
  * Filters a list of tabs according to the merging information provided in the parameters.

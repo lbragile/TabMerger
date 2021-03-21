@@ -15,6 +15,12 @@ module.exports = {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
       "<rootDir>/tests/__mocks__/fileMock.js",
     "\\.(css|less)$": "<rootDir>/tests/__mocks__/styleMock.js",
+    "@(App|Group|Tab|Extra|Button)/(.*)": "<rootDir>/src/components/$1/$2",
+    "@Typings/(.*)": "<rootDir>/src/typings/$1",
+    "@Constants/(.*)": "<rootDir>/src/constants/$1",
+    "@Context/(.*)": "<rootDir>/src/context/$1",
+    "@Settings/(.*)": "<rootDir>/public/settings/$1",
+    "@Background/(.*)": "<rootDir>/public/background/$1",
   },
   setupFiles: [
     "<rootDir>/tests/__mocks__/chromeMock.js",

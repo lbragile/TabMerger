@@ -23,15 +23,16 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React, { useState, useEffect, useContext, CSSProperties } from "react";
 
-import * as TabFunc from "./Tab_functions";
-import * as TabHelper from "./Tab_helpers";
-import { AppContext } from "../../context/AppContext";
-
 import { BiGridSmall } from "react-icons/bi";
 import { RiPushpinLine, RiPushpinFill } from "react-icons/ri";
 import { TiDelete } from "react-icons/ti";
-import { TabComponentProps, TabState } from "../../typings/Tab";
-import "./Tab.css";
+
+import { AppContext } from "@Context/AppContext";
+import * as TabFunc from "@Tab/Tab_functions";
+import * as TabHelper from "@Tab/Tab_helpers";
+import { TabComponentProps, TabState } from "@Typings/Tab";
+
+import "@Tab/Tab.css";
 
 export default function Tab({ id, hidden, textColor, fontWeight, fontFamily }: TabComponentProps): JSX.Element {
   const [tabs, setTabs] = useState<TabState[]>([]);

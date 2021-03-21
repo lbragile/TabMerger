@@ -22,19 +22,17 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React, { useEffect, useContext } from "react";
-import * as CONSTANTS from "../../constants/constants";
-
-import * as GroupFunc from "./Group_functions";
-import { translate, dragOver } from "../App/App_functions";
-import { AppContext } from "../../context/AppContext";
-
-import MergeBtns from "../Button/MergeBtns";
-import GroupTitleBtns from "../Button/GroupTitleBtns";
-
 import { BiHide } from "react-icons/bi";
 
-import "./Group.css";
-import "../Button/Button.css";
+import { translate, dragOver } from "@App/App_functions";
+import { AppContext } from "@Context/AppContext";
+import * as CONSTANTS from "@Constants/constants";
+import * as GroupFunc from "@Group/Group_functions";
+import MergeBtns from "@Button/MergeBtns";
+import GroupTitleBtns from "@Button/GroupTitleBtns";
+
+import "@Group/Group.css";
+import "@Button/Button.css";
 
 export interface GroupProps {
   id: string;
@@ -77,7 +75,11 @@ export default function Group({
       <div
         className="group-title d-flex flex-row justify-content-center"
         draggable={false}
-        style={{ fontFamily: ["Standard", "Premium"].includes(user.tier) ? fontFamily : "Arial" }}
+        style={
+          /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */ {
+            fontFamily: ["Standard", "Premium"].includes(user.tier) ? fontFamily : "Arial",
+          }
+        }
       >
         <h5 className="group-count">{num_tabs}</h5>
 
@@ -110,7 +112,11 @@ export default function Group({
         <div
           className="created mr-1"
           draggable={false}
-          style={{ fontFamily: ["Standard", "Premium"].includes(user.tier) ? fontFamily : "Arial" }}
+          style={
+            /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */ {
+              fontFamily: ["Standard", "Premium"].includes(user.tier) ? fontFamily : "Arial",
+            }
+          }
         >
           <b>{translate("created")}:</b> <span>{created}</span>
         </div>

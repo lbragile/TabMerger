@@ -28,10 +28,10 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React from "react";
 import { toast } from "react-toastify";
 
-import * as CONSTANTS from "../../constants/constants";
-import { getTabTotal, storeDestructiveAction } from "../App/App_helpers";
-import { setStateType, userType } from "../../typings/common";
-import { TabState } from "../../typings/Tab";
+import { getTabTotal, storeDestructiveAction } from "@App/App_helpers";
+import * as CONSTANTS from "@Constants/constants";
+import { setStateType, userType } from "@Typings/common";
+import { TabState } from "@Typings/Tab";
 
 /**
  * Sets the initial tabs based on Chrome's local storage upon initial render.

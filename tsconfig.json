@@ -5,6 +5,16 @@
     "strict": true,
     "noEmit": true
   },
-  "include": ["src", "public"],
-  "exclude": ["node_modules", "build", "test", "coverage", "reports", "misc"]
+  "include": [
+    "src",
+    "public"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "test",
+    "coverage",
+    "reports",
+    "misc"
+  ]
 }

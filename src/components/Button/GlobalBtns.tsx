@@ -24,19 +24,19 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React, { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 
-import Button from "./Button";
-import * as AppFunc from "../App/App_functions";
-import * as CONSTANTS from "../../constants/constants";
-import ImportBtn from "./ImportBtn";
-
 import { BiExport, BiPrinter } from "react-icons/bi";
 import { BsCloudUpload, BsCloudDownload } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { FaUndo } from "react-icons/fa";
 import { GiExpand } from "react-icons/gi";
 import { GrClear, GrAddCircle } from "react-icons/gr";
-import { setStateType, userType } from "../../typings/common";
-import { IMouseEvent } from "../../typings/App";
+
+import * as AppFunc from "@App/App_functions";
+import Button from "@Button/Button";
+import ImportBtn from "./ImportBtn";
+import * as CONSTANTS from "@Constants/constants";
+import { setStateType, userType } from "@Typings/common";
+import { IMouseEvent } from "@Typings/App";
 
 export interface GlobalBtnsProps {
   user: userType;

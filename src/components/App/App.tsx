@@ -24,30 +24,30 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Tour, { ReactourStep } from "reactour";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-import Tab from "../Tab/Tab";
-import Group from "../Group/Group";
-
-import * as AppFunc from "./App_functions";
-import * as AppHelper from "./App_helpers";
-import * as CONSTANTS from "../../constants/constants";
-import { FontStyle, userType } from "../../typings/common";
-
-import GlobalBtns from "../Button/GlobalBtns";
-import Header from "../Extra/Header";
-import TabSearch from "../Extra/TabSearch";
-import Reviews from "../Extra/Reviews";
-import Links from "../Extra/Links";
-import Dialog from "../Extra/Dialog";
-import Button from "../Button/Button";
-import { TOUR_STEPS } from "../Extra/Tutorial";
-import { AppProvider } from "../../context/AppContext";
 import { BiCheckCircle } from "react-icons/bi";
 
-import "./App.css";
-import "../Button/Button.css";
+import Tab from "@Tab/Tab";
+import Group from "@Group/Group";
+
+import * as AppFunc from "@App/App_functions";
+import * as AppHelper from "@App/App_helpers";
+import * as CONSTANTS from "@Constants/constants";
+import { AppProvider } from "@Context/AppContext";
+
+import GlobalBtns from "@Button/GlobalBtns";
+import Button from "@Button/Button";
+import Header from "@Extra/Header";
+import TabSearch from "@Extra/TabSearch";
+import Reviews from "@Extra/Reviews";
+import Links from "@Extra/Links";
+import Dialog from "@Extra/Dialog";
+import { TOUR_STEPS } from "@Extra/Tutorial";
+import { FontStyle, userType } from "@Typings/common";
+
+import "@App/App.css";
+import "@Button/Button.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
 
 export interface IChanges {
   [key: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any

@@ -28,12 +28,12 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 import React, { ChangeEvent } from "react";
 import { toast } from "react-toastify";
 
-import * as CONSTANTS from "../../constants/constants";
-import { getTimestamp, getTabTotal, sortByKey, storeDestructiveAction } from "../App/App_helpers";
-import { translate } from "../App/App_functions";
+import { getTimestamp, getTabTotal, sortByKey, storeDestructiveAction } from "@App/App_helpers";
+import { translate } from "@App/App_functions";
 
-import { setStateType, userType, DefaultGroup } from "../../typings/common";
-import { TabState } from "../../typings/Tab";
+import * as CONSTANTS from "@Constants/constants";
+import { setStateType, userType, DefaultGroup } from "@Typings/common";
+import { TabState } from "@Typings/Tab";
 
 /**
  * Sets the background color of each group according to what the user chose.

@@ -23,9 +23,9 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 
 import React from "react";
 import { BiImport } from "react-icons/bi";
-import { userType, setStateType } from "../../typings/common";
 
-import { translate, importJSON } from "../App/App_functions";
+import { userType, setStateType } from "@Typings/common";
+import { translate, importJSON } from "@App/App_functions";
 
 export interface ImportBtnProps {
   user: userType;

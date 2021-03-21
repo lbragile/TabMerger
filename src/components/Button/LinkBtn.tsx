@@ -22,8 +22,8 @@ TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
 */
 
 import React from "react";
-import Button from "./Button";
-import { setStateType } from "../../typings/common";
+import Button from "@Button/Button";
+import { setStateType } from "@Typings/common";
 
 export interface LinkBtnProps {
   text: string;
