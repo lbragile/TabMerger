@@ -6,16 +6,21 @@ module.exports = {
     node: true,
     webextensions: true,
   },
-  extends: ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
+    ecmaFeatures: { jsx: true },
     ecmaVersion: 12,
   },
   plugins: ["react", "@typescript-eslint"],
-  rules: {},
+  rules: {
+    "default-case": "warn",
+  },
   settings: {
     react: {
       version: "detect",

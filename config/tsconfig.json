@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ES6",
+    "lib": ["DOM", "DOM.Iterable", "ES2017"],
+    "jsx": "react",
+    "moduleResolution": "node", // 'node' (Node.js) or 'classic' (TypeScript pre-1.6)
+    "noEmit": true, // Emit output files to outDir folder
+    "declaration": true, // If Enabled, generates corresponding '.d.ts' file
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'.
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export. This does not affect code emit, just typechecking.
+    "removeComments": false, // removes regular comments, but keeps JSDoc comments intact
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["../src", "../public", "../tests"],
+  "exclude": ["../node_modules", "../coverage", "../misc"]
+}

@@ -1,25 +1,26 @@
 {
   "manifest_version": 2,
-  "version": "2.0.0",
+  "version": "3.0.0",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
   "default_locale": "en",
   "author": "Lior Bragilevsky",
   "homepage_url": "https://lbragile.github.io/TabMerger-Extension/",
-  "background": { "page": "background/background.html", "persistent": true },
-  "options_ui": { "page": "settings/settings.html", "open_in_tab": true },
-  "permissions": ["tabs", "contextMenus", "storage", "alarms", "downloads", "downloads.shelf"],
-  "icons": { "16": "images/logo16.png", "48": "images/logo48.png", "128": "images/logo128.png" },
-  "browser_action": { "default_icon": "images/logo128.png", "default_title": "Merge your tabs into groups" },
-  "incognito": "split",
-  "commands": {
-    "merge-snly-menu": { "suggested_key": { "default": "Alt+O" }, "description": "Merge ONLY Current" },
-    "merge-all-menu": { "suggested_key": { "default": "Alt+A" }, "description": "Merge ALL Tabs" },
-    "merge-left-menu": { "suggested_key": { "default": "Alt+L" }, "description": "Merge LEFT Tabs" },
-    "merge-right-menu": { "suggested_key": { "default": "Alt+R" }, "description": "Merge RIGHT Tabs" },
-    "remove-visibility": { "description": "Exclude From Merging" },
-    "merge-xcluding-menu": { "description": "Merge EXCLUDING Current" },
-    "zdl-instructions": { "description": "Instructions & Help" },
-    "aopen-tabmerger": { "description": "Open/Navigate to TabMerger" }
-  }
+  "permissions": ["tabs", "storage"],
+  "optional_permissions": ["contextMenus", "alarms", "downloads", "downloads.shelf"],
+  "icons": {
+    "16": "images/logo16.png",
+    "48": "images/logo48.png",
+    "128": "images/logo128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "images/logo16.png",
+      "48": "images/logo48.png",
+      "128": "images/logo128.png"
+    },
+    "default_popup": "index.html",
+    "default_title": "Merge your tabs into groups"
+  },
+  "incognito": "split"
 }
