@@ -1,8 +1,8 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "version": "3.0.0",
   "name": "__MSG_appName__",
-  "description": "__MSG_appDesc__",
+  "description": "Stores your tabs in one location to save memory usage and increase your productivity",
   "default_locale": "en",
   "author": "Lior Bragilevsky",
   "homepage_url": "https://lbragile.github.io/TabMerger-Extension/",
@@ -13,14 +13,14 @@
     "48": "images/logo48.png",
     "128": "images/logo128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "images/logo16.png",
       "48": "images/logo48.png",
       "128": "images/logo128.png"
     },
     "default_popup": "index.html",
-    "default_title": "Merge your tabs into groups"
+    "default_title": "Store your tabs in highly customizable containers"
   },
   "incognito": "split"
 }
