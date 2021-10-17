@@ -1,9 +1,7 @@
 import { store } from "..";
 
-export type TState = Record<string, unknown>;
-
-export interface IAction {
-  type: keyof typeof ACTIONS;
+export interface IAction<T> {
+  type: keyof T;
   payload: unknown;
 }
 

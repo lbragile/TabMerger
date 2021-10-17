@@ -1,24 +1,26 @@
 import React from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../styles/Global";
-import Groups from "./Groups";
+import Header from "./Header";
+import SidePanel from "./SidePanel";
 
-const Container = styled.div`
+const Wrapper = styled.div`
   width: 600px;
   height: 600px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  outline: 1px solid black;
+  outline-offset: 1px;
 `;
 
 export default function App(): JSX.Element {
   return (
-    <Container>
+    <Wrapper>
       <GlobalStyle />
-      <div>TabMerger</div>
-      <Groups />
-      <footer>Created By Lior Bragilevsky</footer>
-    </Container>
+      <Header />
+      <SidePanel />
+    </Wrapper>
   );
 }
