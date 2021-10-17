@@ -10,17 +10,15 @@ export interface IHeaderState {
   inputValue: string;
 }
 
-export type THeaderAction = IAction<typeof HEADER_ACTIONS>;
-
 const initState: IHeaderState = { typing: false, inputValue: "" };
 
-const headerReducer = (state = initState, action: THeaderAction): IHeaderState => {
+const headerReducer = (state = initState, action: IAction<IHeaderState>): IHeaderState => {
   switch (action.type) {
     case HEADER_ACTIONS.SET_TYPING:
-      return { ...state, typing: action.payload as IHeaderState["typing"] };
+      return { ...state, typing: action.payload };
 
     case HEADER_ACTIONS.UPDATE_INPUT_VALUE:
-      return { ...state, inputValue: action.payload as IHeaderState["inputValue"] };
+      return { ...state, inputValue: action.payload };
 
     default:
       return state;

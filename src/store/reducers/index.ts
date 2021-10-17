@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
-import containerReducer, { IContainerState } from "./container";
+import groupReducer, { IGroupState } from "./group";
 import headerReducer, { IHeaderState } from "./header";
 
-const rootReducer = combineReducers<{ container: IContainerState; header: IHeaderState }>({
-  container: containerReducer,
+const rootReducer = combineReducers<{ group: IGroupState; header: IHeaderState }>({
+  group: groupReducer,
   header: headerReducer
 });
 

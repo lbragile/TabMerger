@@ -1,8 +1,8 @@
 import { store } from "..";
 
-export interface IAction<T> {
-  type: keyof T;
-  payload: unknown;
+export interface IAction<P> {
+  type: string;
+  payload: ReturnType<P>;
 }
 
 /** @see https://redux.js.org/usage/usage-with-typescript */

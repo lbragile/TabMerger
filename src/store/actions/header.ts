@@ -1,11 +1,13 @@
-import { HEADER_ACTIONS, IHeaderState, THeaderAction } from "../reducers/header";
+import { IAction } from "../../typings/reducers";
+import { HEADER_ACTIONS, IHeaderState } from "../reducers/header";
 
-type TDispatchType = keyof typeof HEADER_ACTIONS;
+type THeaderAction = IAction<IHeaderState>;
+type TPayload = THeaderAction["payload"];
 
-export function setTyping(payload: IHeaderState["typing"]): THeaderAction {
-  return { type: HEADER_ACTIONS.SET_TYPING as TDispatchType, payload };
+export function setTyping(payload: TPayload): THeaderAction {
+  return { type: HEADER_ACTIONS.SET_TYPING, payload };
 }
 
-export function updateInputValue(payload: IHeaderState["inputValue"]): THeaderAction {
-  return { type: HEADER_ACTIONS.UPDATE_INPUT_VALUE as TDispatchType, payload };
+export function updateInputValue(payload: TPayload): THeaderAction {
+  return { type: HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload };
 }

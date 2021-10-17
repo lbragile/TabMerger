@@ -95,7 +95,7 @@ const Popup = styled.div`
   }
 `;
 
-export default function Container({
+export default function Group({
   name,
   info,
   color,
@@ -111,7 +111,7 @@ export default function Container({
 
   return (
     <Wrapper>
-      <Button color={color} onClick={() => console.log("activate container")}>
+      <Button color={color} onClick={() => console.log("activate group")}>
         <Headline
           ref={headlineRef}
           onMouseOver={() => {

@@ -3,24 +3,38 @@ import styled from "styled-components";
 import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
+import Windows from "./Windows";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   width: 600px;
   height: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   outline: 1px solid black;
   outline-offset: 1px;
 `;
 
+const MainArea = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 355px;
+  column-gap: 20px;
+  align-items: start;
+  height: 524px;
+  margin-top: 13px;
+`;
+
 export default function App(): JSX.Element {
   return (
-    <Wrapper>
+    <Container>
       <GlobalStyle />
       <Header />
-      <SidePanel />
-    </Wrapper>
+
+      <MainArea>
+        <SidePanel />
+
+        <Windows />
+      </MainArea>
+    </Container>
   );
 }
