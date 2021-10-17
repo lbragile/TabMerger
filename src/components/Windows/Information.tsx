@@ -26,11 +26,13 @@ const RightColumn = styled.div`
 
 const SettingsIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
+  font-size: 16px;
 `;
 
 const OpenIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
   margin-right: 8px;
+  font-size: 16px;
 `;
 
 const Title = styled.span`

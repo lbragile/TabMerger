@@ -12,7 +12,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   outline: 1px solid black;
-  outline-offset: 1px;
 `;
 
 const MainArea = styled.div`

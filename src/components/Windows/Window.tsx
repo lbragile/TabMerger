@@ -34,7 +34,7 @@ const Headline = styled(Flex).attrs((props: { active: boolean }) => props)`
 `;
 
 const TabsContainer = styled(Flex)`
-  margin: 8px 0 0 32px;
+  margin: 8px 0 0 24px;
 `;
 
 const TabCounter = styled.span`

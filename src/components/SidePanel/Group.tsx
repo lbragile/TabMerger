@@ -2,6 +2,9 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "../../hooks/useSelector";
+import { useDispatch } from "../../hooks/useDispatch";
+import { updateActiveGroup } from "../../store/actions/group";
 
 const Wrapper = styled.div`
   position: relative;
@@ -106,12 +109,15 @@ export default function Group({
   color: string;
   permanent?: boolean;
 }): JSX.Element {
+  const dispatch = useDispatch();
+  const { activeGroup } = useSelector((state) => state.group);
+
   const headlineRef = useRef<HTMLDivElement>(null);
   const [showOverflow, setShowOverflow] = useState(false);
 
   return (
     <Wrapper>
-      <Button color={color} onClick={() => console.log("activate group")}>
+      <Button color={color} active={activeGroup === name} onClick={() => dispatch(updateActiveGroup(name))}>
         <Headline
           ref={headlineRef}
           onMouseOver={() => {

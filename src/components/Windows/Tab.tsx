@@ -4,6 +4,7 @@ import styled from "styled-components";
 const Flex = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 8px;
 `;
 
@@ -15,10 +16,14 @@ const TabTitle = styled.span`
   }
 `;
 
-export default function Tab({ icon, title }: { icon: string; title: string; url: string }): JSX.Element {
+const TabIcon = styled.img`
+  height: 14px;
+`;
+
+export default function Tab({ icon, title, url }: { icon: string; title: string; url: string }): JSX.Element {
   return (
     <Flex>
-      <span>{icon}</span> <TabTitle>{title}</TabTitle>
+      <TabIcon src={icon} /> <TabTitle title={url}>{title}</TabTitle>
     </Flex>
   );
 }
