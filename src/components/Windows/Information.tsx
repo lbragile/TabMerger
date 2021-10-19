@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "../../hooks/useSelector";
+import React from "react";
 import styled from "styled-components";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IGroupState } from "../../store/reducers/groups";
 
 const Grid = styled.div`
   display: grid;
@@ -44,21 +44,11 @@ const SubTitle = styled.span`
   font-size: 14px;
 `;
 
-export default function Information(): JSX.Element {
-  const { activeGroup, windows } = useSelector((store) => store.group);
-
-  const [numTabs, setNumTabs] = useState(0);
-
-  useEffect(() => {
-    const countArr = windows.map((window) => window.tabs.length);
-    const total = countArr.reduce((total, val) => total + val, 0);
-    setNumTabs(total);
-  }, [windows]);
-
+export default function Information({ info, name }: Pick<IGroupState, "info" | "name">): JSX.Element {
   return (
     <Grid>
       <LeftColumn>
-        <Title>{activeGroup}</Title>
+        <Title>{name}</Title>
       </LeftColumn>
       <RightColumn>
         <OpenIcon icon={faWindowRestore} />
@@ -68,9 +58,7 @@ export default function Information(): JSX.Element {
         <SubTitle>Updated 10/12/2021 8:27:52 PM</SubTitle>
       </LeftColumn>
       <RightColumn>
-        <SubTitle>
-          {numTabs}T | {windows.length}W
-        </SubTitle>
+        <SubTitle>{info}</SubTitle>
       </RightColumn>
     </Grid>
   );

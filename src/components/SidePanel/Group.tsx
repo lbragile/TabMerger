@@ -2,11 +2,11 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "../../hooks/useSelector";
 import { useDispatch } from "../../hooks/useDispatch";
-import { updateActiveGroup } from "../../store/actions/group";
+import { deleteGroup, updateActive } from "../../store/actions/groups";
+import { IGroupsState } from "../../store/reducers/groups";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   position: relative;
 `;
 
@@ -69,7 +69,7 @@ const ColorIndicator = styled.div.attrs((props: { color: string }) => props)`
   left: 0;
 `;
 
-const PopUpWrapper = styled.div`
+const PopUpContainer = styled.div`
   position: absolute;
   top: 0;
   left: calc(100% + 4px);
@@ -98,26 +98,24 @@ const Popup = styled.div`
   }
 `;
 
-export default function Group({
-  name,
-  info,
-  color,
-  permanent = undefined
-}: {
-  name: string;
-  info: { tab: string; when: string };
-  color: string;
-  permanent?: boolean;
-}): JSX.Element {
+interface IGroup {
+  data: IGroupsState["available"][number];
+  active: IGroupsState["active"];
+  available: IGroupsState["available"];
+}
+
+export default function Group({ data, active, available }: IGroup): JSX.Element {
   const dispatch = useDispatch();
-  const { activeGroup } = useSelector((state) => state.group);
+
+  const { isActive, name, id, color, updatedAt, permanent, info } = data;
+  const index = available.findIndex((group) => group.id === id);
 
   const headlineRef = useRef<HTMLDivElement>(null);
   const [showOverflow, setShowOverflow] = useState(false);
 
   return (
-    <Wrapper>
-      <Button color={color} active={activeGroup === name} onClick={() => dispatch(updateActiveGroup(name))}>
+    <Container>
+      <Button color={color} active={isActive} onClick={() => !isActive && dispatch(updateActive({ index, id }))}>
         <Headline
           ref={headlineRef}
           onMouseOver={() => {
@@ -132,19 +130,37 @@ export default function Group({
         </Headline>
 
         <Information>
-          <span>{info.tab}</span> <span>{info.when}</span>
+          <span>{info ?? "0T | 0W"}</span> <span>{updatedAt}</span>
         </Information>
 
         <ColorIndicator color={color} onClick={() => console.log("open color picker")} />
 
-        {!permanent && <CloseIcon icon={faTimes} />}
+        {!permanent && (
+          <CloseIcon
+            icon={faTimes}
+            onClick={(e) => {
+              e.stopPropagation();
+
+              /**
+               * If selected group is same as deleted, need to update active group to one above.
+               * @note Deleted index (`idx`) is always >= 2 as the first 2 groups cannot be deleted
+               */
+              if (isActive) {
+                const newIdx = active.index - 1;
+                dispatch(updateActive({ index: newIdx, id: available[newIdx].id }));
+              }
+
+              dispatch(deleteGroup({ index, id }));
+            }}
+          />
+        )}
       </Button>
 
       {showOverflow && (
-        <PopUpWrapper>
+        <PopUpContainer>
           <Popup>{name}</Popup>
-        </PopUpWrapper>
+        </PopUpContainer>
       )}
-    </Wrapper>
+    </Container>
   );
 }

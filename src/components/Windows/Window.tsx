@@ -3,7 +3,7 @@ import { faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import Tab from "./Tab";
-import { IGroupState } from "../../store/reducers/group";
+import { IGroupState } from "../../store/reducers/groups";
 
 const Flex = styled.div`
   display: flex;
@@ -42,7 +42,7 @@ const TabCounter = styled.span`
   margin-left: 16px;
 `;
 
-export default function Window({ active, tabs }: IGroupState["windows"][number]): JSX.Element {
+export default function Window({ active, tabs, id }: IGroupState["windows"][number]): JSX.Element {
   return (
     <Container>
       <Headline active={active}>
