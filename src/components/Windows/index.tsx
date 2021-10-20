@@ -12,11 +12,12 @@ const Flex = styled.div`
 
 export default function Windows(): JSX.Element {
   const { active, available } = useSelector((state) => state.groups);
-  const { windows, info, name } = available[active.index];
+  const { index } = active;
+  const { windows, info, name, updatedAt } = available[index];
 
   return (
     <div>
-      <Information info={info} name={name} />
+      <Information info={info} name={name} updatedAt={updatedAt} index={index} />
 
       <Flex>
         {windows.map((window, i) => (

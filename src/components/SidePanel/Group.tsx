@@ -5,6 +5,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "../../hooks/useDispatch";
 import { deleteGroup, updateActive } from "../../store/actions/groups";
 import { IGroupsState } from "../../store/reducers/groups";
+import { relativeTimeStr } from "../../utils/helper";
 
 const Container = styled.div`
   position: relative;
@@ -130,7 +131,7 @@ export default function Group({ data, active, available }: IGroup): JSX.Element 
         </Headline>
 
         <Information>
-          <span>{info ?? "0T | 0W"}</span> <span>{updatedAt}</span>
+          <span>{info ?? "0T | 0W"}</span> <span>{relativeTimeStr(updatedAt)}</span>
         </Information>
 
         <ColorIndicator color={color} onClick={() => console.log("open color picker")} />

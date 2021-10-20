@@ -4,6 +4,9 @@ import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IGroupState } from "../../store/reducers/groups";
+import { useDispatch } from "../../hooks/useDispatch";
+import { updateName } from "../../store/actions/groups";
+import { getReadableTimestamp } from "../../utils/helper";
 
 const Grid = styled.div`
   display: grid;
@@ -35,27 +38,44 @@ const OpenIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
 `;
 
-const Title = styled.span`
+const Title = styled.input`
   font-weight: bold;
   font-size: 16px;
+  border: none;
+  outline: none;
+
+  &:focus {
+    border-bottom: 1px solid black;
+  }
 `;
 
 const SubTitle = styled.span`
   font-size: 14px;
 `;
 
-export default function Information({ info, name }: Pick<IGroupState, "info" | "name">): JSX.Element {
+interface IInformation extends Pick<IGroupState, "info" | "name" | "updatedAt"> {
+  index: number;
+}
+
+export default function Information({ info, name, index, updatedAt }: IInformation): JSX.Element {
+  const dispatch = useDispatch();
+
   return (
     <Grid>
       <LeftColumn>
-        <Title>{name}</Title>
+        <Title
+          type="text"
+          value={name}
+          spellCheck={false}
+          onChange={(e) => dispatch(updateName({ index, name: e.target.value }))}
+        />
       </LeftColumn>
       <RightColumn>
         <OpenIcon icon={faWindowRestore} />
         <SettingsIcon icon={faEllipsisV} />
       </RightColumn>
       <LeftColumn>
-        <SubTitle>Updated 10/12/2021 8:27:52 PM</SubTitle>
+        <SubTitle>{getReadableTimestamp(updatedAt)}</SubTitle>
       </LeftColumn>
       <RightColumn>
         <SubTitle>{info}</SubTitle>

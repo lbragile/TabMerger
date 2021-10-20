@@ -35,13 +35,13 @@ export interface IGroupsState {
   available: IGroupState[];
 }
 
-// id is set upon creation to ensure uniqueness
+// id & updatedAt are set upon creation to ensure uniqueness/correctness
 const DEFAULT_GROUP: IGroupState = {
   isActive: false,
   name: "No Name",
   id: "",
   color: "#808080",
-  updatedAt: 20,
+  updatedAt: 0,
   windows: [],
   permanent: false,
   info: "0T | 0W"
@@ -55,7 +55,7 @@ const initState: IGroupsState = {
       name: "Awaiting Storage",
       id: nanoid(10),
       color: "#808080",
-      updatedAt: 0,
+      updatedAt: Date.now(),
       windows: [
         {
           active: true,
@@ -86,16 +86,6 @@ const initState: IGroupsState = {
               icon: "https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico",
               title: "Facebook - 0",
               url: "https://www.facebook.com"
-            },
-            {
-              icon: "https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico",
-              title: "Facebook - 1",
-              url: "https://www.facebook.com"
-            },
-            {
-              icon: "https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico",
-              title: "Facebook - 2",
-              url: "https://www.facebook.com"
             }
           ]
         }
@@ -107,7 +97,7 @@ const initState: IGroupsState = {
       name: "Duplicates",
       id: nanoid(10),
       color: "#808080",
-      updatedAt: 10,
+      updatedAt: Date.now(),
       windows: [
         {
           active: false,
@@ -215,7 +205,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupsState>): IGroup
     }
 
     case GROUPS_ACTIONS.ADD_GROUP:
-      available.push({ ...DEFAULT_GROUP, id: nanoid(10) });
+      available.push({ ...DEFAULT_GROUP, id: nanoid(10), updatedAt: Date.now() });
 
       return {
         ...state,

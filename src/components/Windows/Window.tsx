@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import Tab from "./Tab";
 import { IGroupState } from "../../store/reducers/groups";
+import { pluralize } from "../../utils/helper";
 
 const Flex = styled.div`
   display: flex;
@@ -48,7 +49,9 @@ export default function Window({ active, tabs, id }: IGroupState["windows"][numb
       <Headline active={active}>
         <FontAwesomeIcon icon={faWindowMaximize} />
         <WindowTitle>{active ? "Current" : ""} Window</WindowTitle>
-        <TabCounter>{tabs.length} Tab</TabCounter>
+        <TabCounter>
+          {tabs.length} {pluralize(tabs.length, "Tab")}
+        </TabCounter>
       </Headline>
 
       <TabsContainer>
