@@ -44,9 +44,10 @@
   "scripts": {
     "lint": "npx eslint {src,public}/**/**/*.[jt]s -c config/.eslintrc.js --ignore-path .gitignore .",
     "lint:style": "npx stylelint {src,public}/**/**/*.css --config config/.stylelintrc.json",
-    "tsc": "tsc --project ./config/tsconfig.json",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "tsc:dev": "tsc --project ./config/tsconfig.dev.json",
+    "tsc:prod": "tsc --project ./config/tsconfig.prod.json",
+    "start": "npm run tsc:dev && react-scripts start",
+    "build": "npm run tsc:prod && react-scripts build"
   },
   "babel": {
     "extends": "./config/.babelrc.json"

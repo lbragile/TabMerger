@@ -126,7 +126,7 @@ const initState: IGroupsState = {
   ]
 };
 
-const GroupsReducer = (state = initState, action: IAction<IGroupsState>): IGroupsState => {
+const GroupsReducer = (state = initState, action: IAction<IGroupState & { index: number }>): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
@@ -216,8 +216,16 @@ const GroupsReducer = (state = initState, action: IAction<IGroupsState>): IGroup
       const { index } = action.payload;
       available.splice(index, 1);
 
+      // to avoid having a large index, need to re-locate the active group (incase index was for last)
+      const activeIdx = available.findIndex((group) => group.isActive);
+      const newIdx = activeIdx > -1 ? activeIdx : index - 1;
+
+      // Now update the active group - no need to reset all groups as this is taken care of by the above
+      available[newIdx].isActive = true;
+
       return {
         ...state,
+        active: { index: newIdx, id: available[newIdx].id },
         available
       };
     }

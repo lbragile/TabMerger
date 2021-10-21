@@ -101,11 +101,10 @@ const Popup = styled.div`
 
 interface IGroup {
   data: IGroupsState["available"][number];
-  active: IGroupsState["active"];
   available: IGroupsState["available"];
 }
 
-export default function Group({ data, active, available }: IGroup): JSX.Element {
+export default function Group({ data, available }: IGroup): JSX.Element {
   const dispatch = useDispatch();
 
   const { isActive, name, id, color, updatedAt, permanent, info } = data;
@@ -141,16 +140,6 @@ export default function Group({ data, active, available }: IGroup): JSX.Element 
             icon={faTimes}
             onClick={(e) => {
               e.stopPropagation();
-
-              /**
-               * If selected group is same as deleted, need to update active group to one above.
-               * @note Deleted index (`idx`) is always >= 2 as the first 2 groups cannot be deleted
-               */
-              if (isActive) {
-                const newIdx = active.index - 1;
-                dispatch(updateActive({ index: newIdx, id: available[newIdx].id }));
-              }
-
               dispatch(deleteGroup({ index, id }));
             }}
           />

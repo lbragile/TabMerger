@@ -28,7 +28,7 @@ const AddIcon = styled(FontAwesomeIcon)`
 
 export default function SidePanel(): JSX.Element {
   const dispatch = useDispatch();
-  const { active, available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups);
 
   /**
    * update each group's information if it doesn't match the current ...
@@ -49,7 +49,7 @@ export default function SidePanel(): JSX.Element {
   return (
     <Column>
       {available.map((data) => (
-        <Group key={data.id} data={data} active={active} available={available} />
+        <Group key={data.id} data={data} available={available} />
       ))}
 
       <AddIcon icon={faPlus} onClick={() => dispatch(addGroup())} />

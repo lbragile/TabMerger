@@ -22,5 +22,11 @@
     "default_popup": "index.html",
     "default_title": "Store your tabs in highly customizable containers"
   },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "externally_connectable": {
+    "matches": ["*://localhost/*"]
+  },
   "incognito": "split"
 }

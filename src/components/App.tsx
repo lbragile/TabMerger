@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
@@ -24,6 +24,12 @@ const MainArea = styled.div`
 `;
 
 export default function App(): JSX.Element {
+  useEffect(() => {
+    chrome.runtime.sendMessage("ldhahppapilmnhocniaifnlieiofgnii", { greeting: "hello" }, function (response) {
+      console.log(response);
+    });
+  }, []);
+
   return (
     <Container>
       <GlobalStyle />

@@ -37,12 +37,8 @@ export function relativeTimeStr(previous: number, current = Date.now()): string 
     [val, type] = [elapsed / MS_PER_YEAR, "year"];
   }
 
-  if (type === "sec") {
-    return `< 1 min`;
-  } else {
-    val = Math.round(val);
-    return `${val} ${pluralize(val, type)}`;
-  }
+  val = Math.round(val);
+  return type === "sec" ? "< 1 min" : `${val} ${pluralize(val, type)}`;
 }
 
 export function getReadableTimestamp(timestamp: number): string {
