@@ -37,7 +37,7 @@ export default function SidePanel(): JSX.Element {
   useEffect(() => {
     available.forEach((group, i) => {
       const { windows, info } = group;
-      const countArr = windows.map((window) => window.tabs.length);
+      const countArr = windows.map((window) => window.tabs?.length ?? 0);
       const total = countArr.reduce((total, val) => total + val, 0);
       const newInfo = `${total}T | ${windows.length}W`;
       if (info !== newInfo) {

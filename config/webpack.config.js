@@ -1,13 +1,16 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 
-const config = {
+module.exports = {
   entry: {
     popup: path.resolve(__dirname, "../src/index.tsx"),
-    content: path.resolve(__dirname, "../src/content.ts"),
     background: path.resolve(__dirname, "../src/background.ts"),
   },
-  output: { path: path.resolve(__dirname, "../dist"), filename: "[name].js" },
+  plugins: [
+    new CopyPlugin({
+      patterns: [{ from: "public", to: "." }],
+    }),
+  ],
   module: {
     rules: [
       {
@@ -36,11 +39,10 @@ const config = {
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
-  plugins: [
-    new CopyPlugin({
-      patterns: [{ from: "public", to: "." }],
-    }),
-  ],
+  mode: "production",
+  output: {
+    path: path.resolve(__dirname, "../dist"),
+    filename: "[name].js",
+    clean: true,
+  },
 };
-
-module.exports = config;

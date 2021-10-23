@@ -21,11 +21,7 @@ export interface IGroupState {
   id: string;
   color: string;
   updatedAt: number;
-  windows: {
-    active: boolean;
-    id: number;
-    tabs: { icon: string; title: string; url: string }[];
-  }[];
+  windows: chrome.windows.Window[];
   permanent?: boolean;
   info?: string;
 }
@@ -56,40 +52,7 @@ const initState: IGroupsState = {
       id: nanoid(10),
       color: "#808080",
       updatedAt: Date.now(),
-      windows: [
-        {
-          active: true,
-          id: 0,
-          tabs: [
-            {
-              icon: "https://developer.chrome.com/images/meta/favicon-32x32.png",
-              title: "Google - 0",
-              url: "https://www.google.com"
-            },
-            {
-              icon: "https://developer.chrome.com/images/meta/favicon-32x32.png",
-              title: "Google - 1",
-              url: "https://www.google.com"
-            },
-            {
-              icon: "https://developer.chrome.com/images/meta/favicon-32x32.png",
-              title: "Google - 2",
-              url: "https://www.google.com"
-            }
-          ]
-        },
-        {
-          active: false,
-          id: 1,
-          tabs: [
-            {
-              icon: "https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico",
-              title: "Facebook - 0",
-              url: "https://www.facebook.com"
-            }
-          ]
-        }
-      ],
+      windows: [],
       permanent: true
     },
     {
@@ -98,29 +61,7 @@ const initState: IGroupsState = {
       id: nanoid(10),
       color: "#808080",
       updatedAt: Date.now(),
-      windows: [
-        {
-          active: false,
-          id: 1,
-          tabs: [
-            {
-              icon: "https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico",
-              title: "Facebook - 0",
-              url: "https://www.facebook.com"
-            },
-            {
-              icon: "https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico",
-              title: "Facebook - 1",
-              url: "https://www.facebook.com"
-            },
-            {
-              icon: "https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico",
-              title: "Facebook - 2",
-              url: "https://www.facebook.com"
-            }
-          ]
-        }
-      ],
+      windows: [],
       permanent: true
     }
   ]

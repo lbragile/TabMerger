@@ -51,9 +51,7 @@
   "scripts": {
     "lint": "npx eslint {src,public}/**/**/*.[jt]s -c config/.eslintrc.js --ignore-path .gitignore .",
     "lint:style": "npx stylelint {src,public}/**/**/*.css --config config/.stylelintrc.json",
-    "webpack": "webpack --mode production --config config/webpack.config.js",
-    "start": "npm run webpack -- --watch --progress",
-    "build": "npm run webpack"
+    "start": "webpack --config config/webpack.config.js --watch --progress"
   },
   "babel": {
     "extends": "./config/.babelrc.json"

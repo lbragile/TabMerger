@@ -9,6 +9,10 @@ const Flex = styled.div`
 `;
 
 const TabTitle = styled.span`
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 
   &:hover {
@@ -18,12 +22,29 @@ const TabTitle = styled.span`
 
 const TabIcon = styled.img`
   height: 14px;
+  width: 14px;
 `;
 
-export default function Tab({ icon, title, url }: { icon: string; title: string; url: string }): JSX.Element {
+interface ITab {
+  favIconUrl?: string;
+  title: string;
+  url: string;
+}
+
+export default function Tab({ favIconUrl, title, url }: ITab): JSX.Element {
   return (
     <Flex>
-      <TabIcon src={icon} /> <TabTitle title={url}>{title}</TabTitle>
+      <TabIcon
+        src={favIconUrl === "" ? "https://developer.chrome.com/images/meta/favicon-32x32.png" : favIconUrl}
+        alt="Favicon of the tab"
+      />{" "}
+      <TabTitle
+        title={url}
+        onClick={() => console.log("open tab in corresponding window")}
+        onMouseOver={() => console.log("show preview")}
+      >
+        {title}
+      </TabTitle>
     </Flex>
   );
 }

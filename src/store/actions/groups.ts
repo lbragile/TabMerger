@@ -26,8 +26,8 @@ export const updateTimestamp: TActionFunc<IGroupState["updatedAt"]> = (payload) 
   return createAction<IGroupState["updatedAt"]>(GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload);
 };
 
-export const updateWindows: TActionFunc<IGroupState["windows"]> = (payload) => {
-  return createAction<IGroupState["windows"]>(GROUPS_ACTIONS.UPDATE_WINDOWS, payload);
+export const updateWindows: TActionFunc<{ index: number; windows: IGroupState["windows"] }> = (payload) => {
+  return createAction<{ index: number; windows: IGroupState["windows"] }>(GROUPS_ACTIONS.UPDATE_WINDOWS, payload);
 };
 
 export const updateInfo: TActionFunc<{ index: number; info: IGroupState["info"] }> = (payload) => {

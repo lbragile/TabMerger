@@ -43,21 +43,24 @@ const TabCounter = styled.span`
   margin-left: 16px;
 `;
 
-export default function Window({ active, tabs, id }: IGroupState["windows"][number]): JSX.Element {
+export default function Window({ focused, tabs }: IGroupState["windows"][number]): JSX.Element {
   return (
     <Container>
-      <Headline active={active}>
+      <Headline active={focused}>
         <FontAwesomeIcon icon={faWindowMaximize} />
-        <WindowTitle>{active ? "Current" : ""} Window</WindowTitle>
+        <WindowTitle>{focused ? "Current" : ""} Window</WindowTitle>
         <TabCounter>
-          {tabs.length} {pluralize(tabs.length, "Tab")}
+          {tabs?.length ?? 0} {pluralize(tabs?.length ?? 0, "Tab")}
         </TabCounter>
       </Headline>
 
       <TabsContainer>
-        {tabs.map((tab, i) => (
-          <Tab key={tab.title + tab.url + i} icon={tab.icon} title={tab.title} url={tab.url} />
-        ))}
+        {tabs?.map((tab, i) => {
+          const { title, url, favIconUrl } = tab ?? {};
+          if (title && url) {
+            return <Tab key={title + url + i} favIconUrl={favIconUrl} title={title} url={url} />;
+          }
+        })}
       </TabsContainer>
     </Container>
   );

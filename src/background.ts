@@ -1,31 +1,23 @@
-type TSentResponse = (response?: { data: unknown }) => void;
+import { ACTIONS } from "./constants/backgroundActions";
+import { TSentResponse } from "./typings/background";
+import { executeResponse } from "./utils/background";
 
-const getCurrentTab = async () => {
-  const queryOptions = { active: true, currentWindow: true };
-  const [tab] = await chrome.tabs.query(queryOptions);
-  return tab;
+const getAllWindows = async () => {
+  const windows = await chrome.windows.getAll({ populate: true, windowTypes: ["normal"] });
+  return windows;
 };
 
-/**
- * Immediately Invoked Function Expression that executes the `sendResponse` function to response to the web page
- * @see https://stackoverflow.com/a/53024910/4298115
- */
-function executeResponse(res: TSentResponse, cb: () => Promise<unknown>): void {
-  (async () => {
-    res({ data: await cb() });
-  })();
-}
+const handleMessage = (req: { type: string }, sender: chrome.runtime.MessageSender, res: TSentResponse<unknown>) => {
+  switch (req.type) {
+    case ACTIONS.GET_ALL_WINDOWS:
+      executeResponse<chrome.windows.Window[]>(res, getAllWindows);
+      break;
 
-const handleMessage = (req: { type: string }, sender: chrome.runtime.MessageSender, res: TSentResponse) => {
-  if (req.type == "hello background") {
-    executeResponse(res, getCurrentTab);
+    default:
+      break;
   }
 
-  /**
-   * @see https://developer.chrome.com/docs/extensions/mv3/messaging/#simple near the end
-   */
-  return true;
+  return true; /** @see https://developer.chrome.com/docs/extensions/mv3/messaging/#simple near the end */
 };
 
-// popup
 chrome.runtime.onMessage.addListener(handleMessage);
