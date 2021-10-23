@@ -31,7 +31,9 @@
     "@types/styled-components": "^5.1.12",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "babel-loader": "^8.2.3",
     "babel-plugin-styled-components": "^1.13.2",
+    "copy-webpack-plugin": "^9.0.1",
     "eslint": "^7.11.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
@@ -39,15 +41,19 @@
     "styled-components": "^5.3.0",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
-    "typescript": "^4.3.5"
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.3.5",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.59.1",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.3.1"
   },
   "scripts": {
     "lint": "npx eslint {src,public}/**/**/*.[jt]s -c config/.eslintrc.js --ignore-path .gitignore .",
     "lint:style": "npx stylelint {src,public}/**/**/*.css --config config/.stylelintrc.json",
-    "tsc:dev": "tsc --project ./config/tsconfig.dev.json",
-    "tsc:prod": "tsc --project ./config/tsconfig.prod.json",
-    "start": "npm run tsc:dev && react-scripts start",
-    "build": "npm run tsc:prod && react-scripts build"
+    "webpack": "webpack --mode production --config config/webpack.config.js",
+    "start": "npm run webpack -- --watch --progress",
+    "build": "npm run webpack"
   },
   "babel": {
     "extends": "./config/.babelrc.json"

@@ -4,6 +4,9 @@
     "module": "ES6",
     "lib": ["DOM", "DOM.Iterable", "ES2017"],
     "jsx": "react",
+    "outDir": "../dist",
+    "noEmit": false, // Emit output files to outDir folder
+    "declaration": false, // If Enabled, generates corresponding '.d.ts' file
     "moduleResolution": "node", // 'node' (Node.js) or 'classic' (TypeScript pre-1.6)
     "strict": true, // Enable all strict type-checking options
     "esModuleInterop": true, // Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'.
@@ -12,5 +15,6 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
+  "include": ["../public", "../src", "../tests"],
   "exclude": ["../node_modules", "../coverage", "../misc"]
 }

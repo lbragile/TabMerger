@@ -16,8 +16,8 @@ function executeResponse(res: TSentResponse, cb: () => Promise<unknown>): void {
   })();
 }
 
-const handleMessage = (req: { [key: string]: string }, sender: chrome.runtime.MessageSender, res: TSentResponse) => {
-  if (req.greeting == "hello") {
+const handleMessage = (req: { type: string }, sender: chrome.runtime.MessageSender, res: TSentResponse) => {
+  if (req.type == "hello background") {
     executeResponse(res, getCurrentTab);
   }
 
@@ -26,9 +26,6 @@ const handleMessage = (req: { [key: string]: string }, sender: chrome.runtime.Me
    */
   return true;
 };
-
-// react (localhost)
-chrome.runtime.onMessageExternal.addListener(handleMessage);
 
 // popup
 chrome.runtime.onMessage.addListener(handleMessage);

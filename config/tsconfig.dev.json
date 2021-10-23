@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": false, // Emit output files to outDir folder
-    "declaration": true // If Enabled, generates corresponding '.d.ts' file
-  },
-  "include": ["../public"]
-}

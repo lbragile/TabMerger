@@ -25,8 +25,8 @@ const MainArea = styled.div`
 
 export default function App(): JSX.Element {
   useEffect(() => {
-    chrome.runtime.sendMessage("ldhahppapilmnhocniaifnlieiofgnii", { greeting: "hello" }, function (response) {
-      console.log(response);
+    chrome.runtime.sendMessage("ogonhllbkjpohfoecdkoakpeoccjlkem", { type: "hello background" }, ({ data }) => {
+      console.log("tab: ", JSON.stringify(data, null, 2));
     });
   }, []);
 
