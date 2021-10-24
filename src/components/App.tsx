@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import styled from "styled-components";
-import { ACTIONS } from "../constants/backgroundActions";
-import { updateWindows } from "../store/actions/groups";
+import useUpdateWindows from "../hooks/useUpdateWindows";
 import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
@@ -27,18 +25,7 @@ const MainArea = styled.div`
 `;
 
 export default function App(): JSX.Element {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchWindows = () => {
-      chrome.runtime.sendMessage({ type: ACTIONS.GET_ALL_WINDOWS }, ({ data }) => {
-        dispatch(updateWindows({ index: 0, windows: data }));
-      });
-    };
-
-    fetchWindows(); // initial call without delay
-    setInterval(fetchWindows, 1000);
-  }, [dispatch]);
+  useUpdateWindows();
 
   return (
     <Container>
