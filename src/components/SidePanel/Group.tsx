@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "../../hooks/useDispatch";
@@ -24,8 +24,11 @@ const CloseIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const Button = styled.button.attrs((props: { active: boolean; color: string }) => props)`
-  width: 209px;
+const Button = styled.button.attrs((props: { active: boolean; color: string; $overflow: boolean }) => props)`
+  ${({ $overflow: overflow }) => css`
+    width: ${overflow ? "195px" : "209px"};
+    margin-right: ${overflow ? "4px" : "0"};
+  `}
   height: 49px;
   border-radius: 4px;
   background-color: ${({ active }) => (active ? "#BEDDF4" : "transparent")};
@@ -104,7 +107,7 @@ interface IGroup {
   available: IGroupsState["available"];
 }
 
-export default function Group({ data, available }: IGroup): JSX.Element {
+export default function Group({ data, available, overflow }: IGroup & { overflow: boolean }): JSX.Element {
   const dispatch = useDispatch();
 
   const { isActive, name, id, color, updatedAt, permanent, info } = data;
@@ -115,7 +118,12 @@ export default function Group({ data, available }: IGroup): JSX.Element {
 
   return (
     <Container>
-      <Button color={color} active={isActive} onClick={() => !isActive && dispatch(updateActive({ index, id }))}>
+      <Button
+        color={color}
+        active={isActive}
+        $overflow={overflow}
+        onClick={() => !isActive && dispatch(updateActive({ index, id }))}
+      >
         <Headline
           ref={headlineRef}
           onMouseOver={() => {
@@ -125,6 +133,7 @@ export default function Group({ data, available }: IGroup): JSX.Element {
             }
           }}
           onMouseLeave={() => setShowOverflow(false)}
+          onFocus={() => console.log("focused")}
         >
           {name}
         </Headline>
@@ -133,7 +142,13 @@ export default function Group({ data, available }: IGroup): JSX.Element {
           <span>{info ?? "0T | 0W"}</span> <span>{relativeTimeStr(updatedAt)}</span>
         </Information>
 
-        <ColorIndicator color={color} onClick={() => console.log("open color picker")} />
+        <ColorIndicator
+          color={color}
+          role="button"
+          tabIndex={0}
+          onClick={() => console.log("open color picker")}
+          onKeyPress={() => console.log("keyPress")}
+        />
 
         {!permanent && (
           <CloseIcon

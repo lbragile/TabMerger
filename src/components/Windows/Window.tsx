@@ -48,7 +48,14 @@ export default function Window({ focused, tabs }: IGroupState["windows"][number]
     <Container>
       <Headline active={focused}>
         <FontAwesomeIcon icon={faWindowMaximize} />
-        <WindowTitle>{focused ? "Current" : ""} Window</WindowTitle>
+        <WindowTitle
+          tabIndex={0}
+          role="button"
+          onClick={() => console.log("open window")}
+          onKeyPress={(e) => e.key === "w" && console.log("open window from key")}
+        >
+          {focused ? "Current" : ""} Window
+        </WindowTitle>
         <TabCounter>
           {tabs?.length ?? 0} {pluralize(tabs?.length ?? 0, "Tab")}
         </TabCounter>
@@ -56,9 +63,9 @@ export default function Window({ focused, tabs }: IGroupState["windows"][number]
 
       <TabsContainer>
         {tabs?.map((tab, i) => {
-          const { title, url, favIconUrl } = tab ?? {};
+          const { title, url } = tab ?? {};
           if (title && url) {
-            return <Tab key={title + url + i} favIconUrl={favIconUrl} title={title} url={url} />;
+            return <Tab key={title + url + i} {...tab} />;
           }
         })}
       </TabsContainer>

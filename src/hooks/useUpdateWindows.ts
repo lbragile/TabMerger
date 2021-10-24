@@ -2,24 +2,24 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateWindows } from "../store/actions/groups";
 
-export default function useUpdateWindows() {
+export default function useUpdateWindows(): void {
   const dispatch = useDispatch();
   const [created, setCreated] = useState(false);
 
   const fetchWindows = useCallback(
     async (queryOptions: chrome.windows.QueryOptions) => {
-      const windows = await chrome.windows.getAll(queryOptions);
+      const allWindows = await chrome.windows.getAll(queryOptions);
 
       // Popup script (extension icon) click takes focus away from current window, so need to manually set it
       const currentWindow = await chrome.windows.getCurrent();
-      windows.forEach((tabWindow) => {
+      allWindows.forEach((tabWindow) => {
         tabWindow.focused = currentWindow.id ? currentWindow.id === tabWindow.id : false;
       });
 
       // move active window to the top
-      const sortedWindows = windows
+      const sortedWindows = allWindows
         .filter((tabWindow) => tabWindow.focused)
-        .concat(windows.filter((tabWindow) => !tabWindow.focused));
+        .concat(allWindows.filter((tabWindow) => !tabWindow.focused));
 
       // add this window information to the 'Awaiting Storage' group
       dispatch(updateWindows({ index: 0, windows: sortedWindows }));

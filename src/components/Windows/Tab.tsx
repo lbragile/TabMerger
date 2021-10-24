@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 
 const Flex = styled.div`
@@ -25,23 +25,30 @@ const TabIcon = styled.img`
   width: 14px;
 `;
 
-interface ITab {
-  favIconUrl?: string;
-  title: string;
-  url: string;
-}
+export default function Tab(tab: chrome.tabs.Tab): JSX.Element {
+  const tabRef = useRef<HTMLSpanElement | null>(null);
+  const { favIconUrl, title, url, active, pinned } = tab;
 
-export default function Tab({ favIconUrl, title, url }: ITab): JSX.Element {
   return (
     <Flex>
       <TabIcon
         src={favIconUrl === "" ? "https://developer.chrome.com/images/meta/favicon-32x32.png" : favIconUrl}
         alt="Favicon of the tab"
-      />{" "}
+      />
+
       <TabTitle
         title={url}
-        onClick={() => console.log("open tab in corresponding window")}
+        ref={tabRef}
+        role="link"
+        tabIndex={0}
+        onClick={async () => await chrome.tabs.create({ url, active, pinned })}
         onMouseOver={() => console.log("show preview")}
+        onFocus={(e) => (tabRef.current = e.target)}
+        onKeyPress={(e) => {
+          if (e.key === "o") {
+            console.log("open tab from keyboard");
+          }
+        }}
       >
         {title}
       </TabTitle>

@@ -1,13 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import { useSelector } from "../../hooks/useSelector";
+import { Scrollbar } from "../../styles/Scrollbar";
 import Information from "./Information";
 import Window from "./Window";
 
-const Flex = styled.div`
+const Flex = styled(Scrollbar)`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 460px;
+  overflow: auto;
 `;
 
 export default function Windows(): JSX.Element {

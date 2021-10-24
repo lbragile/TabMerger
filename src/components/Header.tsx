@@ -46,11 +46,11 @@ const SettingsIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const SearchIcon = styled(FontAwesomeIcon).attrs((props: { $isTyping: boolean }) => props)`
+const SearchIcon = styled(FontAwesomeIcon).attrs((props: { $typing: boolean }) => props)`
   font-size: 16px;
 
   &:hover {
-    ${({ $isTyping: typing }) =>
+    ${({ $typing: typing }) =>
       css`
         cursor: ${typing ? "pointer" : ""};
         color: ${typing ? "#FF8080" : ""};
@@ -83,18 +83,18 @@ export default function Header(): JSX.Element {
             value={inputValue as string}
             onChange={(e) => {
               const { value } = e.target;
-              dispatch(updateInputValue(value));
-              dispatch(setTyping(value !== ""));
+              dispatch(updateInputValue({ inputValue: value }));
+              dispatch(setTyping({ typing: value !== "" }));
             }}
           />
           <SearchIcon
             icon={typing ? faTimes : faSearch}
-            $isTyping={typing}
+            $typing={typing}
             onClick={() => {
               // clicking the close button should clear the input
               if (typing) {
-                dispatch(updateInputValue(""));
-                dispatch(setTyping(false));
+                dispatch(updateInputValue({ inputValue: "" }));
+                dispatch(setTyping({ typing: false }));
               }
             }}
           />
