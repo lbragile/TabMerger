@@ -81,8 +81,8 @@ export default function Tab({
 }: chrome.tabs.Tab): JSX.Element | null {
   const { inputValue } = useSelector((state) => state.header);
 
-  const openTab = async () => await chrome.tabs.create({ url, active, pinned });
-  const closeTab = async () => tabId && (await chrome.tabs.remove(tabId));
+  const openTab = () => chrome.tabs.create({ url, active, pinned });
+  const closeTab = () => tabId && chrome.tabs.remove(tabId);
 
   return title?.includes(inputValue) ? (
     <Grid>

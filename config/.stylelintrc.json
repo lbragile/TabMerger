@@ -11,7 +11,7 @@
     "selector-type-no-unknown": [
       true,
       {
-        "ignoreTypes": ["/^\\$\\w+/"]
+        "ignoreTypes": ["/-styled-mixin/", "/^\\$\\w+/"]
       }
     ],
     "value-keyword-case": [

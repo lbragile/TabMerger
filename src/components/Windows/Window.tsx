@@ -62,8 +62,8 @@ const CloseIcon = styled(FontAwesomeIcon)`
 `;
 
 export default function Window({ focused, tabs, incognito, id: windowId }: chrome.windows.Window): JSX.Element {
-  const openWindow = async () =>
-    await chrome.windows.create({
+  const openWindow = () =>
+    chrome.windows.create({
       focused,
       incognito,
       state: "maximized",
@@ -71,7 +71,7 @@ export default function Window({ focused, tabs, incognito, id: windowId }: chrom
       url: tabs?.map((tab) => tab.url ?? "https://www.google.com")
     });
 
-  const closeWindow = async () => windowId && (await chrome.windows.remove(windowId));
+  const closeWindow = () => windowId && chrome.windows.remove(windowId);
 
   return (
     <Container>
