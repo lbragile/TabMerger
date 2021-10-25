@@ -1,15 +1,18 @@
-import React, { useRef } from "react";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import styled from "styled-components";
+import { useSelector } from "../../hooks/useSelector";
 
-const Flex = styled.div`
-  display: flex;
-  flex-direction: row;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: auto auto 1fr;
   align-items: center;
+  justify-content: start;
   gap: 8px;
 `;
 
 const TabTitle = styled.span`
-  max-width: 90%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -25,33 +28,89 @@ const TabIcon = styled.img`
   width: 14px;
 `;
 
-export default function Tab(tab: chrome.tabs.Tab): JSX.Element {
-  const tabRef = useRef<HTMLSpanElement | null>(null);
-  const { favIconUrl, title, url, active, pinned } = tab;
+const CloseIcon = styled(FontAwesomeIcon)`
+  visibility: hidden;
+  pointer-events: none;
+  cursor: none;
+  justify-self: end;
+
+  && {
+    color: #ff4040;
+  }
+
+  ${Grid}:hover & {
+    visibility: visible;
+    pointer-events: all;
+    cursor: pointer;
+  }
+`;
+
+const MarkedText = styled.mark`
+  background-color: #ffd580;
+`;
+
+const Highlighted = ({ text = "" }: { text: string }): JSX.Element => {
+  const { inputValue } = useSelector((state) => state.header);
+
+  if (!inputValue.trim()) return <span>{text}</span>;
+
+  /**
+   * The brackets around the re variable keeps it in the array when splitting and does not affect testing
+   * @example 'react'.split(/(ac)/gi) => ['re', 'ac', 't']
+   */
+  const re = new RegExp(`(${inputValue})`, "gi");
 
   return (
-    <Flex>
+    <span>
+      {text
+        .split(re)
+        .map((part, i) =>
+          re.test(part) ? <MarkedText key={part + i}>{part}</MarkedText> : <span key={part + i}>{part}</span>
+        )}
+    </span>
+  );
+};
+
+export default function Tab({
+  favIconUrl,
+  title,
+  url,
+  active,
+  pinned,
+  id: tabId
+}: chrome.tabs.Tab): JSX.Element | null {
+  const { inputValue } = useSelector((state) => state.header);
+
+  const openTab = async () => await chrome.tabs.create({ url, active, pinned });
+  const closeTab = async () => tabId && (await chrome.tabs.remove(tabId));
+
+  return title?.includes(inputValue) ? (
+    <Grid>
       <TabIcon
-        src={favIconUrl === "" ? "https://developer.chrome.com/images/meta/favicon-32x32.png" : favIconUrl}
+        src={
+          favIconUrl === "" || !favIconUrl
+            ? "https://developer.chrome.com/images/meta/favicon-32x32.png"
+            : favIconUrl?.replace("-dark", "")
+        }
         alt="Favicon of the tab"
       />
 
       <TabTitle
         title={url}
-        ref={tabRef}
         role="link"
         tabIndex={0}
-        onClick={async () => await chrome.tabs.create({ url, active, pinned })}
-        onMouseOver={() => console.log("show preview")}
-        onFocus={(e) => (tabRef.current = e.target)}
-        onKeyPress={(e) => {
-          if (e.key === "o") {
-            console.log("open tab from keyboard");
-          }
-        }}
+        onClick={openTab}
+        onKeyPress={(e) => e.key === "Enter" && openTab()}
       >
-        {title}
+        <Highlighted text={title} />
       </TabTitle>
-    </Flex>
-  );
+
+      <CloseIcon
+        icon={faTimesCircle}
+        tabIndex={0}
+        onClick={closeTab}
+        onKeyPress={(e) => e.key === "Enter" && closeTab()}
+      />
+    </Grid>
+  ) : null;
 }

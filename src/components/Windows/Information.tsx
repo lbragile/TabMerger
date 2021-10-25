@@ -70,13 +70,16 @@ export default function Information({ info, name, index, updatedAt }: IInformati
           onChange={(e) => dispatch(updateName({ index, name: e.target.value }))}
         />
       </LeftColumn>
+
       <RightColumn>
-        <OpenIcon icon={faWindowRestore} />
-        <SettingsIcon icon={faEllipsisV} />
+        <OpenIcon icon={faWindowRestore} tabIndex={0} />
+        <SettingsIcon icon={faEllipsisV} tabIndex={0} />
       </RightColumn>
+
       <LeftColumn>
         <SubTitle>{getReadableTimestamp(updatedAt)}</SubTitle>
       </LeftColumn>
+
       <RightColumn>
         <SubTitle>{info}</SubTitle>
       </RightColumn>

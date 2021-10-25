@@ -58,7 +58,7 @@ export default function SidePanel(): JSX.Element {
         <Group key={data.id} data={data} available={available} overflow={overflow} />
       ))}
 
-      <AddIcon icon={faPlus} onClick={() => dispatch(addGroup())} />
+      <AddIcon icon={faPlus} tabIndex={0} onClick={() => dispatch(addGroup())} />
     </Column>
   );
 }

@@ -35,6 +35,7 @@ const SearchInput = styled.input`
   text-overflow: ellipsis;
   outline: none;
   border: none;
+  font-size: 16px;
 `;
 
 const SettingsIcon = styled(FontAwesomeIcon)`
@@ -48,6 +49,7 @@ const SettingsIcon = styled(FontAwesomeIcon)`
 
 const SearchIcon = styled(FontAwesomeIcon).attrs((props: { $typing: boolean }) => props)`
   font-size: 16px;
+  color: ${({ $typing }) => ($typing ? "black" : "#808080")};
 
   &:hover {
     ${({ $typing: typing }) =>
@@ -87,6 +89,7 @@ export default function Header(): JSX.Element {
               dispatch(setTyping({ typing: value !== "" }));
             }}
           />
+
           <SearchIcon
             icon={typing ? faTimes : faSearch}
             $typing={typing}

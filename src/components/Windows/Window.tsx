@@ -1,9 +1,8 @@
 import React from "react";
-import { faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import Tab from "./Tab";
-import { IGroupState } from "../../store/reducers/groups";
 import { pluralize } from "../../utils/helper";
 
 const Flex = styled.div`
@@ -20,12 +19,15 @@ const Container = styled(Flex)`
 
 const WindowTitle = styled.span`
   font-size: 16px;
+  width: fit-content;
+  cursor: pointer;
 `;
 
 const Headline = styled(Flex).attrs((props: { active: boolean }) => props)`
-  flex-direction: row;
-  align-items: center;
-  min-width: 150px;
+  display: grid;
+  grid-template-columns: auto 150px auto auto;
+  column-gap: 8px;
+  justify-content: start;
   font-size: 16px;
 
   & svg,
@@ -43,22 +45,58 @@ const TabCounter = styled.span`
   margin-left: 16px;
 `;
 
-export default function Window({ focused, tabs }: IGroupState["windows"][number]): JSX.Element {
+const CloseIcon = styled(FontAwesomeIcon)`
+  visibility: hidden;
+  pointer-events: none;
+  cursor: none;
+
+  && {
+    color: #ff4040;
+  }
+
+  ${Headline}:hover & {
+    visibility: visible;
+    pointer-events: all;
+    cursor: pointer;
+  }
+`;
+
+export default function Window({ focused, tabs, incognito, id: windowId }: chrome.windows.Window): JSX.Element {
+  const openWindow = async () =>
+    await chrome.windows.create({
+      focused,
+      incognito,
+      state: "maximized",
+      type: "normal",
+      url: tabs?.map((tab) => tab.url ?? "https://www.google.com")
+    });
+
+  const closeWindow = async () => windowId && (await chrome.windows.remove(windowId));
+
   return (
     <Container>
       <Headline active={focused}>
         <FontAwesomeIcon icon={faWindowMaximize} />
+
         <WindowTitle
           tabIndex={0}
           role="button"
-          onClick={() => console.log("open window")}
-          onKeyPress={(e) => e.key === "w" && console.log("open window from key")}
+          onClick={openWindow}
+          onKeyPress={(e) => e.key === "Enter" && openWindow()}
         >
           {focused ? "Current" : ""} Window
         </WindowTitle>
+
         <TabCounter>
           {tabs?.length ?? 0} {pluralize(tabs?.length ?? 0, "Tab")}
         </TabCounter>
+
+        <CloseIcon
+          icon={faTimesCircle}
+          tabIndex={0}
+          onClick={closeWindow}
+          onKeyPress={(e) => e.key === "Enter" && closeWindow()}
+        />
       </Headline>
 
       <TabsContainer>
