@@ -1,33 +1,26 @@
-/*
-TabMerger as the name implies merges your tabs into one location to save
-memory usage and increase your productivity.
-
-Copyright (C) 2021  Lior Bragilevsky
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-If you have any questions, comments, or concerns you can contact the
-TabMerger team at <https://lbragile.github.io/TabMerger-Extension/contact/>
-*/
-
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "@App/App";
+import App from "./components/App";
+import { Provider } from "react-redux";
+import { applyMiddleware, compose, createStore } from "redux";
+import rootReducer from "./store/reducers";
+import logger from "redux-logger";
+
+const composeWithDevTools =
+  typeof window !== "undefined" && window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__" as keyof Window]
+    ? window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__" as keyof Window]
+    : function (...args: (() => void)[]) {
+        if (args.length === 0) return undefined;
+        return typeof args[0] === "object" ? compose : compose(...args);
+      };
+
+export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger)));
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

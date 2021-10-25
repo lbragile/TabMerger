@@ -1,20 +1,3 @@
 {
-  "extends": "./config/tsconfig.development.json",
-  "compilerOptions": {
-    "watch": false,
-    "strict": true,
-    "noEmit": true
-  },
-  "include": [
-    "src",
-    "public"
-  ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "test",
-    "coverage",
-    "reports",
-    "misc"
-  ]
+  "extends": "./config/tsconfig.json"
 }
