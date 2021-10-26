@@ -40,6 +40,7 @@ module.exports = {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
   mode: "production",
+  stats: "minimal",
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "[name].js",

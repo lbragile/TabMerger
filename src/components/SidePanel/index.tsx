@@ -58,7 +58,15 @@ export default function SidePanel(): JSX.Element {
         <Group key={data.id} data={data} available={available} overflow={overflow} />
       ))}
 
-      <AddIcon icon={faPlus} tabIndex={0} onClick={() => dispatch(addGroup())} />
+      <AddIcon
+        icon={faPlus}
+        tabIndex={0}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          dispatch(addGroup());
+        }}
+        onKeyPress={(e) => e.key === "Enter" && dispatch(addGroup())}
+      />
     </Column>
   );
 }

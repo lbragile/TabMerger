@@ -99,7 +99,10 @@ export default function Tab({
         title={url}
         role="link"
         tabIndex={0}
-        onClick={openTab}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          openTab();
+        }}
         onKeyPress={(e) => e.key === "Enter" && openTab()}
       >
         <Highlighted text={title} />
@@ -108,7 +111,10 @@ export default function Tab({
       <CloseIcon
         icon={faTimesCircle}
         tabIndex={0}
-        onClick={closeTab}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          closeTab();
+        }}
         onKeyPress={(e) => e.key === "Enter" && closeTab()}
       />
     </Grid>

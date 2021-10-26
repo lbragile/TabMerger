@@ -29,6 +29,7 @@
     "@types/react-redux": "^7.1.19",
     "@types/react-router-dom": "^5.1.8",
     "@types/redux-logger": "^3.0.9",
+    "@types/remote-redux-devtools": "^0.5.5",
     "@types/styled-components": "^5.1.12",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
@@ -40,6 +41,8 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-styled-components-a11y": "0.0.34",
     "redux-logger": "^3.0.6",
+    "remote-redux-devtools": "^0.5.16",
+    "remotedev-server": "^0.3.1",
     "styled-components": "^5.3.0",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
@@ -54,7 +57,8 @@
   "scripts": {
     "lint:code": "npx eslint {src,public}/**/**/*.{js,jsx,ts,tsx} -c config/.eslintrc.js --ignore-path .gitignore .  --max-warnings=0",
     "lint:style": "npx stylelint {src,public}/**/**/*.{js,jsx,ts,tsx} --config config/.stylelintrc.json",
-    "start": "npm run lint:code && npm run lint:style && webpack --config config/webpack.config.js --watch --progress"
+    "start": "npm run lint:code && npm run lint:style && webpack --config config/webpack.config.js --watch --progress",
+    "remotedev": "remotedev --hostname=localhost --port=8080"
   },
   "babel": {
     "extends": "./config/.babelrc.json"

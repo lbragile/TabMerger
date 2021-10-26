@@ -81,7 +81,10 @@ export default function Window({ focused, tabs, incognito, id: windowId }: chrom
         <WindowTitle
           tabIndex={0}
           role="button"
-          onClick={openWindow}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            openWindow();
+          }}
           onKeyPress={(e) => e.key === "Enter" && openWindow()}
         >
           {focused ? "Current" : ""} Window
@@ -94,7 +97,10 @@ export default function Window({ focused, tabs, incognito, id: windowId }: chrom
         <CloseIcon
           icon={faTimesCircle}
           tabIndex={0}
-          onClick={closeWindow}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            closeWindow();
+          }}
           onKeyPress={(e) => e.key === "Enter" && closeWindow()}
         />
       </Headline>
