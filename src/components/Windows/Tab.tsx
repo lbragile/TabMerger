@@ -1,8 +1,8 @@
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { useSelector } from "../../hooks/useSelector";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Grid = styled.div`
   display: grid;
@@ -52,21 +52,24 @@ const MarkedText = styled.mark`
 const Highlighted = ({ text = "" }: { text: string }): JSX.Element => {
   const { inputValue } = useSelector((state) => state.header);
 
-  if (!inputValue.trim()) return <span>{text}</span>;
-
   /**
    * The brackets around the re variable keeps it in the array when splitting and does not affect testing
    * @example 'react'.split(/(ac)/gi) => ['re', 'ac', 't']
    */
-  const re = new RegExp(`(${inputValue})`, "gi");
+  const re = useMemo(() => {
+    const SPECIAL_CHAR_RE = /([.?*+^$[\]\\(){}|-])/g;
+    const escapedSearch = inputValue.replace(SPECIAL_CHAR_RE, "\\$1");
+    return new RegExp(`(${escapedSearch})`, "i");
+  }, [inputValue]);
 
   return (
     <span>
-      {text
-        .split(re)
-        .map((part, i) =>
-          re.test(part) ? <MarkedText key={part + i}>{part}</MarkedText> : <span key={part + i}>{part}</span>
-        )}
+      {inputValue === ""
+        ? text
+        : text
+            .split(re)
+            .filter((part) => part !== "")
+            .map((part, i) => (re.test(part) ? <MarkedText key={part + i}>{part}</MarkedText> : part))}
     </span>
   );
 };
@@ -79,7 +82,7 @@ export default function Tab({
   pinned,
   id: tabId
 }: chrome.tabs.Tab): JSX.Element | null {
-  const { inputValue } = useSelector((state) => state.header);
+  const { inputValue, filterChoice } = useSelector((state) => state.header);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
@@ -105,7 +108,7 @@ export default function Tab({
         }}
         onKeyPress={(e) => e.key === "Enter" && openTab()}
       >
-        <Highlighted text={title} />
+        {filterChoice.include === "tab" ? <Highlighted text={title} /> : title}
       </TabTitle>
 
       <CloseIcon

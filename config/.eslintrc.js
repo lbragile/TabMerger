@@ -22,6 +22,8 @@ module.exports = {
   rules: {
     "default-case": "warn",
     "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "jsx-a11y/label-has-associated-control": ["error", { required: { some: ["nesting", "id"] } }],
+    "jsx-a11y/label-has-for": ["error", { required: { some: ["nesting", "id"] } }],
   },
   settings: {
     react: {

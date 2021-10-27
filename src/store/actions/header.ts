@@ -9,3 +9,7 @@ export const setTyping: TActionFunc<{ typing: IHeaderState["typing"] }> = (paylo
 export const updateInputValue: TActionFunc<{ inputValue: IHeaderState["inputValue"] }> = (payload) => {
   return createAction<{ inputValue: IHeaderState["inputValue"] }>(HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload);
 };
+
+export const setFilterChoice: TActionFunc<{ filterChoice: IHeaderState["filterChoice"] }> = (payload) => {
+  return createAction<{ filterChoice: IHeaderState["filterChoice"] }>(HEADER_ACTIONS.SET_FILTER_CHOICE, payload);
+};

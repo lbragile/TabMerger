@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { updateWindows } from "../store/actions/groups";
 
 export default function useUpdateWindows(): void {
   const dispatch = useDispatch();
-  const [created, setCreated] = useState(false);
+
+  const fetchOpts: chrome.windows.QueryOptions = useMemo(() => ({ populate: true, windowTypes: ["normal"] }), []);
 
   const fetchWindows = useCallback(
-    async (queryOptions: chrome.windows.QueryOptions) => {
+    async (queryOptions: typeof fetchOpts = fetchOpts) => {
       const allWindows = await chrome.windows.getAll(queryOptions);
 
       // Popup script (extension icon) click takes focus away from current window, so need to manually set it
@@ -24,37 +25,33 @@ export default function useUpdateWindows(): void {
       // add this window information to the 'Awaiting Storage' group
       dispatch(updateWindows({ index: 0, windows: sortedWindows }));
     },
-    [dispatch]
+    [dispatch, fetchOpts]
   );
-
-  const reFetchWindows = useCallback(async () => {
-    setCreated((prevCreated) => !prevCreated);
-  }, []);
 
   const onUpdatedHandler = useCallback(
     async (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
       if (changeInfo.status === "complete") {
-        await reFetchWindows();
+        await fetchWindows();
       }
     },
-    [reFetchWindows]
+    [fetchWindows]
   );
 
   useEffect(() => {
-    fetchWindows({ populate: true, windowTypes: ["normal"] });
-  }, [fetchWindows, created]);
+    fetchWindows();
+  }, [fetchWindows]);
 
   useEffect(() => {
     chrome.tabs.onUpdated.addListener(onUpdatedHandler);
-    chrome.tabs.onRemoved.addListener(reFetchWindows);
-    chrome.windows.onCreated.addListener(reFetchWindows);
-    chrome.windows.onRemoved.addListener(reFetchWindows);
+    chrome.tabs.onRemoved.addListener(() => fetchWindows());
+    chrome.windows.onCreated.addListener(() => fetchWindows());
+    chrome.windows.onRemoved.addListener(() => fetchWindows());
 
     return () => {
       chrome.tabs.onUpdated.removeListener(onUpdatedHandler);
-      chrome.tabs.onRemoved.removeListener(reFetchWindows);
-      chrome.windows.onCreated.removeListener(reFetchWindows);
-      chrome.windows.onRemoved.removeListener(reFetchWindows);
+      chrome.tabs.onRemoved.removeListener(() => fetchWindows());
+      chrome.windows.onCreated.removeListener(() => fetchWindows());
+      chrome.windows.onRemoved.removeListener(() => fetchWindows());
     };
-  }, [reFetchWindows, onUpdatedHandler]);
+  }, [fetchWindows, onUpdatedHandler]);
 }

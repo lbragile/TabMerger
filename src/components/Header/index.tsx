@@ -1,10 +1,11 @@
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
+import { useDispatch } from "../../hooks/useDispatch";
+import { useSelector } from "../../hooks/useSelector";
+import { setTyping, updateInputValue } from "../../store/actions/header";
 import { faCog, faFilter, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import styled, { css } from "styled-components";
-import { useDispatch } from "../hooks/useDispatch";
-import { useSelector } from "../hooks/useSelector";
-import { setTyping, updateInputValue } from "../store/actions/header";
+import Radio from "./Radio";
 
 const Flex = styled.div`
   display: flex;
@@ -60,6 +61,10 @@ const SearchIcon = styled(FontAwesomeIcon).attrs((props: { $typing: boolean }) =
   }
 `;
 
+const FilterContainer = styled.div`
+  position: relative;
+`;
+
 const FilterIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
   cursor: pointer;
@@ -70,9 +75,46 @@ const FilterIcon = styled(FontAwesomeIcon)`
   }
 `;
 
+const FilterOptsContainer = styled.div`
+  width: 120px;
+  max-height: 200px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  background: white;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 10px;
+`;
+
+const VerticalSpacer = styled.div`
+  height: 4px;
+`;
+
+const CloseIcon = styled(FontAwesomeIcon)`
+  font-size: 14px;
+  color: #404040;
+  cursor: pointer;
+
+  &:hover {
+    color: #ff8080;
+  }
+`;
+
+const FilterHeaderRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
-  const { typing, inputValue } = useSelector((state) => state.header);
+  const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
+
+  const [showFilterOpts, setShowFilterOpts] = useState(false);
 
   return (
     <Container>
@@ -103,7 +145,38 @@ export default function Header(): JSX.Element {
           />
         </InputContainer>
 
-        {typing && <FilterIcon icon={faFilter} />}
+        <FilterContainer>
+          {typing && (
+            <FilterIcon
+              icon={faFilter}
+              tabIndex={0}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                setShowFilterOpts(!showFilterOpts);
+              }}
+            />
+          )}
+
+          {showFilterOpts && (
+            <FilterOptsContainer>
+              <FilterHeaderRow>
+                <h2>Search</h2>
+                <CloseIcon icon={faTimes} onClick={() => setShowFilterOpts(false)} />
+              </FilterHeaderRow>
+              <Radio label="Current" />
+              <Radio label="Global" />
+
+              {filterChoice.search === "global" && (
+                <>
+                  <VerticalSpacer />
+                  <h2>Include</h2>
+                  <Radio label="Tab" />
+                  <Radio label="Group" />
+                </>
+              )}
+            </FilterOptsContainer>
+          )}
+        </FilterContainer>
       </Flex>
 
       <SettingsIcon icon={faCog} />
