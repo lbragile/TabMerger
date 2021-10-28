@@ -67,12 +67,12 @@ const initState: IGroupsState = {
   ]
 };
 
-const GroupsReducer = (state = initState, action: IAction<IGroupState & { index: number }>): IGroupsState => {
+const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
     case GROUPS_ACTIONS.UPDATE_ACTIVE: {
-      const active = action.payload;
+      const active = action.payload as IGroupsState["active"];
 
       // set all to in-active, then set selection to active
       available.forEach((group) => (group.isActive = false));
@@ -86,7 +86,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupState & { index:
     }
 
     case GROUPS_ACTIONS.UPDATE_NAME: {
-      const { index, name } = action.payload;
+      const { index, name } = action.payload as { index: number; name: string };
       available[index].name = name;
 
       return {
@@ -96,7 +96,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupState & { index:
     }
 
     case GROUPS_ACTIONS.UPDATE_COLOR: {
-      const { index, color } = action.payload;
+      const { index, color } = action.payload as { index: number; color: string };
       available[index].color = color;
 
       return {
@@ -106,7 +106,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupState & { index:
     }
 
     case GROUPS_ACTIONS.UPDATE_TIMESTAMP: {
-      const { index, updatedAt } = action.payload;
+      const { index, updatedAt } = action.payload as { index: number; updatedAt: number };
       available[index].updatedAt = updatedAt;
 
       return {
@@ -116,7 +116,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupState & { index:
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
-      const { index, windows } = action.payload;
+      const { index, windows } = action.payload as { index: number; windows: chrome.windows.Window[] };
       available[index].windows = windows;
 
       return {
@@ -126,7 +126,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupState & { index:
     }
 
     case GROUPS_ACTIONS.UPDATE_PERMANENT: {
-      const { index, permanent } = action.payload;
+      const { index, permanent } = action.payload as { index: number; permanent: boolean };
       available[index].permanent = permanent;
 
       return {
@@ -136,7 +136,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupState & { index:
     }
 
     case GROUPS_ACTIONS.UPDATE_INFO: {
-      const { index, info } = action.payload;
+      const { index, info } = action.payload as { index: number; info: string };
       available[index].info = info;
 
       return {
@@ -154,7 +154,7 @@ const GroupsReducer = (state = initState, action: IAction<IGroupState & { index:
       };
 
     case GROUPS_ACTIONS.DELETE_GROUP: {
-      const { index } = action.payload;
+      const { index } = action.payload as { index: number };
       available.splice(index, 1);
 
       // to avoid having a large index, need to re-locate the active group (incase index was for last)

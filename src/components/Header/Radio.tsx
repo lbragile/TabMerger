@@ -43,16 +43,16 @@ export default function Radio({ label }: { label: string }): JSX.Element {
         type="radio"
         id={label}
         checked={searchChecked || includeChecked}
-        onClick={() => {
-          const payload =
+        onChange={() => {
+          const newChoice =
             LABELS.search.includes(lowercaseLabel) && !searchChecked
               ? { search: lowercaseLabel, include: lowercaseLabel === "current" ? "tab" : include }
               : LABELS.include.includes(lowercaseLabel) && !includeChecked
               ? { search, include: lowercaseLabel }
               : undefined;
 
-          if (payload) {
-            dispatch(setFilterChoice({ filterChoice: payload }));
+          if (newChoice) {
+            dispatch(setFilterChoice(newChoice));
           }
         }}
       />

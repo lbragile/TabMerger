@@ -127,8 +127,8 @@ export default function Header(): JSX.Element {
             value={inputValue as string}
             onChange={(e) => {
               const { value } = e.target;
-              dispatch(updateInputValue({ inputValue: value }));
-              dispatch(setTyping({ typing: value !== "" }));
+              dispatch(updateInputValue(value));
+              dispatch(setTyping(value !== ""));
             }}
           />
 
@@ -138,8 +138,9 @@ export default function Header(): JSX.Element {
             onClick={() => {
               // clicking the close button should clear the input
               if (typing) {
-                dispatch(updateInputValue({ inputValue: "" }));
-                dispatch(setTyping({ typing: false }));
+                dispatch(updateInputValue(""));
+                dispatch(setTyping(false));
+                setShowFilterOpts(false);
               }
             }}
           />

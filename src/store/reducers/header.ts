@@ -24,20 +24,27 @@ const initState: IHeaderState = {
   }
 };
 
-const headerReducer = (state = initState, action: IAction<IHeaderState>): IHeaderState => {
+const headerReducer = (state = initState, action: IAction): IHeaderState => {
   const { type, payload } = action;
 
   switch (type) {
     case HEADER_ACTIONS.SET_TYPING:
-      return { ...state, typing: payload.typing };
+      return {
+        ...state,
+        typing: payload as IHeaderState["typing"]
+      };
 
-    case HEADER_ACTIONS.UPDATE_INPUT_VALUE: {
-      return { ...state, inputValue: payload.inputValue };
-    }
+    case HEADER_ACTIONS.UPDATE_INPUT_VALUE:
+      return {
+        ...state,
+        inputValue: payload as IHeaderState["inputValue"]
+      };
 
-    case HEADER_ACTIONS.SET_FILTER_CHOICE: {
-      return { ...state, filterChoice: payload.filterChoice };
-    }
+    case HEADER_ACTIONS.SET_FILTER_CHOICE:
+      return {
+        ...state,
+        filterChoice: payload as IHeaderState["filterChoice"]
+      };
 
     default:
       return state;

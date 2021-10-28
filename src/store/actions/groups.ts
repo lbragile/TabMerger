@@ -1,47 +1,40 @@
-import { TActionFunc } from "../../typings/reducers";
-import { GROUPS_ACTIONS, IGroupsState, IGroupState } from "../reducers/groups";
-import { createAction } from "../utils/actionCreator";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-export const updateActive: TActionFunc<IGroupsState["active"]> = (payload) => {
-  return createAction<IGroupsState["active"]>(GROUPS_ACTIONS.UPDATE_ACTIVE, payload);
-};
+import { GROUPS_ACTIONS } from "../reducers/groups";
 
-export const updateIndex: TActionFunc<IGroupsState["active"]["index"]> = (payload) => {
-  return createAction<IGroupsState["active"]["index"]>(GROUPS_ACTIONS.UPDATE_INDEX, payload);
-};
+export const updateActive = (payload: { id: string; index: number } | undefined) => ({
+  type: GROUPS_ACTIONS.UPDATE_ACTIVE,
+  payload
+});
 
-export const updateIsActive: TActionFunc<IGroupState["isActive"]> = (payload) => {
-  return createAction<IGroupState["isActive"]>(GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload);
-};
+export const updateIndex = (payload: number | undefined) => ({ type: GROUPS_ACTIONS.UPDATE_INDEX, payload });
 
-export const updateName: TActionFunc<{ index: number; name: IGroupState["name"] }> = (payload) => {
-  return createAction<{ index: number; name: IGroupState["name"] }>(GROUPS_ACTIONS.UPDATE_NAME, payload);
-};
+export const updateIsActive = (payload: boolean | undefined) => ({ type: GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload });
 
-export const updateColor: TActionFunc<IGroupState["color"]> = (payload) => {
-  return createAction<IGroupState["color"]>(GROUPS_ACTIONS.UPDATE_COLOR, payload);
-};
+export const updateName = (payload: { index: number; name: string } | undefined) => ({
+  type: GROUPS_ACTIONS.UPDATE_NAME,
+  payload
+});
 
-export const updateTimestamp: TActionFunc<IGroupState["updatedAt"]> = (payload) => {
-  return createAction<IGroupState["updatedAt"]>(GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload);
-};
+export const updateColor = (payload: string | undefined) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
-export const updateWindows: TActionFunc<{ index: number; windows: IGroupState["windows"] }> = (payload) => {
-  return createAction<{ index: number; windows: IGroupState["windows"] }>(GROUPS_ACTIONS.UPDATE_WINDOWS, payload);
-};
+export const updateTimestamp = (payload: number | undefined) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
 
-export const updateInfo: TActionFunc<{ index: number; info: IGroupState["info"] }> = (payload) => {
-  return createAction<{ index: number; info: IGroupState["info"] }>(GROUPS_ACTIONS.UPDATE_INFO, payload);
-};
+export const updateWindows = (payload: { index: number; windows: chrome.windows.Window[] } | undefined) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS,
+  payload
+});
 
-export const updatePermanent: TActionFunc<IGroupState["permanent"]> = (payload) => {
-  return createAction<IGroupState["permanent"]>(GROUPS_ACTIONS.UPDATE_PERMANENT, payload);
-};
+export const updateInfo = (payload: { index: number; info: string | undefined } | undefined) => ({
+  type: GROUPS_ACTIONS.UPDATE_INFO,
+  payload
+});
 
-export const addGroup: TActionFunc<IGroupState> = () => {
-  return createAction<IGroupState>(GROUPS_ACTIONS.ADD_GROUP);
-};
+export const updatePermanent = (payload: boolean | undefined) => ({ type: GROUPS_ACTIONS.UPDATE_PERMANENT, payload });
 
-export const deleteGroup: TActionFunc<IGroupsState["active"]> = (payload) => {
-  return createAction<IGroupsState["active"]>(GROUPS_ACTIONS.DELETE_GROUP, payload);
-};
+export const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
+
+export const deleteGroup = (payload: { id: string; index: number } | undefined) => ({
+  type: GROUPS_ACTIONS.DELETE_GROUP,
+  payload
+});
