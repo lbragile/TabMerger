@@ -6,6 +6,7 @@ import { useDispatch } from "../../hooks/useDispatch";
 import { deleteGroup, updateActive } from "../../store/actions/groups";
 import { IGroupsState } from "../../store/reducers/groups";
 import { relativeTimeStr } from "../../utils/helper";
+import { useSelector } from "../../hooks/useSelector";
 
 const Container = styled.div`
   position: relative;
@@ -105,10 +106,12 @@ const Popup = styled.div`
 interface IGroup {
   data: IGroupsState["available"][number];
   available: IGroupsState["available"];
+  overflow: boolean;
 }
 
-export default function Group({ data, available, overflow }: IGroup & { overflow: boolean }): JSX.Element {
+export default function Group({ data, available, overflow }: IGroup): JSX.Element | null {
   const dispatch = useDispatch();
+  const { filterChoice, inputValue } = useSelector((state) => state.header);
 
   const { isActive, name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
@@ -116,7 +119,8 @@ export default function Group({ data, available, overflow }: IGroup & { overflow
   const headlineRef = useRef<HTMLDivElement>(null);
   const [showOverflow, setShowOverflow] = useState(false);
 
-  return (
+  return (filterChoice === "group" && name.toLowerCase().includes(inputValue.toLowerCase())) ||
+    filterChoice === "tab" ? (
     <Container>
       <Button
         color={color}
@@ -167,5 +171,5 @@ export default function Group({ data, available, overflow }: IGroup & { overflow
         </PopUpContainer>
       )}
     </Container>
-  );
+  ) : null;
 }

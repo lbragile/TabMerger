@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { faTimesCircle, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import Tab from "./Tab";
 import { pluralize } from "../../utils/helper";
+import { useSelector } from "../../hooks/useSelector";
 
 const Flex = styled.div`
   display: flex;
@@ -13,12 +14,12 @@ const Flex = styled.div`
 
 const Container = styled(Flex)`
   justify-content: center;
-  margin: 16px 0 0 24px;
+  margin: 12px 0 0 12px;
   font-size: 14px;
 `;
 
 const WindowTitle = styled.span`
-  font-size: 16px;
+  font-size: 15px;
   width: fit-content;
   cursor: pointer;
 `;
@@ -28,7 +29,7 @@ const Headline = styled(Flex).attrs((props: { active: boolean }) => props)`
   grid-template-columns: auto 150px auto auto;
   column-gap: 8px;
   justify-content: start;
-  font-size: 16px;
+  align-items: center;
 
   & svg,
   & ${WindowTitle} {
@@ -37,12 +38,11 @@ const Headline = styled(Flex).attrs((props: { active: boolean }) => props)`
 `;
 
 const TabsContainer = styled(Flex)`
-  margin: 8px 0 0 24px;
+  margin: 8px 0 0 8px;
 `;
 
 const TabCounter = styled.span`
   opacity: 0.5;
-  margin-left: 16px;
 `;
 
 const CloseIcon = styled(FontAwesomeIcon)`
@@ -61,7 +61,16 @@ const CloseIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-export default function Window({ focused, tabs, incognito, state, id: windowId }: chrome.windows.Window): JSX.Element {
+export default function Window({
+  focused,
+  tabs,
+  incognito,
+  state,
+  id: windowId,
+  index
+}: chrome.windows.Window & { index: number }): JSX.Element {
+  const { tabCount, filterChoice } = useSelector((state) => state.header);
+
   const openWindow = () =>
     chrome.windows.create({
       focused: true,
@@ -72,6 +81,15 @@ export default function Window({ focused, tabs, incognito, state, id: windowId }
     });
 
   const closeWindow = () => windowId && chrome.windows.remove(windowId);
+
+  const tabCounterStr = useMemo(() => {
+    const isSearching = tabCount.length > 0;
+    const totalTabs = tabs?.length ?? 0;
+    const numVisibleTabs = isSearching ? tabCount[index] ?? 0 : totalTabs;
+    const count = filterChoice === "tab" ? numVisibleTabs + (isSearching ? ` of ${totalTabs} ` : "") : totalTabs;
+
+    return `${count} ${pluralize(totalTabs, "Tab")}`;
+  }, [tabCount, tabs?.length, filterChoice, index]);
 
   return (
     <Container>
@@ -90,9 +108,7 @@ export default function Window({ focused, tabs, incognito, state, id: windowId }
           {focused ? "Current" : ""} Window
         </WindowTitle>
 
-        <TabCounter>
-          {tabs?.length ?? 0} {pluralize(tabs?.length ?? 0, "Tab")}
-        </TabCounter>
+        <TabCounter>{tabCounterStr}</TabCounter>
 
         <CloseIcon
           icon={faTimesCircle}

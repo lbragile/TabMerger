@@ -2,11 +2,10 @@
 
 import { HEADER_ACTIONS } from "../reducers/header";
 
-export const setTyping = (payload: boolean | undefined) => ({ type: HEADER_ACTIONS.SET_TYPING, payload });
+export const setTyping = (payload: boolean) => ({ type: HEADER_ACTIONS.SET_TYPING, payload });
 
-export const updateInputValue = (payload: string | undefined) => ({ type: HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload });
+export const updateInputValue = (payload: string) => ({ type: HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload });
 
-export const setFilterChoice = (payload: { search: string; include: string } | undefined) => ({
-  type: HEADER_ACTIONS.SET_FILTER_CHOICE,
-  payload
-});
+export const setFilterChoice = (payload: string) => ({ type: HEADER_ACTIONS.SET_FILTER_CHOICE, payload });
+
+export const setTabCount = (payload: number[]) => ({ type: HEADER_ACTIONS.SET_TAB_COUNT, payload });

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import styled, { css } from "styled-components";
-import { useDispatch } from "../../hooks/useDispatch";
-import { useSelector } from "../../hooks/useSelector";
-import { setTyping, updateInputValue } from "../../store/actions/header";
-import { faCog, faFilter, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "../hooks/useDispatch";
+import { useSelector } from "../hooks/useSelector";
+import { setFilterChoice, setTabCount, setTyping, updateInputValue } from "../store/actions/header";
+import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Radio from "./Radio";
 
 const Flex = styled.div`
   display: flex;
@@ -61,60 +60,52 @@ const SearchIcon = styled(FontAwesomeIcon).attrs((props: { $typing: boolean }) =
   }
 `;
 
-const FilterContainer = styled.div`
-  position: relative;
-`;
-
-const FilterIcon = styled(FontAwesomeIcon)`
-  font-size: 16px;
-  cursor: pointer;
-  margin-left: 8px;
-
-  &:hover {
-    color: #404040;
-  }
-`;
-
-const FilterOptsContainer = styled.div`
-  width: 120px;
-  max-height: 200px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-  background: white;
-  border: 1px solid #808080;
-  border-radius: 4px;
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 10px;
-`;
-
-const VerticalSpacer = styled.div`
-  height: 4px;
-`;
-
-const CloseIcon = styled(FontAwesomeIcon)`
-  font-size: 14px;
-  color: #404040;
-  cursor: pointer;
-
-  &:hover {
-    color: #ff8080;
-  }
-`;
-
-const FilterHeaderRow = styled.div`
+const FilterButtonToggle = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  border: 1px solid #cce6ff;
+  border-radius: 10em;
+  margin: 0 8px;
+`;
+
+const FilterChoice = styled.button.attrs((props: { active: boolean }) => props)`
+  background-color: ${({ active }) => (active ? "#cce6ff" : "inherit")};
+  min-width: 50px;
+  padding: 4px 8px;
+  border-radius: 10em;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 600;
 `;
 
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
   const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
+  const { available, active } = useSelector((state) => state.groups);
 
-  const [showFilterOpts, setShowFilterOpts] = useState(false);
+  /**
+   * For each window in the currently active group count the number of matching tabs (with current filter value)
+   * @returns count array where each index corresponds to the number of matching tabs in that window
+   * @example [0, 3, 5] → current window has 0, window has 3, window has 5 matching tabs
+   */
+  const numFilteredTabs = useMemo(() => {
+    const tabCount: number[] = [];
+
+    if (typing) {
+      available[active.index].windows.forEach((window) => {
+        const numMatchingTabs =
+          window.tabs?.filter((tab) => tab?.title?.toLowerCase()?.includes(inputValue.toLowerCase()))?.length ?? 0;
+        tabCount.push(numMatchingTabs);
+      });
+    }
+
+    return tabCount;
+  }, [typing, inputValue, available, active.index]);
+
+  useEffect(() => {
+    dispatch(setTabCount(numFilteredTabs));
+  }, [dispatch, numFilteredTabs]);
 
   return (
     <Container>
@@ -140,44 +131,24 @@ export default function Header(): JSX.Element {
               if (typing) {
                 dispatch(updateInputValue(""));
                 dispatch(setTyping(false));
-                setShowFilterOpts(false);
               }
             }}
           />
         </InputContainer>
 
-        <FilterContainer>
-          {typing && (
-            <FilterIcon
-              icon={faFilter}
-              tabIndex={0}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                setShowFilterOpts(!showFilterOpts);
-              }}
-            />
-          )}
-
-          {showFilterOpts && (
-            <FilterOptsContainer>
-              <FilterHeaderRow>
-                <h2>Search</h2>
-                <CloseIcon icon={faTimes} onClick={() => setShowFilterOpts(false)} />
-              </FilterHeaderRow>
-              <Radio label="Current" />
-              <Radio label="Global" />
-
-              {filterChoice.search === "global" && (
-                <>
-                  <VerticalSpacer />
-                  <h2>Include</h2>
-                  <Radio label="Tab" />
-                  <Radio label="Group" />
-                </>
-              )}
-            </FilterOptsContainer>
-          )}
-        </FilterContainer>
+        {typing && (
+          <FilterButtonToggle>
+            {["tab", "group"].map((text) => (
+              <FilterChoice
+                key={text}
+                onMouseDown={() => dispatch(setFilterChoice(text))}
+                active={filterChoice === text}
+              >
+                {text[0].toUpperCase() + text.slice(1)}
+              </FilterChoice>
+            ))}
+          </FilterButtonToggle>
+        )}
       </Flex>
 
       <SettingsIcon icon={faCog} />

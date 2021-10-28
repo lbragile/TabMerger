@@ -24,7 +24,7 @@ export default function Windows(): JSX.Element {
 
       <Flex>
         {windows.map((window, i) => (
-          <Window key={i} {...window} />
+          <Window key={i} {...window} index={i} />
         ))}
       </Flex>
     </div>

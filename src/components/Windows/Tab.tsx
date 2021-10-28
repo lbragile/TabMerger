@@ -49,7 +49,7 @@ const MarkedText = styled.mark`
   background-color: #ffd580;
 `;
 
-const Highlighted = ({ text = "" }: { text: string }): JSX.Element => {
+const Highlighted = ({ text = "" }: { text?: string }): JSX.Element => {
   const { inputValue } = useSelector((state) => state.header);
 
   /**
@@ -87,7 +87,8 @@ export default function Tab({
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
 
-  return title?.includes(inputValue) ? (
+  return (filterChoice === "tab" && title?.toLowerCase().includes(inputValue.toLowerCase())) ||
+    filterChoice === "group" ? (
     <Grid>
       <TabIcon
         src={
@@ -108,7 +109,7 @@ export default function Tab({
         }}
         onKeyPress={(e) => e.key === "Enter" && openTab()}
       >
-        {filterChoice.include === "tab" ? <Highlighted text={title} /> : title}
+        {filterChoice === "tab" ? <Highlighted text={title} /> : title}
       </TabTitle>
 
       <CloseIcon
