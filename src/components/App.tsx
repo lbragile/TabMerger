@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "../hooks/useSelector";
 import useUpdateWindows from "../hooks/useUpdateWindows";
 import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
@@ -25,6 +26,8 @@ const MainArea = styled.div`
 `;
 
 export default function App(): JSX.Element {
+  const { groupCount, filterChoice } = useSelector((state) => state.header);
+
   useUpdateWindows();
 
   return (
@@ -32,11 +35,13 @@ export default function App(): JSX.Element {
       <GlobalStyle />
       <Header />
 
-      <MainArea>
-        <SidePanel />
+      {(filterChoice === "tab" || (filterChoice === "group" && groupCount > 0)) && (
+        <MainArea>
+          <SidePanel />
 
-        <Windows />
-      </MainArea>
+          <Windows />
+        </MainArea>
+      )}
     </Container>
   );
 }

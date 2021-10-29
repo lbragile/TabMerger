@@ -2,9 +2,10 @@ import React, { useEffect, useMemo } from "react";
 import styled, { css } from "styled-components";
 import { useDispatch } from "../hooks/useDispatch";
 import { useSelector } from "../hooks/useSelector";
-import { setFilterChoice, setTabCount, setTyping, updateInputValue } from "../store/actions/header";
+import { setFilterChoice, setGroupCount, setTabCount, setTyping, updateInputValue } from "../store/actions/header";
 import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SearchResult from "./SearchResult";
 
 const Flex = styled.div`
   display: flex;
@@ -47,7 +48,7 @@ const SettingsIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const SearchIcon = styled(FontAwesomeIcon).attrs((props: { $typing: boolean }) => props)`
+const SearchIcon = styled(FontAwesomeIcon)<{ $typing: boolean }>`
   font-size: 16px;
   color: ${({ $typing }) => ($typing ? "black" : "#808080")};
 
@@ -68,7 +69,7 @@ const FilterButtonToggle = styled.div`
   margin: 0 8px;
 `;
 
-const FilterChoice = styled.button.attrs((props: { active: boolean }) => props)`
+const FilterChoice = styled.button<{ active: boolean }>`
   background-color: ${({ active }) => (active ? "#cce6ff" : "inherit")};
   min-width: 50px;
   padding: 4px 8px;
@@ -82,6 +83,7 @@ const FilterChoice = styled.button.attrs((props: { active: boolean }) => props)`
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
   const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
+
   const { available, active } = useSelector((state) => state.groups);
 
   /**
@@ -92,7 +94,7 @@ export default function Header(): JSX.Element {
   const numFilteredTabs = useMemo(() => {
     const tabCount: number[] = [];
 
-    if (typing) {
+    if (typing && filterChoice === "tab") {
       available[active.index].windows.forEach((window) => {
         const numMatchingTabs =
           window.tabs?.filter((tab) => tab?.title?.toLowerCase()?.includes(inputValue.toLowerCase()))?.length ?? 0;
@@ -101,57 +103,69 @@ export default function Header(): JSX.Element {
     }
 
     return tabCount;
-  }, [typing, inputValue, available, active.index]);
+  }, [typing, inputValue, available, active.index, filterChoice]);
+
+  const numFilteredGroups = useMemo(() => {
+    return available.filter((group) => group.name.toLowerCase().includes(inputValue.toLowerCase())).length;
+  }, [available, inputValue]);
 
   useEffect(() => {
     dispatch(setTabCount(numFilteredTabs));
   }, [dispatch, numFilteredTabs]);
 
+  useEffect(() => {
+    dispatch(setGroupCount(numFilteredGroups));
+  }, [dispatch, numFilteredGroups]);
+
   return (
-    <Container>
-      <Flex>
-        <InputContainer>
-          <SearchInput
-            type="text"
-            placeholder="Search..."
-            spellCheck={false}
-            value={inputValue as string}
-            onChange={(e) => {
-              const { value } = e.target;
-              dispatch(updateInputValue(value));
-              dispatch(setTyping(value !== ""));
-            }}
-          />
+    <>
+      <Container>
+        <Flex>
+          <InputContainer>
+            <SearchInput
+              type="text"
+              placeholder="Search..."
+              spellCheck={false}
+              value={inputValue as string}
+              onChange={(e) => {
+                const { value } = e.target;
+                dispatch(updateInputValue(value));
+                dispatch(setTyping(value !== ""));
+              }}
+            />
 
-          <SearchIcon
-            icon={typing ? faTimes : faSearch}
-            $typing={typing}
-            onClick={() => {
-              // clicking the close button should clear the input
-              if (typing) {
-                dispatch(updateInputValue(""));
-                dispatch(setTyping(false));
-              }
-            }}
-          />
-        </InputContainer>
+            <SearchIcon
+              icon={typing ? faTimes : faSearch}
+              $typing={typing}
+              onClick={() => {
+                // clicking the close button should clear the input
+                if (typing) {
+                  dispatch(updateInputValue(""));
+                  dispatch(setTyping(false));
+                }
+              }}
+            />
+          </InputContainer>
 
-        {typing && (
-          <FilterButtonToggle>
-            {["tab", "group"].map((text) => (
-              <FilterChoice
-                key={text}
-                onMouseDown={() => dispatch(setFilterChoice(text))}
-                active={filterChoice === text}
-              >
-                {text[0].toUpperCase() + text.slice(1)}
-              </FilterChoice>
-            ))}
-          </FilterButtonToggle>
-        )}
-      </Flex>
+          {typing && (
+            <FilterButtonToggle>
+              {["tab", "group"].map((text) => (
+                <FilterChoice
+                  key={text}
+                  onMouseDown={() => dispatch(setFilterChoice(text))}
+                  active={filterChoice === text}
+                >
+                  {text[0].toUpperCase() + text.slice(1)}
+                </FilterChoice>
+              ))}
+            </FilterButtonToggle>
+          )}
+        </Flex>
 
-      <SettingsIcon icon={faCog} />
-    </Container>
+        <SettingsIcon icon={faCog} />
+      </Container>
+
+      {typing && filterChoice === "group" && <SearchResult type="group" />}
+    </>
   );
 }

@@ -29,6 +29,7 @@ const AddIcon = styled(FontAwesomeIcon)`
 
 export default function SidePanel(): JSX.Element {
   const dispatch = useDispatch();
+
   const { available } = useSelector((state) => state.groups);
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);

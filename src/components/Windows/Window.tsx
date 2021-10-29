@@ -24,7 +24,7 @@ const WindowTitle = styled.span`
   cursor: pointer;
 `;
 
-const Headline = styled(Flex).attrs((props: { active: boolean }) => props)`
+const Headline = styled(Flex)<{ active: boolean }>`
   display: grid;
   grid-template-columns: auto 150px auto auto;
   column-gap: 8px;

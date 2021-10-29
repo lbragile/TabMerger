@@ -43,6 +43,11 @@ const Title = styled.input`
   font-size: 16px;
   border: none;
   outline: none;
+  border-bottom: 1px solid transparent;
+
+  &:hover {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
 
   &:focus {
     border-bottom: 1px solid black;

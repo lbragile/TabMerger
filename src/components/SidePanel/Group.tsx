@@ -7,6 +7,7 @@ import { deleteGroup, updateActive } from "../../store/actions/groups";
 import { IGroupsState } from "../../store/reducers/groups";
 import { relativeTimeStr } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
+import Highlighted from "../Highlighted";
 
 const Container = styled.div`
   position: relative;
@@ -25,7 +26,7 @@ const CloseIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const Button = styled.button.attrs((props: { active: boolean; color: string; $overflow: boolean }) => props)`
+const Button = styled.button<{ active: boolean; color: string; $overflow: boolean }>`
   ${({ $overflow: overflow }) => css`
     width: ${overflow ? "195px" : "209px"};
     margin-right: ${overflow ? "4px" : "0"};
@@ -65,7 +66,7 @@ const Information = styled.div`
   font-size: 12px;
 `;
 
-const ColorIndicator = styled.div.attrs((props: { color: string }) => props)`
+const ColorIndicator = styled.div<{ color: string }>`
   width: 8px;
   height: 100%;
   background-color: ${({ color }) => color};
@@ -139,7 +140,7 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
           onMouseLeave={() => setShowOverflow(false)}
           onFocus={() => console.log("focused")}
         >
-          {name}
+          {filterChoice === "group" ? <Highlighted text={name} /> : name}
         </Headline>
 
         <Information>
