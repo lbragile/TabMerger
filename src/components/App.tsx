@@ -26,7 +26,8 @@ const MainArea = styled.div`
 `;
 
 export default function App(): JSX.Element {
-  const { groupCount, filterChoice } = useSelector((state) => state.header);
+  const { filterChoice } = useSelector((state) => state.header);
+  const { filteredGroups } = useSelector((state) => state.filter);
 
   useUpdateWindows();
 
@@ -35,7 +36,7 @@ export default function App(): JSX.Element {
       <GlobalStyle />
       <Header />
 
-      {(filterChoice === "tab" || (filterChoice === "group" && groupCount > 0)) && (
+      {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
         <MainArea>
           <SidePanel />
 

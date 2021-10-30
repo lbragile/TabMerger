@@ -36,21 +36,27 @@ const SearchIcon = styled(FontAwesomeIcon)`
 
 export default function SearchResult({ type }: { type: "tab" | "group" }): JSX.Element {
   const dispatch = useDispatch();
-  const { tabCount, groupCount, inputValue } = useSelector((state) => state.header);
+  const { inputValue } = useSelector((state) => state.header);
+  const { filteredTabs, filteredGroups } = useSelector((state) => state.filter);
 
-  const tabSum = useMemo(() => tabCount.reduce((current, total) => current + total, 0), [tabCount]);
+  const tabsCount = useMemo(
+    () => filteredTabs.reduce((total, windowTabs) => windowTabs.length + total, 0),
+    [filteredTabs]
+  );
+
+  const groupsCount = filteredGroups.length;
 
   return (
-    <StyledResult $isPositive={(type === "tab" ? tabSum : groupCount) > 0} $isGroup={type === "group"}>
+    <StyledResult $isPositive={(type === "tab" ? tabsCount : groupsCount) > 0} $isGroup={type === "group"}>
       <div>
         <SearchIcon icon={faSearch} />
 
         {type === "tab" ? (
           <span>
             <b>{inputValue}</b>{" "}
-            {tabSum > 0 ? (
+            {tabsCount > 0 ? (
               <span>
-                matches <b>{tabSum}</b> {pluralize(tabSum, "tab")}
+                matches <b>{tabsCount}</b> {pluralize(tabsCount, "tab")}
               </span>
             ) : (
               <span>does not match any tab</span>
@@ -60,9 +66,9 @@ export default function SearchResult({ type }: { type: "tab" | "group" }): JSX.E
         ) : (
           <span>
             <b>{inputValue}</b>{" "}
-            {groupCount > 0 ? (
+            {groupsCount > 0 ? (
               <span>
-                matches <b>{groupCount}</b> {pluralize(groupCount, "group")}
+                matches <b>{groupsCount}</b> {pluralize(groupsCount, "group")}
               </span>
             ) : (
               <span>does not match any group</span>

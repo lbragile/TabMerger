@@ -31,6 +31,8 @@ export default function SidePanel(): JSX.Element {
   const dispatch = useDispatch();
 
   const { available } = useSelector((state) => state.groups);
+  const { filteredGroups } = useSelector((state) => state.filter);
+  const { typing, filterChoice } = useSelector((state) => state.header);
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
   const [overflow, setOverflow] = useState(false);
@@ -55,7 +57,7 @@ export default function SidePanel(): JSX.Element {
 
   return (
     <Column ref={sidePanelRef}>
-      {available.map((data) => (
+      {(typing && filterChoice === "group" ? filteredGroups : available).map((data) => (
         <Group key={data.id} data={data} available={available} overflow={overflow} />
       ))}
 

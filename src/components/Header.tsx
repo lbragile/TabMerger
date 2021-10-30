@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import styled, { css } from "styled-components";
 import { useDispatch } from "../hooks/useDispatch";
 import { useSelector } from "../hooks/useSelector";
-import { setFilterChoice, setGroupCount, setTabCount, setTyping, updateInputValue } from "../store/actions/header";
+import { setFilterChoice, setTyping, updateInputValue } from "../store/actions/header";
 import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchResult from "./SearchResult";
+import { updateFilteredTabs, updateFilteredGroups } from "../store/actions/filter";
 
 const Flex = styled.div`
   display: flex;
@@ -82,40 +83,31 @@ const FilterChoice = styled.button<{ active: boolean }>`
 
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
-  const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
 
+  const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
   const { available, active } = useSelector((state) => state.groups);
 
   /**
-   * For each window in the currently active group count the number of matching tabs (with current filter value)
-   * @returns count array where each index corresponds to the number of matching tabs in that window
-   * @example [0, 3, 5] → current window has 0, window has 3, window has 5 matching tabs
+   * For each window in the currently active group, store the matching tabs (with current filter value)
+   * @returns 2d array of tabs where each index corresponds to the matching tabs in that window
    */
-  const numFilteredTabs = useMemo(() => {
-    const tabCount: number[] = [];
-
+  useEffect(() => {
     if (typing && filterChoice === "tab") {
+      const matchingTabs: chrome.tabs.Tab[][] = [];
+
       available[active.index].windows.forEach((window) => {
-        const numMatchingTabs =
-          window.tabs?.filter((tab) => tab?.title?.toLowerCase()?.includes(inputValue.toLowerCase()))?.length ?? 0;
-        tabCount.push(numMatchingTabs);
+        const matchingTabsInWindow = window.tabs?.filter((tab) =>
+          tab?.title?.toLowerCase()?.includes(inputValue.toLowerCase())
+        );
+        matchingTabsInWindow && matchingTabs.push(matchingTabsInWindow ?? []);
       });
+
+      dispatch(updateFilteredTabs(matchingTabs));
+    } else if (typing && filterChoice === "group") {
+      const matchingGroups = available.filter((group) => group.name.toLowerCase().includes(inputValue.toLowerCase()));
+      dispatch(updateFilteredGroups(matchingGroups));
     }
-
-    return tabCount;
-  }, [typing, inputValue, available, active.index, filterChoice]);
-
-  const numFilteredGroups = useMemo(() => {
-    return available.filter((group) => group.name.toLowerCase().includes(inputValue.toLowerCase())).length;
-  }, [available, inputValue]);
-
-  useEffect(() => {
-    dispatch(setTabCount(numFilteredTabs));
-  }, [dispatch, numFilteredTabs]);
-
-  useEffect(() => {
-    dispatch(setGroupCount(numFilteredGroups));
-  }, [dispatch, numFilteredGroups]);
+  }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
 
   return (
     <>

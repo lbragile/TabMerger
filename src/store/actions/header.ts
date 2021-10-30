@@ -7,7 +7,3 @@ export const setTyping = (payload: boolean) => ({ type: HEADER_ACTIONS.SET_TYPIN
 export const updateInputValue = (payload: string) => ({ type: HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload });
 
 export const setFilterChoice = (payload: string) => ({ type: HEADER_ACTIONS.SET_FILTER_CHOICE, payload });
-
-export const setTabCount = (payload: number[]) => ({ type: HEADER_ACTIONS.SET_TAB_COUNT, payload });
-
-export const setGroupCount = (payload: number) => ({ type: HEADER_ACTIONS.SET_GROUP_COUNT, payload });

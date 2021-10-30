@@ -65,31 +65,32 @@ export default function Window({
   focused,
   tabs,
   incognito,
-  state,
   id: windowId,
   index
 }: chrome.windows.Window & { index: number }): JSX.Element {
-  const { tabCount, filterChoice } = useSelector((state) => state.header);
+  const { typing, filterChoice } = useSelector((state) => state.header);
+  const { filteredTabs } = useSelector((state) => state.filter);
+
+  const currentTabs = typing ? filteredTabs[index] : tabs;
 
   const openWindow = () =>
     chrome.windows.create({
       focused: true,
-      incognito,
-      state,
+      state: "maximized",
       type: "normal",
-      url: tabs?.map((tab) => tab.url ?? "https://www.google.com")
+      incognito,
+      url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
     });
 
   const closeWindow = () => windowId && chrome.windows.remove(windowId);
 
   const tabCounterStr = useMemo(() => {
-    const isSearching = tabCount.length > 0;
     const totalTabs = tabs?.length ?? 0;
-    const numVisibleTabs = isSearching ? tabCount[index] ?? 0 : totalTabs;
-    const count = filterChoice === "tab" ? numVisibleTabs + (isSearching ? ` of ${totalTabs} ` : "") : totalTabs;
+    const numVisibleTabs = typing ? filteredTabs[index]?.length ?? 0 : totalTabs;
+    const count = filterChoice === "tab" ? numVisibleTabs + (typing ? ` of ${totalTabs} ` : "") : totalTabs;
 
     return `${count} ${pluralize(totalTabs, "Tab")}`;
-  }, [tabCount, tabs?.length, filterChoice, index]);
+  }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
 
   return (
     <Container>
@@ -122,7 +123,7 @@ export default function Window({
       </Headline>
 
       <TabsContainer>
-        {tabs?.map((tab, i) => {
+        {currentTabs?.map((tab, i) => {
           const { title, url } = tab ?? {};
           if (title && url) {
             return <Tab key={title + url + i} {...tab} />;

@@ -15,7 +15,7 @@ const Grid = styled.div`
   justify-content: space-between;
   align-items: start;
   white-space: nowrap;
-  padding: 4px 0;
+  padding: 0;
   margin-bottom: 8px;
 `;
 

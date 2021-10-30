@@ -46,21 +46,13 @@ const CloseIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-export default function Tab({
-  favIconUrl,
-  title,
-  url,
-  active,
-  pinned,
-  id: tabId
-}: chrome.tabs.Tab): JSX.Element | null {
-  const { inputValue, filterChoice } = useSelector((state) => state.header);
+export default function Tab({ favIconUrl, title, url, active, pinned, id: tabId }: chrome.tabs.Tab): JSX.Element {
+  const { filterChoice } = useSelector((state) => state.header);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
 
-  return (filterChoice === "tab" && title?.toLowerCase().includes(inputValue.toLowerCase())) ||
-    filterChoice === "group" ? (
+  return (
     <Grid>
       <TabIcon
         src={
@@ -94,5 +86,5 @@ export default function Tab({
         onKeyPress={(e) => e.key === "Enter" && closeTab()}
       />
     </Grid>
-  ) : null;
+  );
 }

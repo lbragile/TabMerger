@@ -110,9 +110,9 @@ interface IGroup {
   overflow: boolean;
 }
 
-export default function Group({ data, available, overflow }: IGroup): JSX.Element | null {
+export default function Group({ data, available, overflow }: IGroup): JSX.Element {
   const dispatch = useDispatch();
-  const { filterChoice, inputValue } = useSelector((state) => state.header);
+  const { filterChoice } = useSelector((state) => state.header);
 
   const { isActive, name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
@@ -120,8 +120,7 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
   const headlineRef = useRef<HTMLDivElement>(null);
   const [showOverflow, setShowOverflow] = useState(false);
 
-  return (filterChoice === "group" && name.toLowerCase().includes(inputValue.toLowerCase())) ||
-    filterChoice === "tab" ? (
+  return (
     <Container>
       <Button
         color={color}
@@ -172,5 +171,5 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
         </PopUpContainer>
       )}
     </Container>
-  ) : null;
+  );
 }
