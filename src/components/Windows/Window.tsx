@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { faTimesCircle, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
@@ -18,7 +18,7 @@ const Container = styled(Flex)`
   font-size: 14px;
 `;
 
-const WindowTitle = styled.span`
+const WindowTitle = styled.div`
   font-size: 15px;
   width: fit-content;
   cursor: pointer;
@@ -42,7 +42,8 @@ const TabsContainer = styled(Flex)`
 `;
 
 const TabCounter = styled.span`
-  opacity: 0.5;
+  color: #808080;
+  cursor: default;
 `;
 
 const CloseIcon = styled(FontAwesomeIcon)`
@@ -61,6 +62,41 @@ const CloseIcon = styled(FontAwesomeIcon)`
   }
 `;
 
+const Popup = styled.div<{ $left: number }>`
+  position: absolute;
+  top: 0;
+  left: ${({ $left }) => $left + 10 + "px"};
+  background-color: white;
+  box-shadow: 2px 2px 10px 2px #efefef;
+  display: flex;
+  flex-direction: column;
+  min-width: 175px;
+  padding: 4px;
+
+  &::before {
+    position: absolute;
+    top: 2px;
+    right: 100%;
+    content: "";
+    border: 6px solid transparent;
+    border-right: 6px solid #ababab;
+  }
+`;
+
+const PopupChoice = styled.div`
+  background: inherit;
+  cursor: pointer;
+  padding: 12px 8px;
+
+  &:hover {
+    background-color: #cce6ff;
+  }
+`;
+
+const TitleContainer = styled.div`
+  position: relative;
+`;
+
 export default function Window({
   focused,
   tabs,
@@ -73,23 +109,32 @@ export default function Window({
 
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
-  const openWindow = () =>
-    chrome.windows.create({
-      focused: true,
-      state: "maximized",
-      type: "normal",
-      incognito,
-      url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
-    });
+  const titleRef = useRef<HTMLDivElement | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const openWindow = (where: "new" | "current" | "incognito") => {
+    ["new", "incognito"].includes(where)
+      ? chrome.windows.create({
+          focused: true,
+          state: "maximized",
+          type: "normal",
+          incognito: where === "incognito" ? true : incognito,
+          url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
+        })
+      : currentTabs?.forEach((tab) => {
+          const { active, pinned, url } = tab ?? {};
+          chrome.tabs.create({ active, pinned, url });
+        });
+  };
 
   const closeWindow = () => windowId && chrome.windows.remove(windowId);
 
   const tabCounterStr = useMemo(() => {
     const totalTabs = tabs?.length ?? 0;
     const numVisibleTabs = typing ? filteredTabs[index]?.length ?? 0 : totalTabs;
-    const count = filterChoice === "tab" ? numVisibleTabs + (typing ? ` of ${totalTabs} ` : "") : totalTabs;
+    const count = filterChoice === "tab" ? numVisibleTabs : totalTabs;
 
-    return `${count} ${pluralize(totalTabs, "Tab")}`;
+    return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
   }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
 
   return (
@@ -97,17 +142,42 @@ export default function Window({
       <Headline active={focused}>
         <FontAwesomeIcon icon={faWindowMaximize} />
 
-        <WindowTitle
-          tabIndex={0}
-          role="button"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            openWindow();
-          }}
-          onKeyPress={(e) => e.key === "Enter" && openWindow()}
-        >
-          {focused ? "Current" : ""} Window
-        </WindowTitle>
+        <TitleContainer>
+          <WindowTitle
+            ref={titleRef}
+            tabIndex={0}
+            role="button"
+            onMouseDown={(e) => {
+              // left click
+              if (e.button === 0) {
+                e.preventDefault();
+                openWindow("new");
+              }
+            }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              setShowPopup(true);
+            }}
+            onKeyPress={(e) => e.key === "Enter" && setShowPopup(true)}
+            onBlur={() => setShowPopup(false)}
+          >
+            {focused ? "Current" : ""} Window
+          </WindowTitle>
+
+          {showPopup && (
+            <Popup $left={titleRef.current?.clientWidth ?? 0}>
+              <PopupChoice role="button" tabIndex={0} onMouseDown={() => openWindow("current")}>
+                Open In Current
+              </PopupChoice>
+              <PopupChoice role="button" tabIndex={0} onMouseDown={() => openWindow("new")}>
+                Open In New
+              </PopupChoice>
+              <PopupChoice role="button" tabIndex={0} onMouseDown={() => openWindow("incognito")}>
+                Open Incognito
+              </PopupChoice>
+            </Popup>
+          )}
+        </TitleContainer>
 
         <TabCounter>{tabCounterStr}</TabCounter>
 

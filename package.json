@@ -36,6 +36,7 @@
     "babel-loader": "^8.2.3",
     "babel-plugin-styled-components": "^1.13.3",
     "copy-webpack-plugin": "^9.0.1",
+    "cross-env": "^7.0.3",
     "eslint": "^7.11.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
@@ -61,7 +62,7 @@
     "lint:style": "npx stylelint {src,public}/**/**/*.{js,jsx,ts,tsx} --config config/.stylelintrc.json",
     "lint": "npm run lint:code && npm run lint:style",
     "start": "webpack --config config/webpack.config.js --progress",
-    "build": "npm start -- --env production",
+    "build": "cross-env NODE_ENV=production npm start",
     "server": "remotedev --hostname=localhost --port=8080"
   },
   "babel": {
