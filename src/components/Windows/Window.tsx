@@ -64,10 +64,9 @@ const CloseIcon = styled(FontAwesomeIcon)`
 
 const Popup = styled.div<{ $left: number }>`
   position: absolute;
-  top: 0;
+  top: -8px;
   left: ${({ $left }) => $left + 10 + "px"};
-  background-color: white;
-  box-shadow: 2px 2px 10px 2px #efefef;
+  background-color: #303030;
   display: flex;
   flex-direction: column;
   min-width: 175px;
@@ -75,27 +74,39 @@ const Popup = styled.div<{ $left: number }>`
 
   &::before {
     position: absolute;
-    top: 2px;
+    top: 12px;
     right: 100%;
     content: "";
     border: 6px solid transparent;
-    border-right: 6px solid #ababab;
+    border-right: 6px solid #303030;
   }
 `;
 
-const PopupChoice = styled.div`
+const PopupChoice = styled.button`
   background: inherit;
   cursor: pointer;
   padding: 12px 8px;
+  border: none;
+  outline: none;
+  text-align: left;
+  color: white;
 
   &:hover {
-    background-color: #cce6ff;
+    background-color: #42a4ff;
   }
 `;
 
 const TitleContainer = styled.div`
   position: relative;
 `;
+
+type TOpenWindow = "new" | "current" | "incognito";
+
+const WINDOW_TITLE_POPUP_CHOICES: { type: TOpenWindow; text: string }[] = [
+  { type: "current", text: "Open In Current" },
+  { type: "new", text: "Open In New" },
+  { type: "incognito", text: "Open Incognito" }
+];
 
 export default function Window({
   focused,
@@ -112,7 +123,7 @@ export default function Window({
   const titleRef = useRef<HTMLDivElement | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const openWindow = (where: "new" | "current" | "incognito") => {
+  const openWindow = (where: TOpenWindow) => {
     ["new", "incognito"].includes(where)
       ? chrome.windows.create({
           focused: true,
@@ -142,39 +153,36 @@ export default function Window({
       <Headline active={focused}>
         <FontAwesomeIcon icon={faWindowMaximize} />
 
-        <TitleContainer>
+        <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
           <WindowTitle
             ref={titleRef}
             tabIndex={0}
             role="button"
-            onMouseDown={(e) => {
+            onClick={(e) => {
               // left click
-              if (e.button === 0) {
-                e.preventDefault();
-                openWindow("new");
-              }
+              if (e.button === 0) openWindow("new");
             }}
             onContextMenu={(e) => {
               e.preventDefault();
               setShowPopup(true);
             }}
             onKeyPress={(e) => e.key === "Enter" && setShowPopup(true)}
-            onBlur={() => setShowPopup(false)}
           >
             {focused ? "Current" : ""} Window
           </WindowTitle>
 
           {showPopup && (
             <Popup $left={titleRef.current?.clientWidth ?? 0}>
-              <PopupChoice role="button" tabIndex={0} onMouseDown={() => openWindow("current")}>
-                Open In Current
-              </PopupChoice>
-              <PopupChoice role="button" tabIndex={0} onMouseDown={() => openWindow("new")}>
-                Open In New
-              </PopupChoice>
-              <PopupChoice role="button" tabIndex={0} onMouseDown={() => openWindow("incognito")}>
-                Open Incognito
-              </PopupChoice>
+              {WINDOW_TITLE_POPUP_CHOICES.map((choice) => (
+                <PopupChoice
+                  key={choice.text}
+                  tabIndex={0}
+                  onClick={() => openWindow(choice.type)}
+                  onKeyPress={(e) => e.key === "Enter" && openWindow(choice.type)}
+                >
+                  {choice.text}
+                </PopupChoice>
+              ))}
             </Popup>
           )}
         </TitleContainer>

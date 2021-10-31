@@ -1,2 +1,1 @@
-import Windows from "./Windows";
-export default Windows;
+export { default } from "./Windows";

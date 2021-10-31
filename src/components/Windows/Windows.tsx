@@ -6,11 +6,16 @@ import Information from "./Information";
 import SearchResult from "../SearchResult";
 import Window from "./Window";
 
-const Column = styled(Scrollbar)`
+const Container = styled.div`
+  height: 100%;
+  overflow: hidden;
+`;
+
+const Column = styled(Scrollbar)<{ $searching: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 460px;
+  height: ${({ $searching }) => ($searching ? "412px" : "460px")};
   overflow: auto;
 `;
 
@@ -24,18 +29,18 @@ export default function Windows(): JSX.Element {
   const hasMoreThanOneFilteredTab = typing ? filteredTabs.some((item) => item.length > 0) : true;
 
   return (
-    <div>
+    <Container>
       <Information info={info} name={name} updatedAt={updatedAt} index={index} />
 
       {typing && filterChoice === "tab" && <SearchResult type="tab" />}
 
       {hasMoreThanOneFilteredTab && (
-        <Column>
+        <Column $searching={typing}>
           {windows.map((window, i) => (
             <Window key={i} {...window} index={i} />
           ))}
         </Column>
       )}
-    </div>
+    </Container>
   );
 }
