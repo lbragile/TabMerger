@@ -113,14 +113,18 @@ export default function Window({
   tabs,
   incognito,
   id: windowId,
-  index
-}: chrome.windows.Window & { index: number }): JSX.Element {
+  index,
+  groupIdx
+}: chrome.windows.Window & { index: number; groupIdx: number }): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
 
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
+  const tabsRef = useRef<HTMLDivElement | null>(null);
+  const windowRef = useRef<HTMLDivElement | null>(null);
+
   const [showPopup, setShowPopup] = useState(false);
 
   const openWindow = (where: TOpenWindow) => {
@@ -148,9 +152,59 @@ export default function Window({
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
   }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
 
+  const onDragStartHeadline = (e: React.DragEvent<HTMLDivElement>) => {
+    const dragData = { focused, tabs, incognito, windowId, index };
+    e.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({
+        data: dragData,
+        extraInfo: { windowIndex: index, groupIndex: groupIdx },
+        type: "window"
+      })
+    );
+
+    if (e.dataTransfer.setDragImage) {
+      e.dataTransfer.setDragImage(new Image(), 0, 0); // hide ghost
+    } else if (windowRef.current) {
+      // capture the initial element rather than the ghost image by removing it and quickly resetting ...
+      // ... this causes the captured ghost image to be blank
+      const windowTarget = windowRef.current;
+      windowTarget.style.display = "none";
+      setTimeout(() => (windowTarget.style.display = "initial"), 0);
+    }
+  };
+
+  const onDragHeadline = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    if (windowRef.current && tabsRef.current) {
+      tabsRef.current.style.display = "none"; // want to see only headline while dragging
+
+      const target = windowRef.current;
+      const { width } = target.getBoundingClientRect();
+      target.style.position = "absolute";
+      target.style.top = e.pageY + 5 + "px";
+      target.style.left = e.pageX - width / 2 + "px";
+    }
+  };
+
+  const onDragEndHeadline = () => {
+    if (windowRef.current && tabsRef.current) {
+      windowRef.current.style.position = "initial";
+      tabsRef.current.style.display = "";
+    }
+  };
+
   return (
     <Container>
-      <Headline active={focused}>
+      <Headline
+        ref={windowRef}
+        active={focused}
+        draggable
+        onDragStart={onDragStartHeadline}
+        onDrag={onDragHeadline}
+        onDragEnd={onDragEndHeadline}
+      >
         <FontAwesomeIcon icon={faWindowMaximize} />
 
         <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
@@ -200,11 +254,11 @@ export default function Window({
         />
       </Headline>
 
-      <TabsContainer>
+      <TabsContainer ref={tabsRef}>
         {currentTabs?.map((tab, i) => {
           const { title, url } = tab ?? {};
           if (title && url) {
-            return <Tab key={title + url + i} {...tab} />;
+            return <Tab key={title + url + i} {...tab} groupIndex={groupIdx} windowIndex={index} />;
           }
         })}
       </TabsContainer>
