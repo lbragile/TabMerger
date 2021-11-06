@@ -38,7 +38,7 @@ const Headline = styled(Flex)<{ active: boolean }>`
 `;
 
 const TabsContainer = styled(Flex)`
-  margin: 8px 0 0 8px;
+  margin-top: 8px;
 `;
 
 const TabCounter = styled.span`
@@ -152,7 +152,7 @@ export default function Window({
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
   }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
 
-  const onDragStartHeadline = (e: React.DragEvent<HTMLDivElement>) => {
+  const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     const dragData = { focused, tabs, incognito, windowId, index };
     e.dataTransfer.setData(
       "text/plain",
@@ -174,7 +174,7 @@ export default function Window({
     }
   };
 
-  const onDragHeadline = (e: React.DragEvent<HTMLDivElement>) => {
+  const onDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
 
     if (windowRef.current && tabsRef.current) {
@@ -188,7 +188,7 @@ export default function Window({
     }
   };
 
-  const onDragEndHeadline = () => {
+  const onDragEnd = () => {
     if (windowRef.current && tabsRef.current) {
       windowRef.current.style.position = "initial";
       tabsRef.current.style.display = "";
@@ -201,9 +201,9 @@ export default function Window({
         ref={windowRef}
         active={focused}
         draggable
-        onDragStart={onDragStartHeadline}
-        onDrag={onDragHeadline}
-        onDragEnd={onDragEndHeadline}
+        onDragStart={onDragStart}
+        onDrag={onDrag}
+        onDragEnd={onDragEnd}
       >
         <FontAwesomeIcon icon={faWindowMaximize} />
 

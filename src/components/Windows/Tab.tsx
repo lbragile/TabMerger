@@ -1,16 +1,34 @@
-import React, { useRef } from "react";
-import styled from "styled-components";
+import React, { useEffect, useRef, useState } from "react";
+import styled, { css } from "styled-components";
 import { useSelector } from "../../hooks/useSelector";
-import { faLongArrowAltRight, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Highlighted from "../Highlighted";
 
-const Grid = styled.div`
+interface IStyledTabContainer {
+  $dragging: boolean;
+  $move: { x: number; y: number };
+}
+
+const TabContainer = styled.div.attrs<IStyledTabContainer>((props) => ({
+  ...props,
+  style: {
+    left: props.$move.x + "px",
+    top: props.$move.y + "px"
+  }
+}))<IStyledTabContainer>`
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto auto;
   align-items: center;
   justify-content: start;
   gap: 8px;
+  max-width: 320px;
+  ${({ $dragging }) => css`
+    cursor: ${$dragging ? "grabbing" : "grab"};
+    background-color: ${$dragging ? "lightblue" : "initial"};
+    z-index: ${$dragging ? "10" : "initial"};
+    position: ${$dragging ? "absolute" : "initial"};
+  `};
 `;
 
 const TabTitle = styled.span`
@@ -30,25 +48,21 @@ const TabIcon = styled.img`
 `;
 
 const CloseIcon = styled(FontAwesomeIcon)`
-  visibility: hidden;
-  pointer-events: none;
-  cursor: none;
-  justify-self: end;
-
   && {
-    color: #ff4040;
-  }
-
-  ${Grid}:hover & {
-    visibility: visible;
-    pointer-events: all;
     cursor: pointer;
+    color: transparent;
+
+    &:hover {
+      color: #ff4040;
+    }
   }
 `;
 
-const DraggingArrowIndicator = styled.div`
-  position: fixed;
-  display: none;
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 `;
 
 export default function Tab({
@@ -67,95 +81,63 @@ export default function Tab({
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
 
   const tabRef = useRef<HTMLDivElement | null>(null);
-  const arrowRef = useRef<HTMLDivElement | null>(null);
 
-  const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    const dragData = { favIconUrl, title, url, active, pinned, tabId };
-    e.dataTransfer.setData(
-      "text/plain",
-      JSON.stringify({ data: dragData, extraInfo: { windowIndex, groupIndex }, type: "tab" })
-    );
+  const [isDragging, setIsDragging] = useState(false);
+  const [move, setMove] = useState({ x: 0, y: 0 });
 
-    if (e.dataTransfer.setDragImage) {
-      e.dataTransfer.setDragImage(new Image(), 0, 0); // hide ghost
-    } else if (tabRef.current) {
-      const target = tabRef.current;
-      target.style.display = "none";
-      setTimeout(() => (target.style.display = "initial"), 0);
-    }
-  };
-
-  const onDrag = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
+  function adjustPosition(pageX: number, pageY: number, dragging = true) {
     const target = tabRef.current;
     if (target) {
-      const { width } = target.getBoundingClientRect();
-      target.style.position = "absolute";
-      target.style.top = e.pageY + 5 + "px";
-      target.style.left = e.pageX - width / 2 + "px";
-      target.style.width = "30ch";
+      const { width, height } = target.getBoundingClientRect();
+      const offset = { x: 8 + width / 2, y: 8 + height / 2 };
+
+      if (dragging) {
+        setMove({
+          x: Math.max(offset.x, Math.min(pageX + offset.x - 16, window.innerWidth - offset.x)) - width / 2,
+          y: Math.max(offset.y + 54, Math.min(pageY, window.innerHeight - offset.y)) - height / 2
+        });
+      }
     }
+  }
+
+  /** Dragging event starts when the tab favicon is pressed */
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+    adjustPosition(e.pageX, e.pageY);
   };
 
-  const onDragEnd = () => {
-    const tabTarget = tabRef.current;
+  /** Trigger the following events on the document rather than on the tab favicon to prevent weird behavior */
+  useEffect(() => {
+    const onPointerMove = (e: PointerEvent) => {
+      e.preventDefault();
+      adjustPosition(e.pageX, e.pageY, isDragging);
+    };
 
-    if (tabTarget) {
-      tabTarget.style.position = "initial";
-      tabTarget.style.width = "initial";
-    }
-  };
+    const onPointerUp = (e: PointerEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+    };
 
-  const onDragEnter = () => {
-    const arrowTarget = arrowRef.current;
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
 
-    if (arrowTarget) {
-      arrowTarget.style.display = "inline";
-    }
-  };
-
-  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    const arrowTarget = arrowRef.current;
-    const tabTarget = tabRef.current;
-
-    if (tabTarget && arrowTarget) {
-      const { top, height, bottom } = tabTarget.getBoundingClientRect();
-      console.log(top, height, bottom, e.pageY);
-      const arrowPos = e.pageY > (bottom - top) / 2 ? bottom : top;
-      arrowTarget.style.top = arrowPos - height / 4 + "px";
-    }
-  };
-
-  const onDragLeave = () => {
-    const arrowTarget = arrowRef.current;
-
-    if (arrowTarget) {
-      arrowTarget.style.display = "none";
-    }
-  };
-
-  const onDrop = () => {
-    const arrowTarget = arrowRef.current;
-
-    if (arrowTarget) {
-      arrowTarget.style.display = "none";
-    }
-  };
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+  }, [isDragging, move]);
 
   return (
-    <>
-      <Grid
-        ref={tabRef}
-        draggable
-        onDragStart={onDragStart}
-        onDrag={onDrag}
-        onDragEnd={onDragEnd}
-        onDragEnter={onDragEnter}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
-      >
+    <Row>
+      <CloseIcon
+        icon={faTimesCircle}
+        tabIndex={0}
+        onClick={() => closeTab()}
+        onKeyPress={(e) => e.key === "Enter" && closeTab()}
+      />
+
+      <TabContainer ref={tabRef} $dragging={isDragging} $move={move}>
         <TabIcon
           src={
             favIconUrl === "" || !favIconUrl
@@ -163,6 +145,7 @@ export default function Tab({
               : favIconUrl?.replace("-dark", "")
           }
           alt="Favicon of the tab"
+          onPointerDown={onPointerDown}
         />
 
         <TabTitle
@@ -174,18 +157,7 @@ export default function Tab({
         >
           {filterChoice === "tab" ? <Highlighted text={title} /> : title}
         </TabTitle>
-
-        <CloseIcon
-          icon={faTimesCircle}
-          tabIndex={0}
-          onClick={() => closeTab()}
-          onKeyPress={(e) => e.key === "Enter" && closeTab()}
-        />
-      </Grid>
-
-      <DraggingArrowIndicator ref={arrowRef}>
-        <FontAwesomeIcon icon={faLongArrowAltRight} color="rgb(0 128 255)" />
-      </DraggingArrowIndicator>
-    </>
+      </TabContainer>
+    </Row>
   );
 }

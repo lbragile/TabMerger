@@ -122,6 +122,65 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(updateActive({ index, id }));
 
+  const onDragOver = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (index > 1) {
+      e.currentTarget.style.border = "1px dashed blue";
+      e.currentTarget.style.borderRadius = "4px";
+    } else {
+      e.dataTransfer.dropEffect = "none";
+    }
+  };
+
+  const onDragLeave = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.currentTarget.style.border = `1px solid ${color}`;
+  };
+
+  const onDrop = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.currentTarget.style.border = `1px solid ${color}`;
+
+    if (index > 1) {
+      const {
+        data,
+        extraInfo: { windowIndex, groupIndex },
+        type
+      } = JSON.parse(e.dataTransfer.getData("text"));
+
+      if (type === "window") {
+        // remove window from group where drag was initiated (source)
+        dispatch(
+          updateWindows({
+            index: groupIndex,
+            windows: available[groupIndex].windows.filter((_, i) => i !== windowIndex)
+          })
+        );
+
+        // add dragged window to destination group (as first entry)
+        dispatch(updateWindows({ index, windows: [data, ...available[index].windows] }));
+      } else {
+        // remove tab from window where the drag was initiated (source)
+        const sourceWindows = [...available[groupIndex].windows];
+        sourceWindows[windowIndex].tabs = sourceWindows[windowIndex].tabs?.filter(({ id }) => id !== data.tabId) ?? [];
+        dispatch(updateWindows({ index: groupIndex, windows: sourceWindows }));
+
+        // add new window with dragged tab(s) as data (first entry)
+        const destWindows = [...available[index].windows];
+        const genericNewWindow = {
+          alwaysOnTop: true,
+          focused: false,
+          incognito: false,
+          tabs: Array.isArray(data) ? data : [data]
+        };
+        destWindows.unshift(genericNewWindow);
+        dispatch(updateWindows({ index, windows: destWindows }));
+      }
+    }
+
+    e.dataTransfer.clearData();
+  };
+
   return (
     <Container>
       <Button
@@ -129,63 +188,9 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
         active={isActive}
         $overflow={overflow}
         onClick={handleActiveGroupUpdate}
-        onDragOver={(e) => {
-          e.preventDefault();
-          if (index > 1) {
-            e.currentTarget.style.border = "1px dashed blue";
-            e.currentTarget.style.borderRadius = "4px";
-          } else {
-            e.dataTransfer.dropEffect = "none";
-          }
-        }}
-        onDragLeave={(e) => {
-          e.preventDefault();
-          e.currentTarget.style.border = `1px solid ${color}`;
-        }}
-        onDrop={(e) => {
-          e.preventDefault();
-          e.currentTarget.style.border = `1px solid ${color}`;
-
-          if (index > 1) {
-            const {
-              data,
-              extraInfo: { windowIndex, groupIndex },
-              type
-            } = JSON.parse(e.dataTransfer.getData("text"));
-
-            if (type === "window") {
-              // remove window from group where drag was initiated (source)
-              dispatch(
-                updateWindows({
-                  index: groupIndex,
-                  windows: available[groupIndex].windows.filter((_, i) => i !== windowIndex)
-                })
-              );
-
-              // add dragged window to destination group (as first entry)
-              dispatch(updateWindows({ index, windows: [data, ...available[index].windows] }));
-            } else {
-              // remove tab from window where the drag was initiated (source)
-              const sourceWindows = [...available[groupIndex].windows];
-              sourceWindows[windowIndex].tabs =
-                sourceWindows[windowIndex].tabs?.filter(({ id }) => id !== data.tabId) ?? [];
-              dispatch(updateWindows({ index: groupIndex, windows: sourceWindows }));
-
-              // add new window with dragged tab(s) as data (first entry)
-              const destWindows = [...available[index].windows];
-              const genericNewWindow = {
-                alwaysOnTop: true,
-                focused: false,
-                incognito: false,
-                tabs: Array.isArray(data) ? data : [data]
-              };
-              destWindows.unshift(genericNewWindow);
-              dispatch(updateWindows({ index, windows: destWindows }));
-            }
-          }
-
-          e.dataTransfer.clearData();
-        }}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
       >
         <Headline
           ref={headlineRef}

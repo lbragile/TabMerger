@@ -31,32 +31,31 @@ export default function Windows(): JSX.Element {
 
   const hasMoreThanOneFilteredTab = typing ? filteredTabs.some((item) => item.length > 0) : true;
 
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    // if (index > 1) {
+    //   const { data, windowIdx, sourceGroupIdx } = JSON.parse(e.dataTransfer.getData("text"));
+
+    //   // remove window from source
+    //   const sourceWindows = [...available[sourceGroupIdx].windows];
+    //   sourceWindows.splice(windowIdx, 1);
+    //   dispatch(updateWindows({ index: sourceGroupIdx, windows: sourceWindows }));
+
+    //   // add window to destination
+    //   dispatch(updateWindows({ index, windows: [...windows, data] }));
+
+    //   e.dataTransfer.clearData();
+    // }
+  };
+
   return (
     <Container>
       <Information info={info} name={name} updatedAt={updatedAt} index={index} />
 
       {typing && filterChoice === "tab" && <SearchResult type="tab" />}
 
-      <Column
-        $searching={typing}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault();
-          // if (index > 1) {
-          //   const { data, windowIdx, sourceGroupIdx } = JSON.parse(e.dataTransfer.getData("text"));
-
-          //   // remove window from source
-          //   const sourceWindows = [...available[sourceGroupIdx].windows];
-          //   sourceWindows.splice(windowIdx, 1);
-          //   dispatch(updateWindows({ index: sourceGroupIdx, windows: sourceWindows }));
-
-          //   // add window to destination
-          //   dispatch(updateWindows({ index, windows: [...windows, data] }));
-
-          //   e.dataTransfer.clearData();
-          // }
-        }}
-      >
+      <Column $searching={typing} onDragOver={onDragOver} onDrop={onDrop}>
         {hasMoreThanOneFilteredTab &&
           windows.map((window, i) => <Window key={i} {...window} index={i} groupIdx={index} />)}
       </Column>
