@@ -152,59 +152,9 @@ export default function Window({
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
   }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
 
-  const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    const dragData = { focused, tabs, incognito, windowId, index };
-    e.dataTransfer.setData(
-      "text/plain",
-      JSON.stringify({
-        data: dragData,
-        extraInfo: { windowIndex: index, groupIndex: groupIdx },
-        type: "window"
-      })
-    );
-
-    if (e.dataTransfer.setDragImage) {
-      e.dataTransfer.setDragImage(new Image(), 0, 0); // hide ghost
-    } else if (windowRef.current) {
-      // capture the initial element rather than the ghost image by removing it and quickly resetting ...
-      // ... this causes the captured ghost image to be blank
-      const windowTarget = windowRef.current;
-      windowTarget.style.display = "none";
-      setTimeout(() => (windowTarget.style.display = "initial"), 0);
-    }
-  };
-
-  const onDrag = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
-    if (windowRef.current && tabsRef.current) {
-      tabsRef.current.style.display = "none"; // want to see only headline while dragging
-
-      const target = windowRef.current;
-      const { width } = target.getBoundingClientRect();
-      target.style.position = "absolute";
-      target.style.top = e.pageY + 5 + "px";
-      target.style.left = e.pageX - width / 2 + "px";
-    }
-  };
-
-  const onDragEnd = () => {
-    if (windowRef.current && tabsRef.current) {
-      windowRef.current.style.position = "initial";
-      tabsRef.current.style.display = "";
-    }
-  };
-
   return (
     <Container>
-      <Headline
-        ref={windowRef}
-        active={focused}
-        draggable
-        onDragStart={onDragStart}
-        onDrag={onDrag}
-        onDragEnd={onDragEnd}
-      >
+      <Headline ref={windowRef} active={focused} draggable>
         <FontAwesomeIcon icon={faWindowMaximize} />
 
         <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
@@ -258,7 +208,7 @@ export default function Window({
         {currentTabs?.map((tab, i) => {
           const { title, url } = tab ?? {};
           if (title && url) {
-            return <Tab key={title + url + i} {...tab} groupIndex={groupIdx} windowIndex={index} />;
+            return <Tab key={title + url + i} {...tab} tabIdx={i} windowIdx={index} groupIdx={groupIdx} />;
           }
         })}
       </TabsContainer>

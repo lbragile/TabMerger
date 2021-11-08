@@ -9,6 +9,7 @@ export const GROUPS_ACTIONS = {
   UPDATE_COLOR: "UPDATE_COLOR",
   UPDATE_TIMESTAMP: "UPDATE_TIMESTAMP",
   UPDATE_WINDOWS: "UPDATE_WINDOWS",
+  UPDATE_TABS: "UPDATE_TABS",
   UPDATE_PERMANENT: "UPDATE_PERMANENT",
   UPDATE_INFO: "UPDATE_INFO",
   ADD_GROUP: "ADD_GROUP",
@@ -118,6 +119,29 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
       const { index, windows } = action.payload as { index: number; windows: chrome.windows.Window[] };
       available[index].windows = windows;
+
+      return {
+        ...state,
+        available
+      };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_TABS: {
+      const { src, dest } = action.payload as { src: string; dest: string };
+
+      const [srcTabIdx, srcWindowIdx, srcGroupIdx] = src.split("-").map((x) => Number(x));
+      const [destTabIdx, destWindowIdx] = dest.split("-").map((x) => Number(x));
+
+      const windows = [...available[srcGroupIdx].windows];
+
+      // remove src tab
+      const removedTabs = windows[srcWindowIdx].tabs?.splice(srcTabIdx, 1);
+
+      if (removedTabs) {
+        // add dest tab according to dir
+        windows[destWindowIdx].tabs?.splice(destTabIdx, 0, ...removedTabs);
+        available[srcGroupIdx].windows = windows;
+      }
 
       return {
         ...state,

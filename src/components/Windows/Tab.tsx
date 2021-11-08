@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { useSelector } from "../../hooks/useSelector";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Highlighted from "../Highlighted";
+import { updateTabs } from "../../store/actions/groups";
+import { useDispatch } from "../../hooks/useDispatch";
 
 interface IStyledTabContainer {
   $dragging: boolean;
@@ -25,20 +27,20 @@ const TabContainer = styled.div.attrs<IStyledTabContainer>((props) => ({
   max-width: 320px;
   ${({ $dragging }) => css`
     cursor: ${$dragging ? "grabbing" : "grab"};
-    background-color: ${$dragging ? "lightblue" : "initial"};
+    background-color: ${$dragging ? "#d6f9ff" : "initial"};
     z-index: ${$dragging ? "10" : "initial"};
     position: ${$dragging ? "absolute" : "initial"};
   `};
 `;
 
-const TabTitle = styled.span`
+const TabTitle = styled.span<{ $isDragging: boolean }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration: ${({ $isDragging }) => ($isDragging ? "none" : "underline")};
+    cursor: ${({ $isDragging }) => ($isDragging ? "grabbing" : "pointer")};
   }
 `;
 
@@ -65,6 +67,8 @@ const Row = styled.div`
   gap: 8px;
 `;
 
+const TAB_DROPPABLE_CLASS = ".tab-droppable";
+
 export default function Tab({
   favIconUrl,
   title,
@@ -72,20 +76,25 @@ export default function Tab({
   active,
   pinned,
   id: tabId,
-  groupIndex,
-  windowIndex
-}: chrome.tabs.Tab & { groupIndex: number; windowIndex: number }): JSX.Element {
+  groupIdx,
+  windowIdx,
+  tabIdx
+}: chrome.tabs.Tab & { groupIdx: number; windowIdx: number; tabIdx: number }): JSX.Element {
+  const dispatch = useDispatch();
+
   const { filterChoice } = useSelector((state) => state.header);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
 
+  /** Current drag item */
   const tabRef = useRef<HTMLDivElement | null>(null);
+  const destInfo = useRef("");
 
   const [isDragging, setIsDragging] = useState(false);
   const [move, setMove] = useState({ x: 0, y: 0 });
 
-  function adjustPosition(pageX: number, pageY: number, dragging = true) {
+  const adjustPosition = useCallback((pageX: number, pageY: number, dragUpwards: boolean, dragging = true) => {
     const target = tabRef.current;
     if (target) {
       const { width, height } = target.getBoundingClientRect();
@@ -96,27 +105,67 @@ export default function Tab({
           x: Math.max(offset.x, Math.min(pageX + offset.x - 16, window.innerWidth - offset.x)) - width / 2,
           y: Math.max(offset.y + 54, Math.min(pageY, window.innerHeight - offset.y)) - height / 2
         });
+
+        // need to hide current dragging element, capture element below, then show it
+        target.style.display = "none";
+        const elemUnder = document.elementFromPoint(pageX, pageY);
+        target.style.display = "";
+
+        // add dragging element to the dom depending on the drag direction
+        const closestTab = elemUnder?.closest(TAB_DROPPABLE_CLASS);
+        const dragTab = target.closest(TAB_DROPPABLE_CLASS);
+        if (closestTab && dragTab) {
+          const closestDataIndex = closestTab.getAttribute("data-index");
+          const dragDataIndex = dragTab.getAttribute("data-index");
+
+          if (closestDataIndex && dragDataIndex && closestDataIndex !== dragDataIndex) {
+            // only swap places when movement is past the half way point of the closest tab ...
+            // ... taking into account drag direction
+            const { top: closestTop, height: closestHeight } = closestTab.getBoundingClientRect();
+            const closestTabMiddle = closestTop + closestHeight / 2;
+
+            if (dragUpwards && pageY < closestTabMiddle) {
+              closestTab.insertAdjacentElement("beforebegin", dragTab);
+            } else if (!dragUpwards && pageY >= closestTabMiddle) {
+              closestTab.insertAdjacentElement("afterend", dragTab);
+            }
+
+            // store information for pointer up event
+            destInfo.current = closestDataIndex;
+          }
+        }
       }
     }
-  }
+  }, []);
 
   /** Dragging event starts when the tab favicon is pressed */
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
-    adjustPosition(e.pageX, e.pageY);
+    adjustPosition(e.pageX, e.pageY, e.movementY < 0);
   };
 
   /** Trigger the following events on the document rather than on the tab favicon to prevent weird behavior */
   useEffect(() => {
     const onPointerMove = (e: PointerEvent) => {
       e.preventDefault();
-      adjustPosition(e.pageX, e.pageY, isDragging);
+      adjustPosition(e.pageX, e.pageY, e.movementY < 0, isDragging);
     };
 
     const onPointerUp = (e: PointerEvent) => {
       e.preventDefault();
-      setIsDragging(false);
+
+      if (isDragging) {
+        setIsDragging(false);
+
+        // Update the state as DOM manipulation is now complete
+        dispatch(
+          updateTabs({
+            src: `${tabIdx}-${windowIdx}-${groupIdx}`,
+            dest: destInfo.current
+          })
+        );
+      }
     };
 
     window.addEventListener("pointermove", onPointerMove);
@@ -126,10 +175,10 @@ export default function Tab({
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
     };
-  }, [isDragging, move]);
+  }, [dispatch, isDragging, move, adjustPosition, tabIdx, windowIdx, groupIdx]);
 
   return (
-    <Row>
+    <Row className={TAB_DROPPABLE_CLASS.slice(1)} data-index={`${tabIdx}-${windowIdx}-${groupIdx}`}>
       <CloseIcon
         icon={faTimesCircle}
         tabIndex={0}
@@ -150,6 +199,7 @@ export default function Tab({
 
         <TabTitle
           title={url}
+          $isDragging={isDragging}
           role="link"
           tabIndex={0}
           onClick={() => openTab()}

@@ -25,6 +25,11 @@ export const updateWindows = (payload: { index: number; windows: chrome.windows.
   payload
 });
 
+export const updateTabs = (payload: { src: string; dest: string } | undefined) => ({
+  type: GROUPS_ACTIONS.UPDATE_TABS,
+  payload
+});
+
 export const updateInfo = (payload: { index: number; info: string | undefined } | undefined) => ({
   type: GROUPS_ACTIONS.UPDATE_INFO,
   payload
