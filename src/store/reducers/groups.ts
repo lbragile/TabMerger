@@ -132,15 +132,18 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const [srcTabIdx, srcWindowIdx, srcGroupIdx] = src.split("-").map((x) => Number(x));
       const [destTabIdx, destWindowIdx] = dest.split("-").map((x) => Number(x));
 
-      const windows = [...available[srcGroupIdx].windows];
+      if ([destTabIdx, destWindowIdx].every((idx) => Number.isInteger(idx))) {
+        const windows = [...available[srcGroupIdx].windows];
 
-      // remove src tab
-      const removedTabs = windows[srcWindowIdx].tabs?.splice(srcTabIdx, 1);
+        // remove src tab
+        const removedTabs = windows[srcWindowIdx].tabs?.splice(srcTabIdx, 1);
 
-      if (removedTabs) {
-        // add dest tab according to dir
-        windows[destWindowIdx].tabs?.splice(destTabIdx, 0, ...removedTabs);
-        available[srcGroupIdx].windows = windows;
+        if (removedTabs?.length) {
+          // add dest tab according to dir
+          windows[destWindowIdx].tabs?.splice(destTabIdx, 0, ...(removedTabs ?? []));
+
+          available[srcGroupIdx].windows = windows;
+        }
       }
 
       return {

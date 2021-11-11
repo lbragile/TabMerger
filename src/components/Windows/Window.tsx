@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Tab from "./Tab";
 import { pluralize } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 
 const Flex = styled.div`
   display: flex;
@@ -113,16 +114,14 @@ export default function Window({
   tabs,
   incognito,
   id: windowId,
-  index,
-  groupIdx
-}: chrome.windows.Window & { index: number; groupIdx: number }): JSX.Element {
+  index
+}: chrome.windows.Window & { index: number }): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
 
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
-  const tabsRef = useRef<HTMLDivElement | null>(null);
   const windowRef = useRef<HTMLDivElement | null>(null);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -204,14 +203,28 @@ export default function Window({
         />
       </Headline>
 
-      <TabsContainer ref={tabsRef}>
-        {currentTabs?.map((tab, i) => {
-          const { title, url } = tab ?? {};
-          if (title && url) {
-            return <Tab key={title + url + i} {...tab} tabIdx={i} windowIdx={index} groupIdx={groupIdx} />;
-          }
-        })}
-      </TabsContainer>
+      <Droppable droppableId={"window-" + index} type="tab">
+        {(provider) => (
+          <TabsContainer ref={provider.innerRef} {...provider.droppableProps}>
+            {currentTabs?.map((tab, i) => {
+              const { title, url } = tab ?? {};
+              if (title && url) {
+                return (
+                  <Draggable key={title + url + i} draggableId={`tab-${i}-window-${index}`} index={i}>
+                    {(provided, snapshot) => (
+                      <div key={title + url + i} ref={provided.innerRef} {...provided.draggableProps}>
+                        <Tab {...tab} snapshot={snapshot} dragHandleProps={provided.dragHandleProps} />
+                      </div>
+                    )}
+                  </Draggable>
+                );
+              }
+            })}
+
+            {provider.placeholder}
+          </TabsContainer>
+        )}
+      </Droppable>
     </Container>
   );
 }
