@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSelector } from "../../hooks/useSelector";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,14 +32,21 @@ const TabIcon = styled.img`
   width: 14px;
 `;
 
-const CloseIcon = styled(FontAwesomeIcon)`
+const CloseIcon = styled(FontAwesomeIcon)<{ $visible: boolean }>`
   && {
-    cursor: pointer;
-    color: transparent;
+    ${({ $visible }) =>
+      $visible
+        ? css`
+            cursor: pointer;
+            color: transparent;
 
-    &:hover {
-      color: #ff4040;
-    }
+            &:hover {
+              color: #ff4040;
+            }
+          `
+        : css`
+            visibility: hidden;
+          `}
   }
 `;
 
@@ -64,6 +71,7 @@ export default function Tab({
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }): JSX.Element {
   const { filterChoice } = useSelector((state) => state.header);
+  const { isDragging } = useSelector((state) => state.dnd);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
@@ -75,6 +83,7 @@ export default function Tab({
         tabIndex={0}
         onClick={() => closeTab()}
         onKeyPress={(e) => e.key === "Enter" && closeTab()}
+        $visible={!isDragging}
       />
 
       <TabContainer $dragging={snapshot.isDragging}>

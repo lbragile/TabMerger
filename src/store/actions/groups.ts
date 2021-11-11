@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
+import { DraggableLocation } from "react-beautiful-dnd";
 import { GROUPS_ACTIONS } from "../reducers/groups";
 
 export const updateActive = (payload: { id: string; index: number } | undefined) => ({
@@ -25,7 +26,9 @@ export const updateWindows = (payload: { index: number; windows: chrome.windows.
   payload
 });
 
-export const updateTabs = (payload: { src: string; dest: string } | undefined) => ({
+export const updateTabs = (
+  payload: { index: number; source: DraggableLocation; destination?: DraggableLocation } | undefined
+) => ({
   type: GROUPS_ACTIONS.UPDATE_TABS,
   payload
 });

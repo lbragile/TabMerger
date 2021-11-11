@@ -38,8 +38,10 @@ const Headline = styled(Flex)<{ active: boolean }>`
   }
 `;
 
-const TabsContainer = styled(Flex)`
+const TabsContainer = styled(Flex)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
   margin-top: 8px;
+  border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
+  background-color: ${({ $dragOrigin }) => ($dragOrigin ? "aliceblue" : "white")};
 `;
 
 const TabCounter = styled.span`
@@ -122,8 +124,6 @@ export default function Window({
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
-  const windowRef = useRef<HTMLDivElement | null>(null);
-
   const [showPopup, setShowPopup] = useState(false);
 
   const openWindow = (where: TOpenWindow) => {
@@ -153,7 +153,7 @@ export default function Window({
 
   return (
     <Container>
-      <Headline ref={windowRef} active={focused} draggable>
+      <Headline active={focused} draggable>
         <FontAwesomeIcon icon={faWindowMaximize} />
 
         <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
@@ -203,17 +203,22 @@ export default function Window({
         />
       </Headline>
 
-      <Droppable droppableId={"window-" + index} type="tab">
-        {(provider) => (
-          <TabsContainer ref={provider.innerRef} {...provider.droppableProps}>
+      <Droppable droppableId={"window-" + index} /*isDropDisabled*/>
+        {(provider, dropSnapshot) => (
+          <TabsContainer
+            ref={provider.innerRef}
+            {...provider.droppableProps}
+            $draggedOver={dropSnapshot.isDraggingOver}
+            $dragOrigin={!!dropSnapshot.draggingFromThisWith}
+          >
             {currentTabs?.map((tab, i) => {
               const { title, url } = tab ?? {};
               if (title && url) {
                 return (
                   <Draggable key={title + url + i} draggableId={`tab-${i}-window-${index}`} index={i}>
-                    {(provided, snapshot) => (
+                    {(provided, dragSnapshot) => (
                       <div key={title + url + i} ref={provided.innerRef} {...provided.draggableProps}>
-                        <Tab {...tab} snapshot={snapshot} dragHandleProps={provided.dragHandleProps} />
+                        <Tab {...tab} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />
                       </div>
                     )}
                   </Draggable>

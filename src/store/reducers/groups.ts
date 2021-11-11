@@ -1,5 +1,6 @@
 import { IAction } from "../../typings/reducers";
 import { nanoid } from "nanoid";
+import { DraggableLocation } from "react-beautiful-dnd";
 
 export const GROUPS_ACTIONS = {
   UPDATE_ACTIVE: "UPDATE_ACTIVE",
@@ -127,22 +128,21 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS: {
-      const { src, dest } = action.payload as { src: string; dest: string };
+      const { index, source, destination } = action.payload as {
+        index: number;
+        source: DraggableLocation;
+        destination?: DraggableLocation;
+      };
 
-      const [srcTabIdx, srcWindowIdx, srcGroupIdx] = src.split("-").map((x) => Number(x));
-      const [destTabIdx, destWindowIdx] = dest.split("-").map((x) => Number(x));
+      const windows = available[index].windows;
+      if (destination) {
+        const [srcWindowIdx, destWindowIdx] = [source, destination].map((item) =>
+          Number(item.droppableId.split("-")[1])
+        );
 
-      if ([destTabIdx, destWindowIdx].every((idx) => Number.isInteger(idx))) {
-        const windows = [...available[srcGroupIdx].windows];
-
-        // remove src tab
-        const removedTabs = windows[srcWindowIdx].tabs?.splice(srcTabIdx, 1);
-
-        if (removedTabs?.length) {
-          // add dest tab according to dir
-          windows[destWindowIdx].tabs?.splice(destTabIdx, 0, ...(removedTabs ?? []));
-
-          available[srcGroupIdx].windows = windows;
+        const removedTabs = windows[srcWindowIdx].tabs?.splice(source.index, 1);
+        if (removedTabs) {
+          windows[destWindowIdx].tabs?.splice(destination.index, 0, ...removedTabs);
         }
       }
 
