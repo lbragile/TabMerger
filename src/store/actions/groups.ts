@@ -21,7 +21,15 @@ export const updateColor = (payload: string | undefined) => ({ type: GROUPS_ACTI
 
 export const updateTimestamp = (payload: number | undefined) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
 
-export const updateWindows = (payload: { index: number; windows: chrome.windows.Window[] } | undefined) => ({
+export const updateWindows = (
+  payload:
+    | {
+        index: number;
+        dnd?: { source: DraggableLocation; destination?: DraggableLocation };
+        windows?: chrome.windows.Window[];
+      }
+    | undefined
+) => ({
   type: GROUPS_ACTIONS.UPDATE_WINDOWS,
   payload
 });

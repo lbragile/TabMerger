@@ -11,7 +11,7 @@ export interface IDnDState {
 }
 
 const initState: IDnDState = {
-  type: "",
+  type: "tab-0-window-0",
   isDragging: false
 };
 

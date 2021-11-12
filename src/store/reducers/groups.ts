@@ -118,8 +118,25 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
-      const { index, windows } = action.payload as { index: number; windows: chrome.windows.Window[] };
-      available[index].windows = windows;
+      const { index, windows, dnd } = action.payload as {
+        index: number;
+        dnd?: { source: DraggableLocation; destination?: DraggableLocation };
+        windows?: chrome.windows.Window[];
+      };
+
+      if (windows) {
+        available[index].windows = windows;
+      } else if (dnd) {
+        const { source, destination } = dnd;
+        if (destination) {
+          const currentWindows = available[index].windows;
+
+          // swap windows based on dnd information
+          const temp = currentWindows[source.index];
+          currentWindows[source.index] = currentWindows[destination.index];
+          currentWindows[destination.index] = temp;
+        }
+      }
 
       return {
         ...state,

@@ -13,7 +13,8 @@ const TabContainer = styled.div<{ $dragging: boolean }>`
   justify-content: start;
   gap: 8px;
   width: 320px;
-  background-color: ${({ $dragging }) => ($dragging ? "lightblue" : "initial")};
+  background-color: ${({ $dragging }) => ($dragging ? "white" : "initial")};
+  border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 `;
 
 const TabTitle = styled.span`
@@ -64,9 +65,11 @@ export default function Tab({
   active,
   pinned,
   id: tabId,
+  dropDisabled,
   snapshot,
   dragHandleProps
 }: chrome.tabs.Tab & {
+  dropDisabled: boolean;
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }): JSX.Element {
@@ -86,7 +89,7 @@ export default function Tab({
         $visible={!isDragging}
       />
 
-      <TabContainer $dragging={snapshot.isDragging}>
+      <TabContainer $dragging={snapshot.isDragging && !dropDisabled}>
         <TabIcon
           src={
             favIconUrl === "" || !favIconUrl

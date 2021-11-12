@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Tab from "./Tab";
 import { pluralize } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
 
 const Flex = styled.div`
   display: flex;
@@ -13,10 +13,12 @@ const Flex = styled.div`
   gap: 8px;
 `;
 
-const Container = styled(Flex)`
+const Container = styled(Flex)<{ $dragging: boolean }>`
   justify-content: center;
   margin: 12px 0 0 12px;
   font-size: 14px;
+  background-color: white;
+  border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 `;
 
 const WindowTitle = styled.div`
@@ -116,11 +118,19 @@ export default function Window({
   tabs,
   incognito,
   id: windowId,
-  index
-}: chrome.windows.Window & { index: number }): JSX.Element {
+  index,
+  snapshot: windowSnapshot,
+  dragHandleProps
+}: chrome.windows.Window & {
+  index: number;
+  snapshot: DraggableStateSnapshot;
+  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
+}): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
+  const { type: dragType } = useSelector((state) => state.dnd);
 
+  const isDropDisabled = !dragType.includes("tab");
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
@@ -152,9 +162,11 @@ export default function Window({
   }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
 
   return (
-    <Container>
+    <Container $dragging={windowSnapshot.isDragging} onDragStart={(e) => e.preventDefault()}>
       <Headline active={focused} draggable>
-        <FontAwesomeIcon icon={faWindowMaximize} />
+        <div {...dragHandleProps}>
+          <FontAwesomeIcon icon={faWindowMaximize} />
+        </div>
 
         <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
           <WindowTitle
@@ -203,7 +215,7 @@ export default function Window({
         />
       </Headline>
 
-      <Droppable droppableId={"window-" + index} /*isDropDisabled*/>
+      <Droppable droppableId={"window-" + index} isDropDisabled={isDropDisabled}>
         {(provider, dropSnapshot) => (
           <TabsContainer
             ref={provider.innerRef}
@@ -217,8 +229,13 @@ export default function Window({
                 return (
                   <Draggable key={title + url + i} draggableId={`tab-${i}-window-${index}`} index={i}>
                     {(provided, dragSnapshot) => (
-                      <div key={title + url + i} ref={provided.innerRef} {...provided.draggableProps}>
-                        <Tab {...tab} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />
+                      <div ref={provided.innerRef} {...provided.draggableProps}>
+                        <Tab
+                          {...tab}
+                          dropDisabled={isDropDisabled}
+                          snapshot={dragSnapshot}
+                          dragHandleProps={provided.dragHandleProps}
+                        />
                       </div>
                     )}
                   </Draggable>
