@@ -25,7 +25,7 @@ export default function Windows(): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
-  const { type: dragType } = useSelector((state) => state.dnd);
+  const { dragType } = useSelector((state) => state.dnd);
   const { index } = active;
   const { windows, info, name, updatedAt } = available[index];
 
@@ -37,7 +37,7 @@ export default function Windows(): JSX.Element {
 
       {typing && filterChoice === "tab" && <SearchResult type="tab" />}
 
-      <Droppable droppableId={"group-" + index} isDropDisabled={dragType.includes("tab")}>
+      <Droppable droppableId={"group-" + index} isDropDisabled={!/window-\d+-group-\d+/.test(dragType)}>
         {(provider, dropSnapshot) => (
           <WindowContainer
             ref={provider.innerRef}

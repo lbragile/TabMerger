@@ -8,6 +8,15 @@ import { IGroupsState } from "../../store/reducers/groups";
 import { relativeTimeStr } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
 import Highlighted from "../Highlighted";
+import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+
+interface IGroupStyle {
+  active: boolean;
+  color: string;
+  $overflow: boolean;
+  $dragging: boolean;
+  $draggingOver: boolean;
+}
 
 const Container = styled.div`
   position: relative;
@@ -26,14 +35,15 @@ const CloseIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const Button = styled.button<{ active: boolean; color: string; $overflow: boolean }>`
+const StyledDiv = styled.div<IGroupStyle>`
   ${({ $overflow: overflow }) => css`
     width: ${overflow ? "195px" : "209px"};
     margin-right: ${overflow ? "4px" : "0"};
   `}
   height: 49px;
   border-radius: 4px;
-  background-color: ${({ active }) => (active ? "#BEDDF4" : "transparent")};
+  background-color: ${({ active, $dragging, $draggingOver }) =>
+    active ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "lightgreen" : "white"};
   border: 1px solid ${({ color }) => color};
   overflow: hidden;
   position: relative;
@@ -110,9 +120,19 @@ interface IGroup {
   overflow: boolean;
 }
 
-export default function Group({ data, available, overflow }: IGroup): JSX.Element {
+export default function Group({
+  data,
+  available,
+  overflow,
+  snapshot,
+  dragHandleProps
+}: IGroup & {
+  snapshot: DraggableStateSnapshot;
+  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
+}): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
+  const { combine } = useSelector((state) => state.dnd);
 
   const { isActive, name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
@@ -124,7 +144,17 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
 
   return (
     <Container>
-      <Button color={color} active={isActive} $overflow={overflow} onClick={handleActiveGroupUpdate}>
+      <StyledDiv
+        tabIndex={0}
+        role="button"
+        color={color}
+        active={isActive}
+        $overflow={overflow}
+        $dragging={snapshot.isDragging}
+        $draggingOver={index > 1 && Number(combine?.draggableId?.split("-")[1]) === index}
+        onClick={handleActiveGroupUpdate}
+        onKeyPress={() => console.log("key press")}
+      >
         <Headline
           ref={headlineRef}
           onMouseOver={() => {
@@ -135,6 +165,7 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
           }}
           onMouseLeave={() => setShowOverflow(false)}
           onFocus={() => console.log("focused")}
+          {...dragHandleProps}
         >
           {filterChoice === "group" ? <Highlighted text={name} /> : name}
         </Headline>
@@ -160,7 +191,7 @@ export default function Group({ data, available, overflow }: IGroup): JSX.Elemen
             }}
           />
         )}
-      </Button>
+      </StyledDiv>
 
       {showOverflow && (
         <PopUpContainer>

@@ -7,13 +7,14 @@ import { useSelector } from "../../hooks/useSelector";
 import { addGroup, updateInfo } from "../../store/actions/groups";
 import { useDispatch } from "../../hooks/useDispatch";
 import { Scrollbar } from "../../styles/Scrollbar";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 
-const Column = styled(Scrollbar)`
+const GroupsContainer = styled(Scrollbar)`
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 4px;
-  height: 100%;
+  max-height: 490px;
   overflow-y: auto;
 `;
 
@@ -21,10 +22,16 @@ const AddIcon = styled(FontAwesomeIcon)`
   margin-top: 8px;
   cursor: pointer;
   font-size: 20px;
+  align-self: center;
 
   &:hover {
     color: rgb(0, 0, 0, 0.5);
   }
+`;
+
+const CenteredDiv = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 export default function SidePanel(): JSX.Element {
@@ -33,6 +40,7 @@ export default function SidePanel(): JSX.Element {
   const { available } = useSelector((state) => state.groups);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { typing, filterChoice } = useSelector((state) => state.header);
+  const { dragType } = useSelector((state) => state.dnd);
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
   const [overflow, setOverflow] = useState(false);
@@ -56,10 +64,32 @@ export default function SidePanel(): JSX.Element {
   }, [dispatch, available]);
 
   return (
-    <Column ref={sidePanelRef}>
-      {(typing && filterChoice === "group" ? filteredGroups : available).map((data) => (
-        <Group key={data.id} data={data} available={available} overflow={overflow} />
-      ))}
+    <CenteredDiv>
+      <Droppable droppableId="sidePanel" isCombineEnabled={!/^group-\d+$/.test(dragType)}>
+        {(provider, dropSnapshot) => (
+          <div ref={provider.innerRef} {...provider.droppableProps}>
+            <GroupsContainer ref={sidePanelRef}>
+              {(typing && filterChoice === "group" ? filteredGroups : available).map((data, i) => (
+                <Draggable key={data.id + i} draggableId={`group-${i}`} index={i} isDragDisabled={i <= 1}>
+                  {(provided, dragSnapshot) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps}>
+                      <Group
+                        data={data}
+                        available={available}
+                        overflow={overflow}
+                        snapshot={dragSnapshot}
+                        dragHandleProps={provided.dragHandleProps}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+
+              {provider.placeholder}
+            </GroupsContainer>
+          </div>
+        )}
+      </Droppable>
 
       <AddIcon
         icon={faPlus}
@@ -70,6 +100,6 @@ export default function SidePanel(): JSX.Element {
         }}
         onKeyPress={(e) => e.key === "Enter" && dispatch(addGroup())}
       />
-    </Column>
+    </CenteredDiv>
   );
 }

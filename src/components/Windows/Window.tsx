@@ -128,7 +128,7 @@ export default function Window({
 }): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
-  const { type: dragType } = useSelector((state) => state.dnd);
+  const { dragType } = useSelector((state) => state.dnd);
 
   const isDropDisabled = !dragType.includes("tab");
   const currentTabs = typing ? filteredTabs[index] : tabs;

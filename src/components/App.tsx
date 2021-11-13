@@ -6,10 +6,10 @@ import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Windows from "./Windows";
-import { DragDropContext, DragStart, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DragStart, DragUpdate, DropResult } from "react-beautiful-dnd";
 import { useDispatch } from "../hooks/useDispatch";
-import { updateDragOriginType, updateIsDragging } from "../store/actions/dnd";
 import { updateTabs, updateWindows } from "../store/actions/groups";
+import DND_CREATORS from "../store/actions/dnd";
 
 const Container = styled.div`
   width: 600px;
@@ -40,8 +40,15 @@ export default function App(): JSX.Element {
 
   const onDragStart = useCallback(
     (initial: DragStart) => {
-      dispatch(updateDragOriginType(initial.draggableId));
-      dispatch(updateIsDragging(true));
+      dispatch(DND_CREATORS.updateDragOriginType(initial.draggableId));
+      dispatch(DND_CREATORS.updateIsDragging(true));
+    },
+    [dispatch]
+  );
+
+  const onDragUpdate = useCallback(
+    (initial: DragUpdate) => {
+      dispatch(DND_CREATORS.updateCombineInfo(initial.combine));
     },
     [dispatch]
   );
@@ -60,7 +67,7 @@ export default function App(): JSX.Element {
         // group drag
       }
 
-      dispatch(updateIsDragging(false));
+      dispatch(DND_CREATORS.resetDnDInfo());
     },
     [dispatch, active.index]
   );
@@ -70,7 +77,7 @@ export default function App(): JSX.Element {
       <GlobalStyle />
       <Header />
 
-      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
         {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
           <MainArea>
             <SidePanel />
