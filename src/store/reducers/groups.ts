@@ -45,6 +45,15 @@ const DEFAULT_GROUP: IGroupState = {
   info: "0T | 0W"
 };
 
+const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
+  alwaysOnTop: false,
+  focused: false,
+  incognito: false,
+  state: "maximized",
+  type: "normal",
+  tabs
+});
+
 const initState: IGroupsState = {
   active: { id: nanoid(10), index: 0 },
   available: [
@@ -118,23 +127,34 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
-      const { index, windows, dnd } = action.payload as {
+      const { index, windows, dnd, dragOverGroup } = action.payload as {
         index: number;
         dnd?: { source: DraggableLocation; destination?: DraggableLocation };
         windows?: chrome.windows.Window[];
+        dragOverGroup: number;
       };
 
       if (windows) {
         available[index].windows = windows;
       } else if (dnd) {
         const { source, destination } = dnd;
-        if (destination) {
-          const currentWindows = available[index].windows;
+        const currentWindows = available[index].windows;
 
+        if (destination) {
+          // destination exists if not dragging over a group ...
+          // ... (since it is droppable disabled for window/tab draggable)
           // swap windows based on dnd information
           const temp = currentWindows[source.index];
           currentWindows[source.index] = currentWindows[destination.index];
           currentWindows[destination.index] = temp;
+        } else if (dragOverGroup > 1) {
+          // only possible if dragging a window over a group item ...
+          // ... remove source window, add it to new group at the top (make sure all windows are unfocused)
+          const removedWindows = currentWindows.splice(source.index, 1).map((item) => {
+            item.focused = false;
+            return item;
+          });
+          available[dragOverGroup].windows.unshift(...removedWindows);
         }
       }
 
@@ -145,21 +165,27 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS: {
-      const { index, source, destination } = action.payload as {
+      const { index, source, destination, dragOverGroup } = action.payload as {
         index: number;
         source: DraggableLocation;
         destination?: DraggableLocation;
+        dragOverGroup: number;
       };
 
       const windows = available[index].windows;
-      if (destination) {
-        const [srcWindowIdx, destWindowIdx] = [source, destination].map((item) =>
-          Number(item.droppableId.split("-")[1])
-        );
-
-        const removedTabs = windows[srcWindowIdx].tabs?.splice(source.index, 1);
-        if (removedTabs) {
+      const srcWindowIdx = Number(source.droppableId.split("-")[1]);
+      const removedTabs = windows[srcWindowIdx].tabs?.splice(source.index, 1);
+      if (removedTabs) {
+        if (destination) {
+          // destination exists if not dragging over a group ...
+          // ... (since it is droppable disabled for window/tab draggable)
+          const destWindowIdx = Number(destination.droppableId.split("-")[1]);
           windows[destWindowIdx].tabs?.splice(destination.index, 0, ...removedTabs);
+        } else if (dragOverGroup > 1) {
+          // only possible if dragging a tab over a group item ...
+          // ... remove source tab, add it to new group in a new window at the top
+          const newWindow = createWindowWithTabs(removedTabs);
+          available[dragOverGroup].windows.unshift(newWindow);
         }
       }
 

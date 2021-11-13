@@ -12,7 +12,7 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
-const WindowContainer = styled(Scrollbar)<{ $searching: boolean; $draggedOver: boolean }>`
+const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $draggedOver: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -25,7 +25,7 @@ export default function Windows(): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
-  const { dragType } = useSelector((state) => state.dnd);
+  const { dragType, dragOverGroup } = useSelector((state) => state.dnd);
   const { index } = active;
   const { windows, info, name, updatedAt } = available[index];
 
@@ -37,9 +37,12 @@ export default function Windows(): JSX.Element {
 
       {typing && filterChoice === "tab" && <SearchResult type="tab" />}
 
-      <Droppable droppableId={"group-" + index} isDropDisabled={!/window-\d+-group-\d+/.test(dragType)}>
+      <Droppable
+        droppableId={"group-" + index}
+        isDropDisabled={!/window-\d+-group-\d+/.test(dragType) || dragOverGroup > 1}
+      >
         {(provider, dropSnapshot) => (
-          <WindowContainer
+          <WindowsContainer
             ref={provider.innerRef}
             {...provider.droppableProps}
             $searching={typing}
@@ -62,7 +65,7 @@ export default function Windows(): JSX.Element {
               ))}
 
             {provider.placeholder}
-          </WindowContainer>
+          </WindowsContainer>
         )}
       </Droppable>
     </Container>

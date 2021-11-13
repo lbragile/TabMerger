@@ -65,8 +65,8 @@ export default function SidePanel(): JSX.Element {
 
   return (
     <CenteredDiv>
-      <Droppable droppableId="sidePanel" isCombineEnabled={!/^group-\d+$/.test(dragType)}>
-        {(provider, dropSnapshot) => (
+      <Droppable droppableId="sidePanel" isDropDisabled={!/^group-\d+$/.test(dragType)}>
+        {(provider) => (
           <div ref={provider.innerRef} {...provider.droppableProps}>
             <GroupsContainer ref={sidePanelRef}>
               {(typing && filterChoice === "group" ? filteredGroups : available).map((data, i) => (

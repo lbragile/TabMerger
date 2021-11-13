@@ -6,7 +6,7 @@ import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Windows from "./Windows";
-import { DragDropContext, DragStart, DragUpdate, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DragStart, DropResult } from "react-beautiful-dnd";
 import { useDispatch } from "../hooks/useDispatch";
 import { updateTabs, updateWindows } from "../store/actions/groups";
 import DND_CREATORS from "../store/actions/dnd";
@@ -35,6 +35,7 @@ export default function App(): JSX.Element {
   const { filterChoice } = useSelector((state) => state.header);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { active } = useSelector((state) => state.groups);
+  const { dragOverGroup } = useSelector((state) => state.dnd);
 
   useUpdateWindows();
 
@@ -46,30 +47,23 @@ export default function App(): JSX.Element {
     [dispatch]
   );
 
-  const onDragUpdate = useCallback(
-    (initial: DragUpdate) => {
-      dispatch(DND_CREATORS.updateCombineInfo(initial.combine));
-    },
-    [dispatch]
-  );
-
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { source, destination, draggableId } = result;
 
       if (draggableId.includes("tab")) {
         // tab drag
-        dispatch(updateTabs({ index: active.index, source, destination }));
+        dispatch(updateTabs({ index: active.index, source, destination, dragOverGroup }));
       } else if (/window-\d+-group-\d+/i.test(draggableId)) {
         // window drag
-        dispatch(updateWindows({ index: active.index, dnd: { source, destination } }));
+        dispatch(updateWindows({ index: active.index, dnd: { source, destination }, dragOverGroup }));
       } else {
         // group drag
       }
 
       dispatch(DND_CREATORS.resetDnDInfo());
     },
-    [dispatch, active.index]
+    [dispatch, active.index, dragOverGroup]
   );
 
   return (
@@ -77,7 +71,7 @@ export default function App(): JSX.Element {
       <GlobalStyle />
       <Header />
 
-      <DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
+      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
           <MainArea>
             <SidePanel />

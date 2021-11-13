@@ -23,7 +23,7 @@ export default function useUpdateWindows(): void {
         .concat(allWindows.filter((tabWindow) => !tabWindow.focused));
 
       // add this window information to the 'Awaiting Storage' group
-      dispatch(updateWindows({ index: 0, windows: sortedWindows }));
+      dispatch(updateWindows({ index: 0, windows: sortedWindows, dragOverGroup: 0 }));
     },
     [dispatch, fetchOpts]
   );

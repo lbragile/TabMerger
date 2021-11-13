@@ -96,7 +96,7 @@ export default function Tab({
               ? "https://developer.chrome.com/images/meta/favicon-32x32.png"
               : favIconUrl?.replace("-dark", "")
           }
-          alt="Favicon of the tab"
+          alt="Favicon"
           {...dragHandleProps}
         />
 

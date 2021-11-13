@@ -1,23 +1,22 @@
-import { Combine } from "react-beautiful-dnd";
 import { IAction } from "../../typings/reducers";
 
 export const DND_ACTIONS = {
   UPDATE_DRAG_ORIGIN_TYPE: "UPDATE_DRAG_ORIGIN_TYPE",
   UPDATE_IS_DRAGGING: "UPDATE_IS_DRAGGING",
-  UPDATE_COMBINE_INFO: "UPDATE_COMBINE_INFO",
+  UPDATE_DRAG_OVER_GROUP: "UPDATE_DRAG_OVER_GROUP",
   RESET_DND_INFO: "RESET_DND_INFO"
 };
 
 export interface IDnDState {
   dragType: string;
   isDragging: boolean;
-  combine: Combine;
+  dragOverGroup: number;
 }
 
 const initState: IDnDState = {
   dragType: "tab-0-window-0",
   isDragging: false,
-  combine: { draggableId: "", droppableId: "" }
+  dragOverGroup: 0
 };
 
 const dndReducer = (state = initState, action: IAction): IDnDState => {
@@ -36,10 +35,10 @@ const dndReducer = (state = initState, action: IAction): IDnDState => {
         isDragging: payload as IDnDState["isDragging"]
       };
 
-    case DND_ACTIONS.UPDATE_COMBINE_INFO:
+    case DND_ACTIONS.UPDATE_DRAG_OVER_GROUP:
       return {
         ...state,
-        combine: payload as IDnDState["combine"]
+        dragOverGroup: payload as IDnDState["dragOverGroup"]
       };
 
     case DND_ACTIONS.RESET_DND_INFO:
