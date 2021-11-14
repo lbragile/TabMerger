@@ -1,47 +1,95 @@
-import { TActionFunc } from "../../typings/reducers";
-import { GROUPS_ACTIONS, IGroupsState, IGroupState } from "../reducers/groups";
-import { createAction } from "../utils/actionCreator";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-export const updateActive: TActionFunc<IGroupsState["active"]> = (payload) => {
-  return createAction<IGroupsState["active"]>(GROUPS_ACTIONS.UPDATE_ACTIVE, payload);
-};
+import { DraggableLocation } from "react-beautiful-dnd";
+import { GROUPS_ACTIONS } from "../reducers/groups";
 
-export const updateIndex: TActionFunc<IGroupsState["active"]["index"]> = (payload) => {
-  return createAction<IGroupsState["active"]["index"]>(GROUPS_ACTIONS.UPDATE_INDEX, payload);
-};
+const updateActive = (payload?: { id: string; index: number }) => ({
+  type: GROUPS_ACTIONS.UPDATE_ACTIVE,
+  payload
+});
 
-export const updateIsActive: TActionFunc<IGroupState["isActive"]> = (payload) => {
-  return createAction<IGroupState["isActive"]>(GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload);
-};
+const updateIndex = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_INDEX, payload });
 
-export const updateName: TActionFunc<{ index: number; name: IGroupState["name"] }> = (payload) => {
-  return createAction<{ index: number; name: IGroupState["name"] }>(GROUPS_ACTIONS.UPDATE_NAME, payload);
-};
+const updateIsActive = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload });
 
-export const updateColor: TActionFunc<IGroupState["color"]> = (payload) => {
-  return createAction<IGroupState["color"]>(GROUPS_ACTIONS.UPDATE_COLOR, payload);
-};
+const updateName = (payload?: { index: number; name: string }) => ({
+  type: GROUPS_ACTIONS.UPDATE_NAME,
+  payload
+});
 
-export const updateTimestamp: TActionFunc<IGroupState["updatedAt"]> = (payload) => {
-  return createAction<IGroupState["updatedAt"]>(GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload);
-};
+const updateColor = (payload?: string) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
-export const updateWindows: TActionFunc<{ index: number; windows: IGroupState["windows"] }> = (payload) => {
-  return createAction<{ index: number; windows: IGroupState["windows"] }>(GROUPS_ACTIONS.UPDATE_WINDOWS, payload);
-};
+const updateTimestamp = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
 
-export const updateInfo: TActionFunc<{ index: number; info: IGroupState["info"] }> = (payload) => {
-  return createAction<{ index: number; info: IGroupState["info"] }>(GROUPS_ACTIONS.UPDATE_INFO, payload);
-};
+const updateWindows = (payload?: {
+  index: number;
+  dnd?: { source: DraggableLocation; destination?: DraggableLocation };
+  windows?: chrome.windows.Window[];
+  dragOverGroup: number;
+}) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS,
+  payload
+});
 
-export const updatePermanent: TActionFunc<IGroupState["permanent"]> = (payload) => {
-  return createAction<IGroupState["permanent"]>(GROUPS_ACTIONS.UPDATE_PERMANENT, payload);
-};
+const updateTabs = (payload?: {
+  index: number;
+  source: DraggableLocation;
+  destination?: DraggableLocation;
+  dragOverGroup: number;
+}) => ({
+  type: GROUPS_ACTIONS.UPDATE_TABS,
+  payload
+});
 
-export const addGroup: TActionFunc<IGroupState> = () => {
-  return createAction<IGroupState>(GROUPS_ACTIONS.ADD_GROUP);
-};
+const updateInfo = (payload?: { index: number; info?: string }) => ({
+  type: GROUPS_ACTIONS.UPDATE_INFO,
+  payload
+});
 
-export const deleteGroup: TActionFunc<IGroupsState["active"]> = (payload) => {
-  return createAction<IGroupsState["active"]>(GROUPS_ACTIONS.DELETE_GROUP, payload);
+const updatePermanent = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_PERMANENT, payload });
+
+const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
+
+const deleteGroup = (payload?: { id: string; index: number }) => ({
+  type: GROUPS_ACTIONS.DELETE_GROUP,
+  payload
+});
+
+const clearEmptyGroups = () => ({ type: GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS });
+
+const addWindow = (payload?: { index: number }) => ({ type: GROUPS_ACTIONS.ADD_WINDOW, payload });
+
+const clearEmptyWindows = (payload?: { index: number }) => ({
+  type: GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS,
+  payload
+});
+
+const updateGroupOrder = (payload?: { source: DraggableLocation; destination: DraggableLocation }) => ({
+  type: GROUPS_ACTIONS.UPDATE_GROUP_ORDER,
+  payload
+});
+
+const updateOverflowTitlePopup = (payload?: { visible: boolean; text: string; pos: { x: number; y: number } }) => ({
+  type: GROUPS_ACTIONS.UPDATE_OVERFLOW_TITLE_POPUP,
+  payload
+});
+
+export default {
+  updateActive,
+  updateIndex,
+  updateIsActive,
+  updateName,
+  updateColor,
+  updateTimestamp,
+  updateWindows,
+  updateTabs,
+  updateInfo,
+  updatePermanent,
+  addGroup,
+  deleteGroup,
+  clearEmptyGroups,
+  addWindow,
+  clearEmptyWindows,
+  updateGroupOrder,
+  updateOverflowTitlePopup
 };

@@ -1,15 +1,22 @@
+import React from "react";
+import styled, { css } from "styled-components";
+import { useSelector } from "../../hooks/useSelector";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import styled from "styled-components";
-import { useSelector } from "../../hooks/useSelector";
+import Highlighted from "../Highlighted";
+import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import { isTabDrag } from "../../constants/dragRegExp";
 
-const Grid = styled.div`
+const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto auto;
   align-items: center;
   justify-content: start;
   gap: 8px;
+  width: 320px;
+  background-color: ${({ $dragging }) => ($dragging ? "white" : "initial")};
+  border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
+  border-radius: 4px;
 `;
 
 const TabTitle = styled.span`
@@ -28,48 +35,30 @@ const TabIcon = styled.img`
   width: 14px;
 `;
 
-const CloseIcon = styled(FontAwesomeIcon)`
-  visibility: hidden;
-  pointer-events: none;
-  cursor: none;
-  justify-self: end;
-
+const CloseIcon = styled(FontAwesomeIcon)<{ $visible: boolean }>`
   && {
-    color: #ff4040;
-  }
+    ${({ $visible }) =>
+      $visible
+        ? css`
+            cursor: pointer;
+            color: transparent;
 
-  ${Grid}:hover & {
-    visibility: visible;
-    pointer-events: all;
-    cursor: pointer;
+            &:hover {
+              color: #ff4040;
+            }
+          `
+        : css`
+            visibility: hidden;
+          `}
   }
 `;
 
-const MarkedText = styled.mark`
-  background-color: #ffd580;
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 `;
-
-const Highlighted = ({ text = "" }: { text: string }): JSX.Element => {
-  const { inputValue } = useSelector((state) => state.header);
-
-  if (!inputValue.trim()) return <span>{text}</span>;
-
-  /**
-   * The brackets around the re variable keeps it in the array when splitting and does not affect testing
-   * @example 'react'.split(/(ac)/gi) => ['re', 'ac', 't']
-   */
-  const re = new RegExp(`(${inputValue})`, "gi");
-
-  return (
-    <span>
-      {text
-        .split(re)
-        .map((part, i) =>
-          re.test(part) ? <MarkedText key={part + i}>{part}</MarkedText> : <span key={part + i}>{part}</span>
-        )}
-    </span>
-  );
-};
 
 export default function Tab({
   favIconUrl,
@@ -77,40 +66,50 @@ export default function Tab({
   url,
   active,
   pinned,
-  id: tabId
-}: chrome.tabs.Tab): JSX.Element | null {
-  const { inputValue } = useSelector((state) => state.header);
+  id: tabId,
+  snapshot,
+  dragHandleProps
+}: chrome.tabs.Tab & {
+  snapshot: DraggableStateSnapshot;
+  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
+}): JSX.Element {
+  const { filterChoice } = useSelector((state) => state.header);
+  const { isDragging, dragType } = useSelector((state) => state.dnd);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
 
-  return title?.includes(inputValue) ? (
-    <Grid>
-      <TabIcon
-        src={
-          favIconUrl === "" || !favIconUrl
-            ? "https://developer.chrome.com/images/meta/favicon-32x32.png"
-            : favIconUrl?.replace("-dark", "")
-        }
-        alt="Favicon of the tab"
-      />
-
-      <TabTitle
-        title={url}
-        role="link"
-        tabIndex={0}
-        onClick={openTab}
-        onKeyPress={(e) => e.key === "Enter" && openTab()}
-      >
-        <Highlighted text={title} />
-      </TabTitle>
-
+  return (
+    <Row>
       <CloseIcon
         icon={faTimesCircle}
         tabIndex={0}
-        onClick={closeTab}
+        onClick={() => closeTab()}
         onKeyPress={(e) => e.key === "Enter" && closeTab()}
+        $visible={!isDragging}
       />
-    </Grid>
-  ) : null;
+
+      <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
+        <TabIcon
+          src={
+            favIconUrl === "" || !favIconUrl
+              ? "https://developer.chrome.com/images/meta/favicon-32x32.png"
+              : favIconUrl?.replace("-dark", "")
+          }
+          alt="Favicon"
+          {...dragHandleProps}
+        />
+
+        <TabTitle
+          title={url}
+          role="link"
+          tabIndex={0}
+          onClick={() => openTab()}
+          onKeyPress={(e) => e.key === "Enter" && openTab()}
+        >
+          {filterChoice === "tab" ? <Highlighted text={title} /> : title}
+        </TabTitle>
+      </TabContainer>
+    </Row>
+  );
 }

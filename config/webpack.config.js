@@ -1,5 +1,16 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const { SourceMapDevToolPlugin } = require("webpack");
+const ESLintPlugin = require("eslint-webpack-plugin");
+const StylelintPlugin = require("stylelint-webpack-plugin");
+
+const isProd = process.env.NODE_ENV === "production";
+
+const lintOpts = {
+  extensions: ["ts", "tsx"],
+  files: ["src/**/*"],
+  failOnError: false,
+};
 
 module.exports = {
   entry: {
@@ -8,8 +19,20 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: "public", to: "." }],
+      patterns: [
+        {
+          from: "public",
+          globOptions: {
+            ignore: ["**/logo-full-rescale.png"],
+          },
+        },
+      ],
     }),
+    new SourceMapDevToolPlugin({
+      exclude: isProd ? ["vendors.js", "background.js", "runtime.js", "popup.js"] : ["vendors.js"],
+    }),
+    new ESLintPlugin(lintOpts),
+    new StylelintPlugin(lintOpts),
   ],
   module: {
     rules: [
@@ -39,9 +62,25 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
-  mode: "production",
+  stats: isProd ? "normal" : "minimal",
+  mode: isProd ? "production" : "development",
+  watch: !isProd,
+  devtool: false,
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          enforce: true,
+          chunks: "all",
+        },
+      },
+    },
+  },
   output: {
-    path: path.resolve(__dirname, "../dist"),
+    path: path.resolve(__dirname, isProd ? "../build" : "../dist"),
     filename: "[name].js",
     clean: true,
   },

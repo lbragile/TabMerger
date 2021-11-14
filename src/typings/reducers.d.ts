@@ -1,11 +1,9 @@
-import { store } from "..";
+import { store } from "../store/utils/configureStore";
 
-export interface IAction<P> {
+export interface IAction {
   type: string;
-  payload: P;
+  payload?: unknown;
 }
-
-type TActionFunc<P> = (payload?: P) => IAction<P | undefined>;
 
 /** @see https://redux.js.org/usage/usage-with-typescript */
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,11 +1,9 @@
-import { TActionFunc } from "../../typings/reducers";
-import { HEADER_ACTIONS, IHeaderState } from "../reducers/header";
-import { createAction } from "../utils/actionCreator";
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-export const setTyping: TActionFunc<{ typing: IHeaderState["typing"] }> = (payload) => {
-  return createAction<{ typing: IHeaderState["typing"] }>(HEADER_ACTIONS.SET_TYPING, payload);
-};
+import { HEADER_ACTIONS } from "../reducers/header";
 
-export const updateInputValue: TActionFunc<{ inputValue: IHeaderState["inputValue"] }> = (payload) => {
-  return createAction<{ inputValue: IHeaderState["inputValue"] }>(HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload);
-};
+export const setTyping = (payload: boolean) => ({ type: HEADER_ACTIONS.SET_TYPING, payload });
+
+export const updateInputValue = (payload: string) => ({ type: HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload });
+
+export const setFilterChoice = (payload: string) => ({ type: HEADER_ACTIONS.SET_FILTER_CHOICE, payload });

@@ -5,7 +5,7 @@ import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IGroupState } from "../../store/reducers/groups";
 import { useDispatch } from "../../hooks/useDispatch";
-import { updateName } from "../../store/actions/groups";
+import GROUPS_CREATORS from "../../store/actions/groups";
 import { getReadableTimestamp } from "../../utils/helper";
 
 const Grid = styled.div`
@@ -15,7 +15,7 @@ const Grid = styled.div`
   justify-content: space-between;
   align-items: start;
   white-space: nowrap;
-  padding: 4px 0;
+  padding: 0;
   margin-bottom: 8px;
 `;
 
@@ -38,14 +38,24 @@ const OpenIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
 `;
 
-const Title = styled.input`
+const Title = styled.input<{ $maxLength: boolean }>`
   font-weight: bold;
   font-size: 16px;
   border: none;
   outline: none;
+  border-bottom: 1px solid transparent;
+  width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &:hover {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
 
   &:focus {
     border-bottom: 1px solid black;
+    background-color: ${({ $maxLength }) => ($maxLength ? "#ffd1d1" : "initial")};
   }
 `;
 
@@ -67,7 +77,10 @@ export default function Information({ info, name, index, updatedAt }: IInformati
           type="text"
           value={name}
           spellCheck={false}
-          onChange={(e) => dispatch(updateName({ index, name: e.target.value }))}
+          onChange={({ target: { value } }) => {
+            value.length <= 50 && dispatch(GROUPS_CREATORS.updateName({ index, name: value }));
+          }}
+          $maxLength={name.length === 50}
         />
       </LeftColumn>
 

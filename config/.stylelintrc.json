@@ -19,6 +19,7 @@
       {
         "ignoreKeywords": ["dummyValue"]
       }
-    ]
+    ],
+    "declaration-colon-newline-after": null
   }
 }
