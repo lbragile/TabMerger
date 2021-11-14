@@ -9,17 +9,18 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isWindowDrag } from "../../constants/dragRegExp";
 
 const Container = styled.div`
-  height: 100%;
+  max-height: 524px;
   overflow: hidden;
 `;
 
-const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $draggedOver: boolean }>`
+const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $searchingGroup: boolean; $draggedOver: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
   overflow: auto;
-  height: ${({ $searching }) => ($searching ? "412px" : "460px")};
+  height: ${({ $searching, $searchingGroup }) => ($searching ? "420px" : $searchingGroup ? "412px" : "468px")};
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
+  border-radius: 4px;
 `;
 
 export default function Windows(): JSX.Element {
@@ -31,19 +32,22 @@ export default function Windows(): JSX.Element {
   const { windows, info, name, updatedAt } = available[index];
 
   const hasMoreThanOneFilteredTab = typing ? filteredTabs.some((item) => item.length > 0) : true;
+  const tabSearching = typing && filterChoice === "tab";
+  const groupSearching = typing && filterChoice === "group";
 
   return (
     <Container>
       <Information info={info} name={name} updatedAt={updatedAt} index={index} />
 
-      {typing && filterChoice === "tab" && <SearchResult type="tab" />}
+      {tabSearching && <SearchResult type="tab" />}
 
       <Droppable droppableId={"group-" + index} isDropDisabled={!isWindowDrag(dragType) || dragOverGroup > 1}>
         {(provider, dropSnapshot) => (
           <WindowsContainer
             ref={provider.innerRef}
             {...provider.droppableProps}
-            $searching={typing}
+            $searching={tabSearching}
+            $searchingGroup={groupSearching}
             $draggedOver={dropSnapshot.isDraggingOver}
           >
             {hasMoreThanOneFilteredTab &&

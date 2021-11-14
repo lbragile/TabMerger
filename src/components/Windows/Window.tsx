@@ -19,7 +19,9 @@ const Container = styled(Flex)<{ $dragging: boolean }>`
   margin: 12px 0 0 12px;
   font-size: 14px;
   background-color: white;
+  border-radius: 4px;
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
+  padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
 `;
 
 const WindowTitle = styled.div`
@@ -43,8 +45,9 @@ const Headline = styled(Flex)<{ active: boolean }>`
 
 const TabsContainer = styled(Flex)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
   margin-top: 8px;
-  border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
-  background-color: ${({ $dragOrigin }) => ($dragOrigin ? "aliceblue" : "white")};
+  border-radius: 4px;
+  border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "#0080ff" : "transparent")};
+  background-color: ${({ $dragOrigin }) => ($dragOrigin ? "#f5faff" : "white")};
 `;
 
 const TabCounter = styled.span`

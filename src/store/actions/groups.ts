@@ -69,6 +69,11 @@ const updateGroupOrder = (payload?: { source: DraggableLocation; destination: Dr
   payload
 });
 
+const updateOverflowTitlePopup = (payload?: { visible: boolean; text: string; pos: { x: number; y: number } }) => ({
+  type: GROUPS_ACTIONS.UPDATE_OVERFLOW_TITLE_POPUP,
+  payload
+});
+
 export default {
   updateActive,
   updateIndex,
@@ -85,5 +90,6 @@ export default {
   clearEmptyGroups,
   addWindow,
   clearEmptyWindows,
-  updateGroupOrder
+  updateGroupOrder,
+  updateOverflowTitlePopup
 };

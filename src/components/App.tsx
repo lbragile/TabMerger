@@ -6,7 +6,7 @@ import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Windows from "./Windows";
-import { BeforeCapture, DragDropContext, DragStart, DropResult } from "react-beautiful-dnd";
+import { BeforeCapture, DragDropContext, DragStart, DragUpdate, DropResult } from "react-beautiful-dnd";
 import { useDispatch } from "../hooks/useDispatch";
 import GROUPS_CREATORS from "../store/actions/groups";
 import DND_CREATORS from "../store/actions/dnd";
@@ -37,7 +37,7 @@ export default function App(): JSX.Element {
   const { filterChoice } = useSelector((state) => state.header);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
-  const { dragOverGroup } = useSelector((state) => state.dnd);
+  const { dragOverGroup, dragType } = useSelector((state) => state.dnd);
 
   useUpdateWindows();
 
@@ -60,6 +60,15 @@ export default function App(): JSX.Element {
       }
     },
     [dispatch, active.index]
+  );
+
+  const onDragUpdate = useCallback(
+    ({ destination }: DragUpdate) => {
+      if (destination?.droppableId === "sidePanel" && isGroupDrag(dragType)) {
+        dispatch(DND_CREATORS.updateCanDropGroup(destination.index > 1));
+      }
+    },
+    [dispatch, dragType]
   );
 
   const onDragStart = useCallback(
@@ -103,7 +112,12 @@ export default function App(): JSX.Element {
       <GlobalStyle />
       <Header />
 
-      <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <DragDropContext
+        onBeforeCapture={onBeforeCapture}
+        onDragUpdate={onDragUpdate}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+      >
         {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
           <MainArea>
             <SidePanel />

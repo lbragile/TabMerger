@@ -10,9 +10,12 @@ const updateDragOverGroup = (payload: number) => ({ type: DND_ACTIONS.UPDATE_DRA
 
 const resetDnDInfo = () => ({ type: DND_ACTIONS.RESET_DND_INFO });
 
+const updateCanDropGroup = (payload: boolean) => ({ type: DND_ACTIONS.UPDATE_CAN_DROP_GROUP, payload });
+
 export default {
   updateDragOriginType,
   updateIsDragging,
   updateDragOverGroup,
-  resetDnDInfo
+  resetDnDInfo,
+  updateCanDropGroup
 };

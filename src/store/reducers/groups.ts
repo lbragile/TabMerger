@@ -18,7 +18,8 @@ export const GROUPS_ACTIONS = {
   DELETE_GROUP: "DELETE_GROUP",
   CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
-  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER"
+  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
+  UPDATE_OVERFLOW_TITLE_POPUP: "UPDATE_OVERFLOW_TITLE_POPUP"
 };
 
 export interface IGroupState {
@@ -35,6 +36,11 @@ export interface IGroupState {
 export interface IGroupsState {
   active: { id: string; index: number };
   available: IGroupState[];
+  overflowTitle: {
+    visible: boolean;
+    text: string;
+    pos: { x: number; y: number };
+  };
 }
 
 // id & updatedAt are set upon creation to ensure uniqueness/correctness
@@ -79,7 +85,12 @@ const initState: IGroupsState = {
       windows: [],
       permanent: true
     }
-  ]
+  ],
+  overflowTitle: {
+    visible: false,
+    pos: { x: 0, y: 0 },
+    text: ""
+  }
 };
 
 const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
@@ -293,6 +304,13 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         available
       };
     }
+
+    case GROUPS_ACTIONS.UPDATE_OVERFLOW_TITLE_POPUP:
+      return {
+        ...state,
+        available,
+        overflowTitle: action.payload as IGroupsState["overflowTitle"]
+      };
 
     default:
       return state;

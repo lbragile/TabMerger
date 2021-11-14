@@ -38,12 +38,16 @@ const OpenIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
 `;
 
-const Title = styled.input`
+const Title = styled.input<{ $maxLength: boolean }>`
   font-weight: bold;
   font-size: 16px;
   border: none;
   outline: none;
   border-bottom: 1px solid transparent;
+  width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
   &:hover {
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -51,6 +55,7 @@ const Title = styled.input`
 
   &:focus {
     border-bottom: 1px solid black;
+    background-color: ${({ $maxLength }) => ($maxLength ? "#ffd1d1" : "initial")};
   }
 `;
 
@@ -72,7 +77,10 @@ export default function Information({ info, name, index, updatedAt }: IInformati
           type="text"
           value={name}
           spellCheck={false}
-          onChange={(e) => dispatch(GROUPS_CREATORS.updateName({ index, name: e.target.value }))}
+          onChange={({ target: { value } }) => {
+            value.length <= 50 && dispatch(GROUPS_CREATORS.updateName({ index, name: value }));
+          }}
+          $maxLength={name.length === 50}
         />
       </LeftColumn>
 

@@ -7,23 +7,28 @@ import { useDispatch } from "../../hooks/useDispatch";
 import { Scrollbar } from "../../styles/Scrollbar";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
+import Popup from "../Popup";
 
-const GroupsContainer = styled(Scrollbar)`
+const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $canDrop: boolean; $dragging: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 4px;
-  max-height: 490px;
+  height: ${({ $searching }) => ($searching ? "468px" : "524px")};
+  background-color: ${({ $canDrop, $dragging }) =>
+    $canDrop ? "#d5ffd5" : !$canDrop && $dragging ? "#ffd3d3" : "initial"};
+  border-radius: 4px;
   overflow-y: auto;
 `;
 
 export default function SidePanel(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { available } = useSelector((state) => state.groups);
+  const { available, overflowTitle } = useSelector((state) => state.groups);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { typing, filterChoice } = useSelector((state) => state.header);
-  const { dragType } = useSelector((state) => state.dnd);
+  const { dragType, isDragging, canDrop } = useSelector((state) => state.dnd);
+  const groupSearch = typing && filterChoice === "group";
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
   const [overflow, setOverflow] = useState(false);
@@ -47,30 +52,39 @@ export default function SidePanel(): JSX.Element {
   }, [dispatch, available]);
 
   return (
-    <Droppable droppableId="sidePanel" isDropDisabled={!isGroupDrag(dragType)}>
-      {(provider) => (
-        <div ref={provider.innerRef} {...provider.droppableProps}>
-          <GroupsContainer ref={sidePanelRef}>
-            {(typing && filterChoice === "group" ? filteredGroups : available).map((data, i) => (
-              <Draggable key={data.id + i} draggableId={`group-${i}`} index={i} isDragDisabled={i <= 1}>
-                {(provided, dragSnapshot) => (
-                  <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <Group
-                      data={data}
-                      available={available}
-                      overflow={overflow}
-                      snapshot={dragSnapshot}
-                      dragHandleProps={provided.dragHandleProps}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
+    <>
+      <Droppable droppableId="sidePanel" isDropDisabled={!isGroupDrag(dragType)}>
+        {(provider, dropSnapshot) => (
+          <div ref={provider.innerRef} {...provider.droppableProps}>
+            <GroupsContainer
+              ref={sidePanelRef}
+              $searching={groupSearch}
+              $canDrop={dropSnapshot.isDraggingOver && canDrop}
+              $dragging={isDragging && isGroupDrag(dragType)}
+            >
+              {(groupSearch ? filteredGroups : available).map((data, i) => (
+                <Draggable key={data.id + i} draggableId={`group-${i}`} index={i} isDragDisabled={i <= 1}>
+                  {(provided, dragSnapshot) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps}>
+                      <Group
+                        data={data}
+                        available={available}
+                        overflow={overflow}
+                        snapshot={dragSnapshot}
+                        dragHandleProps={provided.dragHandleProps}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
 
-            {provider.placeholder}
-          </GroupsContainer>
-        </div>
-      )}
-    </Droppable>
+              {provider.placeholder}
+            </GroupsContainer>
+          </div>
+        )}
+      </Droppable>
+
+      {overflowTitle.visible && <Popup {...overflowTitle} />}
+    </>
   );
 }

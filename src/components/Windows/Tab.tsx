@@ -16,6 +16,7 @@ const TabContainer = styled.div<{ $dragging: boolean }>`
   width: 320px;
   background-color: ${({ $dragging }) => ($dragging ? "white" : "initial")};
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
+  border-radius: 4px;
 `;
 
 const TabTitle = styled.span`
