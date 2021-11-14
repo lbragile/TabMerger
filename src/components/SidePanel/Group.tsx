@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "../../hooks/useDispatch";
-import { deleteGroup, updateActive } from "../../store/actions/groups";
+import GROUPS_CREATORS from "../../store/actions/groups";
 import { IGroupsState } from "../../store/reducers/groups";
 import { relativeTimeStr } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
@@ -144,7 +144,7 @@ export default function Group({
   const [showOverflow, setShowOverflow] = useState(false);
   const [draggingOver, setDraggingOver] = useState(false);
 
-  const handleActiveGroupUpdate = () => !isActive && dispatch(updateActive({ index, id }));
+  const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
 
   const handleGroupDragOver = (eventType: "enter" | "leave") => {
     const isEntering = eventType === "enter";
@@ -203,7 +203,7 @@ export default function Group({
             icon={faTimes}
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(deleteGroup({ index, id }));
+              dispatch(GROUPS_CREATORS.deleteGroup({ index, id }));
             }}
           />
         )}

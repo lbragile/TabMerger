@@ -5,7 +5,7 @@ import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IGroupState } from "../../store/reducers/groups";
 import { useDispatch } from "../../hooks/useDispatch";
-import { updateName } from "../../store/actions/groups";
+import GROUPS_CREATORS from "../../store/actions/groups";
 import { getReadableTimestamp } from "../../utils/helper";
 
 const Grid = styled.div`
@@ -72,7 +72,7 @@ export default function Information({ info, name, index, updatedAt }: IInformati
           type="text"
           value={name}
           spellCheck={false}
-          onChange={(e) => dispatch(updateName({ index, name: e.target.value }))}
+          onChange={(e) => dispatch(GROUPS_CREATORS.updateName({ index, name: e.target.value }))}
         />
       </LeftColumn>
 

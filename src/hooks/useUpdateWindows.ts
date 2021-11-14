@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import { updateWindows } from "../store/actions/groups";
+import GROUPS_CREATORS from "../store/actions/groups";
 
 export default function useUpdateWindows(): void {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export default function useUpdateWindows(): void {
         .concat(allWindows.filter((tabWindow) => !tabWindow.focused));
 
       // add this window information to the 'Awaiting Storage' group
-      dispatch(updateWindows({ index: 0, windows: sortedWindows, dragOverGroup: 0 }));
+      dispatch(GROUPS_CREATORS.updateWindows({ index: 0, windows: sortedWindows, dragOverGroup: 0 }));
     },
     [dispatch, fetchOpts]
   );

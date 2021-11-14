@@ -5,6 +5,7 @@ import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import { isTabDrag } from "../../constants/dragRegExp";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
@@ -65,16 +66,14 @@ export default function Tab({
   active,
   pinned,
   id: tabId,
-  dropDisabled,
   snapshot,
   dragHandleProps
 }: chrome.tabs.Tab & {
-  dropDisabled: boolean;
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }): JSX.Element {
   const { filterChoice } = useSelector((state) => state.header);
-  const { isDragging } = useSelector((state) => state.dnd);
+  const { isDragging, dragType } = useSelector((state) => state.dnd);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => tabId && chrome.tabs.remove(tabId);
@@ -89,7 +88,7 @@ export default function Tab({
         $visible={!isDragging}
       />
 
-      <TabContainer $dragging={snapshot.isDragging && !dropDisabled}>
+      <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
         <TabIcon
           src={
             favIconUrl === "" || !favIconUrl

@@ -14,7 +14,11 @@ export const GROUPS_ACTIONS = {
   UPDATE_PERMANENT: "UPDATE_PERMANENT",
   UPDATE_INFO: "UPDATE_INFO",
   ADD_GROUP: "ADD_GROUP",
-  DELETE_GROUP: "DELETE_GROUP"
+  ADD_WINDOW: "ADD_WINDOW",
+  DELETE_GROUP: "DELETE_GROUP",
+  CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
+  CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
+  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER"
 };
 
 export interface IGroupState {
@@ -188,11 +192,6 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
             const newWindow = createWindowWithTabs(removedTabs);
             available[dragOverGroup].windows.unshift(newWindow);
           }
-
-          // source window became empty? clear it
-          if (windows[srcWindowIdx].tabs?.length === 0) {
-            available[index].windows.splice(srcWindowIdx, 1);
-          }
         }
       }
 
@@ -244,6 +243,53 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       return {
         ...state,
         active: { index: newIdx, id: available[newIdx].id },
+        available
+      };
+    }
+
+    case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS:
+      return {
+        ...state,
+        available: available.filter((group, i) => i <= 1 || (i > 1 && group.windows.length !== 0))
+      };
+
+    case GROUPS_ACTIONS.ADD_WINDOW: {
+      const { index } = action.payload as { index: number };
+      available[index].windows.push(createWindowWithTabs([]));
+
+      return {
+        ...state,
+        available
+      };
+    }
+
+    case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
+      const { index } = action.payload as { index: number };
+      const { windows } = available[index];
+
+      const newWindows = windows.filter(({ tabs }) => {
+        const numTabs = tabs?.length;
+        return numTabs !== undefined && numTabs > 0;
+      });
+
+      available[index].windows = newWindows;
+
+      return {
+        ...state,
+        available
+      };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_GROUP_ORDER: {
+      const { source, destination } = action.payload as { source: DraggableLocation; destination: DraggableLocation };
+
+      const removedGroups = available.splice(source.index, 1);
+      if (removedGroups) {
+        available.splice(destination.index, 0, ...removedGroups);
+      }
+
+      return {
+        ...state,
         available
       };
     }

@@ -3,25 +3,25 @@
 import { DraggableLocation } from "react-beautiful-dnd";
 import { GROUPS_ACTIONS } from "../reducers/groups";
 
-export const updateActive = (payload?: { id: string; index: number }) => ({
+const updateActive = (payload?: { id: string; index: number }) => ({
   type: GROUPS_ACTIONS.UPDATE_ACTIVE,
   payload
 });
 
-export const updateIndex = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_INDEX, payload });
+const updateIndex = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_INDEX, payload });
 
-export const updateIsActive = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload });
+const updateIsActive = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload });
 
-export const updateName = (payload?: { index: number; name: string }) => ({
+const updateName = (payload?: { index: number; name: string }) => ({
   type: GROUPS_ACTIONS.UPDATE_NAME,
   payload
 });
 
-export const updateColor = (payload?: string) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
+const updateColor = (payload?: string) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
-export const updateTimestamp = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
+const updateTimestamp = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
 
-export const updateWindows = (payload?: {
+const updateWindows = (payload?: {
   index: number;
   dnd?: { source: DraggableLocation; destination?: DraggableLocation };
   windows?: chrome.windows.Window[];
@@ -31,7 +31,7 @@ export const updateWindows = (payload?: {
   payload
 });
 
-export const updateTabs = (payload?: {
+const updateTabs = (payload?: {
   index: number;
   source: DraggableLocation;
   destination?: DraggableLocation;
@@ -41,16 +41,49 @@ export const updateTabs = (payload?: {
   payload
 });
 
-export const updateInfo = (payload?: { index: number; info?: string }) => ({
+const updateInfo = (payload?: { index: number; info?: string }) => ({
   type: GROUPS_ACTIONS.UPDATE_INFO,
   payload
 });
 
-export const updatePermanent = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_PERMANENT, payload });
+const updatePermanent = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_PERMANENT, payload });
 
-export const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
+const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
 
-export const deleteGroup = (payload?: { id: string; index: number }) => ({
+const deleteGroup = (payload?: { id: string; index: number }) => ({
   type: GROUPS_ACTIONS.DELETE_GROUP,
   payload
 });
+
+const clearEmptyGroups = () => ({ type: GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS });
+
+const addWindow = (payload?: { index: number }) => ({ type: GROUPS_ACTIONS.ADD_WINDOW, payload });
+
+const clearEmptyWindows = (payload?: { index: number }) => ({
+  type: GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS,
+  payload
+});
+
+const updateGroupOrder = (payload?: { source: DraggableLocation; destination: DraggableLocation }) => ({
+  type: GROUPS_ACTIONS.UPDATE_GROUP_ORDER,
+  payload
+});
+
+export default {
+  updateActive,
+  updateIndex,
+  updateIsActive,
+  updateName,
+  updateColor,
+  updateTimestamp,
+  updateWindows,
+  updateTabs,
+  updateInfo,
+  updatePermanent,
+  addGroup,
+  deleteGroup,
+  clearEmptyGroups,
+  addWindow,
+  clearEmptyWindows,
+  updateGroupOrder
+};

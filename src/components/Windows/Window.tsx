@@ -129,9 +129,8 @@ export default function Window({
 }): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
-  const { dragType } = useSelector((state) => state.dnd);
+  const { dragType, dragOverGroup } = useSelector((state) => state.dnd);
 
-  const isDropDisabled = !isTabDrag(dragType);
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
@@ -216,7 +215,7 @@ export default function Window({
         />
       </Headline>
 
-      <Droppable droppableId={"window-" + index} isDropDisabled={isDropDisabled}>
+      <Droppable droppableId={"window-" + index} isDropDisabled={!isTabDrag(dragType) || dragOverGroup > 1}>
         {(provider, dropSnapshot) => (
           <TabsContainer
             ref={provider.innerRef}
@@ -231,12 +230,7 @@ export default function Window({
                   <Draggable key={title + url + i} draggableId={`tab-${i}-window-${index}`} index={i}>
                     {(provided, dragSnapshot) => (
                       <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <Tab
-                          {...tab}
-                          dropDisabled={isDropDisabled}
-                          snapshot={dragSnapshot}
-                          dragHandleProps={provided.dragHandleProps}
-                        />
+                        <Tab {...tab} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />
                       </div>
                     )}
                   </Draggable>
