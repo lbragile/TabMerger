@@ -46,3 +46,14 @@ export function getReadableTimestamp(timestamp: number): string {
   const postfix = Number(parts[4].split(":")[0]) > 11 ? "PM" : "AM";
   return `Updated ${parts.slice(1, 4).join(" ")} ${parts[4]} ${postfix}`;
 }
+
+export const toggleWindowTabsVisibility = (draggableId: string, show: boolean): void => {
+  const droppableId = draggableId.split("-").slice(0, 2).join("-");
+  const elem = document.querySelector(
+    `[data-rbd-draggable-id*="${draggableId}"] [data-rbd-droppable-id^="${droppableId}"]`
+  ) as HTMLDivElement | null;
+
+  if (elem) {
+    elem.style.display = show ? "flex" : "none";
+  }
+};

@@ -6,6 +6,7 @@ import Tab from "./Tab";
 import { pluralize } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
+import { isTabDrag } from "../../constants/dragRegExp";
 
 const Flex = styled.div`
   display: flex;
@@ -130,7 +131,7 @@ export default function Window({
   const { filteredTabs } = useSelector((state) => state.filter);
   const { dragType } = useSelector((state) => state.dnd);
 
-  const isDropDisabled = !dragType.includes("tab");
+  const isDropDisabled = !isTabDrag(dragType);
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);

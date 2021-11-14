@@ -172,20 +172,27 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         dragOverGroup: number;
       };
 
-      const windows = available[index].windows;
+      const { windows } = available[index];
       const srcWindowIdx = Number(source.droppableId.split("-")[1]);
-      const removedTabs = windows[srcWindowIdx].tabs?.splice(source.index, 1);
-      if (removedTabs) {
-        if (destination) {
-          // destination exists if not dragging over a group ...
-          // ... (since it is droppable disabled for window/tab draggable)
-          const destWindowIdx = Number(destination.droppableId.split("-")[1]);
-          windows[destWindowIdx].tabs?.splice(destination.index, 0, ...removedTabs);
-        } else if (dragOverGroup > 1) {
-          // only possible if dragging a tab over a group item ...
-          // ... remove source tab, add it to new group in a new window at the top
-          const newWindow = createWindowWithTabs(removedTabs);
-          available[dragOverGroup].windows.unshift(newWindow);
+      if (destination || dragOverGroup > 1) {
+        const removedTabs = windows[srcWindowIdx].tabs?.splice(source.index, 1);
+        if (removedTabs) {
+          if (destination) {
+            // destination exists if not dragging over a group ...
+            // ... (since it is droppable disabled for window/tab draggable)
+            const destWindowIdx = Number(destination.droppableId.split("-")[1]);
+            windows[destWindowIdx].tabs?.splice(destination.index, 0, ...removedTabs);
+          } else if (dragOverGroup > 1) {
+            // only possible if dragging a tab over a group item ...
+            // ... remove source tab, add it to new group in a new window at the top
+            const newWindow = createWindowWithTabs(removedTabs);
+            available[dragOverGroup].windows.unshift(newWindow);
+          }
+
+          // source window became empty? clear it
+          if (windows[srcWindowIdx].tabs?.length === 0) {
+            available[index].windows.splice(srcWindowIdx, 1);
+          }
         }
       }
 

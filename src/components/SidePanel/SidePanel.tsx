@@ -8,6 +8,7 @@ import { addGroup, updateInfo } from "../../store/actions/groups";
 import { useDispatch } from "../../hooks/useDispatch";
 import { Scrollbar } from "../../styles/Scrollbar";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import { isGroupDrag } from "../../constants/dragRegExp";
 
 const GroupsContainer = styled(Scrollbar)`
   display: flex;
@@ -65,7 +66,7 @@ export default function SidePanel(): JSX.Element {
 
   return (
     <CenteredDiv>
-      <Droppable droppableId="sidePanel" isDropDisabled={!/^group-\d+$/.test(dragType)}>
+      <Droppable droppableId="sidePanel" isDropDisabled={!isGroupDrag(dragType)}>
         {(provider) => (
           <div ref={provider.innerRef} {...provider.droppableProps}>
             <GroupsContainer ref={sidePanelRef}>

@@ -6,10 +6,12 @@ import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Windows from "./Windows";
-import { DragDropContext, DragStart, DropResult } from "react-beautiful-dnd";
+import { BeforeCapture, DragDropContext, DragStart, DropResult } from "react-beautiful-dnd";
 import { useDispatch } from "../hooks/useDispatch";
 import { updateTabs, updateWindows } from "../store/actions/groups";
 import DND_CREATORS from "../store/actions/dnd";
+import { isTabDrag, isWindowDrag } from "../constants/dragRegExp";
+import { toggleWindowTabsVisibility } from "../utils/helper";
 
 const Container = styled.div`
   width: 600px;
@@ -39,23 +41,29 @@ export default function App(): JSX.Element {
 
   useUpdateWindows();
 
+  const onBeforeCapture = useCallback(({ draggableId }: BeforeCapture) => {
+    if (isWindowDrag(draggableId)) {
+      // hide tabs during a window drag
+      toggleWindowTabsVisibility(draggableId, false);
+    }
+  }, []);
+
   const onDragStart = useCallback(
-    (initial: DragStart) => {
-      dispatch(DND_CREATORS.updateDragOriginType(initial.draggableId));
+    ({ draggableId }: DragStart) => {
+      dispatch(DND_CREATORS.updateDragOriginType(draggableId));
       dispatch(DND_CREATORS.updateIsDragging(true));
     },
     [dispatch]
   );
 
   const onDragEnd = useCallback(
-    (result: DropResult) => {
-      const { source, destination, draggableId } = result;
-
-      if (draggableId.includes("tab")) {
-        // tab drag
+    ({ source, destination, draggableId }: DropResult) => {
+      if (isTabDrag(draggableId)) {
         dispatch(updateTabs({ index: active.index, source, destination, dragOverGroup }));
-      } else if (/window-\d+-group-\d+/i.test(draggableId)) {
-        // window drag
+      } else if (isWindowDrag(draggableId)) {
+        // re-show the tabs since the drag ended
+        toggleWindowTabsVisibility(draggableId, true);
+
         dispatch(updateWindows({ index: active.index, dnd: { source, destination }, dragOverGroup }));
       } else {
         // group drag
@@ -71,7 +79,7 @@ export default function App(): JSX.Element {
       <GlobalStyle />
       <Header />
 
-      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
         {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
           <MainArea>
             <SidePanel />

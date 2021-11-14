@@ -6,6 +6,7 @@ import Information from "./Information";
 import SearchResult from "../SearchResult";
 import Window from "./Window";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import { isWindowDrag } from "../../constants/dragRegExp";
 
 const Container = styled.div`
   height: 100%;
@@ -37,10 +38,7 @@ export default function Windows(): JSX.Element {
 
       {typing && filterChoice === "tab" && <SearchResult type="tab" />}
 
-      <Droppable
-        droppableId={"group-" + index}
-        isDropDisabled={!/window-\d+-group-\d+/.test(dragType) || dragOverGroup > 1}
-      >
+      <Droppable droppableId={"group-" + index} isDropDisabled={!isWindowDrag(dragType) || dragOverGroup > 1}>
         {(provider, dropSnapshot) => (
           <WindowsContainer
             ref={provider.innerRef}

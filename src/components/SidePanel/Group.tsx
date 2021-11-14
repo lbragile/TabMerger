@@ -10,6 +10,7 @@ import { useSelector } from "../../hooks/useSelector";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import DND_CREATORS from "../../store/actions/dnd";
+import { isGroupDrag } from "../../constants/dragRegExp";
 
 interface IGroupStyle {
   active: boolean;
@@ -137,7 +138,7 @@ export default function Group({
 
   const { isActive, name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
-  const isGroupDrag = /^group-\d+$/.test(dragType);
+  const groupDrag = isGroupDrag(dragType);
 
   const headlineRef = useRef<HTMLDivElement>(null);
   const [showOverflow, setShowOverflow] = useState(false);
@@ -147,7 +148,7 @@ export default function Group({
 
   const handleGroupDragOver = (eventType: "enter" | "leave") => {
     const isEntering = eventType === "enter";
-    if (isDragging && !isGroupDrag) {
+    if (isDragging && !groupDrag) {
       setDraggingOver(isEntering);
       if ((isEntering ? index : dragOverGroup) > 1) {
         dispatch(DND_CREATORS.updateDragOverGroup(isEntering ? index : 0));
@@ -164,7 +165,7 @@ export default function Group({
         active={isActive}
         $overflow={overflow}
         $dragging={snapshot.isDragging}
-        $draggingOver={index > 1 && isDragging && !isGroupDrag && draggingOver}
+        $draggingOver={index > 1 && isDragging && !groupDrag && draggingOver}
         onClick={handleActiveGroupUpdate}
         onKeyPress={() => console.log("key press")}
         onPointerEnter={() => handleGroupDragOver("enter")}
