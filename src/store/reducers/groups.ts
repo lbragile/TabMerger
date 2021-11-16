@@ -43,18 +43,6 @@ export interface IGroupsState {
   };
 }
 
-// id & updatedAt are set upon creation to ensure uniqueness/correctness
-const DEFAULT_GROUP: IGroupState = {
-  isActive: false,
-  name: "No Name",
-  id: "",
-  color: "#808080",
-  updatedAt: 0,
-  windows: [],
-  permanent: false,
-  info: "0T | 0W"
-};
-
 const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
   alwaysOnTop: false,
   focused: false,
@@ -232,13 +220,25 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       };
     }
 
-    case GROUPS_ACTIONS.ADD_GROUP:
-      available.push({ ...DEFAULT_GROUP, id: nanoid(10), updatedAt: Date.now() });
+    case GROUPS_ACTIONS.ADD_GROUP: {
+      const NEW_GROUP: IGroupState = {
+        isActive: false,
+        name: "No Name",
+        id: nanoid(10),
+        color: "#808080",
+        updatedAt: Date.now(),
+        windows: [],
+        permanent: false,
+        info: "0T | 0W"
+      };
+
+      available.push(NEW_GROUP);
 
       return {
         ...state,
         available
       };
+    }
 
     case GROUPS_ACTIONS.DELETE_GROUP: {
       const { index } = action.payload as { index: number };
@@ -261,7 +261,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS:
       return {
         ...state,
-        available: available.filter((group, i) => i <= 1 || (i > 1 && group.windows.length !== 0))
+        available: available.filter((group, i) => i <= 1 || (i > 1 && group.windows.length > 0))
       };
 
     case GROUPS_ACTIONS.ADD_WINDOW: {
@@ -276,14 +276,19 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
       const { index } = action.payload as { index: number };
-      const { windows } = available[index];
+      const { windows } = available[index] ?? {};
 
-      const newWindows = windows.filter(({ tabs }) => {
-        const numTabs = tabs?.length;
-        return numTabs !== undefined && numTabs > 0;
-      });
+      // possible to have cleaned up the group (by removing all of its tabs) ...
+      // ... now the above index has already been cleared, so the window won't exist ...
+      // ... this should not happen, but is a good "safety guard"
+      if (Object.values(windows).length > 0) {
+        const newWindows = windows.filter(({ tabs }) => {
+          const numTabs = tabs?.length;
+          return numTabs !== undefined && numTabs > 0;
+        });
 
-      available[index].windows = newWindows;
+        available[index].windows = newWindows;
+      }
 
       return {
         ...state,

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "../../hooks/useDispatch";
 import GROUPS_CREATORS from "../../store/actions/groups";
@@ -11,6 +10,7 @@ import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import DND_CREATORS from "../../store/actions/dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
+import { CloseIcon } from "../../styles/CloseIcon";
 
 interface IGroupStyle {
   active: boolean;
@@ -25,17 +25,10 @@ const Container = styled.div`
   position: relative;
 `;
 
-const CloseIcon = styled(FontAwesomeIcon)`
-  color: rgba(0, 0, 0, 0.3);
-  display: none;
+const AbsoluteCloseIcon = styled(CloseIcon)`
   position: absolute;
   top: 4px;
   right: 4px;
-  cursor: pointer;
-
-  &:hover {
-    color: rgba(255, 0, 0, 0.3);
-  }
 `;
 
 const StyledDiv = styled.div<IGroupStyle>`
@@ -46,7 +39,7 @@ const StyledDiv = styled.div<IGroupStyle>`
   height: 49px;
   border-radius: 4px;
   background-color: ${({ active, $dragging, $draggingOver }) =>
-    active ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "lightgreen" : "white"};
+    active ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
   border: 1px solid ${({ color }) => color};
   overflow: hidden;
   position: relative;
@@ -55,10 +48,18 @@ const StyledDiv = styled.div<IGroupStyle>`
   justify-content: space-between;
   padding: 4px 8px 4px 16px;
   cursor: ${({ $draggingOver, $draggingGlobal }) => ($draggingOver || $draggingGlobal ? "grabbing" : "pointer")};
+  ${({ $draggingGlobal }) =>
+    !$draggingGlobal &&
+    css`
+      &:hover ${AbsoluteCloseIcon} {
+        color: rgba(0, 0, 0, 0.3);
+        display: block;
 
-  &:hover ${CloseIcon} {
-    display: block;
-  }
+        &:hover {
+          color: rgba(255, 0, 0, 0.6);
+        }
+      }
+    `}
 `;
 
 const Headline = styled.div`
@@ -156,6 +157,7 @@ export default function Group({
         onClick={handleActiveGroupUpdate}
         onKeyPress={() => console.log("key press")}
         onPointerEnter={() => handleGroupDragOver("enter")}
+        onPointerUp={() => isDragging && setDraggingOver(false)} // drop does not call 'leave' - draggingOver local state isn't reset
         onPointerLeave={() => handleGroupDragOver("leave")}
       >
         <Headline
@@ -180,7 +182,7 @@ export default function Group({
         />
 
         {!permanent && (
-          <CloseIcon
+          <AbsoluteCloseIcon
             icon={faTimes}
             onClick={(e) => {
               e.stopPropagation();

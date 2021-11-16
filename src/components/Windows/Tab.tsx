@@ -1,11 +1,11 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useSelector } from "../../hooks/useSelector";
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { isTabDrag } from "../../constants/dragRegExp";
+import { CloseIcon } from "../../styles/CloseIcon";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
@@ -33,24 +33,6 @@ const TabTitle = styled.span`
 const TabIcon = styled.img`
   height: 14px;
   width: 14px;
-`;
-
-const CloseIcon = styled(FontAwesomeIcon)<{ $visible: boolean }>`
-  && {
-    ${({ $visible }) =>
-      $visible
-        ? css`
-            cursor: pointer;
-            color: transparent;
-
-            &:hover {
-              color: #ff4040;
-            }
-          `
-        : css`
-            visibility: hidden;
-          `}
-  }
 `;
 
 const Row = styled.div`
@@ -82,10 +64,10 @@ export default function Tab({
   return (
     <Row>
       <CloseIcon
-        icon={faTimesCircle}
+        icon={faTimes}
         tabIndex={0}
         onClick={() => closeTab()}
-        onKeyPress={(e) => e.key === "Enter" && closeTab()}
+        onKeyPress={({ key }) => key === "Enter" && closeTab()}
         $visible={!isDragging}
       />
 
@@ -105,7 +87,7 @@ export default function Tab({
           role="link"
           tabIndex={0}
           onClick={() => openTab()}
-          onKeyPress={(e) => e.key === "Enter" && openTab()}
+          onKeyPress={({ key }) => key === "Enter" && openTab()}
         >
           {filterChoice === "tab" ? <Highlighted text={title} /> : title}
         </TabTitle>

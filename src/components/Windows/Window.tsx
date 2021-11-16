@@ -7,6 +7,7 @@ import { pluralize } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
 import { isTabDrag } from "../../constants/dragRegExp";
+import { CloseIcon } from "../../styles/CloseIcon";
 
 const Flex = styled.div`
   display: flex;
@@ -14,9 +15,9 @@ const Flex = styled.div`
   gap: 8px;
 `;
 
-const Container = styled(Flex)<{ $dragging: boolean }>`
+const WindowContainer = styled(Flex)<{ $dragging: boolean }>`
   justify-content: center;
-  margin: 12px 0 0 12px;
+  margin-top: 12px;
   font-size: 14px;
   background-color: white;
   border-radius: 4px;
@@ -32,7 +33,7 @@ const WindowTitle = styled.div`
 
 const Headline = styled(Flex)<{ active: boolean }>`
   display: grid;
-  grid-template-columns: auto 150px auto auto;
+  grid-template-columns: auto auto 25ch auto;
   column-gap: 8px;
   justify-content: start;
   align-items: center;
@@ -44,7 +45,7 @@ const Headline = styled(Flex)<{ active: boolean }>`
 `;
 
 const TabsContainer = styled(Flex)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
-  margin-top: 8px;
+  margin-left: 24px;
   border-radius: 4px;
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "#0080ff" : "transparent")};
   background-color: ${({ $dragOrigin }) => ($dragOrigin ? "#f5faff" : "white")};
@@ -53,22 +54,6 @@ const TabsContainer = styled(Flex)<{ $draggedOver: boolean; $dragOrigin: boolean
 const TabCounter = styled.span`
   color: #808080;
   cursor: default;
-`;
-
-const CloseIcon = styled(FontAwesomeIcon)`
-  visibility: hidden;
-  pointer-events: none;
-  cursor: none;
-
-  && {
-    color: #ff4040;
-  }
-
-  ${Headline}:hover & {
-    visibility: visible;
-    pointer-events: all;
-    cursor: pointer;
-  }
 `;
 
 const Popup = styled.div<{ $left: number }>`
@@ -132,7 +117,7 @@ export default function Window({
 }): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
-  const { dragType, dragOverGroup } = useSelector((state) => state.dnd);
+  const { dragType, dragOverGroup, isDragging } = useSelector((state) => state.dnd);
 
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
@@ -165,8 +150,16 @@ export default function Window({
   }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
 
   return (
-    <Container $dragging={windowSnapshot.isDragging} onDragStart={(e) => e.preventDefault()}>
-      <Headline active={focused} draggable>
+    <WindowContainer $dragging={windowSnapshot.isDragging}>
+      <Headline active={focused}>
+        <CloseIcon
+          icon={faTimesCircle}
+          tabIndex={0}
+          onClick={() => closeWindow()}
+          onKeyPress={({ key }) => key === "Enter" && closeWindow()}
+          $visible={!isDragging}
+        />
+
         <div {...dragHandleProps}>
           <FontAwesomeIcon icon={faWindowMaximize} />
         </div>
@@ -176,15 +169,12 @@ export default function Window({
             ref={titleRef}
             tabIndex={0}
             role="button"
-            onClick={(e) => {
-              // left click
-              if (e.button === 0) openWindow("new");
-            }}
+            onClick={({ button }) => button === 0 && openWindow("new")}
             onContextMenu={(e) => {
               e.preventDefault();
               setShowPopup(true);
             }}
-            onKeyPress={(e) => e.key === "Enter" && setShowPopup(true)}
+            onKeyPress={({ key }) => key === "Enter" && setShowPopup(true)}
           >
             {focused ? "Current" : ""} Window
           </WindowTitle>
@@ -196,7 +186,7 @@ export default function Window({
                   key={choice.text}
                   tabIndex={0}
                   onClick={() => openWindow(choice.type)}
-                  onKeyPress={(e) => e.key === "Enter" && openWindow(choice.type)}
+                  onKeyPress={({ key }) => key === "Enter" && openWindow(choice.type)}
                 >
                   {choice.text}
                 </PopupChoice>
@@ -206,16 +196,6 @@ export default function Window({
         </TitleContainer>
 
         <TabCounter>{tabCounterStr}</TabCounter>
-
-        <CloseIcon
-          icon={faTimesCircle}
-          tabIndex={0}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            closeWindow();
-          }}
-          onKeyPress={(e) => e.key === "Enter" && closeWindow()}
-        />
       </Headline>
 
       <Droppable droppableId={"window-" + index} isDropDisabled={!isTabDrag(dragType) || dragOverGroup > 1}>
@@ -245,6 +225,6 @@ export default function Window({
           </TabsContainer>
         )}
       </Droppable>
-    </Container>
+    </WindowContainer>
   );
 }

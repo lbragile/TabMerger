@@ -101,8 +101,10 @@ export default function App(): JSX.Element {
       }
 
       dispatch(DND_CREATORS.resetDnDInfo());
-      dispatch(GROUPS_CREATORS.clearEmptyGroups());
+
+      // must clear the windows in the current group first, then clear the group
       dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: active.index }));
+      dispatch(GROUPS_CREATORS.clearEmptyGroups());
     },
     [dispatch, active.index, dragOverGroup, available]
   );
