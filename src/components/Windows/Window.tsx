@@ -9,19 +9,22 @@ import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Dr
 import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
 
-const Flex = styled.div`
+const Column = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
 `;
 
-const WindowContainer = styled(Flex)<{ $dragging: boolean }>`
+const Row = styled(Column)`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   justify-content: center;
   margin-top: 12px;
   font-size: 14px;
-  background-color: white;
   border-radius: 4px;
-  border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
 `;
 
@@ -31,20 +34,23 @@ const WindowTitle = styled.div`
   cursor: pointer;
 `;
 
-const Headline = styled(Flex)<{ active: boolean }>`
+const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
   display: grid;
-  grid-template-columns: auto auto 25ch auto;
+  grid-template-columns: auto 25ch auto;
   column-gap: 8px;
   justify-content: start;
   align-items: center;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 
   & svg,
   & ${WindowTitle} {
-    color: ${({ active }) => (active ? "#0080ff" : "")};
+    color: ${({ $active }) => ($active ? "#0080ff" : "")};
   }
 `;
 
-const TabsContainer = styled(Flex)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
+const TabsContainer = styled(Column)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
   margin-left: 24px;
   border-radius: 4px;
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "#0080ff" : "transparent")};
@@ -151,7 +157,7 @@ export default function Window({
 
   return (
     <WindowContainer $dragging={windowSnapshot.isDragging}>
-      <Headline active={focused}>
+      <Row>
         <CloseIcon
           icon={faTimesCircle}
           tabIndex={0}
@@ -160,43 +166,45 @@ export default function Window({
           $visible={!isDragging}
         />
 
-        <div {...dragHandleProps}>
-          <FontAwesomeIcon icon={faWindowMaximize} />
-        </div>
+        <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
+          <div {...dragHandleProps}>
+            <FontAwesomeIcon icon={faWindowMaximize} />
+          </div>
 
-        <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
-          <WindowTitle
-            ref={titleRef}
-            tabIndex={0}
-            role="button"
-            onClick={({ button }) => button === 0 && openWindow("new")}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              setShowPopup(true);
-            }}
-            onKeyPress={({ key }) => key === "Enter" && setShowPopup(true)}
-          >
-            {focused ? "Current" : ""} Window
-          </WindowTitle>
+          <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
+            <WindowTitle
+              ref={titleRef}
+              tabIndex={0}
+              role="button"
+              onClick={({ button }) => button === 0 && openWindow("new")}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setShowPopup(true);
+              }}
+              onKeyPress={({ key }) => key === "Enter" && setShowPopup(true)}
+            >
+              {focused ? "Current" : ""} Window
+            </WindowTitle>
 
-          {showPopup && (
-            <Popup $left={titleRef.current?.clientWidth ?? 0}>
-              {WINDOW_TITLE_POPUP_CHOICES.map((choice) => (
-                <PopupChoice
-                  key={choice.text}
-                  tabIndex={0}
-                  onClick={() => openWindow(choice.type)}
-                  onKeyPress={({ key }) => key === "Enter" && openWindow(choice.type)}
-                >
-                  {choice.text}
-                </PopupChoice>
-              ))}
-            </Popup>
-          )}
-        </TitleContainer>
+            {showPopup && (
+              <Popup $left={titleRef.current?.clientWidth ?? 0}>
+                {WINDOW_TITLE_POPUP_CHOICES.map((choice) => (
+                  <PopupChoice
+                    key={choice.text}
+                    tabIndex={0}
+                    onClick={() => openWindow(choice.type)}
+                    onKeyPress={({ key }) => key === "Enter" && openWindow(choice.type)}
+                  >
+                    {choice.text}
+                  </PopupChoice>
+                ))}
+              </Popup>
+            )}
+          </TitleContainer>
 
-        <TabCounter>{tabCounterStr}</TabCounter>
-      </Headline>
+          <TabCounter>{tabCounterStr}</TabCounter>
+        </Headline>
+      </Row>
 
       <Droppable droppableId={"window-" + index} isDropDisabled={!isTabDrag(dragType) || dragOverGroup > 1}>
         {(provider, dropSnapshot) => (

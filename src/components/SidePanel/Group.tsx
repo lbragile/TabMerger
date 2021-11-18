@@ -108,10 +108,12 @@ export default function Group({
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType, dragOverGroup } = useSelector((state) => state.dnd);
+  const { active } = useSelector((state) => state.groups);
 
-  const { isActive, name, id, color, updatedAt, permanent, info } = data;
+  const { name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
   const groupDrag = isGroupDrag(dragType);
+  const isActive = active.index === index;
 
   const [draggingOver, setDraggingOver] = useState(false);
 

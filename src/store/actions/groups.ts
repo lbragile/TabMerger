@@ -17,7 +17,7 @@ const updateName = (payload?: { index: number; name: string }) => ({
   payload
 });
 
-const updateColor = (payload?: string) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
+const updateColor = (payload?: { index: number; color: string }) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
 const updateTimestamp = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
 
