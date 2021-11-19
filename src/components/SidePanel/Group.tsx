@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "../../hooks/useDispatch";
@@ -11,6 +11,11 @@ import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-
 import DND_CREATORS from "../../store/actions/dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
+import { ColorPicker } from "@mantine/core";
+import useDebounce from "../../hooks/useDebounce";
+import useClickOutside from "../../hooks/useClickOutside";
+import { COLOR_PICKER_SWATCHES } from "../../constants/colorPicker";
+import Popup from "../Popup";
 
 interface IGroupStyle {
   active: boolean;
@@ -87,6 +92,39 @@ const ColorIndicator = styled.div<{ color: string }>`
   position: absolute;
   top: 0;
   left: 0;
+  transition: transform 0.3s linear, background-color 0.3s ease-out;
+
+  &:hover {
+    transform: scaleX(2);
+  }
+`;
+
+const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; $visible: boolean }>`
+  box-shadow: 0 0 4px 0 black;
+  padding: 4px;
+  border-radius: 4px;
+  position: fixed;
+  background: white;
+  z-index: 10;
+  display: ${({ $visible }) => ($visible ? "flex" : "none")};
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  ${({ $pos: { right, top } }) => css`
+    top: ${top}px;
+    left: ${right + 12}px;
+  `}
+
+  & .mantine-ColorPicker-thumb,
+  & .mantine-ColorPicker-saturation,
+  & .mantine-ColorPicker-slider {
+    cursor: crosshair;
+  }
+
+  & > span {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
 `;
 
 interface IGroup {
@@ -115,7 +153,17 @@ export default function Group({
   const groupDrag = isGroupDrag(dragType);
   const isActive = active.index === index;
 
+  const groupRef = useRef<HTMLDivElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
+
   const [draggingOver, setDraggingOver] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [pickerPos, setPickerPos] = useState<{ right: number; top: number }>({ right: 0, top: 0 });
+  const [colorPickerValue, setColorPickerValue] = useState(color);
+  const [titleOverflow, setTitleOverflow] = useState({ visible: false, text: "", pos: { x: 0, y: 0 } });
+  const debouncedPickerValue = useDebounce(colorPickerValue, 100);
+
+  useClickOutside(pickerRef, () => setShowPicker(false));
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
 
@@ -135,64 +183,90 @@ export default function Group({
   ) => {
     if (!isDragging && currentTarget && currentTarget.scrollWidth > currentTarget.clientWidth) {
       const { right, top, height } = currentTarget.getBoundingClientRect();
-      dispatch(
-        GROUPS_CREATORS.updateOverflowTitlePopup({
-          visible: eventType === "enter",
-          text: name,
-          pos: { x: right + 2, y: top - height / 2 }
-        })
-      );
+      setTitleOverflow({
+        visible: eventType === "enter",
+        text: name,
+        pos: { x: right + 2, y: top - height / 2 }
+      });
     }
   };
 
   return (
-    <Container>
-      <StyledDiv
-        tabIndex={0}
-        role="button"
-        color={color}
-        active={isActive}
-        $overflow={overflow}
-        $dragging={snapshot.isDragging}
-        $draggingOver={index > 1 && isDragging && !groupDrag && draggingOver}
-        $draggingGlobal={isDragging}
-        onClick={handleActiveGroupUpdate}
-        onKeyPress={() => console.log("key press")}
-        onPointerEnter={() => handleGroupDragOver("enter")}
-        onPointerUp={() => isDragging && setDraggingOver(false)} // drop does not call 'leave' - draggingOver local state isn't reset
-        onPointerLeave={() => handleGroupDragOver("leave")}
-      >
-        <Headline
-          onPointerEnter={(e) => handleShowTitleOverflow(e, "enter")}
-          onPointerLeave={(e) => handleShowTitleOverflow(e, "leave")}
-          onFocus={() => console.log("focused")}
-          {...dragHandleProps}
-        >
-          {filterChoice === "group" ? <Highlighted text={name} /> : name}
-        </Headline>
-
-        <Information>
-          <span>{info ?? "0T | 0W"}</span> <span>{relativeTimeStr(updatedAt)}</span>
-        </Information>
-
-        <ColorIndicator
-          color={color}
-          role="button"
+    <>
+      <Container ref={groupRef}>
+        <StyledDiv
           tabIndex={0}
-          onClick={() => console.log("open color picker")}
-          onKeyPress={() => console.log("keyPress")}
-        />
+          role="button"
+          color={debouncedPickerValue}
+          active={isActive}
+          $overflow={overflow}
+          $dragging={snapshot.isDragging}
+          $draggingOver={index > 1 && isDragging && !groupDrag && draggingOver}
+          $draggingGlobal={isDragging}
+          onClick={handleActiveGroupUpdate}
+          onKeyPress={() => console.log("key press")}
+          onPointerEnter={() => handleGroupDragOver("enter")}
+          onPointerUp={() => isDragging && setDraggingOver(false)} // drop does not call 'leave' - draggingOver local state isn't reset
+          onPointerLeave={() => handleGroupDragOver("leave")}
+        >
+          <Headline
+            onPointerEnter={(e) => handleShowTitleOverflow(e, "enter")}
+            onPointerLeave={(e) => handleShowTitleOverflow(e, "leave")}
+            onFocus={() => console.log("focused")}
+            {...dragHandleProps}
+          >
+            {filterChoice === "group" ? <Highlighted text={name} /> : name}
+          </Headline>
 
-        {!permanent && (
-          <AbsoluteCloseIcon
-            icon={faTimes}
+          <Information>
+            <span>{info ?? "0T | 0W"}</span> <span>{relativeTimeStr(updatedAt)}</span>
+          </Information>
+
+          <ColorIndicator
+            color={debouncedPickerValue}
+            role="button"
+            tabIndex={0}
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(GROUPS_CREATORS.deleteGroup({ index, id }));
+
+              // groups below the half way mark will have their color pickers show upwards.
+              // timeout allows the picker to be displayed so that it's height can be captured
+              setTimeout(() => {
+                if (pickerRef.current && groupRef.current) {
+                  setShowPicker(true);
+                  const { right, top, height: heightGroup } = groupRef.current.getBoundingClientRect();
+                  const { height: heightPicker } = pickerRef.current.getBoundingClientRect();
+                  setPickerPos({ right, top: top >= 300 ? top - (heightPicker - heightGroup) : top });
+                }
+              }, 0);
             }}
+            onKeyPress={() => console.log("keyPress")}
           />
-        )}
-      </StyledDiv>
-    </Container>
+
+          {!permanent && (
+            <AbsoluteCloseIcon
+              icon={faTimes}
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(GROUPS_CREATORS.deleteGroup({ index, id }));
+              }}
+            />
+          )}
+        </StyledDiv>
+      </Container>
+
+      {/* Want this to be present in the DOM since it's height is used to calculate position */}
+      <ColorPickerContainer ref={pickerRef} $pos={pickerPos} $visible={showPicker}>
+        <ColorPicker
+          format="rgba"
+          value={debouncedPickerValue}
+          onChange={setColorPickerValue}
+          swatches={COLOR_PICKER_SWATCHES}
+        />
+        <span>{debouncedPickerValue}</span>
+      </ColorPickerContainer>
+
+      {titleOverflow.visible && <Popup {...titleOverflow} />}
+    </>
   );
 }

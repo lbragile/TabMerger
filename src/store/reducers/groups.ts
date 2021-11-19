@@ -18,8 +18,7 @@ export const GROUPS_ACTIONS = {
   DELETE_GROUP: "DELETE_GROUP",
   CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
-  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
-  UPDATE_OVERFLOW_TITLE_POPUP: "UPDATE_OVERFLOW_TITLE_POPUP"
+  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER"
 };
 
 export interface IGroupState {
@@ -35,11 +34,6 @@ export interface IGroupState {
 export interface IGroupsState {
   active: { id: string; index: number };
   available: IGroupState[];
-  overflowTitle: {
-    visible: boolean;
-    text: string;
-    pos: { x: number; y: number };
-  };
 }
 
 const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
@@ -58,7 +52,7 @@ const initState: IGroupsState = {
     {
       name: "Awaiting Storage",
       id: activeId,
-      color: "#808080",
+      color: "rgba(128, 128, 128, 1)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
@@ -66,17 +60,12 @@ const initState: IGroupsState = {
     {
       name: "Duplicates",
       id: nanoid(10),
-      color: "#808080",
+      color: "rgba(128, 128, 128, 1)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
     }
-  ],
-  overflowTitle: {
-    visible: false,
-    pos: { x: 0, y: 0 },
-    text: ""
-  }
+  ]
 };
 
 const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
@@ -214,7 +203,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const NEW_GROUP: IGroupState = {
         name: "No Name",
         id: nanoid(10),
-        color: "#808080",
+        color: "rgba(128, 128, 128, 1)",
         updatedAt: Date.now(),
         windows: [],
         permanent: false,
@@ -306,12 +295,6 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         available
       };
     }
-
-    case GROUPS_ACTIONS.UPDATE_OVERFLOW_TITLE_POPUP:
-      return {
-        ...state,
-        overflowTitle: action.payload as IGroupsState["overflowTitle"]
-      };
 
     default:
       return state;
