@@ -155,6 +155,7 @@ export default function Group({
 
   const groupRef = useRef<HTMLDivElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const timeoutDragOver = useRef(0);
 
   const [draggingOver, setDraggingOver] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
@@ -171,8 +172,19 @@ export default function Group({
     const isEntering = eventType === "enter";
     if (isDragging && !groupDrag) {
       setDraggingOver(isEntering);
-      if ((isEntering ? index : dragOverGroup) > 1) {
-        dispatch(DND_CREATORS.updateDragOverGroup(isEntering ? index : 0));
+
+      // debounce the dispatch by 250ms
+      if (isEntering && index > 1) {
+        timeoutDragOver.current = setTimeout(() => {
+          dispatch(DND_CREATORS.updateDragOverGroup(index));
+        }, 250) as unknown as number;
+      } else if (!isEntering) {
+        clearTimeout(timeoutDragOver.current);
+
+        // needed to avoid being able to drop into a hovered group even after leaving
+        if (dragOverGroup !== 0) {
+          dispatch(DND_CREATORS.updateDragOverGroup(0));
+        }
       }
     }
   };
@@ -243,7 +255,7 @@ export default function Group({
             onKeyPress={() => console.log("keyPress")}
           />
 
-          {!permanent && (
+          {!permanent && !isDragging && (
             <AbsoluteCloseIcon
               icon={faTimes}
               onClick={(e) => {
