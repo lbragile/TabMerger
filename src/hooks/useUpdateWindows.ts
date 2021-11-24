@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
 import GROUPS_CREATORS from "../store/actions/groups";
+import { useDispatch } from "./useDispatch";
 
 export default function useUpdateWindows(): void {
   const dispatch = useDispatch();

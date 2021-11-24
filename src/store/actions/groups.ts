@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { DraggableLocation } from "react-beautiful-dnd";
-import { GROUPS_ACTIONS } from "../reducers/groups";
+import { GROUPS_ACTIONS, IGroupsState } from "../reducers/groups";
 
-const updateActive = (payload?: { id: string; index: number }) => ({
+const updateAvailable = (payload?: IGroupsState["available"]) => ({
+  type: GROUPS_ACTIONS.UPDATE_AVAILABLE,
+  payload
+});
+
+const updateActive = (payload?: IGroupsState["active"]) => ({
   type: GROUPS_ACTIONS.UPDATE_ACTIVE,
   payload
 });
@@ -70,6 +75,7 @@ const updateGroupOrder = (payload?: { source: DraggableLocation; destination: Dr
 });
 
 export default {
+  updateAvailable,
   updateActive,
   updateIndex,
   updateIsActive,

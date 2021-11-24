@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { DraggableLocation } from "react-beautiful-dnd";
 
 export const GROUPS_ACTIONS = {
+  UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
   UPDATE_ACTIVE: "UPDATE_ACTIVE",
   UPDATE_INDEX: "UPDATE_INDEX",
   UPDATE_IS_ACTIVE: "UPDATE_IS_ACTIVE",
@@ -72,6 +73,12 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
+    case GROUPS_ACTIONS.UPDATE_AVAILABLE:
+      return {
+        ...state,
+        available: action.payload as IGroupsState["available"]
+      };
+
     case GROUPS_ACTIONS.UPDATE_ACTIVE:
       return {
         ...state,
@@ -240,7 +247,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       // if filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
       // ... as it is not the source of the dnd event - must be non-empty.
       const { index, id } = state.active;
-      const newIdx = index - 1;
+      const newIdx = Math.min(0, index - 1);
       const active = !filteredIds.includes(id) ? { index: newIdx, id: available[newIdx].id } : { ...state.active };
 
       return {
