@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import useUpdateWindows from "../hooks/useUpdateWindows";
@@ -12,6 +12,7 @@ import GROUPS_CREATORS from "../store/actions/groups";
 import DND_CREATORS from "../store/actions/dnd";
 import { isGroupDrag, isTabDrag, isWindowDrag } from "../constants/dragRegExp";
 import { toggleWindowTabsVisibility } from "../utils/helper";
+import useStorage from "../hooks/useStorage";
 
 const Container = styled.div`
   width: 600px;
@@ -39,22 +40,8 @@ export default function App(): JSX.Element {
   const { active, available } = useSelector((state) => state.groups);
   const { dragOverGroup, dragType } = useSelector((state) => state.dnd);
 
-  // useUpdateWindows();
-
-  // get local storage groups on initial load (update available list)
-  useEffect(() => {
-    const key = "groups";
-    chrome.storage.local.get(key, (result) => {
-      if (result) {
-        dispatch(GROUPS_CREATORS.updateAvailable(result[key]));
-      }
-    });
-  }, [dispatch]);
-
-  // update chrome storage (local) whenever the groups update to persist changes
-  useEffect(() => {
-    chrome.storage.local.set({ groups: available });
-  }, [available]);
+  useStorage("groups");
+  useUpdateWindows();
 
   const onBeforeCapture = useCallback(
     ({ draggableId }: BeforeCapture) => {

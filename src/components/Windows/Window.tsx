@@ -215,10 +215,11 @@ export default function Window({
             $dragOrigin={!!dropSnapshot.draggingFromThisWith}
           >
             {currentTabs?.map((tab, i) => {
-              const { title, url } = tab ?? {};
-              if (title && url) {
+              const { title, url, pendingUrl } = tab ?? {};
+              if (title && (url || pendingUrl)) {
+                const tabUrl = url ?? pendingUrl;
                 return (
-                  <Draggable key={title + url + i} draggableId={`tab-${i}-window-${index}`} index={i}>
+                  <Draggable key={title + tabUrl + i} draggableId={`tab-${i}-window-${index}`} index={i}>
                     {(provided, dragSnapshot) => (
                       <div ref={provided.innerRef} {...provided.draggableProps}>
                         <Tab {...tab} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />

@@ -1,28 +1,23 @@
-import { useCallback, useEffect, useState, Dispatch, SetStateAction } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "./useDispatch";
+import GROUPS_CREATORS from "../store/actions/groups";
+import { useSelector } from "./useSelector";
 
-type TSetState<T> = Dispatch<SetStateAction<T>>;
+export default function useStorage(key: string): void {
+  const dispatch = useDispatch();
+  const { available } = useSelector((state) => state.groups);
 
-export default function useStorage<T>(key: string, initialValue: T): [T, TSetState<T>] {
-  const [storedValue, setStoredValue] = useState(initialValue);
-
-  const setValue: TSetState<T> = useCallback(
-    (value) => {
-      if (!(value instanceof Function)) {
-        chrome.storage.local.set({ [key]: value }, () => setStoredValue(value));
-      }
-    },
-    [key]
-  );
-
-  const handleStorageChange = useCallback(
-    () => chrome.storage.local.get(key, (result) => result[key] && setStoredValue(result[key] as T)),
-    [key]
-  );
-
+  // get local storage groups on initial load (update available list)
   useEffect(() => {
-    chrome.storage.onChanged.addListener(handleStorageChange);
-    return () => chrome.storage.onChanged.addListener(handleStorageChange);
-  }, [handleStorageChange]);
+    chrome.storage.local.get(key, (result) => {
+      if (result) {
+        dispatch(GROUPS_CREATORS.updateAvailable(result[key]));
+      }
+    });
+  }, [dispatch, key]);
 
-  return [storedValue, setValue];
+  // update chrome storage (local) whenever the groups update to persist changes
+  useEffect(() => {
+    chrome.storage.local.set({ groups: available });
+  }, [available]);
 }
