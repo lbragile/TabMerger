@@ -3,6 +3,8 @@ import GROUPS_CREATORS from "../store/actions/groups";
 import { useDispatch } from "./useDispatch";
 import { useSelector } from "./useSelector";
 
+/** @note This functionality will be moved to the background script */
+
 export default function useUpdateWindows(): void {
   const dispatch = useDispatch();
   const { available } = useSelector((state) => state.groups);
@@ -40,14 +42,11 @@ export default function useUpdateWindows(): void {
 
   /** When a tab updates, find it in the windows list and update it respectively */
   // TODO - this might need to be done in the background script
-  const tabUpdateHandler = useCallback(
-    async (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
-      if (changeInfo.status === "complete") {
-        console.log(tabId, tab);
-      }
-    },
-    []
-  );
+  const tabUpdateHandler = useCallback((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
+    if (changeInfo.status === "complete") {
+      console.log(tabId, tab);
+    }
+  }, []);
 
   /** When the popup is first opened, get the list of all windows */
   // TODO filter difference between existing windows and ones in local storage (of Awaiting Storage group) - add differences to top

@@ -89,30 +89,21 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const { index, name } = action.payload as { index: number; name: string };
       available[index].name = name;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_COLOR: {
       const { index, color } = action.payload as { index: number; color: string };
       available[index].color = color;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_TIMESTAMP: {
       const { index, updatedAt } = action.payload as { index: number; updatedAt: number };
       available[index].updatedAt = updatedAt;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
@@ -147,10 +138,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         }
       }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS: {
@@ -180,30 +168,21 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         }
       }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_PERMANENT: {
       const { index, permanent } = action.payload as { index: number; permanent: boolean };
       available[index].permanent = permanent;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_INFO: {
       const { index, info } = action.payload as { index: number; info: string };
       available[index].info = info;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.ADD_GROUP: {
@@ -219,25 +198,24 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
       available.push(NEW_GROUP);
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.DELETE_GROUP: {
       const { index } = action.payload as { index: number };
-      available.splice(index, 1);
 
       // re-assign active group if deleted group was the active one (use the group above if needed)
       const activeIdx = state.active.index;
-      const newIdx = activeIdx === index ? index - 1 : activeIdx;
+      const active =
+        activeIdx < index
+          ? { ...state.active }
+          : activeIdx === index
+          ? { index: activeIdx - 1, id: available[activeIdx - 1].id }
+          : { ...state.active, index: activeIdx - 1 };
 
-      return {
-        ...state,
-        active: { index: newIdx, id: available[newIdx].id },
-        available
-      };
+      available.splice(index, 1);
+
+      return { ...state, active, available };
     }
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS: {
@@ -247,24 +225,17 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       // if filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
       // ... as it is not the source of the dnd event - must be non-empty.
       const { index, id } = state.active;
-      const newIdx = Math.min(0, index - 1);
+      const newIdx = Math.max(0, index - 1);
       const active = !filteredIds.includes(id) ? { index: newIdx, id: available[newIdx].id } : { ...state.active };
 
-      return {
-        ...state,
-        available: filteredGroups,
-        active
-      };
+      return { ...state, available: filteredGroups, active };
     }
 
     case GROUPS_ACTIONS.ADD_WINDOW: {
       const { index } = action.payload as { index: number };
       available[index].windows.push(createWindowWithTabs([]));
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
@@ -283,10 +254,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         available[index].windows = newWindows;
       }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_GROUP_ORDER: {
@@ -297,10 +265,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         available.splice(destination.index, 0, ...removedGroups);
       }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     default:
