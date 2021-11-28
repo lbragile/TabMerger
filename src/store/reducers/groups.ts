@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { DraggableLocation } from "react-beautiful-dnd";
 
 export const GROUPS_ACTIONS = {
+  UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
   UPDATE_ACTIVE: "UPDATE_ACTIVE",
   UPDATE_INDEX: "UPDATE_INDEX",
   UPDATE_IS_ACTIVE: "UPDATE_IS_ACTIVE",
@@ -18,12 +19,10 @@ export const GROUPS_ACTIONS = {
   DELETE_GROUP: "DELETE_GROUP",
   CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
-  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
-  UPDATE_OVERFLOW_TITLE_POPUP: "UPDATE_OVERFLOW_TITLE_POPUP"
+  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER"
 };
 
 export interface IGroupState {
-  isActive: boolean;
   name: string;
   id: string;
   color: string;
@@ -36,24 +35,7 @@ export interface IGroupState {
 export interface IGroupsState {
   active: { id: string; index: number };
   available: IGroupState[];
-  overflowTitle: {
-    visible: boolean;
-    text: string;
-    pos: { x: number; y: number };
-  };
 }
-
-// id & updatedAt are set upon creation to ensure uniqueness/correctness
-const DEFAULT_GROUP: IGroupState = {
-  isActive: false,
-  name: "No Name",
-  id: "",
-  color: "#808080",
-  updatedAt: 0,
-  windows: [],
-  permanent: false,
-  info: "0T | 0W"
-};
 
 const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
   alwaysOnTop: false,
@@ -64,81 +46,64 @@ const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window =>
   tabs
 });
 
+const activeId = nanoid(10);
 const initState: IGroupsState = {
-  active: { id: nanoid(10), index: 0 },
+  active: { id: activeId, index: 0 },
   available: [
     {
-      isActive: true,
       name: "Awaiting Storage",
-      id: nanoid(10),
-      color: "#808080",
+      id: activeId,
+      color: "rgba(128, 128, 128, 1)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
     },
     {
-      isActive: false,
       name: "Duplicates",
       id: nanoid(10),
-      color: "#808080",
+      color: "rgba(128, 128, 128, 1)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
     }
-  ],
-  overflowTitle: {
-    visible: false,
-    pos: { x: 0, y: 0 },
-    text: ""
-  }
+  ]
 };
 
 const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
-    case GROUPS_ACTIONS.UPDATE_ACTIVE: {
-      const active = action.payload as IGroupsState["active"];
-
-      // set all to in-active, then set selection to active
-      available.forEach((group) => (group.isActive = false));
-      available[active.index].isActive = true;
-
+    case GROUPS_ACTIONS.UPDATE_AVAILABLE:
       return {
         ...state,
-        active,
-        available
+        available: action.payload as IGroupsState["available"]
       };
-    }
+
+    case GROUPS_ACTIONS.UPDATE_ACTIVE:
+      return {
+        ...state,
+        active: action.payload as IGroupsState["active"]
+      };
 
     case GROUPS_ACTIONS.UPDATE_NAME: {
       const { index, name } = action.payload as { index: number; name: string };
       available[index].name = name;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_COLOR: {
       const { index, color } = action.payload as { index: number; color: string };
       available[index].color = color;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_TIMESTAMP: {
       const { index, updatedAt } = action.payload as { index: number; updatedAt: number };
       available[index].updatedAt = updatedAt;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
@@ -173,10 +138,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         }
       }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS: {
@@ -206,89 +168,93 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         }
       }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_PERMANENT: {
       const { index, permanent } = action.payload as { index: number; permanent: boolean };
       available[index].permanent = permanent;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_INFO: {
       const { index, info } = action.payload as { index: number; info: string };
       available[index].info = info;
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
-    case GROUPS_ACTIONS.ADD_GROUP:
-      available.push({ ...DEFAULT_GROUP, id: nanoid(10), updatedAt: Date.now() });
-
-      return {
-        ...state,
-        available
+    case GROUPS_ACTIONS.ADD_GROUP: {
+      const NEW_GROUP: IGroupState = {
+        name: "No Name",
+        id: nanoid(10),
+        color: "rgba(128, 128, 128, 1)",
+        updatedAt: Date.now(),
+        windows: [],
+        permanent: false,
+        info: "0T | 0W"
       };
+
+      available.push(NEW_GROUP);
+
+      return { ...state, available };
+    }
 
     case GROUPS_ACTIONS.DELETE_GROUP: {
       const { index } = action.payload as { index: number };
+
+      // re-assign active group if deleted group was the active one (use the group above if needed)
+      const activeIdx = state.active.index;
+      const active =
+        activeIdx < index
+          ? { ...state.active }
+          : activeIdx === index
+          ? { index: activeIdx - 1, id: available[activeIdx - 1].id }
+          : { ...state.active, index: activeIdx - 1 };
+
       available.splice(index, 1);
 
-      // to avoid having a large index, need to re-locate the active group (incase index was for last)
-      const activeIdx = available.findIndex((group) => group.isActive);
-      const newIdx = activeIdx > -1 ? activeIdx : index - 1;
-
-      // Now update the active group - no need to reset all groups as this is taken care of by the above
-      available[newIdx].isActive = true;
-
-      return {
-        ...state,
-        active: { index: newIdx, id: available[newIdx].id },
-        available
-      };
+      return { ...state, active, available };
     }
 
-    case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS:
-      return {
-        ...state,
-        available: available.filter((group, i) => i <= 1 || (i > 1 && group.windows.length !== 0))
-      };
+    case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS: {
+      const filteredGroups = available.filter((group, i) => i <= 1 || (i > 1 && group.windows.length > 0));
+      const filteredIds = filteredGroups.map((group) => group.id);
+
+      // if filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
+      // ... as it is not the source of the dnd event - must be non-empty.
+      const { index, id } = state.active;
+      const newIdx = Math.max(0, index - 1);
+      const active = !filteredIds.includes(id) ? { index: newIdx, id: available[newIdx].id } : { ...state.active };
+
+      return { ...state, available: filteredGroups, active };
+    }
 
     case GROUPS_ACTIONS.ADD_WINDOW: {
       const { index } = action.payload as { index: number };
       available[index].windows.push(createWindowWithTabs([]));
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
       const { index } = action.payload as { index: number };
-      const { windows } = available[index];
+      const { windows } = available[index] ?? {};
 
-      const newWindows = windows.filter(({ tabs }) => {
-        const numTabs = tabs?.length;
-        return numTabs !== undefined && numTabs > 0;
-      });
+      // possible to have cleaned up the group (by removing all of its tabs) ...
+      // ... now the above index has already been cleared, so the window won't exist ...
+      // ... this should not happen, but is a good "safety guard"
+      if (Object.values(windows).length > 0) {
+        const newWindows = windows.filter(({ tabs }) => {
+          const numTabs = tabs?.length;
+          return numTabs !== undefined && numTabs > 0;
+        });
 
-      available[index].windows = newWindows;
+        available[index].windows = newWindows;
+      }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_GROUP_ORDER: {
@@ -299,18 +265,8 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         available.splice(destination.index, 0, ...removedGroups);
       }
 
-      return {
-        ...state,
-        available
-      };
+      return { ...state, available };
     }
-
-    case GROUPS_ACTIONS.UPDATE_OVERFLOW_TITLE_POPUP:
-      return {
-        ...state,
-        available,
-        overflowTitle: action.payload as IGroupsState["overflowTitle"]
-      };
 
     default:
       return state;

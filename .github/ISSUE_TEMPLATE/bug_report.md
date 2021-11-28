@@ -6,31 +6,35 @@ labels: bug
 assignees: lbragile
 ---
 
-**Before Proceeding**
-Make sure there are no [existing issues](https://github.com/lbragile/TabMerger/labels/bug) that are similar in nature to what you plan to propose. Additionally ensure that your request is not already in the [todo](https://github.com/lbragile/TabMerger/projects/1) list - you can *filter* cards.
+<!-- markdownlint-disable MD041 -->
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+<!-- Before Proceeding
 
-**To Reproduce**
-Steps to reproduce the behavior:
+Make sure there are no existing issues (https://github.com/lbragile/TabMerger/labels/bug) that are similar in nature to what you plan to propose.
+Additionally ensure that your request is not already in the todo (https://github.com/lbragile/TabMerger/projects/1) list. -->
+
+## Description
+
+<!-- A clear and concise description of what the bug is. -->
+
+## Steps to Reproduce
+
+<!-- Steps to reproduce the behavior:
 
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
-4. See error
+4. See error -->
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Expected behavior
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+<!-- A clear and concise description of what you expected to happen. -->
 
-**Please include the following information:**
+## Additional context
 
-- OS: [e.g. Windows]
-- Browser (Chrome, Firefox, Edge)
-- Version [e.g. v1.4.3]
+- OS: <!-- e.g. Windows -->
+- Browser: <!-- Chrome, Firefox, or Edge -->
+- Version: <!-- e.g. v3.0.0 -->
 
-**Additional context**
-Add any other context about the problem here.
+<!-- Add any other context about the problem here. -->
+<!-- If applicable, add screenshots to help explain your problem. -->

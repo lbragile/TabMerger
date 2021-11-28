@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
@@ -38,7 +38,7 @@ const OpenIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
 `;
 
-const Title = styled.input<{ $maxLength: boolean }>`
+const Title = styled.input<{ $isMaxLength: boolean }>`
   font-weight: bold;
   font-size: 16px;
   border: none;
@@ -55,7 +55,7 @@ const Title = styled.input<{ $maxLength: boolean }>`
 
   &:focus {
     border-bottom: 1px solid black;
-    background-color: ${({ $maxLength }) => ($maxLength ? "#ffd1d1" : "initial")};
+    background-color: ${({ $isMaxLength }) => ($isMaxLength ? "#ffd1d1" : "initial")};
   }
 `;
 
@@ -70,17 +70,20 @@ interface IInformation extends Pick<IGroupState, "info" | "name" | "updatedAt"> 
 export default function Information({ info, name, index, updatedAt }: IInformation): JSX.Element {
   const dispatch = useDispatch();
 
+  const [windowTitle, setWindowTitle] = useState("");
+  useEffect(() => setWindowTitle(name), [name]);
+
   return (
     <Grid>
       <LeftColumn>
         <Title
           type="text"
-          value={name}
+          value={windowTitle}
           spellCheck={false}
-          onChange={({ target: { value } }) => {
-            value.length <= 50 && dispatch(GROUPS_CREATORS.updateName({ index, name: value }));
-          }}
-          $maxLength={name.length === 50}
+          onChange={(e) => setWindowTitle(e.target.value)}
+          onBlur={() => dispatch(GROUPS_CREATORS.updateName({ index, name: windowTitle }))}
+          maxLength={40}
+          $isMaxLength={windowTitle.length === 40}
         />
       </LeftColumn>
 

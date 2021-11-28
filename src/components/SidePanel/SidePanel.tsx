@@ -7,7 +7,6 @@ import { useDispatch } from "../../hooks/useDispatch";
 import { Scrollbar } from "../../styles/Scrollbar";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
-import Popup from "../Popup";
 
 const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $canDrop: boolean; $dragging: boolean }>`
   display: flex;
@@ -24,7 +23,7 @@ const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $canDrop: boole
 export default function SidePanel(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { available, overflowTitle } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging, canDrop } = useSelector((state) => state.dnd);
@@ -83,8 +82,6 @@ export default function SidePanel(): JSX.Element {
           </div>
         )}
       </Droppable>
-
-      {overflowTitle.visible && <Popup {...overflowTitle} />}
     </>
   );
 }

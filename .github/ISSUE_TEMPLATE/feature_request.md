@@ -6,17 +6,21 @@ labels: enhancement
 assignees: lbragile
 ---
 
-**Before Proceeding**
-Make sure there are no [existing issues](https://github.com/lbragile/TabMerger/labels/enhancement) that are similar in nature to what you plan to propose. Additionally ensure that your request is not already in the [todo](https://github.com/lbragile/TabMerger/projects/1) list - you can *filter* cards.
+<!-- markdownlint-disable MD041 -->
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+<!-- Before Proceeding
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+Make sure there are no existing issues (https://github.com/lbragile/TabMerger/labels/enhancement) that are similar in nature to what you plan to propose.
+Additionally ensure that your request is not already in the [todo](https://github.com/lbragile/TabMerger/projects/1) list. -->
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Description
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
+
+## Possible Alternatives
+
+<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+
+## Additional context
+
+<!-- Add any other context or screenshots about the feature request here. -->

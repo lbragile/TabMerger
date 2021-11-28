@@ -5,6 +5,7 @@ const Container = styled.div<{ $pos: { x: number; y: number } }>`
   position: absolute;
   top: ${({ $pos }) => $pos.y + "px"};
   left: ${({ $pos }) => $pos.x + "px"};
+  z-index: 10;
 `;
 
 const Content = styled.div`
@@ -14,7 +15,7 @@ const Content = styled.div`
   background-color: #303030;
   color: white;
   border-radius: 4px;
-  font-weight: 700;
+  font-size: 14px;
   display: grid;
   place-items: center;
   white-space: nowrap;

@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { DraggableLocation } from "react-beautiful-dnd";
-import { GROUPS_ACTIONS } from "../reducers/groups";
+import { GROUPS_ACTIONS, IGroupsState } from "../reducers/groups";
 
-const updateActive = (payload?: { id: string; index: number }) => ({
+const updateAvailable = (payload?: IGroupsState["available"]) => ({
+  type: GROUPS_ACTIONS.UPDATE_AVAILABLE,
+  payload
+});
+
+const updateActive = (payload?: IGroupsState["active"]) => ({
   type: GROUPS_ACTIONS.UPDATE_ACTIVE,
   payload
 });
@@ -17,7 +22,7 @@ const updateName = (payload?: { index: number; name: string }) => ({
   payload
 });
 
-const updateColor = (payload?: string) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
+const updateColor = (payload?: { index: number; color: string }) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
 const updateTimestamp = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
 
@@ -69,12 +74,8 @@ const updateGroupOrder = (payload?: { source: DraggableLocation; destination: Dr
   payload
 });
 
-const updateOverflowTitlePopup = (payload?: { visible: boolean; text: string; pos: { x: number; y: number } }) => ({
-  type: GROUPS_ACTIONS.UPDATE_OVERFLOW_TITLE_POPUP,
-  payload
-});
-
 export default {
+  updateAvailable,
   updateActive,
   updateIndex,
   updateIsActive,
@@ -90,6 +91,5 @@ export default {
   clearEmptyGroups,
   addWindow,
   clearEmptyWindows,
-  updateGroupOrder,
-  updateOverflowTitlePopup
+  updateGroupOrder
 };

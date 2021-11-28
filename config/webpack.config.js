@@ -66,19 +66,6 @@ module.exports = {
   mode: isProd ? "production" : "development",
   watch: !isProd,
   devtool: false,
-  optimization: {
-    runtimeChunk: "single",
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          enforce: true,
-          chunks: "all",
-        },
-      },
-    },
-  },
   output: {
     path: path.resolve(__dirname, isProd ? "../build" : "../dist"),
     filename: "[name].js",
