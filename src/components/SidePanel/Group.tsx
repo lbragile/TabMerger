@@ -164,7 +164,14 @@ export default function Group({
   const [titleOverflow, setTitleOverflow] = useState({ visible: false, text: "", pos: { x: 0, y: 0 } });
   const debouncedPickerValue = useDebounce(colorPickerValue, 100);
 
-  useClickOutside(pickerRef, () => setShowPicker(false));
+  useClickOutside<HTMLDivElement>({
+    ref: pickerRef,
+    cb: () => {
+      dispatch(GROUPS_CREATORS.updateColor({ index, color: debouncedPickerValue }));
+      setShowPicker(false);
+    },
+    preCondition: showPicker === true
+  });
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
 

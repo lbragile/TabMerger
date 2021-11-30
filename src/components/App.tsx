@@ -12,6 +12,7 @@ import GROUPS_CREATORS from "../store/actions/groups";
 import DND_CREATORS from "../store/actions/dnd";
 import { isGroupDrag, isTabDrag, isWindowDrag } from "../constants/dragRegExp";
 import { toggleWindowTabsVisibility } from "../utils/helper";
+import useStorage from "../hooks/useStorage";
 
 const Container = styled.div`
   width: 600px;
@@ -38,6 +39,7 @@ export default function App(): JSX.Element {
   const { active, available } = useSelector((state) => state.groups);
   const { dragOverGroup, dragType } = useSelector((state) => state.dnd);
 
+  useStorage({ available, active });
   useUpdateWindows();
 
   const onBeforeCapture = useCallback(
