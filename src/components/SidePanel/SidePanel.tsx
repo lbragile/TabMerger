@@ -13,7 +13,7 @@ const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $canDrop: boole
   flex-direction: column;
   align-items: center;
   row-gap: 4px;
-  height: ${({ $searching }) => ($searching ? "468px" : "524px")};
+  height: ${({ $searching }) => ($searching ? "472px" : "528px")};
   background-color: ${({ $canDrop, $dragging }) =>
     $canDrop ? "#d5ffd5" : !$canDrop && $dragging ? "#ffd3d3" : "initial"};
   border-radius: 4px;
@@ -47,7 +47,8 @@ export default function SidePanel(): JSX.Element {
       }
     });
 
-    setOverflow(sidePanelRef.current ? sidePanelRef.current.scrollHeight > sidePanelRef.current.clientHeight : false);
+    const target = sidePanelRef.current;
+    setOverflow(!!target && target.scrollHeight > target.clientHeight);
   }, [dispatch, available]);
 
   return (

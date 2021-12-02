@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import styled from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import useUpdateWindows from "../hooks/useUpdateWindows";
@@ -15,7 +15,7 @@ import { toggleWindowTabsVisibility } from "../utils/helper";
 import useStorage from "../hooks/useStorage";
 
 const Container = styled.div`
-  width: 600px;
+  width: 780px;
   height: 600px;
   display: flex;
   flex-direction: column;
@@ -24,15 +24,17 @@ const Container = styled.div`
 
 const MainArea = styled.div`
   display: grid;
-  grid-template-columns: 1fr 355px;
-  column-gap: 20px;
+  grid-template-columns: 1fr 3fr;
+  column-gap: 16px;
   align-items: start;
-  height: 524px;
-  margin-top: 13px;
+  padding: 10px 8px;
+  overflow: hidden;
 `;
 
 export default function App(): JSX.Element {
   const dispatch = useDispatch();
+
+  const timeoutGroupDrag = useRef(0);
 
   const { filterChoice } = useSelector((state) => state.header);
   const { filteredGroups } = useSelector((state) => state.filter);
@@ -65,8 +67,13 @@ export default function App(): JSX.Element {
 
   const onDragUpdate = useCallback(
     ({ destination }: DragUpdate) => {
-      if (destination?.droppableId === "sidePanel" && isGroupDrag(dragType)) {
-        dispatch(DND_CREATORS.updateCanDropGroup(destination.index > 1));
+      if (destination?.droppableId === "sidePanel" && isGroupDrag(dragType) && !timeoutGroupDrag.current) {
+        timeoutGroupDrag.current = setTimeout(() => {
+          dispatch(DND_CREATORS.updateCanDropGroup(destination.index > 1));
+        }, 250) as unknown as number;
+      } else {
+        clearTimeout(timeoutGroupDrag.current);
+        timeoutGroupDrag.current = 0;
       }
     },
     [dispatch, dragType]

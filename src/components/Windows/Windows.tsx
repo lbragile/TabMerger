@@ -9,7 +9,6 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isWindowDrag } from "../../constants/dragRegExp";
 
 const Container = styled.div`
-  max-height: 524px;
   overflow: hidden;
 `;
 
@@ -18,7 +17,7 @@ const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $searchingGrou
   flex-direction: column;
   gap: 8px;
   overflow: auto;
-  height: ${({ $searching, $searchingGroup }) => ($searching ? "420px" : $searchingGroup ? "412px" : "468px")};
+  height: ${({ $searching, $searchingGroup }) => ($searching ? "424px" : $searchingGroup ? "416px" : "472px")};
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
   border-radius: 4px;
 `;

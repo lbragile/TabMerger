@@ -19,7 +19,6 @@ import Popup from "../Popup";
 
 interface IGroupStyle {
   active: boolean;
-  color: string;
   $overflow: boolean;
   $dragging: boolean;
   $draggingOver: boolean;
@@ -36,7 +35,7 @@ const AbsoluteCloseIcon = styled(CloseIcon)`
   right: 4px;
 `;
 
-const StyledDiv = styled.div<IGroupStyle>`
+const GroupButton = styled.div<IGroupStyle>`
   ${({ $overflow: overflow }) => css`
     width: ${overflow ? "195px" : "209px"};
     margin-right: ${overflow ? "4px" : "0"};
@@ -45,7 +44,7 @@ const StyledDiv = styled.div<IGroupStyle>`
   border-radius: 4px;
   background-color: ${({ active, $dragging, $draggingOver }) =>
     active ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  border: 1px solid ${({ color }) => color};
+  border: 1px solid rgba(128, 128, 128, 0.5);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -166,11 +165,11 @@ export default function Group({
 
   useClickOutside<HTMLDivElement>({
     ref: pickerRef,
+    preCondition: showPicker,
     cb: () => {
       dispatch(GROUPS_CREATORS.updateColor({ index, color: debouncedPickerValue }));
       setShowPicker(false);
-    },
-    preCondition: showPicker === true
+    }
   });
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
@@ -213,10 +212,9 @@ export default function Group({
   return (
     <>
       <Container ref={groupRef}>
-        <StyledDiv
+        <GroupButton
           tabIndex={0}
           role="button"
-          color={debouncedPickerValue}
           active={isActive}
           $overflow={overflow}
           $dragging={snapshot.isDragging}
@@ -271,7 +269,7 @@ export default function Group({
               }}
             />
           )}
-        </StyledDiv>
+        </GroupButton>
       </Container>
 
       {/* Want this to be present in the DOM since it's height is used to calculate position */}

@@ -13,10 +13,6 @@ const updateActive = (payload?: IGroupsState["active"]) => ({
   payload
 });
 
-const updateIndex = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_INDEX, payload });
-
-const updateIsActive = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload });
-
 const updateName = (payload?: { index: number; name: string }) => ({
   type: GROUPS_ACTIONS.UPDATE_NAME,
   payload
@@ -24,7 +20,10 @@ const updateName = (payload?: { index: number; name: string }) => ({
 
 const updateColor = (payload?: { index: number; color: string }) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
-const updateTimestamp = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
+const updateTimestamp = (payload?: { index: number; updatedAt: number }) => ({
+  type: GROUPS_ACTIONS.UPDATE_TIMESTAMP,
+  payload
+});
 
 const updateWindows = (payload?: {
   index: number;
@@ -77,8 +76,6 @@ const updateGroupOrder = (payload?: { source: DraggableLocation; destination: Dr
 export default {
   updateAvailable,
   updateActive,
-  updateIndex,
-  updateIsActive,
   updateName,
   updateColor,
   updateTimestamp,

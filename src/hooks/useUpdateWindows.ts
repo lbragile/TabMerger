@@ -23,6 +23,8 @@ export default function useUpdateWindows(): void {
           dragOverGroup: 0
         })
       );
+
+      dispatch(GROUPS_CREATORS.updateTimestamp({ index: 0, updatedAt: Date.now() }));
     });
   }, [dispatch]);
 
