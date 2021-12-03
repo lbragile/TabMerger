@@ -24,11 +24,10 @@ const Container = styled.div`
 
 const MainArea = styled.div`
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: minmax(210px, 1fr) 3fr;
   column-gap: 16px;
   align-items: start;
   padding: 10px 8px;
-  overflow: hidden;
 `;
 
 export default function App(): JSX.Element {
@@ -70,7 +69,7 @@ export default function App(): JSX.Element {
       if (destination?.droppableId === "sidePanel" && isGroupDrag(dragType) && !timeoutGroupDrag.current) {
         timeoutGroupDrag.current = setTimeout(() => {
           dispatch(DND_CREATORS.updateCanDropGroup(destination.index > 1));
-        }, 250) as unknown as number;
+        }, 100) as unknown as number;
       } else {
         clearTimeout(timeoutGroupDrag.current);
         timeoutGroupDrag.current = 0;

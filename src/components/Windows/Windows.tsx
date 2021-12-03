@@ -8,10 +8,6 @@ import Window from "./Window";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isWindowDrag } from "../../constants/dragRegExp";
 
-const Container = styled.div`
-  overflow: hidden;
-`;
-
 const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $searchingGroup: boolean; $draggedOver: boolean }>`
   display: flex;
   flex-direction: column;
@@ -35,7 +31,7 @@ export default function Windows(): JSX.Element {
   const groupSearching = typing && filterChoice === "group";
 
   return (
-    <Container>
+    <div>
       <Information info={info} name={name} updatedAt={updatedAt} index={index} />
 
       {tabSearching && <SearchResult type="tab" />}
@@ -69,6 +65,6 @@ export default function Windows(): JSX.Element {
           </WindowsContainer>
         )}
       </Droppable>
-    </Container>
+    </div>
   );
 }

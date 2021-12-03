@@ -128,24 +128,15 @@ const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; 
 
 interface IGroup {
   data: IGroupsState["available"][number];
-  available: IGroupsState["available"];
-  overflow: boolean;
-}
-
-export default function Group({
-  data,
-  available,
-  overflow,
-  snapshot,
-  dragHandleProps
-}: IGroup & {
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
-}): JSX.Element {
+}
+
+export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType, dragOverGroup } = useSelector((state) => state.dnd);
-  const { active } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups);
 
   const { name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
@@ -216,7 +207,7 @@ export default function Group({
           tabIndex={0}
           role="button"
           active={isActive}
-          $overflow={overflow}
+          $overflow={available.length > 10}
           $dragging={snapshot.isDragging}
           $draggingOver={index > 1 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}

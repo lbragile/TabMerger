@@ -24,7 +24,7 @@ const Container = styled(Flex)`
 
 const InputContainer = styled(Flex)`
   border-radius: 4px;
-  width: 209px;
+  width: 210px;
   height: 39px;
   padding: 8px;
   background-color: #cce6ff;
