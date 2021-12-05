@@ -16,7 +16,7 @@ const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $canDrop: boole
   height: ${({ $searching }) => ($searching ? "472px" : "528px")};
   background-color: ${({ $canDrop, $dragging }) =>
     $canDrop ? "#d5ffd5" : !$canDrop && $dragging ? "#ffd3d3" : "initial"};
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 `;
 

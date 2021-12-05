@@ -16,14 +16,7 @@ export default function useUpdateWindows(): void {
         currentWindows[0].focused = true;
       }
 
-      dispatch(
-        GROUPS_CREATORS.updateWindows({
-          index: 0,
-          windows: hasFocused ? sortedWindows : currentWindows,
-          dragOverGroup: 0
-        })
-      );
-
+      dispatch(GROUPS_CREATORS.updateWindows({ index: 0, windows: hasFocused ? sortedWindows : currentWindows }));
       dispatch(GROUPS_CREATORS.updateTimestamp({ index: 0, updatedAt: Date.now() }));
     });
   }, [dispatch]);

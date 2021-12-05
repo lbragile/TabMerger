@@ -94,7 +94,9 @@ export default function App(): JSX.Element {
         // re-show the tabs since the drag ended
         toggleWindowTabsVisibility(draggableId, true);
 
-        dispatch(GROUPS_CREATORS.updateWindows({ index: active.index, dnd: { source, destination }, dragOverGroup }));
+        dispatch(
+          GROUPS_CREATORS.updateWindowsFromDnd({ index: active.index, dnd: { source, destination }, dragOverGroup })
+        );
       } else if (isGroupDrag(draggableId)) {
         // only swap if the destination exists (valid) and is below "Duplicates"
         if (destination && destination.index > 1) {

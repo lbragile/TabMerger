@@ -25,13 +25,17 @@ const updateTimestamp = (payload?: { index: number; updatedAt: number }) => ({
   payload
 });
 
-const updateWindows = (payload?: {
+const updateWindows = (payload?: { index: number; windows: chrome.windows.Window[] }) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS,
+  payload
+});
+
+const updateWindowsFromDnd = (payload?: {
   index: number;
-  dnd?: { source: DraggableLocation; destination?: DraggableLocation };
-  windows?: chrome.windows.Window[];
+  dnd: { source: DraggableLocation; destination?: DraggableLocation };
   dragOverGroup: number;
 }) => ({
-  type: GROUPS_ACTIONS.UPDATE_WINDOWS,
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_DND,
   payload
 });
 
@@ -80,6 +84,7 @@ export default {
   updateColor,
   updateTimestamp,
   updateWindows,
+  updateWindowsFromDnd,
   updateTabs,
   updateInfo,
   updatePermanent,

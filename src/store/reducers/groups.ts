@@ -11,6 +11,7 @@ export const GROUPS_ACTIONS = {
   UPDATE_COLOR: "UPDATE_COLOR",
   UPDATE_TIMESTAMP: "UPDATE_TIMESTAMP",
   UPDATE_WINDOWS: "UPDATE_WINDOWS",
+  UPDATE_WINDOWS_FROM_DND: "UPDATE_WINDOWS_FROM_DND",
   UPDATE_TABS: "UPDATE_TABS",
   UPDATE_PERMANENT: "UPDATE_PERMANENT",
   UPDATE_INFO: "UPDATE_INFO",
@@ -107,33 +108,33 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
-      const { index, windows, dnd, dragOverGroup } = action.payload as {
+      const { index, windows } = action.payload as {
         index: number;
-        dnd?: { source: DraggableLocation; destination?: DraggableLocation };
-        windows?: chrome.windows.Window[];
+        windows: chrome.windows.Window[];
+      };
+
+      available[index].windows = windows;
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_DND: {
+      const { index, dnd, dragOverGroup } = action.payload as {
+        index: number;
+        dnd: { source: DraggableLocation; destination?: DraggableLocation };
         dragOverGroup: number;
       };
 
-      if (windows) {
-        available[index].windows = windows;
-      } else if (dnd) {
-        const { source, destination } = dnd;
-        const currentWindows = available[index].windows;
+      const { source, destination } = dnd;
 
-        if (destination) {
-          // destination exists if not dragging over a group ...
-          // ... (since it is droppable disabled for window/tab draggable)
-          // swap windows based on dnd information
-          const temp = currentWindows[source.index];
-          currentWindows[source.index] = currentWindows[destination.index];
-          currentWindows[destination.index] = temp;
-        } else if (dragOverGroup > 1) {
-          // only possible if dragging a window over a group item ...
-          // ... remove source window, add it to new group at the top (make sure all windows are unfocused)
-          const removedWindows = currentWindows.splice(source.index, 1).map((item) => {
-            item.focused = false;
-            return item;
-          });
+      const isWithinSameGroup = destination && destination.index >= 0 && destination.droppableId !== "sidePanel";
+      const isSidePanelDnd = dragOverGroup > 1;
+      if (isWithinSameGroup || isSidePanelDnd) {
+        const removedWindows = available[index].windows.splice(source.index, 1);
+        if (isWithinSameGroup) {
+          available[index].windows.splice(destination.index, 0, ...removedWindows);
+        } else {
+          removedWindows.forEach((w) => (w.focused = false));
           available[dragOverGroup].windows.unshift(...removedWindows);
         }
       }
@@ -240,18 +241,12 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
       const { index } = action.payload as { index: number };
-      const { windows } = available[index] ?? {};
 
       // possible to have cleaned up the group (by removing all of its tabs) ...
       // ... now the above index has already been cleared, so the window won't exist ...
       // ... this should not happen, but is a good "safety guard"
-      if (Object.values(windows).length > 0) {
-        const newWindows = windows.filter(({ tabs }) => {
-          const numTabs = tabs?.length;
-          return numTabs !== undefined && numTabs > 0;
-        });
-
-        available[index].windows = newWindows;
+      if (available[index].windows.length > 0) {
+        available[index].windows = available[index].windows.filter(({ tabs }) => tabs && tabs.length > 0);
       }
 
       return { ...state, available };
