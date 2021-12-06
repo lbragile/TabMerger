@@ -87,17 +87,22 @@ export default function App(): JSX.Element {
   );
 
   const onDragEnd = useCallback(
-    ({ source, destination, draggableId }: DropResult) => {
-      if (isTabDrag(draggableId)) {
-        dispatch(GROUPS_CREATORS.updateTabs({ index: active.index, source, destination, dragOverGroup }));
-      } else if (isWindowDrag(draggableId)) {
+    ({ source, destination, combine, draggableId }: DropResult) => {
+      const [isTab, isWindow, isGroup] = [isTabDrag, isWindowDrag, isGroupDrag].map((cb) => cb(draggableId));
+
+      /** @note Combine is only present on side panel dnd combine (tab and window) */
+      if (isTab) {
+        combine
+          ? dispatch(GROUPS_CREATORS.updateTabsFromSidePanelDnd({ index: active.index, source, dragOverGroup }))
+          : dispatch(GROUPS_CREATORS.updateTabsFromGroupDnd({ index: active.index, source, destination }));
+      } else if (isWindow) {
         // re-show the tabs since the drag ended
         toggleWindowTabsVisibility(draggableId, true);
 
-        dispatch(
-          GROUPS_CREATORS.updateWindowsFromDnd({ index: active.index, dnd: { source, destination }, dragOverGroup })
-        );
-      } else if (isGroupDrag(draggableId)) {
+        combine
+          ? dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd({ index: active.index, source, dragOverGroup }))
+          : dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd({ index: active.index, source, destination }));
+      } else if (isGroup) {
         // only swap if the destination exists (valid) and is below "Duplicates"
         if (destination && destination.index > 1) {
           dispatch(GROUPS_CREATORS.updateGroupOrder({ source, destination }));
@@ -111,9 +116,14 @@ export default function App(): JSX.Element {
 
       dispatch(DND_CREATORS.resetDnDInfo());
 
-      // must clear the windows in the current group first, then clear the group
-      dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: active.index }));
-      dispatch(GROUPS_CREATORS.clearEmptyGroups());
+      /**
+       * must clear the windows in the current group first, then clear the group
+       * @note Only relevant for tab or window dragging since a group drag does not add either a (temporary) window or group
+       */
+      if (isTab || isWindow) {
+        dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: active.index }));
+        dispatch(GROUPS_CREATORS.clearEmptyGroups());
+      }
     },
     [dispatch, active.index, dragOverGroup, available]
   );

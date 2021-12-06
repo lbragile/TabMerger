@@ -30,22 +30,40 @@ const updateWindows = (payload?: { index: number; windows: chrome.windows.Window
   payload
 });
 
-const updateWindowsFromDnd = (payload?: {
-  index: number;
-  dnd: { source: DraggableLocation; destination?: DraggableLocation };
-  dragOverGroup: number;
-}) => ({
-  type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_DND,
-  payload
-});
-
-const updateTabs = (payload?: {
+const updateWindowsFromGroupDnd = (payload?: {
   index: number;
   source: DraggableLocation;
   destination?: DraggableLocation;
+}) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_GROUP_DND,
+  payload
+});
+
+const updateWindowsFromSidePanelDnd = (payload?: {
+  index: number;
+  source: DraggableLocation;
   dragOverGroup: number;
 }) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_SIDEPANEL_DND,
+  payload
+});
+
+const updateTabs = (payload?: { groupIdx: number; windowIdx: number; tabs: chrome.tabs.Tab[] }) => ({
   type: GROUPS_ACTIONS.UPDATE_TABS,
+  payload
+});
+
+const updateTabsFromGroupDnd = (payload?: {
+  index: number;
+  source: DraggableLocation;
+  destination?: DraggableLocation;
+}) => ({
+  type: GROUPS_ACTIONS.UPDATE_TABS_FROM_GROUP_DND,
+  payload
+});
+
+const updateTabsFromSidePanelDnd = (payload?: { index: number; source: DraggableLocation; dragOverGroup: number }) => ({
+  type: GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND,
   payload
 });
 
@@ -84,8 +102,11 @@ export default {
   updateColor,
   updateTimestamp,
   updateWindows,
-  updateWindowsFromDnd,
+  updateWindowsFromGroupDnd,
+  updateWindowsFromSidePanelDnd,
   updateTabs,
+  updateTabsFromGroupDnd,
+  updateTabsFromSidePanelDnd,
   updateInfo,
   updatePermanent,
   addGroup,
