@@ -38,7 +38,7 @@ export default function App(): JSX.Element {
   const { filterChoice } = useSelector((state) => state.header);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
-  const { dragOverGroup, dragType } = useSelector((state) => state.dnd);
+  const { canDrop, dragType } = useSelector((state) => state.dnd);
 
   useStorage({ available, active });
   useUpdateWindows();
@@ -65,10 +65,12 @@ export default function App(): JSX.Element {
   );
 
   const onDragUpdate = useCallback(
-    ({ destination }: DragUpdate) => {
-      if (destination?.droppableId === "sidePanel" && isGroupDrag(dragType) && !timeoutGroupDrag.current) {
+    ({ combine, destination }: DragUpdate) => {
+      if ((isGroupDrag(dragType) || combine?.droppableId === "sidePanel") && !timeoutGroupDrag.current) {
         timeoutGroupDrag.current = setTimeout(() => {
-          dispatch(DND_CREATORS.updateCanDropGroup(destination.index > 1));
+          dispatch(
+            DND_CREATORS.updateCanDropGroup(Number(combine?.draggableId.split("-")?.[1] ?? destination?.index) > 1)
+          );
         }, 100) as unknown as number;
       } else {
         clearTimeout(timeoutGroupDrag.current);
@@ -89,28 +91,29 @@ export default function App(): JSX.Element {
   const onDragEnd = useCallback(
     ({ source, destination, combine, draggableId }: DropResult) => {
       const [isTab, isWindow, isGroup] = [isTabDrag, isWindowDrag, isGroupDrag].map((cb) => cb(draggableId));
+      const payload = { index: active.index, source };
+      const spPayload = { ...payload, combine };
+      const destPayload = { ...payload, destination };
 
       /** @note Combine is only present on side panel dnd combine (tab and window) */
       if (isTab) {
         combine
-          ? dispatch(GROUPS_CREATORS.updateTabsFromSidePanelDnd({ index: active.index, source, dragOverGroup }))
-          : dispatch(GROUPS_CREATORS.updateTabsFromGroupDnd({ index: active.index, source, destination }));
+          ? canDrop && dispatch(GROUPS_CREATORS.updateTabsFromSidePanelDnd(spPayload))
+          : dispatch(GROUPS_CREATORS.updateTabsFromGroupDnd(destPayload));
       } else if (isWindow) {
         // re-show the tabs since the drag ended
         toggleWindowTabsVisibility(draggableId, true);
 
         combine
-          ? dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd({ index: active.index, source, dragOverGroup }))
-          : dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd({ index: active.index, source, destination }));
-      } else if (isGroup) {
+          ? canDrop && dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd(spPayload))
+          : dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd(destPayload));
+      } else if (isGroup && destination && destination.index > 1) {
         // only swap if the destination exists (valid) and is below "Duplicates"
-        if (destination && destination.index > 1) {
-          dispatch(GROUPS_CREATORS.updateGroupOrder({ source, destination }));
+        dispatch(GROUPS_CREATORS.updateGroupOrder({ source, destination }));
 
-          // update active group if it does not match the draggable
-          if (destination.index !== source.index) {
-            dispatch(GROUPS_CREATORS.updateActive({ id: available[destination.index].id, index: destination.index }));
-          }
+        // update active group if it does not match the draggable
+        if (destination.index !== source.index) {
+          dispatch(GROUPS_CREATORS.updateActive({ id: available[destination.index].id, index: destination.index }));
         }
       }
 
@@ -125,7 +128,7 @@ export default function App(): JSX.Element {
         dispatch(GROUPS_CREATORS.clearEmptyGroups());
       }
     },
-    [dispatch, active.index, dragOverGroup, available]
+    [dispatch, active.index, available, canDrop]
   );
 
   return (

@@ -28,6 +28,7 @@ export default function SidePanel(): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging, canDrop } = useSelector((state) => state.dnd);
   const groupSearch = typing && filterChoice === "group";
+  const groupDrag = isGroupDrag(dragType);
 
   /**
    * update each group's information if it doesn't match the current ...
@@ -47,14 +48,14 @@ export default function SidePanel(): JSX.Element {
 
   return (
     <div>
-      <Droppable droppableId="sidePanel" isCombineEnabled={!isGroupDrag(dragType)}>
+      <Droppable droppableId="sidePanel" isCombineEnabled={!groupDrag}>
         {(provider, dropSnapshot) => (
           <GroupsContainer
             ref={provider.innerRef}
             {...provider.droppableProps}
             $searching={groupSearch}
-            $canDrop={dropSnapshot.isDraggingOver && canDrop && isGroupDrag(dragType)}
-            $dragging={isDragging && isGroupDrag(dragType)}
+            $canDrop={dropSnapshot.isDraggingOver && canDrop && groupDrag}
+            $dragging={isDragging && groupDrag}
           >
             {(groupSearch ? filteredGroups : available).map((data, i) => (
               <Draggable key={data.id + i} draggableId={`group-${i}`} index={i} isDragDisabled={i <= 1}>

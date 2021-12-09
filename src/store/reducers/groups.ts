@@ -1,6 +1,6 @@
 import { IAction } from "../../typings/reducers";
 import { nanoid } from "nanoid";
-import { DraggableLocation } from "react-beautiful-dnd";
+import { Combine, DraggableLocation } from "react-beautiful-dnd";
 
 export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
@@ -25,6 +25,18 @@ export const GROUPS_ACTIONS = {
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
   UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER"
 };
+
+interface ICommonDnd {
+  index: number;
+  source: DraggableLocation;
+}
+export interface IWithinGroupDnd extends ICommonDnd {
+  destination?: DraggableLocation;
+}
+
+export interface ISidePanelDnd extends ICommonDnd {
+  combine?: Combine;
+}
 
 export interface IGroupState {
   name: string;
@@ -122,11 +134,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_GROUP_DND: {
-      const { index, source, destination } = action.payload as {
-        index: number;
-        source: DraggableLocation;
-        destination?: DraggableLocation;
-      };
+      const { index, source, destination } = action.payload as IWithinGroupDnd;
 
       if (destination) {
         const removedWindows = available[index].windows.splice(source.index, 1);
@@ -137,15 +145,14 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_SIDEPANEL_DND: {
-      const { index, source, dragOverGroup } = action.payload as {
-        index: number;
-        source: DraggableLocation;
-        dragOverGroup: number;
-      };
+      const { index, source, combine } = action.payload as ISidePanelDnd;
 
-      const removedWindows = available[index].windows.splice(source.index, 1);
-      removedWindows.forEach((w) => (w.focused = false));
-      available[dragOverGroup].windows.unshift(...removedWindows);
+      if (combine) {
+        const groupIdx = Number(combine.draggableId.split("-")[1]);
+        const removedWindows = available[index].windows.splice(source.index, 1);
+        removedWindows.forEach((w) => (w.focused = false));
+        available[groupIdx].windows.unshift(...removedWindows);
+      }
 
       return { ...state, available };
     }
@@ -163,11 +170,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS_FROM_GROUP_DND: {
-      const { index, source, destination } = action.payload as {
-        index: number;
-        source: DraggableLocation;
-        destination?: DraggableLocation;
-      };
+      const { index, source, destination } = action.payload as IWithinGroupDnd;
 
       if (destination) {
         const [srcWindowIdx, destWindowIdx] = [source, destination].map((item) =>
@@ -182,17 +185,15 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND: {
-      const { index, source, dragOverGroup } = action.payload as {
-        index: number;
-        source: DraggableLocation;
-        dragOverGroup: number;
-      };
+      const { index, source, combine } = action.payload as ISidePanelDnd;
 
-      if (dragOverGroup > 1) {
+      if (combine) {
         const srcWindowIdx = Number(source.droppableId.split("-")[1]);
+        const groupIdx = Number(combine.draggableId.split("-")[1]);
+
         const removedTabs = available[index].windows[srcWindowIdx].tabs?.splice(source.index, 1);
         const newWindow = createWindowWithTabs(removedTabs ?? []);
-        available[dragOverGroup].windows.unshift(newWindow);
+        available[groupIdx].windows.unshift(newWindow);
       }
 
       return { ...state, available };

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { DraggableLocation } from "react-beautiful-dnd";
-import { GROUPS_ACTIONS, IGroupsState } from "../reducers/groups";
+import { GROUPS_ACTIONS, IGroupsState, ISidePanelDnd } from "../reducers/groups";
 
 const updateAvailable = (payload?: IGroupsState["available"]) => ({
   type: GROUPS_ACTIONS.UPDATE_AVAILABLE,
@@ -30,20 +30,12 @@ const updateWindows = (payload?: { index: number; windows: chrome.windows.Window
   payload
 });
 
-const updateWindowsFromGroupDnd = (payload?: {
-  index: number;
-  source: DraggableLocation;
-  destination?: DraggableLocation;
-}) => ({
+const updateWindowsFromGroupDnd = (payload?: ISidePanelDnd) => ({
   type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_GROUP_DND,
   payload
 });
 
-const updateWindowsFromSidePanelDnd = (payload?: {
-  index: number;
-  source: DraggableLocation;
-  dragOverGroup: number;
-}) => ({
+const updateWindowsFromSidePanelDnd = (payload?: ISidePanelDnd) => ({
   type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_SIDEPANEL_DND,
   payload
 });
@@ -53,16 +45,12 @@ const updateTabs = (payload?: { groupIdx: number; windowIdx: number; tabs: chrom
   payload
 });
 
-const updateTabsFromGroupDnd = (payload?: {
-  index: number;
-  source: DraggableLocation;
-  destination?: DraggableLocation;
-}) => ({
+const updateTabsFromGroupDnd = (payload?: ISidePanelDnd) => ({
   type: GROUPS_ACTIONS.UPDATE_TABS_FROM_GROUP_DND,
   payload
 });
 
-const updateTabsFromSidePanelDnd = (payload?: { index: number; source: DraggableLocation; dragOverGroup: number }) => ({
+const updateTabsFromSidePanelDnd = (payload?: ISidePanelDnd) => ({
   type: GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND,
   payload
 });
@@ -90,7 +78,7 @@ const clearEmptyWindows = (payload?: { index: number }) => ({
   payload
 });
 
-const updateGroupOrder = (payload?: { source: DraggableLocation; destination: DraggableLocation }) => ({
+const updateGroupOrder = (payload?: { source: DraggableLocation; destination?: DraggableLocation }) => ({
   type: GROUPS_ACTIONS.UPDATE_GROUP_ORDER,
   payload
 });

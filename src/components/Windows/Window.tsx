@@ -123,7 +123,7 @@ export default function Window({
 }): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
-  const { dragType, dragOverGroup, isDragging } = useSelector((state) => state.dnd);
+  const { dragType, isDragging } = useSelector((state) => state.dnd);
 
   const currentTabs = typing ? filteredTabs[index] : tabs;
 
@@ -206,7 +206,7 @@ export default function Window({
         </Headline>
       </Row>
 
-      <Droppable droppableId={"window-" + index} isDropDisabled={!isTabDrag(dragType) || dragOverGroup > 1}>
+      <Droppable droppableId={"window-" + index} isDropDisabled={!isTabDrag(dragType)}>
         {(provider, dropSnapshot) => (
           <TabsContainer
             ref={provider.innerRef}

@@ -22,7 +22,7 @@ export default function Windows(): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
-  const { dragType, dragOverGroup } = useSelector((state) => state.dnd);
+  const { dragType } = useSelector((state) => state.dnd);
   const { index } = active;
   const { windows, info, name, updatedAt } = available[index];
 
@@ -36,7 +36,7 @@ export default function Windows(): JSX.Element {
 
       {tabSearching && <SearchResult type="tab" />}
 
-      <Droppable droppableId={"group-" + index} isDropDisabled={!isWindowDrag(dragType) || dragOverGroup > 1}>
+      <Droppable droppableId={"group-" + index} isDropDisabled={!isWindowDrag(dragType)}>
         {(provider, dropSnapshot) => (
           <WindowsContainer
             ref={provider.innerRef}

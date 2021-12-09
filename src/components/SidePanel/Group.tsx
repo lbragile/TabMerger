@@ -8,7 +8,6 @@ import { relativeTimeStr } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
-import DND_CREATORS from "../../store/actions/dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
 import { ColorPicker } from "@mantine/core";
@@ -135,7 +134,7 @@ interface IGroup {
 export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
-  const { isDragging, dragType, dragOverGroup } = useSelector((state) => state.dnd);
+  const { isDragging, dragType } = useSelector((state) => state.dnd);
   const { active, available } = useSelector((state) => state.groups);
 
   const { name, id, color, updatedAt, permanent, info } = data;
@@ -145,7 +144,6 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
 
   const groupRef = useRef<HTMLDivElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
-  const timeoutDragOver = useRef(0);
 
   const [draggingOver, setDraggingOver] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
@@ -164,27 +162,6 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
   });
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
-
-  const handleGroupDragOver = (eventType: "enter" | "leave") => {
-    const isEntering = eventType === "enter";
-    if (isDragging && !groupDrag) {
-      setDraggingOver(isEntering);
-
-      // debounce the dispatch by 250ms
-      if (isEntering && index > 1) {
-        timeoutDragOver.current = setTimeout(() => {
-          dispatch(DND_CREATORS.updateDragOverGroup(index));
-        }, 250) as unknown as number;
-      } else if (!isEntering) {
-        clearTimeout(timeoutDragOver.current);
-
-        // needed to avoid being able to drop into a hovered group even after leaving
-        if (dragOverGroup !== 0) {
-          dispatch(DND_CREATORS.updateDragOverGroup(0));
-        }
-      }
-    }
-  };
 
   const handleShowTitleOverflow = (
     { currentTarget }: React.PointerEvent<HTMLDivElement>,
@@ -213,9 +190,8 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}
           onKeyPress={() => console.log("key press")}
-          onPointerEnter={() => handleGroupDragOver("enter")}
-          onPointerUp={() => isDragging && setDraggingOver(false)} // drop does not call 'leave' - draggingOver local state isn't reset
-          onPointerLeave={() => handleGroupDragOver("leave")}
+          onPointerEnter={() => setDraggingOver(true)}
+          onPointerLeave={() => setDraggingOver(false)}
         >
           <Headline
             onPointerEnter={(e) => handleShowTitleOverflow(e, "enter")}
