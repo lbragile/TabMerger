@@ -33,12 +33,12 @@ const MainArea = styled.div`
 export default function App(): JSX.Element {
   const dispatch = useDispatch();
 
-  const timeoutGroupDrag = useRef(0);
-
   const { filterChoice } = useSelector((state) => state.header);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
-  const { canDrop, dragType } = useSelector((state) => state.dnd);
+  const { dragType } = useSelector((state) => state.dnd);
+
+  const sidePanelRef = useRef<HTMLDivElement | null>(null);
 
   useStorage({ available, active });
   useUpdateWindows();
@@ -64,28 +64,22 @@ export default function App(): JSX.Element {
     [dispatch, active.index]
   );
 
-  const onDragUpdate = useCallback(
-    ({ combine, destination }: DragUpdate) => {
-      if ((isGroupDrag(dragType) || combine?.droppableId === "sidePanel") && !timeoutGroupDrag.current) {
-        timeoutGroupDrag.current = setTimeout(() => {
-          dispatch(
-            DND_CREATORS.updateCanDropGroup(Number(combine?.draggableId.split("-")?.[1] ?? destination?.index) > 1)
-          );
-        }, 100) as unknown as number;
-      } else {
-        clearTimeout(timeoutGroupDrag.current);
-        timeoutGroupDrag.current = 0;
-      }
-    },
-    [dispatch, dragType]
-  );
-
   const onDragStart = useCallback(
     ({ draggableId }: DragStart) => {
       dispatch(DND_CREATORS.updateDragOriginType(draggableId));
       dispatch(DND_CREATORS.updateIsDragging(true));
     },
     [dispatch]
+  );
+
+  const onDragUpdate = useCallback(
+    ({ destination }: DragUpdate) => {
+      if (isGroupDrag(dragType) && sidePanelRef.current) {
+        sidePanelRef.current.style.background = destination && destination.index > 1 ? "#d5ffd5" : "#ffd3d3";
+        sidePanelRef.current.style.borderRadius = "4px";
+      }
+    },
+    [dragType]
   );
 
   const onDragEnd = useCallback(
@@ -95,18 +89,18 @@ export default function App(): JSX.Element {
       const spPayload = { ...payload, combine };
       const destPayload = { ...payload, destination };
 
-      /** @note Combine is only present on side panel dnd combine (tab and window) */
+      const isValidCombine = combine && Number(combine.draggableId.split("-")[1]) > 1;
+      const isValidDndWithinGroup = destination && destination.droppableId !== "sidePanel";
+
       if (isTab) {
-        combine
-          ? canDrop && dispatch(GROUPS_CREATORS.updateTabsFromSidePanelDnd(spPayload))
-          : dispatch(GROUPS_CREATORS.updateTabsFromGroupDnd(destPayload));
+        isValidCombine && dispatch(GROUPS_CREATORS.updateTabsFromSidePanelDnd(spPayload));
+        isValidDndWithinGroup && dispatch(GROUPS_CREATORS.updateTabsFromGroupDnd(destPayload));
       } else if (isWindow) {
         // re-show the tabs since the drag ended
         toggleWindowTabsVisibility(draggableId, true);
 
-        combine
-          ? canDrop && dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd(spPayload))
-          : dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd(destPayload));
+        isValidCombine && dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd(spPayload));
+        isValidDndWithinGroup && dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd(destPayload));
       } else if (isGroup && destination && destination.index > 1) {
         // only swap if the destination exists (valid) and is below "Duplicates"
         dispatch(GROUPS_CREATORS.updateGroupOrder({ source, destination }));
@@ -127,8 +121,14 @@ export default function App(): JSX.Element {
         dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: active.index }));
         dispatch(GROUPS_CREATORS.clearEmptyGroups());
       }
+
+      // For group dnd, reset back to initial styling
+      if (isGroup && sidePanelRef.current) {
+        sidePanelRef.current.style.background = "initial";
+        sidePanelRef.current.style.borderRadius = "initial";
+      }
     },
-    [dispatch, active.index, available, canDrop]
+    [dispatch, active.index, available]
   );
 
   return (
@@ -138,13 +138,15 @@ export default function App(): JSX.Element {
 
       <DragDropContext
         onBeforeCapture={onBeforeCapture}
-        onDragUpdate={onDragUpdate}
         onDragStart={onDragStart}
+        onDragUpdate={onDragUpdate}
         onDragEnd={onDragEnd}
       >
         {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
           <MainArea>
-            <SidePanel />
+            <div ref={sidePanelRef}>
+              <SidePanel />
+            </div>
 
             <Windows />
           </MainArea>

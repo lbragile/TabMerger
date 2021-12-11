@@ -10,13 +10,11 @@ export const DND_ACTIONS = {
 export interface IDnDState {
   dragType: string;
   isDragging: boolean;
-  canDrop: boolean;
 }
 
 const initState: IDnDState = {
   dragType: "tab-0-window-0",
-  isDragging: false,
-  canDrop: true
+  isDragging: false
 };
 
 const dndReducer = (state = initState, action: IAction): IDnDState => {
@@ -37,12 +35,6 @@ const dndReducer = (state = initState, action: IAction): IDnDState => {
 
     case DND_ACTIONS.RESET_DND_INFO:
       return initState;
-
-    case DND_ACTIONS.UPDATE_CAN_DROP_GROUP:
-      return {
-        ...state,
-        canDrop: payload as IDnDState["canDrop"]
-      };
 
     default:
       return state;

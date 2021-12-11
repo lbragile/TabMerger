@@ -8,14 +8,12 @@ import { Scrollbar } from "../../styles/Scrollbar";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
 
-const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $canDrop: boolean; $dragging: boolean }>`
+const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $dragging: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 4px;
   height: ${({ $searching }) => ($searching ? "472px" : "528px")};
-  background-color: ${({ $canDrop, $dragging }) =>
-    $canDrop ? "#d5ffd5" : !$canDrop && $dragging ? "#ffd3d3" : "initial"};
   overflow-y: auto;
   overflow-x: hidden;
 `;
@@ -26,7 +24,7 @@ export default function SidePanel(): JSX.Element {
   const { available } = useSelector((state) => state.groups);
   const { filteredGroups } = useSelector((state) => state.filter);
   const { typing, filterChoice } = useSelector((state) => state.header);
-  const { dragType, isDragging, canDrop } = useSelector((state) => state.dnd);
+  const { dragType, isDragging } = useSelector((state) => state.dnd);
   const groupSearch = typing && filterChoice === "group";
   const groupDrag = isGroupDrag(dragType);
 
@@ -49,12 +47,11 @@ export default function SidePanel(): JSX.Element {
   return (
     <div>
       <Droppable droppableId="sidePanel" isCombineEnabled={!groupDrag}>
-        {(provider, dropSnapshot) => (
+        {(provider) => (
           <GroupsContainer
             ref={provider.innerRef}
             {...provider.droppableProps}
             $searching={groupSearch}
-            $canDrop={dropSnapshot.isDraggingOver && canDrop && groupDrag}
             $dragging={isDragging && groupDrag}
           >
             {(groupSearch ? filteredGroups : available).map((data, i) => (
