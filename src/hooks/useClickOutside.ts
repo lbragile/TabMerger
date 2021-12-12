@@ -6,7 +6,7 @@ interface IClickOutside<T> {
   preCondition?: boolean;
 }
 
-export default function useOnClickOutside<T extends HTMLElement = HTMLElement>({
+export default function useClickOutside<T extends HTMLElement = HTMLElement>({
   ref,
   cb,
   preCondition = true

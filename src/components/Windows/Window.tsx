@@ -137,13 +137,15 @@ export default function Window({
   const titleRef = useRef<HTMLDivElement | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const openWindow = (where: TOpenWindow) => {
-    ["new", "incognito"].includes(where)
+  const openWindow = (type: TOpenWindow) => {
+    const isIncognito = type === "incognito" || incognito;
+
+    (["new", "incognito"] as TOpenWindow[]).includes(type)
       ? chrome.windows.create({
           focused: true,
-          state: "maximized",
+          ...(!isIncognito ? { state: "maximized" } : {}),
           type: "normal",
-          incognito: where === "incognito" ? true : incognito,
+          incognito: isIncognito,
           url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
         })
       : currentTabs?.forEach((tab) => {

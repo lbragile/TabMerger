@@ -3,6 +3,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const { SourceMapDevToolPlugin } = require("webpack");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const StylelintPlugin = require("stylelint-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -33,6 +34,10 @@ module.exports = {
     }),
     new ESLintPlugin(lintOpts),
     new StylelintPlugin(lintOpts),
+    new Dotenv({
+      path: "./.env",
+      safe: true,
+    }),
   ],
   module: {
     rules: [
