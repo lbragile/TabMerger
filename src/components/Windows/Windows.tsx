@@ -52,7 +52,7 @@ export default function Windows(): JSX.Element {
                     <div ref={provided.innerRef} {...provided.draggableProps}>
                       <Window
                         {...window}
-                        index={i}
+                        windowIndex={i}
                         snapshot={dragSnapshot}
                         dragHandleProps={provided.dragHandleProps}
                       />

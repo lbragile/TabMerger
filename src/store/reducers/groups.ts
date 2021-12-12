@@ -23,7 +23,9 @@ export const GROUPS_ACTIONS = {
   DELETE_GROUP: "DELETE_GROUP",
   CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
-  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER"
+  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
+  CLOSE_WINDOW: "CLOSE_WINDOW",
+  CLOSE_TAB: "CLOSE_TAB"
 };
 
 interface ICommonDnd {
@@ -104,6 +106,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.UPDATE_NAME: {
       const { index, name } = action.payload as { index: number; name: string };
       available[index].name = name;
+      available[index].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -111,6 +114,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.UPDATE_COLOR: {
       const { index, color } = action.payload as { index: number; color: string };
       available[index].color = color;
+      available[index].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -129,6 +133,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       };
 
       available[index].windows = windows;
+      available[index].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -139,6 +144,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       if (destination) {
         const removedWindows = available[index].windows.splice(source.index, 1);
         available[index].windows.splice(destination.index, 0, ...removedWindows);
+        available[index].updatedAt = Date.now();
       }
 
       return { ...state, available };
@@ -152,6 +158,9 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         const removedWindows = available[index].windows.splice(source.index, 1);
         removedWindows.forEach((w) => (w.focused = false));
         available[groupIdx].windows.unshift(...removedWindows);
+
+        available[index].updatedAt = Date.now();
+        available[groupIdx].updatedAt = Date.now();
       }
 
       return { ...state, available };
@@ -165,6 +174,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       };
 
       available[groupIdx].windows[windowIdx].tabs = tabs;
+      available[groupIdx].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -179,6 +189,8 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
         const removedTabs = available[index].windows[srcWindowIdx].tabs?.splice(source.index, 1);
         available[index].windows[destWindowIdx].tabs?.splice(destination.index, 0, ...(removedTabs ?? []));
+
+        available[index].updatedAt = Date.now();
       }
 
       return { ...state, available };
@@ -194,6 +206,9 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         const removedTabs = available[index].windows[srcWindowIdx].tabs?.splice(source.index, 1);
         const newWindow = createWindowWithTabs(removedTabs ?? []);
         available[groupIdx].windows.unshift(newWindow);
+
+        available[index].updatedAt = Date.now();
+        available[groupIdx].updatedAt = Date.now();
       }
 
       return { ...state, available };
@@ -284,6 +299,28 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
       const removedGroups = available.splice(source.index, 1);
       available.splice(destination.index, 0, ...removedGroups);
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.CLOSE_WINDOW: {
+      const { groupIndex, windowIndex } = action.payload as { groupIndex: number; windowIndex: number };
+
+      available[groupIndex].windows.splice(windowIndex, 1);
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.CLOSE_TAB: {
+      const { groupIndex, windowIndex, tabIndex } = action.payload as {
+        groupIndex: number;
+        windowIndex: number;
+        tabIndex: number;
+      };
+
+      available[groupIndex].windows[windowIndex].tabs?.splice(tabIndex, 1);
+      available[groupIndex].updatedAt = Date.now();
 
       return { ...state, available };
     }

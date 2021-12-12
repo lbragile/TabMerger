@@ -83,6 +83,16 @@ const updateGroupOrder = (payload?: { source: DraggableLocation; destination?: D
   payload
 });
 
+const closeWindow = (payload?: { windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.CLOSE_WINDOW,
+  payload
+});
+
+const closeTab = (payload?: { tabIndex: number; windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.CLOSE_TAB,
+  payload
+});
+
 export default {
   updateAvailable,
   updateActive,
@@ -102,5 +112,7 @@ export default {
   clearEmptyGroups,
   addWindow,
   clearEmptyWindows,
-  updateGroupOrder
+  updateGroupOrder,
+  closeWindow,
+  closeTab
 };

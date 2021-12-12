@@ -6,6 +6,8 @@ import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
+import { useDispatch } from "../../hooks/useDispatch";
+import GROUPS_CREATORS from "../../store/actions/groups";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
@@ -49,23 +51,41 @@ export default function Tab({
   pinned,
   id: tabId,
   snapshot,
-  dragHandleProps
+  dragHandleProps,
+  tabIndex,
+  windowIndex
 }: chrome.tabs.Tab & {
+  tabIndex: number;
+  windowIndex: number;
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }): JSX.Element {
+  const dispatch = useDispatch();
+
+  const {
+    active: { index: groupIndex }
+  } = useSelector((state) => state.groups);
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
-  const closeTab = () => tabId && chrome.tabs.remove(tabId);
+  const closeTab = () => {
+    if (groupIndex > 1) {
+      dispatch(GROUPS_CREATORS.closeTab({ tabIndex, windowIndex, groupIndex }));
+
+      //  possible to have deleted the last tab in the window
+      dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: groupIndex }));
+    } else {
+      tabId && chrome.tabs.remove(tabId);
+    }
+  };
 
   return (
     <Row>
       <CloseIcon
         icon={faTimes}
         tabIndex={0}
-        onClick={() => closeTab()}
+        onClick={closeTab}
         onKeyPress={({ key }) => key === "Enter" && closeTab()}
         $visible={!isDragging}
       />

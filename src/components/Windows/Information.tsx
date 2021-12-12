@@ -10,13 +10,11 @@ import { getReadableTimestamp } from "../../utils/helper";
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
-  row-gap: 12px;
+  grid-template-columns: 3fr 1fr;
+  row-gap: 8px;
   justify-content: space-between;
   align-items: start;
-  white-space: nowrap;
-  padding: 0;
-  margin-bottom: 8px;
+  padding: 2px 0;
 `;
 
 const LeftColumn = styled.div`
@@ -44,7 +42,7 @@ const Title = styled.input<{ $isMaxLength: boolean }>`
   border: none;
   outline: none;
   border-bottom: 1px solid transparent;
-  width: 200px;
+  width: 300px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

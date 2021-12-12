@@ -5,9 +5,11 @@ import styled from "styled-components";
 import Tab from "./Tab";
 import { pluralize } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
+import { useDispatch } from "../../hooks/useDispatch";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
 import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
+import GROUPS_CREATORS from "../../store/actions/groups";
 
 const Column = styled.div`
   display: flex;
@@ -113,19 +115,24 @@ export default function Window({
   tabs,
   incognito,
   id: windowId,
-  index,
+  windowIndex,
   snapshot: windowSnapshot,
   dragHandleProps
 }: chrome.windows.Window & {
-  index: number;
+  windowIndex: number;
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }): JSX.Element {
+  const dispatch = useDispatch();
+
+  const {
+    active: { index: groupIndex }
+  } = useSelector((state) => state.groups);
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
 
-  const currentTabs = typing ? filteredTabs[index] : tabs;
+  const currentTabs = typing ? filteredTabs[windowIndex] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -145,15 +152,24 @@ export default function Window({
         });
   };
 
-  const closeWindow = () => windowId && chrome.windows.remove(windowId);
+  const closeWindow = () => {
+    if (groupIndex > 1) {
+      dispatch(GROUPS_CREATORS.closeWindow({ groupIndex, windowIndex }));
+
+      // possible to have deleted the last window in the group
+      dispatch(GROUPS_CREATORS.clearEmptyGroups());
+    } else {
+      windowId && chrome.windows.remove(windowId);
+    }
+  };
 
   const tabCounterStr = useMemo(() => {
     const totalTabs = tabs?.length ?? 0;
-    const numVisibleTabs = typing ? filteredTabs[index]?.length ?? 0 : totalTabs;
+    const numVisibleTabs = typing ? filteredTabs[windowIndex]?.length ?? 0 : totalTabs;
     const count = filterChoice === "tab" ? numVisibleTabs : totalTabs;
 
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
-  }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
+  }, [typing, filteredTabs, tabs?.length, filterChoice, windowIndex]);
 
   return (
     <WindowContainer $dragging={windowSnapshot.isDragging}>
@@ -161,7 +177,7 @@ export default function Window({
         <CloseIcon
           icon={faTimesCircle}
           tabIndex={0}
-          onClick={() => closeWindow()}
+          onClick={closeWindow}
           onKeyPress={({ key }) => key === "Enter" && closeWindow()}
           $visible={!isDragging}
         />
@@ -206,7 +222,7 @@ export default function Window({
         </Headline>
       </Row>
 
-      <Droppable droppableId={"window-" + index} isDropDisabled={!isTabDrag(dragType)}>
+      <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType)}>
         {(provider, dropSnapshot) => (
           <TabsContainer
             ref={provider.innerRef}
@@ -219,10 +235,16 @@ export default function Window({
               if (title && (url || pendingUrl)) {
                 const tabUrl = url ?? pendingUrl;
                 return (
-                  <Draggable key={title + tabUrl + i} draggableId={`tab-${i}-window-${index}`} index={i}>
+                  <Draggable key={title + tabUrl + i} draggableId={`tab-${i}-window-${windowIndex}`} index={i}>
                     {(provided, dragSnapshot) => (
                       <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <Tab {...tab} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />
+                        <Tab
+                          {...tab}
+                          tabIndex={i}
+                          windowIndex={windowIndex}
+                          snapshot={dragSnapshot}
+                          dragHandleProps={provided.dragHandleProps}
+                        />
                       </div>
                     )}
                   </Draggable>
