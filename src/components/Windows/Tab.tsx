@@ -105,7 +105,7 @@ export default function Tab({
           title={url}
           role="link"
           tabIndex={0}
-          onClick={() => openTab()}
+          onClick={openTab}
           onKeyPress={({ key }) => key === "Enter" && openTab()}
         >
           {filterChoice === "tab" ? <Highlighted text={title} /> : title}

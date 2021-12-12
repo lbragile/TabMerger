@@ -24,7 +24,6 @@ const Row = styled(Column)`
 
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   justify-content: center;
-  margin-top: 12px;
   font-size: 14px;
   border-radius: 4px;
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
@@ -234,8 +233,8 @@ export default function Window({
           >
             {currentTabs?.map((tab, i) => {
               const { title, url, pendingUrl } = tab ?? {};
-              if (title && (url || pendingUrl)) {
-                const tabUrl = url ?? pendingUrl;
+              const tabUrl = url ?? pendingUrl;
+              if (title && tabUrl) {
                 return (
                   <Draggable key={title + tabUrl + i} draggableId={`tab-${i}-window-${windowIndex}`} index={i}>
                     {(provided, dragSnapshot) => (

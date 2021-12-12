@@ -35,13 +35,18 @@ const DropdownDivider = styled.hr`
   width: 80px;
 `;
 
-export default function Dropdown({
-  items,
-  pos
-}: {
-  items: { text: string; handler?: () => void }[];
-  pos: { top: number; left: number };
-}): JSX.Element {
+interface IDropdown {
+  items: {
+    text: string;
+    handler?: () => void;
+  }[];
+  pos: {
+    top: number;
+    left: number;
+  };
+}
+
+export default function Dropdown({ items, pos }: IDropdown): JSX.Element {
   return (
     <Container $pos={pos}>
       {items.map((item, i) => {

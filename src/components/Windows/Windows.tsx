@@ -11,9 +11,9 @@ import { isWindowDrag } from "../../constants/dragRegExp";
 const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $searchingGroup: boolean; $draggedOver: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   overflow: auto;
-  height: ${({ $searching, $searchingGroup }) => ($searching ? "424px" : $searchingGroup ? "416px" : "472px")};
+  height: ${({ $searching, $searchingGroup }) => ($searching ? "428px" : $searchingGroup ? "424px" : "472px")};
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
   border-radius: 4px;
 `;

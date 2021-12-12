@@ -15,6 +15,7 @@ const Grid = styled.div`
   justify-content: space-between;
   align-items: start;
   padding: 2px 0;
+  margin-bottom: 12px;
 `;
 
 const LeftColumn = styled.div`

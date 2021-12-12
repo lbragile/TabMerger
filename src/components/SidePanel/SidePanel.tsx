@@ -12,8 +12,8 @@ const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $dragging: bool
   display: flex;
   flex-direction: column;
   align-items: center;
-  row-gap: 4px;
-  height: ${({ $searching }) => ($searching ? "472px" : "528px")};
+  row-gap: 4.5px;
+  height: ${({ $searching }) => ($searching ? "482px" : "531px")};
   overflow-y: auto;
   overflow-x: hidden;
 `;
