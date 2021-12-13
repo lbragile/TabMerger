@@ -1,20 +1,29 @@
 import { RefObject, useEffect } from "react";
 
-export default function useOnClickOutside<T extends HTMLElement = HTMLElement>(
-  ref: RefObject<T>,
-  cb: (e: PointerEvent) => void
-): void {
+interface IClickOutside<T> {
+  ref: RefObject<T>;
+  cb: (e: PointerEvent) => void;
+  preCondition?: boolean;
+}
+
+export default function useClickOutside<T extends HTMLElement = HTMLElement>({
+  ref,
+  cb,
+  preCondition = true
+}: IClickOutside<T>): void {
   useEffect(() => {
     const listener = (e: PointerEvent) => {
-      const elem = ref?.current;
+      if (preCondition) {
+        const elem = ref.current;
 
-      // Do nothing if clicking ref's element or descendent elements
-      if (!elem || elem.contains(e.target as Node)) return;
+        // Do nothing if clicking ref's element or descendent elements
+        if (!elem || elem.contains(e.target as Node)) return;
 
-      cb(e);
+        cb(e);
+      }
     };
 
     document.addEventListener("pointerdown", listener);
     return () => document.removeEventListener("pointerdown", listener);
-  }, [ref, cb]);
+  }, [ref, cb, preCondition]);
 }

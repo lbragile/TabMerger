@@ -8,7 +8,6 @@ import { relativeTimeStr } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
-import DND_CREATORS from "../../store/actions/dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
 import { ColorPicker } from "@mantine/core";
@@ -19,7 +18,6 @@ import Popup from "../Popup";
 
 interface IGroupStyle {
   active: boolean;
-  color: string;
   $overflow: boolean;
   $dragging: boolean;
   $draggingOver: boolean;
@@ -36,16 +34,15 @@ const AbsoluteCloseIcon = styled(CloseIcon)`
   right: 4px;
 `;
 
-const StyledDiv = styled.div<IGroupStyle>`
+const GroupButton = styled.div<IGroupStyle>`
   ${({ $overflow: overflow }) => css`
     width: ${overflow ? "195px" : "209px"};
     margin-right: ${overflow ? "4px" : "0"};
   `}
   height: 49px;
-  border-radius: 4px;
   background-color: ${({ active, $dragging, $draggingOver }) =>
     active ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  border: 1px solid ${({ color }) => color};
+  border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -129,24 +126,15 @@ const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; 
 
 interface IGroup {
   data: IGroupsState["available"][number];
-  available: IGroupsState["available"];
-  overflow: boolean;
-}
-
-export default function Group({
-  data,
-  available,
-  overflow,
-  snapshot,
-  dragHandleProps
-}: IGroup & {
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
-}): JSX.Element {
+}
+
+export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
-  const { isDragging, dragType, dragOverGroup } = useSelector((state) => state.dnd);
-  const { active } = useSelector((state) => state.groups);
+  const { isDragging, dragType } = useSelector((state) => state.dnd);
+  const { active, available } = useSelector((state) => state.groups);
 
   const { name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
@@ -155,7 +143,6 @@ export default function Group({
 
   const groupRef = useRef<HTMLDivElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
-  const timeoutDragOver = useRef(0);
 
   const [draggingOver, setDraggingOver] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
@@ -164,30 +151,16 @@ export default function Group({
   const [titleOverflow, setTitleOverflow] = useState({ visible: false, text: "", pos: { x: 0, y: 0 } });
   const debouncedPickerValue = useDebounce(colorPickerValue, 100);
 
-  useClickOutside(pickerRef, () => setShowPicker(false));
+  useClickOutside<HTMLDivElement>({
+    ref: pickerRef,
+    preCondition: showPicker,
+    cb: () => {
+      dispatch(GROUPS_CREATORS.updateColor({ index, color: debouncedPickerValue }));
+      setShowPicker(false);
+    }
+  });
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
-
-  const handleGroupDragOver = (eventType: "enter" | "leave") => {
-    const isEntering = eventType === "enter";
-    if (isDragging && !groupDrag) {
-      setDraggingOver(isEntering);
-
-      // debounce the dispatch by 250ms
-      if (isEntering && index > 1) {
-        timeoutDragOver.current = setTimeout(() => {
-          dispatch(DND_CREATORS.updateDragOverGroup(index));
-        }, 250) as unknown as number;
-      } else if (!isEntering) {
-        clearTimeout(timeoutDragOver.current);
-
-        // needed to avoid being able to drop into a hovered group even after leaving
-        if (dragOverGroup !== 0) {
-          dispatch(DND_CREATORS.updateDragOverGroup(0));
-        }
-      }
-    }
-  };
 
   const handleShowTitleOverflow = (
     { currentTarget }: React.PointerEvent<HTMLDivElement>,
@@ -206,20 +179,18 @@ export default function Group({
   return (
     <>
       <Container ref={groupRef}>
-        <StyledDiv
+        <GroupButton
           tabIndex={0}
           role="button"
-          color={debouncedPickerValue}
           active={isActive}
-          $overflow={overflow}
+          $overflow={available.length > 10}
           $dragging={snapshot.isDragging}
-          $draggingOver={index > 1 && isDragging && !groupDrag && draggingOver}
+          $draggingOver={index > 0 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}
           onKeyPress={() => console.log("key press")}
-          onPointerEnter={() => handleGroupDragOver("enter")}
-          onPointerUp={() => isDragging && setDraggingOver(false)} // drop does not call 'leave' - draggingOver local state isn't reset
-          onPointerLeave={() => handleGroupDragOver("leave")}
+          onPointerEnter={() => setDraggingOver(true)}
+          onPointerLeave={() => setDraggingOver(false)}
         >
           <Headline
             onPointerEnter={(e) => handleShowTitleOverflow(e, "enter")}
@@ -264,7 +235,7 @@ export default function Group({
               }}
             />
           )}
-        </StyledDiv>
+        </GroupButton>
       </Container>
 
       {/* Want this to be present in the DOM since it's height is used to calculate position */}

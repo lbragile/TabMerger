@@ -8,17 +8,12 @@ import Window from "./Window";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isWindowDrag } from "../../constants/dragRegExp";
 
-const Container = styled.div`
-  max-height: 524px;
-  overflow: hidden;
-`;
-
 const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $searchingGroup: boolean; $draggedOver: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   overflow: auto;
-  height: ${({ $searching, $searchingGroup }) => ($searching ? "420px" : $searchingGroup ? "412px" : "468px")};
+  height: ${({ $searching, $searchingGroup }) => ($searching ? "428px" : $searchingGroup ? "424px" : "472px")};
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
   border-radius: 4px;
 `;
@@ -27,21 +22,21 @@ export default function Windows(): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
-  const { dragType, dragOverGroup } = useSelector((state) => state.dnd);
+  const { dragType } = useSelector((state) => state.dnd);
   const { index } = active;
   const { windows, info, name, updatedAt } = available[index];
 
-  const hasMoreThanOneFilteredTab = typing ? filteredTabs.some((item) => item.length > 0) : true;
+  const hasMoreThanOneFilteredTab = !typing || filteredTabs.some((item) => item.length > 0);
   const tabSearching = typing && filterChoice === "tab";
   const groupSearching = typing && filterChoice === "group";
 
   return (
-    <Container>
+    <div>
       <Information info={info} name={name} updatedAt={updatedAt} index={index} />
 
       {tabSearching && <SearchResult type="tab" />}
 
-      <Droppable droppableId={"group-" + index} isDropDisabled={!isWindowDrag(dragType) || dragOverGroup > 1}>
+      <Droppable droppableId={"group-" + index} isDropDisabled={!isWindowDrag(dragType)}>
         {(provider, dropSnapshot) => (
           <WindowsContainer
             ref={provider.innerRef}
@@ -57,7 +52,7 @@ export default function Windows(): JSX.Element {
                     <div ref={provided.innerRef} {...provided.draggableProps}>
                       <Window
                         {...window}
-                        index={i}
+                        windowIndex={i}
                         snapshot={dragSnapshot}
                         dragHandleProps={provided.dragHandleProps}
                       />
@@ -70,6 +65,6 @@ export default function Windows(): JSX.Element {
           </WindowsContainer>
         )}
       </Droppable>
-    </Container>
+    </div>
   );
 }

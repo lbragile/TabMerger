@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { DraggableLocation } from "react-beautiful-dnd";
-import { GROUPS_ACTIONS, IGroupsState } from "../reducers/groups";
+import { GROUPS_ACTIONS, IGroupsState, ISidePanelDnd } from "../reducers/groups";
 
 const updateAvailable = (payload?: IGroupsState["available"]) => ({
   type: GROUPS_ACTIONS.UPDATE_AVAILABLE,
@@ -13,10 +13,6 @@ const updateActive = (payload?: IGroupsState["active"]) => ({
   payload
 });
 
-const updateIndex = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_INDEX, payload });
-
-const updateIsActive = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_IS_ACTIVE, payload });
-
 const updateName = (payload?: { index: number; name: string }) => ({
   type: GROUPS_ACTIONS.UPDATE_NAME,
   payload
@@ -24,25 +20,38 @@ const updateName = (payload?: { index: number; name: string }) => ({
 
 const updateColor = (payload?: { index: number; color: string }) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
-const updateTimestamp = (payload?: number) => ({ type: GROUPS_ACTIONS.UPDATE_TIMESTAMP, payload });
+const updateTimestamp = (payload?: { index: number; updatedAt: number }) => ({
+  type: GROUPS_ACTIONS.UPDATE_TIMESTAMP,
+  payload
+});
 
-const updateWindows = (payload?: {
-  index: number;
-  dnd?: { source: DraggableLocation; destination?: DraggableLocation };
-  windows?: chrome.windows.Window[];
-  dragOverGroup: number;
-}) => ({
+const updateWindows = (payload?: { index: number; windows: chrome.windows.Window[] }) => ({
   type: GROUPS_ACTIONS.UPDATE_WINDOWS,
   payload
 });
 
-const updateTabs = (payload?: {
-  index: number;
-  source: DraggableLocation;
-  destination?: DraggableLocation;
-  dragOverGroup: number;
-}) => ({
+const updateWindowsFromGroupDnd = (payload?: ISidePanelDnd) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_GROUP_DND,
+  payload
+});
+
+const updateWindowsFromSidePanelDnd = (payload?: ISidePanelDnd) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_SIDEPANEL_DND,
+  payload
+});
+
+const updateTabs = (payload?: { groupIdx: number; windowIdx: number; tabs: chrome.tabs.Tab[] }) => ({
   type: GROUPS_ACTIONS.UPDATE_TABS,
+  payload
+});
+
+const updateTabsFromGroupDnd = (payload?: ISidePanelDnd) => ({
+  type: GROUPS_ACTIONS.UPDATE_TABS_FROM_GROUP_DND,
+  payload
+});
+
+const updateTabsFromSidePanelDnd = (payload?: ISidePanelDnd) => ({
+  type: GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND,
   payload
 });
 
@@ -69,21 +78,33 @@ const clearEmptyWindows = (payload?: { index: number }) => ({
   payload
 });
 
-const updateGroupOrder = (payload?: { source: DraggableLocation; destination: DraggableLocation }) => ({
+const updateGroupOrder = (payload?: { source: DraggableLocation; destination?: DraggableLocation }) => ({
   type: GROUPS_ACTIONS.UPDATE_GROUP_ORDER,
+  payload
+});
+
+const closeWindow = (payload?: { windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.CLOSE_WINDOW,
+  payload
+});
+
+const closeTab = (payload?: { tabIndex: number; windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.CLOSE_TAB,
   payload
 });
 
 export default {
   updateAvailable,
   updateActive,
-  updateIndex,
-  updateIsActive,
   updateName,
   updateColor,
   updateTimestamp,
   updateWindows,
+  updateWindowsFromGroupDnd,
+  updateWindowsFromSidePanelDnd,
   updateTabs,
+  updateTabsFromGroupDnd,
+  updateTabsFromSidePanelDnd,
   updateInfo,
   updatePermanent,
   addGroup,
@@ -91,5 +112,7 @@ export default {
   clearEmptyGroups,
   addWindow,
   clearEmptyWindows,
-  updateGroupOrder
+  updateGroupOrder,
+  closeWindow,
+  closeTab
 };

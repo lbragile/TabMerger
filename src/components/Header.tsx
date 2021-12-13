@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { useDispatch } from "../hooks/useDispatch";
 import { useSelector } from "../hooks/useSelector";
@@ -7,6 +7,9 @@ import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchResult from "./SearchResult";
 import { updateFilteredTabs, updateFilteredGroups } from "../store/actions/filter";
+import Dropdown from "./Dropdown";
+import useClickOutside from "../hooks/useClickOutside";
+import { saveAs } from "file-saver";
 
 const Flex = styled.div`
   display: flex;
@@ -24,7 +27,7 @@ const Container = styled(Flex)`
 
 const InputContainer = styled(Flex)`
   border-radius: 4px;
-  width: 209px;
+  width: 210px;
   height: 39px;
   padding: 8px;
   background-color: #cce6ff;
@@ -87,6 +90,18 @@ export default function Header(): JSX.Element {
   const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
   const { available, active } = useSelector((state) => state.groups);
 
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [settingsMenuPos, setSettingsMenuPos] = useState({ top: 0, left: 0 });
+
+  const settingsIconRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useClickOutside<HTMLDivElement>({
+    ref: dropdownRef,
+    preCondition: showDropdown,
+    cb: () => setShowDropdown(false)
+  });
+
   /**
    * For each window in the currently active group, store the matching tabs (with current filter value)
    * @returns 2d array of tabs where each index corresponds to the matching tabs in that window
@@ -108,6 +123,55 @@ export default function Header(): JSX.Element {
       dispatch(updateFilteredGroups(matchingGroups));
     }
   }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
+
+  const calculateDropdownPosition = () => {
+    if (settingsIconRef.current) {
+      const { top, right, height } = settingsIconRef.current.getBoundingClientRect();
+      setSettingsMenuPos({ top: top + height + 4, left: right - 110 });
+    }
+  };
+
+  const settingsItems = useMemo(() => {
+    return [
+      { text: "Import", handler: () => "" },
+      {
+        text: "Export",
+        handler: () => {
+          // TODO show menu where user can select between text, json, ect.
+          const blob = new Blob([JSON.stringify({ active, available }, null, 2)], { type: "application/json" });
+          saveAs(blob, `TabMerger Export - ${new Date().toTimeString()}`);
+        }
+      },
+      { text: "Sync", handler: () => "" },
+      { text: "Print", handler: () => "" },
+      { text: "divider" },
+      { text: "Settings", handler: () => "" },
+      {
+        text: "Help",
+        handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/faq" })
+      },
+      { text: "divider" },
+      {
+        text: "Rate",
+        handler: () =>
+          chrome.tabs.create({
+            url: "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews/"
+          })
+      },
+      {
+        text: "Donate",
+        handler: () =>
+          chrome.tabs.create({
+            url: process.env.REACT_APP_PAYPAL_URL
+          })
+      },
+      { text: "divider" },
+      {
+        text: "About",
+        handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/#about-section" })
+      }
+    ];
+  }, [active, available]);
 
   return (
     <>
@@ -154,8 +218,22 @@ export default function Header(): JSX.Element {
           )}
         </Flex>
 
-        <SettingsIcon icon={faCog} />
+        <div ref={settingsIconRef}>
+          <SettingsIcon
+            icon={faCog}
+            onClick={() => {
+              setShowDropdown(!showDropdown);
+              calculateDropdownPosition();
+            }}
+          />
+        </div>
       </Container>
+
+      {showDropdown && (
+        <div ref={dropdownRef}>
+          <Dropdown items={settingsItems} pos={settingsMenuPos} />
+        </div>
+      )}
 
       {typing && filterChoice === "group" && <SearchResult type="group" />}
     </>

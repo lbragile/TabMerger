@@ -10,13 +10,12 @@ import { getReadableTimestamp } from "../../utils/helper";
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
-  row-gap: 12px;
+  grid-template-columns: 3fr 1fr;
+  row-gap: 8px;
   justify-content: space-between;
   align-items: start;
-  white-space: nowrap;
-  padding: 0;
-  margin-bottom: 8px;
+  padding: 2px 0;
+  margin-bottom: 12px;
 `;
 
 const LeftColumn = styled.div`
@@ -44,7 +43,7 @@ const Title = styled.input<{ $isMaxLength: boolean }>`
   border: none;
   outline: none;
   border-bottom: 1px solid transparent;
-  width: 200px;
+  width: 300px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -82,6 +81,7 @@ export default function Information({ info, name, index, updatedAt }: IInformati
           spellCheck={false}
           onChange={(e) => setWindowTitle(e.target.value)}
           onBlur={() => dispatch(GROUPS_CREATORS.updateName({ index, name: windowTitle }))}
+          onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
           maxLength={40}
           $isMaxLength={windowTitle.length === 40}
         />

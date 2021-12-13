@@ -5,9 +5,12 @@ import styled from "styled-components";
 import Tab from "./Tab";
 import { pluralize } from "../../utils/helper";
 import { useSelector } from "../../hooks/useSelector";
+import { useDispatch } from "../../hooks/useDispatch";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
 import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
+import GROUPS_CREATORS from "../../store/actions/groups";
+import useClickOutside from "../../hooks/useClickOutside";
 
 const Column = styled.div`
   display: flex;
@@ -22,7 +25,6 @@ const Row = styled(Column)`
 
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   justify-content: center;
-  margin-top: 12px;
   font-size: 14px;
   border-radius: 4px;
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
@@ -64,7 +66,7 @@ const TabCounter = styled.span`
 
 const Popup = styled.div<{ $left: number }>`
   position: absolute;
-  top: -8px;
+  top: 0;
   left: ${({ $left }) => $left + 10 + "px"};
   background-color: #303030;
   display: flex;
@@ -74,7 +76,7 @@ const Popup = styled.div<{ $left: number }>`
 
   &::before {
     position: absolute;
-    top: 12px;
+    top: 4px;
     right: 100%;
     content: "";
     border: 6px solid transparent;
@@ -113,30 +115,44 @@ export default function Window({
   tabs,
   incognito,
   id: windowId,
-  index,
+  windowIndex,
   snapshot: windowSnapshot,
   dragHandleProps
 }: chrome.windows.Window & {
-  index: number;
+  windowIndex: number;
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }): JSX.Element {
+  const dispatch = useDispatch();
+
+  const {
+    active: { index: groupIndex }
+  } = useSelector((state) => state.groups);
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
-  const { dragType, dragOverGroup, isDragging } = useSelector((state) => state.dnd);
+  const { dragType, isDragging } = useSelector((state) => state.dnd);
 
-  const currentTabs = typing ? filteredTabs[index] : tabs;
+  const currentTabs = typing ? filteredTabs[windowIndex] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const openWindow = (where: TOpenWindow) => {
-    ["new", "incognito"].includes(where)
+  useClickOutside<HTMLDivElement>({
+    ref: popupRef,
+    preCondition: showPopup,
+    cb: () => setShowPopup(false)
+  });
+
+  const openWindow = (type: TOpenWindow) => {
+    const isIncognito = type === "incognito" || incognito;
+
+    (["new", "incognito"] as TOpenWindow[]).includes(type)
       ? chrome.windows.create({
           focused: true,
-          state: "maximized",
+          ...(!isIncognito ? { state: "maximized" } : {}),
           type: "normal",
-          incognito: where === "incognito" ? true : incognito,
+          incognito: isIncognito,
           url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
         })
       : currentTabs?.forEach((tab) => {
@@ -145,15 +161,24 @@ export default function Window({
         });
   };
 
-  const closeWindow = () => windowId && chrome.windows.remove(windowId);
+  const closeWindow = () => {
+    if (groupIndex > 0) {
+      dispatch(GROUPS_CREATORS.closeWindow({ groupIndex, windowIndex }));
+
+      // possible to have deleted the last window in the group
+      dispatch(GROUPS_CREATORS.clearEmptyGroups());
+    } else {
+      windowId && chrome.windows.remove(windowId);
+    }
+  };
 
   const tabCounterStr = useMemo(() => {
     const totalTabs = tabs?.length ?? 0;
-    const numVisibleTabs = typing ? filteredTabs[index]?.length ?? 0 : totalTabs;
+    const numVisibleTabs = typing ? filteredTabs[windowIndex]?.length ?? 0 : totalTabs;
     const count = filterChoice === "tab" ? numVisibleTabs : totalTabs;
 
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
-  }, [typing, filteredTabs, tabs?.length, filterChoice, index]);
+  }, [typing, filteredTabs, tabs?.length, filterChoice, windowIndex]);
 
   return (
     <WindowContainer $dragging={windowSnapshot.isDragging}>
@@ -161,7 +186,7 @@ export default function Window({
         <CloseIcon
           icon={faTimesCircle}
           tabIndex={0}
-          onClick={() => closeWindow()}
+          onClick={closeWindow}
           onKeyPress={({ key }) => key === "Enter" && closeWindow()}
           $visible={!isDragging}
         />
@@ -171,7 +196,7 @@ export default function Window({
             <FontAwesomeIcon icon={faWindowMaximize} />
           </div>
 
-          <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
+          <TitleContainer>
             <WindowTitle
               ref={titleRef}
               tabIndex={0}
@@ -187,7 +212,7 @@ export default function Window({
             </WindowTitle>
 
             {showPopup && (
-              <Popup $left={titleRef.current?.clientWidth ?? 0}>
+              <Popup ref={popupRef} $left={titleRef.current?.clientWidth ?? 0}>
                 {WINDOW_TITLE_POPUP_CHOICES.map((choice) => (
                   <PopupChoice
                     key={choice.text}
@@ -206,7 +231,7 @@ export default function Window({
         </Headline>
       </Row>
 
-      <Droppable droppableId={"window-" + index} isDropDisabled={!isTabDrag(dragType) || dragOverGroup > 1}>
+      <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType)}>
         {(provider, dropSnapshot) => (
           <TabsContainer
             ref={provider.innerRef}
@@ -216,13 +241,19 @@ export default function Window({
           >
             {currentTabs?.map((tab, i) => {
               const { title, url, pendingUrl } = tab ?? {};
-              if (title && (url || pendingUrl)) {
-                const tabUrl = url ?? pendingUrl;
+              const tabUrl = url ?? pendingUrl;
+              if (title && tabUrl) {
                 return (
-                  <Draggable key={title + tabUrl + i} draggableId={`tab-${i}-window-${index}`} index={i}>
+                  <Draggable key={title + tabUrl + i} draggableId={`tab-${i}-window-${windowIndex}`} index={i}>
                     {(provided, dragSnapshot) => (
                       <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <Tab {...tab} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />
+                        <Tab
+                          {...tab}
+                          tabIndex={i}
+                          windowIndex={windowIndex}
+                          snapshot={dragSnapshot}
+                          dragHandleProps={provided.dragHandleProps}
+                        />
                       </div>
                     )}
                   </Draggable>

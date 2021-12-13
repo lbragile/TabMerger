@@ -1,6 +1,6 @@
 import { IAction } from "../../typings/reducers";
 import { nanoid } from "nanoid";
-import { DraggableLocation } from "react-beautiful-dnd";
+import { Combine, DraggableLocation } from "react-beautiful-dnd";
 
 export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
@@ -11,7 +11,11 @@ export const GROUPS_ACTIONS = {
   UPDATE_COLOR: "UPDATE_COLOR",
   UPDATE_TIMESTAMP: "UPDATE_TIMESTAMP",
   UPDATE_WINDOWS: "UPDATE_WINDOWS",
+  UPDATE_WINDOWS_FROM_GROUP_DND: "UPDATE_WINDOWS_FROM_GROUP_DND",
+  UPDATE_WINDOWS_FROM_SIDEPANEL_DND: "UPDATE_WINDOWS_FROM_SIDEPANEL_DND",
   UPDATE_TABS: "UPDATE_TABS",
+  UPDATE_TABS_FROM_GROUP_DND: "UPDATE_TABS_FROM_GROUP_DND",
+  UPDATE_TABS_FROM_SIDEPANEL_DND: "UPDATE_TABS_FROM_SIDEPANEL_DND",
   UPDATE_PERMANENT: "UPDATE_PERMANENT",
   UPDATE_INFO: "UPDATE_INFO",
   ADD_GROUP: "ADD_GROUP",
@@ -19,8 +23,22 @@ export const GROUPS_ACTIONS = {
   DELETE_GROUP: "DELETE_GROUP",
   CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
-  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER"
+  UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
+  CLOSE_WINDOW: "CLOSE_WINDOW",
+  CLOSE_TAB: "CLOSE_TAB"
 };
+
+interface ICommonDnd {
+  index: number;
+  source: DraggableLocation;
+}
+export interface IWithinGroupDnd extends ICommonDnd {
+  destination?: DraggableLocation;
+}
+
+export interface ISidePanelDnd extends ICommonDnd {
+  combine?: Combine;
+}
 
 export interface IGroupState {
   name: string;
@@ -57,14 +75,6 @@ const initState: IGroupsState = {
       updatedAt: Date.now(),
       windows: [],
       permanent: true
-    },
-    {
-      name: "Duplicates",
-      id: nanoid(10),
-      color: "rgba(128, 128, 128, 1)",
-      updatedAt: Date.now(),
-      windows: [],
-      permanent: true
     }
   ]
 };
@@ -76,7 +86,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.UPDATE_AVAILABLE:
       return {
         ...state,
-        available: action.payload as IGroupsState["available"]
+        available: [state.available[0], ...(action.payload as IGroupsState["available"]).slice(1)]
       };
 
     case GROUPS_ACTIONS.UPDATE_ACTIVE:
@@ -88,6 +98,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.UPDATE_NAME: {
       const { index, name } = action.payload as { index: number; name: string };
       available[index].name = name;
+      available[index].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -95,6 +106,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.UPDATE_COLOR: {
       const { index, color } = action.payload as { index: number; color: string };
       available[index].color = color;
+      available[index].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -107,65 +119,88 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.UPDATE_WINDOWS: {
-      const { index, windows, dnd, dragOverGroup } = action.payload as {
+      const { index, windows } = action.payload as {
         index: number;
-        dnd?: { source: DraggableLocation; destination?: DraggableLocation };
-        windows?: chrome.windows.Window[];
-        dragOverGroup: number;
+        windows: chrome.windows.Window[];
       };
 
-      if (windows) {
-        available[index].windows = windows;
-      } else if (dnd) {
-        const { source, destination } = dnd;
-        const currentWindows = available[index].windows;
+      available[index].windows = windows;
+      available[index].updatedAt = Date.now();
 
-        if (destination) {
-          // destination exists if not dragging over a group ...
-          // ... (since it is droppable disabled for window/tab draggable)
-          // swap windows based on dnd information
-          const temp = currentWindows[source.index];
-          currentWindows[source.index] = currentWindows[destination.index];
-          currentWindows[destination.index] = temp;
-        } else if (dragOverGroup > 1) {
-          // only possible if dragging a window over a group item ...
-          // ... remove source window, add it to new group at the top (make sure all windows are unfocused)
-          const removedWindows = currentWindows.splice(source.index, 1).map((item) => {
-            item.focused = false;
-            return item;
-          });
-          available[dragOverGroup].windows.unshift(...removedWindows);
-        }
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_GROUP_DND: {
+      const { index, source, destination } = action.payload as IWithinGroupDnd;
+
+      if (destination) {
+        const removedWindows = available[index].windows.splice(source.index, 1);
+        available[index].windows.splice(destination.index, 0, ...removedWindows);
+        available[index].updatedAt = Date.now();
+      }
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_SIDEPANEL_DND: {
+      const { index, source, combine } = action.payload as ISidePanelDnd;
+
+      if (combine) {
+        const groupIdx = Number(combine.draggableId.split("-")[1]);
+        const removedWindows = available[index].windows.splice(source.index, 1);
+        removedWindows.forEach((w) => (w.focused = false));
+        available[groupIdx].windows.unshift(...removedWindows);
+
+        available[index].updatedAt = Date.now();
+        available[groupIdx].updatedAt = Date.now();
       }
 
       return { ...state, available };
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS: {
-      const { index, source, destination, dragOverGroup } = action.payload as {
-        index: number;
-        source: DraggableLocation;
-        destination?: DraggableLocation;
-        dragOverGroup: number;
+      const { groupIdx, windowIdx, tabs } = action.payload as {
+        groupIdx: number;
+        windowIdx: number;
+        tabs: chrome.tabs.Tab[];
       };
 
-      const { windows } = available[index];
-      const srcWindowIdx = Number(source.droppableId.split("-")[1]);
-      if (destination || dragOverGroup > 1) {
-        const removedTabs = windows[srcWindowIdx].tabs?.splice(source.index, 1);
-        if (removedTabs) {
-          if (destination) {
-            // destination exists if not dragging over a group ...
-            // ... (since it is droppable disabled for window/tab draggable)
-            const destWindowIdx = Number(destination.droppableId.split("-")[1]);
-            windows[destWindowIdx].tabs?.splice(destination.index, 0, ...removedTabs);
-          } else if (dragOverGroup > 1) {
-            // only possible if dragging a tab over a group item ...
-            // ... remove source tab, add it to new group in a new window at the top
-            const newWindow = createWindowWithTabs(removedTabs);
-            available[dragOverGroup].windows.unshift(newWindow);
-          }
-        }
+      available[groupIdx].windows[windowIdx].tabs = tabs;
+      available[groupIdx].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_TABS_FROM_GROUP_DND: {
+      const { index, source, destination } = action.payload as IWithinGroupDnd;
+
+      if (destination) {
+        const [srcWindowIdx, destWindowIdx] = [source, destination].map((item) =>
+          Number(item.droppableId.split("-")[1])
+        );
+
+        const removedTabs = available[index].windows[srcWindowIdx].tabs?.splice(source.index, 1);
+        available[index].windows[destWindowIdx].tabs?.splice(destination.index, 0, ...(removedTabs ?? []));
+
+        available[index].updatedAt = Date.now();
+      }
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND: {
+      const { index, source, combine } = action.payload as ISidePanelDnd;
+
+      if (combine) {
+        const srcWindowIdx = Number(source.droppableId.split("-")[1]);
+        const groupIdx = Number(combine.draggableId.split("-")[1]);
+
+        const removedTabs = available[index].windows[srcWindowIdx].tabs?.splice(source.index, 1);
+        const newWindow = createWindowWithTabs(removedTabs ?? []);
+        available[groupIdx].windows.unshift(newWindow);
+
+        available[index].updatedAt = Date.now();
+        available[groupIdx].updatedAt = Date.now();
       }
 
       return { ...state, available };
@@ -219,7 +254,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS: {
-      const filteredGroups = available.filter((group, i) => i <= 1 || (i > 1 && group.windows.length > 0));
+      const filteredGroups = available.filter((group, i) => i === 0 || (i > 0 && group.windows.length > 0));
       const filteredIds = filteredGroups.map((group) => group.id);
 
       // if filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
@@ -240,18 +275,12 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
       const { index } = action.payload as { index: number };
-      const { windows } = available[index] ?? {};
 
       // possible to have cleaned up the group (by removing all of its tabs) ...
       // ... now the above index has already been cleared, so the window won't exist ...
       // ... this should not happen, but is a good "safety guard"
-      if (Object.values(windows).length > 0) {
-        const newWindows = windows.filter(({ tabs }) => {
-          const numTabs = tabs?.length;
-          return numTabs !== undefined && numTabs > 0;
-        });
-
-        available[index].windows = newWindows;
+      if (available[index].windows.length > 0) {
+        available[index].windows = available[index].windows.filter(({ tabs }) => tabs && tabs.length > 0);
       }
 
       return { ...state, available };
@@ -261,9 +290,29 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const { source, destination } = action.payload as { source: DraggableLocation; destination: DraggableLocation };
 
       const removedGroups = available.splice(source.index, 1);
-      if (removedGroups) {
-        available.splice(destination.index, 0, ...removedGroups);
-      }
+      available.splice(destination.index, 0, ...removedGroups);
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.CLOSE_WINDOW: {
+      const { groupIndex, windowIndex } = action.payload as { groupIndex: number; windowIndex: number };
+
+      available[groupIndex].windows.splice(windowIndex, 1);
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.CLOSE_TAB: {
+      const { groupIndex, windowIndex, tabIndex } = action.payload as {
+        groupIndex: number;
+        windowIndex: number;
+        tabIndex: number;
+      };
+
+      available[groupIndex].windows[windowIndex].tabs?.splice(tabIndex, 1);
+      available[groupIndex].updatedAt = Date.now();
 
       return { ...state, available };
     }

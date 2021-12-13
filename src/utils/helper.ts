@@ -57,3 +57,13 @@ export const toggleWindowTabsVisibility = (draggableId: string, show: boolean): 
     elem.style.display = show ? "flex" : "none";
   }
 };
+
+export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
+  sortedWindows: chrome.windows.Window[];
+  hasFocused: boolean;
+} {
+  const focused = windows.filter((w) => w.focused);
+  const notFocused = windows.filter((w) => !w.focused);
+
+  return { sortedWindows: focused.concat(notFocused), hasFocused: focused.length > 0 };
+}

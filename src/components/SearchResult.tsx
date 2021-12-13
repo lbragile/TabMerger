@@ -16,7 +16,7 @@ const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
   color: white;
   border-radius: 4px;
   padding: 8px;
-  margin: 16px 0 8px 0;
+  margin: ${({ $isGroup }) => ($isGroup ? "12px 0 4px 0" : "0 0 12px 0")};
   font-size: 14px;
   width: calc(100% - ${({ $isGroup }) => ($isGroup ? "16px" : "0")});
   text-align: center;
