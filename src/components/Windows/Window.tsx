@@ -10,6 +10,7 @@ import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Dr
 import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
 import GROUPS_CREATORS from "../../store/actions/groups";
+import useClickOutside from "../../hooks/useClickOutside";
 
 const Column = styled.div`
   display: flex;
@@ -65,7 +66,7 @@ const TabCounter = styled.span`
 
 const Popup = styled.div<{ $left: number }>`
   position: absolute;
-  top: -8px;
+  top: 0;
   left: ${({ $left }) => $left + 10 + "px"};
   background-color: #303030;
   display: flex;
@@ -75,7 +76,7 @@ const Popup = styled.div<{ $left: number }>`
 
   &::before {
     position: absolute;
-    top: 12px;
+    top: 4px;
     right: 100%;
     content: "";
     border: 6px solid transparent;
@@ -134,7 +135,14 @@ export default function Window({
   const currentTabs = typing ? filteredTabs[windowIndex] : tabs;
 
   const titleRef = useRef<HTMLDivElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
   const [showPopup, setShowPopup] = useState(false);
+
+  useClickOutside<HTMLDivElement>({
+    ref: popupRef,
+    preCondition: showPopup,
+    cb: () => setShowPopup(false)
+  });
 
   const openWindow = (type: TOpenWindow) => {
     const isIncognito = type === "incognito" || incognito;
@@ -188,7 +196,7 @@ export default function Window({
             <FontAwesomeIcon icon={faWindowMaximize} />
           </div>
 
-          <TitleContainer onBlur={() => setTimeout(() => setShowPopup(false), 100)}>
+          <TitleContainer>
             <WindowTitle
               ref={titleRef}
               tabIndex={0}
@@ -204,7 +212,7 @@ export default function Window({
             </WindowTitle>
 
             {showPopup && (
-              <Popup $left={titleRef.current?.clientWidth ?? 0}>
+              <Popup ref={popupRef} $left={titleRef.current?.clientWidth ?? 0}>
                 {WINDOW_TITLE_POPUP_CHOICES.map((choice) => (
                   <PopupChoice
                     key={choice.text}

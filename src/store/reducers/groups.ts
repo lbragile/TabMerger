@@ -94,7 +94,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.UPDATE_AVAILABLE:
       return {
         ...state,
-        available: action.payload as IGroupsState["available"]
+        available: [state.available[0], ...(action.payload as IGroupsState["available"]).slice(1)]
       };
 
     case GROUPS_ACTIONS.UPDATE_ACTIVE:

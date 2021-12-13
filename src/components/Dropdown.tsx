@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div<{ $pos: { top: number; left: number } }>`
-  border: 1px solid #808080;
-  border-radius: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,9 +9,11 @@ const Container = styled.div<{ $pos: { top: number; left: number } }>`
   top: ${({ $pos }) => $pos.top + "px"};
   left: ${({ $pos }) => $pos.left + "px"};
   width: 110px;
-  background-color: #fff;
+  background-color: #303030;
+  color: white;
   overflow: hidden;
   z-index: 10;
+  padding: 4px;
 `;
 
 const DropdownItem = styled.div`
@@ -25,13 +25,14 @@ const DropdownItem = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #ddd;
+    background-color: #42a4ff;
   }
 `;
 
 const DropdownDivider = styled.hr`
   border: none;
   border-top: 1px solid #bfbfbf;
+  margin: 4px 0;
   width: 80px;
 `;
 

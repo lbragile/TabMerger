@@ -40,10 +40,9 @@ const GroupButton = styled.div<IGroupStyle>`
     margin-right: ${overflow ? "4px" : "0"};
   `}
   height: 49px;
-  border-radius: 4px;
   background-color: ${({ active, $dragging, $draggingOver }) =>
     active ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  border: 1px solid rgba(128, 128, 128, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
   display: flex;
