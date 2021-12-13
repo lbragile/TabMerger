@@ -75,14 +75,6 @@ const initState: IGroupsState = {
       updatedAt: Date.now(),
       windows: [],
       permanent: true
-    },
-    {
-      name: "Duplicates",
-      id: nanoid(10),
-      color: "rgba(128, 128, 128, 1)",
-      updatedAt: Date.now(),
-      windows: [],
-      permanent: true
     }
   ]
 };
@@ -262,7 +254,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS: {
-      const filteredGroups = available.filter((group, i) => i <= 1 || (i > 1 && group.windows.length > 0));
+      const filteredGroups = available.filter((group, i) => i === 0 || (i > 0 && group.windows.length > 0));
       const filteredIds = filteredGroups.map((group) => group.id);
 
       // if filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...

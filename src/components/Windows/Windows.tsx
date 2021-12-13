@@ -26,7 +26,7 @@ export default function Windows(): JSX.Element {
   const { index } = active;
   const { windows, info, name, updatedAt } = available[index];
 
-  const hasMoreThanOneFilteredTab = typing ? filteredTabs.some((item) => item.length > 0) : true;
+  const hasMoreThanOneFilteredTab = !typing || filteredTabs.some((item) => item.length > 0);
   const tabSearching = typing && filterChoice === "tab";
   const groupSearching = typing && filterChoice === "group";
 

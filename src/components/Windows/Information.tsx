@@ -81,6 +81,7 @@ export default function Information({ info, name, index, updatedAt }: IInformati
           spellCheck={false}
           onChange={(e) => setWindowTitle(e.target.value)}
           onBlur={() => dispatch(GROUPS_CREATORS.updateName({ index, name: windowTitle }))}
+          onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
           maxLength={40}
           $isMaxLength={windowTitle.length === 40}
         />

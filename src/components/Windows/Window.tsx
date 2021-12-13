@@ -162,7 +162,7 @@ export default function Window({
   };
 
   const closeWindow = () => {
-    if (groupIndex > 1) {
+    if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeWindow({ groupIndex, windowIndex }));
 
       // possible to have deleted the last window in the group

@@ -70,7 +70,7 @@ export default function Tab({
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => {
-    if (groupIndex > 1) {
+    if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeTab({ tabIndex, windowIndex, groupIndex }));
 
       //  possible to have deleted the last tab in the window

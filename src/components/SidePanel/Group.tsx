@@ -185,7 +185,7 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
           active={isActive}
           $overflow={available.length > 10}
           $dragging={snapshot.isDragging}
-          $draggingOver={index > 1 && isDragging && !groupDrag && draggingOver}
+          $draggingOver={index > 0 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}
           onKeyPress={() => console.log("key press")}

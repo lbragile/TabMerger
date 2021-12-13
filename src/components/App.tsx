@@ -75,7 +75,7 @@ export default function App(): JSX.Element {
   const onDragUpdate = useCallback(
     ({ destination }: DragUpdate) => {
       if (isGroupDrag(dragType) && sidePanelRef.current) {
-        sidePanelRef.current.style.background = destination && destination.index > 1 ? "#d5ffd5" : "#ffd3d3";
+        sidePanelRef.current.style.background = destination && destination.index > 0 ? "#d5ffd5" : "#ffd3d3";
         sidePanelRef.current.style.borderRadius = "4px";
       }
     },
@@ -89,7 +89,7 @@ export default function App(): JSX.Element {
       const spPayload = { ...payload, combine };
       const destPayload = { ...payload, destination };
 
-      const isValidCombine = combine && Number(combine.draggableId.split("-")[1]) > 1;
+      const isValidCombine = combine && Number(combine.draggableId.split("-")[1]) > 0;
       const isValidDndWithinGroup = destination && destination.droppableId !== "sidePanel";
 
       if (isTab) {
@@ -101,8 +101,8 @@ export default function App(): JSX.Element {
 
         isValidCombine && dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd(spPayload));
         isValidDndWithinGroup && dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd(destPayload));
-      } else if (isGroup && destination && destination.index > 1) {
-        // only swap if the destination exists (valid) and is below "Duplicates"
+      } else if (isGroup && destination && destination.index > 0) {
+        // only swap if the destination exists (valid) and is below "Awaiting Storage"
         dispatch(GROUPS_CREATORS.updateGroupOrder({ source, destination }));
 
         // update active group if it does not match the draggable
