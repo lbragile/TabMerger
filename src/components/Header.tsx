@@ -127,7 +127,7 @@ export default function Header(): JSX.Element {
   const calculateDropdownPosition = () => {
     if (settingsIconRef.current) {
       const { top, right, height } = settingsIconRef.current.getBoundingClientRect();
-      setSettingsMenuPos({ top: top + height + 4, left: right - 110 });
+      setSettingsMenuPos({ top: top + height + 16, left: right - 110 });
     }
   };
 

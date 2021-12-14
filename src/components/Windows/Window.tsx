@@ -11,6 +11,7 @@ import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
 import GROUPS_CREATORS from "../../store/actions/groups";
 import useClickOutside from "../../hooks/useClickOutside";
+import Dropdown from "../Dropdown";
 
 const Column = styled.div`
   display: flex;
@@ -64,47 +65,13 @@ const TabCounter = styled.span`
   cursor: default;
 `;
 
-const Popup = styled.div<{ $left: number }>`
-  position: absolute;
-  top: 0;
-  left: ${({ $left }) => $left + 10 + "px"};
-  background-color: #303030;
-  display: flex;
-  flex-direction: column;
-  min-width: 175px;
-  padding: 4px;
-
-  &::before {
-    position: absolute;
-    top: 4px;
-    right: 100%;
-    content: "";
-    border: 6px solid transparent;
-    border-right: 6px solid #303030;
-  }
-`;
-
-const PopupChoice = styled.button`
-  background: inherit;
-  cursor: pointer;
-  padding: 12px 8px;
-  border: none;
-  outline: none;
-  text-align: left;
-  color: white;
-
-  &:hover {
-    background-color: #42a4ff;
-  }
-`;
-
 const TitleContainer = styled.div`
   position: relative;
 `;
 
 type TOpenWindow = "new" | "current" | "incognito";
 
-const WINDOW_TITLE_POPUP_CHOICES: { type: TOpenWindow; text: string }[] = [
+const WINDOW_TITLE_POPUP_OPEN_CHOICES: { type: TOpenWindow; text: string }[] = [
   { type: "current", text: "Open In Current" },
   { type: "new", text: "Open In New" },
   { type: "incognito", text: "Open Incognito" }
@@ -211,19 +178,31 @@ export default function Window({
               {focused ? "Current" : ""} Window
             </WindowTitle>
 
-            {showPopup && (
-              <Popup ref={popupRef} $left={titleRef.current?.clientWidth ?? 0}>
-                {WINDOW_TITLE_POPUP_CHOICES.map((choice) => (
-                  <PopupChoice
-                    key={choice.text}
-                    tabIndex={0}
-                    onClick={() => openWindow(choice.type)}
-                    onKeyPress={({ key }) => key === "Enter" && openWindow(choice.type)}
-                  >
-                    {choice.text}
-                  </PopupChoice>
-                ))}
-              </Popup>
+            {showPopup && titleRef.current && (
+              <div ref={popupRef}>
+                <Dropdown
+                  items={[
+                    ...WINDOW_TITLE_POPUP_OPEN_CHOICES.map(({ text, type }) => ({
+                      text,
+                      handler: () => openWindow(type)
+                    })),
+                    { text: "divider" },
+                    { text: "Copy To Group", handler: () => console.log("WIP") },
+                    { text: "Move To Group", handler: () => console.log("WIP") },
+                    { text: "divider" },
+                    { text: "Star", handler: () => console.log("WIP") },
+                    { text: `${incognito ? "Remove" : "Make"} Incognito`, handler: () => console.log("WIP") },
+                    { text: "divider" },
+                    { text: "Rename", handler: () => console.log("WIP") },
+                    { text: "Delete", handler: () => console.log("WIP") }
+                  ]}
+                  pos={{
+                    top: titleRef.current.getBoundingClientRect().top - 2,
+                    left: titleRef.current.getBoundingClientRect().right + 16
+                  }}
+                  isPopup
+                />
+              </div>
             )}
           </TitleContainer>
 
