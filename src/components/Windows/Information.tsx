@@ -13,11 +13,11 @@ import useClickOutside from "../../hooks/useClickOutside";
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr;
-  row-gap: 8px;
+  row-gap: 2px;
   justify-content: space-between;
   align-items: start;
   padding: 2px 0;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 `;
 
 const LeftColumn = styled.div`

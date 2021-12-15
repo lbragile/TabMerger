@@ -17,12 +17,14 @@ import Popup from "../Popup";
 const Column = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
 `;
 
-const Row = styled(Column)`
+const Row = styled.div`
+  display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 8px;
 `;
 
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
@@ -48,7 +50,7 @@ const WindowTitle = styled.div<{ $active: boolean }>`
 const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
   display: grid;
   grid-template-columns: auto 25ch auto;
-  column-gap: 8px;
+  column-gap: 4px;
   justify-content: start;
   align-items: center;
   background-color: white;
