@@ -12,6 +12,7 @@ import { CloseIcon } from "../../styles/CloseIcon";
 import GROUPS_CREATORS from "../../store/actions/groups";
 import useClickOutside from "../../hooks/useClickOutside";
 import Dropdown from "../Dropdown";
+import Popup from "../Popup";
 
 const Column = styled.div`
   display: flex;
@@ -31,10 +32,17 @@ const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
 `;
 
-const WindowTitle = styled.div`
+const WindowTitle = styled.div<{ $active: boolean }>`
   font-size: 15px;
   width: fit-content;
+  padding: 0 4px;
+  font-weight: 600;
   cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: ${({ $active }) => ($active ? "#dde8ffb7" : "#dfdfdfb7")};
+  }
 `;
 
 const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
@@ -101,9 +109,11 @@ export default function Window({
 
   const currentTabs = typing ? filteredTabs[windowIndex] : tabs;
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
   const titleRef = useRef<HTMLDivElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
 
   useClickOutside<HTMLDivElement>({
     ref: popupRef,
@@ -112,20 +122,24 @@ export default function Window({
   });
 
   const openWindow = (type: TOpenWindow) => {
-    const isIncognito = type === "incognito" || incognito;
+    if (groupIndex > 0) {
+      const isIncognito = type === "incognito" || incognito;
 
-    (["new", "incognito"] as TOpenWindow[]).includes(type)
-      ? chrome.windows.create({
-          focused: true,
-          ...(!isIncognito ? { state: "maximized" } : {}),
-          type: "normal",
-          incognito: isIncognito,
-          url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
-        })
-      : currentTabs?.forEach((tab) => {
-          const { active, pinned, url } = tab ?? {};
-          chrome.tabs.create({ active, pinned, url });
-        });
+      (["new", "incognito"] as TOpenWindow[]).includes(type)
+        ? chrome.windows.create({
+            focused: true,
+            ...(!isIncognito ? { state: "maximized" } : {}),
+            type: "normal",
+            incognito: isIncognito,
+            url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
+          })
+        : currentTabs?.forEach((tab) => {
+            const { active, pinned, url } = tab ?? {};
+            chrome.tabs.create({ active, pinned, url });
+          });
+    } else {
+      windowId && chrome.windows.update(windowId, { focused: true });
+    }
   };
 
   const closeWindow = () => {
@@ -166,14 +180,17 @@ export default function Window({
           <TitleContainer>
             <WindowTitle
               ref={titleRef}
+              $active={focused}
               tabIndex={0}
               role="button"
-              onDoubleClick={({ button }) => button === 0 && openWindow("new")}
+              onDoubleClick={(e) => e.button === 0 && openWindow("new")}
               onContextMenu={(e) => {
                 e.preventDefault();
                 setShowPopup(true);
               }}
               onKeyPress={({ key }) => key === "Enter" && setShowPopup(true)}
+              onPointerEnter={() => setShowInstructions(true)}
+              onPointerLeave={() => setShowInstructions(false)}
             >
               {focused ? "Current" : ""} Window
             </WindowTitle>
@@ -197,8 +214,8 @@ export default function Window({
                     { text: "Delete", handler: () => console.log("WIP") }
                   ]}
                   pos={{
-                    top: titleRef.current.getBoundingClientRect().top - 2,
-                    left: titleRef.current.getBoundingClientRect().right + 16
+                    top: 0,
+                    left: titleRef.current.getBoundingClientRect().width + 10
                   }}
                   isPopup
                 />
@@ -244,6 +261,16 @@ export default function Window({
           </TabsContainer>
         )}
       </Droppable>
+
+      {showInstructions && !showPopup && !isDragging && titleRef.current && (
+        <Popup
+          text={`Double Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
+          pos={{
+            x: titleRef.current.getBoundingClientRect().right + 8,
+            y: titleRef.current.getBoundingClientRect().top - 4
+          }}
+        />
+      )}
     </WindowContainer>
   );
 }

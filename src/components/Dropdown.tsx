@@ -1,31 +1,52 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-const Container = styled.div<{ $pos: { top: number; left: number }; $isPopup: boolean }>`
+interface IPos {
+  top: number;
+  left?: number;
+  right?: number;
+}
+
+interface IDropdown {
+  items: {
+    text: string;
+    handler?: () => void;
+  }[];
+  pos: IPos;
+  isPopup?: boolean;
+}
+
+const Triangle = styled.div<{ $pos: IPos }>`
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 8px;
+  left: ${({ $pos }) => ($pos.left ? $pos.left - 12 + "px" : 0)};
+  border: 6px solid transparent;
+  border-right: 6px solid #303030;
+  z-index: 10;
+`;
+
+const Container = styled.div<{ $pos: IPos }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: fixed;
+  position: absolute;
   top: ${({ $pos }) => $pos.top + "px"};
-  left: ${({ $pos }) => $pos.left + "px"};
+  ${({ $pos }) =>
+    $pos.left
+      ? css`
+          left: ${$pos.left + "px"};
+        `
+      : css`
+          right: ${($pos.right ?? 0) + "px"};
+        `}
   min-width: 110px;
   background-color: #303030;
   color: white;
   overflow: hidden;
-  z-index: 10;
+  z-index: 999;
   padding: 4px;
-  ${({ $isPopup, $pos }) =>
-    $isPopup &&
-    css`
-      &::before {
-        position: fixed;
-        top: ${$pos.top + 6 + "px"};
-        left: ${$pos.left - 12 + "px"};
-        content: "";
-        border: 6px solid transparent;
-        border-right: 6px solid #303030;
-      }
-    `}
 `;
 
 const DropdownItem = styled.div`
@@ -51,36 +72,28 @@ const DropdownDivider = styled.hr`
   width: 90%;
 `;
 
-interface IDropdown {
-  items: {
-    text: string;
-    handler?: () => void;
-  }[];
-  pos: {
-    top: number;
-    left: number;
-  };
-  isPopup?: boolean;
-}
-
 export default function Dropdown({ items, pos, isPopup = false }: IDropdown): JSX.Element {
   return (
-    <Container $pos={pos} $isPopup={isPopup}>
-      {items.map((item, i) => {
-        return item.text !== "divider" ? (
-          <DropdownItem
-            key={item.text + i}
-            onClick={item.handler}
-            tabIndex={0}
-            role="button"
-            onKeyPress={({ key }) => key === "Enter" && item.handler?.()}
-          >
-            {item.text}
-          </DropdownItem>
-        ) : (
-          <DropdownDivider key={item.text + i} />
-        );
-      })}
-    </Container>
+    <>
+      <Container $pos={pos}>
+        {items.map((item, i) => {
+          return item.text !== "divider" ? (
+            <DropdownItem
+              key={item.text + i}
+              onClick={item.handler}
+              tabIndex={0}
+              role="button"
+              onKeyPress={({ key }) => key === "Enter" && item.handler?.()}
+            >
+              {item.text}
+            </DropdownItem>
+          ) : (
+            <DropdownDivider key={item.text + i} />
+          );
+        })}
+      </Container>
+
+      {isPopup && <Triangle $pos={pos} />}
+    </>
   );
 }

@@ -91,7 +91,6 @@ export default function Header(): JSX.Element {
   const { available, active } = useSelector((state) => state.groups);
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [settingsMenuPos, setSettingsMenuPos] = useState({ top: 0, left: 0 });
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -123,13 +122,6 @@ export default function Header(): JSX.Element {
       dispatch(updateFilteredGroups(matchingGroups));
     }
   }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
-
-  const calculateDropdownPosition = () => {
-    if (settingsIconRef.current) {
-      const { top, right, height } = settingsIconRef.current.getBoundingClientRect();
-      setSettingsMenuPos({ top: top + height + 16, left: right - 110 });
-    }
-  };
 
   const settingsItems = useMemo(() => {
     return [
@@ -219,19 +211,16 @@ export default function Header(): JSX.Element {
         </Flex>
 
         <div ref={settingsIconRef}>
-          <SettingsIcon
-            icon={faCog}
-            onClick={() => {
-              setShowDropdown(!showDropdown);
-              calculateDropdownPosition();
-            }}
-          />
+          <SettingsIcon icon={faCog} onClick={() => setShowDropdown(!showDropdown)} />
         </div>
       </Container>
 
-      {showDropdown && (
+      {showDropdown && settingsIconRef.current && (
         <div ref={dropdownRef}>
-          <Dropdown items={settingsItems} pos={settingsMenuPos} />
+          <Dropdown
+            items={settingsItems}
+            pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 16, right: 8 }}
+          />
         </div>
       )}
 

@@ -32,7 +32,7 @@ export default function Windows(): JSX.Element {
 
   return (
     <div>
-      <Information info={info} name={name} updatedAt={updatedAt} index={index} />
+      <Information info={info} name={name} updatedAt={updatedAt} groupIndex={index} />
 
       {tabSearching && <SearchResult type="tab" />}
 

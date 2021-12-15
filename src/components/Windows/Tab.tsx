@@ -20,10 +20,12 @@ const TabContainer = styled.div<{ $dragging: boolean }>`
   border-radius: 4px;
 `;
 
-const TabTitle = styled.span`
+const TabTitle = styled.a`
+  text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: black;
   cursor: pointer;
 
   &:hover {
@@ -43,6 +45,13 @@ const Row = styled.div`
   gap: 8px;
 `;
 
+interface ITab {
+  tabIndex: number;
+  windowIndex: number;
+  snapshot: DraggableStateSnapshot;
+  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
+}
+
 export default function Tab({
   favIconUrl,
   title,
@@ -54,12 +63,7 @@ export default function Tab({
   dragHandleProps,
   tabIndex,
   windowIndex
-}: chrome.tabs.Tab & {
-  tabIndex: number;
-  windowIndex: number;
-  snapshot: DraggableStateSnapshot;
-  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
-}): JSX.Element {
+}: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
 
   const {
@@ -67,7 +71,6 @@ export default function Tab({
   } = useSelector((state) => state.groups);
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
-
   const openTab = () => chrome.tabs.create({ url, active, pinned });
   const closeTab = () => {
     if (groupIndex > 0) {
@@ -101,13 +104,7 @@ export default function Tab({
           {...dragHandleProps}
         />
 
-        <TabTitle
-          title={url}
-          role="link"
-          tabIndex={0}
-          onClick={openTab}
-          onKeyPress={({ key }) => key === "Enter" && openTab()}
-        >
+        <TabTitle title={url} href={url} onClick={(e) => e.button === 0 && openTab()} draggable={false}>
           {filterChoice === "tab" ? <Highlighted text={title} /> : title}
         </TabTitle>
       </TabContainer>

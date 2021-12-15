@@ -171,7 +171,7 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
       setTitleOverflow({
         visible: eventType === "enter",
         text: name,
-        pos: { x: right + 2, y: top - height / 2 }
+        pos: { x: right + 2, y: top - height / 4 }
       });
     }
   };
