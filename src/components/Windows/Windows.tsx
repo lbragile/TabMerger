@@ -13,7 +13,7 @@ const WindowsContainer = styled(Scrollbar)<{ $searching: boolean; $searchingGrou
   flex-direction: column;
   gap: 16px;
   overflow: auto;
-  height: ${({ $searching, $searchingGroup }) => ($searching ? "428px" : $searchingGroup ? "424px" : "472px")};
+  height: ${({ $searching, $searchingGroup }) => ($searching ? "416px" : $searchingGroup ? "412px" : "460px")};
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
   border-radius: 4px;
 `;

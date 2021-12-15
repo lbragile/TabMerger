@@ -168,7 +168,7 @@ export default function Window({
               ref={titleRef}
               tabIndex={0}
               role="button"
-              onClick={({ button }) => button === 0 && openWindow("new")}
+              onDoubleClick={({ button }) => button === 0 && openWindow("new")}
               onContextMenu={(e) => {
                 e.preventDefault();
                 setShowPopup(true);

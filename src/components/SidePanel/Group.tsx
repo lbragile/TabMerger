@@ -36,7 +36,7 @@ const AbsoluteCloseIcon = styled(CloseIcon)`
 
 const GroupButton = styled.div<IGroupStyle>`
   ${({ $overflow: overflow }) => css`
-    width: ${overflow ? "195px" : "209px"};
+    width: ${overflow ? "197px" : "209px"};
     margin-right: ${overflow ? "4px" : "0"};
   `}
   height: 49px;
