@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import useUpdateWindows from "../hooks/useUpdateWindows";

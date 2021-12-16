@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { useSelector } from "../../hooks/useSelector";
 import { Scrollbar } from "../../styles/Scrollbar";

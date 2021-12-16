@@ -2,8 +2,14 @@
 
 import { HEADER_ACTIONS } from "../reducers/header";
 
-export const setTyping = (payload: boolean) => ({ type: HEADER_ACTIONS.SET_TYPING, payload });
+const setTyping = (payload: boolean) => ({ type: HEADER_ACTIONS.SET_TYPING, payload });
 
-export const updateInputValue = (payload: string) => ({ type: HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload });
+const updateInputValue = (payload: string) => ({ type: HEADER_ACTIONS.UPDATE_INPUT_VALUE, payload });
 
-export const setFilterChoice = (payload: string) => ({ type: HEADER_ACTIONS.SET_FILTER_CHOICE, payload });
+const setFilterChoice = (payload: string) => ({ type: HEADER_ACTIONS.SET_FILTER_CHOICE, payload });
+
+export default {
+  setTyping,
+  updateInputValue,
+  setFilterChoice
+};

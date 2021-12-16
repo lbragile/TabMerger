@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { useDispatch } from "../hooks/useDispatch";
 import { useSelector } from "../hooks/useSelector";
-import { setFilterChoice, setTyping, updateInputValue } from "../store/actions/header";
 import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchResult from "./SearchResult";
-import { updateFilteredTabs, updateFilteredGroups } from "../store/actions/filter";
+import HEADER_CREATORS from "../store/actions/header";
+import FILTERS_CREATORS from "../store/actions/filter";
 import Dropdown from "./Dropdown";
 import useClickOutside from "../hooks/useClickOutside";
 import { saveAs } from "file-saver";
@@ -115,10 +115,10 @@ export default function Header(): JSX.Element {
         matchingTabsInWindow && matchingTabs.push(matchingTabsInWindow ?? []);
       });
 
-      dispatch(updateFilteredTabs(matchingTabs));
+      dispatch(FILTERS_CREATORS.updateFilteredTabs(matchingTabs));
     } else if (typing && filterChoice === "group") {
       const matchingGroups = available.filter((group) => group.name.toLowerCase().includes(inputValue.toLowerCase()));
-      dispatch(updateFilteredGroups(matchingGroups));
+      dispatch(FILTERS_CREATORS.updateFilteredGroups(matchingGroups));
     }
   }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
 
@@ -176,8 +176,8 @@ export default function Header(): JSX.Element {
               value={inputValue as string}
               onChange={(e) => {
                 const { value } = e.target;
-                dispatch(updateInputValue(value));
-                dispatch(setTyping(value !== ""));
+                dispatch(HEADER_CREATORS.updateInputValue(value));
+                dispatch(HEADER_CREATORS.setTyping(value !== ""));
               }}
             />
 
@@ -187,8 +187,8 @@ export default function Header(): JSX.Element {
               onClick={() => {
                 // clicking the close button should clear the input
                 if (typing) {
-                  dispatch(updateInputValue(""));
-                  dispatch(setTyping(false));
+                  dispatch(HEADER_CREATORS.updateInputValue(""));
+                  dispatch(HEADER_CREATORS.setTyping(false));
                 }
               }}
             />
@@ -199,7 +199,7 @@ export default function Header(): JSX.Element {
               {["tab", "group"].map((text) => (
                 <FilterChoice
                   key={text}
-                  onMouseDown={() => dispatch(setFilterChoice(text))}
+                  onMouseDown={() => dispatch(HEADER_CREATORS.setFilterChoice(text))}
                   active={filterChoice === text}
                 >
                   {text[0].toUpperCase() + text.slice(1)}

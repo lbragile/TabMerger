@@ -13,14 +13,14 @@
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.5",
-    "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "redux": "^4.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.14",
-    "@babel/preset-env": "^7.13.12",
-    "@babel/preset-react": "^7.13.13",
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.5",
+    "@babel/preset-typescript": "^7.16.5",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
@@ -52,7 +52,7 @@
     "redux-logger": "^3.0.6",
     "remote-redux-devtools": "^0.5.16",
     "remotedev-server": "^0.3.1",
-    "styled-components": "^5.3.0",
+    "styled-components": "^5.3.3",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-config-styled-components": "^0.1.1",
@@ -65,8 +65,8 @@
     "webpack-cli": "^4.9.1"
   },
   "scripts": {
-    "lint:code": "npx eslint {src,public}/**/**/*.{js,jsx,ts,tsx} -c config/.eslintrc.js --ignore-path .gitignore .  --max-warnings=0",
-    "lint:style": "npx stylelint {src,public}/**/**/*.{js,jsx,ts,tsx} --config config/.stylelintrc.json",
+    "lint:code": "npx eslint src -c config/.eslintrc.js --max-warnings=0",
+    "lint:style": "npx stylelint src --config config/.stylelintrc.json --max-warnings=0",
     "lint": "npm run lint:code && npm run lint:style",
     "start": "webpack --config config/webpack.config.js --progress",
     "build": "cross-env NODE_ENV=production npm start",

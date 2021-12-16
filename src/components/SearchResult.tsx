@@ -1,10 +1,10 @@
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useSelector } from "../hooks/useSelector";
-import { setTyping, updateInputValue } from "../store/actions/header";
+import HEADER_CREATORS from "../store/actions/header";
 import { pluralize } from "../utils/helper";
 
 const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
@@ -80,8 +80,8 @@ export default function SearchResult({ type }: { type: "tab" | "group" }): JSX.E
       <CloseIcon
         icon={faTimes}
         onClick={() => {
-          dispatch(setTyping(false));
-          dispatch(updateInputValue(""));
+          dispatch(HEADER_CREATORS.setTyping(false));
+          dispatch(HEADER_CREATORS.updateInputValue(""));
         }}
       />
     </StyledResult>
