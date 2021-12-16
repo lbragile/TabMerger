@@ -1,13 +1,11 @@
 name: Compressed Size Check
 
 on:
-  push:
-    branches: ["develop"]
   pull_request:
     branches: ["master"]
 
 jobs:
-  build:
+  size:
     runs-on: windows-latest
 
     steps:

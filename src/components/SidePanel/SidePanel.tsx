@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import Group from "./Group";
 import { useSelector } from "../../hooks/useSelector";
@@ -7,13 +7,14 @@ import { useDispatch } from "../../hooks/useDispatch";
 import { Scrollbar } from "../../styles/Scrollbar";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
+import useContainerHeight from "../../hooks/useContainerHeight";
 
-const GroupsContainer = styled(Scrollbar)<{ $searching: boolean; $dragging: boolean }>`
+const GroupsContainer = styled(Scrollbar)<{ $height: number; $dragging: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 4.5px;
-  height: ${({ $searching }) => ($searching ? "482px" : "531px")};
+  height: ${({ $height }) => $height + "px"};
   overflow-y: auto;
   overflow-x: hidden;
 `;
@@ -27,6 +28,9 @@ export default function SidePanel(): JSX.Element {
   const { dragType, isDragging } = useSelector((state) => state.dnd);
   const groupSearch = typing && filterChoice === "group";
   const groupDrag = isGroupDrag(dragType);
+
+  const groupsContainerRef = useRef<HTMLDivElement | null>(null);
+  const containerHeight = useContainerHeight(groupsContainerRef);
 
   /**
    * update each group's information if it doesn't match the current ...
@@ -45,13 +49,13 @@ export default function SidePanel(): JSX.Element {
   }, [dispatch, available]);
 
   return (
-    <div>
+    <div ref={groupsContainerRef}>
       <Droppable droppableId="sidePanel" isCombineEnabled={!groupDrag}>
         {(provider) => (
           <GroupsContainer
             ref={provider.innerRef}
             {...provider.droppableProps}
-            $searching={groupSearch}
+            $height={containerHeight}
             $dragging={isDragging && groupDrag}
           >
             {(groupSearch ? filteredGroups : available).map((data, i) => (

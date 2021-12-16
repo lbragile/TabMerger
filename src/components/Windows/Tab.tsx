@@ -14,9 +14,9 @@ const TabContainer = styled.div<{ $dragging: boolean }>`
   align-items: center;
   justify-content: start;
   gap: 8px;
+  padding: 0 2px;
   background-color: ${({ $dragging }) => ($dragging ? "white" : "initial")};
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
-  border-radius: 4px;
 `;
 
 const TabTitle = styled.a`

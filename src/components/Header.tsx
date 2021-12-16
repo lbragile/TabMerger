@@ -68,7 +68,6 @@ const FilterButtonToggle = styled.div`
   display: flex;
   flex-direction: row;
   border: 1px solid #cce6ff;
-  border-radius: 10em;
   margin: 0 8px;
 `;
 
@@ -76,7 +75,6 @@ const FilterChoice = styled.button<{ active: boolean }>`
   background-color: ${({ active }) => (active ? "#cce6ff" : "inherit")};
   min-width: 50px;
   padding: 4px 8px;
-  border-radius: 10em;
   border: none;
   outline: none;
   cursor: pointer;

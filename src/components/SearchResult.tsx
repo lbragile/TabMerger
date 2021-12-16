@@ -2,7 +2,7 @@ import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import HEADER_CREATORS from "../store/actions/header";
 import { pluralize } from "../utils/helper";
@@ -14,12 +14,18 @@ const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
   align-items: center;
   background-color: ${({ $isPositive }) => ($isPositive ? "#14b866" : "#F53D3D")};
   color: white;
-  border-radius: 4px;
-  padding: 8px;
-  margin: ${({ $isGroup }) => ($isGroup ? "12px 0 4px 0" : "0 0 12px 0")};
+  padding: 4px 8px;
   font-size: 14px;
   width: calc(100% - ${({ $isGroup }) => ($isGroup ? "16px" : "0")});
   text-align: center;
+  ${({ $isGroup }) =>
+    $isGroup
+      ? css`
+          margin-top: 8px;
+        `
+      : css`
+          margin-bottom: 8px;
+        `};
 
   & b {
     font-weight: 700;

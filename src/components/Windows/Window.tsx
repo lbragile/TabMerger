@@ -30,7 +30,6 @@ const Row = styled.div`
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   justify-content: center;
   font-size: 14px;
-  border-radius: 4px;
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
 `;
 
@@ -54,7 +53,7 @@ const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
   justify-content: start;
   align-items: center;
   background-color: white;
-  border-radius: 4px;
+  padding: 0 2px;
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 
   & svg,
@@ -65,7 +64,6 @@ const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
 
 const TabsContainer = styled(Column)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
   margin-left: 24px;
-  border-radius: 4px;
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "#0080ff" : "transparent")};
   background-color: ${({ $dragOrigin }) => ($dragOrigin ? "#f5faff" : "white")};
 `;

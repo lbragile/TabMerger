@@ -5,11 +5,6 @@ export const Scrollbar = styled.div`
     width: 8px;
   }
 
-  ::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-thumb {
-    border-radius: 0;
-  }
-
   ::-webkit-scrollbar-track {
     background-color: #e1e1e1;
   }
