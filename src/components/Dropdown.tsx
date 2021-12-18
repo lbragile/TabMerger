@@ -6,20 +6,24 @@ interface IPos {
   right?: number;
 }
 
+type TAlign = "left" | "center" | "right";
+
 interface IDropdown {
   items: {
-    text: string;
+    text: string | JSX.Element;
     handler?: () => void;
+    isDanger?: boolean;
   }[];
   pos: IPos;
   isPopup?: boolean;
+  textAlign?: TAlign;
 }
 
 const Triangle = styled.div<{ $pos: IPos }>`
   width: 0;
   height: 0;
   position: absolute;
-  top: 8px;
+  top: 4px;
   left: ${({ $pos }) => ($pos.left ? $pos.left - 12 + "px" : 0)};
   border: 6px solid transparent;
   border-right: 6px solid #303030;
@@ -48,19 +52,19 @@ const Container = styled.div<{ $pos: IPos }>`
   padding: 4px;
 `;
 
-const DropdownItem = styled.div`
+const DropdownItem = styled.div<{ $align: TAlign; $danger?: boolean }>`
   height: 30px;
   line-height: 14px;
   width: 100%;
   padding: 8px;
-  text-align: center;
+  text-align: ${({ $align }) => $align};
   font-weight: normal;
   font-size: 14px;
   white-space: nowrap;
   cursor: pointer;
 
   &:hover {
-    background-color: #42a4ff;
+    background-color: ${({ $danger }) => ($danger ? "#ff4a24" : "#42a4ff")};
   }
 `;
 
@@ -71,18 +75,20 @@ const DropdownDivider = styled.hr`
   width: 90%;
 `;
 
-export default function Dropdown({ items, pos, isPopup = false }: IDropdown): JSX.Element {
+export default function Dropdown({ items, pos, isPopup = false, textAlign = "left" }: IDropdown): JSX.Element {
   return (
     <>
       <Container $pos={pos}>
         {items.map((item, i) => {
           return item.text !== "divider" ? (
             <DropdownItem
-              key={item.text + i}
+              key={i}
               onClick={item.handler}
               tabIndex={0}
               role="button"
               onKeyPress={({ key }) => key === "Enter" && item.handler?.()}
+              $align={textAlign}
+              $danger={item.isDanger}
             >
               {item.text}
             </DropdownItem>

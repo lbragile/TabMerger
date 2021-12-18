@@ -77,13 +77,7 @@ const TitleContainer = styled.div`
   position: relative;
 `;
 
-type TOpenWindow = "new" | "current" | "incognito";
-
-const WINDOW_TITLE_POPUP_OPEN_CHOICES: { type: TOpenWindow; text: string }[] = [
-  { type: "current", text: "Open In Current" },
-  { type: "new", text: "Open In New" },
-  { type: "incognito", text: "Open Incognito" }
-];
+type TOpenWindow = "new" | "current" | "incognito" | "focus";
 
 export default function Window({
   focused,
@@ -121,6 +115,16 @@ export default function Window({
     cb: () => setShowPopup(false)
   });
 
+  const WINDOW_TITLE_POPUP_OPEN_CHOICES: { type: TOpenWindow; text: string }[] = useMemo(() => {
+    return groupIndex > 0
+      ? [
+          { type: "current", text: "Open In Current" },
+          { type: "new", text: "Open In New" },
+          { type: "incognito", text: "Open Incognito" }
+        ]
+      : [{ type: "focus", text: "Focus" }];
+  }, [groupIndex]);
+
   const openWindow = (type: TOpenWindow) => {
     if (groupIndex > 0) {
       const isIncognito = type === "incognito" || incognito;
@@ -140,6 +144,8 @@ export default function Window({
     } else {
       windowId && chrome.windows.update(windowId, { focused: true });
     }
+
+    setShowPopup(false);
   };
 
   const closeWindow = () => {
@@ -183,7 +189,7 @@ export default function Window({
               $active={focused}
               tabIndex={0}
               role="button"
-              onDoubleClick={(e) => e.button === 0 && openWindow("new")}
+              onClick={(e) => e.button === 0 && openWindow("new")}
               onContextMenu={(e) => {
                 e.preventDefault();
                 setShowPopup(true);
@@ -211,7 +217,7 @@ export default function Window({
                     { text: `${incognito ? "Remove" : "Make"} Incognito`, handler: () => console.log("WIP") },
                     { text: "divider" },
                     { text: "Rename", handler: () => console.log("WIP") },
-                    { text: "Delete", handler: () => console.log("WIP") }
+                    { text: "Delete", handler: () => console.log("WIP"), isDanger: true }
                   ]}
                   pos={{
                     top: 0,
@@ -264,7 +270,7 @@ export default function Window({
 
       {showInstructions && !showPopup && !isDragging && titleRef.current && (
         <Popup
-          text={`Double Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
+          text={`Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
           pos={{
             x: titleRef.current.getBoundingClientRect().right + 8,
             y: titleRef.current.getBoundingClientRect().top - 4

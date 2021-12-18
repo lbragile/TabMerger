@@ -43,11 +43,12 @@ const SearchInput = styled.input`
 `;
 
 const SettingsIcon = styled(FontAwesomeIcon)`
-  font-size: 24px;
+  font-size: 32px;
+  padding: 4px;
   cursor: pointer;
 
   &:hover {
-    color: #404040;
+    background-color: #cce6ffaa;
   }
 `;
 

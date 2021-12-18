@@ -1,48 +1,42 @@
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IGroupState } from "../../store/reducers/groups";
 import { useDispatch } from "../../hooks/useDispatch";
 import GROUPS_CREATORS from "../../store/actions/groups";
-import { getReadableTimestamp } from "../../utils/helper";
+import { getReadableTimestamp, pluralize } from "../../utils/helper";
 import Dropdown from "../Dropdown";
 import useClickOutside from "../../hooks/useClickOutside";
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 1fr auto;
   row-gap: 2px;
+  column-gap: 8px;
   justify-content: space-between;
   align-items: start;
   padding: 2px 0;
   margin-bottom: 4px;
 `;
 
-const LeftColumn = styled.div`
-  justify-self: start;
-`;
-
-const RightColumn = styled.div`
-  justify-self: end;
-`;
-
-const RelativeContainer = styled.div`
+const ActionButton = styled.button<{ $disabled?: boolean }>`
+  all: unset;
   position: relative;
-  display: inline-block;
-`;
-
-const SettingsIcon = styled(FontAwesomeIcon)`
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  column-gap: 8px;
+  padding: 2px 4px;
+  margin-left: 8px;
   font-size: 16px;
-`;
-
-const OpenIcon = styled(FontAwesomeIcon)<{ $disabled: boolean }>`
+  text-transform: capitalize;
   cursor: ${({ $disabled }) => ($disabled ? "not-allowed" : "pointer")};
   opacity: ${({ $disabled }) => ($disabled ? "0.5" : "1")};
-  margin-right: 8px;
-  font-size: 16px;
+
+  &:hover {
+    background-color: #e8e8e8aa;
+  }
 `;
 
 const Title = styled.input<{ $isMaxLength: boolean }>`
@@ -66,8 +60,18 @@ const Title = styled.input<{ $isMaxLength: boolean }>`
   }
 `;
 
-const SubTitle = styled.span`
+const SubTitle = styled.span<{ $right?: boolean }>`
   font-size: 14px;
+  ${({ $right }) =>
+    $right
+      ? css`
+          justify-self: end;
+          margin: 0 4px;
+        `
+      : css`
+          justify-self: start;
+          margin: 0;
+        `}
 `;
 
 interface IInformation extends Pick<IGroupState, "info" | "name" | "updatedAt"> {
@@ -81,16 +85,18 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const [showOpenPopup, setShowOpenPopup] = useState(false);
 
-  const settingsIconRef = useRef<HTMLDivElement | null>(null);
-  const openIconRef = useRef<HTMLDivElement | null>(null);
+  const settingsIconRef = useRef<HTMLButtonElement | null>(null);
+  const openIconRef = useRef<HTMLButtonElement | null>(null);
 
-  useClickOutside<HTMLDivElement>({
+  const [numTabs, numWindows] = info?.split(" | ")?.map((count) => Number(count.slice(0, -1))) ?? [0, 0];
+
+  useClickOutside<HTMLButtonElement>({
     ref: settingsIconRef,
     preCondition: showSettingsPopup,
     cb: () => setShowSettingsPopup(false)
   });
 
-  useClickOutside<HTMLDivElement>({
+  useClickOutside<HTMLButtonElement>({
     ref: openIconRef,
     preCondition: showOpenPopup,
     cb: () => setShowOpenPopup(false)
@@ -100,74 +106,91 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
 
   return (
     <Grid>
-      <LeftColumn>
-        <Title
-          type="text"
-          value={windowTitle}
-          spellCheck={false}
-          onChange={(e) => setWindowTitle(e.target.value)}
-          onBlur={() => dispatch(GROUPS_CREATORS.updateName({ index: groupIndex, name: windowTitle }))}
-          onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
-          maxLength={40}
-          $isMaxLength={windowTitle.length === 40}
-        />
-      </LeftColumn>
+      <Title
+        type="text"
+        value={windowTitle}
+        spellCheck={false}
+        onChange={(e) => setWindowTitle(e.target.value)}
+        onBlur={() => dispatch(GROUPS_CREATORS.updateName({ index: groupIndex, name: windowTitle }))}
+        onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
+        maxLength={40}
+        $isMaxLength={windowTitle.length === 40}
+      />
 
-      <RightColumn>
-        <RelativeContainer ref={openIconRef}>
-          <OpenIcon
-            $disabled={groupIndex === 0}
-            icon={faWindowRestore}
-            tabIndex={0}
-            onPointerDown={(e) => e.preventDefault()}
-            onClick={() => groupIndex > 0 && setShowOpenPopup(true)}
-          />
+      <span>
+        <ActionButton
+          ref={openIconRef}
+          onClick={() => groupIndex > 0 && setShowOpenPopup(true)}
+          $disabled={groupIndex === 0}
+        >
+          <FontAwesomeIcon icon={faWindowRestore} />
+
+          <span>open</span>
 
           {showOpenPopup && openIconRef.current && (
             <Dropdown
               items={[
-                { text: "Copy To Group", handler: () => console.log("WIP") },
-                { text: "Copy To Group", handler: () => console.log("WIP") },
-                { text: "Move To Group", handler: () => console.log("WIP") }
+                {
+                  text: (
+                    <p>
+                      Open {numTabs} Tabs <b>In 1 New Window</b>
+                    </p>
+                  ),
+                  handler: () => console.log("WIP")
+                },
+                {
+                  text: (
+                    <p>
+                      Open {numTabs} Tabs{" "}
+                      <b>
+                        In {numWindows} {pluralize(numWindows, "Window")}
+                      </b>
+                    </p>
+                  ),
+                  handler: () => console.log("WIP")
+                },
+                {
+                  text: (
+                    <p>
+                      Open {numTabs} Tabs <b>In Current Window</b>
+                    </p>
+                  ),
+                  handler: () => console.log("WIP")
+                }
               ]}
-              pos={{ top: openIconRef.current.getBoundingClientRect().height + 4, right: 8 }}
+              pos={{ top: openIconRef.current.getBoundingClientRect().height + 4 }}
             />
           )}
-        </RelativeContainer>
+        </ActionButton>
 
-        <RelativeContainer ref={settingsIconRef}>
-          <SettingsIcon
-            icon={faEllipsisV}
-            tabIndex={0}
-            onPointerDown={(e) => e.preventDefault()}
-            onClick={() => setShowSettingsPopup(true)}
-          />
+        <ActionButton ref={settingsIconRef} onClick={() => setShowSettingsPopup(true)}>
+          <FontAwesomeIcon icon={faEllipsisV} />
 
           {showSettingsPopup && settingsIconRef.current && (
             <Dropdown
               items={[
-                { text: "Copy To Group", handler: () => console.log("WIP") },
-                { text: "Move To Group", handler: () => console.log("WIP") },
-                { text: "divider" },
-                { text: "Star", handler: () => console.log("WIP") },
-                { text: `"Make" Incognito`, handler: () => console.log("WIP") },
-                { text: "divider" },
                 { text: "Rename", handler: () => console.log("WIP") },
-                { text: "Delete", handler: () => console.log("WIP") }
+                { text: "Duplicate", handler: () => console.log("WIP") },
+                { text: "divider" },
+                { text: "Sort By Window Title", handler: () => console.log("WIP") },
+                { text: "Sort By Tab Title", handler: () => console.log("WIP") },
+                { text: "Sort By Tab URL", handler: () => console.log("WIP") },
+                { text: "divider" },
+                { text: "Replace With Current", handler: () => console.log("WIP") },
+                { text: "Merge With Current", handler: () => console.log("WIP") },
+                { text: "divider" },
+                { text: "Unite Windows", handler: () => console.log("WIP") },
+                { text: "Delete", handler: () => console.log("WIP"), isDanger: true }
               ]}
               pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 4 }}
             />
           )}
-        </RelativeContainer>
-      </RightColumn>
+        </ActionButton>
+      </span>
 
-      <LeftColumn>
-        <SubTitle>{getReadableTimestamp(updatedAt)}</SubTitle>
-      </LeftColumn>
+      <SubTitle>{getReadableTimestamp(updatedAt)}</SubTitle>
 
-      <RightColumn>
-        <SubTitle>{info}</SubTitle>
-      </RightColumn>
+      <SubTitle $right>{info}</SubTitle>
     </Grid>
   );
 }

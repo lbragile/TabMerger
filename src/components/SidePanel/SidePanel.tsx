@@ -8,6 +8,7 @@ import { Scrollbar } from "../../styles/Scrollbar";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";
 import useContainerHeight from "../../hooks/useContainerHeight";
+import { pluralize } from "../../utils/helper";
 
 const GroupsContainer = styled(Scrollbar)<{ $height: number; $dragging: boolean }>`
   display: flex;
@@ -37,14 +38,36 @@ export default function SidePanel(): JSX.Element {
    * ... whenever the list of groups updates
    */
   useEffect(() => {
+    let [totalTabs, totalWindows] = [0, 0];
+
     available.forEach((group, i) => {
       const { windows: allWindows, info } = group;
       const countArr = allWindows.map((currentWindow) => currentWindow.tabs?.length ?? 0);
-      const total = countArr.reduce((total, val) => total + val, 0);
-      const newInfo = `${total}T | ${allWindows.length}W`;
+      const numTabs = countArr.reduce((total, val) => total + val, 0);
+      const numWindows = allWindows.length;
+      const newInfo = `${numTabs}T | ${numWindows}W`;
       if (info !== newInfo) {
         dispatch(GROUPS_CREATORS.updateInfo({ index: i, info: newInfo }));
       }
+
+      totalTabs += numTabs;
+      totalWindows += numWindows;
+    });
+
+    // This ensures that the number (string) is at most 4 characters (1, 10, 100, 1K, 1.1K, 10K, 100K, 1M, etc.)
+    const [tabText, windowText, groupText] = [totalTabs, totalWindows, available.length].map((count) =>
+      new Intl.NumberFormat("en-GB", { notation: "compact", compactDisplay: "short" }).format(count)
+    );
+
+    chrome.action.setBadgeText({ text: tabText });
+    chrome.action.setBadgeBackgroundColor({ color: "black" });
+
+    const { description } = chrome.runtime.getManifest();
+    chrome.action.setTitle({
+      title: `${description}\nCurrent Statistics: ${tabText} ${pluralize(totalTabs, "Tab")} | ${windowText} ${pluralize(
+        totalWindows,
+        "Window"
+      )} | ${groupText} ${pluralize(available.length, "Group")}`
     });
   }, [dispatch, available]);
 
