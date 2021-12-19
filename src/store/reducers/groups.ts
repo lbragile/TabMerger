@@ -21,11 +21,13 @@ export const GROUPS_ACTIONS = {
   ADD_GROUP: "ADD_GROUP",
   ADD_WINDOW: "ADD_WINDOW",
   DELETE_GROUP: "DELETE_GROUP",
+  DELETE_WINDOW: "DELETE_WINDOW",
   CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
   UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
   CLOSE_WINDOW: "CLOSE_WINDOW",
-  CLOSE_TAB: "CLOSE_TAB"
+  CLOSE_TAB: "CLOSE_TAB",
+  TOGGLE_WINDOW_INCOGNITO: "TOGGLE_WINDOW_INCOGNITO"
 };
 
 interface ICommonDnd {
@@ -237,7 +239,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.DELETE_GROUP: {
-      const { index } = action.payload as { index: number };
+      const index = action.payload as number;
 
       // re-assign active group if deleted group was the active one (use the group above if needed)
       const activeIdx = state.active.index;
@@ -251,6 +253,14 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       available.splice(index, 1);
 
       return { ...state, active, available };
+    }
+
+    case GROUPS_ACTIONS.DELETE_WINDOW: {
+      const { groupIndex, windowIndex } = action.payload as { groupIndex: number; windowIndex: number };
+
+      available[groupIndex].windows.splice(windowIndex, 1);
+
+      return { ...state, available };
     }
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS: {
@@ -313,6 +323,17 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
       available[groupIndex].windows[windowIndex].tabs?.splice(tabIndex, 1);
       available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.TOGGLE_WINDOW_INCOGNITO: {
+      const { groupIndex, windowIndex } = action.payload as {
+        groupIndex: number;
+        windowIndex: number;
+      };
+
+      available[groupIndex].windows[windowIndex].incognito = !available[groupIndex].windows[windowIndex].incognito;
 
       return { ...state, available };
     }

@@ -85,10 +85,13 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const [showOpenPopup, setShowOpenPopup] = useState(false);
 
+  const titleRef = useRef<HTMLInputElement | null>(null);
   const settingsIconRef = useRef<HTMLButtonElement | null>(null);
   const openIconRef = useRef<HTMLButtonElement | null>(null);
 
   const [numTabs, numWindows] = info?.split(" | ")?.map((count) => Number(count.slice(0, -1))) ?? [0, 0];
+
+  const isDropdownItemDisabled = groupIndex === 0;
 
   useClickOutside<HTMLButtonElement>({
     ref: settingsIconRef,
@@ -107,11 +110,14 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
   return (
     <Grid>
       <Title
+        ref={titleRef}
         type="text"
         value={windowTitle}
         spellCheck={false}
         onChange={(e) => setWindowTitle(e.target.value)}
-        onBlur={() => dispatch(GROUPS_CREATORS.updateName({ index: groupIndex, name: windowTitle }))}
+        onBlur={(e) =>
+          e.target.value !== name && dispatch(GROUPS_CREATORS.updateName({ index: groupIndex, name: windowTitle }))
+        }
         onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
         maxLength={40}
         $isMaxLength={windowTitle.length === 40}
@@ -133,26 +139,30 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
                 {
                   text: (
                     <p>
-                      Open {numTabs} Tabs <b>In 1 New Window</b>
+                      Open {numTabs} {pluralize(numTabs, "Tab")} <b>In 1 New Window</b>
                     </p>
                   ),
                   handler: () => console.log("WIP")
                 },
+                ...(numWindows > 1
+                  ? [
+                      {
+                        text: (
+                          <p>
+                            Open {numTabs} Tabs{" "}
+                            <b>
+                              In {numWindows} {pluralize(numWindows, "Window")}
+                            </b>
+                          </p>
+                        ),
+                        handler: () => console.log("WIP")
+                      }
+                    ]
+                  : []),
                 {
                   text: (
                     <p>
-                      Open {numTabs} Tabs{" "}
-                      <b>
-                        In {numWindows} {pluralize(numWindows, "Window")}
-                      </b>
-                    </p>
-                  ),
-                  handler: () => console.log("WIP")
-                },
-                {
-                  text: (
-                    <p>
-                      Open {numTabs} Tabs <b>In Current Window</b>
+                      Open {numTabs} {pluralize(numTabs, "Tab")} <b>In Current Window</b>
                     </p>
                   ),
                   handler: () => console.log("WIP")
@@ -164,23 +174,36 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
         </ActionButton>
 
         <ActionButton ref={settingsIconRef} onClick={() => setShowSettingsPopup(true)}>
-          <FontAwesomeIcon icon={faEllipsisV} />
+          <FontAwesomeIcon icon={faEllipsisV} title="More Options" />
 
           {showSettingsPopup && settingsIconRef.current && (
             <Dropdown
               items={[
-                { text: "Rename", handler: () => console.log("WIP") },
-                { text: "Duplicate", handler: () => console.log("WIP") },
+                {
+                  text: "Rename",
+                  handler: (e) => {
+                    // parent (settings icon will receive the bubbled event if propagation isn't stopped)
+                    e?.stopPropagation();
+                    titleRef.current?.focus();
+                    setShowSettingsPopup(false);
+                  }
+                },
+                { text: "Duplicate", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
                 { text: "divider" },
-                { text: "Sort By Window Title", handler: () => console.log("WIP") },
-                { text: "Sort By Tab Title", handler: () => console.log("WIP") },
-                { text: "Sort By Tab URL", handler: () => console.log("WIP") },
+                { text: "Sort By Window Title", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
+                { text: "Sort By Tab Title", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
+                { text: "Sort By Tab URL", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
                 { text: "divider" },
-                { text: "Replace With Current", handler: () => console.log("WIP") },
-                { text: "Merge With Current", handler: () => console.log("WIP") },
+                { text: "Replace With Current", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
+                { text: "Merge With Current", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
                 { text: "divider" },
-                { text: "Unite Windows", handler: () => console.log("WIP") },
-                { text: "Delete", handler: () => console.log("WIP"), isDanger: true }
+                { text: "Unite Windows", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
+                {
+                  text: "Delete",
+                  handler: () => dispatch(GROUPS_CREATORS.deleteGroup(groupIndex)),
+                  isDanger: true,
+                  isDisabled: isDropdownItemDisabled
+                }
               ]}
               pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 4 }}
             />

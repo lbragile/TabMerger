@@ -64,8 +64,13 @@ const updatePermanent = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_PE
 
 const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
 
-const deleteGroup = (payload?: { id: string; index: number }) => ({
+const deleteGroup = (payload?: number) => ({
   type: GROUPS_ACTIONS.DELETE_GROUP,
+  payload
+});
+
+const deleteWindow = (payload?: { groupIndex: number; windowIndex: number }) => ({
+  type: GROUPS_ACTIONS.DELETE_WINDOW,
   payload
 });
 
@@ -93,6 +98,11 @@ const closeTab = (payload?: { tabIndex: number; windowIndex: number; groupIndex:
   payload
 });
 
+const toggleWindowIncognito = (payload?: { windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.TOGGLE_WINDOW_INCOGNITO,
+  payload
+});
+
 export default {
   updateAvailable,
   updateActive,
@@ -109,10 +119,12 @@ export default {
   updatePermanent,
   addGroup,
   deleteGroup,
+  deleteWindow,
   clearEmptyGroups,
   addWindow,
   clearEmptyWindows,
   updateGroupOrder,
   closeWindow,
-  closeTab
+  closeTab,
+  toggleWindowIncognito
 };

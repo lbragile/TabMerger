@@ -11,8 +11,9 @@ type TAlign = "left" | "center" | "right";
 interface IDropdown {
   items: {
     text: string | JSX.Element;
-    handler?: () => void;
+    handler?: (e?: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
     isDanger?: boolean;
+    isDisabled?: boolean;
   }[];
   pos: IPos;
   isPopup?: boolean;
@@ -52,7 +53,7 @@ const Container = styled.div<{ $pos: IPos }>`
   padding: 4px;
 `;
 
-const DropdownItem = styled.div<{ $align: TAlign; $danger?: boolean }>`
+const DropdownItem = styled.div<{ $align: TAlign; $danger?: boolean; $disabled?: boolean }>`
   height: 30px;
   line-height: 14px;
   width: 100%;
@@ -62,9 +63,11 @@ const DropdownItem = styled.div<{ $align: TAlign; $danger?: boolean }>`
   font-size: 14px;
   white-space: nowrap;
   cursor: pointer;
+  pointer-events: ${({ $disabled }) => ($disabled ? "none" : "all")};
+  opacity: ${({ $disabled }) => ($disabled ? "0.5" : "1")};
 
   &:hover {
-    background-color: ${({ $danger }) => ($danger ? "#ff4a24" : "#42a4ff")};
+    background-color: ${({ $danger, $disabled }) => (!$disabled ? ($danger ? "#ff4a24" : "#42a4ff") : "initial")};
   }
 `;
 
@@ -86,9 +89,10 @@ export default function Dropdown({ items, pos, isPopup = false, textAlign = "lef
               onClick={item.handler}
               tabIndex={0}
               role="button"
-              onKeyPress={({ key }) => key === "Enter" && item.handler?.()}
+              onKeyPress={(e) => e.key === "Enter" && item.handler?.(e)}
               $align={textAlign}
               $danger={item.isDanger}
+              $disabled={item.isDisabled}
             >
               {item.text}
             </DropdownItem>

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { faTimesCircle, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
+import { faMask, faTimesCircle, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import Tab from "./Tab";
@@ -60,6 +60,10 @@ const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
   & ${WindowTitle} {
     color: ${({ $active }) => ($active ? "#0080ff" : "")};
   }
+
+  & svg {
+    max-width: 14px;
+  }
 `;
 
 const TabsContainer = styled(Column)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
@@ -114,16 +118,6 @@ export default function Window({
     preCondition: showPopup,
     cb: () => setShowPopup(false)
   });
-
-  const WINDOW_TITLE_POPUP_OPEN_CHOICES: { type: TOpenWindow; text: string }[] = useMemo(() => {
-    return groupIndex > 0
-      ? [
-          { type: "current", text: "Open In Current" },
-          { type: "new", text: "Open In New" },
-          { type: "incognito", text: "Open Incognito" }
-        ]
-      : [{ type: "focus", text: "Focus" }];
-  }, [groupIndex]);
 
   const openWindow = (type: TOpenWindow) => {
     if (groupIndex > 0) {
@@ -180,7 +174,10 @@ export default function Window({
 
         <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
           <div {...dragHandleProps}>
-            <FontAwesomeIcon icon={faWindowMaximize} />
+            <FontAwesomeIcon
+              title={`${incognito ? "Incognito" : "Regular"} Window`}
+              icon={incognito ? faMask : faWindowMaximize}
+            />
           </div>
 
           <TitleContainer>
@@ -205,19 +202,37 @@ export default function Window({
               <div ref={popupRef}>
                 <Dropdown
                   items={[
-                    ...WINDOW_TITLE_POPUP_OPEN_CHOICES.map(({ text, type }) => ({
-                      text,
-                      handler: () => openWindow(type)
-                    })),
+                    ...(groupIndex > 0
+                      ? [
+                          { text: "Open In Current", handler: () => openWindow("current") },
+                          { text: "Open In New", handler: () => openWindow("new"), isDisabled: incognito },
+                          { text: "Open Incognito", handler: () => openWindow("incognito") }
+                        ]
+                      : [{ text: "Focus", handler: () => openWindow("focus") }]),
                     { text: "divider" },
                     { text: "Copy To Group", handler: () => console.log("WIP") },
                     { text: "Move To Group", handler: () => console.log("WIP") },
                     { text: "divider" },
-                    { text: "Star", handler: () => console.log("WIP") },
-                    { text: `${incognito ? "Remove" : "Make"} Incognito`, handler: () => console.log("WIP") },
+                    { text: "Star", handler: () => console.log("WIP"), isDisabled: groupIndex === 0 },
+                    {
+                      text: `${incognito ? "Remove" : "Make"} Incognito`,
+                      handler: () => {
+                        dispatch(GROUPS_CREATORS.toggleWindowIncognito({ groupIndex, windowIndex }));
+                        setShowPopup(false);
+                      },
+                      isDisabled: groupIndex === 0
+                    },
                     { text: "divider" },
                     { text: "Rename", handler: () => console.log("WIP") },
-                    { text: "Delete", handler: () => console.log("WIP"), isDanger: true }
+                    {
+                      text: "Delete",
+                      handler: () => {
+                        dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
+                        setShowPopup(false);
+                      },
+                      isDanger: true,
+                      isDisabled: groupIndex === 0
+                    }
                   ]}
                   pos={{
                     top: 0,

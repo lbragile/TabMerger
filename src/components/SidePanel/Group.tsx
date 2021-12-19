@@ -48,7 +48,7 @@ const GroupButton = styled.div<IGroupStyle>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 4px 8px 4px 16px;
+  padding: 2px 8px 2px 16px;
   cursor: ${({ $draggingOver, $draggingGlobal }) => ($draggingOver || $draggingGlobal ? "grabbing" : "pointer")};
   ${({ $draggingGlobal }) =>
     !$draggingGlobal &&
@@ -231,7 +231,7 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
               icon={faTimes}
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(GROUPS_CREATORS.deleteGroup({ index, id }));
+                dispatch(GROUPS_CREATORS.deleteGroup(index));
               }}
             />
           )}
