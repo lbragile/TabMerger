@@ -3,6 +3,11 @@ import styled, { css } from "styled-components";
 
 export const CloseIcon = styled(FontAwesomeIcon)<{ $visible?: boolean }>`
   && {
+    &:focus-visible {
+      visibility: visible;
+      color: #ff4040;
+    }
+
     ${({ $visible }) =>
       $visible !== false
         ? css`

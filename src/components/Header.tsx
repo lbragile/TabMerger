@@ -181,6 +181,7 @@ export default function Header(): JSX.Element {
             />
 
             <SearchIcon
+              {...(typing ? { tabIndex: 0 } : {})}
               icon={typing ? faTimes : faSearch}
               $typing={typing}
               onClick={() => {
@@ -209,7 +210,13 @@ export default function Header(): JSX.Element {
         </Flex>
 
         <div ref={settingsIconRef}>
-          <SettingsIcon icon={faCog} onClick={() => setShowDropdown(!showDropdown)} />
+          <SettingsIcon
+            tabIndex={0}
+            icon={faCog}
+            onPointerDown={(e) => e.preventDefault()}
+            onClick={() => setShowDropdown(!showDropdown)}
+            onKeyPress={({ key }) => key === "Enter" && setShowDropdown(!showDropdown)}
+          />
         </div>
       </Container>
 

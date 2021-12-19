@@ -27,7 +27,8 @@ export const GROUPS_ACTIONS = {
   UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
   CLOSE_WINDOW: "CLOSE_WINDOW",
   CLOSE_TAB: "CLOSE_TAB",
-  TOGGLE_WINDOW_INCOGNITO: "TOGGLE_WINDOW_INCOGNITO"
+  TOGGLE_WINDOW_INCOGNITO: "TOGGLE_WINDOW_INCOGNITO",
+  TOGGLE_WINDOW_STARRED: "TOGGLE_WINDOW_STARRED"
 };
 
 interface ICommonDnd {
@@ -47,7 +48,7 @@ export interface IGroupState {
   id: string;
   color: string;
   updatedAt: number;
-  windows: chrome.windows.Window[];
+  windows: (chrome.windows.Window & { starred?: boolean })[];
   permanent?: boolean;
   info?: string;
 }
@@ -139,6 +140,10 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         const removedWindows = available[index].windows.splice(source.index, 1);
         available[index].windows.splice(destination.index, 0, ...removedWindows);
         available[index].updatedAt = Date.now();
+
+        // need to toggle starred state depending on direction of drag
+        const compareIdx = destination.index + Math.sign(source.index - destination.index);
+        available[index].windows[destination.index].starred = !!available[index].windows[compareIdx]?.starred;
       }
 
       return { ...state, available };
@@ -150,7 +155,10 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       if (combine) {
         const groupIdx = Number(combine.draggableId.split("-")[1]);
         const removedWindows = available[index].windows.splice(source.index, 1);
-        removedWindows.forEach((w) => (w.focused = false));
+        removedWindows.forEach((w) => {
+          w.focused = false;
+          w.starred = false;
+        });
         available[groupIdx].windows.unshift(...removedWindows);
 
         available[index].updatedAt = Date.now();
@@ -334,6 +342,22 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       };
 
       available[groupIndex].windows[windowIndex].incognito = !available[groupIndex].windows[windowIndex].incognito;
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.TOGGLE_WINDOW_STARRED: {
+      const { groupIndex, windowIndex } = action.payload as {
+        groupIndex: number;
+        windowIndex: number;
+      };
+
+      available[groupIndex].windows[windowIndex].starred = !available[groupIndex].windows[windowIndex].starred;
+
+      // Place starred windows above regular windows
+      available[groupIndex].windows = available[groupIndex].windows
+        .filter((w) => w.starred)
+        .concat(available[groupIndex].windows.filter((w) => !w.starred));
 
       return { ...state, available };
     }

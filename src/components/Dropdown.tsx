@@ -66,7 +66,8 @@ const DropdownItem = styled.div<{ $align: TAlign; $danger?: boolean; $disabled?:
   pointer-events: ${({ $disabled }) => ($disabled ? "none" : "all")};
   opacity: ${({ $disabled }) => ($disabled ? "0.5" : "1")};
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: ${({ $danger, $disabled }) => (!$disabled ? ($danger ? "#ff4a24" : "#42a4ff") : "initial")};
   }
 `;

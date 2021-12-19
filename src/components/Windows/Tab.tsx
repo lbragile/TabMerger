@@ -66,17 +66,26 @@ export default function Tab({
   const dispatch = useDispatch();
 
   const {
+    available,
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
+
   const openTab = () => chrome.tabs.create({ url, active, pinned });
+
   const closeTab = () => {
     if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeTab({ tabIndex, windowIndex, groupIndex }));
 
-      //  possible to have deleted the last tab in the window
-      dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: groupIndex }));
+      // possible to have deleted the last tab in the window and/or group
+      if (!available[groupIndex].windows[windowIndex].tabs?.length) {
+        dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
+      }
+
+      if (!available[groupIndex].windows.length) {
+        dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
+      }
     } else {
       tabId && chrome.tabs.remove(tabId);
     }
@@ -88,6 +97,7 @@ export default function Tab({
         icon={faTimes}
         tabIndex={0}
         onClick={closeTab}
+        onPointerDown={(e) => e.preventDefault()}
         onKeyPress={({ key }) => key === "Enter" && closeTab()}
         $visible={!isDragging}
       />

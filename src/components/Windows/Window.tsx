@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
-import { faMask, faTimesCircle, faWindowMaximize } from "@fortawesome/free-solid-svg-icons";
+import { faMask, faStar, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { faWindowMaximize } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import Tab from "./Tab";
@@ -41,7 +42,8 @@ const WindowTitle = styled.div<{ $active: boolean }>`
   cursor: pointer;
   user-select: none;
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: ${({ $active }) => ($active ? "#dde8ffb7" : "#dfdfdfb7")};
   }
 `;
@@ -58,7 +60,7 @@ const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
 
   & svg,
   & ${WindowTitle} {
-    color: ${({ $active }) => ($active ? "#0080ff" : "")};
+    color: ${({ $active }) => ($active ? "#0080ff" : "initial")};
   }
 
   & svg {
@@ -81,6 +83,18 @@ const TitleContainer = styled.div`
   position: relative;
 `;
 
+const IconStack = styled.div`
+  position: relative;
+
+  & svg:nth-child(2) {
+    font-size: 7px;
+    position: absolute;
+    top: 0;
+    right: -3.5px;
+    color: #ff8000;
+  }
+`;
+
 type TOpenWindow = "new" | "current" | "incognito" | "focus";
 
 export default function Window({
@@ -89,16 +103,19 @@ export default function Window({
   incognito,
   id: windowId,
   windowIndex,
+  starred,
   snapshot: windowSnapshot,
   dragHandleProps
 }: chrome.windows.Window & {
   windowIndex: number;
+  starred?: boolean;
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }): JSX.Element {
   const dispatch = useDispatch();
 
   const {
+    available,
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
   const { typing, filterChoice } = useSelector((state) => state.header);
@@ -147,7 +164,9 @@ export default function Window({
       dispatch(GROUPS_CREATORS.closeWindow({ groupIndex, windowIndex }));
 
       // possible to have deleted the last window in the group
-      dispatch(GROUPS_CREATORS.clearEmptyGroups());
+      if (!available[groupIndex].windows.length) {
+        dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
+      }
     } else {
       windowId && chrome.windows.remove(windowId);
     }
@@ -168,17 +187,19 @@ export default function Window({
           icon={faTimesCircle}
           tabIndex={0}
           onClick={closeWindow}
+          onPointerDown={(e) => e.preventDefault()}
           onKeyPress={({ key }) => key === "Enter" && closeWindow()}
           $visible={!isDragging}
         />
 
         <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
-          <div {...dragHandleProps}>
+          <IconStack {...dragHandleProps} onContextMenu={(e) => e.preventDefault()}>
             <FontAwesomeIcon
-              title={`${incognito ? "Incognito" : "Regular"} Window`}
+              title={`${starred ? "Favorite " : ""}${incognito ? "Incognito" : "Regular"} Window`}
               icon={incognito ? faMask : faWindowMaximize}
             />
-          </div>
+            {starred && <FontAwesomeIcon icon={faStar} />}
+          </IconStack>
 
           <TitleContainer>
             <WindowTitle
@@ -213,7 +234,14 @@ export default function Window({
                     { text: "Copy To Group", handler: () => console.log("WIP") },
                     { text: "Move To Group", handler: () => console.log("WIP") },
                     { text: "divider" },
-                    { text: "Star", handler: () => console.log("WIP"), isDisabled: groupIndex === 0 },
+                    {
+                      text: starred ? "Unfavorite" : "Favorite",
+                      handler: () => {
+                        dispatch(GROUPS_CREATORS.toggleWindowStarred({ groupIndex, windowIndex }));
+                        setShowPopup(false);
+                      },
+                      isDisabled: groupIndex === 0
+                    },
                     {
                       text: `${incognito ? "Remove" : "Make"} Incognito`,
                       handler: () => {

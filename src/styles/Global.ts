@@ -12,6 +12,11 @@ export const GlobalStyle = createGlobalStyle`${css`
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
+
+    &:not(input):focus-visible {
+      outline: 1px solid #000;
+      outline-offset: -1px;
+    }
   }
 
   html,

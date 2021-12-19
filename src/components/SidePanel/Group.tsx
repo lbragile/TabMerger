@@ -195,7 +195,6 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
           <Headline
             onPointerEnter={(e) => handleShowTitleOverflow(e, "enter")}
             onPointerLeave={(e) => handleShowTitleOverflow(e, "leave")}
-            onFocus={() => console.log("focused")}
             {...dragHandleProps}
           >
             {filterChoice === "group" ? <Highlighted text={name} /> : name}
@@ -228,10 +227,15 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
 
           {!permanent && !isDragging && (
             <AbsoluteCloseIcon
+              tabIndex={0}
               icon={faTimes}
               onClick={(e) => {
                 e.stopPropagation();
                 dispatch(GROUPS_CREATORS.deleteGroup(index));
+              }}
+              onKeyPress={(e) => {
+                e.stopPropagation();
+                e.key === "Enter" && dispatch(GROUPS_CREATORS.deleteGroup(index));
               }}
             />
           )}

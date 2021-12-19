@@ -184,7 +184,7 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
                   handler: (e) => {
                     // parent (settings icon will receive the bubbled event if propagation isn't stopped)
                     e?.stopPropagation();
-                    titleRef.current?.focus();
+                    titleRef.current?.select();
                     setShowSettingsPopup(false);
                   }
                 },

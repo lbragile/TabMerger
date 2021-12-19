@@ -103,6 +103,11 @@ const toggleWindowIncognito = (payload?: { windowIndex: number; groupIndex: numb
   payload
 });
 
+const toggleWindowStarred = (payload?: { windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.TOGGLE_WINDOW_STARRED,
+  payload
+});
+
 export default {
   updateAvailable,
   updateActive,
@@ -126,5 +131,6 @@ export default {
   updateGroupOrder,
   closeWindow,
   closeTab,
-  toggleWindowIncognito
+  toggleWindowIncognito,
+  toggleWindowStarred
 };
