@@ -1,6 +1,7 @@
 # ![tabmerger logo](./public/images/logo-full-rescale.PNG)
 
 [![Code Quality][codefactor]](https://www.codefactor.io/repository/github/lbragile/tabmerger) [![Build][build status]](https://github.com/lbragile/TabMerger/actions) [![Forks][gh forks]](https://github.com/lbragile/TabMerger) [![Stars][gh stars]](https://github.com/lbragile/TabMerger) [![Contributors][gh contributors]](https://github.com/lbragile/TabMerger) [![Release][release]](https://github.com/lbragile/TabMerger/releases/tag/v2.0.0) [![Chrome Users][chromeusers]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Chrome Rating][chromerating]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Firefox Users][firefoxusers]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Rating][firefoxrating]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Code Size][code size]](https://github.com/lbragile/TabMerger/) [![License][license]](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flbragile%2FTabMerger.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Flbragile%2FTabMerger?ref=badge_shield)
 
 | [![Chrome WebStore](https://i.imgur.com/NKFtwOA.png)](http://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/) | [![Firefox WebStore](https://i.imgur.com/YTz727e.png)](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) | [![Edge WebStore](https://i.imgur.com/YQR2RYd.png)](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn) |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -75,3 +76,6 @@ TabMerger is open source and GPLv3 licensed, thus it is not intended for commerc
 [firefoxdownloads]: https://img.shields.io/amo/dw/%257B19feb84f-3a0b-4ca3-bbae-211b52eb158b%257D?label=Downloads&style=flat-square&logo=firefox
 [chromeusers]: https://img.shields.io/chrome-web-store/users/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Users&style=flat-square&logo=google&logoColor=white
 [chromerating]: https://img.shields.io/chrome-web-store/rating/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Rating&style=flat-square&logo=google&logoColor=white
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Flbragile%2FTabMerger.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Flbragile%2FTabMerger?ref=badge_large)
