@@ -3,8 +3,8 @@ import styled, { css } from "styled-components";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IGroupState } from "../../store/reducers/groups";
 import { useDispatch } from "../../hooks/useDispatch";
+import { useSelector } from "../../hooks/useSelector";
 import GROUPS_CREATORS from "../../store/actions/groups";
 import { getReadableTimestamp, pluralize } from "../../utils/helper";
 import Dropdown from "../Dropdown";
@@ -74,12 +74,14 @@ const SubTitle = styled.span<{ $right?: boolean }>`
         `}
 `;
 
-interface IInformation extends Pick<IGroupState, "info" | "name" | "updatedAt"> {
-  groupIndex: number;
-}
-
-export default function Information({ info, name, groupIndex, updatedAt }: IInformation): JSX.Element {
+export default function Information(): JSX.Element {
   const dispatch = useDispatch();
+
+  const {
+    active: { index: groupIndex },
+    available
+  } = useSelector((state) => state.groups);
+  const { windows, info, name, updatedAt } = available[groupIndex];
 
   const [windowTitle, setWindowTitle] = useState("");
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
@@ -126,7 +128,7 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
       <span>
         <ActionButton
           ref={openIconRef}
-          onClick={() => groupIndex > 0 && setShowOpenPopup(true)}
+          onClick={() => groupIndex > 0 && setShowOpenPopup(!showOpenPopup)}
           $disabled={groupIndex === 0}
         >
           <FontAwesomeIcon icon={faWindowRestore} />
@@ -173,7 +175,7 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
           )}
         </ActionButton>
 
-        <ActionButton ref={settingsIconRef} onClick={() => setShowSettingsPopup(true)}>
+        <ActionButton ref={settingsIconRef} onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
           <FontAwesomeIcon icon={faEllipsisV} title="More Options" />
 
           {showSettingsPopup && settingsIconRef.current && (
@@ -188,21 +190,54 @@ export default function Information({ info, name, groupIndex, updatedAt }: IInfo
                     setShowSettingsPopup(false);
                   }
                 },
-                { text: "Duplicate", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
+                {
+                  text: "Duplicate",
+                  handler: (e) => {
+                    e?.stopPropagation();
+                    dispatch(GROUPS_CREATORS.duplicateGroup(groupIndex));
+                    setShowSettingsPopup(false);
+                  },
+                  isDisabled: isDropdownItemDisabled
+                },
                 { text: "divider" },
                 { text: "Sort By Window Title", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
                 { text: "Sort By Tab Title", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
                 { text: "Sort By Tab URL", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
+                {
+                  text: "Unite Windows",
+                  handler: (e) => {
+                    e?.stopPropagation();
+                    dispatch(GROUPS_CREATORS.uniteWindows(groupIndex));
+                    setShowSettingsPopup(false);
+                  },
+                  isDisabled: isDropdownItemDisabled || windows.length === 1
+                },
                 { text: "divider" },
-                { text: "Replace With Current", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
-                { text: "Merge With Current", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
+                {
+                  text: "Merge With Current",
+                  handler: (e) => {
+                    e?.stopPropagation();
+                    dispatch(GROUPS_CREATORS.mergeWithCurrent(groupIndex));
+                    setShowSettingsPopup(false);
+                  },
+                  isDisabled: isDropdownItemDisabled
+                },
+                {
+                  text: "Replace With Current",
+                  handler: (e) => {
+                    e?.stopPropagation();
+                    dispatch(GROUPS_CREATORS.replaceWithCurrent(groupIndex));
+                    setShowSettingsPopup(false);
+                  },
+                  isDisabled: isDropdownItemDisabled,
+                  isDanger: true
+                },
                 { text: "divider" },
-                { text: "Unite Windows", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
                 {
                   text: "Delete",
                   handler: () => dispatch(GROUPS_CREATORS.deleteGroup(groupIndex)),
-                  isDanger: true,
-                  isDisabled: isDropdownItemDisabled
+                  isDisabled: isDropdownItemDisabled,
+                  isDanger: true
                 }
               ]}
               pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 4 }}

@@ -6,7 +6,6 @@ export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
   UPDATE_ACTIVE: "UPDATE_ACTIVE",
   UPDATE_INDEX: "UPDATE_INDEX",
-  UPDATE_IS_ACTIVE: "UPDATE_IS_ACTIVE",
   UPDATE_NAME: "UPDATE_NAME",
   UPDATE_COLOR: "UPDATE_COLOR",
   UPDATE_TIMESTAMP: "UPDATE_TIMESTAMP",
@@ -28,7 +27,11 @@ export const GROUPS_ACTIONS = {
   CLOSE_WINDOW: "CLOSE_WINDOW",
   CLOSE_TAB: "CLOSE_TAB",
   TOGGLE_WINDOW_INCOGNITO: "TOGGLE_WINDOW_INCOGNITO",
-  TOGGLE_WINDOW_STARRED: "TOGGLE_WINDOW_STARRED"
+  TOGGLE_WINDOW_STARRED: "TOGGLE_WINDOW_STARRED",
+  DUPLICATE_GROUP: "DUPLICATE_GROUP",
+  REPLACE_WITH_CURRENT: "REPLACE_WITH_CURRENT",
+  MERGE_WITH_CURRENT: "MERGE_WITH_CURRENT",
+  UNITE_WINDOWS: "UNITE_WINDOWS"
 };
 
 interface ICommonDnd {
@@ -43,7 +46,7 @@ export interface ISidePanelDnd extends ICommonDnd {
   combine?: Combine;
 }
 
-export interface IGroupState {
+export interface IGroupItemState {
   name: string;
   id: string;
   color: string;
@@ -55,7 +58,7 @@ export interface IGroupState {
 
 export interface IGroupsState {
   active: { id: string; index: number };
-  available: IGroupState[];
+  available: IGroupItemState[];
 }
 
 const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
@@ -231,7 +234,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.ADD_GROUP: {
-      const NEW_GROUP: IGroupState = {
+      const NEW_GROUP: IGroupItemState = {
         name: "No Name",
         id: nanoid(10),
         color: "rgba(128, 128, 128, 1)",
@@ -342,6 +345,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       };
 
       available[groupIndex].windows[windowIndex].incognito = !available[groupIndex].windows[windowIndex].incognito;
+      available[groupIndex].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -358,6 +362,62 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       available[groupIndex].windows = available[groupIndex].windows
         .filter((w) => w.starred)
         .concat(available[groupIndex].windows.filter((w) => !w.starred));
+
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.DUPLICATE_GROUP: {
+      const groupIndex = action.payload as number;
+
+      // make sure to deep clone the group
+      available.splice(groupIndex, 0, JSON.parse(JSON.stringify(available[groupIndex])));
+
+      // assign new id to avoid having the same group
+      available[groupIndex + 1].id = nanoid(10);
+
+      // update the timestamp in the new group (original group does not need to update this as nothing changed)
+      available[groupIndex + 1].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.REPLACE_WITH_CURRENT: {
+      const groupIndex = action.payload as number;
+
+      // overwrite the windows with the default group, then unfocus all the windows in the group
+      available[groupIndex].windows = JSON.parse(JSON.stringify(available[0].windows));
+      available[groupIndex].windows.forEach((w) => (w.focused = false));
+
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.MERGE_WITH_CURRENT: {
+      const groupIndex = action.payload as number;
+
+      // place merged windows first in the group then unfocus the newly merged windows
+      available[groupIndex].windows = JSON.parse(JSON.stringify(available[0].windows)).concat(
+        available[groupIndex].windows
+      );
+      available[groupIndex].windows.forEach((w) => (w.focused = false));
+
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UNITE_WINDOWS: {
+      const groupIndex = action.payload as number;
+
+      const allTabsInGroup = available[groupIndex].windows.flatMap((w) => w.tabs ?? []);
+      const firstWindow = available[groupIndex].windows[0];
+      firstWindow.tabs = allTabsInGroup;
+      available[groupIndex].windows = [firstWindow];
+
+      available[groupIndex].updatedAt = Date.now();
 
       return { ...state, available };
     }

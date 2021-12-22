@@ -21,10 +21,12 @@ const WindowsContainer = styled(Scrollbar)<{ $height: number; $draggedOver: bool
 export default function Windows(): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
-  const { active, available } = useSelector((state) => state.groups);
+  const {
+    active: { index: groupIndex },
+    available
+  } = useSelector((state) => state.groups);
   const { dragType } = useSelector((state) => state.dnd);
-  const { index } = active;
-  const { windows, info, name, updatedAt } = available[index];
+  const { windows, updatedAt } = available[groupIndex];
 
   const hasMoreThanOneFilteredTab = !typing || filteredTabs.some((item) => item.length > 0);
   const tabSearching = typing && filterChoice === "tab";
@@ -34,12 +36,12 @@ export default function Windows(): JSX.Element {
 
   return (
     <div>
-      <Information info={info} name={name} updatedAt={updatedAt} groupIndex={index} />
+      <Information />
 
       {tabSearching && <SearchResult type="tab" />}
 
       <div ref={windowContainerRef}>
-        <Droppable droppableId={"group-" + index} isDropDisabled={!isWindowDrag(dragType)}>
+        <Droppable droppableId={"group-" + groupIndex} isDropDisabled={!isWindowDrag(dragType)}>
           {(provider, dropSnapshot) => (
             <WindowsContainer
               ref={provider.innerRef}
@@ -49,7 +51,7 @@ export default function Windows(): JSX.Element {
             >
               {hasMoreThanOneFilteredTab &&
                 windows.map((window, i) => (
-                  <Draggable key={i} draggableId={`window-${i}-group-${index}`} index={i}>
+                  <Draggable key={i} draggableId={`window-${i}-group-${groupIndex}`} index={i}>
                     {(provided, dragSnapshot) => (
                       <div ref={provided.innerRef} {...provided.draggableProps}>
                         <Window

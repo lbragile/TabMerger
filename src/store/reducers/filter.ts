@@ -1,5 +1,5 @@
 import { IAction } from "../../typings/reducers";
-import { IGroupState } from "./groups";
+import { IGroupItemState } from "./groups";
 
 export const FILTER_ACTIONS = {
   UPDATE_FILTERED_TABS: "UPDATE_FILTERED_TABS",
@@ -8,7 +8,7 @@ export const FILTER_ACTIONS = {
 
 export interface IFilterState {
   filteredTabs: chrome.tabs.Tab[][];
-  filteredGroups: IGroupState[];
+  filteredGroups: IGroupItemState[];
 }
 
 const initState: IFilterState = {

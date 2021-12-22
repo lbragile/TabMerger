@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { WINDOW_QUERY_OPTIONS } from "../constants/chrome";
-import { IGroupState } from "../store/reducers/groups";
+import { IGroupItemState } from "../store/reducers/groups";
 import { TSentResponse } from "../typings/background";
 import { sortWindowsByFocus } from "./helper";
 
@@ -25,7 +25,7 @@ export function setDefaultData(): void {
     const active = { id: activeId, index: 0 };
     const { sortedWindows } = sortWindowsByFocus(windows);
 
-    const available: IGroupState[] = [
+    const available: IGroupItemState[] = [
       {
         name: "Awaiting Storage",
         id: activeId,

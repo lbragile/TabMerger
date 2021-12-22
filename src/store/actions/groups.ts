@@ -108,6 +108,26 @@ const toggleWindowStarred = (payload?: { windowIndex: number; groupIndex: number
   payload
 });
 
+const duplicateGroup = (payload?: number) => ({
+  type: GROUPS_ACTIONS.DUPLICATE_GROUP,
+  payload
+});
+
+const replaceWithCurrent = (payload?: number) => ({
+  type: GROUPS_ACTIONS.REPLACE_WITH_CURRENT,
+  payload
+});
+
+const mergeWithCurrent = (payload?: number) => ({
+  type: GROUPS_ACTIONS.MERGE_WITH_CURRENT,
+  payload
+});
+
+const uniteWindows = (payload?: number) => ({
+  type: GROUPS_ACTIONS.UNITE_WINDOWS,
+  payload
+});
+
 export default {
   updateAvailable,
   updateActive,
@@ -132,5 +152,9 @@ export default {
   closeWindow,
   closeTab,
   toggleWindowIncognito,
-  toggleWindowStarred
+  toggleWindowStarred,
+  duplicateGroup,
+  replaceWithCurrent,
+  mergeWithCurrent,
+  uniteWindows
 };
