@@ -75,7 +75,7 @@ const initState: IGroupsState = {
   active: { id: activeId, index: 0 },
   available: [
     {
-      name: "Awaiting Storage",
+      name: "Now Open",
       id: activeId,
       color: "rgba(128, 128, 128, 1)",
       updatedAt: Date.now(),
@@ -235,7 +235,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
     case GROUPS_ACTIONS.ADD_GROUP: {
       const NEW_GROUP: IGroupItemState = {
-        name: "No Name",
+        name: "New",
         id: nanoid(10),
         color: "rgba(128, 128, 128, 1)",
         updatedAt: Date.now(),

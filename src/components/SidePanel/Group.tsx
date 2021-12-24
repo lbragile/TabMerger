@@ -16,7 +16,7 @@ import { COLOR_PICKER_SWATCHES } from "../../constants/colorPicker";
 import Popup from "../Popup";
 
 interface IGroupStyle {
-  active: boolean;
+  $isActive: boolean;
   $overflow: boolean;
   $dragging: boolean;
   $draggingOver: boolean;
@@ -39,8 +39,8 @@ const GroupButton = styled.div<IGroupStyle>`
     margin-right: ${overflow ? "4px" : "0"};
   `}
   height: 49px;
-  background-color: ${({ active, $dragging, $draggingOver }) =>
-    active ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
+  background-color: ${({ $isActive, $dragging, $draggingOver }) =>
+    $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
@@ -63,14 +63,23 @@ const GroupButton = styled.div<IGroupStyle>`
     `}
 `;
 
-const Headline = styled.div`
+const Headline = styled.div<{ $isActive: boolean; $isFirst: boolean }>`
   font-size: 16px;
   font-weight: 600;
-  width: 95%;
+  width: fit-content;
+  max-width: 95%;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  ${({ $isFirst, $isActive }) =>
+    !$isFirst &&
+    css`
+      &:hover {
+        padding: 0 4px;
+        background-color: ${$isActive ? "#ffffffb7" : "#dfdfdfb7"};
+      }
+    `}
 `;
 
 const Information = styled.div`
@@ -166,13 +175,24 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
     eventType: "enter" | "leave"
   ) => {
     if (!isDragging && currentTarget && currentTarget.scrollWidth > currentTarget.clientWidth) {
-      const { right, top, height } = currentTarget.getBoundingClientRect();
-      setTitleOverflow({
-        visible: eventType === "enter",
-        text: name,
-        pos: { x: right + 2, y: top - height / 4 }
-      });
+      const { right, top } = currentTarget.getBoundingClientRect();
+      setTitleOverflow({ visible: eventType === "enter", text: name, pos: { x: right, y: top - 2 } });
     }
+  };
+
+  const handleShowPicker = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
+    // groups below the half way mark will have their color pickers show upwards.
+    // timeout allows the picker to be displayed so that it's height can be captured
+    setTimeout(() => {
+      if (pickerRef.current && groupRef.current) {
+        setShowPicker(true);
+        const { right, top, height: heightGroup } = groupRef.current.getBoundingClientRect();
+        const { height: heightPicker } = pickerRef.current.getBoundingClientRect();
+        setPickerPos({ right, top: top >= 300 ? top - (heightPicker - heightGroup) : top });
+      }
+    }, 0);
   };
 
   return (
@@ -181,17 +201,19 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
         <GroupButton
           tabIndex={0}
           role="button"
-          active={isActive}
+          $isActive={isActive}
           $overflow={available.length > 10}
           $dragging={snapshot.isDragging}
           $draggingOver={index > 0 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}
-          onKeyPress={() => console.log("key press")}
+          onKeyPress={({ key }) => key === "Enter" && handleActiveGroupUpdate()}
           onPointerEnter={() => setDraggingOver(true)}
           onPointerLeave={() => setDraggingOver(false)}
         >
           <Headline
+            $isActive={isActive}
+            $isFirst={index === 0}
             onPointerEnter={(e) => handleShowTitleOverflow(e, "enter")}
             onPointerLeave={(e) => handleShowTitleOverflow(e, "leave")}
             {...dragHandleProps}
@@ -207,21 +229,8 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
             color={debouncedPickerValue}
             role="button"
             tabIndex={0}
-            onClick={(e) => {
-              e.stopPropagation();
-
-              // groups below the half way mark will have their color pickers show upwards.
-              // timeout allows the picker to be displayed so that it's height can be captured
-              setTimeout(() => {
-                if (pickerRef.current && groupRef.current) {
-                  setShowPicker(true);
-                  const { right, top, height: heightGroup } = groupRef.current.getBoundingClientRect();
-                  const { height: heightPicker } = pickerRef.current.getBoundingClientRect();
-                  setPickerPos({ right, top: top >= 300 ? top - (heightPicker - heightGroup) : top });
-                }
-              }, 0);
-            }}
-            onKeyPress={() => console.log("keyPress")}
+            onClick={handleShowPicker}
+            onKeyPress={(e) => e.key === "Enter" && handleShowPicker(e)}
           />
 
           {!permanent && !isDragging && (

@@ -9,7 +9,10 @@ import DND_CREATORS from "../store/actions/dnd";
 export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivElement | null>) {
   const dispatch = useDispatch();
 
-  const { active, available } = useSelector((state) => state.groups);
+  const {
+    active: { index },
+    available
+  } = useSelector((state) => state.groups);
   const { dragType } = useSelector((state) => state.dnd);
 
   const onBeforeCapture = useCallback(
@@ -21,8 +24,8 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
         // hide tabs during a window drag
         toggleWindowTabsVisibility(draggableId, false);
       } else if (tabDrag) {
-        // add window to end of group
-        dispatch(GROUPS_CREATORS.addWindow({ index: active.index }));
+        // add window to end of group (only if not in the first group)
+        index > 0 && dispatch(GROUPS_CREATORS.addWindow({ index }));
       }
 
       if (windowDrag || tabDrag) {
@@ -30,7 +33,7 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
         dispatch(GROUPS_CREATORS.addGroup());
       }
     },
-    [dispatch, active.index]
+    [dispatch, index]
   );
 
   const onDragStart = useCallback(
@@ -54,7 +57,7 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
   const onDragEnd = useCallback(
     ({ source, destination, combine, draggableId }: DropResult) => {
       const [isTab, isWindow, isGroup] = [isTabDrag, isWindowDrag, isGroupDrag].map((cb) => cb(draggableId));
-      const payload = { index: active.index, source };
+      const payload = { index, source };
       const spPayload = { ...payload, combine };
       const destPayload = { ...payload, destination };
 
@@ -71,7 +74,7 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
         isValidCombine && dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd(spPayload));
         isValidDndWithinGroup && dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd(destPayload));
       } else if (isGroup && destination && destination.index > 0) {
-        // only swap if the destination exists (valid) and is below "Awaiting Storage"
+        // only swap if the destination exists (valid) and is below "Now Open"
         dispatch(GROUPS_CREATORS.updateGroupOrder({ source, destination }));
 
         // update active group if it does not match the draggable
@@ -87,7 +90,7 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
        * @note Only relevant for tab or window dragging since a group drag does not add either a (temporary) window or group
        */
       if (isTab || isWindow) {
-        dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: active.index }));
+        dispatch(GROUPS_CREATORS.clearEmptyWindows({ index }));
         dispatch(GROUPS_CREATORS.clearEmptyGroups());
       }
 
@@ -97,7 +100,7 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
         sidePanelRef.current.style.borderRadius = "initial";
       }
     },
-    [dispatch, active.index, available, sidePanelRef]
+    [dispatch, index, available, sidePanelRef]
   );
 
   return { onBeforeCapture, onDragStart, onDragUpdate, onDragEnd };

@@ -9,7 +9,12 @@ import { isWindowDrag } from "../../constants/dragRegExp";
 import { useSelector } from "../../hooks/useRedux";
 import useContainerHeight from "../../hooks/useContainerHeight";
 
-const WindowsContainer = styled(Scrollbar)<{ $height: number; $draggedOver: boolean }>`
+interface IWindowContainerStyle {
+  $height: number;
+  $draggedOver: boolean;
+}
+
+const WindowsContainer = styled(Scrollbar)<IWindowContainerStyle>`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -40,7 +45,7 @@ export default function Windows(): JSX.Element {
       {typing && isTabSearch && <SearchResult />}
 
       <div ref={windowContainerRef}>
-        <Droppable droppableId={"group-" + groupIndex} isDropDisabled={!isWindowDrag(dragType)}>
+        <Droppable droppableId={"group-" + groupIndex} isDropDisabled={!isWindowDrag(dragType) || groupIndex === 0}>
           {(provider, dropSnapshot) => (
             <WindowsContainer
               ref={provider.innerRef}
@@ -51,7 +56,12 @@ export default function Windows(): JSX.Element {
               {windows.map(
                 (window, i) =>
                   (!typing || !isTabSearch || filteredTabs[i]?.length > 0) && (
-                    <Draggable key={i} draggableId={`window-${i}-group-${groupIndex}`} index={i}>
+                    <Draggable
+                      key={i}
+                      draggableId={`window-${i}-group-${groupIndex}`}
+                      index={i}
+                      isDragDisabled={typing && isTabSearch}
+                    >
                       {(provided, dragSnapshot) => (
                         <div ref={provided.innerRef} {...provided.draggableProps}>
                           <Window

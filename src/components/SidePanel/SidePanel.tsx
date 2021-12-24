@@ -39,7 +39,7 @@ export default function SidePanel(): JSX.Element {
             $dragging={isDragging && groupDrag}
           >
             {(groupSearch ? filteredGroups : available).map((data, i) => (
-              <Draggable key={data.id + i} draggableId={`group-${i}`} index={i} isDragDisabled={i === 0}>
+              <Draggable key={data.id + i} draggableId={`group-${i}`} index={i} isDragDisabled={i === 0 || groupSearch}>
                 {(provided, dragSnapshot) => (
                   <div ref={provided.innerRef} {...provided.draggableProps}>
                     <Group data={data} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />

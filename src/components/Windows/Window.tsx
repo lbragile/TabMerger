@@ -123,7 +123,8 @@ export default function Window({
   const { filteredTabs } = useSelector((state) => state.filter);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
 
-  const currentTabs = typing && filterChoice === "tab" ? filteredTabs[windowIndex] : tabs;
+  const isTabSearch = filterChoice === "tab";
+  const currentTabs = typing && isTabSearch ? filteredTabs[windowIndex] : tabs;
 
   const [showPopup, setShowPopup] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -172,10 +173,10 @@ export default function Window({
   const tabCounterStr = useMemo(() => {
     const totalTabs = tabs?.length ?? 0;
     const numVisibleTabs = typing ? filteredTabs[windowIndex]?.length ?? 0 : totalTabs;
-    const count = filterChoice === "tab" ? numVisibleTabs : totalTabs;
+    const count = isTabSearch ? numVisibleTabs : totalTabs;
 
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
-  }, [typing, filteredTabs, tabs?.length, filterChoice, windowIndex]);
+  }, [typing, filteredTabs, tabs?.length, isTabSearch, windowIndex]);
 
   return (
     <WindowContainer $dragging={windowSnapshot.isDragging}>
@@ -273,7 +274,7 @@ export default function Window({
         </Headline>
       </Row>
 
-      <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType)}>
+      <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType) || groupIndex === 0}>
         {(provider, dropSnapshot) => (
           <TabsContainer
             ref={provider.innerRef}
@@ -286,7 +287,12 @@ export default function Window({
               const tabUrl = url ?? pendingUrl;
               if (title && tabUrl) {
                 return (
-                  <Draggable key={title + tabUrl + i} draggableId={`tab-${i}-window-${windowIndex}`} index={i}>
+                  <Draggable
+                    key={title + tabUrl + i}
+                    draggableId={`tab-${i}-window-${windowIndex}`}
+                    index={i}
+                    isDragDisabled={typing && isTabSearch}
+                  >
                     {(provided, dragSnapshot) => (
                       <div ref={provided.innerRef} {...provided.draggableProps}>
                         <Tab

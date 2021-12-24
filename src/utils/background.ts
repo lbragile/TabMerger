@@ -15,11 +15,11 @@ export function executeResponse<T>(res: TSentResponse<T>, cb: () => Promise<T>):
 }
 
 /**
- * Sets the "Awaiting Storage" group with corresponding data.
+ * Sets the "Now Open" group with corresponding data.
  * Additionally, sets the active group information
  */
 export function setDefaultData(): void {
-  // Get all the user's current open windows into the Awaiting Storage group
+  // Get all the user's current open windows into the Now Open group
   chrome.windows.getAll(WINDOW_QUERY_OPTIONS, (windows) => {
     const activeId = nanoid(10);
     const active = { id: activeId, index: 0 };
@@ -27,7 +27,7 @@ export function setDefaultData(): void {
 
     const available: IGroupItemState[] = [
       {
-        name: "Awaiting Storage",
+        name: "Now Open",
         id: activeId,
         windows: sortedWindows,
         color: "rgba(128, 128, 128, 1)",
