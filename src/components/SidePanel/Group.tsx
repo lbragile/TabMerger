@@ -1,11 +1,10 @@
 import { useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "../../hooks/useDispatch";
+import { useDispatch, useSelector } from "../../hooks/useRedux";
 import GROUPS_CREATORS from "../../store/actions/groups";
 import { IGroupsState } from "../../store/reducers/groups";
 import { relativeTimeStr } from "../../utils/helper";
-import { useSelector } from "../../hooks/useSelector";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { isGroupDrag } from "../../constants/dragRegExp";

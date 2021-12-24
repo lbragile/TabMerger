@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import Tab from "./Tab";
 import { pluralize } from "../../utils/helper";
-import { useSelector } from "../../hooks/useSelector";
-import { useDispatch } from "../../hooks/useDispatch";
+import { useDispatch, useSelector } from "../../hooks/useRedux";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
 import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
@@ -97,6 +96,13 @@ const IconStack = styled.div`
 
 type TOpenWindow = "new" | "current" | "incognito" | "focus";
 
+interface IWindow {
+  windowIndex: number;
+  starred?: boolean;
+  snapshot: DraggableStateSnapshot;
+  dragHandleProps?: DraggableProvidedDragHandleProps;
+}
+
 export default function Window({
   focused,
   tabs,
@@ -106,12 +112,7 @@ export default function Window({
   starred,
   snapshot: windowSnapshot,
   dragHandleProps
-}: chrome.windows.Window & {
-  windowIndex: number;
-  starred?: boolean;
-  snapshot: DraggableStateSnapshot;
-  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
-}): JSX.Element {
+}: chrome.windows.Window & IWindow): JSX.Element {
   const dispatch = useDispatch();
 
   const {
@@ -122,7 +123,7 @@ export default function Window({
   const { filteredTabs } = useSelector((state) => state.filter);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
 
-  const currentTabs = typing ? filteredTabs[windowIndex] : tabs;
+  const currentTabs = typing && filterChoice === "tab" ? filteredTabs[windowIndex] : tabs;
 
   const [showPopup, setShowPopup] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -130,11 +131,7 @@ export default function Window({
   const titleRef = useRef<HTMLDivElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
 
-  useClickOutside<HTMLDivElement>({
-    ref: popupRef,
-    preCondition: showPopup,
-    cb: () => setShowPopup(false)
-  });
+  useClickOutside<HTMLDivElement>({ ref: popupRef, preCondition: showPopup, cb: () => setShowPopup(false) });
 
   const openWindow = (type: TOpenWindow) => {
     if (groupIndex > 0) {

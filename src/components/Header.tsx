@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
-import { useDispatch } from "../hooks/useDispatch";
-import { useSelector } from "../hooks/useSelector";
+import { useDispatch, useSelector } from "../hooks/useRedux";
 import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchResult from "./SearchResult";
@@ -93,11 +92,7 @@ export default function Header(): JSX.Element {
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  useClickOutside<HTMLDivElement>({
-    ref: dropdownRef,
-    preCondition: showDropdown,
-    cb: () => setShowDropdown(false)
-  });
+  useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
 
   /**
    * For each window in the currently active group, store the matching tabs (with current filter value)
@@ -229,7 +224,7 @@ export default function Header(): JSX.Element {
         </div>
       )}
 
-      {typing && filterChoice === "group" && <SearchResult type="group" />}
+      {typing && filterChoice === "group" && <SearchResult />}
     </>
   );
 }

@@ -2,8 +2,7 @@ import { useCallback } from "react";
 import { BeforeCapture, DragStart, DragUpdate, DropResult } from "react-beautiful-dnd";
 import { isWindowDrag, isTabDrag, isGroupDrag } from "../constants/dragRegExp";
 import { toggleWindowTabsVisibility } from "../utils/helper";
-import { useDispatch } from "./useDispatch";
-import { useSelector } from "./useSelector";
+import { useDispatch, useSelector } from "./useRedux";
 import GROUPS_CREATORS from "../store/actions/groups";
 import DND_CREATORS from "../store/actions/dnd";
 

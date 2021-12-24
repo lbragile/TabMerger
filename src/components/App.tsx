@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { useSelector } from "../hooks/useSelector";
+import { useSelector } from "../hooks/useRedux";
 import useUpdateWindows from "../hooks/useUpdateWindows";
 import { GlobalStyle } from "../styles/Global";
 import Header from "./Header";
@@ -10,6 +10,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import useStorage from "../hooks/useStorage";
 import useDnd from "../hooks/useDnd";
 import Theme from "../styles/Theme";
+import useUpdateInfo from "../hooks/useUpdateInfo";
 
 const Container = styled.div`
   width: 780px;
@@ -37,6 +38,7 @@ export default function App(): JSX.Element {
 
   useStorage({ available, active });
   useUpdateWindows();
+  useUpdateInfo();
 
   const { onBeforeCapture, onDragStart, onDragUpdate, onDragEnd } = useDnd(sidePanelRef);
 

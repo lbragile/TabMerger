@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import { useSelector } from "../../hooks/useSelector";
 import { Scrollbar } from "../../styles/Scrollbar";
 import Information from "./Information";
 import SearchResult from "../SearchResult";
 import Window from "./Window";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { isWindowDrag } from "../../constants/dragRegExp";
+import { useSelector } from "../../hooks/useRedux";
 import useContainerHeight from "../../hooks/useContainerHeight";
 
 const WindowsContainer = styled(Scrollbar)<{ $height: number; $draggedOver: boolean }>`
@@ -28,17 +28,16 @@ export default function Windows(): JSX.Element {
   const { dragType } = useSelector((state) => state.dnd);
   const { windows, updatedAt } = available[groupIndex];
 
-  const hasMoreThanOneFilteredTab = !typing || filteredTabs.some((item) => item.length > 0);
-  const tabSearching = typing && filterChoice === "tab";
-
   const windowContainerRef = useRef<HTMLDivElement | null>(null);
   const containerHeight = useContainerHeight(windowContainerRef, updatedAt, filterChoice, filteredTabs);
+
+  const isTabSearch = filterChoice === "tab";
 
   return (
     <div>
       <Information />
 
-      {tabSearching && <SearchResult type="tab" />}
+      {typing && isTabSearch && <SearchResult />}
 
       <div ref={windowContainerRef}>
         <Droppable droppableId={"group-" + groupIndex} isDropDisabled={!isWindowDrag(dragType)}>
@@ -49,21 +48,23 @@ export default function Windows(): JSX.Element {
               $draggedOver={dropSnapshot.isDraggingOver}
               $height={containerHeight}
             >
-              {hasMoreThanOneFilteredTab &&
-                windows.map((window, i) => (
-                  <Draggable key={i} draggableId={`window-${i}-group-${groupIndex}`} index={i}>
-                    {(provided, dragSnapshot) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <Window
-                          {...window}
-                          windowIndex={i}
-                          snapshot={dragSnapshot}
-                          dragHandleProps={provided.dragHandleProps}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+              {windows.map(
+                (window, i) =>
+                  (!typing || !isTabSearch || filteredTabs[i]?.length > 0) && (
+                    <Draggable key={i} draggableId={`window-${i}-group-${groupIndex}`} index={i}>
+                      {(provided, dragSnapshot) => (
+                        <div ref={provided.innerRef} {...provided.draggableProps}>
+                          <Window
+                            {...window}
+                            windowIndex={i}
+                            snapshot={dragSnapshot}
+                            dragHandleProps={provided.dragHandleProps}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  )
+              )}
 
               {provider.placeholder}
             </WindowsContainer>
