@@ -77,7 +77,7 @@ const initState: IGroupsState = {
     {
       name: "Now Open",
       id: activeId,
-      color: "rgba(128, 128, 128, 1)",
+      color: "rgb(128 128 128)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
@@ -237,7 +237,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const NEW_GROUP: IGroupItemState = {
         name: "New",
         id: nanoid(10),
-        color: "rgba(128, 128, 128, 1)",
+        color: "rgb(128 128 128)",
         updatedAt: Date.now(),
         windows: [],
         permanent: false,

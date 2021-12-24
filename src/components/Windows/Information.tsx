@@ -50,7 +50,7 @@ const Title = styled.input<{ $isMaxLength: boolean }>`
   overflow: hidden;
 
   &:hover {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgb(0 0 0 / 20%);
   }
 
   &:focus {

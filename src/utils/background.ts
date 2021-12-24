@@ -30,7 +30,7 @@ export function setDefaultData(): void {
         name: "Now Open",
         id: activeId,
         windows: sortedWindows,
-        color: "rgba(128, 128, 128, 1)",
+        color: "rgb(128 128 128)",
         updatedAt: Date.now(),
         permanent: true
       }

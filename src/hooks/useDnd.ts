@@ -48,7 +48,6 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
     ({ destination }: DragUpdate) => {
       if (isGroupDrag(dragType) && sidePanelRef.current) {
         sidePanelRef.current.style.background = destination && destination.index > 0 ? "#d5ffd5" : "#ffd3d3";
-        sidePanelRef.current.style.borderRadius = "4px";
       }
     },
     [dragType, sidePanelRef]

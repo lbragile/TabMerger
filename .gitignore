@@ -1,19 +1,11 @@
-.env
-.env*.local
+.env.*.local
+node_modules
 
-.stryker-tmp
-debug.log
-build_*.zip
-
-node_modules/
-coverage/
-reports/
-build/
-
-# Used to clean up modules in Stryker dashboard (set STRYKER_DASHBOARD_API_KEY=API_KEY&& npm run mutate --files=temp_mutation.js MODULE_NAME)
-temp_mutation.js 
+coverage
+build
+dist
 src/react-app-env.d.ts
 public/*.js
 public/*.d.ts
-dist/
-.vscode/
+.vscode
+debug.log

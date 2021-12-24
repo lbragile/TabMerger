@@ -48,10 +48,11 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-styled-components-a11y": "0.0.34",
     "eslint-webpack-plugin": "^3.1.0",
+    "postcss-scss": "^4.0.2",
     "redux-logger": "^3.0.6",
     "styled-components": "^5.3.3",
-    "stylelint": "^13.13.1",
-    "stylelint-config-standard": "^22.0.0",
+    "stylelint": "^14.2.0",
+    "stylelint-config-standard-scss": "^3.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.10.0",
     "stylelint-webpack-plugin": "^3.0.1",
@@ -65,8 +66,9 @@
     "lint:code": "npx eslint src -c config/.eslintrc.js --max-warnings=0",
     "lint:style": "npx stylelint src --config config/.stylelintrc.json --max-warnings=0",
     "lint": "npm run lint:code && npm run lint:style",
-    "start": "webpack --config config/webpack.config.js --progress",
-    "build": "cross-env NODE_ENV=production npm start"
+    "webpack": "webpack --config config/webpack.config.js --progress",
+    "start": "cross-env NODE_ENV=development npm run webpack",
+    "build": "cross-env NODE_ENV=production npm run webpack"
   },
   "babel": {
     "extends": "./config/.babelrc.json"

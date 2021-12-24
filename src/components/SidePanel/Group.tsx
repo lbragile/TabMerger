@@ -41,7 +41,7 @@ const GroupButton = styled.div<IGroupStyle>`
   height: 49px;
   background-color: ${({ $isActive, $dragging, $draggingOver }) =>
     $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(0 0 0 / 10%);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -53,11 +53,11 @@ const GroupButton = styled.div<IGroupStyle>`
     !$draggingGlobal &&
     css`
       &:hover ${AbsoluteCloseIcon} {
-        color: rgba(0, 0, 0, 0.3);
+        color: rgb(0 0 0 / 30%);
         display: block;
 
         &:hover {
-          color: rgba(255, 0, 0, 0.6);
+          color: rgb(255 0 0 / 60%);
         }
       }
     `}
@@ -120,9 +120,9 @@ const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; 
     left: ${right + 12}px;
   `}
 
-  & .mantine-ColorPicker-thumb,
-  & .mantine-ColorPicker-saturation,
-  & .mantine-ColorPicker-slider {
+  & .cp-thumb,
+  & .cp-saturation,
+  & .cp-slider {
     cursor: crosshair;
   }
 
@@ -253,6 +253,7 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
       {/* Want this to be present in the DOM since it's height is used to calculate position */}
       <ColorPickerContainer ref={pickerRef} $pos={pickerPos} $visible={showPicker}>
         <ColorPicker
+          classNames={{ thumb: "cp-thumb", saturation: "cp-saturation", slider: "cp-slider" }}
           format="rgba"
           value={debouncedPickerValue}
           onChange={setColorPickerValue}
