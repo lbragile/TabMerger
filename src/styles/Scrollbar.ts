@@ -5,20 +5,15 @@ export const Scrollbar = styled.div`
     width: 8px;
   }
 
-  ::-webkit-scrollbar-track,
-  ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-  }
-
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background-color: #e1e1e1;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #888;
+    background-color: #888;
 
     &:hover {
-      background: #777;
+      background-color: #777;
     }
   }
 `;

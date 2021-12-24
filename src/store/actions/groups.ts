@@ -64,8 +64,13 @@ const updatePermanent = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_PE
 
 const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
 
-const deleteGroup = (payload?: { id: string; index: number }) => ({
+const deleteGroup = (payload?: number) => ({
   type: GROUPS_ACTIONS.DELETE_GROUP,
+  payload
+});
+
+const deleteWindow = (payload?: { groupIndex: number; windowIndex: number }) => ({
+  type: GROUPS_ACTIONS.DELETE_WINDOW,
   payload
 });
 
@@ -93,6 +98,36 @@ const closeTab = (payload?: { tabIndex: number; windowIndex: number; groupIndex:
   payload
 });
 
+const toggleWindowIncognito = (payload?: { windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.TOGGLE_WINDOW_INCOGNITO,
+  payload
+});
+
+const toggleWindowStarred = (payload?: { windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.TOGGLE_WINDOW_STARRED,
+  payload
+});
+
+const duplicateGroup = (payload?: number) => ({
+  type: GROUPS_ACTIONS.DUPLICATE_GROUP,
+  payload
+});
+
+const replaceWithCurrent = (payload?: number) => ({
+  type: GROUPS_ACTIONS.REPLACE_WITH_CURRENT,
+  payload
+});
+
+const mergeWithCurrent = (payload?: number) => ({
+  type: GROUPS_ACTIONS.MERGE_WITH_CURRENT,
+  payload
+});
+
+const uniteWindows = (payload?: number) => ({
+  type: GROUPS_ACTIONS.UNITE_WINDOWS,
+  payload
+});
+
 export default {
   updateAvailable,
   updateActive,
@@ -109,10 +144,17 @@ export default {
   updatePermanent,
   addGroup,
   deleteGroup,
+  deleteWindow,
   clearEmptyGroups,
   addWindow,
   clearEmptyWindows,
   updateGroupOrder,
   closeWindow,
-  closeTab
+  closeTab,
+  toggleWindowIncognito,
+  toggleWindowStarred,
+  duplicateGroup,
+  replaceWithCurrent,
+  mergeWithCurrent,
+  uniteWindows
 };

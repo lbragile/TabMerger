@@ -9,7 +9,7 @@ export const HEADER_ACTIONS = {
 export interface IHeaderState {
   typing: boolean;
   inputValue: string;
-  filterChoice: string;
+  filterChoice: "tab" | "group";
 }
 
 const initState: IHeaderState = {

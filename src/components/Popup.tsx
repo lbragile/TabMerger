@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div<{ $pos: { x: number; y: number } }>`
@@ -11,10 +10,9 @@ const Container = styled.div<{ $pos: { x: number; y: number } }>`
 const Content = styled.div`
   position: relative;
   height: 100%;
-  padding: 8px;
+  padding: 4px 8px;
   background-color: #303030;
   color: white;
-  border-radius: 4px;
   font-size: 14px;
   display: grid;
   place-items: center;

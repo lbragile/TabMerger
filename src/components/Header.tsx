@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
-import { useDispatch } from "../hooks/useDispatch";
-import { useSelector } from "../hooks/useSelector";
-import { setFilterChoice, setTyping, updateInputValue } from "../store/actions/header";
+import { useDispatch, useSelector } from "../hooks/useRedux";
 import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchResult from "./SearchResult";
-import { updateFilteredTabs, updateFilteredGroups } from "../store/actions/filter";
+import HEADER_CREATORS from "../store/actions/header";
+import FILTERS_CREATORS from "../store/actions/filter";
 import Dropdown from "./Dropdown";
 import useClickOutside from "../hooks/useClickOutside";
 import { saveAs } from "file-saver";
@@ -26,7 +25,6 @@ const Container = styled(Flex)`
 `;
 
 const InputContainer = styled(Flex)`
-  border-radius: 4px;
   width: 210px;
   height: 39px;
   padding: 8px;
@@ -44,11 +42,12 @@ const SearchInput = styled.input`
 `;
 
 const SettingsIcon = styled(FontAwesomeIcon)`
-  font-size: 24px;
+  font-size: 32px;
+  padding: 4px;
   cursor: pointer;
 
   &:hover {
-    color: #404040;
+    background-color: #cce6ffaa;
   }
 `;
 
@@ -69,7 +68,6 @@ const FilterButtonToggle = styled.div`
   display: flex;
   flex-direction: row;
   border: 1px solid #cce6ff;
-  border-radius: 10em;
   margin: 0 8px;
 `;
 
@@ -77,7 +75,6 @@ const FilterChoice = styled.button<{ active: boolean }>`
   background-color: ${({ active }) => (active ? "#cce6ff" : "inherit")};
   min-width: 50px;
   padding: 4px 8px;
-  border-radius: 10em;
   border: none;
   outline: none;
   cursor: pointer;
@@ -91,16 +88,11 @@ export default function Header(): JSX.Element {
   const { available, active } = useSelector((state) => state.groups);
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [settingsMenuPos, setSettingsMenuPos] = useState({ top: 0, left: 0 });
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  useClickOutside<HTMLDivElement>({
-    ref: dropdownRef,
-    preCondition: showDropdown,
-    cb: () => setShowDropdown(false)
-  });
+  useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
 
   /**
    * For each window in the currently active group, store the matching tabs (with current filter value)
@@ -117,19 +109,12 @@ export default function Header(): JSX.Element {
         matchingTabsInWindow && matchingTabs.push(matchingTabsInWindow ?? []);
       });
 
-      dispatch(updateFilteredTabs(matchingTabs));
+      dispatch(FILTERS_CREATORS.updateFilteredTabs(matchingTabs));
     } else if (typing && filterChoice === "group") {
       const matchingGroups = available.filter((group) => group.name.toLowerCase().includes(inputValue.toLowerCase()));
-      dispatch(updateFilteredGroups(matchingGroups));
+      dispatch(FILTERS_CREATORS.updateFilteredGroups(matchingGroups));
     }
   }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
-
-  const calculateDropdownPosition = () => {
-    if (settingsIconRef.current) {
-      const { top, right, height } = settingsIconRef.current.getBoundingClientRect();
-      setSettingsMenuPos({ top: top + height + 4, left: right - 110 });
-    }
-  };
 
   const settingsItems = useMemo(() => {
     return [
@@ -185,19 +170,20 @@ export default function Header(): JSX.Element {
               value={inputValue as string}
               onChange={(e) => {
                 const { value } = e.target;
-                dispatch(updateInputValue(value));
-                dispatch(setTyping(value !== ""));
+                dispatch(HEADER_CREATORS.updateInputValue(value));
+                dispatch(HEADER_CREATORS.setTyping(value !== ""));
               }}
             />
 
             <SearchIcon
+              {...(typing ? { tabIndex: 0 } : {})}
               icon={typing ? faTimes : faSearch}
               $typing={typing}
               onClick={() => {
                 // clicking the close button should clear the input
                 if (typing) {
-                  dispatch(updateInputValue(""));
-                  dispatch(setTyping(false));
+                  dispatch(HEADER_CREATORS.updateInputValue(""));
+                  dispatch(HEADER_CREATORS.setTyping(false));
                 }
               }}
             />
@@ -208,7 +194,7 @@ export default function Header(): JSX.Element {
               {["tab", "group"].map((text) => (
                 <FilterChoice
                   key={text}
-                  onMouseDown={() => dispatch(setFilterChoice(text))}
+                  onMouseDown={() => dispatch(HEADER_CREATORS.setFilterChoice(text))}
                   active={filterChoice === text}
                 >
                   {text[0].toUpperCase() + text.slice(1)}
@@ -220,22 +206,25 @@ export default function Header(): JSX.Element {
 
         <div ref={settingsIconRef}>
           <SettingsIcon
+            tabIndex={0}
             icon={faCog}
-            onClick={() => {
-              setShowDropdown(!showDropdown);
-              calculateDropdownPosition();
-            }}
+            onPointerDown={(e) => e.preventDefault()}
+            onClick={() => setShowDropdown(!showDropdown)}
+            onKeyPress={({ key }) => key === "Enter" && setShowDropdown(!showDropdown)}
           />
         </div>
       </Container>
 
-      {showDropdown && (
+      {showDropdown && settingsIconRef.current && (
         <div ref={dropdownRef}>
-          <Dropdown items={settingsItems} pos={settingsMenuPos} />
+          <Dropdown
+            items={settingsItems}
+            pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 16, right: 8 }}
+          />
         </div>
       )}
 
-      {typing && filterChoice === "group" && <SearchResult type="group" />}
+      {typing && filterChoice === "group" && <SearchResult />}
     </>
   );
 }

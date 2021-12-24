@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { SourceMapDevToolPlugin } = require("webpack");
@@ -49,6 +50,9 @@ module.exports = {
       {
         test: /\.ts(x)?$/,
         loader: "ts-loader",
+        options: {
+          configFile: path.join(__dirname, "tsconfig.json"),
+        },
         exclude: /node_modules/,
       },
       {

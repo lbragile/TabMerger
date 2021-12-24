@@ -1,12 +1,10 @@
-import React from "react";
 import styled from "styled-components";
-import { useSelector } from "../../hooks/useSelector";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { isTabDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
-import { useDispatch } from "../../hooks/useDispatch";
+import { useDispatch, useSelector } from "../../hooks/useRedux";
 import GROUPS_CREATORS from "../../store/actions/groups";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
@@ -15,15 +13,17 @@ const TabContainer = styled.div<{ $dragging: boolean }>`
   align-items: center;
   justify-content: start;
   gap: 8px;
+  padding: 0 2px;
   background-color: ${({ $dragging }) => ($dragging ? "white" : "initial")};
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
-  border-radius: 4px;
 `;
 
-const TabTitle = styled.span`
+const TabTitle = styled.a`
+  text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: black;
   cursor: pointer;
 
   &:hover {
@@ -43,6 +43,13 @@ const Row = styled.div`
   gap: 8px;
 `;
 
+interface ITab {
+  tabIndex: number;
+  windowIndex: number;
+  snapshot: DraggableStateSnapshot;
+  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
+}
+
 export default function Tab({
   favIconUrl,
   title,
@@ -54,27 +61,30 @@ export default function Tab({
   dragHandleProps,
   tabIndex,
   windowIndex
-}: chrome.tabs.Tab & {
-  tabIndex: number;
-  windowIndex: number;
-  snapshot: DraggableStateSnapshot;
-  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
-}): JSX.Element {
+}: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
 
   const {
+    available,
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
 
   const openTab = () => chrome.tabs.create({ url, active, pinned });
+
   const closeTab = () => {
     if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeTab({ tabIndex, windowIndex, groupIndex }));
 
-      //  possible to have deleted the last tab in the window
-      dispatch(GROUPS_CREATORS.clearEmptyWindows({ index: groupIndex }));
+      // possible to have deleted the last tab in the window and/or group
+      if (!available[groupIndex].windows[windowIndex].tabs?.length) {
+        dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
+      }
+
+      if (!available[groupIndex].windows.length) {
+        dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
+      }
     } else {
       tabId && chrome.tabs.remove(tabId);
     }
@@ -86,6 +96,7 @@ export default function Tab({
         icon={faTimes}
         tabIndex={0}
         onClick={closeTab}
+        onPointerDown={(e) => e.preventDefault()}
         onKeyPress={({ key }) => key === "Enter" && closeTab()}
         $visible={!isDragging}
       />
@@ -101,13 +112,7 @@ export default function Tab({
           {...dragHandleProps}
         />
 
-        <TabTitle
-          title={url}
-          role="link"
-          tabIndex={0}
-          onClick={openTab}
-          onKeyPress={({ key }) => key === "Enter" && openTab()}
-        >
+        <TabTitle title={url} href={url} onClick={(e) => e.button === 0 && openTab()} draggable={false}>
           {filterChoice === "tab" ? <Highlighted text={title} /> : title}
         </TabTitle>
       </TabContainer>

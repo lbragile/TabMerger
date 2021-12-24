@@ -5,11 +5,13 @@ on:
     branches: ["master"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  size:
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v2
       - uses: preactjs/compressed-size-action@v2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          pattern: "**/build/**/*.js"
+          exclude: "{**/*.map,**/node_modules/**}"
