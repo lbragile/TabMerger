@@ -72,6 +72,7 @@ const Headline = styled.div<{ $isActive: boolean; $isFirst: boolean }>`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  transition: background-color 0.3s ease, padding 0.3s ease;
   ${({ $isFirst, $isActive }) =>
     !$isFirst &&
     css`
@@ -133,18 +134,25 @@ const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; 
 `;
 
 interface IGroup {
-  data: IGroupsState["available"][number];
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }
 
-export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.Element {
+export default function Group({
+  name,
+  id,
+  color,
+  updatedAt,
+  permanent,
+  info,
+  snapshot,
+  dragHandleProps
+}: IGroupsState["available"][number] & IGroup): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
   const { active, available } = useSelector((state) => state.groups);
 
-  const { name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
   const groupDrag = isGroupDrag(dragType);
   const isActive = active.index === index;

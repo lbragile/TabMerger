@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "../../hooks/useRedux";
 import GROUPS_CREATORS from "../../store/actions/groups";
 import { getReadableTimestamp, pluralize } from "../../utils/helper";
-import Dropdown from "../Dropdown";
+import Dropdown, { IDropdown } from "../Dropdown";
 import useClickOutside from "../../hooks/useClickOutside";
 
 const Grid = styled.div`
@@ -94,6 +94,8 @@ export default function Information(): JSX.Element {
 
   const isDropdownItemDisabled = groupIndex === 0;
 
+  useEffect(() => setWindowTitle(name), [name]);
+
   useClickOutside<HTMLButtonElement>({
     ref: settingsIconRef,
     preCondition: showSettingsPopup,
@@ -106,7 +108,148 @@ export default function Information(): JSX.Element {
     cb: () => setShowOpenPopup(false)
   });
 
-  useEffect(() => setWindowTitle(name), [name]);
+  const dropdownItemHandlerWrapper = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement> | undefined,
+    action: () => void
+  ) => {
+    // parent (settings icon will receive the bubbled event if propagation isn't stopped)
+    e?.stopPropagation();
+    action();
+    setShowSettingsPopup(false);
+  };
+
+  const openWindows = useCallback(
+    (type: "current" | "new" | "separate", isIncognito = false) => {
+      if (type !== "new") {
+        windows.forEach(({ tabs, incognito, state }) => {
+          type === "current"
+            ? tabs?.forEach((t) => {
+                const { active, pinned, url } = t ?? {};
+                chrome.tabs.create({ active, pinned, url }, () => "");
+              })
+            : chrome.windows.create(
+                {
+                  incognito,
+                  state,
+                  type: "normal",
+                  url: tabs?.map((t) => t?.url ?? "https://www.google.com")
+                },
+                () => ""
+              );
+        });
+      } else {
+        chrome.windows.create(
+          {
+            incognito: isIncognito,
+            state: "maximized",
+            type: "normal",
+            url: windows.flatMap((w) => w.tabs?.map((t) => t?.url ?? "https://www.google.com") ?? [])
+          },
+          () => ""
+        );
+      }
+
+      setShowOpenPopup(false);
+    },
+    [windows]
+  );
+
+  const settingsItems = useMemo(
+    () =>
+      [
+        {
+          text: "Rename",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => titleRef.current?.select())
+        },
+        {
+          text: groupIndex === 0 ? "Save" : "Duplicate",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.duplicateGroup(groupIndex)))
+        },
+        { text: "divider" },
+        {
+          text: "Sort By Tab Title",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.sortByTabTitle(groupIndex))),
+          isDisabled: isDropdownItemDisabled
+        },
+        {
+          text: "Sort By Tab URL",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.sortByTabUrl(groupIndex))),
+          isDisabled: isDropdownItemDisabled
+        },
+        { text: "divider" },
+        {
+          text: "Unite Windows",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.uniteWindows(groupIndex))),
+          isDisabled: isDropdownItemDisabled || numWindows === 1
+        },
+        {
+          text: "Split Windows",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.splitWindows(groupIndex))),
+          isDisabled: isDropdownItemDisabled || numTabs === 1
+        },
+        { text: "divider" },
+        {
+          text: "Merge With Current",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.mergeWithCurrent(groupIndex))),
+          isDisabled: isDropdownItemDisabled
+        },
+        {
+          text: "Replace With Current",
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.replaceWithCurrent(groupIndex))),
+          isDisabled: isDropdownItemDisabled,
+          isDanger: true
+        },
+        { text: "divider" },
+        {
+          text: "Delete",
+          handler: () => dispatch(GROUPS_CREATORS.deleteGroup(groupIndex)),
+          isDisabled: isDropdownItemDisabled,
+          isDanger: true
+        }
+      ] as IDropdown["items"],
+    [dispatch, groupIndex, isDropdownItemDisabled, numTabs, numWindows]
+  );
+
+  const openItems = useMemo(
+    () =>
+      [
+        {
+          text: (
+            <p>
+              Open <b>{numTabs}</b> {pluralize(numTabs, "Tab")} In <b>Current</b> Window
+            </p>
+          ),
+          handler: () => openWindows("current")
+        },
+        {
+          text: (
+            <p>
+              Open <b>{numTabs}</b> Tabs In <b>{numWindows}</b> {pluralize(numWindows, "Window")}
+            </p>
+          ),
+          handler: () => openWindows("separate"),
+          isDisabled: numWindows === 1
+        },
+        { text: "divider" },
+        {
+          text: (
+            <p>
+              Open <b>{numTabs}</b> {pluralize(numTabs, "Tab")} In <b>Regular</b> Window
+            </p>
+          ),
+          handler: () => openWindows("new")
+        },
+        {
+          text: (
+            <p>
+              Open <b>{numTabs}</b> {pluralize(numTabs, "Tab")} In <b>Incognito</b> Window
+            </p>
+          ),
+          handler: () => openWindows("new", true)
+        }
+      ] as IDropdown["items"],
+    [numTabs, numWindows, openWindows]
+  );
 
   return (
     <Grid>
@@ -128,6 +271,7 @@ export default function Information(): JSX.Element {
         <ActionButton
           ref={openIconRef}
           onClick={() => groupIndex > 0 && setShowOpenPopup(!showOpenPopup)}
+          tabIndex={groupIndex > 0 ? 0 : -1}
           $disabled={groupIndex === 0}
         >
           <FontAwesomeIcon icon={faWindowRestore} />
@@ -135,42 +279,7 @@ export default function Information(): JSX.Element {
           <span>open</span>
 
           {showOpenPopup && openIconRef.current && (
-            <Dropdown
-              items={[
-                {
-                  text: (
-                    <p>
-                      Open {numTabs} {pluralize(numTabs, "Tab")} <b>In 1 New Window</b>
-                    </p>
-                  ),
-                  handler: () => console.log("WIP")
-                },
-                ...(numWindows > 1
-                  ? [
-                      {
-                        text: (
-                          <p>
-                            Open {numTabs} Tabs{" "}
-                            <b>
-                              In {numWindows} {pluralize(numWindows, "Window")}
-                            </b>
-                          </p>
-                        ),
-                        handler: () => console.log("WIP")
-                      }
-                    ]
-                  : []),
-                {
-                  text: (
-                    <p>
-                      Open {numTabs} {pluralize(numTabs, "Tab")} <b>In Current Window</b>
-                    </p>
-                  ),
-                  handler: () => console.log("WIP")
-                }
-              ]}
-              pos={{ top: openIconRef.current.getBoundingClientRect().height + 4 }}
-            />
+            <Dropdown items={openItems} pos={{ top: openIconRef.current.getBoundingClientRect().height + 4 }} />
           )}
         </ActionButton>
 
@@ -178,69 +287,7 @@ export default function Information(): JSX.Element {
           <FontAwesomeIcon icon={faEllipsisV} title="More Options" />
 
           {showSettingsPopup && settingsIconRef.current && (
-            <Dropdown
-              items={[
-                {
-                  text: "Rename",
-                  handler: (e) => {
-                    // parent (settings icon will receive the bubbled event if propagation isn't stopped)
-                    e?.stopPropagation();
-                    titleRef.current?.select();
-                    setShowSettingsPopup(false);
-                  }
-                },
-                {
-                  text: "Duplicate",
-                  handler: (e) => {
-                    e?.stopPropagation();
-                    dispatch(GROUPS_CREATORS.duplicateGroup(groupIndex));
-                    setShowSettingsPopup(false);
-                  },
-                  isDisabled: isDropdownItemDisabled
-                },
-                { text: "divider" },
-                { text: "Sort By Window Title", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
-                { text: "Sort By Tab Title", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
-                { text: "Sort By Tab URL", handler: () => console.log("WIP"), isDisabled: isDropdownItemDisabled },
-                {
-                  text: "Unite Windows",
-                  handler: (e) => {
-                    e?.stopPropagation();
-                    dispatch(GROUPS_CREATORS.uniteWindows(groupIndex));
-                    setShowSettingsPopup(false);
-                  },
-                  isDisabled: isDropdownItemDisabled || windows.length === 1
-                },
-                { text: "divider" },
-                {
-                  text: "Merge With Current",
-                  handler: (e) => {
-                    e?.stopPropagation();
-                    dispatch(GROUPS_CREATORS.mergeWithCurrent(groupIndex));
-                    setShowSettingsPopup(false);
-                  },
-                  isDisabled: isDropdownItemDisabled
-                },
-                {
-                  text: "Replace With Current",
-                  handler: (e) => {
-                    e?.stopPropagation();
-                    dispatch(GROUPS_CREATORS.replaceWithCurrent(groupIndex));
-                    setShowSettingsPopup(false);
-                  },
-                  isDisabled: isDropdownItemDisabled,
-                  isDanger: true
-                },
-                { text: "divider" },
-                {
-                  text: "Delete",
-                  handler: () => dispatch(GROUPS_CREATORS.deleteGroup(groupIndex)),
-                  isDisabled: isDropdownItemDisabled,
-                  isDanger: true
-                }
-              ]}
-              pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 4 }}
-            />
+            <Dropdown items={settingsItems} pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 4 }} />
           )}
         </ActionButton>
       </span>

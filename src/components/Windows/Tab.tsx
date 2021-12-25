@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
@@ -31,9 +31,20 @@ const TabTitle = styled.a`
   }
 `;
 
-const TabIcon = styled.img`
+const TabIcon = styled.img<{ $darken?: boolean }>`
   height: 14px;
   width: 14px;
+  transition: transform 0.3s ease;
+  ${({ $darken }) =>
+    $darken &&
+    css`
+      filter: brightness(10%);
+    `}
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(1.25);
+  }
 `;
 
 const Row = styled.div`
@@ -103,11 +114,8 @@ export default function Tab({
 
       <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
         <TabIcon
-          src={
-            favIconUrl === "" || !favIconUrl
-              ? "https://developer.chrome.com/images/meta/favicon-32x32.png"
-              : favIconUrl?.replace("-dark", "")
-          }
+          $darken={favIconUrl?.includes("github")}
+          src={!favIconUrl ? "https://developer.chrome.com/images/meta/favicon-32x32.png" : favIconUrl}
           alt="Favicon"
           {...dragHandleProps}
         />

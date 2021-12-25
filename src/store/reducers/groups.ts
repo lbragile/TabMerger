@@ -31,7 +31,10 @@ export const GROUPS_ACTIONS = {
   DUPLICATE_GROUP: "DUPLICATE_GROUP",
   REPLACE_WITH_CURRENT: "REPLACE_WITH_CURRENT",
   MERGE_WITH_CURRENT: "MERGE_WITH_CURRENT",
-  UNITE_WINDOWS: "UNITE_WINDOWS"
+  UNITE_WINDOWS: "UNITE_WINDOWS",
+  SPLIT_WINDOWS: "SPLIT_WINDOWS",
+  SORT_BY_TAB_TITLE: "SORT_BY_TAB_TITLE",
+  SORT_BY_TAB_URL: "SORT_BY_TAB_URL"
 };
 
 interface ICommonDnd {
@@ -380,6 +383,14 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       // update the timestamp in the new group (original group does not need to update this as nothing changed)
       available[groupIndex + 1].updatedAt = Date.now();
 
+      if (groupIndex === 0) {
+        // make sure new group is not permanent
+        available[1].permanent = false;
+
+        // unfocus all windows in new group (first one will be focused in the `Now Open` group)
+        available[1].windows[0].focused = false;
+      }
+
       return { ...state, available };
     }
 
@@ -418,6 +429,35 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       available[groupIndex].windows = [firstWindow];
 
       available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.SPLIT_WINDOWS: {
+      const groupIndex = action.payload as number;
+
+      const allTabsInGroup = available[groupIndex].windows.flatMap((w) => w.tabs ?? []);
+      available[groupIndex].windows = allTabsInGroup.map((tab) => createWindowWithTabs([tab]));
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.SORT_BY_TAB_TITLE: {
+      const groupIndex = action.payload as number;
+
+      available[groupIndex].windows.forEach((w) =>
+        w.tabs?.sort((a, b) => (a?.title && b?.title ? a.title.localeCompare(b.title) : 0))
+      );
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.SORT_BY_TAB_URL: {
+      const groupIndex = action.payload as number;
+
+      available[groupIndex].windows.forEach((w) =>
+        w.tabs?.sort((a, b) => (a?.url && b?.url ? a.url.localeCompare(b.url) : 0))
+      );
 
       return { ...state, available };
     }

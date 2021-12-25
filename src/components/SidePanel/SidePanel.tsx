@@ -42,7 +42,7 @@ export default function SidePanel(): JSX.Element {
               <Draggable key={data.id + i} draggableId={`group-${i}`} index={i} isDragDisabled={i === 0 || groupSearch}>
                 {(provided, dragSnapshot) => (
                   <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <Group data={data} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />
+                    <Group {...data} snapshot={dragSnapshot} dragHandleProps={provided.dragHandleProps} />
                   </div>
                 )}
               </Draggable>

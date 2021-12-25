@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchResult from "./SearchResult";
 import HEADER_CREATORS from "../store/actions/header";
 import FILTERS_CREATORS from "../store/actions/filter";
-import Dropdown from "./Dropdown";
+import Dropdown, { IDropdown } from "./Dropdown";
 import useClickOutside from "../hooks/useClickOutside";
 import { saveAs } from "file-saver";
 
@@ -118,7 +118,7 @@ export default function Header(): JSX.Element {
 
   const settingsItems = useMemo(() => {
     return [
-      { text: "Import", handler: () => "" },
+      { text: "Import", handler: () => console.log("WIP"), isDisabled: true },
       {
         text: "Export",
         handler: () => {
@@ -127,10 +127,10 @@ export default function Header(): JSX.Element {
           saveAs(blob, `TabMerger Export - ${new Date().toTimeString()}`);
         }
       },
-      { text: "Sync", handler: () => "" },
-      { text: "Print", handler: () => "" },
+      { text: "Sync", handler: () => console.log("WIP"), isDisabled: true },
+      { text: "Print", handler: () => console.log("WIP"), isDisabled: true },
       { text: "divider" },
-      { text: "Settings", handler: () => "" },
+      { text: "Settings", handler: () => console.log("WIP"), isDisabled: true },
       {
         text: "Help",
         handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/faq" })
@@ -145,17 +145,14 @@ export default function Header(): JSX.Element {
       },
       {
         text: "Donate",
-        handler: () =>
-          chrome.tabs.create({
-            url: process.env.REACT_APP_PAYPAL_URL
-          })
+        handler: () => chrome.tabs.create({ url: process.env.REACT_APP_PAYPAL_URL })
       },
       { text: "divider" },
       {
         text: "About",
         handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/#about-section" })
       }
-    ];
+    ] as IDropdown["items"];
   }, [active, available]);
 
   return (
