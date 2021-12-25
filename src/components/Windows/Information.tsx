@@ -8,6 +8,7 @@ import GROUPS_CREATORS from "../../store/actions/groups";
 import { getReadableTimestamp, pluralize } from "../../utils/helper";
 import Dropdown, { IDropdown } from "../Dropdown";
 import useClickOutside from "../../hooks/useClickOutside";
+import { useDebounce, useDebounceCallback } from "../../hooks/useDebounce";
 
 const Grid = styled.div`
   display: grid;
@@ -73,6 +74,8 @@ const SubTitle = styled.span<{ $right?: boolean }>`
         `}
 `;
 
+const TITLE_UPDATE_DELAY = 200;
+
 export default function Information(): JSX.Element {
   const dispatch = useDispatch();
 
@@ -91,10 +94,19 @@ export default function Information(): JSX.Element {
   const openIconRef = useRef<HTMLButtonElement | null>(null);
 
   const [numTabs, numWindows] = info?.split(" | ")?.map((count) => Number(count.slice(0, -1))) ?? [0, 0];
-
   const isDropdownItemDisabled = groupIndex === 0;
 
+  const debouncedWindowTitle = useDebounce(windowTitle, TITLE_UPDATE_DELAY);
+
   useEffect(() => setWindowTitle(name), [name]);
+
+  const debouncedTitleUpdateHandler = useCallback(() => {
+    if (windowTitle !== name && windowTitle === debouncedWindowTitle) {
+      dispatch(GROUPS_CREATORS.updateName({ index: groupIndex, name: windowTitle }));
+    }
+  }, [dispatch, windowTitle, debouncedWindowTitle, groupIndex, name]);
+
+  useDebounceCallback(debouncedTitleUpdateHandler, TITLE_UPDATE_DELAY);
 
   useClickOutside<HTMLButtonElement>({
     ref: settingsIconRef,
@@ -257,11 +269,7 @@ export default function Information(): JSX.Element {
         ref={titleRef}
         type="text"
         value={windowTitle}
-        spellCheck={false}
         onChange={(e) => setWindowTitle(e.target.value)}
-        onBlur={(e) =>
-          e.target.value !== name && dispatch(GROUPS_CREATORS.updateName({ index: groupIndex, name: windowTitle }))
-        }
         onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
         maxLength={40}
         $isMaxLength={windowTitle.length === 40}

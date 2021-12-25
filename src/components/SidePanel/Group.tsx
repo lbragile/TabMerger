@@ -10,7 +10,7 @@ import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-
 import { isGroupDrag } from "../../constants/dragRegExp";
 import { CloseIcon } from "../../styles/CloseIcon";
 import { ColorPicker } from "@mantine/core";
-import useDebounce from "../../hooks/useDebounce";
+import { useDebounce } from "../../hooks/useDebounce";
 import useClickOutside from "../../hooks/useClickOutside";
 import { COLOR_PICKER_SWATCHES } from "../../constants/colorPicker";
 import Popup from "../Popup";

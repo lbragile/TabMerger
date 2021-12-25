@@ -8,32 +8,85 @@ on:
 
 jobs:
   spell:
-    runs-on: windows-latest
+    runs-on: windows-2022
+
+    strategy:
+      matrix:
+        node: [12, 14, 16]
 
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
       - name: Install Dependencies
-        run: npm i -D cspell
+        run: npm i
 
       - name: Check Spelling
         run: npm run spell:check
 
   format:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: spell
+
+    strategy:
+      matrix:
+        node: [12, 14, 16]
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Dependencies
-        run: npm i -D prettier
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
-      - name: Check Spelling
-        run: npm run format:check
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install Dependencies
+        run: npm i
+
+      - name: Format Write
+        id: format
+        run: |
+          npm run format:write
+          echo "::set-output name=NUM_CHANGED::$(git status | grep 'modified:' | wc -l)""
+
+      - name: Format Success
+        if: steps.format.outputs.NUM_CHANGED == 0
+        run: echo "All matched files use Prettier code style!"
+
+      - name: Format Error
+        if: steps.format.outputs.NUM_CHANGED > 0
+        run: echo "::set-failed ::Code style issues found in the above file(s). Forgot to run Prettier locally?"
 
   lint:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: format
 
     strategy:
@@ -55,7 +108,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: Test Using Node.js
+      - name: Use Node.js
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
