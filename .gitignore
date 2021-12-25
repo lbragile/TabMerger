@@ -4,8 +4,6 @@ node_modules
 coverage
 build
 dist
+
 src/react-app-env.d.ts
-public/*.js
-public/*.d.ts
-.vscode
 debug.log

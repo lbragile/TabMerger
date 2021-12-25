@@ -1,0 +1,6 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": ["fortawesome", "fontawesome", "mantine", "SIDEPANEL"],
+  "ignorePaths": ["node_modules/**", "coverage/**", "docs/**", "build/**", "dist/**"]
+}

@@ -1,4 +1,4 @@
-name: Linting
+name: Spell Check | Lint | Format
 
 on:
   push:
@@ -7,8 +7,34 @@ on:
     branches: ["master"]
 
 jobs:
+  spell:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm i -D cspell
+
+      - name: Check Spelling
+        run: npm run spell:check
+
+  format:
+    runs-on: windows-latest
+    needs: spell
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm i -D prettier
+
+      - name: Check Spelling
+        run: npm run format:check
+
   lint:
     runs-on: windows-latest
+    needs: format
 
     strategy:
       matrix:
