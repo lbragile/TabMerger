@@ -1,4 +1,4 @@
-name: Spell Check | Lint | Format
+name: CI
 
 on:
   push:
@@ -75,15 +75,18 @@ jobs:
         id: format
         run: |
           npm run format:write
-          echo "::set-output name=NUM_CHANGED::$(git status | grep 'modified:' | wc -l)""
+          echo "::set-output name=NUM_CHANGED::$(git add . && git status src | grep 'modified:' | wc -l)"
 
       - name: Format Success
-        if: steps.format.outputs.NUM_CHANGED == 0
+        if: ${{ steps.format.outputs.NUM_CHANGED == 0 }}
         run: echo "All matched files use Prettier code style!"
 
       - name: Format Error
-        if: steps.format.outputs.NUM_CHANGED > 0
-        run: echo "::set-failed ::Code style issues found in the above file(s). Forgot to run Prettier locally?"
+        if: ${{ steps.format.outputs.NUM_CHANGED > 0 }}
+        run: |
+          npm run format:check
+          echo "::error::Found formatting issues in ${{ steps.format.outputs.NUM_CHANGED }} of the above file(s). Forgot to run Prettier locally?"
+          exit 1
 
   lint:
     runs-on: windows-2022
