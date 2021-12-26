@@ -1,11 +1,11 @@
-import styled, { css } from "styled-components";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import styled, { css } from "styled-components";
+
 import { isTabDrag } from "../../constants/dragRegExp";
-import { CloseIcon } from "../../styles/CloseIcon";
 import { useDispatch, useSelector } from "../../hooks/useRedux";
 import GROUPS_CREATORS from "../../store/actions/groups";
+import { CloseIcon } from "../../styles/CloseIcon";
+import Highlighted from "../Highlighted";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
@@ -104,7 +104,7 @@ export default function Tab({
   return (
     <Row>
       <CloseIcon
-        icon={faTimes}
+        icon="times"
         tabIndex={0}
         onClick={closeTab}
         onPointerDown={(e) => e.preventDefault()}

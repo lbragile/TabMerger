@@ -1,14 +1,16 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { saveAs } from "file-saver";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
-import { useDispatch, useSelector } from "../hooks/useRedux";
-import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SearchResult from "./SearchResult";
-import HEADER_CREATORS from "../store/actions/header";
-import FILTERS_CREATORS from "../store/actions/filter";
-import Dropdown, { IDropdown } from "./Dropdown";
+
 import useClickOutside from "../hooks/useClickOutside";
-import { saveAs } from "file-saver";
+import { useDispatch, useSelector } from "../hooks/useRedux";
+import FILTERS_CREATORS from "../store/actions/filter";
+import HEADER_CREATORS from "../store/actions/header";
+
+import Dropdown, { IDropdown } from "./Dropdown";
+import Modal, { TModalType } from "./Modal";
+import SearchResult from "./SearchResult";
 
 const Flex = styled.div`
   display: flex;
@@ -88,6 +90,11 @@ export default function Header(): JSX.Element {
   const { available, active } = useSelector((state) => state.groups);
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalDetails, setModalDetails] = useState<{ title: string; type: TModalType }>({
+    title: "About TabMerger",
+    type: "about"
+  });
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -116,9 +123,33 @@ export default function Header(): JSX.Element {
     }
   }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
 
+  const aboutModalHandler = () => {
+    setShowModal(true);
+    setShowDropdown(false);
+    setModalDetails({ title: "About TabMerger", type: "about" });
+  };
+
+  const importHandler = () => {
+    setShowModal(true);
+    setShowDropdown(false);
+    setModalDetails({ title: "Import", type: "import" });
+  };
+
+  // const exportHandler = () => {
+  //   setShowModal(true);
+  //   setShowDropdown(false);
+  //   setModalDetails({ title: "Export", type: "export" });
+  // };
+
+  const settingsHandler = () => {
+    setShowModal(true);
+    setShowDropdown(false);
+    setModalDetails({ title: "TabMerger Settings", type: "settings" });
+  };
+
   const settingsItems = useMemo(() => {
     return [
-      { text: "Import", handler: () => console.log("WIP"), isDisabled: true },
+      { text: "Import", handler: importHandler },
       {
         text: "Export",
         handler: () => {
@@ -128,9 +159,8 @@ export default function Header(): JSX.Element {
         }
       },
       { text: "Sync", handler: () => console.log("WIP"), isDisabled: true },
-      { text: "Print", handler: () => console.log("WIP"), isDisabled: true },
       { text: "divider" },
-      { text: "Settings", handler: () => console.log("WIP"), isDisabled: true },
+      { text: "Settings", handler: settingsHandler },
       {
         text: "Help",
         handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/faq" })
@@ -150,7 +180,7 @@ export default function Header(): JSX.Element {
       { text: "divider" },
       {
         text: "About",
-        handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/#about-section" })
+        handler: aboutModalHandler
       }
     ] as IDropdown["items"];
   }, [active, available]);
@@ -174,7 +204,7 @@ export default function Header(): JSX.Element {
 
             <SearchIcon
               {...(typing ? { tabIndex: 0 } : {})}
-              icon={typing ? faTimes : faSearch}
+              icon={typing ? "times" : "search"}
               $typing={typing}
               onClick={() => {
                 // clicking the close button should clear the input
@@ -204,7 +234,7 @@ export default function Header(): JSX.Element {
         <div ref={settingsIconRef}>
           <SettingsIcon
             tabIndex={0}
-            icon={faCog}
+            icon="cog"
             onPointerDown={(e) => e.preventDefault()}
             onClick={() => setShowDropdown(!showDropdown)}
             onKeyPress={({ key }) => key === "Enter" && setShowDropdown(!showDropdown)}
@@ -222,6 +252,8 @@ export default function Header(): JSX.Element {
       )}
 
       {typing && filterChoice === "group" && <SearchResult />}
+
+      {showModal && <Modal {...modalDetails} save={() => ""} setVisible={setShowModal} />}
     </>
   );
 }

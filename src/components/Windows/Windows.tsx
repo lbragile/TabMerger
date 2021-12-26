@@ -1,13 +1,15 @@
 import { useRef } from "react";
-import styled from "styled-components";
-import { Scrollbar } from "../../styles/Scrollbar";
-import Information from "./Information";
-import SearchResult from "../SearchResult";
-import Window from "./Window";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import styled from "styled-components";
+
 import { isWindowDrag } from "../../constants/dragRegExp";
-import { useSelector } from "../../hooks/useRedux";
 import useContainerHeight from "../../hooks/useContainerHeight";
+import { useSelector } from "../../hooks/useRedux";
+import { Scrollbar } from "../../styles/Scrollbar";
+import SearchResult from "../SearchResult";
+
+import Information from "./Information";
+import Window from "./Window";
 
 interface IWindowContainerStyle {
   $height: number;

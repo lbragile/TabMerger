@@ -1,7 +1,9 @@
 import { useCallback, useEffect } from "react";
+
 import { WINDOW_QUERY_OPTIONS } from "../constants/chrome";
 import GROUPS_CREATORS from "../store/actions/groups";
 import { sortWindowsByFocus } from "../utils/helper";
+
 import { useDispatch } from "./useRedux";
 
 export default function useUpdateWindows(): void {

@@ -1,14 +1,13 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import { faWindowRestore } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import useClickOutside from "../../hooks/useClickOutside";
+import { useDebounce, useDebounceCallback } from "../../hooks/useDebounce";
 import { useDispatch, useSelector } from "../../hooks/useRedux";
 import GROUPS_CREATORS from "../../store/actions/groups";
 import { getReadableTimestamp, pluralize } from "../../utils/helper";
 import Dropdown, { IDropdown } from "../Dropdown";
-import useClickOutside from "../../hooks/useClickOutside";
-import { useDebounce, useDebounceCallback } from "../../hooks/useDebounce";
 
 const Grid = styled.div`
   display: grid;
@@ -282,7 +281,7 @@ export default function Information(): JSX.Element {
           tabIndex={groupIndex > 0 ? 0 : -1}
           $disabled={groupIndex === 0}
         >
-          <FontAwesomeIcon icon={faWindowRestore} />
+          <FontAwesomeIcon icon={["far", "window-restore"]} />
 
           <span>open</span>
 
@@ -292,7 +291,7 @@ export default function Information(): JSX.Element {
         </ActionButton>
 
         <ActionButton ref={settingsIconRef} onClick={() => setShowSettingsPopup(!showSettingsPopup)}>
-          <FontAwesomeIcon icon={faEllipsisV} title="More Options" />
+          <FontAwesomeIcon icon="ellipsis-v" title="More Options" />
 
           {showSettingsPopup && settingsIconRef.current && (
             <Dropdown items={settingsItems} pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 4 }} />

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { DraggableLocation } from "react-beautiful-dnd";
+
 import { GROUPS_ACTIONS, IGroupsState, ISidePanelDnd } from "../reducers/groups";
 
 const updateAvailable = (payload?: IGroupsState["available"]) => ({ type: GROUPS_ACTIONS.UPDATE_AVAILABLE, payload });

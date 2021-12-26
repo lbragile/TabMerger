@@ -1,11 +1,13 @@
 import { useRef } from "react";
-import styled from "styled-components";
-import Group from "./Group";
-import { useSelector } from "../../hooks/useRedux";
-import { Scrollbar } from "../../styles/Scrollbar";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import styled from "styled-components";
+
 import { isGroupDrag } from "../../constants/dragRegExp";
 import useContainerHeight from "../../hooks/useContainerHeight";
+import { useSelector } from "../../hooks/useRedux";
+import { Scrollbar } from "../../styles/Scrollbar";
+
+import Group from "./Group";
 
 const GroupsContainer = styled(Scrollbar)<{ $height: number; $dragging: boolean }>`
   display: flex;

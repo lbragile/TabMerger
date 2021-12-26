@@ -1,18 +1,18 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { faMask, faStar, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import { faWindowMaximize } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components";
-import Tab from "./Tab";
-import { pluralize } from "../../utils/helper";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
+import styled from "styled-components";
+
 import { isTabDrag } from "../../constants/dragRegExp";
-import { CloseIcon } from "../../styles/CloseIcon";
-import GROUPS_CREATORS from "../../store/actions/groups";
 import useClickOutside from "../../hooks/useClickOutside";
+import { useDispatch, useSelector } from "../../hooks/useRedux";
+import GROUPS_CREATORS from "../../store/actions/groups";
+import { CloseIcon } from "../../styles/CloseIcon";
+import { pluralize } from "../../utils/helper";
 import Dropdown from "../Dropdown";
 import Popup from "../Popup";
+
+import Tab from "./Tab";
 
 const Column = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ const Row = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 `;
 
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
@@ -50,7 +50,7 @@ const WindowTitle = styled.div<{ $active: boolean }>`
 const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
   display: grid;
   grid-template-columns: auto 25ch auto;
-  column-gap: 4px;
+  column-gap: 6px;
   justify-content: start;
   align-items: center;
   background-color: white;
@@ -236,7 +236,7 @@ export default function Window({
     <WindowContainer $dragging={windowSnapshot.isDragging}>
       <Row>
         <CloseIcon
-          icon={faTimesCircle}
+          icon="times-circle"
           tabIndex={0}
           onClick={closeWindow}
           onPointerDown={(e) => e.preventDefault()}
@@ -246,8 +246,8 @@ export default function Window({
 
         <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
           <IconStack {...dragHandleProps} onContextMenu={(e) => e.preventDefault()}>
-            <FontAwesomeIcon icon={incognito ? faMask : faWindowMaximize} />
-            {starred && <FontAwesomeIcon icon={faStar} />}
+            <FontAwesomeIcon icon={incognito ? "mask" : ["far", "window-maximize"]} />
+            {starred && <FontAwesomeIcon icon="star" />}
           </IconStack>
 
           <TitleContainer>

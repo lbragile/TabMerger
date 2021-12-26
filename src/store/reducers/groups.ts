@@ -1,6 +1,7 @@
-import { IAction } from "../../typings/reducers";
 import { nanoid } from "nanoid";
 import { Combine, DraggableLocation } from "react-beautiful-dnd";
+
+import { IAction } from "../../typings/reducers";
 
 export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",

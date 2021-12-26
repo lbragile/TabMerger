@@ -35,10 +35,10 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install Dependencies
-        run: npm i
+        run: pnpm i --only=dev
 
       - name: Check Spelling
-        run: npm run spell:check
+        run: pnpm spell:check
 
   format:
     runs-on: windows-2022
@@ -69,12 +69,12 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install Dependencies
-        run: npm i
+        run: pnpm i --only=dev
 
       - name: Format Write
         id: format
         run: |
-          npm run format:write
+          pnpm format:write
           echo "::set-output name=NUM_CHANGED::$(git add . && git status src | grep 'modified:' | wc -l)"
 
       - name: Format Success
@@ -84,7 +84,7 @@ jobs:
       - name: Format Error
         if: ${{ steps.format.outputs.NUM_CHANGED > 0 }}
         run: |
-          npm run format:check
+          pnpm format:check
           echo "::error::Found formatting issues in ${{ steps.format.outputs.NUM_CHANGED }} of the above file(s). Forgot to run Prettier locally?"
           exit 1
 
@@ -117,10 +117,10 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install Dependencies
-        run: npm i
+        run: pnpm i --only=dev
 
       - name: Lint Code
-        run: npm run lint:code
+        run: pnpm lint:code
 
       - name: Lint Style
-        run: npm run lint:style
+        run: pnpm lint:style

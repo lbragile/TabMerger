@@ -45,12 +45,16 @@
     "cspell": "^5.13.4",
     "dotenv-webpack": "^7.0.3",
     "eslint": "^7.11.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "2.25.3",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-styled-components-a11y": "0.0.34",
     "eslint-webpack-plugin": "^3.1.0",
+    "postcss": "8.3.3",
     "postcss-scss": "^4.0.2",
     "prettier": "^2.5.1",
+    "react-is": "17.0.2",
     "redux-logger": "^3.0.6",
     "styled-components": "^5.3.3",
     "stylelint": "^14.2.0",
@@ -61,19 +65,23 @@
     "ts-loader": "^9.2.6",
     "typescript": "^4.3.5",
     "url-loader": "^4.1.1",
-    "webpack": "^5.59.1",
+    "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1"
   },
+  "peerDependencies": {
+    "postcss": "8.3.3",
+    "react-is": "17.0.2"
+  },
   "scripts": {
-    "lint:code": "npx eslint src -c config/.eslintrc.js --max-warnings=0",
-    "lint:style": "npx stylelint src --config config/.stylelintrc.json --max-warnings=0",
-    "lint": "npm run lint:code && npm run lint:style",
+    "lint:code": "pnpm eslint src -c config/.eslintrc.js --max-warnings=0",
+    "lint:style": "pnpm stylelint src --config config/.stylelintrc.json --max-warnings=0",
+    "lint": "pnpm lint:code && pnpm lint:style",
     "format:check": "prettier --config ./config/.prettierrc.json --check src",
     "format:write": "prettier --config ./config/.prettierrc.json --write src",
     "spell:check": "cspell --config ./config/.cspell.json --color --show-context --show-suggestions src/**/*.{ts,tsx}",
     "webpack": "webpack --config config/webpack.config.js --progress",
-    "start": "cross-env NODE_ENV=development npm run webpack",
-    "build": "cross-env NODE_ENV=production npm run webpack"
+    "start": "cross-env NODE_ENV=development pnpm webpack",
+    "build": "cross-env NODE_ENV=production pnpm webpack"
   },
   "babel": {
     "extends": "./config/.babelrc.json"

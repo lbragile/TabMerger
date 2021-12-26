@@ -1,4 +1,5 @@
 import { IAction } from "../../typings/reducers";
+
 import { IGroupItemState } from "./groups";
 
 export const FILTER_ACTIONS = {
