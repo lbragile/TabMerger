@@ -17,17 +17,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache Node Modules
+      - name: Cache Modules
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
             ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: latest
 
       - name: Use Node.js
         uses: actions/setup-node@v2
@@ -51,17 +51,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache Node Modules
+      - name: Cache Modules
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
             ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: latest
 
       - name: Use Node.js
         uses: actions/setup-node@v2
@@ -99,17 +99,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache Node Modules
+      - name: Cache Modules
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
             ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: latest
 
       - name: Use Node.js
         uses: actions/setup-node@v2
