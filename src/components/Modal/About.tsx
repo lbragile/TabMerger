@@ -7,8 +7,21 @@ const Grid = styled.div`
   gap: 4px 16px;
 `;
 
+const IDLink = styled.span`
+  color: #0645ad;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 export default function About(): JSX.Element {
   const { version, description } = chrome.runtime.getManifest();
+  const extensionId = chrome.runtime.id;
+
+  const handleExtensionIdClick = () =>
+    chrome.tabs.create({ url: `chrome://extensions?id=${extensionId}`, active: true }, () => "");
 
   return (
     <div>
@@ -22,13 +35,14 @@ export default function About(): JSX.Element {
         <p>{navigator.language}</p>
 
         <h3>Extension ID</h3>
-        <a
-          href="https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc?hl=en"
-          target="_blank"
-          rel="noopener noreferrer"
+        <IDLink
+          tabIndex={0}
+          role="link"
+          onClick={handleExtensionIdClick}
+          onKeyPress={({ key }) => key === "Enter" && handleExtensionIdClick()}
         >
-          inmiajapbpafmhjleiebcamfhkfnlgoc
-        </a>
+          {extensionId}
+        </IDLink>
 
         <h3>Version</h3>
         <p>v{version}</p>

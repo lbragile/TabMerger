@@ -117,7 +117,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install Dependencies
-        run: pnpm i --only=dev
+        run: pnpm i
 
       - name: Lint Code
         run: pnpm lint:code
