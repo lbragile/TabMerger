@@ -1,6 +1,23 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": ["fortawesome", "fontawesome", "mantine", "SIDEPANEL"],
+  "words": [
+    "fortawesome",
+    "fontawesome",
+    "mantine",
+    "SIDEPANEL",
+    "Abramov",
+    "Vitaly",
+    "Andrey",
+    "Stoiber",
+    "Sitnik",
+    "Rtishchev",
+    "Maddern",
+    "Atlassian",
+    "Lior",
+    "Bragilevsky",
+    "lbragile",
+    "TABMERGER"
+  ],
   "ignorePaths": ["node_modules/**", "coverage/**", "docs/**", "build/**", "dist/**"]
 }

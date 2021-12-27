@@ -1,12 +1,20 @@
 {
   "cSpell.ignoreWords": [
+    "Abramov",
+    "Vitaly",
+    "Andrey",
+    "Stoiber",
+    "Sitnik",
+    "Rtishchev",
+    "Maddern",
+    "Atlassian",
+    "browserslist",
+    "codeql",
+    "markdownlint",
     "pnpm",
     "prettierrc",
-    "markdownlint",
     "stylelintrc",
-    "browserslist",
-    "webextensions",
-    "codeql"
+    "webextensions"
   ],
   "cSpell.words": ["fontawesome", "fortawesome", "mantine", "SIDEPANEL", "tabmerger"]
 }

@@ -114,7 +114,7 @@ export default function Tab({
 
       <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
         <TabIcon
-          $darken={favIconUrl?.includes("github")}
+          $darken={url?.includes("github.com")}
           src={!favIconUrl ? "https://developer.chrome.com/images/meta/favicon-32x32.png" : favIconUrl}
           alt="Favicon"
           {...dragHandleProps}

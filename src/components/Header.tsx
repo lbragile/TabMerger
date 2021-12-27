@@ -9,7 +9,7 @@ import FILTERS_CREATORS from "../store/actions/filter";
 import HEADER_CREATORS from "../store/actions/header";
 
 import Dropdown, { IDropdown } from "./Dropdown";
-import Modal, { TModalType } from "./Modal";
+import Modal, { IModal } from "./Modal";
 import SearchResult from "./SearchResult";
 
 const Flex = styled.div`
@@ -91,9 +91,10 @@ export default function Header(): JSX.Element {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalDetails, setModalDetails] = useState<{ title: string; type: TModalType }>({
+  const [modalDetails, setModalDetails] = useState<Omit<IModal, "setVisible">>({
     title: "About TabMerger",
-    type: "about"
+    type: "about",
+    closeText: "Close"
   });
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
@@ -126,25 +127,19 @@ export default function Header(): JSX.Element {
   const aboutModalHandler = () => {
     setShowModal(true);
     setShowDropdown(false);
-    setModalDetails({ title: "About TabMerger", type: "about" });
+    setModalDetails({ title: "About TabMerger", type: "about", closeText: "Close" });
   };
 
   const importHandler = () => {
     setShowModal(true);
     setShowDropdown(false);
-    setModalDetails({ title: "Import", type: "import" });
+    setModalDetails({ title: "Import", type: "import", closeText: "Cancel" });
   };
-
-  // const exportHandler = () => {
-  //   setShowModal(true);
-  //   setShowDropdown(false);
-  //   setModalDetails({ title: "Export", type: "export" });
-  // };
 
   const settingsHandler = () => {
     setShowModal(true);
     setShowDropdown(false);
-    setModalDetails({ title: "TabMerger Settings", type: "settings" });
+    setModalDetails({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" });
   };
 
   const settingsItems = useMemo(() => {
@@ -163,19 +158,20 @@ export default function Header(): JSX.Element {
       { text: "Settings", handler: settingsHandler },
       {
         text: "Help",
-        handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/faq" })
+        handler: () => chrome.tabs.create({ url: "https://groups.google.com/g/tabmerger", active: true })
       },
       { text: "divider" },
       {
         text: "Rate",
         handler: () =>
           chrome.tabs.create({
-            url: "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews/"
+            url: "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews/",
+            active: true
           })
       },
       {
         text: "Donate",
-        handler: () => chrome.tabs.create({ url: process.env.REACT_APP_PAYPAL_URL })
+        handler: () => chrome.tabs.create({ url: process.env.REACT_APP_PAYPAL_URL, active: true })
       },
       { text: "divider" },
       {
@@ -253,7 +249,7 @@ export default function Header(): JSX.Element {
 
       {typing && filterChoice === "group" && <SearchResult />}
 
-      {showModal && <Modal {...modalDetails} save={() => ""} setVisible={setShowModal} />}
+      {showModal && <Modal {...modalDetails} setVisible={setShowModal} />}
     </>
   );
 }

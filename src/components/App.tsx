@@ -3,6 +3,7 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import {
   faCog,
   faEllipsisV,
+  faExclamationCircle,
   faMask,
   faSearch,
   faStar,
@@ -85,6 +86,13 @@ const App = (): JSX.Element => {
   );
 };
 
+/**
+ * Icons listed here no longer need to be imported in other files.
+ * Instead a string can be passed to the `icon` property.
+ * By default, the icons are all "solid", which is why `far` is also added ...
+ * ... simply do `icon={["far", "icon-name"]}` to use the "regular" version of "icon-name"
+ * @see https://fontawesome.com/v5.15/how-to-use/on-the-web/using-with/react#using
+ */
 library.add(
   far,
   faCog,
@@ -95,7 +103,8 @@ library.add(
   faWindowMaximize,
   faTimesCircle,
   faStar,
-  faMask
+  faMask,
+  faExclamationCircle
 );
 
 export default App;

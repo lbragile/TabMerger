@@ -6,36 +6,38 @@ import Export from "./Export";
 import Import from "./Import";
 import Settings from "./Settings";
 
-export type TModalType = "about" | "settings" | "import" | "export";
+type TModalType = "about" | "settings" | "import" | "export";
 
-interface IModal {
+export interface IModal {
   title: string;
   type: TModalType;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  closeText: string;
   save?: () => void;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CloseIcon = styled(FontAwesomeIcon)`
-  padding: 4px;
+const CloseIconContainer = styled.span`
+  padding: 4px 8px;
   cursor: pointer;
-
-  & svg {
-    color: black;
-  }
+  display: flex;
 
   &:hover {
-    background-color: lightgrey;
+    color: red;
+    background-color: #ff000020;
   }
+`;
+
+const CloseIcon = styled(FontAwesomeIcon)`
+  font-size: 16px;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 400px;
-  max-width: 500px;
+  gap: 24px;
+  width: 500px;
   position: absolute;
-  top: 25%;
+  top: 32px;
   left: 230px;
   background: white;
   padding: 8px;
@@ -46,48 +48,74 @@ const Container = styled.div`
 const Overlay = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #31313180;
+  background-color: #31313140;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1;
 `;
 
-const Row = styled.div`
+const HeaderRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 `;
 
-export default function Modal({ title, type, setVisible, save }: IModal): JSX.Element {
+const FooterRow = styled(HeaderRow)`
+  gap: 8px;
+  justify-content: end;
+`;
+
+const Button = styled.button<{ $primary?: boolean }>`
+  border: none;
+  outline: none;
+  background-color: ${({ $primary }) => ($primary ? "#007bff" : "#e8e8e8")};
+  color: ${({ $primary }) => ($primary ? "white" : "black")};
+  padding: 4px;
+  min-width: 75px;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ $primary }) => ($primary ? "#0069d9" : "#e0e0e0")};
+  }
+`;
+
+export default function Modal({ title, type, closeText, save, setVisible }: IModal): JSX.Element {
   const hide = () => setVisible(false);
 
   return (
     <>
       <Overlay onClick={hide} role="presentation" />
       <Container>
-        <Row>
+        <HeaderRow>
           <h3>{title}</h3>
 
-          <CloseIcon
-            icon="times"
+          <CloseIconContainer
             tabIndex={0}
+            role="button"
             onClick={hide}
             onPointerDown={(e) => e.preventDefault()}
             onKeyPress={({ key }) => key === "Enter" && hide()}
-          />
-        </Row>
+          >
+            <CloseIcon icon="times" />
+          </CloseIconContainer>
+        </HeaderRow>
 
         {type === "about" && <About />}
         {type === "settings" && <Settings />}
         {type === "import" && <Import />}
         {type === "export" && <Export />}
 
-        <Row>
-          {save && <button onClick={save}>Save</button>}
-          <button onClick={hide}>Cancel</button>
-        </Row>
+        <FooterRow>
+          {save && (
+            <Button onClick={save} $primary>
+              Save
+            </Button>
+          )}
+          <Button onClick={hide}>{closeText}</Button>
+        </FooterRow>
       </Container>
     </>
   );
