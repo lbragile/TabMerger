@@ -14,7 +14,7 @@ export default function useUpdateWindows(): void {
       const { sortedWindows, hasFocused } = sortWindowsByFocus(currentWindows);
 
       if (!hasFocused) {
-        // can happen on tab or window removal
+        // Can happen on tab or window removal
         currentWindows[0].focused = true;
       }
 

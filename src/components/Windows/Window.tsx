@@ -172,7 +172,7 @@ export default function Window({
     if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeWindow({ groupIndex, windowIndex }));
 
-      // possible to have deleted the last window in the group
+      // Possible to have deleted the last window in the group
       if (!available[groupIndex].windows.length) {
         dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
       }
@@ -199,8 +199,8 @@ export default function Window({
           ]
         : [{ text: "Focus", handler: () => openWindow("focus") }]),
       { text: "divider" },
-      { text: "Copy To Group", handler: () => console.log("WIP"), isDisabled: true },
-      { text: "Move To Group", handler: () => console.log("WIP"), isDisabled: true },
+      { text: "Copy To Group", handler: () => console.warn("WIP"), isDisabled: true },
+      { text: "Move To Group", handler: () => console.warn("WIP"), isDisabled: true },
       { text: "divider" },
       {
         text: starred ? "Unfavorite" : "Favorite",

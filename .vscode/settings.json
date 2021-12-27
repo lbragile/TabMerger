@@ -14,7 +14,8 @@
     "pnpm",
     "prettierrc",
     "stylelintrc",
-    "webextensions"
+    "webextensions",
+    "camelcase"
   ],
   "cSpell.words": ["fontawesome", "fortawesome", "mantine", "SIDEPANEL", "tabmerger"]
 }

@@ -14,7 +14,7 @@
 
 # Stores your tabs in one location to save memory usage and increase your productivity
 
-[![Demo](https://i.imgur.com/tjhu6OQ.png)](https://www.youtube.com/watch?v=buu6iot1wcg&feature=youtu.be&hd=1)
+![Demo](https://i.imgur.com/2sbEzip.png)
 
 </div>
 
@@ -41,6 +41,22 @@ I would greatly appreciate any financial support you are able/willing to provide
 Your contribution would allow me to focus on developing more useful tools like TabMerger that many users can enjoy and use in their day to day life.
 
 [![buy me a coffee][buycoffee]](https://www.buymeacoffee.com/lbragile)
+
+## 💻 Developers
+
+TabMerger uses [pnpm](https://pnpm.io/) as it's package manager due to its superior security, speed, and compactness.
+\
+To get started, follow these steps:
+
+- `git clone https://github.com/lbragile/TabMerger.git`
+- `cd TabMerger`
+- `npm i -g pnpm`
+- `pnpm i`
+- `pnpm start`
+
+**Spelling**, **linting**, and **formatting** scripts are also provided (see **scripts** section in [package.json](https://github.com/lbragile/TabMerger/blob/master/package.json))
+
+During development (`pnpm start`), the output folder is **dist**. For production (`pnpm build`) the output folder is **build**. You can test the extension by uploading these folders as [described here](https://support.google.com/chrome/a/answer/2714278?hl=en) (step 2)
 
 ## 🚓 License
 

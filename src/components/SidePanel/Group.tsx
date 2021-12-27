@@ -191,8 +191,8 @@ export default function Group({
   const handleShowPicker = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
-    // groups below the half way mark will have their color pickers show upwards.
-    // timeout allows the picker to be displayed so that it's height can be captured
+    // Groups below the half way mark will have their color pickers show upwards.
+    // Timeout allows the picker to be displayed so that it's height can be captured
     setTimeout(() => {
       if (pickerRef.current && groupRef.current) {
         setShowPicker(true);

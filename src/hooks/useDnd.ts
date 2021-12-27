@@ -23,15 +23,15 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
       const tabDrag = isTabDrag(draggableId);
 
       if (windowDrag) {
-        // hide tabs during a window drag
+        // Hide tabs during a window drag
         toggleWindowTabsVisibility(draggableId, false);
       } else if (tabDrag) {
-        // add window to end of group (only if not in the first group)
+        // Add window to end of group (only if not in the first group)
         index > 0 && dispatch(GROUPS_CREATORS.addWindow({ index }));
       }
 
       if (windowDrag || tabDrag) {
-        // add group to end of side panel on both tab and window drag types
+        // Add group to end of side panel on both tab and window drag types
         dispatch(GROUPS_CREATORS.addGroup());
       }
     },
@@ -69,16 +69,16 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
         isValidCombine && dispatch(GROUPS_CREATORS.updateTabsFromSidePanelDnd(spPayload));
         isValidDndWithinGroup && dispatch(GROUPS_CREATORS.updateTabsFromGroupDnd(destPayload));
       } else if (isWindow) {
-        // re-show the tabs since the drag ended
+        // Re-show the tabs since the drag ended
         toggleWindowTabsVisibility(draggableId, true);
 
         isValidCombine && dispatch(GROUPS_CREATORS.updateWindowsFromSidePanelDnd(spPayload));
         isValidDndWithinGroup && dispatch(GROUPS_CREATORS.updateWindowsFromGroupDnd(destPayload));
       } else if (isGroup && destination && destination.index > 0) {
-        // only swap if the destination exists (valid) and is below "Now Open"
+        // Only swap if the destination exists (valid) and is below "Now Open"
         dispatch(GROUPS_CREATORS.updateGroupOrder({ source, destination }));
 
-        // update active group if it does not match the draggable
+        // Update active group if it does not match the draggable
         if (destination.index !== source.index) {
           dispatch(GROUPS_CREATORS.updateActive({ id: available[destination.index].id, index: destination.index }));
         }
@@ -87,7 +87,7 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
       dispatch(DND_CREATORS.resetDnDInfo());
 
       /**
-       * must clear the windows in the current group first, then clear the group
+       * Must clear the windows in the current group first, then clear the group
        * @note Only relevant for tab or window dragging since a group drag does not add either a (temporary) window or group
        */
       if (isTab || isWindow) {

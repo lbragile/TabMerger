@@ -1,5 +1,6 @@
 import { createGlobalStyle, css } from "styled-components";
 
+// eslint-disable-next-line capitalized-comments
 /* stylelint-disable block-opening-brace-newline-after */
 export const GlobalStyle = createGlobalStyle`${css`
   *,

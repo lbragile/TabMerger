@@ -123,7 +123,7 @@ export default function Information(): JSX.Element {
     e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement> | undefined,
     action: () => void
   ) => {
-    // parent (settings icon will receive the bubbled event if propagation isn't stopped)
+    // Parent (settings icon will receive the bubbled event if propagation isn't stopped)
     e?.stopPropagation();
     action();
     setShowSettingsPopup(false);

@@ -29,6 +29,12 @@ module.exports = {
     "jsx-a11y/label-has-for": ["error", { required: { some: ["nesting", "id"] } }],
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
+    "no-console": ["error", { allow: ["error", "warn", "info"] }],
+    "no-alert": "error",
+    "no-inline-comments": "error",
+    "spaced-comment": ["error", "always", { block: { markers: ["*"], balanced: true } }],
+    "capitalized-comments": ["error", "always", { block: { ignoreConsecutiveComments: true } }],
+    camelcase: "error",
     "import/no-unresolved": "error",
     "import/newline-after-import": "warn",
     "import/order": [

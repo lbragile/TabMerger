@@ -88,7 +88,7 @@ export default function Tab({
     if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeTab({ tabIndex, windowIndex, groupIndex }));
 
-      // possible to have deleted the last tab in the window and/or group
+      // Possible to have deleted the last tab in the window and/or group
       if (!available[groupIndex].windows[windowIndex].tabs?.length) {
         dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
       }

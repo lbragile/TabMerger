@@ -148,7 +148,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         available[index].windows.splice(destination.index, 0, ...removedWindows);
         available[index].updatedAt = Date.now();
 
-        // need to toggle starred state depending on direction of drag
+        // Need to toggle starred state depending on direction of drag
         const compareIdx = destination.index + Math.sign(source.index - destination.index);
         available[index].windows[destination.index].starred = !!available[index].windows[compareIdx]?.starred;
       }
@@ -256,7 +256,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.DELETE_GROUP: {
       const index = action.payload as number;
 
-      // re-assign active group if deleted group was the active one (use the group above if needed)
+      // Re-assign active group if deleted group was the active one (use the group above if needed)
       const activeIdx = state.active.index;
       const active =
         activeIdx < index
@@ -282,7 +282,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const filteredGroups = available.filter((group, i) => i === 0 || (i > 0 && group.windows.length > 0));
       const filteredIds = filteredGroups.map((group) => group.id);
 
-      // if filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
+      // If filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
       // ... as it is not the source of the dnd event - must be non-empty.
       const { index, id } = state.active;
       const newIdx = Math.max(0, index - 1);
@@ -301,7 +301,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
       const { index } = action.payload as { index: number };
 
-      // possible to have cleaned up the group (by removing all of its tabs) ...
+      // Possible to have cleaned up the group (by removing all of its tabs) ...
       // ... now the above index has already been cleared, so the window won't exist ...
       // ... this should not happen, but is a good "safety guard"
       if (available[index].windows.length > 0) {
@@ -375,20 +375,20 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.DUPLICATE_GROUP: {
       const groupIndex = action.payload as number;
 
-      // make sure to deep clone the group
+      // Make sure to deep clone the group
       available.splice(groupIndex, 0, JSON.parse(JSON.stringify(available[groupIndex])));
 
-      // assign new id to avoid having the same group
+      // Assign new id to avoid having the same group
       available[groupIndex + 1].id = nanoid(10);
 
-      // update the timestamp in the new group (original group does not need to update this as nothing changed)
+      // Update the timestamp in the new group (original group does not need to update this as nothing changed)
       available[groupIndex + 1].updatedAt = Date.now();
 
       if (groupIndex === 0) {
-        // make sure new group is not permanent
+        // Make sure new group is not permanent
         available[1].permanent = false;
 
-        // unfocus all windows in new group (first one will be focused in the `Now Open` group)
+        // Unfocus all windows in new group (first one will be focused in the `Now Open` group)
         available[1].windows[0].focused = false;
       }
 
@@ -398,7 +398,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.REPLACE_WITH_CURRENT: {
       const groupIndex = action.payload as number;
 
-      // overwrite the windows with the default group, then unfocus all the windows in the group
+      // Overwrite the windows with the default group, then unfocus all the windows in the group
       available[groupIndex].windows = JSON.parse(JSON.stringify(available[0].windows));
       available[groupIndex].windows.forEach((w) => (w.focused = false));
 
@@ -410,7 +410,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.MERGE_WITH_CURRENT: {
       const groupIndex = action.payload as number;
 
-      // place merged windows first in the group then unfocus the newly merged windows
+      // Place merged windows first in the group then unfocus the newly merged windows
       available[groupIndex].windows = JSON.parse(JSON.stringify(available[0].windows)).concat(
         available[groupIndex].windows
       );

@@ -153,7 +153,7 @@ export default function Header(): JSX.Element {
           saveAs(blob, `TabMerger Export - ${new Date().toTimeString()}`);
         }
       },
-      { text: "Sync", handler: () => console.log("WIP"), isDisabled: true },
+      { text: "Sync", handler: () => console.warn("WIP"), isDisabled: true },
       { text: "divider" },
       { text: "Settings", handler: settingsHandler },
       {
@@ -203,7 +203,7 @@ export default function Header(): JSX.Element {
               icon={typing ? "times" : "search"}
               $typing={typing}
               onClick={() => {
-                // clicking the close button should clear the input
+                // Clicking the close button should clear the input
                 if (typing) {
                   dispatch(HEADER_CREATORS.updateInputValue(""));
                   dispatch(HEADER_CREATORS.setTyping(false));
