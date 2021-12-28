@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import useClickOutside from "../hooks/useClickOutside";
@@ -136,6 +136,27 @@ export default function Header(): JSX.Element {
     setModalDetails({ title: "Import", type: "import", closeText: "Cancel" });
   };
 
+  const exportModalHandler = useCallback(() => {
+    setShowModal(true);
+    setShowDropdown(false);
+    setModalDetails({
+      title: "Export",
+      type: "export",
+      closeText: "Close",
+      saveText: "Save File",
+      save: () => {
+        // TODO move logic inside the Export
+        // JSON - application/json
+        // CSV - text/csv
+        // HTML - text/html
+        // Markdown - text/plain
+        // Text - text/plain
+        const blob = new Blob([JSON.stringify({ active, available }, null, 2)], { type: "application/json" });
+        saveAs(blob, `TabMerger Export - ${new Date().toTimeString()}`);
+      }
+    });
+  }, [active, available]);
+
   const settingsHandler = () => {
     setShowModal(true);
     setShowDropdown(false);
@@ -147,11 +168,7 @@ export default function Header(): JSX.Element {
       { text: "Import", handler: importHandler },
       {
         text: "Export",
-        handler: () => {
-          // TODO show menu where user can select between text, json, ect.
-          const blob = new Blob([JSON.stringify({ active, available }, null, 2)], { type: "application/json" });
-          saveAs(blob, `TabMerger Export - ${new Date().toTimeString()}`);
-        }
+        handler: exportModalHandler
       },
       { text: "Sync", handler: () => console.warn("WIP"), isDisabled: true },
       { text: "divider" },
@@ -179,7 +196,7 @@ export default function Header(): JSX.Element {
         handler: aboutModalHandler
       }
     ] as IDropdown["items"];
-  }, [active, available]);
+  }, [exportModalHandler]);
 
   return (
     <>

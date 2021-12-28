@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 
 import About from "./About";
@@ -12,8 +13,9 @@ export interface IModal {
   title: string;
   type: TModalType;
   closeText: string;
+  saveText?: string;
   save?: () => void;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setVisible: Dispatch<SetStateAction<boolean>>;
 }
 
 const CloseIconContainer = styled.span`

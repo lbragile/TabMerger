@@ -17,7 +17,9 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaFeatures: { jsx: true },
+    ecmaFeatures: {
+      jsx: true
+    },
     ecmaVersion: 12
   },
   plugins: ["react", "react-hooks", "@typescript-eslint", "styled-components-a11y", "import"],
@@ -25,15 +27,69 @@ module.exports = {
     "default-case": "warn",
     eqeqeq: ["warn", "always"],
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "jsx-a11y/label-has-associated-control": ["error", { required: { some: ["nesting", "id"] } }],
-    "jsx-a11y/label-has-for": ["error", { required: { some: ["nesting", "id"] } }],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        required: {
+          some: ["nesting", "id"]
+        }
+      }
+    ],
+    "jsx-a11y/label-has-for": [
+      "error",
+      {
+        required: {
+          some: ["nesting", "id"]
+        }
+      }
+    ],
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
-    "no-console": ["error", { allow: ["error", "warn", "info"] }],
+    "no-console": [
+      "error",
+      {
+        allow: ["error", "warn", "info"]
+      }
+    ],
     "no-alert": "error",
     "no-inline-comments": "error",
-    "spaced-comment": ["error", "always", { block: { markers: ["*"], balanced: true } }],
-    "capitalized-comments": ["error", "always", { block: { ignoreConsecutiveComments: true } }],
+    "padding-line-between-statements": [
+      "error",
+      {
+        blankLine: "always",
+        prev: "*",
+        next: "return"
+      },
+      {
+        blankLine: "always",
+        prev: "*",
+        next: "function"
+      },
+      {
+        blankLine: "always",
+        prev: "*",
+        next: "export"
+      }
+    ],
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        block: {
+          markers: ["*"],
+          balanced: true
+        }
+      }
+    ],
+    "capitalized-comments": [
+      "error",
+      "always",
+      {
+        block: {
+          ignoreConsecutiveComments: true
+        }
+      }
+    ],
     camelcase: "error",
     "import/no-unresolved": "error",
     "import/newline-after-import": "warn",
@@ -42,7 +98,9 @@ module.exports = {
       {
         groups: ["builtin", "external", "parent", "sibling", "index"],
         "newlines-between": "always",
-        alphabetize: { order: "asc" },
+        alphabetize: {
+          order: "asc"
+        },
         warnOnUnassignedImports: true
       }
     ]

@@ -42,6 +42,7 @@ interface ICommonDnd {
   index: number;
   source: DraggableLocation;
 }
+
 export interface IWithinGroupDnd extends ICommonDnd {
   destination?: DraggableLocation;
 }

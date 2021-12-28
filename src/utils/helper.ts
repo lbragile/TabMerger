@@ -38,12 +38,14 @@ export function relativeTimeStr(previous: number, current = Date.now()): string 
   }
 
   val = Math.round(val);
+
   return type === "sec" ? "< 1 min" : `${val} ${pluralize(val, type)}`;
 }
 
 export function getReadableTimestamp(timestamp: number): string {
   const parts = new Date(timestamp).toString().split(" ");
   const postfix = Number(parts[4].split(":")[0]) > 11 ? "PM" : "AM";
+
   return `Updated ${parts.slice(1, 4).join(" ")} ${parts[4]} ${postfix}`;
 }
 

@@ -10,7 +10,8 @@ import {
   faTimes,
   faTimesCircle,
   faWindowMaximize,
-  faWindowRestore
+  faWindowRestore,
+  faCopy
 } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -104,7 +105,8 @@ library.add(
   faTimesCircle,
   faStar,
   faMask,
-  faExclamationCircle
+  faExclamationCircle,
+  faCopy
 );
 
 export default App;

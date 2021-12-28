@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import { HEADER_ACTIONS } from "../reducers/header";
 
 const setTyping = (payload: boolean) => ({ type: HEADER_ACTIONS.SET_TYPING, payload });

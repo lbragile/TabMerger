@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useState } from "react";
 import styled, { css } from "styled-components";
 
+import Selector from "./Selector";
+
 const DetailsGrid = styled.div`
   display: grid;
   grid-template-columns: max-content 60%;
@@ -63,34 +65,6 @@ const Note = styled.div`
 
   & p {
     opacity: 0.75;
-  }
-`;
-
-const ModalTabContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  border-bottom: 1px solid #f0f0f0;
-`;
-
-const ModalTab = styled.button<{ $active: boolean }>`
-  outline: none;
-  border: none;
-  background-color: transparent;
-  font-size: 14px;
-  text-transform: uppercase;
-  padding: 2px 16px;
-  cursor: pointer;
-  ${({ $active }) =>
-    $active &&
-    css`
-      color: #007bff;
-      border-bottom: 2px solid #007bff;
-      font-weight: bold;
-    `}
-
-  &:hover {
-    font-weight: bold;
   }
 `;
 
@@ -158,7 +132,7 @@ const LICENSE_DETAILS: ILicenseDetails[] = [
 ];
 
 export default function About(): JSX.Element {
-  const [activeTab, setActiveTab] = useState("Details");
+  const [activeTab, setActiveTab] = useState<"Details" | "Licenses">("Details");
 
   return (
     <>
@@ -185,13 +159,7 @@ export default function About(): JSX.Element {
         </AboutTitle>
       </Row>
 
-      <ModalTabContainer>
-        {["Details", "Licenses"].map((item) => (
-          <ModalTab key={item} $active={activeTab === item} onClick={() => setActiveTab(item)}>
-            {item}
-          </ModalTab>
-        ))}
-      </ModalTabContainer>
+      <Selector opts={["Details", "Licenses"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab === "Details" ? (
         <DetailsGrid>

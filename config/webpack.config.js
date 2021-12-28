@@ -1,23 +1,24 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
+
 const CopyPlugin = require("copy-webpack-plugin");
-const { SourceMapDevToolPlugin } = require("webpack");
+const DotenvPlugin = require("dotenv-webpack");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const StylelintPlugin = require("stylelint-webpack-plugin");
-const DotenvPlugin = require("dotenv-webpack");
+const { SourceMapDevToolPlugin } = require("webpack");
 
 const isProd = process.env.NODE_ENV === "production";
 
 const lintOpts = {
   extensions: ["ts", "tsx"],
   files: ["src/**/*"],
-  failOnError: false,
+  failOnError: false
 };
 
 module.exports = {
   entry: {
     popup: path.resolve(__dirname, "../src/index.tsx"),
-    background: path.resolve(__dirname, "../src/background.ts"),
+    background: path.resolve(__dirname, "../src/background.ts")
   },
   plugins: [
     new CopyPlugin({
@@ -25,36 +26,36 @@ module.exports = {
         {
           from: "public",
           globOptions: {
-            ignore: ["**/logo-full-rescale.png"],
-          },
-        },
-      ],
+            ignore: ["**/logo-full-rescale.png"]
+          }
+        }
+      ]
     }),
     new SourceMapDevToolPlugin({
-      exclude: isProd ? ["vendors.js", "background.js", "runtime.js", "popup.js"] : ["vendors.js"],
+      exclude: isProd ? ["vendors.js", "background.js", "runtime.js", "popup.js"] : ["vendors.js"]
     }),
     new ESLintPlugin(lintOpts),
     new StylelintPlugin(lintOpts),
     new DotenvPlugin({
       path: `./.env.${process.env.NODE_ENV}.local`,
       safe: true,
-      allowEmptyValues: true,
-    }),
+      allowEmptyValues: true
+    })
   ],
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         use: "babel-loader",
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.ts(x)?$/,
         loader: "ts-loader",
         options: {
-          configFile: path.join(__dirname, "tsconfig.json"),
+          configFile: path.join(__dirname, "tsconfig.json")
         },
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.png$/,
@@ -62,15 +63,15 @@ module.exports = {
           {
             loader: "url-loader",
             options: {
-              mimetype: "image/png",
-            },
-          },
-        ],
-      },
-    ],
+              mimetype: "image/png"
+            }
+          }
+        ]
+      }
+    ]
   },
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: [".js", ".jsx", ".ts", ".tsx"]
   },
   stats: isProd ? "normal" : "minimal",
   mode: isProd ? "production" : "development",
@@ -79,6 +80,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, isProd ? "../build" : "../dist"),
     filename: "[name].js",
-    clean: true,
-  },
+    clean: true
+  }
 };

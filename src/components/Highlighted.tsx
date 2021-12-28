@@ -17,6 +17,7 @@ export default function Highlighted({ text = "" }: { text?: string }): JSX.Eleme
   const re = useMemo(() => {
     const SPECIAL_CHAR_RE = /([.?*+^$[\]\\(){}|-])/g;
     const escapedSearch = inputValue.replace(SPECIAL_CHAR_RE, "\\$1");
+
     return new RegExp(`(${escapedSearch})`, "i");
   }, [inputValue]);
 

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import { FILTER_ACTIONS } from "../reducers/filter";
 import { IGroupItemState } from "../reducers/groups";
 
