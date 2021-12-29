@@ -1,21 +1,3 @@
 {
-  "cSpell.ignoreWords": [
-    "Abramov",
-    "Vitaly",
-    "Andrey",
-    "Stoiber",
-    "Sitnik",
-    "Rtishchev",
-    "Maddern",
-    "Atlassian",
-    "browserslist",
-    "codeql",
-    "markdownlint",
-    "pnpm",
-    "prettierrc",
-    "stylelintrc",
-    "webextensions",
-    "camelcase"
-  ],
-  "cSpell.words": ["fontawesome", "fortawesome", "mantine", "SIDEPANEL", "tabmerger"]
+  "cSpell.import": ["./config/.cspell.json"]
 }

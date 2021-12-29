@@ -57,7 +57,7 @@ const Logo = styled.img`
 
 const Note = styled.div`
   padding: 12px;
-  background: #f0f0f0;
+  background-color: #f0f0f0;
   text-align: center;
   display: grid;
   grid-template-columns: auto 1fr;

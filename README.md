@@ -44,7 +44,7 @@ Your contribution would allow me to focus on developing more useful tools like T
 
 ## 💻 Developers
 
-TabMerger uses [pnpm](https://pnpm.io/) as it's package manager due to its superior security, speed, and compactness.
+TabMerger uses [pnpm](https://pnpm.io/) due to its superior security, speed, and compactness.
 \
 To get started, follow these steps:
 
