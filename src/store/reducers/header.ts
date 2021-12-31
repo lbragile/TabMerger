@@ -1,4 +1,4 @@
-import { IAction } from "../../typings/reducers";
+import { IAction } from "~/typings/reducers";
 
 export const HEADER_ACTIONS = {
   SET_TYPING: "SET_TYPING",

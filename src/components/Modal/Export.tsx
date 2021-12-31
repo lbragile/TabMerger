@@ -3,9 +3,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled from "styled-components";
 
-import { useSelector } from "../../hooks/useRedux";
-
 import Selector from "./Selector";
+
+import { useSelector } from "~/hooks/useRedux";
+
 
 const TextAreaContainer = styled.div`
   position: relative;
@@ -96,6 +97,7 @@ export default function Export(): JSX.Element {
     { text: "Titles", checked: true },
     { text: "URLs", checked: true }
   ]);
+
   const [selectedGroups, setSelectedGroups] = useState(available);
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -251,6 +253,7 @@ export default function Export(): JSX.Element {
           title="Copy to Clipboard"
           onClick={() => navigator.clipboard.writeText(text)}
         />
+
         <TextArea ref={textAreaRef} readOnly value={text} />
       </TextAreaContainer>
     </>

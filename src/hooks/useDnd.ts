@@ -1,12 +1,13 @@
 import { useCallback } from "react";
 import { BeforeCapture, DragStart, DragUpdate, DropResult } from "react-beautiful-dnd";
 
-import { isWindowDrag, isTabDrag, isGroupDrag } from "../constants/dragRegExp";
-import DND_CREATORS from "../store/actions/dnd";
-import GROUPS_CREATORS from "../store/actions/groups";
-import { toggleWindowTabsVisibility } from "../utils/helper";
-
 import { useDispatch, useSelector } from "./useRedux";
+
+import { isWindowDrag, isTabDrag, isGroupDrag } from "~/constants/dragRegExp";
+import DND_CREATORS from "~/store/actions/dnd";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { toggleWindowTabsVisibility } from "~/utils/helper";
+
 
 export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivElement | null>) {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
     active: { index },
     available
   } = useSelector((state) => state.groups);
+
   const { dragType } = useSelector((state) => state.dnd);
 
   const onBeforeCapture = useCallback(

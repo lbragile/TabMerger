@@ -5,6 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const DotenvPlugin = require("dotenv-webpack");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const StylelintPlugin = require("stylelint-webpack-plugin");
+const { TsconfigPathsPlugin } = require("tsconfig-paths-webpack-plugin");
 const { SourceMapDevToolPlugin } = require("webpack");
 
 const isProd = process.env.NODE_ENV === "production";
@@ -45,12 +46,17 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        use: "babel-loader",
+        test: /\.tsx?$/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            cacheDirectory: true
+          }
+        },
         exclude: /node_modules/
       },
       {
-        test: /\.ts(x)?$/,
+        test: /\.tsx?$/,
         loader: "ts-loader",
         options: {
           configFile: path.join(__dirname, "tsconfig.json")
@@ -71,7 +77,8 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"]
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    plugins: [new TsconfigPathsPlugin({ configFile: "./config/tsconfig.json" })]
   },
   stats: isProd ? "normal" : "minimal",
   mode: isProd ? "production" : "development",

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import styled from "styled-components";
 
-import { useSelector } from "../hooks/useRedux";
+import { useSelector } from "~/hooks/useRedux";
 
 const MarkedText = styled.mark`
   background-color: #ffd580;

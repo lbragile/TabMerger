@@ -3,14 +3,15 @@ import { saveAs } from "file-saver";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-import useClickOutside from "../hooks/useClickOutside";
-import { useDispatch, useSelector } from "../hooks/useRedux";
-import FILTERS_CREATORS from "../store/actions/filter";
-import HEADER_CREATORS from "../store/actions/header";
-
 import Dropdown, { IDropdown } from "./Dropdown";
 import Modal, { IModal } from "./Modal";
 import SearchResult from "./SearchResult";
+
+import useClickOutside from "~/hooks/useClickOutside";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import FILTERS_CREATORS from "~/store/actions/filter";
+import HEADER_CREATORS from "~/store/actions/header";
+
 
 const Flex = styled.div`
   display: flex;
@@ -114,6 +115,7 @@ export default function Header(): JSX.Element {
         const matchingTabsInWindow = window.tabs?.filter((tab) =>
           tab?.title?.toLowerCase()?.includes(inputValue.toLowerCase())
         );
+
         matchingTabsInWindow && matchingTabs.push(matchingTabsInWindow ?? []);
       });
 

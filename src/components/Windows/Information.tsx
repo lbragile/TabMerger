@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-import useClickOutside from "../../hooks/useClickOutside";
-import { useDebounce, useDebounceCallback } from "../../hooks/useDebounce";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
-import GROUPS_CREATORS from "../../store/actions/groups";
-import { getReadableTimestamp, pluralize } from "../../utils/helper";
-import Dropdown, { IDropdown } from "../Dropdown";
+import Dropdown, { IDropdown } from "~/components/Dropdown";
+import useClickOutside from "~/hooks/useClickOutside";
+import { useDebounce, useDebounceCallback } from "~/hooks/useDebounce";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { getReadableTimestamp, pluralize } from "~/utils/helper";
 
 const Grid = styled.div`
   display: grid;
@@ -82,6 +82,7 @@ export default function Information(): JSX.Element {
     active: { index: groupIndex },
     available
   } = useSelector((state) => state.groups);
+
   const { windows, info, name, updatedAt } = available[groupIndex];
 
   const [windowTitle, setWindowTitle] = useState("");

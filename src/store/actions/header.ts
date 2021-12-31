@@ -1,4 +1,4 @@
-import { HEADER_ACTIONS } from "../reducers/header";
+import { HEADER_ACTIONS } from "~/store/reducers/header";
 
 const setTyping = (payload: boolean) => ({ type: HEADER_ACTIONS.SET_TYPING, payload });
 

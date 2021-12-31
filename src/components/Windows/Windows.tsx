@@ -2,14 +2,14 @@ import { useRef } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
-import { isWindowDrag } from "../../constants/dragRegExp";
-import useContainerHeight from "../../hooks/useContainerHeight";
-import { useSelector } from "../../hooks/useRedux";
-import { Scrollbar } from "../../styles/Scrollbar";
-import SearchResult from "../SearchResult";
-
 import Information from "./Information";
 import Window from "./Window";
+
+import SearchResult from "~/components/SearchResult";
+import { isWindowDrag } from "~/constants/dragRegExp";
+import useContainerHeight from "~/hooks/useContainerHeight";
+import { useSelector } from "~/hooks/useRedux";
+import { Scrollbar } from "~/styles/Scrollbar";
 
 interface IWindowContainerStyle {
   $height: number;
@@ -32,6 +32,7 @@ export default function Windows(): JSX.Element {
     active: { index: groupIndex },
     available
   } = useSelector((state) => state.groups);
+
   const { dragType } = useSelector((state) => state.dnd);
   const { windows, updatedAt } = available[groupIndex];
 

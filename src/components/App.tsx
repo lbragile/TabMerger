@@ -19,17 +19,18 @@ import { useRef } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled, { ThemeProvider } from "styled-components";
 
-import useDnd from "../hooks/useDnd";
-import { useSelector } from "../hooks/useRedux";
-import useStorage from "../hooks/useStorage";
-import useUpdateInfo from "../hooks/useUpdateInfo";
-import useUpdateWindows from "../hooks/useUpdateWindows";
-import { GlobalStyle } from "../styles/Global";
-import Theme from "../styles/Theme";
-
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Windows from "./Windows";
+
+import useDnd from "~/hooks/useDnd";
+import { useSelector } from "~/hooks/useRedux";
+import useStorage from "~/hooks/useStorage";
+import useUpdateInfo from "~/hooks/useUpdateInfo";
+import useUpdateWindows from "~/hooks/useUpdateWindows";
+import { GlobalStyle } from "~/styles/Global";
+import Theme from "~/styles/Theme";
+
 
 const Container = styled.div`
   width: 780px;

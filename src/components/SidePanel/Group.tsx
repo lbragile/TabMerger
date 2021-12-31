@@ -3,17 +3,17 @@ import { useRef, useState } from "react";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
-import { COLOR_PICKER_SWATCHES } from "../../constants/colorPicker";
-import { isGroupDrag } from "../../constants/dragRegExp";
-import useClickOutside from "../../hooks/useClickOutside";
-import { useDebounce } from "../../hooks/useDebounce";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
-import GROUPS_CREATORS from "../../store/actions/groups";
-import { IGroupsState } from "../../store/reducers/groups";
-import { CloseIcon } from "../../styles/CloseIcon";
-import { relativeTimeStr } from "../../utils/helper";
-import Highlighted from "../Highlighted";
-import Popup from "../Popup";
+import Highlighted from "~/components/Highlighted";
+import Popup from "~/components/Popup";
+import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
+import { isGroupDrag } from "~/constants/dragRegExp";
+import useClickOutside from "~/hooks/useClickOutside";
+import { useDebounce } from "~/hooks/useDebounce";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { IGroupsState } from "~/store/reducers/groups";
+import { CloseIcon } from "~/styles/CloseIcon";
+import { relativeTimeStr } from "~/utils/helper";
 
 interface IGroupStyle {
   $isActive: boolean;

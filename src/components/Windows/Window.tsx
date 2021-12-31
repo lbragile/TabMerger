@@ -3,16 +3,16 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
-import { isTabDrag } from "../../constants/dragRegExp";
-import useClickOutside from "../../hooks/useClickOutside";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
-import GROUPS_CREATORS from "../../store/actions/groups";
-import { CloseIcon } from "../../styles/CloseIcon";
-import { pluralize } from "../../utils/helper";
-import Dropdown from "../Dropdown";
-import Popup from "../Popup";
-
 import Tab from "./Tab";
+
+import Dropdown from "~/components/Dropdown";
+import Popup from "~/components/Popup";
+import { isTabDrag } from "~/constants/dragRegExp";
+import useClickOutside from "~/hooks/useClickOutside";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { CloseIcon } from "~/styles/CloseIcon";
+import { pluralize } from "~/utils/helper";
 
 const Column = styled.div`
   display: flex;
@@ -126,6 +126,7 @@ export default function Window({
     available,
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
+
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
   const { dragType, isDragging } = useSelector((state) => state.dnd);

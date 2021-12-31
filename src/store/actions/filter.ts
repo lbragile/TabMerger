@@ -1,5 +1,5 @@
-import { FILTER_ACTIONS } from "../reducers/filter";
-import { IGroupItemState } from "../reducers/groups";
+import { FILTER_ACTIONS } from "~/store/reducers/filter";
+import { IGroupItemState } from "~/store/reducers/groups";
 
 const updateFilteredTabs = (payload: chrome.tabs.Tab[][]) => ({ type: FILTER_ACTIONS.UPDATE_FILTERED_TABS, payload });
 

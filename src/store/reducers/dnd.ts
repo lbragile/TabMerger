@@ -1,4 +1,4 @@
-import { IAction } from "../../typings/reducers";
+import { IAction } from "~/typings/reducers";
 
 export const DND_ACTIONS = {
   UPDATE_DRAG_ORIGIN_TYPE: "UPDATE_DRAG_ORIGIN_TYPE",

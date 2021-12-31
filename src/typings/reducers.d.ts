@@ -1,4 +1,4 @@
-import { store } from "../store/utils/configureStore";
+import { store } from "~/store/utils/configureStore";
 
 export interface IAction {
   type: string;

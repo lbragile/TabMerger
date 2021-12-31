@@ -7,6 +7,7 @@
     "Atlassian",
     "Bragilevsky",
     "camelcase",
+    "dotenv",
     "fontawesome",
     "fortawesome",
     "lbragile",
@@ -14,13 +15,21 @@
     "Maddern",
     "mantine",
     "pnpm",
+    "postcss",
     "prettierrc",
     "Rtishchev",
     "SIDEPANEL",
     "Sitnik",
     "Stoiber",
     "TABMERGER",
-    "Vitaly"
+    "Vitaly",
+    "webextensions"
   ],
-  "ignorePaths": ["node_modules/**", "coverage/**", "docs/**", "build/**", "dist/**"]
+  "ignorePaths": [
+    "node_modules/**",
+    "coverage/**",
+    "docs/**",
+    "build/**",
+    "dist/**"
+  ]
 }

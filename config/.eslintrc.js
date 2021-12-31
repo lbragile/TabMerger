@@ -58,17 +58,12 @@ module.exports = {
       {
         blankLine: "always",
         prev: "*",
-        next: "return"
+        next: ["return", "function", "export", "default", "case"]
       },
       {
         blankLine: "always",
-        prev: "*",
-        next: "function"
-      },
-      {
-        blankLine: "always",
-        prev: "*",
-        next: "export"
+        prev: ["multiline-const", "block-like"],
+        next: "*"
       }
     ],
     "spaced-comment": [
@@ -91,7 +86,7 @@ module.exports = {
       }
     ],
     camelcase: "error",
-    "import/no-unresolved": "error",
+    "import/no-unresolved": ["error", { ignore: ["^~/*"] }],
     "import/newline-after-import": "warn",
     "import/order": [
       "warn",

@@ -1,4 +1,4 @@
-import { DND_ACTIONS } from "../reducers/dnd";
+import { DND_ACTIONS } from "~/store/reducers/dnd";
 
 const updateDragOriginType = (payload: string) => ({ type: DND_ACTIONS.UPDATE_DRAG_ORIGIN_TYPE, payload });
 

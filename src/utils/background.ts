@@ -1,10 +1,10 @@
 import { nanoid } from "nanoid";
 
-import { WINDOW_QUERY_OPTIONS } from "../constants/chrome";
-import { IGroupItemState } from "../store/reducers/groups";
-import { TSentResponse } from "../typings/background";
-
 import { sortWindowsByFocus } from "./helper";
+
+import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
+import { IGroupItemState } from "~/store/reducers/groups";
+import { TSentResponse } from "~/typings/background";
 
 /**
  * Immediately Invoked Function Expression that executes the `sendResponse` function to response to the web page

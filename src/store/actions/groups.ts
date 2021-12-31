@@ -1,6 +1,6 @@
 import { DraggableLocation } from "react-beautiful-dnd";
 
-import { GROUPS_ACTIONS, IGroupsState, ISidePanelDnd } from "../reducers/groups";
+import { GROUPS_ACTIONS, IGroupsState, ISidePanelDnd } from "~/store/reducers/groups";
 
 const updateAvailable = (payload?: IGroupsState["available"]) => ({ type: GROUPS_ACTIONS.UPDATE_AVAILABLE, payload });
 

@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo } from "react";
 import styled, { css } from "styled-components";
 
-import { useDispatch, useSelector } from "../hooks/useRedux";
-import HEADER_CREATORS from "../store/actions/header";
-import { pluralize } from "../utils/helper";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import HEADER_CREATORS from "~/store/actions/header";
+import { pluralize } from "~/utils/helper";
 
 const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
   display: flex;

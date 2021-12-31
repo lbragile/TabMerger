@@ -1,11 +1,11 @@
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
-import { isTabDrag } from "../../constants/dragRegExp";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
-import GROUPS_CREATORS from "../../store/actions/groups";
-import { CloseIcon } from "../../styles/CloseIcon";
-import Highlighted from "../Highlighted";
+import Highlighted from "~/components/Highlighted";
+import { isTabDrag } from "~/constants/dragRegExp";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { CloseIcon } from "~/styles/CloseIcon";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
@@ -79,6 +79,7 @@ export default function Tab({
     available,
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
+
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
 
