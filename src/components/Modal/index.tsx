@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dispatch, SetStateAction } from "react";
+import { saveAs } from "file-saver";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 
 import About from "./About";
@@ -14,7 +15,6 @@ export interface IModal {
   type: TModalType;
   closeText: string;
   saveText?: string;
-  save?: () => void;
   setVisible: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -84,12 +84,14 @@ const Button = styled.button<{ $primary?: boolean }>`
   }
 `;
 
-export default function Modal({ title, type, closeText, save, setVisible }: IModal): JSX.Element {
+export default function Modal({ title, type, closeText, saveText, setVisible }: IModal): JSX.Element {
   const hide = () => setVisible(false);
+  const [file, setFile] = useState<File | null>(null);
 
   return (
     <>
       <Overlay onClick={hide} role="presentation" />
+
       <Container>
         <HeaderRow>
           <h3>{title}</h3>
@@ -108,12 +110,12 @@ export default function Modal({ title, type, closeText, save, setVisible }: IMod
         {type === "about" && <About />}
         {type === "settings" && <Settings />}
         {type === "import" && <Import />}
-        {type === "export" && <Export />}
+        {type === "export" && <Export setFile={setFile} />}
 
         <FooterRow>
-          {save && (
-            <Button onClick={save} $primary>
-              Save
+          {saveText && (
+            <Button onClick={() => file && saveAs(file)} $primary>
+              {saveText}
             </Button>
           )}
           <Button onClick={hide}>{closeText}</Button>

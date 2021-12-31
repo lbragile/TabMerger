@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled from "styled-components";
 
@@ -7,6 +7,20 @@ import Selector from "./Selector";
 
 import { useSelector } from "~/hooks/useRedux";
 
+const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean }>`
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: ${({ $overflow }) => ($overflow ? "28px" : "12px")};
+  color: #313131;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+
+  &:hover {
+    color: #616161;
+  }
+`;
 
 const TextAreaContainer = styled.div`
   position: relative;
@@ -14,6 +28,12 @@ const TextAreaContainer = styled.div`
   width: 95%;
   height: 250px;
   margin: auto;
+
+  &:hover {
+    & ${CopyButton} {
+      display: block;
+    }
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -26,18 +46,6 @@ const TextArea = styled.textarea`
   border-radius: 0;
   padding: 8px;
   resize: none;
-`;
-
-const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean }>`
-  position: absolute;
-  top: 16px;
-  right: ${({ $overflow }) => ($overflow ? "32px" : "16px")};
-  color: #313131;
-  cursor: pointer;
-
-  &:hover {
-    color: #616161;
-  }
 `;
 
 const Row = styled.div`
@@ -85,7 +93,11 @@ const ArrowIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-export default function Export(): JSX.Element {
+interface IExport {
+  setFile: Dispatch<SetStateAction<File | null>>;
+}
+
+export default function Export({ setFile }: IExport): JSX.Element {
   const { available, active } = useSelector((state) => state.groups);
 
   const [activeTab, setActiveTab] = useState<"JSON" | "Text" | "Markdown" | "HTML" | "CSV">("JSON");
@@ -110,7 +122,7 @@ export default function Export(): JSX.Element {
   // Copy button location needs to be adjusted depending on the vertical overflow scrollbar visibility
   useEffect(() => {
     setOverflow(!!textAreaRef.current && textAreaRef.current.scrollHeight > textAreaRef.current.clientHeight);
-  }, [activeTab]);
+  }, [activeTab, keepURLs, keepTitles]);
 
   // Each time the dropdown selection changes, need to update the currently "available" group list
   useEffect(() => {
@@ -208,6 +220,21 @@ export default function Export(): JSX.Element {
     setCheckbox(origCheckbox.map((item) => (item.text === text ? { ...item, checked: !item.checked } : item)));
   };
 
+  useEffect(() => {
+    const [type, extension] =
+      activeTab === "JSON"
+        ? ["application/json", ".json"]
+        : activeTab === "Text"
+        ? ["text/plain", ".txt"]
+        : activeTab === "Markdown"
+        ? ["text/markdown", ".md"]
+        : activeTab === "HTML"
+        ? ["text/html", ".html"]
+        : ["text/csv", ".csv"];
+
+    setFile(new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type }));
+  }, [setFile, text, activeTab]);
+
   return (
     <>
       <Selector opts={["JSON", "Text", "Markdown", "HTML", "CSV"]} activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -225,7 +252,10 @@ export default function Export(): JSX.Element {
                   name={lowerText}
                   checked={activeTab === "JSON" || checked}
                   onChange={() => handleCheckboxChange(text)}
-                  disabled={["Titles", "URLs"].includes(text) && activeTab === "JSON"}
+                  disabled={
+                    (["Titles", "URLs"].includes(text) && activeTab === "JSON") ||
+                    (text === "Titles" && activeTab === "Markdown")
+                  }
                 />
                 <label htmlFor={lowerText}>{text}</label>
               </CheckboxContainer>

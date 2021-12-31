@@ -69,3 +69,7 @@ export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
 
   return { sortedWindows: focused.concat(notFocused), hasFocused: focused.length > 0 };
 }
+
+export function createActiveTab(url: string) {
+  chrome.tabs.create({ url, active: true }, () => "");
+}

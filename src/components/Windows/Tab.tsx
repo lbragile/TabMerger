@@ -83,7 +83,7 @@ export default function Tab({
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
 
-  const openTab = () => chrome.tabs.create({ url, active, pinned });
+  const openTab = () => chrome.tabs.create({ url, active, pinned }, () => "");
 
   const closeTab = () => {
     if (groupIndex > 0) {
@@ -98,7 +98,7 @@ export default function Tab({
         dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
       }
     } else {
-      tabId && chrome.tabs.remove(tabId);
+      tabId && chrome.tabs.remove(tabId, () => "");
     }
   };
 

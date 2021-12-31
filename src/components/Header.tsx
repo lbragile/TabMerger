@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { saveAs } from "file-saver";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Dropdown, { IDropdown } from "./Dropdown";
@@ -11,7 +10,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import FILTERS_CREATORS from "~/store/actions/filter";
 import HEADER_CREATORS from "~/store/actions/header";
-
+import { createActiveTab } from "~/utils/helper";
 
 const Flex = styled.div`
   display: flex;
@@ -126,79 +125,49 @@ export default function Header(): JSX.Element {
     }
   }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
 
-  const aboutModalHandler = () => {
+  const modalDetailsHandler = (args: Omit<IModal, "setVisible">) => {
     setShowModal(true);
     setShowDropdown(false);
-    setModalDetails({ title: "About TabMerger", type: "about", closeText: "Close" });
-  };
-
-  const importHandler = () => {
-    setShowModal(true);
-    setShowDropdown(false);
-    setModalDetails({ title: "Import", type: "import", closeText: "Cancel" });
-  };
-
-  const exportModalHandler = useCallback(() => {
-    setShowModal(true);
-    setShowDropdown(false);
-    setModalDetails({
-      title: "Export",
-      type: "export",
-      closeText: "Close",
-      saveText: "Save File",
-      save: () => {
-        // TODO move logic inside the Export
-        // JSON - application/json
-        // CSV - text/csv
-        // HTML - text/html
-        // Markdown - text/plain
-        // Text - text/plain
-        const blob = new Blob([JSON.stringify({ active, available }, null, 2)], { type: "application/json" });
-        saveAs(blob, `TabMerger Export - ${new Date().toTimeString()}`);
-      }
-    });
-  }, [active, available]);
-
-  const settingsHandler = () => {
-    setShowModal(true);
-    setShowDropdown(false);
-    setModalDetails({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" });
+    setModalDetails(args);
   };
 
   const settingsItems = useMemo(() => {
     return [
-      { text: "Import", handler: importHandler },
+      { text: "Import", handler: () => modalDetailsHandler({ title: "Import", type: "import", closeText: "Cancel" }) },
       {
         text: "Export",
-        handler: exportModalHandler
+        handler: () =>
+          modalDetailsHandler({ title: "Export", type: "export", closeText: "Close", saveText: "Save File" })
       },
       { text: "Sync", handler: () => console.warn("WIP"), isDisabled: true },
       { text: "divider" },
-      { text: "Settings", handler: settingsHandler },
+      {
+        text: "Settings",
+        handler: () => modalDetailsHandler({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" })
+      },
       {
         text: "Help",
-        handler: () => chrome.tabs.create({ url: "https://groups.google.com/g/tabmerger", active: true })
+        handler: () => createActiveTab("https://groups.google.com/g/tabmerger")
       },
       { text: "divider" },
       {
         text: "Rate",
         handler: () =>
-          chrome.tabs.create({
-            url: "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews/",
-            active: true
-          })
+          createActiveTab(
+            "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews/"
+          )
       },
       {
         text: "Donate",
-        handler: () => chrome.tabs.create({ url: process.env.REACT_APP_PAYPAL_URL, active: true })
+        handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? "chrome://newtab")
       },
       { text: "divider" },
       {
         text: "About",
-        handler: aboutModalHandler
+        handler: () => modalDetailsHandler({ title: "About TabMerger", type: "about", closeText: "Close" })
       }
     ] as IDropdown["items"];
-  }, [exportModalHandler]);
+  }, []);
 
   return (
     <>

@@ -4,6 +4,8 @@ import styled, { css } from "styled-components";
 
 import Selector from "./Selector";
 
+import { createActiveTab } from "~/utils/helper";
+
 const DetailsGrid = styled.div`
   display: grid;
   grid-template-columns: max-content 60%;
@@ -74,8 +76,6 @@ const extensionId = chrome.runtime.id;
 const TABMERGER_DEMO_SITE = "https://lbragile.github.io/TabMerger-Extension/";
 const EXTENSION_PAGE_LINK = `chrome://extensions?id=${extensionId}`;
 const TOS_LINK = "https://lbragile.github.io/TabMerger-Extension/terms";
-
-const handleLinkClick = (url: string) => chrome.tabs.create({ url, active: true }, () => "");
 
 interface ILicenseName {
   title: string;
@@ -148,8 +148,8 @@ export default function About(): JSX.Element {
             title={TABMERGER_DEMO_SITE}
             role="link"
             tabIndex={0}
-            onClick={() => handleLinkClick(TABMERGER_DEMO_SITE)}
-            onKeyPress={({ key }) => key === "Enter" && handleLinkClick(TABMERGER_DEMO_SITE)}
+            onClick={() => createActiveTab(TABMERGER_DEMO_SITE)}
+            onKeyPress={({ key }) => key === "Enter" && createActiveTab(TABMERGER_DEMO_SITE)}
           >
             TabMerger v{version}
           </StyledLink>
@@ -174,8 +174,8 @@ export default function About(): JSX.Element {
             tabIndex={0}
             role="link"
             title={EXTENSION_PAGE_LINK}
-            onClick={() => handleLinkClick(EXTENSION_PAGE_LINK)}
-            onKeyPress={({ key }) => key === "Enter" && handleLinkClick(EXTENSION_PAGE_LINK)}
+            onClick={() => createActiveTab(EXTENSION_PAGE_LINK)}
+            onKeyPress={({ key }) => key === "Enter" && createActiveTab(EXTENSION_PAGE_LINK)}
           >
             {extensionId}
           </StyledLink>
@@ -195,8 +195,8 @@ export default function About(): JSX.Element {
                 tabIndex={0}
                 role="link"
                 title={name.url}
-                onClick={() => handleLinkClick(name.url)}
-                onKeyPress={({ key }) => key === "Enter" && handleLinkClick(name.url)}
+                onClick={() => createActiveTab(name.url)}
+                onKeyPress={({ key }) => key === "Enter" && createActiveTab(name.url)}
               >
                 {name.title}
               </StyledLink>
@@ -208,8 +208,8 @@ export default function About(): JSX.Element {
                 tabIndex={0}
                 role="link"
                 title={license.url}
-                onClick={() => handleLinkClick(license.url)}
-                onKeyPress={({ key }) => key === "Enter" && handleLinkClick(license.url)}
+                onClick={() => createActiveTab(license.url)}
+                onKeyPress={({ key }) => key === "Enter" && createActiveTab(license.url)}
               >
                 {license.title}
               </StyledLink>
@@ -228,8 +228,8 @@ export default function About(): JSX.Element {
             title={TOS_LINK}
             role="link"
             tabIndex={0}
-            onClick={() => handleLinkClick(TOS_LINK)}
-            onKeyPress={({ key }) => key === "Enter" && handleLinkClick(TOS_LINK)}
+            onClick={() => createActiveTab(TOS_LINK)}
+            onKeyPress={({ key }) => key === "Enter" && createActiveTab(TOS_LINK)}
           >
             Terms and Conditions
           </StyledLink>
