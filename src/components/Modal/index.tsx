@@ -8,6 +8,10 @@ import Export from "./Export";
 import Import from "./Import";
 import Settings from "./Settings";
 
+import { useDispatch } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { IGroupItemState } from "~/store/reducers/groups";
+
 type TModalType = "about" | "settings" | "import" | "export";
 
 export interface IModal {
@@ -85,8 +89,22 @@ const Button = styled.button<{ $primary?: boolean }>`
 `;
 
 export default function Modal({ title, type, closeText, saveText, setVisible }: IModal): JSX.Element {
-  const hide = () => setVisible(false);
+  const dispatch = useDispatch();
+
   const [file, setFile] = useState<File | null>(null);
+  const [uploadedText, setUploadedText] = useState("");
+
+  const hide = () => setVisible(false);
+
+  const handleSave = () => {
+    if (type === "export" && file) {
+      saveAs(file);
+    } else if (type === "import") {
+      const groups = (JSON.parse(uploadedText) as { available: IGroupItemState[] }).available;
+      dispatch(GROUPS_CREATORS.updateAvailable(groups));
+      hide();
+    }
+  };
 
   return (
     <>
@@ -109,12 +127,12 @@ export default function Modal({ title, type, closeText, saveText, setVisible }: 
 
         {type === "about" && <About />}
         {type === "settings" && <Settings />}
-        {type === "import" && <Import />}
+        {type === "import" && <Import uploadedText={uploadedText} setUploadedText={setUploadedText} />}
         {type === "export" && <Export setFile={setFile} />}
 
         <FooterRow>
-          {saveText && (
-            <Button onClick={() => file && saveAs(file)} $primary>
+          {saveText && ((type === "export" && file) || (type === "import" && uploadedText !== "")) && (
+            <Button onClick={handleSave} $primary>
               {saveText}
             </Button>
           )}

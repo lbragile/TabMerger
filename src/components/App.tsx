@@ -14,7 +14,8 @@ import {
   faCopy,
   faAngleDown,
   faAngleUp,
-  faCheckCircle
+  faCheckCircle,
+  faUpload
 } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -112,7 +113,8 @@ library.add(
   faCopy,
   faAngleDown,
   faAngleUp,
-  faCheckCircle
+  faCheckCircle,
+  faUpload
 );
 
 export default App;

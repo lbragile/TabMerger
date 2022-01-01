@@ -8,6 +8,7 @@
     "Bragilevsky",
     "camelcase",
     "dotenv",
+    "dropzone",
     "fontawesome",
     "fortawesome",
     "lbragile",
@@ -26,11 +27,5 @@
     "Vitaly",
     "webextensions"
   ],
-  "ignorePaths": [
-    "node_modules/**",
-    "coverage/**",
-    "docs/**",
-    "build/**",
-    "dist/**"
-  ]
+  "ignorePaths": ["node_modules/**", "coverage/**", "docs/**", "build/**", "dist/**", "pnpm-lock.yaml"]
 }

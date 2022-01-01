@@ -12,6 +12,7 @@
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
+    "react-dropzone": "^11.4.2",
     "react-multi-select-component": "^4.1.15",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2"
@@ -28,7 +29,7 @@
     "@types/chrome": "^0.0.174",
     "@types/express": "^4.17.13",
     "@types/file-saver": "^2.0.4",
-    "@types/node": "^17.0.5",
+    "@types/node": "^17.0.6",
     "@types/react": "^17.0.38",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.11",

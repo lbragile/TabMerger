@@ -135,7 +135,8 @@ export default function Header(): JSX.Element {
     return [
       {
         text: "Import",
-        handler: () => modalDetailsHandler({ title: "TabMerger Import", type: "import", closeText: "Cancel" })
+        handler: () =>
+          modalDetailsHandler({ title: "TabMerger Import", type: "import", closeText: "Cancel", saveText: "Import" })
       },
       {
         text: "Export",
