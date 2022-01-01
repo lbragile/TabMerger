@@ -6,7 +6,6 @@ import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
 import GROUPS_CREATORS from "~/store/actions/groups";
 import { sortWindowsByFocus } from "~/utils/helper";
 
-
 export default function useUpdateWindows(): void {
   const dispatch = useDispatch();
 

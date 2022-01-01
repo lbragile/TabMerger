@@ -16,6 +16,8 @@ const lintOpts = {
   failOnError: false
 };
 
+const configFile = path.join(__dirname, "tsconfig.json");
+
 module.exports = {
   entry: {
     popup: path.resolve(__dirname, "../src/index.tsx"),
@@ -59,7 +61,7 @@ module.exports = {
         test: /\.tsx?$/,
         loader: "ts-loader",
         options: {
-          configFile: path.join(__dirname, "tsconfig.json")
+          configFile
         },
         exclude: /node_modules/
       },
@@ -78,7 +80,7 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
-    plugins: [new TsconfigPathsPlugin({ configFile: "./config/tsconfig.json" })]
+    plugins: [new TsconfigPathsPlugin({ configFile })]
   },
   stats: isProd ? "normal" : "minimal",
   mode: isProd ? "production" : "development",

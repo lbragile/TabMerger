@@ -9,7 +9,6 @@ import useContainerHeight from "~/hooks/useContainerHeight";
 import { useSelector } from "~/hooks/useRedux";
 import { Scrollbar } from "~/styles/Scrollbar";
 
-
 const GroupsContainer = styled(Scrollbar)<{ $height: number; $dragging: boolean }>`
   display: flex;
   flex-direction: column;

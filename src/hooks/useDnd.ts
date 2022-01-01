@@ -8,7 +8,6 @@ import DND_CREATORS from "~/store/actions/dnd";
 import GROUPS_CREATORS from "~/store/actions/groups";
 import { toggleWindowTabsVisibility } from "~/utils/helper";
 
-
 export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivElement | null>) {
   const dispatch = useDispatch();
 

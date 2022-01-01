@@ -49,6 +49,11 @@ export function getReadableTimestamp(timestamp: number): string {
   return `Updated ${parts.slice(1, 4).join(" ")} ${parts[4]} ${postfix}`;
 }
 
+/**
+ * While dragging a window, this hides its tabs to provide a consistent UI/UX regardless ...
+ * ... of the number of tabs in the window.
+ * Upon dragend, the tabs are re-shown
+ */
 export const toggleWindowTabsVisibility = (draggableId: string, show: boolean): void => {
   const droppableId = draggableId.split("-").slice(0, 2).join("-");
   const elem = document.querySelector(
@@ -73,3 +78,9 @@ export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
 export function createActiveTab(url: string) {
   chrome.tabs.create({ url, active: true }, () => "");
 }
+
+/**
+ * Replaces all <tag> instances with &lt;tag&gt; to avoid breaking document ...
+ * ... structure in exported markdown & html files
+ */
+export const formatHtml = (str?: string) => str?.replace(/<([^>]*)>/g, "&lt;$1&gt;");

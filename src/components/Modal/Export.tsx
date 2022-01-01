@@ -8,7 +8,7 @@ import Selector from "./Selector";
 import { useSelector } from "~/hooks/useRedux";
 import { Note } from "~/styles/Note";
 import { StyledLink } from "~/styles/StyledLink";
-import { createActiveTab } from "~/utils/helper";
+import { createActiveTab, formatHtml } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`
   display: none;
@@ -183,7 +183,9 @@ export default function Export({ setFile }: IExport): JSX.Element {
     selectedGroups.forEach(({ name, windows }, i) => {
       outputStr += `${i > 0 ? "\n" : ""}## ${name}\n`;
       windows.forEach(({ tabs }, j) => {
-        outputStr += `\n### Window ${j + 1}\n\n` + (tabs ? tabs.map((t) => `- [${t.title}](${t.url})\n`).join("") : "");
+        outputStr +=
+          `\n### Window ${j + 1}\n\n` +
+          (tabs ? tabs.map((t) => `- [${formatHtml(t.title)}](${t.url})\n`).join("") : "");
       });
     });
 
@@ -207,10 +209,7 @@ export default function Export({ setFile }: IExport): JSX.Element {
                   (t) =>
                     `\t\t\t<li><img class="${t.url?.includes("github.com") ? "darken " : ""} tabmerger-icon" src=${
                       t.favIconUrl ?? "https://developer.chrome.com/images/meta/favicon-32x32.png"
-                    }><a href=${t.url} target="_blank" rel="noreferrer">${t.title?.replace(
-                      /<([^>]*)>/g,
-                      "&lt;$1&gt;"
-                    )}</a></li>\n`
+                    }><a href=${t.url} target="_blank" rel="noreferrer">${formatHtml(t.title)}</a></li>\n`
                 )
                 .join("")
             : "") +
