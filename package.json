@@ -45,7 +45,7 @@
     "cross-env": "^7.0.3",
     "cspell": "^5.14.0",
     "dotenv-webpack": "^7.0.3",
-    "eslint": "^8.5.0",
+    "eslint": "^8.6.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "2.25.3",
     "eslint-plugin-jsx-a11y": "^6.5.1",

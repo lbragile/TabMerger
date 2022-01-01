@@ -1,9 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import Selector from "./Selector";
 
+import { Note } from "~/styles/Note";
+import { StyledLink } from "~/styles/StyledLink";
 import { createActiveTab } from "~/utils/helper";
 
 const DetailsGrid = styled.div`
@@ -20,21 +22,6 @@ const DetailsGrid = styled.div`
 
 const LicenseGrid = styled(DetailsGrid)`
   grid-template-columns: auto 29ch auto;
-`;
-
-const StyledLink = styled.span<{ $color?: string; $header?: boolean }>`
-  color: ${({ $color }) => $color ?? "#0645ad"};
-  cursor: pointer;
-  ${({ $header }) =>
-    $header &&
-    css`
-      font-size: 16px;
-      font-weight: bold;
-    `}
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const Row = styled.div`
@@ -55,19 +42,6 @@ const AboutTitle = styled.div`
 
 const Logo = styled.img`
   cursor: pointer;
-`;
-
-const Note = styled.div`
-  padding: 12px;
-  background-color: #f0f0f0;
-  text-align: center;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-
-  & p {
-    opacity: 0.75;
-  }
 `;
 
 const { version, description } = chrome.runtime.getManifest();

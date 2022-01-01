@@ -1,33 +1,37 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import Selector from "./Selector";
 
 import { useSelector } from "~/hooks/useRedux";
+import { Note } from "~/styles/Note";
+import { StyledLink } from "~/styles/StyledLink";
+import { createActiveTab } from "~/utils/helper";
 
-const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean }>`
+const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`
   display: none;
   position: absolute;
   top: 16px;
   right: ${({ $overflow }) => ($overflow ? "28px" : "12px")};
-  color: #313131;
+  color: ${({ $copied }) => ($copied ? "#00b300" : "#313131")};
   cursor: pointer;
   width: 16px;
   height: 16px;
-
-  &:hover {
-    color: #616161;
-  }
+  ${({ $copied }) =>
+    !$copied &&
+    css`
+      &:hover {
+        color: #616161;
+      }
+    `}
 `;
 
 const TextAreaContainer = styled.div`
   position: relative;
-  padding: 8px;
-  width: 95%;
+  width: 100%;
   height: 250px;
-  margin: auto;
 
   &:hover {
     & ${CopyButton} {
@@ -43,6 +47,7 @@ const TextArea = styled.textarea`
   overflow-wrap: normal;
   overflow: auto;
   border: 1px solid lightgray;
+  background-color: #fafafa;
   border-radius: 0;
   padding: 8px;
   resize: none;
@@ -69,7 +74,25 @@ const CheckboxContainer = styled(Row)`
 `;
 
 const StyledMultiSelect = styled(MultiSelect)`
-  width: 175px;
+  && {
+    width: 200px;
+
+    & .dropdown-heading {
+      cursor: pointer;
+    }
+
+    & .dropdown-content .panel-content {
+      border-radius: 0;
+    }
+
+    & .dropdown-container {
+      border-radius: 0;
+
+      &:focus-within {
+        box-shadow: none;
+      }
+    }
+  }
 `;
 
 const CloseIcon = styled(FontAwesomeIcon)`
@@ -97,11 +120,14 @@ interface IExport {
   setFile: Dispatch<SetStateAction<File | null>>;
 }
 
+const EMPTY_TEXT = "Nothing to export";
+
 export default function Export({ setFile }: IExport): JSX.Element {
-  const { available, active } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups);
 
   const [activeTab, setActiveTab] = useState<"JSON" | "Text" | "Markdown" | "HTML" | "CSV">("JSON");
   const [overflow, setOverflow] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const selectOpts = useMemo(() => available.map((group) => ({ label: group.name, value: group })), [available]);
   const [selected, setSelected] = useState(selectOpts);
@@ -122,7 +148,7 @@ export default function Export({ setFile }: IExport): JSX.Element {
   // Copy button location needs to be adjusted depending on the vertical overflow scrollbar visibility
   useEffect(() => {
     setOverflow(!!textAreaRef.current && textAreaRef.current.scrollHeight > textAreaRef.current.clientHeight);
-  }, [activeTab, keepURLs, keepTitles]);
+  }, [activeTab, keepURLs, keepTitles, selectedGroups]);
 
   // Each time the dropdown selection changes, need to update the currently "available" group list
   useEffect(() => {
@@ -131,7 +157,7 @@ export default function Export({ setFile }: IExport): JSX.Element {
   }, [selected, available]);
 
   const getRegularText = useCallback(() => {
-    if (!keepTitles && !keepURLs) return "Nothing to export";
+    if (!keepTitles && !keepURLs) return EMPTY_TEXT;
 
     let outputStr = "";
     selectedGroups.forEach(({ name, windows }, i) => {
@@ -145,7 +171,6 @@ export default function Export({ setFile }: IExport): JSX.Element {
                   (t) => `${keepTitles ? `${t.title}\n` : ""}${keepURLs ? `${t.url}\n${keepTitles ? "\n" : ""}` : ""}`
                 )
                 .join("")
-                .replace(/^,/gm, "")
             : "");
       });
     });
@@ -155,17 +180,10 @@ export default function Export({ setFile }: IExport): JSX.Element {
 
   const getMarkdownText = useCallback(() => {
     let outputStr = "";
-    selectedGroups.forEach(({ name, windows }) => {
-      outputStr += `\n## ${name}\n`;
+    selectedGroups.forEach(({ name, windows }, i) => {
+      outputStr += `${i > 0 ? "\n" : ""}## ${name}\n`;
       windows.forEach(({ tabs }, j) => {
-        outputStr +=
-          `\n### Window ${j + 1}\n\n` +
-          (tabs
-            ? tabs
-                .map((t) => `- [${t.title}](${t.url})\n`)
-                .join("")
-                .replace(/^,/gm, "")
-            : "");
+        outputStr += `\n### Window ${j + 1}\n\n` + (tabs ? tabs.map((t) => `- [${t.title}](${t.url})\n`).join("") : "");
       });
     });
 
@@ -176,10 +194,60 @@ export default function Export({ setFile }: IExport): JSX.Element {
     return outputStr;
   }, [keepURLs, selectedGroups]);
 
-  const getHTMLText = useCallback(() => "HTML TEXT", []);
+  const getHTMLText = useCallback(() => {
+    let outputStr = "";
+    selectedGroups.forEach(({ name, windows }, i) => {
+      outputStr += `${i > 0 ? "\n" : ""}\t\t<h1>${name}</h1>\n`;
+      windows.forEach(({ tabs }, j) => {
+        outputStr +=
+          `\t\t<h2>Window ${j + 1}</h2>\n\t\t<ul>\n` +
+          (tabs
+            ? tabs
+                .map(
+                  (t) =>
+                    `\t\t\t<li><img class="${t.url?.includes("github.com") ? "darken " : ""} tabmerger-icon" src=${
+                      t.favIconUrl ?? "https://developer.chrome.com/images/meta/favicon-32x32.png"
+                    }><a href=${t.url} target="_blank" rel="noreferrer">${t.title?.replace(
+                      /<([^>]*)>/g,
+                      "&lt;$1&gt;"
+                    )}</a></li>\n`
+                )
+                .join("")
+            : "") +
+          "\t\t</ul>\n";
+      });
+    });
+
+    return (
+      "<!DOCTYPE html>\n" +
+      '<html lang="en">\n' +
+      "\t<head>\n" +
+      '\t\t<meta charset="utf-8" />\n' +
+      '\t\t<meta name="viewport" content="width=device-width, initial-scale=1" />\n' +
+      '\t\t<meta name="theme-color" content="#000000" />\n' +
+      '\t\t<meta name="description" content="Merges your tabs into one location to save memory usage and increase your productivity." />\n' +
+      "\t\t<title>TabMerger</title>\n" +
+      "\t\t<style>\n" +
+      "\t\t\tbody { font-family:helvetica,arial,sans-serif; font-size: 12px; }\n" +
+      "\t\t\th1 { background:#f0f0f0; opacity: 0.75; padding:8px; font-size: 16px; }\n" +
+      "\t\t\th2 { margin-left:20px; margin-top:16px; font-size: 14px; }\n" +
+      "\t\t\tul { list-style-type: none; white-space: nowrap; display: flex; flex-direction: column; gap: 8px; margin: 0; }\n" +
+      "\t\t\tli { display: flex; flex-direction: row; align-items: center; }\n" +
+      "\t\t\ta { text-decoration: none; color: black; }\n" +
+      "\t\t\ta:hover { text-decoration: underline; }\n" +
+      "\t\t\t.tabmerger-icon { height: 14px; width: 14px; margin-right: 12px; }\n" +
+      "\t\t\t.darken { filter: brightness(0); }\n" +
+      "\t\t</style>\n" +
+      "\t</head>\n" +
+      "\t<body>\n" +
+      outputStr +
+      "\t</body>\n" +
+      "</html>"
+    );
+  }, [selectedGroups]);
 
   const getCSVText = useCallback(() => {
-    if (!keepTitles && !keepURLs) return "Nothing to export";
+    if (!keepTitles && !keepURLs) return EMPTY_TEXT;
 
     let outputStr = "Group Name,Window #,Tab Title,Tab URL\n";
     selectedGroups.forEach(({ name, windows }) => {
@@ -193,7 +261,6 @@ export default function Export({ setFile }: IExport): JSX.Element {
                   }\n`
               )
               .join("")
-              .replace(/^,/gm, "")
           : "";
       });
     });
@@ -201,19 +268,19 @@ export default function Export({ setFile }: IExport): JSX.Element {
     return outputStr;
   }, [keepTitles, keepURLs, selectedGroups]);
 
-  const text = useMemo(
-    () =>
-      activeTab === "JSON"
-        ? JSON.stringify({ active, available: selectedGroups }, null, 4)
-        : activeTab === "Text"
-        ? getRegularText()
-        : activeTab === "Markdown"
-        ? getMarkdownText()
-        : activeTab === "HTML"
-        ? getHTMLText()
-        : getCSVText(),
-    [activeTab, active, selectedGroups, getRegularText, getMarkdownText, getHTMLText, getCSVText]
-  );
+  const text = useMemo(() => {
+    if (selectedGroups.length === 0) return EMPTY_TEXT;
+
+    return activeTab === "JSON"
+      ? JSON.stringify({ available: selectedGroups }, null, 4)
+      : activeTab === "Text"
+      ? getRegularText()
+      : activeTab === "Markdown"
+      ? getMarkdownText()
+      : activeTab === "HTML"
+      ? getHTMLText()
+      : getCSVText();
+  }, [activeTab, selectedGroups, getRegularText, getMarkdownText, getHTMLText, getCSVText]);
 
   const handleCheckboxChange = (text: string) => {
     const origCheckbox = [...checkbox];
@@ -221,18 +288,22 @@ export default function Export({ setFile }: IExport): JSX.Element {
   };
 
   useEffect(() => {
-    const [type, extension] =
-      activeTab === "JSON"
-        ? ["application/json", ".json"]
-        : activeTab === "Text"
-        ? ["text/plain", ".txt"]
-        : activeTab === "Markdown"
-        ? ["text/markdown", ".md"]
-        : activeTab === "HTML"
-        ? ["text/html", ".html"]
-        : ["text/csv", ".csv"];
+    if (text !== EMPTY_TEXT) {
+      const [type, extension] =
+        activeTab === "JSON"
+          ? ["application/json", ".json"]
+          : activeTab === "Text"
+          ? ["text/plain", ".txt"]
+          : activeTab === "Markdown"
+          ? ["text/markdown", ".md"]
+          : activeTab === "HTML"
+          ? ["text/html", ".html"]
+          : ["text/csv", ".csv"];
 
-    setFile(new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type }));
+      setFile(new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type }));
+    } else {
+      setFile(null);
+    }
   }, [setFile, text, activeTab]);
 
   return (
@@ -253,7 +324,7 @@ export default function Export({ setFile }: IExport): JSX.Element {
                   checked={activeTab === "JSON" || checked}
                   onChange={() => handleCheckboxChange(text)}
                   disabled={
-                    (["Titles", "URLs"].includes(text) && activeTab === "JSON") ||
+                    (["Titles", "URLs"].includes(text) && ["JSON", "HTML"].includes(activeTab)) ||
                     (text === "Titles" && activeTab === "Markdown")
                   }
                 />
@@ -277,15 +348,38 @@ export default function Export({ setFile }: IExport): JSX.Element {
 
       <TextAreaContainer>
         <CopyButton
-          icon="copy"
+          icon={copied ? "check-circle" : "copy"}
           size="2x"
           $overflow={overflow}
-          title="Copy to Clipboard"
-          onClick={() => navigator.clipboard.writeText(text)}
+          $copied={copied}
+          title={`${copied ? "Copied" : "Copy"} to Clipboard`}
+          onClick={() => {
+            navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 3000);
+          }}
         />
 
         <TextArea ref={textAreaRef} readOnly value={text} />
       </TextAreaContainer>
+
+      <Note>
+        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+
+        <div>
+          <p>
+            Files are saved to your{" "}
+            <StyledLink
+              role="link"
+              tabIndex={0}
+              onClick={() => createActiveTab("chrome://downloads")}
+              onKeyPress={({ key }) => key === "Enter" && createActiveTab("chrome://downloads")}
+            >
+              Downloads Folder
+            </StyledLink>
+          </p>
+        </div>
+      </Note>
     </>
   );
 }

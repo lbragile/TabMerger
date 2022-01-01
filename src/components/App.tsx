@@ -13,7 +13,8 @@ import {
   faWindowRestore,
   faCopy,
   faAngleDown,
-  faAngleUp
+  faAngleUp,
+  faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -30,7 +31,6 @@ import useUpdateInfo from "~/hooks/useUpdateInfo";
 import useUpdateWindows from "~/hooks/useUpdateWindows";
 import { GlobalStyle } from "~/styles/Global";
 import Theme from "~/styles/Theme";
-
 
 const Container = styled.div`
   width: 780px;
@@ -111,7 +111,8 @@ library.add(
   faExclamationCircle,
   faCopy,
   faAngleDown,
-  faAngleUp
+  faAngleUp,
+  faCheckCircle
 );
 
 export default App;

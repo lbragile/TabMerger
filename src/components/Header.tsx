@@ -133,11 +133,14 @@ export default function Header(): JSX.Element {
 
   const settingsItems = useMemo(() => {
     return [
-      { text: "Import", handler: () => modalDetailsHandler({ title: "Import", type: "import", closeText: "Cancel" }) },
+      {
+        text: "Import",
+        handler: () => modalDetailsHandler({ title: "TabMerger Import", type: "import", closeText: "Cancel" })
+      },
       {
         text: "Export",
         handler: () =>
-          modalDetailsHandler({ title: "Export", type: "export", closeText: "Close", saveText: "Save File" })
+          modalDetailsHandler({ title: "TabMerger Export", type: "export", closeText: "Close", saveText: "Save File" })
       },
       { text: "Sync", handler: () => console.warn("WIP"), isDisabled: true },
       { text: "divider" },

@@ -36,7 +36,7 @@ const CloseIcon = styled(FontAwesomeIcon)`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   width: 500px;
   position: absolute;
   top: 32px;
@@ -118,6 +118,7 @@ export default function Modal({ title, type, closeText, saveText, setVisible }: 
               {saveText}
             </Button>
           )}
+
           <Button onClick={hide}>{closeText}</Button>
         </FooterRow>
       </Container>
