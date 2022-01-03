@@ -1,15 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Dropdown, { IDropdown } from "./Dropdown";
-import Modal, { IModal } from "./Modal";
+import Modal from "./Modal";
 import SearchResult from "./SearchResult";
 
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import FILTERS_CREATORS from "~/store/actions/filter";
 import HEADER_CREATORS from "~/store/actions/header";
+import MODAL_CREATORS from "~/store/actions/modal";
+import { IModalState } from "~/store/reducers/modal";
 import { createActiveTab } from "~/utils/helper";
 
 const Flex = styled.div`
@@ -91,11 +93,6 @@ export default function Header(): JSX.Element {
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalDetails, setModalDetails] = useState<Omit<IModal, "setVisible">>({
-    title: "About TabMerger",
-    type: "about",
-    closeText: "Close"
-  });
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -125,11 +122,14 @@ export default function Header(): JSX.Element {
     }
   }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
 
-  const modalDetailsHandler = (args: Omit<IModal, "setVisible">) => {
-    setShowModal(true);
-    setShowDropdown(false);
-    setModalDetails(args);
-  };
+  const modalDetailsHandler = useCallback(
+    (args: IModalState["info"]) => {
+      setShowModal(true);
+      setShowDropdown(false);
+      dispatch(MODAL_CREATORS.setModalInfo(args));
+    },
+    [dispatch]
+  );
 
   const settingsItems = useMemo(() => {
     return [
@@ -171,7 +171,7 @@ export default function Header(): JSX.Element {
         handler: () => modalDetailsHandler({ title: "About TabMerger", type: "about", closeText: "Close" })
       }
     ] as IDropdown["items"];
-  }, []);
+  }, [modalDetailsHandler]);
 
   return (
     <>
@@ -241,7 +241,7 @@ export default function Header(): JSX.Element {
 
       {typing && filterChoice === "group" && <SearchResult />}
 
-      {showModal && <Modal {...modalDetails} setVisible={setShowModal} />}
+      {showModal && <Modal setVisible={setShowModal} />}
     </>
   );
 }

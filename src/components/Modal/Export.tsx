@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
 import Selector from "./Selector";
 
-import { useSelector } from "~/hooks/useRedux";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import MODAL_CREATORS from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
 import { StyledLink } from "~/styles/StyledLink";
 import { createActiveTab, formatHtml } from "~/utils/helper";
@@ -116,13 +117,10 @@ const ArrowIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-interface IExport {
-  setFile: Dispatch<SetStateAction<File | null>>;
-}
-
 const EMPTY_TEXT = "Nothing to export";
 
-export default function Export({ setFile }: IExport): JSX.Element {
+export default function Export(): JSX.Element {
+  const dispatch = useDispatch();
   const { available } = useSelector((state) => state.groups);
 
   const [activeTab, setActiveTab] = useState<"JSON" | "Text" | "Markdown" | "HTML" | "CSV">("JSON");
@@ -160,8 +158,8 @@ export default function Export({ setFile }: IExport): JSX.Element {
     if (!keepTitles && !keepURLs) return EMPTY_TEXT;
 
     let outputStr = "";
-    selectedGroups.forEach(({ name, windows }, i) => {
-      outputStr += `${i > 0 ? "\n" : ""}${name}\n${lineSeparator("=")}`;
+    selectedGroups.forEach(({ name, windows }) => {
+      outputStr += `${name}\n${lineSeparator("=")}`;
       windows.forEach(({ tabs }, j) => {
         outputStr +=
           `Window ${j + 1}\n${lineSeparator("-")}` +
@@ -299,11 +297,13 @@ export default function Export({ setFile }: IExport): JSX.Element {
           ? ["text/html", ".html"]
           : ["text/csv", ".csv"];
 
-      setFile(new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type }));
+      const newFile = new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type });
+
+      dispatch(MODAL_CREATORS.updateExportFile(newFile));
     } else {
-      setFile(null);
+      dispatch(MODAL_CREATORS.updateExportFile(null));
     }
-  }, [setFile, text, activeTab]);
+  }, [dispatch, text, activeTab]);
 
   return (
     <>

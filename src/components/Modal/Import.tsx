@@ -1,10 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { nanoid } from "nanoid";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import styled, { css } from "styled-components";
 
 import Selector from "./Selector";
 
+import { useDebounce } from "~/hooks/useDebounce";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import MODAL_CREATORS from "~/store/actions/modal";
+import { IGroupItemState } from "~/store/reducers/groups";
 import { Note } from "~/styles/Note";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
@@ -31,7 +36,7 @@ const Column = styled.div`
 `;
 
 const StyledTextArea = styled.textarea`
-  height: 350px;
+  height: 300px;
   width: 400px;
   padding: 8px;
   resize: none;
@@ -54,25 +59,114 @@ const ErrorMessage = styled.p`
 
 const ERROR_TEXT = "Something is wrong with this file, please try another one";
 
-interface IImport {
-  uploadedText: string;
-  setUploadedText: Dispatch<SetStateAction<string>>;
-}
+export default function Import(): JSX.Element {
+  const dispatch = useDispatch();
 
-export default function Import({ uploadedText, setUploadedText }: IImport): JSX.Element {
+  const {
+    import: { type: importType }
+  } = useSelector((state) => state.modal);
+
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
+  const [currentText, setCurrentText] = useState("");
+
+  const debouncedCurrentText = useDebounce(currentText, 250);
+
+  // Reset the uploaded text & formatted groups if the activeTab is changed
+  useEffect(() => {
+    if (activeTab === "File") {
+      setCurrentText("");
+      dispatch(MODAL_CREATORS.updateImportFormattedGroups([]));
+    }
+  }, [dispatch, activeTab]);
+
+  useEffect(() => {
+    if (debouncedCurrentText !== "") {
+      let groups: IGroupItemState[] = [];
+
+      if (importType === "json") {
+        groups = JSON.parse(debouncedCurrentText).available;
+      } else if (importType === "plain") {
+        const matchStr = debouncedCurrentText.match(/(.+\n={3,}\n\n(.+\n-{3,}\n\n(.+\n.+:\/\/.+(\n\n)?)+)+)+/g)?.[0];
+        const groupsArr = matchStr?.split(/(?<=.+?:\/\/.+?\n)(\n(?=.+?\n=+\n))/g).filter((item) => item !== "\n");
+
+        groupsArr?.forEach((item) => {
+          const infoArr = item.split("\n").filter((x) => x);
+          const newEntry: IGroupItemState = {
+            name: infoArr[0],
+            id: nanoid(10),
+            color: "rgb(128 128 128)",
+            updatedAt: Date.now(),
+            windows: [],
+            permanent: false,
+            info: "0T | 0W"
+          };
+
+          const matches = infoArr
+            .slice(2)
+            .join("\n")
+            .matchAll(/.+\n-+(?<tabsStr>(\n.+?\n.+?:\/\/.+)+)/g);
+
+          for (const match of matches) {
+            const { tabsStr } = match.groups as { tabsStr: string };
+            const tabs = tabsStr.split(/(?<=.+:\/\/.+)\n/g).map((item) => {
+              const [title, url] = item.split("\n").filter((x) => x);
+
+              return {
+                title,
+                url,
+                favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`,
+                active: false,
+                audible: false,
+                autoDiscardable: true,
+                discarded: false,
+                groupId: -1,
+                highlighted: false,
+                incognito: false,
+                index: 0,
+                pinned: false,
+                selected: false,
+                windowId: 1
+              };
+            });
+
+            newEntry.windows.push({
+              alwaysOnTop: false,
+              focused: false,
+              incognito: false,
+              state: "maximized",
+              type: "normal",
+              starred: false,
+              tabs
+            });
+          }
+
+          groups.push(newEntry);
+        });
+      }
+
+      dispatch(MODAL_CREATORS.updateImportFormattedGroups(groups));
+    }
+  }, [dispatch, debouncedCurrentText, importType]);
 
   // Get uploaded text & move to the next screen for confirmation
   const onDropAccepted = useCallback(
     async ([file]: File[]) => {
-      const { type } = file;
-      const text =
-        type === "application/json" ? JSON.stringify(await new Response(file).json(), null, 4) : await file.text();
+      const { name } = file;
+      const type = /\.json$/.test(name)
+        ? "json"
+        : /\.csv$/.test(name)
+        ? "csv"
+        : /\.txt$/.test(name)
+        ? "plain"
+        : "markdown";
 
-      setUploadedText(text);
+      const text = type === "json" ? JSON.stringify(await new Response(file).json(), null, 4) : await file.text();
+
+      dispatch(MODAL_CREATORS.updateImportType(type));
+      setCurrentText(text);
       setActiveTab("Text");
     },
-    [setUploadedText]
+    [dispatch]
   );
 
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject, fileRejections } = useDropzone({
@@ -140,11 +234,19 @@ export default function Import({ uploadedText, setUploadedText }: IImport): JSX.
           </Note>
         </>
       ) : (
-        <StyledTextArea
-          placeholder="Enter JSON, markdown, CSV, or plain text here..."
-          value={uploadedText}
-          onChange={(e) => setUploadedText(e.target.value)}
-        />
+        <>
+          <StyledTextArea
+            placeholder="Enter JSON, markdown, CSV, or plain text here..."
+            value={currentText}
+            onChange={(e) => setCurrentText(e.target.value)}
+          />
+
+          <Note>
+            <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+
+            <p>Each Tab must have an associated URL (eg. https://www.google.com)</p>
+          </Note>
+        </>
       )}
     </>
   );

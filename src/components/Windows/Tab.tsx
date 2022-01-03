@@ -61,6 +61,8 @@ interface ITab {
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }
 
+const DEFAULT_FAVICON_URL = "https://developer.chrome.com/images/meta/favicon-32x32.png";
+
 export default function Tab({
   favIconUrl,
   title,
@@ -116,7 +118,11 @@ export default function Tab({
       <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
         <TabIcon
           $darken={url?.includes("github.com")}
-          src={!favIconUrl ? "https://developer.chrome.com/images/meta/favicon-32x32.png" : favIconUrl}
+          src={!favIconUrl ? DEFAULT_FAVICON_URL : favIconUrl}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = DEFAULT_FAVICON_URL;
+          }}
           alt="Favicon"
           {...dragHandleProps}
         />

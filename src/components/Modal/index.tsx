@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 
 import About from "./About";
@@ -8,19 +8,8 @@ import Export from "./Export";
 import Import from "./Import";
 import Settings from "./Settings";
 
-import { useDispatch } from "~/hooks/useRedux";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
 import GROUPS_CREATORS from "~/store/actions/groups";
-import { IGroupItemState } from "~/store/reducers/groups";
-
-type TModalType = "about" | "settings" | "import" | "export";
-
-export interface IModal {
-  title: string;
-  type: TModalType;
-  closeText: string;
-  saveText?: string;
-  setVisible: Dispatch<SetStateAction<boolean>>;
-}
 
 const CloseIconContainer = styled.span`
   padding: 4px 8px;
@@ -88,11 +77,18 @@ const Button = styled.button<{ $primary?: boolean }>`
   }
 `;
 
-export default function Modal({ title, type, closeText, saveText, setVisible }: IModal): JSX.Element {
+export interface IModal {
+  setVisible: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function Modal({ setVisible }: IModal): JSX.Element {
   const dispatch = useDispatch();
 
-  const [file, setFile] = useState<File | null>(null);
-  const [uploadedText, setUploadedText] = useState("");
+  const {
+    info: { type, title, closeText, saveText },
+    export: { file },
+    import: { formatted }
+  } = useSelector((state) => state.modal);
 
   const hide = () => setVisible(false);
 
@@ -100,8 +96,8 @@ export default function Modal({ title, type, closeText, saveText, setVisible }: 
     if (type === "export" && file) {
       saveAs(file);
     } else if (type === "import") {
-      const groups = (JSON.parse(uploadedText) as { available: IGroupItemState[] }).available;
-      dispatch(GROUPS_CREATORS.updateAvailable(groups));
+      dispatch(GROUPS_CREATORS.updateAvailable(formatted));
+      dispatch(GROUPS_CREATORS.updateActive({ index: 0, id: formatted[0].id }));
       hide();
     }
   };
@@ -127,11 +123,11 @@ export default function Modal({ title, type, closeText, saveText, setVisible }: 
 
         {type === "about" && <About />}
         {type === "settings" && <Settings />}
-        {type === "import" && <Import uploadedText={uploadedText} setUploadedText={setUploadedText} />}
-        {type === "export" && <Export setFile={setFile} />}
+        {type === "import" && <Import />}
+        {type === "export" && <Export />}
 
         <FooterRow>
-          {saveText && ((type === "export" && file) || (type === "import" && uploadedText !== "")) && (
+          {saveText && ((type === "export" && file) || (type === "import" && formatted.length > 0)) && (
             <Button onClick={handleSave} $primary>
               {saveText}
             </Button>

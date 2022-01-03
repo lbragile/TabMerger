@@ -7,6 +7,7 @@
     "Atlassian",
     "Bragilevsky",
     "camelcase",
+    "Discardable",
     "dotenv",
     "dropzone",
     "fontawesome",
@@ -27,5 +28,12 @@
     "Vitaly",
     "webextensions"
   ],
-  "ignorePaths": ["node_modules/**", "coverage/**", "docs/**", "build/**", "dist/**", "pnpm-lock.yaml"]
+  "ignorePaths": [
+    "node_modules/**",
+    "coverage/**",
+    "docs/**",
+    "build/**",
+    "dist/**",
+    "pnpm-lock.yaml"
+  ]
 }
