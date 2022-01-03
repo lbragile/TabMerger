@@ -79,74 +79,119 @@ export default function Import(): JSX.Element {
     }
   }, [dispatch, activeTab]);
 
+  const formatPlain = useCallback((text: string) => {
+    const groups: IGroupItemState[] = [];
+
+    const matchStr = text.match(/(.+\n={3,}\n\n(.+\n-{3,}\n\n(.+\n.+:\/\/.+(\n\n)?)+)+)+/g)?.[0];
+    const groupsArr = matchStr?.split(/(?<=.+?:\/\/.+?\n)(\n(?=.+?\n=+\n))/g).filter((item) => item !== "\n");
+
+    groupsArr?.forEach((item) => {
+      const infoArr = item.split("\n").filter((x) => x);
+      const newEntry: IGroupItemState = {
+        name: infoArr[0],
+        id: nanoid(10),
+        color: "rgb(128 128 128)",
+        updatedAt: Date.now(),
+        windows: [],
+        permanent: false,
+        info: "0T | 0W"
+      };
+
+      const matches = infoArr
+        .slice(2)
+        .join("\n")
+        .matchAll(/.+\n-+(?<tabsStr>(\n.+?\n.+?:\/\/.+)+)/g);
+
+      for (const match of matches) {
+        const { tabsStr } = match.groups as { tabsStr: string };
+        const tabs = tabsStr.split(/(?<=.+:\/\/.+)\n/g).map((item) => {
+          const [title, url] = item.split("\n").filter((x) => x);
+
+          return {
+            title,
+            url,
+            favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`,
+            active: false,
+            audible: false,
+            autoDiscardable: true,
+            discarded: false,
+            groupId: -1,
+            highlighted: false,
+            incognito: false,
+            index: 0,
+            pinned: false,
+            selected: false,
+            windowId: 1
+          };
+        });
+
+        newEntry.windows.push({
+          alwaysOnTop: false,
+          focused: false,
+          incognito: false,
+          state: "maximized",
+          type: "normal",
+          starred: false,
+          tabs
+        });
+      }
+
+      groups.push(newEntry);
+    });
+
+    return groups;
+  }, []);
+
   useEffect(() => {
     if (debouncedCurrentText !== "") {
       let groups: IGroupItemState[] = [];
 
       if (importType === "json") {
         groups = JSON.parse(debouncedCurrentText).available;
+
+        // Make sure first group is not a permanent group (since `Now Open` should be the only permanent group)
+        groups[0].id = nanoid(10);
+        groups[0].permanent = false;
+        groups[0].windows.forEach((w) => (w.focused = false));
       } else if (importType === "plain") {
-        const matchStr = debouncedCurrentText.match(/(.+\n={3,}\n\n(.+\n-{3,}\n\n(.+\n.+:\/\/.+(\n\n)?)+)+)+/g)?.[0];
-        const groupsArr = matchStr?.split(/(?<=.+?:\/\/.+?\n)(\n(?=.+?\n=+\n))/g).filter((item) => item !== "\n");
+        groups = formatPlain(debouncedCurrentText);
+      } else if (importType === "markdown") {
+        // Transform the markdown into plain text format, then use the existing parser to create groups
+        const transformedGroupName = debouncedCurrentText.replace(/##\s(.+)?\n(?=\n###\s.+?\n)/g, "$1\n===\n");
+        const transformedWindowName = transformedGroupName.replace(/###\s(.+)?\n/g, "$1\n---\n");
+        const transformedTabs = transformedWindowName.replace(/-\s\[(.+)?\]\((.+)?\)\n?\n?/g, "$1\n$2\n\n");
+        groups = formatPlain(transformedTabs);
+      } else {
+        // Transform the CSV into plain text format, then use the existing parser to create groups
+        let [transformedStr, currentGroupName, currentWindowName] = ["", "", ""];
 
-        groupsArr?.forEach((item) => {
-          const infoArr = item.split("\n").filter((x) => x);
-          const newEntry: IGroupItemState = {
-            name: infoArr[0],
-            id: nanoid(10),
-            color: "rgb(128 128 128)",
-            updatedAt: Date.now(),
-            windows: [],
-            permanent: false,
-            info: "0T | 0W"
-          };
+        const csvData = debouncedCurrentText
+          .split("\n")
+          .slice(1)
+          .filter((x) => x);
 
-          const matches = infoArr
-            .slice(2)
-            .join("\n")
-            .matchAll(/.+\n-+(?<tabsStr>(\n.+?\n.+?:\/\/.+)+)/g);
+        csvData.forEach((row) => {
+          const [groupName, windowName, title, url] = row.split(/,(?=".+?")/g).map((item) => item.replace(/"/g, ""));
 
-          for (const match of matches) {
-            const { tabsStr } = match.groups as { tabsStr: string };
-            const tabs = tabsStr.split(/(?<=.+:\/\/.+)\n/g).map((item) => {
-              const [title, url] = item.split("\n").filter((x) => x);
-
-              return {
-                title,
-                url,
-                favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`,
-                active: false,
-                audible: false,
-                autoDiscardable: true,
-                discarded: false,
-                groupId: -1,
-                highlighted: false,
-                incognito: false,
-                index: 0,
-                pinned: false,
-                selected: false,
-                windowId: 1
-              };
-            });
-
-            newEntry.windows.push({
-              alwaysOnTop: false,
-              focused: false,
-              incognito: false,
-              state: "maximized",
-              type: "normal",
-              starred: false,
-              tabs
-            });
+          if (groupName !== currentGroupName) {
+            currentGroupName = groupName;
+            transformedStr += `${groupName}\n===\n\n`;
           }
 
-          groups.push(newEntry);
+          if (windowName !== currentWindowName) {
+            currentWindowName = windowName;
+            transformedStr += `${windowName}\n---\n\n`;
+          }
+
+          transformedStr += `${title}\n${url}\n\n`;
         });
+
+        groups = formatPlain(transformedStr);
       }
 
       dispatch(MODAL_CREATORS.updateImportFormattedGroups(groups));
     }
-  }, [dispatch, debouncedCurrentText, importType]);
+  }, [dispatch, debouncedCurrentText, importType, formatPlain]);
 
   // Get uploaded text & move to the next screen for confirmation
   const onDropAccepted = useCallback(

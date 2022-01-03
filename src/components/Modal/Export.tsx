@@ -253,8 +253,8 @@ export default function Export(): JSX.Element {
           ? tabs
               .map(
                 (t) =>
-                  `${name},Window ${j + 1},${keepTitles ? t.title + (keepURLs ? "," : "") : ""}${
-                    keepURLs ? t.url : ""
+                  `"${name}","Window ${j + 1}",${keepTitles ? '"' + t.title + '"' + (keepURLs ? "," : "") : ""}${
+                    keepURLs ? '"' + t.url + '"' : ""
                   }\n`
               )
               .join("")

@@ -84,6 +84,8 @@ export interface IModal {
 export default function Modal({ setVisible }: IModal): JSX.Element {
   const dispatch = useDispatch();
 
+  const { available } = useSelector((state) => state.groups);
+
   const {
     info: { type, title, closeText, saveText },
     export: { file },
@@ -96,10 +98,11 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
     if (type === "export" && file) {
       saveAs(file);
     } else if (type === "import") {
-      dispatch(GROUPS_CREATORS.updateAvailable(formatted));
+      dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...formatted]));
       dispatch(GROUPS_CREATORS.updateActive({ index: 0, id: formatted[0].id }));
-      hide();
     }
+
+    hide();
   };
 
   return (

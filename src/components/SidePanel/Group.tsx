@@ -249,6 +249,7 @@ export default function Group({
                 e.stopPropagation();
                 dispatch(GROUPS_CREATORS.deleteGroup(index));
               }}
+              onPointerDown={(e) => e.preventDefault()}
               onKeyPress={(e) => {
                 e.stopPropagation();
                 e.key === "Enter" && dispatch(GROUPS_CREATORS.deleteGroup(index));
