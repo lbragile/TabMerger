@@ -19,7 +19,7 @@ export default function useParseText(debouncedText: string) {
     const groups: IGroupItemState[] = [];
 
     const matchStr = text.match(/(.+\n+={3,}\n+(.+\n+-{3,}\n+(.+\n+.+:\/\/.+\n*)+)+)+/g)?.[0];
-    const groupsArr = matchStr?.split(/(?<=.+?:\/\/.+?\n+)(\n(?=.+?\n+=+\n))/g).filter((item) => item !== "\n");
+    const groupsArr = matchStr?.split(/(?<=.+?:\/\/.+?\n*)(\n(?=.+?\n+=+\n+))/g).filter((item) => item !== "\n");
 
     groupsArr?.forEach((item) => {
       const infoArr = item.split("\n").filter((x) => x);
@@ -28,11 +28,11 @@ export default function useParseText(debouncedText: string) {
       const matches = infoArr
         .slice(2)
         .join("\n")
-        .matchAll(/.+\n-+(?<tabsStr>(\n.+?\n.+?:\/\/.+)+)/g);
+        .matchAll(/.+\n+-+(?<tabsStr>(\n+.+?\n+.+?:\/\/.+)+)/g);
 
       for (const match of matches) {
         const { tabsStr } = match.groups as { tabsStr: string };
-        const tabs = tabsStr.split(/(?<=.+:\/\/.+)\n/g).map((item) => {
+        const tabs = tabsStr.split(/(?<=.+:\/\/.+)\n+/g).map((item) => {
           const [title, url] = item.split("\n").filter((x) => x);
 
           return createTabFromTitleAndUrl(title, url);
@@ -67,9 +67,9 @@ export default function useParseText(debouncedText: string) {
         groups = formatPlain(debouncedText);
       } else if (importType === "markdown") {
         // Transform the markdown into plain text format, then use the existing parser to create groups
-        const transformedGroupName = debouncedText.replace(/##\s(.+)?\n(?=\n###\s.+?\n)/g, "$1\n===\n");
-        const transformedWindowName = transformedGroupName.replace(/###\s(.+)?\n/g, "$1\n---\n");
-        const transformedTabs = transformedWindowName.replace(/-\s\[(.+)?\]\((.+)?\)\n?\n?/g, "$1\n$2\n\n");
+        const transformedGroupName = debouncedText.replace(/##\s(.+)?\n(?=\n*###\s.+?\n+)/g, "$1\n===\n");
+        const transformedWindowName = transformedGroupName.replace(/###\s(.+)?\n+/g, "$1\n---\n");
+        const transformedTabs = transformedWindowName.replace(/-\s\[(.+)?\]\((.+)?\)\n*/g, "$1\n$2\n\n");
         groups = formatPlain(transformedTabs);
       } else {
         // Transform the CSV into plain text format, then use the existing parser to create groups
@@ -110,7 +110,7 @@ export default function useParseText(debouncedText: string) {
   const recomputeUploadType = (value: string) => {
     let type: TImportType = "json";
     if (/.+?\n={3,}\n/.test(value)) type = "plain";
-    else if (/\n?\n?#{2,3}.+?\n/.test(value)) type = "markdown";
+    else if (/\n*#{2,3}.+?\n/.test(value)) type = "markdown";
     else if (/(".+?",?){4}\n/.test(value)) type = "csv";
 
     if (type !== importType) dispatch(MODAL_CREATORS.updateImportType(type));

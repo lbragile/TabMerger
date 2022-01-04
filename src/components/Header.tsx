@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Dropdown, { IDropdown } from "./Dropdown";
@@ -7,8 +7,8 @@ import Modal from "./Modal";
 import SearchResult from "./SearchResult";
 
 import useClickOutside from "~/hooks/useClickOutside";
+import useFilterTabs from "~/hooks/useFilterTabs";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import FILTERS_CREATORS from "~/store/actions/filter";
 import HEADER_CREATORS from "~/store/actions/header";
 import MODAL_CREATORS from "~/store/actions/modal";
 import { IModalState } from "~/store/reducers/modal";
@@ -89,7 +89,6 @@ export default function Header(): JSX.Element {
   const dispatch = useDispatch();
 
   const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
-  const { available, active } = useSelector((state) => state.groups);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -99,28 +98,7 @@ export default function Header(): JSX.Element {
 
   useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
 
-  /**
-   * For each window in the currently active group, store the matching tabs (with current filter value)
-   * @returns 2d array of tabs where each index corresponds to the matching tabs in that window
-   */
-  useEffect(() => {
-    if (typing && filterChoice === "tab") {
-      const matchingTabs: chrome.tabs.Tab[][] = [];
-
-      available[active.index].windows.forEach((window) => {
-        const matchingTabsInWindow = window.tabs?.filter((tab) =>
-          tab?.title?.toLowerCase()?.includes(inputValue.toLowerCase())
-        );
-
-        matchingTabsInWindow && matchingTabs.push(matchingTabsInWindow ?? []);
-      });
-
-      dispatch(FILTERS_CREATORS.updateFilteredTabs(matchingTabs));
-    } else if (typing && filterChoice === "group") {
-      const matchingGroups = available.filter((group) => group.name.toLowerCase().includes(inputValue.toLowerCase()));
-      dispatch(FILTERS_CREATORS.updateFilteredGroups(matchingGroups));
-    }
-  }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
+  useFilterTabs();
 
   const modalDetailsHandler = useCallback(
     (args: IModalState["info"]) => {
