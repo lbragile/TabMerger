@@ -73,6 +73,7 @@ export default function Tab({
   snapshot,
   dragHandleProps,
   tabIndex,
+  windowId,
   windowIndex
 }: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
@@ -85,7 +86,12 @@ export default function Tab({
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
 
-  const openTab = () => chrome.tabs.create({ url, active, pinned }, () => "");
+  const openTab = () =>
+    groupIndex === 0
+      ? chrome.windows.update(windowId, { focused: true }, () =>
+          chrome.tabs.update(tabId ?? 0, { active: true }, () => "")
+        )
+      : chrome.tabs.create({ url, active, pinned, windowId }, () => "");
 
   const closeTab = () => {
     if (groupIndex > 0) {

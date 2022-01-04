@@ -307,7 +307,7 @@ export default function Export(): JSX.Element {
 
   return (
     <>
-      <Selector opts={["JSON", "Text", "Markdown", "HTML", "CSV"]} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Selector opts={["JSON", "Text", "Markdown", "CSV", "HTML"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <Row>
         <Row>

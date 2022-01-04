@@ -10,7 +10,9 @@ import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
+import { TImportType } from "~/store/reducers/modal";
 import { Note } from "~/styles/Note";
+import { pluralize } from "~/utils/helper";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   height: 300px;
@@ -51,19 +53,20 @@ const UploadIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const ErrorMessage = styled.p`
+const Message = styled.p<{ $error?: boolean }>`
   font-weight: bold;
-  color: red;
+  color: ${({ $error }) => ($error ? "red" : "green")};
   text-align: center;
 `;
 
-const ERROR_TEXT = "Something is wrong with this file, please try another one";
+const UPLOAD_FILE_ERROR = "Something is wrong with this file, please try another one";
+const IMPORT_TEXT_ERROR = "This text does not match the expected import format";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
 
   const {
-    import: { type: importType }
+    import: { type: importType, formatted }
   } = useSelector((state) => state.modal);
 
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
@@ -144,15 +147,19 @@ export default function Import(): JSX.Element {
 
   useEffect(() => {
     if (debouncedCurrentText !== "") {
-      let groups: IGroupItemState[] = [];
+      let groups: IGroupItemState[] | null = null;
 
       if (importType === "json") {
-        groups = JSON.parse(debouncedCurrentText).available;
+        try {
+          groups = JSON.parse(debouncedCurrentText).available as IGroupItemState[];
 
-        // Make sure first group is not a permanent group (since `Now Open` should be the only permanent group)
-        groups[0].id = nanoid(10);
-        groups[0].permanent = false;
-        groups[0].windows.forEach((w) => (w.focused = false));
+          // Make sure first group is not a permanent group (since `Now Open` should be the only permanent group)
+          groups[0].id = nanoid(10);
+          groups[0].permanent = false;
+          groups[0].windows.forEach((w) => (w.focused = false));
+        } catch (err) {
+          // Do nothing
+        }
       } else if (importType === "plain") {
         groups = formatPlain(debouncedCurrentText);
       } else if (importType === "markdown") {
@@ -173,23 +180,27 @@ export default function Import(): JSX.Element {
         csvData.forEach((row) => {
           const [groupName, windowName, title, url] = row.split(/,(?=".+?")/g).map((item) => item.replace(/"/g, ""));
 
+          const windowTitle = `${windowName}\n---\n\n`;
+
+          // When a groupName mismatch occurs can automatically add the windowName as well ...
+          // However if there is no groupName mismatch, then must check for windowName mismatch
           if (groupName !== currentGroupName) {
             currentGroupName = groupName;
-            transformedStr += `${groupName}\n===\n\n`;
-          }
-
-          if (windowName !== currentWindowName) {
+            transformedStr += `${groupName}\n===\n\n${windowTitle}`;
+          } else if (windowName !== currentWindowName) {
             currentWindowName = windowName;
-            transformedStr += `${windowName}\n---\n\n`;
+            transformedStr += `${windowTitle}`;
           }
 
           transformedStr += `${title}\n${url}\n\n`;
         });
 
-        groups = formatPlain(transformedStr);
+        groups = transformedStr === "" ? [] : formatPlain(transformedStr);
       }
 
-      dispatch(MODAL_CREATORS.updateImportFormattedGroups(groups));
+      if (groups) {
+        dispatch(MODAL_CREATORS.updateImportFormattedGroups(groups));
+      }
     }
   }, [dispatch, debouncedCurrentText, importType, formatPlain]);
 
@@ -244,12 +255,12 @@ export default function Import(): JSX.Element {
               {isDragActive && isDragAccept ? (
                 <>
                   <FontAwesomeIcon icon="check-circle" size="2x" color="green" />
-                  <p>File looks promising... drop it to proceed</p>
+                  <Message>File looks promising... drop it to proceed</Message>
                 </>
               ) : isDragActive && isDragReject ? (
                 <>
                   <FontAwesomeIcon icon="times-circle" size="2x" color="red" />
-                  <p>{ERROR_TEXT}</p>
+                  <Message $error>{UPLOAD_FILE_ERROR}</Message>
                 </>
               ) : (
                 <>
@@ -270,7 +281,7 @@ export default function Import(): JSX.Element {
             </Column>
           </DropZone>
 
-          {!isDragActive && fileRejections.length > 0 && <ErrorMessage>{ERROR_TEXT}</ErrorMessage>}
+          {!isDragActive && fileRejections.length > 0 && <Message $error>{UPLOAD_FILE_ERROR}</Message>}
 
           <Note>
             <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
@@ -281,15 +292,36 @@ export default function Import(): JSX.Element {
       ) : (
         <>
           <StyledTextArea
-            placeholder="Enter JSON, markdown, CSV, or plain text here..."
+            placeholder="Paste JSON, markdown, CSV, or plain text here..."
             value={currentText}
-            onChange={(e) => setCurrentText(e.target.value)}
+            onChange={({ target: { value } }) => {
+              // If value changed due to a paste event, need to re-compute the upload type
+
+              let type: TImportType = "json";
+              if (/.+?\n={3,}\n/.test(value)) type = "plain";
+              else if (/\n?\n?#{2,3}.+?\n/.test(value)) type = "markdown";
+              else if (/(".+?",?){4}\n/.test(value)) type = "csv";
+
+              if (type !== importType) dispatch(MODAL_CREATORS.updateImportType(type));
+
+              setCurrentText(value);
+            }}
           />
+
+          {currentText.replace(/\n/g, "") !== "" && formatted.length === 0 ? (
+            <Message $error>{IMPORT_TEXT_ERROR}</Message>
+          ) : (
+            currentText.replace(/\n/g, "") !== "" && (
+              <Message>
+                Can import {formatted.length} matching {pluralize(formatted.length, "group")}
+              </Message>
+            )
+          )}
 
           <Note>
             <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
-            <p>Each Tab must have an associated URL (eg. https://www.google.com)</p>
+            <p>Each tab must have an associated URL (eg. https://www.google.com)</p>
           </Note>
         </>
       )}
