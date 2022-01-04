@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { Combine, DraggableLocation } from "react-beautiful-dnd";
 
 import { IAction } from "~/typings/reducers";
+import { createGroup, createWindowWithTabs } from "~/utils/helper";
 
 export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
@@ -65,15 +66,6 @@ export interface IGroupsState {
   active: { id: string; index: number };
   available: IGroupItemState[];
 }
-
-const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
-  alwaysOnTop: false,
-  focused: false,
-  incognito: false,
-  state: "maximized",
-  type: "normal",
-  tabs
-});
 
 const activeId = nanoid(10);
 const initState: IGroupsState = {
@@ -239,17 +231,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.ADD_GROUP: {
-      const NEW_GROUP: IGroupItemState = {
-        name: "New",
-        id: nanoid(10),
-        color: "rgb(128 128 128)",
-        updatedAt: Date.now(),
-        windows: [],
-        permanent: false,
-        info: "0T | 0W"
-      };
-
-      available.push(NEW_GROUP);
+      available.push(createGroup(nanoid(10)));
 
       return { ...state, available };
     }

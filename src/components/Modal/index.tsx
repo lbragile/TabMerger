@@ -132,7 +132,7 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
         <FooterRow>
           {saveText && ((type === "export" && file) || (type === "import" && formatted.length > 0)) && (
             <Button onClick={handleSave} $primary>
-              {saveText}
+              {saveText + (type === "import" ? ` (${formatted.length})` : "")}
             </Button>
           )}
 
