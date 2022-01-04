@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: ["develop"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  ci:
+    runs-on: windows-2022
+
+    strategy:
+      matrix:
+        node: [12, 14, 16]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: latest
+
+      - name: Use NodeJS ${{ matrix.node }} & Cache
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: "pnpm"
+
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Check Spelling
+        run: pnpm spell:check
+
+      - name: Format Write
+        id: format
+        run: |
+          pnpm format:write
+          echo "::set-output name=NUM_CHANGED::$(git add . && git status src | grep 'modified:' | wc -l)"
+
+      - name: Format Success
+        if: ${{ steps.format.outputs.NUM_CHANGED == 0 }}
+        run: echo "All matched files use Prettier code style!"
+
+      - name: Format Error
+        if: ${{ steps.format.outputs.NUM_CHANGED > 0 }}
+        run: |
+          pnpm format:check
+          echo "::error::Found formatting issues in ${{ steps.format.outputs.NUM_CHANGED }} of the above file(s). Forgot to run Prettier locally?"
+          exit 1
+
+      - name: Lint Code
+        run: pnpm lint:code
+
+      - name: Lint Style
+        run: pnpm lint:style

@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { IGroupsState } from "../store/reducers/groups";
-import GROUPS_CREATORS from "../store/actions/groups";
+
 import { useDispatch } from "./useRedux";
+
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { IGroupsState } from "~/store/reducers/groups";
 
 export default function useStorage({ active, available }: IGroupsState): void {
   const dispatch = useDispatch();

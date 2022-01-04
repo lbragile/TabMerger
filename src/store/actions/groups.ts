@@ -1,22 +1,12 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import { DraggableLocation } from "react-beautiful-dnd";
-import { GROUPS_ACTIONS, IGroupsState, ISidePanelDnd } from "../reducers/groups";
 
-const updateAvailable = (payload?: IGroupsState["available"]) => ({
-  type: GROUPS_ACTIONS.UPDATE_AVAILABLE,
-  payload
-});
+import { GROUPS_ACTIONS, IGroupsState, ISidePanelDnd } from "~/store/reducers/groups";
 
-const updateActive = (payload?: IGroupsState["active"]) => ({
-  type: GROUPS_ACTIONS.UPDATE_ACTIVE,
-  payload
-});
+const updateAvailable = (payload?: IGroupsState["available"]) => ({ type: GROUPS_ACTIONS.UPDATE_AVAILABLE, payload });
 
-const updateName = (payload?: { index: number; name: string }) => ({
-  type: GROUPS_ACTIONS.UPDATE_NAME,
-  payload
-});
+const updateActive = (payload?: IGroupsState["active"]) => ({ type: GROUPS_ACTIONS.UPDATE_ACTIVE, payload });
+
+const updateName = (payload?: { index: number; name: string }) => ({ type: GROUPS_ACTIONS.UPDATE_NAME, payload });
 
 const updateColor = (payload?: { index: number; color: string }) => ({ type: GROUPS_ACTIONS.UPDATE_COLOR, payload });
 
@@ -55,19 +45,13 @@ const updateTabsFromSidePanelDnd = (payload?: ISidePanelDnd) => ({
   payload
 });
 
-const updateInfo = (payload?: { index: number; info?: string }) => ({
-  type: GROUPS_ACTIONS.UPDATE_INFO,
-  payload
-});
+const updateInfo = (payload?: { index: number; info?: string }) => ({ type: GROUPS_ACTIONS.UPDATE_INFO, payload });
 
 const updatePermanent = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_PERMANENT, payload });
 
 const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
 
-const deleteGroup = (payload?: number) => ({
-  type: GROUPS_ACTIONS.DELETE_GROUP,
-  payload
-});
+const deleteGroup = (payload?: number) => ({ type: GROUPS_ACTIONS.DELETE_GROUP, payload });
 
 const deleteWindow = (payload?: { groupIndex: number; windowIndex: number }) => ({
   type: GROUPS_ACTIONS.DELETE_WINDOW,
@@ -78,10 +62,7 @@ const clearEmptyGroups = () => ({ type: GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS });
 
 const addWindow = (payload?: { index: number }) => ({ type: GROUPS_ACTIONS.ADD_WINDOW, payload });
 
-const clearEmptyWindows = (payload?: { index: number }) => ({
-  type: GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS,
-  payload
-});
+const clearEmptyWindows = (payload?: { index: number }) => ({ type: GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS, payload });
 
 const updateGroupOrder = (payload?: { source: DraggableLocation; destination?: DraggableLocation }) => ({
   type: GROUPS_ACTIONS.UPDATE_GROUP_ORDER,
@@ -108,25 +89,19 @@ const toggleWindowStarred = (payload?: { windowIndex: number; groupIndex: number
   payload
 });
 
-const duplicateGroup = (payload?: number) => ({
-  type: GROUPS_ACTIONS.DUPLICATE_GROUP,
-  payload
-});
+const duplicateGroup = (payload?: number) => ({ type: GROUPS_ACTIONS.DUPLICATE_GROUP, payload });
 
-const replaceWithCurrent = (payload?: number) => ({
-  type: GROUPS_ACTIONS.REPLACE_WITH_CURRENT,
-  payload
-});
+const replaceWithCurrent = (payload?: number) => ({ type: GROUPS_ACTIONS.REPLACE_WITH_CURRENT, payload });
 
-const mergeWithCurrent = (payload?: number) => ({
-  type: GROUPS_ACTIONS.MERGE_WITH_CURRENT,
-  payload
-});
+const mergeWithCurrent = (payload?: number) => ({ type: GROUPS_ACTIONS.MERGE_WITH_CURRENT, payload });
 
-const uniteWindows = (payload?: number) => ({
-  type: GROUPS_ACTIONS.UNITE_WINDOWS,
-  payload
-});
+const uniteWindows = (payload?: number) => ({ type: GROUPS_ACTIONS.UNITE_WINDOWS, payload });
+
+const splitWindows = (payload?: number) => ({ type: GROUPS_ACTIONS.SPLIT_WINDOWS, payload });
+
+const sortByTabTitle = (payload?: number) => ({ type: GROUPS_ACTIONS.SORT_BY_TAB_TITLE, payload });
+
+const sortByTabUrl = (payload?: number) => ({ type: GROUPS_ACTIONS.SORT_BY_TAB_URL, payload });
 
 export default {
   updateAvailable,
@@ -156,5 +131,8 @@ export default {
   duplicateGroup,
   replaceWithCurrent,
   mergeWithCurrent,
-  uniteWindows
+  uniteWindows,
+  splitWindows,
+  sortByTabTitle,
+  sortByTabUrl
 };

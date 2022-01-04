@@ -1,0 +1,42 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Abramov",
+    "Andrey",
+    "Atlassian",
+    "Bragilevsky",
+    "camelcase",
+    "Discardable",
+    "dotenv",
+    "dropzone",
+    "eligrey",
+    "fontawesome",
+    "fortawesome",
+    "lbragile",
+    "Lior",
+    "Maddern",
+    "mantine",
+    "mantinedev",
+    "newtab",
+    "pnpm",
+    "postcss",
+    "prettierrc",
+    "reduxjs",
+    "Rtishchev",
+    "SIDEPANEL",
+    "Sitnik",
+    "Stoiber",
+    "TABMERGER",
+    "Vitaly",
+    "webextensions"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "coverage/**",
+    "docs/**",
+    "build/**",
+    "dist/**",
+    "pnpm-lock.yaml"
+  ]
+}

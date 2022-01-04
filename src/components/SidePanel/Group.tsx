@@ -1,19 +1,19 @@
-import { useRef, useState } from "react";
-import styled, { css } from "styled-components";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
-import GROUPS_CREATORS from "../../store/actions/groups";
-import { IGroupsState } from "../../store/reducers/groups";
-import { relativeTimeStr } from "../../utils/helper";
-import Highlighted from "../Highlighted";
-import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
-import { isGroupDrag } from "../../constants/dragRegExp";
-import { CloseIcon } from "../../styles/CloseIcon";
 import { ColorPicker } from "@mantine/core";
-import useDebounce from "../../hooks/useDebounce";
-import useClickOutside from "../../hooks/useClickOutside";
-import { COLOR_PICKER_SWATCHES } from "../../constants/colorPicker";
-import Popup from "../Popup";
+import { useRef, useState } from "react";
+import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import styled, { css } from "styled-components";
+
+import Highlighted from "~/components/Highlighted";
+import Popup from "~/components/Popup";
+import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
+import { isGroupDrag } from "~/constants/dragRegExp";
+import useClickOutside from "~/hooks/useClickOutside";
+import { useDebounce } from "~/hooks/useDebounce";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { IGroupsState } from "~/store/reducers/groups";
+import { CloseIcon } from "~/styles/CloseIcon";
+import { relativeTimeStr } from "~/utils/helper";
 
 interface IGroupStyle {
   $isActive: boolean;
@@ -41,7 +41,7 @@ const GroupButton = styled.div<IGroupStyle>`
   height: 49px;
   background-color: ${({ $isActive, $dragging, $draggingOver }) =>
     $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(0 0 0 / 10%);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -53,11 +53,11 @@ const GroupButton = styled.div<IGroupStyle>`
     !$draggingGlobal &&
     css`
       &:hover ${AbsoluteCloseIcon} {
-        color: rgba(0, 0, 0, 0.3);
+        color: rgb(0 0 0 / 30%);
         display: block;
 
         &:hover {
-          color: rgba(255, 0, 0, 0.6);
+          color: rgb(255 0 0 / 60%);
         }
       }
     `}
@@ -72,6 +72,7 @@ const Headline = styled.div<{ $isActive: boolean; $isFirst: boolean }>`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  transition: background-color 0.3s ease, padding 0.3s ease;
   ${({ $isFirst, $isActive }) =>
     !$isFirst &&
     css`
@@ -120,9 +121,9 @@ const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; 
     left: ${right + 12}px;
   `}
 
-  & .mantine-ColorPicker-thumb,
-  & .mantine-ColorPicker-saturation,
-  & .mantine-ColorPicker-slider {
+  & .cp-thumb,
+  & .cp-saturation,
+  & .cp-slider {
     cursor: crosshair;
   }
 
@@ -133,18 +134,25 @@ const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; 
 `;
 
 interface IGroup {
-  data: IGroupsState["available"][number];
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }
 
-export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.Element {
+export default function Group({
+  name,
+  id,
+  color,
+  updatedAt,
+  permanent,
+  info,
+  snapshot,
+  dragHandleProps
+}: IGroupsState["available"][number] & IGroup): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
   const { active, available } = useSelector((state) => state.groups);
 
-  const { name, id, color, updatedAt, permanent, info } = data;
   const index = available.findIndex((group) => group.id === id);
   const groupDrag = isGroupDrag(dragType);
   const isActive = active.index === index;
@@ -183,8 +191,8 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
   const handleShowPicker = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
-    // groups below the half way mark will have their color pickers show upwards.
-    // timeout allows the picker to be displayed so that it's height can be captured
+    // Groups below the half way mark will have their color pickers show upwards.
+    // Timeout allows the picker to be displayed so that it's height can be captured
     setTimeout(() => {
       if (pickerRef.current && groupRef.current) {
         setShowPicker(true);
@@ -236,11 +244,12 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
           {!permanent && !isDragging && (
             <AbsoluteCloseIcon
               tabIndex={0}
-              icon={faTimes}
+              icon="times"
               onClick={(e) => {
                 e.stopPropagation();
                 dispatch(GROUPS_CREATORS.deleteGroup(index));
               }}
+              onPointerDown={(e) => e.preventDefault()}
               onKeyPress={(e) => {
                 e.stopPropagation();
                 e.key === "Enter" && dispatch(GROUPS_CREATORS.deleteGroup(index));
@@ -253,6 +262,7 @@ export default function Group({ data, snapshot, dragHandleProps }: IGroup): JSX.
       {/* Want this to be present in the DOM since it's height is used to calculate position */}
       <ColorPickerContainer ref={pickerRef} $pos={pickerPos} $visible={showPicker}>
         <ColorPicker
+          classNames={{ thumb: "cp-thumb", saturation: "cp-saturation", slider: "cp-slider" }}
           format="rgba"
           value={debouncedPickerValue}
           onChange={setColorPickerValue}

@@ -3,7 +3,9 @@
 
 ![tabmerger logo](./public/images/logo-full-rescale.PNG)
 
-[![Build][build status]](https://github.com/lbragile/TabMerger/actions) [![Forks][gh forks]](https://github.com/lbragile/TabMerger/network/members) [![Stars][gh stars]](https://github.com/lbragile/TabMerger/stargazers) [![Watchers][gh watchers]](https://github.com/lbragile/TabMerger/watchers) [![Release][release]](https://github.com/lbragile/TabMerger/releases/tag/v2.0.0) [![Chrome Users][chromeusers]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Chrome Rating][chromerating]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Firefox Users][firefoxusers]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Rating][firefoxrating]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![License][license]](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
+[![Build][build status]](https://github.com/lbragile/TabMerger/actions) [![Forks][gh forks]](https://github.com/lbragile/TabMerger/network/members) [![Stars][gh stars]](https://github.com/lbragile/TabMerger/stargazers) [![Watchers][gh watchers]](https://github.com/lbragile/TabMerger/watchers) [![Release][release]](https://github.com/lbragile/TabMerger/releases/tag/v2.0.0) [![License][license]](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
+\
+[![Chrome Users][chrome users]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Chrome Rating][chrome rating]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Firefox Users][firefox users]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Rating][firefox rating]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/)
 
 | [![Chrome WebStore](https://i.imgur.com/NKFtwOA.png)](http://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/) | [![Firefox WebStore](https://i.imgur.com/YTz727e.png)](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) | [![Edge WebStore](https://i.imgur.com/YQR2RYd.png)](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn) |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -12,7 +14,7 @@
 
 # Stores your tabs in one location to save memory usage and increase your productivity
 
-[![Demo](https://i.imgur.com/tjhu6OQ.png)](https://www.youtube.com/watch?v=buu6iot1wcg&feature=youtu.be&hd=1)
+![Demo](https://i.imgur.com/2sbEzip.png)
 
 </div>
 
@@ -40,6 +42,22 @@ Your contribution would allow me to focus on developing more useful tools like T
 
 [![buy me a coffee][buycoffee]](https://www.buymeacoffee.com/lbragile)
 
+## 💻 Developers
+
+TabMerger uses [pnpm](https://pnpm.io/) due to its superior security, speed, and compactness.
+\
+To get started, follow these steps:
+
+- `git clone https://github.com/lbragile/TabMerger.git`
+- `cd TabMerger`
+- `npm i -g pnpm`
+- `pnpm i`
+- `pnpm start`
+
+**Spelling**, **linting**, and **formatting** scripts are also provided (see **scripts** section in [package.json](https://github.com/lbragile/TabMerger/blob/master/package.json))
+
+During development (`pnpm start`), the output folder is **dist**. For production (`pnpm build`) the output folder is **build**. You can test the extension by uploading these folders as [described here](https://support.google.com/chrome/a/answer/2714278?hl=en) (step 2)
+
 ## 🚓 License
 
 TabMerger is open source and GPLv3 licensed, thus it is not intended for commercial use!
@@ -61,10 +79,9 @@ Simply contact TabMerger's creator/author for more information.
 [gh stars]: https://img.shields.io/github/stars/lbragile/TabMerger?label=Stars&style=flat-square&logo=github
 [gh watchers]: https://img.shields.io/github/watchers/lbragile/TabMerger?label=Watchers&logo=github&style=flat-square
 [release]: https://img.shields.io/github/v/release/lbragile/TabMerger?label=Release&logo=Github&style=flat-square
+[firefox users]: https://img.shields.io/amo/users/%7B19feb84f-3a0b-4ca3-bbae-211b52eb158b%7D?label=Users&style=flat-square&logo=firefox
+[firefox rating]: https://img.shields.io/amo/rating/%257B19feb84f-3a0b-4ca3-bbae-211b52eb158b%257D?label=Rating&style=flat-square&logo=firefox
+[chrome users]: https://img.shields.io/chrome-web-store/users/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Users&style=flat-square&logo=google&logoColor=white
+[chrome rating]: https://img.shields.io/chrome-web-store/rating/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Rating&style=flat-square&logo=google&logoColor=white
 [license]: https://img.shields.io/github/license/lbragile/tabmerger?label=License&style=flat-square&logo=github
-[firefoxusers]: https://img.shields.io/amo/users/%7B19feb84f-3a0b-4ca3-bbae-211b52eb158b%7D?label=Users&style=flat-square&logo=firefox
-[firefoxrating]: https://img.shields.io/amo/rating/%257B19feb84f-3a0b-4ca3-bbae-211b52eb158b%257D?label=Rating&style=flat-square&logo=firefox
-[firefoxdownloads]: https://img.shields.io/amo/dw/%257B19feb84f-3a0b-4ca3-bbae-211b52eb158b%257D?label=Downloads&style=flat-square&logo=firefox
-[chromeusers]: https://img.shields.io/chrome-web-store/users/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Users&style=flat-square&logo=google&logoColor=white
-[chromerating]: https://img.shields.io/chrome-web-store/rating/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Rating&style=flat-square&logo=google&logoColor=white
 [fossa]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flbragile%2FTabMerger.svg?type=large

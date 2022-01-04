@@ -1,3 +1,5 @@
+import { IGroupItemState } from "~/store/reducers/groups";
+
 export function pluralize(amount: number, baseStr: string): string {
   return amount === 1 ? baseStr : baseStr + "s";
 }
@@ -38,15 +40,22 @@ export function relativeTimeStr(previous: number, current = Date.now()): string 
   }
 
   val = Math.round(val);
+
   return type === "sec" ? "< 1 min" : `${val} ${pluralize(val, type)}`;
 }
 
 export function getReadableTimestamp(timestamp: number): string {
   const parts = new Date(timestamp).toString().split(" ");
   const postfix = Number(parts[4].split(":")[0]) > 11 ? "PM" : "AM";
+
   return `Updated ${parts.slice(1, 4).join(" ")} ${parts[4]} ${postfix}`;
 }
 
+/**
+ * While dragging a window, this hides its tabs to provide a consistent UI/UX regardless ...
+ * ... of the number of tabs in the window.
+ * Upon dragend, the tabs are re-shown
+ */
 export const toggleWindowTabsVisibility = (draggableId: string, show: boolean): void => {
   const droppableId = draggableId.split("-").slice(0, 2).join("-");
   const elem = document.querySelector(
@@ -67,3 +76,49 @@ export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
 
   return { sortedWindows: focused.concat(notFocused), hasFocused: focused.length > 0 };
 }
+
+export function createActiveTab(url: string) {
+  chrome.tabs.create({ url, active: true }, () => "");
+}
+
+export const createTabFromTitleAndUrl = (title: string, url: string): chrome.tabs.Tab => ({
+  title,
+  url,
+  favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`,
+  active: false,
+  audible: false,
+  autoDiscardable: true,
+  discarded: false,
+  groupId: -1,
+  highlighted: false,
+  incognito: false,
+  index: 0,
+  pinned: false,
+  selected: false,
+  windowId: 1
+});
+
+export const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
+  alwaysOnTop: false,
+  focused: false,
+  incognito: false,
+  state: "maximized",
+  type: "normal",
+  tabs
+});
+
+export const createGroup = (id: string, name?: string): IGroupItemState => ({
+  name: name ?? "New",
+  id,
+  color: "rgb(128 128 128)",
+  updatedAt: Date.now(),
+  windows: [],
+  permanent: false,
+  info: "0T | 0W"
+});
+
+/**
+ * Replaces all <tag> instances with &lt;tag&gt; to avoid breaking document ...
+ * ... structure in exported markdown & html files
+ */
+export const formatHtml = (str?: string) => str?.replace(/<([^>]*)>/g, "&lt;$1&gt;");

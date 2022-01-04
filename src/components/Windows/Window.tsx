@@ -1,18 +1,19 @@
-import { useMemo, useRef, useState } from "react";
-import { faMask, faStar, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import { faWindowMaximize } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components";
-import Tab from "./Tab";
-import { pluralize } from "../../utils/helper";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
-import { isTabDrag } from "../../constants/dragRegExp";
-import { CloseIcon } from "../../styles/CloseIcon";
-import GROUPS_CREATORS from "../../store/actions/groups";
-import useClickOutside from "../../hooks/useClickOutside";
-import Dropdown from "../Dropdown";
-import Popup from "../Popup";
+import styled from "styled-components";
+
+import Tab from "./Tab";
+
+import Dropdown from "~/components/Dropdown";
+import Popup from "~/components/Popup";
+import { isTabDrag } from "~/constants/dragRegExp";
+import { GOOGLE_HOMEPAGE } from "~/constants/urls";
+import useClickOutside from "~/hooks/useClickOutside";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { CloseIcon } from "~/styles/CloseIcon";
+import { pluralize } from "~/utils/helper";
 
 const Column = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ const Row = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 `;
 
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
@@ -50,7 +51,7 @@ const WindowTitle = styled.div<{ $active: boolean }>`
 const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
   display: grid;
   grid-template-columns: auto 25ch auto;
-  column-gap: 4px;
+  column-gap: 6px;
   justify-content: start;
   align-items: center;
   background-color: white;
@@ -84,6 +85,7 @@ const TitleContainer = styled.div`
 
 const IconStack = styled.div`
   position: relative;
+  transition: transform 0.3s ease;
 
   & svg:nth-child(2) {
     font-size: 7px;
@@ -91,6 +93,11 @@ const IconStack = styled.div`
     top: 0;
     right: -3.5px;
     color: #ff8000;
+  }
+
+  &:hover {
+    transform: scale(1.25);
+    filter: contrast(1.25);
   }
 `;
 
@@ -107,6 +114,7 @@ export default function Window({
   focused,
   tabs,
   incognito,
+  state,
   id: windowId,
   windowIndex,
   starred,
@@ -119,6 +127,7 @@ export default function Window({
     available,
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
+
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
@@ -134,34 +143,38 @@ export default function Window({
 
   useClickOutside<HTMLDivElement>({ ref: popupRef, preCondition: showPopup, cb: () => setShowPopup(false) });
 
-  const openWindow = (type: TOpenWindow) => {
-    if (groupIndex > 0) {
-      const isIncognito = type === "incognito" || incognito;
+  const openWindow = useCallback(
+    (type: TOpenWindow) => {
+      if (groupIndex > 0) {
+        (["new", "incognito"] as TOpenWindow[]).includes(type)
+          ? chrome.windows.create(
+              {
+                focused: true,
+                type: "normal",
+                state,
+                incognito: type === "incognito" || incognito,
+                url: currentTabs?.map((tab) => tab.url ?? GOOGLE_HOMEPAGE)
+              },
+              () => ""
+            )
+          : currentTabs?.forEach((tab) => {
+              const { active, pinned, url } = tab ?? {};
+              chrome.tabs.create({ active, pinned, url }, () => "");
+            });
+      } else {
+        windowId && chrome.windows.update(windowId, { focused: true });
+      }
 
-      (["new", "incognito"] as TOpenWindow[]).includes(type)
-        ? chrome.windows.create({
-            focused: true,
-            ...(!isIncognito ? { state: "maximized" } : {}),
-            type: "normal",
-            incognito: isIncognito,
-            url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
-          })
-        : currentTabs?.forEach((tab) => {
-            const { active, pinned, url } = tab ?? {};
-            chrome.tabs.create({ active, pinned, url });
-          });
-    } else {
-      windowId && chrome.windows.update(windowId, { focused: true });
-    }
-
-    setShowPopup(false);
-  };
+      setShowPopup(false);
+    },
+    [currentTabs, groupIndex, incognito, state, windowId]
+  );
 
   const closeWindow = () => {
     if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeWindow({ groupIndex, windowIndex }));
 
-      // possible to have deleted the last window in the group
+      // Possible to have deleted the last window in the group
       if (!available[groupIndex].windows.length) {
         dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
       }
@@ -178,11 +191,54 @@ export default function Window({
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
   }, [typing, filteredTabs, tabs?.length, isTabSearch, windowIndex]);
 
+  const windowItems = useMemo(
+    () => [
+      ...(groupIndex > 0
+        ? [
+            { text: "Open In Current", handler: () => openWindow("current") },
+            { text: "Open In New", handler: () => openWindow("new"), isDisabled: incognito },
+            { text: "Open Incognito", handler: () => openWindow("incognito") }
+          ]
+        : [{ text: "Focus", handler: () => openWindow("focus") }]),
+      { text: "divider" },
+      { text: "Copy To Group", handler: () => console.warn("WIP"), isDisabled: true },
+      { text: "Move To Group", handler: () => console.warn("WIP"), isDisabled: true },
+      { text: "divider" },
+      {
+        text: starred ? "Unfavorite" : "Favorite",
+        handler: () => {
+          dispatch(GROUPS_CREATORS.toggleWindowStarred({ groupIndex, windowIndex }));
+          setShowPopup(false);
+        },
+        isDisabled: groupIndex === 0
+      },
+      {
+        text: `${incognito ? "Remove" : "Make"} Incognito`,
+        handler: () => {
+          dispatch(GROUPS_CREATORS.toggleWindowIncognito({ groupIndex, windowIndex }));
+          setShowPopup(false);
+        },
+        isDisabled: groupIndex === 0
+      },
+      { text: "divider" },
+      {
+        text: "Delete",
+        handler: () => {
+          dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
+          setShowPopup(false);
+        },
+        isDanger: true,
+        isDisabled: groupIndex === 0
+      }
+    ],
+    [dispatch, groupIndex, incognito, openWindow, starred, windowIndex]
+  );
+
   return (
     <WindowContainer $dragging={windowSnapshot.isDragging}>
       <Row>
         <CloseIcon
-          icon={faTimesCircle}
+          icon="times-circle"
           tabIndex={0}
           onClick={closeWindow}
           onPointerDown={(e) => e.preventDefault()}
@@ -192,11 +248,8 @@ export default function Window({
 
         <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
           <IconStack {...dragHandleProps} onContextMenu={(e) => e.preventDefault()}>
-            <FontAwesomeIcon
-              title={`${starred ? "Favorite " : ""}${incognito ? "Incognito" : "Regular"} Window`}
-              icon={incognito ? faMask : faWindowMaximize}
-            />
-            {starred && <FontAwesomeIcon icon={faStar} />}
+            <FontAwesomeIcon icon={incognito ? "mask" : ["far", "window-maximize"]} />
+            {starred && <FontAwesomeIcon icon="star" />}
           </IconStack>
 
           <TitleContainer>
@@ -220,50 +273,8 @@ export default function Window({
             {showPopup && titleRef.current && (
               <div ref={popupRef}>
                 <Dropdown
-                  items={[
-                    ...(groupIndex > 0
-                      ? [
-                          { text: "Open In Current", handler: () => openWindow("current") },
-                          { text: "Open In New", handler: () => openWindow("new"), isDisabled: incognito },
-                          { text: "Open Incognito", handler: () => openWindow("incognito") }
-                        ]
-                      : [{ text: "Focus", handler: () => openWindow("focus") }]),
-                    { text: "divider" },
-                    { text: "Copy To Group", handler: () => console.log("WIP") },
-                    { text: "Move To Group", handler: () => console.log("WIP") },
-                    { text: "divider" },
-                    {
-                      text: starred ? "Unfavorite" : "Favorite",
-                      handler: () => {
-                        dispatch(GROUPS_CREATORS.toggleWindowStarred({ groupIndex, windowIndex }));
-                        setShowPopup(false);
-                      },
-                      isDisabled: groupIndex === 0
-                    },
-                    {
-                      text: `${incognito ? "Remove" : "Make"} Incognito`,
-                      handler: () => {
-                        dispatch(GROUPS_CREATORS.toggleWindowIncognito({ groupIndex, windowIndex }));
-                        setShowPopup(false);
-                      },
-                      isDisabled: groupIndex === 0
-                    },
-                    { text: "divider" },
-                    { text: "Rename", handler: () => console.log("WIP") },
-                    {
-                      text: "Delete",
-                      handler: () => {
-                        dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
-                        setShowPopup(false);
-                      },
-                      isDanger: true,
-                      isDisabled: groupIndex === 0
-                    }
-                  ]}
-                  pos={{
-                    top: 0,
-                    left: titleRef.current.getBoundingClientRect().width + 10
-                  }}
+                  items={windowItems}
+                  pos={{ top: 0, left: titleRef.current.getBoundingClientRect().width + 10 }}
                   isPopup
                 />
               </div>

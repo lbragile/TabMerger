@@ -25,5 +25,5 @@
   "background": {
     "service_worker": "background.js"
   },
-  "incognito": "split"
+  "incognito": "spanning"
 }

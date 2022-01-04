@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import styled from "styled-components";
-import { useSelector } from "../hooks/useRedux";
+
+import { useSelector } from "~/hooks/useRedux";
 
 const MarkedText = styled.mark`
   background-color: #ffd580;
@@ -16,6 +17,7 @@ export default function Highlighted({ text = "" }: { text?: string }): JSX.Eleme
   const re = useMemo(() => {
     const SPECIAL_CHAR_RE = /([.?*+^$[\]\\(){}|-])/g;
     const escapedSearch = inputValue.replace(SPECIAL_CHAR_RE, "\\$1");
+
     return new RegExp(`(${escapedSearch})`, "i");
   }, [inputValue]);
 

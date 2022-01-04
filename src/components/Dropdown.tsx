@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 
+import { useSelector } from "~/hooks/useRedux";
+
 interface IPos {
   top: number;
   left?: number;
@@ -8,7 +10,7 @@ interface IPos {
 
 type TAlign = "left" | "center" | "right";
 
-interface IDropdown {
+export interface IDropdown {
   items: {
     text: string | JSX.Element;
     handler?: (e?: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
@@ -62,8 +64,7 @@ const DropdownItem = styled.div<{ $align: TAlign; $danger?: boolean; $disabled?:
   font-weight: normal;
   font-size: 14px;
   white-space: nowrap;
-  cursor: pointer;
-  pointer-events: ${({ $disabled }) => ($disabled ? "none" : "all")};
+  cursor: ${({ $disabled }) => ($disabled ? "default" : "pointer")};
   opacity: ${({ $disabled }) => ($disabled ? "0.5" : "1")};
 
   &:hover,
@@ -80,6 +81,10 @@ const DropdownDivider = styled.hr`
 `;
 
 export default function Dropdown({ items, pos, isPopup = false, textAlign = "left" }: IDropdown): JSX.Element {
+  const {
+    active: { index: groupIndex }
+  } = useSelector((state) => state.groups);
+
   return (
     <>
       <Container $pos={pos}>
@@ -87,8 +92,11 @@ export default function Dropdown({ items, pos, isPopup = false, textAlign = "lef
           return item.text !== "divider" ? (
             <DropdownItem
               key={i}
-              onClick={item.handler}
-              tabIndex={0}
+              onClick={(e) => {
+                e.stopPropagation();
+                !item.isDisabled && item.handler?.(e);
+              }}
+              tabIndex={(groupIndex === 0 && !item.isDisabled) || groupIndex > 0 ? 0 : -1}
               role="button"
               onKeyPress={(e) => e.key === "Enter" && item.handler?.(e)}
               $align={textAlign}

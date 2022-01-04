@@ -1,14 +1,19 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import styled, { css } from "styled-components";
-import { useDispatch, useSelector } from "../hooks/useRedux";
-import { faCog, faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCallback, useMemo, useRef, useState } from "react";
+import styled, { css } from "styled-components";
+
+import Dropdown, { IDropdown } from "./Dropdown";
+import Modal from "./Modal";
 import SearchResult from "./SearchResult";
-import HEADER_CREATORS from "../store/actions/header";
-import FILTERS_CREATORS from "../store/actions/filter";
-import Dropdown from "./Dropdown";
-import useClickOutside from "../hooks/useClickOutside";
-import { saveAs } from "file-saver";
+
+import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
+import useClickOutside from "~/hooks/useClickOutside";
+import useFilterTabs from "~/hooks/useFilterTabs";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import HEADER_CREATORS from "~/store/actions/header";
+import MODAL_CREATORS from "~/store/actions/modal";
+import { IModalState } from "~/store/reducers/modal";
+import { createActiveTab } from "~/utils/helper";
 
 const Flex = styled.div`
   display: flex;
@@ -85,78 +90,58 @@ export default function Header(): JSX.Element {
   const dispatch = useDispatch();
 
   const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
-  const { available, active } = useSelector((state) => state.groups);
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
 
-  /**
-   * For each window in the currently active group, store the matching tabs (with current filter value)
-   * @returns 2d array of tabs where each index corresponds to the matching tabs in that window
-   */
-  useEffect(() => {
-    if (typing && filterChoice === "tab") {
-      const matchingTabs: chrome.tabs.Tab[][] = [];
+  useFilterTabs();
 
-      available[active.index].windows.forEach((window) => {
-        const matchingTabsInWindow = window.tabs?.filter((tab) =>
-          tab?.title?.toLowerCase()?.includes(inputValue.toLowerCase())
-        );
-        matchingTabsInWindow && matchingTabs.push(matchingTabsInWindow ?? []);
-      });
-
-      dispatch(FILTERS_CREATORS.updateFilteredTabs(matchingTabs));
-    } else if (typing && filterChoice === "group") {
-      const matchingGroups = available.filter((group) => group.name.toLowerCase().includes(inputValue.toLowerCase()));
-      dispatch(FILTERS_CREATORS.updateFilteredGroups(matchingGroups));
-    }
-  }, [dispatch, typing, inputValue, available, active.index, filterChoice]);
+  const modalDetailsHandler = useCallback(
+    (args: IModalState["info"]) => {
+      setShowModal(true);
+      setShowDropdown(false);
+      dispatch(MODAL_CREATORS.setModalInfo(args));
+    },
+    [dispatch]
+  );
 
   const settingsItems = useMemo(() => {
     return [
-      { text: "Import", handler: () => "" },
+      {
+        text: "Import",
+        handler: () =>
+          modalDetailsHandler({ title: "TabMerger Import", type: "import", closeText: "Cancel", saveText: "Import" })
+      },
       {
         text: "Export",
-        handler: () => {
-          // TODO show menu where user can select between text, json, ect.
-          const blob = new Blob([JSON.stringify({ active, available }, null, 2)], { type: "application/json" });
-          saveAs(blob, `TabMerger Export - ${new Date().toTimeString()}`);
-        }
-      },
-      { text: "Sync", handler: () => "" },
-      { text: "Print", handler: () => "" },
-      { text: "divider" },
-      { text: "Settings", handler: () => "" },
-      {
-        text: "Help",
-        handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/faq" })
-      },
-      { text: "divider" },
-      {
-        text: "Rate",
         handler: () =>
-          chrome.tabs.create({
-            url: "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews/"
-          })
+          modalDetailsHandler({ title: "TabMerger Export", type: "export", closeText: "Close", saveText: "Save File" })
       },
+      { text: "Sync", handler: () => console.warn("WIP"), isDisabled: true },
+      { text: "divider" },
+      {
+        text: "Settings",
+        handler: () => modalDetailsHandler({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" })
+      },
+      { text: "Help", handler: () => createActiveTab(TABMERGER_HELP) },
+      { text: "divider" },
+      { text: "Rate", handler: () => createActiveTab(TABMERGER_REVIEWS) },
       {
         text: "Donate",
-        handler: () =>
-          chrome.tabs.create({
-            url: process.env.REACT_APP_PAYPAL_URL
-          })
+        handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? "chrome://newtab")
       },
       { text: "divider" },
       {
         text: "About",
-        handler: () => chrome.tabs.create({ url: "https://lbragile.github.io/TabMerger-Extension/#about-section" })
+        handler: () => modalDetailsHandler({ title: "About TabMerger", type: "about", closeText: "Close" })
       }
-    ];
-  }, [active, available]);
+    ] as IDropdown["items"];
+  }, [modalDetailsHandler]);
 
   return (
     <>
@@ -177,10 +162,10 @@ export default function Header(): JSX.Element {
 
             <SearchIcon
               {...(typing ? { tabIndex: 0 } : {})}
-              icon={typing ? faTimes : faSearch}
+              icon={typing ? "times" : "search"}
               $typing={typing}
               onClick={() => {
-                // clicking the close button should clear the input
+                // Clicking the close button should clear the input
                 if (typing) {
                   dispatch(HEADER_CREATORS.updateInputValue(""));
                   dispatch(HEADER_CREATORS.setTyping(false));
@@ -207,7 +192,7 @@ export default function Header(): JSX.Element {
         <div ref={settingsIconRef}>
           <SettingsIcon
             tabIndex={0}
-            icon={faCog}
+            icon="cog"
             onPointerDown={(e) => e.preventDefault()}
             onClick={() => setShowDropdown(!showDropdown)}
             onKeyPress={({ key }) => key === "Enter" && setShowDropdown(!showDropdown)}
@@ -225,6 +210,8 @@ export default function Header(): JSX.Element {
       )}
 
       {typing && filterChoice === "group" && <SearchResult />}
+
+      {showModal && <Modal setVisible={setShowModal} />}
     </>
   );
 }

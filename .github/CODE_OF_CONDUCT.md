@@ -12,10 +12,10 @@ TabMerger contributors are expected to be respectful towards one another.
 ### ✅ Acceptable Behavior
 
 - Using welcoming and inclusive language.
-- ​Being respectful of differing viewpoints and experiences.
-- ​Gracefully accepting constructive criticism.
-- ​Focusing on what is best for the community.
-- ​Showing empathy towards other community members.
+- Being respectful of differing viewpoints and experiences.
+- Gracefully accepting constructive criticism.
+- Focusing on what is best for the community.
+- Showing empathy towards other community members.
 
 ### ❌ Unacceptable Behavior
 

@@ -1,10 +1,10 @@
-import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo } from "react";
-import { useDispatch, useSelector } from "../hooks/useRedux";
 import styled, { css } from "styled-components";
-import HEADER_CREATORS from "../store/actions/header";
-import { pluralize } from "../utils/helper";
+
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import HEADER_CREATORS from "~/store/actions/header";
+import { pluralize } from "~/utils/helper";
 
 const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
   display: flex;
@@ -61,7 +61,7 @@ export default function SearchResult(): JSX.Element {
   return (
     <StyledResult $isPositive={countToShow > 0} $isGroup={!isTabSearch}>
       <div>
-        <SearchIcon icon={faSearch} />
+        <SearchIcon icon="search" />
 
         <span>
           <b>{inputValue}</b>{" "}
@@ -77,7 +77,7 @@ export default function SearchResult(): JSX.Element {
       </div>
 
       <CloseIcon
-        icon={faTimes}
+        icon="times"
         tabIndex={0}
         onClick={handleClearSearch}
         onKeyPress={({ key }) => key === "Enter" && handleClearSearch()}

@@ -1,8 +1,10 @@
 import { nanoid } from "nanoid";
-import { WINDOW_QUERY_OPTIONS } from "../constants/chrome";
-import { IGroupItemState } from "../store/reducers/groups";
-import { TSentResponse } from "../typings/background";
+
 import { sortWindowsByFocus } from "./helper";
+
+import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
+import { IGroupItemState } from "~/store/reducers/groups";
+import { TSentResponse } from "~/typings/background";
 
 /**
  * Immediately Invoked Function Expression that executes the `sendResponse` function to response to the web page
@@ -30,7 +32,7 @@ export function setDefaultData(): void {
         name: "Now Open",
         id: activeId,
         windows: sortedWindows,
-        color: "rgba(128, 128, 128, 1)",
+        color: "rgb(128 128 128)",
         updatedAt: Date.now(),
         permanent: true
       }

@@ -24,6 +24,7 @@ export default function useClickOutside<T extends HTMLElement = HTMLElement>({
     };
 
     document.addEventListener("pointerdown", listener);
+
     return () => document.removeEventListener("pointerdown", listener);
   }, [ref, cb, preCondition]);
 }

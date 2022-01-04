@@ -1,25 +1,20 @@
+import { TABMERGER_SURVEY } from "./constants/urls";
 import { setDefaultData } from "./utils/background";
-// import { BG_ACTIONS } from "./constants/backgroundActions";
-// import { TSentResponse } from "./typings/background";
-// import { executeResponse } from "./utils/background";
 
-const handleMessage = (req: { type: string } /*sender: chrome.runtime.MessageSender, res: TSentResponse<unknown>*/) => {
+const handleMessage = (req: { type: string }) => {
   switch (req.type) {
-    // case BG_ACTIONS.GET_ALL_WINDOWS:
-    //   executeResponse<chrome.windows.Window[]>(res, async function);
-    //   break;
-
     default:
       break;
   }
 
-  return true; /** @see https://developer.chrome.com/docs/extensions/mv3/messaging/#simple near the end */
+  /** @see https://developer.chrome.com/docs/extensions/mv3/messaging/#simple near the end */
+  return true;
 };
 
 const handleInstall = (details: chrome.runtime.InstalledDetails) => {
   switch (details.reason) {
     case "install": {
-      chrome.runtime.setUninstallURL("https://lbragile.github.io/TabMerger-Extension/survey");
+      chrome.runtime.setUninstallURL(TABMERGER_SURVEY);
 
       setDefaultData();
 

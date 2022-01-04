@@ -1,11 +1,12 @@
-import styled from "styled-components";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import Highlighted from "../Highlighted";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
-import { isTabDrag } from "../../constants/dragRegExp";
-import { CloseIcon } from "../../styles/CloseIcon";
-import { useDispatch, useSelector } from "../../hooks/useRedux";
-import GROUPS_CREATORS from "../../store/actions/groups";
+import styled, { css } from "styled-components";
+
+import Highlighted from "~/components/Highlighted";
+import { isTabDrag } from "~/constants/dragRegExp";
+import { DEFAULT_FAVICON_URL } from "~/constants/urls";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import GROUPS_CREATORS from "~/store/actions/groups";
+import { CloseIcon } from "~/styles/CloseIcon";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
@@ -31,9 +32,20 @@ const TabTitle = styled.a`
   }
 `;
 
-const TabIcon = styled.img`
+const TabIcon = styled.img<{ $darken?: boolean }>`
   height: 14px;
   width: 14px;
+  transition: transform 0.3s ease;
+  ${({ $darken }) =>
+    $darken &&
+    css`
+      filter: brightness(10%);
+    `}
+
+  &:hover,
+  &:focus-visible {
+    transform: scale(1.25);
+  }
 `;
 
 const Row = styled.div`
@@ -60,6 +72,7 @@ export default function Tab({
   snapshot,
   dragHandleProps,
   tabIndex,
+  windowId,
   windowIndex
 }: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
@@ -68,16 +81,22 @@ export default function Tab({
     available,
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
+
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
 
-  const openTab = () => chrome.tabs.create({ url, active, pinned });
+  const openTab = () =>
+    groupIndex === 0
+      ? chrome.windows.update(windowId, { focused: true }, () =>
+          chrome.tabs.update(tabId ?? 0, { active: true }, () => "")
+        )
+      : chrome.tabs.create({ url, active, pinned, windowId }, () => "");
 
   const closeTab = () => {
     if (groupIndex > 0) {
       dispatch(GROUPS_CREATORS.closeTab({ tabIndex, windowIndex, groupIndex }));
 
-      // possible to have deleted the last tab in the window and/or group
+      // Possible to have deleted the last tab in the window and/or group
       if (!available[groupIndex].windows[windowIndex].tabs?.length) {
         dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
       }
@@ -86,14 +105,14 @@ export default function Tab({
         dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
       }
     } else {
-      tabId && chrome.tabs.remove(tabId);
+      tabId && chrome.tabs.remove(tabId, () => "");
     }
   };
 
   return (
     <Row>
       <CloseIcon
-        icon={faTimes}
+        icon="times"
         tabIndex={0}
         onClick={closeTab}
         onPointerDown={(e) => e.preventDefault()}
@@ -103,11 +122,12 @@ export default function Tab({
 
       <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
         <TabIcon
-          src={
-            favIconUrl === "" || !favIconUrl
-              ? "https://developer.chrome.com/images/meta/favicon-32x32.png"
-              : favIconUrl?.replace("-dark", "")
-          }
+          $darken={url?.includes("github.com")}
+          src={!favIconUrl ? DEFAULT_FAVICON_URL : favIconUrl}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = DEFAULT_FAVICON_URL;
+          }}
           alt="Favicon"
           {...dragHandleProps}
         />

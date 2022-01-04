@@ -1,5 +1,6 @@
-import { IAction } from "../../typings/reducers";
 import { IGroupItemState } from "./groups";
+
+import { IAction } from "~/typings/reducers";
 
 export const FILTER_ACTIONS = {
   UPDATE_FILTERED_TABS: "UPDATE_FILTERED_TABS",

@@ -1,5 +1,5 @@
 {
-  "trailingComma": "es5",
+  "trailingComma": "none",
   "tabWidth": 2,
   "semi": true,
   "singleQuote": false,
@@ -8,5 +8,6 @@
   "quoteProps": "as-needed",
   "htmlWhitespaceSensitivity": "css",
   "bracketSpacing": true,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "endOfLine": "lf"
 }

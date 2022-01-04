@@ -1,6 +1,8 @@
-import { IAction } from "../../typings/reducers";
 import { nanoid } from "nanoid";
 import { Combine, DraggableLocation } from "react-beautiful-dnd";
+
+import { IAction } from "~/typings/reducers";
+import { createGroup, createWindowWithTabs } from "~/utils/helper";
 
 export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
@@ -31,13 +33,17 @@ export const GROUPS_ACTIONS = {
   DUPLICATE_GROUP: "DUPLICATE_GROUP",
   REPLACE_WITH_CURRENT: "REPLACE_WITH_CURRENT",
   MERGE_WITH_CURRENT: "MERGE_WITH_CURRENT",
-  UNITE_WINDOWS: "UNITE_WINDOWS"
+  UNITE_WINDOWS: "UNITE_WINDOWS",
+  SPLIT_WINDOWS: "SPLIT_WINDOWS",
+  SORT_BY_TAB_TITLE: "SORT_BY_TAB_TITLE",
+  SORT_BY_TAB_URL: "SORT_BY_TAB_URL"
 };
 
 interface ICommonDnd {
   index: number;
   source: DraggableLocation;
 }
+
 export interface IWithinGroupDnd extends ICommonDnd {
   destination?: DraggableLocation;
 }
@@ -61,15 +67,6 @@ export interface IGroupsState {
   available: IGroupItemState[];
 }
 
-const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
-  alwaysOnTop: false,
-  focused: false,
-  incognito: false,
-  state: "maximized",
-  type: "normal",
-  tabs
-});
-
 const activeId = nanoid(10);
 const initState: IGroupsState = {
   active: { id: activeId, index: 0 },
@@ -77,7 +74,7 @@ const initState: IGroupsState = {
     {
       name: "Now Open",
       id: activeId,
-      color: "rgba(128, 128, 128, 1)",
+      color: "rgb(128 128 128)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
@@ -144,7 +141,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
         available[index].windows.splice(destination.index, 0, ...removedWindows);
         available[index].updatedAt = Date.now();
 
-        // need to toggle starred state depending on direction of drag
+        // Need to toggle starred state depending on direction of drag
         const compareIdx = destination.index + Math.sign(source.index - destination.index);
         available[index].windows[destination.index].starred = !!available[index].windows[compareIdx]?.starred;
       }
@@ -234,17 +231,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.ADD_GROUP: {
-      const NEW_GROUP: IGroupItemState = {
-        name: "New",
-        id: nanoid(10),
-        color: "rgba(128, 128, 128, 1)",
-        updatedAt: Date.now(),
-        windows: [],
-        permanent: false,
-        info: "0T | 0W"
-      };
-
-      available.push(NEW_GROUP);
+      available.push(createGroup(nanoid(10)));
 
       return { ...state, available };
     }
@@ -252,7 +239,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.DELETE_GROUP: {
       const index = action.payload as number;
 
-      // re-assign active group if deleted group was the active one (use the group above if needed)
+      // Re-assign active group if deleted group was the active one (use the group above if needed)
       const activeIdx = state.active.index;
       const active =
         activeIdx < index
@@ -278,7 +265,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const filteredGroups = available.filter((group, i) => i === 0 || (i > 0 && group.windows.length > 0));
       const filteredIds = filteredGroups.map((group) => group.id);
 
-      // if filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
+      // If filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
       // ... as it is not the source of the dnd event - must be non-empty.
       const { index, id } = state.active;
       const newIdx = Math.max(0, index - 1);
@@ -297,7 +284,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS: {
       const { index } = action.payload as { index: number };
 
-      // possible to have cleaned up the group (by removing all of its tabs) ...
+      // Possible to have cleaned up the group (by removing all of its tabs) ...
       // ... now the above index has already been cleared, so the window won't exist ...
       // ... this should not happen, but is a good "safety guard"
       if (available[index].windows.length > 0) {
@@ -371,14 +358,22 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.DUPLICATE_GROUP: {
       const groupIndex = action.payload as number;
 
-      // make sure to deep clone the group
+      // Make sure to deep clone the group
       available.splice(groupIndex, 0, JSON.parse(JSON.stringify(available[groupIndex])));
 
-      // assign new id to avoid having the same group
+      // Assign new id to avoid having the same group
       available[groupIndex + 1].id = nanoid(10);
 
-      // update the timestamp in the new group (original group does not need to update this as nothing changed)
+      // Update the timestamp in the new group (original group does not need to update this as nothing changed)
       available[groupIndex + 1].updatedAt = Date.now();
+
+      if (groupIndex === 0) {
+        // Make sure new group is not permanent
+        available[1].permanent = false;
+
+        // Unfocus all windows in new group (first one will be focused in the `Now Open` group)
+        available[1].windows[0].focused = false;
+      }
 
       return { ...state, available };
     }
@@ -386,7 +381,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.REPLACE_WITH_CURRENT: {
       const groupIndex = action.payload as number;
 
-      // overwrite the windows with the default group, then unfocus all the windows in the group
+      // Overwrite the windows with the default group, then unfocus all the windows in the group
       available[groupIndex].windows = JSON.parse(JSON.stringify(available[0].windows));
       available[groupIndex].windows.forEach((w) => (w.focused = false));
 
@@ -398,7 +393,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
     case GROUPS_ACTIONS.MERGE_WITH_CURRENT: {
       const groupIndex = action.payload as number;
 
-      // place merged windows first in the group then unfocus the newly merged windows
+      // Place merged windows first in the group then unfocus the newly merged windows
       available[groupIndex].windows = JSON.parse(JSON.stringify(available[0].windows)).concat(
         available[groupIndex].windows
       );
@@ -418,6 +413,35 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       available[groupIndex].windows = [firstWindow];
 
       available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.SPLIT_WINDOWS: {
+      const groupIndex = action.payload as number;
+
+      const allTabsInGroup = available[groupIndex].windows.flatMap((w) => w.tabs ?? []);
+      available[groupIndex].windows = allTabsInGroup.map((tab) => createWindowWithTabs([tab]));
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.SORT_BY_TAB_TITLE: {
+      const groupIndex = action.payload as number;
+
+      available[groupIndex].windows.forEach((w) =>
+        w.tabs?.sort((a, b) => (a?.title && b?.title ? a.title.localeCompare(b.title) : 0))
+      );
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.SORT_BY_TAB_URL: {
+      const groupIndex = action.payload as number;
+
+      available[groupIndex].windows.forEach((w) =>
+        w.tabs?.sort((a, b) => (a?.url && b?.url ? a.url.localeCompare(b.url) : 0))
+      );
 
       return { ...state, available };
     }

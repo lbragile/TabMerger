@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+
 import { useDispatch, useSelector } from "./useRedux";
-import GROUPS_CREATORS from "../store/actions/groups";
+
+import GROUPS_CREATORS from "~/store/actions/groups";
 
 /**
- * update each group's information if it doesn't match the current ...
+ * Update each group's information if it doesn't match the current ...
  * ... whenever the list of groups updates
  */
 export default function useUpdateInfo() {
