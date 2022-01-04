@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 
 import Selector from "./Selector";
 
+import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
@@ -206,7 +207,7 @@ export default function Export(): JSX.Element {
                 .map(
                   (t) =>
                     `\t\t\t<li><img class="${t.url?.includes("github.com") ? "darken " : ""} tabmerger-icon" src=${
-                      t.favIconUrl ?? "https://developer.chrome.com/images/meta/favicon-32x32.png"
+                      !t.favIconUrl ? DEFAULT_FAVICON_URL : t.favIconUrl
                     }><a href=${t.url} target="_blank" rel="noreferrer">${formatHtml(t.title)}</a></li>\n`
                 )
                 .join("")

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Dropdown, { IDropdown } from "~/components/Dropdown";
+import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce, useDebounceCallback } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
@@ -140,12 +141,7 @@ export default function Information(): JSX.Element {
                 chrome.tabs.create({ active, pinned, url }, () => "");
               })
             : chrome.windows.create(
-                {
-                  incognito,
-                  state,
-                  type: "normal",
-                  url: tabs?.map((t) => t?.url ?? "https://www.google.com")
-                },
+                { incognito, state, type: "normal", url: tabs?.map((t) => t?.url ?? GOOGLE_HOMEPAGE) },
                 () => ""
               );
         });
@@ -155,7 +151,7 @@ export default function Information(): JSX.Element {
             incognito: isIncognito,
             state: "maximized",
             type: "normal",
-            url: windows.flatMap((w) => w.tabs?.map((t) => t?.url ?? "https://www.google.com") ?? [])
+            url: windows.flatMap((w) => w.tabs?.map((t) => t?.url ?? GOOGLE_HOMEPAGE) ?? [])
           },
           () => ""
         );

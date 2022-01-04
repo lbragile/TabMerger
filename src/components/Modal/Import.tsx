@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 
 import Selector from "./Selector";
 
+import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
@@ -186,7 +187,7 @@ export default function Import(): JSX.Element {
           <Note>
             <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
-            <p>Each tab must have an associated URL (eg. https://www.google.com)</p>
+            <p>Each tab must have an associated URL (eg. {GOOGLE_HOMEPAGE})</p>
           </Note>
         </>
       )}

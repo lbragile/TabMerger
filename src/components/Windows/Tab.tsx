@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 
 import Highlighted from "~/components/Highlighted";
 import { isTabDrag } from "~/constants/dragRegExp";
+import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import GROUPS_CREATORS from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
@@ -60,8 +61,6 @@ interface ITab {
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }
-
-const DEFAULT_FAVICON_URL = "https://developer.chrome.com/images/meta/favicon-32x32.png";
 
 export default function Tab({
   favIconUrl,

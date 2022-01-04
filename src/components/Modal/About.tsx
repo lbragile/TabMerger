@@ -4,6 +4,27 @@ import styled from "styled-components";
 
 import Selector from "./Selector";
 
+import {
+  TABMERGER_DEMO_SITE,
+  EXTENSION_PAGE_LINK,
+  TABMERGER_TOS_LINK,
+  TABMERGER_REPO,
+  TABMERGER_LICENSE,
+  REACT_BEAUTIFUL_DND_REPO,
+  REACT_BEAUTIFUL_DND_LICENSE,
+  REACT_REPO,
+  REACT_LICENSE,
+  REDUX_REPO,
+  REDUX_LICENSE,
+  STYLED_COMPONENTS_REPO,
+  STYLED_COMPONENTS_LICENSE,
+  FILE_SAVER_REPO,
+  FILE_SAVER_LICENSE,
+  NANOID_REPO,
+  NANOID_LICENSE,
+  MANTINE_REPO,
+  MANTINE_LICENSE
+} from "~/constants/urls";
 import { Note } from "~/styles/Note";
 import { StyledLink } from "~/styles/StyledLink";
 import { createActiveTab } from "~/utils/helper";
@@ -47,10 +68,6 @@ const Logo = styled.img`
 const { version, description } = chrome.runtime.getManifest();
 const extensionId = chrome.runtime.id;
 
-const TABMERGER_DEMO_SITE = "https://lbragile.github.io/TabMerger-Extension/";
-const EXTENSION_PAGE_LINK = `chrome://extensions?id=${extensionId}`;
-const TOS_LINK = "https://lbragile.github.io/TabMerger-Extension/terms";
-
 interface ILicenseName {
   title: string;
   url: string;
@@ -64,44 +81,36 @@ interface ILicenseDetails {
 
 const LICENSE_DETAILS: ILicenseDetails[] = [
   {
-    name: { title: "TabMerger", url: "https://github.com/lbragile/TabMerger" },
+    name: { title: "TabMerger", url: TABMERGER_REPO },
     authors: "Lior Bragilevsky",
-    license: { title: "GPLv3", url: "https://github.com/lbragile/TabMerger/blob/master/LICENSE.md" }
+    license: { title: "GPLv3", url: TABMERGER_LICENSE }
   },
   {
-    name: { title: "React Beautiful DnD", url: "https://github.com/atlassian/react-beautiful-dnd" },
+    name: { title: "React Beautiful DnD", url: REACT_BEAUTIFUL_DND_REPO },
     authors: "Atlassian Pty Ltd",
-    license: { title: "Apache 2.0", url: "https://github.com/atlassian/react-beautiful-dnd/blob/master/LICENSE" }
+    license: { title: "Apache 2.0", url: REACT_BEAUTIFUL_DND_LICENSE }
   },
+  { name: { title: "React", url: REACT_REPO }, authors: "Facebook Inc", license: { title: "MIT", url: REACT_LICENSE } },
+  { name: { title: "Redux", url: REDUX_REPO }, authors: "Dan Abramov", license: { title: "MIT", url: REDUX_LICENSE } },
   {
-    name: { title: "React", url: "https://github.com/facebook/react" },
-    authors: "Facebook Inc",
-    license: { title: "MIT", url: "https://github.com/facebook/react/blob/main/LICENSE" }
-  },
-  {
-    name: { title: "Redux", url: "https://github.com/reduxjs/redux" },
-    authors: "Dan Abramov",
-    license: { title: "MIT", url: "https://github.com/reduxjs/redux/blob/master/LICENSE.md" }
-  },
-  {
-    name: { title: "Styled Components", url: "https://github.com/styled-components/styled-components" },
+    name: { title: "Styled Components", url: STYLED_COMPONENTS_REPO },
     authors: "Glen Maddern & Maximilian Stoiber",
-    license: { title: "MIT", url: "https://github.com/styled-components/styled-components/blob/main/LICENSE" }
+    license: { title: "MIT", url: STYLED_COMPONENTS_LICENSE }
   },
   {
-    name: { title: "File Saver", url: "https://github.com/eligrey/FileSaver.js" },
+    name: { title: "File Saver", url: FILE_SAVER_REPO },
     authors: "Eli Grey",
-    license: { title: "MIT", url: "https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md" }
+    license: { title: "MIT", url: FILE_SAVER_LICENSE }
   },
   {
-    name: { title: "Nano ID", url: "https://github.com/ai/nanoid" },
+    name: { title: "Nano ID", url: NANOID_REPO },
     authors: "Andrey Sitnik",
-    license: { title: "MIT", url: "https://github.com/ai/nanoid/blob/main/LICENSE" }
+    license: { title: "MIT", url: NANOID_LICENSE }
   },
   {
-    name: { title: "Mantine", url: "https://github.com/mantinedev/mantine" },
+    name: { title: "Mantine", url: MANTINE_REPO },
     authors: "Vitaly Rtishchev",
-    license: { title: "MIT", url: "https://github.com/mantinedev/mantine/blob/master/LICENSE" }
+    license: { title: "MIT", url: MANTINE_LICENSE }
   }
 ];
 
@@ -199,11 +208,11 @@ export default function About(): JSX.Element {
           <p>By using this software you agree to TabMerger&apos;s</p>
 
           <StyledLink
-            title={TOS_LINK}
+            title={TABMERGER_TOS_LINK}
             role="link"
             tabIndex={0}
-            onClick={() => createActiveTab(TOS_LINK)}
-            onKeyPress={({ key }) => key === "Enter" && createActiveTab(TOS_LINK)}
+            onClick={() => createActiveTab(TABMERGER_TOS_LINK)}
+            onKeyPress={({ key }) => key === "Enter" && createActiveTab(TABMERGER_TOS_LINK)}
           >
             Terms and Conditions
           </StyledLink>

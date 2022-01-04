@@ -6,6 +6,7 @@ import Dropdown, { IDropdown } from "./Dropdown";
 import Modal from "./Modal";
 import SearchResult from "./SearchResult";
 
+import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import useFilterTabs from "~/hooks/useFilterTabs";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
@@ -127,18 +128,9 @@ export default function Header(): JSX.Element {
         text: "Settings",
         handler: () => modalDetailsHandler({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" })
       },
-      {
-        text: "Help",
-        handler: () => createActiveTab("https://groups.google.com/g/tabmerger")
-      },
+      { text: "Help", handler: () => createActiveTab(TABMERGER_HELP) },
       { text: "divider" },
-      {
-        text: "Rate",
-        handler: () =>
-          createActiveTab(
-            "https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews/"
-          )
-      },
+      { text: "Rate", handler: () => createActiveTab(TABMERGER_REVIEWS) },
       {
         text: "Donate",
         handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? "chrome://newtab")

@@ -8,6 +8,7 @@ import Tab from "./Tab";
 import Dropdown from "~/components/Dropdown";
 import Popup from "~/components/Popup";
 import { isTabDrag } from "~/constants/dragRegExp";
+import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import GROUPS_CREATORS from "~/store/actions/groups";
@@ -152,7 +153,7 @@ export default function Window({
                 type: "normal",
                 state,
                 incognito: type === "incognito" || incognito,
-                url: currentTabs?.map((tab) => tab.url ?? "https://www.google.com")
+                url: currentTabs?.map((tab) => tab.url ?? GOOGLE_HOMEPAGE)
               },
               () => ""
             )

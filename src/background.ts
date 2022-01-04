@@ -1,3 +1,4 @@
+import { TABMERGER_SURVEY } from "./constants/urls";
 import { setDefaultData } from "./utils/background";
 
 const handleMessage = (req: { type: string }) => {
@@ -13,7 +14,7 @@ const handleMessage = (req: { type: string }) => {
 const handleInstall = (details: chrome.runtime.InstalledDetails) => {
   switch (details.reason) {
     case "install": {
-      chrome.runtime.setUninstallURL("https://lbragile.github.io/TabMerger-Extension/survey");
+      chrome.runtime.setUninstallURL(TABMERGER_SURVEY);
 
       setDefaultData();
 
