@@ -68,6 +68,7 @@ export interface IGroupsState {
 }
 
 const activeId = nanoid(10);
+
 const initState: IGroupsState = {
   active: { id: activeId, index: 0 },
   available: [
@@ -241,6 +242,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
       // Re-assign active group if deleted group was the active one (use the group above if needed)
       const activeIdx = state.active.index;
+
       const active =
         activeIdx < index
           ? { ...state.active }

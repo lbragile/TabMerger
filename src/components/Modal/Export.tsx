@@ -130,6 +130,7 @@ export default function Export(): JSX.Element {
 
   const selectOpts = useMemo(() => available.map((group) => ({ label: group.name, value: group })), [available]);
   const [selected, setSelected] = useState(selectOpts);
+
   const [checkbox, setCheckbox] = useState([
     { text: "Titles", checked: true },
     { text: "URLs", checked: true }

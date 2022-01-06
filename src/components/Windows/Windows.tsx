@@ -28,6 +28,7 @@ const WindowsContainer = styled(Scrollbar)<IWindowContainerStyle>`
 export default function Windows(): JSX.Element {
   const { typing, filterChoice } = useSelector((state) => state.header);
   const { filteredTabs } = useSelector((state) => state.filter);
+
   const {
     active: { index: groupIndex },
     available

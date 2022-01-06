@@ -58,6 +58,7 @@ export function getReadableTimestamp(timestamp: number): string {
  */
 export const toggleWindowTabsVisibility = (draggableId: string, show: boolean): void => {
   const droppableId = draggableId.split("-").slice(0, 2).join("-");
+
   const elem = document.querySelector(
     `[data-rbd-draggable-id*="${draggableId}"] [data-rbd-droppable-id^="${droppableId}"]`
   ) as HTMLDivElement | null;

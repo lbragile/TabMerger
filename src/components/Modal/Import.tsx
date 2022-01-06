@@ -86,6 +86,7 @@ export default function Import(): JSX.Element {
   const onDropAccepted = useCallback(
     async ([file]: File[]) => {
       const { name } = file;
+
       const type = /\.json$/.test(name)
         ? "json"
         : /\.csv$/.test(name)

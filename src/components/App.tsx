@@ -17,10 +17,11 @@ import {
   faCheckCircle,
   faUpload
 } from "@fortawesome/free-solid-svg-icons";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled, { ThemeProvider } from "styled-components";
 
+import ColorPicker from "./ColorPicker";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Windows from "./Windows";
@@ -57,6 +58,8 @@ const App = (): JSX.Element => {
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
 
+  const [color, setColor] = useState("rgba(196, 146, 96, 1)");
+
   useStorage({ available, active });
   useUpdateWindows();
   useUpdateInfo();
@@ -69,6 +72,9 @@ const App = (): JSX.Element => {
 
       <ThemeProvider theme={Theme}>
         <Header />
+
+        <ColorPicker setColor={setColor} />
+        <p>{color}</p>
 
         <DragDropContext
           onBeforeCapture={onBeforeCapture}
