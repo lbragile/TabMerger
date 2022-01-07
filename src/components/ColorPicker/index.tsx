@@ -6,6 +6,7 @@ import Hue from "./Hue";
 import Sketch from "./Sketch";
 
 import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
+import { extractRGBAFromStr, RGBtoHSV } from "~/utils/colorConvert";
 
 const Container = styled.div`
   display: flex;
@@ -32,8 +33,8 @@ const StyledAlpha = styled(Alpha)`
   grid-area: alpha;
 `;
 
-const Preview = styled.div`
-  background-color: red;
+const Preview = styled.div<{ $color: string }>`
+  background-color: ${({ $color }) => $color};
   width: 28px;
   height: 28px;
   grid-area: preview;
@@ -55,33 +56,52 @@ const Swatch = styled.div<{ $color: string }>`
   cursor: pointer;
 `;
 
-export default function ColorPicker({ setColor }: { setColor: (arg: string) => void }): JSX.Element {
-  const [hue, setHue] = useState(30);
-  const [alpha, setAlpha] = useState(1);
+const ColorIndicator = styled.p`
+  padding: 4px;
+  font-size: 12px;
+  text-align: center;
+`;
+
+interface IColorPicker {
+  color: string;
+  setColor: (arg: string) => void;
+}
+
+export default function ColorPicker({ color, setColor }: IColorPicker): JSX.Element {
+  const [hue, setHue] = useState(() => {
+    const [r, g, b] = extractRGBAFromStr(color);
+    const { h } = RGBtoHSV({ r, g, b });
+
+    return Number(h);
+  });
+
+  const [alpha, setAlpha] = useState(() => extractRGBAFromStr(color).at(-1) ?? 1);
 
   return (
     <Container>
-      <Sketch hue={hue} alpha={alpha} setColor={setColor} />
+      <Sketch hue={hue} alpha={alpha} color={color} setColor={setColor} />
 
       <Grid>
         <StyledHue hue={hue} setHue={setHue} />
         <StyledAlpha alpha={alpha} hue={hue} setAlpha={setAlpha} />
-        <Preview />
+        <Preview $color={color} />
       </Grid>
 
       <SwatchGrid>
-        {COLOR_PICKER_SWATCHES.map((color) => (
+        {COLOR_PICKER_SWATCHES.map((swatchColor) => (
           <Swatch
-            key={color}
+            key={swatchColor}
             tabIndex={0}
             role="button"
-            $color={color}
-            title={color}
-            onClick={() => ""}
-            onKeyPress={({ key }) => key === "Enter" && ""}
+            $color={swatchColor}
+            title={swatchColor}
+            onClick={() => setColor(swatchColor)}
+            onKeyPress={({ key }) => key === "Enter" && setColor(swatchColor)}
           />
         ))}
       </SwatchGrid>
+
+      <ColorIndicator>{color}</ColorIndicator>
     </Container>
   );
 }

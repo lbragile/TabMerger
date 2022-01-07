@@ -19,6 +19,10 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
   const [pickerPos, setPickerPos] = useState(alpha);
 
   useEffect(() => {
+    setPickerPos(Math.max(0, Math.min(alpha, 1)));
+  }, [alpha]);
+
+  useEffect(() => {
     const context = alphaRef.current?.getContext("2d");
 
     if (context) {
@@ -57,9 +61,7 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
 
     if (canDrag && context) {
       const { left, width } = context.getBoundingClientRect();
-      const x = clientX - Math.floor(left);
-      setAlpha(x / width);
-      setPickerPos(x - 6);
+      setAlpha((clientX - Math.floor(left)) / width);
     }
   };
 
@@ -69,17 +71,12 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
-    let newX = pickerPos;
     let newAlpha = alpha;
 
-    if (["ArrowLeft", "ArrowRight"].includes(key)) {
-      const delta = key === "ArrowLeft" ? -1 : 1;
-      newX = Math.max(0, Math.min(newX + delta, CANVAS_WIDTH));
-      newAlpha += delta;
-    }
+    if (key === "ArrowLeft") newAlpha -= 0.01;
+    else if (key === "ArrowRight") newAlpha += 0.01;
 
-    setPickerPos(newX);
-    setAlpha(newAlpha);
+    setAlpha(Math.max(0, Math.min(newAlpha, 1)));
   };
 
   return (

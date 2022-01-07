@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Container, Picker } from "~/styles/ColorPicker";
+import { RGBtoHSV, HSVtoRGB, extractRGBAFromStr } from "~/utils/colorConvert";
 
 const CANVAS_WIDTH = 200;
 const CANVAS_HEIGHT = 125;
-const PICKER_RADIUS = 6;
 
 interface ISketch {
   hue: number;
   alpha: number;
+  color: string;
   setColor: (arg: string) => void;
 }
 
@@ -20,12 +21,25 @@ interface ISketch {
  *
  * Thus, HSB/HSV colorspace is used to calculate the position of the cursor on the canvas
  */
-export default function Sketch({ hue, alpha, setColor }: ISketch): JSX.Element {
+export default function Sketch({ hue, alpha, color, setColor }: ISketch): JSX.Element {
   const sketchRef = useRef<HTMLCanvasElement | null>(null);
   const pickerRef = useRef<HTMLDivElement | null>(null);
 
   const [canDrag, setCanDrag] = useState(false);
-  const [pickerPos, setPickerPos] = useState({ x: 188, y: 0 });
+
+  const [pickerPos, setPickerPos] = useState(() => {
+    const [r, g, b] = extractRGBAFromStr(color);
+    const { s, v } = RGBtoHSV({ r, g, b });
+
+    return { x: Number(s), y: 1 - Number(v) };
+  });
+
+  useEffect(() => {
+    const x = Math.max(0, Math.min(pickerPos.x, 1));
+    const y = Math.max(0, Math.min(pickerPos.y, 1));
+    const { r, g, b } = HSVtoRGB({ h: hue, s: x, v: 1 - y });
+    setColor(`rgba(${r}, ${g}, ${b}, ${alpha.toFixed(2)})`);
+  }, [pickerPos, alpha, hue, setColor]);
 
   useEffect(() => {
     const context = sketchRef.current?.getContext("2d");
@@ -55,13 +69,9 @@ export default function Sketch({ hue, alpha, setColor }: ISketch): JSX.Element {
 
     if (canDrag && sketch) {
       const { left, top } = sketch.getBoundingClientRect();
-      const x = Math.max(0, Math.min(clientX - PICKER_RADIUS - left, CANVAS_WIDTH));
-      const y = Math.max(0, Math.min(clientY - PICKER_RADIUS - top, CANVAS_HEIGHT));
-
-      const [r, g, b] = sketch.getContext("2d")?.getImageData(x, y, 1, 1).data ?? [0, 0, 0];
-
+      const x = (clientX - left) / CANVAS_WIDTH;
+      const y = (clientY - top) / CANVAS_HEIGHT;
       setPickerPos({ x, y });
-      setColor(`rgba(${r}, ${g}, ${b}, ${alpha})`);
     }
   };
 
@@ -73,17 +83,12 @@ export default function Sketch({ hue, alpha, setColor }: ISketch): JSX.Element {
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
     let { x: newX, y: newY } = { ...pickerPos };
 
-    if (["ArrowLeft", "ArrowRight"].includes(key)) {
-      newX = Math.max(0, Math.min(newX + (key === "ArrowLeft" ? -1 : 1), CANVAS_WIDTH));
-    } else if (["ArrowUp", "ArrowDown"].includes(key)) {
-      newY = Math.max(0, Math.min(newY + (key === "ArrowUp" ? -1 : 1), CANVAS_HEIGHT));
-    }
-
-    // Re-compute the canvas color
-    const [r, g, b] = sketchRef.current?.getContext("2d")?.getImageData(newX, newY, 1, 1).data ?? [0, 0, 0];
+    if (key === "ArrowLeft") newX -= 0.1;
+    else if (key === "ArrowRight") newX += 0.1;
+    else if (key === "ArrowUp") newY -= 0.05;
+    else if (key === "ArrowDown") newY += 0.05;
 
     setPickerPos({ x: newX, y: newY });
-    setColor(`rgba(${r}, ${g}, ${b}, ${alpha})`);
   };
 
   return (
@@ -94,14 +99,16 @@ export default function Sketch({ hue, alpha, setColor }: ISketch): JSX.Element {
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       />
+
       <Picker
+        $sketch
         ref={pickerRef}
         pos={pickerPos}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onKeyDown={handleKeyPress}
         role="slider"
-        aria-valuenow={Math.sqrt(pickerPos.x ** 2 + pickerPos.y ** 2)}
+        aria-valuenow={pickerPos.x + pickerPos.y}
         tabIndex={0}
       />
     </Container>

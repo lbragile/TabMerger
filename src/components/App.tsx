@@ -58,7 +58,7 @@ const App = (): JSX.Element => {
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
 
-  const [color, setColor] = useState("rgba(196, 146, 96, 1)");
+  const [color, setColor] = useState("rgba(0, 127, 0, 0.75)");
 
   useStorage({ available, active });
   useUpdateWindows();
@@ -73,8 +73,7 @@ const App = (): JSX.Element => {
       <ThemeProvider theme={Theme}>
         <Header />
 
-        <ColorPicker setColor={setColor} />
-        <p>{color}</p>
+        <ColorPicker color={color} setColor={setColor} />
 
         <DragDropContext
           onBeforeCapture={onBeforeCapture}

@@ -18,6 +18,10 @@ export default function Hue({ hue, setHue }: IHue) {
   const [pickerPos, setPickerPos] = useState(hue);
 
   useEffect(() => {
+    setPickerPos(Math.max(0, Math.min(hue / 360, 1)));
+  }, [hue]);
+
+  useEffect(() => {
     const context = hueRef.current?.getContext("2d");
 
     if (context) {
@@ -47,9 +51,7 @@ export default function Hue({ hue, setHue }: IHue) {
 
     if (canDrag && context) {
       const { left, width } = context.getBoundingClientRect();
-      const x = clientX - Math.floor(left);
-      setHue((x * 360) / width);
-      setPickerPos(x - 6);
+      setHue(((clientX - Math.floor(left)) * 360) / width);
     }
   };
 
@@ -59,17 +61,12 @@ export default function Hue({ hue, setHue }: IHue) {
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
-    let newX = pickerPos;
     let newHue = hue;
 
-    if (["ArrowLeft", "ArrowRight"].includes(key)) {
-      const delta = key === "ArrowLeft" ? -1 : 1;
-      newX = Math.max(0, Math.min(newX + delta, CANVAS_WIDTH));
-      newHue += delta;
-    }
+    if (key === "ArrowLeft") newHue -= 10;
+    else if (key === "ArrowRight") newHue += 10;
 
-    setPickerPos(newX);
-    setHue(newHue);
+    setHue(Math.max(0, Math.min(newHue, 359.99)));
   };
 
   return (
