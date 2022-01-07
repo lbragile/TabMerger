@@ -21,9 +21,7 @@ import {
   FILE_SAVER_REPO,
   FILE_SAVER_LICENSE,
   NANOID_REPO,
-  NANOID_LICENSE,
-  MANTINE_REPO,
-  MANTINE_LICENSE
+  NANOID_LICENSE
 } from "~/constants/urls";
 import { Note } from "~/styles/Note";
 import { StyledLink } from "~/styles/StyledLink";
@@ -106,11 +104,6 @@ const LICENSE_DETAILS: ILicenseDetails[] = [
     name: { title: "Nano ID", url: NANOID_REPO },
     authors: "Andrey Sitnik",
     license: { title: "MIT", url: NANOID_LICENSE }
-  },
-  {
-    name: { title: "Mantine", url: MANTINE_REPO },
-    authors: "Vitaly Rtishchev",
-    license: { title: "MIT", url: MANTINE_LICENSE }
   }
 ];
 

@@ -11,9 +11,10 @@ import { extractRGBAFromStr, RGBtoHSV } from "~/utils/colorConvert";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   box-shadow: 0 0 4px 0 black;
   padding: 4px;
+  background-color: white;
 `;
 
 const Grid = styled.div`
@@ -38,6 +39,7 @@ const Preview = styled.div<{ $color: string }>`
   width: 28px;
   height: 28px;
   grid-area: preview;
+  box-shadow: rgb(0 0 0 / 10%) 0 0 0 1px inset, rgb(0 0 0 / 15%) 0 0 4px inset;
 `;
 
 const SwatchGrid = styled.div`
@@ -57,7 +59,6 @@ const Swatch = styled.div<{ $color: string }>`
 `;
 
 const ColorIndicator = styled.p`
-  padding: 4px;
   font-size: 12px;
   text-align: center;
 `;

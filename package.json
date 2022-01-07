@@ -5,8 +5,6 @@
   "author": "Lior Bragilevsky <lbragile.masc@gmail.com> (https://github.com/lbragile)",
   "private": true,
   "dependencies": {
-    "@mantine/core": "^3.5.0",
-    "@mantine/hooks": "^3.5.0",
     "file-saver": "^2.0.5",
     "nanoid": "^3.1.30",
     "react": "^17.0.2",
@@ -29,7 +27,7 @@
     "@types/chrome": "^0.0.174",
     "@types/express": "^4.17.13",
     "@types/file-saver": "^2.0.4",
-    "@types/node": "^17.0.7",
+    "@types/node": "^17.0.8",
     "@types/react": "^17.0.38",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.11",

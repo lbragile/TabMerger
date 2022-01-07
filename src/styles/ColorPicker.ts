@@ -12,6 +12,7 @@ export const Container = styled.div<{ $width: number; $height: number }>`
   position: relative;
   cursor: crosshair;
   overflow: hidden;
+  box-shadow: 0 0 1px rgb(0 0 0 / 60%) inset;
 
   &,
   & canvas {
@@ -32,7 +33,6 @@ export const Picker = styled.div.attrs(({ pos: { x, y }, $sketch }: IPicker) => 
   border: 2px solid white;
   user-select: none;
   position: absolute;
-  transition: all 0.1s ease-out;
 
   &:focus-visible {
     outline: 1px solid white;

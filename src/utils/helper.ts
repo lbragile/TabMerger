@@ -111,7 +111,7 @@ export const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Wi
 export const createGroup = (id: string, name?: string): IGroupItemState => ({
   name: name ?? "New",
   id,
-  color: "rgb(128 128 128)",
+  color: "rgba(128, 128, 128, 1)",
   updatedAt: Date.now(),
   windows: [],
   permanent: false,

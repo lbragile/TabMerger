@@ -48,7 +48,3 @@ export const FILE_SAVER_LICENSE = FILE_SAVER_REPO + "/blob/master/LICENSE.md";
 export const NANOID_REPO = GITHUB_BASE_URL + "/ai/nanoid";
 
 export const NANOID_LICENSE = NANOID_REPO + "/blob/main/LICENSE";
-
-export const MANTINE_REPO = GITHUB_BASE_URL + "/mantinedev/mantine";
-
-export const MANTINE_LICENSE = MANTINE_REPO + "/blob/master/LICENSE";

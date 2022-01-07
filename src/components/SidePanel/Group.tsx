@@ -1,11 +1,10 @@
-import { ColorPicker } from "@mantine/core";
 import { useRef, useState } from "react";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
+import ColorPicker from "~/components/ColorPicker";
 import Highlighted from "~/components/Highlighted";
 import Popup from "~/components/Popup";
-import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
 import { isGroupDrag } from "~/constants/dragRegExp";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
@@ -106,31 +105,13 @@ const ColorIndicator = styled.div<{ color: string }>`
 `;
 
 const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; $visible: boolean }>`
-  box-shadow: 0 0 4px 0 black;
-  padding: 4px;
-  border-radius: 4px;
   position: fixed;
-  background: white;
-  z-index: 10;
+  z-index: 1;
   display: ${({ $visible }) => ($visible ? "flex" : "none")};
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
   ${({ $pos: { right, top } }) => css`
     top: ${top}px;
     left: ${right + 12}px;
   `}
-
-  & .cp-thumb,
-  & .cp-saturation,
-  & .cp-slider {
-    cursor: crosshair;
-  }
-
-  & > span {
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
 `;
 
 interface IGroup {
@@ -261,14 +242,7 @@ export default function Group({
 
       {/* Want this to be present in the DOM since it's height is used to calculate position */}
       <ColorPickerContainer ref={pickerRef} $pos={pickerPos} $visible={showPicker}>
-        <ColorPicker
-          classNames={{ thumb: "cp-thumb", saturation: "cp-saturation", slider: "cp-slider" }}
-          format="rgba"
-          value={debouncedPickerValue}
-          onChange={setColorPickerValue}
-          swatches={COLOR_PICKER_SWATCHES}
-        />
-        <span>{debouncedPickerValue}</span>
+        <ColorPicker color={debouncedPickerValue} setColor={setColorPickerValue} />
       </ColorPickerContainer>
 
       {titleOverflow.visible && <Popup {...titleOverflow} />}

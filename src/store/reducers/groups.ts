@@ -75,7 +75,7 @@ const initState: IGroupsState = {
     {
       name: "Now Open",
       id: activeId,
-      color: "rgb(128 128 128)",
+      color: "rgba(128, 128, 128, 1)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
