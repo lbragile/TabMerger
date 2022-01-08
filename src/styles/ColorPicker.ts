@@ -19,6 +19,10 @@ export const Container = styled.div<{ $width: number; $height: number }>`
     width: ${({ $width }) => $width}px;
     height: ${({ $height }) => $height}px;
   }
+
+  &:focus-visible {
+    outline: 1px solid transparent;
+  }
 `;
 
 export const Picker = styled.div.attrs(({ pos: { x, y }, $sketch }: IPicker) => ({

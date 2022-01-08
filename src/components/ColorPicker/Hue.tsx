@@ -61,33 +61,29 @@ export default function Hue({ hue, setHue }: IHue) {
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
+    pickerRef.current?.focus();
+
     let newHue = hue;
 
-    if (key === "ArrowLeft") newHue -= 10;
-    else if (key === "ArrowRight") newHue += 10;
+    if (key === "ArrowLeft") newHue -= 1;
+    else if (key === "ArrowRight") newHue += 1;
 
     setHue(Math.max(0, Math.min(newHue, 359.99)));
   };
 
   return (
-    <Container className="picker-hue" $width={CANVAS_WIDTH} $height={CANVAS_HEIGHT}>
-      <canvas
-        ref={hueRef}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      />
-
-      <Picker
-        ref={pickerRef}
-        pos={{ x: pickerPos, y: 0 }}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onKeyDown={handleKeyPress}
-        role="slider"
-        aria-valuenow={pickerPos}
-        tabIndex={0}
-      />
+    <Container
+      className="picker-hue"
+      $width={CANVAS_WIDTH}
+      $height={CANVAS_HEIGHT}
+      tabIndex={0}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onKeyDown={handleKeyPress}
+    >
+      <canvas ref={hueRef} />
+      <Picker ref={pickerRef} pos={{ x: pickerPos, y: 0 }} role="slider" aria-valuenow={pickerPos} tabIndex={0} />
     </Container>
   );
 }

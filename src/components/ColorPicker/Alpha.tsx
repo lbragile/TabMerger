@@ -71,6 +71,8 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
+    pickerRef.current?.focus();
+
     let newAlpha = alpha;
 
     if (key === "ArrowLeft") newAlpha -= 0.01;
@@ -80,24 +82,18 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
   };
 
   return (
-    <Container className="picker-alpha" $width={CANVAS_WIDTH} $height={CANVAS_HEIGHT}>
-      <canvas
-        ref={alphaRef}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      />
-
-      <Picker
-        ref={pickerRef}
-        pos={{ x: pickerPos, y: 0 }}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onKeyDown={handleKeyPress}
-        role="slider"
-        aria-valuenow={pickerPos}
-        tabIndex={0}
-      />
+    <Container
+      className="picker-alpha"
+      $width={CANVAS_WIDTH}
+      $height={CANVAS_HEIGHT}
+      tabIndex={0}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onKeyDown={handleKeyPress}
+    >
+      <canvas ref={alphaRef} />
+      <Picker ref={pickerRef} pos={{ x: pickerPos, y: 0 }} role="slider" aria-valuenow={pickerPos} tabIndex={0} />
     </Container>
   );
 }

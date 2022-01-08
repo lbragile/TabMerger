@@ -82,32 +82,34 @@ export default function Sketch({ hue, alpha, color, setColor }: ISketch): JSX.El
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
+    pickerRef.current?.focus();
+
     let { x: newX, y: newY } = { ...pickerPos };
 
-    if (key === "ArrowLeft") newX -= 0.1;
-    else if (key === "ArrowRight") newX += 0.1;
-    else if (key === "ArrowUp") newY -= 0.05;
-    else if (key === "ArrowDown") newY += 0.05;
+    if (key === "ArrowLeft") newX -= 0.01;
+    else if (key === "ArrowRight") newX += 0.01;
+    else if (key === "ArrowUp") newY -= 0.01;
+    else if (key === "ArrowDown") newY += 0.01;
 
     setPickerPos({ x: newX, y: newY });
   };
 
   return (
-    <Container $width={CANVAS_WIDTH} $height={CANVAS_HEIGHT}>
-      <canvas
-        ref={sketchRef}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      />
+    <Container
+      $width={CANVAS_WIDTH}
+      $height={CANVAS_HEIGHT}
+      tabIndex={0}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onKeyDown={handleKeyPress}
+    >
+      <canvas ref={sketchRef} />
 
       <Picker
         $sketch
         ref={pickerRef}
         pos={pickerPos}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onKeyDown={handleKeyPress}
         role="slider"
         aria-valuenow={pickerPos.x + pickerPos.y}
         tabIndex={0}
