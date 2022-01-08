@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
@@ -156,6 +156,11 @@ export default function Group({
       setShowPicker(false);
     }
   });
+
+  // When importing, the color picker value needs to update
+  useEffect(() => {
+    setColorPickerValue(color);
+  }, [color]);
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
 
