@@ -9,7 +9,7 @@ import FILTERS_CREATORS from "~/store/actions/filter";
  * For "tab" filter - Generates 2d array of tabs where each index corresponds to the matching tabs in that window
  * For "group" filter - Simply filters the list of groups to only keep those that contain the search value
  */
-export default function useFilterTabs() {
+export default function useFilter() {
   const dispatch = useDispatch();
 
   const { typing, inputValue, filterChoice } = useSelector((state) => state.header);

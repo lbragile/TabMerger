@@ -8,7 +8,7 @@ import Selector from "./Selector";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
-import { useDispatch, useSelector } from "~/hooks/useRedux";
+import { useDispatch } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
 
@@ -58,14 +58,9 @@ const Message = styled.p<{ $error?: boolean }>`
 `;
 
 const UPLOAD_FILE_ERROR = "Something is wrong with this file, please try another one";
-const IMPORT_TEXT_ERROR = "This text does not match the expected import format";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
-
-  const {
-    import: { formatted }
-  } = useSelector((state) => state.modal);
 
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
   const [currentText, setCurrentText] = useState("");
@@ -180,10 +175,6 @@ export default function Import(): JSX.Element {
               setCurrentText(value);
             }}
           />
-
-          {currentText.replace(/\n/g, "") !== "" && formatted.length === 0 && (
-            <Message $error>{IMPORT_TEXT_ERROR}</Message>
-          )}
 
           <Note>
             <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />

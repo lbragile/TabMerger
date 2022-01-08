@@ -61,7 +61,7 @@ const App = (): JSX.Element => {
   useUpdateWindows();
   useUpdateInfo();
 
-  const { onBeforeCapture, onDragStart, onDragUpdate, onDragEnd } = useDnd(sidePanelRef);
+  const { onBeforeCapture, onDragStart, onDragEnd } = useDnd(sidePanelRef);
 
   return (
     <Container>
@@ -70,12 +70,7 @@ const App = (): JSX.Element => {
       <ThemeProvider theme={Theme}>
         <Header />
 
-        <DragDropContext
-          onBeforeCapture={onBeforeCapture}
-          onDragStart={onDragStart}
-          onDragUpdate={onDragUpdate}
-          onDragEnd={onDragEnd}
-        >
+        <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
           {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
             <MainArea>
               <div ref={sidePanelRef}>

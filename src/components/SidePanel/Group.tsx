@@ -115,8 +115,8 @@ const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; 
 `;
 
 interface IGroup {
-  snapshot: DraggableStateSnapshot;
-  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
+  snapshot?: DraggableStateSnapshot;
+  dragHandleProps?: DraggableProvidedDragHandleProps;
 }
 
 export default function Group({
@@ -197,7 +197,7 @@ export default function Group({
           role="button"
           $isActive={isActive}
           $overflow={available.length > 10}
-          $dragging={snapshot.isDragging}
+          $dragging={!!snapshot?.isDragging}
           $draggingOver={index > 0 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}

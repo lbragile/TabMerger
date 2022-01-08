@@ -8,7 +8,7 @@ import SearchResult from "./SearchResult";
 
 import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
-import useFilterTabs from "~/hooks/useFilterTabs";
+import useFilter from "~/hooks/useFilter";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import HEADER_CREATORS from "~/store/actions/header";
 import MODAL_CREATORS from "~/store/actions/modal";
@@ -99,7 +99,7 @@ export default function Header(): JSX.Element {
 
   useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
 
-  useFilterTabs();
+  useFilter();
 
   const modalDetailsHandler = useCallback(
     (args: IModalState["info"]) => {
