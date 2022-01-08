@@ -27,12 +27,13 @@ export default function Sketch({ hue, alpha, color, setColor }: ISketch): JSX.El
 
   const [canDrag, setCanDrag] = useState(false);
 
-  const [pickerPos, setPickerPos] = useState(() => {
+  const [pickerPos, setPickerPos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
     const [r, g, b] = extractRGBAFromStr(color);
     const { s, v } = RGBtoHSV({ r, g, b });
-
-    return { x: Number(s), y: 1 - Number(v) };
-  });
+    setPickerPos({ x: Number(s), y: 1 - Number(v) });
+  }, [color]);
 
   useEffect(() => {
     const x = Math.max(0, Math.min(pickerPos.x, 1));

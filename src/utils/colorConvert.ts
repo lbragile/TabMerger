@@ -34,7 +34,7 @@ export function RGBtoHSV({ r, g, b }: { r: number; g: number; b: number }): { h:
       ? (Bp - Rp) / delta + 2
       : (Rp - Gp) / delta + 4;
 
-  const S = delta === 0 ? 0 : delta / cMax;
+  const S = cMax === 0 ? 0 : delta / cMax;
 
   const modHue = (H * 60) % 360;
   const newHue = modHue < 0 ? modHue + 360 : modHue;

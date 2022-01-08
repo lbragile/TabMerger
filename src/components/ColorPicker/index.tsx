@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Alpha from "./Alpha";
@@ -69,14 +69,20 @@ interface IColorPicker {
 }
 
 export default function ColorPicker({ color, setColor }: IColorPicker): JSX.Element {
-  const [hue, setHue] = useState(() => {
-    const [r, g, b] = extractRGBAFromStr(color);
-    const { h } = RGBtoHSV({ r, g, b });
+  const [hue, setHue] = useState(0);
+  const [alpha, setAlpha] = useState(1);
 
-    return Number(h);
-  });
+  useEffect(() => {
+    const [r, g, b, a] = extractRGBAFromStr(color);
 
-  const [alpha, setAlpha] = useState(() => extractRGBAFromStr(color).at(-1) ?? 1);
+    // Cannot determine hue if the color is grayscale (r = g = b)
+    if (r !== g || r !== b || g !== b) {
+      const { h } = RGBtoHSV({ r, g, b });
+      setHue(Number(h));
+    }
+
+    setAlpha(a);
+  }, [color]);
 
   return (
     <Container>
