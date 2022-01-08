@@ -29,7 +29,7 @@ export const Picker = styled.div.attrs(({ pos: { x, y }, $sketch }: IPicker) => 
 }))<IPicker>`
   height: 12px;
   width: 12px;
-  background-color: transparent;
+  background-color: #3333;
   border: 2px solid white;
   user-select: none;
   position: absolute;

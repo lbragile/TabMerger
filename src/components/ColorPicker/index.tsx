@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Alpha from "./Alpha";
 import Hue from "./Hue";
+import Preview from "./Preview";
 import Sketch from "./Sketch";
 
 import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
@@ -24,22 +25,19 @@ const Grid = styled.div`
   grid-template-areas:
     "hue preview"
     "alpha preview";
-`;
 
-const StyledHue = styled(Hue)`
-  grid-area: hue;
-`;
+  & .picker-hue {
+    grid-area: hue;
+  }
 
-const StyledAlpha = styled(Alpha)`
-  grid-area: alpha;
-`;
+  & .picker-alpha {
+    grid-area: alpha;
+  }
 
-const Preview = styled.div<{ $color: string }>`
-  background-color: ${({ $color }) => $color};
-  width: 28px;
-  height: 28px;
-  grid-area: preview;
-  box-shadow: rgb(0 0 0 / 10%) 0 0 0 1px inset, rgb(0 0 0 / 15%) 0 0 4px inset;
+  & .picker-preview {
+    grid-area: preview;
+    cursor: default;
+  }
 `;
 
 const SwatchGrid = styled.div`
@@ -89,9 +87,9 @@ export default function ColorPicker({ color, setColor }: IColorPicker): JSX.Elem
       <Sketch hue={hue} alpha={alpha} color={color} setColor={setColor} />
 
       <Grid>
-        <StyledHue hue={hue} setHue={setHue} />
-        <StyledAlpha alpha={alpha} hue={hue} setAlpha={setAlpha} />
-        <Preview $color={color} />
+        <Hue hue={hue} setHue={setHue} />
+        <Alpha alpha={alpha} hue={hue} setAlpha={setAlpha} />
+        <Preview color={color} />
       </Grid>
 
       <SwatchGrid>

@@ -70,7 +70,7 @@ export default function Hue({ hue, setHue }: IHue) {
   };
 
   return (
-    <Container $width={CANVAS_WIDTH} $height={CANVAS_HEIGHT}>
+    <Container className="picker-hue" $width={CANVAS_WIDTH} $height={CANVAS_HEIGHT}>
       <canvas
         ref={hueRef}
         onPointerDown={handlePointerDown}

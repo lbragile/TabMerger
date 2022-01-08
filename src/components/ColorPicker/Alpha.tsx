@@ -80,7 +80,7 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
   };
 
   return (
-    <Container $width={CANVAS_WIDTH} $height={CANVAS_HEIGHT}>
+    <Container className="picker-alpha" $width={CANVAS_WIDTH} $height={CANVAS_HEIGHT}>
       <canvas
         ref={alphaRef}
         onPointerDown={handlePointerDown}
