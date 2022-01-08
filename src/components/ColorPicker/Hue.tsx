@@ -61,6 +61,8 @@ export default function Hue({ hue, setHue }: IHue) {
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
+    if (key === "Tab") return;
+
     pickerRef.current?.focus();
 
     let newHue = hue;

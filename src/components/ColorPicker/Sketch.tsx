@@ -82,6 +82,8 @@ export default function Sketch({ hue, alpha, color, setColor }: ISketch): JSX.El
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
+    if (key === "Tab") return;
+
     pickerRef.current?.focus();
 
     let { x: newX, y: newY } = { ...pickerPos };

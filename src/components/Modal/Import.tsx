@@ -38,6 +38,7 @@ const Column = styled.div`
 const StyledTextArea = styled.textarea`
   height: 300px;
   width: 400px;
+  border-radius: 0;
   padding: 8px;
   resize: none;
   margin: auto;

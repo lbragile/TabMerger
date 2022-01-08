@@ -9,9 +9,9 @@ export const MODAL_ACTIONS = {
   UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE"
 };
 
-type TModalType = "about" | "settings" | "import" | "export";
+type TModalType = "import" | "export" | "sync" | "settings" | "about";
 
-export type TImportType = "json" | "csv" | "markdown" | "plain";
+export type TImportType = "json" | "plain" | "markdown" | "csv";
 
 export interface IModalState {
   info: {

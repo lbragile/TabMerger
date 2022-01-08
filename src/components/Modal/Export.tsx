@@ -3,14 +3,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
+import Link from "./Link";
 import Selector from "./Selector";
 
-import { DEFAULT_FAVICON_URL } from "~/constants/urls";
+import { DEFAULT_FAVICON_URL, DOWNLOADS_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
-import { StyledLink } from "~/styles/StyledLink";
-import { createActiveTab, formatHtml } from "~/utils/helper";
+import { formatHtml } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`
   display: none;
@@ -368,17 +368,7 @@ export default function Export(): JSX.Element {
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
         <div>
-          <p>
-            Files are saved to your{" "}
-            <StyledLink
-              role="link"
-              tabIndex={0}
-              onClick={() => createActiveTab("chrome://downloads")}
-              onKeyPress={({ key }) => key === "Enter" && createActiveTab("chrome://downloads")}
-            >
-              Downloads Folder
-            </StyledLink>
-          </p>
+          <p>Files are saved to your</p> <Link href={DOWNLOADS_URL} title="Downloads Folder" />
         </div>
       </Note>
     </>

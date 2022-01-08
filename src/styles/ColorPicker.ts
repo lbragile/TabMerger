@@ -39,7 +39,7 @@ export const Picker = styled.div.attrs(({ pos: { x, y }, $sketch }: IPicker) => 
   position: absolute;
 
   &:focus-visible {
-    outline: 1px solid white;
-    box-shadow: 0 0 1px 1px black;
+    outline: 1px solid black;
+    outline-offset: -1px;
   }
 `;

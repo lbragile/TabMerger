@@ -7,6 +7,7 @@ import About from "./About";
 import Export from "./Export";
 import Import from "./Import";
 import Settings from "./Settings";
+import Sync from "./Sync";
 
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import GROUPS_CREATORS from "~/store/actions/groups";
@@ -124,10 +125,11 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
           </CloseIconContainer>
         </HeaderRow>
 
-        {type === "about" && <About />}
-        {type === "settings" && <Settings />}
         {type === "import" && <Import />}
         {type === "export" && <Export />}
+        {type === "sync" && <Sync />}
+        {type === "settings" && <Settings />}
+        {type === "about" && <About />}
 
         <FooterRow>
           {saveText && ((type === "export" && file) || (type === "import" && formatted.length > 0)) && (

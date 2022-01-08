@@ -71,6 +71,8 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
   };
 
   const handleKeyPress = ({ key }: React.KeyboardEvent) => {
+    if (key === "Tab") return;
+
     pickerRef.current?.focus();
 
     let newAlpha = alpha;
