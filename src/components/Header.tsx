@@ -124,7 +124,8 @@ export default function Header(): JSX.Element {
       },
       {
         text: "Sync",
-        handler: () => modalDetailsHandler({ title: "TabMerger Sync", type: "sync", closeText: "Cancel" })
+        handler: () =>
+          modalDetailsHandler({ title: "TabMerger Sync", type: "sync", saveText: "Sync", closeText: "Cancel" })
       },
       { text: "divider" },
       {

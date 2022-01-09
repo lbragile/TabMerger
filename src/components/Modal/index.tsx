@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
+import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 
@@ -11,6 +12,9 @@ import Sync from "./Sync";
 
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import GROUPS_CREATORS from "~/store/actions/groups";
+import MODAL_CREATORS from "~/store/actions/modal";
+import Button from "~/styles/Button";
+import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
 
 const CloseIconContainer = styled.span`
   padding: 4px 8px;
@@ -63,21 +67,6 @@ const FooterRow = styled(HeaderRow)`
   justify-content: end;
 `;
 
-const Button = styled.button<{ $primary?: boolean }>`
-  border: none;
-  outline: none;
-  background-color: ${({ $primary }) => ($primary ? "#007bff" : "#e8e8e8")};
-  color: ${({ $primary }) => ($primary ? "white" : "black")};
-  padding: 4px;
-  min-width: 75px;
-  font-weight: bold;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ $primary }) => ($primary ? "#0069d9" : "#e0e0e0")};
-  }
-`;
-
 export interface IModal {
   setVisible: Dispatch<SetStateAction<boolean>>;
 }
@@ -90,7 +79,8 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
   const {
     info: { type, title, closeText, saveText },
     export: { file },
-    import: { formatted }
+    import: { formatted },
+    sync: { possibleData, currentData }
   } = useSelector((state) => state.modal);
 
   const hide = () => setVisible(false);
@@ -101,6 +91,38 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
     } else if (type === "import") {
       dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...formatted]));
       dispatch(GROUPS_CREATORS.updateActive({ index: 0, id: formatted[0].id }));
+    } else if (type === "sync") {
+      if (possibleData.length) {
+        chrome.storage.sync.clear();
+
+        for (let i = 0; i < possibleData.length; i++) {
+          const group = possibleData[i];
+          const currentSize = group.name.length + JSON.stringify(group).length;
+          if (currentSize <= 2500) {
+            chrome.storage.sync.set({ [group.name + i]: { ...group, order: i } }, () => "");
+          }
+        }
+      } else if (currentData.length) {
+        // Create groups that are properly formatted using the limited sync data
+        const newAvailable = currentData.map((item) => {
+          const group = createGroup(nanoid(10), item.name, item.color);
+          item.windows.forEach((w) => {
+            const tabs: chrome.tabs.Tab[] = [];
+
+            w.tabs.forEach((t) => {
+              tabs.push(createTabFromTitleAndUrl(t.title, t.url));
+            });
+
+            group.windows.push(createWindowWithTabs(tabs, w.incognito, w.starred));
+          });
+
+          return group;
+        });
+
+        dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...newAvailable]));
+      }
+
+      dispatch(MODAL_CREATORS.updateSyncLast(getReadableTimestamp(Date.now())));
     }
 
     hide();
@@ -132,9 +154,21 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
         {type === "about" && <About />}
 
         <FooterRow>
-          {saveText && ((type === "export" && file) || (type === "import" && formatted.length > 0)) && (
+          {saveText && type === "export" && file && (
+            <Button onClick={handleSave} $primary>
+              {saveText}
+            </Button>
+          )}
+
+          {saveText && type === "import" && formatted.length > 0 && (
             <Button onClick={handleSave} $primary>
               {saveText + (type === "import" ? ` (${formatted.length})` : "")}
+            </Button>
+          )}
+
+          {saveText && type === "sync" && (possibleData.length > 0 || currentData.length > 0) && (
+            <Button onClick={handleSave} $primary>
+              {`${possibleData.length > 0 ? "Upload" : "Download"} ${saveText}`}
             </Button>
           )}
 

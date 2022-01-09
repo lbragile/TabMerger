@@ -1,3 +1,4 @@
+import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { IGroupItemState } from "~/store/reducers/groups";
 
 export function pluralize(amount: number, baseStr: string): string {
@@ -82,9 +83,9 @@ export function createActiveTab(url: string) {
   chrome.tabs.create({ url, active: true }, () => "");
 }
 
-export const createTabFromTitleAndUrl = (title: string, url: string): chrome.tabs.Tab => ({
-  title,
-  url,
+export const createTabFromTitleAndUrl = (title: string | undefined, url: string | undefined): chrome.tabs.Tab => ({
+  title: title ?? "New",
+  url: url ?? GOOGLE_HOMEPAGE,
   favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`,
   active: false,
   audible: false,
@@ -99,19 +100,24 @@ export const createTabFromTitleAndUrl = (title: string, url: string): chrome.tab
   windowId: 1
 });
 
-export const createWindowWithTabs = (tabs: chrome.tabs.Tab[]): chrome.windows.Window => ({
+export const createWindowWithTabs = (
+  tabs: chrome.tabs.Tab[],
+  incognito = false,
+  starred = false
+): chrome.windows.Window & { starred: boolean } => ({
   alwaysOnTop: false,
   focused: false,
-  incognito: false,
+  incognito,
+  starred,
   state: "maximized",
   type: "normal",
   tabs
 });
 
-export const createGroup = (id: string, name?: string): IGroupItemState => ({
-  name: name ?? "New",
+export const createGroup = (id: string, name = "New", color = "rgba(128, 128, 128, 1)"): IGroupItemState => ({
+  name,
   id,
-  color: "rgba(128, 128, 128, 1)",
+  color,
   updatedAt: Date.now(),
   windows: [],
   permanent: false,

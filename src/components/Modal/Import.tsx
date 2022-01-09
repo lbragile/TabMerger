@@ -10,6 +10,7 @@ import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
 import { useDispatch } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
+import Message from "~/styles/Message";
 import { Note } from "~/styles/Note";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
@@ -50,12 +51,6 @@ const UploadIcon = styled(FontAwesomeIcon)`
   &:hover {
     color: #666;
   }
-`;
-
-const Message = styled.p<{ $error?: boolean }>`
-  font-weight: bold;
-  color: ${({ $error }) => ($error ? "red" : "green")};
-  text-align: center;
 `;
 
 const UPLOAD_FILE_ERROR = "Something is wrong with this file, please try another one";
