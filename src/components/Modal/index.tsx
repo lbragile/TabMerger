@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { nanoid } from "nanoid";
 import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 
@@ -11,10 +10,9 @@ import Settings from "./Settings";
 import Sync from "./Sync";
 
 import { useDispatch, useSelector } from "~/hooks/useRedux";
+import { useSyncDownload, useSyncUpload } from "~/hooks/useSync";
 import GROUPS_CREATORS from "~/store/actions/groups";
-import MODAL_CREATORS from "~/store/actions/modal";
 import Button from "~/styles/Button";
-import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
 
 const CloseIconContainer = styled.span`
   padding: 4px 8px;
@@ -83,49 +81,23 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
     sync: { possibleData, currentData }
   } = useSelector((state) => state.modal);
 
+  const syncUpload = useSyncUpload(possibleData);
+  const syncDownload = useSyncDownload(currentData, available);
+
   const hide = () => setVisible(false);
 
   const handleSave = () => {
     if (type === "export" && file) {
       saveAs(file);
+      hide();
     } else if (type === "import") {
       dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...formatted]));
       dispatch(GROUPS_CREATORS.updateActive({ index: 0, id: formatted[0].id }));
+      hide();
     } else if (type === "sync") {
-      if (possibleData.length) {
-        chrome.storage.sync.clear();
-
-        for (let i = 0; i < possibleData.length; i++) {
-          const group = possibleData[i];
-          const currentSize = group.name.length + JSON.stringify(group).length;
-          if (currentSize <= 2500) {
-            chrome.storage.sync.set({ [group.name + i]: { ...group, order: i } }, () => "");
-          }
-        }
-      } else if (currentData.length) {
-        // Create groups that are properly formatted using the limited sync data
-        const newAvailable = currentData.map((item) => {
-          const group = createGroup(nanoid(10), item.name, item.color);
-          item.windows.forEach((w) => {
-            const tabs: chrome.tabs.Tab[] = [];
-
-            w.tabs.forEach((t) => {
-              tabs.push(createTabFromTitleAndUrl(t.title, t.url));
-            });
-
-            group.windows.push(createWindowWithTabs(tabs, w.incognito, w.starred));
-          });
-
-          return group;
-        });
-
-        dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...newAvailable]));
-      }
-
-      dispatch(MODAL_CREATORS.updateSyncLast(getReadableTimestamp(Date.now())));
+      if (possibleData.length) syncUpload();
+      else if (currentData.length) syncDownload();
     }
-
-    hide();
   };
 
   return (

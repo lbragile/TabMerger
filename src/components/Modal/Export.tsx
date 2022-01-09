@@ -11,6 +11,7 @@ import useFormatText from "~/hooks/useFormatText";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
+import TextArea from "~/styles/Textarea";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`
   display: none;
@@ -40,19 +41,6 @@ const TextAreaContainer = styled.div`
       display: block;
     }
   }
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  height: 100%;
-  white-space: pre;
-  overflow-wrap: normal;
-  overflow: auto;
-  border: 1px solid lightgray;
-  background-color: #fafafa;
-  border-radius: 0;
-  padding: 8px;
-  resize: none;
 `;
 
 const Row = styled.div`
@@ -254,7 +242,7 @@ export default function Export(): JSX.Element {
           }}
         />
 
-        <TextArea ref={textAreaRef} readOnly value={text} />
+        <TextArea ref={textAreaRef} $width="100%" $height="100%" readOnly value={text} />
       </TextAreaContainer>
 
       <Note>

@@ -12,6 +12,7 @@ import { useDispatch } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
 import Message from "~/styles/Message";
 import { Note } from "~/styles/Note";
+import TextArea from "~/styles/Textarea";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   height: 300px;
@@ -34,17 +35,6 @@ const Column = styled.div`
   gap: 8px;
   justify-content: center;
   align-items: center;
-`;
-
-const StyledTextArea = styled.textarea`
-  height: 300px;
-  width: 400px;
-  border-radius: 0;
-  padding: 8px;
-  resize: none;
-  margin: auto;
-  white-space: pre;
-  overflow-wrap: normal;
 `;
 
 const UploadIcon = styled(FontAwesomeIcon)`
@@ -161,7 +151,9 @@ export default function Import(): JSX.Element {
         </>
       ) : (
         <>
-          <StyledTextArea
+          <TextArea
+            $height="300px"
+            $background="initial"
             placeholder="Paste JSON, markdown, CSV, or plain text here..."
             value={currentText}
             onChange={({ target: { value } }) => {

@@ -9,8 +9,8 @@ const EMPTY_TEXT = "Nothing to export";
 
 export default function useFormatText(
   selectedGroups: (IGroupItemState | ISyncDataItem)[],
-  keepURLs: boolean,
-  keepTitles: boolean
+  keepURLs = true,
+  keepTitles = true
 ) {
   const lineSeparator = (char: string) => `${new Array(10).fill(char).join("")}\n\n`;
 

@@ -7,6 +7,7 @@ const Button = styled.button<{ $primary?: boolean }>`
   color: ${({ $primary }) => ($primary ? "white" : "black")};
   padding: 4px;
   min-width: 75px;
+  max-width: fit-content;
   font-weight: bold;
   cursor: pointer;
 
