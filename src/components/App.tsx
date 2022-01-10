@@ -26,8 +26,8 @@ import SidePanel from "./SidePanel";
 import Windows from "./Windows";
 
 import useDnd from "~/hooks/useDnd";
+import { useUpdateGroupsFromStorage } from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
-import useStorage from "~/hooks/useStorage";
 import useUpdateInfo from "~/hooks/useUpdateInfo";
 import useUpdateWindows from "~/hooks/useUpdateWindows";
 import { GlobalStyle } from "~/styles/Global";
@@ -57,11 +57,11 @@ const App = (): JSX.Element => {
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
 
-  useStorage({ available, active });
+  useUpdateGroupsFromStorage({ available, active });
   useUpdateWindows();
   useUpdateInfo();
 
-  const { onBeforeCapture, onDragStart, onDragUpdate, onDragEnd } = useDnd(sidePanelRef);
+  const { onBeforeCapture, onDragStart, onDragEnd } = useDnd(sidePanelRef);
 
   return (
     <Container>
@@ -70,12 +70,7 @@ const App = (): JSX.Element => {
       <ThemeProvider theme={Theme}>
         <Header />
 
-        <DragDropContext
-          onBeforeCapture={onBeforeCapture}
-          onDragStart={onDragStart}
-          onDragUpdate={onDragUpdate}
-          onDragEnd={onDragEnd}
-        >
+        <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
           {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
             <MainArea>
               <div ref={sidePanelRef}>

@@ -14,7 +14,7 @@
 
 # Stores your tabs in one location to save memory usage and increase your productivity
 
-![Demo](https://i.imgur.com/2sbEzip.png)
+![Demo](https://i.imgur.com/2sbEzip.png?1)
 
 </div>
 

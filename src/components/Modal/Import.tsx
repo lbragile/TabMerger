@@ -8,9 +8,11 @@ import Selector from "./Selector";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
-import { useDispatch, useSelector } from "~/hooks/useRedux";
+import { useDispatch } from "~/hooks/useRedux";
 import MODAL_CREATORS from "~/store/actions/modal";
+import Message from "~/styles/Message";
 import { Note } from "~/styles/Note";
+import TextArea from "~/styles/Textarea";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   height: 300px;
@@ -35,37 +37,16 @@ const Column = styled.div`
   align-items: center;
 `;
 
-const StyledTextArea = styled.textarea`
-  height: 300px;
-  width: 400px;
-  padding: 8px;
-  resize: none;
-  margin: auto;
-  white-space: pre;
-  overflow-wrap: normal;
-`;
-
 const UploadIcon = styled(FontAwesomeIcon)`
   &:hover {
     color: #666;
   }
 `;
 
-const Message = styled.p<{ $error?: boolean }>`
-  font-weight: bold;
-  color: ${({ $error }) => ($error ? "red" : "green")};
-  text-align: center;
-`;
-
 const UPLOAD_FILE_ERROR = "Something is wrong with this file, please try another one";
-const IMPORT_TEXT_ERROR = "This text does not match the expected import format";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
-
-  const {
-    import: { formatted }
-  } = useSelector((state) => state.modal);
 
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
   const [currentText, setCurrentText] = useState("");
@@ -86,6 +67,7 @@ export default function Import(): JSX.Element {
   const onDropAccepted = useCallback(
     async ([file]: File[]) => {
       const { name } = file;
+
       const type = /\.json$/.test(name)
         ? "json"
         : /\.csv$/.test(name)
@@ -169,7 +151,9 @@ export default function Import(): JSX.Element {
         </>
       ) : (
         <>
-          <StyledTextArea
+          <TextArea
+            $height="300px"
+            $background="initial"
             placeholder="Paste JSON, markdown, CSV, or plain text here..."
             value={currentText}
             onChange={({ target: { value } }) => {
@@ -179,10 +163,6 @@ export default function Import(): JSX.Element {
               setCurrentText(value);
             }}
           />
-
-          {currentText.replace(/\n/g, "") !== "" && formatted.length === 0 && (
-            <Message $error>{IMPORT_TEXT_ERROR}</Message>
-          )}
 
           <Note>
             <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />

@@ -1,15 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 
 import About from "./About";
 import Export from "./Export";
 import Import from "./Import";
 import Settings from "./Settings";
+import Sync from "./Sync";
 
 import { useDispatch, useSelector } from "~/hooks/useRedux";
+import { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
 import GROUPS_CREATORS from "~/store/actions/groups";
+import Button from "~/styles/Button";
 
 const CloseIconContainer = styled.span`
   padding: 4px 8px;
@@ -62,21 +65,6 @@ const FooterRow = styled(HeaderRow)`
   justify-content: end;
 `;
 
-const Button = styled.button<{ $primary?: boolean }>`
-  border: none;
-  outline: none;
-  background-color: ${({ $primary }) => ($primary ? "#007bff" : "#e8e8e8")};
-  color: ${({ $primary }) => ($primary ? "white" : "black")};
-  padding: 4px;
-  min-width: 75px;
-  font-weight: bold;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ $primary }) => ($primary ? "#0069d9" : "#e0e0e0")};
-  }
-`;
-
 export interface IModal {
   setVisible: Dispatch<SetStateAction<boolean>>;
 }
@@ -89,20 +77,36 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
   const {
     info: { type, title, closeText, saveText },
     export: { file },
-    import: { formatted }
+    import: { formatted },
+    sync: { type: syncType, possibleData, currentData }
   } = useSelector((state) => state.modal);
+
+  const syncUpload = useSyncStorageUpload(possibleData);
+  const syncDownload = useSyncStorageDownload(currentData, available);
+
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   const hide = () => setVisible(false);
 
   const handleSave = () => {
     if (type === "export" && file) {
       saveAs(file);
+      hide();
     } else if (type === "import") {
       dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...formatted]));
       dispatch(GROUPS_CREATORS.updateActive({ index: 0, id: formatted[0].id }));
-    }
+      hide();
+    } else if (type === "sync") {
+      if (possibleData.length) syncUpload();
+      else if (currentData.length) syncDownload();
 
-    hide();
+      /**
+       * Prevent user from mashing the submit button, due to rate limit on sync storage
+       * @see https://developer.chrome.com/docs/extensions/reference/storage/#property-sync-sync-MAX_WRITE_OPERATIONS_PER_MINUTE
+       */
+      setDisableSubmit(true);
+      setTimeout(() => setDisableSubmit(false), 3000);
+    }
   };
 
   return (
@@ -124,15 +128,34 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
           </CloseIconContainer>
         </HeaderRow>
 
-        {type === "about" && <About />}
-        {type === "settings" && <Settings />}
         {type === "import" && <Import />}
         {type === "export" && <Export />}
+        {type === "sync" && <Sync />}
+        {type === "settings" && <Settings />}
+        {type === "about" && <About />}
 
         <FooterRow>
-          {saveText && ((type === "export" && file) || (type === "import" && formatted.length > 0)) && (
-            <Button onClick={handleSave} $primary>
+          {saveText && type === "export" && file && (
+            <Button onClick={handleSave} $variant="primary">
+              {saveText}
+            </Button>
+          )}
+
+          {saveText && type === "import" && formatted.length > 0 && (
+            <Button onClick={handleSave} $variant="primary">
               {saveText + (type === "import" ? ` (${formatted.length})` : "")}
+            </Button>
+          )}
+
+          {saveText && type === "sync" && syncType === "Upload" && possibleData.length > 0 && (
+            <Button onClick={handleSave} $variant="primary" disabled={disableSubmit}>
+              {`Upload ${saveText} (${possibleData.length})`}
+            </Button>
+          )}
+
+          {saveText && type === "sync" && syncType === "Download" && currentData.length > 0 && (
+            <Button onClick={handleSave} $variant="primary" disabled={disableSubmit}>
+              {`Download ${saveText} (${currentData.length})`}
             </Button>
           )}
 

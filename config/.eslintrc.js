@@ -62,6 +62,11 @@ module.exports = {
       },
       {
         blankLine: "always",
+        prev: "singleline-const",
+        next: "multiline-const"
+      },
+      {
+        blankLine: "always",
         prev: ["multiline-const", "block-like"],
         next: "*"
       }

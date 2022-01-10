@@ -2,37 +2,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useState } from "react";
 import styled from "styled-components";
 
+import Link from "./Link";
 import Selector from "./Selector";
 
-import {
-  TABMERGER_DEMO_SITE,
-  EXTENSION_PAGE_LINK,
-  TABMERGER_TOS_LINK,
-  TABMERGER_REPO,
-  TABMERGER_LICENSE,
-  REACT_BEAUTIFUL_DND_REPO,
-  REACT_BEAUTIFUL_DND_LICENSE,
-  REACT_REPO,
-  REACT_LICENSE,
-  REDUX_REPO,
-  REDUX_LICENSE,
-  STYLED_COMPONENTS_REPO,
-  STYLED_COMPONENTS_LICENSE,
-  FILE_SAVER_REPO,
-  FILE_SAVER_LICENSE,
-  NANOID_REPO,
-  NANOID_LICENSE,
-  MANTINE_REPO,
-  MANTINE_LICENSE
-} from "~/constants/urls";
+import { TABMERGER_DEMO_SITE, EXTENSION_PAGE_LINK, TABMERGER_TOS_LINK, LICENSE_INFO } from "~/constants/urls";
 import { Note } from "~/styles/Note";
-import { StyledLink } from "~/styles/StyledLink";
-import { createActiveTab } from "~/utils/helper";
 
 const DetailsGrid = styled.div`
   display: grid;
   grid-template-columns: max-content 60%;
-  gap: 8px 16px;
+  gap: 16px;
   justify-content: center;
 
   & h4 {
@@ -66,7 +45,6 @@ const Logo = styled.img`
 `;
 
 const { version, description } = chrome.runtime.getManifest();
-const extensionId = chrome.runtime.id;
 
 interface ILicenseName {
   title: string;
@@ -81,36 +59,39 @@ interface ILicenseDetails {
 
 const LICENSE_DETAILS: ILicenseDetails[] = [
   {
-    name: { title: "TabMerger", url: TABMERGER_REPO },
+    name: { title: "TabMerger", url: LICENSE_INFO.TabMerger.repo },
     authors: "Lior Bragilevsky",
-    license: { title: "GPLv3", url: TABMERGER_LICENSE }
+    license: { title: "GPLv3", url: LICENSE_INFO.TabMerger.license }
   },
   {
-    name: { title: "React Beautiful DnD", url: REACT_BEAUTIFUL_DND_REPO },
+    name: { title: "React Beautiful DnD", url: LICENSE_INFO.ReactBeautifulDnD.repo },
     authors: "Atlassian Pty Ltd",
-    license: { title: "Apache 2.0", url: REACT_BEAUTIFUL_DND_LICENSE }
+    license: { title: "Apache 2.0", url: LICENSE_INFO.ReactBeautifulDnD.license }
   },
-  { name: { title: "React", url: REACT_REPO }, authors: "Facebook Inc", license: { title: "MIT", url: REACT_LICENSE } },
-  { name: { title: "Redux", url: REDUX_REPO }, authors: "Dan Abramov", license: { title: "MIT", url: REDUX_LICENSE } },
   {
-    name: { title: "Styled Components", url: STYLED_COMPONENTS_REPO },
+    name: { title: "React", url: LICENSE_INFO.React.repo },
+    authors: "Facebook Inc",
+    license: { title: "MIT", url: LICENSE_INFO.React.license }
+  },
+  {
+    name: { title: "Redux", url: LICENSE_INFO.Redux.repo },
+    authors: "Dan Abramov",
+    license: { title: "MIT", url: LICENSE_INFO.Redux.license }
+  },
+  {
+    name: { title: "Styled Components", url: LICENSE_INFO.StyledComponents.repo },
     authors: "Glen Maddern & Maximilian Stoiber",
-    license: { title: "MIT", url: STYLED_COMPONENTS_LICENSE }
+    license: { title: "MIT", url: LICENSE_INFO.StyledComponents.license }
   },
   {
-    name: { title: "File Saver", url: FILE_SAVER_REPO },
+    name: { title: "File Saver", url: LICENSE_INFO.FileSaver.repo },
     authors: "Eli Grey",
-    license: { title: "MIT", url: FILE_SAVER_LICENSE }
+    license: { title: "MIT", url: LICENSE_INFO.FileSaver.license }
   },
   {
-    name: { title: "Nano ID", url: NANOID_REPO },
+    name: { title: "Nano ID", url: LICENSE_INFO.NanoID.repo },
     authors: "Andrey Sitnik",
-    license: { title: "MIT", url: NANOID_LICENSE }
-  },
-  {
-    name: { title: "Mantine", url: MANTINE_REPO },
-    authors: "Vitaly Rtishchev",
-    license: { title: "MIT", url: MANTINE_LICENSE }
+    license: { title: "MIT", url: LICENSE_INFO.NanoID.license }
   }
 ];
 
@@ -125,17 +106,7 @@ export default function About(): JSX.Element {
         </a>
 
         <AboutTitle>
-          <StyledLink
-            $color="black"
-            $header
-            title={TABMERGER_DEMO_SITE}
-            role="link"
-            tabIndex={0}
-            onClick={() => createActiveTab(TABMERGER_DEMO_SITE)}
-            onKeyPress={({ key }) => key === "Enter" && createActiveTab(TABMERGER_DEMO_SITE)}
-          >
-            TabMerger v{version}
-          </StyledLink>
+          <Link href={TABMERGER_DEMO_SITE} title={`TabMerger v${version}`} color="black" />
 
           <p>Copyright &copy; {new Date().getFullYear()} lbragile</p>
           <p>All rights reserved</p>
@@ -153,15 +124,7 @@ export default function About(): JSX.Element {
           <p>{navigator.language}</p>
 
           <h4>Extension ID</h4>
-          <StyledLink
-            tabIndex={0}
-            role="link"
-            title={EXTENSION_PAGE_LINK}
-            onClick={() => createActiveTab(EXTENSION_PAGE_LINK)}
-            onKeyPress={({ key }) => key === "Enter" && createActiveTab(EXTENSION_PAGE_LINK)}
-          >
-            {extensionId}
-          </StyledLink>
+          <Link href={EXTENSION_PAGE_LINK} title={chrome.runtime.id} />
 
           <h4>Version</h4>
           <p>v{version}</p>
@@ -173,29 +136,11 @@ export default function About(): JSX.Element {
         <LicenseGrid>
           {LICENSE_DETAILS.map(({ name, authors, license }) => (
             <Fragment key={name.title}>
-              <StyledLink
-                $color="#0073e6"
-                tabIndex={0}
-                role="link"
-                title={name.url}
-                onClick={() => createActiveTab(name.url)}
-                onKeyPress={({ key }) => key === "Enter" && createActiveTab(name.url)}
-              >
-                {name.title}
-              </StyledLink>
+              <Link href={name.url} title={name.title} />
 
               <p>{authors}</p>
 
-              <StyledLink
-                $color="#0073e6"
-                tabIndex={0}
-                role="link"
-                title={license.url}
-                onClick={() => createActiveTab(license.url)}
-                onKeyPress={({ key }) => key === "Enter" && createActiveTab(license.url)}
-              >
-                {license.title}
-              </StyledLink>
+              <Link href={license.url} title={license.title} />
             </Fragment>
           ))}
         </LicenseGrid>
@@ -207,15 +152,7 @@ export default function About(): JSX.Element {
         <div>
           <p>By using this software you agree to TabMerger&apos;s</p>
 
-          <StyledLink
-            title={TABMERGER_TOS_LINK}
-            role="link"
-            tabIndex={0}
-            onClick={() => createActiveTab(TABMERGER_TOS_LINK)}
-            onKeyPress={({ key }) => key === "Enter" && createActiveTab(TABMERGER_TOS_LINK)}
-          >
-            Terms and Conditions
-          </StyledLink>
+          <Link href={TABMERGER_TOS_LINK} title="Terms and Conditions" />
         </div>
       </Note>
     </>

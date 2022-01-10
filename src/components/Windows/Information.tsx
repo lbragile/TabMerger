@@ -296,7 +296,7 @@ export default function Information(): JSX.Element {
         </ActionButton>
       </span>
 
-      <SubTitle>{getReadableTimestamp(updatedAt)}</SubTitle>
+      <SubTitle>Updated {getReadableTimestamp(updatedAt)}</SubTitle>
 
       <SubTitle $right>{info}</SubTitle>
     </Grid>

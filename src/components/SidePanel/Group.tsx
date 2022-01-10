@@ -1,11 +1,10 @@
-import { ColorPicker } from "@mantine/core";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
+import ColorPicker from "~/components/ColorPicker";
 import Highlighted from "~/components/Highlighted";
 import Popup from "~/components/Popup";
-import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
 import { isGroupDrag } from "~/constants/dragRegExp";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
@@ -16,6 +15,7 @@ import { CloseIcon } from "~/styles/CloseIcon";
 import { relativeTimeStr } from "~/utils/helper";
 
 interface IGroupStyle {
+  $permanent: boolean;
   $isActive: boolean;
   $overflow: boolean;
   $dragging: boolean;
@@ -41,7 +41,8 @@ const GroupButton = styled.div<IGroupStyle>`
   height: 49px;
   background-color: ${({ $isActive, $dragging, $draggingOver }) =>
     $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  border: 1px solid rgb(0 0 0 / 10%);
+  outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(255 127 0 / 30%)" : "rgb(0 0 0 / 10%)")};
+  outline-offset: -1px;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -106,36 +107,18 @@ const ColorIndicator = styled.div<{ color: string }>`
 `;
 
 const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; $visible: boolean }>`
-  box-shadow: 0 0 4px 0 black;
-  padding: 4px;
-  border-radius: 4px;
   position: fixed;
-  background: white;
-  z-index: 10;
+  z-index: 1;
   display: ${({ $visible }) => ($visible ? "flex" : "none")};
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
   ${({ $pos: { right, top } }) => css`
     top: ${top}px;
     left: ${right + 12}px;
   `}
-
-  & .cp-thumb,
-  & .cp-saturation,
-  & .cp-slider {
-    cursor: crosshair;
-  }
-
-  & > span {
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
 `;
 
 interface IGroup {
-  snapshot: DraggableStateSnapshot;
-  dragHandleProps: DraggableProvidedDragHandleProps | undefined;
+  snapshot?: DraggableStateSnapshot;
+  dragHandleProps?: DraggableProvidedDragHandleProps;
 }
 
 export default function Group({
@@ -176,6 +159,11 @@ export default function Group({
     }
   });
 
+  // When importing, the color picker value needs to update
+  useEffect(() => {
+    setColorPickerValue(color);
+  }, [color]);
+
   const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
 
   const handleShowTitleOverflow = (
@@ -209,9 +197,10 @@ export default function Group({
         <GroupButton
           tabIndex={0}
           role="button"
+          $permanent={index === 0}
           $isActive={isActive}
           $overflow={available.length > 10}
-          $dragging={snapshot.isDragging}
+          $dragging={!!snapshot?.isDragging}
           $draggingOver={index > 0 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}
@@ -261,14 +250,7 @@ export default function Group({
 
       {/* Want this to be present in the DOM since it's height is used to calculate position */}
       <ColorPickerContainer ref={pickerRef} $pos={pickerPos} $visible={showPicker}>
-        <ColorPicker
-          classNames={{ thumb: "cp-thumb", saturation: "cp-saturation", slider: "cp-slider" }}
-          format="rgba"
-          value={debouncedPickerValue}
-          onChange={setColorPickerValue}
-          swatches={COLOR_PICKER_SWATCHES}
-        />
-        <span>{debouncedPickerValue}</span>
+        <ColorPicker color={debouncedPickerValue} setColor={setColorPickerValue} />
       </ColorPickerContainer>
 
       {titleOverflow.visible && <Popup {...titleOverflow} />}

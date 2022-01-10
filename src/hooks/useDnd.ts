@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { BeforeCapture, DragStart, DragUpdate, DropResult } from "react-beautiful-dnd";
+import { BeforeCapture, DragStart, DropResult } from "react-beautiful-dnd";
 
 import { useDispatch, useSelector } from "./useRedux";
 
@@ -15,8 +15,6 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
     active: { index },
     available
   } = useSelector((state) => state.groups);
-
-  const { dragType } = useSelector((state) => state.dnd);
 
   const onBeforeCapture = useCallback(
     ({ draggableId }: BeforeCapture) => {
@@ -45,15 +43,6 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
       dispatch(DND_CREATORS.updateIsDragging(true));
     },
     [dispatch]
-  );
-
-  const onDragUpdate = useCallback(
-    ({ destination }: DragUpdate) => {
-      if (isGroupDrag(dragType) && sidePanelRef.current) {
-        sidePanelRef.current.style.background = destination && destination.index > 0 ? "#d5ffd5" : "#ffd3d3";
-      }
-    },
-    [dragType, sidePanelRef]
   );
 
   const onDragEnd = useCallback(
@@ -105,5 +94,5 @@ export default function useDnd(sidePanelRef: React.MutableRefObject<HTMLDivEleme
     [dispatch, index, available, sidePanelRef]
   );
 
-  return { onBeforeCapture, onDragStart, onDragUpdate, onDragEnd };
+  return { onBeforeCapture, onDragStart, onDragEnd };
 }

@@ -68,13 +68,14 @@ export interface IGroupsState {
 }
 
 const activeId = nanoid(10);
+
 const initState: IGroupsState = {
   active: { id: activeId, index: 0 },
   available: [
     {
       name: "Now Open",
       id: activeId,
-      color: "rgb(128 128 128)",
+      color: "rgba(128, 128, 128, 1)",
       updatedAt: Date.now(),
       windows: [],
       permanent: true
@@ -86,11 +87,17 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
-    case GROUPS_ACTIONS.UPDATE_AVAILABLE:
+    case GROUPS_ACTIONS.UPDATE_AVAILABLE: {
+      const newAvailable = action.payload as IGroupsState["available"];
+
       return {
         ...state,
-        available: [state.available[0], ...(action.payload as IGroupsState["available"]).slice(1)]
+        available: [
+          { ...state.available[0], name: newAvailable[0].name, color: newAvailable[0].color },
+          ...newAvailable.slice(1)
+        ]
       };
+    }
 
     case GROUPS_ACTIONS.UPDATE_ACTIVE:
       return {
@@ -241,6 +248,7 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
       // Re-assign active group if deleted group was the active one (use the group above if needed)
       const activeIdx = state.active.index;
+
       const active =
         activeIdx < index
           ? { ...state.active }

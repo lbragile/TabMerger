@@ -32,6 +32,7 @@ export default function useParseText(debouncedText: string) {
 
       for (const match of matches) {
         const { tabsStr } = match.groups as { tabsStr: string };
+
         const tabs = tabsStr.split(/(?<=.+:\/\/.+)\n+/g).map((item) => {
           const [title, url] = item.split("\n").filter((x) => x);
 

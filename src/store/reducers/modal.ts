@@ -6,12 +6,30 @@ export const MODAL_ACTIONS = {
   SET_MODAL_INFO: "SET_MODAL_INFO",
   UPDATE_EXPORT_FILE: "UPDATE_EXPORT_FILE",
   UPDATE_IMPORT_FORMATTED_GROUPS: "UPDATE_IMPORT_FORMATTED_GROUPS",
-  UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE"
+  UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE",
+  UPDATE_SYNC_TYPE: "UPDATE_SYNC_TYPE",
+  UPDATE_SYNC_CURRENT_DATA: "UPDATE_SYNC_CURRENT_DATA",
+  UPDATE_SYNC_POSSIBLE_DATA: "UPDATE_SYNC_POSSIBLE_DATA"
 };
 
-type TModalType = "about" | "settings" | "import" | "export";
+type TModalType = "import" | "export" | "sync" | "settings" | "about";
 
-export type TImportType = "json" | "csv" | "markdown" | "plain";
+export type TImportType = "json" | "plain" | "markdown" | "csv";
+
+export type TSyncType = "Upload" | "Download";
+
+export interface ISyncDataItem {
+  name: string;
+  color: string;
+  windows: {
+    incognito: boolean;
+    starred: boolean | undefined;
+    tabs: {
+      title: string | undefined;
+      url: string | undefined;
+    }[];
+  }[];
+}
 
 export interface IModalState {
   info: {
@@ -27,6 +45,11 @@ export interface IModalState {
     type: TImportType;
     formatted: IGroupItemState[];
   };
+  sync: {
+    type: TSyncType;
+    currentData: ISyncDataItem[];
+    possibleData: ISyncDataItem[];
+  };
 }
 
 const initState: IModalState = {
@@ -41,6 +64,11 @@ const initState: IModalState = {
   import: {
     type: "json",
     formatted: []
+  },
+  sync: {
+    type: "Upload",
+    currentData: [],
+    possibleData: []
   }
 };
 
@@ -59,7 +87,7 @@ const modalReducer = (state = initState, action: IAction): IModalState => {
         ...state,
         export: {
           ...state.export,
-          file: payload as File
+          file: payload as IModalState["export"]["file"]
         }
       };
 
@@ -68,7 +96,7 @@ const modalReducer = (state = initState, action: IAction): IModalState => {
         ...state,
         import: {
           ...state.import,
-          formatted: payload as IGroupItemState[]
+          formatted: payload as IModalState["import"]["formatted"]
         }
       };
 
@@ -77,7 +105,34 @@ const modalReducer = (state = initState, action: IAction): IModalState => {
         ...state,
         import: {
           ...state.import,
-          type: payload as TImportType
+          type: payload as IModalState["import"]["type"]
+        }
+      };
+
+    case MODAL_ACTIONS.UPDATE_SYNC_TYPE:
+      return {
+        ...state,
+        sync: {
+          ...state.sync,
+          type: payload as IModalState["sync"]["type"]
+        }
+      };
+
+    case MODAL_ACTIONS.UPDATE_SYNC_CURRENT_DATA:
+      return {
+        ...state,
+        sync: {
+          ...state.sync,
+          currentData: payload as IModalState["sync"]["currentData"]
+        }
+      };
+
+    case MODAL_ACTIONS.UPDATE_SYNC_POSSIBLE_DATA:
+      return {
+        ...state,
+        sync: {
+          ...state.sync,
+          possibleData: payload as IModalState["sync"]["possibleData"]
         }
       };
 
