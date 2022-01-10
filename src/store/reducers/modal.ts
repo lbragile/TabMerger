@@ -7,7 +7,7 @@ export const MODAL_ACTIONS = {
   UPDATE_EXPORT_FILE: "UPDATE_EXPORT_FILE",
   UPDATE_IMPORT_FORMATTED_GROUPS: "UPDATE_IMPORT_FORMATTED_GROUPS",
   UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE",
-  UPDATE_SYNC_TIMESTAMP: "UPDATE_SYNC_TIMESTAMP",
+  UPDATE_SYNC_TYPE: "UPDATE_SYNC_TYPE",
   UPDATE_SYNC_CURRENT_DATA: "UPDATE_SYNC_CURRENT_DATA",
   UPDATE_SYNC_POSSIBLE_DATA: "UPDATE_SYNC_POSSIBLE_DATA"
 };
@@ -15,6 +15,8 @@ export const MODAL_ACTIONS = {
 type TModalType = "import" | "export" | "sync" | "settings" | "about";
 
 export type TImportType = "json" | "plain" | "markdown" | "csv";
+
+export type TSyncType = "Upload" | "Download";
 
 export interface ISyncDataItem {
   name: string;
@@ -44,7 +46,7 @@ export interface IModalState {
     formatted: IGroupItemState[];
   };
   sync: {
-    last: string;
+    type: TSyncType;
     currentData: ISyncDataItem[];
     possibleData: ISyncDataItem[];
   };
@@ -64,7 +66,7 @@ const initState: IModalState = {
     formatted: []
   },
   sync: {
-    last: "",
+    type: "Upload",
     currentData: [],
     possibleData: []
   }
@@ -107,12 +109,12 @@ const modalReducer = (state = initState, action: IAction): IModalState => {
         }
       };
 
-    case MODAL_ACTIONS.UPDATE_SYNC_TIMESTAMP:
+    case MODAL_ACTIONS.UPDATE_SYNC_TYPE:
       return {
         ...state,
         sync: {
           ...state.sync,
-          last: payload as IModalState["sync"]["last"]
+          type: payload as IModalState["sync"]["type"]
         }
       };
 

@@ -3,18 +3,14 @@ import { useCallback, useEffect } from "react";
 
 import { useDispatch } from "./useRedux";
 
+import { MAX_SYNC_GROUPS, MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_ITEM_SIZE } from "~/constants/sync";
 import GROUPS_CREATORS from "~/store/actions/groups";
 import MODAL_CREATORS from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
 
-const MAX_SYNC_GROUPS = 40;
-const MAX_SYNC_TABS_PER_GROUP = 25;
-
-const MAX_SYNC_ITEM_SIZE = 102400 / MAX_SYNC_GROUPS;
-
-export default function useSync(activeTab: "Download" | "Upload", available: IGroupItemState[]) {
+export default function useSyncStorageInfo(activeTab: "Download" | "Upload", available: IGroupItemState[]) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -72,32 +68,37 @@ export default function useSync(activeTab: "Download" | "Upload", available: IGr
       dispatch(MODAL_CREATORS.updateSyncCurrentData([]));
     }
   }, [dispatch, activeTab, available]);
-
-  return { MAX_SYNC_GROUPS, MAX_SYNC_TABS_PER_GROUP };
 }
 
-export function useSyncUpload(possibleData: ISyncDataItem[]) {
-  const dispatch = useDispatch();
-
-  return useCallback(() => {
+export function useSyncStorageUpload(possibleData: ISyncDataItem[]) {
+  const syncUpload = useCallback(() => {
     chrome.storage.sync.clear();
 
+    let syncUpdated = false;
     for (let i = 0; i < possibleData.length; i++) {
       const group = possibleData[i];
       const currentSize = group.name.length + JSON.stringify(group).length;
       if (currentSize <= MAX_SYNC_ITEM_SIZE) {
-        chrome.storage.sync.set({ [group.name + i]: { ...group, order: i } }, () => "");
+        syncUpdated = true;
+
+        // Short keys since they are not relevant for the download (save a few bytes to reduce limit constraint)
+        chrome.storage.sync.set({ [i]: { ...group, order: i } }, () => "");
       }
     }
 
-    dispatch(MODAL_CREATORS.updateSyncLast(getReadableTimestamp(Date.now())));
-  }, [dispatch, possibleData]);
+    // Update local storage upload sync timestamp (only if a sync occurred)
+    if (syncUpdated) {
+      chrome.storage.local.set({ lastSyncUpload: getReadableTimestamp() }, () => "");
+    }
+  }, [possibleData]);
+
+  return syncUpload;
 }
 
-export function useSyncDownload(currentData: ISyncDataItem[], available: IGroupItemState[]) {
+export function useSyncStorageDownload(currentData: ISyncDataItem[], available: IGroupItemState[]) {
   const dispatch = useDispatch();
 
-  return useCallback(() => {
+  const syncDownload = useCallback(() => {
     // Create groups that are properly formatted using the limited sync data
     const newAvailable = currentData.map((item) => {
       const group = createGroup(nanoid(10), item.name, item.color);
@@ -116,6 +117,9 @@ export function useSyncDownload(currentData: ISyncDataItem[], available: IGroupI
 
     dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...newAvailable]));
 
-    dispatch(MODAL_CREATORS.updateSyncLast(getReadableTimestamp(Date.now())));
+    // Update local storage download sync timestamp
+    chrome.storage.local.set({ lastSyncDownload: getReadableTimestamp() }, () => "");
   }, [dispatch, currentData, available]);
+
+  return syncDownload;
 }

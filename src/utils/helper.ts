@@ -45,11 +45,10 @@ export function relativeTimeStr(previous: number, current = Date.now()): string 
   return type === "sec" ? "< 1 min" : `${val} ${pluralize(val, type)}`;
 }
 
-export function getReadableTimestamp(timestamp: number): string {
+export function getReadableTimestamp(timestamp = Date.now()): string {
   const parts = new Date(timestamp).toString().split(" ");
-  const postfix = Number(parts[4].split(":")[0]) > 11 ? "PM" : "AM";
 
-  return `Updated ${parts.slice(1, 4).join(" ")} ${parts[4]} ${postfix}`;
+  return `${parts.slice(1, 4).join(" ")} ${parts[4]}`;
 }
 
 /**

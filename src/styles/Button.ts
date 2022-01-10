@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
-const Button = styled.button<{ $primary?: boolean }>`
+const Button = styled.button<{ $variant?: "primary" | "secondary" | "info" | "danger" }>`
   border: none;
   outline: none;
-  background-color: ${({ $primary }) => ($primary ? "#007bff" : "#e8e8e8")};
-  color: ${({ $primary }) => ($primary ? "white" : "black")};
+  background-color: ${({ $variant }) =>
+    $variant === "primary" ? "#007bff" : $variant === "info" ? "#17a2b8" : "#e8e8e8"};
+  color: ${({ $variant }) => (["primary", "info"].includes($variant ?? "") ? "white" : "black")};
   padding: 4px;
   min-width: 75px;
   max-width: fit-content;
@@ -12,7 +13,13 @@ const Button = styled.button<{ $primary?: boolean }>`
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ $primary }) => ($primary ? "#0069d9" : "#e0e0e0")};
+    background-color: ${({ $variant }) =>
+      $variant === "primary" ? "#0069d9" : $variant === "info" ? "#138496" : "#dcdcdc"};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 

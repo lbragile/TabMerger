@@ -26,8 +26,8 @@ import SidePanel from "./SidePanel";
 import Windows from "./Windows";
 
 import useDnd from "~/hooks/useDnd";
+import { useUpdateGroupsFromStorage } from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
-import useStorage from "~/hooks/useStorage";
 import useUpdateInfo from "~/hooks/useUpdateInfo";
 import useUpdateWindows from "~/hooks/useUpdateWindows";
 import { GlobalStyle } from "~/styles/Global";
@@ -57,7 +57,7 @@ const App = (): JSX.Element => {
 
   const sidePanelRef = useRef<HTMLDivElement | null>(null);
 
-  useStorage({ available, active });
+  useUpdateGroupsFromStorage({ available, active });
   useUpdateWindows();
   useUpdateInfo();
 

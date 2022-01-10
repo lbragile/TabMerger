@@ -1,30 +1,41 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import Selector from "./Selector";
 
+import { MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_GROUPS } from "~/constants/sync";
 import useFormatText from "~/hooks/useFormatText";
-import { useSelector } from "~/hooks/useRedux";
-import useSync from "~/hooks/useSync";
+import useLocalStorage from "~/hooks/useLocalStorage";
+import { useDispatch, useSelector } from "~/hooks/useRedux";
+import useSyncStorageInfo from "~/hooks/useSyncStorage";
+import MODAL_CREATORS from "~/store/actions/modal";
+import { TSyncType } from "~/store/reducers/modal";
 import Button from "~/styles/Button";
 import Message from "~/styles/Message";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
+import { relativeTimeStr } from "~/utils/helper";
 
-const StyledMessage = styled(Message)<{ $error: boolean }>`
-  background: ${({ $error }) => ($error ? "#ffcccc" : "#ccffcc")};
+const StyledMessage = styled(Message)<{ $error: boolean; $recent: boolean }>`
+  background: ${({ $error, $recent }) => ($error ? "#ffdddd" : $recent ? "#ddffdd" : "#e8e8ff")};
+  color: ${({ $error, $recent }) => ($error ? "#721c24" : $recent ? "#155724" : "blue")};
   width: fit-content;
   padding: 4px 8px;
   margin: auto;
 `;
 
+const StyledButton = styled(Button)`
+  margin: auto;
+`;
+
 export default function Sync(): JSX.Element {
-  const [activeTab, setActiveTab] = useState<"Upload" | "Download">("Upload");
+  const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState<TSyncType>("Upload");
 
   const {
-    sync: { last: lastSync, currentData, possibleData }
+    sync: { currentData, possibleData }
   } = useSelector((state) => state.modal);
 
   const { available } = useSelector((state) => state.groups);
@@ -32,7 +43,16 @@ export default function Sync(): JSX.Element {
   const { getRegularText: getRegularTextPossible, getHTMLText: getHTMLTextPossible } = useFormatText(possibleData);
   const { getRegularText: getRegularTextCurrent, getHTMLText: getHTMLTextCurrent } = useFormatText(currentData);
 
-  const { MAX_SYNC_GROUPS, MAX_SYNC_TABS_PER_GROUP } = useSync(activeTab, available);
+  useSyncStorageInfo(activeTab, available);
+
+  const [lastSyncUpload] = useLocalStorage("lastSyncUpload", "");
+  const [lastSyncDownload] = useLocalStorage("lastSyncDownload", "");
+  const activeLastSync = activeTab === "Upload" ? lastSyncUpload : lastSyncDownload;
+  const relativeTime = relativeTimeStr(new Date(activeLastSync).getTime());
+
+  useEffect(() => {
+    dispatch(MODAL_CREATORS.updateSyncType(activeTab));
+  }, [dispatch, activeTab]);
 
   const handlePreviewSyncData = () => {
     const data = [activeTab === "Upload" ? getHTMLTextPossible() : getHTMLTextCurrent()];
@@ -46,17 +66,25 @@ export default function Sync(): JSX.Element {
     <>
       <Selector opts={["Upload", "Download"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <StyledMessage $error={lastSync === ""}>
-        {lastSync === ""
-          ? `Nothing was ${activeTab === "Upload" ? "uploaded" : "downloaded"}... yet`
-          : `Last ${activeTab === "Upload" ? "uploaded" : "downloaded"} on ${lastSync.replace("Updated ", "")}`}
+      <StyledMessage $error={activeLastSync === ""} $recent={relativeTime.includes("<")}>
+        {activeLastSync === ""
+          ? `Nothing was ${activeTab.toLowerCase()}ed... yet`
+          : `Last ${activeTab.toLowerCase()}ed on ${activeLastSync} (${relativeTime} ago)`}
       </StyledMessage>
 
-      <TextArea value={activeTab === "Upload" ? getRegularTextPossible() : getRegularTextCurrent()} readOnly />
+      <TextArea
+        value={activeTab === "Upload" ? getRegularTextPossible() : getRegularTextCurrent()}
+        placeholder={`There is nothing to see here yet.\nYou must first upload something to be able to download!`}
+        readOnly
+      />
 
-      <Button $primary onClick={handlePreviewSyncData}>
+      <StyledButton
+        $variant="info"
+        disabled={activeTab === "Download" && currentData.length === 0}
+        onClick={handlePreviewSyncData}
+      >
         Preview
-      </Button>
+      </StyledButton>
 
       <Note>
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />

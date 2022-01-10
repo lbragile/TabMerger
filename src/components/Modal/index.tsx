@@ -10,7 +10,7 @@ import Settings from "./Settings";
 import Sync from "./Sync";
 
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { useSyncDownload, useSyncUpload } from "~/hooks/useSync";
+import { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
 import GROUPS_CREATORS from "~/store/actions/groups";
 import Button from "~/styles/Button";
 
@@ -78,11 +78,11 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
     info: { type, title, closeText, saveText },
     export: { file },
     import: { formatted },
-    sync: { possibleData, currentData }
+    sync: { type: syncType, possibleData, currentData }
   } = useSelector((state) => state.modal);
 
-  const syncUpload = useSyncUpload(possibleData);
-  const syncDownload = useSyncDownload(currentData, available);
+  const syncUpload = useSyncStorageUpload(possibleData);
+  const syncDownload = useSyncStorageDownload(currentData, available);
 
   const hide = () => setVisible(false);
 
@@ -127,20 +127,26 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
 
         <FooterRow>
           {saveText && type === "export" && file && (
-            <Button onClick={handleSave} $primary>
+            <Button onClick={handleSave} $variant="primary">
               {saveText}
             </Button>
           )}
 
           {saveText && type === "import" && formatted.length > 0 && (
-            <Button onClick={handleSave} $primary>
+            <Button onClick={handleSave} $variant="primary">
               {saveText + (type === "import" ? ` (${formatted.length})` : "")}
             </Button>
           )}
 
-          {saveText && type === "sync" && (possibleData.length > 0 || currentData.length > 0) && (
-            <Button onClick={handleSave} $primary>
-              {`${possibleData.length > 0 ? "Upload" : "Download"} ${saveText}`}
+          {saveText && type === "sync" && syncType === "Upload" && possibleData.length > 0 && (
+            <Button onClick={handleSave} $variant="primary">
+              {`Upload ${saveText} (${possibleData.length})`}
+            </Button>
+          )}
+
+          {saveText && type === "sync" && syncType === "Download" && currentData.length > 0 && (
+            <Button onClick={handleSave} $variant="primary">
+              {`Download ${saveText} (${currentData.length})`}
             </Button>
           )}
 
