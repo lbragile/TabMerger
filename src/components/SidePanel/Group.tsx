@@ -15,6 +15,7 @@ import { CloseIcon } from "~/styles/CloseIcon";
 import { relativeTimeStr } from "~/utils/helper";
 
 interface IGroupStyle {
+  $permanent: boolean;
   $isActive: boolean;
   $overflow: boolean;
   $dragging: boolean;
@@ -40,7 +41,8 @@ const GroupButton = styled.div<IGroupStyle>`
   height: 49px;
   background-color: ${({ $isActive, $dragging, $draggingOver }) =>
     $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  border: 1px solid rgb(0 0 0 / 10%);
+  outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(255 127 0 / 30%)" : "rgb(0 0 0 / 10%)")};
+  outline-offset: -1px;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -195,6 +197,7 @@ export default function Group({
         <GroupButton
           tabIndex={0}
           role="button"
+          $permanent={index === 0}
           $isActive={isActive}
           $overflow={available.length > 10}
           $dragging={!!snapshot?.isDragging}

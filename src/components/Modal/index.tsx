@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 
 import About from "./About";
@@ -84,6 +84,8 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
   const syncUpload = useSyncStorageUpload(possibleData);
   const syncDownload = useSyncStorageDownload(currentData, available);
 
+  const [disableSubmit, setDisableSubmit] = useState(false);
+
   const hide = () => setVisible(false);
 
   const handleSave = () => {
@@ -97,6 +99,13 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
     } else if (type === "sync") {
       if (possibleData.length) syncUpload();
       else if (currentData.length) syncDownload();
+
+      /**
+       * Prevent user from mashing the submit button, due to rate limit on sync storage
+       * @see https://developer.chrome.com/docs/extensions/reference/storage/#property-sync-sync-MAX_WRITE_OPERATIONS_PER_MINUTE
+       */
+      setDisableSubmit(true);
+      setTimeout(() => setDisableSubmit(false), 3000);
     }
   };
 
@@ -139,13 +148,13 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
           )}
 
           {saveText && type === "sync" && syncType === "Upload" && possibleData.length > 0 && (
-            <Button onClick={handleSave} $variant="primary">
+            <Button onClick={handleSave} $variant="primary" disabled={disableSubmit}>
               {`Upload ${saveText} (${possibleData.length})`}
             </Button>
           )}
 
           {saveText && type === "sync" && syncType === "Download" && currentData.length > 0 && (
-            <Button onClick={handleSave} $variant="primary">
+            <Button onClick={handleSave} $variant="primary" disabled={disableSubmit}>
               {`Download ${saveText} (${currentData.length})`}
             </Button>
           )}
