@@ -42,7 +42,8 @@ const malformedCommits = danger.git.commits.filter((commit) => {
   const subject = commit.message.split("\n")[0];
 
   return (
-    (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) && !subject.includes("Test")) ||
+    (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) &&
+      !subject.includes("Merge pull request")) ||
     subject.length > LONG_COMMIT_MESSAGE_THRESHOLD
   );
 });
