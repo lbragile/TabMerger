@@ -24,7 +24,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install Dependencies
-        run: pnpm i
+        run: pnpm i --only=dev
 
       - name: Danger Checks
         run: pnpm exec danger ci
