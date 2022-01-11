@@ -56,7 +56,7 @@ Some commit messages do not match the expected format (helps us generate changel
 <details>
     <summary>Violating Commits</summary>
     <ul>
-      ${malformedCommits.map((item) => `<li>${item.message.split("\n")[0]} (\`${item.sha}\`)</li>`).join("\n")}
+      ${malformedCommits.map((item) => `<li>${item.message.split("\n")[0]} (${item.sha.slice(0, 8)})</li>`).join("\n")}
     </ul>
 </details>\n
 See <a href='https://www.conventionalcommits.org/en/v1.0.0/'>Conventional Commits</a> for expected formatting.
