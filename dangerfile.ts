@@ -54,13 +54,13 @@ const BIG_PR_MESSAGE = `Big PR (# added: <b>${linesAdded}</b>, # deleted: <b>${l
 const MALFORMED_COMMIT_MESSAGE = `
 Some commit messages do not match the expected format (helps us generate changelogs).
 <br />
+<br />
 <details>
     <summary>Violating Commits</summary>
     <ul>
       ${malformedCommits.map((item) => `<li>${item.message.split("\n")[0]} (${item.sha.slice(0, 8)})</li>`).join("\n")}
     </ul>
 </details>
-<br />
 See <a href='https://www.conventionalcommits.org/en/v1.0.0/'>Conventional Commits</a> for expected formatting.
 `;
 
