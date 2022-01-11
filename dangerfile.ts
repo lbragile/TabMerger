@@ -9,7 +9,7 @@ Comparing: ${danger.git.base.slice(0, 8)}...${danger.git.head.slice(0, 8)}
 <details>
     <summary>See Details</summary>
     <ul>
-      ${danger.git.modified_files.map((item) => `<li>${item}</li>`)}
+      ${danger.git.modified_files.map((item) => `<li>${item}</li>`).join("\n")}
     </ul>
 </details>
 
@@ -17,7 +17,7 @@ Comparing: ${danger.git.base.slice(0, 8)}...${danger.git.head.slice(0, 8)}
 <details>
     <summary>See Details</summary>
     <ul>
-      ${danger.git.created_files.map((item) => `<li>${item}</li>`)}
+      ${danger.git.created_files.map((item) => `<li>${item}</li>`).join("\n")}
     </ul>
 </details>
 
@@ -25,7 +25,7 @@ Comparing: ${danger.git.base.slice(0, 8)}...${danger.git.head.slice(0, 8)}
 <details>
     <summary>See Details</summary>
     <ul>
-      ${danger.git.deleted_files.map((item) => `<li>${item}</li>`)}
+      ${danger.git.deleted_files.map((item) => `<li>${item}</li>`).join("\n")}
     </ul>
 </details>
 `);
@@ -42,8 +42,7 @@ const malformedCommits = danger.git.commits.filter((commit) => {
   const subject = commit.message.split("\n")[0];
 
   return (
-    (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) &&
-      !subject.includes("Merge pull request")) ||
+    !subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) ||
     subject.length > LONG_COMMIT_MESSAGE_THRESHOLD
   );
 });
@@ -57,7 +56,7 @@ Some commit messages do not match the expected format (helps us generate changel
 <details>
     <summary>Violating Commits</summary>
     <ul>
-      ${malformedCommits.map((item) => `<li>${item.message.split("\n")[0]} (\`${item.sha}\`)</li>`)}
+      ${malformedCommits.map((item) => `<li>${item.message.split("\n")[0]} (\`${item.sha}\`)</li>`).join("\n")}
     </ul>
 </details>\n
 See <a href='https://www.conventionalcommits.org/en/v1.0.0/'>Conventional Commits</a> for expected formatting.
