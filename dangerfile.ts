@@ -42,8 +42,7 @@ const malformedCommits = danger.git.commits.filter((commit) => {
   const subject = commit.message.split("\n")[0];
 
   return (
-    (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) &&
-      !subject.includes("Merge pull request")) ||
+    (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) && !subject.includes("Test")) ||
     subject.length > LONG_COMMIT_MESSAGE_THRESHOLD
   );
 });
@@ -53,13 +52,15 @@ const PACKAGE_CHECK_MESSAGE = `Changes found in package.json, but not in pnpm-lo
 const BIG_PR_MESSAGE = `Big PR (# added: <b>${linesAdded}</b>, # deleted: <b>${linesDeleted}</b>), please keep your PR small to make it easier to review`;
 
 const MALFORMED_COMMIT_MESSAGE = `
-Some commit messages do not match the expected format (helps us generate changelogs).\n\n
+Some commit messages do not match the expected format (helps us generate changelogs).
+<br />
 <details>
     <summary>Violating Commits</summary>
     <ul>
       ${malformedCommits.map((item) => `<li>${item.message.split("\n")[0]} (${item.sha.slice(0, 8)})</li>`).join("\n")}
     </ul>
-</details>\n
+</details>
+<br />
 See <a href='https://www.conventionalcommits.org/en/v1.0.0/'>Conventional Commits</a> for expected formatting.
 `;
 
