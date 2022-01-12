@@ -72,25 +72,29 @@ function formatByteStr(bytes: number, addPrefix = false) {
   const filesChanged = [...danger.git.modified_files, ...danger.git.created_files, ...danger.git.deleted_files];
 
   const fileSizeMapper: Record<"filename" | "base" | "current" | "diff" | "percent", string>[] = [];
-  let totalChange = 0;
-  let totalPercentage = 0;
+  const totalChange: Record<"base" | "current" | "diff", number> = { base: 0, current: 0, diff: 0 };
   for (const file of filesChanged) {
-    const { before, after } = await danger.git.diffForFile(file);
+    if (file !== "pnpm-lock.yaml") {
+      const { before, after } = await danger.git.diffForFile(file);
 
-    const unMinifiedSizeDiffInBytes = after.length - before.length;
-    const percentageChanged = (unMinifiedSizeDiffInBytes * 100) / before.length;
+      const unMinifiedSizeDiffInBytes = after.length - before.length;
+      const percentageChanged = before.length === 0 ? 100 : (unMinifiedSizeDiffInBytes * 100) / before.length;
 
-    totalChange += unMinifiedSizeDiffInBytes;
-    totalPercentage += percentageChanged === Number.POSITIVE_INFINITY ? 100 : percentageChanged;
+      totalChange.base += before.length;
+      totalChange.current += after.length;
+      totalChange.diff += unMinifiedSizeDiffInBytes;
 
-    fileSizeMapper.push({
-      filename: file,
-      base: formatByteStr(before.length),
-      current: formatByteStr(after.length),
-      diff: formatByteStr(unMinifiedSizeDiffInBytes, true),
-      percent: `${percentageChanged.toFixed(2)}%`
-    });
+      fileSizeMapper.push({
+        filename: file,
+        base: formatByteStr(before.length),
+        current: formatByteStr(after.length),
+        diff: formatByteStr(unMinifiedSizeDiffInBytes, true),
+        percent: `${getPrefixSymbol(percentageChanged)}${percentageChanged.toFixed(2)}%`
+      });
+    }
   }
+
+  const totalPercentage = (totalChange.diff * 100) / totalChange.base;
 
   // MESSAGES
 
@@ -106,13 +110,14 @@ function formatByteStr(bytes: number, addPrefix = false) {
   Comparing: ${danger.git.base.slice(0, 7)}...${danger.git.head.slice(0, 7)}
 
   | Filename | Base | Current | +/- |  %  |
-  |---------:|:----:|:-------:|:---:|:---:|
+  |---------:|:----:|:-------:|:---|:---|
   ${fileSizeMapper
     .map((item) => `| ${item.filename} | ${item.base} | ${item.current} | ${item.diff} | ${item.percent} |`)
     .join("\n")}
-  | Total | N/A | N/A | ${formatByteStr(totalChange, true)} | ${getPrefixSymbol(
-    totalPercentage
-  )}${totalPercentage.toFixed(2)} |
+  | Total | ${formatByteStr(totalChange.base, true)} | ${formatByteStr(totalChange.current, true)} | ${formatByteStr(
+    totalChange.diff,
+    true
+  )} | ${getPrefixSymbol(totalPercentage)}${totalPercentage.toFixed(2)}% |
 
   ### Summary
   ${generateCollapsibleList(danger.git.modified_files, "Changed Files")}
