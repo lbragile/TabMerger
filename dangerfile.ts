@@ -46,7 +46,8 @@ function formatByteStr(bytes: number, addPrefix = false) {
     const subject = commit.message.split("\n")[0];
 
     return (
-      (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) && !subject.includes("Test")) ||
+      (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) &&
+        !subject.includes("Merge pull request")) ||
       subject.length > LONG_COMMIT_MESSAGE_THRESHOLD
     );
   });
@@ -109,12 +110,19 @@ function formatByteStr(bytes: number, addPrefix = false) {
 
   Comparing: ${danger.git.base.slice(0, 7)}...${danger.git.head.slice(0, 7)}
 
+  #### Note: the following excludes changes to \`pnpm-lock.yaml\` due to its volatile nature.
+
   | Filename | Base | Current | +/- |  %  |
   |---------:|:----:|:-------:|:---|:---|
   ${fileSizeMapper
-    .map((item) => `| ${item.filename} | ${item.base} | ${item.current} | ${item.diff} | ${item.percent} |`)
+    .map(
+      (item) =>
+        `| ${danger.github.utils.fileLinks([item.filename])} | ${item.base} | ${item.current} | ${item.diff} | ${
+          item.percent
+        } |`
+    )
     .join("\n")}
-  | Total | ${formatByteStr(totalChange.base, true)} | ${formatByteStr(totalChange.current, true)} | ${formatByteStr(
+  | Total | ${formatByteStr(totalChange.base)} | ${formatByteStr(totalChange.current)} | ${formatByteStr(
     totalChange.diff,
     true
   )} | ${getPrefixSymbol(totalPercentage)}${totalPercentage.toFixed(2)}% |
