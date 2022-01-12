@@ -20,10 +20,13 @@
     "@babel/preset-env": "^7.16.7",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
+    "@commitlint/cli": "^16.0.2",
+    "@commitlint/config-conventional": "^16.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
+    "@octokit/core": "^3.5.1",
     "@types/chrome": "^0.0.175",
     "@types/express": "^4.17.13",
     "@types/file-saver": "^2.0.4",
@@ -43,6 +46,7 @@
     "copy-webpack-plugin": "^10.2.0",
     "cross-env": "^7.0.3",
     "cspell": "^5.15.1",
+    "danger": "^10.8.0",
     "dotenv-webpack": "^7.0.3",
     "eslint": "^8.6.0",
     "eslint-import-resolver-typescript": "^2.5.0",
@@ -52,6 +56,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-styled-components-a11y": "0.0.34",
     "eslint-webpack-plugin": "^3.1.1",
+    "husky": "^7.0.4",
     "postcss": "^8.4.5",
     "postcss-scss": "^4.0.2",
     "prettier": "^2.5.1",
@@ -73,6 +78,7 @@
     "webpack-cli": "^4.9.1"
   },
   "peerDependencies": {
+    "@octokit/core": "^3.5.1",
     "postcss": "8.4.5",
     "react-is": "17.0.2"
   },
@@ -86,7 +92,8 @@
     "webpack": "webpack --config config/webpack.config.js --progress",
     "start": "cross-env NODE_ENV=development pnpm webpack",
     "build": "cross-env NODE_ENV=production pnpm webpack",
-    "remotedev": "remotedev --hostname=localhost --port=8080 --logLevel=0"
+    "remotedev": "remotedev --hostname=localhost --port=8080 --logLevel=0",
+    "changelog": "auto-changelog --config ./config/auto-changelog.json"
   },
   "babel": {
     "extends": "./config/.babelrc.json"
@@ -96,6 +103,11 @@
   },
   "stylelint": {
     "extends": "./config/.stylelintrc.json"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "browserslist": {
     "production": [
