@@ -1,0 +1,81 @@
+# Change Log
+
+All notable changes to TabMerger will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and TabMerger adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+{{#each releases}}
+  ## [{{title}}]({{href}}) ({{niceDate}})
+
+  ### Added
+  
+  {{#each merges}}
+    {{#matches message '(feat|fix|perf|refactor|test):\sadd(ed)?' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{message}}{{#if href}} [`!{{id}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+  {{#each fixes}}
+    {{#matches commit.subject '(feat|fix|perf|refactor|test):.+?add(ed)?' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{commit.subject}}{{#each fixes}}{{#if href}} [`#{{id}}`]({{href}}){{/if}}{{/each}}
+    {{/matches}}
+  {{/each}}
+  {{#each commits}}
+    {{#matches subject '(feat|fix|perf|refactor|test):.+?add(ed)?' flags="i"}}
+      - {{#if breaking}}**Breaking change:** {{/if}}{{subject}}{{#if href}} [`{{shorthash}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+
+  ### Fixed
+  
+  {{#each merges}}
+    {{#matches message '(feat|fix|perf|refactor|test):\sfix(ed)?' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{message}}{{#if href}} [`!{{id}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+  {{#each fixes}}
+    {{#matches commit.subject '(feat|fix|perf|refactor|test):.+?fix(ed)?' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{commit.subject}}{{#each fixes}}{{#if href}} [`#{{id}}`]({{href}}){{/if}}{{/each}}
+    {{/matches}}
+  {{/each}}
+  {{#each commits}}
+    {{#matches subject '(feat|fix|perf|refactor|test):.+?fix(ed)?' flags="i"}}
+      - {{#if breaking}}**Breaking change:** {{/if}}{{subject}}{{#if href}} [`{{shorthash}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+
+  ### Changed
+  
+  {{#each merges}}
+    {{#matches message '(feat|fix|perf|refactor|test):\s(changed?|adjust(ed)?|updated?|upgraded?)' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{message}}{{#if href}} [`!{{id}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+  {{#each fixes}}
+    {{#matches commit.subject '(feat|fix|perf|refactor|test):.+?(changed?|adjust(ed)?|updated?|upgraded?)' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{commit.subject}}{{#each fixes}}{{#if href}} [`#{{id}}`]({{href}}){{/if}}{{/each}}
+    {{/matches}}
+  {{/each}}
+  {{#each commits}}
+    {{#matches subject '(feat|fix|perf|refactor|test):.+?(changed?|adjust(ed)?|updated?|upgraded?)' flags="i"}}
+      - {{#if breaking}}**Breaking change:** {{/if}}{{subject}}{{#if href}} [`{{shorthash}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+
+  ### Removed
+  
+  {{#each merges}}
+    {{#matches message '(feat|fix|perf|refactor|test):\sremoved?' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{message}}{{#if href}} [`!{{id}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+  {{#each fixes}}
+    {{#matches commit.subject '(feat|fix|perf|refactor|test):.+?removed?' flags="i"}}
+      - {{#if commit.breaking}}**Breaking change:** {{/if}}{{commit.subject}}{{#each fixes}}{{#if href}} [`#{{id}}`]({{href}}){{/if}}{{/each}}
+    {{/matches}}
+  {{/each}}
+  {{#each commits}}
+    {{#matches subject '(feat|fix|perf|refactor|test):.+?removed?' flags="i"}}
+      - {{#if breaking}}**Breaking change:** {{/if}}{{subject}}{{#if href}} [`{{shorthash}}`]({{href}}){{/if}}
+    {{/matches}}
+  {{/each}}
+{{/each}}
