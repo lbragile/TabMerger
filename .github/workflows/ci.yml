@@ -28,7 +28,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install Dependencies
-        run: pnpm i --only=dev
+        run: pnpm i
 
       - name: Check Spelling
         run: pnpm spell:check
