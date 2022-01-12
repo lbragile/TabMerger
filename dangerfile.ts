@@ -14,6 +14,25 @@ function generateCollapsibleList(items: string[], summary: string): string {
   `;
 }
 
+function getPrefixSymbol(val: number) {
+  return val > 0 ? "🔴 " : val < 0 ? "🟢 " : "🟡 ";
+}
+
+function formatByteStr(bytes: number, addPrefix = false) {
+  const [kiloBytes, megaBytes, gigaBytes] = [1, 2, 3].map((exp) => 1e3 ** exp);
+
+  const outputStr =
+    bytes < kiloBytes
+      ? bytes + " B"
+      : bytes < megaBytes
+      ? (bytes / kiloBytes).toFixed(2) + " KB"
+      : bytes < gigaBytes
+      ? (bytes / megaBytes).toFixed(2) + " MB"
+      : (bytes / gigaBytes).toFixed(2) + " GB";
+
+  return `${addPrefix ? getPrefixSymbol(bytes) : ""}${outputStr}`;
+}
+
 (async function () {
   const packageChanged = danger.git.modified_files.includes("package.json");
   const lockfileChanged = danger.git.modified_files.includes("pnpm-lock.yaml");
@@ -53,18 +72,23 @@ function generateCollapsibleList(items: string[], summary: string): string {
   const filesChanged = [...danger.git.modified_files, ...danger.git.created_files, ...danger.git.deleted_files];
 
   const fileSizeMapper: Record<"filename" | "base" | "current" | "diff" | "percent", string>[] = [];
+  let totalChange = 0;
+  let totalPercentage = 0;
   for (const file of filesChanged) {
     const { before, after } = await danger.git.diffForFile(file);
 
     const unMinifiedSizeDiffInBytes = after.length - before.length;
     const percentageChanged = (unMinifiedSizeDiffInBytes * 100) / before.length;
 
+    totalChange += unMinifiedSizeDiffInBytes;
+    totalPercentage += percentageChanged === Number.POSITIVE_INFINITY ? 100 : percentageChanged;
+
     fileSizeMapper.push({
       filename: file,
-      base: `${before.length * 1e3} KB`,
-      current: `${after.length * 1e3} KB`,
-      diff: `${unMinifiedSizeDiffInBytes * 1e3}KB`,
-      percent: `${percentageChanged}%`
+      base: formatByteStr(before.length),
+      current: formatByteStr(after.length),
+      diff: formatByteStr(unMinifiedSizeDiffInBytes, true),
+      percent: `${percentageChanged.toFixed(2)}%`
     });
   }
 
@@ -78,18 +102,6 @@ function generateCollapsibleList(items: string[], summary: string): string {
 
   markdown(`
   ## PR Snapshot
-  
-  Comparing: ${danger.git.base.slice(0, 7)}...${danger.git.head.slice(0, 7)}
-  
-  ${generateCollapsibleList(danger.git.modified_files, "Changed Files")}
-
-  ${generateCollapsibleList(danger.git.created_files, "Created Files")}
-
-  ${generateCollapsibleList(danger.git.deleted_files, "Deleted Files")}
-  `);
-
-  markdown(`
-  ## File Size Changes
 
   Comparing: ${danger.git.base.slice(0, 7)}...${danger.git.head.slice(0, 7)}
 
@@ -98,5 +110,15 @@ function generateCollapsibleList(items: string[], summary: string): string {
   ${fileSizeMapper
     .map((item) => `| ${item.filename} | ${item.base} | ${item.current} | ${item.diff} | ${item.percent} |`)
     .join("\n")}
+  | Total | N/A | N/A | ${formatByteStr(totalChange, true)} | ${getPrefixSymbol(
+    totalPercentage
+  )}${totalPercentage.toFixed(2)} |
+
+  ### Summary
+  ${generateCollapsibleList(danger.git.modified_files, "Changed Files")}
+
+  ${generateCollapsibleList(danger.git.created_files, "Created Files")}
+
+  ${generateCollapsibleList(danger.git.deleted_files, "Deleted Files")}
   `);
 })();
