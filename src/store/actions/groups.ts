@@ -47,14 +47,17 @@ const updateTabsFromSidePanelDnd = (payload?: ISidePanelDnd) => ({
 
 const updateInfo = (payload?: { index: number; info?: string }) => ({ type: GROUPS_ACTIONS.UPDATE_INFO, payload });
 
-const updatePermanent = (payload?: boolean) => ({ type: GROUPS_ACTIONS.UPDATE_PERMANENT, payload });
-
 const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
 
 const deleteGroup = (payload?: number) => ({ type: GROUPS_ACTIONS.DELETE_GROUP, payload });
 
 const deleteWindow = (payload?: { groupIndex: number; windowIndex: number }) => ({
   type: GROUPS_ACTIONS.DELETE_WINDOW,
+  payload
+});
+
+const deleteTab = (payload?: { tabIndex: number; windowIndex: number; groupIndex: number }) => ({
+  type: GROUPS_ACTIONS.DELETE_TAB,
   payload
 });
 
@@ -66,16 +69,6 @@ const clearEmptyWindows = (payload?: { index: number }) => ({ type: GROUPS_ACTIO
 
 const updateGroupOrder = (payload?: { source: DraggableLocation; destination?: DraggableLocation }) => ({
   type: GROUPS_ACTIONS.UPDATE_GROUP_ORDER,
-  payload
-});
-
-const closeWindow = (payload?: { windowIndex: number; groupIndex: number }) => ({
-  type: GROUPS_ACTIONS.CLOSE_WINDOW,
-  payload
-});
-
-const closeTab = (payload?: { tabIndex: number; windowIndex: number; groupIndex: number }) => ({
-  type: GROUPS_ACTIONS.CLOSE_TAB,
   payload
 });
 
@@ -116,16 +109,14 @@ export default {
   updateTabsFromGroupDnd,
   updateTabsFromSidePanelDnd,
   updateInfo,
-  updatePermanent,
   addGroup,
   deleteGroup,
   deleteWindow,
+  deleteTab,
   clearEmptyGroups,
   addWindow,
   clearEmptyWindows,
   updateGroupOrder,
-  closeWindow,
-  closeTab,
   toggleWindowIncognito,
   toggleWindowStarred,
   duplicateGroup,

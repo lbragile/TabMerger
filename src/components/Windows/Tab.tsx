@@ -94,7 +94,7 @@ export default function Tab({
 
   const closeTab = () => {
     if (groupIndex > 0) {
-      dispatch(GROUPS_CREATORS.closeTab({ tabIndex, windowIndex, groupIndex }));
+      dispatch(GROUPS_CREATORS.deleteTab({ tabIndex, windowIndex, groupIndex }));
 
       // Possible to have deleted the last tab in the window and/or group
       if (!available[groupIndex].windows[windowIndex].tabs?.length) {
