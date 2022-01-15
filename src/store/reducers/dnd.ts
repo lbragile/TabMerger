@@ -12,12 +12,12 @@ export interface IDnDState {
   isDragging: boolean;
 }
 
-const initState: IDnDState = {
+export const initDnDState: IDnDState = {
   dragType: "tab-0-window-0",
   isDragging: false
 };
 
-const dndReducer = (state = initState, action: IAction): IDnDState => {
+const dndReducer = (state: IDnDState, action: IAction): IDnDState => {
   const { type, payload } = action;
 
   switch (type) {
@@ -34,7 +34,7 @@ const dndReducer = (state = initState, action: IAction): IDnDState => {
       };
 
     case DND_ACTIONS.RESET_DND_INFO:
-      return initState;
+      return initDnDState;
 
     default:
       return state;

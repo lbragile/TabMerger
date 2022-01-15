@@ -52,7 +52,7 @@ export interface IModalState {
   };
 }
 
-const initState: IModalState = {
+export const initModalState: IModalState = {
   info: {
     title: "About TabMerger",
     type: "about",
@@ -72,7 +72,7 @@ const initState: IModalState = {
   }
 };
 
-const modalReducer = (state = initState, action: IAction): IModalState => {
+const modalReducer = (state: IModalState, action: IAction): IModalState => {
   const { type, payload } = action;
 
   switch (type) {

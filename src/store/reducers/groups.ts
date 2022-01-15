@@ -66,7 +66,7 @@ export interface IGroupsState {
 
 const activeId = nanoid(10);
 
-const initState: IGroupsState = {
+export const initGroupsState: IGroupsState = {
   active: { id: activeId, index: 0 },
   available: [
     {
@@ -80,7 +80,7 @@ const initState: IGroupsState = {
   ]
 };
 
-const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
+const GroupsReducer = (state: IGroupsState, action: IAction): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {

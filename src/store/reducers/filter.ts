@@ -12,12 +12,12 @@ export interface IFilterState {
   filteredGroups: IGroupItemState[];
 }
 
-const initState: IFilterState = {
+export const initFilterState: IFilterState = {
   filteredTabs: [[]],
   filteredGroups: []
 };
 
-const filterReducer = (state = initState, action: IAction): IFilterState => {
+const filterReducer = (state: IFilterState, action: IAction): IFilterState => {
   const { type, payload } = action;
 
   switch (type) {

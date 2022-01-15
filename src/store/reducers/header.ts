@@ -12,13 +12,13 @@ export interface IHeaderState {
   filterChoice: "tab" | "group";
 }
 
-const initState: IHeaderState = {
+export const initHeaderState: IHeaderState = {
   typing: false,
   inputValue: "",
   filterChoice: "tab"
 };
 
-const headerReducer = (state = initState, action: IAction): IHeaderState => {
+const headerReducer = (state: IHeaderState, action: IAction): IHeaderState => {
   const { type, payload } = action;
 
   switch (type) {
