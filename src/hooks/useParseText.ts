@@ -3,7 +3,7 @@ import { useCallback, useEffect } from "react";
 
 import { useDispatch, useSelector } from "./useRedux";
 
-import MODAL_CREATORS from "~/store/actions/modal";
+import { updateImportFormattedGroups, updateImportType } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { TImportType } from "~/store/reducers/modal";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs } from "~/utils/helper";
@@ -62,7 +62,7 @@ export default function useParseText(debouncedText: string) {
           groups[0].windows.forEach((w) => (w.focused = false));
         } catch (err) {
           // Clear the formatted groups if an invalid upload is detected
-          dispatch(MODAL_CREATORS.updateImportFormattedGroups([]));
+          dispatch(updateImportFormattedGroups([]));
         }
       } else if (importType === "plain") {
         groups = formatPlain(debouncedText);
@@ -103,7 +103,7 @@ export default function useParseText(debouncedText: string) {
       }
 
       if (groups) {
-        dispatch(MODAL_CREATORS.updateImportFormattedGroups(groups));
+        dispatch(updateImportFormattedGroups(groups));
       }
     }
   }, [dispatch, debouncedText, importType, formatPlain]);
@@ -114,7 +114,7 @@ export default function useParseText(debouncedText: string) {
     else if (/\n*#{2,3}.+?\n/.test(value)) type = "markdown";
     else if (/(".+?",?){4}\n/.test(value)) type = "csv";
 
-    if (type !== importType) dispatch(MODAL_CREATORS.updateImportType(type));
+    if (type !== importType) dispatch(updateImportType(type));
   };
 
   return { recomputeUploadType };

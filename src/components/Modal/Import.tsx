@@ -9,7 +9,7 @@ import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
 import { useDispatch } from "~/hooks/useRedux";
-import MODAL_CREATORS from "~/store/actions/modal";
+import { updateImportFormattedGroups, updateImportType } from "~/store/actions/modal";
 import Message from "~/styles/Message";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
@@ -59,7 +59,7 @@ export default function Import(): JSX.Element {
   useEffect(() => {
     if (activeTab === "File") {
       setCurrentText("");
-      dispatch(MODAL_CREATORS.updateImportFormattedGroups([]));
+      dispatch(updateImportFormattedGroups([]));
     }
   }, [dispatch, activeTab]);
 
@@ -78,7 +78,7 @@ export default function Import(): JSX.Element {
 
       const text = type === "json" ? JSON.stringify(await new Response(file).json(), null, 4) : await file.text();
 
-      dispatch(MODAL_CREATORS.updateImportType(type));
+      dispatch(updateImportType(type));
       setCurrentText(text);
       setActiveTab("Text");
     },

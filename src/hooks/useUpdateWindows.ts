@@ -3,7 +3,7 @@ import { useCallback, useEffect } from "react";
 import { useDispatch } from "./useRedux";
 
 import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
-import GROUPS_CREATORS from "~/store/actions/groups";
+import { updateWindows, updateTimestamp } from "~/store/actions/groups";
 import { sortWindowsByFocus } from "~/utils/helper";
 
 export default function useUpdateWindows(): void {
@@ -18,8 +18,8 @@ export default function useUpdateWindows(): void {
         currentWindows[0].focused = true;
       }
 
-      dispatch(GROUPS_CREATORS.updateWindows({ index: 0, windows: hasFocused ? sortedWindows : currentWindows }));
-      dispatch(GROUPS_CREATORS.updateTimestamp({ index: 0, updatedAt: Date.now() }));
+      dispatch(updateWindows({ index: 0, windows: hasFocused ? sortedWindows : currentWindows }));
+      dispatch(updateTimestamp({ index: 0, updatedAt: Date.now() }));
     });
   }, [dispatch]);
 

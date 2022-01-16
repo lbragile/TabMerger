@@ -9,7 +9,7 @@ import { isGroupDrag } from "~/constants/dragRegExp";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import GROUPS_CREATORS from "~/store/actions/groups";
+import { updateColor, deleteGroup, updateActive } from "~/store/actions/groups";
 import { IGroupsState } from "~/store/reducers/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { relativeTimeStr } from "~/utils/helper";
@@ -41,7 +41,7 @@ const GroupButton = styled.div<IGroupStyle>`
   height: 49px;
   background-color: ${({ $isActive, $dragging, $draggingOver }) =>
     $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
-  outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(255 127 0 / 30%)" : "rgb(0 0 0 / 10%)")};
+  outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(133 66 0 / 30%)" : "rgb(0 0 0 / 10%)")};
   outline-offset: -1px;
   overflow: hidden;
   position: relative;
@@ -154,7 +154,7 @@ export default function Group({
     ref: pickerRef,
     preCondition: showPicker,
     cb: () => {
-      dispatch(GROUPS_CREATORS.updateColor({ index, color: debouncedPickerValue }));
+      dispatch(updateColor({ index, color: debouncedPickerValue }));
       setShowPicker(false);
     }
   });
@@ -164,7 +164,7 @@ export default function Group({
     setColorPickerValue(color);
   }, [color]);
 
-  const handleActiveGroupUpdate = () => !isActive && dispatch(GROUPS_CREATORS.updateActive({ index, id }));
+  const handleActiveGroupUpdate = () => !isActive && dispatch(updateActive({ index, id }));
 
   const handleShowTitleOverflow = (
     { currentTarget }: React.PointerEvent<HTMLDivElement>,
@@ -236,12 +236,12 @@ export default function Group({
               icon="times"
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(GROUPS_CREATORS.deleteGroup(index));
+                dispatch(deleteGroup(index));
               }}
               onPointerDown={(e) => e.preventDefault()}
               onKeyPress={(e) => {
                 e.stopPropagation();
-                e.key === "Enter" && dispatch(GROUPS_CREATORS.deleteGroup(index));
+                e.key === "Enter" && dispatch(deleteGroup(index));
               }}
             />
           )}

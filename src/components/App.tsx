@@ -17,7 +17,6 @@ import {
   faCheckCircle,
   faUpload
 } from "@fortawesome/free-solid-svg-icons";
-import { useRef } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import styled, { ThemeProvider } from "styled-components";
 
@@ -26,6 +25,7 @@ import SidePanel from "./SidePanel";
 import Windows from "./Windows";
 
 import useDnd from "~/hooks/useDnd";
+import useFilter from "~/hooks/useFilter";
 import { useUpdateGroupsFromStorage } from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
 import useUpdateInfo from "~/hooks/useUpdateInfo";
@@ -52,16 +52,15 @@ const MainArea = styled.div`
 
 const App = (): JSX.Element => {
   const { filterChoice } = useSelector((state) => state.header);
-  const { filteredGroups } = useSelector((state) => state.filter);
   const { active, available } = useSelector((state) => state.groups);
 
-  const sidePanelRef = useRef<HTMLDivElement | null>(null);
+  const { filteredGroups } = useFilter();
 
   useUpdateGroupsFromStorage({ available, active });
   useUpdateWindows();
   useUpdateInfo();
 
-  const { onBeforeCapture, onDragStart, onDragEnd } = useDnd(sidePanelRef);
+  const { onBeforeCapture, onDragStart, onDragEnd } = useDnd();
 
   return (
     <Container>
@@ -73,9 +72,7 @@ const App = (): JSX.Element => {
         <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
           {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
             <MainArea>
-              <div ref={sidePanelRef}>
-                <SidePanel />
-              </div>
+              <SidePanel />
 
               <Windows />
             </MainArea>

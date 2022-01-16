@@ -5,7 +5,7 @@ import Highlighted from "~/components/Highlighted";
 import { isTabDrag } from "~/constants/dragRegExp";
 import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import GROUPS_CREATORS from "~/store/actions/groups";
+import { deleteTab, deleteWindow, deleteGroup } from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
@@ -19,17 +19,20 @@ const TabContainer = styled.div<{ $dragging: boolean }>`
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 `;
 
-const TabTitle = styled.a`
+const TabTitle = styled.a<{ $isDragging: boolean }>`
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: black;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  cursor: ${({ $isDragging }) => ($isDragging ? "grabbing" : "pointer")};
+  ${({ $isDragging }) =>
+    !$isDragging &&
+    css`
+      &:hover {
+        text-decoration: underline;
+      }
+    `}
 `;
 
 const TabIcon = styled.img<{ $darken?: boolean }>`
@@ -94,15 +97,15 @@ export default function Tab({
 
   const closeTab = () => {
     if (groupIndex > 0) {
-      dispatch(GROUPS_CREATORS.deleteTab({ tabIndex, windowIndex, groupIndex }));
+      dispatch(deleteTab({ tabIndex, windowIndex, groupIndex }));
 
       // Possible to have deleted the last tab in the window and/or group
       if (!available[groupIndex].windows[windowIndex].tabs?.length) {
-        dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
+        dispatch(deleteWindow({ groupIndex, windowIndex }));
       }
 
       if (!available[groupIndex].windows.length) {
-        dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
+        dispatch(deleteGroup(groupIndex));
       }
     } else {
       tabId && chrome.tabs.remove(tabId, () => "");
@@ -132,7 +135,13 @@ export default function Tab({
           {...dragHandleProps}
         />
 
-        <TabTitle title={url} href={url} onClick={(e) => e.button === 0 && openTab()} draggable={false}>
+        <TabTitle
+          $isDragging={isDragging}
+          title={url}
+          href={url}
+          onClick={(e) => e.button === 0 && openTab()}
+          draggable={false}
+        >
           {filterChoice === "tab" ? <Highlighted text={title} /> : title}
         </TabTitle>
       </TabContainer>

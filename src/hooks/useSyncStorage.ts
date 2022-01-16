@@ -4,8 +4,8 @@ import { useCallback, useEffect } from "react";
 import { useDispatch } from "./useRedux";
 
 import { MAX_SYNC_GROUPS, MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_ITEM_SIZE } from "~/constants/sync";
-import GROUPS_CREATORS from "~/store/actions/groups";
-import MODAL_CREATORS from "~/store/actions/modal";
+import { updateAvailable } from "~/store/actions/groups";
+import { updateSyncCurrentData, updateSyncPossibleData } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
@@ -22,8 +22,8 @@ export default function useSyncStorageInfo(activeTab: "Download" | "Upload", ava
         const sortedGroupsArr = groupsArr.sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0));
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const newSyncData: ISyncDataItem[] = sortedGroupsArr.map(({ order, ...rest }) => rest);
-        dispatch(MODAL_CREATORS.updateSyncCurrentData(newSyncData));
-        dispatch(MODAL_CREATORS.updateSyncPossibleData([]));
+        dispatch(updateSyncCurrentData(newSyncData));
+        dispatch(updateSyncPossibleData([]));
       });
     } else {
       const syncedGroups: ISyncDataItem[] = [];
@@ -64,8 +64,8 @@ export default function useSyncStorageInfo(activeTab: "Download" | "Upload", ava
         }
       }
 
-      dispatch(MODAL_CREATORS.updateSyncPossibleData(syncedGroups));
-      dispatch(MODAL_CREATORS.updateSyncCurrentData([]));
+      dispatch(updateSyncPossibleData(syncedGroups));
+      dispatch(updateSyncCurrentData([]));
     }
   }, [dispatch, activeTab, available]);
 }
@@ -115,7 +115,7 @@ export function useSyncStorageDownload(currentData: ISyncDataItem[], available: 
       return group;
     });
 
-    dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...newAvailable]));
+    dispatch(updateAvailable([available[0], ...newAvailable]));
 
     // Update local storage download sync timestamp
     chrome.storage.local.set({ lastSyncDownload: getReadableTimestamp() }, () => "");

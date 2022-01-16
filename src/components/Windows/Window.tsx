@@ -10,8 +10,9 @@ import Popup from "~/components/Popup";
 import { isTabDrag } from "~/constants/dragRegExp";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
+import useFilter from "~/hooks/useFilter";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import GROUPS_CREATORS from "~/store/actions/groups";
+import { deleteWindow, deleteGroup, toggleWindowStarred, toggleWindowIncognito } from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { pluralize } from "~/utils/helper";
 
@@ -128,10 +129,12 @@ export default function Window({
     active: { index: groupIndex }
   } = useSelector((state) => state.groups);
 
-  const { typing, filterChoice } = useSelector((state) => state.header);
-  const { filteredTabs } = useSelector((state) => state.filter);
+  const { inputValue, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
 
+  const { filteredTabs } = useFilter();
+
+  const typing = inputValue !== "";
   const isTabSearch = filterChoice === "tab";
   const currentTabs = typing && isTabSearch ? filteredTabs[windowIndex] : tabs;
 
@@ -172,11 +175,11 @@ export default function Window({
 
   const closeWindow = () => {
     if (groupIndex > 0) {
-      dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
+      dispatch(deleteWindow({ groupIndex, windowIndex }));
 
       // Possible to have deleted the last window in the group
       if (!available[groupIndex].windows.length) {
-        dispatch(GROUPS_CREATORS.deleteGroup(groupIndex));
+        dispatch(deleteGroup(groupIndex));
       }
     } else {
       windowId && chrome.windows.remove(windowId);
@@ -207,7 +210,7 @@ export default function Window({
       {
         text: starred ? "Unfavorite" : "Favorite",
         handler: () => {
-          dispatch(GROUPS_CREATORS.toggleWindowStarred({ groupIndex, windowIndex }));
+          dispatch(toggleWindowStarred({ groupIndex, windowIndex }));
           setShowPopup(false);
         },
         isDisabled: groupIndex === 0
@@ -215,7 +218,7 @@ export default function Window({
       {
         text: `${incognito ? "Remove" : "Make"} Incognito`,
         handler: () => {
-          dispatch(GROUPS_CREATORS.toggleWindowIncognito({ groupIndex, windowIndex }));
+          dispatch(toggleWindowIncognito({ groupIndex, windowIndex }));
           setShowPopup(false);
         },
         isDisabled: groupIndex === 0
@@ -224,7 +227,7 @@ export default function Window({
       {
         text: "Delete",
         handler: () => {
-          dispatch(GROUPS_CREATORS.deleteWindow({ groupIndex, windowIndex }));
+          dispatch(deleteWindow({ groupIndex, windowIndex }));
           setShowPopup(false);
         },
         isDanger: true,

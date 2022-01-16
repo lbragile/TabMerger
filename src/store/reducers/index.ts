@@ -1,5 +1,4 @@
 import dndReducer, { initDnDState } from "./dnd";
-import filterReducer, { initFilterState } from "./filter";
 import groupsReducer, { initGroupsState } from "./groups";
 import headerReducer, { initHeaderState } from "./header";
 import modalReducer, { initModalState } from "./modal";
@@ -30,7 +29,6 @@ const combineReducers = <S>(reducers: ReducersMap<S>): TRootReducer<S> => {
 export const rootReducer = combineReducers<TRootState>({
   header: headerReducer,
   groups: groupsReducer,
-  filter: filterReducer,
   dnd: dndReducer,
   modal: modalReducer
 });
@@ -38,7 +36,6 @@ export const rootReducer = combineReducers<TRootState>({
 export const combinedState = {
   header: initHeaderState,
   groups: initGroupsState,
-  filter: initFilterState,
   dnd: initDnDState,
   modal: initModalState
 };

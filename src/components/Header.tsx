@@ -8,10 +8,9 @@ import SearchResult from "./SearchResult";
 
 import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
-import useFilter from "~/hooks/useFilter";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import HEADER_CREATORS from "~/store/actions/header";
-import MODAL_CREATORS from "~/store/actions/modal";
+import { updateInputValue, setFilterChoice } from "~/store/actions/header";
+import { setModalInfo } from "~/store/actions/modal";
 import { IModalState } from "~/store/reducers/modal";
 import { createActiveTab } from "~/utils/helper";
 
@@ -59,14 +58,14 @@ const SettingsIcon = styled(FontAwesomeIcon)`
 const SearchIcon = styled(FontAwesomeIcon)<{ $typing: boolean }>`
   font-size: 16px;
   color: ${({ $typing }) => ($typing ? "black" : "#808080")};
-
-  &:hover {
-    ${({ $typing: typing }) =>
-      css`
-        cursor: ${typing ? "pointer" : ""};
-        color: ${typing ? "#FF8080" : ""};
-      `}
-  }
+  ${({ $typing }) =>
+    $typing &&
+    css`
+      &:hover {
+        cursor: pointer;
+        color: #ff8080;
+      }
+    `}
 `;
 
 const FilterButtonToggle = styled.div`
@@ -89,7 +88,8 @@ const FilterChoice = styled.button<{ active: boolean }>`
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { typing, inputValue, filterChoice } = useSelector((state) => state.header);
+  const { inputValue, filterChoice } = useSelector((state) => state.header);
+  const typing = inputValue !== "";
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -99,13 +99,11 @@ export default function Header(): JSX.Element {
 
   useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
 
-  useFilter();
-
   const modalDetailsHandler = useCallback(
     (args: IModalState["info"]) => {
       setShowModal(true);
       setShowDropdown(false);
-      dispatch(MODAL_CREATORS.setModalInfo(args));
+      dispatch(setModalInfo(args));
     },
     [dispatch]
   );
@@ -160,8 +158,7 @@ export default function Header(): JSX.Element {
               value={inputValue as string}
               onChange={(e) => {
                 const { value } = e.target;
-                dispatch(HEADER_CREATORS.updateInputValue(value));
-                dispatch(HEADER_CREATORS.setTyping(value !== ""));
+                dispatch(updateInputValue(value));
               }}
             />
 
@@ -169,11 +166,11 @@ export default function Header(): JSX.Element {
               {...(typing ? { tabIndex: 0 } : {})}
               icon={typing ? "times" : "search"}
               $typing={typing}
+              onPointerDown={(e) => e.preventDefault()}
               onClick={() => {
                 // Clicking the close button should clear the input
                 if (typing) {
-                  dispatch(HEADER_CREATORS.updateInputValue(""));
-                  dispatch(HEADER_CREATORS.setTyping(false));
+                  dispatch(updateInputValue(""));
                 }
               }}
             />
@@ -184,7 +181,7 @@ export default function Header(): JSX.Element {
               {["tab", "group"].map((text) => (
                 <FilterChoice
                   key={text}
-                  onMouseDown={() => dispatch(HEADER_CREATORS.setFilterChoice(text))}
+                  onMouseDown={() => dispatch(setFilterChoice(text))}
                   active={filterChoice === text}
                 >
                   {text[0].toUpperCase() + text.slice(1)}

@@ -8,6 +8,7 @@ import Window from "./Window";
 import SearchResult from "~/components/SearchResult";
 import { isWindowDrag } from "~/constants/dragRegExp";
 import useContainerHeight from "~/hooks/useContainerHeight";
+import useFilter from "~/hooks/useFilter";
 import { useSelector } from "~/hooks/useRedux";
 import { Scrollbar } from "~/styles/Scrollbar";
 
@@ -26,15 +27,17 @@ const WindowsContainer = styled(Scrollbar)<IWindowContainerStyle>`
 `;
 
 export default function Windows(): JSX.Element {
-  const { typing, filterChoice } = useSelector((state) => state.header);
-  const { filteredTabs } = useSelector((state) => state.filter);
+  const { inputValue, filterChoice } = useSelector((state) => state.header);
+  const { dragType } = useSelector((state) => state.dnd);
 
   const {
     active: { index: groupIndex },
     available
   } = useSelector((state) => state.groups);
 
-  const { dragType } = useSelector((state) => state.dnd);
+  const typing = inputValue !== "";
+  const { filteredTabs } = useFilter();
+
   const { windows, updatedAt } = available[groupIndex];
 
   const windowContainerRef = useRef<HTMLDivElement | null>(null);

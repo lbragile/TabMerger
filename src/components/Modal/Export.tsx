@@ -9,7 +9,7 @@ import Selector from "./Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import MODAL_CREATORS from "~/store/actions/modal";
+import { updateExportFile } from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
 
@@ -182,9 +182,9 @@ export default function Export(): JSX.Element {
 
       const newFile = new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type });
 
-      dispatch(MODAL_CREATORS.updateExportFile(newFile));
+      dispatch(updateExportFile(newFile));
     } else {
-      dispatch(MODAL_CREATORS.updateExportFile(null));
+      dispatch(updateExportFile(null));
     }
   }, [dispatch, text, activeTab]);
 

@@ -2,8 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo } from "react";
 import styled, { css } from "styled-components";
 
+import useFilter from "~/hooks/useFilter";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import HEADER_CREATORS from "~/store/actions/header";
+import { updateInputValue } from "~/store/actions/header";
 import { pluralize } from "~/utils/helper";
 
 const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
@@ -42,7 +43,7 @@ const SearchIcon = styled(FontAwesomeIcon)`
 export default function SearchResult(): JSX.Element {
   const dispatch = useDispatch();
   const { inputValue, filterChoice: type } = useSelector((state) => state.header);
-  const { filteredTabs, filteredGroups } = useSelector((state) => state.filter);
+  const { filteredTabs, filteredGroups } = useFilter();
 
   const tabsCount = useMemo(
     () => filteredTabs.reduce((total, windowTabs) => windowTabs.length + total, 0),
@@ -54,8 +55,7 @@ export default function SearchResult(): JSX.Element {
   const countToShow = isTabSearch ? tabsCount : groupsCount;
 
   const handleClearSearch = () => {
-    dispatch(HEADER_CREATORS.setTyping(false));
-    dispatch(HEADER_CREATORS.updateInputValue(""));
+    dispatch(updateInputValue(""));
   };
 
   return (
@@ -79,6 +79,7 @@ export default function SearchResult(): JSX.Element {
       <CloseIcon
         icon="times"
         tabIndex={0}
+        onPointerDown={(e) => e.preventDefault()}
         onClick={handleClearSearch}
         onKeyPress={({ key }) => key === "Enter" && handleClearSearch()}
       />

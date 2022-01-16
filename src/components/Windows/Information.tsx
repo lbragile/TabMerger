@@ -7,7 +7,17 @@ import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce, useDebounceCallback } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import GROUPS_CREATORS from "~/store/actions/groups";
+import {
+  duplicateGroup,
+  sortByTabTitle,
+  sortByTabUrl,
+  uniteWindows,
+  splitWindows,
+  mergeWithCurrent,
+  replaceWithCurrent,
+  updateName,
+  deleteGroup
+} from "~/store/actions/groups";
 import { getReadableTimestamp, pluralize } from "~/utils/helper";
 
 const Grid = styled.div`
@@ -103,7 +113,7 @@ export default function Information(): JSX.Element {
 
   const debouncedTitleUpdateHandler = useCallback(() => {
     if (windowTitle !== name && windowTitle === debouncedWindowTitle) {
-      dispatch(GROUPS_CREATORS.updateName({ index: groupIndex, name: windowTitle }));
+      dispatch(updateName({ index: groupIndex, name: windowTitle }));
     }
   }, [dispatch, windowTitle, debouncedWindowTitle, groupIndex, name]);
 
@@ -171,46 +181,46 @@ export default function Information(): JSX.Element {
         },
         {
           text: groupIndex === 0 ? "Save" : "Duplicate",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.duplicateGroup(groupIndex)))
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(duplicateGroup(groupIndex)))
         },
         { text: "divider" },
         {
           text: "Sort By Tab Title",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.sortByTabTitle(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(sortByTabTitle(groupIndex))),
           isDisabled: isDropdownItemDisabled
         },
         {
           text: "Sort By Tab URL",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.sortByTabUrl(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(sortByTabUrl(groupIndex))),
           isDisabled: isDropdownItemDisabled
         },
         { text: "divider" },
         {
           text: "Unite Windows",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.uniteWindows(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(uniteWindows(groupIndex))),
           isDisabled: isDropdownItemDisabled || numWindows === 1
         },
         {
           text: "Split Windows",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.splitWindows(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(splitWindows(groupIndex))),
           isDisabled: isDropdownItemDisabled || numTabs === 1
         },
         { text: "divider" },
         {
           text: "Merge With Current",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.mergeWithCurrent(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(mergeWithCurrent(groupIndex))),
           isDisabled: isDropdownItemDisabled
         },
         {
           text: "Replace With Current",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(GROUPS_CREATORS.replaceWithCurrent(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(replaceWithCurrent(groupIndex))),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         },
         { text: "divider" },
         {
           text: "Delete",
-          handler: () => dispatch(GROUPS_CREATORS.deleteGroup(groupIndex)),
+          handler: () => dispatch(deleteGroup(groupIndex)),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         }

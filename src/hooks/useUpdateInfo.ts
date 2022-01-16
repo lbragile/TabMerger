@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "./useRedux";
 
-import GROUPS_CREATORS from "~/store/actions/groups";
+import { updateInfo } from "~/store/actions/groups";
 
 /**
  * Update each group's information if it doesn't match the current ...
@@ -20,7 +20,7 @@ export default function useUpdateInfo() {
       const numWindows = allWindows.length;
       const newInfo = `${numTabs}T | ${numWindows}W`;
       if (info !== newInfo) {
-        dispatch(GROUPS_CREATORS.updateInfo({ index: i, info: newInfo }));
+        dispatch(updateInfo({ index: i, info: newInfo }));
       }
     });
   }, [dispatch, available]);
