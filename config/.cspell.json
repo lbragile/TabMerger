@@ -3,6 +3,7 @@
   "language": "en",
   "words": [
     "Abramov",
+    "Aggarwal",
     "Andrey",
     "Atlassian",
     "Bragilevsky",
@@ -35,7 +36,8 @@
     "Stoiber",
     "TABMERGER",
     "Vitaly",
-    "webextensions"
+    "webextensions",
+    "Zalavadiya"
   ],
   "ignorePaths": [
     "node_modules/**",

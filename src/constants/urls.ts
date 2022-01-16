@@ -32,8 +32,11 @@ const REACT_BEAUTIFUL_DND_LICENSE = REACT_BEAUTIFUL_DND_REPO + "/blob/master/LIC
 const REACT_REPO = GITHUB_BASE_URL + "/facebook/react";
 const REACT_LICENSE = REACT_REPO + "/blob/main/LICENSE";
 
-const REDUX_REPO = GITHUB_BASE_URL + "/reduxjs/redux";
-const REDUX_LICENSE = REDUX_REPO + "/blob/master/LICENSE.md";
+const REACT_DROPZONE_REPO = GITHUB_BASE_URL + "/react-dropzone/react-dropzone";
+const REACT_DROPZONE_LICENSE = REACT_DROPZONE_REPO + "/blob/master/LICENSE";
+
+const REACT_MULTI_SELECT_COMPONENT_REPO = GITHUB_BASE_URL + "/hc-oss/react-multi-select-component";
+const REACT_MULTI_SELECT_COMPONENT_LICENSE = REACT_MULTI_SELECT_COMPONENT_REPO + "/blob/master/LICENSE";
 
 const STYLED_COMPONENTS_REPO = GITHUB_BASE_URL + "/styled-components/styled-components";
 const STYLED_COMPONENTS_LICENSE = STYLED_COMPONENTS_REPO + "/blob/main/LICENSE";
@@ -57,9 +60,13 @@ export const LICENSE_INFO = {
     repo: REACT_REPO,
     license: REACT_LICENSE
   },
-  Redux: {
-    repo: REDUX_REPO,
-    license: REDUX_LICENSE
+  ReactDropzone: {
+    repo: REACT_DROPZONE_REPO,
+    license: REACT_DROPZONE_LICENSE
+  },
+  ReactMultiSelectComponent: {
+    repo: REACT_MULTI_SELECT_COMPONENT_REPO,
+    license: REACT_MULTI_SELECT_COMPONENT_LICENSE
   },
   StyledComponents: {
     repo: STYLED_COMPONENTS_REPO,
