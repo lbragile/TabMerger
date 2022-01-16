@@ -9,11 +9,6 @@ export const updateAvailable = (payload?: IGroupsState["available"]) => ({
 
 export const updateActive = (payload?: IGroupsState["active"]) => ({ type: GROUPS_ACTIONS.UPDATE_ACTIVE, payload });
 
-export const updateName = (payload?: { index: number; name: string }) => ({
-  type: GROUPS_ACTIONS.UPDATE_NAME,
-  payload
-});
-
 export const updateColor = (payload?: { index: number; color: string }) => ({
   type: GROUPS_ACTIONS.UPDATE_COLOR,
   payload
@@ -110,3 +105,13 @@ export const splitWindows = (payload?: number) => ({ type: GROUPS_ACTIONS.SPLIT_
 export const sortByTabTitle = (payload?: number) => ({ type: GROUPS_ACTIONS.SORT_BY_TAB_TITLE, payload });
 
 export const sortByTabUrl = (payload?: number) => ({ type: GROUPS_ACTIONS.SORT_BY_TAB_URL, payload });
+
+export const updateGroupName = (payload?: { groupIndex: number; name: string }) => ({
+  type: GROUPS_ACTIONS.UPDATE_GROUP_NAME,
+  payload
+});
+
+export const updateWindowName = (payload?: { groupIndex: number; windowIndex: number; name: string }) => ({
+  type: GROUPS_ACTIONS.UPDATE_WINDOW_NAME,
+  payload
+});

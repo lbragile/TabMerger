@@ -12,7 +12,14 @@ import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import useFilter from "~/hooks/useFilter";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { deleteWindow, deleteGroup, toggleWindowStarred, toggleWindowIncognito } from "~/store/actions/groups";
+import useRename from "~/hooks/useRename";
+import {
+  deleteWindow,
+  deleteGroup,
+  toggleWindowStarred,
+  toggleWindowIncognito,
+  updateWindowName
+} from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { pluralize } from "~/utils/helper";
 
@@ -35,13 +42,18 @@ const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
 `;
 
-const WindowTitle = styled.div<{ $active: boolean }>`
+const WindowTitle = styled.input<{ $active: boolean; $open: boolean }>`
+  all: unset;
   font-size: 15px;
-  width: fit-content;
+  width: calc(100% - 8px);
   padding: 0 4px;
   font-weight: 600;
   cursor: pointer;
   user-select: none;
+  background-color: ${({ $open, $active }) => ($open ? ($active ? "#dde8ffb7" : "#dfdfdfb7") : "initial")};
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
   &:hover,
   &:focus-visible {
@@ -107,6 +119,7 @@ type TOpenWindow = "new" | "current" | "incognito" | "focus";
 interface IWindow {
   windowIndex: number;
   starred?: boolean;
+  name?: string;
   snapshot: DraggableStateSnapshot;
   dragHandleProps?: DraggableProvidedDragHandleProps;
 }
@@ -119,6 +132,7 @@ export default function Window({
   id: windowId,
   windowIndex,
   starred,
+  name,
   snapshot: windowSnapshot,
   dragHandleProps
 }: chrome.windows.Window & IWindow): JSX.Element {
@@ -141,7 +155,12 @@ export default function Window({
   const [showPopup, setShowPopup] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
 
-  const titleRef = useRef<HTMLDivElement | null>(null);
+  const [windowName, setWindowName] = useRename(
+    () => dispatch(updateWindowName({ groupIndex, windowIndex, name: windowName })),
+    name ?? `${focused ? "Current " : ""}Window`
+  );
+
+  const titleRef = useRef<HTMLInputElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   useClickOutside<HTMLDivElement>({ ref: popupRef, preCondition: showPopup, cb: () => setShowPopup(false) });
@@ -196,6 +215,19 @@ export default function Window({
 
   const windowItems = useMemo(
     () => [
+      {
+        text: "Rename",
+        handler: () => {
+          const target = titleRef.current;
+          if (target) {
+            target.focus();
+            target.setSelectionRange(target.value.length, target.value.length);
+          }
+
+          setShowPopup(false);
+        }
+      },
+      { text: "divider" },
       ...(groupIndex > 0
         ? [
             { text: "Open In Current", handler: () => openWindow("current") },
@@ -259,19 +291,23 @@ export default function Window({
             <WindowTitle
               ref={titleRef}
               $active={focused}
+              $open={showPopup}
+              title={titleRef.current?.value}
               tabIndex={0}
               role="button"
+              maxLength={25}
+              value={windowName}
+              onChange={(e) => setWindowName(e.target.value)}
               onClick={(e) => e.button === 0 && openWindow("new")}
               onContextMenu={(e) => {
                 e.preventDefault();
+                e.currentTarget.blur();
                 setShowPopup(true);
               }}
               onKeyPress={({ key }) => key === "Enter" && setShowPopup(true)}
               onPointerEnter={() => setShowInstructions(true)}
               onPointerLeave={() => setShowInstructions(false)}
-            >
-              {focused ? "Current" : ""} Window
-            </WindowTitle>
+            />
 
             {showPopup && titleRef.current && (
               <div ref={popupRef}>

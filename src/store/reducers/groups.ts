@@ -7,7 +7,6 @@ import { createGroup, createWindowWithTabs } from "~/utils/helper";
 export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
   UPDATE_ACTIVE: "UPDATE_ACTIVE",
-  UPDATE_NAME: "UPDATE_NAME",
   UPDATE_COLOR: "UPDATE_COLOR",
   UPDATE_INFO: "UPDATE_INFO",
   UPDATE_TIMESTAMP: "UPDATE_TIMESTAMP",
@@ -33,7 +32,9 @@ export const GROUPS_ACTIONS = {
   UNITE_WINDOWS: "UNITE_WINDOWS",
   SPLIT_WINDOWS: "SPLIT_WINDOWS",
   SORT_BY_TAB_TITLE: "SORT_BY_TAB_TITLE",
-  SORT_BY_TAB_URL: "SORT_BY_TAB_URL"
+  SORT_BY_TAB_URL: "SORT_BY_TAB_URL",
+  UPDATE_GROUP_NAME: "UPDATE_GROUP_NAME",
+  UPDATE_WINDOW_NAME: "UPDATE_WINDOW_NAME"
 };
 
 interface ICommonDnd {
@@ -54,7 +55,7 @@ export interface IGroupItemState {
   id: string;
   color: string;
   updatedAt: number;
-  windows: (chrome.windows.Window & { starred?: boolean })[];
+  windows: (chrome.windows.Window & { starred?: boolean; name?: string })[];
   permanent?: boolean;
   info?: string;
 }
@@ -101,14 +102,6 @@ const GroupsReducer = (state: IGroupsState, action: IAction): IGroupsState => {
         ...state,
         active: action.payload as IGroupsState["active"]
       };
-
-    case GROUPS_ACTIONS.UPDATE_NAME: {
-      const { index, name } = action.payload as { index: number; name: string };
-      available[index].name = name;
-      available[index].updatedAt = Date.now();
-
-      return { ...state, available };
-    }
 
     case GROUPS_ACTIONS.UPDATE_COLOR: {
       const { index, color } = action.payload as { index: number; color: string };
@@ -413,6 +406,8 @@ const GroupsReducer = (state: IGroupsState, action: IAction): IGroupsState => {
       const allTabsInGroup = available[groupIndex].windows.flatMap((w) => w.tabs ?? []);
       available[groupIndex].windows = allTabsInGroup.map((tab) => createWindowWithTabs([tab]));
 
+      available[groupIndex].updatedAt = Date.now();
+
       return { ...state, available };
     }
 
@@ -423,6 +418,8 @@ const GroupsReducer = (state: IGroupsState, action: IAction): IGroupsState => {
         w.tabs?.sort((a, b) => (a?.title && b?.title ? a.title.localeCompare(b.title) : 0))
       );
 
+      available[groupIndex].updatedAt = Date.now();
+
       return { ...state, available };
     }
 
@@ -432,6 +429,30 @@ const GroupsReducer = (state: IGroupsState, action: IAction): IGroupsState => {
       available[groupIndex].windows.forEach((w) =>
         w.tabs?.sort((a, b) => (a?.url && b?.url ? a.url.localeCompare(b.url) : 0))
       );
+
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_GROUP_NAME: {
+      const { groupIndex, name } = action.payload as { groupIndex: number; name: string };
+      available[groupIndex].name = name;
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.UPDATE_WINDOW_NAME: {
+      const { groupIndex, windowIndex, name } = action.payload as {
+        groupIndex: number;
+        windowIndex: number;
+        name: string;
+      };
+
+      available[groupIndex].windows[windowIndex].name = name;
+
+      available[groupIndex].updatedAt = Date.now();
 
       return { ...state, available };
     }
