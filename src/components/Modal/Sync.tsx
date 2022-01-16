@@ -10,7 +10,7 @@ import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import useSyncStorageInfo from "~/hooks/useSyncStorage";
-import MODAL_CREATORS from "~/store/actions/modal";
+import { updateSyncType } from "~/store/actions/modal";
 import { TSyncType } from "~/store/reducers/modal";
 import Button from "~/styles/Button";
 import Message from "~/styles/Message";
@@ -51,7 +51,7 @@ export default function Sync(): JSX.Element {
   const relativeTime = relativeTimeStr(new Date(activeLastSync).getTime());
 
   useEffect(() => {
-    dispatch(MODAL_CREATORS.updateSyncType(activeTab));
+    dispatch(updateSyncType(activeTab));
   }, [dispatch, activeTab]);
 
   const handlePreviewSyncData = () => {

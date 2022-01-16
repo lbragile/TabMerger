@@ -61,12 +61,12 @@ const LICENSE_DETAILS: ILicenseDetails[] = [
   {
     name: { title: "TabMerger", url: LICENSE_INFO.TabMerger.repo },
     authors: "Lior Bragilevsky",
-    license: { title: "GPLv3", url: LICENSE_INFO.TabMerger.license }
+    license: { title: "GNU GPL v3.0", url: LICENSE_INFO.TabMerger.license }
   },
   {
     name: { title: "React Beautiful DnD", url: LICENSE_INFO.ReactBeautifulDnD.repo },
     authors: "Atlassian Pty Ltd",
-    license: { title: "Apache 2.0", url: LICENSE_INFO.ReactBeautifulDnD.license }
+    license: { title: "Apache v2.0", url: LICENSE_INFO.ReactBeautifulDnD.license }
   },
   {
     name: { title: "React", url: LICENSE_INFO.React.repo },
@@ -74,9 +74,14 @@ const LICENSE_DETAILS: ILicenseDetails[] = [
     license: { title: "MIT", url: LICENSE_INFO.React.license }
   },
   {
-    name: { title: "Redux", url: LICENSE_INFO.Redux.repo },
-    authors: "Dan Abramov",
-    license: { title: "MIT", url: LICENSE_INFO.Redux.license }
+    name: { title: "React Dropzone", url: LICENSE_INFO.ReactDropzone.repo },
+    authors: "Param Aggarwal",
+    license: { title: "MIT", url: LICENSE_INFO.ReactDropzone.license }
+  },
+  {
+    name: { title: "React Multi Select Component", url: LICENSE_INFO.ReactMultiSelectComponent.repo },
+    authors: "Harsh Zalavadiya",
+    license: { title: "MIT", url: LICENSE_INFO.ReactMultiSelectComponent.license }
   },
   {
     name: { title: "Styled Components", url: LICENSE_INFO.StyledComponents.repo },

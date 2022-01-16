@@ -1,23 +1,41 @@
-import { combineReducers } from "redux";
+import dndReducer, { initDnDState } from "./dnd";
+import groupsReducer, { initGroupsState } from "./groups";
+import headerReducer, { initHeaderState } from "./header";
+import modalReducer, { initModalState } from "./modal";
 
-import dndReducer, { IDnDState } from "./dnd";
-import filterReducer, { IFilterState } from "./filter";
-import groupsReducer, { IGroupsState } from "./groups";
-import headerReducer, { IHeaderState } from "./header";
-import modalReducer, { IModalState } from "./modal";
+import { TRootReducer, TRootState } from "~/typings/reducers";
 
-const rootReducer = combineReducers<{
-  header: IHeaderState;
-  groups: IGroupsState;
-  filter: IFilterState;
-  dnd: IDnDState;
-  modal: IModalState;
-}>({
+type ReducersMap<S> = {
+  [K in keyof S]: TRootReducer<S[K]>;
+};
+
+/**
+ * @see https://stackoverflow.com/a/61439698/4298115
+ */
+const combineReducers = <S>(reducers: ReducersMap<S>): TRootReducer<S> => {
+  // Each "slice" of the combined reducer needs to be a reducer itself
+  return (state, action) => {
+    // Each reducer outputs the state for that "slice"
+    return (Object.keys(reducers) as Array<keyof S>).reduce(
+      (prevState, key) => ({
+        ...prevState,
+        [key]: reducers[key](prevState[key], action)
+      }),
+      state
+    );
+  };
+};
+
+export const rootReducer = combineReducers<TRootState>({
   header: headerReducer,
   groups: groupsReducer,
-  filter: filterReducer,
   dnd: dndReducer,
   modal: modalReducer
 });
 
-export default rootReducer;
+export const combinedState = {
+  header: initHeaderState,
+  groups: initGroupsState,
+  dnd: initDnDState,
+  modal: initModalState
+};

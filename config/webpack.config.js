@@ -29,7 +29,7 @@ module.exports = {
         {
           from: "public",
           globOptions: {
-            ignore: ["**/logo-full-rescale.png"]
+            ignore: ["**/logo-full-rescale.PNG"]
           }
         }
       ]

@@ -22,11 +22,11 @@
 
 Tired of searching through squished icons to find a tab you are sure is there?
 
-With TabMerger you can simplify this clutter while increasing productivity in a highly organized and customizable fashion!
+TabMerger simplifies this clutter while increasing productivity in a highly organized and customizable fashion!
 
-With one click, you can have everything in a common location, where you can then re-arrange into appropriate groups, add custom notes, and so much more.
-
-All items are stored internally for you to use at a later time, even when you close the browser window(s) - reducing memory consumption and speeding up your machine. Lots of analytics keep you informed.
+In one click, you can have everything in a common location, where you can then re-arrange into appropriate groups, add custom notes, and so much more.
+All items are stored internally for you to use at a later time, even when you close the browser window(s) - reducing memory consumption and speeding up your machine.
+Lots of analytics keep you informed.
 
 ## ⭐ Review
 

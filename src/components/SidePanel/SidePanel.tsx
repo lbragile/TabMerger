@@ -6,6 +6,7 @@ import Group from "./Group";
 
 import { isGroupDrag } from "~/constants/dragRegExp";
 import useContainerHeight from "~/hooks/useContainerHeight";
+import useFilter from "~/hooks/useFilter";
 import { useSelector } from "~/hooks/useRedux";
 import { Scrollbar } from "~/styles/Scrollbar";
 
@@ -30,10 +31,11 @@ const DraggableContainer = styled(Scrollbar)<{ $height: number; $dragging: boole
 
 export default function SidePanel(): JSX.Element {
   const { available } = useSelector((state) => state.groups);
-  const { filteredGroups } = useSelector((state) => state.filter);
-  const { typing, filterChoice } = useSelector((state) => state.header);
+  const { inputValue, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
-  const groupSearch = typing && filterChoice === "group";
+
+  const { filteredGroups } = useFilter();
+  const groupSearch = inputValue !== "" && filterChoice === "group";
   const groupDrag = isGroupDrag(dragType);
 
   const groupsContainerRef = useRef<HTMLDivElement | null>(null);

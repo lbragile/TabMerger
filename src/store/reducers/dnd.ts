@@ -3,8 +3,7 @@ import { IAction } from "~/typings/reducers";
 export const DND_ACTIONS = {
   UPDATE_DRAG_ORIGIN_TYPE: "UPDATE_DRAG_ORIGIN_TYPE",
   UPDATE_IS_DRAGGING: "UPDATE_IS_DRAGGING",
-  RESET_DND_INFO: "RESET_DND_INFO",
-  UPDATE_CAN_DROP_GROUP: "UPDATE_CAN_DROP_GROUP"
+  RESET_DND_INFO: "RESET_DND_INFO"
 };
 
 export interface IDnDState {
@@ -12,12 +11,12 @@ export interface IDnDState {
   isDragging: boolean;
 }
 
-const initState: IDnDState = {
+export const initDnDState: IDnDState = {
   dragType: "tab-0-window-0",
   isDragging: false
 };
 
-const dndReducer = (state = initState, action: IAction): IDnDState => {
+const dndReducer = (state: IDnDState, action: IAction): IDnDState => {
   const { type, payload } = action;
 
   switch (type) {
@@ -34,7 +33,7 @@ const dndReducer = (state = initState, action: IAction): IDnDState => {
       };
 
     case DND_ACTIONS.RESET_DND_INFO:
-      return initState;
+      return initDnDState;
 
     default:
       return state;

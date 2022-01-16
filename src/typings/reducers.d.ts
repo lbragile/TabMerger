@@ -1,12 +1,12 @@
-import { store } from "~/store/utils/configureStore";
+import { Reducer } from "react";
+
+import { combinedState } from "~/store/reducers";
 
 export interface IAction {
   type: string;
   payload?: unknown;
 }
 
-/** @see https://redux.js.org/usage/usage-with-typescript */
+export type TRootState = typeof combinedState;
 
-export type RootState = ReturnType<typeof store.getState>;
-
-export type AppDispatch = typeof store.dispatch;
+export type TRootReducer<S = TRootState, A = IAction> = Reducer<S, A>;

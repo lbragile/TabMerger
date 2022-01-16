@@ -11,7 +11,7 @@ import Sync from "./Sync";
 
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
-import GROUPS_CREATORS from "~/store/actions/groups";
+import { updateAvailable, updateActive } from "~/store/actions/groups";
 import Button from "~/styles/Button";
 
 const CloseIconContainer = styled.span`
@@ -93,8 +93,8 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
       saveAs(file);
       hide();
     } else if (type === "import") {
-      dispatch(GROUPS_CREATORS.updateAvailable([available[0], ...formatted]));
-      dispatch(GROUPS_CREATORS.updateActive({ index: 0, id: formatted[0].id }));
+      dispatch(updateAvailable([available[0], ...formatted]));
+      dispatch(updateActive({ index: 0, id: formatted[0].id }));
       hide();
     } else if (type === "sync") {
       if (possibleData.length) syncUpload();

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "reac
 
 import { useDispatch } from "./useRedux";
 
-import GROUPS_CREATORS from "~/store/actions/groups";
+import { updateAvailable, updateActive } from "~/store/actions/groups";
 import { IGroupsState } from "~/store/reducers/groups";
 
 interface IChanges {
@@ -54,11 +54,11 @@ export function useUpdateGroupsFromStorage({ active, available }: IGroupsState):
     chrome.storage.local.get(null, (result) => {
       const { available: storageAvailable, active: storageActive } = result as IGroupsState;
       if (storageAvailable) {
-        dispatch(GROUPS_CREATORS.updateAvailable(storageAvailable));
+        dispatch(updateAvailable(storageAvailable));
       }
 
       if (storageActive) {
-        dispatch(GROUPS_CREATORS.updateActive(storageActive));
+        dispatch(updateActive(storageActive));
       }
     });
   }, [dispatch]);

@@ -7,9 +7,9 @@ import { createGroup, createWindowWithTabs } from "~/utils/helper";
 export const GROUPS_ACTIONS = {
   UPDATE_AVAILABLE: "UPDATE_AVAILABLE",
   UPDATE_ACTIVE: "UPDATE_ACTIVE",
-  UPDATE_INDEX: "UPDATE_INDEX",
   UPDATE_NAME: "UPDATE_NAME",
   UPDATE_COLOR: "UPDATE_COLOR",
+  UPDATE_INFO: "UPDATE_INFO",
   UPDATE_TIMESTAMP: "UPDATE_TIMESTAMP",
   UPDATE_WINDOWS: "UPDATE_WINDOWS",
   UPDATE_WINDOWS_FROM_GROUP_DND: "UPDATE_WINDOWS_FROM_GROUP_DND",
@@ -17,17 +17,14 @@ export const GROUPS_ACTIONS = {
   UPDATE_TABS: "UPDATE_TABS",
   UPDATE_TABS_FROM_GROUP_DND: "UPDATE_TABS_FROM_GROUP_DND",
   UPDATE_TABS_FROM_SIDEPANEL_DND: "UPDATE_TABS_FROM_SIDEPANEL_DND",
-  UPDATE_PERMANENT: "UPDATE_PERMANENT",
-  UPDATE_INFO: "UPDATE_INFO",
   ADD_GROUP: "ADD_GROUP",
   ADD_WINDOW: "ADD_WINDOW",
   DELETE_GROUP: "DELETE_GROUP",
   DELETE_WINDOW: "DELETE_WINDOW",
+  DELETE_TAB: "DELETE_TAB",
   CLEAR_EMPTY_GROUPS: "CLEAR_EMPTY_GROUPS",
   CLEAR_EMPTY_WINDOWS: "CLEAR_EMPTY_WINDOWS",
   UPDATE_GROUP_ORDER: "UPDATE_GROUP_ORDER",
-  CLOSE_WINDOW: "CLOSE_WINDOW",
-  CLOSE_TAB: "CLOSE_TAB",
   TOGGLE_WINDOW_INCOGNITO: "TOGGLE_WINDOW_INCOGNITO",
   TOGGLE_WINDOW_STARRED: "TOGGLE_WINDOW_STARRED",
   DUPLICATE_GROUP: "DUPLICATE_GROUP",
@@ -69,7 +66,7 @@ export interface IGroupsState {
 
 const activeId = nanoid(10);
 
-const initState: IGroupsState = {
+export const initGroupsState: IGroupsState = {
   active: { id: activeId, index: 0 },
   available: [
     {
@@ -83,7 +80,7 @@ const initState: IGroupsState = {
   ]
 };
 
-const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
+const GroupsReducer = (state: IGroupsState, action: IAction): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
@@ -223,13 +220,6 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       return { ...state, available };
     }
 
-    case GROUPS_ACTIONS.UPDATE_PERMANENT: {
-      const { index, permanent } = action.payload as { index: number; permanent: boolean };
-      available[index].permanent = permanent;
-
-      return { ...state, available };
-    }
-
     case GROUPS_ACTIONS.UPDATE_INFO: {
       const { index, info } = action.payload as { index: number; info: string };
       available[index].info = info;
@@ -265,6 +255,20 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
       const { groupIndex, windowIndex } = action.payload as { groupIndex: number; windowIndex: number };
 
       available[groupIndex].windows.splice(windowIndex, 1);
+      available[groupIndex].updatedAt = Date.now();
+
+      return { ...state, available };
+    }
+
+    case GROUPS_ACTIONS.DELETE_TAB: {
+      const { groupIndex, windowIndex, tabIndex } = action.payload as {
+        groupIndex: number;
+        windowIndex: number;
+        tabIndex: number;
+      };
+
+      available[groupIndex].windows[windowIndex].tabs?.splice(tabIndex, 1);
+      available[groupIndex].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -307,28 +311,6 @@ const GroupsReducer = (state = initState, action: IAction): IGroupsState => {
 
       const removedGroups = available.splice(source.index, 1);
       available.splice(destination.index, 0, ...removedGroups);
-
-      return { ...state, available };
-    }
-
-    case GROUPS_ACTIONS.CLOSE_WINDOW: {
-      const { groupIndex, windowIndex } = action.payload as { groupIndex: number; windowIndex: number };
-
-      available[groupIndex].windows.splice(windowIndex, 1);
-      available[groupIndex].updatedAt = Date.now();
-
-      return { ...state, available };
-    }
-
-    case GROUPS_ACTIONS.CLOSE_TAB: {
-      const { groupIndex, windowIndex, tabIndex } = action.payload as {
-        groupIndex: number;
-        windowIndex: number;
-        tabIndex: number;
-      };
-
-      available[groupIndex].windows[windowIndex].tabs?.splice(tabIndex, 1);
-      available[groupIndex].updatedAt = Date.now();
 
       return { ...state, available };
     }
