@@ -83,7 +83,6 @@
     "webpack": "webpack --config config/webpack.config.js --progress",
     "start": "cross-env NODE_ENV=development pnpm webpack",
     "build": "cross-env NODE_ENV=production pnpm webpack",
-    "remotedev": "remotedev --hostname=localhost --port=8080 --logLevel=0",
     "changelog": "auto-changelog --config ./config/auto-changelog.json"
   },
   "babel": {
