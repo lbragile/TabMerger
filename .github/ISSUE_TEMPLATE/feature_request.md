@@ -1,8 +1,8 @@
 ---
 name: Suggesting a Feature/Enhancement
 about: Use this template to suggest a new feature or enhancement for TabMerger.
-title: "[FEATURE]: Feature/Enhancement Description"
-labels: enhancement
+title: "feat: Feature/Enhancement Description"
+labels: feat
 assignees: lbragile
 ---
 

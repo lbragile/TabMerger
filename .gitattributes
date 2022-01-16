@@ -10,3 +10,4 @@
 *.md linguist-detectable=false
 *.sh linguist-detectable=false
 *.hbs linguist-detectable=false
+.env linguist-detectable=false

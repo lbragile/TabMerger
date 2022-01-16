@@ -1,7 +1,7 @@
 ---
 name: Reporting a Bug
 about: Use this template to create a report about a bug you found.
-title: "[BUG]: Bug Description"
+title: "fix: Bug Description"
 labels: bug
 assignees: lbragile
 ---
