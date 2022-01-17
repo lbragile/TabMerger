@@ -101,13 +101,15 @@ export const createTabFromTitleAndUrl = (title: string | undefined, url: string 
 
 export const createWindowWithTabs = (
   tabs: chrome.tabs.Tab[],
+  name = "Window",
   incognito = false,
   starred = false
-): chrome.windows.Window & { starred: boolean } => ({
+): chrome.windows.Window & { starred: boolean; name: string } => ({
   alwaysOnTop: false,
   focused: false,
   incognito,
   starred,
+  name,
   state: "maximized",
   type: "normal",
   tabs

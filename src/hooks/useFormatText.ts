@@ -7,22 +7,22 @@ import { formatHtml } from "~/utils/helper";
 
 const EMPTY_TEXT = "Nothing to export";
 
+const lineSeparator = (char: string) => `${new Array(10).fill(char).join("")}\n\n`;
+
 export default function useFormatText(
   selectedGroups: (IGroupItemState | ISyncDataItem)[],
   keepURLs = true,
   keepTitles = true
 ) {
-  const lineSeparator = (char: string) => `${new Array(10).fill(char).join("")}\n\n`;
-
   const getRegularText = useCallback(() => {
     if (!keepTitles && !keepURLs) return EMPTY_TEXT;
 
     let outputStr = "";
-    selectedGroups.forEach(({ name, windows }) => {
-      outputStr += `${name}\n${lineSeparator("=")}`;
-      windows.forEach(({ tabs }, j) => {
+    selectedGroups.forEach(({ name, windows }, i) => {
+      outputStr += `${(!keepTitles || !keepURLs) && i > 0 ? "\n" : ""}${name}\n${lineSeparator("=")}`;
+      windows.forEach(({ tabs, name: windowName }, j) => {
         outputStr +=
-          `Window ${j + 1}\n${lineSeparator("-")}` +
+          `${(!keepTitles || !keepURLs) && j > 0 ? "\n" : ""}${windowName ?? "Window"}\n${lineSeparator("-")}` +
           (tabs
             ? tabs
                 .map(
@@ -40,9 +40,9 @@ export default function useFormatText(
     let outputStr = "";
     selectedGroups.forEach(({ name, windows }, i) => {
       outputStr += `${i > 0 ? "\n" : ""}## ${name}\n`;
-      windows.forEach(({ tabs }, j) => {
+      windows.forEach(({ tabs, name: windowName }) => {
         outputStr +=
-          `\n### Window ${j + 1}\n\n` +
+          `\n### ${windowName ?? "Window"}\n\n` +
           (tabs ? tabs.map((t) => `- [${formatHtml(t.title)}](${t.url})\n`).join("") : "");
       });
     });
@@ -58,9 +58,9 @@ export default function useFormatText(
     let outputStr = "";
     selectedGroups.forEach(({ name, windows }, i) => {
       outputStr += `${i > 0 ? "\n" : ""}\t\t<h1>${name}</h1>\n`;
-      windows.forEach(({ tabs }, j) => {
+      windows.forEach(({ tabs, name: windowName }) => {
         outputStr +=
-          `\t\t<h2>Window ${j + 1}</h2>\n\t\t<ul>\n` +
+          `\t\t<h2>${windowName ?? "Window"}</h2>\n\t\t<ul>\n` +
           (tabs
             ? tabs
                 .map(
@@ -109,14 +109,14 @@ export default function useFormatText(
 
     let outputStr = "Group Name,Window #,Tab Title,Tab URL\n";
     selectedGroups.forEach(({ name, windows }) => {
-      windows.forEach(({ tabs }, j) => {
+      windows.forEach(({ tabs, name: windowName }) => {
         outputStr += tabs
           ? tabs
               .map(
                 (t) =>
-                  `"${name}","Window ${j + 1}",${keepTitles ? '"' + t.title + '"' + (keepURLs ? "," : "") : ""}${
-                    keepURLs ? '"' + t.url + '"' : ""
-                  }\n`
+                  `"${name}","${windowName ?? "Window"}",${
+                    keepTitles ? '"' + t.title + '"' + (keepURLs ? "," : "") : ""
+                  }${keepURLs ? '"' + t.url + '"' : ""}\n`
               )
               .join("")
           : "";

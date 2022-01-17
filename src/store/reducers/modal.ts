@@ -24,6 +24,7 @@ export interface ISyncDataItem {
   windows: {
     incognito: boolean;
     starred: boolean | undefined;
+    name: string | undefined;
     tabs: {
       title: string | undefined;
       url: string | undefined;

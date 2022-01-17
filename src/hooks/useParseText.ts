@@ -18,7 +18,7 @@ export default function useParseText(debouncedText: string) {
   const formatPlain = useCallback((text: string) => {
     const groups: IGroupItemState[] = [];
 
-    const matchStr = text.match(/(.+\n+={3,}\n+(.+\n+-{3,}\n+(.+\n+.+:\/\/.+\n*)+)+)+/g)?.[0];
+    const matchStr = text.match(/(.+\n+={3,}\n+(.+\n+-{3,}\n+((?!.*:\/\/).+\n+.+:\/\/.+\n*)+)+)+/g)?.[0];
     const groupsArr = matchStr?.split(/(?<=.+?:\/\/.+?\n*)(\n(?=.+?\n+=+\n+))/g).filter((item) => item !== "\n");
 
     groupsArr?.forEach((item) => {
@@ -28,10 +28,10 @@ export default function useParseText(debouncedText: string) {
       const matches = infoArr
         .slice(2)
         .join("\n")
-        .matchAll(/.+\n+-+(?<tabsStr>(\n+.+?\n+.+?:\/\/.+)+)/g);
+        .matchAll(/(?<windowName>(.+))\n+-+(?<tabsStr>(\n+.+?\n+.+?:\/\/.+)+)/g);
 
       for (const match of matches) {
-        const { tabsStr } = match.groups as { tabsStr: string };
+        const { tabsStr, windowName } = match.groups as { tabsStr: string; windowName: string };
 
         const tabs = tabsStr.split(/(?<=.+:\/\/.+)\n+/g).map((item) => {
           const [title, url] = item.split("\n").filter((x) => x);
@@ -39,7 +39,7 @@ export default function useParseText(debouncedText: string) {
           return createTabFromTitleAndUrl(title, url);
         });
 
-        newEntry.windows.push(createWindowWithTabs(tabs));
+        newEntry.windows.push(createWindowWithTabs(tabs, windowName));
       }
 
       groups.push(newEntry);

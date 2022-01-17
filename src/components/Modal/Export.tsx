@@ -116,7 +116,11 @@ export default function Export(): JSX.Element {
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const selectOpts = useMemo(() => available.map((group) => ({ label: group.name, value: group })), [available]);
+  const selectOpts = useMemo(
+    () => available.slice(1).map((group) => ({ label: group.name, value: group })),
+    [available]
+  );
+
   const [selected, setSelected] = useState(selectOpts);
 
   const [checkbox, setCheckbox] = useState([
