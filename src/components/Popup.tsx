@@ -13,7 +13,7 @@ const Content = styled.div`
   padding: 4px 8px;
   background-color: #303030;
   color: white;
-  font-size: 14px;
+  font-size: 12px;
   display: grid;
   place-items: center;
   white-space: nowrap;

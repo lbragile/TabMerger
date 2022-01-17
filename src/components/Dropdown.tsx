@@ -1,7 +1,5 @@
 import styled, { css } from "styled-components";
 
-import { useSelector } from "~/hooks/useRedux";
-
 interface IPos {
   top: number;
   left?: number;
@@ -81,10 +79,6 @@ const DropdownDivider = styled.hr`
 `;
 
 export default function Dropdown({ items, pos, isPopup = false, textAlign = "left" }: IDropdown): JSX.Element {
-  const {
-    active: { index: groupIndex }
-  } = useSelector((state) => state.groups);
-
   return (
     <>
       <Container $pos={pos}>
@@ -96,7 +90,7 @@ export default function Dropdown({ items, pos, isPopup = false, textAlign = "lef
                 e.stopPropagation();
                 !item.isDisabled && item.handler?.(e);
               }}
-              tabIndex={(groupIndex === 0 && !item.isDisabled) || groupIndex > 0 ? 0 : -1}
+              tabIndex={item.isDisabled ? -1 : 0}
               role="button"
               onKeyPress={(e) => e.key === "Enter" && item.handler?.(e)}
               $align={textAlign}

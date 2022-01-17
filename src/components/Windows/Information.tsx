@@ -1,12 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Dropdown, { IDropdown } from "~/components/Dropdown";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
-import { useDebounce, useDebounceCallback } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
+import useRename from "~/hooks/useRename";
 import {
   duplicateGroup,
   sortByTabTitle,
@@ -15,7 +15,7 @@ import {
   splitWindows,
   mergeWithCurrent,
   replaceWithCurrent,
-  updateName,
+  updateGroupName,
   deleteGroup
 } from "~/store/actions/groups";
 import { getReadableTimestamp, pluralize } from "~/utils/helper";
@@ -84,8 +84,6 @@ const SubTitle = styled.span<{ $right?: boolean }>`
         `}
 `;
 
-const TITLE_UPDATE_DELAY = 200;
-
 export default function Information(): JSX.Element {
   const dispatch = useDispatch();
 
@@ -96,7 +94,6 @@ export default function Information(): JSX.Element {
 
   const { windows, info, name, updatedAt } = available[groupIndex];
 
-  const [windowTitle, setWindowTitle] = useState("");
   const [showSettingsPopup, setShowSettingsPopup] = useState(false);
   const [showOpenPopup, setShowOpenPopup] = useState(false);
 
@@ -107,17 +104,10 @@ export default function Information(): JSX.Element {
   const [numTabs, numWindows] = info?.split(" | ")?.map((count) => Number(count.slice(0, -1))) ?? [0, 0];
   const isDropdownItemDisabled = groupIndex === 0;
 
-  const debouncedWindowTitle = useDebounce(windowTitle, TITLE_UPDATE_DELAY);
-
-  useEffect(() => setWindowTitle(name), [name]);
-
-  const debouncedTitleUpdateHandler = useCallback(() => {
-    if (windowTitle !== name && windowTitle === debouncedWindowTitle) {
-      dispatch(updateName({ index: groupIndex, name: windowTitle }));
-    }
-  }, [dispatch, windowTitle, debouncedWindowTitle, groupIndex, name]);
-
-  useDebounceCallback(debouncedTitleUpdateHandler, TITLE_UPDATE_DELAY);
+  const [windowTitle, setWindowTitle] = useRename(
+    () => dispatch(updateGroupName({ groupIndex, name: windowTitle })),
+    name
+  );
 
   useClickOutside<HTMLButtonElement>({
     ref: settingsIconRef,

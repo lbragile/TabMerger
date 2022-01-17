@@ -1,28 +1,27 @@
 import { useCallback } from "react";
 
-import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
-import { formatHtml } from "~/utils/helper";
+import { formatHtml, generateFavIconFromUrl } from "~/utils/helper";
 
 const EMPTY_TEXT = "Nothing to export";
+
+const lineSeparator = (char: string) => `${new Array(10).fill(char).join("")}\n\n`;
 
 export default function useFormatText(
   selectedGroups: (IGroupItemState | ISyncDataItem)[],
   keepURLs = true,
   keepTitles = true
 ) {
-  const lineSeparator = (char: string) => `${new Array(10).fill(char).join("")}\n\n`;
-
   const getRegularText = useCallback(() => {
     if (!keepTitles && !keepURLs) return EMPTY_TEXT;
 
     let outputStr = "";
-    selectedGroups.forEach(({ name, windows }) => {
-      outputStr += `${name}\n${lineSeparator("=")}`;
-      windows.forEach(({ tabs }, j) => {
+    selectedGroups.forEach(({ name, windows }, i) => {
+      outputStr += `${(!keepTitles || !keepURLs) && i > 0 ? "\n" : ""}${name}\n${lineSeparator("=")}`;
+      windows.forEach(({ tabs, name: windowName }, j) => {
         outputStr +=
-          `Window ${j + 1}\n${lineSeparator("-")}` +
+          `${(!keepTitles || !keepURLs) && j > 0 ? "\n" : ""}${windowName ?? "Window"}\n${lineSeparator("-")}` +
           (tabs
             ? tabs
                 .map(
@@ -40,9 +39,9 @@ export default function useFormatText(
     let outputStr = "";
     selectedGroups.forEach(({ name, windows }, i) => {
       outputStr += `${i > 0 ? "\n" : ""}## ${name}\n`;
-      windows.forEach(({ tabs }, j) => {
+      windows.forEach(({ tabs, name: windowName }) => {
         outputStr +=
-          `\n### Window ${j + 1}\n\n` +
+          `\n### ${windowName ?? "Window"}\n\n` +
           (tabs ? tabs.map((t) => `- [${formatHtml(t.title)}](${t.url})\n`).join("") : "");
       });
     });
@@ -58,16 +57,14 @@ export default function useFormatText(
     let outputStr = "";
     selectedGroups.forEach(({ name, windows }, i) => {
       outputStr += `${i > 0 ? "\n" : ""}\t\t<h1>${name}</h1>\n`;
-      windows.forEach(({ tabs }, j) => {
+      windows.forEach(({ tabs, name: windowName }) => {
         outputStr +=
-          `\t\t<h2>Window ${j + 1}</h2>\n\t\t<ul>\n` +
+          `\t\t<h2>${windowName ?? "Window"}</h2>\n\t\t<ul>\n` +
           (tabs
             ? tabs
                 .map(
                   (t) =>
-                    `\t\t\t<li><img class="${t.url?.includes("github.com") ? "darken " : ""} tabmerger-icon" src=${
-                      t.url ? `https://s2.googleusercontent.com/s2/favicons?domain_url=${t.url}` : DEFAULT_FAVICON_URL
-                    }
+                    `\t\t\t<li><img class="tabmerger-icon" src=${generateFavIconFromUrl(t.url)}
                     ><a href=${t.url} target="_blank" rel="noreferrer">${formatHtml(t.title)}</a></li>\n`
                 )
                 .join("")
@@ -94,7 +91,6 @@ export default function useFormatText(
       "\t\t\ta { text-decoration: none; color: black; }\n" +
       "\t\t\ta:hover { text-decoration: underline; }\n" +
       "\t\t\t.tabmerger-icon { height: 14px; width: 14px; margin-right: 12px; }\n" +
-      "\t\t\t.darken { filter: brightness(0); }\n" +
       "\t\t</style>\n" +
       "\t</head>\n" +
       "\t<body>\n" +
@@ -109,14 +105,14 @@ export default function useFormatText(
 
     let outputStr = "Group Name,Window #,Tab Title,Tab URL\n";
     selectedGroups.forEach(({ name, windows }) => {
-      windows.forEach(({ tabs }, j) => {
+      windows.forEach(({ tabs, name: windowName }) => {
         outputStr += tabs
           ? tabs
               .map(
                 (t) =>
-                  `"${name}","Window ${j + 1}",${keepTitles ? '"' + t.title + '"' + (keepURLs ? "," : "") : ""}${
-                    keepURLs ? '"' + t.url + '"' : ""
-                  }\n`
+                  `"${name}","${windowName ?? "Window"}",${
+                    keepTitles ? '"' + t.title + '"' + (keepURLs ? "," : "") : ""
+                  }${keepURLs ? '"' + t.url + '"' : ""}\n`
               )
               .join("")
           : "";

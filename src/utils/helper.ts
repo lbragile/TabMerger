@@ -78,6 +78,9 @@ export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
   return { sortedWindows: focused.concat(notFocused), hasFocused: focused.length > 0 };
 }
 
+export const generateFavIconFromUrl = (url: string | undefined) =>
+  `https://s2.googleusercontent.com/s2/favicons?domain_url=${url ?? GOOGLE_HOMEPAGE}`;
+
 export function createActiveTab(url: string) {
   chrome.tabs.create({ url, active: true }, () => "");
 }
@@ -85,7 +88,7 @@ export function createActiveTab(url: string) {
 export const createTabFromTitleAndUrl = (title: string | undefined, url: string | undefined): chrome.tabs.Tab => ({
   title: title ?? "New",
   url: url ?? GOOGLE_HOMEPAGE,
-  favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`,
+  favIconUrl: generateFavIconFromUrl(url),
   active: false,
   audible: false,
   autoDiscardable: true,
@@ -101,13 +104,15 @@ export const createTabFromTitleAndUrl = (title: string | undefined, url: string 
 
 export const createWindowWithTabs = (
   tabs: chrome.tabs.Tab[],
+  name = "Window",
   incognito = false,
   starred = false
-): chrome.windows.Window & { starred: boolean } => ({
+): chrome.windows.Window & { starred: boolean; name: string } => ({
   alwaysOnTop: false,
   focused: false,
   incognito,
   starred,
+  name,
   state: "maximized",
   type: "normal",
   tabs

@@ -55,10 +55,11 @@ export default function useSyncStorageInfo(activeTab: "Download" | "Upload", ava
            * Need to strip some unnecessary information which can be large in some cases to maximize tabs per sync item
            * @example tab.favIconUrl can be a very long string, but it can be reconstructed from the tab.url
            */
-          const { incognito, starred } = currentWindows[j];
+          const { incognito, starred, name } = currentWindows[j];
           syncedGroups[i].windows.push({
             incognito,
             starred,
+            name,
             tabs: newTabs.map(({ title, url }) => ({ title, url: url?.split("?")[0] }))
           });
         }
@@ -109,7 +110,7 @@ export function useSyncStorageDownload(currentData: ISyncDataItem[], available: 
           tabs.push(createTabFromTitleAndUrl(t.title, t.url));
         });
 
-        group.windows.push(createWindowWithTabs(tabs, w.incognito, w.starred));
+        group.windows.push(createWindowWithTabs(tabs, w.name, w.incognito, w.starred));
       });
 
       return group;
