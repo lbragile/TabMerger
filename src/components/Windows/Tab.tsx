@@ -7,6 +7,7 @@ import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { deleteTab, deleteWindow, deleteGroup } from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
+import { generateFavIconFromUrl } from "~/utils/helper";
 
 const TabContainer = styled.div<{ $dragging: boolean }>`
   display: grid;
@@ -35,15 +36,10 @@ const TabTitle = styled.a<{ $isDragging: boolean }>`
     `}
 `;
 
-const TabIcon = styled.img<{ $darken?: boolean }>`
+const TabIcon = styled.img`
   height: 14px;
   width: 14px;
   transition: transform 0.3s ease;
-  ${({ $darken }) =>
-    $darken &&
-    css`
-      filter: brightness(10%);
-    `}
 
   &:hover,
   &:focus-visible {
@@ -66,7 +62,6 @@ interface ITab {
 }
 
 export default function Tab({
-  favIconUrl,
   title,
   url,
   active,
@@ -125,8 +120,7 @@ export default function Tab({
 
       <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
         <TabIcon
-          $darken={url?.includes("github.com")}
-          src={!favIconUrl ? DEFAULT_FAVICON_URL : favIconUrl}
+          src={generateFavIconFromUrl(url)}
           onError={(e) => {
             e.currentTarget.onerror = null;
             e.currentTarget.src = DEFAULT_FAVICON_URL;

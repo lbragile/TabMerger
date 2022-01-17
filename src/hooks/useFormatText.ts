@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 
-import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
-import { formatHtml } from "~/utils/helper";
+import { formatHtml, generateFavIconFromUrl } from "~/utils/helper";
 
 const EMPTY_TEXT = "Nothing to export";
 
@@ -65,9 +64,7 @@ export default function useFormatText(
             ? tabs
                 .map(
                   (t) =>
-                    `\t\t\t<li><img class="${t.url?.includes("github.com") ? "darken " : ""} tabmerger-icon" src=${
-                      t.url ? `https://s2.googleusercontent.com/s2/favicons?domain_url=${t.url}` : DEFAULT_FAVICON_URL
-                    }
+                    `\t\t\t<li><img class="tabmerger-icon" src=${generateFavIconFromUrl(t.url)}
                     ><a href=${t.url} target="_blank" rel="noreferrer">${formatHtml(t.title)}</a></li>\n`
                 )
                 .join("")
@@ -94,7 +91,6 @@ export default function useFormatText(
       "\t\t\ta { text-decoration: none; color: black; }\n" +
       "\t\t\ta:hover { text-decoration: underline; }\n" +
       "\t\t\t.tabmerger-icon { height: 14px; width: 14px; margin-right: 12px; }\n" +
-      "\t\t\t.darken { filter: brightness(0); }\n" +
       "\t\t</style>\n" +
       "\t</head>\n" +
       "\t<body>\n" +

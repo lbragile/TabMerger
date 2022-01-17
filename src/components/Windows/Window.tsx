@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
@@ -225,7 +225,8 @@ export default function Window({
           }
 
           setShowPopup(false);
-        }
+        },
+        isDisabled: groupIndex === 0
       },
       { text: "divider" },
       ...(groupIndex > 0
@@ -269,6 +270,21 @@ export default function Window({
     [dispatch, groupIndex, incognito, openWindow, starred, windowIndex]
   );
 
+  const handleWindowTitleUpdate = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const isCtrl = e.ctrlKey || e.metaKey;
+    const isEnter = e.code === "Enter";
+
+    if (!isCtrl && isEnter) titleRef.current?.blur();
+
+    isEnter && setShowPopup(isCtrl);
+  };
+
+  const handleContextMenuClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    e.currentTarget.blur();
+    setShowPopup(true);
+  };
+
   return (
     <WindowContainer $dragging={windowSnapshot.isDragging}>
       <Row>
@@ -292,19 +308,16 @@ export default function Window({
               ref={titleRef}
               $active={focused}
               $open={showPopup}
-              title={titleRef.current?.value}
+              {...(windowName.length > 15 ? { title: titleRef.current?.value } : {})}
               tabIndex={0}
               role="button"
               maxLength={25}
               value={windowName}
               onChange={(e) => setWindowName(e.target.value)}
-              onClick={(e) => e.button === 0 && openWindow("new")}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                e.currentTarget.blur();
-                setShowPopup(true);
-              }}
-              onKeyPress={({ key }) => key === "Enter" && setShowPopup(true)}
+              onClick={(e) => groupIndex === 0 && e.currentTarget.blur()}
+              onDoubleClick={(e) => e.button === 0 && openWindow("new")}
+              onContextMenu={handleContextMenuClick}
+              onKeyPress={handleWindowTitleUpdate}
               onPointerEnter={() => setShowInstructions(true)}
               onPointerLeave={() => setShowInstructions(false)}
             />
@@ -366,10 +379,10 @@ export default function Window({
 
       {showInstructions && !showPopup && !isDragging && titleRef.current && (
         <Popup
-          text={`Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
+          text={`Double Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
           pos={{
             x: titleRef.current.getBoundingClientRect().right + 8,
-            y: titleRef.current.getBoundingClientRect().top - 4
+            y: titleRef.current.getBoundingClientRect().top - 2
           }}
         />
       )}
