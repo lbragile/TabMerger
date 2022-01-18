@@ -25,6 +25,7 @@ import SidePanel from "./SidePanel";
 import Windows from "./Windows";
 
 import useDnd from "~/hooks/useDnd";
+import useExecuteCommand from "~/hooks/useExecuteCommand";
 import useFilter from "~/hooks/useFilter";
 import { useUpdateGroupsFromStorage } from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
@@ -59,6 +60,7 @@ const App = (): JSX.Element => {
   useUpdateGroupsFromStorage({ available, active });
   useUpdateWindows();
   useUpdateInfo();
+  useExecuteCommand();
 
   const { onBeforeCapture, onDragStart, onDragEnd } = useDnd();
 

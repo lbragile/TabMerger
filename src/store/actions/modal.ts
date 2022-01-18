@@ -23,3 +23,5 @@ export const updateSyncPossibleData = (payload: ISyncDataItem[]) => ({
   type: MODAL_ACTIONS.UPDATE_SYNC_POSSIBLE_DATA,
   payload
 });
+
+export const setVisibility = (payload?: boolean) => ({ type: MODAL_ACTIONS.SET_VISIBILITY, payload });

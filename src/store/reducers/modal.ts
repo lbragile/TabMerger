@@ -9,7 +9,8 @@ export const MODAL_ACTIONS = {
   UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE",
   UPDATE_SYNC_TYPE: "UPDATE_SYNC_TYPE",
   UPDATE_SYNC_CURRENT_DATA: "UPDATE_SYNC_CURRENT_DATA",
-  UPDATE_SYNC_POSSIBLE_DATA: "UPDATE_SYNC_POSSIBLE_DATA"
+  UPDATE_SYNC_POSSIBLE_DATA: "UPDATE_SYNC_POSSIBLE_DATA",
+  SET_VISIBILITY: "SET_VISIBILITY"
 };
 
 type TModalType = "import" | "export" | "sync" | "settings" | "about";
@@ -33,6 +34,7 @@ export interface ISyncDataItem {
 }
 
 export interface IModalState {
+  visible: boolean;
   info: {
     title: string;
     type: TModalType;
@@ -54,6 +56,7 @@ export interface IModalState {
 }
 
 export const initModalState: IModalState = {
+  visible: false,
   info: {
     title: "About TabMerger",
     type: "about",
@@ -77,6 +80,12 @@ const modalReducer = (state: IModalState, action: IAction): IModalState => {
   const { type, payload } = action;
 
   switch (type) {
+    case MODAL_ACTIONS.SET_VISIBILITY:
+      return {
+        ...state,
+        visible: payload as boolean
+      };
+
     case MODAL_ACTIONS.SET_MODAL_INFO:
       return {
         ...state,

@@ -14,7 +14,7 @@ const ModalTab = styled.button<{ $active: boolean }>`
   background-color: transparent;
   font-size: 14px;
   text-transform: uppercase;
-  padding: 2px 16px;
+  padding: 2px 8px;
   cursor: pointer;
   ${({ $active }) =>
     $active &&

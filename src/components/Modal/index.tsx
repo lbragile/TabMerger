@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import About from "./About";
@@ -12,6 +12,7 @@ import Sync from "./Sync";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
 import { updateAvailable, updateActive } from "~/store/actions/groups";
+import { setVisibility } from "~/store/actions/modal";
 import Button from "~/styles/Button";
 
 const CloseIconContainer = styled.span`
@@ -65,11 +66,7 @@ const FooterRow = styled(HeaderRow)`
   justify-content: end;
 `;
 
-export interface IModal {
-  setVisible: Dispatch<SetStateAction<boolean>>;
-}
-
-export default function Modal({ setVisible }: IModal): JSX.Element {
+export default function Modal(): JSX.Element {
   const dispatch = useDispatch();
 
   const { available } = useSelector((state) => state.groups);
@@ -86,7 +83,7 @@ export default function Modal({ setVisible }: IModal): JSX.Element {
 
   const [disableSubmit, setDisableSubmit] = useState(false);
 
-  const hide = () => setVisible(false);
+  const hide = () => dispatch(setVisibility(false));
 
   const handleSave = () => {
     if (type === "export" && file) {

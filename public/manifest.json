@@ -6,7 +6,7 @@
   "default_locale": "en",
   "author": "Lior Bragilevsky",
   "homepage_url": "https://lbragile.github.io/TabMerger-Extension/",
-  "permissions": ["tabs", "storage", "unlimitedStorage"],
+  "permissions": ["tabs", "storage", "unlimitedStorage", "commands"],
   "optional_permissions": [],
   "icons": {
     "16": "images/logo16.png",
@@ -24,6 +24,49 @@
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+T"
+      }
+    },
+    "currentGroup": {
+      "suggested_key": {
+        "default": "Alt+C"
+      },
+      "description": "Select Current Group"
+    },
+    "previousGroup": {
+      "suggested_key": {
+        "default": "Alt+P"
+      },
+      "description": "Select Previous Group"
+    },
+    "nextGroup": {
+      "suggested_key": {
+        "default": "Alt+N"
+      },
+      "description": "Select Next Group"
+    },
+    "undoAction": {
+      "description": "Toggle Undo"
+    },
+    "redoAction": {
+      "description": "Toggle Redo"
+    },
+    "import": {
+      "description": "Perform Import"
+    },
+    "export": {
+      "description": "Perform Export"
+    },
+    "sync": {
+      "description": "Perform Sync"
+    },
+    "find": {
+      "description": "Focus Search Bar"
+    }
   },
   "incognito": "spanning"
 }

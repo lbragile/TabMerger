@@ -10,7 +10,7 @@ import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateInputValue, setFilterChoice } from "~/store/actions/header";
-import { setModalInfo } from "~/store/actions/modal";
+import { setModalInfo, setVisibility } from "~/store/actions/modal";
 import { IModalState } from "~/store/reducers/modal";
 import { createActiveTab } from "~/utils/helper";
 
@@ -89,10 +89,10 @@ export default function Header(): JSX.Element {
   const dispatch = useDispatch();
 
   const { inputValue, filterChoice } = useSelector((state) => state.header);
+  const { visible } = useSelector((state) => state.modal);
   const typing = inputValue !== "";
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -101,8 +101,8 @@ export default function Header(): JSX.Element {
 
   const modalDetailsHandler = useCallback(
     (args: IModalState["info"]) => {
-      setShowModal(true);
       setShowDropdown(false);
+      dispatch(setVisibility(true));
       dispatch(setModalInfo(args));
     },
     [dispatch]
@@ -128,8 +128,7 @@ export default function Header(): JSX.Element {
       { text: "divider" },
       {
         text: "Settings",
-        handler: () => modalDetailsHandler({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" }),
-        isDisabled: true
+        handler: () => modalDetailsHandler({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" })
       },
       { text: "Help", handler: () => createActiveTab(TABMERGER_HELP) },
       { text: "divider" },
@@ -213,7 +212,7 @@ export default function Header(): JSX.Element {
 
       {typing && filterChoice === "group" && <SearchResult />}
 
-      {showModal && <Modal setVisible={setShowModal} />}
+      {visible && <Modal />}
     </>
   );
 }
