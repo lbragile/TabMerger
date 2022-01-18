@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Dropdown, { IDropdown } from "./Dropdown";
@@ -9,7 +9,7 @@ import SearchResult from "./SearchResult";
 import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { updateInputValue, setFilterChoice } from "~/store/actions/header";
+import { updateInputValue, setFilterChoice, setFocused } from "~/store/actions/header";
 import { setModalInfo, setVisibility } from "~/store/actions/modal";
 import { IModalState } from "~/store/reducers/modal";
 import { createActiveTab } from "~/utils/helper";
@@ -88,7 +88,7 @@ const FilterChoice = styled.button<{ active: boolean }>`
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { inputValue, filterChoice } = useSelector((state) => state.header);
+  const { inputValue, filterChoice, focused } = useSelector((state) => state.header);
   const { visible } = useSelector((state) => state.modal);
   const typing = inputValue !== "";
 
@@ -96,8 +96,15 @@ export default function Header(): JSX.Element {
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const searchRef = useRef<HTMLInputElement | null>(null);
 
   useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
+
+  useEffect(() => {
+    if (focused && searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, [focused]);
 
   const modalDetailsHandler = useCallback(
     (args: IModalState["info"]) => {
@@ -151,10 +158,12 @@ export default function Header(): JSX.Element {
         <Flex>
           <InputContainer>
             <SearchInput
+              ref={searchRef}
               type="text"
               placeholder="Search..."
               spellCheck={false}
-              value={inputValue as string}
+              value={inputValue}
+              onBlur={() => dispatch(setFocused(false))}
               onChange={(e) => {
                 const { value } = e.target;
                 dispatch(updateInputValue(value));

@@ -3,12 +3,14 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "./useRedux";
 
 import { updateActive } from "~/store/actions/groups";
+import { setFocused } from "~/store/actions/header";
 import { setModalInfo, setVisibility } from "~/store/actions/modal";
 
 export default function useExecuteCommand() {
   const dispatch = useDispatch();
 
   const { available, active } = useSelector((state) => state.groups);
+  const { visible } = useSelector((state) => state.modal);
 
   useEffect(() => {
     const commandListener = (command: string) => {
@@ -51,6 +53,11 @@ export default function useExecuteCommand() {
           break;
         }
 
+        case "find": {
+          if (!visible) dispatch(setFocused(true));
+          break;
+        }
+
         default:
           break;
       }
@@ -59,5 +66,5 @@ export default function useExecuteCommand() {
     chrome.commands.onCommand.addListener(commandListener);
 
     return () => chrome.commands.onCommand.removeListener(commandListener);
-  }, [dispatch, available, active]);
+  }, [dispatch, available, active, visible]);
 }

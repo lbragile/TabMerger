@@ -2,17 +2,20 @@ import { IAction } from "~/typings/reducers";
 
 export const HEADER_ACTIONS = {
   UPDATE_INPUT_VALUE: "UPDATE_INPUT_VALUE",
-  SET_FILTER_CHOICE: "SET_FILTER_CHOICE"
+  SET_FILTER_CHOICE: "SET_FILTER_CHOICE",
+  SET_FOCUSED: "SET_FOCUSED"
 };
 
 export interface IHeaderState {
   inputValue: string;
   filterChoice: "tab" | "group";
+  focused: boolean;
 }
 
 export const initHeaderState: IHeaderState = {
   inputValue: "",
-  filterChoice: "tab"
+  filterChoice: "tab",
+  focused: false
 };
 
 const headerReducer = (state: IHeaderState, action: IAction): IHeaderState => {
@@ -29,6 +32,12 @@ const headerReducer = (state: IHeaderState, action: IAction): IHeaderState => {
       return {
         ...state,
         filterChoice: payload as IHeaderState["filterChoice"]
+      };
+
+    case HEADER_ACTIONS.SET_FOCUSED:
+      return {
+        ...state,
+        focused: payload as boolean
       };
 
     default:
