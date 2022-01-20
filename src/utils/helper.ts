@@ -1,3 +1,4 @@
+import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { IGroupItemState } from "~/store/reducers/groups";
 
@@ -78,16 +79,16 @@ export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
   return { sortedWindows: focused.concat(notFocused), hasFocused: focused.length > 0 };
 }
 
-export const generateFavIconFromUrl = (url: string | undefined) =>
-  `https://s2.googleusercontent.com/s2/favicons?domain_url=${url ?? GOOGLE_HOMEPAGE}`;
+export const generateFavIconFromUrl = (url = GOOGLE_HOMEPAGE) =>
+  `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`;
 
 export function createActiveTab(url: string) {
   chrome.tabs.create({ url, active: true }, () => "");
 }
 
-export const createTabFromTitleAndUrl = (title: string | undefined, url: string | undefined): chrome.tabs.Tab => ({
-  title: title ?? "New",
-  url: url ?? GOOGLE_HOMEPAGE,
+export const createTabFromTitleAndUrl = (title = "Google", url = GOOGLE_HOMEPAGE): chrome.tabs.Tab => ({
+  title,
+  url,
   favIconUrl: generateFavIconFromUrl(url),
   active: false,
   audible: false,
@@ -104,7 +105,7 @@ export const createTabFromTitleAndUrl = (title: string | undefined, url: string 
 
 export const createWindowWithTabs = (
   tabs: chrome.tabs.Tab[],
-  name = "Window",
+  name = DEFAULT_WINDOW_TITLE,
   incognito = false,
   starred = false
 ): chrome.windows.Window & { starred: boolean; name: string } => ({
@@ -118,7 +119,7 @@ export const createWindowWithTabs = (
   tabs
 });
 
-export const createGroup = (id: string, name = "New", color = "rgba(128, 128, 128, 1)"): IGroupItemState => ({
+export const createGroup = (id: string, name = DEFAULT_GROUP_TITLE, color = DEFAULT_GROUP_COLOR): IGroupItemState => ({
   name,
   id,
   color,
@@ -132,4 +133,4 @@ export const createGroup = (id: string, name = "New", color = "rgba(128, 128, 12
  * Replaces all <tag> instances with &lt;tag&gt; to avoid breaking document ...
  * ... structure in exported markdown & html files
  */
-export const formatHtml = (str?: string) => str?.replace(/<([^>]*)>/g, "&lt;$1&gt;");
+export const adjustHTMLTags = (str?: string) => str?.replace(/<([^>]*)>/g, "&lt;$1&gt;");

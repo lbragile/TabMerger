@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 
+import { DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
-import { formatHtml, generateFavIconFromUrl } from "~/utils/helper";
+import { adjustHTMLTags, generateFavIconFromUrl } from "~/utils/helper";
 
 const EMPTY_TEXT = "Nothing to export";
 
@@ -21,7 +22,9 @@ export default function useFormatText(
       outputStr += `${(!keepTitles || !keepURLs) && i > 0 ? "\n" : ""}${name}\n${lineSeparator("=")}`;
       windows.forEach(({ tabs, name: windowName }, j) => {
         outputStr +=
-          `${(!keepTitles || !keepURLs) && j > 0 ? "\n" : ""}${windowName ?? "Window"}\n${lineSeparator("-")}` +
+          `${(!keepTitles || !keepURLs) && j > 0 ? "\n" : ""}${windowName ?? DEFAULT_WINDOW_TITLE}\n${lineSeparator(
+            "-"
+          )}` +
           (tabs
             ? tabs
                 .map(
@@ -41,8 +44,8 @@ export default function useFormatText(
       outputStr += `${i > 0 ? "\n" : ""}## ${name}\n`;
       windows.forEach(({ tabs, name: windowName }) => {
         outputStr +=
-          `\n### ${windowName ?? "Window"}\n\n` +
-          (tabs ? tabs.map((t) => `- [${formatHtml(t.title)}](${t.url})\n`).join("") : "");
+          `\n### ${windowName ?? DEFAULT_WINDOW_TITLE}\n\n` +
+          (tabs ? tabs.map((t) => `- [${adjustHTMLTags(t.title)}](${t.url})\n`).join("") : "");
       });
     });
 
@@ -59,13 +62,13 @@ export default function useFormatText(
       outputStr += `${i > 0 ? "\n" : ""}\t\t<h1>${name}</h1>\n`;
       windows.forEach(({ tabs, name: windowName }) => {
         outputStr +=
-          `\t\t<h2>${windowName ?? "Window"}</h2>\n\t\t<ul>\n` +
+          `\t\t<h2>${windowName ?? DEFAULT_WINDOW_TITLE}</h2>\n\t\t<ul>\n` +
           (tabs
             ? tabs
                 .map(
                   (t) =>
                     `\t\t\t<li><img class="tabmerger-icon" src=${generateFavIconFromUrl(t.url)}
-                    ><a href=${t.url} target="_blank" rel="noreferrer">${formatHtml(t.title)}</a></li>\n`
+                    ><a href=${t.url} target="_blank" rel="noreferrer">${adjustHTMLTags(t.title)}</a></li>\n`
                 )
                 .join("")
             : "") +
@@ -110,7 +113,7 @@ export default function useFormatText(
           ? tabs
               .map(
                 (t) =>
-                  `"${name}","${windowName ?? "Window"}",${
+                  `"${name}","${windowName ?? DEFAULT_WINDOW_TITLE}",${
                     keepTitles ? '"' + t.title + '"' + (keepURLs ? "," : "") : ""
                   }${keepURLs ? '"' + t.url + '"' : ""}\n`
               )

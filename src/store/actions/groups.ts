@@ -54,7 +54,7 @@ export const updateInfo = (payload?: { index: number; info?: string }) => ({
   payload
 });
 
-export const addGroup = () => ({ type: GROUPS_ACTIONS.ADD_GROUP });
+export const addGroup = (payload?: { color: string; title: string }) => ({ type: GROUPS_ACTIONS.ADD_GROUP, payload });
 
 export const deleteGroup = (payload?: number) => ({ type: GROUPS_ACTIONS.DELETE_GROUP, payload });
 

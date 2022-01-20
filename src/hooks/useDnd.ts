@@ -1,8 +1,10 @@
 import { useCallback } from "react";
 import { BeforeCapture, DragStart, DropResult } from "react-beautiful-dnd";
 
+import useLocalStorage from "./useLocalStorage";
 import { useDispatch, useSelector } from "./useRedux";
 
+import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from "~/constants/defaults";
 import { isWindowDrag, isTabDrag, isGroupDrag } from "~/constants/dragRegExp";
 import { updateDragOriginType, updateIsDragging, resetDnDInfo } from "~/store/actions/dnd";
 import {
@@ -21,6 +23,9 @@ import { toggleWindowTabsVisibility } from "~/utils/helper";
 
 export default function useDnd() {
   const dispatch = useDispatch();
+
+  const [groupTitle] = useLocalStorage("groupTitle", DEFAULT_GROUP_TITLE);
+  const [groupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
 
   const {
     active: { index },
@@ -42,10 +47,10 @@ export default function useDnd() {
 
       if (windowDrag || tabDrag) {
         // Add group to end of side panel on both tab and window drag types
-        dispatch(addGroup());
+        dispatch(addGroup({ title: groupTitle, color: groupColor }));
       }
     },
-    [dispatch, index]
+    [dispatch, index, groupTitle, groupColor]
   );
 
   const onDragStart = useCallback(
@@ -76,7 +81,7 @@ export default function useDnd() {
         isValidCombine && dispatch(updateWindowsFromSidePanelDnd(sidePanelPayload));
         isValidDndWithinGroup && dispatch(updateWindowsFromGroupDnd(destPayload));
       } else if (isGroup && destination && destination.index > 0) {
-        // Only swap if the destination exists (valid) and is below "Now Open"
+        // Only swap if the destination exists (valid) and is below the first group
         dispatch(updateGroupOrder({ source, destination }));
 
         // Update active group if it does not match the draggable

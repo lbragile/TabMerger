@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { Combine, DraggableLocation } from "react-beautiful-dnd";
 
+import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
 import { IAction } from "~/typings/reducers";
 import { createGroup, createWindowWithTabs } from "~/utils/helper";
 
@@ -71,9 +72,9 @@ export const initGroupsState: IGroupsState = {
   active: { id: activeId, index: 0 },
   available: [
     {
-      name: "Now Open",
+      name: FIRST_GROUP_TITLE,
       id: activeId,
-      color: "rgba(128, 128, 128, 1)",
+      color: DEFAULT_GROUP_COLOR,
       updatedAt: Date.now(),
       windows: [],
       permanent: true
@@ -221,7 +222,9 @@ const GroupsReducer = (state: IGroupsState, action: IAction): IGroupsState => {
     }
 
     case GROUPS_ACTIONS.ADD_GROUP: {
-      available.push(createGroup(nanoid(10)));
+      const { color, title } = action.payload as { color: string; title: string };
+
+      available.push(createGroup(nanoid(10), title, color));
 
       return { ...state, available };
     }

@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { sortWindowsByFocus } from "./helper";
 
 import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
+import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { TSentResponse } from "~/typings/background";
 
@@ -17,7 +18,7 @@ export function executeResponse<T>(res: TSentResponse<T>, cb: () => Promise<T>):
 }
 
 /**
- * Sets the "Now Open" group with corresponding data.
+ * Sets the first group with corresponding data.
  * Additionally, sets the active group information
  */
 export function setDefaultData(): void {
@@ -29,10 +30,10 @@ export function setDefaultData(): void {
 
     const available: IGroupItemState[] = [
       {
-        name: "Now Open",
+        name: FIRST_GROUP_TITLE,
         id: activeId,
         windows: sortedWindows,
-        color: "rgba(128, 128, 128, 1)",
+        color: DEFAULT_GROUP_COLOR,
         updatedAt: Date.now(),
         permanent: true
       }

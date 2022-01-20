@@ -15,6 +15,7 @@ const Container = styled.div`
   gap: 6px;
   box-shadow: 0 0 4px 0 black;
   padding: 4px;
+  max-width: 208px;
   background-color: white;
 `;
 
