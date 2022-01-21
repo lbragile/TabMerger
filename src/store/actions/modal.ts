@@ -24,4 +24,15 @@ export const updateSyncPossibleData = (payload: ISyncDataItem[]) => ({
   payload
 });
 
-export const setVisibility = (payload?: boolean) => ({ type: MODAL_ACTIONS.SET_VISIBILITY, payload });
+export const setVisibility = (payload: boolean) => ({ type: MODAL_ACTIONS.SET_VISIBILITY, payload });
+
+export const MODAL_CREATORS = {
+  setModalInfo,
+  updateExportFile,
+  updateImportFormattedGroups,
+  updateImportType,
+  updateSyncType,
+  updateSyncCurrentData,
+  updateSyncPossibleData,
+  setVisibility
+};

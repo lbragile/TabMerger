@@ -186,7 +186,7 @@ export default function Header(): JSX.Element {
 
           {typing && (
             <FilterButtonToggle>
-              {["tab", "group"].map((text) => (
+              {(["tab", "group"] as ("tab" | "group")[]).map((text) => (
                 <FilterChoice
                   key={text}
                   onMouseDown={() => dispatch(setFilterChoice(text))}

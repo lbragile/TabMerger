@@ -1,17 +1,17 @@
 import { IGroupItemState } from "./groups";
 
-import { IAction } from "~/typings/reducers";
+import { TRootActions } from "~/typings/reducers";
 
 export const MODAL_ACTIONS = {
-  SET_MODAL_INFO: "SET_MODAL_INFO",
-  UPDATE_EXPORT_FILE: "UPDATE_EXPORT_FILE",
-  UPDATE_IMPORT_FORMATTED_GROUPS: "UPDATE_IMPORT_FORMATTED_GROUPS",
-  UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE",
-  UPDATE_SYNC_TYPE: "UPDATE_SYNC_TYPE",
-  UPDATE_SYNC_CURRENT_DATA: "UPDATE_SYNC_CURRENT_DATA",
-  UPDATE_SYNC_POSSIBLE_DATA: "UPDATE_SYNC_POSSIBLE_DATA",
-  SET_VISIBILITY: "SET_VISIBILITY"
-};
+  SET_MODAL_INFO: "setModalInfo",
+  UPDATE_EXPORT_FILE: "updateExportFile",
+  UPDATE_IMPORT_FORMATTED_GROUPS: "updateImportFormattedGroups",
+  UPDATE_IMPORT_TYPE: "updateImportType",
+  UPDATE_SYNC_TYPE: "updateSyncType",
+  UPDATE_SYNC_CURRENT_DATA: "updateSyncCurrentData",
+  UPDATE_SYNC_POSSIBLE_DATA: "updateSyncPossibleData",
+  SET_VISIBILITY: "setVisibility"
+} as const;
 
 type TModalType = "import" | "export" | "sync" | "settings" | "about";
 
@@ -76,20 +76,18 @@ export const initModalState: IModalState = {
   }
 };
 
-const modalReducer = (state: IModalState, action: IAction): IModalState => {
-  const { type, payload } = action;
-
-  switch (type) {
+const modalReducer = (state: IModalState, action: TRootActions): IModalState => {
+  switch (action.type) {
     case MODAL_ACTIONS.SET_VISIBILITY:
       return {
         ...state,
-        visible: payload as boolean
+        visible: action.payload
       };
 
     case MODAL_ACTIONS.SET_MODAL_INFO:
       return {
         ...state,
-        info: payload as IModalState["info"]
+        info: action.payload
       };
 
     case MODAL_ACTIONS.UPDATE_EXPORT_FILE:
@@ -97,7 +95,7 @@ const modalReducer = (state: IModalState, action: IAction): IModalState => {
         ...state,
         export: {
           ...state.export,
-          file: payload as IModalState["export"]["file"]
+          file: action.payload
         }
       };
 
@@ -106,7 +104,7 @@ const modalReducer = (state: IModalState, action: IAction): IModalState => {
         ...state,
         import: {
           ...state.import,
-          formatted: payload as IModalState["import"]["formatted"]
+          formatted: action.payload
         }
       };
 
@@ -115,7 +113,7 @@ const modalReducer = (state: IModalState, action: IAction): IModalState => {
         ...state,
         import: {
           ...state.import,
-          type: payload as IModalState["import"]["type"]
+          type: action.payload
         }
       };
 
@@ -124,7 +122,7 @@ const modalReducer = (state: IModalState, action: IAction): IModalState => {
         ...state,
         sync: {
           ...state.sync,
-          type: payload as IModalState["sync"]["type"]
+          type: action.payload
         }
       };
 
@@ -133,7 +131,7 @@ const modalReducer = (state: IModalState, action: IAction): IModalState => {
         ...state,
         sync: {
           ...state.sync,
-          currentData: payload as IModalState["sync"]["currentData"]
+          currentData: action.payload
         }
       };
 
@@ -142,7 +140,7 @@ const modalReducer = (state: IModalState, action: IAction): IModalState => {
         ...state,
         sync: {
           ...state.sync,
-          possibleData: payload as IModalState["sync"]["possibleData"]
+          possibleData: action.payload
         }
       };
 
