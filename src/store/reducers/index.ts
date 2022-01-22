@@ -1,7 +1,7 @@
-import { DND_CREATORS } from "../actions/dnd";
-import { GROUPS_CREATORS } from "../actions/groups";
-import { HEADER_CREATORS } from "../actions/header";
-import { MODAL_CREATORS } from "../actions/modal";
+import * as dndActions from "../actions/dnd";
+import * as groupsActions from "../actions/groups";
+import * as headerActions from "../actions/header";
+import * as modalActions from "../actions/modal";
 
 import dndReducer, { initDnDState } from "./dnd";
 import groupsReducer, { initGroupsState } from "./groups";
@@ -35,10 +35,10 @@ export const rootState = {
 };
 
 export const rootActions = {
-  ...DND_CREATORS,
-  ...GROUPS_CREATORS,
-  ...HEADER_CREATORS,
-  ...MODAL_CREATORS
+  header: headerActions,
+  groups: groupsActions,
+  dnd: dndActions,
+  modal: modalActions
 };
 
 export const rootReducer = combineReducers({

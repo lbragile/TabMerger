@@ -1,9 +1,9 @@
 import { TRootActions } from "~/typings/reducers";
 
 export const DND_ACTIONS = {
-  UPDATE_DRAG_ORIGIN_TYPE: "updateDragOriginType",
-  UPDATE_IS_DRAGGING: "updateIsDragging",
-  RESET_DND_INFO: "resetDnDInfo"
+  UPDATE_DRAG_ORIGIN_TYPE: "UPDATE_DRAG_ORIGIN_TYPE",
+  UPDATE_IS_DRAGGING: "UPDATE_IS_DRAGGING",
+  RESET_DND_INFO: "RESET_DND_INFO"
 } as const;
 
 interface IDnDState {

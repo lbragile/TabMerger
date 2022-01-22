@@ -128,36 +128,3 @@ export const updateWindowName = (payload: { groupIndex: number; windowIndex: num
   type: GROUPS_ACTIONS.UPDATE_WINDOW_NAME,
   payload
 });
-
-export const GROUPS_CREATORS = {
-  updateAvailable,
-  updateActive,
-  updateColor,
-  updateTimestamp,
-  updateWindows,
-  updateWindowsFromGroupDnd,
-  updateWindowsFromSidePanelDnd,
-  updateTabs,
-  updateTabsFromGroupDnd,
-  updateTabsFromSidePanelDnd,
-  updateInfo,
-  addGroup,
-  deleteGroup,
-  deleteWindow,
-  deleteTab,
-  clearEmptyGroups,
-  addWindow,
-  clearEmptyWindows,
-  updateGroupOrder,
-  toggleWindowIncognito,
-  toggleWindowStarred,
-  duplicateGroup,
-  replaceWithCurrent,
-  mergeWithCurrent,
-  uniteWindows,
-  splitWindows,
-  sortByTabTitle,
-  sortByTabUrl,
-  updateGroupName,
-  updateWindowName
-};

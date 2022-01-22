@@ -3,14 +3,14 @@ import { IGroupItemState } from "./groups";
 import { TRootActions } from "~/typings/reducers";
 
 export const MODAL_ACTIONS = {
-  SET_MODAL_INFO: "setModalInfo",
-  UPDATE_EXPORT_FILE: "updateExportFile",
-  UPDATE_IMPORT_FORMATTED_GROUPS: "updateImportFormattedGroups",
-  UPDATE_IMPORT_TYPE: "updateImportType",
-  UPDATE_SYNC_TYPE: "updateSyncType",
-  UPDATE_SYNC_CURRENT_DATA: "updateSyncCurrentData",
-  UPDATE_SYNC_POSSIBLE_DATA: "updateSyncPossibleData",
-  SET_VISIBILITY: "setVisibility"
+  SET_MODAL_INFO: "SET_MODAL_INFO",
+  UPDATE_EXPORT_FILE: "UPDATE_EXPORT_FILE",
+  UPDATE_IMPORT_FORMATTED_GROUPS: "UPDATE_IMPORT_FORMATTED_GROUPS",
+  UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE",
+  UPDATE_SYNC_TYPE: "UPDATE_SYNC_TYPE",
+  UPDATE_SYNC_CURRENT_DATA: "UPDATE_SYNC_CURRENT_DATA",
+  UPDATE_SYNC_POSSIBLE_DATA: "UPDATE_SYNC_POSSIBLE_DATA",
+  SET_VISIBILITY: "SET_VISIBILITY"
 } as const;
 
 type TModalType = "import" | "export" | "sync" | "settings" | "about";

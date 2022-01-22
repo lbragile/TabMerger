@@ -1,9 +1,9 @@
 import { TRootActions } from "~/typings/reducers";
 
 export const HEADER_ACTIONS = {
-  UPDATE_INPUT_VALUE: "updateInputValue",
-  SET_FILTER_CHOICE: "setFilterChoice",
-  SET_FOCUSED: "setFocused"
+  UPDATE_INPUT_VALUE: "UPDATE_INPUT_VALUE",
+  SET_FILTER_CHOICE: "SET_FILTER_CHOICE",
+  SET_FOCUSED: "SET_FOCUSED"
 } as const;
 
 interface IHeaderState {
