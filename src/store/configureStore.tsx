@@ -1,8 +1,8 @@
 import { createContext, Dispatch, useMemo, useReducer } from "react";
 
 import useReducerLogger from "~/hooks/useReducerLogger";
-import { rootReducer, rootState } from "~/store/reducers";
-import { TRootActions, TRootState } from "~/typings/reducers";
+import { rootReducer, rootState } from "~/store";
+import { TRootActions, TRootState } from "~/typings/redux";
 
 export const ReduxStore = createContext<{ state: TRootState; dispatch: Dispatch<TRootActions> }>({
   state: rootState,

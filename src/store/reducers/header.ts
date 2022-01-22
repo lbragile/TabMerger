@@ -1,4 +1,4 @@
-import { TRootActions } from "~/typings/reducers";
+import { TRootActions } from "~/typings/redux";
 
 export const HEADER_ACTIONS = {
   UPDATE_INPUT_VALUE: "UPDATE_INPUT_VALUE",
@@ -18,7 +18,7 @@ export const initHeaderState: IHeaderState = {
   focused: false
 };
 
-const headerReducer = (state: IHeaderState, action: TRootActions): IHeaderState => {
+const headerReducer = (state = initHeaderState, action: TRootActions): IHeaderState => {
   switch (action.type) {
     case HEADER_ACTIONS.UPDATE_INPUT_VALUE:
       return {

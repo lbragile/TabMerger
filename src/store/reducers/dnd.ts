@@ -1,4 +1,4 @@
-import { TRootActions } from "~/typings/reducers";
+import { TRootActions } from "~/typings/redux";
 
 export const DND_ACTIONS = {
   UPDATE_DRAG_ORIGIN_TYPE: "UPDATE_DRAG_ORIGIN_TYPE",
@@ -16,7 +16,7 @@ export const initDnDState: IDnDState = {
   isDragging: false
 };
 
-const dndReducer = (state: IDnDState, action: TRootActions): IDnDState => {
+const dndReducer = (state = initDnDState, action: TRootActions): IDnDState => {
   switch (action.type) {
     case DND_ACTIONS.UPDATE_DRAG_ORIGIN_TYPE:
       return {

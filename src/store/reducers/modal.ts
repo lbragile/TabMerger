@@ -1,6 +1,6 @@
 import { IGroupItemState } from "./groups";
 
-import { TRootActions } from "~/typings/reducers";
+import { TRootActions } from "~/typings/redux";
 
 export const MODAL_ACTIONS = {
   SET_MODAL_INFO: "SET_MODAL_INFO",
@@ -76,7 +76,7 @@ export const initModalState: IModalState = {
   }
 };
 
-const modalReducer = (state: IModalState, action: TRootActions): IModalState => {
+const modalReducer = (state = initModalState, action: TRootActions): IModalState => {
   switch (action.type) {
     case MODAL_ACTIONS.SET_VISIBILITY:
       return {

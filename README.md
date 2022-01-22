@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-next-line MD033 MD041 -->
 <div align="center">
 
-![tabmerger logo](./public/images/logo-full-rescale.PNG)
+![tabmerger logo](https://raw.githubusercontent.com/lbragile/TabMerger/master/public/images/logo-full.png)
 
 [![Build][build status]](https://github.com/lbragile/TabMerger/actions) [![Forks][gh forks]](https://github.com/lbragile/TabMerger/network/members) [![Stars][gh stars]](https://github.com/lbragile/TabMerger/stargazers) [![Watchers][gh watchers]](https://github.com/lbragile/TabMerger/watchers) [![Release][release]](https://github.com/lbragile/TabMerger/releases/tag/v2.0.0) [![License][license]](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
 \

@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { Combine, DraggableLocation } from "react-beautiful-dnd";
 
 import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
-import { TRootActions } from "~/typings/reducers";
+import { TRootActions } from "~/typings/redux";
 import { createGroup, createWindowWithTabs } from "~/utils/helper";
 
 export const GROUPS_ACTIONS = {
@@ -78,7 +78,7 @@ export const initGroupsState: IGroupsState = {
   ]
 };
 
-const GroupsReducer = (state: IGroupsState, action: TRootActions): IGroupsState => {
+const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
