@@ -1,7 +1,7 @@
 import { IGroupItemState } from "~/store/reducers/groups";
-import { MODAL_ACTIONS, IModalState, TImportType, ISyncDataItem, TSyncType } from "~/store/reducers/modal";
+import { MODAL_ACTIONS, TImportType, ISyncDataItem, TSyncType, TModalType } from "~/store/reducers/modal";
 
-export const setModalInfo = (payload: IModalState["info"]) => ({ type: MODAL_ACTIONS.SET_MODAL_INFO, payload });
+export const setModalType = (payload: TModalType) => ({ type: MODAL_ACTIONS.SET_MODAL_TYPE, payload });
 
 export const updateExportFile = (payload: File | null) => ({ type: MODAL_ACTIONS.UPDATE_EXPORT_FILE, payload });
 

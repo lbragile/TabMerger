@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "./useRedux";
 
 import { updateActive } from "~/store/actions/groups";
 import { setFocused } from "~/store/actions/header";
-import { setModalInfo, setVisibility } from "~/store/actions/modal";
+import { setModalType, setVisibility } from "~/store/actions/modal";
 
 export default function useExecuteCommand() {
   const dispatch = useDispatch();
@@ -37,23 +37,19 @@ export default function useExecuteCommand() {
 
           case "import": {
             dispatch(setVisibility(true));
-            dispatch(
-              setModalInfo({ title: "TabMerger Import", type: "import", closeText: "Cancel", saveText: "Import" })
-            );
+            dispatch(setModalType("import"));
             break;
           }
 
           case "export": {
             dispatch(setVisibility(true));
-            dispatch(
-              setModalInfo({ title: "TabMerger Export", type: "export", closeText: "Close", saveText: "Save File" })
-            );
+            dispatch(setModalType("export"));
             break;
           }
 
           case "sync": {
             dispatch(setVisibility(true));
-            dispatch(setModalInfo({ title: "TabMerger Sync", type: "sync", saveText: "Sync", closeText: "Cancel" }));
+            dispatch(setModalType("sync"));
             break;
           }
 

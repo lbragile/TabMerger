@@ -1,15 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { saveAs } from "file-saver";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
-import Link from "./Link";
-import Selector from "./Selector";
-
+import Link from "~/components/Link";
+import ModalFooter from "~/components/ModalFooter";
+import ModalHeader from "~/components/ModalHeader";
+import Selector from "~/components/Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { updateExportFile } from "~/store/actions/modal";
+import { setVisibility, updateExportFile } from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
 
@@ -112,6 +114,10 @@ export default function Export(): JSX.Element {
   const dispatch = useDispatch();
   const { available } = useSelector((state) => state.groups);
 
+  const {
+    export: { file }
+  } = useSelector((state) => state.modal);
+
   const [activeTab, setActiveTab] = useState<"JSON" | "Text" | "Markdown" | "HTML" | "CSV">("JSON");
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -194,6 +200,8 @@ export default function Export(): JSX.Element {
 
   return (
     <>
+      <ModalHeader title="TabMerger Export" />
+
       <Selector opts={["JSON", "Text", "Markdown", "CSV", "HTML"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <Row>
@@ -256,6 +264,17 @@ export default function Export(): JSX.Element {
           <p>Files are saved to your</p> <Link href={DOWNLOADS_URL} title="Downloads Folder" />
         </div>
       </Note>
+
+      <ModalFooter
+        showSave={!!file}
+        saveText="Export"
+        handleSave={() => {
+          if (file) {
+            saveAs(file);
+            dispatch(setVisibility(false));
+          }
+        }}
+      />
     </>
   );
 }

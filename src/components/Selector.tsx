@@ -35,7 +35,7 @@ interface ISelector<T> {
   setActiveTab: Dispatch<SetStateAction<T>>;
 }
 
-export default function Selector<T = string>({ opts, activeTab, setActiveTab }: ISelector<T>) {
+export default function Selector<T>({ opts, activeTab, setActiveTab }: ISelector<T>) {
   return (
     <ModalTabContainer>
       {opts.map((item) => (

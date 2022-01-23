@@ -6,12 +6,12 @@ import Dropdown, { IDropdown } from "./Dropdown";
 import Modal from "./Modal";
 import SearchResult from "./SearchResult";
 
-import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
+import { CHROME_NEW_TAB, TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateInputValue, setFilterChoice, setFocused } from "~/store/actions/header";
-import { setModalInfo, setVisibility } from "~/store/actions/modal";
-import { IModalState } from "~/store/reducers/modal";
+import { setModalType, setVisibility } from "~/store/actions/modal";
+import { TModalType } from "~/store/reducers/modal";
 import { createActiveTab } from "~/utils/helper";
 
 const Flex = styled.div`
@@ -107,48 +107,27 @@ export default function Header(): JSX.Element {
   }, [focused]);
 
   const modalDetailsHandler = useCallback(
-    (args: IModalState["info"]) => {
+    (type: TModalType) => {
       setShowDropdown(false);
       dispatch(setVisibility(true));
-      dispatch(setModalInfo(args));
+      dispatch(setModalType(type));
     },
     [dispatch]
   );
 
   const settingsItems = useMemo(() => {
     return [
-      {
-        text: "Import",
-        handler: () =>
-          modalDetailsHandler({ title: "TabMerger Import", type: "import", closeText: "Cancel", saveText: "Import" })
-      },
-      {
-        text: "Export",
-        handler: () =>
-          modalDetailsHandler({ title: "TabMerger Export", type: "export", closeText: "Close", saveText: "Save File" })
-      },
-      {
-        text: "Sync",
-        handler: () =>
-          modalDetailsHandler({ title: "TabMerger Sync", type: "sync", saveText: "Sync", closeText: "Cancel" })
-      },
+      { text: "Import", handler: () => modalDetailsHandler("import") },
+      { text: "Export", handler: () => modalDetailsHandler("export") },
+      { text: "Sync", handler: () => modalDetailsHandler("sync") },
       { text: "divider" },
-      {
-        text: "Settings",
-        handler: () => modalDetailsHandler({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" })
-      },
+      { text: "Settings", handler: () => modalDetailsHandler("settings") },
       { text: "Help", handler: () => createActiveTab(TABMERGER_HELP) },
       { text: "divider" },
       { text: "Rate", handler: () => createActiveTab(TABMERGER_REVIEWS) },
-      {
-        text: "Donate",
-        handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? "chrome://newtab")
-      },
+      { text: "Donate", handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? CHROME_NEW_TAB) },
       { text: "divider" },
-      {
-        text: "About",
-        handler: () => modalDetailsHandler({ title: "About TabMerger", type: "about", closeText: "Close" })
-      }
+      { text: "About", handler: () => modalDetailsHandler("about") }
     ] as IDropdown["items"];
   }, [modalDetailsHandler]);
 

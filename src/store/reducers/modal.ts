@@ -3,7 +3,7 @@ import { IGroupItemState } from "./groups";
 import { TRootActions } from "~/typings/redux";
 
 export const MODAL_ACTIONS = {
-  SET_MODAL_INFO: "SET_MODAL_INFO",
+  SET_MODAL_TYPE: "SET_MODAL_TYPE",
   UPDATE_EXPORT_FILE: "UPDATE_EXPORT_FILE",
   UPDATE_IMPORT_FORMATTED_GROUPS: "UPDATE_IMPORT_FORMATTED_GROUPS",
   UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE",
@@ -13,7 +13,7 @@ export const MODAL_ACTIONS = {
   SET_VISIBILITY: "SET_VISIBILITY"
 } as const;
 
-type TModalType = "import" | "export" | "sync" | "settings" | "about";
+export type TModalType = "import" | "export" | "sync" | "settings" | "about";
 
 export type TImportType = "json" | "plain" | "markdown" | "csv";
 
@@ -35,12 +35,7 @@ export interface ISyncDataItem {
 
 export interface IModalState {
   visible: boolean;
-  info: {
-    title: string;
-    type: TModalType;
-    closeText: string;
-    saveText?: string;
-  };
+  type: TModalType;
   export: {
     file: File | null;
   };
@@ -57,11 +52,7 @@ export interface IModalState {
 
 export const initModalState: IModalState = {
   visible: false,
-  info: {
-    title: "About TabMerger",
-    type: "about",
-    closeText: "Close"
-  },
+  type: "about",
   export: {
     file: null
   },
@@ -84,10 +75,10 @@ const modalReducer = (state = initModalState, action: TRootActions): IModalState
         visible: action.payload
       };
 
-    case MODAL_ACTIONS.SET_MODAL_INFO:
+    case MODAL_ACTIONS.SET_MODAL_TYPE:
       return {
         ...state,
-        info: action.payload
+        type: action.payload
       };
 
     case MODAL_ACTIONS.UPDATE_EXPORT_FILE:

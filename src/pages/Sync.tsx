@@ -3,13 +3,14 @@ import { saveAs } from "file-saver";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import Selector from "./Selector";
-
+import ModalFooter from "~/components/ModalFooter";
+import ModalHeader from "~/components/ModalHeader";
+import Selector from "~/components/Selector";
 import { MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_GROUPS } from "~/constants/sync";
 import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import useSyncStorageInfo from "~/hooks/useSyncStorage";
+import useSyncStorageInfo, { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
 import { updateSyncType } from "~/store/actions/modal";
 import { TSyncType } from "~/store/reducers/modal";
 import Button from "~/styles/Button";
@@ -33,6 +34,7 @@ const StyledButton = styled(Button)`
 export default function Sync(): JSX.Element {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState<TSyncType>("Upload");
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   const {
     sync: { currentData, possibleData }
@@ -40,8 +42,13 @@ export default function Sync(): JSX.Element {
 
   const { available } = useSelector((state) => state.groups);
 
+  const syncAmount = (activeTab === "Upload" ? possibleData : currentData).length;
+
   const { getRegularText: getRegularTextPossible, getHTMLText: getHTMLTextPossible } = useFormatText(possibleData);
   const { getRegularText: getRegularTextCurrent, getHTMLText: getHTMLTextCurrent } = useFormatText(currentData);
+
+  const syncUpload = useSyncStorageUpload(possibleData);
+  const syncDownload = useSyncStorageDownload(currentData, available);
 
   useSyncStorageInfo(activeTab, available);
 
@@ -64,6 +71,8 @@ export default function Sync(): JSX.Element {
 
   return (
     <>
+      <ModalHeader title="TabMerger Sync" />
+
       <Selector opts={["Upload", "Download"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <StyledMessage $error={activeLastSync === ""} $recent={relativeTime.includes("<")}>
@@ -78,11 +87,7 @@ export default function Sync(): JSX.Element {
         readOnly
       />
 
-      <StyledButton
-        $variant="info"
-        disabled={activeTab === "Download" && currentData.length === 0}
-        onClick={handlePreviewSyncData}
-      >
+      <StyledButton $variant="info" disabled={syncAmount === 0} onClick={handlePreviewSyncData}>
         Preview
       </StyledButton>
 
@@ -102,6 +107,23 @@ export default function Sync(): JSX.Element {
           )}
         </div>
       </Note>
+
+      <ModalFooter
+        showSave={syncAmount > 0}
+        saveText={`${activeTab} Sync (${syncAmount})`}
+        disableSave={disableSubmit}
+        handleSave={() => {
+          if (possibleData.length) syncUpload();
+          else if (currentData.length) syncDownload();
+
+          /**
+           * Prevent user from mashing the submit button, due to rate limit on sync storage
+           * @see https://developer.chrome.com/docs/extensions/reference/storage/#property-sync-sync-MAX_WRITE_OPERATIONS_PER_MINUTE
+           */
+          setDisableSubmit(true);
+          setTimeout(() => setDisableSubmit(false), 3000);
+        }}
+      />
     </>
   );
 }
