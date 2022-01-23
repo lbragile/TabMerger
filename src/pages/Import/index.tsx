@@ -9,18 +9,18 @@ import Selector from "~/components/Selector";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateAvailable, updateActive } from "~/store/actions/groups";
 import { setVisibility, updateImportFormattedGroups } from "~/store/actions/modal";
+import { TImportType } from "~/store/reducers/modal";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
 
   const { available } = useSelector((state) => state.groups);
 
-  const {
-    import: { formatted }
-  } = useSelector((state) => state.modal);
+  const { importFile } = useSelector((state) => state.modal);
 
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
   const [currentText, setCurrentText] = useState("");
+  const [importType, setImportType] = useState<TImportType>("json");
 
   // Reset the uploaded text & formatted groups if the activeTab is changed
   useEffect(() => {
@@ -37,18 +37,23 @@ export default function Import(): JSX.Element {
       <Selector opts={["File", "Text"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab === "File" ? (
-        <File setCurrentText={setCurrentText} setActiveTab={setActiveTab} />
+        <File setCurrentText={setCurrentText} setActiveTab={setActiveTab} setImportType={setImportType} />
       ) : (
-        <Text currentText={currentText} setCurrentText={setCurrentText} />
+        <Text
+          currentText={currentText}
+          setCurrentText={setCurrentText}
+          importType={importType}
+          setImportType={setImportType}
+        />
       )}
 
       <ModalFooter
-        showSave={formatted.length > 0}
-        saveText={`Import (${formatted.length})`}
+        showSave={importFile.length > 0}
+        saveText={`Import (${importFile.length})`}
         closeText="Cancel"
         handleSave={() => {
-          dispatch(updateAvailable([available[0], ...formatted]));
-          dispatch(updateActive({ index: 0, id: formatted[0].id }));
+          dispatch(updateAvailable([available[0], ...importFile]));
+          dispatch(updateActive({ index: 0, id: importFile[0].id }));
           dispatch(setVisibility(false));
         }}
       />

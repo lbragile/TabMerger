@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import ModalFooter from "~/components/ModalFooter";
@@ -9,9 +9,8 @@ import Selector from "~/components/Selector";
 import { MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_GROUPS } from "~/constants/sync";
 import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
-import { useDispatch, useSelector } from "~/hooks/useRedux";
+import { useSelector } from "~/hooks/useRedux";
 import useSyncStorageInfo, { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
-import { updateSyncType } from "~/store/actions/modal";
 import { TSyncType } from "~/store/reducers/modal";
 import Button from "~/styles/Button";
 import Message from "~/styles/Message";
@@ -32,7 +31,6 @@ const StyledButton = styled(Button)`
 `;
 
 export default function Sync(): JSX.Element {
-  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState<TSyncType>("Upload");
   const [disableSubmit, setDisableSubmit] = useState(false);
 
@@ -56,10 +54,6 @@ export default function Sync(): JSX.Element {
   const [lastSyncDownload] = useLocalStorage("lastSyncDownload", "");
   const activeLastSync = activeTab === "Upload" ? lastSyncUpload : lastSyncDownload;
   const relativeTime = relativeTimeStr(new Date(activeLastSync).getTime());
-
-  useEffect(() => {
-    dispatch(updateSyncType(activeTab));
-  }, [dispatch, activeTab]);
 
   const handlePreviewSyncData = () => {
     const data = [activeTab === "Upload" ? getHTMLTextPossible() : getHTMLTextCurrent()];

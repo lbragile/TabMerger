@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-import About from "../../pages/About";
-import Export from "../../pages/Export";
-import Import from "../../pages/Import";
-import Settings from "../../pages/Settings";
-import Sync from "../../pages/Sync";
+import About from "../pages/About";
+import Export from "../pages/Export";
+import Import from "../pages/Import";
+import Settings from "../pages/Settings";
+import Sync from "../pages/Sync";
 
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { setVisibility } from "~/store/actions/modal";

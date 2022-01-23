@@ -1,19 +1,15 @@
 import { nanoid } from "nanoid";
 import { useCallback, useEffect } from "react";
 
-import { useDispatch, useSelector } from "./useRedux";
+import { useDispatch } from "./useRedux";
 
-import { updateImportFormattedGroups, updateImportType } from "~/store/actions/modal";
+import { updateImportFormattedGroups } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { TImportType } from "~/store/reducers/modal";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs } from "~/utils/helper";
 
-export default function useParseText(debouncedText: string) {
+export default function useParseText(debouncedText: string, importType: TImportType) {
   const dispatch = useDispatch();
-
-  const {
-    import: { type: importType }
-  } = useSelector((state) => state.modal);
 
   const formatPlain = useCallback((text: string) => {
     const groups: IGroupItemState[] = [];
@@ -107,15 +103,4 @@ export default function useParseText(debouncedText: string) {
       }
     }
   }, [dispatch, debouncedText, importType, formatPlain]);
-
-  const recomputeUploadType = (value: string) => {
-    let type: TImportType = "json";
-    if (/.+?\n={3,}\n/.test(value)) type = "plain";
-    else if (/\n*#{2,3}.+?\n/.test(value)) type = "markdown";
-    else if (/(".+?",?){4}\n/.test(value)) type = "csv";
-
-    if (type !== importType) dispatch(updateImportType(type));
-  };
-
-  return { recomputeUploadType };
 }

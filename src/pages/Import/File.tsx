@@ -3,8 +3,7 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import styled, { css } from "styled-components";
 
-import { useDispatch } from "~/hooks/useRedux";
-import { updateImportType } from "~/store/actions/modal";
+import { TImportType } from "~/store/reducers/modal";
 import Message from "~/styles/Message";
 import { Note } from "~/styles/Note";
 
@@ -42,11 +41,10 @@ const UPLOAD_FILE_ERROR = "Something is wrong with this file, please try another
 interface IFile {
   setCurrentText: (arg: string) => void;
   setActiveTab: (arg: "File" | "Text") => void;
+  setImportType: (arg: TImportType) => void;
 }
 
-export default function File({ setCurrentText, setActiveTab }: IFile): JSX.Element {
-  const dispatch = useDispatch();
-
+export default function File({ setCurrentText, setActiveTab, setImportType }: IFile): JSX.Element {
   // Get uploaded text & move to the next screen for confirmation
   const onDropAccepted = useCallback(
     async ([file]: File[]) => {
@@ -62,11 +60,11 @@ export default function File({ setCurrentText, setActiveTab }: IFile): JSX.Eleme
 
       const text = type === "json" ? JSON.stringify(await new Response(file).json(), null, 4) : await file.text();
 
-      dispatch(updateImportType(type));
+      setImportType(type);
       setCurrentText(text);
       setActiveTab("Text");
     },
-    [dispatch, setCurrentText, setActiveTab]
+    [setImportType, setCurrentText, setActiveTab]
   );
 
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject, fileRejections } = useDropzone({

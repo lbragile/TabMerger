@@ -113,10 +113,7 @@ const EMPTY_TEXT = "Nothing to export";
 export default function Export(): JSX.Element {
   const dispatch = useDispatch();
   const { available } = useSelector((state) => state.groups);
-
-  const {
-    export: { file }
-  } = useSelector((state) => state.modal);
+  const { exportFile } = useSelector((state) => state.modal);
 
   const [activeTab, setActiveTab] = useState<"JSON" | "Text" | "Markdown" | "HTML" | "CSV">("JSON");
   const [overflow, setOverflow] = useState(false);
@@ -266,11 +263,11 @@ export default function Export(): JSX.Element {
       </Note>
 
       <ModalFooter
-        showSave={!!file}
+        showSave={!!exportFile}
         saveText="Export"
         handleSave={() => {
-          if (file) {
-            saveAs(file);
+          if (exportFile) {
+            saveAs(exportFile);
             dispatch(setVisibility(false));
           }
         }}

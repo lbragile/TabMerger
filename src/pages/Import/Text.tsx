@@ -3,18 +3,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
+import { TImportType } from "~/store/reducers/modal";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
 
 interface IText {
   currentText: string;
   setCurrentText: (arg: string) => void;
+  importType: TImportType;
+  setImportType: (arg: TImportType) => void;
 }
 
-export default function Text({ currentText, setCurrentText }: IText): JSX.Element {
+export default function Text({ currentText, setCurrentText, importType, setImportType }: IText): JSX.Element {
   const debouncedCurrentText = useDebounce(currentText, 250);
 
-  const { recomputeUploadType } = useParseText(debouncedCurrentText);
+  useParseText(debouncedCurrentText, importType);
 
   return (
     <>
@@ -25,7 +28,12 @@ export default function Text({ currentText, setCurrentText }: IText): JSX.Elemen
         value={currentText}
         onChange={({ target: { value } }) => {
           // If value changed due to a paste event, need to re-compute the upload type
-          recomputeUploadType(value);
+          let type: TImportType = "json";
+          if (/.+?\n={3,}\n/.test(value)) type = "plain";
+          else if (/\n*#{2,3}.+?\n/.test(value)) type = "markdown";
+          else if (/(".+?",?){4}\n/.test(value)) type = "csv";
+
+          if (type !== importType) setImportType(type);
 
           setCurrentText(value);
         }}

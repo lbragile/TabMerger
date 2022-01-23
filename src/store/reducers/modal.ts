@@ -36,15 +36,9 @@ export interface ISyncDataItem {
 export interface IModalState {
   visible: boolean;
   type: TModalType;
-  export: {
-    file: File | null;
-  };
-  import: {
-    type: TImportType;
-    formatted: IGroupItemState[];
-  };
+  exportFile: File | null;
+  importFile: IGroupItemState[];
   sync: {
-    type: TSyncType;
     currentData: ISyncDataItem[];
     possibleData: ISyncDataItem[];
   };
@@ -53,15 +47,9 @@ export interface IModalState {
 export const initModalState: IModalState = {
   visible: false,
   type: "about",
-  export: {
-    file: null
-  },
-  import: {
-    type: "json",
-    formatted: []
-  },
+  exportFile: null,
+  importFile: [],
   sync: {
-    type: "Upload",
     currentData: [],
     possibleData: []
   }
@@ -84,37 +72,13 @@ const modalReducer = (state = initModalState, action: TRootActions): IModalState
     case MODAL_ACTIONS.UPDATE_EXPORT_FILE:
       return {
         ...state,
-        export: {
-          ...state.export,
-          file: action.payload
-        }
+        exportFile: action.payload
       };
 
     case MODAL_ACTIONS.UPDATE_IMPORT_FORMATTED_GROUPS:
       return {
         ...state,
-        import: {
-          ...state.import,
-          formatted: action.payload
-        }
-      };
-
-    case MODAL_ACTIONS.UPDATE_IMPORT_TYPE:
-      return {
-        ...state,
-        import: {
-          ...state.import,
-          type: action.payload
-        }
-      };
-
-    case MODAL_ACTIONS.UPDATE_SYNC_TYPE:
-      return {
-        ...state,
-        sync: {
-          ...state.sync,
-          type: action.payload
-        }
+        importFile: action.payload
       };
 
     case MODAL_ACTIONS.UPDATE_SYNC_CURRENT_DATA:
