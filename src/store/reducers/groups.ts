@@ -186,14 +186,14 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
     }
 
     case GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND: {
-      const { index, source, combine } = action.payload;
+      const { index, source, combine, name } = action.payload;
 
       if (combine) {
         const srcWindowIdx = Number(source.droppableId.split("-")[1]);
         const groupIdx = Number(combine.draggableId.split("-")[1]);
 
         const removedTabs = available[index].windows[srcWindowIdx].tabs?.splice(source.index, 1);
-        const newWindow = createWindowWithTabs(removedTabs ?? []);
+        const newWindow = createWindowWithTabs(removedTabs ?? [], name);
         available[groupIdx].windows.unshift(newWindow);
 
         available[index].updatedAt = Date.now();
@@ -268,8 +268,9 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
     }
 
     case GROUPS_ACTIONS.ADD_WINDOW: {
-      const { index } = action.payload;
-      available[index].windows.push(createWindowWithTabs([]));
+      const { index, name } = action.payload;
+
+      available[index].windows.push(createWindowWithTabs([], name));
 
       return { ...state, available };
     }

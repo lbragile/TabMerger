@@ -13,7 +13,7 @@ import { useSelector } from "~/hooks/useRedux";
 import useSyncStorageInfo, { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
 import { TSyncType } from "~/store/reducers/modal";
 import Button from "~/styles/Button";
-import Message from "~/styles/Message";
+import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
 import { relativeTimeStr } from "~/utils/helper";

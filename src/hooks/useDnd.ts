@@ -4,7 +4,7 @@ import { BeforeCapture, DragStart, DropResult } from "react-beautiful-dnd";
 import useLocalStorage from "./useLocalStorage";
 import { useDispatch, useSelector } from "./useRedux";
 
-import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from "~/constants/defaults";
+import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import { isWindowDrag, isTabDrag, isGroupDrag } from "~/constants/dragRegExp";
 import { updateDragOriginType, updateIsDragging, resetDnDInfo } from "~/store/actions/dnd";
 import {
@@ -26,6 +26,7 @@ export default function useDnd() {
 
   const [groupTitle] = useLocalStorage("groupTitle", DEFAULT_GROUP_TITLE);
   const [groupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
+  const [windowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
 
   const {
     active: { index },
@@ -42,7 +43,7 @@ export default function useDnd() {
         toggleWindowTabsVisibility(draggableId, false);
       } else if (tabDrag) {
         // Add window to end of group (only if not in the first group)
-        index > 0 && dispatch(addWindow({ index }));
+        index > 0 && dispatch(addWindow({ index, name: windowTitle }));
       }
 
       if (windowDrag || tabDrag) {
@@ -50,7 +51,7 @@ export default function useDnd() {
         dispatch(addGroup({ title: groupTitle, color: groupColor }));
       }
     },
-    [dispatch, index, groupTitle, groupColor]
+    [dispatch, index, groupTitle, groupColor, windowTitle]
   );
 
   const onDragStart = useCallback(
@@ -72,7 +73,7 @@ export default function useDnd() {
       const isValidDndWithinGroup = destination && destination.droppableId !== "sidePanel";
 
       if (isTab) {
-        isValidCombine && dispatch(updateTabsFromSidePanelDnd(sidePanelPayload));
+        isValidCombine && dispatch(updateTabsFromSidePanelDnd({ ...sidePanelPayload, name: windowTitle }));
         isValidDndWithinGroup && dispatch(updateTabsFromGroupDnd(destPayload));
       } else if (isWindow) {
         // Re-show the tabs since the drag ended
@@ -101,7 +102,7 @@ export default function useDnd() {
         dispatch(clearEmptyGroups());
       }
     },
-    [dispatch, index, available]
+    [dispatch, index, available, windowTitle]
   );
 
   return { onBeforeCapture, onDragStart, onDragEnd };

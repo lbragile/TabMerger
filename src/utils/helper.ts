@@ -134,3 +134,17 @@ export const createGroup = (id: string, name = DEFAULT_GROUP_TITLE, color = DEFA
  * ... structure in exported markdown & html files
  */
 export const adjustHTMLTags = (str?: string) => str?.replace(/<([^>]*)>/g, "&lt;$1&gt;");
+
+/**
+ * Converts a given wildcard glob pattern to RegExp...
+ * ... also escapes all "Special RegExp" characters in the process
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+ */
+export function wildcardGlobToRegExp(glob: string) {
+  return new RegExp(
+    `^${glob
+      .split(/\*+/)
+      .map((item) => item.replace(/[|\\/\\{}()[\]^$+*?.]/g, "\\$&"))
+      .join(".*")}$`
+  );
+}

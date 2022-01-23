@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Link from "~/components/Link";
+import ModalFooter from "~/components/ModalFooter";
 import { CHROME_SHORTCUTS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import useLocalStorage from "~/hooks/useLocalStorage";
-import Message from "~/styles/Message";
+import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
 
 const Row = styled.div`
@@ -116,6 +117,8 @@ export default function Keyboard(): JSX.Element {
           <p>Empty fields are not active!</p>
         </div>
       </Note>
+
+      <ModalFooter showSave={false} closeText="Close" />
     </>
   );
 }

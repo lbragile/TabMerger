@@ -57,7 +57,7 @@ export const updateTabsFromGroupDnd = (payload: IWithinGroupDnd) => ({
   payload
 });
 
-export const updateTabsFromSidePanelDnd = (payload: ISidePanelDnd) => ({
+export const updateTabsFromSidePanelDnd = (payload: ISidePanelDnd & { name: string }) => ({
   type: GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND,
   payload
 });
@@ -83,7 +83,7 @@ export const deleteTab = (payload: { tabIndex: number; windowIndex: number; grou
 
 export const clearEmptyGroups = () => ({ type: GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS });
 
-export const addWindow = (payload: { index: number }) => ({ type: GROUPS_ACTIONS.ADD_WINDOW, payload });
+export const addWindow = (payload: { index: number; name: string }) => ({ type: GROUPS_ACTIONS.ADD_WINDOW, payload });
 
 export const clearEmptyWindows = (payload: { index: number }) => ({
   type: GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS,

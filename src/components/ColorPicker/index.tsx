@@ -6,7 +6,7 @@ import Hue from "./Hue";
 import Preview from "./Preview";
 import Sketch from "./Sketch";
 
-import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
+import { COLOR_PICKER_SWATCHES } from "~/constants/colors";
 import { extractRGBAFromStr, RGBtoHSV } from "~/utils/colorConvert";
 
 const Container = styled.div`
