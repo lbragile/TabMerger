@@ -1,10 +1,12 @@
 import { nanoid } from "nanoid";
 
-import { sortWindowsByFocus } from "./helper";
+import { getReadableTimestamp, sortWindowsByFocus } from "./helper";
 
 import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
 import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
+import { MAX_SYNC_ITEM_SIZE } from "~/constants/sync";
 import { IGroupItemState } from "~/store/reducers/groups";
+import { ISyncDataItem } from "~/store/reducers/modal";
 import { TSentResponse } from "~/typings/background";
 
 /**
@@ -42,3 +44,25 @@ export function setDefaultData(): void {
     chrome.storage.local.set({ active, available }, () => "");
   });
 }
+
+// Properly stores groups into very optimized sync items
+export const handleSyncUpload = (possibleData: ISyncDataItem[]) => {
+  chrome.storage.sync.clear(() => "");
+
+  let syncUpdated = false;
+  for (let i = 0; i < possibleData.length; i++) {
+    const group = possibleData[i];
+    const currentSize = group.name.length + JSON.stringify(group).length;
+    if (currentSize <= MAX_SYNC_ITEM_SIZE) {
+      syncUpdated = true;
+
+      // Short keys since they are not relevant for the download (save a few bytes to reduce limit constraint)
+      chrome.storage.sync.set({ [i]: { ...group, order: i } }, () => "");
+    }
+  }
+
+  // Update local storage upload sync timestamp (only if a sync occurred)
+  if (syncUpdated) {
+    chrome.storage.local.set({ lastSyncUpload: getReadableTimestamp() }, () => "");
+  }
+};

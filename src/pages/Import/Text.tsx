@@ -29,7 +29,7 @@ export default function Text({ currentText, setCurrentText, importType, setImpor
         onChange={({ target: { value } }) => {
           // If value changed due to a paste event, need to re-compute the upload type
           let type: TImportType = "json";
-          if (/.+?\n={3,}\n/.test(value)) type = "plain";
+          if (/.+?\n={3,}\n/.test(value)) type = "text";
           else if (/\n*#{2,3}.+?\n/.test(value)) type = "markdown";
           else if (/(".+?",?){4}\n/.test(value)) type = "csv";
 
@@ -42,7 +42,9 @@ export default function Text({ currentText, setCurrentText, importType, setImpor
       <Note>
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
-        <p>Each tab must have an associated URL (eg. {GOOGLE_HOMEPAGE})</p>
+        <div>
+          <p>Each tab must have an associated URL (eg. {GOOGLE_HOMEPAGE})</p>
+        </div>
       </Note>
     </>
   );

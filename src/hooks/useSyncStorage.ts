@@ -3,11 +3,12 @@ import { useCallback, useEffect } from "react";
 
 import { useDispatch } from "./useRedux";
 
-import { MAX_SYNC_GROUPS, MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_ITEM_SIZE } from "~/constants/sync";
+import { MAX_SYNC_GROUPS, MAX_SYNC_TABS_PER_GROUP } from "~/constants/sync";
 import { updateAvailable } from "~/store/actions/groups";
 import { updateSyncCurrentData, updateSyncPossibleData } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
+import { handleSyncUpload } from "~/utils/background";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
 
 export default function useSyncStorageInfo(activeTab: "Download" | "Upload", available: IGroupItemState[]) {
@@ -73,24 +74,7 @@ export default function useSyncStorageInfo(activeTab: "Download" | "Upload", ava
 
 export function useSyncStorageUpload(possibleData: ISyncDataItem[]) {
   const syncUpload = useCallback(() => {
-    chrome.storage.sync.clear();
-
-    let syncUpdated = false;
-    for (let i = 0; i < possibleData.length; i++) {
-      const group = possibleData[i];
-      const currentSize = group.name.length + JSON.stringify(group).length;
-      if (currentSize <= MAX_SYNC_ITEM_SIZE) {
-        syncUpdated = true;
-
-        // Short keys since they are not relevant for the download (save a few bytes to reduce limit constraint)
-        chrome.storage.sync.set({ [i]: { ...group, order: i } }, () => "");
-      }
-    }
-
-    // Update local storage upload sync timestamp (only if a sync occurred)
-    if (syncUpdated) {
-      chrome.storage.local.set({ lastSyncUpload: getReadableTimestamp() }, () => "");
-    }
+    handleSyncUpload(possibleData);
   }, [possibleData]);
 
   return syncUpload;

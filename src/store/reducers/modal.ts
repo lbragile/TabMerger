@@ -15,7 +15,9 @@ export const MODAL_ACTIONS = {
 
 export type TModalType = "import" | "export" | "sync" | "settings" | "about";
 
-export type TImportType = "json" | "plain" | "markdown" | "csv";
+export type TImportType = "json" | "text" | "markdown" | "csv";
+
+export type TExportType = TImportType | "html";
 
 export type TSyncType = "Upload" | "Download";
 

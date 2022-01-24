@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Link from "~/components/Link";
@@ -77,7 +77,7 @@ export default function Keyboard(): JSX.Element {
   useEffect(() => {
     chrome.commands.getAll((commands) =>
       setAllCommands(
-        [{ description: "Activate Extension", shortcut: "Alt + T", name: "_execute_action" }, ...commands].sort(
+        [{ description: "Activate Extension", shortcut: "Alt+T", name: "_execute_action" }, ...commands].sort(
           (a, b) => a.description?.localeCompare(b.description ?? "") ?? 0
         )
       )
@@ -100,7 +100,15 @@ export default function Keyboard(): JSX.Element {
       <ShortcutGrid>
         {allCommands.map((command, i) => (
           <ShortcutItem key={(command.name ?? "") + i} $disabled={command.shortcut === ""}>
-            <span>{command.shortcut}</span> {command.description}
+            <div>
+              {command.shortcut?.split("+")?.map((item, i, array) => (
+                <Fragment key={item + i}>
+                  <span>{item}</span>
+                  {i !== array.length - 1 ? "+" : ""}
+                </Fragment>
+              ))}
+            </div>{" "}
+            {command.description}
           </ShortcutItem>
         ))}
       </ShortcutGrid>

@@ -55,7 +55,7 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
         : /\.csv$/.test(name)
         ? "csv"
         : /\.txt$/.test(name)
-        ? "plain"
+        ? "text"
         : "markdown";
 
       const text = type === "json" ? JSON.stringify(await new Response(file).json(), null, 4) : await file.text();
@@ -124,7 +124,9 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
       <Note>
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
-        <p>Upon successful upload, you will have a chance to confirm!</p>
+        <div>
+          <p>Upon successful upload, you will have a chance to confirm!</p>
+        </div>
       </Note>
     </>
   );

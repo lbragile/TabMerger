@@ -12,6 +12,7 @@ import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { setVisibility, updateExportFile } from "~/store/actions/modal";
+import { TExportType } from "~/store/reducers/modal";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
 
@@ -115,7 +116,7 @@ export default function Export(): JSX.Element {
   const { available } = useSelector((state) => state.groups);
   const { exportFile } = useSelector((state) => state.modal);
 
-  const [activeTab, setActiveTab] = useState<"JSON" | "Text" | "Markdown" | "HTML" | "CSV">("JSON");
+  const [activeTab, setActiveTab] = useState<TExportType>("json");
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -158,13 +159,13 @@ export default function Export(): JSX.Element {
   const text = useMemo(() => {
     if (selectedGroups.length === 0) return EMPTY_TEXT;
 
-    return activeTab === "JSON"
+    return activeTab === "json"
       ? JSON.stringify({ available: selectedGroups }, null, 4)
-      : activeTab === "Text"
+      : activeTab === "text"
       ? getRegularText()
-      : activeTab === "Markdown"
+      : activeTab === "markdown"
       ? getMarkdownText()
-      : activeTab === "HTML"
+      : activeTab === "html"
       ? getHTMLText()
       : getCSVText();
   }, [activeTab, selectedGroups, getRegularText, getMarkdownText, getHTMLText, getCSVText]);
@@ -177,13 +178,13 @@ export default function Export(): JSX.Element {
   useEffect(() => {
     if (text !== EMPTY_TEXT) {
       const [type, extension] =
-        activeTab === "JSON"
+        activeTab === "json"
           ? ["application/json", ".json"]
-          : activeTab === "Text"
+          : activeTab === "text"
           ? ["text/plain", ".txt"]
-          : activeTab === "Markdown"
+          : activeTab === "markdown"
           ? ["text/markdown", ".md"]
-          : activeTab === "HTML"
+          : activeTab === "html"
           ? ["text/html", ".html"]
           : ["text/csv", ".csv"];
 
@@ -199,7 +200,7 @@ export default function Export(): JSX.Element {
     <>
       <ModalHeader title="TabMerger Export" />
 
-      <Selector opts={["JSON", "Text", "Markdown", "CSV", "HTML"]} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Selector opts={["json", "text", "markdown", "csv", "html"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <Row>
         <Row>
@@ -212,11 +213,11 @@ export default function Export(): JSX.Element {
                   type="checkbox"
                   id={lowerText}
                   name={lowerText}
-                  checked={activeTab === "JSON" || checked}
+                  checked={activeTab === "json" || checked}
                   onChange={() => handleCheckboxChange(text)}
                   disabled={
-                    (["Titles", "URLs"].includes(text) && ["JSON", "HTML"].includes(activeTab)) ||
-                    (text === "Titles" && activeTab === "Markdown")
+                    (["Titles", "URLs"].includes(text) && ["json", "html"].includes(activeTab)) ||
+                    (text === "Titles" && activeTab === "markdown")
                   }
                 />
                 <label htmlFor={lowerText}>{text}</label>
@@ -258,7 +259,7 @@ export default function Export(): JSX.Element {
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
         <div>
-          <p>Files are saved to your</p> <Link href={DOWNLOADS_URL} title="Downloads Folder" />
+          <span>Files are saved to your</span> <Link href={DOWNLOADS_URL} title="Downloads Folder" />
         </div>
       </Note>
 

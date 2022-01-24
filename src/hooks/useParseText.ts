@@ -60,7 +60,7 @@ export default function useParseText(debouncedText: string, importType: TImportT
           // Clear the formatted groups if an invalid upload is detected
           dispatch(updateImportFormattedGroups([]));
         }
-      } else if (importType === "plain") {
+      } else if (importType === "text") {
         groups = formatPlain(debouncedText);
       } else if (importType === "markdown") {
         // Transform the markdown into plain text format, then use the existing parser to create groups

@@ -8,7 +8,10 @@ export const Note = styled.div`
   grid-template-columns: auto 1fr;
   align-items: center;
 
-  & p {
-    opacity: 0.75;
+  & div {
+    & > p,
+    & > span {
+      opacity: 0.75;
+    }
   }
 `;

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { saveAs } from "file-saver";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import ModalFooter from "~/components/ModalFooter";
@@ -34,6 +34,8 @@ export default function Sync(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TSyncType>("Upload");
   const [disableSubmit, setDisableSubmit] = useState(false);
 
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
   const {
     sync: { currentData, possibleData }
   } = useSelector((state) => state.modal);
@@ -54,6 +56,19 @@ export default function Sync(): JSX.Element {
   const [lastSyncDownload] = useLocalStorage("lastSyncDownload", "");
   const activeLastSync = activeTab === "Upload" ? lastSyncUpload : lastSyncDownload;
   const relativeTime = relativeTimeStr(new Date(activeLastSync).getTime());
+
+  // Timeout need sto be cleared if the user closes the modal to avoid memory leaks
+  useEffect(() => {
+    const handleRemoveTimeout = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+
+    handleRemoveTimeout();
+
+    return () => handleRemoveTimeout();
+  }, []);
 
   const handlePreviewSyncData = () => {
     const data = [activeTab === "Upload" ? getHTMLTextPossible() : getHTMLTextCurrent()];
@@ -115,7 +130,7 @@ export default function Sync(): JSX.Element {
            * @see https://developer.chrome.com/docs/extensions/reference/storage/#property-sync-sync-MAX_WRITE_OPERATIONS_PER_MINUTE
            */
           setDisableSubmit(true);
-          setTimeout(() => setDisableSubmit(false), 3000);
+          timeoutRef.current = setTimeout(() => setDisableSubmit(false), 3000);
         }}
       />
     </>
