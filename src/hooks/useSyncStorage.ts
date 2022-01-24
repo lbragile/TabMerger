@@ -1,17 +1,17 @@
 import { nanoid } from "nanoid";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useDispatch } from "./useRedux";
 
 import { updateAvailable } from "~/store/actions/groups";
-import { updateSyncCurrentData, updateSyncPossibleData } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
-import { ISyncDataItem } from "~/store/reducers/modal";
+import { ISyncDataItem } from "~/typings/settings";
 import { prepareGroupsForSync, handleSyncUpload } from "~/utils/background";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
 
 export default function useSyncStorageInfo(activeTab: "Download" | "Upload", available: IGroupItemState[]) {
-  const dispatch = useDispatch();
+  const [possibleData, setPossibleData] = useState<ISyncDataItem[]>([]);
+  const [currentData, setCurrentData] = useState<ISyncDataItem[]>([]);
 
   useEffect(() => {
     if (activeTab === "Download") {
@@ -22,15 +22,17 @@ export default function useSyncStorageInfo(activeTab: "Download" | "Upload", ava
         const sortedGroupsArr = groupsArr.sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0));
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const newSyncData: ISyncDataItem[] = sortedGroupsArr.map(({ order, ...rest }) => rest);
-        dispatch(updateSyncCurrentData(newSyncData));
-        dispatch(updateSyncPossibleData([]));
+        setCurrentData(newSyncData);
+        setPossibleData([]);
       });
     } else {
       const syncedGroups = prepareGroupsForSync(available);
-      dispatch(updateSyncPossibleData(syncedGroups));
-      dispatch(updateSyncCurrentData([]));
+      setPossibleData(syncedGroups);
+      setCurrentData([]);
     }
-  }, [dispatch, activeTab, available]);
+  }, [activeTab, available]);
+
+  return { possibleData, currentData };
 }
 
 export function useSyncStorageUpload(possibleData: ISyncDataItem[]) {

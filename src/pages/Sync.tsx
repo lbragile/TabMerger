@@ -11,11 +11,11 @@ import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
 import useSyncStorageInfo, { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
-import { TSyncType } from "~/store/reducers/modal";
 import Button from "~/styles/Button";
 import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
+import { TSyncType } from "~/typings/settings";
 import { relativeTimeStr } from "~/utils/helper";
 
 const StyledMessage = styled(Message)<{ $error: boolean; $recent: boolean }>`
@@ -36,11 +36,9 @@ export default function Sync(): JSX.Element {
 
   const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const {
-    sync: { currentData, possibleData }
-  } = useSelector((state) => state.modal);
-
   const { available } = useSelector((state) => state.groups);
+
+  const { possibleData, currentData } = useSyncStorageInfo(activeTab, available);
 
   const syncAmount = (activeTab === "Upload" ? possibleData : currentData).length;
 
@@ -49,8 +47,6 @@ export default function Sync(): JSX.Element {
 
   const syncUpload = useSyncStorageUpload(possibleData);
   const syncDownload = useSyncStorageDownload(currentData, available);
-
-  useSyncStorageInfo(activeTab, available);
 
   const [lastSyncUpload] = useLocalStorage("lastSyncUpload", "");
   const [lastSyncDownload] = useLocalStorage("lastSyncDownload", "");

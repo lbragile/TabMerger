@@ -1,16 +1,17 @@
 import { nanoid } from "nanoid";
 import { useCallback, useEffect } from "react";
 
-import { useDispatch } from "./useRedux";
-
-import { updateImportFormattedGroups } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
-import { TImportType } from "~/store/reducers/modal";
+import { TImportType } from "~/typings/settings";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs } from "~/utils/helper";
 
-export default function useParseText(debouncedText: string, importType: TImportType) {
-  const dispatch = useDispatch();
+interface IParseText {
+  debouncedText: string;
+  importType: TImportType;
+  setImportFile: (arg: IGroupItemState[]) => void;
+}
 
+export default function useParseText({ debouncedText, importType, setImportFile }: IParseText) {
   const formatPlain = useCallback((text: string) => {
     const groups: IGroupItemState[] = [];
 
@@ -58,7 +59,7 @@ export default function useParseText(debouncedText: string, importType: TImportT
           groups[0].windows.forEach((w) => (w.focused = false));
         } catch (err) {
           // Clear the formatted groups if an invalid upload is detected
-          dispatch(updateImportFormattedGroups([]));
+          setImportFile([]);
         }
       } else if (importType === "text") {
         groups = formatPlain(debouncedText);
@@ -99,8 +100,8 @@ export default function useParseText(debouncedText: string, importType: TImportT
       }
 
       if (groups) {
-        dispatch(updateImportFormattedGroups(groups));
+        setImportFile(groups);
       }
     }
-  }, [dispatch, debouncedText, importType, formatPlain]);
+  }, [debouncedText, importType, formatPlain, setImportFile]);
 }

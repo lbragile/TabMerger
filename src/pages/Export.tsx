@@ -13,9 +13,9 @@ import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { setVisibility } from "~/store/actions/modal";
-import { TExportType } from "~/store/reducers/modal";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
+import { TExportType } from "~/typings/settings";
 import { getReadableTimestamp } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`

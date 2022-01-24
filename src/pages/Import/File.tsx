@@ -3,9 +3,9 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import styled, { css } from "styled-components";
 
-import { TImportType } from "~/store/reducers/modal";
 import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
+import { TImportType } from "~/typings/settings";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   height: 300px;

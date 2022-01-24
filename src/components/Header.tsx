@@ -11,7 +11,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateInputValue, setFilterChoice, setFocused } from "~/store/actions/header";
 import { setModalType, setVisibility } from "~/store/actions/modal";
-import { TModalType } from "~/store/reducers/modal";
+import { TModalType } from "~/typings/settings";
 import { createActiveTab } from "~/utils/helper";
 
 const Flex = styled.div`

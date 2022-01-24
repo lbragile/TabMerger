@@ -8,25 +8,25 @@ import ModalHeader from "~/components/ModalHeader";
 import Selector from "~/components/Selector";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateAvailable, updateActive } from "~/store/actions/groups";
-import { setVisibility, updateImportFormattedGroups } from "~/store/actions/modal";
-import { TImportType } from "~/store/reducers/modal";
+import { setVisibility } from "~/store/actions/modal";
+import { IGroupItemState } from "~/store/reducers/groups";
+import { TImportType } from "~/typings/settings";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
 
   const { available } = useSelector((state) => state.groups);
 
-  const { importFile } = useSelector((state) => state.modal);
-
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
   const [currentText, setCurrentText] = useState("");
   const [importType, setImportType] = useState<TImportType>("json");
+  const [importFile, setImportFile] = useState<IGroupItemState[]>([]);
 
   // Reset the uploaded text & formatted groups if the activeTab is changed
   useEffect(() => {
     if (activeTab === "File") {
       setCurrentText("");
-      dispatch(updateImportFormattedGroups([]));
+      setImportFile([]);
     }
   }, [dispatch, activeTab]);
 
@@ -44,6 +44,7 @@ export default function Import(): JSX.Element {
           setCurrentText={setCurrentText}
           importType={importType}
           setImportType={setImportType}
+          setImportFile={setImportFile}
         />
       )}
 

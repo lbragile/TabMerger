@@ -3,21 +3,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
-import { TImportType } from "~/store/reducers/modal";
+import { IGroupItemState } from "~/store/reducers/groups";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
+import { TImportType } from "~/typings/settings";
 
 interface IText {
   currentText: string;
   setCurrentText: (arg: string) => void;
   importType: TImportType;
   setImportType: (arg: TImportType) => void;
+  setImportFile: (arg: IGroupItemState[]) => void;
 }
 
-export default function Text({ currentText, setCurrentText, importType, setImportType }: IText): JSX.Element {
+export default function Text({
+  currentText,
+  setCurrentText,
+  importType,
+  setImportType,
+  setImportFile
+}: IText): JSX.Element {
   const debouncedCurrentText = useDebounce(currentText, 250);
 
-  useParseText(debouncedCurrentText, importType);
+  useParseText({ debouncedText: debouncedCurrentText, importType, setImportFile });
 
   return (
     <>
