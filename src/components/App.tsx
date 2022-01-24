@@ -18,7 +18,7 @@ import {
   faUpload
 } from "@fortawesome/free-solid-svg-icons";
 import { DragDropContext } from "react-beautiful-dnd";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 
 import Header from "./Header";
 import SidePanel from "./SidePanel";
@@ -32,7 +32,6 @@ import { useSelector } from "~/hooks/useRedux";
 import useUpdateInfo from "~/hooks/useUpdateInfo";
 import useUpdateWindows from "~/hooks/useUpdateWindows";
 import { GlobalStyle } from "~/styles/Global";
-import Theme from "~/styles/Theme";
 
 const Container = styled.div`
   width: 780px;
@@ -40,6 +39,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: ${({ theme }) => theme.colors.background};
 `;
 
 const MainArea = styled.div`
@@ -68,19 +68,17 @@ const App = (): JSX.Element => {
     <Container>
       <GlobalStyle />
 
-      <ThemeProvider theme={Theme}>
-        <Header />
+      <Header />
 
-        <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-          {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
-            <MainArea>
-              <SidePanel />
+      <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
+          <MainArea>
+            <SidePanel />
 
-              <Windows />
-            </MainArea>
-          )}
-        </DragDropContext>
-      </ThemeProvider>
+            <Windows />
+          </MainArea>
+        )}
+      </DragDropContext>
     </Container>
   );
 };
