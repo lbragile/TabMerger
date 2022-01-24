@@ -1,6 +1,6 @@
 import { TABMERGER_SURVEY } from "./constants/urls";
-import { ISyncDataItem } from "./store/reducers/modal";
-import { handleSyncUpload, setDefaultData } from "./utils/background";
+import { prepareGroupsForSync, handleSyncUpload, setDefaultData } from "./utils/background";
+import { getReadableTimestamp } from "./utils/helper";
 
 const handleMessage = (req: { type: string }) => {
   switch (req.type) {
@@ -74,6 +74,7 @@ chrome.downloads.onChanged.addListener((downloadDelta) => {
   if (downloadDelta.state?.current === "complete") {
     try {
       chrome.downloads.setShelfEnabled(true);
+      chrome.storage.local.set({ lastExport: getReadableTimestamp() }, () => "");
     } catch (err) {
       /**
        * Enabling the shelf while at least one other extension has disabled it will return an error through runtime.lastError
@@ -116,7 +117,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     });
   } else if (alarm.name === "autoSyncAlarm") {
     chrome.storage.local.get(["available"], (result) => {
-      handleSyncUpload(result.available as ISyncDataItem[]);
+      handleSyncUpload(prepareGroupsForSync(result.available));
     });
   }
 });

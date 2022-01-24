@@ -4,7 +4,7 @@ import { getReadableTimestamp, sortWindowsByFocus } from "./helper";
 
 import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
 import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
-import { MAX_SYNC_ITEM_SIZE } from "~/constants/sync";
+import { MAX_SYNC_GROUPS, MAX_SYNC_ITEM_SIZE, MAX_SYNC_TABS_PER_GROUP } from "~/constants/sync";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
 import { TSentResponse } from "~/typings/background";
@@ -45,7 +45,10 @@ export function setDefaultData(): void {
   });
 }
 
-// Properly stores groups into very optimized sync items
+/**
+ * Properly stores groups into very optimized sync items
+ * @note Also performed in the extension popup script
+ */
 export const handleSyncUpload = (possibleData: ISyncDataItem[]) => {
   chrome.storage.sync.clear(() => "");
 
@@ -65,4 +68,51 @@ export const handleSyncUpload = (possibleData: ISyncDataItem[]) => {
   if (syncUpdated) {
     chrome.storage.local.set({ lastSyncUpload: getReadableTimestamp() }, () => "");
   }
+};
+
+/**
+ * Strips unnecessary information from each group, keeping only what is needed for a sync operation
+ * @note Also performed in the extension popup script
+ */
+export const prepareGroupsForSync = (available: IGroupItemState[]) => {
+  const syncedGroups: ISyncDataItem[] = [];
+
+  // Only sync stored groups (index > 1)
+  const storedGroups = available.slice(1);
+  for (let i = 0; i < Math.min(storedGroups.length, MAX_SYNC_GROUPS); i++) {
+    syncedGroups.push({ name: storedGroups[i].name, color: storedGroups[i].color, windows: [] });
+
+    let tabCount = 0;
+    const currentWindows = storedGroups[i].windows;
+    for (let j = 0; j < currentWindows.length; j++) {
+      const windowTabs = currentWindows[j].tabs;
+      if (!windowTabs) continue;
+      if (tabCount > MAX_SYNC_TABS_PER_GROUP) break;
+
+      const numTabsInWindow = windowTabs.length;
+      let newTabs: chrome.tabs.Tab[] = [];
+      if (tabCount + numTabsInWindow > MAX_SYNC_TABS_PER_GROUP) {
+        const numTabsToAdd = MAX_SYNC_TABS_PER_GROUP - tabCount;
+        newTabs = windowTabs.slice(0, numTabsToAdd);
+      } else {
+        newTabs = currentWindows[j].tabs ?? [];
+      }
+
+      tabCount += numTabsInWindow;
+
+      /**
+       * Need to strip some unnecessary information which can be large in some cases to maximize tabs per sync item
+       * @example tab.favIconUrl can be a very long string, but it can be reconstructed from the tab.url
+       */
+      const { incognito, starred, name } = currentWindows[j];
+      syncedGroups[i].windows.push({
+        incognito,
+        starred,
+        name,
+        tabs: newTabs.map(({ title, url }) => ({ title, url: url?.split("?")[0] }))
+      });
+    }
+  }
+
+  return syncedGroups;
 };

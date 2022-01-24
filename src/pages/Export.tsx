@@ -10,11 +10,13 @@ import ModalHeader from "~/components/ModalHeader";
 import Selector from "~/components/Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
+import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { setVisibility, updateExportFile } from "~/store/actions/modal";
+import { setVisibility } from "~/store/actions/modal";
 import { TExportType } from "~/store/reducers/modal";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
+import { getReadableTimestamp } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`
   display: none;
@@ -114,11 +116,13 @@ const EMPTY_TEXT = "Nothing to export";
 export default function Export(): JSX.Element {
   const dispatch = useDispatch();
   const { available } = useSelector((state) => state.groups);
-  const { exportFile } = useSelector((state) => state.modal);
 
   const [activeTab, setActiveTab] = useState<TExportType>("json");
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [exportFile, setExportFile] = useState<File | null>(null);
+
+  const [, setLastExport] = useLocalStorage("lastExport", "");
 
   const selectOpts = useMemo(
     () => available.slice(1).map((group) => ({ label: group.name, value: group })),
@@ -190,11 +194,11 @@ export default function Export(): JSX.Element {
 
       const newFile = new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type });
 
-      dispatch(updateExportFile(newFile));
+      setExportFile(newFile);
     } else {
-      dispatch(updateExportFile(null));
+      setExportFile(null);
     }
-  }, [dispatch, text, activeTab]);
+  }, [text, activeTab]);
 
   return (
     <>
@@ -269,6 +273,7 @@ export default function Export(): JSX.Element {
         handleSave={() => {
           if (exportFile) {
             saveAs(exportFile);
+            setLastExport(getReadableTimestamp());
             dispatch(setVisibility(false));
           }
         }}

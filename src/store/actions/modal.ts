@@ -3,8 +3,6 @@ import { MODAL_ACTIONS, ISyncDataItem, TModalType } from "~/store/reducers/modal
 
 export const setModalType = (payload: TModalType) => ({ type: MODAL_ACTIONS.SET_MODAL_TYPE, payload });
 
-export const updateExportFile = (payload: File | null) => ({ type: MODAL_ACTIONS.UPDATE_EXPORT_FILE, payload });
-
 export const updateImportFormattedGroups = (payload: IGroupItemState[]) => ({
   type: MODAL_ACTIONS.UPDATE_IMPORT_FORMATTED_GROUPS,
   payload

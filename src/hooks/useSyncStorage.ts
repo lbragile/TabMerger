@@ -3,12 +3,11 @@ import { useCallback, useEffect } from "react";
 
 import { useDispatch } from "./useRedux";
 
-import { MAX_SYNC_GROUPS, MAX_SYNC_TABS_PER_GROUP } from "~/constants/sync";
 import { updateAvailable } from "~/store/actions/groups";
 import { updateSyncCurrentData, updateSyncPossibleData } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
 import { ISyncDataItem } from "~/store/reducers/modal";
-import { handleSyncUpload } from "~/utils/background";
+import { prepareGroupsForSync, handleSyncUpload } from "~/utils/background";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
 
 export default function useSyncStorageInfo(activeTab: "Download" | "Upload", available: IGroupItemState[]) {
@@ -27,45 +26,7 @@ export default function useSyncStorageInfo(activeTab: "Download" | "Upload", ava
         dispatch(updateSyncPossibleData([]));
       });
     } else {
-      const syncedGroups: ISyncDataItem[] = [];
-
-      // Only sync stored groups (index > 1)
-      const storedGroups = available.slice(1);
-      for (let i = 0; i < Math.min(storedGroups.length, MAX_SYNC_GROUPS); i++) {
-        syncedGroups.push({ name: storedGroups[i].name, color: storedGroups[i].color, windows: [] });
-
-        let tabCount = 0;
-        const currentWindows = storedGroups[i].windows;
-        for (let j = 0; j < currentWindows.length; j++) {
-          const windowTabs = currentWindows[j].tabs;
-          if (!windowTabs) continue;
-          if (tabCount > MAX_SYNC_TABS_PER_GROUP) break;
-
-          const numTabsInWindow = windowTabs.length;
-          let newTabs: chrome.tabs.Tab[] = [];
-          if (tabCount + numTabsInWindow > MAX_SYNC_TABS_PER_GROUP) {
-            const numTabsToAdd = MAX_SYNC_TABS_PER_GROUP - tabCount;
-            newTabs = windowTabs.slice(0, numTabsToAdd);
-          } else {
-            newTabs = currentWindows[j].tabs ?? [];
-          }
-
-          tabCount += numTabsInWindow;
-
-          /**
-           * Need to strip some unnecessary information which can be large in some cases to maximize tabs per sync item
-           * @example tab.favIconUrl can be a very long string, but it can be reconstructed from the tab.url
-           */
-          const { incognito, starred, name } = currentWindows[j];
-          syncedGroups[i].windows.push({
-            incognito,
-            starred,
-            name,
-            tabs: newTabs.map(({ title, url }) => ({ title, url: url?.split("?")[0] }))
-          });
-        }
-      }
-
+      const syncedGroups = prepareGroupsForSync(available);
       dispatch(updateSyncPossibleData(syncedGroups));
       dispatch(updateSyncCurrentData([]));
     }

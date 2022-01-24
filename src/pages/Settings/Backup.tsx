@@ -62,17 +62,20 @@ export default function Backup(): JSX.Element {
   const [syncFreq, setSyncFreq] = useLocalStorage("syncFreq", 30);
 
   const [lastSyncUpload] = useLocalStorage("lastSyncUpload", "");
+  const [lastExport] = useLocalStorage("lastExport", "");
 
-  const relativeTime = relativeTimeStr(new Date(lastSyncUpload).getTime());
+  const [relativeTimeExport, relativeTimeSync] = [lastExport, lastSyncUpload].map((item) =>
+    relativeTimeStr(new Date(item).getTime())
+  );
 
   return (
     <>
       <Header>Automatic Export</Header>
 
-      <StyledMessage $error={lastSyncUpload === ""} $recent={relativeTime.includes("<")}>
-        {lastSyncUpload === ""
+      <StyledMessage $error={lastExport === ""} $recent={relativeTimeExport.includes("<")}>
+        {lastExport === ""
           ? `Nothing was exported... yet`
-          : `Last exported on ${lastSyncUpload} (${relativeTime} ago)`}
+          : `Last exported on ${lastExport} (${relativeTimeExport} ago)`}
       </StyledMessage>
 
       <CheckboxContainer>
@@ -114,8 +117,10 @@ export default function Backup(): JSX.Element {
 
       <Header>Automatic Sync</Header>
 
-      <StyledMessage $error={lastSyncUpload === ""} $recent={relativeTime.includes("<")}>
-        {lastSyncUpload === "" ? `Nothing was synced... yet` : `Last synced on ${lastSyncUpload} (${relativeTime} ago)`}
+      <StyledMessage $error={lastSyncUpload === ""} $recent={relativeTimeSync.includes("<")}>
+        {lastSyncUpload === ""
+          ? `Nothing was synced... yet`
+          : `Last synced on ${lastSyncUpload} (${relativeTimeSync} ago)`}
       </StyledMessage>
 
       <CheckboxContainer>

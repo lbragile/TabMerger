@@ -4,10 +4,8 @@ import { TRootActions } from "~/typings/redux";
 
 export const MODAL_ACTIONS = {
   SET_MODAL_TYPE: "SET_MODAL_TYPE",
-  UPDATE_EXPORT_FILE: "UPDATE_EXPORT_FILE",
   UPDATE_IMPORT_FORMATTED_GROUPS: "UPDATE_IMPORT_FORMATTED_GROUPS",
   UPDATE_IMPORT_TYPE: "UPDATE_IMPORT_TYPE",
-  UPDATE_SYNC_TYPE: "UPDATE_SYNC_TYPE",
   UPDATE_SYNC_CURRENT_DATA: "UPDATE_SYNC_CURRENT_DATA",
   UPDATE_SYNC_POSSIBLE_DATA: "UPDATE_SYNC_POSSIBLE_DATA",
   SET_VISIBILITY: "SET_VISIBILITY"
@@ -38,7 +36,6 @@ export interface ISyncDataItem {
 export interface IModalState {
   visible: boolean;
   type: TModalType;
-  exportFile: File | null;
   importFile: IGroupItemState[];
   sync: {
     currentData: ISyncDataItem[];
@@ -49,7 +46,6 @@ export interface IModalState {
 export const initModalState: IModalState = {
   visible: false,
   type: "about",
-  exportFile: null,
   importFile: [],
   sync: {
     currentData: [],
@@ -69,12 +65,6 @@ const modalReducer = (state = initModalState, action: TRootActions): IModalState
       return {
         ...state,
         type: action.payload
-      };
-
-    case MODAL_ACTIONS.UPDATE_EXPORT_FILE:
-      return {
-        ...state,
-        exportFile: action.payload
       };
 
     case MODAL_ACTIONS.UPDATE_IMPORT_FORMATTED_GROUPS:
