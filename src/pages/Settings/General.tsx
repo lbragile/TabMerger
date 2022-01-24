@@ -3,7 +3,7 @@ import { useState, useRef, useMemo } from "react";
 import styled from "styled-components";
 
 import ColorPicker from "~/components/ColorPicker";
-import ModalFooter from "~/components/ModalFooter";
+import { ModalFooter } from "~/components/Modal";
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import { DEFAULT_FAVICON_URL, GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";

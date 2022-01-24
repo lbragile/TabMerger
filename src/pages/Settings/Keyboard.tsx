@@ -3,7 +3,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Link from "~/components/Link";
-import ModalFooter from "~/components/ModalFooter";
+import { ModalFooter } from "~/components/Modal";
 import { CHROME_SHORTCUTS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import useLocalStorage from "~/hooks/useLocalStorage";

@@ -3,8 +3,7 @@ import { saveAs } from "file-saver";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-import ModalFooter from "~/components/ModalFooter";
-import ModalHeader from "~/components/ModalHeader";
+import { ModalFooter, ModalHeader } from "~/components/Modal";
 import Selector from "~/components/Selector";
 import { MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_GROUPS } from "~/constants/sync";
 import useFormatText from "~/hooks/useFormatText";

@@ -5,8 +5,7 @@ import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
 import Link from "~/components/Link";
-import ModalFooter from "~/components/ModalFooter";
-import ModalHeader from "~/components/ModalHeader";
+import { ModalFooter, ModalHeader } from "~/components/Modal";
 import Selector from "~/components/Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";

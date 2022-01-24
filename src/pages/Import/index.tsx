@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import File from "./File";
 import Text from "./Text";
 
-import ModalFooter from "~/components/ModalFooter";
-import ModalHeader from "~/components/ModalHeader";
+import { ModalFooter, ModalHeader } from "~/components/Modal";
 import Selector from "~/components/Selector";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateAvailable, updateActive } from "~/store/actions/groups";

@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Link from "~/components/Link";
-import ModalFooter from "~/components/ModalFooter";
+import { ModalFooter } from "~/components/Modal";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
-import { relativeTimeStr } from "~/utils/helper";
+import { pluralize, relativeTimeStr } from "~/utils/helper";
 
 const Header = styled.h3`
   padding: 4px;
@@ -55,18 +56,29 @@ const StyledMessage = styled(Message)<{ $error: boolean; $recent: boolean }>`
 
 export default function Backup(): JSX.Element {
   const [autoExport, setAutoExport] = useLocalStorage("autoExport", false);
-  const [exportFreq, setExportFreq] = useLocalStorage("exportFreq", 30);
+  const [exportFreq, setExportFreq] = useLocalStorage("exportFreq", 10);
   const [exportMax, setExportMax] = useLocalStorage("exportMax", 2);
-
   const [autoSync, setAutoSync] = useLocalStorage("autoSync", false);
-  const [syncFreq, setSyncFreq] = useLocalStorage("syncFreq", 30);
+  const [syncFreq, setSyncFreq] = useLocalStorage("syncFreq", 10);
 
   const [lastSyncUpload] = useLocalStorage("lastSyncUpload", "");
   const [lastExport] = useLocalStorage("lastExport", "");
 
+  const [localAutoExport, setLocalAutoExport] = useState(autoExport);
+  const [localExportFreq, setLocalExportFreq] = useState(exportFreq);
+  const [localExportMax, setLocalExportMax] = useState(exportMax);
+  const [localAutoSync, setLocalAutoSync] = useState(autoSync);
+  const [localSyncFreq, setLocalSyncFreq] = useState(syncFreq);
+
   const [relativeTimeExport, relativeTimeSync] = [lastExport, lastSyncUpload].map((item) =>
     relativeTimeStr(new Date(item).getTime())
   );
+
+  useEffect(() => setLocalAutoExport(autoExport), [autoExport]);
+  useEffect(() => setLocalExportFreq(exportFreq), [exportFreq]);
+  useEffect(() => setLocalExportMax(exportMax), [exportMax]);
+  useEffect(() => setLocalAutoSync(autoSync), [autoSync]);
+  useEffect(() => setLocalSyncFreq(syncFreq), [syncFreq]);
 
   return (
     <>
@@ -83,8 +95,8 @@ export default function Backup(): JSX.Element {
           type="checkbox"
           id="autoExport"
           name="autoExport"
-          checked={autoExport}
-          onChange={() => setAutoExport(!autoExport)}
+          checked={localAutoExport}
+          onChange={() => setLocalAutoExport(!localAutoExport)}
         />
         <label htmlFor="autoExport">Enable Automatic Export</label>
       </CheckboxContainer>
@@ -95,11 +107,12 @@ export default function Backup(): JSX.Element {
           type="number"
           step="1"
           min="1"
-          max="1440"
-          value={exportFreq}
-          onChange={({ target: { value } }) => setExportFreq(Math.max(1, Math.min(Math.round(Number(value)), 1440)))}
+          max="30"
+          value={localExportFreq}
+          onChange={({ target: { valueAsNumber } }) => setLocalExportFreq(valueAsNumber)}
+          onBlur={({ target: { valueAsNumber } }) => setLocalExportFreq(Math.max(1, Math.min(valueAsNumber, 30)))}
         />{" "}
-        <span>minutes</span>
+        <span>{pluralize(localExportFreq, "minute")}</span>
       </div>
 
       <div>
@@ -109,8 +122,9 @@ export default function Backup(): JSX.Element {
           step="1"
           min="1"
           max="10"
-          value={exportMax}
-          onChange={({ target: { value } }) => setExportMax(Math.max(1, Math.min(Math.round(Number(value)), 10)))}
+          value={localExportMax}
+          onChange={({ target: { valueAsNumber } }) => setLocalExportMax(valueAsNumber)}
+          onBlur={({ target: { valueAsNumber } }) => setLocalExportMax(Math.max(1, Math.min(valueAsNumber, 10)))}
         />{" "}
         <span>most recent</span>
       </div>
@@ -128,8 +142,8 @@ export default function Backup(): JSX.Element {
           type="checkbox"
           id="autoSync"
           name="autoSync"
-          checked={autoSync}
-          onChange={() => setAutoSync(!autoSync)}
+          checked={localAutoSync}
+          onChange={() => setLocalAutoSync(!localAutoSync)}
         />
         <label htmlFor="autoSync">Enable Automatic Sync</label>
       </CheckboxContainer>
@@ -140,11 +154,12 @@ export default function Backup(): JSX.Element {
           type="number"
           step="1"
           min="1"
-          max="1440"
-          value={syncFreq}
-          onChange={({ target: { value } }) => setSyncFreq(Math.max(1, Math.min(Math.round(Number(value)), 1440)))}
+          max="30"
+          value={localSyncFreq}
+          onChange={({ target: { valueAsNumber } }) => setLocalSyncFreq(valueAsNumber)}
+          onBlur={({ target: { valueAsNumber } }) => setLocalSyncFreq(Math.max(1, Math.min(valueAsNumber, 30)))}
         />{" "}
-        <span>minutes</span>
+        <span>{pluralize(localSyncFreq, "minute")}</span>
       </div>
 
       <Note>
@@ -156,7 +171,18 @@ export default function Backup(): JSX.Element {
           <span>in JSON format</span>
         </div>
       </Note>
-      <ModalFooter showSave closeText="Cancel" />
+
+      <ModalFooter
+        showSave
+        closeText="Cancel"
+        handleSave={() => {
+          setAutoExport(localAutoExport);
+          setExportFreq(localExportFreq);
+          setExportMax(localExportMax);
+          setAutoSync(localAutoSync);
+          setSyncFreq(localSyncFreq);
+        }}
+      />
     </>
   );
 }

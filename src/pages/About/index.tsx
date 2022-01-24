@@ -8,8 +8,7 @@ import Selector from "../../components/Selector";
 import Details from "./Details";
 import License from "./License";
 
-import ModalFooter from "~/components/ModalFooter";
-import ModalHeader from "~/components/ModalHeader";
+import { ModalFooter, ModalHeader } from "~/components/Modal";
 import { TABMERGER_DEMO_SITE, TABMERGER_TOS_LINK } from "~/constants/urls";
 import { Note } from "~/styles/Note";
 

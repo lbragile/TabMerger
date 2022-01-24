@@ -105,7 +105,27 @@ chrome.alarms.onAlarm.addListener((alarm) => {
               filename: `TabMerger Backups/${name}`,
               url: reader.result as string
             },
-            () => ""
+            (downloadId) => {
+              chrome.storage.local.get(["downloads", "exportMax"], (result) => {
+                const downloads: number[] = result.downloads ?? [];
+                let newDownloads: number[] = [];
+                if (downloads.length === (result.exportMax as number)) {
+                  const removeId = downloads[downloads.length - 1];
+
+                  // Remove oldest download from directory
+                  chrome.downloads.removeFile(removeId, () => "");
+
+                  // Remove oldest download from history (chrome://downloads)
+                  chrome.downloads.erase({ id: removeId }, () => "");
+
+                  newDownloads = [downloadId, ...downloads.slice(0, -1)];
+                } else {
+                  newDownloads = [downloadId, ...downloads];
+                }
+
+                chrome.storage.local.set({ downloads: newDownloads }, () => "");
+              });
+            }
           );
         },
         false

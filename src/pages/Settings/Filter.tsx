@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Link from "~/components/Link";
-import ModalFooter from "~/components/ModalFooter";
+import { ModalFooter } from "~/components/Modal";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";

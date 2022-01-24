@@ -6,7 +6,7 @@ import General from "./General";
 import Keyboard from "./Keyboard";
 import Theme from "./Theme";
 
-import ModalHeader from "~/components/ModalHeader";
+import { ModalHeader } from "~/components/Modal";
 import Selector from "~/components/Selector";
 
 export default function Settings(): JSX.Element {

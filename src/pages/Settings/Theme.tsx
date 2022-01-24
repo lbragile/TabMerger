@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import ModalFooter from "~/components/ModalFooter";
+import { ModalFooter } from "~/components/Modal";
 import { Note } from "~/styles/Note";
 
 export default function Theme(): JSX.Element {
