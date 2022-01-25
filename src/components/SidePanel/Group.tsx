@@ -39,8 +39,10 @@ const GroupButton = styled.div<IGroupStyle>`
     margin-right: ${overflow ? "4px" : "0"};
   `}
   height: 49px;
-  background-color: ${({ $isActive, $dragging, $draggingOver }) =>
-    $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
+  background-color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
+    $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : theme.colors.surface};
+  color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
+    $isActive || $dragging || $draggingOver ? "black" : theme.colors.onSurface};
   outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(133 66 0 / 30%)" : "rgb(0 0 0 / 10%)")};
   outline-offset: -1px;
   overflow: hidden;
@@ -50,11 +52,11 @@ const GroupButton = styled.div<IGroupStyle>`
   justify-content: space-between;
   padding: 2px 8px 2px 16px;
   cursor: ${({ $draggingOver, $draggingGlobal }) => ($draggingOver || $draggingGlobal ? "grabbing" : "pointer")};
-  ${({ $draggingGlobal }) =>
+  ${({ $draggingGlobal, theme }) =>
     !$draggingGlobal &&
     css`
       &:hover ${AbsoluteCloseIcon} {
-        color: rgb(0 0 0 / 30%);
+        color: ${theme.colors.onSurface};
         display: block;
 
         &:hover {

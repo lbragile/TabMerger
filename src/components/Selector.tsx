@@ -15,17 +15,18 @@ const ModalTab = styled.button<{ $active: boolean }>`
   font-size: 14px;
   text-transform: uppercase;
   padding: 2px 8px;
+  color: ${({ theme }) => theme.colors.onSurface};
   cursor: pointer;
   ${({ $active }) =>
     $active &&
     css`
       color: #007bff;
       border-bottom: 2px solid #007bff;
-      font-weight: bold;
+      text-shadow: 1px 0 0 currentColor;
     `}
 
   &:hover {
-    font-weight: bold;
+    text-shadow: 1px 0 0 currentColor;
   }
 `;
 

@@ -46,7 +46,7 @@ const Container = styled.div`
   position: absolute;
   top: 32px;
   left: 230px;
-  background: white;
+  background: ${({ theme }) => theme.colors.surface};
   padding: 8px;
   box-shadow: 0 0 2px 2px #1113;
   z-index: 2;

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import styled from "styled-components";
 
 import ColorPicker from "~/components/ColorPicker";
@@ -10,6 +10,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Note } from "~/styles/Note";
+import { SectionTitle } from "~/styles/SectionTitle";
 import { generateFavIconFromUrl } from "~/utils/helper";
 
 const Row = styled.div`
@@ -36,15 +37,10 @@ const Column = styled.div`
   gap: 8px;
 `;
 
-const Header = styled.h3`
-  padding: 4px;
-  background: #f0f0f0;
-`;
-
 const GroupButton = styled.div`
   width: 209px;
   height: 49px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.surface};
   outline: 1px solid rgb(0 0 0 / 10%);
   outline-offset: -1px;
   overflow: hidden;
@@ -130,7 +126,7 @@ const WindowHeadline = styled.div`
   column-gap: 6px;
   justify-content: start;
   align-items: center;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.surface};
   padding: 0 2px;
   border: 1px dashed initial;
 
@@ -197,8 +193,24 @@ export default function General(): JSX.Element {
   const [windowTitle, setWindowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
   const [faviconUrl, setFaviconUrl] = useLocalStorage("faviconUrl", GOOGLE_HOMEPAGE);
 
-  const debouncedColor = useDebounce(groupColor);
-  const debouncedFaviconUrl = useDebounce(faviconUrl, 1000);
+  const [localIgnoreURL, setLocalIgnoreURL] = useState(true);
+  const [localConfirmDelete, setLocalConfirmDelete] = useState(true);
+  const [localShowBadgeInfo, setLocalShowBadgeInfo] = useState(true);
+  const [localGroupTitle, setLocalGroupTitle] = useState(DEFAULT_GROUP_TITLE);
+  const [localGroupColor, setLocalGroupColor] = useState(DEFAULT_GROUP_COLOR);
+  const [localWindowTitle, setLocalWindowTitle] = useState(DEFAULT_WINDOW_TITLE);
+  const [localFaviconUrl, setLocalFaviconUrl] = useState(GOOGLE_HOMEPAGE);
+
+  useEffect(() => setLocalIgnoreURL(ignoreURL), [ignoreURL]);
+  useEffect(() => setLocalConfirmDelete(confirmDelete), [confirmDelete]);
+  useEffect(() => setLocalShowBadgeInfo(showBadgeInfo), [showBadgeInfo]);
+  useEffect(() => setLocalGroupTitle(groupTitle), [groupTitle]);
+  useEffect(() => setLocalGroupColor(groupColor), [groupColor]);
+  useEffect(() => setLocalWindowTitle(windowTitle), [windowTitle]);
+  useEffect(() => setLocalFaviconUrl(faviconUrl), [faviconUrl]);
+
+  const debouncedColor = useDebounce(localGroupColor);
+  const debouncedFaviconUrl = useDebounce(localFaviconUrl, 1000);
 
   const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -207,32 +219,44 @@ export default function General(): JSX.Element {
   const settingsOptions = useMemo(
     () => [
       {
-        label: "Ignore URL parameters and query strings during search",
+        label: (
+          <span>
+            Ignore URL query strings during search (http://www.fake.com
+            <s>?a=1&b=2&c=3</s>){" "}
+          </span>
+        ),
         id: "ignoreURL",
-        checked: ignoreURL,
-        onChange: () => setIgnoreURL(!ignoreURL)
+        checked: localIgnoreURL,
+        onChange: () => setLocalIgnoreURL(!localIgnoreURL)
       },
       {
         label: "Confirm destructive actions (those that delete items)",
         id: "confirmDestructive",
-        checked: confirmDelete,
-        onChange: () => setConfirmDelete(!confirmDelete)
+        checked: localConfirmDelete,
+        onChange: () => setLocalConfirmDelete(!localConfirmDelete)
       },
       {
-        label: "Display Badge Information (extension icon will have extra details)",
+        label: "Display extra information in extension icon",
         id: "badgeInformation",
-        checked: showBadgeInfo,
-        onChange: () => setShowBadgeInfo(!showBadgeInfo)
+        checked: localShowBadgeInfo,
+        onChange: () => setLocalShowBadgeInfo(!localShowBadgeInfo)
       }
     ],
-    [confirmDelete, ignoreURL, setConfirmDelete, setIgnoreURL, setShowBadgeInfo, showBadgeInfo]
+    [
+      localIgnoreURL,
+      localConfirmDelete,
+      localShowBadgeInfo,
+      setLocalIgnoreURL,
+      setLocalConfirmDelete,
+      setLocalShowBadgeInfo
+    ]
   );
 
   return (
     <>
       <Column>
         {settingsOptions.map((item) => (
-          <CheckboxContainer key={item.label}>
+          <CheckboxContainer key={item.label.toString()}>
             <input type="checkbox" id={item.id} name={item.id} checked={item.checked} onChange={item.onChange} />
             <label htmlFor={item.id}>{item.label}</label>
           </CheckboxContainer>
@@ -240,11 +264,11 @@ export default function General(): JSX.Element {
       </Column>
 
       <Column>
-        <Header>Default Group</Header>
+        <SectionTitle>Default Group</SectionTitle>
 
         <GroupButtonContainer>
           <GroupButton>
-            <Headline value={groupTitle} onChange={(e) => setGroupTitle(e.target.value)} />
+            <Headline value={localGroupTitle} onChange={(e) => setLocalGroupTitle(e.target.value)} />
 
             <Information>
               <span>0T | 0W</span> <span>&lt; 1 min</span>
@@ -261,25 +285,29 @@ export default function General(): JSX.Element {
 
           {showPicker && (
             <ColorPickerContainer ref={pickerRef}>
-              <ColorPicker color={debouncedColor} setColor={setGroupColor} />
+              <ColorPicker color={debouncedColor} setColor={setLocalGroupColor} />
             </ColorPickerContainer>
           )}
         </GroupButtonContainer>
       </Column>
 
       <Column>
-        <Header>Default Window Title</Header>
+        <SectionTitle>Default Window Title</SectionTitle>
         <WindowHeadline>
           <FontAwesomeIcon icon={["far", "window-maximize"]} />
 
-          <WindowTitle type="text" value={windowTitle} onChange={({ target: { value } }) => setWindowTitle(value)} />
+          <WindowTitle
+            type="text"
+            value={localWindowTitle}
+            onChange={({ target: { value } }) => setLocalWindowTitle(value)}
+          />
 
           <TabCounter>0 Tabs</TabCounter>
         </WindowHeadline>
       </Column>
 
       <Column>
-        <Header>Default Favicon URL</Header>
+        <SectionTitle>Default Favicon URL</SectionTitle>
 
         <TabContainer>
           <TabIcon
@@ -291,7 +319,11 @@ export default function General(): JSX.Element {
             alt="Favicon"
           />
 
-          <TabTitle value={faviconUrl} onChange={({ target: { value } }) => setFaviconUrl(value)} draggable={false} />
+          <TabTitle
+            value={localFaviconUrl}
+            onChange={({ target: { value } }) => setLocalFaviconUrl(value)}
+            draggable={false}
+          />
         </TabContainer>
       </Column>
 
@@ -306,7 +338,19 @@ export default function General(): JSX.Element {
         </div>
       </Note>
 
-      <ModalFooter showSave={false} closeText="Close" />
+      <ModalFooter
+        showSave
+        closeText="Close"
+        handleSave={() => {
+          setIgnoreURL(localIgnoreURL);
+          setConfirmDelete(localConfirmDelete);
+          setShowBadgeInfo(localShowBadgeInfo);
+          setGroupTitle(localGroupTitle);
+          setGroupColor(localGroupColor);
+          setWindowTitle(localWindowTitle);
+          setFaviconUrl(localFaviconUrl);
+        }}
+      />
     </>
   );
 }

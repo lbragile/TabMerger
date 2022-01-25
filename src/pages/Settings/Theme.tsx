@@ -17,6 +17,7 @@ const ButtonToggle = styled.div`
 
 const Choice = styled.button<{ active: boolean }>`
   background-color: ${({ active }) => (active ? "#cce6ff" : "inherit")};
+  color: ${({ active, theme }) => (active ? "black" : theme.colors.onBackground)};
   min-width: 50px;
   padding: 4px 8px;
   border: none;

@@ -59,14 +59,16 @@ const Title = styled.input<{ $isMaxLength: boolean }>`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.onBackground};
 
   &:hover {
-    border-bottom: 1px solid rgb(0 0 0 / 20%);
+    border-bottom: 1px solid ${({ theme }) => theme.colors.onBackground};
   }
 
   &:focus {
-    border-bottom: 1px solid black;
-    background-color: ${({ $isMaxLength }) => ($isMaxLength ? "#ffd1d1" : "initial")};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.onBackground};
+    background-color: ${({ $isMaxLength, theme }) => ($isMaxLength ? theme.colors.error : "initial")};
   }
 `;
 

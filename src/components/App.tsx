@@ -40,6 +40,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.onBackground};
 `;
 
 const MainArea = styled.div`

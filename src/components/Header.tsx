@@ -49,6 +49,7 @@ const SettingsIcon = styled(FontAwesomeIcon)`
   font-size: 32px;
   padding: 4px;
   cursor: pointer;
+  color: black;
 
   &:hover {
     background-color: #cce6ffaa;

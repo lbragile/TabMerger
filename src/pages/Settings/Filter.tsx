@@ -40,11 +40,16 @@ export default function Filter(): JSX.Element {
   const [excludeProtocol, setExcludeProtocol] = useLocalStorage("excludeProtocol", true);
   const [filter, setFilter] = useLocalStorage("urlFilter", "");
 
-  const [testUrl, setTestUrl] = useState("");
-  const [isCaught, setIsCaught] = useState(false);
+  const [localExcludeProtocol, setLocalExcludeProtocol] = useState(true);
   const [localFilter, setLocalFilter] = useState("");
 
+  const [testUrl, setTestUrl] = useState("");
+  const [isCaught, setIsCaught] = useState(false);
+
   const debouncedTestUrl = useDebounce(testUrl, 1000);
+
+  useEffect(() => setLocalFilter(filter), [filter]);
+  useEffect(() => setLocalExcludeProtocol(excludeProtocol), [excludeProtocol]);
 
   useEffect(() => {
     if (testUrl !== "") {
@@ -57,10 +62,6 @@ export default function Filter(): JSX.Element {
     }
   }, [localFilter, testUrl]);
 
-  useEffect(() => {
-    setLocalFilter(filter);
-  }, [filter]);
-
   return (
     <>
       <CheckboxContainer>
@@ -68,8 +69,8 @@ export default function Filter(): JSX.Element {
           type="checkbox"
           id="excludeProtocol"
           name="excludeProtocol"
-          checked={excludeProtocol}
-          onChange={() => setExcludeProtocol(!excludeProtocol)}
+          checked={localExcludeProtocol}
+          onChange={() => setLocalExcludeProtocol(!localExcludeProtocol)}
         />
         <label htmlFor="excludeProtocol">
           Exclude URLs that do not start with <b>http</b> or <b>https</b>
@@ -106,17 +107,20 @@ export default function Filter(): JSX.Element {
 
         <div>
           <p>
-            <Link
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions"
-              title="Regular Expressions"
-            />{" "}
-            and/or <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can
-            be used!
+            <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can be used!
           </p>
         </div>
       </Note>
 
-      <ModalFooter showSave saveText="Apply" closeText="Cancel" handleSave={() => setFilter(localFilter)} />
+      <ModalFooter
+        showSave
+        saveText="Apply"
+        closeText="Cancel"
+        handleSave={() => {
+          setExcludeProtocol(localExcludeProtocol);
+          setFilter(localFilter);
+        }}
+      />
     </>
   );
 }

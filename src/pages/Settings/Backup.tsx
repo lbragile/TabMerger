@@ -8,12 +8,8 @@ import { DOWNLOADS_URL } from "~/constants/urls";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
+import { SectionTitle } from "~/styles/SectionTitle";
 import { pluralize, relativeTimeStr } from "~/utils/helper";
-
-const Header = styled.h3`
-  padding: 4px;
-  background: #f0f0f0;
-`;
 
 const StyledInput = styled.input`
   all: unset;
@@ -82,7 +78,7 @@ export default function Backup(): JSX.Element {
 
   return (
     <>
-      <Header>Automatic Export</Header>
+      <SectionTitle>Automatic Export</SectionTitle>
 
       <StyledMessage $error={lastExport === ""} $recent={relativeTimeExport.includes("<")}>
         {lastExport === ""
@@ -129,7 +125,7 @@ export default function Backup(): JSX.Element {
         <span>most recent</span>
       </div>
 
-      <Header>Automatic Sync</Header>
+      <SectionTitle>Automatic Sync</SectionTitle>
 
       <StyledMessage $error={lastSyncUpload === ""} $recent={relativeTimeSync.includes("<")}>
         {lastSyncUpload === ""
