@@ -1,20 +1,17 @@
 import { nanoid } from "nanoid";
 import { useCallback, useEffect } from "react";
 
-import { useDispatch, useSelector } from "./useRedux";
-
-import { updateImportFormattedGroups, updateImportType } from "~/store/actions/modal";
 import { IGroupItemState } from "~/store/reducers/groups";
-import { TImportType } from "~/store/reducers/modal";
+import { TImportType } from "~/typings/settings";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs } from "~/utils/helper";
 
-export default function useParseText(debouncedText: string) {
-  const dispatch = useDispatch();
+interface IParseText {
+  debouncedText: string;
+  importType: TImportType;
+  setImportFile: (arg: IGroupItemState[]) => void;
+}
 
-  const {
-    import: { type: importType }
-  } = useSelector((state) => state.modal);
-
+export default function useParseText({ debouncedText, importType, setImportFile }: IParseText) {
   const formatPlain = useCallback((text: string) => {
     const groups: IGroupItemState[] = [];
 
@@ -62,9 +59,9 @@ export default function useParseText(debouncedText: string) {
           groups[0].windows.forEach((w) => (w.focused = false));
         } catch (err) {
           // Clear the formatted groups if an invalid upload is detected
-          dispatch(updateImportFormattedGroups([]));
+          setImportFile([]);
         }
-      } else if (importType === "plain") {
+      } else if (importType === "text") {
         groups = formatPlain(debouncedText);
       } else if (importType === "markdown") {
         // Transform the markdown into plain text format, then use the existing parser to create groups
@@ -103,19 +100,8 @@ export default function useParseText(debouncedText: string) {
       }
 
       if (groups) {
-        dispatch(updateImportFormattedGroups(groups));
+        setImportFile(groups);
       }
     }
-  }, [dispatch, debouncedText, importType, formatPlain]);
-
-  const recomputeUploadType = (value: string) => {
-    let type: TImportType = "json";
-    if (/.+?\n={3,}\n/.test(value)) type = "plain";
-    else if (/\n*#{2,3}.+?\n/.test(value)) type = "markdown";
-    else if (/(".+?",?){4}\n/.test(value)) type = "csv";
-
-    if (type !== importType) dispatch(updateImportType(type));
-  };
-
-  return { recomputeUploadType };
+  }, [debouncedText, importType, formatPlain, setImportFile]);
 }

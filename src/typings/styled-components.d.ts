@@ -1,9 +1,9 @@
-import Theme from "~/styles/Theme";
+import { ThemeOptions } from "~/styles/ThemeOptions";
 
-type TMainTheme = typeof Theme;
+type TMainTheme = typeof ThemeOptions["light"];
 
 declare module "styled-components" {
   export interface DefaultTheme extends TMainTheme {
-    temp?: string;
+    [key: string]: unknown;
   }
 }

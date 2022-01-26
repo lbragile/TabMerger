@@ -10,7 +10,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateColor, deleteGroup, updateActive } from "~/store/actions/groups";
-import { IGroupsState } from "~/store/reducers/groups";
+import { IGroupItemState } from "~/store/reducers/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { relativeTimeStr } from "~/utils/helper";
 
@@ -39,8 +39,10 @@ const GroupButton = styled.div<IGroupStyle>`
     margin-right: ${overflow ? "4px" : "0"};
   `}
   height: 49px;
-  background-color: ${({ $isActive, $dragging, $draggingOver }) =>
-    $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : "white"};
+  background-color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
+    $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : theme.colors.surface};
+  color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
+    $isActive || $dragging || $draggingOver ? "black" : theme.colors.onSurface};
   outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(133 66 0 / 30%)" : "rgb(0 0 0 / 10%)")};
   outline-offset: -1px;
   overflow: hidden;
@@ -50,11 +52,11 @@ const GroupButton = styled.div<IGroupStyle>`
   justify-content: space-between;
   padding: 2px 8px 2px 16px;
   cursor: ${({ $draggingOver, $draggingGlobal }) => ($draggingOver || $draggingGlobal ? "grabbing" : "pointer")};
-  ${({ $draggingGlobal }) =>
+  ${({ $draggingGlobal, theme }) =>
     !$draggingGlobal &&
     css`
       &:hover ${AbsoluteCloseIcon} {
-        color: rgb(0 0 0 / 30%);
+        color: ${theme.colors.onSurface};
         display: block;
 
         &:hover {
@@ -84,7 +86,7 @@ const Headline = styled.div<{ $isActive: boolean; $isFirst: boolean }>`
     `}
 `;
 
-const Information = styled.div`
+const GroupInformation = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -130,7 +132,7 @@ export default function Group({
   info,
   snapshot,
   dragHandleProps
-}: IGroupsState["available"][number] & IGroup): JSX.Element {
+}: IGroupItemState & IGroup): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
@@ -208,6 +210,14 @@ export default function Group({
           onPointerEnter={() => setDraggingOver(true)}
           onPointerLeave={() => setDraggingOver(false)}
         >
+          <ColorIndicator
+            color={debouncedPickerValue}
+            role="button"
+            tabIndex={0}
+            onClick={handleShowPicker}
+            onKeyPress={(e) => e.key === "Enter" && handleShowPicker(e)}
+          />
+
           <Headline
             $isActive={isActive}
             $isFirst={index === 0}
@@ -218,17 +228,9 @@ export default function Group({
             {filterChoice === "group" ? <Highlighted text={name} /> : name}
           </Headline>
 
-          <Information>
+          <GroupInformation>
             <span>{info ?? "0T | 0W"}</span> <span>{relativeTimeStr(updatedAt)}</span>
-          </Information>
-
-          <ColorIndicator
-            color={debouncedPickerValue}
-            role="button"
-            tabIndex={0}
-            onClick={handleShowPicker}
-            onKeyPress={(e) => e.key === "Enter" && handleShowPicker(e)}
-          />
+          </GroupInformation>
 
           {!permanent && !isDragging && (
             <AbsoluteCloseIcon

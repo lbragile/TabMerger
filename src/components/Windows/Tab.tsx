@@ -16,8 +16,8 @@ const TabContainer = styled.div<{ $dragging: boolean }>`
   justify-content: start;
   gap: 8px;
   padding: 0 2px;
-  background-color: ${({ $dragging }) => ($dragging ? "white" : "initial")};
-  border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
+  background-color: ${({ $dragging, theme }) => ($dragging ? theme.colors.background : "transparent")};
+  border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "transparent")};
 `;
 
 const TabTitle = styled.a<{ $isDragging: boolean }>`
@@ -25,7 +25,7 @@ const TabTitle = styled.a<{ $isDragging: boolean }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: black;
+  color: ${({ theme }) => theme.colors.onBackground};
   cursor: ${({ $isDragging }) => ($isDragging ? "grabbing" : "pointer")};
   ${({ $isDragging }) =>
     !$isDragging &&

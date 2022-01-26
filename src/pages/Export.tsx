@@ -1,17 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { saveAs } from "file-saver";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
-import Link from "./Link";
-import Selector from "./Selector";
-
+import Link from "~/components/Link";
+import { ModalFooter, ModalHeader } from "~/components/Modal";
+import Selector from "~/components/Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
+import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { updateExportFile } from "~/store/actions/modal";
+import { setVisibility } from "~/store/actions/modal";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
+import { TExportType } from "~/typings/settings";
+import { getReadableTimestamp } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`
   display: none;
@@ -49,7 +53,7 @@ const Row = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 8px;
-  background-color: #f0f0f0;
+  background-color: ${({ theme }) => theme.colors.secondary};
   gap: 8px;
 `;
 
@@ -66,6 +70,7 @@ const CheckboxContainer = styled(Row)`
 const StyledMultiSelect = styled(MultiSelect)`
   && {
     width: 200px;
+    color: black;
 
     & .dropdown-heading {
       cursor: pointer;
@@ -100,6 +105,7 @@ const ArrowIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
   cursor: pointer;
   transition: color 0.3 ease;
+  color: black;
 
   &:hover {
     color: #808080;
@@ -112,9 +118,12 @@ export default function Export(): JSX.Element {
   const dispatch = useDispatch();
   const { available } = useSelector((state) => state.groups);
 
-  const [activeTab, setActiveTab] = useState<"JSON" | "Text" | "Markdown" | "HTML" | "CSV">("JSON");
+  const [activeTab, setActiveTab] = useState<TExportType>("json");
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [exportFile, setExportFile] = useState<File | null>(null);
+
+  const [, setLastExport] = useLocalStorage("lastExport", "");
 
   const selectOpts = useMemo(
     () => available.slice(1).map((group) => ({ label: group.name, value: group })),
@@ -155,13 +164,13 @@ export default function Export(): JSX.Element {
   const text = useMemo(() => {
     if (selectedGroups.length === 0) return EMPTY_TEXT;
 
-    return activeTab === "JSON"
+    return activeTab === "json"
       ? JSON.stringify({ available: selectedGroups }, null, 4)
-      : activeTab === "Text"
+      : activeTab === "text"
       ? getRegularText()
-      : activeTab === "Markdown"
+      : activeTab === "markdown"
       ? getMarkdownText()
-      : activeTab === "HTML"
+      : activeTab === "html"
       ? getHTMLText()
       : getCSVText();
   }, [activeTab, selectedGroups, getRegularText, getMarkdownText, getHTMLText, getCSVText]);
@@ -174,27 +183,29 @@ export default function Export(): JSX.Element {
   useEffect(() => {
     if (text !== EMPTY_TEXT) {
       const [type, extension] =
-        activeTab === "JSON"
+        activeTab === "json"
           ? ["application/json", ".json"]
-          : activeTab === "Text"
+          : activeTab === "text"
           ? ["text/plain", ".txt"]
-          : activeTab === "Markdown"
+          : activeTab === "markdown"
           ? ["text/markdown", ".md"]
-          : activeTab === "HTML"
+          : activeTab === "html"
           ? ["text/html", ".html"]
           : ["text/csv", ".csv"];
 
       const newFile = new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type });
 
-      dispatch(updateExportFile(newFile));
+      setExportFile(newFile);
     } else {
-      dispatch(updateExportFile(null));
+      setExportFile(null);
     }
-  }, [dispatch, text, activeTab]);
+  }, [text, activeTab]);
 
   return (
     <>
-      <Selector opts={["JSON", "Text", "Markdown", "CSV", "HTML"]} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <ModalHeader title="TabMerger Export" />
+
+      <Selector opts={["json", "text", "markdown", "csv", "html"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <Row>
         <Row>
@@ -207,11 +218,11 @@ export default function Export(): JSX.Element {
                   type="checkbox"
                   id={lowerText}
                   name={lowerText}
-                  checked={activeTab === "JSON" || checked}
+                  checked={activeTab === "json" || checked}
                   onChange={() => handleCheckboxChange(text)}
                   disabled={
-                    (["Titles", "URLs"].includes(text) && ["JSON", "HTML"].includes(activeTab)) ||
-                    (text === "Titles" && activeTab === "Markdown")
+                    (["Titles", "URLs"].includes(text) && ["json", "html"].includes(activeTab)) ||
+                    (text === "Titles" && activeTab === "markdown")
                   }
                 />
                 <label htmlFor={lowerText}>{text}</label>
@@ -253,9 +264,21 @@ export default function Export(): JSX.Element {
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
         <div>
-          <p>Files are saved to your</p> <Link href={DOWNLOADS_URL} title="Downloads Folder" />
+          <span>Files are saved to your</span> <Link href={DOWNLOADS_URL} title="Downloads Folder" />
         </div>
       </Note>
+
+      <ModalFooter
+        showSave={!!exportFile}
+        saveText="Export"
+        handleSave={() => {
+          if (exportFile) {
+            saveAs(exportFile);
+            setLastExport(getReadableTimestamp());
+            dispatch(setVisibility(false));
+          }
+        }}
+      />
     </>
   );
 }

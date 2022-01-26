@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import Tab from "./Tab";
 
@@ -39,10 +39,10 @@ const Row = styled.div`
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   justify-content: center;
   font-size: 14px;
-  padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "initial")};
+  padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "0")};
 `;
 
-const WindowTitle = styled.input<{ $active: boolean; $open: boolean }>`
+const WindowTitle = styled.input<{ $active: boolean; $open: boolean; $dragging: boolean }>`
   all: unset;
   font-size: 15px;
   width: calc(100% - 8px);
@@ -50,15 +50,22 @@ const WindowTitle = styled.input<{ $active: boolean; $open: boolean }>`
   font-weight: 600;
   cursor: pointer;
   user-select: none;
-  background-color: ${({ $open, $active }) => ($open ? ($active ? "#dde8ffb7" : "#dfdfdfb7") : "initial")};
+  background-color: ${({ $open, $active }) => ($open ? ($active ? "#dde8ffb7" : "#dfdfdfb7") : "transparent")};
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-
-  &:hover,
-  &:focus-visible {
-    background-color: ${({ $active }) => ($active ? "#dde8ffb7" : "#dfdfdfb7")};
-  }
+  ${({ $dragging, $active }) =>
+    $dragging
+      ? css`
+          use-event: none;
+          cursor: grabbing;
+        `
+      : css`
+          &:hover,
+          &:focus-visible {
+            background-color: ${$active ? "#dde8ffb7" : "#dfdfdfb7"};
+          }
+        `}
 `;
 
 const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
@@ -67,13 +74,13 @@ const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
   column-gap: 6px;
   justify-content: start;
   align-items: center;
-  background-color: white;
+  background-color: ${({ $dragging, theme }) => ($dragging ? theme.colors.surface : "transparent")};
   padding: 0 2px;
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 
   & svg,
   & ${WindowTitle} {
-    color: ${({ $active }) => ($active ? "#0080ff" : "initial")};
+    color: ${({ $active, theme }) => ($active ? "#0080ff" : theme.colors.onBackground)};
   }
 
   & svg {
@@ -84,11 +91,12 @@ const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
 const TabsContainer = styled(Column)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
   margin-left: 24px;
   border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "#0080ff" : "transparent")};
-  background-color: ${({ $dragOrigin }) => ($dragOrigin ? "#f5faff" : "white")};
+  background-color: ${({ $dragOrigin, theme }) => ($dragOrigin ? theme.colors.surface : "transparent")};
 `;
 
 const TabCounter = styled.span`
-  color: #808080;
+  color: ${({ theme }) => theme.colors.onBackground};
+  opacity: 0.75;
   cursor: default;
 `;
 
@@ -308,6 +316,7 @@ export default function Window({
               ref={titleRef}
               $active={focused}
               $open={showPopup}
+              $dragging={isDragging}
               {...(windowName.length > 15 ? { title: titleRef.current?.value } : {})}
               tabIndex={0}
               role="button"

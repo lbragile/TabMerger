@@ -1,12 +1,12 @@
-import { IAction } from "~/typings/reducers";
+import { TRootActions } from "~/typings/redux";
 
 export const DND_ACTIONS = {
   UPDATE_DRAG_ORIGIN_TYPE: "UPDATE_DRAG_ORIGIN_TYPE",
   UPDATE_IS_DRAGGING: "UPDATE_IS_DRAGGING",
   RESET_DND_INFO: "RESET_DND_INFO"
-};
+} as const;
 
-export interface IDnDState {
+interface IDnDState {
   dragType: string;
   isDragging: boolean;
 }
@@ -16,20 +16,18 @@ export const initDnDState: IDnDState = {
   isDragging: false
 };
 
-const dndReducer = (state: IDnDState, action: IAction): IDnDState => {
-  const { type, payload } = action;
-
-  switch (type) {
+const dndReducer = (state = initDnDState, action: TRootActions): IDnDState => {
+  switch (action.type) {
     case DND_ACTIONS.UPDATE_DRAG_ORIGIN_TYPE:
       return {
         ...state,
-        dragType: payload as IDnDState["dragType"]
+        dragType: action.payload
       };
 
     case DND_ACTIONS.UPDATE_IS_DRAGGING:
       return {
         ...state,
-        isDragging: payload as IDnDState["isDragging"]
+        isDragging: action.payload
       };
 
     case DND_ACTIONS.RESET_DND_INFO:

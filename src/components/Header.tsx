@@ -1,17 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Dropdown, { IDropdown } from "./Dropdown";
 import Modal from "./Modal";
 import SearchResult from "./SearchResult";
 
-import { TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
+import { CHROME_NEW_TAB, TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { updateInputValue, setFilterChoice } from "~/store/actions/header";
-import { setModalInfo } from "~/store/actions/modal";
-import { IModalState } from "~/store/reducers/modal";
+import { updateInputValue, setFilterChoice, setFocused } from "~/store/actions/header";
+import { setModalType, setVisibility } from "~/store/actions/modal";
+import { TModalType } from "~/typings/settings";
 import { createActiveTab } from "~/utils/helper";
 
 const Flex = styled.div`
@@ -49,6 +49,7 @@ const SettingsIcon = styled(FontAwesomeIcon)`
   font-size: 32px;
   padding: 4px;
   cursor: pointer;
+  color: black;
 
   &:hover {
     background-color: #cce6ffaa;
@@ -88,61 +89,46 @@ const FilterChoice = styled.button<{ active: boolean }>`
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { inputValue, filterChoice } = useSelector((state) => state.header);
+  const { inputValue, filterChoice, focused } = useSelector((state) => state.header);
+  const { visible } = useSelector((state) => state.modal);
   const typing = inputValue !== "";
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const searchRef = useRef<HTMLInputElement | null>(null);
 
   useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
 
+  useEffect(() => {
+    if (focused && searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, [focused]);
+
   const modalDetailsHandler = useCallback(
-    (args: IModalState["info"]) => {
-      setShowModal(true);
+    (type: TModalType) => {
       setShowDropdown(false);
-      dispatch(setModalInfo(args));
+      dispatch(setVisibility(true));
+      dispatch(setModalType(type));
     },
     [dispatch]
   );
 
   const settingsItems = useMemo(() => {
     return [
-      {
-        text: "Import",
-        handler: () =>
-          modalDetailsHandler({ title: "TabMerger Import", type: "import", closeText: "Cancel", saveText: "Import" })
-      },
-      {
-        text: "Export",
-        handler: () =>
-          modalDetailsHandler({ title: "TabMerger Export", type: "export", closeText: "Close", saveText: "Save File" })
-      },
-      {
-        text: "Sync",
-        handler: () =>
-          modalDetailsHandler({ title: "TabMerger Sync", type: "sync", saveText: "Sync", closeText: "Cancel" })
-      },
+      { text: "Import", handler: () => modalDetailsHandler("import") },
+      { text: "Export", handler: () => modalDetailsHandler("export") },
+      { text: "Sync", handler: () => modalDetailsHandler("sync") },
       { text: "divider" },
-      {
-        text: "Settings",
-        handler: () => modalDetailsHandler({ title: "TabMerger Settings", type: "settings", closeText: "Cancel" }),
-        isDisabled: true
-      },
+      { text: "Settings", handler: () => modalDetailsHandler("settings") },
       { text: "Help", handler: () => createActiveTab(TABMERGER_HELP) },
       { text: "divider" },
       { text: "Rate", handler: () => createActiveTab(TABMERGER_REVIEWS) },
-      {
-        text: "Donate",
-        handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? "chrome://newtab")
-      },
+      { text: "Donate", handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? CHROME_NEW_TAB) },
       { text: "divider" },
-      {
-        text: "About",
-        handler: () => modalDetailsHandler({ title: "About TabMerger", type: "about", closeText: "Close" })
-      }
+      { text: "About", handler: () => modalDetailsHandler("about") }
     ] as IDropdown["items"];
   }, [modalDetailsHandler]);
 
@@ -152,10 +138,12 @@ export default function Header(): JSX.Element {
         <Flex>
           <InputContainer>
             <SearchInput
+              ref={searchRef}
               type="text"
               placeholder="Search..."
               spellCheck={false}
-              value={inputValue as string}
+              value={inputValue}
+              onBlur={() => dispatch(setFocused(false))}
               onChange={(e) => {
                 const { value } = e.target;
                 dispatch(updateInputValue(value));
@@ -178,7 +166,7 @@ export default function Header(): JSX.Element {
 
           {typing && (
             <FilterButtonToggle>
-              {["tab", "group"].map((text) => (
+              {(["tab", "group"] as ("tab" | "group")[]).map((text) => (
                 <FilterChoice
                   key={text}
                   onMouseDown={() => dispatch(setFilterChoice(text))}
@@ -213,7 +201,7 @@ export default function Header(): JSX.Element {
 
       {typing && filterChoice === "group" && <SearchResult />}
 
-      {showModal && <Modal setVisible={setShowModal} />}
+      {visible && <Modal />}
     </>
   );
 }

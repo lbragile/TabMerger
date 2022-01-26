@@ -6,16 +6,17 @@ import Hue from "./Hue";
 import Preview from "./Preview";
 import Sketch from "./Sketch";
 
-import { COLOR_PICKER_SWATCHES } from "~/constants/colorPicker";
+import { COLOR_PICKER_SWATCHES } from "~/constants/colors";
 import { extractRGBAFromStr, RGBtoHSV } from "~/utils/colorConvert";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: 0 0 4px 0 black;
+  box-shadow: 0 0 4px 0 ${({ theme }) => theme.colors.onSurface};
   padding: 4px;
-  background-color: white;
+  max-width: 208px;
+  background-color: ${({ theme }) => theme.colors.surface};
 `;
 
 const Grid = styled.div`

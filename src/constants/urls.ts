@@ -20,6 +20,10 @@ export const DEFAULT_FAVICON_URL = "https://developer.chrome.com/images/meta/fav
 
 export const GOOGLE_HOMEPAGE = "https://www.google.com";
 
+export const CHROME_SHORTCUTS = "chrome://extensions/shortcuts";
+
+export const CHROME_NEW_TAB = "chrome://newtab";
+
 // LICENSE
 const GITHUB_BASE_URL = "https://github.com";
 

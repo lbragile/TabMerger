@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`${css`
     font-family: Arial, Helvetica, sans-serif;
 
     &:not(input):focus-visible {
-      outline: 1px solid #000;
+      outline: 1px solid ${({ theme }) => theme.colors.onBackground};
       outline-offset: -1px;
     }
   }

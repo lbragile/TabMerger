@@ -25,7 +25,7 @@ export default function useLocalStorage<T>(key: string, initialValue: T): [T, Di
 
   useEffect(() => {
     chrome.storage.local.get([key], (value) => {
-      setValue(value[key] ? (value[key] as T) : initialValue);
+      setValue(value[key] ?? initialValue);
     });
   }, [key, initialValue, setValue]);
 
