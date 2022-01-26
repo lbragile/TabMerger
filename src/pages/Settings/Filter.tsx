@@ -31,7 +31,7 @@ const CheckboxContainer = styled(Row)`
 
 const StyledInput = styled.input`
   all: unset;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.onBackground};
   padding: 4px;
   width: 40ch;
 `;

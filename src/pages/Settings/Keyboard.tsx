@@ -51,8 +51,8 @@ const ShortcutItem = styled.div<{ $disabled: boolean }>`
     padding: 0.1em 0.5em;
     margin: 0 0.2em;
     box-shadow: 0 1px 0 #0002, 0 0 0 2px ${({ theme }) => theme.colors.background} inset;
-    background-color: #f7f7f7;
-    color: ${({ theme }) => theme.colors.onBackground};
+    background-color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.onSecondary};
   }
 
   ${({ $disabled }) =>

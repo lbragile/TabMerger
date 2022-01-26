@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 
 import About from "../pages/About";
@@ -67,7 +68,6 @@ interface IModalFooter {
   closeText?: string;
   saveText?: string;
   showSave: boolean;
-  disableSave?: boolean;
   handleSave?: () => void;
 }
 
@@ -113,22 +113,50 @@ export function ModalHeader({ title }: { title: string }) {
   );
 }
 
-export function ModalFooter({
-  closeText = "Close",
-  saveText = "Save",
-  showSave,
-  disableSave,
-  handleSave
-}: IModalFooter) {
+export function ModalFooter({ closeText = "Close", saveText = "Save", showSave, handleSave }: IModalFooter) {
   const dispatch = useDispatch();
 
   const hide = () => dispatch(setVisibility(false));
 
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  // Timeout need sto be cleared if the user closes the modal to avoid memory leaks
+  useEffect(() => {
+    const handleRemoveTimeout = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+
+    handleRemoveTimeout();
+
+    return () => handleRemoveTimeout();
+  }, []);
+
   return (
     <FooterRow>
       {showSave && (
-        <Button onClick={handleSave} $variant="primary" disabled={!!disableSave}>
-          {saveText}
+        <Button
+          onClick={() => {
+            try {
+              handleSave?.();
+
+              /**
+               * Prevent user from mashing the submit button, as some cases have rate limits
+               * @example @see https://developer.chrome.com/docs/extensions/reference/storage/#property-sync-sync-MAX_WRITE_OPERATIONS_PER_MINUTE
+               */
+              setSaveSuccess(true);
+              timeoutRef.current = setTimeout(() => setSaveSuccess(false), 3000);
+            } catch (err) {
+              setSaveSuccess(false);
+            }
+          }}
+          $variant={saveSuccess ? "success" : "primary"}
+          disabled={saveSuccess}
+        >
+          {saveSuccess ? <FontAwesomeIcon icon="check-circle" /> : saveText}
         </Button>
       )}
 
