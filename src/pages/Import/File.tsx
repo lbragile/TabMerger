@@ -16,9 +16,9 @@ const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   align-content: center;
   gap: 16px;
   cursor: pointer;
-  ${({ $isRejected, $isAccepted }) => css`
+  ${({ $isRejected, $isAccepted, theme }) => css`
     border: 1px dashed ${$isAccepted ? "green" : $isRejected ? "red" : "grey"};
-    background-color: ${$isAccepted ? "#ccffcc" : $isRejected ? "#ffcccc" : "#f0f0f0"};
+    background-color: ${$isAccepted ? "#ccffcc" : $isRejected ? "#ffcccc" : theme.colors.secondary};
   `}
 `;
 

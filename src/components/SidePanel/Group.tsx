@@ -10,7 +10,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateColor, deleteGroup, updateActive } from "~/store/actions/groups";
-import { IGroupsState } from "~/store/reducers/groups";
+import { IGroupItemState } from "~/store/reducers/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { relativeTimeStr } from "~/utils/helper";
 
@@ -86,7 +86,7 @@ const Headline = styled.div<{ $isActive: boolean; $isFirst: boolean }>`
     `}
 `;
 
-const Information = styled.div`
+const GroupInformation = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -132,7 +132,7 @@ export default function Group({
   info,
   snapshot,
   dragHandleProps
-}: IGroupsState["available"][number] & IGroup): JSX.Element {
+}: IGroupItemState & IGroup): JSX.Element {
   const dispatch = useDispatch();
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
@@ -210,6 +210,14 @@ export default function Group({
           onPointerEnter={() => setDraggingOver(true)}
           onPointerLeave={() => setDraggingOver(false)}
         >
+          <ColorIndicator
+            color={debouncedPickerValue}
+            role="button"
+            tabIndex={0}
+            onClick={handleShowPicker}
+            onKeyPress={(e) => e.key === "Enter" && handleShowPicker(e)}
+          />
+
           <Headline
             $isActive={isActive}
             $isFirst={index === 0}
@@ -220,17 +228,9 @@ export default function Group({
             {filterChoice === "group" ? <Highlighted text={name} /> : name}
           </Headline>
 
-          <Information>
+          <GroupInformation>
             <span>{info ?? "0T | 0W"}</span> <span>{relativeTimeStr(updatedAt)}</span>
-          </Information>
-
-          <ColorIndicator
-            color={debouncedPickerValue}
-            role="button"
-            tabIndex={0}
-            onClick={handleShowPicker}
-            onKeyPress={(e) => e.key === "Enter" && handleShowPicker(e)}
-          />
+          </GroupInformation>
 
           {!permanent && !isDragging && (
             <AbsoluteCloseIcon

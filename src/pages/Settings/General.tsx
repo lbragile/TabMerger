@@ -69,7 +69,7 @@ const Headline = styled.input`
   }
 `;
 
-const Information = styled.div`
+const GroupInformation = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -126,7 +126,7 @@ const WindowHeadline = styled.div`
   column-gap: 6px;
   justify-content: start;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.surface};
+  background-color: transparent;
   padding: 0 2px;
   border: 1px dashed initial;
 
@@ -142,7 +142,8 @@ const WindowHeadline = styled.div`
 `;
 
 const TabCounter = styled.span`
-  color: #808080;
+  color: ${({ theme }) => theme.colors.onBackground};
+  opacity: 0.75;
   cursor: default;
 `;
 
@@ -167,7 +168,7 @@ const TabTitle = styled.input`
   border-bottom: 1px solid transparent;
 
   &:hover {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.onBackground};
   }
 `;
 
@@ -270,9 +271,9 @@ export default function General(): JSX.Element {
           <GroupButton>
             <Headline value={localGroupTitle} onChange={(e) => setLocalGroupTitle(e.target.value)} />
 
-            <Information>
+            <GroupInformation>
               <span>0T | 0W</span> <span>&lt; 1 min</span>
-            </Information>
+            </GroupInformation>
 
             <ColorIndicator
               color={debouncedColor}

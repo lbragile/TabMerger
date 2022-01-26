@@ -5,7 +5,7 @@ const ModalTabContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.secondary};
 `;
 
 const ModalTab = styled.button<{ $active: boolean }>`
@@ -20,8 +20,8 @@ const ModalTab = styled.button<{ $active: boolean }>`
   ${({ $active }) =>
     $active &&
     css`
-      color: #007bff;
-      border-bottom: 2px solid #007bff;
+      color: ${({ theme }) => theme.colors.primary};
+      border-bottom: 2px solid ${({ theme }) => theme.colors.primary};
       text-shadow: 1px 0 0 currentColor;
     `}
 

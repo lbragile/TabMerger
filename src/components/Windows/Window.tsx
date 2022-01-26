@@ -95,7 +95,8 @@ const TabsContainer = styled(Column)<{ $draggedOver: boolean; $dragOrigin: boole
 `;
 
 const TabCounter = styled.span`
-  color: #808080;
+  color: ${({ theme }) => theme.colors.onBackground};
+  opacity: 0.75;
   cursor: default;
 `;
 

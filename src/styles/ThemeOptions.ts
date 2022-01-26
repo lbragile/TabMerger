@@ -1,7 +1,7 @@
 const colors = {
   light: {
-    primary: "#94c9ff",
-    secondary: "#808080",
+    primary: "#007bff",
+    secondary: "#f0f0f0",
     background: "#fff",
     surface: "#fff",
     error: "#ffcccc",
@@ -12,13 +12,13 @@ const colors = {
     onError: "#fff"
   },
   dark: {
-    primary: "#94c9ff",
-    secondary: "#808080",
+    primary: "#459aff",
+    secondary: "#616161",
     background: "#212121",
     surface: "#414141",
-    error: "#ffcccc",
+    error: "#ff4444",
     onPrimary: "#000",
-    onSecondary: "#000",
+    onSecondary: "#fff",
     onBackground: "#fff",
     onSurface: "#fff",
     onError: "#fff"

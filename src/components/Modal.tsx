@@ -46,7 +46,7 @@ const Container = styled.div`
   position: absolute;
   top: 32px;
   left: 230px;
-  background: ${({ theme }) => theme.colors.surface};
+  background: ${({ theme }) => theme.colors.background};
   padding: 8px;
   box-shadow: 0 0 2px 2px #1113;
   z-index: 2;
@@ -55,7 +55,8 @@ const Container = styled.div`
 const Overlay = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #31313140;
+  background-color: ${({ theme }) => theme.colors.onBackground};
+  opacity: 0.2;
   position: fixed;
   top: 0;
   left: 0;

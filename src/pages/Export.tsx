@@ -53,7 +53,7 @@ const Row = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: 8px;
-  background-color: #f0f0f0;
+  background-color: ${({ theme }) => theme.colors.secondary};
   gap: 8px;
 `;
 
@@ -70,6 +70,7 @@ const CheckboxContainer = styled(Row)`
 const StyledMultiSelect = styled(MultiSelect)`
   && {
     width: 200px;
+    color: black;
 
     & .dropdown-heading {
       cursor: pointer;
@@ -104,6 +105,7 @@ const ArrowIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
   cursor: pointer;
   transition: color 0.3 ease;
+  color: black;
 
   &:hover {
     color: #808080;

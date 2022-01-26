@@ -31,7 +31,6 @@ export default function Text({
     <>
       <TextArea
         $height="300px"
-        $background="initial"
         placeholder="Paste JSON, markdown, CSV, or plain text here..."
         value={currentText}
         onChange={({ target: { value } }) => {

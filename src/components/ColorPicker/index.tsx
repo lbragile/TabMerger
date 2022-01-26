@@ -13,10 +13,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: 0 0 4px 0 black;
+  box-shadow: 0 0 4px 0 ${({ theme }) => theme.colors.onSurface};
   padding: 4px;
   max-width: 208px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.surface};
 `;
 
 const Grid = styled.div`
