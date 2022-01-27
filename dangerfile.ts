@@ -120,7 +120,7 @@ function formatByteStr(bytes: number, addPrefix = false) {
   ${fileSizeMapper
     .map(
       (item) =>
-        `| ${danger.github.utils.fileLinks([item.filename])} | ${item.base} | ${item.current} | ${item.diff} | ${
+        `| ${danger.github.utils.fileLinks([item.filename], false)} | ${item.base} | ${item.current} | ${item.diff} | ${
           item.percent
         } |`
     )
