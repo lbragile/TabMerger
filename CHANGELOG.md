@@ -4,10 +4,25 @@ All notable changes to TabMerger will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and TabMerger adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/lbragile/TabMerger/compare/v2.0.0...HEAD) (11 January 2022)
+<!-- add-changelog-start -->
+
+<!-- add-changelog-end -->
+
+## [Unreleased](https://github.com/lbragile/TabMerger/compare/v2.0.0...HEAD) (Jan 26 2022)
 
 ### Added
 
+- Global settings menu [`!42`](https://github.com/lbragile/TabMerger/pull/42)
+- Success button on save [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- Basic theme logic & colors in `ThemeProvider` [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- `removeFile` and `erase` history abilities based on user input [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- Auto export and sync functionality [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- UI to `General` & `Filter` tabs [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- Default group info change & extracted common values into constants [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- Ability to focus search bar using shortcuts [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- Keyboard shortcut commands [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- `enter` (blur) vs `ctrl + enter` (show dropdown) in window title edit mode [`#38`](https://github.com/lbragile/TabMerger/issues/38)
+- Window renaming abilities [`#38`](https://github.com/lbragile/TabMerger/issues/38)
 - Color Picker [`e3af217`](https://github.com/lbragile/TabMerger/commit/e3af2178d456e106e304186abec5082ad7ee43a9)
 - Import Functionality [`7fc174c`](https://github.com/lbragile/TabMerger/commit/7fc174c8f031b3874b8c781d93ac37ce7e90caa7)
 - HTML export logic - note about downloads folder & copy indicator [`3423a6d`](https://github.com/lbragile/TabMerger/commit/3423a6dee2753259dc4001ce83046d80f63ceb1c)
@@ -27,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ### Fixed
 
+- Local storage for enabling/disabling keyboard shortcuts [`#41`](https://github.com/lbragile/TabMerger/issues/41)
 - Tab and window delete logic [`4fa8c8b`](https://github.com/lbragile/TabMerger/commit/4fa8c8bb1e531daea444190670382b7eba8b8a85)
 - Color picker issues [`2dc7057`](https://github.com/lbragile/TabMerger/commit/2dc70577fb0fa9f2d119a61caf71bc2c1f05dbdf)
 - Settings dropdown styling & used outside click to hide window context menu [`3df317e`](https://github.com/lbragile/TabMerger/commit/3df317e5a0cb58c72df1c407a996c89a8c01f398)
@@ -43,6 +59,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ### Changed
 
+- Theme values & improved tab index mobility for groups [`#41`](https://github.com/lbragile/TabMerger/issues/41)
+- Dark mode theme for many components [`#41`](https://github.com/lbragile/TabMerger/issues/41)
 - Position of close icon in window & shape in tab [`8bbbd5e`](https://github.com/lbragile/TabMerger/commit/8bbbd5eec0405e2ce1d6cd07f71fc7c7389c20ab)
 - Visibility of tabs on window drag [`fb386c7`](https://github.com/lbragile/TabMerger/commit/fb386c76494c74ac94904f51a49cdf097d42f88f)
 - Improved element keyboard focus [`4fa8c8b`](https://github.com/lbragile/TabMerger/commit/4fa8c8bb1e531daea444190670382b7eba8b8a85)
@@ -51,9 +69,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Styling of window [`060fb8c`](https://github.com/lbragile/TabMerger/commit/060fb8c61a6911c94edc62b64ad26c3681ab5641)
 - Icon for search with a button toggle. Tab count for each window within a group [`060fb8c`](https://github.com/lbragile/TabMerger/commit/060fb8c61a6911c94edc62b64ad26c3681ab5641)
 
-<!-- auto-changelog-above -->
-
-## [v2.0.0](https://github.com/lbragile/TabMerger/compare/v1.6.2...v2.0.0) (06 March 2021)
+## [v2.0.0](https://github.com/lbragile/TabMerger/compare/v1.6.2...v2.0.0) (Mar 06 2021)
 
 ### Added
 
@@ -73,7 +89,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Confirmation boxes with sleek notification menus
 - Extra details on main page that are relevant to each user
 
-## [v1.6.2](https://github.com/lbragile/TabMerger/compare/v1.6.1...v1.6.2) (16 February 2021)
+## [v1.6.2](https://github.com/lbragile/TabMerger/compare/v1.6.1...v1.6.2) (Feb 16 2021)
 
 ### Added
 
@@ -90,7 +106,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Merge button icons to remove confusion on direction of merging and popup text
 
-## [v1.6.1](https://github.com/lbragile/TabMerger/compare/v1.6.0...v1.6.1) (06 February 2021)
+## [v1.6.1](https://github.com/lbragile/TabMerger/compare/v1.6.0...v1.6.1) (Feb 06 2021)
 
 ### Fixed
 
@@ -100,7 +116,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Hidden/empty (no tab) groups from the print friendly PDF
 
-## [v1.6.0](https://github.com/lbragile/TabMerger/compare/v1.5.0...v1.6.0) (04 February 2021)
+## [v1.6.0](https://github.com/lbragile/TabMerger/compare/v1.5.0...v1.6.0) (Feb 04 2021)
 
 ### Added
 
@@ -130,7 +146,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Page UI improvements
 - Fail safe JSON property names to allow better imports from similarly structured JSON files generated by other applications
 
-## [v1.5.0](https://github.com/lbragile/TabMerger/compare/v1.4.3...v1.5.0) (08 January 2021)
+## [v1.5.0](https://github.com/lbragile/TabMerger/compare/v1.4.3...v1.5.0) (Jan 08 2021)
 
 ### Changed
 
@@ -140,13 +156,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Scroll to bottom upon adding group
 - New homepage website which loads much faster, providing better User Experience
 
-## [v1.4.1 - v1.4.3](https://github.com/lbragile/TabMerger/compare/v1.4.0...v1.4.3) (22 December 2020)
+## [v1.4.3](https://github.com/lbragile/TabMerger/compare/v1.4.0...v1.4.3) (Dec 22 2020)
 
 ### Fixed
 
 - Bugs in sync & incognito operation (stable as of v1.4.3)
 
-## [v1.4.0](https://github.com/lbragile/TabMerger/compare/v1.3.0...v1.4.0) (21 December 2020)
+## [v1.4.0](https://github.com/lbragile/TabMerger/compare/v1.3.0...v1.4.0) (Dec 21 2020)
 
 ### Changed
 
@@ -158,7 +174,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Deprecated PDF Export
 
-## [v1.3.0 - v1.3.1](https://github.com/lbragile/TabMerger/compare/v1.2.1...v1.3.0) (14 December 2020)
+## [v1.3.1](https://github.com/lbragile/TabMerger/compare/v1.2.1...v1.3.0) (Dec 14 2020)
 
 ### Added
 
@@ -175,7 +191,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Can restore settings back to default
 
-## [v1.2.1](https://github.com/lbragile/TabMerger/compare/v1.2.0...v1.2.1) (06 December 2020)
+## [v1.2.1](https://github.com/lbragile/TabMerger/compare/v1.2.0...v1.2.1) (Dec 06 2020)
 
 ## Added
 
@@ -189,7 +205,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - Better UI for both FireFox and Chrome versions
 - Further support for languages added
 
-## [v1.2.0](https://github.com/lbragile/TabMerger/compare/bd7f947...v1.2.0) (03 December 2020)
+## [v1.2.0](https://github.com/lbragile/TabMerger/compare/bd7f947...v1.2.0) (Dec 03 2020)
 
 ### Added
 
@@ -200,27 +216,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 - New tab merging functionality allows user to merge within each group directly
 - Better logic for merging prevents extension page from "moving around"
 
-## [v1.1.3](https://github.com/lbragile/TabMerger/compare/20533f0...bd7f947) (01 December 2020)
+## [v1.1.3](https://github.com/lbragile/TabMerger/compare/20533f0...bd7f947) (Dec 01 2020)
 
 ### Fixed
 
 - Issue where extension icon click caused items to close without being merged in FireFox
 - Group title change persistence
 
-## [v1.1.0 - v1.1.2](https://github.com/lbragile/TabMerger/compare/f61488f...20533f0) (30 November 2020)
+## [v1.1.2](https://github.com/lbragile/TabMerger/compare/f61488f...20533f0) (Nov 30 2020)
 
 ### Added
 
 - Dark Mode
 - [FireFox](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) support
 
-## [v1.0.1](https://github.com/lbragile/TabMerger/compare/bae006f...f61488f) (28 November 2020)
+## [v1.0.1](https://github.com/lbragile/TabMerger/compare/bae006f...f61488f) (Nov 28 2020)
 
 ### Added
 
 - Demo video and improved UI
 - Broader language support
 
-## [v1.0.0](https://github.com/lbragile/TabMerger/compare/5ffab12...bae006f) (28 November 2020)
+## [v1.0.0](https://github.com/lbragile/TabMerger/compare/5ffab12...bae006f) (Nov 28 2020)
 
 - Initial release includes core merging, grouping, restoring functionality
