@@ -110,10 +110,10 @@ function formatByteStr(bytes: number, addPrefix = false) {
 
   Comparing: ${danger.git.base.slice(0, 7)}...${danger.git.head.slice(0, 7)}
 
-  <b>Note:</b> the following excludes changes to \`pnpm-lock.yaml\` due to its volatile nature.
-
   <details>
-  <summary>Open to view Data Dictionary</summary>
+  <summary>Insights</summary>
+
+  <b>Note:</b> the following excludes changes to \`pnpm-lock.yaml\` due to its volatile nature.
 
   | Filename | Base | Current | +/- |  %  |
   |---------:|:----:|:-------:|:---|:---|
