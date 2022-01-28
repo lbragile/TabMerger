@@ -1,7 +1,0 @@
-{
-  "template": "./templates/changelog-template.hbs",
-  "startingDate": "2022-01-01",
-  "commitLimit": false,
-  "sortCommits": "date-desc",
-  "unreleased": true
-}

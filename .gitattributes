@@ -9,5 +9,5 @@
 *.yaml linguist-detectable=false
 *.md linguist-detectable=false
 *.sh linguist-detectable=false
-*.hbs linguist-detectable=false
-.env linguist-detectable=false
+.env.example linguist-detectable=false
+.husky/* linguist-detectable=false

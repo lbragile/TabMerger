@@ -8,7 +8,7 @@ function generateCollapsibleList(items: string[], summary: string): string {
   <details>
     <summary>${summary}</summary>
     <ul>
-      ${items.map((item) => `<li>${danger.github.utils.fileLinks([item])}</li>`).join("\n")}
+      ${items.map((item) => `<li>${danger.github.utils.fileLinks([item], false)}</li>`).join("\n")}
     </ul>
   </details>
   `;
@@ -46,7 +46,7 @@ function formatByteStr(bytes: number, addPrefix = false) {
     const subject = commit.message.split("\n")[0];
 
     return (
-      (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs):/i) &&
+      (!subject.match(/^(feat|fix|build|chore|ci|style|refactor|perf|test|docs)(\(.+?\))?:/i) &&
         !subject.includes("Merge pull request")) ||
       subject.length > LONG_COMMIT_MESSAGE_THRESHOLD
     );
@@ -54,8 +54,7 @@ function formatByteStr(bytes: number, addPrefix = false) {
 
   const MALFORMED_COMMIT_MESSAGE = `
   Some commit messages do not match the expected format (helps us generate changelogs).
-  <br />
-  <br />
+
   <details>
       <summary>Violating Commits</summary>
       <ul>
@@ -64,6 +63,7 @@ function formatByteStr(bytes: number, addPrefix = false) {
           .join("\n")}
       </ul>
   </details>
+
   See ${danger.utils.href(
     "https://www.conventionalcommits.org/en/v1.0.0/",
     "Conventional Commits"
@@ -110,6 +110,9 @@ function formatByteStr(bytes: number, addPrefix = false) {
 
   Comparing: ${danger.git.base.slice(0, 7)}...${danger.git.head.slice(0, 7)}
 
+  <details>
+  <summary>Insights</summary>
+
   <b>Note:</b> the following excludes changes to \`pnpm-lock.yaml\` due to its volatile nature.
 
   | Filename | Base | Current | +/- |  %  |
@@ -117,7 +120,7 @@ function formatByteStr(bytes: number, addPrefix = false) {
   ${fileSizeMapper
     .map(
       (item) =>
-        `| ${danger.github.utils.fileLinks([item.filename])} | ${item.base} | ${item.current} | ${item.diff} | ${
+        `| ${danger.github.utils.fileLinks([item.filename], false)} | ${item.base} | ${item.current} | ${item.diff} | ${
           item.percent
         } |`
     )
@@ -126,6 +129,8 @@ function formatByteStr(bytes: number, addPrefix = false) {
     totalChange.diff,
     true
   )} | ${getPrefixSymbol(totalPercentage)}${totalPercentage.toFixed(2)}% |
+
+  </details>
 
   ### Summary
   ${generateCollapsibleList(danger.git.modified_files, "Changed Files")}
