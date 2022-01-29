@@ -22,11 +22,11 @@ const ModalTab = styled.button<{ $active: boolean }>`
     css`
       color: ${({ theme }) => theme.colors.primary};
       border-bottom: 2px solid ${({ theme }) => theme.colors.primary};
-      text-shadow: 1px 0 0 currentColor;
+      text-shadow: 1px 0 0 currentcolor;
     `}
 
   &:hover {
-    text-shadow: 1px 0 0 currentColor;
+    text-shadow: 1px 0 0 currentcolor;
   }
 `;
 

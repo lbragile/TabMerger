@@ -1,16 +1,6 @@
-import { TABMERGER_SURVEY } from "./constants/urls";
+import { TABMERGER_DEMO_SITE, TABMERGER_HELP, TABMERGER_SURVEY } from "./constants/urls";
 import { prepareGroupsForSync, handleSyncUpload, setDefaultData } from "./utils/background";
-import { getReadableTimestamp } from "./utils/helper";
-
-const handleMessage = (req: { type: string }) => {
-  switch (req.type) {
-    default:
-      break;
-  }
-
-  /** @see https://developer.chrome.com/docs/extensions/mv3/messaging/#simple near the end */
-  return true;
-};
+import { createActiveTab, getReadableTimestamp } from "./utils/helper";
 
 const handleInstall = (details: chrome.runtime.InstalledDetails) => {
   switch (details.reason) {
@@ -38,9 +28,20 @@ const handleInstall = (details: chrome.runtime.InstalledDetails) => {
     default:
       break;
   }
+
+  // Context menu needs to be created once on any install event
+  chrome.contextMenus.create({ title: "Exclude Site From TabMerger Visibility", id: "exclude", contexts: ["all"] });
+  chrome.contextMenus.create({ type: "separator", id: "separator-1" });
+  chrome.contextMenus.create({ title: "Help", id: "help", contexts: ["all"] });
+  chrome.contextMenus.create({ title: "Contact Us", id: "contact", contexts: ["all"] });
 };
 
-function handleAlarmUpdate(type: "autoExport" | "autoSync", newValue?: boolean) {
+/**
+ * Helper for either:
+ * 1. Clearing (checkbox became 'unchecked')
+ * 2. Updating an alarm (a property of the alarm changed OR it was enabled)
+ */
+function updateAlarm(type: "autoExport" | "autoSync", newValue?: boolean) {
   const item = type === "autoExport" ? "exportFreq" : "syncFreq";
   const alarmName = type + "Alarm";
 
@@ -53,24 +54,28 @@ function handleAlarmUpdate(type: "autoExport" | "autoSync", newValue?: boolean) 
   }
 }
 
-chrome.storage.onChanged.addListener(
-  (changes: Record<string, chrome.storage.StorageChange>, areaName: "sync" | "local" | "managed") => {
-    if (areaName !== "local") return;
+const handleStorageChangeDueToAlarm = (
+  changes: Record<string, chrome.storage.StorageChange>,
+  areaName: "sync" | "local" | "managed"
+) => {
+  if (areaName !== "local") return;
 
-    const changedKeys = Object.keys(changes);
-    const relevantKeys = ["autoExport", "exportFreq", "autoSync", "syncFreq"];
+  const changedKeys = Object.keys(changes);
+  const relevantKeys = ["autoExport", "exportFreq", "autoSync", "syncFreq"];
 
-    // Only create/update alarm when one of the following changed
-    if (!changedKeys.some((key) => relevantKeys.includes(key))) return;
+  // Only create/update alarm when one of the following changed
+  if (!changedKeys.some((key) => relevantKeys.includes(key))) return;
 
-    chrome.storage.local.get(relevantKeys, ({ autoExport, autoSync }) => {
-      handleAlarmUpdate("autoExport", !!autoExport);
-      handleAlarmUpdate("autoSync", !!autoSync);
-    });
-  }
-);
+  chrome.storage.local.get(relevantKeys, ({ autoExport, autoSync }) => {
+    updateAlarm("autoExport", !!autoExport);
+    updateAlarm("autoSync", !!autoSync);
+  });
+};
 
-chrome.downloads.onChanged.addListener((downloadDelta) => {
+/**
+ * When a download completes, need to set the export timestamp and re-show the gray download shelf
+ */
+const handleDownloadComplete = (downloadDelta: chrome.downloads.DownloadDelta) => {
   if (downloadDelta.state?.current === "complete") {
     try {
       chrome.downloads.setShelfEnabled(true);
@@ -83,9 +88,18 @@ chrome.downloads.onChanged.addListener((downloadDelta) => {
       // Do nothing
     }
   }
-});
+};
 
-chrome.alarms.onAlarm.addListener((alarm) => {
+/**
+ * Depending on the triggering alarm, executes an action
+ *
+ * To export, simply stringify the current storage object.
+ * Depending on user settings, this also clears the old files from the directory and downloads history.
+ *
+ * To sync, the same functionality found in the main sync modal tab is performed
+ * @param alarm
+ */
+const handleAlarm = (alarm: chrome.alarms.Alarm) => {
   if (alarm.name === "autoExportAlarm") {
     chrome.storage.local.get(null, (result) => {
       const reader = new FileReader();
@@ -140,7 +154,59 @@ chrome.alarms.onAlarm.addListener((alarm) => {
       handleSyncUpload(prepareGroupsForSync(result.available));
     });
   }
-});
+};
+
+/**
+ * Helper to add a tab URL to the filter list of ignored tabs
+ * @note Query parameters are omitted
+ */
+function excludeTab(tab: chrome.tabs.Tab | undefined) {
+  const { url } = tab ?? {};
+  if (url) {
+    chrome.storage.local.get(["urlFilter"], (result) => {
+      chrome.storage.local.set({ urlFilter: url.split("?")[0] + ",\n" + (result.urlFilter ?? "") }, () => "");
+    });
+  }
+}
+
+const handleContextMenu = (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => {
+  switch (info.menuItemId) {
+    case "exclude":
+      excludeTab(tab);
+      break;
+
+    case "help":
+      createActiveTab(TABMERGER_HELP);
+      break;
+
+    case "contact":
+      createActiveTab(TABMERGER_DEMO_SITE);
+      break;
+
+    default:
+      break;
+  }
+};
+
+/**
+ * Excluding is a "global" command (happens outside of the popup) ...
+ * ... and thus needs to be handled in the background service worker
+ */
+const handleCommand = (command: string, tab: chrome.tabs.Tab) => {
+  if (command === "exclude") {
+    excludeTab(tab);
+  }
+};
 
 chrome.runtime.onInstalled.addListener(handleInstall);
-chrome.runtime.onMessage.addListener(handleMessage);
+
+chrome.alarms.onAlarm.addListener(handleAlarm);
+chrome.storage.onChanged.addListener(handleStorageChangeDueToAlarm);
+chrome.permissions.onAdded.addListener((added: chrome.permissions.Permissions) => {
+  if (added.permissions?.includes("downloads") && added.permissions?.includes("downloads.shelf")) {
+    chrome.downloads.onChanged.addListener(handleDownloadComplete);
+  }
+});
+
+chrome.contextMenus.onClicked.addListener(handleContextMenu);
+chrome.commands.onCommand.addListener(handleCommand);

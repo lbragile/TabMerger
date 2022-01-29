@@ -107,7 +107,13 @@ export default function Filter(): JSX.Element {
 
         <div>
           <p>
-            <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can be used!
+            <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can be used
+            to group many URL patterns!
+          </p>
+
+          <p>
+            <Link href="https://en.wikipedia.org/wiki/Query_string" title="Query parameters" /> in URLs are
+            ignored/trimmed
           </p>
         </div>
       </Note>

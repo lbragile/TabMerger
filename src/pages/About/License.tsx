@@ -18,7 +18,11 @@ const DetailsGrid = styled.div`
 `;
 
 const LicenseGrid = styled(DetailsGrid)`
-  grid-template-columns: auto 29ch auto;
+  grid-template-columns: repeat(3, auto);
+
+  & span:nth-of-type(2n + 1) {
+    justify-self: right;
+  }
 `;
 
 interface ILicenseName {
@@ -60,13 +64,8 @@ const LICENSE_DETAILS: ILicenseDetails[] = [
   },
   {
     name: { title: "Styled Components", url: LICENSE_INFO.StyledComponents.repo },
-    authors: "Glen Maddern & Maximilian Stoiber",
+    authors: "Glen M. & Maximilian S.",
     license: { title: "MIT", url: LICENSE_INFO.StyledComponents.license }
-  },
-  {
-    name: { title: "File Saver", url: LICENSE_INFO.FileSaver.repo },
-    authors: "Eli Grey",
-    license: { title: "MIT", url: LICENSE_INFO.FileSaver.license }
   },
   {
     name: { title: "Nano ID", url: LICENSE_INFO.NanoID.repo },

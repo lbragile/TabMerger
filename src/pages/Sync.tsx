@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { saveAs } from "file-saver";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -30,9 +29,11 @@ const StyledButton = styled(Button)`
 `;
 
 export default function Sync(): JSX.Element {
-  const [activeTab, setActiveTab] = useState<TSyncType>("Upload");
-
   const { available } = useSelector((state) => state.groups);
+
+  const [fileLocationPicker] = useLocalStorage("fileLocationPicker", false);
+
+  const [activeTab, setActiveTab] = useState<TSyncType>("Upload");
 
   const { possibleData, currentData } = useSyncStorageInfo(activeTab, available);
 
@@ -51,10 +52,16 @@ export default function Sync(): JSX.Element {
 
   const handlePreviewSyncData = () => {
     const data = [activeTab === "Upload" ? getHTMLTextPossible() : getHTMLTextCurrent()];
-    const fileName = `TabMerger Sync - ${new Date().toTimeString()}.html`;
-    const file = new File(data, fileName, { type: "text/html" });
+    const filename = `TabMerger Sync Preview.html`;
+    const file = new File(data, filename, { type: "text/html" });
 
-    saveAs(file);
+    chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
+      if (!granted) return;
+
+      const url = URL.createObjectURL(file);
+
+      chrome.downloads.download({ conflictAction: "uniquify", saveAs: fileLocationPicker, filename, url }, () => "");
+    });
   };
 
   return (
