@@ -45,9 +45,6 @@ const REACT_MULTI_SELECT_COMPONENT_LICENSE = REACT_MULTI_SELECT_COMPONENT_REPO +
 const STYLED_COMPONENTS_REPO = GITHUB_BASE_URL + "/styled-components/styled-components";
 const STYLED_COMPONENTS_LICENSE = STYLED_COMPONENTS_REPO + "/blob/main/LICENSE";
 
-const FILE_SAVER_REPO = GITHUB_BASE_URL + "/eligrey/FileSaver.js";
-const FILE_SAVER_LICENSE = FILE_SAVER_REPO + "/blob/master/LICENSE.md";
-
 const NANOID_REPO = GITHUB_BASE_URL + "/ai/nanoid";
 const NANOID_LICENSE = NANOID_REPO + "/blob/main/LICENSE";
 
@@ -75,10 +72,6 @@ export const LICENSE_INFO = {
   StyledComponents: {
     repo: STYLED_COMPONENTS_REPO,
     license: STYLED_COMPONENTS_LICENSE
-  },
-  FileSaver: {
-    repo: FILE_SAVER_REPO,
-    license: FILE_SAVER_LICENSE
   },
   NanoID: {
     repo: NANOID_REPO,

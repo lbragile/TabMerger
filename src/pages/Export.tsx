@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { saveAs } from "file-saver";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
@@ -10,8 +9,7 @@ import Selector from "~/components/Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
-import { useDispatch, useSelector } from "~/hooks/useRedux";
-import { setVisibility } from "~/store/actions/modal";
+import { useSelector } from "~/hooks/useRedux";
 import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
 import { TExportType } from "~/typings/settings";
@@ -67,6 +65,12 @@ const CheckboxContainer = styled(Row)`
   }
 `;
 
+const LabelledCheckbox = styled(CheckboxContainer)`
+  gap: 8px;
+  justify-content: start;
+  background: unset;
+`;
+
 const StyledMultiSelect = styled(MultiSelect)`
   && {
     width: 200px;
@@ -115,15 +119,18 @@ const ArrowIcon = styled(FontAwesomeIcon)`
 const EMPTY_TEXT = "Nothing to export";
 
 export default function Export(): JSX.Element {
-  const dispatch = useDispatch();
   const { available } = useSelector((state) => state.groups);
+
+  const [fileLocationPicker, setFileLocationPicker] = useLocalStorage("fileLocationPicker", false);
+  const [, setLastExport] = useLocalStorage("lastExport", "");
 
   const [activeTab, setActiveTab] = useState<TExportType>("json");
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
   const [exportFile, setExportFile] = useState<File | null>(null);
+  const [localFileLocationPicker, setLocalFileLocationPicker] = useState(false);
 
-  const [, setLastExport] = useLocalStorage("lastExport", "");
+  useEffect(() => setLocalFileLocationPicker(fileLocationPicker), [fileLocationPicker]);
 
   const selectOpts = useMemo(
     () => available.slice(1).map((group) => ({ label: group.name, value: group })),
@@ -193,7 +200,7 @@ export default function Export(): JSX.Element {
           ? ["text/html", ".html"]
           : ["text/csv", ".csv"];
 
-      const newFile = new File([text], `TabMerger Export - ${new Date().toTimeString()}${extension}`, { type });
+      const newFile = new File([text], `TabMerger Export${extension}`, { type });
 
       setExportFile(newFile);
     } else {
@@ -260,11 +267,22 @@ export default function Export(): JSX.Element {
         <TextArea ref={textAreaRef} $width="100%" $height="100%" readOnly value={text} />
       </TextAreaContainer>
 
+      <LabelledCheckbox>
+        <input
+          type="checkbox"
+          id="fileExportPath"
+          name="fileExportPath"
+          checked={localFileLocationPicker}
+          onChange={() => setLocalFileLocationPicker(!localFileLocationPicker)}
+        />
+        <label htmlFor="fileExportPath">Show File Location Picker</label>
+      </LabelledCheckbox>
+
       <Note>
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
         <div>
-          <span>Files are saved to your</span> <Link href={DOWNLOADS_URL} title="Downloads Folder" />
+          <span>Files can be found in your</span> <Link href={DOWNLOADS_URL} title="Downloads Tab" />
         </div>
       </Note>
 
@@ -273,9 +291,19 @@ export default function Export(): JSX.Element {
         saveText="Export"
         handleSave={() => {
           if (exportFile) {
-            saveAs(exportFile);
-            setLastExport(getReadableTimestamp());
-            dispatch(setVisibility(false));
+            chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
+              if (!granted) return;
+
+              const url = URL.createObjectURL(exportFile);
+
+              chrome.downloads.download(
+                { conflictAction: "uniquify", saveAs: localFileLocationPicker, filename: exportFile.name, url },
+                () => ""
+              );
+
+              setLastExport(getReadableTimestamp());
+              setFileLocationPicker(localFileLocationPicker);
+            });
           }
         }}
       />

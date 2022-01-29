@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import Link from "../../components/Link";
 import Selector from "../../components/Selector";
@@ -35,6 +35,8 @@ const Logo = styled.img`
 const { version } = chrome.runtime.getManifest();
 
 export default function About(): JSX.Element {
+  const theme = useTheme();
+
   const [activeTab, setActiveTab] = useState<"Details" | "Licenses">("Details");
 
   return (
@@ -47,7 +49,7 @@ export default function About(): JSX.Element {
         </a>
 
         <AboutTitle>
-          <Link href={TABMERGER_DEMO_SITE} title={`TabMerger v${version}`} color="black" />
+          <Link href={TABMERGER_DEMO_SITE} title={`TabMerger v${version}`} color={theme.colors.onBackground} />
 
           <p>Copyright &copy; {new Date().getFullYear()} lbragile</p>
           <p>All rights reserved</p>

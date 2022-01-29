@@ -14,7 +14,7 @@ import { pluralize, relativeTimeStr } from "~/utils/helper";
 const StyledInput = styled.input`
   all: unset;
   width: 8ch;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.onBackground};
   font-weight: bold;
   text-align: center;
 
@@ -172,9 +172,14 @@ export default function Backup(): JSX.Element {
         showSave
         closeText="Cancel"
         handleSave={() => {
-          setAutoExport(localAutoExport);
-          setExportFreq(localExportFreq);
-          setExportMax(localExportMax);
+          chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
+            if (!granted) return;
+
+            setAutoExport(localAutoExport);
+            setExportFreq(localExportFreq);
+            setExportMax(localExportMax);
+          });
+
           setAutoSync(localAutoSync);
           setSyncFreq(localSyncFreq);
         }}

@@ -5,7 +5,6 @@
   "author": "Lior Bragilevsky <lbragile.masc@gmail.com> (https://github.com/lbragile)",
   "private": true,
   "dependencies": {
-    "file-saver": "^2.0.5",
     "nanoid": "^3.2.0",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
@@ -27,7 +26,6 @@
     "@octokit/core": "^3.5.1",
     "@types/chrome": "^0.0.177",
     "@types/express": "^4.17.13",
-    "@types/file-saver": "^2.0.5",
     "@types/node": "^17.0.13",
     "@types/react": "^17.0.38",
     "@types/react-beautiful-dnd": "^13.1.2",
