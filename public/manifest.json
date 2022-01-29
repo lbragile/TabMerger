@@ -1,9 +1,8 @@
 {
   "manifest_version": 3,
   "version": "3.0.0",
-  "name": "__MSG_appName__",
+  "name": "TabMerger",
   "description": "Stores your tabs in one location to save memory usage and increase your productivity",
-  "default_locale": "en",
   "author": "Lior Bragilevsky",
   "homepage_url": "https://lbragile.github.io/TabMerger-Extension/",
   "permissions": ["tabs", "storage", "unlimitedStorage", "commands", "contextMenus", "alarms"],
