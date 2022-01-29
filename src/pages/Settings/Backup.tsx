@@ -172,13 +172,9 @@ export default function Backup(): JSX.Element {
         showSave
         closeText="Cancel"
         handleSave={() => {
-          chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
-            if (!granted) return;
-
-            setAutoExport(localAutoExport);
-            setExportFreq(localExportFreq);
-            setExportMax(localExportMax);
-          });
+          setAutoExport(localAutoExport);
+          setExportFreq(localExportFreq);
+          setExportMax(localExportMax);
 
           setAutoSync(localAutoSync);
           setSyncFreq(localSyncFreq);

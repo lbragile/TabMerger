@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 export const StyledLink = styled.span<{ $color?: string; $header?: boolean }>`
-  color: ${({ $color }) => $color ?? "#0645ad"};
+  color: ${({ $color, theme }) => $color ?? theme.links.onSurface};
   cursor: pointer;
   ${({ $header }) =>
     $header &&

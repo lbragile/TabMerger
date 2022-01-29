@@ -202,11 +202,6 @@ chrome.runtime.onInstalled.addListener(handleInstall);
 
 chrome.alarms.onAlarm.addListener(handleAlarm);
 chrome.storage.onChanged.addListener(handleStorageChangeDueToAlarm);
-chrome.permissions.onAdded.addListener((added: chrome.permissions.Permissions) => {
-  if (added.permissions?.includes("downloads") && added.permissions?.includes("downloads.shelf")) {
-    chrome.downloads.onChanged.addListener(handleDownloadComplete);
-  }
-});
-
+chrome.downloads.onChanged.addListener(handleDownloadComplete);
 chrome.contextMenus.onClicked.addListener(handleContextMenu);
 chrome.commands.onCommand.addListener(handleCommand);

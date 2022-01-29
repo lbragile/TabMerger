@@ -74,13 +74,12 @@ const LabelledCheckbox = styled(CheckboxContainer)`
 const StyledMultiSelect = styled(MultiSelect)`
   && {
     width: 200px;
-    color: black;
 
     & .dropdown-heading {
       cursor: pointer;
     }
 
-    & .dropdown-content .panel-content {
+    & .panel-content {
       border-radius: 0;
     }
 
@@ -91,6 +90,14 @@ const StyledMultiSelect = styled(MultiSelect)`
         box-shadow: none;
       }
     }
+
+    & .dropdown-heading,
+    & .panel-content,
+    & .select-item,
+    & .search input {
+      background-color: ${({ theme }) => theme.colors.surface};
+      color: ${({ theme }) => theme.colors.onSurface};
+    }
   }
 `;
 
@@ -99,6 +106,7 @@ const CloseIcon = styled(FontAwesomeIcon)`
   font-size: 14px;
   cursor: pointer;
   transition: color 0.3 ease;
+  color: ${({ theme }) => theme.colors.onSurface};
 
   &:hover {
     color: #ff4040;
@@ -109,7 +117,7 @@ const ArrowIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
   cursor: pointer;
   transition: color 0.3 ease;
-  color: black;
+  color: ${({ theme }) => theme.colors.onSurface};
 
   &:hover {
     color: #808080;
@@ -291,19 +299,15 @@ export default function Export(): JSX.Element {
         saveText="Export"
         handleSave={() => {
           if (exportFile) {
-            chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
-              if (!granted) return;
+            const url = URL.createObjectURL(exportFile);
 
-              const url = URL.createObjectURL(exportFile);
+            chrome.downloads.download(
+              { conflictAction: "uniquify", saveAs: localFileLocationPicker, filename: exportFile.name, url },
+              () => ""
+            );
 
-              chrome.downloads.download(
-                { conflictAction: "uniquify", saveAs: localFileLocationPicker, filename: exportFile.name, url },
-                () => ""
-              );
-
-              setLastExport(getReadableTimestamp());
-              setFileLocationPicker(localFileLocationPicker);
-            });
+            setLastExport(getReadableTimestamp());
+            setFileLocationPicker(localFileLocationPicker);
           }
         }}
       />

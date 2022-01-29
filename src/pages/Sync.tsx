@@ -55,13 +55,9 @@ export default function Sync(): JSX.Element {
     const filename = `TabMerger Sync Preview.html`;
     const file = new File(data, filename, { type: "text/html" });
 
-    chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
-      if (!granted) return;
+    const url = URL.createObjectURL(file);
 
-      const url = URL.createObjectURL(file);
-
-      chrome.downloads.download({ conflictAction: "uniquify", saveAs: fileLocationPicker, filename, url }, () => "");
-    });
+    chrome.downloads.download({ conflictAction: "uniquify", saveAs: fileLocationPicker, filename, url }, () => "");
   };
 
   return (

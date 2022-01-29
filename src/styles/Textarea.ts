@@ -11,6 +11,10 @@ const TextArea = styled.textarea<{ $width?: string; $height?: string; $backgroun
   margin: auto;
   white-space: pre;
   overflow-wrap: normal;
+
+  &:read-only {
+    opacity: 0.9;
+  }
 `;
 
 export default TextArea;

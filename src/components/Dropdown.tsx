@@ -27,7 +27,7 @@ const Triangle = styled.div<{ $pos: IPos }>`
   top: 4px;
   left: ${({ $pos }) => ($pos.left ? $pos.left - 12 + "px" : 0)};
   border: 6px solid transparent;
-  border-right: 6px solid #303030;
+  border-right: 6px solid ${({ theme }) => theme.popups.surface};
   z-index: 10;
 `;
 
@@ -46,8 +46,8 @@ const Container = styled.div<{ $pos: IPos }>`
           right: ${($pos.right ?? 0) + "px"};
         `}
   min-width: 110px;
-  background-color: #303030;
-  color: white;
+  background-color: ${({ theme }) => theme.popups.surface};
+  color: ${({ theme }) => theme.popups.onSurface};
   overflow: hidden;
   z-index: 999;
   padding: 4px;
@@ -73,7 +73,8 @@ const DropdownItem = styled.div<{ $align: TAlign; $danger?: boolean; $disabled?:
 
 const DropdownDivider = styled.hr`
   border: none;
-  border-top: 1px solid #bfbfbf;
+  border-top: 1px solid ${({ theme }) => theme.popups.onSurface};
+  opacity: 0.3;
   margin: 4px 0;
   width: 90%;
 `;

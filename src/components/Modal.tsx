@@ -49,7 +49,7 @@ const Container = styled.div`
   left: 230px;
   background: ${({ theme }) => theme.colors.background};
   padding: 8px;
-  box-shadow: 0 0 2px 2px #1113;
+  box-shadow: 0 0 2px 2px ${({ theme }) => theme.colors.onBackground + "3"};
   z-index: 2;
 `;
 

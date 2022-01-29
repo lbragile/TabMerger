@@ -43,7 +43,8 @@ const GroupButton = styled.div<IGroupStyle>`
     $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : theme.colors.surface};
   color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
     $isActive || $dragging || $draggingOver ? "black" : theme.colors.onSurface};
-  outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(133 66 0 / 30%)" : "rgb(0 0 0 / 10%)")};
+  outline: 1px solid
+    ${({ $permanent, theme }) => ($permanent ? "rgb(133 66 0 / 30%)" : theme.colors.onBackground + "2")};
   outline-offset: -1px;
   overflow: hidden;
   position: relative;
