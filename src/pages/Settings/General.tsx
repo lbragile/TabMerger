@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef, useMemo, useEffect } from "react";
-import styled from "styled-components";
 
 import Checkbox from "~/components/Checkbox";
 import ColorPicker from "~/components/ColorPicker";
@@ -10,123 +9,18 @@ import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
+import { Column } from "~/styles/Column";
+import {
+  GroupButtonContainer,
+  GroupButton,
+  GroupInformation,
+  ColorIndicator,
+  ColorPickerContainer,
+  GroupHeadline,
+  AbsoluteCloseIcon
+} from "~/styles/Group";
 import { SectionTitle } from "~/styles/SectionTitle";
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const GroupButton = styled.div`
-  width: 209px;
-  height: 49px;
-  background-color: ${({ theme }) => theme.colors.surface};
-  outline: 1px solid rgb(0 0 0 / 10%);
-  outline-offset: -1px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 6px 8px 2px 16px;
-  cursor: pointer;
-`;
-
-const Headline = styled.input`
-  all: unset;
-  font-size: 16px;
-  font-weight: 600;
-  width: fit-content;
-  max-width: 95%;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 16px;
-
-  &:hover {
-    border-bottom: 1px solid grey;
-  }
-`;
-
-const GroupInformation = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 12px;
-`;
-
-const ColorIndicator = styled.div<{ color: string }>`
-  width: 8px;
-  height: 100%;
-  background-color: ${({ color }) => color};
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: transform 0.3s linear, background-color 0.3s ease-out;
-
-  &:hover {
-    transform: scaleX(2);
-  }
-`;
-
-const ColorPickerContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: calc(100% + 8px);
-`;
-
-const GroupButtonContainer = styled.div`
-  position: relative;
-  max-width: fit-content;
-`;
-
-const WindowTitle = styled.input`
-  all: unset;
-  font-size: 15px;
-  width: calc(100% - 8px);
-  padding: 0 4px;
-  font-weight: 600;
-  cursor: pointer;
-  user-select: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-
-  &:hover,
-  &:focus-visible {
-    background-color: #dfdfdfb7;
-  }
-`;
-
-const WindowHeadline = styled.div`
-  display: grid;
-  grid-template-columns: auto 25ch auto;
-  column-gap: 6px;
-  justify-content: start;
-  align-items: center;
-  background-color: transparent;
-  padding: 0 2px;
-  border: 1px dashed initial;
-
-  & svg {
-    max-width: 14px;
-    transition: transform 0.3s ease;
-
-    &:hover,
-    &:focus-visible {
-      transform: scale(1.25);
-    }
-  }
-`;
-
-const TabCounter = styled.span`
-  color: ${({ theme }) => theme.colors.onBackground};
-  opacity: 0.75;
-  cursor: default;
-`;
+import { WindowHeadline, WindowTitle, TabCounter } from "~/styles/Window";
 
 export default function General(): JSX.Element {
   const [showPicker, setShowPicker] = useState(false);
@@ -175,18 +69,18 @@ export default function General(): JSX.Element {
 
   return (
     <>
-      <Column>
+      <Column $gap="8px">
         {settingsOptions.map((item) => (
           <Checkbox key={item.label} id={item.id} text={item.label} checked={item.checked} setChecked={item.onChange} />
         ))}
       </Column>
 
-      <Column>
+      <Column $gap="8px">
         <SectionTitle>Default Group</SectionTitle>
 
         <GroupButtonContainer>
           <GroupButton>
-            <Headline value={localGroupTitle} onChange={(e) => setLocalGroupTitle(e.target.value)} />
+            <GroupHeadline value={localGroupTitle} onChange={(e) => setLocalGroupTitle(e.target.value)} />
 
             <GroupInformation>
               <span>0T | 0W</span> <span>&lt; 1 min</span>
@@ -200,6 +94,8 @@ export default function General(): JSX.Element {
               onKeyPress={(e) => e.key === "Enter" && setShowPicker(true)}
             />
           </GroupButton>
+
+          <AbsoluteCloseIcon icon="times" />
 
           {showPicker && (
             <ColorPickerContainer ref={pickerRef}>

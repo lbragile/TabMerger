@@ -4,6 +4,7 @@ import { useDropzone } from "react-dropzone";
 import styled, { css } from "styled-components";
 
 import Note from "~/components/Note";
+import { Column } from "~/styles/Column";
 import { Message } from "~/styles/Message";
 import { TImportType } from "~/typings/settings";
 
@@ -22,9 +23,7 @@ const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   `}
 `;
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
+const StyledColumn = styled(Column)`
   gap: 8px;
   justify-content: center;
   align-items: center;
@@ -89,7 +88,7 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
       <DropZone {...getRootProps()} $isRejected={isDragReject} $isAccepted={isDragAccept}>
         <input {...getInputProps()} />
 
-        <Column>
+        <StyledColumn>
           {isDragActive && isDragAccept ? (
             <>
               <FontAwesomeIcon icon="check-circle" size="2x" color="green" />
@@ -116,7 +115,7 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
               </p>
             </>
           )}
-        </Column>
+        </StyledColumn>
       </DropZone>
 
       {!isDragActive && fileRejections.length > 0 && <Message $error>{UPLOAD_FILE_ERROR}</Message>}

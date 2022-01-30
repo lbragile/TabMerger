@@ -23,7 +23,7 @@ const WindowsContainer = styled(Scrollbar)<IWindowContainerStyle>`
   gap: 8px;
   overflow: auto;
   height: ${({ $height }) => $height + "px"};
-  border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
+  border: 1px dashed ${({ $draggedOver, theme }) => ($draggedOver ? theme.colors.primary : "transparent")};
 `;
 
 export default function Windows(): JSX.Element {

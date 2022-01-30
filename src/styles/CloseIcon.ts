@@ -1,25 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
-export const CloseIcon = styled(FontAwesomeIcon)<{ $visible?: boolean }>`
+export const CloseIcon = styled(FontAwesomeIcon)`
   && {
-    &:focus-visible {
-      visibility: visible;
+    z-index: 1;
+    cursor: pointer;
+    color: ${({ theme }) => theme.colors.onBackground};
+    opacity: 0;
+
+    &:focus-visible,
+    &:hover {
+      opacity: 1;
       color: #ff4040;
     }
-
-    ${({ $visible }) =>
-      $visible !== false
-        ? css`
-            cursor: pointer;
-            color: transparent;
-
-            &:hover {
-              color: #ff4040;
-            }
-          `
-        : css`
-            visibility: hidden;
-          `}
   }
 `;

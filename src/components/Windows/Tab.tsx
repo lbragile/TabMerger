@@ -4,7 +4,6 @@ import styled, { css } from "styled-components";
 import Highlighted from "~/components/Highlighted";
 import { isTabDrag } from "~/constants/dragRegExp";
 import { DEFAULT_FAVICON_URL } from "~/constants/urls";
-import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { deleteTab, deleteWindow, deleteGroup } from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
@@ -70,8 +69,6 @@ export default function Tab({
 }: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
 
-  const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", true);
-
   const {
     available,
     active: { index: groupIndex }
@@ -104,8 +101,6 @@ export default function Tab({
     }
   };
 
-  const tabTitle = filterChoice === "tab" ? <Highlighted text={title} /> : title;
-
   return (
     <Row>
       <CloseIcon
@@ -114,7 +109,6 @@ export default function Tab({
         onClick={closeTab}
         onPointerDown={(e) => e.preventDefault()}
         onKeyPress={({ key }) => key === "Enter" && closeTab()}
-        $visible={!isDragging}
       />
 
       <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
@@ -135,7 +129,7 @@ export default function Tab({
           onClick={(e) => e.button === 0 && openTab()}
           draggable={false}
         >
-          {italicizeNonHttp && !/^https?:\/\//.test(title ?? "") ? <i>{tabTitle}</i> : tabTitle}
+          {filterChoice === "tab" ? <Highlighted text={title} /> : title}
         </TabTitle>
       </TabContainer>
     </Row>

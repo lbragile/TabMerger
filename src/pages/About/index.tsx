@@ -12,16 +12,16 @@ import Note from "~/components/Note";
 import { TABMERGER_DEMO_SITE, TABMERGER_TOS_LINK } from "~/constants/urls";
 import { Row } from "~/styles/Row";
 
-const StyledRow = styled(Row)`
-  gap: 32px;
-`;
-
 const AboutTitle = styled.div`
   text-align: center;
 
   & p {
     opacity: 0.5;
   }
+`;
+
+const StyledRow = styled(Row)`
+  justify-content: center;
 `;
 
 const Logo = styled.img`
@@ -39,7 +39,7 @@ export default function About(): JSX.Element {
     <>
       <ModalHeader title="About TabMerger" />
 
-      <StyledRow>
+      <StyledRow $gap="32px">
         <a href={TABMERGER_DEMO_SITE} title={TABMERGER_DEMO_SITE} target="_blank" rel="noreferrer">
           <Logo src="./images/logo48.png" alt="TabMerger Logo" />
         </a>

@@ -14,7 +14,7 @@ const colors = {
     onSuccess: "green"
   },
   dark: {
-    primary: "#459aff",
+    primary: "#6dafff",
     secondary: "#404040",
     background: "#212121",
     surface: "#303030",

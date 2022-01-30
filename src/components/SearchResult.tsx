@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 import useFilter from "~/hooks/useFilter";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateInputValue } from "~/store/actions/header";
+import { CloseIcon } from "~/styles/CloseIcon";
 import { pluralize } from "~/utils/helper";
 
 const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
@@ -32,8 +33,10 @@ const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
   }
 `;
 
-const CloseIcon = styled(FontAwesomeIcon)`
-  cursor: pointer;
+const StyledCloseIcon = styled(CloseIcon)`
+  && {
+    opacity: 1;
+  }
 `;
 
 const SearchIcon = styled(FontAwesomeIcon)`
@@ -76,7 +79,7 @@ export default function SearchResult(): JSX.Element {
         </span>
       </div>
 
-      <CloseIcon
+      <StyledCloseIcon
         icon="times"
         tabIndex={0}
         onPointerDown={(e) => e.preventDefault()}

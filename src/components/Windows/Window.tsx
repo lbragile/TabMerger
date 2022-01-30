@@ -21,18 +21,10 @@ import {
   updateWindowName
 } from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
+import { Column } from "~/styles/Column";
 import { Row } from "~/styles/Row";
+import { TabCounter, WindowHeadline, WindowTitle } from "~/styles/Window";
 import { pluralize } from "~/utils/helper";
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`;
-
-const StyledRow = styled(Row)`
-  gap: 4px;
-`;
 
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   justify-content: center;
@@ -40,18 +32,8 @@ const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "0")};
 `;
 
-const WindowTitle = styled.input<{ $active: boolean; $open: boolean; $dragging: boolean }>`
-  all: unset;
-  font-size: 15px;
-  width: calc(100% - 8px);
-  padding: 0 4px;
-  font-weight: 600;
-  cursor: pointer;
-  user-select: none;
+const StyledWindowTitle = styled(WindowTitle)<{ $active: boolean; $open: boolean; $dragging: boolean }>`
   background-color: ${({ $open, $active }) => ($open ? ($active ? "#dde8ffb7" : "#dfdfdfb7") : "transparent")};
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
   ${({ $dragging, $active }) =>
     $dragging
       ? css`
@@ -66,36 +48,20 @@ const WindowTitle = styled.input<{ $active: boolean; $open: boolean; $dragging: 
         `}
 `;
 
-const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
-  display: grid;
-  grid-template-columns: auto 25ch auto;
-  column-gap: 6px;
-  justify-content: start;
-  align-items: center;
+const Headline = styled(WindowHeadline)<{ $active: boolean; $dragging: boolean }>`
   background-color: ${({ $dragging, theme }) => ($dragging ? theme.colors.surface : "transparent")};
-  padding: 0 2px;
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 
   & svg,
-  & ${WindowTitle} {
-    color: ${({ $active, theme }) => ($active ? "#0080ff" : theme.colors.onBackground)};
-  }
-
-  & svg {
-    max-width: 14px;
+  & ${StyledWindowTitle} {
+    color: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.onBackground)};
   }
 `;
 
 const TabsContainer = styled(Column)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
   margin-left: 24px;
-  border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "#0080ff" : "transparent")};
+  border: 1px dashed ${({ $draggedOver, theme }) => ($draggedOver ? theme.colors.primary : "transparent")};
   background-color: ${({ $dragOrigin, theme }) => ($dragOrigin ? theme.colors.surface : "transparent")};
-`;
-
-const TabCounter = styled.span`
-  color: ${({ theme }) => theme.colors.onBackground};
-  opacity: 0.75;
-  cursor: default;
 `;
 
 const TitleContainer = styled.div`
@@ -112,11 +78,6 @@ const IconStack = styled.div`
     top: 0;
     right: -3.5px;
     color: #ff8000;
-  }
-
-  &:hover {
-    transform: scale(1.25);
-    filter: contrast(1.25);
   }
 `;
 
@@ -292,15 +253,14 @@ export default function Window({
   };
 
   return (
-    <WindowContainer $dragging={windowSnapshot.isDragging}>
-      <StyledRow>
+    <WindowContainer $dragging={windowSnapshot.isDragging} $gap="2px">
+      <Row $gap="4px">
         <CloseIcon
           icon="times-circle"
           tabIndex={0}
           onClick={closeWindow}
           onPointerDown={(e) => e.preventDefault()}
           onKeyPress={({ key }) => key === "Enter" && closeWindow()}
-          $visible={!isDragging}
         />
 
         <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
@@ -310,7 +270,7 @@ export default function Window({
           </IconStack>
 
           <TitleContainer>
-            <WindowTitle
+            <StyledWindowTitle
               ref={titleRef}
               $active={focused}
               $open={showPopup}
@@ -342,7 +302,7 @@ export default function Window({
 
           <TabCounter>{tabCounterStr}</TabCounter>
         </Headline>
-      </StyledRow>
+      </Row>
 
       <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType) || groupIndex === 0}>
         {(provider, dropSnapshot) => (

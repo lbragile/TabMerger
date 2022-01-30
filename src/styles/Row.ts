@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export const Row = styled.div`
+export const Row = styled.div<{ $gap?: string }>`
   display: flex;
   flex-direction: row;
   justify-content: start;
   align-items: center;
-  gap: 8px;
+  gap: ${({ $gap }) => $gap ?? "8px"};
 `;

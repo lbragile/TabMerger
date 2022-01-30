@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import Dropdown, { IDropdown } from "./Dropdown";
 import Modal from "./Modal";
@@ -11,24 +11,23 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateInputValue, setFilterChoice, setFocused } from "~/store/actions/header";
 import { setModalType, setVisibility } from "~/store/actions/modal";
+import { CloseIcon } from "~/styles/CloseIcon";
+import { Row } from "~/styles/Row";
 import { TModalType } from "~/typings/settings";
 import { createActiveTab } from "~/utils/helper";
 
-const Flex = styled.div`
-  display: flex;
-  flex-direction: row;
+const StyledRow = styled(Row)`
   justify-content: space-between;
-  align-items: center;
 `;
 
-const Container = styled(Flex)`
+const Container = styled(StyledRow)`
   background-color: #94c9ff;
   width: 100%;
   height: 49px;
   padding: 8px;
 `;
 
-const InputContainer = styled(Flex)`
+const InputContainer = styled(StyledRow)`
   width: 210px;
   height: 39px;
   padding: 8px;
@@ -56,17 +55,17 @@ const SettingsIcon = styled(FontAwesomeIcon)`
   }
 `;
 
-const SearchIcon = styled(FontAwesomeIcon)<{ $typing: boolean }>`
+const SearchIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
-  color: ${({ $typing }) => ($typing ? "black" : "#808080")};
-  ${({ $typing }) =>
-    $typing &&
-    css`
-      &:hover {
-        cursor: pointer;
-        color: #ff8080;
-      }
-    `}
+  color: black;
+`;
+
+const StyledCloseIcon = styled(CloseIcon)`
+  && {
+    font-size: 16px;
+    color: black;
+    opacity: 1;
+  }
 `;
 
 const FilterButtonToggle = styled.div`
@@ -135,7 +134,7 @@ export default function Header(): JSX.Element {
   return (
     <>
       <Container>
-        <Flex>
+        <StyledRow>
           <InputContainer>
             <SearchInput
               ref={searchRef}
@@ -150,18 +149,16 @@ export default function Header(): JSX.Element {
               }}
             />
 
-            <SearchIcon
-              {...(typing ? { tabIndex: 0 } : {})}
-              icon={typing ? "times" : "search"}
-              $typing={typing}
-              onPointerDown={(e) => e.preventDefault()}
-              onClick={() => {
-                // Clicking the close button should clear the input
-                if (typing) {
-                  dispatch(updateInputValue(""));
-                }
-              }}
-            />
+            {typing ? (
+              <StyledCloseIcon
+                tabIndex={0}
+                icon="times"
+                onPointerDown={(e) => e.preventDefault()}
+                onClick={() => typing && dispatch(updateInputValue(""))}
+              />
+            ) : (
+              <SearchIcon icon="search" />
+            )}
           </InputContainer>
 
           {typing && (
@@ -177,7 +174,7 @@ export default function Header(): JSX.Element {
               ))}
             </FilterButtonToggle>
           )}
-        </Flex>
+        </StyledRow>
 
         <div ref={settingsIconRef}>
           <SettingsIcon

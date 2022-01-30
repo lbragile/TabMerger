@@ -12,6 +12,7 @@ import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
+import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
 import { TExportType } from "~/typings/settings";
@@ -80,18 +81,6 @@ const StyledMultiSelect = styled(MultiSelect)`
       background-color: ${({ theme }) => theme.colors.surface};
       color: ${({ theme }) => theme.colors.onSurface};
     }
-  }
-`;
-
-const CloseIcon = styled(FontAwesomeIcon)`
-  margin: 0 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: color 0.3 ease;
-  color: ${({ theme }) => theme.colors.onSurface};
-
-  &:hover {
-    color: #ff4040;
   }
 `;
 
