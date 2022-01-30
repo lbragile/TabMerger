@@ -11,12 +11,9 @@ import License from "./License";
 import { ModalFooter, ModalHeader } from "~/components/Modal";
 import { TABMERGER_DEMO_SITE, TABMERGER_TOS_LINK } from "~/constants/urls";
 import { Note } from "~/styles/Note";
+import { Row } from "~/styles/Row";
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+const StyledRow = styled(Row)`
   gap: 32px;
 `;
 
@@ -43,7 +40,7 @@ export default function About(): JSX.Element {
     <>
       <ModalHeader title="About TabMerger" />
 
-      <Row>
+      <StyledRow>
         <a href={TABMERGER_DEMO_SITE} title={TABMERGER_DEMO_SITE} target="_blank" rel="noreferrer">
           <Logo src="./images/logo48.png" alt="TabMerger Logo" />
         </a>
@@ -54,7 +51,7 @@ export default function About(): JSX.Element {
           <p>Copyright &copy; {new Date().getFullYear()} lbragile</p>
           <p>All rights reserved</p>
         </AboutTitle>
-      </Row>
+      </StyledRow>
 
       <Selector opts={["Details", "Licenses"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 

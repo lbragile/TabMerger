@@ -2,34 +2,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef, useMemo, useEffect } from "react";
 import styled from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import ColorPicker from "~/components/ColorPicker";
 import { ModalFooter } from "~/components/Modal";
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
-import { DEFAULT_FAVICON_URL, GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Note } from "~/styles/Note";
 import { SectionTitle } from "~/styles/SectionTitle";
-import { generateFavIconFromUrl } from "~/utils/helper";
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  padding: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
 
 const Column = styled.div`
   display: flex;
@@ -147,71 +128,28 @@ const TabCounter = styled.span`
   cursor: default;
 `;
 
-const TabContainer = styled.div`
-  display: grid;
-  grid-template-columns: auto auto;
-  align-items: center;
-  justify-content: start;
-  gap: 8px;
-  padding: 0 2px;
-  background-color: initial;
-  border: 1px dashed initial;
-  font-size: 14px;
-`;
-
-const TabTitle = styled.input`
-  all: unset;
-  border: 0;
-  height: 16px;
-  line-height: 16px;
-  width: 50ch;
-  border-bottom: 1px solid transparent;
-
-  &:hover {
-    border-bottom: 1px solid ${({ theme }) => theme.colors.onBackground};
-  }
-`;
-
-const TabIcon = styled.img`
-  height: 20px;
-  width: 20px;
-  transition: transform 0.3s ease;
-
-  &:hover,
-  &:focus-visible {
-    transform: scale(1.25);
-  }
-`;
-
 export default function General(): JSX.Element {
   const [showPicker, setShowPicker] = useState(false);
 
-  const [ignoreURL, setIgnoreURL] = useLocalStorage("ignoreURL", true);
   const [confirmDelete, setConfirmDelete] = useLocalStorage("confirmDelete", true);
-  const [showBadgeInfo, setShowBadgeInfo] = useLocalStorage("showBadgeInfo", true);
+  const [showBadgeInfo, setShowBadgeInfo] = useLocalStorage("showBadgeInfo", false);
   const [groupTitle, setGroupTitle] = useLocalStorage("groupTitle", DEFAULT_GROUP_TITLE);
   const [groupColor, setGroupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
   const [windowTitle, setWindowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
-  const [faviconUrl, setFaviconUrl] = useLocalStorage("faviconUrl", GOOGLE_HOMEPAGE);
 
-  const [localIgnoreURL, setLocalIgnoreURL] = useState(true);
   const [localConfirmDelete, setLocalConfirmDelete] = useState(true);
   const [localShowBadgeInfo, setLocalShowBadgeInfo] = useState(true);
   const [localGroupTitle, setLocalGroupTitle] = useState(DEFAULT_GROUP_TITLE);
   const [localGroupColor, setLocalGroupColor] = useState(DEFAULT_GROUP_COLOR);
   const [localWindowTitle, setLocalWindowTitle] = useState(DEFAULT_WINDOW_TITLE);
-  const [localFaviconUrl, setLocalFaviconUrl] = useState(GOOGLE_HOMEPAGE);
 
-  useEffect(() => setLocalIgnoreURL(ignoreURL), [ignoreURL]);
   useEffect(() => setLocalConfirmDelete(confirmDelete), [confirmDelete]);
   useEffect(() => setLocalShowBadgeInfo(showBadgeInfo), [showBadgeInfo]);
   useEffect(() => setLocalGroupTitle(groupTitle), [groupTitle]);
   useEffect(() => setLocalGroupColor(groupColor), [groupColor]);
   useEffect(() => setLocalWindowTitle(windowTitle), [windowTitle]);
-  useEffect(() => setLocalFaviconUrl(faviconUrl), [faviconUrl]);
 
   const debouncedColor = useDebounce(localGroupColor);
-  const debouncedFaviconUrl = useDebounce(localFaviconUrl, 1000);
 
   const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -220,47 +158,26 @@ export default function General(): JSX.Element {
   const settingsOptions = useMemo(
     () => [
       {
-        label: (
-          <span>
-            Ignore URL query strings during search (http://www.fake.com
-            <s>?a=1&b=2&c=3</s>){" "}
-          </span>
-        ),
-        id: "ignoreURL",
-        checked: localIgnoreURL,
-        onChange: () => setLocalIgnoreURL(!localIgnoreURL)
-      },
-      {
         label: "Confirm destructive actions (those that delete items)",
         id: "confirmDestructive",
         checked: localConfirmDelete,
         onChange: () => setLocalConfirmDelete(!localConfirmDelete)
       },
       {
-        label: "Display extra information in extension icon",
+        label: "Display stored tab count in extension icon (popup reload required)",
         id: "badgeInformation",
         checked: localShowBadgeInfo,
         onChange: () => setLocalShowBadgeInfo(!localShowBadgeInfo)
       }
     ],
-    [
-      localIgnoreURL,
-      localConfirmDelete,
-      localShowBadgeInfo,
-      setLocalIgnoreURL,
-      setLocalConfirmDelete,
-      setLocalShowBadgeInfo
-    ]
+    [localConfirmDelete, localShowBadgeInfo, setLocalConfirmDelete, setLocalShowBadgeInfo]
   );
 
   return (
     <>
       <Column>
         {settingsOptions.map((item) => (
-          <CheckboxContainer key={item.label.toString()}>
-            <input type="checkbox" id={item.id} name={item.id} checked={item.checked} onChange={item.onChange} />
-            <label htmlFor={item.id}>{item.label}</label>
-          </CheckboxContainer>
+          <Checkbox key={item.label} id={item.id} text={item.label} checked={item.checked} setChecked={item.onChange} />
         ))}
       </Column>
 
@@ -307,27 +224,6 @@ export default function General(): JSX.Element {
         </WindowHeadline>
       </Column>
 
-      <Column>
-        <SectionTitle>Default Favicon URL</SectionTitle>
-
-        <TabContainer>
-          <TabIcon
-            src={generateFavIconFromUrl(debouncedFaviconUrl)}
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = DEFAULT_FAVICON_URL;
-            }}
-            alt="Favicon"
-          />
-
-          <TabTitle
-            value={localFaviconUrl}
-            onChange={({ target: { value } }) => setLocalFaviconUrl(value)}
-            draggable={false}
-          />
-        </TabContainer>
-      </Column>
-
       <Note>
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
 
@@ -343,13 +239,11 @@ export default function General(): JSX.Element {
         showSave
         closeText="Close"
         handleSave={() => {
-          setIgnoreURL(localIgnoreURL);
           setConfirmDelete(localConfirmDelete);
           setShowBadgeInfo(localShowBadgeInfo);
           setGroupTitle(localGroupTitle);
           setGroupColor(localGroupColor);
           setWindowTitle(localWindowTitle);
-          setFaviconUrl(localFaviconUrl);
         }}
       />
     </>

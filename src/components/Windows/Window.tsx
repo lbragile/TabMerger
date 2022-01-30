@@ -21,6 +21,7 @@ import {
   updateWindowName
 } from "~/store/actions/groups";
 import { CloseIcon } from "~/styles/CloseIcon";
+import { Row } from "~/styles/Row";
 import { pluralize } from "~/utils/helper";
 
 const Column = styled.div`
@@ -29,10 +30,7 @@ const Column = styled.div`
   gap: 2px;
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+const StyledRow = styled(Row)`
   gap: 4px;
 `;
 
@@ -295,7 +293,7 @@ export default function Window({
 
   return (
     <WindowContainer $dragging={windowSnapshot.isDragging}>
-      <Row>
+      <StyledRow>
         <CloseIcon
           icon="times-circle"
           tabIndex={0}
@@ -344,7 +342,7 @@ export default function Window({
 
           <TabCounter>{tabCounterStr}</TabCounter>
         </Headline>
-      </Row>
+      </StyledRow>
 
       <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType) || groupIndex === 0}>
         {(provider, dropSnapshot) => (

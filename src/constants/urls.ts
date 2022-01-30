@@ -10,6 +10,10 @@ export const TABMERGER_TOS_LINK = TABMERGER_DEMO_SITE + "/terms";
 
 export const TABMERGER_SURVEY = TABMERGER_DEMO_SITE + "/survey";
 
+export const TABMERGER_PRICING = TABMERGER_DEMO_SITE + "/pricing";
+
+export const TABMERGER_CONTACT = TABMERGER_DEMO_SITE + "/contact";
+
 // EXTENSION
 export const EXTENSION_PAGE_LINK = `chrome://extensions?id=${chrome.runtime.id}`;
 

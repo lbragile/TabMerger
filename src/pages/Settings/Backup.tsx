@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
 import { DOWNLOADS_URL } from "~/constants/urls";
@@ -25,29 +26,8 @@ const StyledInput = styled.input`
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  padding: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
-
-const StyledMessage = styled(Message)<{ $error: boolean; $recent: boolean }>`
-  background: ${({ $error, $recent }) => ($error ? "#ffdddd" : $recent ? "#ddffdd" : "#e8e8ff")};
-  color: ${({ $error, $recent }) => ($error ? "#721c24" : $recent ? "#155724" : "blue")};
-  width: fit-content;
-  padding: 4px 8px;
+const StyledMessage = styled(Message)`
+  margin: unset;
 `;
 
 export default function Backup(): JSX.Element {
@@ -86,16 +66,12 @@ export default function Backup(): JSX.Element {
           : `Last exported on ${lastExport} (${relativeTimeExport} ago)`}
       </StyledMessage>
 
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="autoExport"
-          name="autoExport"
-          checked={localAutoExport}
-          onChange={() => setLocalAutoExport(!localAutoExport)}
-        />
-        <label htmlFor="autoExport">Enable Automatic Export</label>
-      </CheckboxContainer>
+      <Checkbox
+        id="autoExport"
+        text="Enable Automatic Export"
+        checked={localAutoExport}
+        setChecked={() => setLocalAutoExport(!localAutoExport)}
+      />
 
       <div>
         <span>Every</span>{" "}
@@ -133,16 +109,12 @@ export default function Backup(): JSX.Element {
           : `Last synced on ${lastSyncUpload} (${relativeTimeSync} ago)`}
       </StyledMessage>
 
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="autoSync"
-          name="autoSync"
-          checked={localAutoSync}
-          onChange={() => setLocalAutoSync(!localAutoSync)}
-        />
-        <label htmlFor="autoSync">Enable Automatic Sync</label>
-      </CheckboxContainer>
+      <Checkbox
+        id="autoSync"
+        text="Enable Automatic Sync"
+        checked={localAutoSync}
+        setChecked={() => setLocalAutoSync(!localAutoSync)}
+      />
 
       <div>
         <span>Every</span>{" "}

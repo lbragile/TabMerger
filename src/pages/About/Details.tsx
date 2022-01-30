@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import Link from "../../components/Link";
 
-import { EXTENSION_PAGE_LINK } from "~/constants/urls";
+import { EXTENSION_PAGE_LINK, TABMERGER_PRICING } from "~/constants/urls";
 
 const DetailsGrid = styled.div`
   display: grid;
@@ -35,7 +35,7 @@ export default function Details(): JSX.Element {
         <p>v{version}</p>
 
         <h4>Subscription</h4>
-        <p>Free</p>
+        <Link href={TABMERGER_PRICING} title="Free" />
       </DetailsGrid>
     </>
   );

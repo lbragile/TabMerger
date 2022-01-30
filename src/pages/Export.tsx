@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter, ModalHeader } from "~/components/Modal";
 import Selector from "~/components/Selector";
@@ -11,6 +12,7 @@ import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
 import { Note } from "~/styles/Note";
+import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
 import { TExportType } from "~/typings/settings";
 import { getReadableTimestamp } from "~/utils/helper";
@@ -36,7 +38,7 @@ const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolea
 const TextAreaContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 225px;
 
   &:hover {
     & ${CopyButton} {
@@ -45,30 +47,10 @@ const TextAreaContainer = styled.div`
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
+const StyledRow = styled(Row)`
   justify-content: space-around;
-  align-items: center;
-  padding: 8px;
   background-color: ${({ theme }) => theme.colors.secondary};
-  gap: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 4px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
-
-const LabelledCheckbox = styled(CheckboxContainer)`
-  gap: 8px;
-  justify-content: start;
-  background: unset;
+  padding: 8px;
 `;
 
 const StyledMultiSelect = styled(MultiSelect)`
@@ -222,29 +204,22 @@ export default function Export(): JSX.Element {
 
       <Selector opts={["json", "text", "markdown", "csv", "html"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <Row>
-        <Row>
-          {checkbox.map(({ text, checked }) => {
-            const lowerText = text.toLowerCase();
-
-            return (
-              <CheckboxContainer key={text}>
-                <input
-                  type="checkbox"
-                  id={lowerText}
-                  name={lowerText}
-                  checked={activeTab === "json" || checked}
-                  onChange={() => handleCheckboxChange(text)}
-                  disabled={
-                    (["Titles", "URLs"].includes(text) && ["json", "html"].includes(activeTab)) ||
-                    (text === "Titles" && activeTab === "markdown")
-                  }
-                />
-                <label htmlFor={lowerText}>{text}</label>
-              </CheckboxContainer>
-            );
-          })}
-        </Row>
+      <StyledRow>
+        <div>
+          {checkbox.map(({ text, checked }) => (
+            <Checkbox
+              key={text}
+              id={text.toLocaleLowerCase()}
+              text={text}
+              checked={activeTab === "json" || checked}
+              setChecked={() => handleCheckboxChange(text)}
+              disabled={
+                (["Titles", "URLs"].includes(text) && ["json", "html"].includes(activeTab)) ||
+                (text === "Titles" && activeTab === "markdown")
+              }
+            />
+          ))}
+        </div>
 
         <StyledMultiSelect
           options={selectOpts}
@@ -256,7 +231,7 @@ export default function Export(): JSX.Element {
           ArrowRenderer={({ expanded }) => <ArrowIcon icon={expanded ? "angle-up" : "angle-down"} />}
           valueRenderer={(selected) => (selected.length ? `${selected.length} Selected` : "Select Groups")}
         />
-      </Row>
+      </StyledRow>
 
       <TextAreaContainer>
         <CopyButton
@@ -275,16 +250,12 @@ export default function Export(): JSX.Element {
         <TextArea ref={textAreaRef} $width="100%" $height="100%" readOnly value={text} />
       </TextAreaContainer>
 
-      <LabelledCheckbox>
-        <input
-          type="checkbox"
-          id="fileExportPath"
-          name="fileExportPath"
-          checked={localFileLocationPicker}
-          onChange={() => setLocalFileLocationPicker(!localFileLocationPicker)}
-        />
-        <label htmlFor="fileExportPath">Show File Location Picker</label>
-      </LabelledCheckbox>
+      <Checkbox
+        id="fileExportPath"
+        text="Show File Location Picker"
+        checked={localFileLocationPicker}
+        setChecked={() => setLocalFileLocationPicker(!localFileLocationPicker)}
+      />
 
       <Note>
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />

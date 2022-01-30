@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
 import useLocalStorage from "~/hooks/useLocalStorage";
@@ -11,28 +12,10 @@ import { Note } from "~/styles/Note";
 import { ThemeOptions } from "~/styles/ThemeOptions";
 import { relativeTimeStr } from "~/utils/helper";
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  padding: 8px;
-`;
-
 const Column = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
 `;
 
 const AbsoluteCloseIcon = styled(CloseIcon)`
@@ -147,18 +130,16 @@ export default function Theme(): JSX.Element {
         </Column>
       ))}
 
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="localItalicizeNonHttp"
-          name="localItalicizeNonHttp"
-          checked={localItalicizeNonHttp}
-          onChange={() => setLocalItalicizeNonHttp(!localItalicizeNonHttp)}
-        />
-        <label htmlFor="localItalicizeNonHttp">
-          <i>Italicize</i> tab titles whose URL does not start with <b>http</b> or <b>https</b>
-        </label>
-      </CheckboxContainer>
+      <Checkbox
+        id="italicizeUrls"
+        text={
+          <>
+            <i>Italicize</i> tab titles whose URL does not start with <b>http</b> or <b>https</b>
+          </>
+        }
+        checked={localItalicizeNonHttp}
+        setChecked={() => setLocalItalicizeNonHttp(!localItalicizeNonHttp)}
+      />
 
       <Note>
         <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />

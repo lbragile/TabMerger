@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
 import { CHROME_SHORTCUTS } from "~/constants/urls";
@@ -9,24 +10,6 @@ import useClickOutside from "~/hooks/useClickOutside";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  padding: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
 
 const ShortcutGrid = styled.div`
   display: grid;
@@ -87,16 +70,12 @@ export default function Keyboard(): JSX.Element {
 
   return (
     <>
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="allowShortcuts"
-          name="allowShortcuts"
-          checked={allowShortcuts}
-          onChange={() => setAllowShortcuts(!allowShortcuts)}
-        />
-        <label htmlFor="allowShortcuts">Keyboard Shortcuts</label>
-      </CheckboxContainer>
+      <Checkbox
+        id="allowShortcuts"
+        text="Keyboard Shortcuts"
+        checked={allowShortcuts}
+        setChecked={() => setAllowShortcuts(!allowShortcuts)}
+      />
 
       <ShortcutGrid>
         {allCommands.map((command, i) => (

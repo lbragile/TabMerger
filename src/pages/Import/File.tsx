@@ -18,7 +18,7 @@ const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   cursor: pointer;
   ${({ $isRejected, $isAccepted, theme }) => css`
     border: 1px dashed ${$isAccepted ? "green" : $isRejected ? "red" : "grey"};
-    background-color: ${$isAccepted ? "#ccffcc" : $isRejected ? "#ffcccc" : theme.colors.secondary};
+    background-color: ${$isAccepted ? "#ddffdd" : $isRejected ? "#ffdddd" : theme.colors.secondary};
   `}
 `;
 
@@ -93,7 +93,7 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
           {isDragActive && isDragAccept ? (
             <>
               <FontAwesomeIcon icon="check-circle" size="2x" color="green" />
-              <Message>File looks promising... drop it to proceed</Message>
+              <Message $recent>File looks promising... drop it to proceed</Message>
             </>
           ) : isDragActive && isDragReject ? (
             <>

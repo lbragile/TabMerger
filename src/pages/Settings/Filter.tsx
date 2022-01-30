@@ -2,32 +2,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
 import { Note } from "~/styles/Note";
+import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
 import { wildcardGlobToRegExp } from "~/utils/helper";
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  gap: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
 
 const StyledInput = styled.input`
   all: unset;
@@ -64,18 +48,16 @@ export default function Filter(): JSX.Element {
 
   return (
     <>
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="excludeProtocol"
-          name="excludeProtocol"
-          checked={localExcludeProtocol}
-          onChange={() => setLocalExcludeProtocol(!localExcludeProtocol)}
-        />
-        <label htmlFor="excludeProtocol">
-          Exclude URLs that do not start with <b>http</b> or <b>https</b>
-        </label>
-      </CheckboxContainer>
+      <Checkbox
+        id="excludeProtocol"
+        text={
+          <>
+            Exclude URLs that do not start with <b>http</b> or <b>https</b>
+          </>
+        }
+        checked={localExcludeProtocol}
+        setChecked={() => setLocalExcludeProtocol(!localExcludeProtocol)}
+      ></Checkbox>
 
       <TextArea
         $width="100%"
@@ -94,10 +76,10 @@ export default function Filter(): JSX.Element {
             placeholder="Check if a given URL will be filtered"
           />
           {debouncedTestUrl !== "" && (
-            <>
+            <Message $error={!isCaught}>
               <FontAwesomeIcon icon={isCaught ? "check-circle" : "times-circle"} color={isCaught ? "green" : "red"} />
-              <Message $error={!isCaught}>URL will {isCaught ? "" : "not"} be filtered</Message>
-            </>
+              <span>URL will {isCaught ? "" : "not"} be filtered</span>
+            </Message>
           )}
         </Row>
       </div>

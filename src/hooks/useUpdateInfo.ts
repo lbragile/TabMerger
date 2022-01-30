@@ -23,5 +23,19 @@ export default function useUpdateInfo() {
         dispatch(updateInfo({ index: i, info: newInfo }));
       }
     });
+
+    // Badge Info Computation
+    chrome.storage.local.get(["showBadgeInfo"], ({ showBadgeInfo }) => {
+      let count = 0;
+
+      if (showBadgeInfo) {
+        available.slice(1).forEach(({ windows }) => windows.forEach(({ tabs }) => (count += tabs?.length ?? 0)));
+      }
+
+      const color = showBadgeInfo ? "#000F" : "#0000";
+      const text = showBadgeInfo ? Intl.NumberFormat("en", { notation: "compact" }).format(count) : "";
+      chrome.action.setBadgeBackgroundColor({ color }, () => "");
+      chrome.action.setBadgeText({ text }, () => "");
+    });
   }, [dispatch, available]);
 }
