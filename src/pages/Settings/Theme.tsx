@@ -1,14 +1,13 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
 import { CloseIcon } from "~/styles/CloseIcon";
-import { Note } from "~/styles/Note";
 import { ThemeOptions } from "~/styles/ThemeOptions";
 import { relativeTimeStr } from "~/utils/helper";
 
@@ -142,18 +141,15 @@ export default function Theme(): JSX.Element {
       />
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>
+          Generally most URLs follow{" "}
+          <Link href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" title="HTTP protocol" />
+        </p>
 
-        <div>
-          <p>
-            Generally most URLs follow{" "}
-            <Link href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" title="HTTP protocol" />
-          </p>
-          <p>
-            That said, sometimes they can be based on{" "}
-            <Link href="https://en.wikipedia.org/wiki/List_of_URI_schemes" title="other protocols" />
-          </p>
-        </div>
+        <p>
+          That said, sometimes they can be based on{" "}
+          <Link href="https://en.wikipedia.org/wiki/List_of_URI_schemes" title="other protocols" />
+        </p>
       </Note>
 
       <ModalFooter

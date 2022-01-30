@@ -1,14 +1,13 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
 import { SectionTitle } from "~/styles/SectionTitle";
 import { pluralize, relativeTimeStr } from "~/utils/helper";
 
@@ -131,13 +130,11 @@ export default function Backup(): JSX.Element {
       </div>
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>These happen in the background - even when TabMerger is closed!</p>
 
-        <div>
-          <p>These happen in the background - even when TabMerger is closed!</p>
-          <span>Files are saved to your</span> <Link href={DOWNLOADS_URL} title="Downloads Folder" />{" "}
-          <span>in JSON format</span>
-        </div>
+        <span>
+          Files are saved to your <Link href={DOWNLOADS_URL} title="Downloads Folder" /> in JSON format
+        </span>
       </Note>
 
       <ModalFooter

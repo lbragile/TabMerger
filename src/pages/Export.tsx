@@ -6,12 +6,12 @@ import styled, { css } from "styled-components";
 import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter, ModalHeader } from "~/components/Modal";
+import Note from "~/components/Note";
 import Selector from "~/components/Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
-import { Note } from "~/styles/Note";
 import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
 import { TExportType } from "~/typings/settings";
@@ -258,11 +258,9 @@ export default function Export(): JSX.Element {
       />
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
-
-        <div>
-          <span>Files can be found in your</span> <Link href={DOWNLOADS_URL} title="Downloads Tab" />
-        </div>
+        <span>
+          Files can be found in your <Link href={DOWNLOADS_URL} title="Downloads Tab" />
+        </span>
       </Note>
 
       <ModalFooter

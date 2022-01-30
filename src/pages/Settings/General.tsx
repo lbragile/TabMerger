@@ -5,11 +5,11 @@ import styled from "styled-components";
 import Checkbox from "~/components/Checkbox";
 import ColorPicker from "~/components/ColorPicker";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
-import { Note } from "~/styles/Note";
 import { SectionTitle } from "~/styles/SectionTitle";
 
 const Column = styled.div`
@@ -225,14 +225,11 @@ export default function General(): JSX.Element {
       </Column>
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>
+          The Favicon URL must start with <b>http://www.</b> or <b>https://www.</b>
+        </p>
 
-        <div>
-          <p>
-            The Favicon URL must start with <b>http://www.</b> or <b>https://www.</b>
-          </p>
-          <p>Improper input will result in a default favicon symbol.</p>
-        </div>
+        <p>Improper input will result in a default favicon symbol</p>
       </Note>
 
       <ModalFooter

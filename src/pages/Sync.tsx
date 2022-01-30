@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import styled from "styled-components";
 
 import { ModalFooter, ModalHeader } from "~/components/Modal";
+import Note from "~/components/Note";
 import Selector from "~/components/Selector";
 import { MAX_SYNC_TABS_PER_GROUP, MAX_SYNC_GROUPS } from "~/constants/sync";
 import useFormatText from "~/hooks/useFormatText";
@@ -11,18 +11,9 @@ import { useSelector } from "~/hooks/useRedux";
 import useSyncStorageInfo, { useSyncStorageDownload, useSyncStorageUpload } from "~/hooks/useSyncStorage";
 import Button from "~/styles/Button";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
 import { TSyncType } from "~/typings/settings";
 import { relativeTimeStr } from "~/utils/helper";
-
-const StyledMessage = styled(Message)<{ $error: boolean; $recent: boolean }>`
-  background: ${({ $error, $recent }) => ($error ? "#ffdddd" : $recent ? "#ddffdd" : "#e8e8ff")};
-  color: ${({ $error, $recent }) => ($error ? "#721c24" : $recent ? "#155724" : "blue")};
-  width: fit-content;
-  padding: 4px 8px;
-  margin: auto;
-`;
 
 const StyledButton = styled(Button)`
   margin: auto;
@@ -66,11 +57,11 @@ export default function Sync(): JSX.Element {
 
       <Selector opts={["Upload", "Download"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <StyledMessage $error={activeLastSync === ""} $recent={relativeTime.includes("<")}>
+      <Message $error={activeLastSync === ""} $recent={relativeTime.includes("<")}>
         {activeLastSync === ""
           ? `Nothing was ${activeTab.toLowerCase()}ed... yet`
           : `Last ${activeTab.toLowerCase()}ed on ${activeLastSync} (${relativeTime} ago)`}
-      </StyledMessage>
+      </Message>
 
       <TextArea
         value={activeTab === "Upload" ? getRegularTextPossible() : getRegularTextCurrent()}
@@ -83,20 +74,16 @@ export default function Sync(): JSX.Element {
       </StyledButton>
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
-
-        <div>
-          {activeTab === "Upload" ? (
-            <p>
-              Sync includes the first <b>{MAX_SYNC_TABS_PER_GROUP}</b> tabs per group for the first{" "}
-              <b>{MAX_SYNC_GROUPS}</b> groups
-            </p>
-          ) : (
-            <p>
-              Press &ldquo;Download Sync&rdquo; to <b>replace</b> current data with the synced data!
-            </p>
-          )}
-        </div>
+        {activeTab === "Upload" ? (
+          <p>
+            Sync includes the first <b>{MAX_SYNC_TABS_PER_GROUP}</b> tabs per group for the first{" "}
+            <b>{MAX_SYNC_GROUPS}</b> groups
+          </p>
+        ) : (
+          <p>
+            Press &ldquo;Download Sync&rdquo; to <b>replace</b> current data with the synced data!
+          </p>
+        )}
       </Note>
 
       <ModalFooter

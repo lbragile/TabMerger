@@ -1,15 +1,14 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
 import { CHROME_SHORTCUTS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
 
 const ShortcutGrid = styled.div`
   display: grid;
@@ -96,14 +95,11 @@ export default function Keyboard(): JSX.Element {
       {emptyCommands.length > 0 && <Message $error>There are {emptyCommands.length} disabled commands</Message>}
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>
+          Visit the <Link href={CHROME_SHORTCUTS} title="Shortcuts Menu" /> to adjust these keyboard shortcuts.
+        </p>
 
-        <div>
-          <p>
-            Visit the <Link href={CHROME_SHORTCUTS} title="Shortcuts Menu" /> to adjust these keyboard shortcuts.
-          </p>
-          <p>Empty fields are not active!</p>
-        </div>
+        <p>Empty fields are not active!</p>
       </Note>
 
       <ModalFooter showSave={false} closeText="Close" />

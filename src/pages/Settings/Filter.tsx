@@ -5,10 +5,10 @@ import styled from "styled-components";
 import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
 import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
 import { wildcardGlobToRegExp } from "~/utils/helper";
@@ -85,19 +85,15 @@ export default function Filter(): JSX.Element {
       </div>
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>
+          <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can be used to
+          group many URL patterns!
+        </p>
 
-        <div>
-          <p>
-            <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can be used
-            to group many URL patterns!
-          </p>
-
-          <p>
-            <Link href="https://en.wikipedia.org/wiki/Query_string" title="Query parameters" /> in URLs are
-            ignored/trimmed
-          </p>
-        </div>
+        <p>
+          <Link href="https://en.wikipedia.org/wiki/Query_string" title="Query parameters" /> in URLs are
+          ignored/trimmed
+        </p>
       </Note>
 
       <ModalFooter

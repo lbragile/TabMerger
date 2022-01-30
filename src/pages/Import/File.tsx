@@ -3,8 +3,8 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import styled, { css } from "styled-components";
 
+import Note from "~/components/Note";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
 import { TImportType } from "~/typings/settings";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
@@ -122,11 +122,7 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
       {!isDragActive && fileRejections.length > 0 && <Message $error>{UPLOAD_FILE_ERROR}</Message>}
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
-
-        <div>
-          <p>Upon successful upload, you will have a chance to confirm!</p>
-        </div>
+        <p>Upon successful upload, you will have a chance to confirm!</p>
       </Note>
     </>
   );

@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import styled, { useTheme } from "styled-components";
 
@@ -9,8 +8,8 @@ import Details from "./Details";
 import License from "./License";
 
 import { ModalFooter, ModalHeader } from "~/components/Modal";
+import Note from "~/components/Note";
 import { TABMERGER_DEMO_SITE, TABMERGER_TOS_LINK } from "~/constants/urls";
-import { Note } from "~/styles/Note";
 import { Row } from "~/styles/Row";
 
 const StyledRow = styled(Row)`
@@ -58,13 +57,9 @@ export default function About(): JSX.Element {
       {activeTab === "Details" ? <Details /> : <License />}
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>By using this software you agree to TabMerger&apos;s</p>
 
-        <div>
-          <p>By using this software you agree to TabMerger&apos;s</p>
-
-          <Link href={TABMERGER_TOS_LINK} title="Terms and Conditions" />
-        </div>
+        <Link href={TABMERGER_TOS_LINK} title="Terms and Conditions" />
       </Note>
 
       <ModalFooter showSave={false} />
