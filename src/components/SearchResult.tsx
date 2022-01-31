@@ -1,32 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMemo } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import useFilter from "~/hooks/useFilter";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateInputValue } from "~/store/actions/header";
 import { CloseIcon } from "~/styles/CloseIcon";
+import { Message } from "~/styles/Message";
 import { pluralize } from "~/utils/helper";
 
-const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
-  display: flex;
-  flex-direction: row;
+const StyledResult = styled(Message)<{ $isGroup: boolean }>`
   justify-content: space-between;
-  align-items: center;
-  background-color: ${({ $isPositive }) => ($isPositive ? "#14b866" : "#F53D3D")};
-  color: white;
-  padding: 4px 8px;
   font-size: 14px;
-  width: calc(100% - ${({ $isGroup }) => ($isGroup ? "16px" : "0")});
-  text-align: center;
-  ${({ $isGroup }) =>
-    $isGroup
-      ? css`
-          margin-top: 8px;
-        `
-      : css`
-          margin-bottom: 8px;
-        `};
+  width: ${({ $isGroup }) => ($isGroup ? "calc(100% - 16px)" : "100%")};
+  font-weight: normal;
+  margin-top: ${({ $isGroup }) => ($isGroup ? "8px" : "0")};
+  border: 1px solid currentcolor;
 
   & b {
     font-weight: 700;
@@ -35,17 +24,20 @@ const StyledResult = styled.div<{ $isPositive: boolean; $isGroup: boolean }>`
 
 const StyledCloseIcon = styled(CloseIcon)`
   && {
+    color: black;
     opacity: 1;
   }
 `;
 
 const SearchIcon = styled(FontAwesomeIcon)`
+  color: black;
   margin-right: 8px;
 `;
 
 export default function SearchResult(): JSX.Element {
   const dispatch = useDispatch();
-  const { inputValue, filterChoice: type } = useSelector((state) => state.header);
+  const { inputValue, filterChoice } = useSelector((state) => state.header);
+
   const { filteredTabs, filteredGroups } = useFilter();
 
   const tabsCount = useMemo(
@@ -54,15 +46,11 @@ export default function SearchResult(): JSX.Element {
   );
 
   const groupsCount = filteredGroups.length;
-  const isTabSearch = type === "tab";
+  const isTabSearch = filterChoice === "tab";
   const countToShow = isTabSearch ? tabsCount : groupsCount;
 
-  const handleClearSearch = () => {
-    dispatch(updateInputValue(""));
-  };
-
   return (
-    <StyledResult $isPositive={countToShow > 0} $isGroup={!isTabSearch}>
+    <StyledResult $error={countToShow === 0} $recent={countToShow > 0} $isGroup={!isTabSearch}>
       <div>
         <SearchIcon icon="search" />
 
@@ -70,10 +58,10 @@ export default function SearchResult(): JSX.Element {
           <b>{inputValue}</b>{" "}
           {countToShow > 0 ? (
             <span>
-              matches <b>{countToShow}</b> {pluralize(countToShow, type)}
+              matches <b>{countToShow}</b> {pluralize(countToShow, filterChoice)}
             </span>
           ) : (
-            <span>does not match any {type}</span>
+            <span>does not match any {filterChoice}</span>
           )}{" "}
           {isTabSearch && "in this group"}
         </span>
@@ -83,8 +71,8 @@ export default function SearchResult(): JSX.Element {
         icon="times"
         tabIndex={0}
         onPointerDown={(e) => e.preventDefault()}
-        onClick={handleClearSearch}
-        onKeyPress={({ key }) => key === "Enter" && handleClearSearch()}
+        onClick={() => dispatch(updateInputValue(""))}
+        onKeyPress={({ key }) => key === "Enter" && dispatch(updateInputValue(""))}
       />
     </StyledResult>
   );

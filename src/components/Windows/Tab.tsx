@@ -51,6 +51,7 @@ const TabIcon = styled.img`
 interface ITab {
   tabIndex: number;
   windowIndex: number;
+  italicizeNonHttp: boolean;
   snapshot: DraggableStateSnapshot;
   dragHandleProps: DraggableProvidedDragHandleProps | undefined;
 }
@@ -61,6 +62,7 @@ export default function Tab({
   active,
   pinned,
   id: tabId,
+  italicizeNonHttp,
   snapshot,
   dragHandleProps,
   tabIndex,
@@ -86,23 +88,25 @@ export default function Tab({
 
   const closeTab = () => {
     if (groupIndex > 0) {
-      dispatch(deleteTab({ tabIndex, windowIndex, groupIndex }));
-
+      const { windows } = available[groupIndex];
+      const numTabsInWindow = windows[windowIndex].tabs?.length;
       // Possible to have deleted the last tab in the window and/or group
-      if (!available[groupIndex].windows[windowIndex].tabs?.length) {
-        dispatch(deleteWindow({ groupIndex, windowIndex }));
-      }
-
-      if (!available[groupIndex].windows.length) {
+      if (windows.length === 1 && numTabsInWindow === 1) {
         dispatch(deleteGroup(groupIndex));
+      } else if (numTabsInWindow === 1) {
+        dispatch(deleteWindow({ groupIndex, windowIndex }));
+      } else {
+        dispatch(deleteTab({ tabIndex, windowIndex, groupIndex }));
       }
     } else {
       tabId && chrome.tabs.remove(tabId, () => "");
     }
   };
 
+  const tabTitle = filterChoice === "tab" ? <Highlighted text={title} /> : title;
+
   return (
-    <Row>
+    <Row $gap="4px">
       <CloseIcon
         icon="times"
         tabIndex={0}
@@ -129,7 +133,7 @@ export default function Tab({
           onClick={(e) => e.button === 0 && openTab()}
           draggable={false}
         >
-          {filterChoice === "tab" ? <Highlighted text={title} /> : title}
+          {italicizeNonHttp && !/^https?/.test(url ?? "") ? <i>{tabTitle}</i> : tabTitle}
         </TabTitle>
       </TabContainer>
     </Row>

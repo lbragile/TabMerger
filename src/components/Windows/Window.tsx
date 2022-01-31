@@ -11,6 +11,7 @@ import { isTabDrag } from "~/constants/dragRegExp";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import useFilter from "~/hooks/useFilter";
+import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import useRename from "~/hooks/useRename";
 import {
@@ -105,6 +106,8 @@ export default function Window({
 }: chrome.windows.Window & IWindow): JSX.Element {
   const dispatch = useDispatch();
 
+  const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", false);
+
   const {
     available,
     active: { index: groupIndex }
@@ -112,7 +115,6 @@ export default function Window({
 
   const { inputValue, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
-
   const { filteredTabs } = useFilter();
 
   const typing = inputValue !== "";
@@ -161,11 +163,11 @@ export default function Window({
 
   const closeWindow = () => {
     if (groupIndex > 0) {
-      dispatch(deleteWindow({ groupIndex, windowIndex }));
-
       // Possible to have deleted the last window in the group
-      if (!available[groupIndex].windows.length) {
+      if (available[groupIndex].windows.length === 1) {
         dispatch(deleteGroup(groupIndex));
+      } else {
+        dispatch(deleteWindow({ groupIndex, windowIndex }));
       }
     } else {
       windowId && chrome.windows.remove(windowId);
@@ -329,6 +331,7 @@ export default function Window({
                           {...tab}
                           tabIndex={i}
                           windowIndex={windowIndex}
+                          italicizeNonHttp={italicizeNonHttp}
                           snapshot={dragSnapshot}
                           dragHandleProps={provided.dragHandleProps}
                         />

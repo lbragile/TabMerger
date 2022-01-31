@@ -15,7 +15,8 @@ import { relativeTimeStr } from "~/utils/helper";
 const StyledGroupButton = styled(GroupButton)<{ $theme: typeof ThemeOptions["light"]; $active: boolean }>`
   background-color: ${({ $theme }) => $theme.colors.surface};
   color: ${({ $theme }) => $theme.colors.onSurface};
-  outline: 3px solid ${({ $active, $theme }) => ($active ? $theme.colors.primary : $theme.colors.onBackground + "2")};
+  outline: ${({ $active, $theme }) =>
+    $active ? `3px solid ${$theme.colors.primary}` : `1px solid ${$theme.colors.onBackground + "2"}`};
   outline-offset: -1px;
 `;
 

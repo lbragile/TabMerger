@@ -18,7 +18,7 @@ const getStyle = (color: string) => `color: ${color}; font-weight: 600;`;
 export default function useReducerLogger(reducer: TRootReducer): TRootReducer {
   return useCallback(
     (prevState, action) => {
-      const nextState = reducer(prevState, action);
+      const nextState = reducer(JSON.parse(JSON.stringify(prevState)), action);
 
       console.groupCollapsed(
         `%c action %c${action.type} %c@ ${getTimestamp()}`,
