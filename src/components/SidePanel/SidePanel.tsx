@@ -34,8 +34,10 @@ export default function SidePanel(): JSX.Element {
   const { inputValue, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
 
-  const { filteredGroups } = useFilter();
+  const { filteredGroups, nonEmptyGroups } = useFilter();
   const groupSearch = inputValue !== "" && filterChoice === "group";
+  const tabSearch = inputValue !== "" && filterChoice === "tab";
+  const currentGroups = groupSearch ? filteredGroups : tabSearch ? nonEmptyGroups : available;
   const groupDrag = isGroupDrag(dragType);
 
   const groupsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -43,9 +45,7 @@ export default function SidePanel(): JSX.Element {
 
   return (
     <Container>
-      {((groupSearch && filteredGroups.map((group) => group.id).includes(available[0].id)) || !groupSearch) && (
-        <Group {...available[0]} />
-      )}
+      {currentGroups.map((group) => group.id).includes(available[0].id) && <Group {...available[0]} />}
 
       <div ref={groupsContainerRef}>
         <Droppable droppableId="sidePanel" isCombineEnabled={!groupDrag}>
@@ -56,8 +56,9 @@ export default function SidePanel(): JSX.Element {
               $height={containerHeight}
               $dragging={isDragging && groupDrag}
             >
-              {(groupSearch ? filteredGroups.filter((group) => group.id !== available[0].id) : available.slice(1)).map(
-                (data, i) => (
+              {currentGroups
+                .filter((group) => group.id !== available[0].id)
+                .map((data, i) => (
                   <Draggable
                     key={data.id + i + 1}
                     draggableId={`group-${i + 1}`}
@@ -70,8 +71,7 @@ export default function SidePanel(): JSX.Element {
                       </div>
                     )}
                   </Draggable>
-                )
-              )}
+                ))}
 
               {provider.placeholder}
             </DraggableContainer>

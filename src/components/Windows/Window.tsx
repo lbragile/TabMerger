@@ -110,7 +110,7 @@ export default function Window({
 
   const {
     available,
-    active: { index: groupIndex }
+    active: { id: activeId, index: groupIndex }
   } = useSelector((state) => state.groups);
 
   const { inputValue, filterChoice } = useSelector((state) => state.header);
@@ -119,7 +119,7 @@ export default function Window({
 
   const typing = inputValue !== "";
   const isTabSearch = filterChoice === "tab";
-  const currentTabs = typing && isTabSearch ? filteredTabs[windowIndex] : tabs;
+  const currentTabs = typing && isTabSearch ? filteredTabs[activeId][windowIndex] : tabs;
 
   const [showPopup, setShowPopup] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -176,11 +176,11 @@ export default function Window({
 
   const tabCounterStr = useMemo(() => {
     const totalTabs = tabs?.length ?? 0;
-    const numVisibleTabs = typing ? filteredTabs[windowIndex]?.length ?? 0 : totalTabs;
+    const numVisibleTabs = typing ? filteredTabs[activeId][windowIndex]?.length ?? 0 : totalTabs;
     const count = isTabSearch ? numVisibleTabs : totalTabs;
 
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
-  }, [typing, filteredTabs, tabs?.length, isTabSearch, windowIndex]);
+  }, [typing, filteredTabs, tabs?.length, isTabSearch, activeId, windowIndex]);
 
   const windowItems = useMemo(
     () => [

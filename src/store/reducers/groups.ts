@@ -82,17 +82,11 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
   const available = [...state.available];
 
   switch (action.type) {
-    case GROUPS_ACTIONS.UPDATE_AVAILABLE: {
-      const newAvailable = action.payload;
-
+    case GROUPS_ACTIONS.UPDATE_AVAILABLE:
       return {
         ...state,
-        available: [
-          { ...state.available[0], name: newAvailable[0].name, color: newAvailable[0].color },
-          ...newAvailable.slice(1)
-        ]
+        available: action.payload
       };
-    }
 
     case GROUPS_ACTIONS.UPDATE_ACTIVE:
       return {

@@ -191,7 +191,7 @@ export default function Header(): JSX.Element {
         <div ref={dropdownRef}>
           <Dropdown
             items={settingsItems}
-            pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 16, right: 8 }}
+            pos={{ top: settingsIconRef.current.getBoundingClientRect().height + 8, right: 8 }}
           />
         </div>
       )}

@@ -14,7 +14,7 @@ const StyledResult = styled(Message)<{ $isGroup: boolean }>`
   font-size: 14px;
   width: ${({ $isGroup }) => ($isGroup ? "calc(100% - 16px)" : "100%")};
   font-weight: normal;
-  margin-top: ${({ $isGroup }) => ($isGroup ? "8px" : "0")};
+  margin: ${({ $isGroup }) => ($isGroup ? "8px 0 0 0" : "0 0 4px 0")};
   border: 1px solid currentcolor;
 
   & b {
@@ -37,12 +37,13 @@ const SearchIcon = styled(FontAwesomeIcon)`
 export default function SearchResult(): JSX.Element {
   const dispatch = useDispatch();
   const { inputValue, filterChoice } = useSelector((state) => state.header);
+  const { active } = useSelector((state) => state.groups);
 
   const { filteredTabs, filteredGroups } = useFilter();
 
   const tabsCount = useMemo(
-    () => filteredTabs.reduce((total, windowTabs) => windowTabs.length + total, 0),
-    [filteredTabs]
+    () => filteredTabs[active.id].reduce((total, windowTabs) => windowTabs.length + total, 0),
+    [filteredTabs, active]
   );
 
   const groupsCount = filteredGroups.length;

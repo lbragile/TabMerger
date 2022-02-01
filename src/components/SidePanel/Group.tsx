@@ -118,9 +118,7 @@ export default function Group({
   });
 
   // When importing, the color picker value needs to update
-  useEffect(() => {
-    setColorPickerValue(color);
-  }, [color]);
+  useEffect(() => setColorPickerValue(color), [color]);
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(updateActive({ index, id }));
 

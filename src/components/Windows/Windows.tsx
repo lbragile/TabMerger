@@ -31,7 +31,7 @@ export default function Windows(): JSX.Element {
   const { dragType } = useSelector((state) => state.dnd);
 
   const {
-    active: { index: groupIndex },
+    active: { id: activeId, index: groupIndex },
     available
   } = useSelector((state) => state.groups);
 
@@ -62,7 +62,7 @@ export default function Windows(): JSX.Element {
             >
               {windows.map(
                 (window, i) =>
-                  (!typing || !isTabSearch || filteredTabs[i]?.length > 0) && (
+                  (!typing || !isTabSearch || filteredTabs[activeId][i]?.length > 0) && (
                     <Draggable
                       key={i}
                       draggableId={`window-${i}-group-${groupIndex}`}
