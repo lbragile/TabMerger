@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { BeforeCapture, DragStart, DropResult } from "react-beautiful-dnd";
+import type { BeforeCapture, DragStart, DropResult } from "react-beautiful-dnd";
 
 import useLocalStorage from "./useLocalStorage";
 import { useDispatch, useSelector } from "./useRedux";
@@ -19,6 +19,7 @@ import {
   clearEmptyWindows,
   clearEmptyGroups
 } from "~/store/actions/groups";
+import { addAction } from "~/store/actions/history";
 import { toggleWindowTabsVisibility } from "~/utils/helper";
 
 export default function useDnd() {
@@ -28,10 +29,9 @@ export default function useDnd() {
   const [groupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
   const [windowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
 
-  const {
-    active: { index },
-    available
-  } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups);
+
+  const { index } = active;
 
   const onBeforeCapture = useCallback(
     ({ draggableId }: BeforeCapture) => {
@@ -72,22 +72,34 @@ export default function useDnd() {
       const isValidCombine = combine && Number(combine.draggableId.split("-")[1]) > 0;
       const isValidDndWithinGroup = destination && destination.droppableId !== "sidePanel";
 
-      if (isTab) {
-        isValidCombine && dispatch(updateTabsFromSidePanelDnd({ ...sidePanelPayload, name: windowTitle }));
-        isValidDndWithinGroup && dispatch(updateTabsFromGroupDnd(destPayload));
+      if (isTab && (isValidCombine || isValidDndWithinGroup)) {
+        const action = isValidCombine
+          ? updateTabsFromSidePanelDnd({ ...sidePanelPayload, name: windowTitle })
+          : updateTabsFromGroupDnd(destPayload);
+
+        dispatch(action);
+        dispatch(addAction(action));
       } else if (isWindow) {
         // Re-show the tabs since the drag ended
         toggleWindowTabsVisibility(draggableId, true);
 
-        isValidCombine && dispatch(updateWindowsFromSidePanelDnd(sidePanelPayload));
-        isValidDndWithinGroup && dispatch(updateWindowsFromGroupDnd(destPayload));
+        if (isValidCombine || isValidDndWithinGroup) {
+          const action = isValidCombine
+            ? updateWindowsFromSidePanelDnd(sidePanelPayload)
+            : updateWindowsFromGroupDnd(destPayload);
+
+          dispatch(action);
+          dispatch(addAction(action));
+        }
       } else if (isGroup && destination && destination.index > 0) {
         // Only swap if the destination exists (valid) and is below the first group
         dispatch(updateGroupOrder({ source, destination }));
 
         // Update active group if it does not match the draggable
         if (destination.index !== source.index) {
-          dispatch(updateActive({ id: available[destination.index].id, index: destination.index }));
+          const action = updateActive({ id: available[destination.index].id, index: destination.index });
+          dispatch(action);
+          dispatch(addAction(action));
         }
       }
 
@@ -99,10 +111,10 @@ export default function useDnd() {
        */
       if (isTab || isWindow) {
         dispatch(clearEmptyWindows({ index }));
-        dispatch(clearEmptyGroups());
+        dispatch(clearEmptyGroups(active));
       }
     },
-    [dispatch, index, available, windowTitle]
+    [dispatch, index, available, windowTitle, active]
   );
 
   return { onBeforeCapture, onDragStart, onDragEnd };

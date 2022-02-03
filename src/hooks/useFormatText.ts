@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 
 import { DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
-import { IGroupItemState } from "~/store/reducers/groups";
-import { ISyncDataItem } from "~/typings/settings";
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { ISyncDataItem } from "~/typings/settings";
 import { adjustHTMLTags, generateFavIconFromUrl } from "~/utils/helper";
 
 const EMPTY_TEXT = "Nothing to export";

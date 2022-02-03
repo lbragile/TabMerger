@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
 import ColorPicker from "~/components/ColorPicker";
@@ -10,7 +10,8 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateColor, deleteGroup, updateActive } from "~/store/actions/groups";
-import { IGroupItemState } from "~/store/reducers/groups";
+import { addAction } from "~/store/actions/history";
+import type { IGroupItemState } from "~/store/reducers/groups";
 import {
   AbsoluteCloseIcon,
   ColorIndicator,
@@ -120,7 +121,13 @@ export default function Group({
   // When importing, the color picker value needs to update
   useEffect(() => setColorPickerValue(color), [color]);
 
-  const handleActiveGroupUpdate = () => !isActive && dispatch(updateActive({ index, id }));
+  const handleActiveGroupUpdate = () => {
+    if (!isActive) {
+      const action = updateActive({ index, id });
+      dispatch(action);
+      dispatch(addAction(action));
+    }
+  };
 
   const handleShowTitleOverflow = (
     { currentTarget }: React.PointerEvent<HTMLDivElement>,
@@ -145,6 +152,12 @@ export default function Group({
         setPickerPos({ right, top: top >= 300 ? top - (heightPicker - heightGroup) : top });
       }
     }, 0);
+  };
+
+  const handleCloseGroup = () => {
+    const action = deleteGroup({ index, active });
+    dispatch(action);
+    dispatch(addAction(action));
   };
 
   return (
@@ -192,12 +205,14 @@ export default function Group({
               icon="times"
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(deleteGroup(index));
+                handleCloseGroup();
               }}
               onPointerDown={(e) => e.preventDefault()}
               onKeyPress={(e) => {
                 e.stopPropagation();
-                e.key === "Enter" && dispatch(deleteGroup(index));
+                if (e.key === "Enter") {
+                  handleCloseGroup();
+                }
               }}
             />
           )}

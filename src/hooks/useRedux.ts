@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import { ReduxStore } from "~/store/configureStore";
-import { TRootState } from "~/typings/redux";
+import type { TRootState } from "~/typings/redux";
 
 type TypedUseSelectorHook = <U>(cb: (state: TRootState) => U) => U;
 

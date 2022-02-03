@@ -15,7 +15,7 @@ import { useSelector } from "~/hooks/useRedux";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
-import { TExportType } from "~/typings/settings";
+import type { TExportType } from "~/typings/settings";
 import { getReadableTimestamp } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`

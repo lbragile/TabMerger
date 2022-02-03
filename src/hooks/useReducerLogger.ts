@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-import { TRootReducer } from "~/typings/redux";
+import type { TRootReducer } from "~/typings/redux";
 
 function getTimestamp() {
   const d = new Date();

@@ -1,5 +1,5 @@
-import { TRootActions } from "~/typings/redux";
-import { TModalType } from "~/typings/settings";
+import type { TRootActions } from "~/typings/redux";
+import type { TModalType } from "~/typings/settings";
 
 export const MODAL_ACTIONS = {
   SET_MODAL_TYPE: "SET_MODAL_TYPE",

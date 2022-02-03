@@ -2,7 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
-import Dropdown, { IDropdown } from "./Dropdown";
+import type { IDropdown } from "./Dropdown";
+import Dropdown from "./Dropdown";
 import Modal from "./Modal";
 import SearchResult from "./SearchResult";
 
@@ -13,7 +14,7 @@ import { updateInputValue, setFilterChoice, setFocused } from "~/store/actions/h
 import { setModalType, setVisibility } from "~/store/actions/modal";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
-import { TModalType } from "~/typings/settings";
+import type { TModalType } from "~/typings/settings";
 import { createActiveTab } from "~/utils/helper";
 
 const StyledRow = styled(Row)`

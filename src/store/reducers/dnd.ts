@@ -1,4 +1,4 @@
-import { TRootActions } from "~/typings/redux";
+import type { TRootActions } from "~/typings/redux";
 
 export const DND_ACTIONS = {
   UPDATE_DRAG_ORIGIN_TYPE: "UPDATE_DRAG_ORIGIN_TYPE",

@@ -1,37 +1,62 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import useLocalStorage from "./useLocalStorage";
 import { useDispatch, useSelector } from "./useRedux";
 
-import { updateActive } from "~/store/actions/groups";
+import { updateActive, updateAvailable } from "~/store/actions/groups";
 import { setFocused } from "~/store/actions/header";
+import { addAction, updatePosition } from "~/store/actions/history";
 import { setModalType, setVisibility } from "~/store/actions/modal";
+import groupsReducer from "~/store/reducers/groups";
+import type { TRootActions } from "~/typings/redux";
 
 export default function useExecuteCommand() {
   const dispatch = useDispatch();
 
   const { available, active } = useSelector((state) => state.groups);
   const { visible } = useSelector((state) => state.modal);
+  const { actions, anchorState, pos } = useSelector((state) => state.history);
 
   const [allowShortcuts] = useLocalStorage("allowShortcuts", true);
+
+  const undoRedoHandler = useCallback(
+    (end: number) => {
+      const { available: newAvailable, active: newActive } =
+        end === 0
+          ? anchorState
+          : actions.slice(0, end).reduce((prev, item) => groupsReducer(prev, item as TRootActions), anchorState);
+
+      dispatch(updatePosition(end));
+      dispatch(updateAvailable(newAvailable));
+      dispatch(updateActive(newActive));
+    },
+    [dispatch, actions, anchorState]
+  );
 
   useEffect(() => {
     const commandListener = (command: string) => {
       if (allowShortcuts) {
         switch (command) {
-          case "currentGroup":
-            dispatch(updateActive({ id: available[0].id, index: 0 }));
+          case "currentGroup": {
+            const action = updateActive({ id: available[0].id, index: 0 });
+            dispatch(action);
+            dispatch(addAction(action));
             break;
+          }
 
           case "previousGroup": {
             const newIndex = Math.max(0, active.index - 1);
-            dispatch(updateActive({ id: available[newIndex].id, index: newIndex }));
+            const action = updateActive({ id: available[newIndex].id, index: newIndex });
+            dispatch(action);
+            dispatch(addAction(action));
             break;
           }
 
           case "nextGroup": {
             const newIndex = Math.min(active.index + 1, available.length - 1);
-            dispatch(updateActive({ id: available[newIndex].id, index: newIndex }));
+            const action = updateActive({ id: available[newIndex].id, index: newIndex });
+            dispatch(action);
+            dispatch(addAction(action));
             break;
           }
 
@@ -58,6 +83,24 @@ export default function useExecuteCommand() {
             break;
           }
 
+          case "undoAction": {
+            const newPos = pos - 1;
+            if (newPos >= 0) {
+              undoRedoHandler(newPos);
+            }
+
+            break;
+          }
+
+          case "redoAction": {
+            const newPos = pos + 1;
+            if (newPos <= actions.length) {
+              undoRedoHandler(newPos);
+            }
+
+            break;
+          }
+
           default:
             break;
         }
@@ -67,5 +110,5 @@ export default function useExecuteCommand() {
     chrome.commands.onCommand.addListener(commandListener);
 
     return () => chrome.commands.onCommand.removeListener(commandListener);
-  }, [dispatch, available, active, visible, allowShortcuts]);
+  }, [dispatch, available, active, visible, allowShortcuts, undoRedoHandler, pos, actions]);
 }

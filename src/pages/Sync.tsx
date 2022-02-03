@@ -12,7 +12,7 @@ import useSyncStorageInfo, { useSyncStorageDownload, useSyncStorageUpload } from
 import Button from "~/styles/Button";
 import { Message } from "~/styles/Message";
 import TextArea from "~/styles/Textarea";
-import { TSyncType } from "~/typings/settings";
+import type { TSyncType } from "~/typings/settings";
 import { relativeTimeStr } from "~/utils/helper";
 
 const StyledButton = styled(Button)`

@@ -1,6 +1,6 @@
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
-import { IGroupItemState } from "~/store/reducers/groups";
+import type { IGroupItemState } from "~/store/reducers/groups";
 
 export function pluralize(amount: number, baseStr: string): string {
   return amount === 1 ? baseStr : baseStr + "s";

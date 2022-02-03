@@ -1,8 +1,8 @@
 import { nanoid } from "nanoid";
-import { Combine, DraggableLocation } from "react-beautiful-dnd";
+import type { Combine, DraggableLocation } from "react-beautiful-dnd";
 
 import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
-import { TRootActions } from "~/typings/redux";
+import type { TRootActions } from "~/typings/redux";
 import { createGroup, createWindowWithTabs } from "~/utils/helper";
 
 export const GROUPS_ACTIONS = {
@@ -78,7 +78,7 @@ export const initGroupsState: IGroupsState = {
   ]
 };
 
-const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsState => {
+const groupsReducer = (state = initGroupsState, action: TRootActions): IGroupsState => {
   const available = [...state.available];
 
   switch (action.type) {
@@ -213,21 +213,21 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
     }
 
     case GROUPS_ACTIONS.DELETE_GROUP: {
-      const index = action.payload;
+      const { index, active } = action.payload;
 
       // Re-assign active group if deleted group was the active one (use the group above if needed)
-      const activeIdx = state.active.index;
+      const activeIdx = active.index;
 
-      const active =
+      const newActive =
         activeIdx < index
-          ? { ...state.active }
+          ? active
           : activeIdx === index
           ? { index: activeIdx - 1, id: available[activeIdx - 1].id }
-          : { ...state.active, index: activeIdx - 1 };
+          : { ...active, index: activeIdx - 1 };
 
       available.splice(index, 1);
 
-      return { ...state, active, available };
+      return { active: newActive, available };
     }
 
     case GROUPS_ACTIONS.DELETE_WINDOW: {
@@ -249,16 +249,17 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
     }
 
     case GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS: {
+      const active = action.payload;
       const filteredGroups = available.filter((group, i) => i === 0 || (i > 0 && group.windows.length > 0));
       const filteredIds = filteredGroups.map((group) => group.id);
 
       // If filtered groups do not contain the active group, it was deleted, thus can assign the group above as active ...
       // ... as it is not the source of the dnd event - must be non-empty.
-      const { index, id } = state.active;
+      const { index, id } = active;
       const newIdx = Math.max(0, index - 1);
-      const active = !filteredIds.includes(id) ? { index: newIdx, id: available[newIdx].id } : { ...state.active };
+      const newActive = !filteredIds.includes(id) ? { index: newIdx, id: available[newIdx].id } : active;
 
-      return { ...state, available: filteredGroups, active };
+      return { available: filteredGroups, active: newActive };
     }
 
     case GROUPS_ACTIONS.ADD_WINDOW: {
@@ -437,4 +438,4 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
   }
 };
 
-export default GroupsReducer;
+export default groupsReducer;

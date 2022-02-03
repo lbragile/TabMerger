@@ -1,4 +1,5 @@
-import { RefObject, useEffect } from "react";
+import type { RefObject} from "react";
+import { useEffect } from "react";
 
 interface IClickOutside<T> {
   ref: RefObject<T>;

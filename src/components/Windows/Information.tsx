@@ -2,7 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-import Dropdown, { IDropdown } from "~/components/Dropdown";
+import type { IDropdown } from "~/components/Dropdown";
+import Dropdown from "~/components/Dropdown";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
@@ -89,10 +90,9 @@ const SubTitle = styled.span<{ $right?: boolean }>`
 export default function Information(): JSX.Element {
   const dispatch = useDispatch();
 
-  const {
-    active: { index: groupIndex },
-    available
-  } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups);
+
+  const groupIndex = active.index;
 
   const { windows, info, name, updatedAt } = available[groupIndex];
 
@@ -212,12 +212,12 @@ export default function Information(): JSX.Element {
         { text: "divider" },
         {
           text: "Delete",
-          handler: () => dispatch(deleteGroup(groupIndex)),
+          handler: () => dispatch(deleteGroup({ index: groupIndex, active })),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         }
       ] as IDropdown["items"],
-    [dispatch, groupIndex, isDropdownItemDisabled, numTabs, numWindows]
+    [dispatch, groupIndex, active, isDropdownItemDisabled, numTabs, numWindows]
   );
 
   const openItems = useMemo(

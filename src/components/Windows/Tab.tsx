@@ -1,4 +1,4 @@
-import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
 import Highlighted from "~/components/Highlighted";
@@ -6,6 +6,7 @@ import { isTabDrag } from "~/constants/dragRegExp";
 import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { deleteTab, deleteWindow, deleteGroup } from "~/store/actions/groups";
+import { addAction } from "~/store/actions/history";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
 import { generateFavIconFromUrl } from "~/utils/helper";
@@ -71,10 +72,9 @@ export default function Tab({
 }: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
 
-  const {
-    available,
-    active: { index: groupIndex }
-  } = useSelector((state) => state.groups);
+  const { available, active: activeGroup } = useSelector((state) => state.groups);
+
+  const { index: groupIndex } = activeGroup;
 
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
@@ -90,14 +90,19 @@ export default function Tab({
     if (groupIndex > 0) {
       const { windows } = available[groupIndex];
       const numTabsInWindow = windows[windowIndex].tabs?.length;
+
       // Possible to have deleted the last tab in the window and/or group
-      if (windows.length === 1 && numTabsInWindow === 1) {
-        dispatch(deleteGroup(groupIndex));
-      } else if (numTabsInWindow === 1) {
-        dispatch(deleteWindow({ groupIndex, windowIndex }));
-      } else {
-        dispatch(deleteTab({ tabIndex, windowIndex, groupIndex }));
-      }
+      const isLastWindow = numTabsInWindow === 1;
+      const isLastTab = windows.length === 1 && isLastWindow;
+
+      const action = isLastTab
+        ? deleteGroup({ index: groupIndex, active: activeGroup })
+        : isLastWindow
+        ? deleteWindow({ groupIndex, windowIndex })
+        : deleteTab({ tabIndex, windowIndex, groupIndex });
+
+      dispatch(action);
+      dispatch(addAction(action));
     } else {
       tabId && chrome.tabs.remove(tabId, () => "");
     }

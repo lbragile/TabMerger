@@ -1,8 +1,8 @@
 import { nanoid } from "nanoid";
 import { useCallback, useEffect } from "react";
 
-import { IGroupItemState } from "~/store/reducers/groups";
-import { TImportType } from "~/typings/settings";
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { TImportType } from "~/typings/settings";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs } from "~/utils/helper";
 
 interface IParseText {

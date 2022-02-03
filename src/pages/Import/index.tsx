@@ -7,9 +7,10 @@ import { ModalFooter, ModalHeader } from "~/components/Modal";
 import Selector from "~/components/Selector";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateAvailable, updateActive } from "~/store/actions/groups";
+import { addAction } from "~/store/actions/history";
 import { setVisibility } from "~/store/actions/modal";
-import { IGroupItemState } from "~/store/reducers/groups";
-import { TImportType } from "~/typings/settings";
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { TImportType } from "~/typings/settings";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
@@ -53,8 +54,11 @@ export default function Import(): JSX.Element {
         closeText="Cancel"
         handleSave={() => {
           dispatch(updateAvailable([available[0], ...importFile]));
-          dispatch(updateActive({ index: 0, id: importFile[0].id }));
           dispatch(setVisibility(false));
+
+          const action = updateActive({ index: 0, id: importFile[0].id });
+          dispatch(action);
+          dispatch(addAction(action));
         }}
       />
     </>

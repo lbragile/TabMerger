@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import styled, { css } from "styled-components";
 
 const ModalTabContainer = styled.div`

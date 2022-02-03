@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useSelector } from "./useRedux";
 
-import { IGroupItemState } from "~/store/reducers/groups";
+import type { IGroupItemState } from "~/store/reducers/groups";
 
 /**
  * For each window in the currently active group, store the matching tabs (with current filter value)

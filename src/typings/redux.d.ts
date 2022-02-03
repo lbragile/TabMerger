@@ -1,6 +1,6 @@
-import { Reducer } from "react";
+import type { Reducer } from "react";
 
-import { rootActions, rootState } from "~/store";
+import type { rootActions, rootState } from "~/store";
 
 type ActionsMap<A> = {
   [K in keyof A]: A[K] extends Record<keyof A[K], (...arg: never[]) => infer R> ? R : never;

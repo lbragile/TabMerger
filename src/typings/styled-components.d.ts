@@ -1,4 +1,4 @@
-import { ThemeOptions } from "~/styles/ThemeOptions";
+import type { ThemeOptions } from "~/styles/ThemeOptions";
 
 type TMainTheme = typeof ThemeOptions["light"];
 

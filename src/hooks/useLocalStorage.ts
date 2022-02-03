@@ -1,9 +1,11 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useDispatch } from "./useRedux";
 
 import { updateAvailable, updateActive } from "~/store/actions/groups";
-import { IGroupsState } from "~/store/reducers/groups";
+import { setAnchorState } from "~/store/actions/history";
+import type { IGroupsState } from "~/store/reducers/groups";
 
 interface IChanges {
   [key: string]: chrome.storage.StorageChange;
@@ -60,6 +62,9 @@ export function useUpdateGroupsFromStorage({ active, available }: IGroupsState):
       if (storageActive) {
         dispatch(updateActive(storageActive));
       }
+
+      // Set undo/redo anchor
+      dispatch(setAnchorState({ available: storageAvailable, active: storageActive }));
     });
   }, [dispatch]);
 

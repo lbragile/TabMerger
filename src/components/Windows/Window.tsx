@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
+import { useCallback, useMemo, useRef, useState } from "react";
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
 import Tab from "./Tab";
@@ -21,6 +22,7 @@ import {
   toggleWindowIncognito,
   updateWindowName
 } from "~/store/actions/groups";
+import { addAction } from "~/store/actions/history";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Column } from "~/styles/Column";
 import { Row } from "~/styles/Row";
@@ -108,10 +110,9 @@ export default function Window({
 
   const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", false);
 
-  const {
-    available,
-    active: { id: activeId, index: groupIndex }
-  } = useSelector((state) => state.groups);
+  const { available, active } = useSelector((state) => state.groups);
+
+  const { id: activeId, index: groupIndex } = active;
 
   const { inputValue, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
@@ -164,11 +165,13 @@ export default function Window({
   const closeWindow = () => {
     if (groupIndex > 0) {
       // Possible to have deleted the last window in the group
-      if (available[groupIndex].windows.length === 1) {
-        dispatch(deleteGroup(groupIndex));
-      } else {
-        dispatch(deleteWindow({ groupIndex, windowIndex }));
-      }
+      const action =
+        available[groupIndex].windows.length === 1
+          ? deleteGroup({ index: groupIndex, active })
+          : deleteWindow({ groupIndex, windowIndex });
+
+      dispatch(action);
+      dispatch(addAction(action));
     } else {
       windowId && chrome.windows.remove(windowId);
     }

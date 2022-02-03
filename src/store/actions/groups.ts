@@ -1,6 +1,7 @@
-import { Combine, DraggableLocation } from "react-beautiful-dnd";
+import type { Combine, DraggableLocation } from "react-beautiful-dnd";
 
-import { GROUPS_ACTIONS, IGroupsState } from "~/store/reducers/groups";
+import type { IGroupsState } from "~/store/reducers/groups";
+import { GROUPS_ACTIONS } from "~/store/reducers/groups";
 
 interface ICommonDnd {
   index: number;
@@ -69,7 +70,10 @@ export const updateInfo = (payload: { index: number; info?: string }) => ({
 
 export const addGroup = (payload: { color: string; title: string }) => ({ type: GROUPS_ACTIONS.ADD_GROUP, payload });
 
-export const deleteGroup = (payload: number) => ({ type: GROUPS_ACTIONS.DELETE_GROUP, payload });
+export const deleteGroup = (payload: { index: number; active: { index: number; id: string } }) => ({
+  type: GROUPS_ACTIONS.DELETE_GROUP,
+  payload
+});
 
 export const deleteWindow = (payload: { groupIndex: number; windowIndex: number }) => ({
   type: GROUPS_ACTIONS.DELETE_WINDOW,
@@ -81,7 +85,10 @@ export const deleteTab = (payload: { tabIndex: number; windowIndex: number; grou
   payload
 });
 
-export const clearEmptyGroups = () => ({ type: GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS });
+export const clearEmptyGroups = (payload: { index: number; id: string }) => ({
+  type: GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS,
+  payload
+});
 
 export const addWindow = (payload: { index: number; name: string }) => ({ type: GROUPS_ACTIONS.ADD_WINDOW, payload });
 

@@ -27,6 +27,13 @@ module.exports = {
     "default-case": "warn",
     eqeqeq: ["warn", "always"],
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        prefer: "type-imports",
+        disallowTypeAnnotations: true
+      }
+    ],
     "jsx-a11y/label-has-associated-control": [
       "error",
       {

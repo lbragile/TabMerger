@@ -1,4 +1,4 @@
-import { TRootActions } from "~/typings/redux";
+import type { TRootActions } from "~/typings/redux";
 
 export const HEADER_ACTIONS = {
   UPDATE_INPUT_VALUE: "UPDATE_INPUT_VALUE",
