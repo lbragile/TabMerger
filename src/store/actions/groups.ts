@@ -1,6 +1,6 @@
 import type { Combine, DraggableLocation } from "react-beautiful-dnd";
-
 import type { IGroupsState } from "~/store/reducers/groups";
+
 import { GROUPS_ACTIONS } from "~/store/reducers/groups";
 
 interface ICommonDnd {

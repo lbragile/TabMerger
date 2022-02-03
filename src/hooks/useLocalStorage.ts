@@ -1,11 +1,12 @@
-import type { Dispatch, SetStateAction } from "react";
 import { useCallback, useEffect, useState } from "react";
 
 import { useDispatch } from "./useRedux";
 
+import type { Dispatch, SetStateAction } from "react";
+import type { IGroupsState } from "~/store/reducers/groups";
+
 import { updateAvailable, updateActive } from "~/store/actions/groups";
 import { setAnchorState } from "~/store/actions/history";
-import type { IGroupsState } from "~/store/reducers/groups";
 
 interface IChanges {
   [key: string]: chrome.storage.StorageChange;

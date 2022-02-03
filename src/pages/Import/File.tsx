@@ -3,10 +3,11 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import styled, { css } from "styled-components";
 
+import type { TImportType } from "~/typings/settings";
+
 import Note from "~/components/Note";
 import { Column } from "~/styles/Column";
 import { Message } from "~/styles/Message";
-import type { TImportType } from "~/typings/settings";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   height: 300px;

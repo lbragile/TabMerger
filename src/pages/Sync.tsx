@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import type { TSyncType } from "~/typings/settings";
+
 import { ModalFooter, ModalHeader } from "~/components/Modal";
 import Note from "~/components/Note";
 import Selector from "~/components/Selector";
@@ -12,7 +14,6 @@ import useSyncStorageInfo, { useSyncStorageDownload, useSyncStorageUpload } from
 import Button from "~/styles/Button";
 import { Message } from "~/styles/Message";
 import TextArea from "~/styles/Textarea";
-import type { TSyncType } from "~/typings/settings";
 import { relativeTimeStr } from "~/utils/helper";
 
 const StyledButton = styled(Button)`

@@ -1,10 +1,12 @@
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { TImportType } from "~/typings/settings";
+
 import Note from "~/components/Note";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
-import type { IGroupItemState } from "~/store/reducers/groups";
 import TextArea from "~/styles/Textarea";
-import type { TImportType } from "~/typings/settings";
+
 
 interface IText {
   currentText: string;

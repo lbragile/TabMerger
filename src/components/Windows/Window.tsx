@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useMemo, useRef, useState } from "react";
-import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
 import Tab from "./Tab";
+
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 
 import Dropdown from "~/components/Dropdown";
 import Popup from "~/components/Popup";
@@ -22,7 +23,6 @@ import {
   toggleWindowIncognito,
   updateWindowName
 } from "~/store/actions/groups";
-import { addAction } from "~/store/actions/history";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Column } from "~/styles/Column";
 import { Row } from "~/styles/Row";
@@ -107,6 +107,7 @@ export default function Window({
   dragHandleProps
 }: chrome.windows.Window & IWindow): JSX.Element {
   const dispatch = useDispatch();
+  const dispatchWithHistory = useDispatch(true);
 
   const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", false);
 
@@ -165,13 +166,11 @@ export default function Window({
   const closeWindow = () => {
     if (groupIndex > 0) {
       // Possible to have deleted the last window in the group
-      const action =
-        available[groupIndex].windows.length === 1
-          ? deleteGroup({ index: groupIndex, active })
-          : deleteWindow({ groupIndex, windowIndex });
-
-      dispatch(action);
-      dispatch(addAction(action));
+      if (available[groupIndex].windows.length === 1) {
+        dispatchWithHistory(deleteGroup({ index: groupIndex, active }));
+      } else {
+        dispatchWithHistory(deleteWindow({ groupIndex, windowIndex }));
+      }
     } else {
       windowId && chrome.windows.remove(windowId);
     }

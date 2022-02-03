@@ -1,5 +1,6 @@
-import type { Dispatch, SetStateAction } from "react";
 import styled, { css } from "styled-components";
+
+import type { Dispatch, SetStateAction } from "react";
 
 const ModalTabContainer = styled.div`
   display: flex;

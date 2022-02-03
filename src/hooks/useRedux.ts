@@ -1,7 +1,9 @@
 import { useContext } from "react";
 
+import type { TRootActions, TRootState } from "~/typings/redux";
+
+import { addAction } from "~/store/actions/history";
 import { ReduxStore } from "~/store/configureStore";
-import type { TRootState } from "~/typings/redux";
 
 type TypedUseSelectorHook = <U>(cb: (state: TRootState) => U) => U;
 
@@ -11,8 +13,13 @@ export const useSelector: TypedUseSelectorHook = (cb) => {
   return cb(state);
 };
 
-export const useDispatch = () => {
+export const useDispatch = (withHistory = false) => {
   const { dispatch } = useContext(ReduxStore);
 
-  return dispatch;
+  return withHistory
+    ? (arg: TRootActions) => {
+        dispatch(arg);
+        dispatch(addAction(arg));
+      }
+    : dispatch;
 };

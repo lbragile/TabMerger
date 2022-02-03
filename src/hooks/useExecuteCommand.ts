@@ -3,15 +3,17 @@ import { useCallback, useEffect } from "react";
 import useLocalStorage from "./useLocalStorage";
 import { useDispatch, useSelector } from "./useRedux";
 
+import type { TRootActions } from "~/typings/redux";
+
 import { updateActive, updateAvailable } from "~/store/actions/groups";
 import { setFocused } from "~/store/actions/header";
-import { addAction, updatePosition } from "~/store/actions/history";
+import { updatePosition } from "~/store/actions/history";
 import { setModalType, setVisibility } from "~/store/actions/modal";
 import groupsReducer from "~/store/reducers/groups";
-import type { TRootActions } from "~/typings/redux";
 
 export default function useExecuteCommand() {
   const dispatch = useDispatch();
+  const dispatchWithHistory = useDispatch(true);
 
   const { available, active } = useSelector((state) => state.groups);
   const { visible } = useSelector((state) => state.modal);
@@ -37,26 +39,19 @@ export default function useExecuteCommand() {
     const commandListener = (command: string) => {
       if (allowShortcuts) {
         switch (command) {
-          case "currentGroup": {
-            const action = updateActive({ id: available[0].id, index: 0 });
-            dispatch(action);
-            dispatch(addAction(action));
+          case "currentGroup":
+            dispatchWithHistory(updateActive({ id: available[0].id, index: 0 }));
             break;
-          }
 
           case "previousGroup": {
             const newIndex = Math.max(0, active.index - 1);
-            const action = updateActive({ id: available[newIndex].id, index: newIndex });
-            dispatch(action);
-            dispatch(addAction(action));
+            dispatchWithHistory(updateActive({ id: available[newIndex].id, index: newIndex }));
             break;
           }
 
           case "nextGroup": {
             const newIndex = Math.min(active.index + 1, available.length - 1);
-            const action = updateActive({ id: available[newIndex].id, index: newIndex });
-            dispatch(action);
-            dispatch(addAction(action));
+            dispatchWithHistory(updateActive({ id: available[newIndex].id, index: newIndex }));
             break;
           }
 
@@ -110,5 +105,5 @@ export default function useExecuteCommand() {
     chrome.commands.onCommand.addListener(commandListener);
 
     return () => chrome.commands.onCommand.removeListener(commandListener);
-  }, [dispatch, available, active, visible, allowShortcuts, undoRedoHandler, pos, actions]);
+  }, [dispatch, dispatchWithHistory, available, active, visible, allowShortcuts, undoRedoHandler, pos, actions]);
 }

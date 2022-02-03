@@ -1,5 +1,4 @@
 import type { Reducer } from "react";
-
 import type { rootActions, rootState } from "~/store";
 
 type ActionsMap<A> = {

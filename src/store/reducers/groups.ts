@@ -1,8 +1,9 @@
 import { nanoid } from "nanoid";
+
 import type { Combine, DraggableLocation } from "react-beautiful-dnd";
+import type { TRootActions } from "~/typings/redux";
 
 import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
-import type { TRootActions } from "~/typings/redux";
 import { createGroup, createWindowWithTabs } from "~/utils/helper";
 
 export const GROUPS_ACTIONS = {

@@ -1,9 +1,10 @@
-import type { Dispatch} from "react";
 import { createContext, useMemo, useReducer } from "react";
+
+import type { Dispatch} from "react";
+import type { TRootActions, TRootState } from "~/typings/redux";
 
 import useReducerLogger from "~/hooks/useReducerLogger";
 import { rootReducer, rootState } from "~/store";
-import type { TRootActions, TRootState } from "~/typings/redux";
 
 export const ReduxStore = createContext<{ state: TRootState; dispatch: Dispatch<TRootActions> }>({
   state: rootState,

@@ -1,12 +1,12 @@
-import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
+
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 
 import Highlighted from "~/components/Highlighted";
 import { isTabDrag } from "~/constants/dragRegExp";
 import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { deleteTab, deleteWindow, deleteGroup } from "~/store/actions/groups";
-import { addAction } from "~/store/actions/history";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
 import { generateFavIconFromUrl } from "~/utils/helper";
@@ -70,7 +70,7 @@ export default function Tab({
   windowId,
   windowIndex
 }: chrome.tabs.Tab & ITab): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatchWithHistory = useDispatch(true);
 
   const { available, active: activeGroup } = useSelector((state) => state.groups);
 
@@ -95,14 +95,13 @@ export default function Tab({
       const isLastWindow = numTabsInWindow === 1;
       const isLastTab = windows.length === 1 && isLastWindow;
 
-      const action = isLastTab
-        ? deleteGroup({ index: groupIndex, active: activeGroup })
-        : isLastWindow
-        ? deleteWindow({ groupIndex, windowIndex })
-        : deleteTab({ tabIndex, windowIndex, groupIndex });
-
-      dispatch(action);
-      dispatch(addAction(action));
+      if (isLastTab) {
+        dispatchWithHistory(deleteGroup({ index: groupIndex, active: activeGroup }));
+      } else if (isLastWindow) {
+        dispatchWithHistory(deleteWindow({ groupIndex, windowIndex }));
+      } else {
+        dispatchWithHistory(deleteTab({ tabIndex, windowIndex, groupIndex }));
+      }
     } else {
       tabId && chrome.tabs.remove(tabId, () => "");
     }

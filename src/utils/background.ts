@@ -2,12 +2,13 @@ import { nanoid } from "nanoid";
 
 import { getReadableTimestamp, sortWindowsByFocus } from "./helper";
 
-import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
-import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
-import { MAX_SYNC_GROUPS, MAX_SYNC_ITEM_SIZE, MAX_SYNC_TABS_PER_GROUP } from "~/constants/sync";
 import type { IGroupItemState } from "~/store/reducers/groups";
 import type { TSentResponse } from "~/typings/background";
 import type { ISyncDataItem } from "~/typings/settings";
+
+import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
+import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
+import { MAX_SYNC_GROUPS, MAX_SYNC_ITEM_SIZE, MAX_SYNC_TABS_PER_GROUP } from "~/constants/sync";
 
 /**
  * Immediately Invoked Function Expression that executes the `sendResponse` function to response to the web page

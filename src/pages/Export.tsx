@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
+import type { TExportType } from "~/typings/settings";
+
 import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter, ModalHeader } from "~/components/Modal";
@@ -15,7 +17,6 @@ import { useSelector } from "~/hooks/useRedux";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
-import type { TExportType } from "~/typings/settings";
 import { getReadableTimestamp } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`

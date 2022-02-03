@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
+
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import type { IGroupItemState } from "~/store/reducers/groups";
 
 import ColorPicker from "~/components/ColorPicker";
 import Highlighted from "~/components/Highlighted";
@@ -10,8 +12,6 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateColor, deleteGroup, updateActive } from "~/store/actions/groups";
-import { addAction } from "~/store/actions/history";
-import type { IGroupItemState } from "~/store/reducers/groups";
 import {
   AbsoluteCloseIcon,
   ColorIndicator,
@@ -91,6 +91,8 @@ export default function Group({
   dragHandleProps
 }: IGroupItemState & IGroup): JSX.Element {
   const dispatch = useDispatch();
+  const dispatchWithHistory = useDispatch(true);
+
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
   const { active, available } = useSelector((state) => state.groups);
@@ -121,13 +123,7 @@ export default function Group({
   // When importing, the color picker value needs to update
   useEffect(() => setColorPickerValue(color), [color]);
 
-  const handleActiveGroupUpdate = () => {
-    if (!isActive) {
-      const action = updateActive({ index, id });
-      dispatch(action);
-      dispatch(addAction(action));
-    }
-  };
+  const handleActiveGroupUpdate = () => !isActive && dispatchWithHistory(updateActive({ index, id }));
 
   const handleShowTitleOverflow = (
     { currentTarget }: React.PointerEvent<HTMLDivElement>,
@@ -154,11 +150,7 @@ export default function Group({
     }, 0);
   };
 
-  const handleCloseGroup = () => {
-    const action = deleteGroup({ index, active });
-    dispatch(action);
-    dispatch(addAction(action));
-  };
+  const handleCloseGroup = () => dispatchWithHistory(deleteGroup({ index, active }));
 
   return (
     <>
