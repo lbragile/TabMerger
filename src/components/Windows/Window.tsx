@@ -127,7 +127,7 @@ export default function Window({
   const [showInstructions, setShowInstructions] = useState(false);
 
   const [windowName, setWindowName] = useRename(
-    () => dispatch(updateWindowName({ groupIndex, windowIndex, name: windowName })),
+    (newName: string) => dispatch(updateWindowName({ groupIndex, windowIndex, name: newName })),
     name ?? `${focused ? "Current " : ""}Window`
   );
 

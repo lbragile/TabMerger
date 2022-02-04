@@ -9,7 +9,6 @@ import { updateActive, updateAvailable } from "~/store/actions/groups";
 import { setFocused } from "~/store/actions/header";
 import { updatePosition } from "~/store/actions/history";
 import { setModalType, setVisibility } from "~/store/actions/modal";
-import groupsReducer from "~/store/reducers/groups";
 
 export default function useExecuteCommand() {
   const dispatch = useDispatch();
@@ -23,14 +22,19 @@ export default function useExecuteCommand() {
 
   const undoRedoHandler = useCallback(
     (end: number) => {
-      const { available: newAvailable, active: newActive } =
-        end === 0
-          ? anchorState
-          : actions.slice(0, end).reduce((prev, item) => groupsReducer(prev, item as TRootActions), anchorState);
+      // Start by reset the state to the anchor state
+      dispatch(updateAvailable(anchorState.available));
+      dispatch(updateActive(anchorState.active));
+
+      /**
+       * Apply each action until the current position `end`
+       * @note `end` === 0 will short circuit the slice leaving just the anchor state (what is needed)
+       */
+      actions.slice(0, end).forEach((action) => {
+        dispatch(action as TRootActions);
+      });
 
       dispatch(updatePosition(end));
-      dispatch(updateAvailable(newAvailable));
-      dispatch(updateActive(newActive));
     },
     [dispatch, actions, anchorState]
   );

@@ -10,7 +10,11 @@ import { useDebounce, useDebounceCallback } from "./useDebounce";
  * @param delay Debounce duration
  * @returns Local state & corresponding handler - to display most up-to-date information
  */
-export default function useRename(dispatcher: () => void, name: string, delay = 250): [string, (arg: string) => void] {
+export default function useRename(
+  dispatcher: (arg: string) => void,
+  name: string,
+  delay = 250
+): [string, (arg: string) => void] {
   const [value, setValue] = useState("");
 
   const debouncedValue = useDebounce(value, delay);
@@ -19,7 +23,7 @@ export default function useRename(dispatcher: () => void, name: string, delay = 
 
   const debounceHandler = useCallback(() => {
     if (value !== name && value === debouncedValue) {
-      dispatcher();
+      dispatcher(value);
     }
   }, [dispatcher, value, debouncedValue, name]);
 

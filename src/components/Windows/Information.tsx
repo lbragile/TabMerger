@@ -90,6 +90,7 @@ const SubTitle = styled.span<{ $right?: boolean }>`
 
 export default function Information(): JSX.Element {
   const dispatch = useDispatch();
+  const dispatchWithHistory = useDispatch(true);
 
   const { active, available } = useSelector((state) => state.groups);
 
@@ -107,8 +108,8 @@ export default function Information(): JSX.Element {
   const [numTabs, numWindows] = info?.split(" | ")?.map((count) => Number(count.slice(0, -1))) ?? [0, 0];
   const isDropdownItemDisabled = groupIndex === 0;
 
-  const [windowTitle, setWindowTitle] = useRename(
-    () => dispatch(updateGroupName({ groupIndex, name: windowTitle })),
+  const [groupTitle, setGroupTitle] = useRename(
+    (newName: string) => dispatch(updateGroupName({ groupIndex, name: newName })),
     name
   );
 
@@ -213,12 +214,13 @@ export default function Information(): JSX.Element {
         { text: "divider" },
         {
           text: "Delete",
-          handler: () => dispatch(deleteGroup({ index: groupIndex, active })),
+          handler: (e) =>
+            dropdownItemHandlerWrapper(e, () => dispatchWithHistory(deleteGroup({ index: groupIndex, active }))),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         }
       ] as IDropdown["items"],
-    [dispatch, groupIndex, active, isDropdownItemDisabled, numTabs, numWindows]
+    [dispatch, dispatchWithHistory, groupIndex, active, isDropdownItemDisabled, numTabs, numWindows]
   );
 
   const openItems = useMemo(
@@ -267,11 +269,11 @@ export default function Information(): JSX.Element {
       <Title
         ref={titleRef}
         type="text"
-        value={windowTitle}
-        onChange={(e) => setWindowTitle(e.target.value)}
+        value={groupTitle}
+        onChange={(e) => setGroupTitle(e.target.value)}
         onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
         maxLength={40}
-        $isMaxLength={windowTitle.length === 40}
+        $isMaxLength={groupTitle.length === 40}
       />
 
       <span>
