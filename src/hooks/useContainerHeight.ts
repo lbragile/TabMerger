@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { MutableRefObject} from "react";
+import type { MutableRefObject } from "react";
 
 /**
  * This is useful for dynamically computing  the height of containers relative to some bottom position

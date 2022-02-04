@@ -1,6 +1,6 @@
 import { createContext, useMemo, useReducer } from "react";
 
-import type { Dispatch} from "react";
+import type { Dispatch } from "react";
 import type { TRootActions, TRootState } from "~/typings/redux";
 
 import useReducerLogger from "~/hooks/useReducerLogger";

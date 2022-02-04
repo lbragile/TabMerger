@@ -7,7 +7,6 @@ import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
 import TextArea from "~/styles/Textarea";
 
-
 interface IText {
   currentText: string;
   setCurrentText: (arg: string) => void;
