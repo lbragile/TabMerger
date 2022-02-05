@@ -24,7 +24,6 @@ import { toggleWindowTabsVisibility } from "~/utils/helper";
 
 export default function useDnd() {
   const dispatch = useDispatch();
-  const dispatchWithHistory = useDispatch(true);
 
   const [groupTitle] = useLocalStorage("groupTitle", DEFAULT_GROUP_TITLE);
   const [groupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
@@ -74,21 +73,21 @@ export default function useDnd() {
       const isValidDndWithinGroup = destination && destination.droppableId !== "sidePanel";
 
       if (isTab) {
-        isValidCombine && dispatchWithHistory(updateTabsFromSidePanelDnd({ ...sidePanelPayload, name: windowTitle }));
-        isValidDndWithinGroup && dispatchWithHistory(updateTabsFromGroupDnd(destPayload));
+        isValidCombine && dispatch(updateTabsFromSidePanelDnd({ ...sidePanelPayload, name: windowTitle }));
+        isValidDndWithinGroup && dispatch(updateTabsFromGroupDnd(destPayload));
       } else if (isWindow) {
         // Re-show the tabs since the drag ended
         toggleWindowTabsVisibility(draggableId, true);
 
-        isValidCombine && dispatchWithHistory(updateWindowsFromSidePanelDnd(sidePanelPayload));
-        isValidDndWithinGroup && dispatchWithHistory(updateWindowsFromGroupDnd(destPayload));
+        isValidCombine && dispatch(updateWindowsFromSidePanelDnd(sidePanelPayload));
+        isValidDndWithinGroup && dispatch(updateWindowsFromGroupDnd(destPayload));
       } else if (isGroup && destination && destination.index > 0) {
         // Only swap if the destination exists (valid) and is below the first group
         dispatch(updateGroupOrder({ source, destination }));
 
         // Update active group if it does not match the draggable
         if (destination.index !== source.index) {
-          dispatchWithHistory(updateActive({ id: available[destination.index].id, index: destination.index }));
+          dispatch(updateActive({ id: available[destination.index].id, index: destination.index }));
         }
       }
 
@@ -103,7 +102,7 @@ export default function useDnd() {
         dispatch(clearEmptyGroups(active));
       }
     },
-    [dispatch, dispatchWithHistory, index, available, windowTitle, active]
+    [dispatch, index, available, windowTitle, active]
   );
 
   return { onBeforeCapture, onDragStart, onDragEnd };

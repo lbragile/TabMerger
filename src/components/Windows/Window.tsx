@@ -107,7 +107,6 @@ export default function Window({
   dragHandleProps
 }: chrome.windows.Window & IWindow): JSX.Element {
   const dispatch = useDispatch();
-  const dispatchWithHistory = useDispatch(true);
 
   const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", false);
 
@@ -167,9 +166,9 @@ export default function Window({
     if (groupIndex > 0) {
       // Possible to have deleted the last window in the group
       if (available[groupIndex].windows.length === 1) {
-        dispatchWithHistory(deleteGroup({ index: groupIndex, active }));
+        dispatch(deleteGroup({ index: groupIndex }));
       } else {
-        dispatchWithHistory(deleteWindow({ groupIndex, windowIndex }));
+        dispatch(deleteWindow({ groupIndex, windowIndex }));
       }
     } else {
       windowId && chrome.windows.remove(windowId);

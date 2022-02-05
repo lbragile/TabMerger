@@ -70,7 +70,7 @@ export default function Tab({
   windowId,
   windowIndex
 }: chrome.tabs.Tab & ITab): JSX.Element {
-  const dispatchWithHistory = useDispatch(true);
+  const dispatch = useDispatch();
 
   const { available, active: activeGroup } = useSelector((state) => state.groups);
 
@@ -96,11 +96,11 @@ export default function Tab({
       const isLastTab = windows.length === 1 && isLastWindow;
 
       if (isLastTab) {
-        dispatchWithHistory(deleteGroup({ index: groupIndex, active: activeGroup }));
+        dispatch(deleteGroup({ index: groupIndex }));
       } else if (isLastWindow) {
-        dispatchWithHistory(deleteWindow({ groupIndex, windowIndex }));
+        dispatch(deleteWindow({ groupIndex, windowIndex }));
       } else {
-        dispatchWithHistory(deleteTab({ tabIndex, windowIndex, groupIndex }));
+        dispatch(deleteTab({ tabIndex, windowIndex, groupIndex }));
       }
     } else {
       tabId && chrome.tabs.remove(tabId, () => "");

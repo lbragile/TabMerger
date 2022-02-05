@@ -1,24 +1,20 @@
-import { createContext, useMemo, useReducer } from "react";
+import { applyMiddleware, createStore } from "redux";
+import { createLogger } from "redux-logger";
+import { composeWithDevTools } from "remote-redux-devtools";
 
-import type { Dispatch } from "react";
-import type { TRootActions, TRootState } from "~/typings/redux";
+import { rootReducer } from "~/store";
 
-import useReducerLogger from "~/hooks/useReducerLogger";
-import { rootReducer, rootState } from "~/store";
-
-export const ReduxStore = createContext<{ state: TRootState; dispatch: Dispatch<TRootActions> }>({
-  state: rootState,
-  dispatch: () => ""
+const composeEnhancers = composeWithDevTools({
+  name: "TabMerger",
+  realtime: true,
+  hostname: "localhost",
+  port: 8080
 });
 
-const StoreProvider = ({ children }: { children: JSX.Element }) => {
-  const loggedReducer = useReducerLogger(rootReducer);
+const logger = createLogger({
+  collapsed: true,
+  duration: true,
+  predicate: () => process.env.NODE_ENV === "development"
+});
 
-  const [state, dispatch] = useReducer(process.env.NODE_ENV === "development" ? loggedReducer : rootReducer, rootState);
-
-  const store = useMemo(() => ({ state, dispatch }), [state]);
-
-  return <ReduxStore.Provider value={store}>{children}</ReduxStore.Provider>;
-};
-
-export default StoreProvider;
+export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger)));

@@ -10,7 +10,9 @@
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.5.3",
-    "react-multi-select-component": "^4.2.1"
+    "react-multi-select-component": "^4.2.1",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.0",
@@ -30,6 +32,9 @@
     "@types/react": "^17.0.38",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.11",
+    "@types/react-redux": "^7.1.22",
+    "@types/redux-logger": "^3.0.9",
+    "@types/remote-redux-devtools": "^0.5.5",
     "@types/styled-components": "^5.1.21",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
@@ -53,6 +58,8 @@
     "postcss-scss": "^4.0.3",
     "prettier": "^2.5.1",
     "react-is": "17.0.2",
+    "redux-logger": "^3.0.6",
+    "remote-redux-devtools": "^0.5.16",
     "styled-components": "^5.3.3",
     "stylelint": "^14.3.0",
     "stylelint-config-standard-scss": "^3.0.0",

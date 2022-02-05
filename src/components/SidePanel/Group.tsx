@@ -91,7 +91,6 @@ export default function Group({
   dragHandleProps
 }: IGroupItemState & IGroup): JSX.Element {
   const dispatch = useDispatch();
-  const dispatchWithHistory = useDispatch(true);
 
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
@@ -123,7 +122,7 @@ export default function Group({
   // When importing, the color picker value needs to update
   useEffect(() => setColorPickerValue(color), [color]);
 
-  const handleActiveGroupUpdate = () => !isActive && dispatchWithHistory(updateActive({ index, id }));
+  const handleActiveGroupUpdate = () => !isActive && dispatch(updateActive({ index, id }));
 
   const handleShowTitleOverflow = (
     { currentTarget }: React.PointerEvent<HTMLDivElement>,
@@ -150,7 +149,7 @@ export default function Group({
     }, 0);
   };
 
-  const handleCloseGroup = () => dispatchWithHistory(deleteGroup({ index, active }));
+  const handleCloseGroup = () => dispatch(deleteGroup({ index }));
 
   return (
     <>

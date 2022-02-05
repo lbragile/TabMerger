@@ -90,7 +90,6 @@ const SubTitle = styled.span<{ $right?: boolean }>`
 
 export default function Information(): JSX.Element {
   const dispatch = useDispatch();
-  const dispatchWithHistory = useDispatch(true);
 
   const { active, available } = useSelector((state) => state.groups);
 
@@ -214,13 +213,12 @@ export default function Information(): JSX.Element {
         { text: "divider" },
         {
           text: "Delete",
-          handler: (e) =>
-            dropdownItemHandlerWrapper(e, () => dispatchWithHistory(deleteGroup({ index: groupIndex, active }))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(deleteGroup({ index: groupIndex }))),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         }
       ] as IDropdown["items"],
-    [dispatch, dispatchWithHistory, groupIndex, active, isDropdownItemDisabled, numTabs, numWindows]
+    [dispatch, groupIndex, isDropdownItemDisabled, numTabs, numWindows]
   );
 
   const openItems = useMemo(

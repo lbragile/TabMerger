@@ -1,4 +1,5 @@
-import type { TRootActions } from "~/typings/redux";
+import type * as HEADER_CREATORS from "~/store/actions/header";
+import type { TAction } from "~/typings/redux";
 
 export const HEADER_ACTIONS = {
   UPDATE_INPUT_VALUE: "UPDATE_INPUT_VALUE",
@@ -18,7 +19,7 @@ export const initHeaderState: IHeaderState = {
   focused: false
 };
 
-const headerReducer = (state = initHeaderState, action: TRootActions): IHeaderState => {
+const headerReducer = (state = initHeaderState, action: TAction<typeof HEADER_CREATORS>): IHeaderState => {
   switch (action.type) {
     case HEADER_ACTIONS.UPDATE_INPUT_VALUE:
       return {

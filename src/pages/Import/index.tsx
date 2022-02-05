@@ -14,7 +14,6 @@ import { setVisibility } from "~/store/actions/modal";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
-  const dispatchWithHistory = useDispatch(true);
 
   const { available } = useSelector((state) => state.groups);
 
@@ -56,7 +55,7 @@ export default function Import(): JSX.Element {
         handleSave={() => {
           dispatch(updateAvailable([available[0], ...importFile]));
           dispatch(setVisibility(false));
-          dispatchWithHistory(updateActive({ index: 0, id: importFile[0].id }));
+          dispatch(updateActive({ index: 0, id: importFile[0].id }));
         }}
       />
     </>

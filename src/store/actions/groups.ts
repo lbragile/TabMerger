@@ -70,10 +70,7 @@ export const updateInfo = (payload: { index: number; info?: string }) => ({
 
 export const addGroup = (payload: { color: string; title: string }) => ({ type: GROUPS_ACTIONS.ADD_GROUP, payload });
 
-export const deleteGroup = (payload: { index: number; active: { index: number; id: string } }) => ({
-  type: GROUPS_ACTIONS.DELETE_GROUP,
-  payload
-});
+export const deleteGroup = (payload: { index: number }) => ({ type: GROUPS_ACTIONS.DELETE_GROUP, payload });
 
 export const deleteWindow = (payload: { groupIndex: number; windowIndex: number }) => ({
   type: GROUPS_ACTIONS.DELETE_WINDOW,

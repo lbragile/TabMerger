@@ -1,25 +1,10 @@
-import { useContext } from "react";
+import { useSelector as useReduxSelector, useDispatch as useReduxDispatch } from "react-redux";
 
-import type { TRootActions, TRootState } from "~/typings/redux";
+import type { TypedUseSelectorHook } from "react-redux";
+import type { RootState, AppDispatch } from "~/typings/redux";
 
-import { addAction } from "~/store/actions/history";
-import { ReduxStore } from "~/store/configureStore";
+/** @see https://redux.js.org/usage/usage-with-typescript */
 
-type TypedUseSelectorHook = <U>(cb: (state: TRootState) => U) => U;
+export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
 
-export const useSelector: TypedUseSelectorHook = (cb) => {
-  const { state } = useContext(ReduxStore);
-
-  return cb(state);
-};
-
-export const useDispatch = (withHistory = false) => {
-  const { dispatch } = useContext(ReduxStore);
-
-  return withHistory
-    ? (arg: TRootActions) => {
-        dispatch(arg);
-        dispatch(addAction(arg));
-      }
-    : dispatch;
-};
+export const useDispatch = (): AppDispatch => useReduxDispatch<AppDispatch>();
