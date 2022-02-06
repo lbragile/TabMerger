@@ -35,34 +35,34 @@
   "commands": {
     "_execute_action": {
       "suggested_key": {
-        "default": "Alt+T"
+        "default": "Alt+0"
       }
     },
     "currentGroup": {
-      "suggested_key": {
-        "default": "Alt+C"
-      },
       "description": "Select Current Group"
     },
     "previousGroup": {
-      "suggested_key": {
-        "default": "Alt+P"
-      },
       "description": "Select Previous Group"
     },
     "nextGroup": {
-      "suggested_key": {
-        "default": "Alt+N"
-      },
       "description": "Select Next Group"
     },
     "exclude": {
+      "suggested_key": {
+        "default": "Alt+X"
+      },
       "description": "Filter Out Tab"
     },
     "undoAction": {
+      "suggested_key": {
+        "default": "Alt+U"
+      },
       "description": "Toggle Undo"
     },
     "redoAction": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
       "description": "Toggle Redo"
     },
     "import": {

@@ -46,8 +46,19 @@ const popups = {
     onSurface: "#fff"
   },
   dark: {
-    surface: "#eee",
-    onSurface: "#000"
+    surface: "#5e5e5e",
+    onSurface: "#fff"
+  }
+};
+
+const headers = {
+  light: {
+    primary: "#dde8ffb7",
+    secondary: "#dfdfdfb7"
+  },
+  dark: {
+    primary: "#98bbff2b",
+    secondary: "#dfdfdf2b"
   }
 };
 
@@ -55,11 +66,13 @@ export const ThemeOptions = {
   light: {
     colors: colors.light,
     links: links.light,
-    popups: popups.light
+    popups: popups.light,
+    headers: headers.light
   },
   dark: {
     colors: colors.dark,
     links: links.dark,
-    popups: popups.dark
+    popups: popups.dark,
+    headers: headers.dark
   }
 };

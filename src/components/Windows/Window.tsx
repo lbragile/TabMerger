@@ -36,8 +36,9 @@ const WindowContainer = styled(Column)<{ $dragging: boolean }>`
 `;
 
 const StyledWindowTitle = styled(WindowTitle)<{ $active: boolean; $open: boolean; $dragging: boolean }>`
-  background-color: ${({ $open, $active }) => ($open ? ($active ? "#dde8ffb7" : "#dfdfdfb7") : "transparent")};
-  ${({ $dragging, $active }) =>
+  background-color: ${({ $open, $active, theme }) =>
+    $open ? ($active ? theme.headers.primary : theme.headers.secondary) : "transparent"};
+  ${({ $dragging, $active, theme }) =>
     $dragging
       ? css`
           use-event: none;
@@ -46,7 +47,7 @@ const StyledWindowTitle = styled(WindowTitle)<{ $active: boolean; $open: boolean
       : css`
           &:hover,
           &:focus-visible {
-            background-color: ${$active ? "#dde8ffb7" : "#dfdfdfb7"};
+            background-color: ${$active ? theme.headers.primary : theme.headers.secondary};
           }
         `}
 `;
@@ -260,6 +261,7 @@ export default function Window({
       <Row $gap="4px">
         <CloseIcon
           icon="times-circle"
+          $disabled={groupIndex === 0 && windowIndex === 0}
           tabIndex={0}
           onClick={closeWindow}
           onPointerDown={(e) => e.preventDefault()}

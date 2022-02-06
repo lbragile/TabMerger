@@ -119,16 +119,15 @@ export default function Header(): JSX.Element {
 
   const settingsItems = useMemo(() => {
     return [
+      { text: "Settings", handler: () => modalDetailsHandler("settings") },
+      { text: "divider" },
       { text: "Import", handler: () => modalDetailsHandler("import") },
       { text: "Export", handler: () => modalDetailsHandler("export") },
       { text: "Sync", handler: () => modalDetailsHandler("sync") },
       { text: "divider" },
-      { text: "Settings", handler: () => modalDetailsHandler("settings") },
       { text: "Help", handler: () => createActiveTab(TABMERGER_HELP) },
-      { text: "divider" },
       { text: "Rate", handler: () => createActiveTab(TABMERGER_REVIEWS) },
       { text: "Donate", handler: () => createActiveTab(process.env.REACT_APP_PAYPAL_URL ?? CHROME_NEW_TAB) },
-      { text: "divider" },
       { text: "About", handler: () => modalDetailsHandler("about") }
     ] as IDropdown["items"];
   }, [modalDetailsHandler]);

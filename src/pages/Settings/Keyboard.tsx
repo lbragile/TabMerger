@@ -60,7 +60,7 @@ export default function Keyboard(): JSX.Element {
   useEffect(() => {
     chrome.commands.getAll((commands) =>
       setAllCommands(
-        [{ description: "Activate Extension", shortcut: "Alt+T", name: "_execute_action" }, ...commands].sort(
+        [{ description: "Activate Extension", shortcut: "Alt+0", name: "_execute_action" }, ...commands].sort(
           (a, b) => a.description?.localeCompare(b.description ?? "") ?? 0
         )
       )

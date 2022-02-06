@@ -148,6 +148,11 @@ const groupsReducer = (state = initGroupsState, action: TAction<typeof GROUPS_CR
         });
         available[groupIdx].windows.unshift(...removedWindows);
 
+        // Sort windows so that favorites are on top
+        available[groupIdx].windows = available[groupIdx].windows
+          .filter((w) => w.starred)
+          .concat(available[groupIdx].windows.filter((w) => !w.starred));
+
         available[index].updatedAt = Date.now();
         available[groupIdx].updatedAt = Date.now();
       }
@@ -191,6 +196,11 @@ const groupsReducer = (state = initGroupsState, action: TAction<typeof GROUPS_CR
         const removedTabs = available[index].windows[srcWindowIdx].tabs?.splice(source.index, 1);
         const newWindow = createWindowWithTabs(removedTabs ?? [], name);
         available[groupIdx].windows.unshift(newWindow);
+
+        // Sort windows so that favorites are on top
+        available[groupIdx].windows = available[groupIdx].windows
+          .filter((w) => w.starred)
+          .concat(available[groupIdx].windows.filter((w) => !w.starred));
 
         available[index].updatedAt = Date.now();
         available[groupIdx].updatedAt = Date.now();
@@ -287,12 +297,17 @@ const groupsReducer = (state = initGroupsState, action: TAction<typeof GROUPS_CR
     case GROUPS_ACTIONS.UPDATE_GROUP_ORDER: {
       const { source, destination } = action.payload;
 
+      let newActive = { ...state.active };
+
       if (destination) {
         const removedGroups = available.splice(source.index, 1);
         available.splice(destination.index, 0, ...removedGroups);
+
+        // Make the dragged group active
+        newActive = { id: removedGroups[0].id, index: destination.index };
       }
 
-      return { ...state, available };
+      return { active: newActive, available };
     }
 
     case GROUPS_ACTIONS.TOGGLE_WINDOW_INCOGNITO: {

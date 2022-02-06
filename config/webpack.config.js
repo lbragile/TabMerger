@@ -86,18 +86,6 @@ module.exports = {
   mode: isProd ? "production" : "development",
   watch: !isProd,
   devtool: false,
-  optimization: {
-    runtimeChunk: "single",
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          chunks: "all"
-        }
-      }
-    }
-  },
   performance: {
     maxEntrypointSize: 1.024e6,
     maxAssetSize: 1.024e6

@@ -113,6 +113,7 @@ export default function Tab({
     <Row $gap="4px">
       <CloseIcon
         icon="times"
+        $disabled={groupIndex === 0 && windowIndex === 0}
         tabIndex={0}
         onClick={closeTab}
         onPointerDown={(e) => e.preventDefault()}

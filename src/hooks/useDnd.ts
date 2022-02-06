@@ -16,7 +16,6 @@ import {
   updateWindowsFromSidePanelDnd,
   updateWindowsFromGroupDnd,
   updateGroupOrder,
-  updateActive,
   clearEmptyWindows,
   clearEmptyGroups
 } from "~/store/actions/groups";
@@ -29,7 +28,7 @@ export default function useDnd() {
   const [groupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
   const [windowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
 
-  const { active, available } = useSelector((state) => state.groups.present);
+  const { active } = useSelector((state) => state.groups.present);
 
   const { index } = active;
 
@@ -84,11 +83,6 @@ export default function useDnd() {
       } else if (isGroup && destination && destination.index > 0) {
         // Only swap if the destination exists (valid) and is below the first group
         dispatch(updateGroupOrder({ source, destination }));
-
-        // Update active group if it does not match the draggable
-        if (destination.index !== source.index) {
-          dispatch(updateActive({ id: available[destination.index].id, index: destination.index }));
-        }
       }
 
       dispatch(resetDnDInfo());
@@ -102,7 +96,7 @@ export default function useDnd() {
         dispatch(clearEmptyGroups(active));
       }
     },
-    [dispatch, index, available, windowTitle, active]
+    [dispatch, index, windowTitle, active]
   );
 
   return { onBeforeCapture, onDragStart, onDragEnd };
