@@ -14,6 +14,8 @@ export const TABMERGER_PRICING = TABMERGER_DEMO_SITE + "/pricing";
 
 export const TABMERGER_CONTACT = TABMERGER_DEMO_SITE + "/contact";
 
+export const TABMERGER_ISSUES = "https://github.com/lbragile/TabMerger/issues";
+
 // EXTENSION
 export const EXTENSION_PAGE_LINK = `chrome://extensions?id=${chrome.runtime.id}`;
 

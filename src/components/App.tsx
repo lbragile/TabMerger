@@ -18,8 +18,11 @@ import {
   faUpload
 } from "@fortawesome/free-solid-svg-icons";
 import { DragDropContext } from "react-beautiful-dnd";
+import { ErrorBoundary } from "react-error-boundary";
+import { ActionCreators } from "redux-undo";
 import styled from "styled-components";
 
+import ErrorBoundaryFallback from "./ErrorBoundaryFallback";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Windows from "./Windows";
@@ -28,7 +31,7 @@ import useDnd from "~/hooks/useDnd";
 import useExecuteCommand from "~/hooks/useExecuteCommand";
 import useFilter from "~/hooks/useFilter";
 import useInitState from "~/hooks/useInitState";
-import { useSelector } from "~/hooks/useRedux";
+import { useSelector, useDispatch } from "~/hooks/useRedux";
 import useUpdateInfo from "~/hooks/useUpdateInfo";
 import useUpdateWindows from "~/hooks/useUpdateWindows";
 import { GlobalStyle } from "~/styles/Global";
@@ -53,6 +56,8 @@ const MainArea = styled.div`
 `;
 
 const App = (): JSX.Element => {
+  const dispatch = useDispatch();
+
   const { filterChoice } = useSelector((state) => state.header);
   const { active, available } = useSelector((state) => state.groups.present);
 
@@ -68,18 +73,25 @@ const App = (): JSX.Element => {
   return (
     <Container>
       <GlobalStyle />
+      <ErrorBoundary
+        FallbackComponent={ErrorBoundaryFallback}
+        onReset={() => {
+          // Revert 2 steps back
+          dispatch(ActionCreators.jump(-2));
+        }}
+      >
+        <Header />
 
-      <Header />
+        <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+          {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
+            <MainArea>
+              <SidePanel />
 
-      <DragDropContext onBeforeCapture={onBeforeCapture} onDragStart={onDragStart} onDragEnd={onDragEnd}>
-        {(filterChoice === "tab" || (filterChoice === "group" && filteredGroups.length > 0)) && (
-          <MainArea>
-            <SidePanel />
-
-            <Windows />
-          </MainArea>
-        )}
-      </DragDropContext>
+              <Windows />
+            </MainArea>
+          )}
+        </DragDropContext>
+      </ErrorBoundary>
     </Container>
   );
 };

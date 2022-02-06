@@ -19,13 +19,21 @@ const DND_GROUPING = [
 
 const EXCLUDED_ACTIONS = [GROUPS_ACTIONS.UPDATE_INFO, GROUPS_ACTIONS.UPDATE_TIMESTAMP];
 
+let randomGroupPostfix = 0;
+
 export const rootReducer = combineReducers({
   header: headerReducer,
   dnd: dndReducer,
   modal: modalReducer,
   groups: undoable(groupsReducer, {
     filter: excludeAction(EXCLUDED_ACTIONS),
-    groupBy: (actionType) => (DND_GROUPING.includes(actionType.type) ? DND_GROUPING[0] : null),
+    groupBy: (actionType) => {
+      if (actionType.type === DND_GROUPING[0]) {
+        randomGroupPostfix = Math.random();
+      }
+
+      return DND_GROUPING.includes(actionType.type) ? DND_GROUPING[0] + "-" + randomGroupPostfix : null;
+    },
     syncFilter: true
   })
 });
