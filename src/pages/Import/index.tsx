@@ -15,7 +15,7 @@ import { setVisibility } from "~/store/actions/modal";
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
   const [currentText, setCurrentText] = useState("");

@@ -81,7 +81,7 @@ export const initGroupsState: IGroupsState = {
 };
 
 const groupsReducer = (state = initGroupsState, action: TAction<typeof GROUPS_CREATORS>): IGroupsState => {
-  const available = [...state.available];
+  const available = JSON.parse(JSON.stringify(state.available)) as IGroupItemState[];
 
   switch (action.type) {
     case GROUPS_ACTIONS.UPDATE_AVAILABLE:

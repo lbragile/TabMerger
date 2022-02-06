@@ -31,7 +31,7 @@ const StyledGroupHeadline = styled(GroupHeadline).attrs(() => ({ as: "div" }))`
 type TSelectedTheme = "light" | "dark";
 
 export default function Theme(): JSX.Element {
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
   const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
   const [italicizeNonHttp, setItalicizeNonHttp] = useLocalStorage("italicizeNonHttp", true);

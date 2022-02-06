@@ -33,7 +33,7 @@ export default function Windows(): JSX.Element {
   const {
     active: { id: activeId, index: groupIndex },
     available
-  } = useSelector((state) => state.groups);
+  } = useSelector((state) => state.groups.present);
 
   const typing = inputValue !== "";
   const { filteredTabs } = useFilter();

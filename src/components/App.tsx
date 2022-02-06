@@ -54,7 +54,7 @@ const MainArea = styled.div`
 
 const App = (): JSX.Element => {
   const { filterChoice } = useSelector((state) => state.header);
-  const { active, available } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups.present);
 
   const { filteredGroups } = useFilter();
 

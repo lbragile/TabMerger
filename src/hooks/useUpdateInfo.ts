@@ -10,7 +10,7 @@ import { updateInfo } from "~/store/actions/groups";
  */
 export default function useUpdateInfo() {
   const dispatch = useDispatch();
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
   useEffect(() => {
     available.forEach((group, i) => {

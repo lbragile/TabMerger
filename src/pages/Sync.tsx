@@ -21,7 +21,7 @@ const StyledButton = styled(Button)`
 `;
 
 export default function Sync(): JSX.Element {
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
   const [fileLocationPicker] = useLocalStorage("fileLocationPicker", false);
 

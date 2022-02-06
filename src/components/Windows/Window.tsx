@@ -110,7 +110,7 @@ export default function Window({
 
   const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", false);
 
-  const { available, active } = useSelector((state) => state.groups);
+  const { available, active } = useSelector((state) => state.groups.present);
 
   const { id: activeId, index: groupIndex } = active;
 

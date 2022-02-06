@@ -37,7 +37,7 @@ const SearchIcon = styled(FontAwesomeIcon)`
 export default function SearchResult(): JSX.Element {
   const dispatch = useDispatch();
   const { inputValue, filterChoice } = useSelector((state) => state.header);
-  const { active } = useSelector((state) => state.groups);
+  const { active } = useSelector((state) => state.groups.present);
 
   const { filteredTabs, filteredGroups } = useFilter();
 

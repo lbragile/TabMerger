@@ -11,7 +11,7 @@ import type { IGroupItemState } from "~/store/reducers/groups";
  */
 export default function useFilter() {
   const { inputValue } = useSelector((state) => state.header);
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
   const [filteredTabs, nonEmptyGroups] = useMemo(() => {
     const remainingTabs: Record<string, chrome.tabs.Tab[][]> = {};

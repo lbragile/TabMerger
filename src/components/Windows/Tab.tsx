@@ -72,7 +72,7 @@ export default function Tab({
 }: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
 
-  const { available, active: activeGroup } = useSelector((state) => state.groups);
+  const { available, active: activeGroup } = useSelector((state) => state.groups.present);
 
   const { index: groupIndex } = activeGroup;
 

@@ -91,7 +91,7 @@ const SubTitle = styled.span<{ $right?: boolean }>`
 export default function Information(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { active, available } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups.present);
 
   const groupIndex = active.index;
 

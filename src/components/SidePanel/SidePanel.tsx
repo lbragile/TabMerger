@@ -30,7 +30,7 @@ const DraggableContainer = styled(Scrollbar)<{ $height: number; $dragging: boole
 `;
 
 export default function SidePanel(): JSX.Element {
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
   const { inputValue, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
 

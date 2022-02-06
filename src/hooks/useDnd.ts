@@ -29,7 +29,7 @@ export default function useDnd() {
   const [groupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
   const [windowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
 
-  const { active, available } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups.present);
 
   const { index } = active;
 

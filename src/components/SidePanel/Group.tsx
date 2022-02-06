@@ -94,7 +94,7 @@ export default function Group({
 
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
-  const { active, available } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups.present);
 
   const index = available.findIndex((group) => group.id === id);
   const groupDrag = isGroupDrag(dragType);

@@ -99,7 +99,7 @@ const ArrowIcon = styled(FontAwesomeIcon)`
 const EMPTY_TEXT = "Nothing to export";
 
 export default function Export(): JSX.Element {
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
   const [fileLocationPicker, setFileLocationPicker] = useLocalStorage("fileLocationPicker", false);
   const [, setLastExport] = useLocalStorage("lastExport", "");
