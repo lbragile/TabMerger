@@ -1,17 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { useDispatch } from "./useRedux";
-
 import type { Dispatch, SetStateAction } from "react";
-import type { IGroupsState } from "~/store/reducers/groups";
-
-import { updateAvailable, updateActive } from "~/store/actions/groups";
-
-interface IChanges {
-  [key: string]: chrome.storage.StorageChange;
-}
-
-type TAreaName = "sync" | "local" | "managed";
 
 export default function useLocalStorage<T>(key: string, initialValue: T): [T, Dispatch<SetStateAction<T>>] {
   const [storedValue, setStoredValue] = useState<T>(initialValue);
@@ -32,7 +21,7 @@ export default function useLocalStorage<T>(key: string, initialValue: T): [T, Di
   }, [key, initialValue, setValue]);
 
   const handleStorageChange = useCallback(
-    (changes: IChanges, areaName: TAreaName) => {
+    (changes: { [key: string]: chrome.storage.StorageChange }, areaName: chrome.storage.AreaName) => {
       if (areaName === "local" && changes[key]) {
         setStoredValue(changes[key].newValue);
       }
@@ -47,25 +36,4 @@ export default function useLocalStorage<T>(key: string, initialValue: T): [T, Di
   }, [handleStorageChange]);
 
   return [storedValue, setValue];
-}
-
-export function useUpdateGroupsFromStorage({ active, available }: IGroupsState): void {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    chrome.storage.local.get(null, (result) => {
-      const { available: storageAvailable, active: storageActive } = result as IGroupsState;
-      if (storageAvailable) {
-        dispatch(updateAvailable(storageAvailable));
-      }
-
-      if (storageActive) {
-        dispatch(updateActive(storageActive));
-      }
-    });
-  }, [dispatch]);
-
-  useEffect(() => {
-    chrome.storage.local.set({ available, active }, () => "");
-  }, [active, available]);
 }

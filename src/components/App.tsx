@@ -27,7 +27,7 @@ import Windows from "./Windows";
 import useDnd from "~/hooks/useDnd";
 import useExecuteCommand from "~/hooks/useExecuteCommand";
 import useFilter from "~/hooks/useFilter";
-import { useUpdateGroupsFromStorage } from "~/hooks/useLocalStorage";
+import useInitState from "~/hooks/useInitState";
 import { useSelector } from "~/hooks/useRedux";
 import useUpdateInfo from "~/hooks/useUpdateInfo";
 import useUpdateWindows from "~/hooks/useUpdateWindows";
@@ -58,7 +58,7 @@ const App = (): JSX.Element => {
 
   const { filteredGroups } = useFilter();
 
-  useUpdateGroupsFromStorage({ available, active });
+  useInitState({ available, active });
   useUpdateWindows();
   useUpdateInfo();
   useExecuteCommand();
