@@ -7,6 +7,7 @@ import { isTabDrag } from "~/constants/dragRegExp";
 import { DEFAULT_FAVICON_URL } from "~/constants/urls";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { deleteTab, deleteWindow, deleteGroup } from "~/store/actions/groups";
+import { setShowUndo } from "~/store/actions/header";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
 import { generateFavIconFromUrl } from "~/utils/helper";
@@ -102,6 +103,8 @@ export default function Tab({
       } else {
         dispatch(deleteTab({ tabIndex, windowIndex, groupIndex }));
       }
+
+      dispatch(setShowUndo(true));
     } else {
       tabId && chrome.tabs.remove(tabId, () => "");
     }
@@ -117,7 +120,7 @@ export default function Tab({
         tabIndex={0}
         onClick={closeTab}
         onPointerDown={(e) => e.preventDefault()}
-        onKeyPress={({ key }) => key === "Enter" && closeTab()}
+        onKeyPress={({ code }) => code === "Enter" && closeTab()}
       />
 
       <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>

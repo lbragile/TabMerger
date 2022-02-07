@@ -10,7 +10,7 @@ const installHandler = (details: chrome.runtime.InstalledDetails) => {
       setDefaultData();
 
       const { version } = chrome.runtime.getManifest();
-      console.info(`Initialized Storage for TabMerger v${version}`);
+      console.info(`Successfully Installed TabMerger v${version}`);
       break;
     }
 
@@ -20,7 +20,7 @@ const installHandler = (details: chrome.runtime.InstalledDetails) => {
       chrome.storage.local.get("available", ({ available }) => {
         if (!available) setDefaultData();
 
-        console.info("Previous Version: ", details.previousVersion);
+        console.info(`Updated TabMerger - Previous Version: ${details.previousVersion}`);
       });
       break;
     }

@@ -9,7 +9,7 @@ export default function Link({ href, title, color }: { href: string; title: stri
       role="link"
       title={href}
       onClick={() => createActiveTab(href)}
-      onKeyPress={({ key }) => key === "Enter" && createActiveTab(href)}
+      onKeyPress={({ code }) => code === "Enter" && createActiveTab(href)}
     >
       {title}
     </StyledLink>

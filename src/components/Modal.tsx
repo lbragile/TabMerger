@@ -105,7 +105,7 @@ export function ModalHeader({ title }: { title: string }) {
         role="button"
         onClick={hide}
         onPointerDown={(e) => e.preventDefault()}
-        onKeyPress={({ key }) => key === "Enter" && hide()}
+        onKeyPress={({ code }) => code === "Enter" && hide()}
       >
         <CloseIcon icon="times" />
       </CloseIconContainer>

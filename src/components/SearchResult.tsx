@@ -73,7 +73,7 @@ export default function SearchResult(): JSX.Element {
         tabIndex={0}
         onPointerDown={(e) => e.preventDefault()}
         onClick={() => dispatch(updateInputValue(""))}
-        onKeyPress={({ key }) => key === "Enter" && dispatch(updateInputValue(""))}
+        onKeyPress={({ code }) => code === "Enter" && dispatch(updateInputValue(""))}
       />
     </StyledResult>
   );

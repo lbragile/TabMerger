@@ -1,9 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ActionCreators } from "redux-undo";
 import styled from "styled-components";
 
 import Dropdown from "./Dropdown";
 import Modal from "./Modal";
+import ProgressBar from "./ProgressBar";
 import SearchResult from "./SearchResult";
 
 import type { IDropdown } from "./Dropdown";
@@ -11,7 +13,9 @@ import type { TModalType } from "~/typings/settings";
 
 import { CHROME_NEW_TAB, TABMERGER_HELP, TABMERGER_REVIEWS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
+import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
+import useUndoProgress from "~/hooks/useUndoProgress";
 import { updateInputValue, setFilterChoice, setFocused } from "~/store/actions/header";
 import { setModalType, setVisibility } from "~/store/actions/modal";
 import { CloseIcon } from "~/styles/CloseIcon";
@@ -26,7 +30,7 @@ const Container = styled(StyledRow)`
   background-color: #94c9ff;
   width: 100%;
   height: 49px;
-  padding: 8px;
+  padding: 0 8px;
 `;
 
 const InputContainer = styled(StyledRow)`
@@ -87,13 +91,54 @@ const FilterChoice = styled.button<{ active: boolean }>`
   font-weight: 600;
 `;
 
+const UndoWarningPrompt = styled.div`
+  position: relative;
+  color: black;
+  background: #ffed6b;
+  min-width: 150px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+`;
+
+const UndoCTA = styled.div`
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const CloseIconContainer = styled.span`
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  & ${CloseIcon} {
+    font-size: 12px;
+  }
+
+  &:hover {
+    background-color: #ff000020;
+
+    & ${CloseIcon} {
+      color: red;
+    }
+  }
+`;
+
 export default function Header(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { inputValue, filterChoice, focused } = useSelector((state) => state.header);
+  const { inputValue, filterChoice, focused, showUndo } = useSelector((state) => state.header);
   const { visible } = useSelector((state) => state.modal);
   const typing = inputValue !== "";
 
+  const [confirmDelete] = useLocalStorage("confirmDelete", true);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const settingsIconRef = useRef<HTMLDivElement | null>(null);
@@ -101,6 +146,8 @@ export default function Header(): JSX.Element {
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   useClickOutside<HTMLDivElement>({ ref: dropdownRef, preCondition: showDropdown, cb: () => setShowDropdown(false) });
+
+  const { resetTimer, completed } = useUndoProgress();
 
   useEffect(() => {
     if (focused && searchRef.current) {
@@ -131,6 +178,15 @@ export default function Header(): JSX.Element {
       { text: "About", handler: () => modalDetailsHandler("about") }
     ] as IDropdown["items"];
   }, [modalDetailsHandler]);
+
+  const undoHandler = () => {
+    dispatch(ActionCreators.undo());
+    resetTimer();
+  };
+
+  const closeUndoPrompt = () => {
+    resetTimer();
+  };
 
   return (
     <>
@@ -177,13 +233,39 @@ export default function Header(): JSX.Element {
           )}
         </StyledRow>
 
+        {showUndo && confirmDelete && (
+          <UndoWarningPrompt>
+            <UndoCTA
+              tabIndex={0}
+              role="button"
+              onClick={undoHandler}
+              onKeyDown={(e) => e.preventDefault()}
+              onKeyPress={({ code }) => code === "Enter" && undoHandler()}
+            >
+              Undo
+            </UndoCTA>
+
+            <CloseIconContainer
+              tabIndex={0}
+              role="button"
+              onClick={closeUndoPrompt}
+              onKeyDown={(e) => e.preventDefault()}
+              onKeyPress={({ code }) => code === "Enter" && closeUndoPrompt}
+            >
+              <StyledCloseIcon icon="times" />
+            </CloseIconContainer>
+
+            <ProgressBar completed={completed} />
+          </UndoWarningPrompt>
+        )}
+
         <div ref={settingsIconRef}>
           <SettingsIcon
             tabIndex={0}
             icon="cog"
             onPointerDown={(e) => e.preventDefault()}
             onClick={() => setShowDropdown(!showDropdown)}
-            onKeyPress={({ key }) => key === "Enter" && setShowDropdown(!showDropdown)}
+            onKeyPress={({ code }) => code === "Enter" && setShowDropdown(!showDropdown)}
           />
         </div>
       </Container>

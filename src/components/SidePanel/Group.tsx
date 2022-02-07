@@ -12,6 +12,7 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateColor, deleteGroup, updateActive } from "~/store/actions/groups";
+import { setShowUndo } from "~/store/actions/header";
 import {
   AbsoluteCloseIcon,
   ColorIndicator,
@@ -149,7 +150,10 @@ export default function Group({
     }, 0);
   };
 
-  const handleCloseGroup = () => dispatch(deleteGroup({ index }));
+  const handleCloseGroup = () => {
+    dispatch(deleteGroup({ index }));
+    dispatch(setShowUndo(true));
+  };
 
   return (
     <>
@@ -164,7 +168,7 @@ export default function Group({
           $draggingOver={index > 0 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}
-          onKeyPress={({ key }) => key === "Enter" && handleActiveGroupUpdate()}
+          onKeyPress={({ code }) => code === "Enter" && handleActiveGroupUpdate()}
           onPointerEnter={() => setDraggingOver(true)}
           onPointerLeave={() => setDraggingOver(false)}
         >

@@ -23,6 +23,7 @@ import {
   toggleWindowIncognito,
   updateWindowName
 } from "~/store/actions/groups";
+import { setShowUndo } from "~/store/actions/header";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Column } from "~/styles/Column";
 import { Row } from "~/styles/Row";
@@ -171,6 +172,8 @@ export default function Window({
       } else {
         dispatch(deleteWindow({ groupIndex, windowIndex }));
       }
+
+      dispatch(setShowUndo(true));
     } else {
       windowId && chrome.windows.remove(windowId);
     }
@@ -265,7 +268,7 @@ export default function Window({
           tabIndex={0}
           onClick={closeWindow}
           onPointerDown={(e) => e.preventDefault()}
-          onKeyPress={({ key }) => key === "Enter" && closeWindow()}
+          onKeyPress={({ code }) => code === "Enter" && closeWindow()}
         />
 
         <Headline $active={focused} $dragging={windowSnapshot.isDragging}>

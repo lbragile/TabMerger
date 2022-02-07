@@ -20,6 +20,7 @@ import {
   updateGroupName,
   deleteGroup
 } from "~/store/actions/groups";
+import { setShowUndo } from "~/store/actions/header";
 import { getReadableTimestamp, pluralize } from "~/utils/helper";
 
 const Grid = styled.div`
@@ -124,15 +125,20 @@ export default function Information(): JSX.Element {
     cb: () => setShowOpenPopup(false)
   });
 
-  const dropdownItemHandlerWrapper = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement> | undefined,
-    action: () => void
-  ) => {
-    // Parent (settings icon will receive the bubbled event if propagation isn't stopped)
-    e?.stopPropagation();
-    action();
-    setShowSettingsPopup(false);
-  };
+  const dropdownItemHandlerWrapper = useCallback(
+    (
+      e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement> | undefined,
+      action: () => void,
+      showUndoPrompt = false
+    ) => {
+      // Parent (settings icon will receive the bubbled event if propagation isn't stopped)
+      e?.stopPropagation();
+      action();
+      setShowSettingsPopup(false);
+      showUndoPrompt && dispatch(setShowUndo(true));
+    },
+    [dispatch]
+  );
 
   const openWindows = useCallback(
     (type: "current" | "new" | "separate", isIncognito = false) => {
@@ -174,7 +180,7 @@ export default function Information(): JSX.Element {
         },
         {
           text: groupIndex === 0 ? "Save" : "Duplicate",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(duplicateGroup(groupIndex)))
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(duplicateGroup(groupIndex)), true)
         },
         { text: "divider" },
         {
@@ -201,24 +207,24 @@ export default function Information(): JSX.Element {
         { text: "divider" },
         {
           text: "Merge With Current",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(mergeWithCurrent(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(mergeWithCurrent(groupIndex)), true),
           isDisabled: isDropdownItemDisabled
         },
         {
           text: "Replace With Current",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(replaceWithCurrent(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(replaceWithCurrent(groupIndex)), true),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         },
         { text: "divider" },
         {
           text: "Delete",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(deleteGroup({ index: groupIndex }))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(deleteGroup({ index: groupIndex })), true),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         }
       ] as IDropdown["items"],
-    [dispatch, groupIndex, isDropdownItemDisabled, numTabs, numWindows]
+    [dispatch, dropdownItemHandlerWrapper, groupIndex, isDropdownItemDisabled, numTabs, numWindows]
   );
 
   const openItems = useMemo(

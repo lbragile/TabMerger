@@ -14,7 +14,7 @@ export const WindowTitle = styled.input`
 
   &:hover,
   &:focus-visible {
-    background-color: #dfdfdfb7;
+    background-color: ${({ theme }) => theme.headers.secondary};
   }
 `;
 

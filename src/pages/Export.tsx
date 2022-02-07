@@ -85,10 +85,18 @@ const StyledMultiSelect = styled(MultiSelect)`
   }
 `;
 
+const StyledCloseIcon = styled(CloseIcon)`
+  && {
+    transition: none;
+    opacity: 1;
+    margin-right: 6px;
+  }
+`;
+
 const ArrowIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.3 ease;
+  transition: none;
   color: ${({ theme }) => theme.colors.onSurface};
 
   &:hover {
@@ -216,8 +224,8 @@ export default function Export(): JSX.Element {
           value={selected}
           onChange={setSelected}
           labelledBy="Select"
-          ClearIcon={<CloseIcon icon="times" />}
-          ClearSelectedIcon={<CloseIcon icon="times" />}
+          ClearIcon={<StyledCloseIcon icon="times" />}
+          ClearSelectedIcon={<StyledCloseIcon icon="times" />}
           ArrowRenderer={({ expanded }) => <ArrowIcon icon={expanded ? "angle-up" : "angle-down"} />}
           valueRenderer={(selected) => (selected.length ? `${selected.length} Selected` : "Select Groups")}
         />

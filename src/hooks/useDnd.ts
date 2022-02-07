@@ -19,6 +19,7 @@ import {
   clearEmptyWindows,
   clearEmptyGroups
 } from "~/store/actions/groups";
+import { setShowUndo } from "~/store/actions/header";
 import { toggleWindowTabsVisibility } from "~/utils/helper";
 
 export default function useDnd() {
@@ -94,6 +95,11 @@ export default function useDnd() {
       if (isTab || isWindow) {
         dispatch(clearEmptyWindows({ index }));
         dispatch(clearEmptyGroups(active));
+      }
+
+      // Only show undo prompt for side panel dnd
+      if (isValidCombine) {
+        dispatch(setShowUndo(true));
       }
     },
     [dispatch, index, windowTitle, active]

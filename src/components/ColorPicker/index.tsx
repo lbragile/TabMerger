@@ -102,7 +102,7 @@ export default function ColorPicker({ color, setColor }: IColorPicker): JSX.Elem
             $color={swatchColor}
             title={swatchColor}
             onClick={() => setColor(swatchColor)}
-            onKeyPress={({ key }) => key === "Enter" && setColor(swatchColor)}
+            onKeyPress={({ code }) => code === "Enter" && setColor(swatchColor)}
           />
         ))}
       </SwatchGrid>
