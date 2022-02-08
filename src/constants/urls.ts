@@ -30,6 +30,9 @@ export const CHROME_SHORTCUTS = "chrome://extensions/shortcuts";
 
 export const CHROME_NEW_TAB = "chrome://newtab";
 
+// FILTERS
+export const DEFAULT_FILTER = "chrome://*,\nfile://*,\n";
+
 // LICENSE
 const GITHUB_BASE_URL = "https://github.com";
 

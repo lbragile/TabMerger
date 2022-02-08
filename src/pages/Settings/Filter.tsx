@@ -6,6 +6,7 @@ import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
 import Note from "~/components/Note";
+import { DEFAULT_FILTER } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { Message } from "~/styles/Message";
@@ -35,16 +36,24 @@ export default function Filter(): JSX.Element {
   useEffect(() => setLocalFilter(filter), [filter]);
   useEffect(() => setLocalExcludeProtocol(excludeProtocol), [excludeProtocol]);
 
+  // Filter testing (to see if a given URL input is "caught" by the filters)
   useEffect(() => {
     if (testUrl !== "") {
-      const caughtByFilter = localFilter
-        .split(/,\s+/)
-        .map((pattern) => wildcardGlobToRegExp(pattern).test(testUrl))
-        .some((x) => x);
+      const caughtByFilter =
+        localFilter.split(/,\s+/).filter((pattern) => wildcardGlobToRegExp(pattern).test(testUrl)).length > 0;
 
       setIsCaught(caughtByFilter);
     }
   }, [localFilter, testUrl]);
+
+  // Appends or removes the default filters from the filter list
+  useEffect(() => {
+    if (localExcludeProtocol) {
+      setLocalFilter((prev) => DEFAULT_FILTER + prev);
+    } else {
+      setLocalFilter((prev) => prev.replace(DEFAULT_FILTER, ""));
+    }
+  }, [localExcludeProtocol]);
 
   return (
     <>
@@ -76,7 +85,7 @@ export default function Filter(): JSX.Element {
             placeholder="Check if a given URL will be filtered"
           />
           {debouncedTestUrl !== "" && (
-            <Message $error={!isCaught}>
+            <Message $error={!isCaught} $recent={isCaught}>
               <FontAwesomeIcon icon={isCaught ? "check-circle" : "times-circle"} color={isCaught ? "green" : "red"} />
               <span>URL will {isCaught ? "" : "not"} be filtered</span>
             </Message>

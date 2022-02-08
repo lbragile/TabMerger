@@ -35,7 +35,7 @@ module.exports = {
       ]
     }),
     new SourceMapDevToolPlugin({
-      exclude: isProd ? ["vendors.js", "background.js", "runtime.js", "popup.js"] : ["vendors.js"]
+      exclude: isProd ? ["popup.js"] : []
     }),
     new ESLintPlugin(lintOpts),
     new StylelintPlugin(lintOpts),
