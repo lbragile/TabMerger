@@ -68,7 +68,7 @@ const StyledGroupHeadline = styled(GroupHeadline).attrs(() => ({ as: "div" }))<{
 
 const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; $visible: boolean }>`
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   display: ${({ $visible }) => ($visible ? "flex" : "none")};
   ${({ $pos: { right, top } }) => css`
     top: ${top}px;

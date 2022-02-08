@@ -19,7 +19,11 @@ export default function useRename(
 
   const debouncedValue = useDebounce(value, delay);
 
-  useEffect(() => setValue(name), [name]);
+  useEffect(() => {
+    setValue(name);
+
+    return () => setValue("");
+  }, [name]);
 
   const debounceHandler = useCallback(() => {
     if (value !== name && value === debouncedValue) {

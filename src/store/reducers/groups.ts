@@ -16,7 +16,6 @@ export const GROUPS_ACTIONS = {
   UPDATE_WINDOWS: "UPDATE_WINDOWS",
   UPDATE_WINDOWS_FROM_GROUP_DND: "UPDATE_WINDOWS_FROM_GROUP_DND",
   UPDATE_WINDOWS_FROM_SIDEPANEL_DND: "UPDATE_WINDOWS_FROM_SIDEPANEL_DND",
-  UPDATE_TABS: "UPDATE_TABS",
   UPDATE_TABS_FROM_GROUP_DND: "UPDATE_TABS_FROM_GROUP_DND",
   UPDATE_TABS_FROM_SIDEPANEL_DND: "UPDATE_TABS_FROM_SIDEPANEL_DND",
   ADD_GROUP: "ADD_GROUP",
@@ -156,15 +155,6 @@ const groupsReducer = (state = initGroupsState, action: TAction<typeof GROUPS_CR
         available[index].updatedAt = Date.now();
         available[groupIdx].updatedAt = Date.now();
       }
-
-      return { ...state, available };
-    }
-
-    case GROUPS_ACTIONS.UPDATE_TABS: {
-      const { groupIdx, windowIdx, tabs } = action.payload;
-
-      available[groupIdx].windows[windowIdx].tabs = tabs;
-      available[groupIdx].updatedAt = Date.now();
 
       return { ...state, available };
     }

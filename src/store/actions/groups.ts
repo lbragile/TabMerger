@@ -48,11 +48,6 @@ export const updateWindowsFromSidePanelDnd = (payload: ISidePanelDnd) => ({
   payload
 });
 
-export const updateTabs = (payload: { groupIdx: number; windowIdx: number; tabs: chrome.tabs.Tab[] }) => ({
-  type: GROUPS_ACTIONS.UPDATE_TABS,
-  payload
-});
-
 export const updateTabsFromGroupDnd = (payload: IWithinGroupDnd) => ({
   type: GROUPS_ACTIONS.UPDATE_TABS_FROM_GROUP_DND,
   payload

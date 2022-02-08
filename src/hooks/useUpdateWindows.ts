@@ -62,6 +62,8 @@ export default function useUpdateWindows(): void {
   );
 
   useEffect(() => {
+    updateAwaitingStorageWindows();
+
     chrome.tabs.onCreated.addListener(updateAwaitingStorageWindows);
     chrome.tabs.onUpdated.addListener(tabUpdateHandler);
     chrome.tabs.onRemoved.addListener(updateAwaitingStorageWindows);

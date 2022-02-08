@@ -31,7 +31,7 @@ export const CHROME_SHORTCUTS = "chrome://extensions/shortcuts";
 export const CHROME_NEW_TAB = "chrome://newtab";
 
 // FILTERS
-export const DEFAULT_FILTER = "chrome://*,\nfile://*,\n";
+export const DEFAULT_FILTER = ["chrome://", "chrome-extension://", "file://", ""].join("*,\n");
 
 // LICENSE
 const GITHUB_BASE_URL = "https://github.com";
@@ -44,6 +44,12 @@ const REACT_BEAUTIFUL_DND_LICENSE = REACT_BEAUTIFUL_DND_REPO + "/blob/master/LIC
 
 const REACT_REPO = GITHUB_BASE_URL + "/facebook/react";
 const REACT_LICENSE = REACT_REPO + "/blob/main/LICENSE";
+
+const REACT_REDUX_REPO = GITHUB_BASE_URL + "/reduxjs/react-redux";
+const REACT_REDUX_LICENSE = REACT_REDUX_REPO + "/blob/master/LICENSE.md";
+
+const REACT_ERROR_BOUNDARY_REPO = GITHUB_BASE_URL + "/bvaughn/react-error-boundary";
+const REACT_ERROR_BOUNDARY_LICENSE = REACT_ERROR_BOUNDARY_REPO + "/blob/master/LICENSE";
 
 const REACT_DROPZONE_REPO = GITHUB_BASE_URL + "/react-dropzone/react-dropzone";
 const REACT_DROPZONE_LICENSE = REACT_DROPZONE_REPO + "/blob/master/LICENSE";
@@ -69,6 +75,14 @@ export const LICENSE_INFO = {
   React: {
     repo: REACT_REPO,
     license: REACT_LICENSE
+  },
+  ReactRedux: {
+    repo: REACT_REDUX_REPO,
+    license: REACT_REDUX_LICENSE
+  },
+  ReactErrorBoundary: {
+    repo: REACT_ERROR_BOUNDARY_REPO,
+    license: REACT_ERROR_BOUNDARY_LICENSE
   },
   ReactDropzone: {
     repo: REACT_DROPZONE_REPO,
