@@ -67,7 +67,7 @@ export default function Backup(): JSX.Element {
 
       <Checkbox
         id="autoExport"
-        text="Enable Automatic Export"
+        text="Automatically Export"
         checked={localAutoExport}
         setChecked={() => setLocalAutoExport(!localAutoExport)}
       />
@@ -110,7 +110,7 @@ export default function Backup(): JSX.Element {
 
       <Checkbox
         id="autoSync"
-        text="Enable Automatic Sync"
+        text="Automatically Sync"
         checked={localAutoSync}
         setChecked={() => setLocalAutoSync(!localAutoSync)}
       />

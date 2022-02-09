@@ -58,7 +58,7 @@ export default function General(): JSX.Element {
         onChange: () => setLocalConfirmDelete(!localConfirmDelete)
       },
       {
-        label: "Display stored tab count in extension icon (popup reload required)",
+        label: "Display stored tab count in extension icon (reload required)",
         id: "badgeInformation",
         checked: localShowBadgeInfo,
         onChange: () => setLocalShowBadgeInfo(!localShowBadgeInfo)
@@ -122,10 +122,8 @@ export default function General(): JSX.Element {
 
       <Note>
         <p>
-          The Favicon URL must start with <b>http://www.</b> or <b>https://www.</b>
+          <b>Default Group & Default Window Title</b> apply to newly created items
         </p>
-
-        <p>Improper input will result in a default favicon symbol</p>
       </Note>
 
       <ModalFooter

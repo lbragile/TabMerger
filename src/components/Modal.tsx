@@ -137,6 +137,8 @@ export function ModalFooter({ closeText = "Close", saveText = "Save", showSave, 
 
   return (
     <FooterRow>
+      <Button onClick={hide}>{closeText}</Button>
+
       {showSave && (
         <Button
           onClick={() => {
@@ -159,8 +161,6 @@ export function ModalFooter({ closeText = "Close", saveText = "Save", showSave, 
           {saveSuccess ? <FontAwesomeIcon icon="check-circle" /> : saveText}
         </Button>
       )}
-
-      <Button onClick={hide}>{closeText}</Button>
     </FooterRow>
   );
 }

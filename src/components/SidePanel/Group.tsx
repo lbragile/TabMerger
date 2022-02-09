@@ -38,7 +38,7 @@ const StyledGroupButton = styled(GroupButton)<IGroupStyle>`
     margin-right: ${overflow ? "4px" : "0"};
   `}
   background-color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
-    $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : theme.colors.surface};
+    $isActive ? "#beddf4" : $dragging ? "lightgrey" : $draggingOver ? "#cfc" : theme.colors.surface};
   color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
     $isActive || $dragging || $draggingOver ? "black" : theme.colors.onSurface};
   outline: 1px solid

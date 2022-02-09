@@ -81,7 +81,9 @@ export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
 }
 
 export const generateFavIconFromUrl = (url = GOOGLE_HOMEPAGE) =>
-  /^https?/.test(url) ? `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}` : DEFAULT_FAVICON_URL;
+  /^https?:\/\/.*(?<!\.html|\.php)$/.test(url)
+    ? `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`
+    : DEFAULT_FAVICON_URL;
 
 export function createActiveTab(url: string) {
   chrome.tabs.create({ url, active: true }, () => "");
