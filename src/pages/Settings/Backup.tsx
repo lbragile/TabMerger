@@ -53,12 +53,7 @@ export default function Backup(): JSX.Element {
           : `Last exported on ${lastExport} (${relativeTimeExport} ago)`}
       </StyledMessage>
 
-      <Checkbox
-        id="autoExport"
-        text="Automatically Export"
-        checked={localAutoExport}
-        setChecked={() => setLocalAutoExport(!localAutoExport)}
-      />
+      <Checkbox id="autoExport" text="Automatically Export" checked={localAutoExport} setChecked={setLocalAutoExport} />
 
       <div>
         <span>Every</span>{" "}
@@ -96,12 +91,7 @@ export default function Backup(): JSX.Element {
           : `Last synced on ${lastSyncUpload} (${relativeTimeSync} ago)`}
       </StyledMessage>
 
-      <Checkbox
-        id="autoSync"
-        text="Automatically Sync"
-        checked={localAutoSync}
-        setChecked={() => setLocalAutoSync(!localAutoSync)}
-      />
+      <Checkbox id="autoSync" text="Automatically Sync" checked={localAutoSync} setChecked={setLocalAutoSync} />
 
       <div>
         <span>Every</span>{" "}

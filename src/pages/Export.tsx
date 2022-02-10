@@ -122,6 +122,8 @@ export default function Export(): JSX.Element {
   const [copied, setCopied] = useState(false);
   const [exportFile, setExportFile] = useState<File | null>(null);
 
+  const isDisabled = ["json", "html"].includes(activeTab);
+
   const selectOpts = useMemo(
     () => available.slice(1).map((group) => ({ label: group.name, value: group })),
     [available]
@@ -129,17 +131,12 @@ export default function Export(): JSX.Element {
 
   const [selected, setSelected] = useState(selectOpts);
 
-  const [checkbox, setCheckbox] = useState([
-    { text: "Titles", checked: true },
-    { text: "URLs", checked: true }
-  ]);
+  const [keepTitles, setKeepTitles] = useState(true);
+  const [keepURLs, setKeepURLs] = useState(true);
 
   const [selectedGroups, setSelectedGroups] = useState(available);
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const checkedText = checkbox.filter((item) => item.checked).map((item) => item.text);
-  const [keepTitles, keepURLs] = ["Titles", "URLs"].map((item) => checkedText.includes(item));
 
   // Copy button location needs to be adjusted depending on the vertical overflow scrollbar visibility
   useEffect(() => {
@@ -172,11 +169,6 @@ export default function Export(): JSX.Element {
       : getCSVText();
   }, [activeTab, selectedGroups, getRegularText, getMarkdownText, getHTMLText, getCSVText]);
 
-  const handleCheckboxChange = (text: string) => {
-    const origCheckbox = [...checkbox];
-    setCheckbox(origCheckbox.map((item) => (item.text === text ? { ...item, checked: !item.checked } : item)));
-  };
-
   useEffect(() => {
     if (text !== EMPTY_TEXT) {
       const [type, extension] =
@@ -206,19 +198,21 @@ export default function Export(): JSX.Element {
 
       <StyledRow>
         <div>
-          {checkbox.map(({ text, checked }) => (
-            <Checkbox
-              key={text}
-              id={text.toLocaleLowerCase()}
-              text={text}
-              checked={activeTab === "json" || checked}
-              setChecked={() => handleCheckboxChange(text)}
-              disabled={
-                (["Titles", "URLs"].includes(text) && ["json", "html"].includes(activeTab)) ||
-                (text === "Titles" && activeTab === "markdown")
-              }
-            />
-          ))}
+          <Checkbox
+            id="title"
+            text="Titles"
+            checked={isDisabled || activeTab === "markdown" || keepTitles}
+            setChecked={setKeepTitles}
+            disabled={isDisabled || activeTab === "markdown"}
+          />
+
+          <Checkbox
+            id="url"
+            text="URLs"
+            checked={isDisabled || keepURLs}
+            setChecked={setKeepURLs}
+            disabled={isDisabled}
+          />
         </div>
 
         <StyledMultiSelect
@@ -254,7 +248,7 @@ export default function Export(): JSX.Element {
         id="fileExportPath"
         text="Show File Location Picker"
         checked={localFileLocationPicker}
-        setChecked={() => setLocalFileLocationPicker(!localFileLocationPicker)}
+        setChecked={setLocalFileLocationPicker}
       />
 
       <Note>

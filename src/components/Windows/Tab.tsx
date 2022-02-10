@@ -1,10 +1,14 @@
+import { useState } from "react";
 import styled, { css } from "styled-components";
+
+import DeleteConfirmation from "../DeleteConfirmation";
 
 import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 
 import Highlighted from "~/components/Highlighted";
 import { isTabDrag } from "~/constants/dragRegExp";
 import { DEFAULT_FAVICON_URL } from "~/constants/urls";
+import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { deleteTab, deleteWindow, deleteGroup } from "~/store/actions/groups";
 import { setShowUndo } from "~/store/actions/header";
@@ -73,19 +77,27 @@ export default function Tab({
 }: chrome.tabs.Tab & ITab): JSX.Element {
   const dispatch = useDispatch();
 
+  const [confirmDelete] = useLocalStorage("confirmDelete", true);
+
   const { available, active: activeGroup } = useSelector((state) => state.groups.present);
-
-  const { index: groupIndex } = activeGroup;
-
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
 
-  const openTab = () =>
-    groupIndex === 0
-      ? chrome.windows.update(windowId, { focused: true }, () =>
-          chrome.tabs.update(tabId ?? 0, { active: true }, () => "")
-        )
-      : chrome.tabs.create({ url, active, pinned, windowId }, () => "");
+  const { index: groupIndex } = activeGroup;
+
+  const [askConfirmationNow, setAskConfirmationNow] = useState(false);
+
+  const openTab = () => {
+    if (groupIndex === 0) {
+      chrome.windows.update(windowId, { focused: true }, () =>
+        chrome.tabs.update(tabId ?? 0, { active: true }, () => "")
+      );
+    } else {
+      chrome.tabs.create({ url, active, pinned, windowId }, () => "");
+    }
+  };
+
+  const closeCurrentlyOpenTab = () => tabId && chrome.tabs.remove(tabId, () => "");
 
   const closeTab = () => {
     if (groupIndex > 0) {
@@ -106,44 +118,54 @@ export default function Tab({
 
       dispatch(setShowUndo(true));
     } else {
-      tabId && chrome.tabs.remove(tabId, () => "");
+      confirmDelete ? setAskConfirmationNow(true) : closeCurrentlyOpenTab();
     }
   };
 
   const tabTitle = filterChoice === "tab" ? <Highlighted text={title} /> : title;
 
   return (
-    <Row $gap="4px">
-      <CloseIcon
-        icon="times"
-        $disabled={groupIndex === 0 && windowIndex === 0}
-        tabIndex={0}
-        onClick={closeTab}
-        onPointerDown={(e) => e.preventDefault()}
-        onKeyPress={({ code }) => code === "Enter" && closeTab()}
-      />
-
-      <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
-        <TabIcon
-          src={generateFavIconFromUrl(url)}
-          onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = DEFAULT_FAVICON_URL;
-          }}
-          alt="Favicon"
-          {...dragHandleProps}
+    <>
+      <Row $gap="4px">
+        <CloseIcon
+          icon="times"
+          tabIndex={0}
+          onClick={closeTab}
+          onPointerDown={(e) => e.preventDefault()}
+          onKeyPress={({ code }) => code === "Enter" && closeTab()}
         />
 
-        <TabTitle
-          $isDragging={isDragging}
-          title={url}
-          href={url}
-          onClick={(e) => e.button === 0 && openTab()}
-          draggable={false}
-        >
-          {italicizeNonHttp && !/^https?/.test(url ?? "") ? <i>{tabTitle}</i> : tabTitle}
-        </TabTitle>
-      </TabContainer>
-    </Row>
+        <TabContainer $dragging={snapshot.isDragging && isTabDrag(dragType)}>
+          <TabIcon
+            src={generateFavIconFromUrl(url)}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = DEFAULT_FAVICON_URL;
+            }}
+            alt="Favicon"
+            {...dragHandleProps}
+          />
+
+          <TabTitle
+            $isDragging={isDragging}
+            title={url}
+            href={url}
+            onClick={(e) => e.button === 0 && openTab()}
+            draggable={false}
+          >
+            {italicizeNonHttp && !/^https?/.test(url ?? "") ? <i>{tabTitle}</i> : tabTitle}
+          </TabTitle>
+        </TabContainer>
+      </Row>
+
+      {confirmDelete && askConfirmationNow && (
+        <DeleteConfirmation
+          isWindow={false}
+          windowIndex={windowIndex}
+          setShow={setAskConfirmationNow}
+          closeHandler={closeCurrentlyOpenTab}
+        />
+      )}
+    </>
   );
 }

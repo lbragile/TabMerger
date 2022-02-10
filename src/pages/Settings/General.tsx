@@ -50,13 +50,13 @@ export default function General(): JSX.Element {
         label: "Confirm destructive actions (those that delete items)",
         id: "confirmDestructive",
         checked: localConfirmDelete,
-        onChange: () => setLocalConfirmDelete(!localConfirmDelete)
+        onChange: setLocalConfirmDelete
       },
       {
         label: "Display stored tab count in extension icon (reload required)",
         id: "badgeInformation",
         checked: localShowBadgeInfo,
-        onChange: () => setLocalShowBadgeInfo(!localShowBadgeInfo)
+        onChange: setLocalShowBadgeInfo
       }
     ],
     [localConfirmDelete, localShowBadgeInfo, setLocalConfirmDelete, setLocalShowBadgeInfo]

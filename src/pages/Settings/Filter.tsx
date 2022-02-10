@@ -59,7 +59,7 @@ export default function Filter(): JSX.Element {
           </>
         }
         checked={localExcludeProtocol}
-        setChecked={() => setLocalExcludeProtocol(!localExcludeProtocol)}
+        setChecked={setLocalExcludeProtocol}
       ></Checkbox>
 
       <TextArea

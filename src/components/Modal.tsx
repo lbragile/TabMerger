@@ -11,15 +11,14 @@ import Sync from "../pages/Sync";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { setVisibility } from "~/store/actions/modal";
 import Button from "~/styles/Button";
+import { ModalContainer, Overlay } from "~/styles/Modal";
 import { Row } from "~/styles/Row";
 
 const HeaderRow = styled(Row)`
   justify-content: space-between;
 `;
 
-const FooterRow = styled(Row)`
-  justify-content: end;
-`;
+const FooterRow = styled(HeaderRow)``;
 
 const CloseIconContainer = styled.span`
   padding: 4px 8px;
@@ -36,36 +35,16 @@ const CloseIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 500px;
-  position: absolute;
-  top: 32px;
-  left: 230px;
-  background: ${({ theme }) => theme.colors.background};
-  padding: 8px;
-  box-shadow: 0 0 2px 2px ${({ theme }) => theme.colors.onBackground + "3"};
-  z-index: 2;
-`;
-
-const Overlay = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background-color: ${({ theme }) => theme.colors.onBackground};
-  opacity: 0.2;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-`;
-
-interface IModalFooter {
+interface IModalHeader {
+  title: string;
+  hideHandler?: () => void;
+}
+interface IModalFooter extends Omit<IModalHeader, "title"> {
   closeText?: string;
   saveText?: string;
   showSave: boolean;
   handleSave?: () => void;
+  children?: JSX.Element;
 }
 
 export default function Modal(): JSX.Element {
@@ -77,21 +56,21 @@ export default function Modal(): JSX.Element {
     <>
       <Overlay onClick={() => dispatch(setVisibility(false))} role="presentation" />
 
-      <Container>
+      <ModalContainer>
         {type === "import" && <Import />}
         {type === "export" && <Export />}
         {type === "sync" && <Sync />}
         {type === "settings" && <Settings />}
         {type === "about" && <About />}
-      </Container>
+      </ModalContainer>
     </>
   );
 }
 
-export function ModalHeader({ title }: { title: string }) {
+export function ModalHeader({ title, hideHandler }: IModalHeader) {
   const dispatch = useDispatch();
 
-  const hide = () => dispatch(setVisibility(false));
+  const hide = () => hideHandler?.() ?? dispatch(setVisibility(false));
 
   return (
     <HeaderRow>
@@ -110,10 +89,17 @@ export function ModalHeader({ title }: { title: string }) {
   );
 }
 
-export function ModalFooter({ closeText = "Close", saveText = "Save", showSave, handleSave }: IModalFooter) {
+export function ModalFooter({
+  closeText = "Close",
+  saveText = "Save",
+  showSave,
+  handleSave,
+  hideHandler,
+  children
+}: IModalFooter) {
   const dispatch = useDispatch();
 
-  const hide = () => dispatch(setVisibility(false));
+  const hide = () => hideHandler?.() ?? dispatch(setVisibility(false));
 
   const [saveSuccess, setSaveSuccess] = useState(false);
 
@@ -134,30 +120,34 @@ export function ModalFooter({ closeText = "Close", saveText = "Save", showSave, 
 
   return (
     <FooterRow>
-      <Button onClick={hide}>{closeText}</Button>
+      {children ?? <div />}
 
-      {showSave && (
-        <Button
-          onClick={() => {
-            try {
-              handleSave?.();
+      <Row>
+        <Button onClick={hide}>{closeText}</Button>
 
-              /**
-               * Prevent user from mashing the submit button, as some cases have rate limits
-               * @example @see https://developer.chrome.com/docs/extensions/reference/storage/#property-sync-sync-MAX_WRITE_OPERATIONS_PER_MINUTE
-               */
-              setSaveSuccess(true);
-              timeoutRef.current = setTimeout(() => setSaveSuccess(false), 3000);
-            } catch (err) {
-              setSaveSuccess(false);
-            }
-          }}
-          $variant={saveSuccess ? "success" : "primary"}
-          disabled={saveSuccess}
-        >
-          {saveSuccess ? <FontAwesomeIcon icon="check-circle" /> : saveText}
-        </Button>
-      )}
+        {showSave && (
+          <Button
+            onClick={() => {
+              try {
+                handleSave?.();
+
+                /**
+                 * Prevent user from mashing the submit button, as some cases have rate limits
+                 * @example @see https://developer.chrome.com/docs/extensions/reference/storage/#property-sync-sync-MAX_WRITE_OPERATIONS_PER_MINUTE
+                 */
+                setSaveSuccess(true);
+                timeoutRef.current = setTimeout(() => setSaveSuccess(false), 3000);
+              } catch (err) {
+                setSaveSuccess(false);
+              }
+            }}
+            $variant={saveSuccess ? "success" : "primary"}
+            disabled={saveSuccess}
+          >
+            {saveSuccess ? <FontAwesomeIcon icon="check-circle" /> : saveText}
+          </Button>
+        )}
+      </Row>
     </FooterRow>
   );
 }

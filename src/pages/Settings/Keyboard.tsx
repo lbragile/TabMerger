@@ -73,7 +73,7 @@ export default function Keyboard(): JSX.Element {
         id="allowShortcuts"
         text="Keyboard Shortcuts"
         checked={localAllowShortcuts}
-        setChecked={() => setLocalAllowShortcuts(!localAllowShortcuts)}
+        setChecked={setLocalAllowShortcuts}
       />
 
       <ShortcutGrid>

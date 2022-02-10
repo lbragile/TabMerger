@@ -16,7 +16,7 @@ export default function Checkbox({ id, text, checked, setChecked, disabled }: IC
         id={id}
         name={id}
         checked={checked}
-        onChange={() => setChecked(!checked)}
+        onChange={(e) => setChecked(e.target.checked)}
         disabled={!!disabled}
       />
       <label htmlFor={id}>{text}</label>

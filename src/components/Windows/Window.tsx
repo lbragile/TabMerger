@@ -3,6 +3,8 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
+import DeleteConfirmation from "../DeleteConfirmation";
+
 import Tab from "./Tab";
 
 import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
@@ -111,6 +113,7 @@ export default function Window({
   const dispatch = useDispatch();
 
   const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", false);
+  const [confirmDelete] = useLocalStorage("confirmDelete", true);
 
   const { available, active } = useSelector((state) => state.groups.present);
 
@@ -126,6 +129,7 @@ export default function Window({
 
   const [showPopup, setShowPopup] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [askConfirmationNow, setAskConfirmationNow] = useState(false);
 
   const [windowName, setWindowName] = useRename(
     (newName: string) => dispatch(updateWindowName({ groupIndex, windowIndex, name: newName })),
@@ -164,6 +168,8 @@ export default function Window({
     [currentTabs, groupIndex, incognito, state, windowId]
   );
 
+  const closeCurrentlyOpenWindow = () => windowId && chrome.windows.remove(windowId, () => "");
+
   const closeWindow = () => {
     if (groupIndex > 0) {
       // Possible to have deleted the last window in the group
@@ -175,7 +181,7 @@ export default function Window({
 
       dispatch(setShowUndo(true));
     } else {
-      windowId && chrome.windows.remove(windowId);
+      confirmDelete ? setAskConfirmationNow(true) : closeCurrentlyOpenWindow();
     }
   };
 
@@ -260,108 +266,118 @@ export default function Window({
   };
 
   return (
-    <WindowContainer $dragging={windowSnapshot.isDragging} $gap="2px">
-      <Row $gap="4px">
-        <CloseIcon
-          icon="times-circle"
-          $disabled={groupIndex === 0 && windowIndex === 0}
-          tabIndex={0}
-          onClick={closeWindow}
-          onPointerDown={(e) => e.preventDefault()}
-          onKeyPress={({ code }) => code === "Enter" && closeWindow()}
-        />
+    <>
+      <WindowContainer $dragging={windowSnapshot.isDragging} $gap="2px">
+        <Row $gap="4px">
+          <CloseIcon
+            icon="times-circle"
+            tabIndex={0}
+            onClick={closeWindow}
+            onPointerDown={(e) => e.preventDefault()}
+            onKeyPress={({ code }) => code === "Enter" && closeWindow()}
+          />
 
-        <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
-          <IconStack {...dragHandleProps} onContextMenu={(e) => e.preventDefault()}>
-            <FontAwesomeIcon icon={incognito ? "mask" : ["far", "window-maximize"]} />
-            {starred && <FontAwesomeIcon icon="star" />}
-          </IconStack>
+          <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
+            <IconStack {...dragHandleProps} onContextMenu={(e) => e.preventDefault()}>
+              <FontAwesomeIcon icon={incognito ? "mask" : ["far", "window-maximize"]} />
+              {starred && <FontAwesomeIcon icon="star" />}
+            </IconStack>
 
-          <TitleContainer>
-            <StyledWindowTitle
-              ref={titleRef}
-              $active={focused}
-              $open={showPopup}
-              $dragging={isDragging}
-              {...(windowName.length > 15 ? { title: titleRef.current?.value } : {})}
-              tabIndex={0}
-              role="button"
-              maxLength={25}
-              value={windowName}
-              onChange={(e) => setWindowName(e.target.value)}
-              onClick={(e) => groupIndex === 0 && e.currentTarget.blur()}
-              onDoubleClick={(e) => e.button === 0 && openWindow("new")}
-              onContextMenu={handleContextMenuClick}
-              onKeyPress={handleWindowTitleUpdate}
-              onPointerEnter={() => setShowInstructions(true)}
-              onPointerLeave={() => setShowInstructions(false)}
-            />
+            <TitleContainer>
+              <StyledWindowTitle
+                ref={titleRef}
+                $active={focused}
+                $open={showPopup}
+                $dragging={isDragging}
+                {...(windowName.length > 15 ? { title: titleRef.current?.value } : {})}
+                tabIndex={0}
+                role="button"
+                maxLength={25}
+                value={windowName}
+                onChange={(e) => setWindowName(e.target.value)}
+                onClick={(e) => groupIndex === 0 && e.currentTarget.blur()}
+                onDoubleClick={(e) => e.button === 0 && openWindow("new")}
+                onContextMenu={handleContextMenuClick}
+                onKeyPress={handleWindowTitleUpdate}
+                onPointerEnter={() => setShowInstructions(true)}
+                onPointerLeave={() => setShowInstructions(false)}
+              />
 
-            {showPopup && titleRef.current && (
-              <div ref={popupRef}>
-                <Dropdown
-                  items={windowItems}
-                  pos={{ top: 0, left: titleRef.current.getBoundingClientRect().width + 10 }}
-                  isPopup
-                />
-              </div>
-            )}
-          </TitleContainer>
+              {showPopup && titleRef.current && (
+                <div ref={popupRef}>
+                  <Dropdown
+                    items={windowItems}
+                    pos={{ top: 0, left: titleRef.current.getBoundingClientRect().width + 10 }}
+                    isPopup
+                  />
+                </div>
+              )}
+            </TitleContainer>
 
-          <TabCounter>{tabCounterStr}</TabCounter>
-        </Headline>
-      </Row>
+            <TabCounter>{tabCounterStr}</TabCounter>
+          </Headline>
+        </Row>
 
-      <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType) || groupIndex === 0}>
-        {(provider, dropSnapshot) => (
-          <TabsContainer
-            ref={provider.innerRef}
-            {...provider.droppableProps}
-            $draggedOver={dropSnapshot.isDraggingOver}
-            $dragOrigin={!!dropSnapshot.draggingFromThisWith}
-          >
-            {currentTabs?.map((tab, i) => {
-              const { title, url, pendingUrl } = tab ?? {};
-              const tabUrl = url ?? pendingUrl;
-              if (title && tabUrl) {
-                return (
-                  <Draggable
-                    key={title + tabUrl + i}
-                    draggableId={`tab-${i}-window-${windowIndex}`}
-                    index={i}
-                    isDragDisabled={typing && isTabSearch}
-                  >
-                    {(provided, dragSnapshot) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <Tab
-                          {...tab}
-                          tabIndex={i}
-                          windowIndex={windowIndex}
-                          italicizeNonHttp={italicizeNonHttp}
-                          snapshot={dragSnapshot}
-                          dragHandleProps={provided.dragHandleProps}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              }
-            })}
+        <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType) || groupIndex === 0}>
+          {(provider, dropSnapshot) => (
+            <TabsContainer
+              ref={provider.innerRef}
+              {...provider.droppableProps}
+              $draggedOver={dropSnapshot.isDraggingOver}
+              $dragOrigin={!!dropSnapshot.draggingFromThisWith}
+            >
+              {currentTabs?.map((tab, i) => {
+                const { title, url, pendingUrl } = tab ?? {};
+                const tabUrl = url ?? pendingUrl;
+                if (title && tabUrl) {
+                  return (
+                    <Draggable
+                      key={title + tabUrl + i}
+                      draggableId={`tab-${i}-window-${windowIndex}`}
+                      index={i}
+                      isDragDisabled={typing && isTabSearch}
+                    >
+                      {(provided, dragSnapshot) => (
+                        <div ref={provided.innerRef} {...provided.draggableProps}>
+                          <Tab
+                            {...tab}
+                            tabIndex={i}
+                            windowIndex={windowIndex}
+                            italicizeNonHttp={italicizeNonHttp}
+                            snapshot={dragSnapshot}
+                            dragHandleProps={provided.dragHandleProps}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                }
+              })}
 
-            {provider.placeholder}
-          </TabsContainer>
+              {provider.placeholder}
+            </TabsContainer>
+          )}
+        </Droppable>
+
+        {showInstructions && !showPopup && !isDragging && titleRef.current && (
+          <Popup
+            text={`Double Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
+            pos={{
+              x: titleRef.current.getBoundingClientRect().right + 8,
+              y: titleRef.current.getBoundingClientRect().top - 2
+            }}
+          />
         )}
-      </Droppable>
+      </WindowContainer>
 
-      {showInstructions && !showPopup && !isDragging && titleRef.current && (
-        <Popup
-          text={`Double Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
-          pos={{
-            x: titleRef.current.getBoundingClientRect().right + 8,
-            y: titleRef.current.getBoundingClientRect().top - 2
-          }}
+      {confirmDelete && askConfirmationNow && (
+        <DeleteConfirmation
+          isWindow
+          windowIndex={windowIndex}
+          setShow={setAskConfirmationNow}
+          closeHandler={closeCurrentlyOpenWindow}
         />
       )}
-    </WindowContainer>
+    </>
   );
 }

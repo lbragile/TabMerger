@@ -88,15 +88,6 @@ module.exports = {
         }
       }
     ],
-    "capitalized-comments": [
-      "error",
-      "always",
-      {
-        block: {
-          ignoreConsecutiveComments: true
-        }
-      }
-    ],
     camelcase: "error",
     "import/no-unresolved": ["error", { ignore: ["^~/*"] }],
     "import/newline-after-import": "warn",

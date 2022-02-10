@@ -74,7 +74,7 @@ export default function Theme(): JSX.Element {
           </>
         }
         checked={localItalicizeNonHttp}
-        setChecked={() => setLocalItalicizeNonHttp(!localItalicizeNonHttp)}
+        setChecked={setLocalItalicizeNonHttp}
       />
 
       <Note>
