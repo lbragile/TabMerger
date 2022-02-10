@@ -15,6 +15,7 @@ const Button = styled.button<{ $variant?: "primary" | "secondary" | "info" | "da
   padding: 4px;
   min-width: 75px;
   max-width: fit-content;
+  white-space: nowrap;
   font-weight: bold;
   cursor: pointer;
 

@@ -1,13 +1,13 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useLocalStorage from "~/hooks/useLocalStorage";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
 import { SectionTitle } from "~/styles/SectionTitle";
 import { pluralize, relativeTimeStr } from "~/utils/helper";
 
@@ -25,56 +25,23 @@ const StyledInput = styled.input`
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  padding: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
-
-const StyledMessage = styled(Message)<{ $error: boolean; $recent: boolean }>`
-  background: ${({ $error, $recent }) => ($error ? "#ffdddd" : $recent ? "#ddffdd" : "#e8e8ff")};
-  color: ${({ $error, $recent }) => ($error ? "#721c24" : $recent ? "#155724" : "blue")};
-  width: fit-content;
-  padding: 4px 8px;
+const StyledMessage = styled(Message)`
+  margin: unset;
 `;
 
 export default function Backup(): JSX.Element {
-  const [autoExport, setAutoExport] = useLocalStorage("autoExport", false);
-  const [exportFreq, setExportFreq] = useLocalStorage("exportFreq", 10);
-  const [exportMax, setExportMax] = useLocalStorage("exportMax", 2);
-  const [autoSync, setAutoSync] = useLocalStorage("autoSync", false);
-  const [syncFreq, setSyncFreq] = useLocalStorage("syncFreq", 10);
+  const [, setAutoExport, localAutoExport, setLocalAutoExport] = useStorageWithSave("autoExport", false);
+  const [, setExportFreq, localExportFreq, setLocalExportFreq] = useStorageWithSave("exportFreq", 10);
+  const [, setExportMax, localExportMax, setLocalExportMax] = useStorageWithSave("exportMax", 2);
+  const [, setAutoSync, localAutoSync, setLocalAutoSync] = useStorageWithSave("autoSync", false);
+  const [, setSyncFreq, localSyncFreq, setLocalSyncFreq] = useStorageWithSave("syncFreq", 10);
 
   const [lastSyncUpload] = useLocalStorage("lastSyncUpload", "");
   const [lastExport] = useLocalStorage("lastExport", "");
 
-  const [localAutoExport, setLocalAutoExport] = useState(autoExport);
-  const [localExportFreq, setLocalExportFreq] = useState(exportFreq);
-  const [localExportMax, setLocalExportMax] = useState(exportMax);
-  const [localAutoSync, setLocalAutoSync] = useState(autoSync);
-  const [localSyncFreq, setLocalSyncFreq] = useState(syncFreq);
-
   const [relativeTimeExport, relativeTimeSync] = [lastExport, lastSyncUpload].map((item) =>
     relativeTimeStr(new Date(item).getTime())
   );
-
-  useEffect(() => setLocalAutoExport(autoExport), [autoExport]);
-  useEffect(() => setLocalExportFreq(exportFreq), [exportFreq]);
-  useEffect(() => setLocalExportMax(exportMax), [exportMax]);
-  useEffect(() => setLocalAutoSync(autoSync), [autoSync]);
-  useEffect(() => setLocalSyncFreq(syncFreq), [syncFreq]);
 
   return (
     <>
@@ -86,16 +53,7 @@ export default function Backup(): JSX.Element {
           : `Last exported on ${lastExport} (${relativeTimeExport} ago)`}
       </StyledMessage>
 
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="autoExport"
-          name="autoExport"
-          checked={localAutoExport}
-          onChange={() => setLocalAutoExport(!localAutoExport)}
-        />
-        <label htmlFor="autoExport">Enable Automatic Export</label>
-      </CheckboxContainer>
+      <Checkbox id="autoExport" text="Automatically Export" checked={localAutoExport} setChecked={setLocalAutoExport} />
 
       <div>
         <span>Every</span>{" "}
@@ -133,16 +91,7 @@ export default function Backup(): JSX.Element {
           : `Last synced on ${lastSyncUpload} (${relativeTimeSync} ago)`}
       </StyledMessage>
 
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="autoSync"
-          name="autoSync"
-          checked={localAutoSync}
-          onChange={() => setLocalAutoSync(!localAutoSync)}
-        />
-        <label htmlFor="autoSync">Enable Automatic Sync</label>
-      </CheckboxContainer>
+      <Checkbox id="autoSync" text="Automatically Sync" checked={localAutoSync} setChecked={setLocalAutoSync} />
 
       <div>
         <span>Every</span>{" "}
@@ -159,26 +108,20 @@ export default function Backup(): JSX.Element {
       </div>
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>These happen in the background - even when TabMerger is closed!</p>
 
-        <div>
-          <p>These happen in the background - even when TabMerger is closed!</p>
-          <span>Files are saved to your</span> <Link href={DOWNLOADS_URL} title="Downloads Folder" />{" "}
-          <span>in JSON format</span>
-        </div>
+        <span>
+          Files are saved to your <Link href={DOWNLOADS_URL} title="Downloads Folder" /> in JSON format
+        </span>
       </Note>
 
       <ModalFooter
         showSave
         closeText="Cancel"
         handleSave={() => {
-          chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
-            if (!granted) return;
-
-            setAutoExport(localAutoExport);
-            setExportFreq(localExportFreq);
-            setExportMax(localExportMax);
-          });
+          setAutoExport(localAutoExport);
+          setExportFreq(localExportFreq);
+          setExportMax(localExportMax);
 
           setAutoSync(localAutoSync);
           setSyncFreq(localSyncFreq);

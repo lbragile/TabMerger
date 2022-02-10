@@ -3,16 +3,21 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import styled, { css } from "styled-components";
 
+import type { TExportType } from "~/typings/settings";
+
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter, ModalHeader } from "~/components/Modal";
+import Note from "~/components/Note";
 import Selector from "~/components/Selector";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
-import { Note } from "~/styles/Note";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
+import { CloseIcon } from "~/styles/CloseIcon";
+import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
-import { TExportType } from "~/typings/settings";
 import { getReadableTimestamp } from "~/utils/helper";
 
 const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolean }>`
@@ -36,7 +41,7 @@ const CopyButton = styled(FontAwesomeIcon)<{ $overflow: boolean; $copied: boolea
 const TextAreaContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 225px;
 
   &:hover {
     & ${CopyButton} {
@@ -45,42 +50,21 @@ const TextAreaContainer = styled.div`
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
+const StyledRow = styled(Row)`
   justify-content: space-around;
-  align-items: center;
-  padding: 8px;
   background-color: ${({ theme }) => theme.colors.secondary};
-  gap: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 4px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
-
-const LabelledCheckbox = styled(CheckboxContainer)`
-  gap: 8px;
-  justify-content: start;
-  background: unset;
+  padding: 8px;
 `;
 
 const StyledMultiSelect = styled(MultiSelect)`
   && {
     width: 200px;
-    color: black;
 
     & .dropdown-heading {
       cursor: pointer;
     }
 
-    & .dropdown-content .panel-content {
+    & .panel-content {
       border-radius: 0;
     }
 
@@ -91,25 +75,30 @@ const StyledMultiSelect = styled(MultiSelect)`
         box-shadow: none;
       }
     }
+
+    & .dropdown-heading,
+    & .panel-content,
+    & .select-item,
+    & .search input {
+      background-color: ${({ theme }) => theme.colors.surface};
+      color: ${({ theme }) => theme.colors.onSurface};
+    }
   }
 `;
 
-const CloseIcon = styled(FontAwesomeIcon)`
-  margin: 0 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: color 0.3 ease;
-
-  &:hover {
-    color: #ff4040;
+const StyledCloseIcon = styled(CloseIcon)`
+  && {
+    transition: none;
+    opacity: 1;
+    margin-right: 6px;
   }
 `;
 
 const ArrowIcon = styled(FontAwesomeIcon)`
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.3 ease;
-  color: black;
+  transition: none;
+  color: ${({ theme }) => theme.colors.onSurface};
 
   &:hover {
     color: #808080;
@@ -119,18 +108,21 @@ const ArrowIcon = styled(FontAwesomeIcon)`
 const EMPTY_TEXT = "Nothing to export";
 
 export default function Export(): JSX.Element {
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
-  const [fileLocationPicker, setFileLocationPicker] = useLocalStorage("fileLocationPicker", false);
+  const [, setFileLocationPicker, localFileLocationPicker, setLocalFileLocationPicker] = useStorageWithSave(
+    "fileLocationPicker",
+    false
+  );
+
   const [, setLastExport] = useLocalStorage("lastExport", "");
 
   const [activeTab, setActiveTab] = useState<TExportType>("json");
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
   const [exportFile, setExportFile] = useState<File | null>(null);
-  const [localFileLocationPicker, setLocalFileLocationPicker] = useState(false);
 
-  useEffect(() => setLocalFileLocationPicker(fileLocationPicker), [fileLocationPicker]);
+  const isDisabled = ["json", "html"].includes(activeTab);
 
   const selectOpts = useMemo(
     () => available.slice(1).map((group) => ({ label: group.name, value: group })),
@@ -139,17 +131,12 @@ export default function Export(): JSX.Element {
 
   const [selected, setSelected] = useState(selectOpts);
 
-  const [checkbox, setCheckbox] = useState([
-    { text: "Titles", checked: true },
-    { text: "URLs", checked: true }
-  ]);
+  const [keepTitles, setKeepTitles] = useState(true);
+  const [keepURLs, setKeepURLs] = useState(true);
 
   const [selectedGroups, setSelectedGroups] = useState(available);
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const checkedText = checkbox.filter((item) => item.checked).map((item) => item.text);
-  const [keepTitles, keepURLs] = ["Titles", "URLs"].map((item) => checkedText.includes(item));
 
   // Copy button location needs to be adjusted depending on the vertical overflow scrollbar visibility
   useEffect(() => {
@@ -182,11 +169,6 @@ export default function Export(): JSX.Element {
       : getCSVText();
   }, [activeTab, selectedGroups, getRegularText, getMarkdownText, getHTMLText, getCSVText]);
 
-  const handleCheckboxChange = (text: string) => {
-    const origCheckbox = [...checkbox];
-    setCheckbox(origCheckbox.map((item) => (item.text === text ? { ...item, checked: !item.checked } : item)));
-  };
-
   useEffect(() => {
     if (text !== EMPTY_TEXT) {
       const [type, extension] =
@@ -214,41 +196,36 @@ export default function Export(): JSX.Element {
 
       <Selector opts={["json", "text", "markdown", "csv", "html"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <Row>
-        <Row>
-          {checkbox.map(({ text, checked }) => {
-            const lowerText = text.toLowerCase();
+      <StyledRow>
+        <div>
+          <Checkbox
+            id="title"
+            text="Titles"
+            checked={isDisabled || activeTab === "markdown" || keepTitles}
+            setChecked={setKeepTitles}
+            disabled={isDisabled || activeTab === "markdown"}
+          />
 
-            return (
-              <CheckboxContainer key={text}>
-                <input
-                  type="checkbox"
-                  id={lowerText}
-                  name={lowerText}
-                  checked={activeTab === "json" || checked}
-                  onChange={() => handleCheckboxChange(text)}
-                  disabled={
-                    (["Titles", "URLs"].includes(text) && ["json", "html"].includes(activeTab)) ||
-                    (text === "Titles" && activeTab === "markdown")
-                  }
-                />
-                <label htmlFor={lowerText}>{text}</label>
-              </CheckboxContainer>
-            );
-          })}
-        </Row>
+          <Checkbox
+            id="url"
+            text="URLs"
+            checked={isDisabled || keepURLs}
+            setChecked={setKeepURLs}
+            disabled={isDisabled}
+          />
+        </div>
 
         <StyledMultiSelect
           options={selectOpts}
           value={selected}
           onChange={setSelected}
           labelledBy="Select"
-          ClearIcon={<CloseIcon icon="times" />}
-          ClearSelectedIcon={<CloseIcon icon="times" />}
+          ClearIcon={<StyledCloseIcon icon="times" />}
+          ClearSelectedIcon={<StyledCloseIcon icon="times" />}
           ArrowRenderer={({ expanded }) => <ArrowIcon icon={expanded ? "angle-up" : "angle-down"} />}
           valueRenderer={(selected) => (selected.length ? `${selected.length} Selected` : "Select Groups")}
         />
-      </Row>
+      </StyledRow>
 
       <TextAreaContainer>
         <CopyButton
@@ -267,23 +244,17 @@ export default function Export(): JSX.Element {
         <TextArea ref={textAreaRef} $width="100%" $height="100%" readOnly value={text} />
       </TextAreaContainer>
 
-      <LabelledCheckbox>
-        <input
-          type="checkbox"
-          id="fileExportPath"
-          name="fileExportPath"
-          checked={localFileLocationPicker}
-          onChange={() => setLocalFileLocationPicker(!localFileLocationPicker)}
-        />
-        <label htmlFor="fileExportPath">Show File Location Picker</label>
-      </LabelledCheckbox>
+      <Checkbox
+        id="fileExportPath"
+        text="Show File Location Picker"
+        checked={localFileLocationPicker}
+        setChecked={setLocalFileLocationPicker}
+      />
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
-
-        <div>
-          <span>Files can be found in your</span> <Link href={DOWNLOADS_URL} title="Downloads Tab" />
-        </div>
+        <span>
+          Files can be found in your <Link href={DOWNLOADS_URL} title="Downloads Tab" />
+        </span>
       </Note>
 
       <ModalFooter
@@ -291,19 +262,15 @@ export default function Export(): JSX.Element {
         saveText="Export"
         handleSave={() => {
           if (exportFile) {
-            chrome.permissions.request({ permissions: ["downloads", "downloads.shelf"] }, (granted) => {
-              if (!granted) return;
+            const url = URL.createObjectURL(exportFile);
 
-              const url = URL.createObjectURL(exportFile);
+            chrome.downloads.download(
+              { conflictAction: "uniquify", saveAs: localFileLocationPicker, filename: exportFile.name, url },
+              () => ""
+            );
 
-              chrome.downloads.download(
-                { conflictAction: "uniquify", saveAs: localFileLocationPicker, filename: exportFile.name, url },
-                () => ""
-              );
-
-              setLastExport(getReadableTimestamp());
-              setFileLocationPicker(localFileLocationPicker);
-            });
+            setLastExport(getReadableTimestamp());
+            setFileLocationPicker(localFileLocationPicker);
           }
         }}
       />

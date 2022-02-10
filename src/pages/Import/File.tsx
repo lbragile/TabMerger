@@ -3,9 +3,11 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import styled, { css } from "styled-components";
 
+import type { TImportType } from "~/typings/settings";
+
+import Note from "~/components/Note";
+import { Column } from "~/styles/Column";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
-import { TImportType } from "~/typings/settings";
 
 const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   height: 300px;
@@ -18,13 +20,11 @@ const DropZone = styled.div<{ $isRejected: boolean; $isAccepted: boolean }>`
   cursor: pointer;
   ${({ $isRejected, $isAccepted, theme }) => css`
     border: 1px dashed ${$isAccepted ? "green" : $isRejected ? "red" : "grey"};
-    background-color: ${$isAccepted ? "#ccffcc" : $isRejected ? "#ffcccc" : theme.colors.secondary};
+    background-color: ${$isAccepted ? "#ddffdd" : $isRejected ? "#ffdddd" : theme.colors.secondary};
   `}
 `;
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
+const StyledColumn = styled(Column)`
   gap: 8px;
   justify-content: center;
   align-items: center;
@@ -89,11 +89,11 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
       <DropZone {...getRootProps()} $isRejected={isDragReject} $isAccepted={isDragAccept}>
         <input {...getInputProps()} />
 
-        <Column>
+        <StyledColumn>
           {isDragActive && isDragAccept ? (
             <>
               <FontAwesomeIcon icon="check-circle" size="2x" color="green" />
-              <Message>File looks promising... drop it to proceed</Message>
+              <Message $recent>File looks promising... drop it to proceed</Message>
             </>
           ) : isDragActive && isDragReject ? (
             <>
@@ -116,17 +116,13 @@ export default function File({ setCurrentText, setActiveTab, setImportType }: IF
               </p>
             </>
           )}
-        </Column>
+        </StyledColumn>
       </DropZone>
 
       {!isDragActive && fileRejections.length > 0 && <Message $error>{UPLOAD_FILE_ERROR}</Message>}
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
-
-        <div>
-          <p>Upon successful upload, you will have a chance to confirm!</p>
-        </div>
+        <p>Upon successful upload, you will have a chance to confirm!</p>
       </Note>
     </>
   );

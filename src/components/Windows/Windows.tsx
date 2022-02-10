@@ -23,7 +23,7 @@ const WindowsContainer = styled(Scrollbar)<IWindowContainerStyle>`
   gap: 8px;
   overflow: auto;
   height: ${({ $height }) => $height + "px"};
-  border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "blue" : "transparent")};
+  border: 1px dashed ${({ $draggedOver, theme }) => ($draggedOver ? theme.colors.primary : "transparent")};
 `;
 
 export default function Windows(): JSX.Element {
@@ -31,9 +31,9 @@ export default function Windows(): JSX.Element {
   const { dragType } = useSelector((state) => state.dnd);
 
   const {
-    active: { index: groupIndex },
+    active: { id: activeId, index: groupIndex },
     available
-  } = useSelector((state) => state.groups);
+  } = useSelector((state) => state.groups.present);
 
   const typing = inputValue !== "";
   const { filteredTabs } = useFilter();
@@ -62,7 +62,7 @@ export default function Windows(): JSX.Element {
             >
               {windows.map(
                 (window, i) =>
-                  (!typing || !isTabSearch || filteredTabs[i]?.length > 0) && (
+                  (!typing || !isTabSearch || filteredTabs[activeId][i]?.length > 0) && (
                     <Draggable
                       key={i}
                       draggableId={`window-${i}-group-${groupIndex}`}

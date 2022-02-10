@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import styled, { useTheme } from "styled-components";
 
@@ -9,16 +8,9 @@ import Details from "./Details";
 import License from "./License";
 
 import { ModalFooter, ModalHeader } from "~/components/Modal";
+import Note from "~/components/Note";
 import { TABMERGER_DEMO_SITE, TABMERGER_TOS_LINK } from "~/constants/urls";
-import { Note } from "~/styles/Note";
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-`;
+import { Row } from "~/styles/Row";
 
 const AboutTitle = styled.div`
   text-align: center;
@@ -26,6 +18,10 @@ const AboutTitle = styled.div`
   & p {
     opacity: 0.5;
   }
+`;
+
+const StyledRow = styled(Row)`
+  justify-content: center;
 `;
 
 const Logo = styled.img`
@@ -43,7 +39,7 @@ export default function About(): JSX.Element {
     <>
       <ModalHeader title="About TabMerger" />
 
-      <Row>
+      <StyledRow $gap="32px">
         <a href={TABMERGER_DEMO_SITE} title={TABMERGER_DEMO_SITE} target="_blank" rel="noreferrer">
           <Logo src="./images/logo48.png" alt="TabMerger Logo" />
         </a>
@@ -54,20 +50,16 @@ export default function About(): JSX.Element {
           <p>Copyright &copy; {new Date().getFullYear()} lbragile</p>
           <p>All rights reserved</p>
         </AboutTitle>
-      </Row>
+      </StyledRow>
 
       <Selector opts={["Details", "Licenses"]} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab === "Details" ? <Details /> : <License />}
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>By using this software you agree to TabMerger&apos;s</p>
 
-        <div>
-          <p>By using this software you agree to TabMerger&apos;s</p>
-
-          <Link href={TABMERGER_TOS_LINK} title="Terms and Conditions" />
-        </div>
+        <Link href={TABMERGER_TOS_LINK} title="Terms and Conditions" />
       </Note>
 
       <ModalFooter showSave={false} />

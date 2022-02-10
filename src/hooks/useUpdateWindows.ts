@@ -1,27 +1,43 @@
 import { useCallback, useEffect } from "react";
 
+import useLocalStorage from "./useLocalStorage";
 import { useDispatch } from "./useRedux";
 
 import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
 import { updateWindows, updateTimestamp } from "~/store/actions/groups";
-import { sortWindowsByFocus } from "~/utils/helper";
+import { sortWindowsByFocus, wildcardGlobToRegExp } from "~/utils/helper";
 
 export default function useUpdateWindows(): void {
   const dispatch = useDispatch();
 
+  const [urlFilter] = useLocalStorage("urlFilter", "");
+
   const updateAwaitingStorageWindows = useCallback(() => {
     chrome.windows.getAll(WINDOW_QUERY_OPTIONS, (currentWindows) => {
+      // Filter out tabs that are matching at least one pattern in the settings
+      const filterPatterns = urlFilter.split(/,\s+/);
+
+      currentWindows.forEach((w) => {
+        w.tabs =
+          w.tabs?.filter(({ url }) => {
+            return filterPatterns.filter((pattern) => wildcardGlobToRegExp(pattern).test(url ?? "")).length === 0;
+          }) ?? [];
+      });
+
+      // Clear empty windows
+      currentWindows = currentWindows.filter((w) => (w.tabs?.length ?? 0) > 0);
+
       const { sortedWindows, hasFocused } = sortWindowsByFocus(currentWindows);
 
+      // Can happen on tab or window removal
       if (!hasFocused) {
-        // Can happen on tab or window removal
         currentWindows[0].focused = true;
       }
 
       dispatch(updateWindows({ index: 0, windows: hasFocused ? sortedWindows : currentWindows }));
       dispatch(updateTimestamp({ index: 0, updatedAt: Date.now() }));
     });
-  }, [dispatch]);
+  }, [dispatch, urlFilter]);
 
   const tabUpdateHandler = useCallback(
     (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {

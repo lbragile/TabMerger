@@ -3,9 +3,10 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useDispatch } from "./useRedux";
 
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { ISyncDataItem } from "~/typings/settings";
+
 import { updateAvailable } from "~/store/actions/groups";
-import { IGroupItemState } from "~/store/reducers/groups";
-import { ISyncDataItem } from "~/typings/settings";
 import { prepareGroupsForSync, handleSyncUpload } from "~/utils/background";
 import { createGroup, createTabFromTitleAndUrl, createWindowWithTabs, getReadableTimestamp } from "~/utils/helper";
 

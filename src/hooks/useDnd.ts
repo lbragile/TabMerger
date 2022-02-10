@@ -1,8 +1,9 @@
 import { useCallback } from "react";
-import { BeforeCapture, DragStart, DropResult } from "react-beautiful-dnd";
 
 import useLocalStorage from "./useLocalStorage";
 import { useDispatch, useSelector } from "./useRedux";
+
+import type { BeforeCapture, DragStart, DropResult } from "react-beautiful-dnd";
 
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import { isWindowDrag, isTabDrag, isGroupDrag } from "~/constants/dragRegExp";
@@ -15,7 +16,6 @@ import {
   updateWindowsFromSidePanelDnd,
   updateWindowsFromGroupDnd,
   updateGroupOrder,
-  updateActive,
   clearEmptyWindows,
   clearEmptyGroups
 } from "~/store/actions/groups";
@@ -28,10 +28,9 @@ export default function useDnd() {
   const [groupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
   const [windowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
 
-  const {
-    active: { index },
-    available
-  } = useSelector((state) => state.groups);
+  const { active } = useSelector((state) => state.groups.present);
+
+  const { index } = active;
 
   const onBeforeCapture = useCallback(
     ({ draggableId }: BeforeCapture) => {
@@ -84,11 +83,6 @@ export default function useDnd() {
       } else if (isGroup && destination && destination.index > 0) {
         // Only swap if the destination exists (valid) and is below the first group
         dispatch(updateGroupOrder({ source, destination }));
-
-        // Update active group if it does not match the draggable
-        if (destination.index !== source.index) {
-          dispatch(updateActive({ id: available[destination.index].id, index: destination.index }));
-        }
       }
 
       dispatch(resetDnDInfo());
@@ -99,10 +93,10 @@ export default function useDnd() {
        */
       if (isTab || isWindow) {
         dispatch(clearEmptyWindows({ index }));
-        dispatch(clearEmptyGroups());
+        dispatch(clearEmptyGroups(active));
       }
     },
-    [dispatch, index, available, windowTitle]
+    [dispatch, index, windowTitle, active]
   );
 
   return { onBeforeCapture, onDragStart, onDragEnd };

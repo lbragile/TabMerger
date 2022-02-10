@@ -1,32 +1,14 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
 import { CHROME_SHORTCUTS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
-import useLocalStorage from "~/hooks/useLocalStorage";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  padding: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
 
 const ShortcutGrid = styled.div`
   display: grid;
@@ -65,7 +47,7 @@ const ShortcutItem = styled.div<{ $disabled: boolean }>`
 export default function Keyboard(): JSX.Element {
   const [showPicker, setShowPicker] = useState(false);
 
-  const [allowShortcuts, setAllowShortcuts] = useLocalStorage("allowShortcuts", true);
+  const [, setAllowShortcuts, localAllowShortcuts, setLocalAllowShortcuts] = useStorageWithSave("allowShortcuts", true);
 
   const [allCommands, setAllCommands] = useState<chrome.commands.Command[]>([]);
 
@@ -78,7 +60,7 @@ export default function Keyboard(): JSX.Element {
   useEffect(() => {
     chrome.commands.getAll((commands) =>
       setAllCommands(
-        [{ description: "Activate Extension", shortcut: "Alt+T", name: "_execute_action" }, ...commands].sort(
+        [{ description: "Activate Extension", shortcut: "Alt+0", name: "_execute_action" }, ...commands].sort(
           (a, b) => a.description?.localeCompare(b.description ?? "") ?? 0
         )
       )
@@ -87,16 +69,12 @@ export default function Keyboard(): JSX.Element {
 
   return (
     <>
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="allowShortcuts"
-          name="allowShortcuts"
-          checked={allowShortcuts}
-          onChange={() => setAllowShortcuts(!allowShortcuts)}
-        />
-        <label htmlFor="allowShortcuts">Keyboard Shortcuts</label>
-      </CheckboxContainer>
+      <Checkbox
+        id="allowShortcuts"
+        text="Keyboard Shortcuts"
+        checked={localAllowShortcuts}
+        setChecked={setLocalAllowShortcuts}
+      />
 
       <ShortcutGrid>
         {allCommands.map((command, i) => (
@@ -117,17 +95,21 @@ export default function Keyboard(): JSX.Element {
       {emptyCommands.length > 0 && <Message $error>There are {emptyCommands.length} disabled commands</Message>}
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>
+          Visit the <Link href={CHROME_SHORTCUTS} title="Shortcuts Menu" /> to adjust these keyboard shortcuts.
+        </p>
 
-        <div>
-          <p>
-            Visit the <Link href={CHROME_SHORTCUTS} title="Shortcuts Menu" /> to adjust these keyboard shortcuts.
-          </p>
-          <p>Empty fields are not active!</p>
-        </div>
+        <p>Empty fields are not active!</p>
       </Note>
 
-      <ModalFooter showSave={false} closeText="Close" />
+      <ModalFooter
+        showSave
+        closeText="Close"
+        saveText="Save"
+        handleSave={() => {
+          setAllowShortcuts(localAllowShortcuts);
+        }}
+      />
     </>
   );
 }

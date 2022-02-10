@@ -2,22 +2,12 @@ import { nanoid } from "nanoid";
 
 import { getReadableTimestamp, sortWindowsByFocus } from "./helper";
 
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { ISyncDataItem } from "~/typings/settings";
+
 import { WINDOW_QUERY_OPTIONS } from "~/constants/chrome";
 import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
 import { MAX_SYNC_GROUPS, MAX_SYNC_ITEM_SIZE, MAX_SYNC_TABS_PER_GROUP } from "~/constants/sync";
-import { IGroupItemState } from "~/store/reducers/groups";
-import { TSentResponse } from "~/typings/background";
-import { ISyncDataItem } from "~/typings/settings";
-
-/**
- * Immediately Invoked Function Expression that executes the `sendResponse` function to response to the web page
- * @see https://stackoverflow.com/a/53024910/4298115
- */
-export function executeResponse<T>(res: TSentResponse<T>, cb: () => Promise<T>): void {
-  (async () => {
-    res({ data: await cb() });
-  })();
-}
 
 /**
  * Sets the first group with corresponding data.

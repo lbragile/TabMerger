@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { ActionCreators } from "redux-undo";
 
 import useLocalStorage from "./useLocalStorage";
 import { useDispatch, useSelector } from "./useRedux";
@@ -10,7 +11,7 @@ import { setModalType, setVisibility } from "~/store/actions/modal";
 export default function useExecuteCommand() {
   const dispatch = useDispatch();
 
-  const { available, active } = useSelector((state) => state.groups);
+  const { available, active } = useSelector((state) => state.groups.present);
   const { visible } = useSelector((state) => state.modal);
 
   const [allowShortcuts] = useLocalStorage("allowShortcuts", true);
@@ -55,6 +56,16 @@ export default function useExecuteCommand() {
 
           case "find": {
             if (!visible) dispatch(setFocused(true));
+            break;
+          }
+
+          case "undoAction": {
+            dispatch(ActionCreators.undo());
+            break;
+          }
+
+          case "redoAction": {
+            dispatch(ActionCreators.redo());
             break;
           }
 

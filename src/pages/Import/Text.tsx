@@ -1,12 +1,11 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { TImportType } from "~/typings/settings";
 
+import Note from "~/components/Note";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
 import useParseText from "~/hooks/useParseText";
-import { IGroupItemState } from "~/store/reducers/groups";
-import { Note } from "~/styles/Note";
 import TextArea from "~/styles/Textarea";
-import { TImportType } from "~/typings/settings";
 
 interface IText {
   currentText: string;
@@ -47,11 +46,7 @@ export default function Text({
       />
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
-
-        <div>
-          <p>Each tab must have an associated URL (eg. {GOOGLE_HOMEPAGE})</p>
-        </div>
+        <p>Each tab must have an associated URL (eg. {GOOGLE_HOMEPAGE})</p>
       </Note>
     </>
   );

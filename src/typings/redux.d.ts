@@ -1,13 +1,11 @@
-import { Reducer } from "react";
+import type { store } from "~/store/configureStore";
 
-import { rootActions, rootState } from "~/store";
+/** @see https://redux.js.org/usage/usage-with-typescript */
 
-type ActionsMap<A> = {
-  [K in keyof A]: A[K] extends Record<keyof A[K], (...arg: never[]) => infer R> ? R : never;
-}[keyof A];
+export type RootState = ReturnType<typeof store.getState>;
 
-export type TRootState = typeof rootState;
+export type AppDispatch = typeof store.dispatch;
 
-export type TRootActions = ActionsMap<typeof rootActions>;
+type ValueOf<T> = T[keyof T];
 
-export type TRootReducer<S = TRootState, A = TRootActions> = Reducer<S, A>;
+export type TAction<A extends Record<string, (...args: never[]) => unknown>> = ReturnType<ValueOf<A>>;

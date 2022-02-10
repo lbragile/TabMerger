@@ -8,7 +8,7 @@ import { LICENSE_INFO } from "~/constants/urls";
 const DetailsGrid = styled.div`
   display: grid;
   grid-template-columns: max-content 60%;
-  gap: 16px;
+  gap: 12px;
   justify-content: center;
 
   & h4 {
@@ -51,6 +51,16 @@ const LICENSE_DETAILS: ILicenseDetails[] = [
     name: { title: "React", url: LICENSE_INFO.React.repo },
     authors: "Facebook Inc",
     license: { title: "MIT", url: LICENSE_INFO.React.license }
+  },
+  {
+    name: { title: "React Redux", url: LICENSE_INFO.ReactRedux.repo },
+    authors: "Dan Abramov",
+    license: { title: "MIT", url: LICENSE_INFO.ReactRedux.license }
+  },
+  {
+    name: { title: "React Error Boundary", url: LICENSE_INFO.ReactErrorBoundary.repo },
+    authors: "Brian Vaughn",
+    license: { title: "MIT", url: LICENSE_INFO.ReactErrorBoundary.license }
   },
   {
     name: { title: "React Dropzone", url: LICENSE_INFO.ReactDropzone.repo },

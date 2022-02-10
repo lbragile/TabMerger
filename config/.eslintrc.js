@@ -27,6 +27,13 @@ module.exports = {
     "default-case": "warn",
     eqeqeq: ["warn", "always"],
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        prefer: "type-imports",
+        disallowTypeAnnotations: true
+      }
+    ],
     "jsx-a11y/label-has-associated-control": [
       "error",
       {
@@ -81,22 +88,13 @@ module.exports = {
         }
       }
     ],
-    "capitalized-comments": [
-      "error",
-      "always",
-      {
-        block: {
-          ignoreConsecutiveComments: true
-        }
-      }
-    ],
     camelcase: "error",
     "import/no-unresolved": ["error", { ignore: ["^~/*"] }],
     "import/newline-after-import": "warn",
     "import/order": [
       "warn",
       {
-        groups: ["builtin", "external", "parent", "sibling", "index"],
+        groups: ["builtin", "external", "parent", "sibling", "index", "object", "type"],
         "newlines-between": "always",
         alphabetize: {
           order: "asc"

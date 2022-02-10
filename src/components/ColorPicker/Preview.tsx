@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import { Container } from "~/styles/ColorPicker";
 
@@ -18,6 +18,8 @@ const Foreground = styled.div<{ $color: string }>`
 export default function Preview({ color }: { color: string }) {
   const previewRef = useRef<HTMLCanvasElement | null>(null);
 
+  const theme = useTheme();
+
   // Draw background 4x4 grid behind the foreground to show transparency better
   useEffect(() => {
     const context = previewRef.current?.getContext("2d");
@@ -34,10 +36,10 @@ export default function Preview({ color }: { color: string }) {
         }
       }
 
-      context.fillStyle = "#1113";
+      context.fillStyle = theme.colors.onBackground + "3";
       context.fill();
     }
-  }, []);
+  }, [theme]);
 
   return (
     <Container className="picker-preview" $width={SQUARE_DIM} $height={SQUARE_DIM}>

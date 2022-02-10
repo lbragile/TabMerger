@@ -2,32 +2,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
+import Note from "~/components/Note";
+import { DEFAULT_FILTER } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
-import useLocalStorage from "~/hooks/useLocalStorage";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Message } from "~/styles/Message";
-import { Note } from "~/styles/Note";
+import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
 import { wildcardGlobToRegExp } from "~/utils/helper";
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  gap: 8px;
-`;
-
-const CheckboxContainer = styled(Row)`
-  padding: unset;
-  gap: 8px;
-
-  & label,
-  & input {
-    cursor: pointer;
-  }
-`;
 
 const StyledInput = styled.input`
   all: unset;
@@ -37,45 +22,45 @@ const StyledInput = styled.input`
 `;
 
 export default function Filter(): JSX.Element {
-  const [excludeProtocol, setExcludeProtocol] = useLocalStorage("excludeProtocol", true);
-  const [filter, setFilter] = useLocalStorage("urlFilter", "");
+  const [, setFilter, localFilter, setLocalFilter] = useStorageWithSave("urlFilter", "");
 
-  const [localExcludeProtocol, setLocalExcludeProtocol] = useState(true);
-  const [localFilter, setLocalFilter] = useState("");
+  const [, setExcludeProtocol, localExcludeProtocol, setLocalExcludeProtocol] = useStorageWithSave(
+    "excludeProtocol",
+    true
+  );
 
   const [testUrl, setTestUrl] = useState("");
   const [isCaught, setIsCaught] = useState(false);
 
   const debouncedTestUrl = useDebounce(testUrl, 1000);
 
-  useEffect(() => setLocalFilter(filter), [filter]);
-  useEffect(() => setLocalExcludeProtocol(excludeProtocol), [excludeProtocol]);
-
+  // Filter testing (to see if a given URL input is "caught" by the filters)
   useEffect(() => {
     if (testUrl !== "") {
-      const caughtByFilter = localFilter
-        .split(/,\s+/)
-        .map((pattern) => wildcardGlobToRegExp(pattern).test(testUrl))
-        .some((x) => x);
+      const caughtByFilter =
+        localFilter.split(/,\s+/).filter((pattern) => wildcardGlobToRegExp(pattern).test(testUrl)).length > 0;
 
       setIsCaught(caughtByFilter);
     }
   }, [localFilter, testUrl]);
 
+  // Appends or removes the default filters from the filter list
+  useEffect(() => {
+    setLocalFilter((prev) => (localExcludeProtocol ? DEFAULT_FILTER + prev : prev.replace(DEFAULT_FILTER, "")));
+  }, [localExcludeProtocol, setLocalFilter]);
+
   return (
     <>
-      <CheckboxContainer>
-        <input
-          type="checkbox"
-          id="excludeProtocol"
-          name="excludeProtocol"
-          checked={localExcludeProtocol}
-          onChange={() => setLocalExcludeProtocol(!localExcludeProtocol)}
-        />
-        <label htmlFor="excludeProtocol">
-          Exclude URLs that do not start with <b>http</b> or <b>https</b>
-        </label>
-      </CheckboxContainer>
+      <Checkbox
+        id="excludeProtocol"
+        text={
+          <>
+            Exclude URLs that do not start with <b>http</b> or <b>https</b>
+          </>
+        }
+        checked={localExcludeProtocol}
+        setChecked={setLocalExcludeProtocol}
+      ></Checkbox>
 
       <TextArea
         $width="100%"
@@ -94,28 +79,24 @@ export default function Filter(): JSX.Element {
             placeholder="Check if a given URL will be filtered"
           />
           {debouncedTestUrl !== "" && (
-            <>
+            <Message $error={!isCaught} $recent={isCaught}>
               <FontAwesomeIcon icon={isCaught ? "check-circle" : "times-circle"} color={isCaught ? "green" : "red"} />
-              <Message $error={!isCaught}>URL will {isCaught ? "" : "not"} be filtered</Message>
-            </>
+              <span>URL will {isCaught ? "" : "not"} be filtered</span>
+            </Message>
           )}
         </Row>
       </div>
 
       <Note>
-        <FontAwesomeIcon icon="exclamation-circle" color="#aaa" size="2x" />
+        <p>
+          <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can be used to
+          group many URL patterns!
+        </p>
 
-        <div>
-          <p>
-            <Link href="https://en.wikipedia.org/wiki/Glob_(programming)" title="Wildcard Glob Patterns" /> can be used
-            to group many URL patterns!
-          </p>
-
-          <p>
-            <Link href="https://en.wikipedia.org/wiki/Query_string" title="Query parameters" /> in URLs are
-            ignored/trimmed
-          </p>
-        </div>
+        <p>
+          <Link href="https://en.wikipedia.org/wiki/Query_string" title="Query parameters" /> in URLs are
+          ignored/trimmed
+        </p>
       </Note>
 
       <ModalFooter

@@ -1,8 +1,8 @@
-import { TABMERGER_DEMO_SITE, TABMERGER_HELP, TABMERGER_SURVEY } from "./constants/urls";
+import { TABMERGER_CONTACT, TABMERGER_HELP, TABMERGER_SURVEY } from "./constants/urls";
 import { prepareGroupsForSync, handleSyncUpload, setDefaultData } from "./utils/background";
 import { createActiveTab, getReadableTimestamp } from "./utils/helper";
 
-const handleInstall = (details: chrome.runtime.InstalledDetails) => {
+const installHandler = (details: chrome.runtime.InstalledDetails) => {
   switch (details.reason) {
     case "install": {
       chrome.runtime.setUninstallURL(TABMERGER_SURVEY);
@@ -10,7 +10,7 @@ const handleInstall = (details: chrome.runtime.InstalledDetails) => {
       setDefaultData();
 
       const { version } = chrome.runtime.getManifest();
-      console.info(`Initialized Storage for TabMerger v${version}`);
+      console.info(`Successfully Installed TabMerger v${version}`);
       break;
     }
 
@@ -20,7 +20,7 @@ const handleInstall = (details: chrome.runtime.InstalledDetails) => {
       chrome.storage.local.get("available", ({ available }) => {
         if (!available) setDefaultData();
 
-        console.info("Previous Version: ", details.previousVersion);
+        console.info(`Updated TabMerger - Previous Version: ${details.previousVersion}`);
       });
       break;
     }
@@ -54,7 +54,7 @@ function updateAlarm(type: "autoExport" | "autoSync", newValue?: boolean) {
   }
 }
 
-const handleStorageChangeDueToAlarm = (
+const storageChangeHandler = (
   changes: Record<string, chrome.storage.StorageChange>,
   areaName: "sync" | "local" | "managed"
 ) => {
@@ -75,7 +75,7 @@ const handleStorageChangeDueToAlarm = (
 /**
  * When a download completes, need to set the export timestamp and re-show the gray download shelf
  */
-const handleDownloadComplete = (downloadDelta: chrome.downloads.DownloadDelta) => {
+const downloadStatusHandler = (downloadDelta: chrome.downloads.DownloadDelta) => {
   if (downloadDelta.state?.current === "complete") {
     try {
       chrome.downloads.setShelfEnabled(true);
@@ -99,7 +99,7 @@ const handleDownloadComplete = (downloadDelta: chrome.downloads.DownloadDelta) =
  * To sync, the same functionality found in the main sync modal tab is performed
  * @param alarm
  */
-const handleAlarm = (alarm: chrome.alarms.Alarm) => {
+const alarmHandler = (alarm: chrome.alarms.Alarm) => {
   if (alarm.name === "autoExportAlarm") {
     chrome.storage.local.get(null, (result) => {
       const reader = new FileReader();
@@ -169,7 +169,7 @@ function excludeTab(tab: chrome.tabs.Tab | undefined) {
   }
 }
 
-const handleContextMenu = (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => {
+const contextMenuHandler = (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) => {
   switch (info.menuItemId) {
     case "exclude":
       excludeTab(tab);
@@ -180,7 +180,7 @@ const handleContextMenu = (info: chrome.contextMenus.OnClickData, tab?: chrome.t
       break;
 
     case "contact":
-      createActiveTab(TABMERGER_DEMO_SITE);
+      createActiveTab(TABMERGER_CONTACT);
       break;
 
     default:
@@ -192,21 +192,15 @@ const handleContextMenu = (info: chrome.contextMenus.OnClickData, tab?: chrome.t
  * Excluding is a "global" command (happens outside of the popup) ...
  * ... and thus needs to be handled in the background service worker
  */
-const handleCommand = (command: string, tab: chrome.tabs.Tab) => {
+const commandsHandler = (command: string, tab: chrome.tabs.Tab) => {
   if (command === "exclude") {
     excludeTab(tab);
   }
 };
 
-chrome.runtime.onInstalled.addListener(handleInstall);
-
-chrome.alarms.onAlarm.addListener(handleAlarm);
-chrome.storage.onChanged.addListener(handleStorageChangeDueToAlarm);
-chrome.permissions.onAdded.addListener((added: chrome.permissions.Permissions) => {
-  if (added.permissions?.includes("downloads") && added.permissions?.includes("downloads.shelf")) {
-    chrome.downloads.onChanged.addListener(handleDownloadComplete);
-  }
-});
-
-chrome.contextMenus.onClicked.addListener(handleContextMenu);
-chrome.commands.onCommand.addListener(handleCommand);
+chrome.runtime.onInstalled.addListener(installHandler);
+chrome.alarms.onAlarm.addListener(alarmHandler);
+chrome.storage.onChanged.addListener(storageChangeHandler);
+chrome.downloads.onChanged.addListener(downloadStatusHandler);
+chrome.contextMenus.onClicked.addListener(contextMenuHandler);
+chrome.commands.onCommand.addListener(commandsHandler);

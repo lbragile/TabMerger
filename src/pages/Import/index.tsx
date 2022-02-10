@@ -3,18 +3,19 @@ import { useState, useEffect } from "react";
 import File from "./File";
 import Text from "./Text";
 
+import type { IGroupItemState } from "~/store/reducers/groups";
+import type { TImportType } from "~/typings/settings";
+
 import { ModalFooter, ModalHeader } from "~/components/Modal";
 import Selector from "~/components/Selector";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateAvailable, updateActive } from "~/store/actions/groups";
 import { setVisibility } from "~/store/actions/modal";
-import { IGroupItemState } from "~/store/reducers/groups";
-import { TImportType } from "~/typings/settings";
 
 export default function Import(): JSX.Element {
   const dispatch = useDispatch();
 
-  const { available } = useSelector((state) => state.groups);
+  const { available } = useSelector((state) => state.groups.present);
 
   const [activeTab, setActiveTab] = useState<"File" | "Text">("File");
   const [currentText, setCurrentText] = useState("");
@@ -53,8 +54,8 @@ export default function Import(): JSX.Element {
         closeText="Cancel"
         handleSave={() => {
           dispatch(updateAvailable([available[0], ...importFile]));
-          dispatch(updateActive({ index: 0, id: importFile[0].id }));
           dispatch(setVisibility(false));
+          dispatch(updateActive({ index: 0, id: importFile[0].id }));
         }}
       />
     </>

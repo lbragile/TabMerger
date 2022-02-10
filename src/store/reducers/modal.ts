@@ -1,5 +1,6 @@
-import { TRootActions } from "~/typings/redux";
-import { TModalType } from "~/typings/settings";
+import type * as MODAL_CREATORS from "~/store/actions/modal";
+import type { TAction } from "~/typings/redux";
+import type { TModalType } from "~/typings/settings";
 
 export const MODAL_ACTIONS = {
   SET_MODAL_TYPE: "SET_MODAL_TYPE",
@@ -16,7 +17,7 @@ export const initModalState: IModalState = {
   type: "about"
 };
 
-const modalReducer = (state = initModalState, action: TRootActions): IModalState => {
+const modalReducer = (state = initModalState, action: TAction<typeof MODAL_CREATORS>): IModalState => {
   switch (action.type) {
     case MODAL_ACTIONS.SET_VISIBILITY:
       return {

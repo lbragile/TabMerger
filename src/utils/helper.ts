@@ -1,6 +1,7 @@
+import type { IGroupItemState } from "~/store/reducers/groups";
+
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
-import { GOOGLE_HOMEPAGE } from "~/constants/urls";
-import { IGroupItemState } from "~/store/reducers/groups";
+import { DEFAULT_FAVICON_URL, GOOGLE_HOMEPAGE } from "~/constants/urls";
 
 export function pluralize(amount: number, baseStr: string): string {
   return amount === 1 ? baseStr : baseStr + "s";
@@ -80,7 +81,9 @@ export function sortWindowsByFocus(windows: chrome.windows.Window[]): {
 }
 
 export const generateFavIconFromUrl = (url = GOOGLE_HOMEPAGE) =>
-  `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`;
+  /^https?:\/\/.*(?<!\.html|\.php)$/.test(url)
+    ? `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`
+    : DEFAULT_FAVICON_URL;
 
 export function createActiveTab(url: string) {
   chrome.tabs.create({ url, active: true }, () => "");

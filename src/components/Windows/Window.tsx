@@ -1,9 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Draggable, DraggableProvidedDragHandleProps, DraggableStateSnapshot, Droppable } from "react-beautiful-dnd";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
 
+import DeleteConfirmation from "../DeleteConfirmation";
+
 import Tab from "./Tab";
+
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 
 import Dropdown from "~/components/Dropdown";
 import Popup from "~/components/Popup";
@@ -11,6 +15,7 @@ import { isTabDrag } from "~/constants/dragRegExp";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import useFilter from "~/hooks/useFilter";
+import useLocalStorage from "~/hooks/useLocalStorage";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import useRename from "~/hooks/useRename";
 import {
@@ -20,21 +25,12 @@ import {
   toggleWindowIncognito,
   updateWindowName
 } from "~/store/actions/groups";
+import { setShowUndo } from "~/store/actions/header";
 import { CloseIcon } from "~/styles/CloseIcon";
+import { Column } from "~/styles/Column";
+import { Row } from "~/styles/Row";
+import { TabCounter, WindowHeadline, WindowTitle } from "~/styles/Window";
 import { pluralize } from "~/utils/helper";
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-`;
 
 const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   justify-content: center;
@@ -42,19 +38,10 @@ const WindowContainer = styled(Column)<{ $dragging: boolean }>`
   padding: 0 ${({ $dragging }) => ($dragging ? "4px" : "0")};
 `;
 
-const WindowTitle = styled.input<{ $active: boolean; $open: boolean; $dragging: boolean }>`
-  all: unset;
-  font-size: 15px;
-  width: calc(100% - 8px);
-  padding: 0 4px;
-  font-weight: 600;
-  cursor: pointer;
-  user-select: none;
-  background-color: ${({ $open, $active }) => ($open ? ($active ? "#dde8ffb7" : "#dfdfdfb7") : "transparent")};
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  ${({ $dragging, $active }) =>
+const StyledWindowTitle = styled(WindowTitle)<{ $active: boolean; $open: boolean; $dragging: boolean }>`
+  background-color: ${({ $open, $active, theme }) =>
+    $open ? ($active ? theme.headers.primary : theme.headers.secondary) : "transparent"};
+  ${({ $dragging, $active, theme }) =>
     $dragging
       ? css`
           use-event: none;
@@ -63,41 +50,25 @@ const WindowTitle = styled.input<{ $active: boolean; $open: boolean; $dragging: 
       : css`
           &:hover,
           &:focus-visible {
-            background-color: ${$active ? "#dde8ffb7" : "#dfdfdfb7"};
+            background-color: ${$active ? theme.headers.primary : theme.headers.secondary};
           }
         `}
 `;
 
-const Headline = styled(Column)<{ $active: boolean; $dragging: boolean }>`
-  display: grid;
-  grid-template-columns: auto 25ch auto;
-  column-gap: 6px;
-  justify-content: start;
-  align-items: center;
+const Headline = styled(WindowHeadline)<{ $active: boolean; $dragging: boolean }>`
   background-color: ${({ $dragging, theme }) => ($dragging ? theme.colors.surface : "transparent")};
-  padding: 0 2px;
   border: 1px dashed ${({ $dragging }) => ($dragging ? "grey" : "initial")};
 
   & svg,
-  & ${WindowTitle} {
-    color: ${({ $active, theme }) => ($active ? "#0080ff" : theme.colors.onBackground)};
-  }
-
-  & svg {
-    max-width: 14px;
+  & ${StyledWindowTitle} {
+    color: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.onBackground)};
   }
 `;
 
 const TabsContainer = styled(Column)<{ $draggedOver: boolean; $dragOrigin: boolean }>`
   margin-left: 24px;
-  border: 1px dashed ${({ $draggedOver }) => ($draggedOver ? "#0080ff" : "transparent")};
+  border: 1px dashed ${({ $draggedOver, theme }) => ($draggedOver ? theme.colors.primary : "transparent")};
   background-color: ${({ $dragOrigin, theme }) => ($dragOrigin ? theme.colors.surface : "transparent")};
-`;
-
-const TabCounter = styled.span`
-  color: ${({ theme }) => theme.colors.onBackground};
-  opacity: 0.75;
-  cursor: default;
 `;
 
 const TitleContainer = styled.div`
@@ -114,11 +85,6 @@ const IconStack = styled.div`
     top: 0;
     right: -3.5px;
     color: #ff8000;
-  }
-
-  &:hover {
-    transform: scale(1.25);
-    filter: contrast(1.25);
   }
 `;
 
@@ -146,25 +112,27 @@ export default function Window({
 }: chrome.windows.Window & IWindow): JSX.Element {
   const dispatch = useDispatch();
 
-  const {
-    available,
-    active: { index: groupIndex }
-  } = useSelector((state) => state.groups);
+  const [italicizeNonHttp] = useLocalStorage("italicizeNonHttp", false);
+  const [confirmDelete] = useLocalStorage("confirmDelete", true);
+
+  const { available, active } = useSelector((state) => state.groups.present);
+
+  const { id: activeId, index: groupIndex } = active;
 
   const { inputValue, filterChoice } = useSelector((state) => state.header);
   const { dragType, isDragging } = useSelector((state) => state.dnd);
-
   const { filteredTabs } = useFilter();
 
   const typing = inputValue !== "";
   const isTabSearch = filterChoice === "tab";
-  const currentTabs = typing && isTabSearch ? filteredTabs[windowIndex] : tabs;
+  const currentTabs = typing && isTabSearch ? filteredTabs[activeId][windowIndex] : tabs;
 
   const [showPopup, setShowPopup] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [askConfirmationNow, setAskConfirmationNow] = useState(false);
 
   const [windowName, setWindowName] = useRename(
-    () => dispatch(updateWindowName({ groupIndex, windowIndex, name: windowName })),
+    (newName: string) => dispatch(updateWindowName({ groupIndex, windowIndex, name: newName })),
     name ?? `${focused ? "Current " : ""}Window`
   );
 
@@ -200,26 +168,30 @@ export default function Window({
     [currentTabs, groupIndex, incognito, state, windowId]
   );
 
+  const closeCurrentlyOpenWindow = () => windowId && chrome.windows.remove(windowId, () => "");
+
   const closeWindow = () => {
     if (groupIndex > 0) {
-      dispatch(deleteWindow({ groupIndex, windowIndex }));
-
       // Possible to have deleted the last window in the group
-      if (!available[groupIndex].windows.length) {
-        dispatch(deleteGroup(groupIndex));
+      if (available[groupIndex].windows.length === 1) {
+        dispatch(deleteGroup({ index: groupIndex }));
+      } else {
+        dispatch(deleteWindow({ groupIndex, windowIndex }));
       }
+
+      dispatch(setShowUndo(true));
     } else {
-      windowId && chrome.windows.remove(windowId);
+      confirmDelete ? setAskConfirmationNow(true) : closeCurrentlyOpenWindow();
     }
   };
 
   const tabCounterStr = useMemo(() => {
     const totalTabs = tabs?.length ?? 0;
-    const numVisibleTabs = typing ? filteredTabs[windowIndex]?.length ?? 0 : totalTabs;
+    const numVisibleTabs = typing ? filteredTabs[activeId][windowIndex]?.length ?? 0 : totalTabs;
     const count = isTabSearch ? numVisibleTabs : totalTabs;
 
     return `${count}${typing ? ` of ${totalTabs}` : ""} ${pluralize(totalTabs, "Tab")}`;
-  }, [typing, filteredTabs, tabs?.length, isTabSearch, windowIndex]);
+  }, [typing, filteredTabs, tabs?.length, isTabSearch, activeId, windowIndex]);
 
   const windowItems = useMemo(
     () => [
@@ -294,107 +266,118 @@ export default function Window({
   };
 
   return (
-    <WindowContainer $dragging={windowSnapshot.isDragging}>
-      <Row>
-        <CloseIcon
-          icon="times-circle"
-          tabIndex={0}
-          onClick={closeWindow}
-          onPointerDown={(e) => e.preventDefault()}
-          onKeyPress={({ key }) => key === "Enter" && closeWindow()}
-          $visible={!isDragging}
-        />
+    <>
+      <WindowContainer $dragging={windowSnapshot.isDragging} $gap="2px">
+        <Row $gap="4px">
+          <CloseIcon
+            icon="times-circle"
+            tabIndex={0}
+            onClick={closeWindow}
+            onPointerDown={(e) => e.preventDefault()}
+            onKeyPress={({ code }) => code === "Enter" && closeWindow()}
+          />
 
-        <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
-          <IconStack {...dragHandleProps} onContextMenu={(e) => e.preventDefault()}>
-            <FontAwesomeIcon icon={incognito ? "mask" : ["far", "window-maximize"]} />
-            {starred && <FontAwesomeIcon icon="star" />}
-          </IconStack>
+          <Headline $active={focused} $dragging={windowSnapshot.isDragging}>
+            <IconStack {...dragHandleProps} onContextMenu={(e) => e.preventDefault()}>
+              <FontAwesomeIcon icon={incognito ? "mask" : ["far", "window-maximize"]} />
+              {starred && <FontAwesomeIcon icon="star" />}
+            </IconStack>
 
-          <TitleContainer>
-            <WindowTitle
-              ref={titleRef}
-              $active={focused}
-              $open={showPopup}
-              $dragging={isDragging}
-              {...(windowName.length > 15 ? { title: titleRef.current?.value } : {})}
-              tabIndex={0}
-              role="button"
-              maxLength={25}
-              value={windowName}
-              onChange={(e) => setWindowName(e.target.value)}
-              onClick={(e) => groupIndex === 0 && e.currentTarget.blur()}
-              onDoubleClick={(e) => e.button === 0 && openWindow("new")}
-              onContextMenu={handleContextMenuClick}
-              onKeyPress={handleWindowTitleUpdate}
-              onPointerEnter={() => setShowInstructions(true)}
-              onPointerLeave={() => setShowInstructions(false)}
-            />
+            <TitleContainer>
+              <StyledWindowTitle
+                ref={titleRef}
+                $active={focused}
+                $open={showPopup}
+                $dragging={isDragging}
+                {...(windowName.length > 15 ? { title: titleRef.current?.value } : {})}
+                tabIndex={0}
+                role="button"
+                maxLength={25}
+                value={windowName}
+                onChange={(e) => setWindowName(e.target.value)}
+                onClick={(e) => groupIndex === 0 && e.currentTarget.blur()}
+                onDoubleClick={(e) => e.button === 0 && openWindow("new")}
+                onContextMenu={handleContextMenuClick}
+                onKeyPress={handleWindowTitleUpdate}
+                onPointerEnter={() => setShowInstructions(true)}
+                onPointerLeave={() => setShowInstructions(false)}
+              />
 
-            {showPopup && titleRef.current && (
-              <div ref={popupRef}>
-                <Dropdown
-                  items={windowItems}
-                  pos={{ top: 0, left: titleRef.current.getBoundingClientRect().width + 10 }}
-                  isPopup
-                />
-              </div>
-            )}
-          </TitleContainer>
+              {showPopup && titleRef.current && (
+                <div ref={popupRef}>
+                  <Dropdown
+                    items={windowItems}
+                    pos={{ top: 0, left: titleRef.current.getBoundingClientRect().width + 10 }}
+                    isPopup
+                  />
+                </div>
+              )}
+            </TitleContainer>
 
-          <TabCounter>{tabCounterStr}</TabCounter>
-        </Headline>
-      </Row>
+            <TabCounter>{tabCounterStr}</TabCounter>
+          </Headline>
+        </Row>
 
-      <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType) || groupIndex === 0}>
-        {(provider, dropSnapshot) => (
-          <TabsContainer
-            ref={provider.innerRef}
-            {...provider.droppableProps}
-            $draggedOver={dropSnapshot.isDraggingOver}
-            $dragOrigin={!!dropSnapshot.draggingFromThisWith}
-          >
-            {currentTabs?.map((tab, i) => {
-              const { title, url, pendingUrl } = tab ?? {};
-              const tabUrl = url ?? pendingUrl;
-              if (title && tabUrl) {
-                return (
-                  <Draggable
-                    key={title + tabUrl + i}
-                    draggableId={`tab-${i}-window-${windowIndex}`}
-                    index={i}
-                    isDragDisabled={typing && isTabSearch}
-                  >
-                    {(provided, dragSnapshot) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <Tab
-                          {...tab}
-                          tabIndex={i}
-                          windowIndex={windowIndex}
-                          snapshot={dragSnapshot}
-                          dragHandleProps={provided.dragHandleProps}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              }
-            })}
+        <Droppable droppableId={"window-" + windowIndex} isDropDisabled={!isTabDrag(dragType) || groupIndex === 0}>
+          {(provider, dropSnapshot) => (
+            <TabsContainer
+              ref={provider.innerRef}
+              {...provider.droppableProps}
+              $draggedOver={dropSnapshot.isDraggingOver}
+              $dragOrigin={!!dropSnapshot.draggingFromThisWith}
+            >
+              {currentTabs?.map((tab, i) => {
+                const { title, url, pendingUrl } = tab ?? {};
+                const tabUrl = url ?? pendingUrl;
+                if (title && tabUrl) {
+                  return (
+                    <Draggable
+                      key={title + tabUrl + i}
+                      draggableId={`tab-${i}-window-${windowIndex}`}
+                      index={i}
+                      isDragDisabled={typing && isTabSearch}
+                    >
+                      {(provided, dragSnapshot) => (
+                        <div ref={provided.innerRef} {...provided.draggableProps}>
+                          <Tab
+                            {...tab}
+                            tabIndex={i}
+                            windowIndex={windowIndex}
+                            italicizeNonHttp={italicizeNonHttp}
+                            snapshot={dragSnapshot}
+                            dragHandleProps={provided.dragHandleProps}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                }
+              })}
 
-            {provider.placeholder}
-          </TabsContainer>
+              {provider.placeholder}
+            </TabsContainer>
+          )}
+        </Droppable>
+
+        {showInstructions && !showPopup && !isDragging && titleRef.current && (
+          <Popup
+            text={`Double Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
+            pos={{
+              x: titleRef.current.getBoundingClientRect().right + 8,
+              y: titleRef.current.getBoundingClientRect().top - 2
+            }}
+          />
         )}
-      </Droppable>
+      </WindowContainer>
 
-      {showInstructions && !showPopup && !isDragging && titleRef.current && (
-        <Popup
-          text={`Double Click To ${groupIndex > 0 ? "Open" : "Focus"} • Right Click For Options`}
-          pos={{
-            x: titleRef.current.getBoundingClientRect().right + 8,
-            y: titleRef.current.getBoundingClientRect().top - 2
-          }}
+      {confirmDelete && askConfirmationNow && (
+        <DeleteConfirmation
+          isWindow
+          windowIndex={windowIndex}
+          setShow={setAskConfirmationNow}
+          closeHandler={closeCurrentlyOpenWindow}
         />
       )}
-    </WindowContainer>
+    </>
   );
 }

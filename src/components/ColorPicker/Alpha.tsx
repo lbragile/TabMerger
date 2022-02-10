@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { useTheme } from "styled-components";
 
 import { Container, Picker } from "~/styles/ColorPicker";
 
@@ -12,6 +13,8 @@ interface IAlpha {
 }
 
 export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
+  const theme = useTheme();
+
   const alphaRef = useRef<HTMLCanvasElement | null>(null);
   const pickerRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,7 +44,7 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
         context.rect((2 * j + 1) * w, h, w, h);
       }
 
-      context.fillStyle = "#1113";
+      context.fillStyle = theme.colors.onBackground + "3";
       context.fill();
 
       // Draw hue gradient
@@ -52,7 +55,7 @@ export default function Alpha({ alpha, hue, setAlpha }: IAlpha) {
       context.fillStyle = gradient;
       context.fill();
     }
-  }, [hue]);
+  }, [hue, theme]);
 
   const handlePointerDown = () => setCanDrag(true);
 

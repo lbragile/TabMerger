@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
 import styled, { css } from "styled-components";
+
+import type { DraggableProvidedDragHandleProps, DraggableStateSnapshot } from "react-beautiful-dnd";
+import type { IGroupItemState } from "~/store/reducers/groups";
 
 import ColorPicker from "~/components/ColorPicker";
 import Highlighted from "~/components/Highlighted";
@@ -10,8 +12,15 @@ import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { updateColor, deleteGroup, updateActive } from "~/store/actions/groups";
-import { IGroupItemState } from "~/store/reducers/groups";
-import { CloseIcon } from "~/styles/CloseIcon";
+import { setShowUndo } from "~/store/actions/header";
+import {
+  AbsoluteCloseIcon,
+  ColorIndicator,
+  GroupButton,
+  GroupButtonContainer,
+  GroupHeadline,
+  GroupInformation
+} from "~/styles/Group";
 import { relativeTimeStr } from "~/utils/helper";
 
 interface IGroupStyle {
@@ -23,59 +32,30 @@ interface IGroupStyle {
   $draggingGlobal: boolean;
 }
 
-const Container = styled.div`
-  position: relative;
-`;
-
-const AbsoluteCloseIcon = styled(CloseIcon)`
-  position: absolute;
-  top: 4px;
-  right: 4px;
-`;
-
-const GroupButton = styled.div<IGroupStyle>`
+const StyledGroupButton = styled(GroupButton)<IGroupStyle>`
   ${({ $overflow: overflow }) => css`
     width: ${overflow ? "197px" : "209px"};
     margin-right: ${overflow ? "4px" : "0"};
   `}
-  height: 49px;
   background-color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
-    $isActive ? "#BEDDF4" : $dragging ? "lightgrey" : $draggingOver ? "#caffca" : theme.colors.surface};
+    $isActive ? "#beddf4" : $dragging ? "lightgrey" : $draggingOver ? "#cfc" : theme.colors.surface};
   color: ${({ $isActive, $dragging, $draggingOver, theme }) =>
     $isActive || $dragging || $draggingOver ? "black" : theme.colors.onSurface};
-  outline: 1px solid ${({ $permanent }) => ($permanent ? "rgb(133 66 0 / 30%)" : "rgb(0 0 0 / 10%)")};
-  outline-offset: -1px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 2px 8px 2px 16px;
+  outline: 1px solid
+    ${({ $permanent, theme }) => ($permanent ? "rgb(133 66 0 / 30%)" : theme.colors.onBackground + "2")};
   cursor: ${({ $draggingOver, $draggingGlobal }) => ($draggingOver || $draggingGlobal ? "grabbing" : "pointer")};
-  ${({ $draggingGlobal, theme }) =>
-    !$draggingGlobal &&
-    css`
-      &:hover ${AbsoluteCloseIcon} {
-        color: ${theme.colors.onSurface};
-        display: block;
-
-        &:hover {
-          color: rgb(255 0 0 / 60%);
-        }
-      }
-    `}
 `;
 
-const Headline = styled.div<{ $isActive: boolean; $isFirst: boolean }>`
-  font-size: 16px;
-  font-weight: 600;
-  width: fit-content;
-  max-width: 95%;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+const StyledGroupHeadline = styled(GroupHeadline).attrs(() => ({ as: "div" }))<{
+  $isActive: boolean;
+  $isFirst: boolean;
+}>`
   transition: background-color 0.3s ease, padding 0.3s ease;
+
+  &:hover {
+    border-bottom: none;
+  }
+
   ${({ $isFirst, $isActive }) =>
     !$isFirst &&
     css`
@@ -86,31 +66,9 @@ const Headline = styled.div<{ $isActive: boolean; $isFirst: boolean }>`
     `}
 `;
 
-const GroupInformation = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 12px;
-`;
-
-const ColorIndicator = styled.div<{ color: string }>`
-  width: 8px;
-  height: 100%;
-  background-color: ${({ color }) => color};
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: transform 0.3s linear, background-color 0.3s ease-out;
-
-  &:hover {
-    transform: scaleX(2);
-  }
-`;
-
 const ColorPickerContainer = styled.div<{ $pos: { right: number; top: number }; $visible: boolean }>`
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   display: ${({ $visible }) => ($visible ? "flex" : "none")};
   ${({ $pos: { right, top } }) => css`
     top: ${top}px;
@@ -134,9 +92,10 @@ export default function Group({
   dragHandleProps
 }: IGroupItemState & IGroup): JSX.Element {
   const dispatch = useDispatch();
+
   const { filterChoice } = useSelector((state) => state.header);
   const { isDragging, dragType } = useSelector((state) => state.dnd);
-  const { active, available } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups.present);
 
   const index = available.findIndex((group) => group.id === id);
   const groupDrag = isGroupDrag(dragType);
@@ -162,9 +121,7 @@ export default function Group({
   });
 
   // When importing, the color picker value needs to update
-  useEffect(() => {
-    setColorPickerValue(color);
-  }, [color]);
+  useEffect(() => setColorPickerValue(color), [color]);
 
   const handleActiveGroupUpdate = () => !isActive && dispatch(updateActive({ index, id }));
 
@@ -193,10 +150,15 @@ export default function Group({
     }, 0);
   };
 
+  const handleCloseGroup = () => {
+    dispatch(deleteGroup({ index }));
+    dispatch(setShowUndo(true));
+  };
+
   return (
     <>
-      <Container ref={groupRef}>
-        <GroupButton
+      <GroupButtonContainer ref={groupRef}>
+        <StyledGroupButton
           tabIndex={0}
           role="button"
           $permanent={index === 0}
@@ -206,7 +168,7 @@ export default function Group({
           $draggingOver={index > 0 && isDragging && !groupDrag && draggingOver}
           $draggingGlobal={isDragging}
           onClick={handleActiveGroupUpdate}
-          onKeyPress={({ key }) => key === "Enter" && handleActiveGroupUpdate()}
+          onKeyPress={({ code }) => code === "Enter" && handleActiveGroupUpdate()}
           onPointerEnter={() => setDraggingOver(true)}
           onPointerLeave={() => setDraggingOver(false)}
         >
@@ -218,7 +180,7 @@ export default function Group({
             onKeyPress={(e) => e.key === "Enter" && handleShowPicker(e)}
           />
 
-          <Headline
+          <StyledGroupHeadline
             $isActive={isActive}
             $isFirst={index === 0}
             onPointerEnter={(e) => handleShowTitleOverflow(e, "enter")}
@@ -226,7 +188,7 @@ export default function Group({
             {...dragHandleProps}
           >
             {filterChoice === "group" ? <Highlighted text={name} /> : name}
-          </Headline>
+          </StyledGroupHeadline>
 
           <GroupInformation>
             <span>{info ?? "0T | 0W"}</span> <span>{relativeTimeStr(updatedAt)}</span>
@@ -238,17 +200,19 @@ export default function Group({
               icon="times"
               onClick={(e) => {
                 e.stopPropagation();
-                dispatch(deleteGroup(index));
+                handleCloseGroup();
               }}
               onPointerDown={(e) => e.preventDefault()}
               onKeyPress={(e) => {
                 e.stopPropagation();
-                e.key === "Enter" && dispatch(deleteGroup(index));
+                if (e.key === "Enter") {
+                  handleCloseGroup();
+                }
               }}
             />
           )}
-        </GroupButton>
-      </Container>
+        </StyledGroupButton>
+      </GroupButtonContainer>
 
       {/* Want this to be present in the DOM since it's height is used to calculate position */}
       <ColorPickerContainer ref={pickerRef} $pos={pickerPos} $visible={showPicker}>

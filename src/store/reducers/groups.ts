@@ -1,8 +1,10 @@
 import { nanoid } from "nanoid";
-import { Combine, DraggableLocation } from "react-beautiful-dnd";
+
+import type { Combine, DraggableLocation } from "react-beautiful-dnd";
+import type * as GROUPS_CREATORS from "~/store/actions/groups";
+import type { TAction } from "~/typings/redux";
 
 import { DEFAULT_GROUP_COLOR, FIRST_GROUP_TITLE } from "~/constants/defaults";
-import { TRootActions } from "~/typings/redux";
 import { createGroup, createWindowWithTabs } from "~/utils/helper";
 
 export const GROUPS_ACTIONS = {
@@ -14,7 +16,6 @@ export const GROUPS_ACTIONS = {
   UPDATE_WINDOWS: "UPDATE_WINDOWS",
   UPDATE_WINDOWS_FROM_GROUP_DND: "UPDATE_WINDOWS_FROM_GROUP_DND",
   UPDATE_WINDOWS_FROM_SIDEPANEL_DND: "UPDATE_WINDOWS_FROM_SIDEPANEL_DND",
-  UPDATE_TABS: "UPDATE_TABS",
   UPDATE_TABS_FROM_GROUP_DND: "UPDATE_TABS_FROM_GROUP_DND",
   UPDATE_TABS_FROM_SIDEPANEL_DND: "UPDATE_TABS_FROM_SIDEPANEL_DND",
   ADD_GROUP: "ADD_GROUP",
@@ -78,21 +79,15 @@ export const initGroupsState: IGroupsState = {
   ]
 };
 
-const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsState => {
-  const available = [...state.available];
+const groupsReducer = (state = initGroupsState, action: TAction<typeof GROUPS_CREATORS>): IGroupsState => {
+  const available = JSON.parse(JSON.stringify(state.available)) as IGroupItemState[];
 
   switch (action.type) {
-    case GROUPS_ACTIONS.UPDATE_AVAILABLE: {
-      const newAvailable = action.payload;
-
+    case GROUPS_ACTIONS.UPDATE_AVAILABLE:
       return {
         ...state,
-        available: [
-          { ...state.available[0], name: newAvailable[0].name, color: newAvailable[0].color },
-          ...newAvailable.slice(1)
-        ]
+        available: action.payload
       };
-    }
 
     case GROUPS_ACTIONS.UPDATE_ACTIVE:
       return {
@@ -152,18 +147,14 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
         });
         available[groupIdx].windows.unshift(...removedWindows);
 
+        // Sort windows so that favorites are on top
+        available[groupIdx].windows = available[groupIdx].windows
+          .filter((w) => w.starred)
+          .concat(available[groupIdx].windows.filter((w) => !w.starred));
+
         available[index].updatedAt = Date.now();
         available[groupIdx].updatedAt = Date.now();
       }
-
-      return { ...state, available };
-    }
-
-    case GROUPS_ACTIONS.UPDATE_TABS: {
-      const { groupIdx, windowIdx, tabs } = action.payload;
-
-      available[groupIdx].windows[windowIdx].tabs = tabs;
-      available[groupIdx].updatedAt = Date.now();
 
       return { ...state, available };
     }
@@ -196,6 +187,11 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
         const newWindow = createWindowWithTabs(removedTabs ?? [], name);
         available[groupIdx].windows.unshift(newWindow);
 
+        // Sort windows so that favorites are on top
+        available[groupIdx].windows = available[groupIdx].windows
+          .filter((w) => w.starred)
+          .concat(available[groupIdx].windows.filter((w) => !w.starred));
+
         available[index].updatedAt = Date.now();
         available[groupIdx].updatedAt = Date.now();
       }
@@ -219,12 +215,12 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
     }
 
     case GROUPS_ACTIONS.DELETE_GROUP: {
-      const index = action.payload;
+      const { index } = action.payload;
 
       // Re-assign active group if deleted group was the active one (use the group above if needed)
       const activeIdx = state.active.index;
 
-      const active =
+      const newActive =
         activeIdx < index
           ? { ...state.active }
           : activeIdx === index
@@ -233,7 +229,7 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
 
       available.splice(index, 1);
 
-      return { ...state, active, available };
+      return { active: newActive, available };
     }
 
     case GROUPS_ACTIONS.DELETE_WINDOW: {
@@ -262,9 +258,9 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
       // ... as it is not the source of the dnd event - must be non-empty.
       const { index, id } = state.active;
       const newIdx = Math.max(0, index - 1);
-      const active = !filteredIds.includes(id) ? { index: newIdx, id: available[newIdx].id } : { ...state.active };
+      const newActive = !filteredIds.includes(id) ? { index: newIdx, id: available[newIdx].id } : { ...state.active };
 
-      return { ...state, available: filteredGroups, active };
+      return { available: filteredGroups, active: newActive };
     }
 
     case GROUPS_ACTIONS.ADD_WINDOW: {
@@ -291,12 +287,17 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
     case GROUPS_ACTIONS.UPDATE_GROUP_ORDER: {
       const { source, destination } = action.payload;
 
+      let newActive = { ...state.active };
+
       if (destination) {
         const removedGroups = available.splice(source.index, 1);
         available.splice(destination.index, 0, ...removedGroups);
+
+        // Make the dragged group active
+        newActive = { id: removedGroups[0].id, index: destination.index };
       }
 
-      return { ...state, available };
+      return { active: newActive, available };
     }
 
     case GROUPS_ACTIONS.TOGGLE_WINDOW_INCOGNITO: {
@@ -443,4 +444,4 @@ const GroupsReducer = (state = initGroupsState, action: TRootActions): IGroupsSt
   }
 };
 
-export default GroupsReducer;
+export default groupsReducer;

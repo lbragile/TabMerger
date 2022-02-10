@@ -35,7 +35,7 @@ module.exports = {
       ]
     }),
     new SourceMapDevToolPlugin({
-      exclude: isProd ? ["vendors.js", "background.js", "runtime.js", "popup.js"] : ["vendors.js"]
+      exclude: isProd ? ["popup.js"] : []
     }),
     new ESLintPlugin(lintOpts),
     new StylelintPlugin(lintOpts),
@@ -86,6 +86,10 @@ module.exports = {
   mode: isProd ? "production" : "development",
   watch: !isProd,
   devtool: false,
+  performance: {
+    maxEntrypointSize: 1.024e6,
+    maxAssetSize: 1.024e6
+  },
   output: {
     path: path.resolve(__dirname, isProd ? "../build" : "../dist"),
     filename: "[name].js",

@@ -1,48 +1,44 @@
-import * as dndActions from "./actions/dnd";
-import * as groupsActions from "./actions/groups";
-import * as headerActions from "./actions/header";
-import * as modalActions from "./actions/modal";
-import dndReducer, { initDnDState } from "./reducers/dnd";
-import groupsReducer, { initGroupsState } from "./reducers/groups";
-import headerReducer, { initHeaderState } from "./reducers/header";
-import modalReducer, { initModalState } from "./reducers/modal";
+import { combineReducers } from "redux";
+import undoable, { excludeAction } from "redux-undo";
 
-import { TRootReducer, TRootState } from "~/typings/redux";
+import dndReducer from "./reducers/dnd";
+import groupsReducer, { GROUPS_ACTIONS } from "./reducers/groups";
+import headerReducer from "./reducers/header";
+import modalReducer from "./reducers/modal";
 
-/**
- * Takes in reducer slices object and forms a single reducer with the combined state as output
- * @see https://stackoverflow.com/a/61439698/4298115
- */
-const combineReducers = <S = TRootState>(reducers: { [K in keyof S]: TRootReducer<S[K]> }): TRootReducer<S> => {
-  return (state, action) => {
-    // Build the combined state
-    return (Object.keys(reducers) as Array<keyof S>).reduce(
-      (prevState, key) => ({
-        ...prevState,
-        [key]: reducers[key](prevState[key], action)
-      }),
-      state
-    );
-  };
-};
+// ! Last elements must be ordered properly
+const DND_GROUPING = [
+  GROUPS_ACTIONS.ADD_GROUP,
+  GROUPS_ACTIONS.ADD_WINDOW,
+  GROUPS_ACTIONS.UPDATE_TABS_FROM_GROUP_DND,
+  GROUPS_ACTIONS.UPDATE_TABS_FROM_SIDEPANEL_DND,
+  GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_GROUP_DND,
+  GROUPS_ACTIONS.UPDATE_WINDOWS_FROM_SIDEPANEL_DND,
+  GROUPS_ACTIONS.CLEAR_EMPTY_WINDOWS,
+  GROUPS_ACTIONS.CLEAR_EMPTY_GROUPS
+] as string[];
 
-export const rootState = {
-  header: initHeaderState,
-  groups: initGroupsState,
-  dnd: initDnDState,
-  modal: initModalState
-};
+const EXCLUDED_ACTIONS = [GROUPS_ACTIONS.UPDATE_INFO, GROUPS_ACTIONS.UPDATE_TIMESTAMP, GROUPS_ACTIONS.UPDATE_WINDOWS];
 
-export const rootActions = {
-  header: headerActions,
-  groups: groupsActions,
-  dnd: dndActions,
-  modal: modalActions
-};
+let randomGroupPostfix = 0;
 
 export const rootReducer = combineReducers({
   header: headerReducer,
-  groups: groupsReducer,
   dnd: dndReducer,
-  modal: modalReducer
+  modal: modalReducer,
+  groups: undoable(groupsReducer, {
+    filter: excludeAction(EXCLUDED_ACTIONS),
+    groupBy: (actionType) => {
+      const matchType = DND_GROUPING[DND_GROUPING.length - 1];
+      const groupingId = DND_GROUPING.includes(actionType.type) ? matchType + "-" + randomGroupPostfix : null;
+
+      // Want to update the random postfix after the final group's `groupingId` is updated
+      if (actionType.type === matchType) {
+        randomGroupPostfix = Math.random();
+      }
+
+      return groupingId;
+    },
+    syncFilter: true
+  })
 });

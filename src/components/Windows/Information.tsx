@@ -2,7 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useMemo, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
-import Dropdown, { IDropdown } from "~/components/Dropdown";
+import type { IDropdown } from "~/components/Dropdown";
+
+import Dropdown from "~/components/Dropdown";
 import { GOOGLE_HOMEPAGE } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
@@ -18,6 +20,7 @@ import {
   updateGroupName,
   deleteGroup
 } from "~/store/actions/groups";
+import { setShowUndo } from "~/store/actions/header";
 import { getReadableTimestamp, pluralize } from "~/utils/helper";
 
 const Grid = styled.div`
@@ -89,10 +92,9 @@ const SubTitle = styled.span<{ $right?: boolean }>`
 export default function Information(): JSX.Element {
   const dispatch = useDispatch();
 
-  const {
-    active: { index: groupIndex },
-    available
-  } = useSelector((state) => state.groups);
+  const { active, available } = useSelector((state) => state.groups.present);
+
+  const groupIndex = active.index;
 
   const { windows, info, name, updatedAt } = available[groupIndex];
 
@@ -106,8 +108,8 @@ export default function Information(): JSX.Element {
   const [numTabs, numWindows] = info?.split(" | ")?.map((count) => Number(count.slice(0, -1))) ?? [0, 0];
   const isDropdownItemDisabled = groupIndex === 0;
 
-  const [windowTitle, setWindowTitle] = useRename(
-    () => dispatch(updateGroupName({ groupIndex, name: windowTitle })),
+  const [groupTitle, setGroupTitle] = useRename(
+    (newName: string) => dispatch(updateGroupName({ groupIndex, name: newName })),
     name
   );
 
@@ -123,15 +125,20 @@ export default function Information(): JSX.Element {
     cb: () => setShowOpenPopup(false)
   });
 
-  const dropdownItemHandlerWrapper = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement> | undefined,
-    action: () => void
-  ) => {
-    // Parent (settings icon will receive the bubbled event if propagation isn't stopped)
-    e?.stopPropagation();
-    action();
-    setShowSettingsPopup(false);
-  };
+  const dropdownItemHandlerWrapper = useCallback(
+    (
+      e: React.MouseEvent<HTMLDivElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement> | undefined,
+      action: () => void,
+      showUndoPrompt = false
+    ) => {
+      // Parent (settings icon will receive the bubbled event if propagation isn't stopped)
+      e?.stopPropagation();
+      action();
+      setShowSettingsPopup(false);
+      showUndoPrompt && dispatch(setShowUndo(true));
+    },
+    [dispatch]
+  );
 
   const openWindows = useCallback(
     (type: "current" | "new" | "separate", isIncognito = false) => {
@@ -173,7 +180,7 @@ export default function Information(): JSX.Element {
         },
         {
           text: groupIndex === 0 ? "Save" : "Duplicate",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(duplicateGroup(groupIndex)))
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(duplicateGroup(groupIndex)), true)
         },
         { text: "divider" },
         {
@@ -200,24 +207,24 @@ export default function Information(): JSX.Element {
         { text: "divider" },
         {
           text: "Merge With Current",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(mergeWithCurrent(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(mergeWithCurrent(groupIndex)), true),
           isDisabled: isDropdownItemDisabled
         },
         {
           text: "Replace With Current",
-          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(replaceWithCurrent(groupIndex))),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(replaceWithCurrent(groupIndex)), true),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         },
         { text: "divider" },
         {
           text: "Delete",
-          handler: () => dispatch(deleteGroup(groupIndex)),
+          handler: (e) => dropdownItemHandlerWrapper(e, () => dispatch(deleteGroup({ index: groupIndex })), true),
           isDisabled: isDropdownItemDisabled,
           isDanger: true
         }
       ] as IDropdown["items"],
-    [dispatch, groupIndex, isDropdownItemDisabled, numTabs, numWindows]
+    [dispatch, dropdownItemHandlerWrapper, groupIndex, isDropdownItemDisabled, numTabs, numWindows]
   );
 
   const openItems = useMemo(
@@ -266,11 +273,11 @@ export default function Information(): JSX.Element {
       <Title
         ref={titleRef}
         type="text"
-        value={windowTitle}
-        onChange={(e) => setWindowTitle(e.target.value)}
+        value={groupTitle}
+        onChange={(e) => setGroupTitle(e.target.value)}
         onKeyPress={(e) => e.key === "Enter" && e.currentTarget.blur()}
         maxLength={40}
-        $isMaxLength={windowTitle.length === 40}
+        $isMaxLength={groupTitle.length === 40}
       />
 
       <span>
