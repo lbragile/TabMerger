@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Checkbox from "~/components/Checkbox";
@@ -7,6 +6,7 @@ import { ModalFooter } from "~/components/Modal";
 import Note from "~/components/Note";
 import { DOWNLOADS_URL } from "~/constants/urls";
 import useLocalStorage from "~/hooks/useLocalStorage";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Message } from "~/styles/Message";
 import { SectionTitle } from "~/styles/SectionTitle";
 import { pluralize, relativeTimeStr } from "~/utils/helper";
@@ -30,30 +30,18 @@ const StyledMessage = styled(Message)`
 `;
 
 export default function Backup(): JSX.Element {
-  const [autoExport, setAutoExport] = useLocalStorage("autoExport", false);
-  const [exportFreq, setExportFreq] = useLocalStorage("exportFreq", 10);
-  const [exportMax, setExportMax] = useLocalStorage("exportMax", 2);
-  const [autoSync, setAutoSync] = useLocalStorage("autoSync", false);
-  const [syncFreq, setSyncFreq] = useLocalStorage("syncFreq", 10);
+  const [, setAutoExport, localAutoExport, setLocalAutoExport] = useStorageWithSave("autoExport", false);
+  const [, setExportFreq, localExportFreq, setLocalExportFreq] = useStorageWithSave("exportFreq", 10);
+  const [, setExportMax, localExportMax, setLocalExportMax] = useStorageWithSave("exportMax", 2);
+  const [, setAutoSync, localAutoSync, setLocalAutoSync] = useStorageWithSave("autoSync", false);
+  const [, setSyncFreq, localSyncFreq, setLocalSyncFreq] = useStorageWithSave("syncFreq", 10);
 
   const [lastSyncUpload] = useLocalStorage("lastSyncUpload", "");
   const [lastExport] = useLocalStorage("lastExport", "");
 
-  const [localAutoExport, setLocalAutoExport] = useState(autoExport);
-  const [localExportFreq, setLocalExportFreq] = useState(exportFreq);
-  const [localExportMax, setLocalExportMax] = useState(exportMax);
-  const [localAutoSync, setLocalAutoSync] = useState(autoSync);
-  const [localSyncFreq, setLocalSyncFreq] = useState(syncFreq);
-
   const [relativeTimeExport, relativeTimeSync] = [lastExport, lastSyncUpload].map((item) =>
     relativeTimeStr(new Date(item).getTime())
   );
-
-  useEffect(() => setLocalAutoExport(autoExport), [autoExport]);
-  useEffect(() => setLocalExportFreq(exportFreq), [exportFreq]);
-  useEffect(() => setLocalExportMax(exportMax), [exportMax]);
-  useEffect(() => setLocalAutoSync(autoSync), [autoSync]);
-  useEffect(() => setLocalSyncFreq(syncFreq), [syncFreq]);
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useState, useRef, useMemo } from "react";
 
 import Checkbox from "~/components/Checkbox";
 import ColorPicker from "~/components/ColorPicker";
@@ -8,7 +8,7 @@ import Note from "~/components/Note";
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE, DEFAULT_WINDOW_TITLE } from "~/constants/defaults";
 import useClickOutside from "~/hooks/useClickOutside";
 import { useDebounce } from "~/hooks/useDebounce";
-import useLocalStorage from "~/hooks/useLocalStorage";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Column } from "~/styles/Column";
 import {
   GroupButtonContainer,
@@ -25,23 +25,18 @@ import { WindowHeadline, WindowTitle, TabCounter } from "~/styles/Window";
 export default function General(): JSX.Element {
   const [showPicker, setShowPicker] = useState(false);
 
-  const [confirmDelete, setConfirmDelete] = useLocalStorage("confirmDelete", true);
-  const [showBadgeInfo, setShowBadgeInfo] = useLocalStorage("showBadgeInfo", false);
-  const [groupTitle, setGroupTitle] = useLocalStorage("groupTitle", DEFAULT_GROUP_TITLE);
-  const [groupColor, setGroupColor] = useLocalStorage("groupColor", DEFAULT_GROUP_COLOR);
-  const [windowTitle, setWindowTitle] = useLocalStorage("windowTitle", DEFAULT_WINDOW_TITLE);
+  const [, setConfirmDelete, localConfirmDelete, setLocalConfirmDelete] = useStorageWithSave("confirmDelete", true);
 
-  const [localConfirmDelete, setLocalConfirmDelete] = useState(true);
-  const [localShowBadgeInfo, setLocalShowBadgeInfo] = useState(true);
-  const [localGroupTitle, setLocalGroupTitle] = useState(DEFAULT_GROUP_TITLE);
-  const [localGroupColor, setLocalGroupColor] = useState(DEFAULT_GROUP_COLOR);
-  const [localWindowTitle, setLocalWindowTitle] = useState(DEFAULT_WINDOW_TITLE);
+  const [, setShowBadgeInfo, localShowBadgeInfo, setLocalShowBadgeInfo] = useStorageWithSave("showBadgeInfo", false);
 
-  useEffect(() => setLocalConfirmDelete(confirmDelete), [confirmDelete]);
-  useEffect(() => setLocalShowBadgeInfo(showBadgeInfo), [showBadgeInfo]);
-  useEffect(() => setLocalGroupTitle(groupTitle), [groupTitle]);
-  useEffect(() => setLocalGroupColor(groupColor), [groupColor]);
-  useEffect(() => setLocalWindowTitle(windowTitle), [windowTitle]);
+  const [, setGroupTitle, localGroupTitle, setLocalGroupTitle] = useStorageWithSave("groupTitle", DEFAULT_GROUP_TITLE);
+
+  const [, setGroupColor, localGroupColor, setLocalGroupColor] = useStorageWithSave("groupColor", DEFAULT_GROUP_COLOR);
+
+  const [, setWindowTitle, localWindowTitle, setLocalWindowTitle] = useStorageWithSave(
+    "windowTitle",
+    DEFAULT_WINDOW_TITLE
+  );
 
   const debouncedColor = useDebounce(localGroupColor);
 

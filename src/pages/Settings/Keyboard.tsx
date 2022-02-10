@@ -7,7 +7,7 @@ import { ModalFooter } from "~/components/Modal";
 import Note from "~/components/Note";
 import { CHROME_SHORTCUTS } from "~/constants/urls";
 import useClickOutside from "~/hooks/useClickOutside";
-import useLocalStorage from "~/hooks/useLocalStorage";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Message } from "~/styles/Message";
 
 const ShortcutGrid = styled.div`
@@ -47,7 +47,7 @@ const ShortcutItem = styled.div<{ $disabled: boolean }>`
 export default function Keyboard(): JSX.Element {
   const [showPicker, setShowPicker] = useState(false);
 
-  const [allowShortcuts, setAllowShortcuts] = useLocalStorage("allowShortcuts", true);
+  const [, setAllowShortcuts, localAllowShortcuts, setLocalAllowShortcuts] = useStorageWithSave("allowShortcuts", true);
 
   const [allCommands, setAllCommands] = useState<chrome.commands.Command[]>([]);
 
@@ -72,8 +72,8 @@ export default function Keyboard(): JSX.Element {
       <Checkbox
         id="allowShortcuts"
         text="Keyboard Shortcuts"
-        checked={allowShortcuts}
-        setChecked={() => setAllowShortcuts(!allowShortcuts)}
+        checked={localAllowShortcuts}
+        setChecked={() => setLocalAllowShortcuts(!localAllowShortcuts)}
       />
 
       <ShortcutGrid>
@@ -102,7 +102,14 @@ export default function Keyboard(): JSX.Element {
         <p>Empty fields are not active!</p>
       </Note>
 
-      <ModalFooter showSave={false} closeText="Close" />
+      <ModalFooter
+        showSave
+        closeText="Close"
+        saveText="Save"
+        handleSave={() => {
+          setAllowShortcuts(localAllowShortcuts);
+        }}
+      />
     </>
   );
 }

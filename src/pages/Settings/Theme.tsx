@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Checkbox from "~/components/Checkbox";
 import Link from "~/components/Link";
 import { ModalFooter } from "~/components/Modal";
 import Note from "~/components/Note";
-import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Column } from "~/styles/Column";
 import { AbsoluteCloseIcon, ColorIndicator, GroupButton, GroupHeadline, GroupInformation } from "~/styles/Group";
 import { ThemeOptions } from "~/styles/ThemeOptions";
@@ -33,14 +32,12 @@ type TSelectedTheme = "light" | "dark";
 export default function Theme(): JSX.Element {
   const { available } = useSelector((state) => state.groups.present);
 
-  const [darkMode, setDarkMode] = useLocalStorage("darkMode", false);
-  const [italicizeNonHttp, setItalicizeNonHttp] = useLocalStorage("italicizeNonHttp", true);
+  const [, setDarkMode, localDarkMode, setLocalDarkMode] = useStorageWithSave("darkMode", false);
 
-  const [currentTheme, setCurrentTheme] = useState<TSelectedTheme>("dark");
-  const [localItalicizeNonHttp, setLocalItalicizeNonHttp] = useState(true);
-
-  useEffect(() => setCurrentTheme(darkMode ? "dark" : "light"), [darkMode]);
-  useEffect(() => setLocalItalicizeNonHttp(italicizeNonHttp), [italicizeNonHttp]);
+  const [, setItalicizeNonHttp, localItalicizeNonHttp, setLocalItalicizeNonHttp] = useStorageWithSave(
+    "italicizeNonHttp",
+    true
+  );
 
   return (
     <>
@@ -50,11 +47,11 @@ export default function Theme(): JSX.Element {
 
           <StyledGroupButton
             $theme={ThemeOptions[text]}
-            $active={currentTheme === text}
+            $active={(localDarkMode && text === "dark") || (!localDarkMode && text === "light")}
             tabIndex={0}
             role="button"
-            onClick={() => setCurrentTheme(text)}
-            onKeyPress={({ code }) => code === "Enter" && setCurrentTheme(text)}
+            onClick={() => setLocalDarkMode(text === "dark")}
+            onKeyPress={({ code }) => code === "Enter" && setLocalDarkMode(text === "dark")}
           >
             <StyledGroupHeadline>{available[0].name}</StyledGroupHeadline>
 
@@ -96,7 +93,7 @@ export default function Theme(): JSX.Element {
         showSave
         closeText="Close"
         handleSave={() => {
-          setDarkMode(currentTheme === "dark");
+          setDarkMode(localDarkMode);
           setItalicizeNonHttp(localItalicizeNonHttp);
         }}
       />

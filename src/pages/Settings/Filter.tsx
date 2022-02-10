@@ -8,7 +8,7 @@ import { ModalFooter } from "~/components/Modal";
 import Note from "~/components/Note";
 import { DEFAULT_FILTER } from "~/constants/urls";
 import { useDebounce } from "~/hooks/useDebounce";
-import useLocalStorage from "~/hooks/useLocalStorage";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { Message } from "~/styles/Message";
 import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
@@ -22,19 +22,17 @@ const StyledInput = styled.input`
 `;
 
 export default function Filter(): JSX.Element {
-  const [excludeProtocol, setExcludeProtocol] = useLocalStorage("excludeProtocol", true);
-  const [filter, setFilter] = useLocalStorage("urlFilter", "");
+  const [, setFilter, localFilter, setLocalFilter] = useStorageWithSave("urlFilter", "");
 
-  const [localExcludeProtocol, setLocalExcludeProtocol] = useState(true);
-  const [localFilter, setLocalFilter] = useState("");
+  const [, setExcludeProtocol, localExcludeProtocol, setLocalExcludeProtocol] = useStorageWithSave(
+    "excludeProtocol",
+    true
+  );
 
   const [testUrl, setTestUrl] = useState("");
   const [isCaught, setIsCaught] = useState(false);
 
   const debouncedTestUrl = useDebounce(testUrl, 1000);
-
-  useEffect(() => setLocalFilter(filter), [filter]);
-  useEffect(() => setLocalExcludeProtocol(excludeProtocol), [excludeProtocol]);
 
   // Filter testing (to see if a given URL input is "caught" by the filters)
   useEffect(() => {
@@ -48,12 +46,8 @@ export default function Filter(): JSX.Element {
 
   // Appends or removes the default filters from the filter list
   useEffect(() => {
-    if (localExcludeProtocol) {
-      setLocalFilter((prev) => DEFAULT_FILTER + prev);
-    } else {
-      setLocalFilter((prev) => prev.replace(DEFAULT_FILTER, ""));
-    }
-  }, [localExcludeProtocol]);
+    setLocalFilter((prev) => (localExcludeProtocol ? DEFAULT_FILTER + prev : prev.replace(DEFAULT_FILTER, "")));
+  }, [localExcludeProtocol, setLocalFilter]);
 
   return (
     <>

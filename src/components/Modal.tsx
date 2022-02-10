@@ -11,17 +11,14 @@ import Sync from "../pages/Sync";
 import { useDispatch, useSelector } from "~/hooks/useRedux";
 import { setVisibility } from "~/store/actions/modal";
 import Button from "~/styles/Button";
+import { Row } from "~/styles/Row";
 
-const HeaderRow = styled.div`
-  display: flex;
-  flex-direction: row;
+const HeaderRow = styled(Row)`
   justify-content: space-between;
-  align-items: center;
 `;
 
-const FooterRow = styled(HeaderRow)`
+const FooterRow = styled(Row)`
   justify-content: end;
-  gap: 8px;
 `;
 
 const CloseIconContainer = styled.span`

@@ -14,6 +14,7 @@ import { DOWNLOADS_URL } from "~/constants/urls";
 import useFormatText from "~/hooks/useFormatText";
 import useLocalStorage from "~/hooks/useLocalStorage";
 import { useSelector } from "~/hooks/useRedux";
+import useStorageWithSave from "~/hooks/useStorageWithSave";
 import { CloseIcon } from "~/styles/CloseIcon";
 import { Row } from "~/styles/Row";
 import TextArea from "~/styles/Textarea";
@@ -109,16 +110,17 @@ const EMPTY_TEXT = "Nothing to export";
 export default function Export(): JSX.Element {
   const { available } = useSelector((state) => state.groups.present);
 
-  const [fileLocationPicker, setFileLocationPicker] = useLocalStorage("fileLocationPicker", false);
+  const [, setFileLocationPicker, localFileLocationPicker, setLocalFileLocationPicker] = useStorageWithSave(
+    "fileLocationPicker",
+    false
+  );
+
   const [, setLastExport] = useLocalStorage("lastExport", "");
 
   const [activeTab, setActiveTab] = useState<TExportType>("json");
   const [overflow, setOverflow] = useState(false);
   const [copied, setCopied] = useState(false);
   const [exportFile, setExportFile] = useState<File | null>(null);
-  const [localFileLocationPicker, setLocalFileLocationPicker] = useState(false);
-
-  useEffect(() => setLocalFileLocationPicker(fileLocationPicker), [fileLocationPicker]);
 
   const selectOpts = useMemo(
     () => available.slice(1).map((group) => ({ label: group.name, value: group })),
