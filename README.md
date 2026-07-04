@@ -1,87 +1,109 @@
-<!-- markdownlint-disable-next-line MD033 MD041 -->
-<div align="center">
+# TabMerger
 
-![tabmerger logo](https://raw.githubusercontent.com/lbragile/TabMerger/master/public/images/logo-full.png)
+[![Build](https://img.shields.io/github/actions/workflow/status/lbragile/TabMerger/ci.yml?label=CI&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/actions)
+[![License](https://img.shields.io/github/license/lbragile/tabmerger?label=License&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
 
-[![Build][build status]](https://github.com/lbragile/TabMerger/actions) [![Forks][gh forks]](https://github.com/lbragile/TabMerger/network/members) [![Stars][gh stars]](https://github.com/lbragile/TabMerger/stargazers) [![Watchers][gh watchers]](https://github.com/lbragile/TabMerger/watchers) [![Release][release]](https://github.com/lbragile/TabMerger/releases/tag/v2.0.0) [![License][license]](https://github.com/lbragile/TabMerger/blob/master/LICENSE.md)
-\
-[![Chrome Users][chrome users]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Chrome Rating][chrome rating]](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc) [![Firefox Users][firefox users]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/) [![Firefox Rating][firefox rating]](https://addons.mozilla.org/en-US/firefox/addon/tabmerger/)
+A cross-browser tab manager for Chrome, Firefox, and Edge. Save, organize, and restore your tab sessions — with optional AI-powered grouping and cloud sync.
 
-| [![Chrome WebStore](https://i.imgur.com/NKFtwOA.png)](http://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/) | [![Firefox WebStore](https://i.imgur.com/YTz727e.png)](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) | [![Edge WebStore](https://i.imgur.com/YQR2RYd.png)](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn) |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+---
 
-[![Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=283682&theme=light)](https://www.producthunt.com/posts/tabmerger?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-tabmerger)
+## Getting started
 
-# Stores your tabs in one location to save memory usage and increase your productivity
+### Prerequisites
 
-![Demo](https://i.imgur.com/2sbEzip.png?1)
+- [Node.js](https://nodejs.org/) 20+
+- [pnpm](https://pnpm.io/) 9+ (`npm i -g pnpm`)
 
-</div>
+### Install
 
-## 🖋 Description
+```bash
+git clone https://github.com/lbragile/TabMerger.git
+cd TabMerger
+pnpm install
+```
 
-Tired of searching through squished icons to find a tab you are sure is there?
+Copy environment files and fill in your keys:
 
-TabMerger simplifies this clutter while increasing productivity in a highly organized and customizable fashion!
+```bash
+cp .env.example .env.local
+cp packages/extension/.env.example packages/extension/.env.local
+cp packages/web/.env.example packages/web/.env.local
+```
 
-In one click, you can have everything in a common location, where you can then re-arrange into appropriate groups, add custom notes, and so much more.
-All items are stored internally for you to use at a later time, even when you close the browser window(s) - reducing memory consumption and speeding up your machine.
-Lots of analytics keep you informed.
+### Run
 
-## ⭐ Review
+**Browser extension (Chrome, with HMR):**
+```bash
+pnpm dev:extension
+```
+Then load `packages/extension/.output/chrome-mv3/` as an unpacked extension in `chrome://extensions`.
 
-If you found TabMerger useful, consider leaving a positive & meaningful review ([Chrome](https://chrome.google.com/webstore/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc/reviews) | [Firefox](https://addons.mozilla.org/en-CA/firefox/addon/tabmerger/) | [Edge](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn))
-\
-It would also mean a lot if you could 🌟 this repository on [GitHub](https://www.github.com/lbragile/TabMerger)!
+**Firefox:**
+```bash
+pnpm dev:extension:firefox
+```
 
-## 💸 Donate
+**Web app (Next.js):**
+```bash
+pnpm dev:web
+```
+Opens at `http://localhost:3000`.
 
-I would greatly appreciate any financial support you are able/willing to provide.
-\
-Your contribution would allow me to focus on developing more useful tools like TabMerger that many users can enjoy and use in their day to day life.
+**Both at once:**
+```bash
+pnpm dev
+```
 
-[![buy me a coffee][buycoffee]](https://www.buymeacoffee.com/lbragile)
+### Build for production
 
-## 💻 Developers
+```bash
+pnpm build:extension   # Chrome MV3 + Firefox + Edge zips in packages/extension/.output/
+pnpm build:web         # Next.js production build in packages/web/.next/
+```
 
-TabMerger uses [pnpm](https://pnpm.io/) due to its superior security, speed, and compactness.
-\
-To get started, follow these steps:
+---
 
-- `git clone https://github.com/lbragile/TabMerger.git`
-- `cd TabMerger`
-- `npm i -g pnpm`
-- `pnpm i`
-- `pnpm start`
+## Project structure
 
-**Spelling**, **linting**, and **formatting** scripts are also provided (see **scripts** section in [package.json](https://github.com/lbragile/TabMerger/blob/master/package.json))
+```
+TabMerger/
+  packages/
+    extension/   # WXT browser extension (React 18, Tailwind, shadcn/ui, Zustand, TanStack Query)
+    web/         # Next.js 15 marketing site + dashboard (Supabase, Stripe, Claude AI)
+    shared/      # Shared TypeScript types and constants
+  supabase/      # Database migrations and RLS policies
+  docs/          # Architecture, feature roadmap, and integration guides
+  scripts/       # Dev tooling (secret scanning, setup helpers)
+  .github/       # CI/CD workflows (test, publish, deploy)
+  .claude/       # AI agent definitions for development
+```
 
-During development (`pnpm start`), the output folder is **dist**. For production (`pnpm build`) the output folder is **build**. You can test the extension by uploading these folders as [described here](https://support.google.com/chrome/a/answer/2714278?hl=en) (step 2)
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for a full breakdown.
 
-## 🚓 License
+---
+
+## Pricing tiers
+
+| Tier | Price | Features |
+|---|---|---|
+| Free | $0 | 5 groups · 50 tabs · local storage |
+| Pro | $3.99/mo | Unlimited groups + tabs · cloud sync · sessions |
+| Pro AI | $7.99/mo | Pro + AI grouping · smart naming · tab previews |
+
+---
+
+## Contributing
+
+See the [`docs/`](docs/) directory for architecture decisions, roadmap, and integration guides.
+
+Before committing, the pre-commit hook scans for secrets and API keys. Run it manually:
+
+```bash
+bash scripts/scan-secrets.sh
+```
+
+---
+
+## License
 
 Copyright (c) 2020-2026 Lior Bragilevsky. All rights reserved. See [LICENSE.md](LICENSE.md).
-\
-However, if you would like to use TabMerger commercially, we do offer a commercial license.
-\
-Simply contact TabMerger's creator/author for more information.
-
-[![FOSSA Status][fossa]](https://app.fossa.com/reports/da0dd9bb-6c2b-489b-9710-a1976b255696)
-
-<!-- Donation Information -->
-
-[buycoffee]: https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=lbragile&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff
-
-<!-- Badges -->
-
-[build status]: https://img.shields.io/github/workflow/status/lbragile/TabMerger/TabMerger%20Unit%20Testing?label=Build&style=flat-square&logo=github
-[gh forks]: https://img.shields.io/github/forks/lbragile/TabMerger?label=Forks&logo=github&style=flat-square
-[gh stars]: https://img.shields.io/github/stars/lbragile/TabMerger?label=Stars&style=flat-square&logo=github
-[gh watchers]: https://img.shields.io/github/watchers/lbragile/TabMerger?label=Watchers&logo=github&style=flat-square
-[release]: https://img.shields.io/github/v/release/lbragile/TabMerger?label=Release&logo=Github&style=flat-square
-[firefox users]: https://img.shields.io/amo/users/%7B19feb84f-3a0b-4ca3-bbae-211b52eb158b%7D?label=Users&style=flat-square&logo=firefox
-[firefox rating]: https://img.shields.io/amo/rating/%257B19feb84f-3a0b-4ca3-bbae-211b52eb158b%257D?label=Rating&style=flat-square&logo=firefox
-[chrome users]: https://img.shields.io/chrome-web-store/users/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Users&style=flat-square&logo=google&logoColor=white
-[chrome rating]: https://img.shields.io/chrome-web-store/rating/inmiajapbpafmhjleiebcamfhkfnlgoc?label=Rating&style=flat-square&logo=google&logoColor=white
-[license]: https://img.shields.io/github/license/lbragile/tabmerger?label=License&style=flat-square&logo=github
-[fossa]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flbragile%2FTabMerger.svg?type=large

@@ -2,56 +2,130 @@ name: CI
 
 on:
   push:
-    branches: ["develop"]
+    branches:
+      - master
   pull_request:
-    branches: ["master"]
+    branches:
+      - master
 
 jobs:
-  ci:
-    runs-on: windows-2022
-
-    strategy:
-      matrix:
-        node: [12, 14, 16]
-
+  scan-secrets:
+    name: Secret Scan
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: pnpm/action-setup@v2.0.1
+      - name: Scan for secrets and PII
+        run: |
+          # Scan all files tracked in this commit (not just staged, since CI checks full tree)
+          git ls-files | xargs grep -lE \
+            'AKIA[0-9A-Z]{16}|sk_live_[0-9a-zA-Z]{24,}|sk_test_[0-9a-zA-Z]{24,}|whsec_[0-9a-zA-Z]{32,}|sk-ant-[a-zA-Z0-9\-_]{32,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----' \
+            2>/dev/null && echo "::error::Secret pattern found in repository" && exit 1 || true
+
+          # Block committed .env files (only .env.example is allowed)
+          git ls-files | grep -E '^\.env(\.[a-z]+)?$' | grep -v '\.example$' \
+            && echo "::error::.env file found in repository" && exit 1 || true
+
+          echo "No secrets found."
+
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
         with:
           version: latest
 
-      - name: Use NodeJS ${{ matrix.node }} & Cache
-        uses: actions/setup-node@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
-          cache: "pnpm"
+          node-version: 20
+          cache: pnpm
 
-      - name: Install Dependencies
-        run: pnpm i
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Check Spelling
-        run: pnpm spell:check
+      - name: Type-check shared
+        run: pnpm --filter @tabmerger/shared type-check
 
-      - name: Format Write
-        id: format
-        run: |
-          pnpm format:write
-          echo "::set-output name=NUM_CHANGED::$(git add . && git status src | grep 'modified:' | wc -l)"
+      - name: Type-check extension
+        run: pnpm --filter @tabmerger/extension type-check
 
-      - name: Format Success
-        if: ${{ steps.format.outputs.NUM_CHANGED == 0 }}
-        run: echo "All matched files use Prettier code style!"
+      - name: Type-check web
+        run: pnpm --filter @tabmerger/web type-check
 
-      - name: Format Error
-        if: ${{ steps.format.outputs.NUM_CHANGED > 0 }}
-        run: |
-          pnpm format:check
-          echo "::error::Found formatting issues in ${{ steps.format.outputs.NUM_CHANGED }} of the above file(s). Forgot to run Prettier locally?"
-          exit 1
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Lint Code
-        run: pnpm lint:code
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
-      - name: Lint Style
-        run: pnpm lint:style
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint extension
+        run: pnpm --filter @tabmerger/extension lint
+
+      - name: Lint web
+        run: pnpm --filter @tabmerger/web lint
+
+  build-extension:
+    name: Build Extension (Chrome MV3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build extension
+        run: pnpm --filter @tabmerger/extension build
+
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web app
+        run: pnpm --filter @tabmerger/web build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}

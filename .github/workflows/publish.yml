@@ -1,0 +1,145 @@
+name: Publish to Stores
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    name: Build Extension Packages
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and zip Chrome (MV3)
+        working-directory: packages/extension
+        run: pnpm wxt zip
+
+      - name: Build and zip Firefox
+        working-directory: packages/extension
+        run: pnpm wxt zip -b firefox
+
+      - name: Build and zip Edge
+        working-directory: packages/extension
+        run: pnpm wxt zip -b edge
+
+      - name: Upload Chrome artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tabmerger-chrome
+          path: packages/extension/.output/tabmerger-${{ steps.version.outputs.version }}-chrome.zip
+          if-no-files-found: error
+
+      - name: Upload Firefox artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tabmerger-firefox
+          path: packages/extension/.output/tabmerger-${{ steps.version.outputs.version }}-firefox.zip
+          if-no-files-found: error
+
+      - name: Upload Edge artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tabmerger-edge
+          path: packages/extension/.output/tabmerger-${{ steps.version.outputs.version }}-edge.zip
+          if-no-files-found: error
+
+  publish-chrome:
+    name: Publish to Chrome Web Store
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tabmerger-chrome
+
+      - name: Publish to Chrome Web Store
+        run: |
+          pnpm dlx chrome-webstore-upload-cli upload \
+            --source tabmerger-*-chrome.zip \
+            --extension-id ${{ secrets.CHROME_EXTENSION_ID }} \
+            --client-id ${{ secrets.CHROME_CLIENT_ID }} \
+            --client-secret ${{ secrets.CHROME_CLIENT_SECRET }} \
+            --refresh-token ${{ secrets.CHROME_REFRESH_TOKEN }} \
+            --auto-publish
+
+  publish-firefox:
+    name: Publish to Firefox Add-ons
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tabmerger-firefox
+
+      - name: Extract Firefox zip
+        run: |
+          mkdir -p firefox-src
+          unzip tabmerger-*-firefox.zip -d firefox-src
+
+      - name: Sign and submit to Firefox Add-ons
+        run: |
+          pnpm dlx web-ext sign \
+            --source-dir firefox-src \
+            --artifacts-dir artifacts \
+            --api-key ${{ secrets.FIREFOX_API_KEY }} \
+            --api-secret ${{ secrets.FIREFOX_API_SECRET }} \
+            --channel listed
+
+  publish-edge:
+    name: Publish to Edge Add-ons
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tabmerger-edge
+
+      - name: Upload package to Edge Add-ons
+        run: |
+          UPLOAD_RESPONSE=$(curl -s -X POST \
+            "https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}/submissions/draft/package" \
+            -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}" \
+            -H "Content-Type: application/zip" \
+            --data-binary @tabmerger-*-edge.zip)
+          echo "Upload response: $UPLOAD_RESPONSE"
+
+      - name: Submit for review
+        run: |
+          curl -s -X POST \
+            "https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}/submissions" \
+            -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}"
+
+  notify:
+    name: Create GitHub Release
+    needs: [publish-chrome, publish-firefox, publish-edge]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create ${{ github.ref_name }} --generate-notes

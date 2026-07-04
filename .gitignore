@@ -1,10 +1,32 @@
+# Environment files — never commit real secrets
+.env.local
 .env.*.local
+.env
+
+# Claude Code local overrides (may contain API keys)
+.claude/settings.local.json
+
 node_modules
 
 coverage
 build
 dist
 
+# Next.js
+.next/
+out/
+
+# WXT / extension build outputs
+.output/
+.wxt/
+
+# Turbopack / Turbo
+.turbo/
+
+# Vite
+.vite/
+
 # Cache
 .eslintcache
 .stylelintcache
+*.tsbuildinfo

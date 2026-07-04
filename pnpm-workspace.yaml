@@ -1,0 +1,10 @@
+packages:
+  - 'packages/*'
+
+overrides:
+  '@vitejs/plugin-react': '^5.0.0'
+allowBuilds:
+  esbuild: true
+  sharp: true
+  spawn-sync: true
+  unrs-resolver: true

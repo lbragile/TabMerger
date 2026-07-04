@@ -1,0 +1,48 @@
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useUIStore } from '@/stores/uiStore';
+import { AddGroupModal } from './AddGroup';
+import { DeleteConfirmModal } from './DeleteConfirm';
+import { ImportExportModal } from './ImportExport';
+import { SettingsModal } from './Settings';
+import { AuthModal } from './Auth';
+import { UpgradePromptModal } from './UpgradePrompt';
+
+export function ModalRoot() {
+  const modal = useUIStore((s) => s.modal);
+  const closeModal = useUIStore((s) => s.closeModal);
+
+  if (!modal.type) return null;
+
+  const content = () => {
+    switch (modal.type) {
+      case 'addGroup':
+        return <AddGroupModal onClose={closeModal} />;
+      case 'deleteGroup':
+      case 'deleteWindow':
+      case 'deleteTab':
+        return (
+          <DeleteConfirmModal
+            type={modal.type}
+            data={modal.data ?? {}}
+            onClose={closeModal}
+          />
+        );
+      case 'importExport':
+        return <ImportExportModal mode={(modal.data?.mode as string) ?? 'export'} data={modal.data ?? {}} onClose={closeModal} />;
+      case 'settings':
+        return <SettingsModal onClose={closeModal} />;
+      case 'auth':
+        return <AuthModal onClose={closeModal} />;
+      case 'upgrade':
+        return <UpgradePromptModal reason={modal.data?.reason as string} onClose={closeModal} />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Dialog open={!!modal.type} onOpenChange={(open) => !open && closeModal()}>
+      <DialogContent className="max-w-md">{content()}</DialogContent>
+    </Dialog>
+  );
+}
