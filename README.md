@@ -60,7 +60,7 @@ During development (`pnpm start`), the output folder is **dist**. For production
 
 ## 🚓 License
 
-TabMerger is open source and GPLv3 licensed, thus it is not intended for commercial use!
+Copyright (c) 2020-2026 Lior Bragilevsky. All rights reserved. See [LICENSE.md](LICENSE.md).
 \
 However, if you would like to use TabMerger commercially, we do offer a commercial license.
 \

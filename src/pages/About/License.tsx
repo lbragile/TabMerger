@@ -40,7 +40,7 @@ const LICENSE_DETAILS: ILicenseDetails[] = [
   {
     name: { title: "TabMerger", url: LICENSE_INFO.TabMerger.repo },
     authors: "Lior Bragilevsky",
-    license: { title: "GNU GPL v3.0", url: LICENSE_INFO.TabMerger.license }
+    license: { title: "All rights reserved", url: LICENSE_INFO.TabMerger.license }
   },
   {
     name: { title: "React Beautiful DnD", url: LICENSE_INFO.ReactBeautifulDnD.repo },
