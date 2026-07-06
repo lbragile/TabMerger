@@ -73,6 +73,12 @@ export function PricingTable({ currentTier }: PricingTableProps) {
           currentTier={currentTier}
         />
       </div>
+
+      <p className="text-sm text-muted-foreground text-center">
+        Cancel anytime from your account — no lock-in, no questions asked.
+        <br />
+        You keep access until the end of your billing period.
+      </p>
     </div>
   )
 }

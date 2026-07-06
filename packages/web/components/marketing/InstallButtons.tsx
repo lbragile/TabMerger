@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Chrome } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
 
 export function InstallButtons() {
   return (
@@ -13,22 +14,36 @@ export function InstallButtons() {
           <p className="mt-4 text-lg opacity-80 max-w-xl mx-auto">
             Install TabMerger in seconds. No account required to get started.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="gap-2"
-              asChild
+
+          {/* Browser install buttons */}
+          <div className="mt-8 flex flex-wrap gap-3 justify-center">
+            <a
+              href="https://chrome.google.com/webstore"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-sm"
             >
-              <a
-                href="https://chrome.google.com/webstore"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Chrome className="h-5 w-5" />
-                Add to Chrome — It&apos;s Free
-              </a>
-            </Button>
+              <ChromeIcon size={20} />
+              Add to Chrome
+            </a>
+            <a
+              href="#"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-sm"
+            >
+              <FirefoxIcon size={20} />
+              Add to Firefox
+            </a>
+            <a
+              href="#"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-sm"
+            >
+              <EdgeIcon size={20} />
+              Add to Edge
+            </a>
+          </div>
+
+          {/* Secondary CTA */}
+          <div className="mt-6">
             <Button
               size="lg"
               variant="outline"
@@ -41,6 +56,10 @@ export function InstallButtons() {
               </Link>
             </Button>
           </div>
+
+          <p className="mt-4 text-xs opacity-50">
+            Free to install — No account required &middot; Edge support coming soon
+          </p>
         </div>
       </div>
     </section>

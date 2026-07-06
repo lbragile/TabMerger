@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Layers } from 'lucide-react'
+import Image from 'next/image'
 
 export function Footer() {
   return (
@@ -7,7 +7,7 @@ export function Footer() {
       <div className="container flex flex-col gap-6 py-10 md:flex-row md:justify-between">
         <div className="flex flex-col gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <Layers className="h-5 w-5 text-primary" />
+            <Image src="/logo.png" alt="TabMerger" width={24} height={24} className="rounded-sm" />
             <span className="font-bold">TabMerger</span>
           </Link>
           <p className="text-sm text-muted-foreground max-w-xs">

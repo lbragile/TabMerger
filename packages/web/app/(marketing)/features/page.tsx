@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 import {
   Layers,
   Search,
@@ -23,9 +23,17 @@ export const metadata: Metadata = {
     'Explore everything TabMerger can do — from smart tab grouping to AI-powered organization.',
 }
 
+type BadgeTier = 'Core' | 'Pro' | 'Pro AI'
+
+const badgeStyle: Record<BadgeTier, string> = {
+  'Core':   'bg-muted text-muted-foreground',
+  'Pro':    'bg-primary/10 text-primary',
+  'Pro AI': 'bg-secondary/10 text-secondary',
+}
+
 const featureSections = [
   {
-    badge: 'Core',
+    badge: 'Core' as BadgeTier,
     title: 'Powerful tab management',
     description:
       'The foundation of TabMerger: fast, intuitive tab organization that fits any workflow.',
@@ -63,8 +71,7 @@ const featureSections = [
     ],
   },
   {
-    badge: 'Pro',
-    badgeVariant: 'default' as const,
+    badge: 'Pro' as BadgeTier,
     title: 'Sync & sessions',
     description:
       'Pick up exactly where you left off, on any device, any time.',
@@ -96,8 +103,7 @@ const featureSections = [
     ],
   },
   {
-    badge: 'Pro AI',
-    badgeVariant: 'default' as const,
+    badge: 'Pro AI' as BadgeTier,
     title: 'AI-powered organization',
     description:
       'Let Claude analyze your tabs and make smart suggestions so you can focus on thinking, not filing.',
@@ -168,9 +174,9 @@ export default function FeaturesPage() {
           {featureSections.map((section) => (
             <div key={section.title}>
               <div className="mb-10">
-                <Badge variant={section.badgeVariant ?? 'secondary'} className="mb-3">
+                <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.badge])}>
                   {section.badge}
-                </Badge>
+                </span>
                 <h2 className="text-3xl font-bold tracking-tight">
                   {section.title}
                 </h2>
@@ -184,7 +190,7 @@ export default function FeaturesPage() {
                   return (
                     <div
                       key={feature.title}
-                      className="flex flex-col gap-3 rounded-xl border bg-background p-6"
+                      className="flex flex-col gap-3 rounded-xl border bg-background p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-primary/30"
                     >
                       <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10">
                         <Icon className="h-5 w-5 text-primary" />

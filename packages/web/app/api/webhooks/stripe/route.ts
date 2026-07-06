@@ -41,28 +41,40 @@ export async function POST(request: NextRequest) {
         )
 
         const customerId = session.customer as string
-        const userId = subscription.metadata?.user_id
 
-        if (!userId) {
-          // Look up user by customer ID from profiles table
+        // Resolve the Supabase user ID from most-reliable to least-reliable source:
+        // 1. subscription.metadata.user_id — set via subscription_data.metadata in createCheckoutSession
+        // 2. session.metadata.user_id     — set via top-level metadata in createCheckoutSession
+        // 3. profile lookup by stripe_customer_id — handles legacy/returning customers
+        let resolvedUserId =
+          subscription.metadata?.user_id ?? session.metadata?.user_id ?? null
+
+        if (!resolvedUserId) {
           const { data: profile } = await supabase
             .from('profiles')
             .select('id')
             .eq('stripe_customer_id', customerId)
             .single()
 
-          if (!profile) break
+          if (!profile) {
+            console.error(
+              'checkout.session.completed: cannot resolve user for Stripe customer',
+              customerId
+            )
+            break
+          }
 
-          await upsertSubscription(supabase, subscription, profile.id)
-        } else {
-          await upsertSubscription(supabase, subscription, userId)
+          resolvedUserId = profile.id
         }
 
-        // Store stripe_customer_id on profile
+        // Ensure the customer ID is persisted on the profile so future webhook
+        // events (subscription.updated / deleted) can look up the user by customer ID.
         await supabase
           .from('profiles')
           .update({ stripe_customer_id: customerId })
-          .eq('id', userId ?? '')
+          .eq('id', resolvedUserId)
+
+        await upsertSubscription(supabase, subscription, resolvedUserId)
 
         break
       }

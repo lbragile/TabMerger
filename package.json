@@ -14,6 +14,8 @@
     "zip": "pnpm --filter @tabmerger/extension zip",
     "lint": "pnpm --filter @tabmerger/extension lint && pnpm --filter @tabmerger/web lint",
     "type-check": "pnpm -r type-check",
+    "test": "pnpm -r --filter @tabmerger/extension --filter @tabmerger/web test",
+    "test:e2e": "pnpm --filter @tabmerger/web test:e2e",
     "scan-secrets": "bash scripts/scan-secrets.sh"
   },
   "devDependencies": {

@@ -4,7 +4,8 @@ import { supabase } from './supabase';
 import { getPendingSyncGroups, markGroupSynced, saveGroup } from './localDb';
 
 export async function pushPendingChanges(session: Session): Promise<void> {
-  const pending = await getPendingSyncGroups();
+  // ponytail: explicit permanent guard — Now Open should already have pendingSync:false, but belt-and-suspenders
+  const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent);
   if (pending.length === 0) return;
 
   const userId = session.user.id;
@@ -61,7 +62,7 @@ export async function pullRemoteChanges(session: Session, localGroups: Group[]):
 
   const localMap = new Map(localGroups.map((g) => [g.id, g]));
 
-  const merged: Group[] = [];
+  let merged: Group[] = [];
 
   // Merge: last-write-wins by updatedAt
   const allIds = new Set([...remoteMap.keys(), ...localMap.keys()]);
@@ -81,6 +82,13 @@ export async function pullRemoteChanges(session: Session, localGroups: Group[]):
     } else if (local) {
       merged.push(local);
     }
+  }
+
+  // Deduplicate permanent groups: keep oldest (lowest updatedAt) — remote could have stale permanents
+  const mergedPermanents = merged.filter((g) => g.permanent).sort((a, b) => a.updatedAt - b.updatedAt);
+  if (mergedPermanents.length > 1) {
+    const extraIds = new Set(mergedPermanents.slice(1).map((g) => g.id));
+    merged = merged.filter((g) => !extraIds.has(g.id));
   }
 
   // Keep permanent group first

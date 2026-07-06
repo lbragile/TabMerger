@@ -30,3 +30,21 @@ out/
 .eslintcache
 .stylelintcache
 *.tsbuildinfo
+.tokensave
+
+# Test outputs
+coverage/
+playwright-report/
+blob-report/
+test-results/
+.vitest-cache/
+
+# Playwright MCP artifacts
+.playwright-mcp/
+*.zip
+*.webm
+*.png
+!public/**/*.png
+!packages/extension/public/**/*.png
+!packages/web/public/**/*.png
+!packages/web/app/**/*.png

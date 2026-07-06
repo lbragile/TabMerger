@@ -1,27 +1,35 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { Group, Window, Tab } from '@/lib/types';
+import type { Group, GroupsState, Window, Tab } from '@/lib/types';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
-import { getFaviconUrl } from '@/lib/utils';
+import { getFaviconUrl, formatGroupCounts } from '@/lib/utils';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
-function chromeTabToTab(t: chrome.tabs.Tab): Tab {
-  return {
+export function chromeTabToTab(t: chrome.tabs.Tab, groupMap: Map<number, chrome.tabGroups.TabGroup>): Tab {
+  const tab: Tab = {
     id: t.id ?? 0,
     title: t.title ?? 'Untitled',
     url: t.url ?? '',
     favIconUrl: t.favIconUrl || getFaviconUrl(t.url ?? ''),
     pinned: t.pinned
   };
+  if (t.groupId !== undefined && t.groupId !== -1) {
+    const group = groupMap.get(t.groupId);
+    if (group) {
+      tab.chromeGroup = { id: group.id, name: group.title ?? '', color: group.color };
+    }
+  }
+  return tab;
 }
 
 function chromeWindowToWindow(
   w: chrome.windows.Window,
-  tabs: chrome.tabs.Tab[]
+  tabs: chrome.tabs.Tab[],
+  groupMap: Map<number, chrome.tabGroups.TabGroup>
 ): Window {
   return {
     id: w.id ?? 0,
-    tabs: tabs.map(chromeTabToTab),
+    tabs: tabs.map((t) => chromeTabToTab(t, groupMap)),
     incognito: w.incognito,
     focused: w.focused,
     starred: false,
@@ -29,18 +37,42 @@ function chromeWindowToWindow(
   };
 }
 
-async function syncNowOpen(): Promise<void> {
+async function syncNowOpen(): Promise<GroupsState | undefined> {
   try {
-    const [chromeWindows, state] = await Promise.all([
-      chrome.windows.getAll({ populate: true }),
+    const tabGroupsAvailable = typeof chrome.tabGroups?.query === 'function';
+    // Use chrome.tabs.query({}) instead of windows.getAll({ populate: true }) — the latter
+    // does not reliably include groupId on returned tab objects; tabs.query always does.
+    const [chromeTabs, chromeWindows, rawTabGroups, state] = await Promise.all([
+      chrome.tabs.query({}),
+      chrome.windows.getAll(),
+      tabGroupsAvailable ? chrome.tabGroups.query({}) : Promise.resolve([] as chrome.tabGroups.TabGroup[]),
       getGroupsState()
     ]);
 
-    const nowOpenWindows: Window[] = chromeWindows
-      .filter((w) => w.type === 'normal')
-      .map((w) => chromeWindowToWindow(w, w.tabs ?? []));
+    const groupMap = new Map<number, chrome.tabGroups.TabGroup>(
+      rawTabGroups.map((g) => [g.id, g])
+    );
 
-    const available = [...state.available];
+    // Group tabs by windowId (tabs.query guarantees groupId is populated)
+    const tabsByWindow = new Map<number, chrome.tabs.Tab[]>();
+    for (const tab of chromeTabs) {
+      if (tab.windowId === undefined) continue;
+      const list = tabsByWindow.get(tab.windowId) ?? [];
+      list.push(tab);
+      tabsByWindow.set(tab.windowId, list);
+    }
+
+    const nowOpenWindows: Window[] = chromeWindows
+      .filter((w) => w.type === 'normal' && w.id !== undefined)
+      .map((w) => chromeWindowToWindow(w, tabsByWindow.get(w.id!) ?? [], groupMap));
+
+    // Guard: strip any extra permanent groups beyond the first one
+    let seenPermanent = false;
+    const available = state.available.filter((g) => {
+      if (!g.permanent) return true;
+      if (!seenPermanent) { seenPermanent = true; return true; }
+      return false;
+    });
     const nowOpenIdx = available.findIndex((g) => g.permanent);
     if (nowOpenIdx === -1) return;
 
@@ -52,11 +84,11 @@ async function syncNowOpen(): Promise<void> {
     };
 
     const tabCount = nowOpenWindows.reduce((a, w) => a + w.tabs.length, 0);
-    available[nowOpenIdx].info = `${tabCount}T | ${nowOpenWindows.length}W`;
+    available[nowOpenIdx].info = formatGroupCounts(nowOpenWindows.length, tabCount);
 
     const next = { ...state, available };
     await saveGroupsState(next);
-    return;
+    return next;
   } catch (err) {
     console.error('[useCurrentTabs] sync error', err);
   }
@@ -69,9 +101,9 @@ export function useCurrentTabs() {
     let mounted = true;
 
     const doSync = async () => {
-      await syncNowOpen();
-      if (mounted) {
-        qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY });
+      const next = await syncNowOpen();
+      if (mounted && next) {
+        qc.setQueryData(GROUPS_QUERY_KEY, next);
       }
     };
 

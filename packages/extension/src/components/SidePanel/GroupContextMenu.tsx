@@ -45,6 +45,8 @@ interface GroupContextMenuProps {
   wrapperClassName?: string;
   onWrapperClick?: React.MouseEventHandler<HTMLDivElement>;
   onWrapperContextMenu?: React.MouseEventHandler<HTMLDivElement>;
+  onWrapperMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  onWrapperMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export function GroupContextMenu({
@@ -57,7 +59,9 @@ export function GroupContextMenu({
   wrapperStyle,
   wrapperClassName,
   onWrapperClick,
-  onWrapperContextMenu
+  onWrapperContextMenu,
+  onWrapperMouseEnter,
+  onWrapperMouseLeave,
 }: GroupContextMenuProps) {
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
@@ -79,6 +83,8 @@ export function GroupContextMenu({
       className={cn('relative', wrapperClassName)}
       onClick={onWrapperClick}
       onContextMenu={onWrapperContextMenu}
+      onMouseEnter={onWrapperMouseEnter}
+      onMouseLeave={onWrapperMouseLeave}
     >
       <DropdownMenu open={open} onOpenChange={onOpenChange}>
         {/*
@@ -92,7 +98,7 @@ export function GroupContextMenu({
           tabIndex={-1}
           aria-hidden="true"
         />
-        <DropdownMenuContent className="w-48 text-xs" align="start">
+        <DropdownMenuContent className="w-48 text-xs max-h-64 overflow-y-auto" align="start">
           <DropdownMenuItem onClick={() => setRenameTarget({ kind: 'group', groupIndex })}>
             <Edit3 className="h-3.5 w-3.5 mr-2" />
             Rename

@@ -43,9 +43,15 @@ export function useAuth(): AuthState & {
   };
 
   const signInWithGoogle = async () => {
+    // chrome.identity may be undefined in some popup contexts or non-Chrome browsers.
+    // Fall back to letting Supabase open a browser tab for OAuth when unavailable.
+    let redirectTo: string | undefined;
+    if (chrome?.identity?.getRedirectURL) {
+      redirectTo = chrome.identity.getRedirectURL();
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: chrome.identity.getRedirectURL() }
+      options: { redirectTo }
     });
     if (error) throw error;
   };

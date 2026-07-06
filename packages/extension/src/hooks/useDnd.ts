@@ -4,14 +4,15 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
-  type DragOverEvent
+  type DragEndEvent
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useQueryClient } from '@tanstack/react-query';
-import { getGroupsState, saveGroupsState } from '@/lib/localDb';
-import { createWindow, sortWindowsByStarred } from '@/lib/utils';
+import { saveGroupsState } from '@/lib/localDb';
+import type { GroupsState } from '@/lib/types';
+import { sortWindowsByStarred } from '@/lib/utils';
 import { GROUPS_QUERY_KEY } from './useGroups';
+import { useUIStore } from '@/stores/uiStore';
 
 /**
  * DnD ID format:
@@ -39,6 +40,7 @@ export function useDndSensors() {
 
 export function useGroupDndHandlers() {
   const qc = useQueryClient();
+  const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
 
   const onDragEnd = useCallback(
     async (event: DragEndEvent) => {
@@ -50,7 +52,9 @@ export function useGroupDndHandlers() {
 
       if (from.kind !== 'group' || to.kind !== 'group') return;
 
-      const state = await getGroupsState();
+      // Read from query cache — same order the UI renders — not IDB which re-sorts by updatedAt
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      if (!state) return;
       const available = [...state.available];
 
       // Don't allow moving the permanent group
@@ -58,14 +62,36 @@ export function useGroupDndHandlers() {
       // Don't allow dropping before the permanent group
       if (to.groupIndex === 0) return;
 
+      const dropTarget = available[to.groupIndex];
+      const shouldBeStarred = dropTarget?.starred ?? false;
+
       const [moved] = available.splice(from.groupIndex, 1);
+      moved.starred = shouldBeStarred; // ponytail: match zone before re-sort clamps position
+      moved.updatedAt = Date.now();
+      moved.pendingSync = true;
       available.splice(to.groupIndex, 0, moved);
 
-      const next = { ...state, active: { id: moved.id, index: to.groupIndex }, available };
+      // Enforce zone order: Now Open → starred → unstarred.
+      // Re-sorting after the splice preserves relative order within each zone
+      // while clamping cross-zone drops to the zone boundary.
+      const nowOpenGroup = available[0];
+      const rest = available.slice(1);
+      const zoneSorted = [
+        nowOpenGroup,
+        ...rest.filter((g) => g.starred),
+        ...rest.filter((g) => !g.starred)
+      ];
+      const newIndex = zoneSorted.findIndex((g) => g.id === moved.id);
+
+      const finalIndex = newIndex >= 0 ? newIndex : to.groupIndex;
+      const next = { ...state, active: { id: moved.id, index: finalIndex }, available: zoneSorted };
       await saveGroupsState(next);
       qc.setQueryData(GROUPS_QUERY_KEY, next);
+
+      // Keep the dragged group selected at its new position (Task 12)
+      setActiveGroupIndex(finalIndex);
     },
-    [qc]
+    [qc, setActiveGroupIndex]
   );
 
   return { onDragEnd };
@@ -84,16 +110,22 @@ export function useWindowDndHandlers(groupIndex: number) {
 
       if (from.kind !== 'window') return;
 
-      const state = await getGroupsState();
+      // Read from query cache — same order the UI renders — not IDB which re-sorts by updatedAt
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      if (!state) return;
       const available = [...state.available];
       const group = { ...available[groupIndex] };
       const windows = [...group.windows];
 
       // Move within same group
       if (to.kind === 'window' && to.groupIndex === groupIndex) {
+        const dropTarget = windows[to.windowIndex];
+        const shouldBeStarred = dropTarget?.starred ?? false;
+
         const [moved] = windows.splice(from.windowIndex, 1);
+        moved.starred = shouldBeStarred; // ponytail: match zone before re-sort clamps position
         windows.splice(to.windowIndex, 0, moved);
-        group.windows = windows;
+        group.windows = sortWindowsByStarred(windows);
         group.updatedAt = Date.now();
         group.pendingSync = true;
         available[groupIndex] = group;
@@ -128,108 +160,3 @@ export function useWindowDndHandlers(groupIndex: number) {
   return { onDragEnd };
 }
 
-export function useTabDndHandlers(groupIndex: number) {
-  const qc = useQueryClient();
-
-  const onDragOver = useCallback(
-    async (event: DragOverEvent) => {
-      const { active, over } = event;
-      if (!over) return;
-
-      const from = parseDndId(String(active.id));
-      const to = parseDndId(String(over.id));
-
-      if (from.kind !== 'tab') return;
-
-      // Moving between windows in same group
-      if (from.windowIndex === to.windowIndex) return;
-
-      const state = await getGroupsState();
-      const available = [...state.available];
-      const group = { ...available[groupIndex] };
-      const windows = group.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
-
-      const [movedTab] = windows[from.windowIndex].tabs.splice(from.tabIndex, 1);
-      const targetWindowIdx = to.kind === 'tab' ? to.windowIndex : to.windowIndex;
-      const targetTabIdx = to.kind === 'tab' ? to.tabIndex : windows[targetWindowIdx].tabs.length;
-      windows[targetWindowIdx].tabs.splice(targetTabIdx, 0, movedTab);
-
-      group.windows = windows;
-      group.updatedAt = Date.now();
-      group.pendingSync = true;
-      available[groupIndex] = group;
-
-      const next = { ...state, available };
-      await saveGroupsState(next);
-      qc.setQueryData(GROUPS_QUERY_KEY, next);
-    },
-    [qc, groupIndex]
-  );
-
-  const onDragEnd = useCallback(
-    async (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) return;
-
-      const from = parseDndId(String(active.id));
-      const to = parseDndId(String(over.id));
-
-      if (from.kind !== 'tab') return;
-      if (from.windowIndex !== to.windowIndex) return; // handled by onDragOver
-
-      const state = await getGroupsState();
-      const available = [...state.available];
-      const group = { ...available[groupIndex] };
-      const windows = group.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
-
-      const [movedTab] = windows[from.windowIndex].tabs.splice(from.tabIndex, 1);
-      windows[to.windowIndex].tabs.splice(to.tabIndex, 0, movedTab);
-
-      group.windows = windows;
-      group.updatedAt = Date.now();
-      group.pendingSync = true;
-      available[groupIndex] = group;
-
-      const next = { ...state, available };
-      await saveGroupsState(next);
-      qc.setQueryData(GROUPS_QUERY_KEY, next);
-    },
-    [qc, groupIndex]
-  );
-
-  // Handle cross-group tab drop onto sidebar
-  const onTabDropToGroup = useCallback(
-    async (
-      fromGroupIndex: number,
-      fromWindowIndex: number,
-      fromTabIndex: number,
-      toGroupIndex: number
-    ) => {
-      const state = await getGroupsState();
-      const available = [...state.available];
-
-      const fromGroup = { ...available[fromGroupIndex] };
-      const windows = fromGroup.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
-      const [movedTab] = windows[fromWindowIndex].tabs.splice(fromTabIndex, 1);
-
-      fromGroup.windows = windows;
-      fromGroup.updatedAt = Date.now();
-      fromGroup.pendingSync = true;
-      available[fromGroupIndex] = fromGroup;
-
-      const toGroup = { ...available[toGroupIndex] };
-      const newWindow = createWindow([movedTab]);
-      toGroup.windows = sortWindowsByStarred([newWindow, ...toGroup.windows]);
-      toGroup.updatedAt = Date.now();
-      toGroup.pendingSync = true;
-      available[toGroupIndex] = toGroup;
-
-      const next = { ...state, available };
-      await saveGroupsState(next);
-      qc.setQueryData(GROUPS_QUERY_KEY, next);
-    },
-    [qc]
-  );
-
-  return { onDragOver, onDragEnd, onTabDropToGroup };
-}

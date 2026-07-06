@@ -6,6 +6,7 @@ export interface Tab {
   url: string;
   favIconUrl?: string;
   pinned?: boolean;
+  chromeGroup?: { id: number; name: string; color: string };
 }
 
 export interface ExtWindow {
@@ -24,6 +25,7 @@ export interface Group {
   updatedAt: number; // epoch ms
   windows: ExtWindow[];
   permanent?: boolean; // first group only
+  starred?: boolean; // pinned to top of group list (after Now Open)
   info?: string; // optional note
   pendingSync?: boolean; // local-only, not persisted to Supabase
 }

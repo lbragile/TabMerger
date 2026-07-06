@@ -4,6 +4,7 @@ export interface Tab {
   url: string;
   favIconUrl?: string;
   pinned?: boolean;
+  chromeGroup?: { id: number; name: string; color: string };
 }
 
 export interface Window {
@@ -22,6 +23,7 @@ export interface Group {
   updatedAt: number;
   windows: Window[];
   permanent?: boolean;
+  starred?: boolean; // pinned to top of group list (after Now Open)
   info?: string;
   pendingSync?: boolean;
 }

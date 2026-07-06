@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const url = await createCheckoutSession({
+      userId: user.id,
       priceId,
       customerEmail: user.email,
       customerId: profile?.stripe_customer_id ?? undefined,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -7,9 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { getSetting, setSetting } from '@/lib/localDb';
+import { applyTheme } from '@/lib/theme';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
+import { useGroups, useSetGroupsState } from '@/hooks/useGroups';
 import { toast } from 'sonner';
+import type { GroupsState } from '@/lib/types';
+import { Download, Upload } from 'lucide-react';
 
 interface AppSettings {
   theme: 'light' | 'dark' | 'system';
@@ -35,6 +39,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const { tier, cloudSync } = useEntitlements();
   const { user, signOut } = useAuth();
+  const { data: groupsState } = useGroups();
+  const setGroupsState = useSetGroupsState();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getSetting<AppSettings>('appSettings', DEFAULT_SETTINGS).then(setSettings);
@@ -44,6 +51,10 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     const next = { ...settings, [key]: value };
     setSettings(next);
     await setSetting('appSettings', next);
+    // Apply theme immediately when the user changes it — no reload needed
+    if (key === 'theme') {
+      applyTheme(value as AppSettings['theme']);
+    }
   };
 
   const handleClearAll = async () => {
@@ -55,6 +66,34 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     await db.clear('settings');
     toast.success('All data cleared');
     onClose();
+  };
+
+  const handleExport = () => {
+    if (!groupsState) return;
+    const json = JSON.stringify(groupsState, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tabmerger-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Groups exported successfully');
+  };
+
+  const handleImport = async (file: File) => {
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text) as GroupsState;
+      if (!parsed.available || !Array.isArray(parsed.available)) {
+        throw new Error('Invalid format');
+      }
+      await setGroupsState(parsed);
+      toast.success('Groups imported successfully');
+      onClose();
+    } catch {
+      toast.error('Invalid JSON file — expected TabMerger export format');
+    }
   };
 
   const tierLabels: Record<string, string> = {
@@ -77,8 +116,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <TabsTrigger value="account" className="flex-1 text-xs">
             Account
           </TabsTrigger>
-          <TabsTrigger value="storage" className="flex-1 text-xs">
-            Storage
+          <TabsTrigger value="data" className="flex-1 text-xs">
+            Data
           </TabsTrigger>
         </TabsList>
 
@@ -189,10 +228,59 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           )}
         </TabsContent>
 
-        <TabsContent value="storage" className="space-y-4 mt-4">
+        <TabsContent value="data" className="space-y-4 mt-4">
           <p className="text-xs text-muted-foreground">
             TabMerger stores all data locally in IndexedDB. Cloud sync requires a Pro account.
           </p>
+
+          <Separator />
+
+          {/* Export */}
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">Export data</Label>
+              <p className="text-xs text-muted-foreground">Download all groups as a JSON file</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs gap-1.5 shrink-0"
+              onClick={handleExport}
+            >
+              <Download className="h-3.5 w-3.5" />
+              Export
+            </Button>
+          </div>
+
+          {/* Import */}
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">Import data</Label>
+              <p className="text-xs text-muted-foreground">Restore groups from a JSON export</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs gap-1.5 shrink-0"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="h-3.5 w-3.5" />
+              Import
+            </Button>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) void handleImport(file);
+            }}
+          />
+
+          <Separator />
+
           <Button variant="destructive" size="sm" className="w-full text-xs" onClick={handleClearAll}>
             Clear all data
           </Button>

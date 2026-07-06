@@ -73,6 +73,24 @@ export function useSuggestSessions() {
   });
 }
 
+export function useOrganizeTabs() {
+  const { session } = useAuth();
+  const { aiFeatures } = useEntitlements();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!aiFeatures) throw new Error('Pro AI plan required');
+      if (!session?.access_token) throw new Error('Not authenticated');
+
+      return aiPost<{ runId: string; token: string }>(
+        '/api/ai/organize',
+        {}, // ponytail: no body — server derives userId from Bearer token
+        session.access_token
+      );
+    }
+  });
+}
+
 export function useTabSummary() {
   const { session } = useAuth();
   const { aiFeatures } = useEntitlements();

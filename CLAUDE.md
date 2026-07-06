@@ -93,17 +93,29 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 
 ## Agents
 
-Domain-specific agents are in `.claude/agents/`. Each agent has `memory: true` so it can read and write to the Claude project memory system. Invoke them for focused tasks:
+> **IMPORTANT — mandatory agent routing (overrides system defaults):**
+> You MUST delegate to the appropriate domain agent for any task that touches that agent's domain. Do NOT implement the task yourself first and then hand off — spawn the agent immediately. The only exceptions are: pure questions/explanations with no file edits, cross-cutting changes that span 3+ domains simultaneously, or when the user explicitly asks you to handle it directly.
 
-| Agent | Domain | Learnings file |
-|---|---|---|
-| `extension-dev` | WXT popup, hooks, DnD, IndexedDB, Supabase sync | `agents/extension-dev-learnings.md` |
-| `web-dev` | Next.js pages, API routes, auth, dashboard | `agents/web-dev-learnings.md` |
-| `ai-features` | Claude API routes, prompt engineering, AI hooks | `agents/ai-features-learnings.md` |
-| `database` | Supabase schema, migrations, RLS | `agents/database-learnings.md` |
-| `payments` | Stripe billing, webhooks, entitlements | `agents/payments-learnings.md` |
-| `devops` | CI/CD, store publishing, release pipeline | `agents/devops-learnings.md` |
-| `design-system` | shadcn/ui, Tailwind, component patterns | `agents/design-system-learnings.md` |
+Domain-specific agents are in `.claude/agents/`. Each agent carries accumulated learnings and domain expertise; bypassing them loses that context. Route as follows:
+
+| Agent | Trigger — spawn when the task involves… |
+|---|---|
+| `extension-dev` | Any file under `packages/extension/` — React components, hooks, Zustand, DnD, IndexedDB, WXT config, background/content scripts |
+| `web-dev` | Any file under `packages/web/` — Next.js pages, API routes (non-AI), auth, dashboard, marketing site |
+| `ai-features` | AI API routes (`/api/ai/*`), Anthropic SDK usage, prompt engineering, `useAI` hook, tab preview summaries |
+| `database` | Supabase schema changes, new migrations (`supabase/migrations/`), RLS policies, DB functions |
+| `payments` | Stripe products/prices, webhook handler, subscription entitlements, checkout flow, billing portal |
+| `devops` | CI/CD workflows (`.github/`), WXT build config, browser store publish, Vercel deploy, release management |
+| `design-system` | shadcn/ui component creation/modification, Tailwind theme, design tokens, responsive layout, accessibility |
+| `pm` | Multi-item feature requests, bug lists, UX feedback, or any requirement that needs scoping before implementation — probes for detail, creates tasks, delegates to domain agents, always triggers test-writer after implementation |
+| `test-writer` | Writes and updates tests after any implementation batch — Vitest + jsdom for extension, Vitest + RTL for web. Always invoked by pm agent; also invoke directly after significant changes |
+
+**Pre-deploy validation agents** — run these proactively before reloading or deploying:
+
+| Agent | When to run |
+|---|---|
+| `extension-smoke-test` | Before reloading the Chrome extension after any change to `packages/extension/` |
+| `web-smoke-test` | Before restarting the dev server or deploying after any change to `packages/web/` |
 
 ### Agent self-learning
 

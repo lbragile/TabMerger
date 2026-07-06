@@ -1,7 +1,8 @@
 import Stripe from 'stripe'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-06-30.basil',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  apiVersion: '2025-06-30.basil' as any,
   typescript: true,
 })
 
@@ -65,12 +66,14 @@ export function getStripePriceId(
 }
 
 export async function createCheckoutSession({
+  userId,
   priceId,
   customerEmail,
   customerId,
   successUrl,
   cancelUrl,
 }: {
+  userId: string
   priceId: string
   customerEmail?: string
   customerId?: string
@@ -88,8 +91,11 @@ export async function createCheckoutSession({
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: successUrl,
     cancel_url: cancelUrl,
+    // user_id on session metadata is a fallback readable from session object directly
+    metadata: { user_id: userId },
+    // user_id on subscription_data metadata travels with the subscription object
     subscription_data: {
-      metadata: {},
+      metadata: { user_id: userId },
     },
   })
 

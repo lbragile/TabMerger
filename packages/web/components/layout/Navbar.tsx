@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Layers } from 'lucide-react'
 
 export async function Navbar() {
   const supabase = await createClient()
@@ -26,7 +26,7 @@ export async function Navbar() {
       <div className="container flex h-14 items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Layers className="h-6 w-6 text-primary" />
+            <Image src="/logo.png" alt="TabMerger" width={28} height={28} className="rounded-md" />
             <span className="font-bold text-lg">TabMerger</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">

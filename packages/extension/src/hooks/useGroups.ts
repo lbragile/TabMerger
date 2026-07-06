@@ -42,26 +42,48 @@ export function useAddGroup() {
   });
 }
 
+/** Returns the set of URLs currently open in the Now Open group (index 0). */
+function getNowOpenUrls(state: GroupsState | undefined): Set<string> {
+  const nowOpen = state?.available[0];
+  if (!nowOpen) return new Set();
+  return new Set(nowOpen.windows.flatMap((w) => w.tabs.map((t) => t.url)));
+}
+
 export function useDeleteGroup() {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: (groupIndex: number) =>
-      mutate((prev) => {
+    mutationFn: async (groupIndex: number) => {
+      // Only close browser tabs that are actually live in the Now Open group (Task 23)
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const target = state?.available[groupIndex];
+      if (target && !target.permanent) {
+        const liveUrls = getNowOpenUrls(state);
+        const tabIds = target.windows
+          .flatMap((w) => w.tabs)
+          .filter((t) => liveUrls.has(t.url))
+          .map((t) => t.id);
+        if (tabIds.length > 0) {
+          chrome.tabs.remove(tabIds).catch(() => {});
+        }
+      }
+
+      return mutate((prev) => {
         const { active, available } = prev;
-        const target = available[groupIndex];
-        if (!target || target.permanent) return prev;
+        const group = available[groupIndex];
+        if (!group || group.permanent) return prev;
 
         const newAvailable = available.filter((_, i) => i !== groupIndex);
-        void dbDeleteGroup(target.id);
+        void dbDeleteGroup(group.id);
 
         const newActiveIndex =
           active.index >= groupIndex && active.index > 0 ? active.index - 1 : active.index;
         const newActiveId = newAvailable[newActiveIndex]?.id ?? newAvailable[0]?.id ?? '';
 
         return { active: { id: newActiveId, index: newActiveIndex }, available: newAvailable };
-      }),
+      });
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY })
   });
 }
@@ -178,11 +200,23 @@ export function useAddWindow() {
 }
 
 export function useDeleteWindow() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({ groupIndex, windowIndex }: { groupIndex: number; windowIndex: number }) =>
-      mutate((prev) => {
+    mutationFn: async ({ groupIndex, windowIndex }: { groupIndex: number; windowIndex: number }) => {
+      // Only close browser tabs that are actually live in the Now Open group (Task 23)
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const windowObj = state?.available[groupIndex]?.windows[windowIndex];
+      if (windowObj) {
+        const liveUrls = getNowOpenUrls(state);
+        const tabIds = windowObj.tabs.filter((t) => liveUrls.has(t.url)).map((t) => t.id);
+        if (tabIds.length > 0) {
+          chrome.tabs.remove(tabIds).catch(() => {});
+        }
+      }
+
+      return mutate((prev) => {
         const available = [...prev.available];
         const windows = available[groupIndex].windows.filter((_, i) => i !== windowIndex);
         available[groupIndex] = {
@@ -193,7 +227,8 @@ export function useDeleteWindow() {
         };
         available[groupIndex].info = getGroupInfo(available[groupIndex]);
         return { ...prev, available };
-      })
+      });
+    }
   });
 }
 
@@ -245,6 +280,40 @@ export function useToggleWindowStarred() {
   });
 }
 
+export function useToggleGroupStar() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (groupIndex: number) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+        available[groupIndex] = {
+          ...available[groupIndex],
+          starred: !available[groupIndex].starred,
+          updatedAt: Date.now(),
+          pendingSync: true
+        };
+
+        // Re-sort: Now Open (permanent) first, then starred groups, then unstarred groups.
+        // Relative order within each zone is preserved.
+        const nowOpen = available[0];
+        const rest = available.slice(1);
+        const sorted = [
+          nowOpen,
+          ...rest.filter((g) => g.starred),
+          ...rest.filter((g) => !g.starred)
+        ];
+
+        // Recalculate active index in case the toggled group moved zones
+        const newActiveIndex = sorted.findIndex((g) => g.id === prev.active.id);
+        return {
+          active: { id: prev.active.id, index: newActiveIndex >= 0 ? newActiveIndex : prev.active.index },
+          available: sorted
+        };
+      })
+  });
+}
+
 export function useToggleWindowIncognito() {
   const mutate = useGroupsMutation();
 
@@ -269,10 +338,11 @@ export function useToggleWindowIncognito() {
 }
 
 export function useDeleteTab() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       groupIndex,
       windowIndex,
       tabIndex
@@ -280,21 +350,41 @@ export function useDeleteTab() {
       groupIndex: number;
       windowIndex: number;
       tabIndex: number;
-    }) =>
-      mutate((prev) => {
+    }) => {
+      // Only close the browser tab if its URL is live in the Now Open group (Task 23)
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const tab = state?.available[groupIndex]?.windows[windowIndex]?.tabs[tabIndex];
+      if (tab?.id) {
+        const liveUrls = getNowOpenUrls(state);
+        if (liveUrls.has(tab.url)) {
+          chrome.tabs.remove(tab.id).catch(() => {});
+        }
+      }
+
+      return mutate((prev) => {
         const available = [...prev.available];
         const windows = [...available[groupIndex].windows];
         const tabs = windows[windowIndex].tabs.filter((_, i) => i !== tabIndex);
-        windows[windowIndex] = { ...windows[windowIndex], tabs };
+
+        // Task 15: auto-close the source window if it becomes empty and the group has > 1 window
+        let updatedWindows: typeof windows;
+        if (tabs.length === 0 && windows.length > 1) {
+          updatedWindows = windows.filter((_, i) => i !== windowIndex);
+        } else {
+          windows[windowIndex] = { ...windows[windowIndex], tabs };
+          updatedWindows = windows;
+        }
+
         available[groupIndex] = {
           ...available[groupIndex],
-          windows,
+          windows: updatedWindows,
           updatedAt: Date.now(),
           pendingSync: true
         };
         available[groupIndex].info = getGroupInfo(available[groupIndex]);
         return { ...prev, available };
-      })
+      });
+    }
   });
 }
 
@@ -404,6 +494,104 @@ export function useSortTabs() {
           updatedAt: Date.now(),
           pendingSync: true
         };
+        return { ...prev, available };
+      })
+  });
+}
+
+export function useMoveTab() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({
+      fromGroupIndex,
+      fromWindowIndex,
+      fromTabIndex,
+      toGroupIndex,
+      copy = false
+    }: {
+      fromGroupIndex: number;
+      fromWindowIndex: number;
+      fromTabIndex: number;
+      toGroupIndex: number;
+      /** When true, leave the source tab in place (used when source is Now Open / permanent). */
+      copy?: boolean;
+    }) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+
+        const fromGroup = { ...available[fromGroupIndex] };
+        const fromWindows = fromGroup.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
+
+        let movedTab;
+        if (copy) {
+          // ponytail: id:0 is falsy — useDeleteTab's `if (tab?.id)` guard won't close the live browser tab
+          movedTab = { ...fromWindows[fromWindowIndex].tabs[fromTabIndex], id: 0 };
+        } else {
+          // Remove tab from source window
+          [movedTab] = fromWindows[fromWindowIndex].tabs.splice(fromTabIndex, 1);
+
+          // Task 15: auto-close empty source window if the group still has other windows
+          const finalFromWindows =
+            fromWindows[fromWindowIndex].tabs.length === 0 && fromWindows.length > 1
+              ? fromWindows.filter((_, i) => i !== fromWindowIndex)
+              : fromWindows;
+
+          fromGroup.windows = finalFromWindows;
+          fromGroup.updatedAt = Date.now();
+          fromGroup.pendingSync = true;
+          fromGroup.info = getGroupInfo(fromGroup);
+          available[fromGroupIndex] = fromGroup;
+        }
+
+        // Add tab to destination group in a new window at the top
+        const toGroup = { ...available[toGroupIndex] };
+        const newWin = createWindow([movedTab]);
+        toGroup.windows = sortWindowsByStarred([newWin, ...toGroup.windows]);
+        toGroup.updatedAt = Date.now();
+        toGroup.pendingSync = true;
+        toGroup.info = getGroupInfo(toGroup);
+        available[toGroupIndex] = toGroup;
+
+        return { ...prev, available };
+      })
+  });
+}
+
+export function useMoveWindow() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({
+      fromGroupIndex,
+      windowIndex,
+      toGroupIndex
+    }: {
+      fromGroupIndex: number;
+      windowIndex: number;
+      toGroupIndex: number;
+    }) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+
+        // Remove window from source group
+        const fromGroup = { ...available[fromGroupIndex] };
+        const fromWindows = [...fromGroup.windows];
+        const [movedWindow] = fromWindows.splice(windowIndex, 1);
+        fromGroup.windows = fromWindows;
+        fromGroup.updatedAt = Date.now();
+        fromGroup.pendingSync = true;
+        fromGroup.info = getGroupInfo(fromGroup);
+        available[fromGroupIndex] = fromGroup;
+
+        // Append window to target group (sorted by starred)
+        const toGroup = { ...available[toGroupIndex] };
+        toGroup.windows = sortWindowsByStarred([...toGroup.windows, { ...movedWindow }]);
+        toGroup.updatedAt = Date.now();
+        toGroup.pendingSync = true;
+        toGroup.info = getGroupInfo(toGroup);
+        available[toGroupIndex] = toGroup;
+
         return { ...prev, available };
       })
   });

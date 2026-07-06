@@ -13,7 +13,7 @@ export interface TabMergerDB {
   };
   groupsState: {
     key: string;
-    value: { id: 'state'; active: GroupsState['active'] };
+    value: { id: 'state'; active: GroupsState['active']; order?: string[] };
   };
   sessions: {
     key: string;
@@ -64,12 +64,33 @@ export async function getGroupsState(): Promise<GroupsState> {
 
   await tx.done;
 
-  // Sort groups: permanent first, then by updatedAt desc
-  const sorted = allGroups.sort((a, b) => {
-    if (a.permanent && !b.permanent) return -1;
-    if (!a.permanent && b.permanent) return 1;
-    return b.updatedAt - a.updatedAt;
-  });
+  // Deduplicate permanent groups: keep oldest (lowest updatedAt), delete the rest
+  let groups = allGroups;
+  const permanents = groups.filter((g) => g.permanent).sort((a, b) => a.updatedAt - b.updatedAt);
+  if (permanents.length > 1) {
+    const extraIds = new Set(permanents.slice(1).map((g) => g.id));
+    await Promise.all([...extraIds].map((id) => db.delete('groups', id)));
+    groups = groups.filter((g) => !extraIds.has(g.id));
+  }
+
+  // Sort groups: use explicit saved order when available (preserves drag order across reloads).
+  // Fall back to updatedAt desc for legacy data that pre-dates the order field.
+  let sorted: Group[];
+  if (stateRecord?.order?.length) {
+    const posMap = new Map<string, number>(stateRecord.order.map((id: string, i: number): [string, number] => [id, i]));
+    sorted = [...groups].sort((a, b) => {
+      if (a.permanent && !b.permanent) return -1;
+      if (!a.permanent && b.permanent) return 1;
+      // Groups not in the saved order (e.g. newly added) go to the end
+      return (posMap.get(a.id) ?? Infinity) - (posMap.get(b.id) ?? Infinity);
+    });
+  } else {
+    sorted = [...groups].sort((a, b) => {
+      if (a.permanent && !b.permanent) return -1;
+      if (!a.permanent && b.permanent) return 1;
+      return b.updatedAt - a.updatedAt;
+    });
+  }
 
   if (sorted.length === 0) {
     const nowOpen = createNowOpenGroup();
@@ -94,8 +115,8 @@ export async function saveGroupsState(state: GroupsState): Promise<void> {
   // Save all groups
   await Promise.all(state.available.map((g) => groupsStore.put(g)));
 
-  // Save active state
-  await stateStore.put({ id: 'state', active: state.active });
+  // Save active state + explicit group order so getGroupsState() restores drag order on reload
+  await stateStore.put({ id: 'state', active: state.active, order: state.available.map((g) => g.id) });
 
   await tx.done;
 }

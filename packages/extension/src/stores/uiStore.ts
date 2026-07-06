@@ -23,6 +23,14 @@ interface RenameTarget {
   windowIndex?: number;
 }
 
+export type SelectionItemType = 'tab' | 'window' | 'group';
+
+export interface SelectedItem {
+  type: SelectionItemType;
+  /** Matches the DnD id format: "tab-{gi}-{wi}-{ti}", "window-{gi}-{wi}", "group-{gi}" */
+  id: string;
+}
+
 interface UIState {
   modal: ModalState;
   activeGroupIndex: number;
@@ -32,6 +40,10 @@ interface UIState {
   // Undo/redo stack (max 10)
   undoStack: GroupsState[];
   redoStack: GroupsState[];
+
+  // Selection mode
+  selectionMode: boolean;
+  selectedItems: SelectedItem[];
 
   // Actions
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
@@ -43,6 +55,14 @@ interface UIState {
   undo: () => GroupsState | undefined;
   redo: () => GroupsState | undefined;
   clearHistory: () => void;
+
+  // Selection actions
+  enterSelectionMode: () => void;
+  exitSelectionMode: () => void;
+  toggleSelectionMode: () => void;
+  /** Toggles an item. Auto-clears selection if switching to a different type. */
+  toggleSelection: (item: SelectedItem) => void;
+  clearSelection: () => void;
 }
 
 export const useUIStore = create<UIState>((set, get) => ({
@@ -52,6 +72,8 @@ export const useUIStore = create<UIState>((set, get) => ({
   renameTarget: null,
   undoStack: [],
   redoStack: [],
+  selectionMode: false,
+  selectedItems: [],
 
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),
@@ -81,5 +103,30 @@ export const useUIStore = create<UIState>((set, get) => ({
     return top;
   },
 
-  clearHistory: () => set({ undoStack: [], redoStack: [] })
+  clearHistory: () => set({ undoStack: [], redoStack: [] }),
+
+  enterSelectionMode: () => set({ selectionMode: true }),
+
+  exitSelectionMode: () => set({ selectionMode: false, selectedItems: [] }),
+
+  toggleSelectionMode: () =>
+    set((prev) => ({
+      selectionMode: !prev.selectionMode,
+      // Clear items when leaving selection mode
+      selectedItems: prev.selectionMode ? [] : prev.selectedItems
+    })),
+
+  toggleSelection: (item) =>
+    set((prev) => {
+      const { selectedItems } = prev;
+      const committedType = selectedItems[0]?.type;
+      // Switching to a different type clears the previous selection
+      const base = committedType && committedType !== item.type ? [] : selectedItems;
+      const exists = base.some((s) => s.id === item.id);
+      return {
+        selectedItems: exists ? base.filter((s) => s.id !== item.id) : [...base, item]
+      };
+    }),
+
+  clearSelection: () => set({ selectedItems: [] })
 }));

@@ -38,7 +38,9 @@ const config: Config = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        }
+        },
+        'zone-header': 'hsl(var(--zone-header))',
+        'zone-sidebar': 'hsl(var(--zone-sidebar))'
       },
       borderRadius: {
         lg: 'var(--radius)',

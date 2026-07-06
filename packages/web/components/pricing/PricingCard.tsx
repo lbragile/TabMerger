@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -65,19 +64,23 @@ export function PricingCard({
   return (
     <div
       className={cn(
-        'relative flex flex-col rounded-2xl border p-8',
+        'relative flex flex-col rounded-2xl border p-8 transition-all duration-200',
+        'hover:-translate-y-1',
         highlighted
-          ? 'border-primary bg-primary text-primary-foreground shadow-xl'
-          : 'bg-background'
+          ? 'border-primary bg-primary text-primary-foreground shadow-xl hover:shadow-2xl'
+          : 'bg-background hover:shadow-md hover:border-primary/40'
       )}
     >
+      {/* Corner ribbon — overflow-hidden is on the small 80×80 clip box, not the card,
+          so the card's drop-shadow is not clipped. The rotated inner div then peeks out. */}
       {highlighted && (
-        <Badge
-          className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-yellow-950 hover:bg-yellow-500"
-        >
-          Most Popular
-        </Badge>
+        <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden rounded-tr-2xl pointer-events-none">
+          <div className="absolute top-[18px] -right-[18px] w-24 rotate-45 bg-amber-400 text-amber-950 text-[10px] font-bold py-1 text-center tracking-wide uppercase shadow-sm">
+            Popular
+          </div>
+        </div>
       )}
+
       <div className="mb-6">
         <h3 className={cn('text-lg font-semibold', highlighted && 'text-primary-foreground')}>
           {name}
@@ -119,7 +122,7 @@ export function PricingCard({
         onClick={handleClick}
         disabled={loading || isCurrentPlan}
         variant={highlighted ? 'secondary' : 'default'}
-        className="w-full"
+        className="w-full transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
       >
         {loading
           ? 'Loading...'
@@ -129,6 +132,12 @@ export function PricingCard({
               ? 'Get started free'
               : `Upgrade to ${name}`}
       </Button>
+
+      {tier !== 'free' && !isCurrentPlan && (
+        <p className={cn('mt-2 text-center text-xs', highlighted ? 'text-primary-foreground/50' : 'text-muted-foreground')}>
+          Cancel anytime
+        </p>
+      )}
     </div>
   )
 }

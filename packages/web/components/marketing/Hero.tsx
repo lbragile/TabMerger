@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Chrome } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
 
 export function Hero() {
   return (
@@ -16,23 +17,52 @@ export function Hero() {
             saving memory and mental bandwidth.
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <Button size="lg" className="gap-2" asChild>
+
+        {/* Browser install buttons */}
+        <div className="flex flex-col items-center gap-3">
+          {/* Primary CTA — Chrome */}
+          <Button size="lg" className="gap-2 px-8" asChild>
             <a
               href="https://chrome.google.com/webstore"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Chrome className="h-5 w-5" />
+              <ChromeIcon size={20} />
               Add to Chrome — It&apos;s Free
             </a>
           </Button>
-          <Button variant="outline" size="lg" className="gap-2" asChild>
-            <Link href="/features">
-              See all features
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
+
+          {/* Secondary — Firefox + Edge */}
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" className="gap-1.5" asChild>
+              <a
+                href="https://addons.mozilla.org/firefox/addon/tabmerger"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FirefoxIcon size={16} />
+                Add to Firefox
+              </a>
+            </Button>
+            <Button size="sm" variant="outline" className="gap-1.5" asChild>
+              <a
+                href="https://microsoftedge.microsoft.com/addons/detail/tabmerger"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <EdgeIcon size={16} />
+                Add to Edge
+              </a>
+            </Button>
+          </div>
+
+          <Link
+            href="/features"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mt-1"
+          >
+            See all features
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
         <div className="flex items-center gap-6 text-sm text-muted-foreground">
           <span className="flex items-center gap-1">

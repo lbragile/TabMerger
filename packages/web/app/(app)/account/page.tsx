@@ -122,6 +122,12 @@ export default async function AccountPage() {
             ) : null}
           </div>
 
+          {isPaid && billingPortalUrl && (
+            <p className="text-xs text-muted-foreground">
+              You can cancel anytime via <strong>Manage billing</strong>. You keep access until the end of your current billing period.
+            </p>
+          )}
+
           {subscription?.current_period_end && isPaid && (
             <>
               <Separator />

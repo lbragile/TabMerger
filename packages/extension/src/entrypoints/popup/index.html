@@ -4,6 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TabMerger</title>
+    <!--
+      Apply saved theme synchronously before React mounts.
+      Reads from localStorage (written by applyTheme() in lib/theme.ts) so the
+      correct .dark class is on <html> before the first paint, ensuring Radix
+      portal content (dropdown menus, tooltips) inherits the right CSS variables
+      without any flash or race with the async IndexedDB read in useTheme().
+    -->
+    <script>
+      try {
+        var t = localStorage.getItem('tabmerger-theme');
+        if (t === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else if (t === 'system' || t === null) {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+          }
+        }
+        // t === 'light' → no class needed; :root defaults are light-mode values
+      } catch (e) {}
+    </script>
     <style>
       body {
         width: 780px;

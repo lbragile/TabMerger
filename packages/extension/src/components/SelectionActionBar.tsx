@@ -1,0 +1,102 @@
+import { Trash2, MoveRight, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { useUIStore } from '@/stores/uiStore';
+import { useGroups } from '@/hooks/useGroups';
+import { useBulkDelete, useBulkMoveToGroup } from '@/hooks/useBulkActions';
+import { cn, pluralize } from '@/lib/utils';
+
+/** Maps a selection type to a human-readable plural noun. */
+function itemLabel(type: string, count: number): string {
+  const noun = type === 'tab' ? 'tab' : type === 'window' ? 'window' : 'group';
+  return `${count} ${pluralize(count, noun)} selected`;
+}
+
+export function SelectionActionBar() {
+  const selectedItems = useUIStore((s) => s.selectedItems);
+  const exitSelectionMode = useUIStore((s) => s.exitSelectionMode);
+  const { data: groupsState } = useGroups();
+  const { mutate: bulkDelete, isPending: isDeleting } = useBulkDelete();
+  const { mutate: bulkMove, isPending: isMoving } = useBulkMoveToGroup();
+
+  if (selectedItems.length === 0) return null;
+
+  const type = selectedItems[0].type;
+  const canMove = type !== 'group';
+  const isPending = isDeleting || isMoving;
+
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 px-3 py-2 border-t border-border bg-muted/60 backdrop-blur-sm shrink-0',
+        'text-xs'
+      )}
+    >
+      {/* Count label */}
+      <span className="flex-1 font-medium text-foreground">
+        {itemLabel(type, selectedItems.length)}
+      </span>
+
+      {/* Move to group — only for tabs and windows */}
+      {canMove && groupsState && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 px-2 text-xs gap-1"
+              disabled={isPending}
+            >
+              <MoveRight className="h-3.5 w-3.5" />
+              Move to group
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="text-xs max-h-56 overflow-y-auto">
+            {groupsState.available.map((group, index) => (
+              <DropdownMenuItem
+                key={group.id}
+                className="text-xs"
+                onClick={() => bulkMove({ items: selectedItems, targetGroupIndex: index })}
+              >
+                <span
+                  className="h-2 w-2 rounded-full shrink-0 mr-2"
+                  style={{ backgroundColor: group.color }}
+                />
+                <span className="truncate">{group.name}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+
+      {/* Delete */}
+      <Button
+        variant="destructive"
+        size="sm"
+        className="h-7 px-2 text-xs gap-1"
+        disabled={isPending}
+        onClick={() => bulkDelete(selectedItems)}
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+        Delete
+      </Button>
+
+      {/* Cancel */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7 shrink-0"
+        disabled={isPending}
+        onClick={exitSelectionMode}
+        title="Cancel selection"
+      >
+        <X className="h-3.5 w-3.5" />
+      </Button>
+    </div>
+  );
+}

@@ -10,37 +10,60 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --primary: 193 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 33 91% 54%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 193 60% 94%;
+    --accent-foreground: 193 100% 25%;
+    --gradient-brand: linear-gradient(135deg, #00B4CC 0%, #008C9E 50%, #F5921E 100%);
+    --gradient-brand-subtle: linear-gradient(135deg, hsl(193 60% 94%) 0%, hsl(33 100% 95%) 100%);
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.4rem;
+
+    /* Sidebar text — light-mode values for the off-white sidebar background (~#F4F4F6).
+       Dark-mode values are overridden in .dark below. */
+    --sidebar-text-active: #111827;      /* ~18:1 contrast on light sidebar — active group name */
+    --sidebar-text-inactive: #374151;    /* ~11:1 contrast — inactive group name */
+    --sidebar-text-muted: #6B7280;       /* ~5.5:1 contrast — badge counts, footer */
+    --sidebar-text-subtle: #767C88;      /* ~3.6:1 contrast — drag handle / unstarred star (WCAG AA 3:1 for UI components) */
+    --star-active: #B45309;              /* amber-700 — starred icon on light sidebar (~4.5:1, WCAG AA) */
+
+    /* Zone surface colors — subtle background differentiation between UI regions. */
+    --zone-header: 240 5% 97%;           /* light: barely-grey off-white (between white and --muted) */
+    --zone-sidebar: 240 5% 97%;          /* light: same as header */
+    --zone-sidebar-border: rgba(255,255,255,0.08);
   }
 
   .dark {
     --background: 240 10% 3.9%;
+    --zone-header: 228 8% 9%;            /* dark: between body (3.9% L) and sidebar (10% L) */
+    --zone-sidebar: 228 9% 10%;          /* dark: ≈ #16181D */
+    /* Sidebar text — WCAG AA compliant on the #16181D sidebar background */
+    --sidebar-text-active: #FFFFFF;      /* 21:1 contrast — active group name */
+    --sidebar-text-inactive: #C4C7CC;    /* ~10:1 contrast — inactive group name */
+    --sidebar-text-muted: #9CA3AF;       /* ~7:1  contrast — badge counts, footer */
+    --sidebar-text-subtle: #8B919A;      /* ~5.5:1 contrast — drag handle / unstarred star */
+    --star-active: #FBBF24;             /* yellow-400 — starred icon on dark sidebar (~11:1, WCAG AA) */
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --primary: 193 80% 55%;
+    --primary-foreground: 193 100% 10%;
+    --secondary: 33 85% 60%;
+    --secondary-foreground: 33 91% 10%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 193 60% 15%;
+    --accent-foreground: 193 80% 85%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;

@@ -4,6 +4,7 @@ import { StatsOverview } from '@/components/dashboard/StatsOverview'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 import { SessionList } from '@/components/dashboard/SessionList'
 import { Badge } from '@/components/ui/badge'
+import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ upgraded?: string }>
+  searchParams: Promise<{ upgraded?: string; organizeRunId?: string; organizeToken?: string }>
 }) {
   const params = await searchParams
   const supabase = await createClient()
@@ -47,6 +48,13 @@ export default async function DashboardPage({
   const currentTier = (subscription?.tier as 'free' | 'pro' | 'pro_ai') ?? 'free'
   const isPro = currentTier === 'pro' || currentTier === 'pro_ai'
 
+  const { organizeRunId, organizeToken } = params
+  let organizeSession: string | null = null
+  if (organizeRunId && organizeToken) {
+    const { data: { session } } = await supabase.auth.getSession()
+    organizeSession = session?.access_token ?? null
+  }
+
   return (
     <div className="flex flex-col gap-8">
       {params.upgraded === '1' && (
@@ -79,6 +87,14 @@ export default async function DashboardPage({
         status={subscription?.status}
         currentPeriodEnd={subscription?.current_period_end}
       />
+
+      {organizeRunId && organizeToken && organizeSession && (
+        <OrganizeProposal
+          runId={organizeRunId}
+          token={organizeToken}
+          supabaseToken={organizeSession}
+        />
+      )}
 
       <div>
         <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>

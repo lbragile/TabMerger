@@ -4,6 +4,8 @@ packages:
 overrides:
   '@vitejs/plugin-react': '^5.0.0'
 allowBuilds:
+  '@swc/core': true
+  cbor-extract: true
   esbuild: true
   sharp: true
   spawn-sync: true

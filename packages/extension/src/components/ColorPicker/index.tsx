@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { PRESET_COLORS } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -32,7 +33,32 @@ function hexToRgba(hex: string): string {
   return `rgba(${r}, ${g}, ${b}, 1)`;
 }
 
+/** Return true if the string is a valid 3- or 6-digit hex colour. */
+function isValidHex(hex: string): boolean {
+  return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hex);
+}
+
 export function ColorPicker({ value, onChange }: ColorPickerProps) {
+  const [hexInput, setHexInput] = useState(() => rgbaToHex(value));
+
+  // Sync hex input when the controlled value changes from outside (e.g. preset click)
+  useEffect(() => {
+    setHexInput(rgbaToHex(value));
+  }, [value]);
+
+  const applyHex = () => {
+    const trimmed = hexInput.trim();
+    if (isValidHex(trimmed)) {
+      onChange(hexToRgba(trimmed));
+    } else {
+      // Reset to match the current value
+      setHexInput(rgbaToHex(value));
+    }
+  };
+
+  // Preview colour: use the typed hex if valid, otherwise fall back to current value
+  const previewColor = isValidHex(hexInput.trim()) ? hexInput.trim() : rgbaToHex(value);
+
   return (
     <div>
       {/* Preset swatches */}
@@ -52,15 +78,26 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
         ))}
       </div>
 
-      {/* Custom color input */}
+      {/* Custom hex text input — stays within the popup DOM, no system dialog */}
       <div className="px-1 pb-1.5 pt-1 border-t border-border/50 flex items-center gap-2">
         <span className="text-[10px] text-muted-foreground shrink-0">Custom</span>
+        {/* Live colour preview swatch */}
+        <span
+          className="h-4 w-4 shrink-0 rounded-full border border-border"
+          style={{ backgroundColor: previewColor }}
+        />
         <input
-          type="color"
-          value={rgbaToHex(value)}
-          onChange={(e) => onChange(hexToRgba(e.target.value))}
-          className="h-6 w-10 rounded cursor-pointer border border-border bg-transparent p-0.5"
-          title="Pick a custom color"
+          type="text"
+          value={hexInput}
+          placeholder="#rrggbb"
+          spellCheck={false}
+          onChange={(e) => setHexInput(e.target.value)}
+          onBlur={applyHex}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') applyHex();
+          }}
+          className="h-6 flex-1 min-w-0 rounded border border-border bg-transparent px-1.5 text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-ring"
+          title="Enter hex colour (#rrggbb)"
         />
       </div>
     </div>
