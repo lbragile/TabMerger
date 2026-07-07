@@ -13,22 +13,31 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
   const { mutate: deleteWindow } = useDeleteWindow();
   const { mutate: deleteTab } = useDeleteTab();
 
-  const labels: Record<string, { title: string; description: string }> = {
+  const isNowOpen = data.isNowOpen as boolean | undefined;
+
+  const labels: Record<string, { title: string; description: string; confirm: string }> = {
     deleteGroup: {
       title: 'Delete Group',
-      description: `Are you sure you want to delete "${data.groupName as string}"? This cannot be undone.`
+      description: `Are you sure you want to delete "${data.groupName as string}"? This cannot be undone.`,
+      confirm: 'Delete',
     },
     deleteWindow: {
-      title: 'Delete Window',
-      description: 'Are you sure you want to delete this window and all its tabs?'
+      title: isNowOpen ? 'Close Window' : 'Remove Window',
+      description: isNowOpen
+        ? 'Are you sure you want to close this window and all its tabs?'
+        : 'Are you sure you want to remove this window and all its tabs?',
+      confirm: isNowOpen ? 'Close' : 'Remove',
     },
     deleteTab: {
-      title: 'Delete Tab',
-      description: 'Are you sure you want to remove this tab?'
-    }
+      title: isNowOpen ? 'Close Tab' : 'Remove Tab',
+      description: isNowOpen
+        ? 'Are you sure you want to close this tab?'
+        : 'Are you sure you want to remove this tab?',
+      confirm: isNowOpen ? 'Close' : 'Remove',
+    },
   };
 
-  const { title, description } = labels[type] ?? labels.deleteGroup;
+  const { title, description, confirm } = labels[type] ?? labels.deleteGroup;
 
   const handleConfirm = () => {
     if (type === 'deleteGroup') {
@@ -51,7 +60,7 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
   return (
     <>
       <DialogHeader>
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle className="text-destructive">{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <DialogFooter className="mt-4">
@@ -59,7 +68,7 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
           Cancel
         </Button>
         <Button variant="destructive" onClick={handleConfirm}>
-          Delete
+          {confirm}
         </Button>
       </DialogFooter>
     </>

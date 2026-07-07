@@ -3,6 +3,7 @@ export interface Tab {
   title: string;
   url: string;
   favIconUrl?: string;
+  ogImage?: string;
   pinned?: boolean;
   chromeGroup?: { id: number; name: string; color: string };
 }
@@ -25,6 +26,7 @@ export interface Group {
   permanent?: boolean;
   starred?: boolean; // pinned to top of group list (after Now Open)
   info?: string;
+  note?: string;
   pendingSync?: boolean;
 }
 
@@ -81,8 +83,8 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
 
 export const DEFAULT_GROUP_COLOR = 'rgba(128, 128, 128, 1)';
 export const FIRST_GROUP_TITLE = 'Now Open';
-export const DEFAULT_GROUP_TITLE = 'New';
-export const DEFAULT_WINDOW_TITLE = 'Window';
+export const DEFAULT_GROUP_TITLE = 'temp group';
+export const DEFAULT_WINDOW_TITLE = 'temp window';
 
 export const PRESET_COLORS = [
   'rgba(239, 68, 68, 1)',

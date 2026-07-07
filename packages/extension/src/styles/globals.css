@@ -38,7 +38,10 @@
     /* Zone surface colors — subtle background differentiation between UI regions. */
     --zone-header: 240 5% 97%;           /* light: barely-grey off-white (between white and --muted) */
     --zone-sidebar: 240 5% 97%;          /* light: same as header */
-    --zone-sidebar-border: rgba(255,255,255,0.08);
+    --zone-sidebar-border: rgba(0,0,0,0.08);
+    --sidebar-hover-bg: rgba(0,0,0,0.05);
+    --sidebar-badge-bg: rgba(0,0,0,0.07);
+    --sidebar-accent-filter: brightness(0.7);
   }
 
   .dark {
@@ -51,6 +54,10 @@
     --sidebar-text-muted: #9CA3AF;       /* ~7:1  contrast — badge counts, footer */
     --sidebar-text-subtle: #8B919A;      /* ~5.5:1 contrast — drag handle / unstarred star */
     --star-active: #FBBF24;             /* yellow-400 — starred icon on dark sidebar (~11:1, WCAG AA) */
+    --zone-sidebar-border: rgba(255,255,255,0.08);
+    --sidebar-hover-bg: rgba(255,255,255,0.07);
+    --sidebar-badge-bg: rgba(255,255,255,0.1);
+    --sidebar-accent-filter: brightness(1.5);
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -64,7 +71,7 @@
     --muted-foreground: 240 5% 64.9%;
     --accent: 193 60% 15%;
     --accent-foreground: 193 80% 85%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 80% 62%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;

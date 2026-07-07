@@ -217,36 +217,14 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
         </button>
       )}
 
-      <img
-        src={tab.favIconUrl || FALLBACK_FAVICON}
-        alt=""
-        className="h-3.5 w-3.5 shrink-0 rounded-sm"
-        onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON; }}
-      />
-
-      {tab.chromeGroup && (
-        <span className="relative inline-flex items-center shrink-0 group/pill">
-          <span
-            className="text-[9px] px-1 py-0 rounded-full max-w-[60px] truncate text-white leading-4"
-            style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b' }}
-            title={tab.chromeGroup.name}
-          >
-            {tab.chromeGroup.name || ' '}
-          </span>
-          {/* 6b: reopen all tabs sharing this Chrome group */}
-          {chrome.tabGroups && (
-            <button
-              type="button"
-              className="ml-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity rounded hover:bg-accent p-0.5"
-              title="Reopen Chrome group"
-              onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
-              onMouseDown={(e) => e.stopPropagation()}
-            >
-              <ExternalLink className="h-2.5 w-2.5 text-muted-foreground" />
-            </button>
-          )}
-        </span>
-      )}
+      <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 overflow-hidden flex items-center justify-center">
+        <img
+          src={tab.favIconUrl || FALLBACK_FAVICON}
+          alt=""
+          className="h-3.5 w-3.5"
+          onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON; }}
+        />
+      </span>
 
       <TabPreview tab={tab}>
         <span
@@ -258,12 +236,38 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
         </span>
       </TabPreview>
 
+      {tab.chromeGroup && (
+        <span className="relative inline-flex items-center shrink-0 group/pill">
+          <span
+            className="text-[9px] px-1 py-0 rounded-full max-w-[60px] truncate text-white leading-4"
+            style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b' }}
+          >
+            {tab.chromeGroup.name || ' '}
+          </span>
+          {chrome.tabGroups && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="ml-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity rounded hover:bg-accent p-0.5"
+                  onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink className="h-2.5 w-2.5 text-muted-foreground" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Reopen Chrome group</TooltipContent>
+            </Tooltip>
+          )}
+        </span>
+      )}
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
-            className="h-4 w-4 shrink-0 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+            className="h-4 w-4 shrink-0 rounded opacity-0 group-hover:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
             onClick={async (e) => {
               e.stopPropagation();
               const { confirmOnTabClose } = await getSetting<{ confirmOnTabClose: boolean }>(
@@ -271,17 +275,17 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
                 { confirmOnTabClose: false }
               );
               if (confirmOnTabClose) {
-                openModal('deleteTab', { groupIndex, windowIndex, tabIndex });
+                openModal('deleteTab', { groupIndex, windowIndex, tabIndex, isNowOpen });
               } else {
                 deleteTab({ groupIndex, windowIndex, tabIndex });
               }
             }}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <X className="h-3 w-3 text-muted-foreground" />
+            <X className="h-3 w-3" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Close tab</TooltipContent>
+        <TooltipContent className="bg-destructive text-destructive-foreground">{isNowOpen ? 'Close tab' : 'Remove tab'}</TooltipContent>
       </Tooltip>
     </div>
   );

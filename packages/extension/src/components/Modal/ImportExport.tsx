@@ -1,12 +1,8 @@
 import { useState, useRef } from 'react';
-import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { useGroups, useSetGroupsState } from '@/hooks/useGroups';
-import { useUpdateGroupInfo } from '@/hooks/useGroups';
 import type { GroupsState } from '@/lib/types';
 import { toast } from 'sonner';
 
@@ -17,13 +13,9 @@ interface ImportExportModalProps {
 }
 
 export function ImportExportModal({ mode: initialMode, data, onClose }: ImportExportModalProps) {
-  const [activeTab, setActiveTab] = useState<string>(
-    data.mode === 'note' ? 'note' : initialMode === 'import' ? 'import' : 'export'
-  );
-  const [noteValue, setNoteValue] = useState('');
+  const [activeTab, setActiveTab] = useState<string>(initialMode === 'import' ? 'import' : 'export');
   const { data: groupsState } = useGroups();
   const setGroupsState = useSetGroupsState();
-  const { mutate: updateGroupInfo } = useUpdateGroupInfo();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
@@ -55,14 +47,6 @@ export function ImportExportModal({ mode: initialMode, data, onClose }: ImportEx
     }
   };
 
-  const handleSaveNote = () => {
-    const groupIndex = data.groupIndex as number;
-    if (groupIndex !== undefined) {
-      updateGroupInfo({ groupIndex, info: noteValue });
-    }
-    onClose();
-  };
-
   return (
     <>
       <DialogHeader>
@@ -72,17 +56,8 @@ export function ImportExportModal({ mode: initialMode, data, onClose }: ImportEx
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
         <TabsList className="w-full">
-          <TabsTrigger value="export" className="flex-1 text-xs">
-            Export
-          </TabsTrigger>
-          <TabsTrigger value="import" className="flex-1 text-xs">
-            Import
-          </TabsTrigger>
-          {data.mode === 'note' && (
-            <TabsTrigger value="note" className="flex-1 text-xs">
-              Note
-            </TabsTrigger>
-          )}
+          <TabsTrigger value="export" className="flex-1 text-xs">Export</TabsTrigger>
+          <TabsTrigger value="import" className="flex-1 text-xs">Import</TabsTrigger>
         </TabsList>
 
         <TabsContent value="export" className="space-y-3 mt-3">
@@ -114,24 +89,6 @@ export function ImportExportModal({ mode: initialMode, data, onClose }: ImportEx
           </Button>
         </TabsContent>
 
-        {data.mode === 'note' && (
-          <TabsContent value="note" className="space-y-3 mt-3">
-            <Label htmlFor="group-note">Group Note</Label>
-            <Textarea
-              id="group-note"
-              value={noteValue}
-              onChange={(e) => setNoteValue(e.target.value)}
-              placeholder="Add a note to this group..."
-              rows={4}
-            />
-            <DialogFooter>
-              <Button variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button onClick={handleSaveNote}>Save Note</Button>
-            </DialogFooter>
-          </TabsContent>
-        )}
       </Tabs>
     </>
   );

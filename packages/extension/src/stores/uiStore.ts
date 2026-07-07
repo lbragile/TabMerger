@@ -6,6 +6,7 @@ export type ModalType =
   | 'deleteGroup'
   | 'deleteWindow'
   | 'deleteTab'
+  | 'note'
   | 'importExport'
   | 'settings'
   | 'auth'

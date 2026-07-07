@@ -33,6 +33,7 @@ const chromeMock = {
     query: vi.fn<() => Promise<chrome.tabs.Tab[]>>().mockResolvedValue([]),
     create: vi.fn().mockResolvedValue({}),
     remove: vi.fn().mockResolvedValue(undefined),
+    sendMessage: vi.fn().mockResolvedValue({}),
     onCreated: makeListener(),
     onRemoved: makeListener(),
     onUpdated: makeListener(),
@@ -98,6 +99,7 @@ beforeEach(() => {
   chromeMock.tabs.query.mockResolvedValue([])
   chromeMock.tabs.create.mockResolvedValue({})
   chromeMock.tabs.remove.mockResolvedValue(undefined)
+  chromeMock.tabs.sendMessage.mockResolvedValue({})
   chromeMock.windows.create.mockResolvedValue({})
   chromeMock.windows.update.mockResolvedValue({})
   chromeMock.windows.getAll.mockResolvedValue([])
@@ -583,6 +585,107 @@ describe('useMoveTab', () => {
     const targetTabs = saved.available[2].windows.flatMap((w) => w.tabs)
     expect(targetTabs).toHaveLength(1)
     expect(targetTabs[0].id).toBe(42)
+
+    void qc
+  })
+
+  it('copy:true — ogImage populated from sendMessage when source is a live Now Open tab', async () => {
+    const nowOpen = createNowOpenGroup()
+    const liveTab = tab(99, 'https://live.com', 'Live')
+    nowOpen.windows = [win([liveTab])]
+
+    const savedGroup = createGroup('g1', 'Saved')
+    savedGroup.windows = []
+
+    const state = makeState([nowOpen, savedGroup])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    chromeMock.tabs.sendMessage.mockResolvedValue({ ogImage: 'https://live.com/og.png' })
+
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveTab(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        fromGroupIndex: 0,
+        fromWindowIndex: 0,
+        fromTabIndex: 0,
+        toGroupIndex: 1,
+        copy: true,
+      })
+    })
+
+    const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
+    const destTab = saved.available[1].windows.flatMap((w) => w.tabs)[0]
+    expect(destTab.ogImage).toBe('https://live.com/og.png')
+    expect(chromeMock.tabs.sendMessage).toHaveBeenCalledWith(99, { type: 'GET_PAGE_META' })
+
+    void qc
+  })
+
+  it('copy:false — ogImage populated from sendMessage when moving a live tab between saved groups', async () => {
+    const nowOpen = createNowOpenGroup()
+    const sourceGroup = createGroup('src', 'Source')
+    // id>0 simulates a live tab in a saved group
+    const liveTab = tab(55, 'https://src.com', 'Src')
+    sourceGroup.windows = [win([liveTab])]
+
+    const targetGroup = createGroup('tgt', 'Target')
+    targetGroup.windows = []
+
+    const state = makeState([nowOpen, sourceGroup, targetGroup])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    chromeMock.tabs.sendMessage.mockResolvedValue({ ogImage: 'https://src.com/og.png' })
+
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveTab(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        fromGroupIndex: 1,
+        fromWindowIndex: 0,
+        fromTabIndex: 0,
+        toGroupIndex: 2,
+      })
+    })
+
+    const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
+    const destTab = saved.available[2].windows.flatMap((w) => w.tabs)[0]
+    expect(destTab.ogImage).toBe('https://src.com/og.png')
+
+    void qc
+  })
+
+  it('ogImage is undefined when sendMessage throws (e.g. chrome:// pages)', async () => {
+    const nowOpen = createNowOpenGroup()
+    const liveTab = tab(77, 'https://live.com', 'Live')
+    nowOpen.windows = [win([liveTab])]
+
+    const savedGroup = createGroup('g1', 'Saved')
+    savedGroup.windows = []
+
+    const state = makeState([nowOpen, savedGroup])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    chromeMock.tabs.sendMessage.mockRejectedValue(new Error('Cannot access chrome:// URL'))
+
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveTab(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        fromGroupIndex: 0,
+        fromWindowIndex: 0,
+        fromTabIndex: 0,
+        toGroupIndex: 1,
+        copy: true,
+      })
+    })
+
+    const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
+    const destTab = saved.available[1].windows.flatMap((w) => w.tabs)[0]
+    expect(destTab.ogImage).toBeUndefined()
 
     void qc
   })

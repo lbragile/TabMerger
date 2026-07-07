@@ -13,10 +13,12 @@ interface TabPreviewProps {
 
 export function TabPreview({ tab, children }: TabPreviewProps) {
   const { aiFeatures } = useEntitlements();
-  const { visible, summary, loading, handleMouseEnter, handleMouseLeave } = useTabPreview(
+  const { visible, summary, ogImage, loading, handleMouseEnter, handleMouseLeave } = useTabPreview(
     tab.url,
     tab.title,
-    aiFeatures
+    aiFeatures,
+    tab.id,
+    tab.ogImage
   );
 
   return (
@@ -32,7 +34,7 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
       </PopoverTrigger>
       <PopoverContent
         className="w-72 p-3"
-        side="right"
+        side="top"
         align="start"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -47,6 +49,17 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{tab.title}</p>
             <p className="truncate text-xs text-muted-foreground">{tab.url}</p>
+            {/* OG image — shown for all users while live tab is hovered */}
+            {loading ? (
+              <Skeleton className="mt-2 h-24 w-full rounded" />
+            ) : ogImage ? (
+              <img
+                src={ogImage}
+                alt=""
+                className="mt-2 w-full rounded object-cover max-h-32"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+            ) : null}
             {/* AI summary section — only rendered for Pro AI users */}
             {aiFeatures && (
               loading ? (

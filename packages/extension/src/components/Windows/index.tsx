@@ -9,8 +9,9 @@ import {
   DragOverlay
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Plus, MoreHorizontal, RefreshCw, GitMerge, Layers, SplitSquareHorizontal, SortAsc } from 'lucide-react';
+import { Plus, MoreHorizontal, RefreshCw, GitMerge, Layers, SplitSquareHorizontal, SortAsc, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   DropdownMenu,
@@ -28,6 +29,7 @@ import {
   useUniteWindows,
   useSplitWindows,
   useSortTabs,
+  useDeleteAllWindows,
   GROUPS_QUERY_KEY
 } from '@/hooks/useGroups';
 import { useDndSensors, useWindowDndHandlers, parseDndId } from '@/hooks/useDnd';
@@ -80,6 +82,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   const { mutate: uniteWindows } = useUniteWindows();
   const { mutate: splitWindows } = useSplitWindows();
   const { mutate: sortTabs } = useSortTabs();
+  const { mutate: deleteAllWindows } = useDeleteAllWindows();
 
   // Parse "in:group_name tab query" — pass tab query and tag filter to children
   const { tabQuery: searchFilter, tagFilter } = parseSearchQuery(rawSearchFilter);
@@ -212,19 +215,35 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
     <div className="flex flex-col h-full">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-border shrink-0">
-        <span className="text-xs text-muted-foreground">
-          {group.info ?? formatGroupCounts(group.windows.length, group.windows.reduce((a, w) => a + w.tabs.length, 0))}
+        <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+          <span>{group.info ?? formatGroupCounts(group.windows.length, group.windows.reduce((a, w) => a + w.tabs.length, 0))}</span>
+          {group.note && (
+            <>
+              <span className="opacity-30">·</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="italic text-muted-foreground/70 truncate max-w-[120px] cursor-default">{group.note}</span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">{group.note}</TooltipContent>
+              </Tooltip>
+            </>
+          )}
         </span>
         <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 px-2 text-xs"
-            onClick={() => addWindow({ groupIndex })}
-          >
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            Window
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-xs"
+                onClick={() => addWindow({ groupIndex })}
+              >
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Window
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">Add a new empty window to this group</TooltipContent>
+          </Tooltip>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-6 w-6">
@@ -233,30 +252,43 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="text-xs">
               <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
-                <RefreshCw className="h-3.5 w-3.5 mr-2" />
-                Replace with current tabs
+                <RefreshCw className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Replace with current tabs</div><div className="text-[10px] text-muted-foreground font-normal">Swap all windows with your open browser session</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => mergeWithCurrent(groupIndex)}>
-                <GitMerge className="h-3.5 w-3.5 mr-2" />
-                Merge with current tabs
+                <GitMerge className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Merge with current tabs</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
-                <Layers className="h-3.5 w-3.5 mr-2" />
-                Unite all windows
+                <Layers className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Unite all windows</div><div className="text-[10px] text-muted-foreground font-normal">Combine all windows into one</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => splitWindows(groupIndex)}>
-                <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2" />
-                Split into windows
+                <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Split into windows</div><div className="text-[10px] text-muted-foreground font-normal">Move each tab into its own window</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
-                <SortAsc className="h-3.5 w-3.5 mr-2" />
-                Sort tabs by title
+                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Sort tabs by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by name</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
-                <SortAsc className="h-3.5 w-3.5 mr-2" />
-                Sort tabs by URL
+                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Sort tabs by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by address</div></div>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+                onClick={() => deleteAllWindows({ groupIndex })}
+              >
+                <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div>
+                  <div>{group.permanent ? 'Close all windows' : 'Remove all windows'}</div>
+                  <div className="text-[10px] font-normal opacity-60">
+                    {group.permanent ? 'Close all browser windows in this group' : 'Permanently remove all windows and their tabs'}
+                  </div>
+                </div>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

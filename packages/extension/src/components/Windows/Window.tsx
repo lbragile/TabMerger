@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {
@@ -58,6 +58,16 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
 
   const [isEditing, setIsEditing] = useState(false);
   const [nameValue, setNameValue] = useState(window.name ?? 'Window');
+  const renameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isEditing) return;
+    const id = setTimeout(() => {
+      renameInputRef.current?.focus();
+      renameInputRef.current?.select();
+    }, 50);
+    return () => clearTimeout(id);
+  }, [isEditing]);
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
 
   const openWindow = useOpenWindow();
@@ -68,6 +78,7 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
   const { mutate: toggleIncognito } = useToggleWindowIncognito();
   const { mutate: moveWindow } = useMoveWindow();
   const { data: groupsState } = useGroups();
+  const isNowOpen = groupsState?.available[groupIndex]?.permanent ?? false;
 
   const openModal = useUIStore((s) => s.openModal);
   const selectionMode = useUIStore((s) => s.selectionMode);
@@ -196,26 +207,37 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
           <GripVertical className="h-3.5 w-3.5" />
         </span>
 
-        {isEditing ? (
-          <input
-            autoFocus
-            value={nameValue}
-            onChange={(e) => setNameValue(e.target.value)}
-            onBlur={handleRename}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleRename();
-              if (e.key === 'Escape') setIsEditing(false);
-            }}
-            className="flex-1 text-xs bg-transparent border-b border-primary outline-none"
-          />
-        ) : (
-          <span
-            className="flex-1 text-xs font-medium truncate cursor-default"
-            onDoubleClick={() => setIsEditing(true)}
-          >
-            {window.name ?? 'Window'}
-          </span>
-        )}
+        {/* Window name — outer div holds flex slot; span anchors height; input overlays when editing */}
+        <div className="flex-1 min-w-0 relative">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                className={cn('block truncate text-xs font-medium cursor-default', isEditing && 'invisible')}
+                onDoubleClick={() => setIsEditing(true)}
+              >
+                {(window.name ?? 'Window').length > 20
+                  ? `${(window.name ?? 'Window').slice(0, 20)}…`
+                  : (window.name ?? 'Window')}
+              </span>
+            </TooltipTrigger>
+            {(window.name ?? 'Window').length > 20 && (
+              <TooltipContent side="top">{window.name ?? 'Window'}</TooltipContent>
+            )}
+          </Tooltip>
+          {isEditing && (
+            <input
+              ref={renameInputRef}
+              value={nameValue}
+              onChange={(e) => setNameValue(e.target.value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRename();
+                if (e.key === 'Escape') setIsEditing(false);
+              }}
+              className="absolute inset-0 w-full bg-transparent border-b border-primary outline-none text-xs px-0"
+            />
+          )}
+        </div>
 
         {window.incognito && (
           <Badge variant="secondary" className="h-4 px-1 text-[10px]">
@@ -266,41 +288,46 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <DropdownMenuContent align="end" className="text-xs">
+            <DropdownMenuContent align="end" className="text-xs" onCloseAutoFocus={(e) => e.preventDefault()}>
               <DropdownMenuItem onClick={() => setIsEditing(true)}>
-                <Edit3 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                Rename
+                <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <div><div>Rename</div><div className="text-[10px] text-muted-foreground font-normal">Set a new name for this window</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => toggleIncognito({ groupIndex, windowIndex })}>
                 {window.incognito ? (
                   <>
-                    <Shield className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                    Remove incognito
+                    <Shield className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                    <div><div>Remove incognito</div><div className="text-[10px] text-muted-foreground font-normal">Clear the incognito tag from this window</div></div>
                   </>
                 ) : (
                   <>
-                    <ShieldOff className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                    Mark incognito
+                    <ShieldOff className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                    <div><div>Mark incognito</div><div className="text-[10px] text-muted-foreground font-normal">Tag this window as an incognito session</div></div>
                   </>
                 )}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="text-destructive"
+                className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
                 onClick={async () => {
                   const { confirmOnWindowClose } = await getSetting<{ confirmOnWindowClose: boolean }>(
                     'appSettings',
                     { confirmOnWindowClose: true }
                   );
                   if (confirmOnWindowClose) {
-                    openModal('deleteWindow', { groupIndex, windowIndex });
+                    openModal('deleteWindow', { groupIndex, windowIndex, isNowOpen });
                   } else {
                     deleteWindow({ groupIndex, windowIndex });
                   }
                 }}
               >
-                <Trash2 className="h-3.5 w-3.5 mr-2" />
-                Delete window
+                <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div>
+                  <div>{isNowOpen ? 'Close window' : 'Remove window'}</div>
+                  <div className="text-[10px] font-normal opacity-60">
+                    {isNowOpen ? 'Close this browser window and its tabs' : 'Permanently remove this window and its tabs'}
+                  </div>
+                </div>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

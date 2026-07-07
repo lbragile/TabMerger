@@ -10,11 +10,15 @@ export default defineContentScript({
       const metaDesc = document
         .querySelector('meta[name="description"]')
         ?.getAttribute('content');
+      const ogImage = document
+        .querySelector('meta[property="og:image"]')
+        ?.getAttribute('content') ?? null;
 
       return {
         title: document.title,
         description: ogDesc ?? metaDesc ?? null,
-        url: location.href
+        url: location.href,
+        ogImage
       };
     };
 

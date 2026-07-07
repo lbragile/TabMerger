@@ -3,6 +3,7 @@ import { useUIStore } from '@/stores/uiStore';
 import { AddGroupModal } from './AddGroup';
 import { DeleteConfirmModal } from './DeleteConfirm';
 import { ImportExportModal } from './ImportExport';
+import { NoteModal } from './Note';
 import { SettingsModal } from './Settings';
 import { AuthModal } from './Auth';
 import { UpgradePromptModal } from './UpgradePrompt';
@@ -27,6 +28,8 @@ export function ModalRoot() {
             onClose={closeModal}
           />
         );
+      case 'note':
+        return <NoteModal data={modal.data ?? {}} onClose={closeModal} />;
       case 'importExport':
         return <ImportExportModal mode={(modal.data?.mode as string) ?? 'export'} data={modal.data ?? {}} onClose={closeModal} />;
       case 'settings':

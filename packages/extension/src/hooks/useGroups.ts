@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { nanoid } from 'nanoid';
 import type { Group, GroupsState } from '@/lib/types';
-import { DEFAULT_GROUP_COLOR } from '@/lib/types';
+import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { getGroupsState, saveGroupsState, deleteGroup as dbDeleteGroup } from '@/lib/localDb';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
@@ -101,6 +101,7 @@ export function useDuplicateGroup() {
         const clone: Group = {
           ...JSON.parse(JSON.stringify(source)),
           id: nanoid(10),
+          name: DEFAULT_GROUP_TITLE,
           permanent: false,
           updatedAt: Date.now(),
           pendingSync: true
@@ -165,6 +166,22 @@ export function useUpdateGroupInfo() {
   });
 }
 
+export function useUpdateGroupNote() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({ groupIndex, note }: { groupIndex: number; note: string }) =>
+      mutate(
+        (prev) => {
+          const available = [...prev.available];
+          available[groupIndex] = { ...available[groupIndex], note, updatedAt: Date.now(), pendingSync: true };
+          return { ...prev, available };
+        },
+        true
+      )
+  });
+}
+
 export function useReorderGroups() {
   const mutate = useGroupsMutation();
 
@@ -222,6 +239,38 @@ export function useDeleteWindow() {
         available[groupIndex] = {
           ...available[groupIndex],
           windows,
+          updatedAt: Date.now(),
+          pendingSync: true
+        };
+        available[groupIndex].info = getGroupInfo(available[groupIndex]);
+        return { ...prev, available };
+      });
+    }
+  });
+}
+
+export function useDeleteAllWindows() {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: async ({ groupIndex }: { groupIndex: number }) => {
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const group = state?.available[groupIndex];
+      if (group) {
+        const liveUrls = getNowOpenUrls(state);
+        const tabIds = group.windows
+          .flatMap((w) => w.tabs)
+          .filter((t) => liveUrls.has(t.url))
+          .map((t) => t.id);
+        if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
+      }
+
+      return mutate((prev) => {
+        const available = [...prev.available];
+        available[groupIndex] = {
+          ...available[groupIndex],
+          windows: [],
           updatedAt: Date.now(),
           pendingSync: true
         };
@@ -500,10 +549,11 @@ export function useSortTabs() {
 }
 
 export function useMoveTab() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       fromGroupIndex,
       fromWindowIndex,
       fromTabIndex,
@@ -516,8 +566,27 @@ export function useMoveTab() {
       toGroupIndex: number;
       /** When true, leave the source tab in place (used when source is Now Open / permanent). */
       copy?: boolean;
-    }) =>
-      mutate((prev) => {
+    }) => {
+      // Capture ogImage before the sync mutation runs
+      let ogImage: string | undefined;
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const sourceTab = state?.available[fromGroupIndex]?.windows[fromWindowIndex]?.tabs[fromTabIndex];
+      if (sourceTab) {
+        if (sourceTab.id > 0) {
+          // Live Now Open tab — fetch from content script
+          try {
+            const meta = await chrome.tabs.sendMessage(sourceTab.id, { type: 'GET_PAGE_META' });
+            ogImage = (meta as { ogImage?: string })?.ogImage ?? undefined;
+          } catch {
+            ogImage = undefined;
+          }
+        } else {
+          // Already saved tab being moved between groups — carry through existing ogImage
+          ogImage = sourceTab.ogImage;
+        }
+      }
+
+      return mutate((prev) => {
         const available = [...prev.available];
 
         const fromGroup = { ...available[fromGroupIndex] };
@@ -526,10 +595,11 @@ export function useMoveTab() {
         let movedTab;
         if (copy) {
           // ponytail: id:0 is falsy — useDeleteTab's `if (tab?.id)` guard won't close the live browser tab
-          movedTab = { ...fromWindows[fromWindowIndex].tabs[fromTabIndex], id: 0 };
+          movedTab = { ...fromWindows[fromWindowIndex].tabs[fromTabIndex], id: 0, ogImage };
         } else {
           // Remove tab from source window
           [movedTab] = fromWindows[fromWindowIndex].tabs.splice(fromTabIndex, 1);
+          movedTab = { ...movedTab, ogImage };
 
           // Task 15: auto-close empty source window if the group still has other windows
           const finalFromWindows =
@@ -554,7 +624,8 @@ export function useMoveTab() {
         available[toGroupIndex] = toGroup;
 
         return { ...prev, available };
-      })
+      });
+    }
   });
 }
 

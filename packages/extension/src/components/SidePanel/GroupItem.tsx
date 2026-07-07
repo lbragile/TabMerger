@@ -53,10 +53,14 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
   const isRenaming = renameTarget?.kind === 'group' && renameTarget.groupIndex === groupIndex;
 
   useEffect(() => {
-    if (isRenaming) {
-      setEditValue(group.name);
-      setTimeout(() => inputRef.current?.focus(), 0);
-    }
+    if (!isRenaming) return;
+    setEditValue(group.name);
+    // Delay past Radix's dropdown close animation which restores focus to the trigger
+    const id = setTimeout(() => {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }, 50);
+    return () => clearTimeout(id);
   }, [isRenaming, group.name]);
 
   const handleRename = () => {
@@ -112,7 +116,7 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
             : undefined,
         borderRadius: 8,
         outline: isSelected ? '2px solid rgba(0, 180, 204, 0.5)' : undefined,
-        outlineOffset: '-2px'
+        outlineOffset: '-2px',
       }}
       wrapperClassName={cn(
         'group flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer select-none transition-colors',
@@ -128,7 +132,7 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
       // sidebar has a fixed dark background that CSS variables can't target.
       onWrapperMouseEnter={(e) => {
         if (!isActive && !contextMenuOpen && !isSelected) {
-          e.currentTarget.style.background = 'rgba(255,255,255,0.07)';
+          e.currentTarget.style.background = 'var(--sidebar-hover-bg)';
         }
       }}
       onWrapperMouseLeave={(e) => {
@@ -137,8 +141,25 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
         }
       }}
     >
-        {/* Drag handle — hover-only; hidden entirely for permanent (Now Open) group which cannot be reordered */}
-        {!group.permanent && (
+        {/* Active group: vertical accent bar on left + darker overlay */}
+        {isActive && (
+          <>
+            <span
+              className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
+              style={{ background: group.color, filter: 'var(--sidebar-accent-filter)', pointerEvents: 'none' }}
+              aria-hidden="true"
+            />
+            <span
+              className="absolute inset-0 rounded-lg dark:hidden"
+              style={{ background: 'rgba(0,0,0,0.06)', pointerEvents: 'none' }}
+              aria-hidden="true"
+            />
+          </>
+        )}
+        {/* Drag handle — hover-only for draggable groups; permanent group gets an invisible spacer to keep alignment */}
+        {group.permanent ? (
+          <span className="h-3 w-3 shrink-0" aria-hidden="true" />
+        ) : (
           <span
             className="cursor-grab touch-none shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
             style={{ color: 'var(--sidebar-text-subtle)' }}
@@ -195,52 +216,61 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
               />
             </PopoverContent>
           </Popover>
-          <TooltipContent side="right">Change color</TooltipContent>
+          <TooltipContent side="top">Change color</TooltipContent>
         </Tooltip>
 
-        {/* Name */}
-        {isRenaming ? (
-          <input
-            ref={inputRef}
-            value={editValue}
-            size={Math.max(editValue.length, 4)}
-            onChange={(e) => setEditValue(e.target.value)}
-            onBlur={handleRename}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleRename();
-              if (e.key === 'Escape') setRenameTarget(null);
-            }}
-            onClick={(e) => e.stopPropagation()}
-            className="py-0 text-xs bg-transparent outline-none"
-            style={{ borderBottom: '1px solid rgba(0,180,204,0.6)', color: 'var(--sidebar-text-active)' }}
-          />
-        ) : (
-          <span
-            className="flex-1 min-w-0 truncate text-xs font-medium"
-            style={{ color: isActive ? 'var(--sidebar-text-active)' : 'var(--sidebar-text-inactive)' }}
-            onDoubleClick={(e) => {
-              e.stopPropagation();
-              if (group.permanent) return;
-              setRenameTarget({ kind: 'group', groupIndex });
-            }}
-          >
-            {group.name}
-          </span>
-        )}
+        {/* Name — outer div holds the flex slot; span anchors height; input overlays when renaming */}
+        <div className="flex-1 min-w-0 relative">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                className={cn('block truncate text-xs font-medium', isRenaming && 'invisible')}
+                style={{ color: isActive ? 'var(--sidebar-text-active)' : 'var(--sidebar-text-inactive)' }}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  if (group.permanent) return;
+                  setRenameTarget({ kind: 'group', groupIndex });
+                }}
+              >
+                {group.name.length > 10 ? `${group.name.slice(0, 10)}…` : group.name}
+              </span>
+            </TooltipTrigger>
+            {group.name.length > 10 && (
+              <TooltipContent side="top">{group.name}</TooltipContent>
+            )}
+          </Tooltip>
+          {isRenaming && (
+            <input
+              ref={inputRef}
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onBlur={handleRename}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleRename();
+                if (e.key === 'Escape') setRenameTarget(null);
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute inset-0 w-full bg-transparent outline-none text-xs px-0"
+              style={{ borderBottom: '1px solid rgba(0,180,204,0.6)', color: 'var(--sidebar-text-active)' }}
+            />
+          )}
+        </div>
 
-        {/* Tab count badge */}
+        {/* Windows ◆ tabs badge */}
         <span
-          className="text-[10px] px-1.5 py-0.5 rounded-md shrink-0"
+          className="text-[10px] px-1.5 py-0.5 rounded-md shrink-0 whitespace-nowrap"
           style={{
-            background: 'rgba(255,255,255,0.1)',
+            background: 'var(--sidebar-badge-bg)',
             color: 'var(--sidebar-text-muted)',
           }}
         >
-          {tabCount}
+          {group.windows.length} <span className="opacity-40">◆</span> {tabCount}
         </span>
 
-        {/* Star/pin button — always visible when starred, hover-visible otherwise */}
-        {!group.permanent && (
+        {/* Star/pin button — always visible when starred, hover-visible otherwise; permanent group gets a spacer */}
+        {group.permanent ? (
+          <span className="h-3 w-3 shrink-0" aria-hidden="true" />
+        ) : (
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -263,7 +293,7 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
                 />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right">{group.starred ? 'Unpin group' : 'Pin group'}</TooltipContent>
+            <TooltipContent side="top">{group.starred ? 'Unpin group' : 'Pin group'}</TooltipContent>
           </Tooltip>
         )}
 

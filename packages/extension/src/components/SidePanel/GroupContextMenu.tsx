@@ -98,20 +98,22 @@ export function GroupContextMenu({
           tabIndex={-1}
           aria-hidden="true"
         />
-        <DropdownMenuContent className="w-48 text-xs max-h-64 overflow-y-auto" align="start">
-          <DropdownMenuItem onClick={() => setRenameTarget({ kind: 'group', groupIndex })}>
-            <Edit3 className="h-3.5 w-3.5 mr-2" />
-            Rename
-          </DropdownMenuItem>
+        <DropdownMenuContent className="w-56 text-xs max-h-64 overflow-y-auto" align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
+          {!group.permanent && (
+            <DropdownMenuItem onClick={() => setRenameTarget({ kind: 'group', groupIndex })}>
+              <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0" />
+              <div><div>Rename</div><div className="text-[10px] text-muted-foreground font-normal">Set a new name for this group</div></div>
+            </DropdownMenuItem>
+          )}
 
           <Popover open={colorPickerOpen} onOpenChange={setColorPickerOpen}>
             <PopoverTrigger asChild>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Palette className="h-3.5 w-3.5 mr-2" />
-                Change color
+                <Palette className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Change color</div><div className="text-[10px] text-muted-foreground font-normal">Pick a color for this group label</div></div>
               </DropdownMenuItem>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-2" side="right">
+            <PopoverContent className="w-auto p-2" side="top">
               <ColorPicker
                 value={group.color}
                 onChange={(color) => {
@@ -123,60 +125,62 @@ export function GroupContextMenu({
           </Popover>
 
           <DropdownMenuItem
-            onClick={() =>
-              openModal('importExport', { mode: 'note', groupIndex, groupId: group.id })
-            }
+            onClick={() => openModal('note', { groupIndex, groupId: group.id })}
           >
-            <FileText className="h-3.5 w-3.5 mr-2" />
-            Add/edit note
+            <FileText className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Add/edit note</div><div className="text-[10px] text-muted-foreground font-normal">Attach a note to this group</div></div>
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => duplicateGroup(groupIndex)}>
-            <Copy className="h-3.5 w-3.5 mr-2" />
-            Duplicate
+            <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Duplicate</div><div className="text-[10px] text-muted-foreground font-normal">Copy this group with all its tabs</div></div>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
-            <RefreshCw className="h-3.5 w-3.5 mr-2" />
-            Replace with current
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => mergeWithCurrent(groupIndex)}>
-            <GitMerge className="h-3.5 w-3.5 mr-2" />
-            Merge with current
-          </DropdownMenuItem>
+          {!group.permanent && (
+            <>
+              <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
+                <RefreshCw className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Replace with current</div><div className="text-[10px] text-muted-foreground font-normal">Swap all windows with your open browser session</div></div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => mergeWithCurrent(groupIndex)}>
+                <GitMerge className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Merge with current</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
+              </DropdownMenuItem>
+            </>
+          )}
 
           <DropdownMenuSeparator />
 
           <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
-            <Layers className="h-3.5 w-3.5 mr-2" />
-            Unite windows
+            <Layers className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Unite windows</div><div className="text-[10px] text-muted-foreground font-normal">Combine all windows into one</div></div>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => splitWindows(groupIndex)}>
-            <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2" />
-            Split windows
+            <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Split windows</div><div className="text-[10px] text-muted-foreground font-normal">Move each tab into its own window</div></div>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
-            <SortAsc className="h-3.5 w-3.5 mr-2" />
-            Sort by title
+            <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Sort by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by name</div></div>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
-            <SortAsc className="h-3.5 w-3.5 mr-2" />
-            Sort by URL
+            <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Sort by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by address</div></div>
           </DropdownMenuItem>
 
           {!group.permanent && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="text-destructive"
+                className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
                 onClick={() =>
                   openModal('deleteGroup', { groupIndex, groupName: group.name })
                 }
               >
-                <Trash2 className="h-3.5 w-3.5 mr-2" />
-                Delete group
+                <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Delete group</div><div className="text-[10px] font-normal opacity-60">Permanently remove this group and its tabs</div></div>
               </DropdownMenuItem>
             </>
           )}
