@@ -43,17 +43,32 @@ export function useAuth(): AuthState & {
   };
 
   const signInWithGoogle = async () => {
-    // chrome.identity may be undefined in some popup contexts or non-Chrome browsers.
-    // Fall back to letting Supabase open a browser tab for OAuth when unavailable.
-    let redirectTo: string | undefined;
-    if (chrome?.identity?.getRedirectURL) {
-      redirectTo = chrome.identity.getRedirectURL();
-    }
-    const { error } = await supabase.auth.signInWithOAuth({
+    const redirectTo = chrome.identity.getRedirectURL();
+
+    // skipBrowserRedirect=true gets the OAuth URL + stores PKCE verifier without navigating
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo }
+      options: { redirectTo, skipBrowserRedirect: true }
     });
     if (error) throw error;
+    if (!data.url) throw new Error('No OAuth URL returned');
+
+    // Chrome-managed auth window — avoids the popup-redirect dead-end
+    const responseUrl = await new Promise<string>((resolve, reject) => {
+      chrome.identity.launchWebAuthFlow({ url: data.url!, interactive: true }, (url) => {
+        if (chrome.runtime.lastError || !url) {
+          reject(new Error(chrome.runtime.lastError?.message ?? 'Auth cancelled'));
+        } else {
+          resolve(url);
+        }
+      });
+    });
+
+    // PKCE flow: code in query params; exchange it using the stored verifier
+    const code = new URL(responseUrl).searchParams.get('code');
+    if (!code) throw new Error('No auth code in redirect URL');
+    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    if (exchangeError) throw exchangeError;
   };
 
   const signOut = async () => {

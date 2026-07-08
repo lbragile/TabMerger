@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { GroupContextMenu } from './GroupContextMenu';
 import { ColorPicker } from '@/components/ColorPicker';
 import type { Group } from '@/lib/types';
-import { useUpdateGroupName, useUpdateGroupColor, useToggleGroupStar } from '@/hooks/useGroups';
+import { useUpdateGroupName, useUpdateGroupColor, useToggleGroupStar, useGroups } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
@@ -21,6 +21,8 @@ interface GroupItemProps {
 }
 
 export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemProps) {
+  const { data: groupsState } = useGroups();
+  const savedGroupCount = (groupsState?.available ?? []).filter((g) => !g.permanent).length;
   const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } =
     useSortable({ id: `group-${groupIndex}` });
 
@@ -79,7 +81,7 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
 
   // Derive selection state for this group
   const committedType = selectedItems[0]?.type ?? null;
-  const showCheckbox = selectionMode && (!committedType || committedType === 'group');
+  const showCheckbox = selectionMode && !group.permanent && (!committedType || committedType === 'group');
   const selectionId = `group-${groupIndex}`;
   const isSelected = selectedItems.some((s) => s.id === selectionId);
 
@@ -156,23 +158,8 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
             />
           </>
         )}
-        {/* Drag handle — hover-only for draggable groups; permanent group gets an invisible spacer to keep alignment */}
-        {group.permanent ? (
-          <span className="h-3 w-3 shrink-0" aria-hidden="true" />
-        ) : (
-          <span
-            className="cursor-grab touch-none shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-            style={{ color: 'var(--sidebar-text-subtle)' }}
-            {...attributes}
-            {...listeners}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <GripVertical className="h-3 w-3" />
-          </span>
-        )}
-
-        {/* Selection checkbox — only visible when in selection mode and type is committed to 'group' (or uncommitted) */}
-        {showCheckbox && (
+        {/* Single slot: checkbox in selection mode, drag handle otherwise */}
+        {showCheckbox ? (
           <button
             type="button"
             className="shrink-0 flex items-center justify-center h-4 w-4 text-[var(--sidebar-text-inactive)] hover:text-[var(--sidebar-text-active)] transition-colors"
@@ -185,6 +172,21 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
               <Square className="h-3.5 w-3.5" />
             )}
           </button>
+        ) : group.permanent ? (
+          <span className="h-3 w-3 shrink-0" aria-hidden="true" />
+        ) : (
+          savedGroupCount > 1 ? (
+            <span
+              className="cursor-grab touch-none shrink-0 opacity-30 group-hover:opacity-100 transition-opacity"
+              style={{ color: 'var(--sidebar-text-subtle)' }}
+              {...(selectionMode ? {} : { ...attributes, ...listeners })}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <GripVertical className="h-3 w-3" />
+            </span>
+          ) : (
+            <span className="h-3 w-3 shrink-0" />
+          )
         )}
 
         {/* Color swatch — opens color picker on click */}
@@ -258,17 +260,19 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
 
         {/* Windows ◆ tabs badge */}
         <span
-          className="text-[10px] px-1.5 py-0.5 rounded-md shrink-0 whitespace-nowrap"
+          className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md shrink-0 whitespace-nowrap"
           style={{
             background: 'var(--sidebar-badge-bg)',
             color: 'var(--sidebar-text-muted)',
           }}
         >
-          {group.windows.length} <span className="opacity-40">◆</span> {tabCount}
+          <span>{group.windows.length}</span>
+          <span className="opacity-40">◆</span>
+          <span>{tabCount}</span>
         </span>
 
-        {/* Star/pin button — always visible when starred, hover-visible otherwise; permanent group gets a spacer */}
-        {group.permanent ? (
+        {/* Star/pin button — hidden in selection mode; spacer preserves layout */}
+        {(group.permanent || selectionMode) ? (
           <span className="h-3 w-3 shrink-0" aria-hidden="true" />
         ) : (
           <Tooltip>
@@ -277,7 +281,7 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
                 type="button"
                 className={cn(
                   'shrink-0 transition-opacity',
-                  group.starred ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  group.starred ? 'opacity-100' : 'opacity-30 group-hover:opacity-100'
                 )}
                 onClick={(e) => {
                   e.stopPropagation();

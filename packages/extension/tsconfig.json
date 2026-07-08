@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "types": ["chrome"]
   },
   "include": ["src", ".wxt/types"],
   "exclude": ["node_modules", "dist", ".output"]

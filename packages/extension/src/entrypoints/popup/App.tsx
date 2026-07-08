@@ -92,7 +92,16 @@ export function App() {
     <TooltipProvider delayDuration={400}>
       <AppContent />
       <ModalRoot />
-      <Toaster position="bottom-right" richColors closeButton />
+      <Toaster
+        position="bottom-right"
+        richColors
+        closeButton
+        toastOptions={{
+          classNames: {
+            actionButton: 'toast-action-btn'
+          }
+        }}
+      />
     </TooltipProvider>
   );
 }

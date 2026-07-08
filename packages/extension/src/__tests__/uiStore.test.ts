@@ -125,29 +125,32 @@ describe('undo/redo stack', () => {
     expect(useUIStore.getState().redoStack).toHaveLength(0)
   })
 
-  it('undo pops from stack and pushes to redo', () => {
+  const currentState = { groups: [], current: true } as any
+
+  it('undo pops snapshot from stack and pushes currentState to redo', () => {
     useUIStore.getState().pushUndo(fakeState)
-    const popped = useUIStore.getState().undo()
+    const popped = useUIStore.getState().undo(currentState)
     expect(popped).toBe(fakeState)
     expect(useUIStore.getState().undoStack).toHaveLength(0)
-    expect(useUIStore.getState().redoStack).toHaveLength(1)
+    // currentState (not fakeState) should be on redo so redo can return to it
+    expect(useUIStore.getState().redoStack[0]).toBe(currentState)
   })
 
-  it('redo pops from redo and pushes back to undo', () => {
+  it('redo pops snapshot from redo and pushes currentState to undo', () => {
     useUIStore.getState().pushUndo(fakeState)
-    useUIStore.getState().undo()
-    const redone = useUIStore.getState().redo()
-    expect(redone).toBe(fakeState)
+    useUIStore.getState().undo(currentState)
+    const redone = useUIStore.getState().redo(fakeState)
+    expect(redone).toBe(currentState)
     expect(useUIStore.getState().redoStack).toHaveLength(0)
-    expect(useUIStore.getState().undoStack).toHaveLength(1)
+    expect(useUIStore.getState().undoStack[0]).toBe(fakeState)
   })
 
   it('undo returns undefined when stack is empty', () => {
-    expect(useUIStore.getState().undo()).toBeUndefined()
+    expect(useUIStore.getState().undo(currentState)).toBeUndefined()
   })
 
   it('redo returns undefined when stack is empty', () => {
-    expect(useUIStore.getState().redo()).toBeUndefined()
+    expect(useUIStore.getState().redo(currentState)).toBeUndefined()
   })
 
   it('caps undo stack at 10 items', () => {

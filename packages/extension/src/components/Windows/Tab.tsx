@@ -41,11 +41,12 @@ interface TabItemProps {
   groupIndex: number;
   windowIndex: number;
   tabIndex: number;
+  siblingCount: number;
   searchFilter?: string;
   tagFilter?: string;
 }
 
-export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, tagFilter }: TabItemProps) {
+export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, searchFilter, tagFilter }: TabItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `tab-${groupIndex}-${windowIndex}-${tabIndex}`
   });
@@ -190,18 +191,8 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Drag handle — leftmost, hover-only */}
-      <span
-        className="opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground transition-opacity touch-none"
-        {...attributes}
-        {...listeners}
-        onMouseDown={(e) => e.stopPropagation()}
-      >
-        <GripVertical className="h-3 w-3" />
-      </span>
-
-      {/* Selection checkbox — appears in selection mode when type is 'tab' or uncommitted */}
-      {showCheckbox && (
+      {/* Single slot: checkbox in selection mode, drag handle otherwise */}
+      {showCheckbox ? (
         <button
           type="button"
           className="shrink-0 flex items-center justify-center h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
@@ -215,6 +206,16 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
             <Square className="h-3.5 w-3.5" />
           )}
         </button>
+      ) : siblingCount > 1 ? (
+        <span
+          className="opacity-30 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground transition-opacity touch-none"
+          {...(selectionMode ? {} : { ...attributes, ...listeners })}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <GripVertical className="h-3 w-3" />
+        </span>
+      ) : (
+        <span className="h-3 w-3 shrink-0" />
       )}
 
       <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 overflow-hidden flex items-center justify-center">
@@ -249,7 +250,7 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  className="ml-0.5 opacity-0 group-hover/pill:opacity-100 transition-opacity rounded hover:bg-accent p-0.5"
+                  className="ml-0.5 rounded hover:bg-accent p-0.5"
                   onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
                   onMouseDown={(e) => e.stopPropagation()}
                 >
@@ -262,7 +263,7 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
         </span>
       )}
 
-      <Tooltip>
+      {selectionMode ? <span className="h-4 w-4 shrink-0" /> : <Tooltip>
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
@@ -286,7 +287,7 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, searchFilter, 
           </Button>
         </TooltipTrigger>
         <TooltipContent className="bg-destructive text-destructive-foreground">{isNowOpen ? 'Close tab' : 'Remove tab'}</TooltipContent>
-      </Tooltip>
+      </Tooltip>}
     </div>
   );
 }

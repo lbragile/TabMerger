@@ -8,6 +8,14 @@ import type { Group } from '@/lib/types'
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
+// vi.hoisted ensures these are available when vi.mock factories are evaluated
+const { mockDuplicateGroupMutate, mockUseGroups, mockUseEntitlements, mockToastError } = vi.hoisted(() => ({
+  mockDuplicateGroupMutate: vi.fn(),
+  mockUseGroups: vi.fn(),
+  mockUseEntitlements: vi.fn(),
+  mockToastError: vi.fn(),
+}))
+
 vi.mock('@/lib/localDb', () => ({
   saveGroupsState: vi.fn(),
   getGroupsState: vi.fn(),
@@ -15,13 +23,14 @@ vi.mock('@/lib/localDb', () => ({
 
 vi.mock('@/hooks/useGroups', () => ({
   useDeleteGroup: () => ({ mutate: vi.fn() }),
-  useDuplicateGroup: () => ({ mutate: vi.fn() }),
+  useDuplicateGroup: () => ({ mutate: mockDuplicateGroupMutate }),
   useUpdateGroupColor: () => ({ mutate: vi.fn() }),
   useReplaceWithCurrent: () => ({ mutate: vi.fn() }),
   useMergeWithCurrent: () => ({ mutate: vi.fn() }),
   useUniteWindows: () => ({ mutate: vi.fn() }),
   useSplitWindows: () => ({ mutate: vi.fn() }),
   useSortTabs: () => ({ mutate: vi.fn() }),
+  useGroups: () => mockUseGroups(),
   GROUPS_QUERY_KEY: ['groups'],
 }))
 
@@ -33,6 +42,20 @@ vi.mock('@/stores/uiStore', () => ({
 vi.mock('@/components/ColorPicker', () => ({
   ColorPicker: () => React.createElement('div', { 'data-testid': 'color-picker' }),
 }))
+
+vi.mock('@/hooks/useEntitlements', () => ({
+  useEntitlements: () => mockUseEntitlements(),
+}))
+
+vi.mock('sonner', () => ({
+  toast: { error: mockToastError },
+}))
+
+// ─── Chrome stub ──────────────────────────────────────────────────────────────
+
+globalThis.chrome = {
+  tabs: { create: vi.fn() },
+} as unknown as typeof chrome
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -66,11 +89,18 @@ function renderContextMenu(group: Group, open = true) {
   )
 }
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
+beforeEach(() => {
+  vi.clearAllMocks()
+  // Default: 3 groups, limit 5 — safely under limit
+  mockUseGroups.mockReturnValue({
+    data: { available: new Array(3).fill({}), active: { id: '', index: 0 } },
+  })
+  mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
+})
+
+// ─── Tests — item descriptions ────────────────────────────────────────────────
 
 describe('GroupContextMenu — item descriptions', () => {
-  beforeEach(() => { vi.clearAllMocks() })
-
   it('shows a description for every menu item', () => {
     renderContextMenu(makeGroup())
 
@@ -111,5 +141,80 @@ describe('GroupContextMenu — item descriptions', () => {
     const item = screen.getByText('Delete group').closest('[role="menuitem"]') as HTMLElement
     expect(item.className).toMatch(/data-\[highlighted\]:bg-destructive/)
     expect(item.className).toMatch(/data-\[highlighted\]:text-destructive/)
+  })
+})
+
+// ─── Tests — duplicate free-tier guard ────────────────────────────────────────
+
+describe('GroupContextMenu — duplicate free-tier guard', () => {
+  it('calls duplicateGroup when under the group limit', () => {
+    // 3 groups, limit 5 → allowed
+    mockUseGroups.mockReturnValue({
+      data: { available: new Array(3).fill({}), active: { id: '', index: 0 } },
+    })
+    mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
+
+    renderContextMenu(makeGroup())
+    fireEvent.click(screen.getByText('Duplicate'))
+
+    expect(mockDuplicateGroupMutate).toHaveBeenCalledWith(1)
+    expect(mockToastError).not.toHaveBeenCalled()
+  })
+
+  it('shows toast.error and does NOT call duplicateGroup when at the group limit (Now Open excluded)', () => {
+    // 6 total (1 Now Open + 5 saved), limit 5 → blocked: 6-1=5 >= 5
+    mockUseGroups.mockReturnValue({
+      data: { available: new Array(6).fill({}), active: { id: '', index: 0 } },
+    })
+    mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
+
+    renderContextMenu(makeGroup())
+    fireEvent.click(screen.getByText('Duplicate'))
+
+    expect(mockToastError).toHaveBeenCalledWith(
+      'Free plan allows up to 5 groups.',
+      expect.objectContaining({ action: expect.objectContaining({ label: 'Upgrade' }) })
+    )
+    expect(mockDuplicateGroupMutate).not.toHaveBeenCalled()
+  })
+
+  it('allows duplicate with 5 total groups (4 saved + Now Open), limit 5', () => {
+    // 5-1=4 < 5 → allowed
+    mockUseGroups.mockReturnValue({
+      data: { available: new Array(5).fill({}), active: { id: '', index: 0 } },
+    })
+    mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
+
+    renderContextMenu(makeGroup())
+    fireEvent.click(screen.getByText('Duplicate'))
+
+    expect(mockDuplicateGroupMutate).toHaveBeenCalledWith(1)
+    expect(mockToastError).not.toHaveBeenCalled()
+  })
+
+  it('shows toast.error when exceeding the group limit', () => {
+    // 7 total (6 saved + Now Open), limit 5 → blocked: 7-1=6 >= 5
+    mockUseGroups.mockReturnValue({
+      data: { available: new Array(7).fill({}), active: { id: '', index: 0 } },
+    })
+    mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
+
+    renderContextMenu(makeGroup())
+    fireEvent.click(screen.getByText('Duplicate'))
+
+    expect(mockToastError).toHaveBeenCalled()
+    expect(mockDuplicateGroupMutate).not.toHaveBeenCalled()
+  })
+
+  it('treats missing groupsState data as zero groups (allows duplicate)', () => {
+    mockUseGroups.mockReturnValue({ data: null })
+    mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
+
+    renderContextMenu(makeGroup())
+    fireEvent.click(screen.getByText('Duplicate'))
+
+    // 0 < 5 → allowed
+    expect(mockDuplicateGroupMutate).toHaveBeenCalledWith(1)
+    expect(mockToastError).not.toHaveBeenCalled()
   })
 })

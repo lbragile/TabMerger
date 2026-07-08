@@ -14,7 +14,8 @@ export default defineConfig({
   manifest: {
     name: 'TabMerger',
     description: 'Merge and organize browser tabs into groups to reduce memory usage',
-    permissions: ['tabs', 'tabGroups', 'storage', 'alarms', 'contextMenus', 'scripting'],
+    incognito: 'spanning',
+    permissions: ['tabs', 'tabGroups', 'storage', 'alarms', 'contextMenus', 'scripting', 'identity'],
     host_permissions: ['<all_urls>'],
     action: { default_popup: 'popup.html' },
     web_accessible_resources: [

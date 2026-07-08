@@ -6,7 +6,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { getGroupsState, saveGroupsState, deleteGroup as dbDeleteGroup } from '@/lib/localDb';
 import { useUIStore } from '@/stores/uiStore';
 import type { SelectedItem } from '@/stores/uiStore';
-import { GROUPS_QUERY_KEY } from '@/hooks/useGroups';
+import { GROUPS_QUERY_KEY, RESTRICTED_URL_RE } from '@/hooks/useGroups';
 import { createWindow, getGroupInfo, sortWindowsByStarred } from '@/lib/utils';
 import type { Tab, Window as WindowType } from '@/lib/types';
 
@@ -231,10 +231,11 @@ export function useBulkMoveToGroup() {
           .filter((t): t is Tab => t !== undefined);
 
         // Remove from source positions in DESC order (avoids index drift)
+        // Now Open (permanent) sources are copies — never remove from them
         const affectedSourceGroups = new Set<number>();
         for (const p of parsedDesc) {
           const grp = available[p.groupIndex];
-          if (!grp) continue;
+          if (!grp || grp.permanent) continue;
           const win = grp.windows[p.windowIndex];
           if (!win) continue;
           win.tabs.splice(p.tabIndex, 1);
@@ -247,16 +248,26 @@ export function useBulkMoveToGroup() {
           affectedSourceGroups.add(p.groupIndex);
         }
 
-        // Add each tab as its own window in the target group
-        const newWindows = tabsToMove.map((tab) => createWindow([tab]));
-        const targetGrp = available[targetGroupIndex];
-        available[targetGroupIndex] = {
-          ...targetGrp,
-          windows: sortWindowsByStarred([...newWindows, ...targetGrp.windows]),
-          updatedAt: Date.now(),
-          pendingSync: true
-        };
-        available[targetGroupIndex].info = getGroupInfo(available[targetGroupIndex]);
+        if (available[targetGroupIndex]?.permanent) {
+          // Moving to Now Open → open each tab in the browser; useCurrentTabs will sync them in
+          for (const tab of tabsToMove) {
+            if (tab.url && !RESTRICTED_URL_RE.test(tab.url)) {
+              chrome.tabs.create({ url: tab.url, active: false }).catch(() => {});
+            }
+          }
+          // Don't insert into Now Open IndexedDB — the sync handles it
+        } else {
+          // Add each tab as its own window in the target group
+          const newWindows = tabsToMove.map((tab) => createWindow([tab]));
+          const targetGrp = available[targetGroupIndex];
+          available[targetGroupIndex] = {
+            ...targetGrp,
+            windows: sortWindowsByStarred([...newWindows, ...targetGrp.windows]),
+            updatedAt: Date.now(),
+            pendingSync: true
+          };
+          available[targetGroupIndex].info = getGroupInfo(available[targetGroupIndex]);
+        }
 
         // Refresh info + timestamps for source groups
         for (const gi of affectedSourceGroups) {
@@ -284,10 +295,11 @@ export function useBulkMoveToGroup() {
           .filter((w): w is WindowType => w !== undefined);
 
         // Remove from source positions in DESC order
+        // Now Open (permanent) sources are copies — never remove from them
         const affectedSourceGroups = new Set<number>();
         for (const p of parsedDesc) {
           const grp = available[p.groupIndex];
-          if (!grp) continue;
+          if (!grp || grp.permanent) continue;
           available[p.groupIndex] = {
             ...grp,
             windows: grp.windows.filter((_, i) => i !== p.windowIndex)
@@ -295,15 +307,24 @@ export function useBulkMoveToGroup() {
           affectedSourceGroups.add(p.groupIndex);
         }
 
-        // Add windows to target group
-        const targetGrp = available[targetGroupIndex];
-        available[targetGroupIndex] = {
-          ...targetGrp,
-          windows: sortWindowsByStarred([...windowsToMove, ...targetGrp.windows]),
-          updatedAt: Date.now(),
-          pendingSync: true
-        };
-        available[targetGroupIndex].info = getGroupInfo(available[targetGroupIndex]);
+        if (available[targetGroupIndex]?.permanent) {
+          // Moving to Now Open → open each window in the browser; useCurrentTabs will sync them in
+          for (const win of windowsToMove) {
+            const urls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
+            if (urls.length > 0) chrome.windows.create({ url: urls, focused: false }).catch(() => {});
+          }
+          // Don't insert into Now Open IndexedDB — the sync handles it
+        } else {
+          // Add windows to target group
+          const targetGrp = available[targetGroupIndex];
+          available[targetGroupIndex] = {
+            ...targetGrp,
+            windows: sortWindowsByStarred([...windowsToMove, ...targetGrp.windows]),
+            updatedAt: Date.now(),
+            pendingSync: true
+          };
+          available[targetGroupIndex].info = getGroupInfo(available[targetGroupIndex]);
+        }
 
         // Refresh info + timestamps for source groups
         for (const gi of affectedSourceGroups) {
@@ -322,6 +343,55 @@ export function useBulkMoveToGroup() {
       qc.setQueryData(GROUPS_QUERY_KEY, next);
     },
 
+    onSuccess: () => exitSelectionMode()
+  });
+}
+
+// ─── Bulk Star ────────────────────────────────────────────────────────────────
+
+export function useBulkStar() {
+  const qc = useQueryClient();
+  const pushUndo = useUIStore((s) => s.pushUndo);
+  const exitSelectionMode = useUIStore((s) => s.exitSelectionMode);
+
+  return useMutation({
+    mutationFn: async ({ items, starred }: { items: SelectedItem[]; starred: boolean }) => {
+      if (items.length === 0) return;
+      const state = await qc.fetchQuery({ queryKey: GROUPS_QUERY_KEY, queryFn: getGroupsState });
+      pushUndo(state);
+
+      const available = state.available.map((g) => ({ ...g, windows: [...g.windows] }));
+      const type = items[0].type;
+
+      if (type === 'window') {
+        for (const item of items) {
+          const p = parseWindowId(item.id);
+          if (!p) continue;
+          const grp = available[p.groupIndex];
+          if (!grp) continue;
+          const win = grp.windows[p.windowIndex];
+          if (!win) continue;
+          grp.windows[p.windowIndex] = { ...win, starred };
+        }
+        for (const grp of available) {
+          if (!grp) continue;
+          const idx = available.indexOf(grp);
+          available[idx] = { ...grp, windows: sortWindowsByStarred(grp.windows), updatedAt: Date.now(), pendingSync: true };
+        }
+      } else if (type === 'group') {
+        for (const item of items) {
+          const p = parseGroupId(item.id);
+          if (!p) continue;
+          const grp = available[p.groupIndex];
+          if (!grp || grp.permanent) continue;
+          available[p.groupIndex] = { ...grp, starred, updatedAt: Date.now(), pendingSync: true };
+        }
+      }
+
+      const next = { ...state, available };
+      await saveGroupsState(next);
+      qc.setQueryData(GROUPS_QUERY_KEY, next);
+    },
     onSuccess: () => exitSelectionMode()
   });
 }

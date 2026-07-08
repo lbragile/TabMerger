@@ -90,7 +90,7 @@ describe('TabItem — chromeGroup pill', () => {
   it('renders the group name pill when chromeGroup is set', () => {
     const t = makeTab({ chromeGroup: { id: 5, name: 'Work', color: 'blue' } })
     render(
-      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} />,
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={2} />,
       { wrapper }
     )
     expect(screen.getByText('Work')).toBeInTheDocument()
@@ -99,7 +99,7 @@ describe('TabItem — chromeGroup pill', () => {
   it('does not render a pill when chromeGroup is absent', () => {
     const t = makeTab() // no chromeGroup
     render(
-      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} />,
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={2} />,
       { wrapper }
     )
     // The tab title is shown but no pill with a chrome group name
@@ -111,9 +111,9 @@ describe('TabItem — chromeGroup pill', () => {
   it('uses the group name as the pill title attribute', () => {
     const t = makeTab({ chromeGroup: { id: 3, name: 'Research', color: 'red' } })
     render(
-      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} />,
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={2} />,
       { wrapper }
     )
-    expect(screen.getByTitle('Research')).toBeInTheDocument()
+    expect(screen.getByText('Research')).toBeInTheDocument()
   })
 })

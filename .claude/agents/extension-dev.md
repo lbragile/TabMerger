@@ -118,5 +118,14 @@ Before writing or editing any file, check that it contains none of the following
 Use `your_api_key_here`, `sk_test_...`, `your@email.com` as placeholders in examples.
 After modifying many files, run `bash scripts/scan-secrets.sh` to verify.
 
+## TDD completion gate (mandatory)
+
+After finishing any implementation task, you MUST NOT declare it complete until:
+
+1. **Tests pass** — run `npx vitest run` and confirm the full suite is green, including any tests the `test-writer` pre-wrote for this feature (they should have been failing before your implementation). If tests are still failing, fix the implementation — do not patch the tests to make them pass.
+2. **Ask the user to verify** — once tests are green, ask the user to reload the extension in Chrome and manually confirm the specific behavior works end-to-end. Use a concrete question: "Tests pass. Can you reload the extension and [do X] to confirm [Y] works?" Do not move on until the user confirms.
+
+If you are uncertain about the requirements mid-implementation, stop and ask the user. Do not make assumptions about scope or acceptance criteria — unclear requirements produce the wrong feature.
+
 ## Self-learning
 After each task, if you discover something non-obvious about WXT, @dnd-kit, idb, or the project conventions, write it to the learnings file.

@@ -77,16 +77,26 @@ Before spawning implementation agents, **always** spawn the `test-writer` agent 
 - The specific behaviors and edge cases to cover
 - Instruction to write tests that will FAIL until the implementation is complete (red phase of TDD)
 
-Wait for the test-writer to finish before spawning implementation agents. This ensures every feature is specified in tests before code is written.
+**Wait for the test-writer to confirm the tests are written and failing before spawning implementation agents.** This is the red phase — if the tests pass before implementation starts, they are not testing the right thing. Challenge the test-writer if tests pass prematurely.
 
-### Step 4 — Post-implementation tests (mandatory after every implementation batch)
+### Step 4 — Post-implementation: tests must pass before sign-off
 
-After implementation agents complete, **always** spawn the `test-writer` agent again. Pass it:
+After implementation agents complete, **always** spawn the `test-writer` agent again with:
 - A summary of every file that was changed
 - The specific new behaviors introduced (what each task added/fixed)
-- Instruction to: (1) confirm the pre-written unit tests now pass, (2) add any missing unit tests for edge cases, and (3) write E2E tests covering the full user flow end-to-end
+- Instruction to: (1) confirm the pre-written unit tests now PASS (red → green), (2) add any missing edge case unit tests, (3) write E2E tests for the full user flow
 
-The test-writer will run the full suite and confirm everything passes. Do not skip this step — untested changes accumulate into an unverifiable codebase.
+**The test-writer must confirm the full suite passes (including the previously-failing tests) before you mark any task complete.** If tests still fail, send the failure details back to the implementation agent for fixes. Loop until green.
+
+**Then ask the user to manually verify the feature works correctly** in the browser before closing the task. Use `AskUserQuestion` to ask: "Tests pass — can you reload the extension and confirm [specific behavior] works as expected?" Do not mark done until the user confirms or you have browser verification.
+
+### Step 4b — Verification gate (mandatory before proceeding)
+
+After every implementation batch, DO NOT move to the next task until:
+1. The `test-writer` confirms the full test suite passes
+2. The user explicitly confirms the feature works in the browser
+
+If the user is unsure, probe them: ask what specifically they tried, what they expected, and what they saw. Do not accept vague "looks fine" — ask for the specific interactions that exercise the new behavior. If they haven't tested it, ask them to do so before proceeding.
 
 ### Step 4b — Task pipeline report (after every action)
 

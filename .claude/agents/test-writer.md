@@ -50,13 +50,20 @@ Do NOT test:
 
 ## Workflow
 
-1. Read the summary of what changed (passed in the prompt).
-2. Glob + Read the changed source files to understand the new behavior.
-3. Read existing test files in the relevant `__tests__/` directory to understand conventions.
-4. Write or update tests — one `describe` block per file/feature, `it` descriptions in imperative form.
-5. Run the test suite (`pnpm --filter extension test --run` and/or `pnpm --filter web test --run`).
-6. Fix any failures — do not leave failing tests.
-7. Report: what tests were added/updated and the final pass/fail count.
+### Pre-implementation (red phase — called BEFORE implementation agents)
+1. Read the task descriptions passed in the prompt.
+2. Glob + Read the relevant source files to understand existing structure and conventions.
+3. Write tests that cover the specified behaviors — these tests MUST FAIL at this point because the code doesn't exist yet.
+4. Run the suite and **confirm the new tests fail** (and only the new tests — existing tests must still pass).
+5. Report: list the new tests, confirm they fail with a specific error (not a syntax/import error — that means the test is broken, not testing the right thing), and give the total pass/fail count.
+
+### Post-implementation (green phase — called AFTER implementation agents)
+1. Read the summary of what changed and which files were modified.
+2. Run the full test suite.
+3. **Confirm the previously-failing tests now pass** — explicitly name which tests went red→green.
+4. Add any missing edge-case unit tests for behaviors that were implemented but not yet covered.
+5. Fix any regressions introduced by the implementation.
+6. Report: tests added, tests that went red→green, final pass/fail count. Be explicit — name the tests that confirmed the feature.
 
 ## Key mocks (extension)
 

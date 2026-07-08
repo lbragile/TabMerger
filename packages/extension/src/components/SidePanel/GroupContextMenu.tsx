@@ -28,9 +28,12 @@ import {
   useMergeWithCurrent,
   useUniteWindows,
   useSplitWindows,
-  useSortTabs
+  useSortTabs,
+  useGroups
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
+import { useEntitlements } from '@/hooks/useEntitlements';
+import { toast } from 'sonner';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -67,6 +70,8 @@ export function GroupContextMenu({
 
   const { mutate: deleteGroup } = useDeleteGroup();
   const { mutate: duplicateGroup } = useDuplicateGroup();
+  const { data: groupsState } = useGroups();
+  const { maxGroups } = useEntitlements();
   const { mutate: updateColor } = useUpdateGroupColor();
   const { mutate: replaceWithCurrent } = useReplaceWithCurrent();
   const { mutate: mergeWithCurrent } = useMergeWithCurrent();
@@ -131,7 +136,15 @@ export function GroupContextMenu({
             <div><div>Add/edit note</div><div className="text-[10px] text-muted-foreground font-normal">Attach a note to this group</div></div>
           </DropdownMenuItem>
 
-          <DropdownMenuItem onClick={() => duplicateGroup(groupIndex)}>
+          <DropdownMenuItem onClick={() => {
+            if ((groupsState?.available.length ?? 1) - 1 >= maxGroups) {
+              toast.error(`Free plan allows up to ${maxGroups} groups.`, {
+                action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+              });
+              return;
+            }
+            duplicateGroup(groupIndex);
+          }}>
             <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>Duplicate</div><div className="text-[10px] text-muted-foreground font-normal">Copy this group with all its tabs</div></div>
           </DropdownMenuItem>

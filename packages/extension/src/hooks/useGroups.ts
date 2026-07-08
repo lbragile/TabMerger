@@ -363,12 +363,31 @@ export function useToggleGroupStar() {
   });
 }
 
+// URLs that cannot be programmatically opened (chrome://, about:, extension pages, etc.)
+// ponytail: matches scheme: prefix — covers both about:blank and chrome://newtab
+export const RESTRICTED_URL_RE = /^(chrome|about|chrome-extension|moz-extension):/i;
+
 export function useToggleWindowIncognito() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({ groupIndex, windowIndex }: { groupIndex: number; windowIndex: number }) =>
-      mutate((prev) => {
+    mutationFn: async ({ groupIndex, windowIndex }: { groupIndex: number; windowIndex: number }) => {
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const group = state?.available[groupIndex];
+
+      // Now Open group: manipulate the real browser window; useCurrentTabs will sync state
+      if (group?.permanent) {
+        const win = group.windows[windowIndex];
+        const tabUrls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
+        const oldWindowId = win.id;
+        await chrome.windows.create({ incognito: !win.incognito, url: tabUrls, focused: true });
+        await chrome.windows.remove(oldWindowId);
+        return;
+      }
+
+      // Saved group: flip the flag in IndexedDB only
+      return mutate((prev) => {
         const available = [...prev.available];
         const windows = [...available[groupIndex].windows];
         windows[windowIndex] = {
@@ -382,7 +401,8 @@ export function useToggleWindowIncognito() {
           pendingSync: true
         };
         return { ...prev, available };
-      })
+      });
+    }
   });
 }
 
@@ -586,6 +606,30 @@ export function useMoveTab() {
         }
       }
 
+      // Moving to Now Open → open in browser; useCurrentTabs sync will pick it up automatically
+      if (state?.available[toGroupIndex]?.permanent) {
+        if (sourceTab?.url && !RESTRICTED_URL_RE.test(sourceTab.url)) {
+          chrome.tabs.create({ url: sourceTab.url, active: false }).catch(() => {});
+        }
+        // If source is also Now Open (copy=true), the browser tab already exists — nothing to remove
+        if (copy) return;
+        return mutate((prev) => {
+          const available = [...prev.available];
+          const fromGroup = { ...available[fromGroupIndex] };
+          const fromWindows = fromGroup.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
+          fromWindows[fromWindowIndex].tabs.splice(fromTabIndex, 1);
+          fromGroup.windows =
+            fromWindows[fromWindowIndex].tabs.length === 0 && fromWindows.length > 1
+              ? fromWindows.filter((_, i) => i !== fromWindowIndex)
+              : fromWindows;
+          fromGroup.updatedAt = Date.now();
+          fromGroup.pendingSync = true;
+          fromGroup.info = getGroupInfo(fromGroup);
+          available[fromGroupIndex] = fromGroup;
+          return { ...prev, available };
+        });
+      }
+
       return mutate((prev) => {
         const available = [...prev.available];
 
@@ -630,10 +674,11 @@ export function useMoveTab() {
 }
 
 export function useMoveWindow() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       fromGroupIndex,
       windowIndex,
       toGroupIndex
@@ -641,8 +686,31 @@ export function useMoveWindow() {
       fromGroupIndex: number;
       windowIndex: number;
       toGroupIndex: number;
-    }) =>
-      mutate((prev) => {
+    }) => {
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+
+      // Moving to Now Open → open in browser; useCurrentTabs sync will pick it up automatically
+      if (state?.available[toGroupIndex]?.permanent) {
+        const win = state.available[fromGroupIndex]?.windows[windowIndex];
+        if (win) {
+          const urls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
+          if (urls.length > 0) chrome.windows.create({ url: urls, focused: false }).catch(() => {});
+        }
+        // If source is also Now Open, browser window already exists — nothing to remove
+        if (state.available[fromGroupIndex]?.permanent) return;
+        return mutate((prev) => {
+          const available = [...prev.available];
+          const fromGroup = { ...available[fromGroupIndex] };
+          fromGroup.windows = fromGroup.windows.filter((_, i) => i !== windowIndex);
+          fromGroup.updatedAt = Date.now();
+          fromGroup.pendingSync = true;
+          fromGroup.info = getGroupInfo(fromGroup);
+          available[fromGroupIndex] = fromGroup;
+          return { ...prev, available };
+        });
+      }
+
+      return mutate((prev) => {
         const available = [...prev.available];
 
         // Remove window from source group
@@ -664,7 +732,8 @@ export function useMoveWindow() {
         available[toGroupIndex] = toGroup;
 
         return { ...prev, available };
-      })
+      });
+    }
   });
 }
 

@@ -33,6 +33,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useToggleWindowIncognito: () => ({ mutate: vi.fn() }),
   useMoveWindow: () => ({ mutate: vi.fn() }),
   useGroups: () => ({ data: { available: [] } }),
+  useSortTabs: () => ({ mutate: vi.fn() }),
   useDeleteTab: () => ({ mutate: vi.fn() }),
   useMoveTab: () => ({ mutate: vi.fn() }),
 }))
@@ -105,17 +106,17 @@ describe('Destructive button styling', () => {
       // MoreHorizontal button is the last visible button in the window header
       const buttons = screen.getAllByRole('button')
       await userEvent.click(buttons[buttons.length - 1])
-      return screen.getByText('Delete window').closest('[role="menuitem"]') as HTMLElement
+      return screen.getByText('Remove window').closest('[role="menuitem"]') as HTMLElement
     }
 
     it('has text-destructive at rest', async () => {
-      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0 }))
+      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0, siblingCount: 2 }))
       const item = await openMoreMenu()
       expect(item.className).toMatch(/text-destructive/)
     })
 
     it('has data-[highlighted] classes so hover/focus stays red', async () => {
-      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0 }))
+      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0, siblingCount: 2 }))
       const item = await openMoreMenu()
       expect(item.className).toMatch(/data-\[highlighted\]:bg-destructive/)
       expect(item.className).toMatch(/data-\[highlighted\]:text-destructive/)
@@ -129,7 +130,7 @@ describe('Destructive button styling', () => {
 
     it('has text-destructive at rest', () => {
       const { container } = wrap(
-        React.createElement(TabItem, { tab: makeTab(), groupIndex: 0, windowIndex: 0, tabIndex: 0 })
+        React.createElement(TabItem, { tab: makeTab(), groupIndex: 0, windowIndex: 0, tabIndex: 0, siblingCount: 2 })
       )
       const btn = getDeleteButton(container)
       expect(btn).toBeTruthy()
@@ -138,7 +139,7 @@ describe('Destructive button styling', () => {
 
     it('has hover:text-destructive and hover:bg-destructive/10 for hover state', () => {
       const { container } = wrap(
-        React.createElement(TabItem, { tab: makeTab(), groupIndex: 0, windowIndex: 0, tabIndex: 0 })
+        React.createElement(TabItem, { tab: makeTab(), groupIndex: 0, windowIndex: 0, tabIndex: 0, siblingCount: 2 })
       )
       const btn = getDeleteButton(container)
       expect(btn.className).toMatch(/hover:text-destructive/)

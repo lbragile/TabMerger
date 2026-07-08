@@ -27,13 +27,16 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const { onDragEnd } = useGroupDndHandlers();
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
+  const selectionMode = useUIStore((s) => s.selectionMode);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const { maxGroups } = useEntitlements();
   const { mutateAsync: addGroup } = useAddGroup();
 
   const handleNewGroup = async () => {
-    if (groupsState.available.length >= maxGroups) {
-      toast.error(`Free plan allows up to ${maxGroups} groups. Upgrade to Pro for unlimited.`);
+    if (groupsState.available.length - 1 >= maxGroups) {
+      toast.error(`Free plan allows up to ${maxGroups} groups.`, {
+        action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+      });
       return;
     }
     // New group is appended at end of available[]; since it's unstarred it lands at the
@@ -65,30 +68,6 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       className="flex flex-col h-full shrink-0 bg-zone-sidebar"
       style={{ width: 210, borderRight: '1px solid var(--zone-sidebar-border)' }}
     >
-      {/* Sidebar header — logo + title + new-group button */}
-      <div
-        className="flex items-center gap-2 px-3 py-2.5 shrink-0"
-        style={{ borderBottom: '1px solid var(--zone-sidebar-border)' }}
-      >
-        <span className="flex-1 text-sm font-semibold tracking-tight text-[var(--sidebar-text-active)]">
-          Groups
-        </span>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-5 w-5 shrink-0 hover:bg-white/10"
-              onClick={handleNewGroup}
-              aria-label="New group"
-            >
-              <Plus className="h-3.5 w-3.5 text-[var(--sidebar-text-inactive)]" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">New group</TooltipContent>
-        </Tooltip>
-      </div>
-
       {/* Groups list */}
       <ScrollArea className="flex-1">
         <div className="p-1.5">
@@ -96,7 +75,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             sensors={sensors}
             collisionDetection={closestCenter}
             modifiers={[restrictToVerticalAxis]}
-            onDragEnd={onDragEnd}
+            onDragEnd={selectionMode ? () => {} : onDragEnd}
           >
             <SortableContext items={groupIds} strategy={verticalListSortingStrategy}>
               {available.map((group, i) => (
@@ -105,23 +84,36 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                   group={group}
                   groupIndex={i}
                   isActive={i === activeGroupIndex}
-                  onClick={() => setActiveGroupIndex(i)}
+                  onClick={() => !selectionMode && setActiveGroupIndex(i)}
                 />
               ))}
             </SortableContext>
           </DndContext>
+
+          <div className="flex justify-center">
+          <Button
+            variant="outline"
+            className="h-8 rounded-md px-3 mt-2 text-xs"
+            onClick={handleNewGroup}
+            disabled={selectionMode}
+          >
+            <Plus className="h-3.5 w-3.5 mr-1" />
+            Add Group
+          </Button>
+          </div>
         </div>
       </ScrollArea>
 
-      {/* Footer — stats bar */}
+      {/* Footer — stats */}
       <div
-        className="px-3 py-2 shrink-0"
+        className="px-2 py-2 shrink-0"
         style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
       >
         {(() => {
-          const groupCount = available.length - 1;
-          const winCount = available.reduce((acc, g) => acc + g.windows.length, 0);
-          const tabCount = available.reduce((acc, g) => acc + g.windows.reduce((a, w) => a + w.tabs.length, 0), 0);
+          const saved = available.filter((g) => !g.permanent);
+          const groupCount = saved.length;
+          const winCount = saved.reduce((acc, g) => acc + g.windows.length, 0);
+          const tabCount = saved.reduce((acc, g) => acc + g.windows.reduce((a, w) => a + w.tabs.length, 0), 0);
           return (
             <p className="text-[10px] text-center text-muted-foreground">
               {groupCount} {pluralize(groupCount, 'Group')} &middot;{' '}
@@ -130,7 +122,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             </p>
           );
         })()}
-      </div>
+        </div>
     </div>
   );
 }

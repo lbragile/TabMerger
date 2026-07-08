@@ -53,8 +53,8 @@ interface UIState {
   setSearchFilter: (filter: string) => void;
   setRenameTarget: (target: RenameTarget | null) => void;
   pushUndo: (state: GroupsState) => void;
-  undo: () => GroupsState | undefined;
-  redo: () => GroupsState | undefined;
+  undo: (currentState: GroupsState) => GroupsState | undefined;
+  redo: (currentState: GroupsState) => GroupsState | undefined;
   clearHistory: () => void;
 
   // Selection actions
@@ -88,19 +88,21 @@ export const useUIStore = create<UIState>((set, get) => ({
       return { undoStack: stack, redoStack: [] };
     }),
 
-  undo: () => {
+  // currentState = the live GroupsState at the moment of the gesture (from TanStack Query cache)
+  // It goes onto the opposite stack so the other direction can restore it.
+  undo: (currentState: import('@/lib/types').GroupsState) => {
     const { undoStack, redoStack } = get();
     if (undoStack.length === 0) return undefined;
     const [top, ...rest] = undoStack;
-    set({ undoStack: rest, redoStack: [top, ...redoStack].slice(0, 10) });
+    set({ undoStack: rest, redoStack: [currentState, ...redoStack].slice(0, 10) });
     return top;
   },
 
-  redo: () => {
+  redo: (currentState: import('@/lib/types').GroupsState) => {
     const { undoStack, redoStack } = get();
     if (redoStack.length === 0) return undefined;
     const [top, ...rest] = redoStack;
-    set({ undoStack: [top, ...undoStack].slice(0, 10), redoStack: rest });
+    set({ undoStack: [currentState, ...undoStack].slice(0, 10), redoStack: rest });
     return top;
   },
 

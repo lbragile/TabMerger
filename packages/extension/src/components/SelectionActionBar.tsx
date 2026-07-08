@@ -1,4 +1,4 @@
-import { Trash2, MoveRight, X } from 'lucide-react';
+import { Trash2, MoveRight, Copy, Star, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useUIStore } from '@/stores/uiStore';
 import { useGroups } from '@/hooks/useGroups';
-import { useBulkDelete, useBulkMoveToGroup } from '@/hooks/useBulkActions';
+import { useBulkDelete, useBulkMoveToGroup, useBulkStar } from '@/hooks/useBulkActions';
 import { cn, pluralize } from '@/lib/utils';
 
 /** Maps a selection type to a human-readable plural noun. */
@@ -17,18 +17,29 @@ function itemLabel(type: string, count: number): string {
   return `${count} ${pluralize(count, noun)} selected`;
 }
 
+/** Parse the source groupIndex from the first selected item ID. */
+function sourceGroupIndex(id: string): number {
+  const m = id.match(/^(?:tab|window)-(\d+)/);
+  return m ? +m[1] : -1;
+}
+
 export function SelectionActionBar() {
   const selectedItems = useUIStore((s) => s.selectedItems);
   const exitSelectionMode = useUIStore((s) => s.exitSelectionMode);
   const { data: groupsState } = useGroups();
   const { mutate: bulkDelete, isPending: isDeleting } = useBulkDelete();
   const { mutate: bulkMove, isPending: isMoving } = useBulkMoveToGroup();
+  const { mutate: bulkStar, isPending: isStarring } = useBulkStar();
 
   if (selectedItems.length === 0) return null;
 
   const type = selectedItems[0].type;
   const canMove = type !== 'group';
-  const isPending = isDeleting || isMoving;
+  const canStar = type !== 'tab';
+  const isPending = isDeleting || isMoving || isStarring;
+
+  const srcIndex = sourceGroupIndex(selectedItems[0].id);
+  const isNowOpen = groupsState?.available[srcIndex]?.permanent ?? false;
 
   return (
     <div
@@ -42,7 +53,7 @@ export function SelectionActionBar() {
         {itemLabel(type, selectedItems.length)}
       </span>
 
-      {/* Move to group — only for tabs and windows */}
+      {/* Move / Copy to group — only for tabs and windows */}
       {canMove && groupsState && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -52,8 +63,8 @@ export function SelectionActionBar() {
               className="h-7 px-2 text-xs gap-1"
               disabled={isPending}
             >
-              <MoveRight className="h-3.5 w-3.5" />
-              Move to group
+              {isNowOpen ? <Copy className="h-3.5 w-3.5" /> : <MoveRight className="h-3.5 w-3.5" />}
+              {isNowOpen ? 'Copy to group' : 'Move to group'}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="text-xs max-h-56 overflow-y-auto">
@@ -74,7 +85,33 @@ export function SelectionActionBar() {
         </DropdownMenu>
       )}
 
-      {/* Delete */}
+      {/* Star / Unstar — windows and groups only */}
+      {canStar && (
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 px-2 text-xs gap-1"
+            disabled={isPending}
+            onClick={() => bulkStar({ items: selectedItems, starred: true })}
+          >
+            <Star className="h-3.5 w-3.5" fill="currentColor" />
+            Star
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 px-2 text-xs gap-1"
+            disabled={isPending}
+            onClick={() => bulkStar({ items: selectedItems, starred: false })}
+          >
+            <Star className="h-3.5 w-3.5" />
+            Unstar
+          </Button>
+        </>
+      )}
+
+      {/* Delete / Close */}
       <Button
         variant="destructive"
         size="sm"
@@ -83,7 +120,7 @@ export function SelectionActionBar() {
         onClick={() => bulkDelete(selectedItems)}
       >
         <Trash2 className="h-3.5 w-3.5" />
-        Delete
+        {isNowOpen ? 'Close' : 'Delete'}
       </Button>
 
       {/* Cancel */}

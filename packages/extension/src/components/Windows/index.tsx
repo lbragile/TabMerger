@@ -73,6 +73,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   const { onDragEnd: onWindowDragEnd } = useWindowDndHandlers(groupIndex);
   const { mutate: addWindow } = useAddWindow();
   const rawSearchFilter = useUIStore((s) => s.searchFilter);
+  const selectionMode = useUIStore((s) => s.selectionMode);
   const qc = useQueryClient();
   const [activeTab, setActiveTab] = useState<Tab | null>(null);
   const [isDraggingTab, setIsDraggingTab] = useState(false);
@@ -214,9 +215,9 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-3 py-1.5 border-b border-border shrink-0">
+      <div className="flex items-center justify-between px-3 py-2.5 border-b border-border shrink-0">
         <span className="text-xs text-muted-foreground flex items-center gap-1.5">
-          <span>{group.info ?? formatGroupCounts(group.windows.length, group.windows.reduce((a, w) => a + w.tabs.length, 0))}</span>
+          <span>{formatGroupCounts(group.windows.length, group.windows.reduce((a, w) => a + w.tabs.length, 0))}</span>
           {group.note && (
             <>
               <span className="opacity-30">·</span>
@@ -230,20 +231,6 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
           )}
         </span>
         <div className="flex items-center gap-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2 text-xs"
-                onClick={() => addWindow({ groupIndex })}
-              >
-                <Plus className="h-3.5 w-3.5 mr-1" />
-                Window
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top">Add a new empty window to this group</TooltipContent>
-          </Tooltip>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-6 w-6">
@@ -313,6 +300,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
                   window={window}
                   groupIndex={groupIndex}
                   windowIndex={windowIndex}
+                  siblingCount={group.windows.length}
                   searchFilter={searchFilter}
                   tagFilter={tagFilter}
                 />
@@ -335,16 +323,19 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
           </DndContext>
 
           {group.windows.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <p className="text-sm text-muted-foreground">No windows in this group</p>
+            <p className="py-6 text-center text-sm text-muted-foreground">No windows in this group</p>
+          )}
+
+          {!group.permanent && (
+            <div className="flex justify-center mt-1">
               <Button
                 variant="outline"
-                size="sm"
-                className="mt-2 text-xs"
+                className="h-8 rounded-md px-3 mt-2 text-xs"
                 onClick={() => addWindow({ groupIndex })}
+                disabled={selectionMode}
               >
                 <Plus className="h-3.5 w-3.5 mr-1" />
-                Add window
+                Add Window
               </Button>
             </div>
           )}

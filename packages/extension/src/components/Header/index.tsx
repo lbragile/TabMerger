@@ -6,6 +6,7 @@ import {
     Sparkles,
     CheckSquare,
     Square,
+    Zap,
 } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
@@ -72,17 +73,15 @@ export function Header() {
     const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
 
     const handleUndo = async () => {
-        const prev = undo();
-        if (prev) {
-            await setGroupsState(prev);
-        }
+        if (!groupsState) return;
+        const prev = undo(groupsState);
+        if (prev) await setGroupsState(prev);
     };
 
     const handleRedo = async () => {
-        const next = redo();
-        if (next) {
-            await setGroupsState(next);
-        }
+        if (!groupsState) return;
+        const next = redo(groupsState);
+        if (next) await setGroupsState(next);
     };
 
     const handleAIGroup = async () => {
@@ -106,7 +105,7 @@ export function Header() {
     const currentTierLabel = tierLabel(tier);
 
     return (
-        <header className="grid grid-cols-[auto_1fr_auto] items-center gap-2 px-3 py-2 border-b border-border shrink-0 bg-zone-header">
+        <header className="grid grid-cols-[210px_1fr_auto] items-center gap-2 px-3 py-2 border-b border-border shrink-0 bg-zone-header">
             {/* Logo — pinned to the left */}
             <div className="flex items-center gap-1.5">
                 <img
@@ -119,13 +118,13 @@ export function Header() {
                 </span>
             </div>
 
-            {/* Search — centred in the middle column, capped at 260px */}
+            {/* Search — centred in the middle column, capped at 360px */}
             <div className="flex justify-center">
                 <Input
-                    placeholder='Search tabs... (try "in:work github")'
+                    placeholder='Search… try in:"fitness journey" abs or tag:"study session"'
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
-                    className="h-7 text-xs max-w-[260px] w-full"
+                    className="h-7 text-xs max-w-[360px] w-full"
                 />
             </div>
 
@@ -256,7 +255,7 @@ export function Header() {
                             {user ? (
                                 <>
                                     {/* Account info */}
-                                    <div className="px-2 py-1.5 space-y-1">
+                                    <div className="px-2 py-1.5 space-y-1 pointer-events-none select-none">
                                         <p
                                             className="text-xs font-medium truncate"
                                             title={user.email ?? ""}
@@ -277,6 +276,24 @@ export function Header() {
                                     >
                                         Settings
                                     </DropdownMenuItem>
+                                    {tier === 'free' && (
+                                        <DropdownMenuItem
+                                            className="text-xs text-primary focus:text-primary font-medium cursor-pointer"
+                                            onClick={() => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })}
+                                        >
+                                            <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                            Upgrade to Pro
+                                        </DropdownMenuItem>
+                                    )}
+                                    {tier === 'pro' && (
+                                        <DropdownMenuItem
+                                            className="text-xs text-primary focus:text-primary font-medium cursor-pointer"
+                                            onClick={() => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })}
+                                        >
+                                            <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                            Upgrade to Pro AI
+                                        </DropdownMenuItem>
+                                    )}
                                     <DropdownMenuItem
                                         className="text-xs text-destructive focus:text-destructive"
                                         onClick={() => void signOut()}
@@ -287,7 +304,7 @@ export function Header() {
                             ) : (
                                 <>
                                     {/* Not signed in */}
-                                    <div className="px-2 py-1.5">
+                                    <div className="px-2 py-1.5 pointer-events-none select-none">
                                         <Badge
                                             variant="secondary"
                                             className="text-[10px] h-4 px-1.5"
@@ -295,12 +312,12 @@ export function Header() {
                                             Free plan
                                         </Badge>
                                     </div>
-                                    <DropdownMenuSeparator />
                                     <DropdownMenuItem
-                                        className="text-xs"
-                                        onClick={() => openModal("auth")}
+                                        className="text-xs text-primary focus:text-primary font-medium"
+                                        onClick={() => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })}
                                     >
-                                        Sign in
+                                        <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                        Upgrade to Pro
                                     </DropdownMenuItem>
                                 </>
                             )}

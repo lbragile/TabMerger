@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 import { useOpenWindow } from '@/hooks/useOpenWindow'
 import { useBulkDelete, useBulkMoveToGroup } from '@/hooks/useBulkActions'
-import { useToggleGroupStar, useMoveTab, useDeleteTab, GROUPS_QUERY_KEY } from '@/hooks/useGroups'
+import { useToggleGroupStar, useMoveTab, useDeleteTab, useToggleWindowIncognito, GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { useGroupDndHandlers, useWindowDndHandlers } from '@/hooks/useDnd'
 import { useCurrentTabs } from '@/hooks/useCurrentTabs'
 import { useUIStore } from '@/stores/uiStore'
@@ -44,6 +44,7 @@ const chromeMock = {
   windows: {
     create: vi.fn().mockResolvedValue({}),
     update: vi.fn().mockResolvedValue({}),
+    remove: vi.fn().mockResolvedValue(undefined),
     getAll: vi.fn<() => Promise<chrome.windows.Window[]>>().mockResolvedValue([]),
     onCreated: makeListener(),
     onRemoved: makeListener(),
@@ -102,6 +103,7 @@ beforeEach(() => {
   chromeMock.tabs.sendMessage.mockResolvedValue({})
   chromeMock.windows.create.mockResolvedValue({})
   chromeMock.windows.update.mockResolvedValue({})
+  chromeMock.windows.remove.mockResolvedValue(undefined)
   chromeMock.windows.getAll.mockResolvedValue([])
   chromeMock.tabGroups.query.mockResolvedValue([])
   ;(saveGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(undefined)
@@ -1096,5 +1098,114 @@ describe('useGroupDndHandlers — sequential drag', () => {
     expect(afterDrag2.available[0].permanent).toBe(true)
 
     void qc
+  })
+})
+
+// ─── useToggleWindowIncognito ─────────────────────────────────────────────────
+
+describe('useToggleWindowIncognito', () => {
+  /** Build a Now Open window with given tabs and incognito flag. */
+  function nowOpenWindow(id: number, tabs: ReturnType<typeof tab>[], incognito = false): ExtWindow {
+    return { id, tabs, incognito, focused: false }
+  }
+
+  it('calls chrome.windows.create with incognito:true and the tab URLs for a Now Open window', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [nowOpenWindow(42, [tab(1, 'https://a.com'), tab(2, 'https://b.com')])]
+
+    const state = makeState([nowOpen])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useToggleWindowIncognito(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0 })
+    })
+
+    expect(chromeMock.windows.create).toHaveBeenCalledWith({
+      incognito: true,
+      url: ['https://a.com', 'https://b.com'],
+      focused: true,
+    })
+  })
+
+  it('calls chrome.windows.remove with the old window ID for a Now Open window', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [nowOpenWindow(42, [tab(1, 'https://a.com')])]
+
+    const state = makeState([nowOpen])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useToggleWindowIncognito(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0 })
+    })
+
+    expect(chromeMock.windows.remove).toHaveBeenCalledWith(42)
+  })
+
+  it('filters out restricted URLs (chrome://, about:) from the chrome.windows.create call', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [nowOpenWindow(10, [
+      tab(1, 'chrome://newtab'),
+      tab(2, 'about:blank'),
+      tab(3, 'https://example.com'),
+    ])]
+
+    const state = makeState([nowOpen])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useToggleWindowIncognito(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0 })
+    })
+
+    expect(chromeMock.windows.create).toHaveBeenCalledWith(
+      expect.objectContaining({ url: ['https://example.com'] })
+    )
+  })
+
+  it('does NOT call chrome.windows.create for a saved group — only updates IndexedDB', async () => {
+    const nowOpen = createNowOpenGroup()
+    const savedGroup = createGroup('g1', 'Work')
+    savedGroup.windows = [{ ...nowOpenWindow(99, [tab(1, 'https://work.com')]), incognito: false }]
+
+    const state = makeState([nowOpen, savedGroup])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useToggleWindowIncognito(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 1, windowIndex: 0 })
+    })
+
+    expect(chromeMock.windows.create).not.toHaveBeenCalled()
+    expect(chromeMock.windows.remove).not.toHaveBeenCalled()
+    expect(saveGroupsState).toHaveBeenCalled()
+    const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
+    expect(saved.available[1].windows[0].incognito).toBe(true)
+  })
+
+  it('calls chrome.windows.create with incognito:false when toggling an incognito window off', async () => {
+    const nowOpen = createNowOpenGroup()
+    // Start incognito: true — toggling off should produce incognito: false
+    nowOpen.windows = [nowOpenWindow(77, [tab(1, 'https://a.com')], true)]
+
+    const state = makeState([nowOpen])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useToggleWindowIncognito(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0 })
+    })
+
+    expect(chromeMock.windows.create).toHaveBeenCalledWith(
+      expect.objectContaining({ incognito: false })
+    )
   })
 })

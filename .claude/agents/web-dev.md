@@ -134,5 +134,14 @@ Before writing or editing any file, check that it contains none of the following
 Use `your_api_key_here`, `sk_test_...`, `your@email.com` as placeholders in examples.
 After modifying many files, run `bash scripts/scan-secrets.sh` to verify.
 
+## TDD completion gate (mandatory)
+
+After finishing any implementation task, you MUST NOT declare it complete until:
+
+1. **Tests pass** — run the relevant test suite and confirm it is fully green, including any tests the `test-writer` pre-wrote for this feature (they should have been failing before your implementation). If tests fail, fix the implementation — do not patch tests.
+2. **Ask the user to verify** — once tests are green, ask the user to check the specific behavior in the browser/app with a concrete question. Do not move on until the user confirms it works end-to-end.
+
+If you are uncertain about requirements mid-implementation, stop and ask. Do not guess at scope.
+
 ## Self-learning
 After each task, record non-obvious Next.js 15, Supabase SSR, or Stripe patterns to the learnings file.

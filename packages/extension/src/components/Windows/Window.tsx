@@ -13,11 +13,11 @@ import {
   GripVertical,
   MoveRight,
   Square,
-  CheckSquare
+  CheckSquare,
+  SortAsc
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +36,8 @@ import {
   useToggleWindowStarred,
   useToggleWindowIncognito,
   useMoveWindow,
-  useGroups
+  useGroups,
+  useSortTabs
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, pluralize } from '@/lib/utils';
@@ -47,11 +48,12 @@ interface WindowProps {
   window: WindowType;
   groupIndex: number;
   windowIndex: number;
+  siblingCount: number;
   searchFilter?: string;
   tagFilter?: string;
 }
 
-export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagFilter }: WindowProps) {
+export function WindowItem({ window, groupIndex, windowIndex, siblingCount, searchFilter, tagFilter }: WindowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `window-${groupIndex}-${windowIndex}`
   });
@@ -77,6 +79,7 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
   const { mutate: toggleStarred } = useToggleWindowStarred();
   const { mutate: toggleIncognito } = useToggleWindowIncognito();
   const { mutate: moveWindow } = useMoveWindow();
+  const { mutate: sortTabs } = useSortTabs();
   const { data: groupsState } = useGroups();
   const isNowOpen = groupsState?.available[groupIndex]?.permanent ?? false;
 
@@ -134,9 +137,15 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
         isSelected && 'ring-2 ring-primary/70'
       )}
     >
+      {window.incognito && (
+        <div className="flex items-center gap-1 px-2 py-0.5 rounded-t-md bg-primary/10 border-b border-primary/20 text-primary">
+          <EyeOff className="h-2.5 w-2.5 shrink-0" />
+          <span className="text-[10px] font-medium">Incognito</span>
+        </div>
+      )}
       {/* Window header — right-click opens "Move to group" context menu */}
       <div
-        className="group relative flex items-center gap-1 px-2 py-1 border-b border-border/50"
+        className="group relative flex items-center gap-1.5 px-1.5 py-1 border-b border-border/50"
         onClick={handleHeaderClick}
         onContextMenu={(e) => {
           e.preventDefault();
@@ -155,7 +164,7 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="text-xs">
                 <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                Move to group
+                {isNowOpen ? 'Copy to group' : 'Move to group'}
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="max-h-48 overflow-y-auto">
                 {targetGroups.map(({ group, index }) => (
@@ -183,8 +192,8 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Selection checkbox */}
-        {showCheckbox && (
+        {/* Single slot: checkbox in selection mode, drag handle otherwise */}
+        {showCheckbox ? (
           <button
             type="button"
             className="shrink-0 flex items-center justify-center h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
@@ -197,15 +206,16 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
               <Square className="h-3.5 w-3.5" />
             )}
           </button>
+        ) : siblingCount > 1 ? (
+          <span
+            className="opacity-30 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
+            {...(selectionMode ? {} : { ...attributes, ...listeners })}
+          >
+            <GripVertical className="h-3.5 w-3.5" />
+          </span>
+        ) : (
+          <span className="h-3.5 w-3.5 shrink-0" />
         )}
-
-        <span
-          className="opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical className="h-3.5 w-3.5" />
-        </span>
 
         {/* Window name — outer div holds flex slot; span anchors height; input overlays when editing */}
         <div className="flex-1 min-w-0 relative">
@@ -239,56 +249,36 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
           )}
         </div>
 
-        {window.incognito && (
-          <Badge variant="secondary" className="h-4 px-1 text-[10px]">
-            <EyeOff className="h-2.5 w-2.5 mr-0.5 text-muted-foreground" />
-            incognito
-          </Badge>
-        )}
-
         <span className="text-[10px] text-muted-foreground">
           {window.tabs.length} {pluralize(window.tabs.length, 'tab')}
         </span>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-5 w-5 rounded text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-              disabled={window.tabs.length === 0}
-              onClick={(e) => { e.stopPropagation(); void openWindow(window); }}
-            >
-              <ExternalLink className="h-3 w-3" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Open in browser</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn('h-5 w-5 rounded', window.starred ? 'text-amber-600 dark:text-yellow-400' : 'text-muted-foreground')}
-              onClick={() => toggleStarred({ groupIndex, windowIndex })}
-            >
-              <Star className="h-3 w-3" fill={window.starred ? 'currentColor' : 'none'} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>{window.starred ? 'Unstar window' : 'Star window'}</TooltipContent>
-        </Tooltip>
+        {!selectionMode && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn('h-5 w-5 rounded', window.starred ? 'text-amber-600 dark:text-yellow-400' : 'text-muted-foreground')}
+                onClick={() => toggleStarred({ groupIndex, windowIndex })}
+              >
+                <Star className="h-3 w-3" fill={window.starred ? 'currentColor' : 'none'} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{window.starred ? 'Unstar window' : 'Star window'}</TooltipContent>
+          </Tooltip>
+        )}
 
         <Tooltip>
           <DropdownMenu>
             <TooltipTrigger asChild>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-5 w-5 rounded text-muted-foreground">
+              <DropdownMenuTrigger asChild disabled={selectionMode}>
+                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 rounded invisible' : 'h-5 w-5 rounded text-muted-foreground'}>
                   <MoreHorizontal className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <DropdownMenuContent align="end" className="text-xs" onCloseAutoFocus={(e) => e.preventDefault()}>
+            <DropdownMenuContent align="end" className="text-xs max-h-80 overflow-y-auto" onCloseAutoFocus={(e) => e.preventDefault()}>
               <DropdownMenuItem onClick={() => setIsEditing(true)}>
                 <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
                 <div><div>Rename</div><div className="text-[10px] text-muted-foreground font-normal">Set a new name for this window</div></div>
@@ -305,6 +295,21 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
                     <div><div>Mark incognito</div><div className="text-[10px] text-muted-foreground font-normal">Tag this window as an incognito session</div></div>
                   </>
                 )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={window.tabs.length === 0}
+                onClick={() => void openWindow(window)}
+              >
+                <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <div><div>Open in browser</div><div className="text-[10px] text-muted-foreground font-normal">Open all tabs in a new browser window</div></div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
+                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <div><div>Sort tabs by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort tabs in this window</div></div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
+                <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <div><div>Sort tabs by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort tabs by address</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -331,13 +336,13 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <TooltipContent>More options</TooltipContent>
+          {!selectionMode && <TooltipContent>More options</TooltipContent>}
         </Tooltip>
       </div>
 
       {/* Tabs list — DndContext is in parent WindowsPanel */}
       {/* max-h-44 caps each window at ~5-6 visible tabs; overflow-y-auto allows independent scroll */}
-      <div className="py-0.5 max-h-44 overflow-y-auto">
+      <div className="py-0.5 px-3 max-h-44 overflow-y-auto">
         {window.tabs.map((tab, tabIndex) => (
           <TabItem
             key={tab.id}
@@ -345,6 +350,7 @@ export function WindowItem({ window, groupIndex, windowIndex, searchFilter, tagF
             groupIndex={groupIndex}
             windowIndex={windowIndex}
             tabIndex={tabIndex}
+            siblingCount={window.tabs.length}
             searchFilter={searchFilter}
             tagFilter={tagFilter}
           />

@@ -38,7 +38,8 @@ interface SettingsModalProps {
 export function SettingsModal({ onClose }: SettingsModalProps) {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const { tier, cloudSync } = useEntitlements();
-  const { user, signOut } = useAuth();
+  const { user, session, signOut } = useAuth();
+  const [portalLoading, setPortalLoading] = useState(false);
   const { data: groupsState } = useGroups();
   const setGroupsState = useSetGroupsState();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -93,6 +94,24 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       onClose();
     } catch {
       toast.error('Invalid JSON file — expected TabMerger export format');
+    }
+  };
+
+  const handleManageBilling = async () => {
+    if (!session?.access_token) return;
+    setPortalLoading(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_WEB_APP_URL}/api/portal`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` }
+      });
+      const { url, error } = await res.json();
+      if (error || !url) throw new Error(error ?? 'No portal URL');
+      chrome.tabs.create({ url, active: true });
+    } catch {
+      toast.error('Could not open billing portal');
+    } finally {
+      setPortalLoading(false);
     }
   };
 
@@ -219,6 +238,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 onCheckedChange={(v) => void handleChange('syncEnabled', v)}
               />
             </div>
+          )}
+
+          {tier !== 'free' && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-xs"
+              onClick={() => void handleManageBilling()}
+              disabled={portalLoading}
+            >
+              {portalLoading ? 'Opening...' : 'Manage billing'}
+            </Button>
           )}
 
           {user && (
