@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 import { SessionList } from '@/components/dashboard/SessionList'
+import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { Badge } from '@/components/ui/badge'
 import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 
@@ -23,30 +24,30 @@ export default async function DashboardPage({
 
   if (!user) return null
 
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  const currentTier = (subscription?.tier as 'free' | 'pro' | 'pro_ai') ?? 'free'
+  const isPro = currentTier === 'pro' || currentTier === 'pro_ai'
+
   const [
     { data: profile },
-    { data: subscription },
     { data: groups },
     { data: sessions },
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
-    supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single(),
-    supabase.from('groups').select('id').eq('user_id', user.id),
+    supabase.from('groups').select('id, name, color, windows, updated_at').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
     supabase
       .from('sessions')
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false }),
   ])
-
-  const currentTier = (subscription?.tier as 'free' | 'pro' | 'pro_ai') ?? 'free'
-  const isPro = currentTier === 'pro' || currentTier === 'pro_ai'
 
   const { organizeRunId, organizeToken } = params
   let organizeSession: string | null = null
@@ -95,6 +96,12 @@ export default async function DashboardPage({
           supabaseToken={organizeSession}
         />
       )}
+
+      <div>
+        <h2 className="text-lg font-semibold mb-4">Tab Groups</h2>
+        {/* ponytail: cast because Supabase infers windows as Json, not ExtWindow[] */}
+        <GroupGrid groups={(groups ?? []) as never} isPro={isPro} />
+      </div>
 
       <div>
         <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>

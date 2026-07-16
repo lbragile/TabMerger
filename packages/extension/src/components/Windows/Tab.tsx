@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { X, MoveRight, Square, CheckSquare, GripVertical, ExternalLink } from 'lucide-react';
+import { X, MoveRight, CheckSquare2, CheckSquare, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TabPreview } from './TabPreview';
@@ -30,6 +30,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -42,15 +43,18 @@ interface TabItemProps {
   windowIndex: number;
   tabIndex: number;
   siblingCount: number;
+  isDraggingTab?: boolean;
+  activeWindowIndex?: number | null;
   searchFilter?: string;
   tagFilter?: string;
+  groupColor?: string;
 }
 
-export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, searchFilter, tagFilter }: TabItemProps) {
+export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, isDraggingTab, activeWindowIndex, searchFilter, tagFilter, groupColor }: TabItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: `tab-${groupIndex}-${windowIndex}-${tabIndex}`
+    id: `tab-${tab.id}-${windowIndex}-${tabIndex}`
   });
-  const { mutate: deleteTab } = useDeleteTab();
+const { mutate: deleteTab } = useDeleteTab();
   const { mutate: moveTab } = useMoveTab();
   const { data: groupsState } = useGroups();
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
@@ -61,9 +65,11 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, 
   const toggleSelection = useUIStore((s) => s.toggleSelection);
   const enterSelectionMode = useUIStore((s) => s.enterSelectionMode);
 
+  // Suppress transforms on tabs in non-active windows so they don't animate during cross-window drag
+  const suppressTransform = isDraggingTab && activeWindowIndex !== windowIndex;
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition
+    transform: suppressTransform ? undefined : CSS.Transform.toString(transform),
+    transition: suppressTransform ? undefined : transition
   };
 
   const handleOpen = async (e?: React.MouseEvent) => {
@@ -133,12 +139,16 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, 
       ref={setNodeRef}
       style={style}
       className={cn(
-        'group relative flex items-center gap-1.5 rounded px-1.5 py-0.5 text-sm hover:bg-accent/50 cursor-pointer',
-        isDragging && 'opacity-50 bg-accent',
+        'group relative flex items-center gap-1 min-w-0 rounded px-1.5 py-0.5 text-sm hover:bg-accent/50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500',
+        isDragging && 'opacity-30 border border-dashed border-primary/40',
         searchFilter && !isHighlighted && 'opacity-30',
         tagFilter && !tagMatch && 'opacity-30',
         isSelected && 'bg-primary/10 ring-1 ring-primary/50'
       )}
+      tabIndex={0}
+      data-group-index={groupIndex}
+      data-window-index={windowIndex}
+      data-tab-index={tabIndex}
       onClick={handleRowClick}
       onContextMenu={(e) => {
         e.preventDefault();
@@ -188,6 +198,24 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, 
               )}
             </DropdownMenuSubContent>
           </DropdownMenuSub>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="text-xs text-destructive focus:text-destructive"
+            onClick={async () => {
+              const { confirmOnTabClose } = await getSetting<{ confirmOnTabClose: boolean }>(
+                'appSettings',
+                { confirmOnTabClose: false }
+              );
+              if (confirmOnTabClose) {
+                openModal('deleteTab', { groupIndex, windowIndex, tabIndex, isNowOpen });
+              } else {
+                deleteTab({ groupIndex, windowIndex, tabIndex });
+              }
+            }}
+          >
+            <X className="h-3.5 w-3.5 mr-2" />
+            {isNowOpen ? 'Close tab' : 'Remove tab'}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -203,10 +231,10 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, 
           {isSelected ? (
             <CheckSquare className="h-3.5 w-3.5 text-primary" />
           ) : (
-            <Square className="h-3.5 w-3.5" />
+            <CheckSquare2 className="h-3.5 w-3.5 text-muted-foreground" />
           )}
         </button>
-      ) : siblingCount > 1 ? (
+      ) : (
         <span
           className="opacity-30 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground transition-opacity touch-none"
           {...(selectionMode ? {} : { ...attributes, ...listeners })}
@@ -214,8 +242,6 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, 
         >
           <GripVertical className="h-3 w-3" />
         </span>
-      ) : (
-        <span className="h-3 w-3 shrink-0" />
       )}
 
       <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 overflow-hidden flex items-center justify-center">
@@ -227,41 +253,32 @@ export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount, 
         />
       </span>
 
-      <TabPreview tab={tab}>
-        <span
-          className="flex-1 truncate text-xs leading-5 hover:underline"
-          onClick={(e) => handleOpen(e)}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          {tab.title || tab.url}
-        </span>
-      </TabPreview>
-
-      {tab.chromeGroup && (
-        <span className="relative inline-flex items-center shrink-0 group/pill">
+      {/* Title + tag — compact, tag sits right after text */}
+      <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden">
+        <TabPreview tab={tab} isLive={isNowOpen}>
           <span
-            className="text-[9px] px-1 py-0 rounded-full max-w-[60px] truncate text-white leading-4"
-            style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b' }}
+            className="block truncate overflow-hidden min-w-0 w-full text-xs leading-5 hover:underline"
+            onClick={(e) => handleOpen(e)}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            {tab.title || tab.url}
+          </span>
+        </TabPreview>
+
+        {tab.chromeGroup && (
+          <span
+            className={cn(
+              'relative z-10 text-[9px] px-1 py-0 rounded-full max-w-[60px] truncate leading-4 border transition-all duration-100 shrink-0',
+              isNowOpen && 'hover:brightness-110 cursor-pointer'
+            )}
+            style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
+            onClick={isNowOpen ? (e) => { e.stopPropagation(); void handleReopenGroup(); } : undefined}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             {tab.chromeGroup.name || ' '}
           </span>
-          {chrome.tabGroups && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  className="ml-0.5 rounded hover:bg-accent p-0.5"
-                  onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
-                  onMouseDown={(e) => e.stopPropagation()}
-                >
-                  <ExternalLink className="h-2.5 w-2.5 text-muted-foreground" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="top">Reopen Chrome group</TooltipContent>
-            </Tooltip>
-          )}
-        </span>
-      )}
+        )}
+      </div>
 
       {selectionMode ? <span className="h-4 w-4 shrink-0" /> : <Tooltip>
         <TooltipTrigger asChild>

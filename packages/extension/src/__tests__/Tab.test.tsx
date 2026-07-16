@@ -19,6 +19,8 @@ vi.mock('@/lib/chromeGroups', () => ({
 }))
 
 vi.mock('@dnd-kit/sortable', () => ({
+  SortableContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+  verticalListSortingStrategy: vi.fn(),
   useSortable: () => ({
     attributes: {},
     listeners: {},
@@ -31,6 +33,14 @@ vi.mock('@dnd-kit/sortable', () => ({
 
 vi.mock('@dnd-kit/utilities', () => ({
   CSS: { Transform: { toString: () => '' } },
+}))
+
+vi.mock('@/components/Windows/TabPreview', () => ({
+  TabPreview: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+}))
+
+vi.mock('@/hooks/useEntitlements', () => ({
+  useEntitlements: () => ({ tier: 'free', isPro: false, aiFeatures: false, isFree: true }),
 }))
 
 vi.mock('@/hooks/useGroups', () => ({
@@ -56,6 +66,7 @@ vi.mock('@/stores/uiStore', () => ({
 globalThis.chrome = {
   tabs: { create: vi.fn(), group: vi.fn() },
   tabGroups: { update: vi.fn() },
+  storage: { local: { get: vi.fn(), set: vi.fn(), onChanged: { addListener: vi.fn(), removeListener: vi.fn() } } },
 } as unknown as typeof chrome
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -82,6 +93,33 @@ function wrapper({ children }: { children: React.ReactNode }) {
 
 beforeEach(() => {
   vi.clearAllMocks()
+})
+
+// ─── TabItem — long title truncation ─────────────────────────────────────────
+
+describe('TabItem — long title truncation', () => {
+  it('renders long titles with truncate class so CSS clips them', () => {
+    const longTitle = 'Client ID for Web application – Google Auth Platform – My First Project – Google Cloud console'
+    const t = makeTab({ title: longTitle })
+    render(
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={2} />,
+      { wrapper }
+    )
+    const titleEl = screen.getByText(longTitle)
+    expect(titleEl.className).toMatch(/truncate/)
+  })
+
+  it('title element has min-w-0 and w-full to enable CSS truncation', () => {
+    const longTitle = 'A'.repeat(200)
+    const t = makeTab({ title: longTitle })
+    render(
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={2} />,
+      { wrapper }
+    )
+    const titleEl = screen.getByText(longTitle)
+    expect(titleEl.className).toMatch(/truncate/)
+    expect(titleEl.className).toMatch(/min-w-0/)
+  })
 })
 
 // ─── TabItem — chromeGroup pill ───────────────────────────────────────────────

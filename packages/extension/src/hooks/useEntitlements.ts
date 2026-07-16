@@ -20,15 +20,24 @@ async function fetchTier(userId: string): Promise<Tier> {
   return 'free';
 }
 
+// ponytail: demo-mode override for marketing recordings only — same gate as the Settings
+// "Demo Mode" button. `pnpm build:extension` runs plain `wxt build` (no VITE_DEMO_BUILD)
+// with DEV=false, so this never affects the real Chrome Web Store build.
+const DEMO_MODE = import.meta.env.VITE_DEMO_BUILD === 'true';
+
 export function useEntitlements(): Entitlements & { loading: boolean } {
   const { user, loading: authLoading } = useAuth();
 
   const { data: tier, isLoading } = useQuery({
     queryKey: ['entitlements', user?.id],
     queryFn: () => fetchTier(user!.id),
-    enabled: !!user,
-    staleTime: 1000 * 60 * 5 // refresh every 5 minutes
+    enabled: !!user && !DEMO_MODE,
+    staleTime: 1000 * 60 * 5
   });
+
+  if (DEMO_MODE) {
+    return { ...TIER_LIMITS.pro_ai, loading: false };
+  }
 
   const effectiveTier: Tier = user ? (tier ?? 'free') : 'free';
 

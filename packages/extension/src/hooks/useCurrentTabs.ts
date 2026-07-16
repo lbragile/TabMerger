@@ -37,6 +37,17 @@ function chromeWindowToWindow(
   };
 }
 
+/** Fetch ogImage for a single live tab via content script. Returns null if unavailable. */
+async function fetchOgImageForTab(tabId: number): Promise<string | null> {
+  if (!tabId) return null;
+  try {
+    const meta = await chrome.tabs.sendMessage(tabId, { type: 'GET_PAGE_META' });
+    return (meta as { ogImage?: string | null })?.ogImage ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function syncNowOpen(): Promise<GroupsState | undefined> {
   try {
     const tabGroupsAvailable = typeof chrome.tabGroups?.query === 'function';
@@ -62,9 +73,35 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
       tabsByWindow.set(tab.windowId, list);
     }
 
+    // ponytail: exclude the extension's own pages (e.g. its popup opened as a window/tab)
+    // from Now Open — chrome.runtime.id, same "own pages" concept as RESTRICTED_URL_RE
+    // in useGroups.ts, but scoped to this extension only rather than all extensions.
+    const ownExtensionPrefix = `chrome-extension://${chrome.runtime.id}/`;
+    for (const [windowId, tabs] of tabsByWindow) {
+      tabsByWindow.set(windowId, tabs.filter((t) => !t.url?.startsWith(ownExtensionPrefix)));
+    }
+
     const nowOpenWindows: Window[] = chromeWindows
       .filter((w) => w.type === 'normal' && w.id !== undefined)
-      .map((w) => chromeWindowToWindow(w, tabsByWindow.get(w.id!) ?? [], groupMap));
+      .map((w) => chromeWindowToWindow(w, tabsByWindow.get(w.id!) ?? [], groupMap))
+      .filter((w) => w.tabs.length > 0);
+
+    // Carry over previously-fetched ogImages so they survive re-syncs.
+    // Also schedule a background fetch for tabs that don't have one yet.
+    const prevNowOpen = state.available.find((g) => g.permanent);
+    const prevOgImages = new Map<string, string>();
+    prevNowOpen?.windows.forEach((w) => w.tabs.forEach((t) => {
+      if (t.ogImage) prevOgImages.set(t.url, t.ogImage);
+    }));
+
+    const tabsMissingOgImage: Tab[] = [];
+    nowOpenWindows.forEach((w) => w.tabs.forEach((t) => {
+      if (prevOgImages.has(t.url)) {
+        t.ogImage = prevOgImages.get(t.url);
+      } else {
+        tabsMissingOgImage.push(t);
+      }
+    }));
 
     // Guard: strip any extra permanent groups beyond the first one
     let seenPermanent = false;
@@ -94,20 +131,57 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
   }
 }
 
+/** Background pass: fetch ogImages for live Now Open tabs and persist them. */
+async function backfillOgImages(
+  tabs: Tab[],
+  setQueryData: (updater: (prev: GroupsState) => GroupsState) => void
+) {
+  if (tabs.length === 0) return;
+  const results = await Promise.all(
+    tabs.map(async (t) => ({ url: t.url, ogImage: await fetchOgImageForTab(t.id ?? 0) }))
+  );
+  const fetched = new Map(results.filter((r) => r.ogImage).map((r) => [r.url, r.ogImage!]));
+  if (fetched.size === 0) return;
+
+  setQueryData((prev) => {
+    const available = prev.available.map((g) => {
+      if (!g.permanent) return g;
+      return {
+        ...g,
+        windows: g.windows.map((w) => ({
+          ...w,
+          tabs: w.tabs.map((t) => fetched.has(t.url) ? { ...t, ogImage: fetched.get(t.url) } : t)
+        }))
+      };
+    });
+    void saveGroupsState({ ...prev, available });
+    return { ...prev, available };
+  });
+}
+
 export function useCurrentTabs() {
   const qc = useQueryClient();
 
   useEffect(() => {
     let mounted = true;
 
-    const doSync = async () => {
+    const doSync = async (fetchOg = false) => {
       const next = await syncNowOpen();
-      if (mounted && next) {
-        qc.setQueryData(GROUPS_QUERY_KEY, next);
+      if (!mounted || !next) return;
+      qc.setQueryData(GROUPS_QUERY_KEY, next);
+      if (fetchOg) {
+        const nowOpen = next.available.find((g) => g.permanent);
+        const missing = (nowOpen?.windows ?? []).flatMap((w) =>
+          w.tabs.filter((t) => !t.ogImage)
+        );
+        void backfillOgImages(missing, (updater) =>
+          qc.setQueryData(GROUPS_QUERY_KEY, updater)
+        );
       }
     };
 
-    void doSync();
+    // Initial sync fetches ogImages; subsequent event-driven syncs carry them over via prevOgImages.
+    void doSync(true);
 
     const handleChange = () => void doSync();
 

@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
     Tooltip,
     TooltipContent,
@@ -36,9 +36,9 @@ import { cn } from "@/lib/utils";
 
 /** Map an internal tier key to a human-readable label. */
 function tierLabel(tier: string): string {
-    if (tier === "pro_ai") return "Pro + AI";
+    if (tier === "pro_ai") return "Pro AI";
     if (tier === "pro") return "Pro";
-    return "Free plan";
+    return "Free tier";
 }
 
 export function Header() {
@@ -138,6 +138,7 @@ export function Header() {
                             className="h-7 w-7"
                             onClick={handleUndo}
                             disabled={undoStack.length === 0}
+                            aria-label="Undo"
                         >
                             <Undo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
@@ -153,6 +154,7 @@ export function Header() {
                             className="h-7 w-7"
                             onClick={handleRedo}
                             disabled={redoStack.length === 0}
+                            aria-label="Redo"
                         >
                             <Redo2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
@@ -173,6 +175,11 @@ export function Header() {
                             )}
                             onClick={toggleSelectionMode}
                             aria-pressed={selectionMode}
+                            aria-label={
+                                selectionMode
+                                    ? "Exit selection mode"
+                                    : "Select items"
+                            }
                         >
                             {selectionMode ? (
                                 <CheckSquare className="h-3.5 w-3.5 text-primary" />
@@ -199,6 +206,7 @@ export function Header() {
                                 onClick={handleAIGroup}
                                 disabled={aiLoading}
                                 title="AI Group"
+                                aria-label="AI Auto-group"
                             >
                                 <Sparkles className="h-3.5 w-3.5 text-purple-500" />
                             </Button>
@@ -216,6 +224,7 @@ export function Header() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => openModal("settings")}
+                            aria-label="Settings"
                         >
                             <Settings className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
@@ -262,33 +271,30 @@ export function Header() {
                                         >
                                             {user.email}
                                         </p>
-                                        <Badge
-                                            variant="secondary"
-                                            className="text-[10px] h-4 px-1.5"
-                                        >
-                                            {currentTierLabel}
-                                        </Badge>
+                                        <Badge variant="secondary" className="text-xs px-2 py-0.5 mt-0.5">{currentTierLabel}</Badge>
                                     </div>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                        className="text-xs"
-                                        onClick={() => openModal("settings")}
-                                    >
-                                        Settings
-                                    </DropdownMenuItem>
-                                    {tier === 'free' && (
+                                    {tier === "free" && (
                                         <DropdownMenuItem
                                             className="text-xs text-primary focus:text-primary font-medium cursor-pointer"
-                                            onClick={() => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })}
+                                            onClick={() =>
+                                                chrome.tabs.create({
+                                                    url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`,
+                                                })
+                                            }
                                         >
                                             <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
                                             Upgrade to Pro
                                         </DropdownMenuItem>
                                     )}
-                                    {tier === 'pro' && (
+                                    {tier === "pro" && (
                                         <DropdownMenuItem
                                             className="text-xs text-primary focus:text-primary font-medium cursor-pointer"
-                                            onClick={() => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })}
+                                            onClick={() =>
+                                                chrome.tabs.create({
+                                                    url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`,
+                                                })
+                                            }
                                         >
                                             <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
                                             Upgrade to Pro AI
@@ -303,21 +309,16 @@ export function Header() {
                                 </>
                             ) : (
                                 <>
-                                    {/* Not signed in */}
+                                    {/* Not signed in — Upgrade hidden, sign-in only */}
                                     <div className="px-2 py-1.5 pointer-events-none select-none">
-                                        <Badge
-                                            variant="secondary"
-                                            className="text-[10px] h-4 px-1.5"
-                                        >
-                                            Free plan
-                                        </Badge>
+                                        <Badge variant="secondary" className="text-xs px-2 py-0.5">Free tier</Badge>
                                     </div>
                                     <DropdownMenuItem
                                         className="text-xs text-primary focus:text-primary font-medium"
-                                        onClick={() => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })}
+                                        onClick={() => openModal("auth")}
                                     >
-                                        <Zap className="h-3.5 w-3.5 mr-2 shrink-0" />
-                                        Upgrade to Pro
+                                        <UserCircle className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                        Sign in
                                     </DropdownMenuItem>
                                 </>
                             )}

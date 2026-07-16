@@ -16,15 +16,19 @@ import { useUIStore } from '@/stores/uiStore';
 
 /**
  * DnD ID format:
- *   tab:    "tab-{groupIdx}-{windowIdx}-{tabIdx}"
+ *   tab:    "tab-{tabId}-{winIdx}-{tabIdx}"  ← unique even when tab.id duplicates across windows
  *   window: "window-{groupIdx}-{windowIdx}"
  *   group:  "group-{groupIdx}"
  */
 export function parseDndId(id: string) {
   const parts = id.split('-');
   const kind = parts[0];
+  if (kind === 'tab') {
+    return { kind, tabId: parseInt(parts[1], 10), groupIndex: 0, windowIndex: parseInt(parts[2] ?? '0', 10), tabIndex: parseInt(parts[3] ?? '0', 10) };
+  }
   return {
     kind,
+    tabId: NaN,
     groupIndex: parseInt(parts[1] ?? '0', 10),
     windowIndex: parseInt(parts[2] ?? '0', 10),
     tabIndex: parseInt(parts[3] ?? '0', 10)

@@ -1,0 +1,22 @@
+{
+  "name": "@tabmerger/demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright recording + Remotion rendering pipeline for the TabMerger walkthrough video",
+  "scripts": {
+    "record": "tsx record.ts",
+    "render": "remotion render remotion/Root.tsx WalkthroughDemo out/tabmerger-demo.mp4",
+    "screenshots": "tsx screenshots.ts",
+    "store-assets": "tsx render-store-assets.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/player": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "remotion": "^4.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  }
+}

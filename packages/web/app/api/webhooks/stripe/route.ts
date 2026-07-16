@@ -110,6 +110,25 @@ export async function POST(request: NextRequest) {
         break
       }
 
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice
+        const customerId = invoice.customer as string
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('stripe_customer_id', customerId)
+          .single()
+
+        if (!profile) break
+
+        await supabase
+          .from('subscriptions')
+          .update({ status: 'past_due' })
+          .eq('user_id', profile.id)
+
+        break
+      }
+
       default:
         // Unhandled event type
         break
@@ -133,16 +152,22 @@ async function upsertSubscription(
   const priceId = subscription.items.data[0]?.price.id
   const tier = getTierFromPriceId(priceId)
 
-  await supabase.from('subscriptions').upsert({
-    id: subscription.id,
-    user_id: userId,
-    tier,
-    status: subscription.status,
-    current_period_end: new Date(
-      subscription.current_period_end * 1000
-    ).toISOString(),
-    updated_at: new Date().toISOString(),
-  })
+  const { error } = await supabase.from('subscriptions').upsert(
+    {
+      id: subscription.id,
+      user_id: userId,
+      tier,
+      status: subscription.status,
+      stripe_price_id: priceId,
+      cancel_at_period_end: subscription.cancel_at_period_end,
+      current_period_end: subscription.current_period_end
+        ? new Date(subscription.current_period_end * 1000).toISOString()
+        : null,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'id' }
+  )
+  if (error) console.error('upsertSubscription error:', error)
 }
 
 function getTierFromPriceId(priceId: string | undefined): string {

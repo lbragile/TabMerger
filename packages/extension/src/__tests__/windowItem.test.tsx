@@ -17,6 +17,10 @@ const { mockOpenWindow, mockSortTabs } = vi.hoisted(() => ({
 // ─── DnD stubs ────────────────────────────────────────────────────────────────
 
 vi.mock('@dnd-kit/sortable', () => ({
+  SortableContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+  verticalListSortingStrategy: vi.fn(),
+  arrayMove: <T,>(arr: T[], from: number, to: number) => { const a = [...arr]; const [item] = a.splice(from, 1); a.splice(to, 0, item); return a; },
+  sortableKeyboardCoordinates: vi.fn(),
   useSortable: () => ({
     attributes: {},
     listeners: {},
@@ -26,6 +30,17 @@ vi.mock('@dnd-kit/sortable', () => ({
     isDragging: false,
   }),
 }))
+
+vi.mock('@dnd-kit/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@dnd-kit/core')>()
+  return {
+    ...actual,
+    DndContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+    DragOverlay: () => null,
+    useSensors: vi.fn(() => []),
+    useSensor: vi.fn(),
+  }
+})
 
 vi.mock('@dnd-kit/utilities', () => ({
   CSS: { Transform: { toString: () => '' } },
@@ -133,7 +148,8 @@ function wrap(ui: React.ReactElement) {
 }
 
 function renderWindow(win: WindowType, groupIndex = 0, windowIndex = 0) {
-  return wrap(React.createElement(WindowItem, { window: win, groupIndex, windowIndex, siblingCount: 2 }))
+  const tabIds = win.tabs.map((t) => `tab-${t.id}`)
+  return wrap(React.createElement(WindowItem, { window: win, groupIndex, windowIndex, siblingCount: 2, tabIds }))
 }
 
 async function openMoreMenu(user: ReturnType<typeof userEvent.setup>) {

@@ -12,6 +12,10 @@ import type { Tab as TabType } from '@/lib/types'
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
 vi.mock('@dnd-kit/sortable', () => ({
+  SortableContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+  verticalListSortingStrategy: vi.fn(),
+  arrayMove: <T,>(arr: T[], from: number, to: number) => { const a = [...arr]; const [item] = a.splice(from, 1); a.splice(to, 0, item); return a; },
+  sortableKeyboardCoordinates: vi.fn(),
   useSortable: () => ({
     attributes: {},
     listeners: {},
@@ -21,6 +25,17 @@ vi.mock('@dnd-kit/sortable', () => ({
     isDragging: false,
   }),
 }))
+
+vi.mock('@dnd-kit/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@dnd-kit/core')>()
+  return {
+    ...actual,
+    DndContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
+    DragOverlay: () => null,
+    useSensors: vi.fn(() => []),
+    useSensor: vi.fn(),
+  }
+})
 
 vi.mock('@dnd-kit/utilities', () => ({
   CSS: { Transform: { toString: () => '' } },
@@ -110,13 +125,13 @@ describe('Destructive button styling', () => {
     }
 
     it('has text-destructive at rest', async () => {
-      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0, siblingCount: 2 }))
+      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0, siblingCount: 2, tabIds: [] }))
       const item = await openMoreMenu()
       expect(item.className).toMatch(/text-destructive/)
     })
 
     it('has data-[highlighted] classes so hover/focus stays red', async () => {
-      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0, siblingCount: 2 }))
+      wrap(React.createElement(WindowItem, { window: makeWindow(), groupIndex: 0, windowIndex: 0, siblingCount: 2, tabIds: [] }))
       const item = await openMoreMenu()
       expect(item.className).toMatch(/data-\[highlighted\]:bg-destructive/)
       expect(item.className).toMatch(/data-\[highlighted\]:text-destructive/)

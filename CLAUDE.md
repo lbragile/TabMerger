@@ -31,6 +31,7 @@ packages/
   extension/   WXT browser extension — Chrome (MV3), Firefox, Edge
   web/         Next.js 15 marketing site + user dashboard + AI API routes
   shared/      TypeScript types and constants shared between both packages
+  demo/        Remotion + Playwright walkthrough-video pipeline (dev tooling, not shipped)
 supabase/      Postgres migrations, RLS policies, seed data
 docs/          Architecture, feature roadmap, integration guides
 scripts/       Dev tooling (scan-secrets.sh, setup.sh)
@@ -109,6 +110,7 @@ Domain-specific agents are in `.claude/agents/`. Each agent carries accumulated 
 | `design-system` | shadcn/ui component creation/modification, Tailwind theme, design tokens, responsive layout, accessibility |
 | `pm` | Multi-item feature requests, bug lists, UX feedback, or any requirement that needs scoping before implementation — probes for detail, creates tasks, delegates to domain agents, always triggers test-writer after implementation |
 | `test-writer` | Writes and updates tests after any implementation batch — Vitest + jsdom for extension, Vitest + RTL for web. Always invoked by pm agent; also invoke directly after significant changes |
+| `demo` | `packages/demo/` — Remotion video composition, the Playwright driver that records the extension, demo-script authoring. Delegates extension-side demo-mode code to `extension-dev` |
 
 **Pre-deploy validation agents** — run these proactively before reloading or deploying:
 

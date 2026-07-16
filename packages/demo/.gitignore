@@ -1,0 +1,6 @@
+recordings/
+out/
+node_modules/
+screenshots/
+promo/
+.pw-user-*/

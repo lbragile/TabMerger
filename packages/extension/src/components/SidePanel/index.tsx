@@ -47,18 +47,14 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     setRenameTarget({ kind: 'group', groupIndex: newIndex });
   };
 
-  // Render in zone order: Now Open (permanent) → starred → unstarred.
-  // This mirrors what is stored in IndexedDB after any mutation, but is applied
-  // defensively here so the UI is correct even if legacy data arrives unsorted.
-  const rawAvailable = groupsState.available;
-  const nowOpenGroup = rawAvailable[0];
-  const rest = rawAvailable.slice(1);
+  // Sort for display only — starred below Now Open — but preserve real store indices.
+  const raw = groupsState.available;
   const available = [
-    nowOpenGroup,
-    ...rest.filter((g) => g.starred),
-    ...rest.filter((g) => !g.starred)
-  ];
-  const groupIds = available.map((_, i) => `group-${i}`);
+    raw[0],
+    ...raw.slice(1).filter((g) => g.starred),
+    ...raw.slice(1).filter((g) => !g.starred),
+  ].map((g) => ({ group: g, realIndex: raw.indexOf(g) }));
+  const groupIds = available.map(({ realIndex }) => `group-${realIndex}`);
 
   // Restrict group reordering to vertical axis only
   const restrictToVerticalAxis: Modifier = ({ transform }) => ({ ...transform, x: 0 });
@@ -78,13 +74,13 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             onDragEnd={selectionMode ? () => {} : onDragEnd}
           >
             <SortableContext items={groupIds} strategy={verticalListSortingStrategy}>
-              {available.map((group, i) => (
+              {available.map(({ group, realIndex }) => (
                 <GroupItem
                   key={group.id}
                   group={group}
-                  groupIndex={i}
-                  isActive={i === activeGroupIndex}
-                  onClick={() => !selectionMode && setActiveGroupIndex(i)}
+                  groupIndex={realIndex}
+                  isActive={realIndex === activeGroupIndex}
+                  onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
                 />
               ))}
             </SortableContext>
@@ -110,7 +106,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
         style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
       >
         {(() => {
-          const saved = available.filter((g) => !g.permanent);
+          const saved = raw.filter((g) => !g.permanent);
           const groupCount = saved.length;
           const winCount = saved.reduce((acc, g) => acc + g.windows.length, 0);
           const tabCount = saved.reduce((acc, g) => acc + g.windows.reduce((a, w) => a + w.tabs.length, 0), 0);

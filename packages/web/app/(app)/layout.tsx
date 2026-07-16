@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -10,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Layers, LayoutDashboard, Settings } from 'lucide-react'
+import { LayoutDashboard, Settings } from 'lucide-react'
 
 export default async function AppLayout({
   children,
@@ -34,7 +35,7 @@ export default async function AppLayout({
         <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center space-x-2">
-              <Layers className="h-6 w-6 text-primary" />
+              <Image src="/logo.png" alt="TabMerger" width={24} height={24} className="rounded-md" />
               <span className="font-bold">TabMerger</span>
             </Link>
             <nav className="flex items-center gap-1">

@@ -6,16 +6,42 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface AuthModalProps {
   onClose: () => void;
+}
+
+function PasswordStrength({ password }: { password: string }) {
+  const rules = [
+    { label: 'At least 8 characters', ok: password.length >= 8 },
+    { label: 'One uppercase letter', ok: /[A-Z]/.test(password) },
+    { label: 'One number', ok: /[0-9]/.test(password) },
+  ];
+  if (!password) return null;
+  return (
+    <ul className="mt-1.5 space-y-0.5">
+      {rules.map((r) => (
+        <li key={r.label} className={cn('flex items-center gap-1.5 text-[11px]', r.ok ? 'text-green-500' : 'text-muted-foreground')}>
+          <Check className={cn('h-3 w-3 shrink-0', r.ok ? 'opacity-100' : 'opacity-0')} />
+          {r.label}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export function AuthModal({ onClose }: AuthModalProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, signInWithGoogle, signOut, user } = useAuth();
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [signedUp, setSignedUp] = useState(false);
+  const { signIn, signUp, resetPassword, signOut, user } = useAuth();
+
+  const passwordValid = password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,11 +59,26 @@ export function AuthModal({ onClose }: AuthModalProps) {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!passwordValid) return;
     setLoading(true);
     try {
       await signUp(email, password);
-      toast.success('Account created — check your email');
-      onClose();
+      setSignedUp(true);
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await resetPassword(forgotEmail);
+      toast.success('Check your email for a reset link');
+      setForgotPassword(false);
+      setForgotEmail('');
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
@@ -70,6 +111,50 @@ export function AuthModal({ onClose }: AuthModalProps) {
     );
   }
 
+  if (forgotPassword) {
+    return (
+      <>
+        <DialogHeader>
+          <DialogTitle>Reset Password</DialogTitle>
+          <DialogDescription>Enter your email to receive a reset link.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleResetPassword} className="mt-4 space-y-3">
+          <div className="space-y-1">
+            <Label htmlFor="reset-email">Email</Label>
+            <Input
+              id="reset-email"
+              type="email"
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              required
+              autoFocus
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Sending...' : 'Send reset email'}
+          </Button>
+          <Button type="button" variant="ghost" className="w-full text-xs" onClick={() => setForgotPassword(false)}>
+            Back to sign in
+          </Button>
+        </form>
+      </>
+    );
+  }
+
+  if (signedUp) {
+    return (
+      <>
+        <DialogHeader>
+          <DialogTitle>Check your email</DialogTitle>
+          <DialogDescription>Account created! Check your email to confirm, then sign in.</DialogDescription>
+        </DialogHeader>
+        <Button className="mt-4 w-full" variant="outline" onClick={() => setSignedUp(false)}>
+          Back to sign in
+        </Button>
+      </>
+    );
+  }
+
   return (
     <>
       <DialogHeader>
@@ -78,29 +163,6 @@ export function AuthModal({ onClose }: AuthModalProps) {
       </DialogHeader>
 
       <div className="mt-4">
-        <Button
-          variant="outline"
-          className="w-full mb-4"
-          onClick={async () => {
-            try {
-              await signInWithGoogle();
-            } catch (err) {
-              toast.error((err as Error).message);
-            }
-          }}
-        >
-          Continue with Google
-        </Button>
-
-        <div className="relative mb-4">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or</span>
-          </div>
-        </div>
-
         <Tabs defaultValue="signin">
           <TabsList className="w-full">
             <TabsTrigger value="signin" className="flex-1 text-xs">
@@ -133,6 +195,13 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  className="text-[11px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline"
+                  onClick={() => { setForgotPassword(true); setForgotEmail(email); }}
+                >
+                  Forgot password?
+                </button>
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Signing in...' : 'Sign In'}
@@ -160,10 +229,10 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={8}
                 />
+                <PasswordStrength password={password} />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full" disabled={loading || !passwordValid}>
                 {loading ? 'Creating account...' : 'Create Account'}
               </Button>
             </form>

@@ -85,19 +85,15 @@ export function GroupContextMenu({
     <div
       ref={wrapperRef as React.RefCallback<HTMLDivElement>}
       style={wrapperStyle}
-      className={cn('relative', wrapperClassName)}
+      className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500', wrapperClassName)}
+      tabIndex={0}
+      data-sidebar-group-index={groupIndex}
       onClick={onWrapperClick}
       onContextMenu={onWrapperContextMenu}
       onMouseEnter={onWrapperMouseEnter}
       onMouseLeave={onWrapperMouseLeave}
     >
       <DropdownMenu open={open} onOpenChange={onOpenChange}>
-        {/*
-          The trigger is a zero-size, pointer-events-none overlay so that left-clicking the
-          group item (which is rendered as a sibling below) does NOT cause Radix's
-          DropdownMenuTrigger to call onOpenChange — the menu opens only via right-click
-          (controlled externally through the `open` prop).
-        */}
         <DropdownMenuTrigger
           className="absolute inset-0 h-full w-full pointer-events-none opacity-0 focus:outline-none"
           tabIndex={-1}
@@ -129,9 +125,7 @@ export function GroupContextMenu({
             </PopoverContent>
           </Popover>
 
-          <DropdownMenuItem
-            onClick={() => openModal('note', { groupIndex, groupId: group.id })}
-          >
+          <DropdownMenuItem onClick={() => openModal('note', { groupIndex, groupId: group.id })}>
             <FileText className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>Add/edit note</div><div className="text-[10px] text-muted-foreground font-normal">Attach a note to this group</div></div>
           </DropdownMenuItem>
@@ -188,9 +182,7 @@ export function GroupContextMenu({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
-                onClick={() =>
-                  openModal('deleteGroup', { groupIndex, groupName: group.name })
-                }
+                onClick={() => openModal('deleteGroup', { groupIndex, groupName: group.name })}
               >
                 <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
                 <div><div>Delete group</div><div className="text-[10px] font-normal opacity-60">Permanently remove this group and its tabs</div></div>

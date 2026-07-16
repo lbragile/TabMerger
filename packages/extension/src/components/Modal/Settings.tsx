@@ -10,9 +10,10 @@ import { getSetting, setSetting } from '@/lib/localDb';
 import { applyTheme } from '@/lib/theme';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
-import { useGroups, useSetGroupsState } from '@/hooks/useGroups';
+import { useGroups, useImportGroups } from '@/hooks/useGroups';
+import { importGroups, parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
+import { exportGroups } from '@/lib/importExport';
 import { toast } from 'sonner';
-import type { GroupsState } from '@/lib/types';
 import { Download, Upload } from 'lucide-react';
 
 interface AppSettings {
@@ -21,6 +22,7 @@ interface AppSettings {
   confirmOnWindowClose: boolean;
   syncEnabled: boolean;
   openTabOnClick: boolean;
+  autoDedupOnMerge: boolean;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -28,7 +30,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   confirmOnTabClose: false,
   confirmOnWindowClose: true,
   syncEnabled: true,
-  openTabOnClick: true
+  openTabOnClick: true,
+  autoDedupOnMerge: false
 };
 
 interface SettingsModalProps {
@@ -41,7 +44,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { user, session, signOut } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
   const { data: groupsState } = useGroups();
-  const setGroupsState = useSetGroupsState();
+  const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -71,12 +74,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
   const handleExport = () => {
     if (!groupsState) return;
-    const json = JSON.stringify(groupsState, null, 2);
+    const json = exportGroups(groupsState.available);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `tabmerger-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `tabmerger-backup-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success('Groups exported successfully');
@@ -85,17 +88,29 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const handleImport = async (file: File) => {
     try {
       const text = await file.text();
-      const parsed = JSON.parse(text) as GroupsState;
-      if (!parsed.available || !Array.isArray(parsed.available)) {
-        throw new Error('Invalid format');
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      let groups: import('@/lib/types').Group[];
+      if (ext === 'html') {
+        groups = parseBookmarksHtml(text);
+      } else if (ext === 'txt') {
+        groups = parseOneTabs(text);
+      } else {
+        groups = importGroups(text);
       }
-      await setGroupsState(parsed);
-      toast.success('Groups imported successfully');
-      onClose();
-    } catch {
-      toast.error('Invalid JSON file — expected TabMerger export format');
+      if (groups.length === 0) throw new Error('No groups found');
+      if (!confirm(`Import ${groups.length} group${groups.length === 1 ? '' : 's'}?`)) return;
+      importGroupsMutation(groups, {
+        onSuccess: () => {
+          toast.success('Groups imported successfully');
+          onClose();
+        }
+      });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Invalid file format');
     }
   };
+
+
 
   const handleManageBilling = async () => {
     if (!session?.access_token) return;
@@ -193,6 +208,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             <Switch
               checked={settings.openTabOnClick}
               onCheckedChange={(v) => void handleChange('openTabOnClick', v)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">Auto-deduplicate on merge</Label>
+              <p className="text-xs text-muted-foreground">Remove duplicate tabs when merging windows</p>
+            </div>
+            <Switch
+              checked={settings.autoDedupOnMerge}
+              onCheckedChange={(v) => void handleChange('autoDedupOnMerge', v)}
             />
           </div>
         </TabsContent>
@@ -302,7 +328,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".json"
+            accept=".json,.html,.txt"
             className="hidden"
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -315,6 +341,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <Button variant="destructive" size="sm" className="w-full text-xs" onClick={handleClearAll}>
             Clear all data
           </Button>
+
         </TabsContent>
       </Tabs>
     </>

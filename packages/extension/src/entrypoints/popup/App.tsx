@@ -13,6 +13,7 @@ import { useSync } from '@/hooks/useSync';
 import { useUIStore } from '@/stores/uiStore';
 import { parseSearchQuery, fuzzyMatch } from '@/lib/utils';
 import { useTheme } from '@/hooks/useTheme';
+import { useKeyboardNav } from '@/hooks/useKeyboardNav';
 
 function AppContent() {
   const { data: groupsState, isLoading } = useGroups();
@@ -25,6 +26,8 @@ function AppContent() {
 
   // Apply saved theme (light/dark/system) before anything renders
   useTheme();
+
+  useKeyboardNav({ groupCount: groupsState?.available.length ?? 0, focusedTabId: null });
 
   // Keep "Now Open" in sync with actual browser tabs
   useCurrentTabs();

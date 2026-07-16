@@ -18,6 +18,10 @@ export const metadata: Metadata = {
     'chrome extension',
     'tab organizer',
   ],
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',

@@ -61,8 +61,8 @@ check_pattern "Private key block"     "-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KE
 # PII patterns
 check_pattern "Email address (literal)" "[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
 
-# .env files committed directly (allow .env.example and .env.local.example)
-ENV_FILES=$(echo "$STAGED" | grep -E "(^|\/)\.env$|(^|\/)\.env\.[^e][a-z]*$" || true)
+# .env files committed directly (allow .env.example, .env.local.example, .env.demo)
+ENV_FILES=$(echo "$STAGED" | grep -E "(^|\/)\.env$|(^|\/)\.env\.[^e][a-z]*$" | grep -v "\.env\.demo$" || true)
 if [ -n "$ENV_FILES" ]; then
   echo -e "${RED}[BLOCKED]${NC} ${YELLOW}.env file staged for commit${NC}:"
   echo "$ENV_FILES" | sed 's/^/  /'

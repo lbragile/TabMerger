@@ -12,7 +12,8 @@ export function useGroups() {
   return useQuery({
     queryKey: GROUPS_QUERY_KEY,
     queryFn: getGroupsState,
-    staleTime: Infinity
+    staleTime: 0,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -744,4 +745,55 @@ export function useSetGroupsState() {
     await saveGroupsState(state);
     qc.setQueryData(GROUPS_QUERY_KEY, state);
   };
+}
+
+/** Removes duplicate tabs (by URL) from a group. For Now Open, also closes them in Chrome. */
+export function useDeduplicateGroup() {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: async ({ groupIndex, duplicateIds }: { groupIndex: number; duplicateIds: number[] }) => {
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const group = state?.available[groupIndex];
+      if (!group) return;
+      // For Now Open, close browser tabs
+      if (group.permanent && duplicateIds.length > 0) {
+        chrome.tabs.remove(duplicateIds).catch(() => {});
+      }
+      const idSet = new Set(duplicateIds);
+      return mutate(
+        (prev) => {
+          const available = [...prev.available];
+          const g = available[groupIndex];
+          const updatedWindows = g.windows.map((w) => ({
+            ...w,
+            tabs: w.tabs.filter((t) => !idSet.has(t.id))
+          })).filter((w) => w.tabs.length > 0)
+          available[groupIndex] = {
+            ...g,
+            windows: updatedWindows,
+            updatedAt: Date.now(),
+            pendingSync: !g.permanent
+          };
+          available[groupIndex].info = getGroupInfo(available[groupIndex]);
+          return { ...prev, available };
+        },
+        group.permanent // skip undo for Now Open
+      );
+    }
+  });
+}
+
+/** Imports groups and appends them (preserving Now Open at index 0). */
+export function useImportGroups() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (newGroups: import('@/lib/types').Group[]) =>
+      mutate((prev) => ({
+        ...prev,
+        available: [...prev.available, ...newGroups]
+      }))
+  });
 }

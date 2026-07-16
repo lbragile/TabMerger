@@ -1,9 +1,8 @@
 name: Publish to Stores
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -73,15 +72,14 @@ jobs:
         with:
           name: tabmerger-chrome
 
-      - name: Publish to Chrome Web Store
+      - name: Upload to Chrome Web Store (submit for review — publish manually from dashboard)
         run: |
           pnpm dlx chrome-webstore-upload-cli upload \
             --source tabmerger-*-chrome.zip \
             --extension-id ${{ secrets.CHROME_EXTENSION_ID }} \
             --client-id ${{ secrets.CHROME_CLIENT_ID }} \
             --client-secret ${{ secrets.CHROME_CLIENT_SECRET }} \
-            --refresh-token ${{ secrets.CHROME_REFRESH_TOKEN }} \
-            --auto-publish
+            --refresh-token ${{ secrets.CHROME_REFRESH_TOKEN }}
 
   publish-firefox:
     name: Publish to Firefox Add-ons
@@ -131,15 +129,27 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}"
 
   notify:
-    name: Create GitHub Release
-    needs: [publish-chrome, publish-firefox, publish-edge]
+    name: Attach Artifacts to Release
+    needs: [build, publish-chrome, publish-firefox, publish-edge]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create GitHub Release
+      - uses: actions/download-artifact@v4
+        with:
+          name: tabmerger-chrome
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: tabmerger-firefox
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: tabmerger-edge
+
+      - name: Attach zips to GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create ${{ github.ref_name }} --generate-notes
+        run: gh release upload ${{ github.ref_name }} tabmerger-*.zip

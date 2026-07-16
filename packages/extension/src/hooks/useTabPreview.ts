@@ -44,11 +44,14 @@ export function useTabPreview(url: string, title: string, aiEnabled: boolean, ta
   });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const graceRef = useRef(false);
   const { mutateAsync: fetchSummary } = useTabSummary();
 
   const handleMouseEnter = useCallback(() => {
     if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
     timerRef.current = setTimeout(async () => {
+      graceRef.current = true;
+      setTimeout(() => { graceRef.current = false; }, 500);
       setState((s) => ({ ...s, visible: true, loading: true }));
       if (!aiEnabled) {
         const ogImage = storedOgImage ?? await fetchOgImage(tabId ?? 0, url);
@@ -67,10 +70,15 @@ export function useTabPreview(url: string, title: string, aiEnabled: boolean, ta
 
   const handleMouseLeave = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (graceRef.current) return;
     leaveTimerRef.current = setTimeout(() => {
       setState({ visible: false, summary: null, ogImage: null, loading: false });
-    }, 100);
+    }, 300);
   }, []);
 
-  return { ...state, handleMouseEnter, handleMouseLeave };
+  const cancelLeave = useCallback(() => {
+    if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+  }, []);
+
+  return { ...state, handleMouseEnter, handleMouseLeave, cancelLeave };
 }

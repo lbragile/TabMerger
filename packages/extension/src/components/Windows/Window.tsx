@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
+import { useState, useRef, useEffect, Fragment } from 'react';
+import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {
   Star,
@@ -49,11 +49,18 @@ interface WindowProps {
   groupIndex: number;
   windowIndex: number;
   siblingCount: number;
+  tabIds: string[];
+  isDraggingTab?: boolean;
+  activeWindowIndex?: number | null;
+  dragStartWinIndex?: number | null;
+  insertState?: { tabId: string; position: 'before' | 'after' } | null;
+  groupColor?: string;
+  isBeingDragged?: boolean;
   searchFilter?: string;
   tagFilter?: string;
 }
 
-export function WindowItem({ window, groupIndex, windowIndex, siblingCount, searchFilter, tagFilter }: WindowProps) {
+export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabIds, isDraggingTab, activeWindowIndex, dragStartWinIndex, insertState, groupColor, isBeingDragged, searchFilter, tagFilter }: WindowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `window-${groupIndex}-${windowIndex}`
   });
@@ -70,10 +77,9 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
     }, 50);
     return () => clearTimeout(id);
   }, [isEditing]);
+
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
-
   const openWindow = useOpenWindow();
-
   const { mutate: deleteWindow } = useDeleteWindow();
   const { mutate: updateWindowName } = useUpdateWindowName();
   const { mutate: toggleStarred } = useToggleWindowStarred();
@@ -89,11 +95,20 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
   const toggleSelection = useUIStore((s) => s.toggleSelection);
   const enterSelectionMode = useUIStore((s) => s.enterSelectionMode);
 
+  // Suppress window transform during tab drags (prevents windows jumping horizontally)
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    ...(window.starred ? { borderLeftColor: 'hsl(var(--primary))' } : {})
+    transform: (isDraggingTab || isBeingDragged) ? undefined : CSS.Transform.toString(transform),
+    transition: (isDraggingTab || isBeingDragged) ? undefined : transition,
+    ...(window.starred ? { borderLeftColor: groupColor ?? 'hsl(var(--primary))' } : {})
   };
+
+  // Cross-window drop target: active window that is NOT the drag source
+  const isCrossWindowTarget =
+    isDraggingTab && activeWindowIndex === windowIndex && windowIndex !== dragStartWinIndex;
+  // ponytail: parse rgba(R,G,B,1) → rgba(R,G,B,0.4) for glow; fallback to transparent
+  const glowStyle = isCrossWindowTarget && groupColor
+    ? { boxShadow: `0 0 0 2px ${groupColor.replace(/,\s*[\d.]+\)$/, ', 0.4)')}` }
+    : {};
 
   const handleRename = () => {
     if (nameValue.trim()) {
@@ -102,11 +117,9 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
     setIsEditing(false);
   };
 
-  // All groups except the current one — available as move targets
   const targetGroups =
     groupsState?.available.map((g, i) => ({ group: g, index: i })).filter(({ index }) => index !== groupIndex) ?? [];
 
-  // Selection state for this window
   const committedType = selectedItems[0]?.type ?? null;
   const showCheckbox = selectionMode && (!committedType || committedType === 'window');
   const selectionId = `window-${groupIndex}-${windowIndex}`;
@@ -128,10 +141,10 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
   return (
     <div
       ref={setNodeRef}
-      style={style}
+      style={{ ...style, ...glowStyle }}
       className={cn(
-        'rounded-md border border-border bg-card mb-2 transition-shadow',
-        isDragging && 'opacity-50 shadow-lg',
+        'rounded-md border border-border bg-card mb-2 p-1 transition-shadow min-w-0 overflow-hidden',
+        isBeingDragged ? 'opacity-0' : isDragging && 'opacity-50 shadow-lg',
         window.starred && 'border-l-2',
         window.incognito && 'bg-muted/30',
         isSelected && 'ring-2 ring-primary/70'
@@ -143,7 +156,8 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
           <span className="text-[10px] font-medium">Incognito</span>
         </div>
       )}
-      {/* Window header — right-click opens "Move to group" context menu */}
+
+      {/* Window header */}
       <div
         className="group relative flex items-center gap-1.5 px-1.5 py-1 border-b border-border/50"
         onClick={handleHeaderClick}
@@ -153,7 +167,6 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
           setContextMenuOpen(true);
         }}
       >
-        {/* Zero-size context menu trigger — same pattern as GroupContextMenu */}
         <DropdownMenu open={contextMenuOpen} onOpenChange={setContextMenuOpen}>
           <DropdownMenuTrigger
             className="absolute inset-0 w-full h-full pointer-events-none opacity-0 focus:outline-none"
@@ -192,7 +205,6 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Single slot: checkbox in selection mode, drag handle otherwise */}
         {showCheckbox ? (
           <button
             type="button"
@@ -217,7 +229,6 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
           <span className="h-3.5 w-3.5 shrink-0" />
         )}
 
-        {/* Window name — outer div holds flex slot; span anchors height; input overlays when editing */}
         <div className="flex-1 min-w-0 relative">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -340,21 +351,39 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, sear
         </Tooltip>
       </div>
 
-      {/* Tabs list — DndContext is in parent WindowsPanel */}
-      {/* max-h-44 caps each window at ~5-6 visible tabs; overflow-y-auto allows independent scroll */}
-      <div className="py-0.5 px-3 max-h-44 overflow-y-auto">
-        {window.tabs.map((tab, tabIndex) => (
-          <TabItem
-            key={tab.id}
-            tab={tab}
-            groupIndex={groupIndex}
-            windowIndex={windowIndex}
-            tabIndex={tabIndex}
-            siblingCount={window.tabs.length}
-            searchFilter={searchFilter}
-            tagFilter={tagFilter}
-          />
-        ))}
+      {/* Tabs list */}
+      <div className={cn('py-0.5 px-3 overflow-y-auto', isCrossWindowTarget ? 'max-h-64' : 'max-h-[182px]')}>
+        <SortableContext items={tabIds} strategy={verticalListSortingStrategy}>
+          {window.tabs.filter(Boolean).map((tab, tabIndex) => {
+            const dndId = `tab-${tab.id}-${windowIndex}-${tabIndex}`;
+            return (
+              <Fragment key={dndId}>
+                {isCrossWindowTarget && insertState?.tabId === dndId && insertState.position === 'before' && (
+                  <div className="mx-1 my-0.5 h-0.5 rounded-sm" style={{ background: groupColor }} />
+                )}
+                <TabItem
+                  tab={tab}
+                  groupIndex={groupIndex}
+                  windowIndex={windowIndex}
+                  tabIndex={tabIndex}
+                  siblingCount={window.tabs.length}
+                  isDraggingTab={isDraggingTab}
+                  activeWindowIndex={activeWindowIndex}
+                  searchFilter={searchFilter}
+                  tagFilter={tagFilter}
+                  groupColor={groupColor}
+                />
+                {isCrossWindowTarget && insertState?.tabId === dndId && insertState.position === 'after' && (
+                  <div className="mx-1 my-0.5 h-0.5 rounded-sm" style={{ background: groupColor }} />
+                )}
+              </Fragment>
+            );
+          })}
+          {/* Insertion line at end when hovering empty window area */}
+          {isCrossWindowTarget && insertState?.tabId === '__end__' && (
+            <div className="mx-1 my-0.5 h-0.5 rounded-sm" style={{ background: groupColor }} />
+          )}
+        </SortableContext>
         {window.tabs.length === 0 && (
           <p className="px-3 py-1.5 text-xs text-muted-foreground italic">Empty window</p>
         )}

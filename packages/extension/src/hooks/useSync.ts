@@ -18,7 +18,19 @@ export function useSync() {
       const state = await getGroupsState();
       await pushPendingChanges(session);
       const merged = await pullRemoteChanges(session, state.available);
-      const next = { ...state, available: merged };
+
+      // Re-apply local drag order: pull returns groups sorted by updatedAt which
+      // stomps the user's drag order. Re-sort merged using the locally-saved order;
+      // any groups new from remote land at the end.
+      const localOrder = state.available.map((g) => g.id);
+      const posMap = new Map(localOrder.map((id, i) => [id, i]));
+      const reordered = [...merged].sort((a, b) => {
+        if (a.permanent && !b.permanent) return -1;
+        if (!a.permanent && b.permanent) return 1;
+        return (posMap.get(a.id) ?? Infinity) - (posMap.get(b.id) ?? Infinity);
+      });
+
+      const next = { ...state, available: reordered };
       await saveGroupsState(next);
       qc.setQueryData(GROUPS_QUERY_KEY, next);
     } catch (err) {

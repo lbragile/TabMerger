@@ -16,6 +16,10 @@
     "type-check": "pnpm -r type-check",
     "test": "pnpm -r --filter @tabmerger/extension --filter @tabmerger/web test",
     "test:e2e": "pnpm --filter @tabmerger/web test:e2e",
+    "demo:record": "pnpm --filter @tabmerger/demo record",
+    "demo:render": "pnpm --filter @tabmerger/demo render",
+    "demo:screenshots": "pnpm --filter @tabmerger/demo screenshots",
+    "demo:store-assets": "pnpm --filter @tabmerger/demo store-assets",
     "scan-secrets": "bash scripts/scan-secrets.sh"
   },
   "devDependencies": {

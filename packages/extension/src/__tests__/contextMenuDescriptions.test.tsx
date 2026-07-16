@@ -81,9 +81,8 @@ function renderContextMenu(group: Group, open = true) {
           groupIndex: 1,
           open,
           onOpenChange: vi.fn(),
-        },
-          React.createElement('div', null, 'trigger')
-        )
+          children: React.createElement('div', null, 'trigger'),
+        })
       )
     )
   )

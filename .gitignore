@@ -32,6 +32,9 @@ out/
 *.tsbuildinfo
 .tokensave
 
+# Supabase
+supabase/.temp/
+
 # Test outputs
 coverage/
 playwright-report/

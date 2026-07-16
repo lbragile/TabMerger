@@ -7,6 +7,7 @@ import { NoteModal } from './Note';
 import { SettingsModal } from './Settings';
 import { AuthModal } from './Auth';
 import { UpgradePromptModal } from './UpgradePrompt';
+import { DeduplicateConfirmModal } from './DeduplicateConfirm';
 
 export function ModalRoot() {
   const modal = useUIStore((s) => s.modal);
@@ -38,6 +39,8 @@ export function ModalRoot() {
         return <AuthModal onClose={closeModal} />;
       case 'upgrade':
         return <UpgradePromptModal reason={modal.data?.reason as string} onClose={closeModal} />;
+      case 'deduplicateGroup':
+        return <DeduplicateConfirmModal data={modal.data ?? {}} onClose={closeModal} />;
       default:
         return null;
     }
