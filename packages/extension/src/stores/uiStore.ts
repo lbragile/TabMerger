@@ -12,6 +12,7 @@ export type ModalType =
   | 'auth'
   | 'upgrade'
   | 'deduplicateGroup'
+  | 'urlRules'
   | null;
 
 interface ModalState {

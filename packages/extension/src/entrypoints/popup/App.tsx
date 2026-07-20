@@ -12,8 +12,12 @@ import { useCurrentTabs } from '@/hooks/useCurrentTabs';
 import { useSync } from '@/hooks/useSync';
 import { useUIStore } from '@/stores/uiStore';
 import { parseSearchQuery, fuzzyMatch } from '@/lib/utils';
+import { trackEvent } from '@/lib/analytics';
 import { useTheme } from '@/hooks/useTheme';
 import { useKeyboardNav } from '@/hooks/useKeyboardNav';
+import { SubscriptionStatusBanner } from '@/components/SubscriptionStatusBanner';
+import { UpgradeCTA } from '@/components/UpgradeCTA';
+import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
 
 function AppContent() {
   const { data: groupsState, isLoading } = useGroups();
@@ -26,6 +30,12 @@ function AppContent() {
 
   // Apply saved theme (light/dark/system) before anything renders
   useTheme();
+
+  useEffect(() => {
+    if (sessionStorage.getItem('ext_opened')) return;
+    sessionStorage.setItem('ext_opened', '1');
+    trackEvent('extension_opened');
+  }, []);
 
   useKeyboardNav({ groupCount: groupsState?.available.length ?? 0, focusedTabId: null });
 
@@ -71,6 +81,9 @@ function AppContent() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <Header />
+      <SubscriptionStatusBanner />
+      <UpgradeCTA />
+      <CleanupSuggestionBanner />
       <AIGroupSuggestion />
       <div className="flex flex-1 min-h-0">
         <SidePanel groupsState={groupsState} />

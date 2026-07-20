@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { trackEvent } from '@/lib/analytics';
 import type { Tab, Group } from '@/lib/types';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
@@ -28,6 +29,7 @@ export function useAutoGroup() {
   const { aiFeatures } = useEntitlements();
 
   return useMutation({
+    onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'group' }); },
     mutationFn: async (tabs: Tab[]) => {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -46,6 +48,7 @@ export function useNameGroup() {
   const { aiFeatures } = useEntitlements();
 
   return useMutation({
+    onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'name' }); },
     mutationFn: async (tabs: Tab[]) => {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -60,6 +63,7 @@ export function useSuggestSessions() {
   const { aiFeatures } = useEntitlements();
 
   return useMutation({
+    onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'suggest' }); },
     mutationFn: async (recentGroups: Group[]) => {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -78,6 +82,7 @@ export function useOrganizeTabs() {
   const { aiFeatures } = useEntitlements();
 
   return useMutation({
+    onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'organize' }); },
     mutationFn: async () => {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (!session?.access_token) throw new Error('Not authenticated');

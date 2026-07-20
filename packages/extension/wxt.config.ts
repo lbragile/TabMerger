@@ -1,5 +1,7 @@
 import { defineConfig } from "wxt";
 import path from "path";
+import { visualizer } from "rollup-plugin-visualizer";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     srcDir: "src",
@@ -10,6 +12,11 @@ export default defineConfig({
                 "@": path.resolve(__dirname, "src"),
             },
         },
+        // ponytail: only loaded when ANALYZE=true, zero cost in normal builds
+        plugins: [
+            tailwindcss(),
+            ...(process.env.ANALYZE ? [visualizer({ open: true, filename: "bundle-stats.html" })] : []),
+        ],
     }),
     manifestVersion: 3,
     manifest: {
@@ -17,7 +24,7 @@ export default defineConfig({
         description:
             "Merge and organize browser tabs into groups to reduce memory usage",
         incognito: "spanning",
-        permissions: ["tabs", "tabGroups", "storage", "contextMenus"],
+        permissions: ["tabs", "tabGroups", "storage", "contextMenus", "alarms", "notifications"],
         host_permissions: ["<all_urls>"],
         action: { default_popup: "popup.html" },
         web_accessible_resources: [
@@ -34,12 +41,8 @@ export default defineConfig({
     dev: {
         server: { port: 3001 },
     },
-    runner: {
-        // Isolated profile so the dev extension doesn't pollute a real Chrome profile.
-        // --no-first-run prevents Chrome's welcome page from opening on a fresh profile.
+    webExt: {
         chromiumArgs: ["--user-data-dir=.wxt/chrome-data", "--no-first-run"],
-        // Explicitly open about:blank; omitting this (or passing []) lets startUrl be
-        // undefined, which causes Chrome to fall back to its default welcome page.
         startUrls: ["about:blank"],
     },
 });

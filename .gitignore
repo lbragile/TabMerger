@@ -35,6 +35,11 @@ out/
 # Supabase
 supabase/.temp/
 
+# Sentry
+.sentryclirc
+.sentry/
+packages/web/.next/static/chunks/*.js.map
+
 # Test outputs
 coverage/
 playwright-report/

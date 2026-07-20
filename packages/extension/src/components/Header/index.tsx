@@ -7,6 +7,7 @@ import {
     CheckSquare,
     Square,
     Zap,
+    BookmarkPlus,
 } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAutoGroup } from "@/hooks/useAI";
 import { useGroups, useSetGroupsState } from "@/hooks/useGroups";
+import { useSessions, useSaveSession } from "@/hooks/useSessions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +69,9 @@ export function Header() {
     );
 
     const { user, signOut } = useAuth();
-    const { aiFeatures, tier } = useEntitlements();
+    const { aiFeatures, tier, sessions: hasSessions } = useEntitlements();
+    const { data: sessionList = [] } = useSessions();
+    const { mutateAsync: saveSession } = useSaveSession();
     const { data: groupsState } = useGroups();
     const setGroupsState = useSetGroupsState();
     const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
@@ -101,6 +105,23 @@ export function Header() {
         }
     };
 
+    const handleSaveSession = async () => {
+        const name = window.prompt('Session name:');
+        if (!name?.trim()) return;
+        try {
+            await saveSession({ name: name.trim(), sessionCount: sessionList.length, hasSessions });
+            toast.success('Session saved');
+        } catch (err) {
+            if (err instanceof Error && err.message === 'SESSION_LIMIT') {
+                toast.error('Free plan allows up to 3 sessions.', {
+                    action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+                });
+            } else {
+                toast.error('Failed to save session');
+            }
+        }
+    };
+
     const userInitials = user?.email?.slice(0, 2).toUpperCase() ?? "TM";
     const currentTierLabel = tierLabel(tier);
 
@@ -130,6 +151,21 @@ export function Header() {
 
             {/* Actions — pinned to the right */}
             <div className="flex items-center gap-0.5">
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={handleSaveSession}
+                            aria-label="Save session"
+                        >
+                            <BookmarkPlus className="h-3.5 w-3.5 text-muted-foreground" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">Save session</TooltipContent>
+                </Tooltip>
+
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button
@@ -193,29 +229,30 @@ export function Header() {
                     </TooltipContent>
                 </Tooltip>
 
-                {aiFeatures && (
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className={cn(
-                                    "h-7 w-7",
-                                    aiLoading && "animate-pulse",
-                                )}
-                                onClick={handleAIGroup}
-                                disabled={aiLoading}
-                                title="AI Group"
-                                aria-label="AI Auto-group"
-                            >
-                                <Sparkles className="h-3.5 w-3.5 text-purple-500" />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom">
-                            AI Auto-group
-                        </TooltipContent>
-                    </Tooltip>
-                )}
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className={cn(
+                                "h-7 w-7",
+                                aiLoading && "animate-pulse",
+                                !aiFeatures && "opacity-50",
+                            )}
+                            onClick={aiFeatures ? handleAIGroup : () => openModal('upgrade')}
+                            disabled={aiLoading}
+                            aria-label="AI Auto-group"
+                        >
+                            <Sparkles className={cn(
+                                "h-3.5 w-3.5",
+                                aiFeatures ? "text-purple-500" : "text-muted-foreground",
+                            )} />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                        {aiFeatures ? 'AI Auto-group' : 'Pro AI required — click to upgrade'}
+                    </TooltipContent>
+                </Tooltip>
 
                 <Tooltip>
                     <TooltipTrigger asChild>

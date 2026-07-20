@@ -4,6 +4,7 @@ packages:
 overrides:
   '@vitejs/plugin-react': '^5.0.0'
 allowBuilds:
+  '@sentry/cli': false
   '@swc/core': true
   cbor-extract: true
   esbuild: true

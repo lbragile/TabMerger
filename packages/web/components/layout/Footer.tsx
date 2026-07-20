@@ -40,6 +40,14 @@ export function Footer() {
                                     Pricing
                                 </Link>
                             </li>
+                            <li>
+                                <Link
+                                    href="/changelog"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    Changelog
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
@@ -80,6 +88,14 @@ export function Footer() {
                                     className="hover:text-foreground transition-colors"
                                 >
                                     Terms of Service
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/contact"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    Contact
                                 </Link>
                             </li>
                         </ul>

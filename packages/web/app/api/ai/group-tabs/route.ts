@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { groupTabs, type Tab } from '@/lib/ai'
+import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
 
 export async function POST(request: NextRequest) {
-  // Extract Bearer token and verify Pro AI subscription
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')
 
@@ -22,16 +22,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('tier, status')
-    .eq('user_id', user.id)
-    .single()
-
-  if (subscription?.tier !== 'pro_ai' || subscription?.status !== 'active') {
+  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id)
+  if (!allowed) {
     return NextResponse.json(
-      { error: 'Pro AI subscription required' },
-      { status: 403 }
+      { error: 'Pro AI subscription required or monthly limit reached' },
+      { status: remaining === 0 ? 429 : 403 }
     )
   }
 
@@ -44,7 +39,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const groups = await groupTabs(tabs)
-    return NextResponse.json({ groups })
+    return NextResponse.json({ groups }, {
+      headers: { 'X-AI-Requests-Remaining': String(remaining) },
+    })
   } catch (err) {
     console.error('AI group-tabs error:', err)
     return NextResponse.json(

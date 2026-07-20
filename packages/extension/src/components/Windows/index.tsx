@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   DndContext,
@@ -12,7 +12,7 @@ import {
 } from '@dnd-kit/core';
 import { getEventCoordinates } from '@dnd-kit/utilities';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
-import { Plus, MoreHorizontal, RefreshCw, GitMerge, Layers, SplitSquareHorizontal, SortAsc, Trash2, Copy } from 'lucide-react';
+import { Plus, MoreHorizontal, RefreshCw, GitMerge, Layers, SplitSquareHorizontal, SortAsc, Trash2, Copy, StickyNote, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -32,12 +32,15 @@ import {
   useSplitWindows,
   useSortTabs,
   useDeleteAllWindows,
+  useUpdateGroupNote,
+  useRemoveStaleTabs,
   GROUPS_QUERY_KEY
 } from '@/hooks/useGroups';
 import { useDndSensors, useWindowDndHandlers, parseDndId } from '@/hooks/useDnd';
 import { useUIStore } from '@/stores/uiStore';
+import { useEntitlements } from '@/hooks/useEntitlements';
 import { useQueryClient } from '@tanstack/react-query';
-import { saveGroupsState } from '@/lib/localDb';
+import { saveGroupsState, getSetting } from '@/lib/localDb';
 import { parseSearchQuery, cn, formatGroupCounts } from '@/lib/utils';
 import { deduplicateTabs } from '@/lib/deduplication';
 import { toast } from 'sonner';
@@ -89,12 +92,48 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   const [insertState, setInsertState] = useState<{ tabId: string; position: 'before' | 'after' } | null>(null);
   const dragStartWinRef = useRef<number | null>(null);
 
+  const { maxTabs } = useEntitlements();
   const { mutate: replaceWithCurrent } = useReplaceWithCurrent();
   const { mutate: mergeWithCurrent } = useMergeWithCurrent();
   const { mutate: uniteWindows } = useUniteWindows();
   const { mutate: splitWindows } = useSplitWindows();
   const { mutate: sortTabs } = useSortTabs();
   const { mutate: deleteAllWindows } = useDeleteAllWindows();
+  const { mutate: updateGroupNote } = useUpdateGroupNote();
+
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [noteValue, setNoteValue] = useState('');
+  const noteContainerRef = useRef<HTMLDivElement>(null);
+  const noteTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [staleThresholdMs, setStaleThresholdMs] = useState(30 * 24 * 60 * 60 * 1000);
+  useEffect(() => {
+    getSetting<{ staleThresholdDays?: number }>('appSettings', {}).then((s) => {
+      const days = s.staleThresholdDays ?? 30;
+      setStaleThresholdMs(days * 24 * 60 * 60 * 1000);
+    });
+  }, []);
+
+  const { mutate: removeStaleTabs } = useRemoveStaleTabs();
+
+  const staleCount = group.permanent ? 0 : group.windows.reduce(
+    (acc, w) => acc + w.tabs.filter((t) => t.savedAt && Date.now() - t.savedAt > staleThresholdMs).length,
+    0
+  );
+
+  const handleRemoveStaleTabs = () => removeStaleTabs({ groupIndex, staleThresholdMs });
+
+  useEffect(() => {
+    if (noteOpen) {
+      setNoteValue(group.note ?? '');
+      setTimeout(() => noteTextareaRef.current?.focus(), 0);
+    }
+  }, [noteOpen, group.note]);
+
+  const commitGroupNote = () => {
+    updateGroupNote({ groupIndex, note: noteValue.trim() });
+    setNoteOpen(false);
+  };
 
   const { tabQuery: searchFilter, tagFilter } = parseSearchQuery(rawSearchFilter);
 
@@ -281,22 +320,45 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
       <div className="flex items-center justify-between px-3 py-2.5 border-b border-border shrink-0">
         <span className="text-xs text-muted-foreground flex items-center gap-1.5">
           <span>{formatGroupCounts(group.windows.length, group.windows.reduce((a, w) => a + w.tabs.length, 0))}</span>
-          {group.note && (
-            <>
-              <span className="opacity-30">·</span>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="italic text-muted-foreground/70 truncate max-w-[120px] cursor-default">{group.note}</span>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">{group.note}</TooltipContent>
-              </Tooltip>
-            </>
-          )}
         </span>
         <div className="flex items-center gap-1">
+          {staleCount > 0 && !group.permanent && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-amber-500 hover:text-amber-600 hover:bg-amber-500/10"
+                  onClick={handleRemoveStaleTabs}
+                  aria-label={`Remove ${staleCount} stale tab${staleCount !== 1 ? 's' : ''}`}
+                >
+                  <Clock className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Remove {staleCount} stale tab{staleCount !== 1 ? 's' : ''}</TooltipContent>
+            </Tooltip>
+          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring rounded"
+                onClick={() => setNoteOpen((o) => !o)}
+                onMouseDown={(e) => e.stopPropagation()}
+                aria-label={group.note ? 'Edit group note' : 'Add group note'}
+              >
+                <StickyNote className="h-3 w-3" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {group.note
+                ? (group.note.length > 80 ? group.note.slice(0, 80) + '…' : group.note)
+                : 'Add note'}
+            </TooltipContent>
+          </Tooltip>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
+              <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="More group options">
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
@@ -349,6 +411,35 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
         </div>
       </div>
 
+      {noteOpen && (
+        <div
+          ref={noteContainerRef}
+          className="mx-3 my-2 flex flex-col gap-1 rounded-md border border-primary/40 bg-card p-2 shadow-xs shrink-0"
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <textarea
+            ref={noteTextareaRef}
+            rows={2}
+            maxLength={500}
+            className="w-full rounded border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
+            placeholder="Add a note for this group…"
+            value={noteValue}
+            onChange={(e) => setNoteValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') setNoteOpen(false);
+              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) commitGroupNote();
+            }}
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] text-muted-foreground">{noteValue.length}/500</span>
+            <div className="flex gap-1">
+              <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)}>Cancel</Button>
+              <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitGroupNote}>Save</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
         <div className="p-2">
           <DndContext
@@ -357,27 +448,37 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
             onDragStart={handleDragStart}
             onDragMove={handleDragMove}
             onDragCancel={handleDragCancel}
-            onDragEnd={(e) => void handleDragEnd(e)}
+            onDragEnd={(e: import('@dnd-kit/core').DragEndEvent) => void handleDragEnd(e)}
           >
             <SortableContext items={windowIds} strategy={verticalListSortingStrategy}>
-              {group.windows.map((window, windowIndex) => (
-                <WindowItem
-                  key={window.id}
-                  window={window}
-                  groupIndex={groupIndex}
-                  windowIndex={windowIndex}
-                  siblingCount={group.windows.length}
-                  tabIds={window.tabs.filter(Boolean).map((t, ti) => `tab-${t.id}-${windowIndex}-${ti}`)}
-                  isDraggingTab={isDraggingTab}
-                  activeWindowIndex={activeWindowIndex}
-                  dragStartWinIndex={dragStartWinRef.current}
-                  insertState={insertState}
-                  groupColor={group.color}
-                  isBeingDragged={activeWindow != null && window.id === activeWindow.id}
-                  searchFilter={searchFilter}
-                  tagFilter={tagFilter}
-                />
-              ))}
+              {group.windows.reduce<{ els: React.ReactNode[]; offset: number }>(
+                ({ els, offset }, window, windowIndex) => ({
+                  els: [
+                    ...els,
+                    <WindowItem
+                      key={window.id}
+                      window={window}
+                      groupIndex={groupIndex}
+                      windowIndex={windowIndex}
+                      siblingCount={group.windows.length}
+                      tabIds={window.tabs.filter(Boolean).map((t, ti) => `tab-${t.id}-${windowIndex}-${ti}`)}
+                      isDraggingTab={isDraggingTab}
+                      activeWindowIndex={activeWindowIndex}
+                      dragStartWinIndex={dragStartWinRef.current}
+                      insertState={insertState}
+                      groupColor={group.color}
+                      isBeingDragged={activeWindow != null && window.id === activeWindow.id}
+                      searchFilter={searchFilter}
+                      tagFilter={tagFilter}
+                      tabOffset={offset}
+                      maxTabs={maxTabs}
+                      staleThresholdMs={staleThresholdMs}
+                    />
+                  ],
+                  offset: offset + window.tabs.length,
+                }),
+                { els: [], offset: 0 }
+              ).els}
             </SortableContext>
 
             {/* Sentinel drop zone — lets windows be placed after the last item */}

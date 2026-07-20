@@ -75,7 +75,7 @@ export function PricingCard({
           so the card's drop-shadow is not clipped. The rotated inner div then peeks out. */}
       {highlighted && (
         <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden rounded-tr-2xl pointer-events-none">
-          <div className="absolute top-[18px] -right-[18px] w-24 rotate-45 bg-amber-400 text-amber-950 text-[10px] font-bold py-1 text-center tracking-wide uppercase shadow-sm">
+          <div className="absolute top-[18px] -right-[18px] w-24 rotate-45 bg-amber-400 text-amber-950 text-[10px] font-bold py-1 text-center tracking-wide uppercase shadow-xs">
             Popular
           </div>
         </div>

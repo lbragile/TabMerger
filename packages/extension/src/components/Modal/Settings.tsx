@@ -23,6 +23,7 @@ interface AppSettings {
   syncEnabled: boolean;
   openTabOnClick: boolean;
   autoDedupOnMerge: boolean;
+  staleThresholdDays: 7 | 14 | 30 | 60;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -31,15 +32,21 @@ const DEFAULT_SETTINGS: AppSettings = {
   confirmOnWindowClose: true,
   syncEnabled: true,
   openTabOnClick: true,
-  autoDedupOnMerge: false
+  autoDedupOnMerge: false,
+  staleThresholdDays: 30
 };
+
+function settingsEqual(a: AppSettings, b: AppSettings) {
+  return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
+}
 
 interface SettingsModalProps {
   onClose: () => void;
 }
 
 export function SettingsModal({ onClose }: SettingsModalProps) {
-  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const [saved, setSaved] = useState<AppSettings>(DEFAULT_SETTINGS);
+  const [draft, setDraft] = useState<AppSettings>(DEFAULT_SETTINGS);
   const { tier, cloudSync } = useEntitlements();
   const { user, session, signOut } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
@@ -48,17 +55,27 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    getSetting<AppSettings>('appSettings', DEFAULT_SETTINGS).then(setSettings);
+    getSetting<AppSettings>('appSettings', DEFAULT_SETTINGS).then((s) => {
+      setSaved(s);
+      setDraft(s);
+    });
   }, []);
 
-  const handleChange = async <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
-    const next = { ...settings, [key]: value };
-    setSettings(next);
-    await setSetting('appSettings', next);
-    // Apply theme immediately when the user changes it — no reload needed
-    if (key === 'theme') {
-      applyTheme(value as AppSettings['theme']);
-    }
+  const isDirty = !settingsEqual(draft, saved);
+
+  const patch = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+    setDraft((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSave = async () => {
+    await setSetting('appSettings', draft);
+    setSaved(draft);
+    applyTheme(draft.theme);
+    toast.success('Settings saved');
+  };
+
+  const handleRestoreDefaults = () => {
+    setDraft(DEFAULT_SETTINGS);
   };
 
   const handleClearAll = async () => {
@@ -110,8 +127,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     }
   };
 
-
-
   const handleManageBilling = async () => {
     if (!session?.access_token) return;
     setPortalLoading(true);
@@ -162,8 +177,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <p className="text-xs text-muted-foreground">Choose your preferred theme</p>
             </div>
             <Select
-              value={settings.theme}
-              onValueChange={(v) => void handleChange('theme', v as AppSettings['theme'])}
+              value={draft.theme}
+              onValueChange={(v) => patch('theme', v as AppSettings['theme'])}
             >
               <SelectTrigger className="w-28 h-7 text-xs">
                 <SelectValue />
@@ -184,8 +199,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <p className="text-xs text-muted-foreground">Ask before removing a tab</p>
             </div>
             <Switch
-              checked={settings.confirmOnTabClose}
-              onCheckedChange={(v) => void handleChange('confirmOnTabClose', v)}
+              checked={draft.confirmOnTabClose}
+              onCheckedChange={(v) => patch('confirmOnTabClose', v)}
             />
           </div>
 
@@ -195,8 +210,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <p className="text-xs text-muted-foreground">Ask before removing a window</p>
             </div>
             <Switch
-              checked={settings.confirmOnWindowClose}
-              onCheckedChange={(v) => void handleChange('confirmOnWindowClose', v)}
+              checked={draft.confirmOnWindowClose}
+              onCheckedChange={(v) => patch('confirmOnWindowClose', v)}
             />
           </div>
 
@@ -206,8 +221,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <p className="text-xs text-muted-foreground">Single click opens tab in browser</p>
             </div>
             <Switch
-              checked={settings.openTabOnClick}
-              onCheckedChange={(v) => void handleChange('openTabOnClick', v)}
+              checked={draft.openTabOnClick}
+              onCheckedChange={(v) => patch('openTabOnClick', v)}
             />
           </div>
 
@@ -217,9 +232,32 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <p className="text-xs text-muted-foreground">Remove duplicate tabs when merging windows</p>
             </div>
             <Switch
-              checked={settings.autoDedupOnMerge}
-              onCheckedChange={(v) => void handleChange('autoDedupOnMerge', v)}
+              checked={draft.autoDedupOnMerge}
+              onCheckedChange={(v) => patch('autoDedupOnMerge', v)}
             />
+          </div>
+
+          <Separator />
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">Stale tab threshold</Label>
+              <p className="text-xs text-muted-foreground">Show amber dot on tabs older than this</p>
+            </div>
+            <Select
+              value={String(draft.staleThresholdDays ?? 30)}
+              onValueChange={(v) => patch('staleThresholdDays', Number(v) as AppSettings['staleThresholdDays'])}
+            >
+              <SelectTrigger className="w-24 h-7 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7">7 days</SelectItem>
+                <SelectItem value="14">14 days</SelectItem>
+                <SelectItem value="30">30 days</SelectItem>
+                <SelectItem value="60">60 days</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </TabsContent>
 
@@ -260,8 +298,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 <p className="text-xs text-muted-foreground">Sync groups to Supabase</p>
               </div>
               <Switch
-                checked={settings.syncEnabled}
-                onCheckedChange={(v) => void handleChange('syncEnabled', v)}
+                checked={draft.syncEnabled}
+                onCheckedChange={(v) => patch('syncEnabled', v)}
               />
             </div>
           )}
@@ -292,7 +330,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <Separator />
 
-          {/* Export */}
           <div className="flex items-center justify-between">
             <div>
               <Label className="text-sm">Export data</Label>
@@ -309,7 +346,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </Button>
           </div>
 
-          {/* Import */}
           <div className="flex items-center justify-between">
             <div>
               <Label className="text-sm">Import data</Label>
@@ -341,9 +377,33 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <Button variant="destructive" size="sm" className="w-full text-xs" onClick={handleClearAll}>
             Clear all data
           </Button>
-
         </TabsContent>
       </Tabs>
+
+      {/* Footer — only shown for settings that need saving (General + Account sync toggle) */}
+      <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs text-muted-foreground"
+          onClick={handleRestoreDefaults}
+        >
+          Restore defaults
+        </Button>
+        <div className="flex items-center gap-2">
+          {isDirty && (
+            <span className="text-xs text-muted-foreground">Unsaved changes</span>
+          )}
+          <Button
+            size="sm"
+            className="text-xs"
+            disabled={!isDirty}
+            onClick={() => void handleSave()}
+          >
+            Save changes
+          </Button>
+        </div>
+      </div>
     </>
   );
 }

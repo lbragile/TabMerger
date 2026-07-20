@@ -6,6 +6,7 @@ import { SessionList } from '@/components/dashboard/SessionList'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { Badge } from '@/components/ui/badge'
 import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
+import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -41,7 +42,7 @@ export default async function DashboardPage({
     { data: sessions },
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
-    supabase.from('groups').select('id, name, color, windows, updated_at').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
+    supabase.from('groups').select('id, name, color, windows, updated_at, public_slug').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
     supabase
       .from('sessions')
       .select('*')
@@ -76,6 +77,8 @@ export default async function DashboardPage({
           Welcome back, {user.email}
         </p>
       </div>
+
+      <OnboardingChecklist isSignedIn={!!user} isPro={isPro} />
 
       <StatsOverview
         groupCount={groups?.length ?? 0}

@@ -142,12 +142,12 @@ export default async function AccountPage() {
         </CardContent>
       </Card>
 
-      {/* Danger zone */}
-      <Card className="border-destructive/50">
+      {/* Session management */}
+      <Card>
         <CardHeader>
-          <CardTitle className="text-destructive">Danger zone</CardTitle>
+          <CardTitle>Sessions</CardTitle>
           <CardDescription>
-            Irreversible actions. Proceed with caution.
+            Manage your active sessions across devices.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -159,7 +159,7 @@ export default async function AccountPage() {
               </p>
             </div>
             <form action="/api/auth/sign-out" method="POST">
-              <Button type="submit" variant="destructive" size="sm">
+              <Button type="submit" variant="outline" size="sm">
                 Sign out
               </Button>
             </form>

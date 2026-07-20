@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDroppable } from '@dnd-kit/core';
-import { GripVertical, Square, CheckSquare, Star } from 'lucide-react';
+import { GripVertical, Square, CheckSquare, Star, Lock } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GroupContextMenu } from './GroupContextMenu';
@@ -17,10 +17,11 @@ interface GroupItemProps {
   group: Group;
   groupIndex: number;
   isActive: boolean;
+  isLocked?: boolean;
   onClick: () => void;
 }
 
-export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemProps) {
+export function GroupItem({ group, groupIndex, isActive, isLocked = false, onClick }: GroupItemProps) {
   const { data: groupsState } = useGroups();
   const savedGroupCount = (groupsState?.available ?? []).filter((g) => !g.permanent).length;
   const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } =
@@ -91,6 +92,7 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
   };
 
   const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isLocked) return;
     // Ctrl+click anywhere on the group row enters selection mode and toggles this group
     if (e.ctrlKey || e.metaKey) {
       e.stopPropagation();
@@ -121,7 +123,8 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
         outlineOffset: '-2px',
       }}
       wrapperClassName={cn(
-        'group flex items-center gap-2 px-2.5 py-2 rounded-lg cursor-pointer select-none transition-colors',
+        'group flex items-center gap-2 px-2.5 py-2 rounded-lg select-none transition-colors',
+        isLocked ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
         isDragging && 'opacity-50',
         isOver && 'ring-1 ring-white/30 ring-inset',
       )}
@@ -180,6 +183,7 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
               className="cursor-grab touch-none shrink-0 opacity-30 group-hover:opacity-100 transition-opacity"
               style={{ color: 'var(--sidebar-text-subtle)' }}
               {...(selectionMode ? {} : { ...attributes, ...listeners })}
+              aria-label={selectionMode ? undefined : 'Drag to reorder group'}
               onClick={(e) => e.stopPropagation()}
             >
               <GripVertical className="h-3 w-3" />
@@ -196,9 +200,10 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
               <PopoverTrigger asChild>
                 <button
                   type="button"
-                  className="h-2.5 w-2.5 shrink-0 rounded-full transition-all hover:scale-125"
+                  className="h-2.5 w-2.5 shrink-0 rounded-full transition-all hover:scale-125 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                   style={{ backgroundColor: group.color }}
                   onClick={(e) => e.stopPropagation()}
+                  aria-label="Change group color"
                 />
               </PopoverTrigger>
             </TooltipTrigger>
@@ -271,8 +276,17 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
           <span>{tabCount}</span>
         </span>
 
-        {/* Star/pin button — hidden in selection mode; spacer preserves layout */}
-        {(group.permanent || selectionMode) ? (
+        {/* Star/pin button — hidden in selection mode or when locked; spacer preserves layout */}
+        {isLocked ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="shrink-0 text-muted-foreground/60" aria-label="Pro required">
+                <Lock className="h-3 w-3" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top">Upgrade to Pro to access this group</TooltipContent>
+          </Tooltip>
+        ) : (group.permanent || selectionMode) ? (
           <span className="h-3 w-3 shrink-0" aria-hidden="true" />
         ) : (
           <Tooltip>
@@ -280,9 +294,10 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
               <button
                 type="button"
                 className={cn(
-                  'shrink-0 transition-opacity',
+                  'shrink-0 transition-opacity focus-visible:ring-2 focus-visible:ring-ring rounded',
                   group.starred ? 'opacity-100' : 'opacity-30 group-hover:opacity-100'
                 )}
+                aria-label={group.starred ? 'Unpin group' : 'Pin group'}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleGroupStar(groupIndex);
@@ -291,8 +306,8 @@ export function GroupItem({ group, groupIndex, isActive, onClick }: GroupItemPro
                 <Star
                   className="h-3 w-3 transition-colors"
                   style={{
-                    fill: group.starred ? 'var(--star-active)' : 'none',
-                    color: group.starred ? 'var(--star-active)' : 'var(--sidebar-text-subtle)'
+                    fill: group.starred ? (group.color ?? 'var(--star-active)') : 'none',
+                    color: group.starred ? (group.color ?? 'var(--star-active)') : 'var(--sidebar-text-subtle)'
                   }}
                 />
               </button>

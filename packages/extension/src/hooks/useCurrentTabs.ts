@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { Group, GroupsState, Window, Tab } from '@/lib/types';
+import type { GroupsState, Window, Tab } from '@/lib/types';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { getFaviconUrl, formatGroupCounts } from '@/lib/utils';
 import { GROUPS_QUERY_KEY } from './useGroups';
@@ -90,17 +90,17 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
     // Also schedule a background fetch for tabs that don't have one yet.
     const prevNowOpen = state.available.find((g) => g.permanent);
     const prevOgImages = new Map<string, string>();
+    const prevNotes = new Map<string, string>();
     prevNowOpen?.windows.forEach((w) => w.tabs.forEach((t) => {
       if (t.ogImage) prevOgImages.set(t.url, t.ogImage);
+      if (t.note) prevNotes.set(t.url, t.note);
     }));
 
     const tabsMissingOgImage: Tab[] = [];
     nowOpenWindows.forEach((w) => w.tabs.forEach((t) => {
-      if (prevOgImages.has(t.url)) {
-        t.ogImage = prevOgImages.get(t.url);
-      } else {
-        tabsMissingOgImage.push(t);
-      }
+      if (prevOgImages.has(t.url)) t.ogImage = prevOgImages.get(t.url);
+      else tabsMissingOgImage.push(t);
+      if (prevNotes.has(t.url)) t.note = prevNotes.get(t.url);
     }));
 
     // Guard: strip any extra permanent groups beyond the first one

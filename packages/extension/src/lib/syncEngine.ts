@@ -18,7 +18,9 @@ export async function pushPendingChanges(session: Session): Promise<void> {
       color: group.color,
       updated_at: new Date(group.updatedAt).toISOString(),
       windows: group.windows,
-      permanent: group.permanent ?? false,
+      starred: group.starred ?? false,
+      archived: group.archived ?? false,
+      note: group.note ?? null,
       info: group.info ?? ''
     });
 
@@ -53,7 +55,9 @@ export async function pullRemoteChanges(session: Session, localGroups: Group[]):
         color: row.color as string,
         updatedAt: new Date(row.updated_at as string).getTime(),
         windows: row.windows as Group['windows'],
-        permanent: row.permanent as boolean,
+        starred: (row.starred as boolean) ?? false,
+        archived: (row.archived as boolean) ?? false,
+        note: (row.note as string | null) ?? undefined,
         info: row.info as string,
         pendingSync: false
       } satisfies Group
@@ -118,7 +122,9 @@ export async function subscribeToRemoteChanges(
           color: row.color as string,
           updatedAt: new Date(row.updated_at as string).getTime(),
           windows: row.windows as Group['windows'],
-          permanent: row.permanent as boolean,
+          starred: (row.starred as boolean) ?? false,
+          archived: (row.archived as boolean) ?? false,
+          note: (row.note as string | null) ?? undefined,
           info: row.info as string,
           pendingSync: false
         };

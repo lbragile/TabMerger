@@ -35,7 +35,7 @@ export async function openTabInChromeGroup(
     });
     await chrome.tabGroups.update(groupId, {
       title: tab.chromeGroup.name,
-      color: tab.chromeGroup.color as chrome.tabGroups.ColorEnum,
+      color: tab.chromeGroup.color as chrome.tabGroups.Color,
     });
   }
 }

@@ -27,6 +27,7 @@ export function useOpenWindow() {
     } else {
       // Nothing open yet — create a new window, populate it, then remove the initial blank tab
       const newWin = await chrome.windows.create({ focused: true });
+      if (!newWin) return;
       const targetWindowId = newWin.id!;
       const blankTabId = newWin.tabs?.[0]?.id;
 

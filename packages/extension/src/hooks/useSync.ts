@@ -61,7 +61,10 @@ export function useSync() {
       if (idx === -1) {
         state.available.push(updatedGroup);
       } else {
-        state.available[idx] = updatedGroup;
+        // ponytail: last-write-wins — prevents remote stale data from clearing local
+        // archived/starred state that was set after the last push (e.g. NULL column on remote)
+        const local = state.available[idx];
+        state.available[idx] = updatedGroup.updatedAt >= local.updatedAt ? updatedGroup : local;
       }
       await saveGroupsState(state);
       qc.setQueryData(GROUPS_QUERY_KEY, state);

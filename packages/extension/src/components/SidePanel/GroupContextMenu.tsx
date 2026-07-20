@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,26 +10,28 @@ import {
   Trash2,
   Copy,
   Edit3,
-  Palette,
   FileText,
   RefreshCw,
   GitMerge,
   Layers,
   SplitSquareHorizontal,
-  SortAsc
+  SortAsc,
+  ExternalLink,
+  Archive,
+  Link
 } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ColorPicker } from '@/components/ColorPicker';
 import {
   useDeleteGroup,
   useDuplicateGroup,
-  useUpdateGroupColor,
+
   useReplaceWithCurrent,
   useMergeWithCurrent,
   useUniteWindows,
   useSplitWindows,
   useSortTabs,
-  useGroups
+  useGroups,
+  useArchiveGroup,
+  useRestoreGroup
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
@@ -43,6 +45,7 @@ interface GroupContextMenuProps {
   children: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onAddNote?: () => void;
   wrapperRef?: (node: HTMLElement | null) => void;
   wrapperStyle?: React.CSSProperties;
   wrapperClassName?: string;
@@ -66,13 +69,12 @@ export function GroupContextMenu({
   onWrapperMouseEnter,
   onWrapperMouseLeave,
 }: GroupContextMenuProps) {
-  const [colorPickerOpen, setColorPickerOpen] = useState(false);
-
-  const { mutate: deleteGroup } = useDeleteGroup();
+  const { mutate: _deleteGroup } = useDeleteGroup();
+  const { mutate: archiveGroup } = useArchiveGroup();
+  const { mutate: restoreGroup } = useRestoreGroup();
   const { mutate: duplicateGroup } = useDuplicateGroup();
   const { data: groupsState } = useGroups();
   const { maxGroups } = useEntitlements();
-  const { mutate: updateColor } = useUpdateGroupColor();
   const { mutate: replaceWithCurrent } = useReplaceWithCurrent();
   const { mutate: mergeWithCurrent } = useMergeWithCurrent();
   const { mutate: uniteWindows } = useUniteWindows();
@@ -85,10 +87,18 @@ export function GroupContextMenu({
     <div
       ref={wrapperRef as React.RefCallback<HTMLDivElement>}
       style={wrapperStyle}
-      className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500', wrapperClassName)}
+      className={cn('relative focus:outline-none focus-visible:ring-2 focus-visible:ring-primary', wrapperClassName)}
       tabIndex={0}
+      role="button"
+      aria-label={group.name}
       data-sidebar-group-index={groupIndex}
       onClick={onWrapperClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onWrapperClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
+        }
+      }}
       onContextMenu={onWrapperContextMenu}
       onMouseEnter={onWrapperMouseEnter}
       onMouseLeave={onWrapperMouseLeave}
@@ -107,27 +117,14 @@ export function GroupContextMenu({
             </DropdownMenuItem>
           )}
 
-          <Popover open={colorPickerOpen} onOpenChange={setColorPickerOpen}>
-            <PopoverTrigger asChild>
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Palette className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Change color</div><div className="text-[10px] text-muted-foreground font-normal">Pick a color for this group label</div></div>
-              </DropdownMenuItem>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-2" side="top">
-              <ColorPicker
-                value={group.color}
-                onChange={(color) => {
-                  updateColor({ groupIndex, color });
-                  setColorPickerOpen(false);
-                }}
-              />
-            </PopoverContent>
-          </Popover>
-
           <DropdownMenuItem onClick={() => openModal('note', { groupIndex, groupId: group.id })}>
             <FileText className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>Add/edit note</div><div className="text-[10px] text-muted-foreground font-normal">Attach a note to this group</div></div>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={() => openModal('urlRules')}>
+            <Link className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Manage URL rules</div><div className="text-[10px] text-muted-foreground font-normal">Auto-assign tabs to groups by URL pattern</div></div>
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => {
@@ -158,6 +155,19 @@ export function GroupContextMenu({
             </>
           )}
 
+          {!group.permanent && (() => {
+            const urls = group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http')));
+            return (
+              <DropdownMenuItem
+                disabled={urls.length === 0}
+                onClick={() => chrome.windows.create({ url: urls })}
+              >
+                <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0" />
+                <div><div>Open all in new window</div><div className="text-[10px] text-muted-foreground font-normal">Open every tab in this group in a new window</div></div>
+              </DropdownMenuItem>
+            );
+          })()}
+
           <DropdownMenuSeparator />
 
           <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
@@ -180,6 +190,17 @@ export function GroupContextMenu({
           {!group.permanent && (
             <>
               <DropdownMenuSeparator />
+              {group.archived ? (
+                <DropdownMenuItem onClick={() => restoreGroup(groupIndex)}>
+                  <Archive className="h-3.5 w-3.5 mr-2 shrink-0" />
+                  <div><div>Restore group</div><div className="text-[10px] text-muted-foreground font-normal">Move back to active groups</div></div>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => archiveGroup(groupIndex)}>
+                  <Archive className="h-3.5 w-3.5 mr-2 shrink-0" />
+                  <div><div>Archive group</div><div className="text-[10px] text-muted-foreground font-normal">Hide this group; restore it anytime</div></div>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
                 onClick={() => openModal('deleteGroup', { groupIndex, groupName: group.name })}

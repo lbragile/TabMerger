@@ -44,6 +44,8 @@ const faqs = [
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false)
+  // ponytail: stable id from question text for aria-controls
+  const id = `faq-${question.slice(0, 20).replace(/\s+/g, '-').toLowerCase()}`
 
   return (
     <div className="border-b last:border-b-0">
@@ -51,6 +53,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         className="flex w-full items-center justify-between py-4 text-left text-sm font-medium hover:text-foreground/80 transition-colors"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls={id}
       >
         {question}
         <ChevronDown
@@ -58,10 +61,11 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
             'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200',
             open && 'rotate-180'
           )}
+          aria-hidden="true"
         />
       </button>
       {open && (
-        <div className="pb-4 text-sm text-muted-foreground leading-relaxed">
+        <div id={id} className="pb-4 text-sm text-muted-foreground leading-relaxed">
           {answer}
         </div>
       )}

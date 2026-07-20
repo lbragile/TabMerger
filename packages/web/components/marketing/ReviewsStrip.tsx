@@ -89,7 +89,7 @@ export function ReviewsStrip() {
           {doubled.map((review, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[260px] rounded-xl bg-white shadow-sm border p-4 flex flex-col gap-3"
+              className="flex-shrink-0 w-[260px] rounded-xl bg-white shadow-xs border p-4 flex flex-col gap-3"
             >
               <StarRating count={review.rating} />
               <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">

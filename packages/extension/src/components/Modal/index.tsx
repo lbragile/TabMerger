@@ -8,6 +8,7 @@ import { SettingsModal } from './Settings';
 import { AuthModal } from './Auth';
 import { UpgradePromptModal } from './UpgradePrompt';
 import { DeduplicateConfirmModal } from './DeduplicateConfirm';
+import { UrlRulesModal } from './UrlRules';
 
 export function ModalRoot() {
   const modal = useUIStore((s) => s.modal);
@@ -41,6 +42,8 @@ export function ModalRoot() {
         return <UpgradePromptModal reason={modal.data?.reason as string} onClose={closeModal} />;
       case 'deduplicateGroup':
         return <DeduplicateConfirmModal data={modal.data ?? {}} onClose={closeModal} />;
+      case 'urlRules':
+        return <UrlRulesModal onClose={closeModal} />;
       default:
         return null;
     }

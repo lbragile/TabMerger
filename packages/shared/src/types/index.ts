@@ -8,6 +8,9 @@ export interface Tab {
   ogImage?: string;
   pinned?: boolean;
   chromeGroup?: { id: number; name: string; color: string };
+  note?: string;
+  savedAt?: number; // epoch ms — set when tab first lands in a saved (non-Now-Open) group
+  reminder?: { fireAt: number; note?: string };
 }
 
 export interface ExtWindow {
@@ -17,6 +20,7 @@ export interface ExtWindow {
   focused: boolean;
   starred?: boolean;
   name?: string;
+  note?: string;
 }
 
 export interface Group {
@@ -30,11 +34,20 @@ export interface Group {
   info?: string;
   note?: string;
   pendingSync?: boolean; // local-only, not persisted to Supabase
+  archived?: boolean; // hidden from main sidebar; excluded from free-tier group count
+}
+
+export interface UrlRule {
+  id: string;
+  pattern: string;
+  groupId: string;
+  createdAt: number;
 }
 
 export interface GroupsState {
   active: { id: string; index: number };
   available: Group[];
+  urlRules?: UrlRule[];
 }
 
 export interface Session {

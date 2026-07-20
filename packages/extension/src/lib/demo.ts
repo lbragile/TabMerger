@@ -18,7 +18,7 @@ export async function enterDemoMode(): Promise<void> {
   const allWindows = await chrome.windows.getAll();
   await Promise.all(
     allWindows
-      .filter((w) => w.id !== undefined && w.id !== freshWindow.id)
+      .filter((w) => w.id !== undefined && w.id !== freshWindow?.id)
       .map((w) => chrome.windows.remove(w.id as number))
   );
 }

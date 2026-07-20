@@ -13,7 +13,7 @@ import {
   Keyboard,
   RefreshCw,
   Shield,
-  Chrome,
+  Globe,
   ArrowRight,
 } from 'lucide-react'
 
@@ -156,7 +156,7 @@ export default function FeaturesPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Chrome className="h-5 w-5" />
+                <Globe className="h-5 w-5" />
                 Add to Chrome — It&apos;s Free
               </a>
             </Button>

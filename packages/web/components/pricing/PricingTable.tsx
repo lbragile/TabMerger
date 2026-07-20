@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { PricingCard } from './PricingCard'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { TIERS } from '@/lib/stripe'
+import { TIERS } from '@/lib/tiers'
 
 interface PricingTableProps {
   currentTier?: string

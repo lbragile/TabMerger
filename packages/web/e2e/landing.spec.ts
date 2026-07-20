@@ -46,8 +46,8 @@ test.describe('Landing page', () => {
     await expect(page.getByRole('link', { name: 'Edge Add to Edge' })).toBeVisible()
   })
 
-  test('reviews strip is visible', async ({ page }) => {
+  test('testimonials carousel is visible', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByText('Sarah K.').first()).toBeVisible()
+    await expect(page.getByText('Rachel D.').first()).toBeVisible()
   })
 })

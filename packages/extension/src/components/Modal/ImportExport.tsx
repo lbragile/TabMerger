@@ -2,8 +2,9 @@ import { useState, useRef } from 'react';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { useGroups, useSetGroupsState } from '@/hooks/useGroups';
+import { useGroups, useSetGroupsState, useImportGroups } from '@/hooks/useGroups';
 import type { GroupsState } from '@/lib/types';
+import { parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
 import { toast } from 'sonner';
 
 interface ImportExportModalProps {
@@ -12,11 +13,14 @@ interface ImportExportModalProps {
   onClose: () => void;
 }
 
-export function ImportExportModal({ mode: initialMode, data, onClose }: ImportExportModalProps) {
+export function ImportExportModal({ mode: initialMode, data: _data, onClose }: ImportExportModalProps) {
   const [activeTab, setActiveTab] = useState<string>(initialMode === 'import' ? 'import' : 'export');
   const { data: groupsState } = useGroups();
   const setGroupsState = useSetGroupsState();
+  const importGroups = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const bookmarksInputRef = useRef<HTMLInputElement>(null);
+  const onetabInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
     if (!groupsState) return;
@@ -47,6 +51,26 @@ export function ImportExportModal({ mode: initialMode, data, onClose }: ImportEx
     }
   };
 
+  const handleBookmarksImport = async (file: File) => {
+    const html = await file.text();
+    const groups = parseBookmarksHtml(html);
+    if (groups.length === 0) { toast.error('No bookmarks found'); return; }
+    const tabCount = groups.reduce((n, g) => n + (g.windows[0]?.tabs.length ?? 0), 0);
+    await importGroups.mutateAsync(groups);
+    toast.success(`Imported ${groups.length} group${groups.length !== 1 ? 's' : ''}, ${tabCount} tab${tabCount !== 1 ? 's' : ''}`);
+    onClose();
+  };
+
+  const handleOneTabImport = async (file: File) => {
+    const text = await file.text();
+    const groups = parseOneTabs(text);
+    if (groups.length === 0) { toast.error('No tabs found'); return; }
+    const tabCount = groups.reduce((n, g) => n + (g.windows[0]?.tabs.length ?? 0), 0);
+    await importGroups.mutateAsync(groups);
+    toast.success(`Imported ${groups.length} group${groups.length !== 1 ? 's' : ''}, ${tabCount} tab${tabCount !== 1 ? 's' : ''}`);
+    onClose();
+  };
+
   return (
     <>
       <DialogHeader>
@@ -69,24 +93,66 @@ export function ImportExportModal({ mode: initialMode, data, onClose }: ImportEx
           </Button>
         </TabsContent>
 
-        <TabsContent value="import" className="space-y-3 mt-3">
-          <p className="text-sm text-muted-foreground">
-            Import groups from a previously exported JSON file. This will replace your current
-            groups.
-          </p>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) void handleImport(file);
-            }}
-          />
-          <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="w-full">
-            Choose JSON file
-          </Button>
+        <TabsContent value="import" className="space-y-4 mt-3">
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">TabMerger JSON</p>
+            <p className="text-sm text-muted-foreground">
+              Import from a previously exported JSON file. Replaces current groups.
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleImport(file);
+              }}
+            />
+            <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="w-full">
+              Choose JSON file
+            </Button>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Chrome Bookmarks</p>
+            <p className="text-sm text-muted-foreground">
+              Import from a Chrome bookmarks HTML export. Each folder becomes a group.
+            </p>
+            <input
+              ref={bookmarksInputRef}
+              type="file"
+              accept=".html"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleBookmarksImport(file);
+              }}
+            />
+            <Button variant="outline" onClick={() => bookmarksInputRef.current?.click()} className="w-full">
+              Choose Bookmarks HTML file
+            </Button>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">OneTab</p>
+            <p className="text-sm text-muted-foreground">
+              Import from a OneTab plain-text export. Each blank-line-separated block becomes a group.
+            </p>
+            <input
+              ref={onetabInputRef}
+              type="file"
+              accept=".txt"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleOneTabImport(file);
+              }}
+            />
+            <Button variant="outline" onClick={() => onetabInputRef.current?.click()} className="w-full">
+              Choose OneTab TXT file
+            </Button>
+          </div>
         </TabsContent>
 
       </Tabs>

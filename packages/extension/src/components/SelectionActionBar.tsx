@@ -1,4 +1,4 @@
-import { Trash2, MoveRight, Copy, Star, X } from 'lucide-react';
+import { Trash2, MoveRight, Copy, Star, X, Share2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,6 +10,11 @@ import { useUIStore } from '@/stores/uiStore';
 import { useGroups } from '@/hooks/useGroups';
 import { useBulkDelete, useBulkMoveToGroup, useBulkStar } from '@/hooks/useBulkActions';
 import { cn, pluralize } from '@/lib/utils';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase';
+import { useEntitlements } from '@/hooks/useEntitlements';
+import { createSharedBundle } from '@/lib/sharing';
 
 /** Maps a selection type to a human-readable plural noun. */
 function itemLabel(type: string, count: number): string {
@@ -30,13 +35,32 @@ export function SelectionActionBar() {
   const { mutate: bulkDelete, isPending: isDeleting } = useBulkDelete();
   const { mutate: bulkMove, isPending: isMoving } = useBulkMoveToGroup();
   const { mutate: bulkStar, isPending: isStarring } = useBulkStar();
+  const entitlements = useEntitlements();
+  const [isSharing, setIsSharing] = useState(false);
 
   if (selectedItems.length === 0) return null;
 
   const type = selectedItems[0].type;
   const canMove = type !== 'group';
   const canStar = type !== 'tab';
-  const isPending = isDeleting || isMoving || isStarring;
+  const canShare = type === 'group';
+  const isPending = isDeleting || isMoving || isStarring || isSharing;
+
+  async function handleShare() {
+    const groupIds = selectedItems.map((s) => s.id);
+    const allGroups = groupsState?.available ?? [];
+    const entitlement = { tier: entitlements.tier, sharing: entitlements.cloudSync };
+    setIsSharing(true);
+    try {
+      const url = await createSharedBundle(groupIds, allGroups, supabase, entitlement);
+      await navigator.clipboard.writeText(url);
+      toast.success('Link copied to clipboard');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to share');
+    } finally {
+      setIsSharing(false);
+    }
+  }
 
   const srcIndex = sourceGroupIndex(selectedItems[0].id);
   const isNowOpen = groupsState?.available[srcIndex]?.permanent ?? false;
@@ -111,6 +135,21 @@ export function SelectionActionBar() {
         </>
       )}
 
+      {/* Share — groups only */}
+      {canShare && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-7 px-2 text-xs gap-1"
+          disabled={isPending || !entitlements.cloudSync}
+          title={!entitlements.cloudSync ? 'Sharing requires Pro' : undefined}
+          onClick={handleShare}
+        >
+          {isSharing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Share2 className="h-3.5 w-3.5" />}
+          Share
+        </Button>
+      )}
+
       {/* Delete / Close */}
       <Button
         variant="destructive"
@@ -130,7 +169,7 @@ export function SelectionActionBar() {
         className="h-7 w-7 shrink-0"
         disabled={isPending}
         onClick={exitSelectionMode}
-        title="Cancel selection"
+        aria-label="Cancel selection"
       >
         <X className="h-3.5 w-3.5" />
       </Button>

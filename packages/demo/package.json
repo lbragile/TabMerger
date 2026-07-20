@@ -11,12 +11,12 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@remotion/bundler": "^4.0.0",
-    "@remotion/cli": "^4.0.0",
-    "@remotion/player": "^4.0.0",
-    "@remotion/renderer": "^4.0.0",
-    "remotion": "^4.0.0",
-    "tsx": "^4.19.0",
-    "typescript": "^5.5.4"
+    "@remotion/bundler": "^4.0.490",
+    "@remotion/cli": "^4.0.490",
+    "@remotion/player": "^4.0.490",
+    "@remotion/renderer": "^4.0.490",
+    "remotion": "^4.0.490",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3"
   }
 }

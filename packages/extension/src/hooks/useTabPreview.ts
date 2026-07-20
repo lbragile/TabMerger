@@ -1,6 +1,9 @@
 import { useState, useRef, useCallback } from 'react';
 import { useTabSummary } from './useAI';
 
+// ponytail: module-level cache — lives for the popup session, cleared on close
+const summaryCache = new Map<string, string>();
+
 interface TabPreviewState {
   visible: boolean;
   summary: string | null;
@@ -60,8 +63,10 @@ export function useTabPreview(url: string, title: string, aiEnabled: boolean, ta
       }
       try {
         const ogImage = storedOgImage ?? await fetchOgImage(tabId ?? 0, url);
-        const result = await fetchSummary({ url, title });
-        setState({ visible: true, summary: result.summary ?? null, ogImage: ogImage ?? null, loading: false });
+        const cached = summaryCache.get(url);
+        const summary = cached ?? (await fetchSummary({ url, title })).summary ?? null;
+        if (summary && !cached) summaryCache.set(url, summary);
+        setState({ visible: true, summary, ogImage: ogImage ?? null, loading: false });
       } catch {
         setState({ visible: true, summary: null, ogImage: null, loading: false });
       }

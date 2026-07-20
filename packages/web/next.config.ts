@@ -1,6 +1,14 @@
 import type { NextConfig } from 'next'
+import path from 'path'
+import { withSentryConfig } from '@sentry/nextjs'
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    // pnpm monorepo fix: Turbopack looks for next/package.json from the workspace root
+    // (where pnpm-workspace.yaml lives), not from packages/web. Point to the repo root
+    // so it finds node_modules/next that we've hoisted there.
+    root: path.resolve(process.cwd(), '../..'),
+  },
   images: {
     remotePatterns: [
       {
@@ -15,4 +23,7 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  telemetry: false,
+})

@@ -14,7 +14,8 @@ import {
   MoveRight,
   Square,
   CheckSquare,
-  SortAsc
+  SortAsc,
+  StickyNote
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -33,6 +34,7 @@ import type { Window as WindowType } from '@/lib/types';
 import {
   useDeleteWindow,
   useUpdateWindowName,
+  useUpdateWindowNote,
   useToggleWindowStarred,
   useToggleWindowIncognito,
   useMoveWindow,
@@ -58,9 +60,12 @@ interface WindowProps {
   isBeingDragged?: boolean;
   searchFilter?: string;
   tagFilter?: string;
+  tabOffset?: number;
+  maxTabs?: number;
+  staleThresholdMs?: number;
 }
 
-export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabIds, isDraggingTab, activeWindowIndex, dragStartWinIndex, insertState, groupColor, isBeingDragged, searchFilter, tagFilter }: WindowProps) {
+export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabIds, isDraggingTab, activeWindowIndex, dragStartWinIndex, insertState, groupColor, isBeingDragged, searchFilter, tagFilter, tabOffset = 0, maxTabs = Infinity, staleThresholdMs }: WindowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `window-${groupIndex}-${windowIndex}`
   });
@@ -79,9 +84,22 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
   }, [isEditing]);
 
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [noteValue, setNoteValue] = useState('');
+  const noteTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const noteContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (noteOpen) {
+      setNoteValue(window.note ?? '');
+      setTimeout(() => noteTextareaRef.current?.focus(), 0);
+    }
+  }, [noteOpen, window.note]);
+
   const openWindow = useOpenWindow();
   const { mutate: deleteWindow } = useDeleteWindow();
   const { mutate: updateWindowName } = useUpdateWindowName();
+  const { mutate: updateWindowNote } = useUpdateWindowNote();
   const { mutate: toggleStarred } = useToggleWindowStarred();
   const { mutate: toggleIncognito } = useToggleWindowIncognito();
   const { mutate: moveWindow } = useMoveWindow();
@@ -138,6 +156,16 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
     }
   };
 
+  const commitWindowNote = () => {
+    updateWindowNote({ groupIndex, windowIndex, note: noteValue.trim() });
+    setNoteOpen(false);
+  };
+
+  const handleWindowNoteBlur = (e: React.FocusEvent) => {
+    if (noteContainerRef.current?.contains(e.relatedTarget as Node)) return;
+    commitWindowNote();
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -173,7 +201,12 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
             tabIndex={-1}
             aria-hidden="true"
           />
-          <DropdownMenuContent className="w-48 text-xs" align="start">
+          <DropdownMenuContent className="w-48 text-xs" align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
+            <DropdownMenuItem onClick={() => setNoteOpen(true)}>
+              <StickyNote className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              {window.note ? 'Edit note' : 'Add note'}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="text-xs">
                 <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -222,6 +255,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
           <span
             className="opacity-30 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
             {...(selectionMode ? {} : { ...attributes, ...listeners })}
+            aria-label={selectionMode ? undefined : 'Drag to reorder window'}
           >
             <GripVertical className="h-3.5 w-3.5" />
           </span>
@@ -264,14 +298,35 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
           {window.tabs.length} {pluralize(window.tabs.length, 'tab')}
         </span>
 
+        {window.note && !selectionMode && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring rounded"
+                onClick={(e) => { e.stopPropagation(); setNoteOpen(true); }}
+                onMouseDown={(e) => e.stopPropagation()}
+                aria-label="Edit window note"
+              >
+                <StickyNote className="h-3 w-3" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-[200px] text-xs break-words">
+              {window.note.length > 80 ? window.note.slice(0, 80) + '…' : window.note}
+            </TooltipContent>
+          </Tooltip>
+        )}
+
         {!selectionMode && (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className={cn('h-5 w-5 rounded', window.starred ? 'text-amber-600 dark:text-yellow-400' : 'text-muted-foreground')}
+                className={cn('h-5 w-5 rounded', !window.starred && 'text-muted-foreground')}
+                style={window.starred ? { color: groupColor ?? 'var(--star-active)' } : undefined}
                 onClick={() => toggleStarred({ groupIndex, windowIndex })}
+                aria-label={window.starred ? 'Unstar window' : 'Star window'}
               >
                 <Star className="h-3 w-3" fill={window.starred ? 'currentColor' : 'none'} />
               </Button>
@@ -284,7 +339,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
           <DropdownMenu>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild disabled={selectionMode}>
-                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 rounded invisible' : 'h-5 w-5 rounded text-muted-foreground'}>
+                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 rounded invisible' : 'h-5 w-5 rounded text-muted-foreground'} aria-label="More window options">
                   <MoreHorizontal className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
@@ -322,6 +377,10 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
                 <div><div>Sort tabs by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort tabs by address</div></div>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setNoteOpen(true)}>
+                <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
+                <div><div>{window.note ? 'Edit note' : 'Add note'}</div><div className="text-[10px] text-muted-foreground font-normal">Attach a plain-text note to this window</div></div>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
@@ -351,8 +410,39 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
         </Tooltip>
       </div>
 
+      {/* Window inline note editor */}
+      {noteOpen && (
+        <div
+          ref={noteContainerRef}
+          className="mx-3 mt-1 mb-1 flex flex-col gap-1 rounded-md border border-primary/40 bg-card p-2 shadow-xs"
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <textarea
+            ref={noteTextareaRef}
+            rows={2}
+            maxLength={500}
+            className="w-full rounded border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
+            placeholder="Add a note…"
+            value={noteValue}
+            onChange={(e) => setNoteValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') { setNoteOpen(false); }
+              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { commitWindowNote(); }
+            }}
+            onBlur={handleWindowNoteBlur}
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] text-muted-foreground">{noteValue.length}/500</span>
+            <div className="flex gap-1">
+              <Button size="sm" variant="ghost" className="h-5 text-[10px] px-2" onClick={() => setNoteOpen(false)} onMouseDown={(e) => e.stopPropagation()}>Cancel</Button>
+              <Button size="sm" className="h-5 text-[10px] px-2" onClick={commitWindowNote} onMouseDown={(e) => e.stopPropagation()}>Save</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Tabs list */}
-      <div className={cn('py-0.5 px-3 overflow-y-auto', isCrossWindowTarget ? 'max-h-64' : 'max-h-[182px]')}>
+      <div className={cn('py-0.5 px-3 overflow-y-auto', isCrossWindowTarget ? 'max-h-64' : 'max-h-52')}>
         <SortableContext items={tabIds} strategy={verticalListSortingStrategy}>
           {window.tabs.filter(Boolean).map((tab, tabIndex) => {
             const dndId = `tab-${tab.id}-${windowIndex}-${tabIndex}`;
@@ -372,6 +462,8 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
                   searchFilter={searchFilter}
                   tagFilter={tagFilter}
                   groupColor={groupColor}
+                  isLocked={isFinite(maxTabs) && tabOffset + tabIndex >= maxTabs}
+                  staleThresholdMs={staleThresholdMs}
                 />
                 {isCrossWindowTarget && insertState?.tabId === dndId && insertState.position === 'after' && (
                   <div className="mx-1 my-0.5 h-0.5 rounded-sm" style={{ background: groupColor }} />

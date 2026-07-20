@@ -6,6 +6,10 @@ export interface Tab {
   ogImage?: string;
   pinned?: boolean;
   chromeGroup?: { id: number; name: string; color: string };
+  note?: string;
+  savedAt?: number; // epoch ms — set when tab first lands in a saved (non-Now-Open) group
+  reminder?: { fireAt: number; note?: string };
+  customTitle?: string;
 }
 
 export interface Window {
@@ -15,6 +19,7 @@ export interface Window {
   focused: boolean;
   starred?: boolean;
   name?: string;
+  note?: string;
 }
 
 export interface Group {
@@ -28,11 +33,20 @@ export interface Group {
   info?: string;
   note?: string;
   pendingSync?: boolean;
+  archived?: boolean; // hidden from main sidebar; excluded from free-tier group count
+}
+
+export interface UrlRule {
+  id: string;       // nanoid(10)
+  pattern: string;  // glob-style, e.g. "github.com/*"
+  groupId: string;
+  createdAt: number;
 }
 
 export interface GroupsState {
   active: { id: string; index: number };
   available: Group[];
+  urlRules?: UrlRule[];
 }
 
 export interface Session {
@@ -52,6 +66,9 @@ export interface Entitlements {
   cloudSync: boolean;
   sessions: boolean;
   aiFeatures: boolean;
+  cancelAtPeriodEnd: boolean;
+  currentPeriodEnd: string | null;
+  subscriptionStatus: string | null;
 }
 
 export const TIER_LIMITS: Record<Tier, Entitlements> = {
@@ -61,7 +78,10 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
     maxTabs: 50,
     cloudSync: false,
     sessions: false,
-    aiFeatures: false
+    aiFeatures: false,
+    cancelAtPeriodEnd: false,
+    currentPeriodEnd: null,
+    subscriptionStatus: null
   },
   pro: {
     tier: 'pro',
@@ -69,7 +89,10 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
     maxTabs: Infinity,
     cloudSync: true,
     sessions: true,
-    aiFeatures: false
+    aiFeatures: false,
+    cancelAtPeriodEnd: false,
+    currentPeriodEnd: null,
+    subscriptionStatus: null
   },
   pro_ai: {
     tier: 'pro_ai',
@@ -77,7 +100,10 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
     maxTabs: Infinity,
     cloudSync: true,
     sessions: true,
-    aiFeatures: true
+    aiFeatures: true,
+    cancelAtPeriodEnd: false,
+    currentPeriodEnd: null,
+    subscriptionStatus: null
   }
 };
 

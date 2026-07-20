@@ -23,7 +23,14 @@
     "scan-secrets": "bash scripts/scan-secrets.sh"
   },
   "devDependencies": {
-    "husky": "^9.0.0"
+    "next": "^16.2.10",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.9",
+    "husky": "^9.1.7",
+    "semantic-release": "^25.0.8"
   },
   "commitlint": {
     "extends": [

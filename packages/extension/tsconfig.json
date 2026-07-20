@@ -18,7 +18,9 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@tabmerger/shared": ["../shared/src/index.ts"],
+      "@tabmerger/shared/*": ["../shared/src/*"]
     },
     "types": ["chrome"]
   },

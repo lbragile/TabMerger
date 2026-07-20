@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { start, getRun } from 'workflow/api'
 import { tabOrganizerWorkflow } from '@/lib/workflows/tabOrganizer'
+import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
 
 async function getAuthenticatedUser(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
@@ -20,18 +21,6 @@ async function getAuthenticatedUser(request: NextRequest) {
   return { token, user, supabase }
 }
 
-async function checkProAiSubscription(
-  supabase: Awaited<ReturnType<typeof createServiceRoleClient>>,
-  userId: string
-) {
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('tier, status')
-    .eq('user_id', userId)
-    .single()
-
-  return subscription?.tier === 'pro_ai' && subscription?.status === 'active'
-}
 
 export async function POST(request: NextRequest) {
   const { token, user, supabase } = await getAuthenticatedUser(request)
@@ -43,11 +32,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const hasAccess = await checkProAiSubscription(supabase, user.id)
-  if (!hasAccess) {
+  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id)
+  if (!allowed) {
     return NextResponse.json(
-      { error: 'Pro AI subscription required' },
-      { status: 403 }
+      { error: 'Pro AI subscription required or monthly limit reached' },
+      { status: remaining === 0 ? 429 : 403 }
     )
   }
 
@@ -58,7 +47,9 @@ export async function POST(request: NextRequest) {
     // Store runId → userId so the GET stream can verify ownership (Issue 3)
     await supabase.from('organize_runs').insert({ run_id: run.runId, user_id: user.id })
 
-    return NextResponse.json({ runId: run.runId, token: hookToken })
+    return NextResponse.json({ runId: run.runId, token: hookToken }, {
+      headers: { 'X-AI-Requests-Remaining': String(remaining) },
+    })
   } catch (err) {
     console.error('AI organize start error:', err)
     return NextResponse.json(
@@ -78,10 +69,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const hasAccess = await checkProAiSubscription(supabase, user.id)
-  if (!hasAccess) {
+  const { allowed } = await checkAndIncrementAIUsage(supabase, user.id)
+  if (!allowed) {
     return NextResponse.json(
-      { error: 'Pro AI subscription required' },
+      { error: 'Pro AI subscription required or monthly limit reached' },
       { status: 403 }
     )
   }

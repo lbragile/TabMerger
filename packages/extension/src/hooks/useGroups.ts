@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { nanoid } from 'nanoid';
-import type { Group, GroupsState } from '@/lib/types';
+import type { Group, GroupsState, Tab } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { getGroupsState, saveGroupsState, deleteGroup as dbDeleteGroup } from '@/lib/localDb';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
+import { trackEvent } from '@/lib/analytics';
 
 export const GROUPS_QUERY_KEY = ['groups'] as const;
 
@@ -39,7 +40,8 @@ export function useAddGroup() {
       mutate((prev) => {
         const newGroup = createGroup(nanoid(10), name, color ?? DEFAULT_GROUP_COLOR);
         return { ...prev, available: [...prev.available, newGroup] };
-      })
+      }),
+    onSuccess: () => { trackEvent('group_created'); }
   });
 }
 
@@ -310,6 +312,34 @@ export function useUpdateWindowName() {
   });
 }
 
+export function useUpdateWindowNote() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({
+      groupIndex,
+      windowIndex,
+      note
+    }: {
+      groupIndex: number;
+      windowIndex: number;
+      note: string;
+    }) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+        const windows = [...available[groupIndex].windows];
+        windows[windowIndex] = { ...windows[windowIndex], note: note || undefined };
+        available[groupIndex] = {
+          ...available[groupIndex],
+          windows,
+          updatedAt: Date.now(),
+          pendingSync: true
+        };
+        return { ...prev, available };
+      }, true)
+  });
+}
+
 export function useToggleWindowStarred() {
   const mutate = useGroupsMutation();
 
@@ -458,6 +488,38 @@ export function useDeleteTab() {
   });
 }
 
+export function useUpdateTabNote() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({
+      groupIndex,
+      windowIndex,
+      tabIndex,
+      note
+    }: {
+      groupIndex: number;
+      windowIndex: number;
+      tabIndex: number;
+      note: string;
+    }) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+        const windows = [...available[groupIndex].windows];
+        const tabs = [...windows[windowIndex].tabs];
+        tabs[tabIndex] = { ...tabs[tabIndex], note: note || undefined };
+        windows[windowIndex] = { ...windows[windowIndex], tabs };
+        available[groupIndex] = {
+          ...available[groupIndex],
+          windows,
+          updatedAt: Date.now(),
+          pendingSync: true
+        };
+        return { ...prev, available };
+      }, true) // ponytail: skip undo — note edits are too granular to undo per-keystroke
+  });
+}
+
 export function useReplaceWithCurrent() {
   const mutate = useGroupsMutation();
 
@@ -465,12 +527,16 @@ export function useReplaceWithCurrent() {
     mutationFn: (groupIndex: number) =>
       mutate((prev) => {
         const available = [...prev.available];
+        const now = Date.now();
         const currentWindows = JSON.parse(JSON.stringify(available[0].windows));
-        currentWindows.forEach((w: Group['windows'][0]) => (w.focused = false));
+        currentWindows.forEach((w: Group['windows'][0]) => {
+          w.focused = false;
+          w.tabs.forEach((t: Tab) => { if (!t.savedAt) t.savedAt = now; });
+        });
         available[groupIndex] = {
           ...available[groupIndex],
           windows: currentWindows,
-          updatedAt: Date.now(),
+          updatedAt: now,
           pendingSync: true
         };
         available[groupIndex].info = getGroupInfo(available[groupIndex]);
@@ -486,8 +552,12 @@ export function useMergeWithCurrent() {
     mutationFn: (groupIndex: number) =>
       mutate((prev) => {
         const available = [...prev.available];
+        const now = Date.now();
         const currentWindows = JSON.parse(JSON.stringify(available[0].windows));
-        currentWindows.forEach((w: Group['windows'][0]) => (w.focused = false));
+        currentWindows.forEach((w: Group['windows'][0]) => {
+          w.focused = false;
+          w.tabs.forEach((t: Tab) => { if (!t.savedAt) t.savedAt = now; });
+        });
         available[groupIndex] = {
           ...available[groupIndex],
           windows: [...currentWindows, ...available[groupIndex].windows],
@@ -574,6 +644,10 @@ export function useMoveTab() {
   const mutate = useGroupsMutation();
 
   return useMutation({
+    onSuccess: (_data, { toGroupIndex }) => {
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      if (!state?.available[toGroupIndex]?.permanent) trackEvent('tab_saved', { count: 1 });
+    },
     mutationFn: async ({
       fromGroupIndex,
       fromWindowIndex,
@@ -637,14 +711,16 @@ export function useMoveTab() {
         const fromGroup = { ...available[fromGroupIndex] };
         const fromWindows = fromGroup.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
 
+        const savedAt = Date.now();
         let movedTab;
         if (copy) {
           // ponytail: id:0 is falsy — useDeleteTab's `if (tab?.id)` guard won't close the live browser tab
-          movedTab = { ...fromWindows[fromWindowIndex].tabs[fromTabIndex], id: 0, ogImage };
+          movedTab = { ...fromWindows[fromWindowIndex].tabs[fromTabIndex], id: 0, ogImage, savedAt };
         } else {
           // Remove tab from source window
           [movedTab] = fromWindows[fromWindowIndex].tabs.splice(fromTabIndex, 1);
-          movedTab = { ...movedTab, ogImage };
+          // Preserve existing savedAt when moving between saved groups; stamp if from Now Open
+          movedTab = { ...movedTab, ogImage, savedAt: movedTab.savedAt ?? savedAt };
 
           // Task 15: auto-close empty source window if the group still has other windows
           const finalFromWindows =
@@ -781,6 +857,137 @@ export function useDeduplicateGroup() {
         },
         group.permanent // skip undo for Now Open
       );
+    }
+  });
+}
+
+/** Removes all tabs older than staleThresholdMs from a saved group. */
+export function useRemoveStaleTabs() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({ groupIndex, staleThresholdMs }: { groupIndex: number; staleThresholdMs: number }) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+        const g = { ...available[groupIndex] };
+        const now = Date.now();
+        g.windows = g.windows
+          .map((w) => ({ ...w, tabs: w.tabs.filter((t) => !t.savedAt || now - t.savedAt <= staleThresholdMs) }))
+          .filter((w) => w.tabs.length > 0 || g.windows.length === 1);
+        g.updatedAt = now;
+        g.pendingSync = true;
+        g.info = getGroupInfo(g);
+        available[groupIndex] = g;
+        return { ...prev, available };
+      })
+  });
+}
+
+export function useArchiveGroup() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (groupIndex: number) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+        const group = available[groupIndex];
+        if (!group || group.permanent) return prev;
+        available[groupIndex] = { ...group, archived: true, updatedAt: Date.now(), pendingSync: true };
+        return { ...prev, available };
+      })
+  });
+}
+
+export function useRestoreGroup() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: (groupIndex: number) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+        const group = available[groupIndex];
+        if (!group) return prev;
+        available[groupIndex] = { ...group, archived: false, updatedAt: Date.now(), pendingSync: true };
+        return { ...prev, available };
+      })
+  });
+}
+
+export function useSetTabReminder() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: async ({
+      groupIndex,
+      windowIndex,
+      tabIndex,
+      fireAt,
+      note
+    }: {
+      groupIndex: number;
+      windowIndex: number;
+      tabIndex: number;
+      fireAt: number;
+      note?: string;
+    }) => {
+      // Store URL in chrome.storage.local so background can open it without popup
+      const state = await mutate((prev) => {
+        const available = [...prev.available];
+        const windows = [...available[groupIndex].windows];
+        const tabs = [...windows[windowIndex].tabs];
+        tabs[tabIndex] = { ...tabs[tabIndex], reminder: { fireAt, note: note || undefined } };
+        windows[windowIndex] = { ...windows[windowIndex], tabs };
+        available[groupIndex] = { ...available[groupIndex], windows, updatedAt: Date.now(), pendingSync: true };
+        return { ...prev, available };
+      }, true); // ponytail: skip undo for reminder — ephemeral user intent, not structural
+
+      // Register the alarm — background will fire the notification
+      const tab = state.available[groupIndex]?.windows[windowIndex]?.tabs[tabIndex];
+      if (!tab) return;
+      const alarmName = `reminder-${tab.id}-${groupIndex}-${windowIndex}-${tabIndex}`;
+      await chrome.storage.local.set({
+        [alarmName]: { url: tab.url, title: tab.title, note: note || '' }
+      });
+      const delayInMinutes = Math.max(1, (fireAt - Date.now()) / 60_000);
+      // chrome.alarms only available in background — delegate via message
+      chrome.runtime.sendMessage({ type: 'CREATE_ALARM', name: alarmName, delayInMinutes });
+    }
+  });
+}
+
+export function useClearTabReminder() {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: async ({
+      groupIndex,
+      windowIndex,
+      tabIndex
+    }: {
+      groupIndex: number;
+      windowIndex: number;
+      tabIndex: number;
+    }) => {
+      // Capture tab id before mutate removes the reminder field
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const tabId = state?.available[groupIndex]?.windows[windowIndex]?.tabs[tabIndex]?.id ?? '';
+
+      await mutate((prev) => {
+        const available = [...prev.available];
+        const windows = [...available[groupIndex].windows];
+        const tabs = [...windows[windowIndex].tabs];
+        const { reminder: _r, ...rest } = tabs[tabIndex];
+        tabs[tabIndex] = rest as typeof tabs[number];
+        windows[windowIndex] = { ...windows[windowIndex], tabs };
+        available[groupIndex] = { ...available[groupIndex], windows, updatedAt: Date.now(), pendingSync: true };
+        return { ...prev, available };
+      }, true);
+
+      // Best-effort alarm + storage cleanup; alarms only in background
+      const alarmName = `reminder-${tabId}-${groupIndex}-${windowIndex}-${tabIndex}`;
+      chrome.runtime.sendMessage({ type: 'CLEAR_ALARM', name: alarmName }).catch(() => {});
+      chrome.storage.local.remove(alarmName).catch(() => {});
     }
   });
 }

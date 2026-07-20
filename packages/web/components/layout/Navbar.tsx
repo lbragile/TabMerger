@@ -38,13 +38,13 @@ export async function Navbar() {
                     <nav className="flex items-center space-x-6 text-sm font-medium">
                         <Link
                             href="/features"
-                            className="transition-colors hover:text-foreground/80 text-foreground/60"
+                            className="transition-colors hover:text-foreground/80 text-foreground/75"
                         >
                             Features
                         </Link>
                         <Link
                             href="/pricing"
-                            className="transition-colors hover:text-foreground/80 text-foreground/60"
+                            className="transition-colors hover:text-foreground/80 text-foreground/75"
                         >
                             Pricing
                         </Link>
@@ -58,6 +58,7 @@ export async function Navbar() {
                                     <Button
                                         variant="ghost"
                                         className="relative h-8 w-8 rounded-full"
+                                        aria-label="Account menu"
                                     >
                                         <Avatar className="h-8 w-8">
                                             <AvatarFallback className="text-xs">

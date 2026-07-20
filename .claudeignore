@@ -1,0 +1,39 @@
+# Build outputs
+packages/extension/.output/
+packages/extension/.wxt/
+packages/web/.next/
+packages/demo/.output/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Lock files (too large, not useful for context)
+pnpm-lock.yaml
+
+# Generated / binary assets
+**/*.zip
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.svg
+**/*.ico
+**/*.woff
+**/*.woff2
+**/*.ttf
+
+# Test snapshots and coverage
+**/coverage/
+**/__snapshots__/
+
+# Supabase local dev volumes
+supabase/.branches/
+supabase/.temp/
+
+# Demo pipeline outputs
+packages/demo/out/
+packages/demo/public/
+
+# Logs
+**/*.log

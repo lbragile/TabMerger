@@ -1,5 +1,17 @@
 name: CI
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Required status checks — wire these up in GitHub repo Settings →
+# Branches → master → Branch protection rules → "Require status checks":
+#   • Secret Scan       (scan-secrets)
+#   • Type Check        (type-check)
+#   • Lint              (lint)
+#   • Unit Tests        (unit-tests)
+#
+# dep-audit is intentionally non-blocking (continue-on-error: true) so
+# Renovate/Dependabot PRs can still land even with transitive advisories.
+# ──────────────────────────────────────────────────────────────────────────────
+
 on:
   push:
     branches:
@@ -29,6 +41,29 @@ jobs:
             && echo "::error::.env file found in repository" && exit 1 || true
 
           echo "No secrets found."
+
+  dep-audit:
+    name: Dependency Audit (non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true  # ponytail: warn only — Renovate PRs must not be blocked by transitive advisories
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit for high/critical vulnerabilities
+        run: pnpm audit --audit-level=high
 
   type-check:
     name: Type Check
@@ -130,6 +165,24 @@ jobs:
       - name: Build extension
         run: pnpm --filter @tabmerger/extension build
 
+      - name: Check bundle size budget
+        run: |
+          SIZE=$(du -sb packages/extension/.output/chrome-mv3 | cut -f1)
+          BUDGET=2097152
+          echo "Bundle size: ${SIZE} bytes (budget: ${BUDGET} bytes / 2 MB)"
+          if [ "$SIZE" -gt "$BUDGET" ]; then
+            echo "::error::Bundle too large: ${SIZE} bytes exceeds 2 MB budget (${BUDGET} bytes)"
+            exit 1
+          fi
+          echo "Bundle OK"
+
+      - name: Upload bundle size report
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-bundle
+          path: packages/extension/.output/chrome-mv3/
+          retention-days: 7
+
   build-web:
     name: Build Web
     runs-on: ubuntu-latest
@@ -154,3 +207,38 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    needs: [scan-secrets, type-check, lint, unit-tests]
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Release
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

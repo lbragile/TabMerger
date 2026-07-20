@@ -37,9 +37,10 @@ function makeGroup(overrides: Partial<chrome.tabGroups.TabGroup> = {}): chrome.t
   return {
     id: 5,
     title: 'Work',
-    color: 'blue' as chrome.tabGroups.ColorEnum,
+    color: 'blue' as chrome.tabGroups.Color,
     windowId: 1,
     collapsed: false,
+    shared: false,
     ...overrides,
   }
 }
@@ -78,7 +79,7 @@ describe('chromeTabToTab', () => {
   })
 
   it('sets chromeGroup when groupId matches an entry in groupMap', () => {
-    const group = makeGroup({ id: 5, title: 'Work', color: 'blue' as chrome.tabGroups.ColorEnum })
+    const group = makeGroup({ id: 5, title: 'Work', color: 'blue' as chrome.tabGroups.Color })
     const map = new Map([[5, group]])
     const t = makeChromeTab({ groupId: 5 })
     const result = chromeTabToTab(t, map)

@@ -1,0 +1,40 @@
+{
+  "version": "0.2",
+  "words": [
+    "Supabase",
+    "supabase",
+    "upserts",
+    "timestamptz",
+    "pgvector",
+    "ciphertext",
+    "undoable",
+    "CCPA",
+    "tabmerger",
+    "nanoid",
+    "minimap",
+    "minimatch",
+    "lucide",
+    "zustand",
+    "WXT",
+    "wxt",
+    "idb",
+    "IndexedDB",
+    "indexeddb",
+    "commitlint",
+    "commitlints",
+    "releaserc",
+    "pnpm",
+    "vite",
+    "MV3",
+    "HMR",
+    "PBKDF2",
+    "AES"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "*.lock",
+    ".output",
+    ".next",
+    "dist"
+  ]
+}

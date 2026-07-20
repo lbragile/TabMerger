@@ -64,6 +64,10 @@ export default defineContentScript({
         sendResponse(getMeta());
         return true;
       }
+      if (msg?.type === 'SET_TAB_TITLE') {
+        try { document.title = msg.title as string; } catch { /* page may block assignment */ }
+        return false;
+      }
     });
   }
 });
