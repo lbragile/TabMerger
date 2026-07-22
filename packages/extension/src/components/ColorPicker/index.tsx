@@ -96,7 +96,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
           onKeyDown={(e) => {
             if (e.key === 'Enter') applyHex();
           }}
-          className="h-6 flex-1 min-w-0 rounded border border-border bg-transparent px-1.5 text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-ring"
+          className="h-6 flex-1 min-w-0 border border-border bg-transparent px-1.5 text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-ring"
           title="Enter hex colour (#rrggbb)"
         />
       </div>

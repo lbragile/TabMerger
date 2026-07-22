@@ -42,6 +42,7 @@ export default async function DashboardPage({
     { data: sessions },
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
+    /** Free tier cap enforced at the query level so the UI never accidentally renders groups the user shouldn't see */
     supabase.from('groups').select('id, name, color, windows, updated_at, public_slug').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
     supabase
       .from('sessions')
@@ -53,6 +54,7 @@ export default async function DashboardPage({
   const { organizeRunId, organizeToken } = params
   let organizeSession: string | null = null
   if (organizeRunId && organizeToken) {
+    /** OrganizeProposal is a client component and can't read server cookies, so we pass the JWT down as a prop */
     const { data: { session } } = await supabase.auth.getSession()
     organizeSession = session?.access_token ?? null
   }

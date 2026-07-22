@@ -18,6 +18,11 @@ async function getProUser(supabase: Awaited<ReturnType<typeof createClient>>) {
   return user
 }
 
+/**
+ * Generates a public share slug for a group and writes it to the groups table.
+ * Called by the extension or dashboard share button. Requires a Pro subscription.
+ * Ownership is enforced by filtering on both group id and user_id — prevents other users' groups being published.
+ */
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
@@ -38,6 +43,10 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
   return NextResponse.json({ slug })
 }
 
+/**
+ * Removes the public share slug from a group, making it private again.
+ * Same auth and ownership constraints as POST — Pro only, user_id filter.
+ */
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()

@@ -5,6 +5,11 @@ import { start, getRun } from 'workflow/api'
 import { tabOrganizerWorkflow } from '@/lib/workflows/tabOrganizer'
 import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
 
+/**
+ * Extracts and validates the caller's identity from the Authorization header.
+ * The extension passes its Supabase JWT as a Bearer token because it runs on a different origin
+ * and cannot share cookies; the service role client is needed to verify an arbitrary JWT.
+ */
 async function getAuthenticatedUser(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')
@@ -22,6 +27,11 @@ async function getAuthenticatedUser(request: NextRequest) {
 }
 
 
+/**
+ * Starts a durable tab-organizer workflow and returns a runId + hookToken.
+ * Enforces Pro AI entitlement and records the runId → userId mapping so the GET handler
+ * can verify ownership before streaming results back.
+ */
 export async function POST(request: NextRequest) {
   const { token, user, supabase } = await getAuthenticatedUser(request)
 
@@ -59,6 +69,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * Streams NDJSON progress events for a running workflow identified by runId.
+ * Verifies the runId belongs to the authenticated user before streaming to prevent IDOR.
+ */
 export async function GET(request: NextRequest) {
   const { token, user, supabase } = await getAuthenticatedUser(request)
 

@@ -71,6 +71,17 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   const { onDragEnd: onWindowDragEnd } = useWindowDndHandlers(groupIndex);
   const { mutate: addWindow } = useAddWindow();
   const rawSearchFilter = useUIStore((s) => s.searchFilter);
+  const scrollToWindowIndex = useUIStore((s) => s.scrollToWindowIndex);
+  const setScrollToWindowIndex = useUIStore((s) => s.setScrollToWindowIndex);
+  const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollToWindowIndex === null || activeGroupIndex !== groupIndex) return;
+    const el = scrollContainerRef.current?.querySelector<HTMLElement>(`[data-window-index="${scrollToWindowIndex}"]`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setScrollToWindowIndex(null);
+  }, [scrollToWindowIndex, activeGroupIndex, groupIndex, setScrollToWindowIndex]);
   const selectionMode = useUIStore((s) => s.selectionMode);
   const openModal = useUIStore((s) => s.openModal);
   const qc = useQueryClient();
@@ -338,24 +349,22 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
               <TooltipContent side="bottom">Remove {staleCount} stale tab{staleCount !== 1 ? 's' : ''}</TooltipContent>
             </Tooltip>
           )}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring rounded"
-                onClick={() => setNoteOpen((o) => !o)}
-                onMouseDown={(e) => e.stopPropagation()}
-                aria-label={group.note ? 'Edit group note' : 'Add group note'}
-              >
-                <StickyNote className="h-3 w-3" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              {group.note
-                ? (group.note.length > 80 ? group.note.slice(0, 80) + '…' : group.note)
-                : 'Add note'}
-            </TooltipContent>
-          </Tooltip>
+          {group.note && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring rounded"
+                  onClick={() => setNoteOpen((o) => !o)}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  aria-label="Edit group note"
+                >
+                  <StickyNote className="h-3 w-3" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Edit note</TooltipContent>
+            </Tooltip>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="More group options">
@@ -363,6 +372,11 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="text-xs">
+              <DropdownMenuItem onClick={() => setNoteOpen((o) => !o)}>
+                <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0" />
+                {group.note ? 'Edit note' : 'Add note'}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
                 <RefreshCw className="h-3.5 w-3.5 mr-2 shrink-0" />
                 <div><div>Replace with current tabs</div><div className="text-[10px] text-muted-foreground font-normal">Swap all windows with your open browser session</div></div>
@@ -414,14 +428,14 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
       {noteOpen && (
         <div
           ref={noteContainerRef}
-          className="mx-3 my-2 flex flex-col gap-1 rounded-md border border-primary/40 bg-card p-2 shadow-xs shrink-0"
+          className="mx-3 my-2 flex flex-col gap-1 border border-primary/40 bg-card p-2 shadow-xs shrink-0"
           onMouseDown={(e) => e.stopPropagation()}
         >
           <textarea
             ref={noteTextareaRef}
             rows={2}
             maxLength={500}
-            className="w-full rounded border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder="Add a note for this group…"
             value={noteValue}
             onChange={(e) => setNoteValue(e.target.value)}
@@ -440,7 +454,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
         </div>
       )}
 
-      <div className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
+      <div ref={scrollContainerRef} className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
         <div className="p-2">
           <DndContext
             sensors={sensors}
@@ -482,12 +496,12 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
             </SortableContext>
 
             {/* Sentinel drop zone — lets windows be placed after the last item */}
-            <div ref={setEndDropRef} className={cn('h-4 rounded transition-colors', isOverEnd && 'bg-primary/10')} />
+            <div ref={setEndDropRef} className={cn('h-4 transition-colors', isOverEnd && 'bg-primary/10')} />
 
             {createPortal(
               <DragOverlay dropAnimation={null} modifiers={activeTab ? [snapTabToCursor] : [restrictToVerticalAxis]}>
                 {activeTab ? (
-                  <div className="flex items-center gap-1.5 rounded px-1.5 py-0.5 text-sm bg-accent shadow-md border border-border opacity-90 pointer-events-none">
+                  <div className="flex items-center gap-1.5 px-1.5 py-0.5 text-sm bg-accent shadow-md border border-border opacity-90 pointer-events-none">
                     <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 overflow-hidden flex items-center justify-center">
                       {activeTab.favIconUrl && (
                         <img src={activeTab.favIconUrl} alt="" className="h-3.5 w-3.5" />
@@ -496,7 +510,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
                     <span className="truncate max-w-[200px] text-xs">{activeTab.title}</span>
                   </div>
                 ) : activeWindow ? (
-                  <div className="rounded-md border border-border bg-card shadow-lg opacity-90 pointer-events-none px-2 py-1.5 text-xs font-medium">
+                  <div className="border border-border bg-card shadow-lg opacity-90 pointer-events-none px-2 py-1.5 text-xs font-medium">
                     {activeWindow.name ?? 'Window'} · {activeWindow.tabs.length} tab{activeWindow.tabs.length !== 1 ? 's' : ''}
                   </div>
                 ) : null}
@@ -510,10 +524,10 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
           )}
 
           {!group.permanent && (
-            <div className="flex justify-center mt-1">
+            <div>
               <Button
                 variant="outline"
-                className="h-8 rounded-md px-3 mt-2 text-xs"
+                className={cn('h-7 rounded-none px-3 text-xs w-full', group.windows.length > 0 ? 'mt-0.5' : 'mt-1')}
                 onClick={() => addWindow({ groupIndex })}
                 disabled={selectionMode}
               >

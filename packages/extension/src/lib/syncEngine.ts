@@ -3,6 +3,11 @@ import type { Group } from './types';
 import { supabase } from './supabase';
 import { getPendingSyncGroups, markGroupSynced, saveGroup } from './localDb';
 
+/**
+ * Upserts all locally-modified groups (pendingSync=true) to Supabase, then clears the flag.
+ * Permanent groups (Now Open) are explicitly excluded — they are device-local by design.
+ * Runs sequentially per group so a single failure doesn't block the rest.
+ */
 export async function pushPendingChanges(session: Session): Promise<void> {
   // ponytail: explicit permanent guard — Now Open should already have pendingSync:false, but belt-and-suspenders
   const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent);
@@ -32,6 +37,11 @@ export async function pushPendingChanges(session: Session): Promise<void> {
   }
 }
 
+/**
+ * Fetches all remote groups for the user and merges them with the local set using last-write-wins on `updatedAt`.
+ * Remote-only groups are saved to IDB; local-only groups are kept as-is (they will be pushed on the next sync cycle).
+ * Returns the merged list sorted: permanent group first, then non-archived by most recently updated.
+ */
 export async function pullRemoteChanges(session: Session, localGroups: Group[]): Promise<Group[]> {
   const userId = session.user.id;
 
@@ -102,6 +112,11 @@ export async function pullRemoteChanges(session: Session, localGroups: Group[]):
   ];
 }
 
+/**
+ * Opens a Supabase Realtime channel for the user's groups table and calls `onUpdate` whenever
+ * another device pushes a change. Each received row is saved to IDB immediately.
+ * Returns an unsubscribe function — callers must invoke it on unmount to avoid channel leaks.
+ */
 export async function subscribeToRemoteChanges(
   session: Session,
   onUpdate: (group: Group) => void
@@ -114,6 +129,7 @@ export async function subscribeToRemoteChanges(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'groups', filter: `user_id=eq.${userId}` },
       async (payload) => {
+        /** Deletions are represented by the `archived` flag, not hard deletes in Supabase */
         if (payload.eventType === 'DELETE') return;
         const row = payload.new as Record<string, unknown>;
         const group: Group = {

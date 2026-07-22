@@ -82,7 +82,7 @@ export function getGroupTabCount(group: Group): number {
  * e.g. formatGroupCounts(1, 3) → "1 Window | 3 Tabs"
  */
 export function formatGroupCounts(windowCount: number, tabCount: number): string {
-  return `${windowCount} ${pluralize(windowCount, 'Window')} | ${tabCount} ${pluralize(tabCount, 'Tab')}`;
+  return `${windowCount} ${pluralize(windowCount, 'Window')} ◆ ${tabCount} ${pluralize(tabCount, 'Tab')}`;
 }
 
 export function getGroupInfo(group: Group): string {
@@ -107,16 +107,17 @@ export function fuzzyMatch(text: string, query: string): boolean {
 }
 
 /**
- * Parse a search query supporting in: and tag: prefixes with optional quoted values.
+ * Parse a search query supporting group:, window:, and tag: prefixes with optional quoted values.
  * Prefixes are only recognized at the start of the string or after whitespace.
  * Unquoted values consume until the next recognized prefix or end of string.
- * e.g. 'in:"My Group" open tabs' → { groupFilter: "My Group", tagFilter: "", tabQuery: "open tabs" }
- * e.g. 'in:My Group Name'        → { groupFilter: "My Group Name", tagFilter: "", tabQuery: "" }
- * e.g. 'xyz_in:work'             → { groupFilter: "", tagFilter: "", tabQuery: "xyz_in:work" }
+ * e.g. 'group:"My Group" open tabs' → { groupFilter: "My Group", windowFilter: "", tagFilter: "", tabQuery: "open tabs" }
+ * e.g. 'window:Morning'             → { groupFilter: "", windowFilter: "Morning", tagFilter: "", tabQuery: "" }
+ * e.g. 'xyz_group:work'             → { groupFilter: "", windowFilter: "", tagFilter: "", tabQuery: "xyz_group:work" }
  */
-export function parseSearchQuery(query: string): { groupFilter: string; tagFilter: string; tabQuery: string } {
-  const PREFIX_RE = /in:|tag:/i;
+export function parseSearchQuery(query: string): { groupFilter: string; windowFilter: string; tagFilter: string; tabQuery: string } {
+  const PREFIX_RE = /group:|window:|tag:/i;
   let groupFilter = '';
+  let windowFilter = '';
   let tagFilter = '';
   const plainParts: string[] = [];
   let pos = 0;
@@ -160,12 +161,13 @@ export function parseSearchQuery(query: string): { groupFilter: string; tagFilte
       else { value = rest.slice(0, next.index).trim(); pos += next.index; }
     }
 
-    if (prefix === 'in:') groupFilter = value;
+    if (prefix === 'group:') groupFilter = value;
+    else if (prefix === 'window:') windowFilter = value;
     else tagFilter = value;
     plainStart = pos; // resume plain-text accumulation after the consumed value
   }
 
-  return { groupFilter, tagFilter, tabQuery: plainParts.filter(Boolean).join(' ') };
+  return { groupFilter, windowFilter, tagFilter, tabQuery: plainParts.filter(Boolean).join(' ') };
 }
 
 export function pluralize(amount: number, baseStr: string): string {

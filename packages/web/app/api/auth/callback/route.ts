@@ -1,6 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+/**
+ * PKCE auth callback — exchanges the one-time code Supabase sends to this URL for a session cookie.
+ * Called by Supabase after email sign-up or OAuth. Redirects to `next` param (default: /dashboard)
+ * on success, or back to sign-in with an error flag on failure.
+ * Uses x-forwarded-host in production to construct the correct redirect behind a proxy/Vercel.
+ */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')

@@ -3,6 +3,12 @@ import { createServiceRoleClient } from '@/lib/supabase/server'
 import { groupTabs, type Tab } from '@/lib/ai'
 import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
 
+/**
+ * Groups an array of tabs into labelled clusters using the AI model.
+ * Validates the caller's Supabase JWT from the Authorization header — the extension uses Bearer tokens
+ * because it runs on a different origin and cannot share cookies with the web app.
+ * Enforces Pro AI entitlement via checkAndIncrementAIUsage before calling the model.
+ */
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')
@@ -11,6 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Service role needed to validate an arbitrary JWT; anon client can only inspect its own session cookie
   const supabase = await createServiceRoleClient()
 
   const {

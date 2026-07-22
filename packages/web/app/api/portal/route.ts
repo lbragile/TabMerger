@@ -3,6 +3,11 @@ import { createServiceRoleClient } from '@/lib/supabase/server'
 import { createBillingPortalSession } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
 
+/**
+ * Opens a Stripe Billing Portal session, called from the extension via Bearer-token auth.
+ * Mirrors /api/billing-portal but uses JWT auth instead of cookies because the extension
+ * runs on a different origin. Requires a stripe_customer_id on the user's profile.
+ */
 export async function POST(request: NextRequest) {
   const token = request.headers.get('authorization')?.replace('Bearer ', '')
 

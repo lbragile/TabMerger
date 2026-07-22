@@ -6,6 +6,11 @@ import { useEntitlements } from './useEntitlements';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 
+/**
+ * Shared cross-origin fetch helper for all AI API routes.
+ * Sends a `Bearer` token because the extension runs on a different origin and
+ * cannot use session cookies. The web app's API routes verify this JWT server-side.
+ */
 async function aiPost<T>(path: string, body: unknown, token: string): Promise<T> {
   const res = await fetch(`${WEB_APP_URL}${path}`, {
     method: 'POST',

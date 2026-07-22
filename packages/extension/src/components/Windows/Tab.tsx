@@ -1,19 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { X, MoveRight, CheckSquare2, CheckSquare, GripVertical, Lock, StickyNote, Clock } from 'lucide-react';
+import { X, MoveRight, CheckSquare2, CheckSquare, GripVertical, Lock, StickyNote, Clock, Pencil, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TabPreview } from './TabPreview';
 import type { Tab as TabType } from '@/lib/types';
-import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminder, useClearTabReminder } from '@/hooks/useGroups';
+import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminder, useClearTabReminder, GROUPS_QUERY_KEY } from '@/hooks/useGroups';
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
-import { getSetting } from '@/lib/localDb';
+import { getSetting, saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { saveCustomTitle, getDisplayTitle, notifySavedTabTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
+import type { GroupsState } from '@/lib/types';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
@@ -75,8 +76,20 @@ const { mutate: deleteTab } = useDeleteTab();
   const [reminderOpen, setReminderOpen] = useState(false);
   const [reminderNote, setReminderNote] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const noteContainerRef = useRef<HTMLDivElement>(null);
   const reminderContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!editingTitle) return;
+    const id = setTimeout(() => {
+      const el = titleInputRef.current;
+      if (!el) return;
+      el.focus();
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+    }, 50);
+    return () => clearTimeout(id);
+  }, [editingTitle]);
 
   // Focus textarea when note editor opens
   useEffect(() => {
@@ -94,11 +107,28 @@ const { mutate: deleteTab } = useDeleteTab();
   const commitTitle = async (value: string) => {
     setEditingTitle(false);
     const trimmed = value.trim();
-    await saveCustomTitle(tab.id, trimmed);
-    void queryClient.invalidateQueries({ queryKey: ['groups'] });
-    if (tab.chromeTabId != null && trimmed) {
-      void notifySavedTabTitle({ browserTabId: tab.chromeTabId, customTitle: trimmed, tabId: tab.id });
-    }
+    const state = queryClient.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+    if (!state) return;
+    const available = state.available.map((g, gi) => {
+      if (gi !== groupIndex) return g;
+      return {
+        ...g,
+        windows: g.windows.map((w, wi) => {
+          if (wi !== windowIndex) return w;
+          return {
+            ...w,
+            tabs: w.tabs.map((t, ti) => {
+              if (ti !== tabIndex) return t;
+              if (!trimmed || trimmed === t.title) { const { customTitle: _ct, ...rest } = t; return rest; }
+              return { ...t, customTitle: trimmed };
+            })
+          };
+        })
+      };
+    });
+    const next = { ...state, available };
+    queryClient.setQueryData(GROUPS_QUERY_KEY, next);
+    await saveGroupsState(next);
   };
 
   const handleNoteBlur = (e: React.FocusEvent) => {
@@ -195,7 +225,7 @@ const { mutate: deleteTab } = useDeleteTab();
       ref={setNodeRef}
       style={style}
       className={cn(
-        'group relative flex items-center gap-1 min-w-0 rounded px-1.5 py-0.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        'group relative flex items-center gap-1 min-w-0 px-1.5 py-0.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         isLocked ? 'cursor-not-allowed opacity-60' : 'hover:bg-accent/50 cursor-pointer',
         isDragging && 'opacity-30 border border-dashed border-primary/40',
         searchFilter && !isHighlighted && 'opacity-30',
@@ -210,7 +240,7 @@ const { mutate: deleteTab } = useDeleteTab();
       data-tab-index={tabIndex}
       onClick={handleRowClick}
       onKeyDown={(e) => {
-        if ((e.key === 'Enter' || e.key === ' ') && !isLocked) {
+        if ((e.key === 'Enter' || e.key === ' ') && !isLocked && !editingTitle) {
           e.preventDefault();
           void handleOpen();
         }
@@ -313,6 +343,23 @@ const { mutate: deleteTab } = useDeleteTab();
           )}
           <DropdownMenuSeparator />
           <DropdownMenuItem
+            className="text-xs"
+            onClick={() => { setTitleValue(getDisplayTitle(tab)); setEditingTitle(true); }}
+          >
+            <Pencil className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            Rename tab
+          </DropdownMenuItem>
+          {tab.customTitle && (
+            <DropdownMenuItem
+              className="text-xs"
+              onClick={() => { void commitTitle(''); }}
+            >
+              <Pencil className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              Reset to original title
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
             className="text-xs text-destructive focus:text-destructive"
             onClick={async () => {
               const { confirmOnTabClose } = await getSetting<{ confirmOnTabClose: boolean }>(
@@ -333,7 +380,9 @@ const { mutate: deleteTab } = useDeleteTab();
       </DropdownMenu>
 
       {/* Single slot: checkbox in selection mode, drag handle otherwise */}
-      {showCheckbox ? (
+      {editingTitle ? (
+        <span className="h-3 w-3 shrink-0" />
+      ) : showCheckbox ? (
         <button
           type="button"
           className="shrink-0 flex items-center justify-center h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
@@ -375,22 +424,23 @@ const { mutate: deleteTab } = useDeleteTab();
       {/* Title + tag — compact, tag sits right after text */}
       <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden">
         {editingTitle ? (
-          <input
-            autoFocus
-            className="block min-w-0 w-full text-xs leading-5 bg-background border border-primary/50 rounded px-1 focus:outline-none focus:ring-1 focus:ring-primary"
-            value={titleValue}
-            onChange={(e) => setTitleValue(e.target.value)}
-            onBlur={(e) => { void commitTitle(e.target.value); }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') { void commitTitle(titleValue); }
-              if (e.key === 'Escape') { setEditingTitle(false); }
-            }}
-            onMouseDown={(e) => e.stopPropagation()}
-          />
+          <>
+            <input
+              ref={titleInputRef}
+              className="min-w-0 flex-1 text-xs leading-5 bg-background border border-primary/50 pl-1 focus:outline-none focus:ring-1 focus:ring-primary"
+              value={titleValue}
+              onChange={(e) => setTitleValue(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { void commitTitle(titleValue); } }}
+              onBlur={() => void commitTitle(titleValue)}
+              onMouseDown={(e) => e.stopPropagation()}
+            />
+            <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={() => void commitTitle(titleValue)}><Check className="h-2.5 w-2.5" /></button>
+            <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={() => setEditingTitle(false)}><X className="h-2.5 w-2.5" /></button>
+          </>
         ) : (
         <TabPreview tab={tab} isLive={isNowOpen}>
           <span
-            className="block truncate overflow-hidden min-w-0 w-full text-xs leading-5 hover:underline"
+            className="block truncate min-w-0 w-full text-xs leading-5 hover:underline"
             onClick={(e) => handleOpen(e)}
             onDoubleClick={(e) => {
               e.stopPropagation();
@@ -408,7 +458,7 @@ const { mutate: deleteTab } = useDeleteTab();
           isNowOpen ? (
             <button
               type="button"
-              className="relative z-10 text-[9px] px-1 py-0 rounded-full max-w-[60px] truncate leading-4 border shrink-0 hover:brightness-110 cursor-pointer focus-visible:ring-1 focus-visible:ring-ring"
+              className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0 hover:brightness-110 cursor-pointer focus-visible:ring-1 focus-visible:ring-ring"
               style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
               onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
               onMouseDown={(e) => e.stopPropagation()}
@@ -418,7 +468,7 @@ const { mutate: deleteTab } = useDeleteTab();
             </button>
           ) : (
             <span
-              className="relative z-10 text-[9px] px-1 py-0 rounded-full max-w-[60px] truncate leading-4 border shrink-0"
+              className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0"
               style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
               onMouseDown={(e) => e.stopPropagation()}
               aria-label={`Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
@@ -427,15 +477,25 @@ const { mutate: deleteTab } = useDeleteTab();
             </span>
           )
         )}
+        {tab.customTitle && (
+          <span
+            className="relative z-10 text-[9px] px-1 py-0 leading-4 border shrink-0 flex items-center gap-0.5 whitespace-nowrap"
+            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', borderColor: 'transparent' }}
+            aria-label="Custom title"
+          >
+            <Pencil className="h-2 w-2" />
+            renamed
+          </span>
+        )}
       </div>
 
       {/* Note icon — only shown when tab has a note */}
-      {tab.note && !isLocked && !selectionMode && (
+      {tab.note && !isLocked && !selectionMode && !editingTitle && (
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring rounded"
+              className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
               onClick={(e) => { e.stopPropagation(); setNoteOpen(true); }}
               onMouseDown={(e) => e.stopPropagation()}
               aria-label="Edit tab note"
@@ -443,19 +503,17 @@ const { mutate: deleteTab } = useDeleteTab();
               <StickyNote className="h-3 w-3" />
             </button>
           </TooltipTrigger>
-          <TooltipContent className="max-w-[200px] text-xs break-words">
-            {tab.note.length > 80 ? tab.note.slice(0, 80) + '…' : tab.note}
-          </TooltipContent>
+          <TooltipContent>Edit note</TooltipContent>
         </Tooltip>
       )}
 
       {/* Clock icon — only shown when tab has a reminder */}
-      {tab.reminder && !isLocked && !selectionMode && (
+      {tab.reminder && !isLocked && !selectionMode && !editingTitle && (
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="h-4 w-4 shrink-0 flex items-center justify-center text-amber-500/70 hover:text-amber-500 focus-visible:ring-1 focus-visible:ring-ring rounded"
+              className="h-4 w-4 shrink-0 flex items-center justify-center text-amber-500/70 hover:text-amber-500 focus-visible:ring-1 focus-visible:ring-ring"
               onClick={(e) => { e.stopPropagation(); setReminderOpen(true); }}
               onMouseDown={(e) => e.stopPropagation()}
               aria-label="Edit tab reminder"
@@ -470,7 +528,7 @@ const { mutate: deleteTab } = useDeleteTab();
         </Tooltip>
       )}
 
-      {isLocked ? (
+      {!editingTitle && (isLocked ? (
         <Tooltip>
           <TooltipTrigger asChild>
             <span className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/60">
@@ -484,7 +542,7 @@ const { mutate: deleteTab } = useDeleteTab();
           <Button
             variant="ghost"
             size="icon"
-            className="h-4 w-4 shrink-0 rounded opacity-0 group-hover:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
+            className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
             aria-label={isNowOpen ? 'Close tab' : 'Remove tab'}
             onClick={async (e) => {
               e.stopPropagation();
@@ -504,14 +562,14 @@ const { mutate: deleteTab } = useDeleteTab();
           </Button>
         </TooltipTrigger>
         <TooltipContent className="bg-destructive text-destructive-foreground">{isNowOpen ? 'Close tab' : 'Remove tab'}</TooltipContent>
-      </Tooltip>}
+      </Tooltip>)}
     </div>
 
     {/* Inline reminder editor */}
     {reminderOpen && (
       <div
         ref={reminderContainerRef}
-        className="mx-6 mb-1 flex flex-col gap-1.5 rounded-md border border-amber-400/40 bg-card p-2 shadow-xs"
+        className="mx-6 mb-1 flex flex-col gap-1.5 border border-amber-400/40 bg-card p-2 shadow-xs"
         onMouseDown={(e) => e.stopPropagation()}
       >
         <p className="text-[10px] font-medium text-muted-foreground">Remind me in…</p>
@@ -538,7 +596,7 @@ const { mutate: deleteTab } = useDeleteTab();
         </div>
         <input
           type="datetime-local"
-          className="w-full rounded border border-border bg-muted/50 px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
+          className="w-full border border-border bg-muted/50 px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
           min={new Date(Date.now() + 60_000).toISOString().slice(0, 16)}
           defaultValue={tab.reminder ? new Date(tab.reminder.fireAt).toISOString().slice(0, 16) : undefined}
           id={`reminder-dt-${tab.id}`}
@@ -547,7 +605,7 @@ const { mutate: deleteTab } = useDeleteTab();
         <input
           type="text"
           maxLength={200}
-          className="w-full rounded border border-border bg-muted/50 px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
+          className="w-full border border-border bg-muted/50 px-2 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
           placeholder="Optional note…"
           value={reminderNote}
           onChange={(e) => setReminderNote(e.target.value)}
@@ -577,14 +635,14 @@ const { mutate: deleteTab } = useDeleteTab();
     {noteOpen && (
       <div
         ref={noteContainerRef}
-        className="mx-6 mb-1 flex flex-col gap-1 rounded-md border border-primary/40 bg-card p-2 shadow-xs"
+        className="mx-6 mb-1 flex flex-col gap-1 border border-primary/40 bg-card p-2 shadow-xs"
         onMouseDown={(e) => e.stopPropagation()}
       >
         <textarea
           ref={textareaRef}
           rows={2}
           maxLength={500}
-          className="w-full rounded border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
+          className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
           placeholder="Add a note…"
           value={noteValue}
           onChange={(e) => setNoteValue(e.target.value)}

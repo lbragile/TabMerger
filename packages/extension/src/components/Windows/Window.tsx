@@ -15,7 +15,9 @@ import {
   Square,
   CheckSquare,
   SortAsc,
-  StickyNote
+  StickyNote,
+  Check,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -77,8 +79,11 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
   useEffect(() => {
     if (!isEditing) return;
     const id = setTimeout(() => {
-      renameInputRef.current?.focus();
-      renameInputRef.current?.select();
+      const el = renameInputRef.current;
+      if (!el) return;
+      el.focus();
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
     }, 50);
     return () => clearTimeout(id);
   }, [isEditing]);
@@ -169,9 +174,10 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
   return (
     <div
       ref={setNodeRef}
+      data-window-index={windowIndex}
       style={{ ...style, ...glowStyle }}
       className={cn(
-        'rounded-md border border-border bg-card mb-2 p-1 transition-shadow min-w-0 overflow-hidden',
+        'border border-border bg-card mb-2 p-1 transition-shadow min-w-0 overflow-hidden',
         isBeingDragged ? 'opacity-0' : isDragging && 'opacity-50 shadow-lg',
         window.starred && 'border-l-2',
         window.incognito && 'bg-muted/30',
@@ -179,7 +185,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
       )}
     >
       {window.incognito && (
-        <div className="flex items-center gap-1 px-2 py-0.5 rounded-t-md bg-primary/10 border-b border-primary/20 text-primary">
+        <div className="flex items-center gap-1 px-2 py-0.5 bg-primary/10 border-b border-primary/20 text-primary">
           <EyeOff className="h-2.5 w-2.5 shrink-0" />
           <span className="text-[10px] font-medium">Incognito</span>
         </div>
@@ -202,11 +208,6 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
             aria-hidden="true"
           />
           <DropdownMenuContent className="w-48 text-xs" align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
-            <DropdownMenuItem onClick={() => setNoteOpen(true)}>
-              <StickyNote className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-              {window.note ? 'Edit note' : 'Add note'}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="text-xs">
                 <MoveRight className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -235,6 +236,33 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
                 )}
               </DropdownMenuSubContent>
             </DropdownMenuSub>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-xs" onClick={() => setNoteOpen(true)}>
+              <StickyNote className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              {window.note ? 'Edit note' : 'Add note'}
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-xs" onClick={() => setIsEditing(true)}>
+              <Edit3 className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+              Rename window
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-xs text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+              onClick={async () => {
+                const { confirmOnWindowClose } = await getSetting<{ confirmOnWindowClose: boolean }>(
+                  'appSettings',
+                  { confirmOnWindowClose: true }
+                );
+                if (confirmOnWindowClose) {
+                  openModal('deleteWindow', { groupIndex, windowIndex, isNowOpen });
+                } else {
+                  deleteWindow({ groupIndex, windowIndex });
+                }
+              }}
+            >
+              <Trash2 className="h-3.5 w-3.5 mr-2" />
+              {isNowOpen ? 'Close window' : 'Remove window'}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -263,34 +291,37 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
           <span className="h-3.5 w-3.5 shrink-0" />
         )}
 
-        <div className="flex-1 min-w-0 relative">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span
-                className={cn('block truncate text-xs font-medium cursor-default', isEditing && 'invisible')}
-                onDoubleClick={() => setIsEditing(true)}
-              >
-                {(window.name ?? 'Window').length > 20
-                  ? `${(window.name ?? 'Window').slice(0, 20)}…`
-                  : (window.name ?? 'Window')}
-              </span>
-            </TooltipTrigger>
-            {(window.name ?? 'Window').length > 20 && (
-              <TooltipContent side="top">{window.name ?? 'Window'}</TooltipContent>
-            )}
-          </Tooltip>
-          {isEditing && (
-            <input
-              ref={renameInputRef}
-              value={nameValue}
-              onChange={(e) => setNameValue(e.target.value)}
-              onBlur={handleRename}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleRename();
-                if (e.key === 'Escape') setIsEditing(false);
-              }}
-              className="absolute inset-0 w-full bg-transparent border-b border-primary outline-none text-xs px-0"
-            />
+        <div className="flex-1 min-w-0">
+          {isEditing ? (
+            <div className="flex items-center gap-1 w-full">
+              <input
+                ref={renameInputRef}
+                size={1}
+                value={nameValue}
+                onChange={(e) => setNameValue(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); }}
+                onBlur={handleRename}
+                className="min-w-0 flex-1 bg-transparent border-b border-primary outline-none text-xs px-0"
+              />
+              <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={handleRename}><Check className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={() => setIsEditing(false)}><X className="h-2.5 w-2.5" /></button>
+            </div>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span
+                  className="block truncate text-xs font-medium cursor-default"
+                  onDoubleClick={() => setIsEditing(true)}
+                >
+                  {(window.name ?? 'Window').length > 20
+                    ? `${(window.name ?? 'Window').slice(0, 20)}…`
+                    : (window.name ?? 'Window')}
+                </span>
+              </TooltipTrigger>
+              {(window.name ?? 'Window').length > 20 && (
+                <TooltipContent side="top">{window.name ?? 'Window'}</TooltipContent>
+              )}
+            </Tooltip>
           )}
         </div>
 
@@ -303,7 +334,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
             <TooltipTrigger asChild>
               <button
                 type="button"
-                className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring rounded"
+                className="h-5 w-5 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
                 onClick={(e) => { e.stopPropagation(); setNoteOpen(true); }}
                 onMouseDown={(e) => e.stopPropagation()}
                 aria-label="Edit window note"
@@ -311,9 +342,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
                 <StickyNote className="h-3 w-3" />
               </button>
             </TooltipTrigger>
-            <TooltipContent className="max-w-[200px] text-xs break-words">
-              {window.note.length > 80 ? window.note.slice(0, 80) + '…' : window.note}
-            </TooltipContent>
+            <TooltipContent>Edit note</TooltipContent>
           </Tooltip>
         )}
 
@@ -323,7 +352,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
               <Button
                 variant="ghost"
                 size="icon"
-                className={cn('h-5 w-5 rounded', !window.starred && 'text-muted-foreground')}
+                className={cn('h-5 w-5 rounded-none', !window.starred && 'text-muted-foreground')}
                 style={window.starred ? { color: groupColor ?? 'var(--star-active)' } : undefined}
                 onClick={() => toggleStarred({ groupIndex, windowIndex })}
                 aria-label={window.starred ? 'Unstar window' : 'Star window'}
@@ -339,51 +368,42 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
           <DropdownMenu>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild disabled={selectionMode}>
-                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 rounded invisible' : 'h-5 w-5 rounded text-muted-foreground'} aria-label="More window options">
+                <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 invisible' : 'h-5 w-5 text-muted-foreground'} aria-label="More window options">
                   <MoreHorizontal className="h-3 w-3 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
             </TooltipTrigger>
-            <DropdownMenuContent align="end" className="text-xs max-h-80 overflow-y-auto" onCloseAutoFocus={(e) => e.preventDefault()}>
-              <DropdownMenuItem onClick={() => setIsEditing(true)}>
+            <DropdownMenuContent align="end" className="w-48 text-xs" onCloseAutoFocus={(e) => e.preventDefault()}>
+              <DropdownMenuItem className="text-xs" onClick={() => setIsEditing(true)}>
                 <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                <div><div>Rename</div><div className="text-[10px] text-muted-foreground font-normal">Set a new name for this window</div></div>
+                Rename
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => toggleIncognito({ groupIndex, windowIndex })}>
+              <DropdownMenuItem className="text-xs" onClick={() => toggleIncognito({ groupIndex, windowIndex })}>
                 {window.incognito ? (
-                  <>
-                    <Shield className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                    <div><div>Remove incognito</div><div className="text-[10px] text-muted-foreground font-normal">Clear the incognito tag from this window</div></div>
-                  </>
+                  <><Shield className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />Remove incognito</>
                 ) : (
-                  <>
-                    <ShieldOff className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                    <div><div>Mark incognito</div><div className="text-[10px] text-muted-foreground font-normal">Tag this window as an incognito session</div></div>
-                  </>
+                  <><ShieldOff className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />Mark incognito</>
                 )}
               </DropdownMenuItem>
-              <DropdownMenuItem
-                disabled={window.tabs.length === 0}
-                onClick={() => void openWindow(window)}
-              >
+              <DropdownMenuItem className="text-xs" disabled={window.tabs.length === 0} onClick={() => void openWindow(window)}>
                 <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                <div><div>Open in browser</div><div className="text-[10px] text-muted-foreground font-normal">Open all tabs in a new browser window</div></div>
+                Open in browser
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
+              <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, by: 'title' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                <div><div>Sort tabs by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort tabs in this window</div></div>
+                Sort by title
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
+              <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, by: 'url' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                <div><div>Sort tabs by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort tabs by address</div></div>
+                Sort by URL
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setNoteOpen(true)}>
+              <DropdownMenuItem className="text-xs" onClick={() => setNoteOpen(true)}>
                 <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                <div><div>{window.note ? 'Edit note' : 'Add note'}</div><div className="text-[10px] text-muted-foreground font-normal">Attach a plain-text note to this window</div></div>
+                {window.note ? 'Edit note' : 'Add note'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+                className="text-xs text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
                 onClick={async () => {
                   const { confirmOnWindowClose } = await getSetting<{ confirmOnWindowClose: boolean }>(
                     'appSettings',
@@ -397,12 +417,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
                 }}
               >
                 <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div>
-                  <div>{isNowOpen ? 'Close window' : 'Remove window'}</div>
-                  <div className="text-[10px] font-normal opacity-60">
-                    {isNowOpen ? 'Close this browser window and its tabs' : 'Permanently remove this window and its tabs'}
-                  </div>
-                </div>
+                {isNowOpen ? 'Close window' : 'Remove window'}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -414,14 +429,14 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
       {noteOpen && (
         <div
           ref={noteContainerRef}
-          className="mx-3 mt-1 mb-1 flex flex-col gap-1 rounded-md border border-primary/40 bg-card p-2 shadow-xs"
+          className="mx-3 mt-1 mb-1 flex flex-col gap-1 border border-primary/40 bg-card p-2 shadow-xs"
           onMouseDown={(e) => e.stopPropagation()}
         >
           <textarea
             ref={noteTextareaRef}
             rows={2}
             maxLength={500}
-            className="w-full rounded border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full border border-border bg-muted/50 px-2 py-1 text-xs resize-y focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder="Add a note…"
             value={noteValue}
             onChange={(e) => setNoteValue(e.target.value)}

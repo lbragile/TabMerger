@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+/**
+ * Deletes a saved session by ID. Called by the dashboard session list.
+ * RLS on the sessions table would catch cross-user deletes, but the explicit user_id filter
+ * is a defence-in-depth guard that also avoids a full-table scan on the RLS check.
+ */
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

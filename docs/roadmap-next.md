@@ -503,6 +503,17 @@ Added `"alarms"` and `"notifications"` to `wxt.config.ts` manifest permissions. 
 - Also verify `background.ts` registers `chrome.alarms.onAlarm` listener correctly on startup
 - Acceptance: setting a 1-minute reminder fires a Chrome notification at the scheduled time
 
+### DEV-007 — Inline code comments audit (extension + web)
+**Agent:** `extension-dev`, `web-dev`  
+**Status:** Pending  
+**Spec:** Add meaningful inline comments wherever logic is non-obvious — regex invariants, algorithmic decisions, framework gotchas, workarounds. Do not comment obvious code or repeat what the function name already says. Target: a new contributor can understand *why* without needing to ask.
+
+- Extension: focus on `SearchOverlay.tsx` picker context regex, `useGroups` mutation ordering, `syncEngine` conflict resolution, `urlRuleEngine` match priority
+- Web: focus on Stripe webhook raw-body requirement, Supabase RLS client selection, Next.js 15 async `cookies()` pattern, session restore flow
+- Rule: if a comment would still be useful after renaming the variable/function to something more descriptive, keep it; otherwise delete it
+
+---
+
 ### DEV-006 — Upgrade all dependencies to latest major versions
 **Agent:** `devops`  
 **Status:** ✅ Done  

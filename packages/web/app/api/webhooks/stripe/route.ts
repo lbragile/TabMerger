@@ -3,6 +3,11 @@ import { stripe } from '@/lib/stripe'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import type Stripe from 'stripe'
 
+/**
+ * Stripe webhook receiver. Verifies the event signature, then handles subscription lifecycle
+ * events (checkout completed, updated, deleted, payment failed) by syncing state to Supabase.
+ * Must read the body as raw text — JSON parsing mutates bytes and breaks the HMAC signature check.
+ */
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const sig = request.headers.get('stripe-signature')
@@ -27,6 +32,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Service role required — webhook runs with no user session, so anon client has no RLS identity to satisfy
   const supabase = await createServiceRoleClient()
 
   try {
@@ -144,6 +150,11 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ received: true })
 }
 
+/**
+ * Writes or updates a subscription row keyed on the Stripe subscription ID.
+ * Derives the app tier from the price ID via env-var mapping; defaults to 'free' on unknown prices.
+ * Side-effect: logs errors but does not throw — webhook must always return 200 to avoid Stripe retries.
+ */
 async function upsertSubscription(
   supabase: Awaited<ReturnType<typeof createServiceRoleClient>>,
   subscription: Stripe.Subscription,
@@ -171,6 +182,10 @@ async function upsertSubscription(
   if (error) console.error('upsertSubscription error:', error)
 }
 
+/**
+ * Maps a Stripe price ID to the internal tier name ('pro', 'pro_ai', or 'free').
+ * Price IDs are read from env vars so they work across test and live Stripe environments.
+ */
 function getTierFromPriceId(priceId: string | undefined): string {
   if (!priceId) return 'free'
 

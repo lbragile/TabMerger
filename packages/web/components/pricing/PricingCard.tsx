@@ -15,6 +15,9 @@ interface PricingCardProps {
   tier: string
   highlighted?: boolean
   currentTier?: string
+  displayMonthly?: string
+  displayYearly?: string
+  yearlySubtext?: string
 }
 
 export function PricingCard({
@@ -26,16 +29,26 @@ export function PricingCard({
   tier,
   highlighted = false,
   currentTier,
+  displayMonthly,
+  displayYearly,
+  yearlySubtext,
 }: PricingCardProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
-  const price = interval === 'monthly' ? monthlyPrice : yearlyPrice
+  const rawPrice = interval === 'monthly' ? monthlyPrice : yearlyPrice
   const isCurrentPlan = currentTier === tier
+  const isFree = tier === 'free'
+
+  // Display price: use override strings if provided, otherwise format from number
+  const displayPrice =
+    interval === 'monthly'
+      ? (displayMonthly ?? (rawPrice === 0 ? '$0' : `$${rawPrice}`))
+      : (displayYearly ?? (rawPrice === 0 ? '$0' : `$${rawPrice}`))
 
   async function handleClick() {
-    if (tier === 'free') {
-      router.push('https://chrome.google.com/webstore')
+    if (isFree) {
+      window.open('https://chrome.google.com/webstore', '_blank', 'noopener')
       return
     }
 
@@ -64,80 +77,95 @@ export function PricingCard({
   return (
     <div
       className={cn(
-        'relative flex flex-col rounded-2xl border p-8 transition-all duration-200',
-        'hover:-translate-y-1',
+        'flex flex-col border p-5',
         highlighted
-          ? 'border-primary bg-primary text-primary-foreground shadow-xl hover:shadow-2xl'
-          : 'bg-background hover:shadow-md hover:border-primary/40'
+          ? 'border-2 border-foreground p-[26px] bg-muted/30'
+          : 'border-border bg-background'
       )}
+      style={highlighted ? { boxShadow: '0 4px 24px rgba(0,0,0,0.10)' } : undefined}
     >
-      {/* Corner ribbon — overflow-hidden is on the small 80×80 clip box, not the card,
-          so the card's drop-shadow is not clipped. The rotated inner div then peeks out. */}
-      {highlighted && (
-        <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden rounded-tr-2xl pointer-events-none">
-          <div className="absolute top-[18px] -right-[18px] w-24 rotate-45 bg-amber-400 text-amber-950 text-[10px] font-bold py-1 text-center tracking-wide uppercase shadow-xs">
-            Popular
-          </div>
-        </div>
-      )}
-
-      <div className="mb-6">
-        <h3 className={cn('text-lg font-semibold', highlighted && 'text-primary-foreground')}>
+      {/* Title row */}
+      <div className="flex items-center gap-2 mb-3">
+        <h6 className={cn('text-sm font-semibold', highlighted ? 'text-foreground' : 'text-muted-foreground')}>
           {name}
-        </h3>
-        <div className="mt-2 flex items-baseline gap-1">
-          <span className="text-4xl font-bold">
-            {price === 0 ? 'Free' : `$${price}`}
+        </h6>
+        {highlighted && (
+          <span
+            className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 text-primary-foreground"
+            style={{ background: 'hsl(var(--primary))' }}
+          >
+            Recommended
           </span>
-          {price > 0 && (
-            <span className={cn('text-sm', highlighted ? 'text-primary-foreground/70' : 'text-muted-foreground')}>
-              /{interval === 'monthly' ? 'mo' : 'yr'}
-            </span>
-          )}
-        </div>
-        {interval === 'yearly' && price > 0 && (
-          <p className={cn('mt-1 text-xs', highlighted ? 'text-primary-foreground/70' : 'text-muted-foreground')}>
-            Billed annually
-          </p>
         )}
       </div>
 
-      <ul className="mb-8 flex flex-col gap-3 flex-1">
+      {/* Price */}
+      <div className="flex items-baseline gap-1 mb-1">
+        <span className="font-extrabold" style={{ fontSize: '42px' }}>
+          {displayPrice}
+        </span>
+      </div>
+      {interval === 'yearly' && rawPrice > 0 && yearlySubtext && (
+        <p className="text-muted-foreground mb-4" style={{ fontSize: '11.5px' }}>
+          {yearlySubtext}
+        </p>
+      )}
+      {(!yearlySubtext || interval !== 'yearly' || rawPrice === 0) && (
+        <div className="mb-4" />
+      )}
+
+      {/* AI demo placeholder — proAi only */}
+      {tier === 'proAi' && (
+        <div
+          className="bg-muted border border-border flex items-center justify-center text-xs text-muted-foreground mb-4"
+          style={{ height: '56px' }}
+        >
+          Live AI demo
+        </div>
+      )}
+
+      {/* Feature list */}
+      <ul className="flex flex-col flex-1">
         {features.map((feature) => (
-          <li key={feature} className="flex items-start gap-2 text-sm">
-            <Check
-              className={cn(
-                'h-4 w-4 shrink-0 mt-0.5',
-                highlighted ? 'text-primary-foreground' : 'text-primary'
-              )}
-            />
-            <span className={highlighted ? 'text-primary-foreground/90' : ''}>
-              {feature}
-            </span>
+          <li
+            key={feature}
+            className={cn(
+              'flex items-center gap-2 border-t border-border py-1.5 text-sm',
+              highlighted && 'font-medium'
+            )}
+          >
+            <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
+            <span>{feature}</span>
           </li>
         ))}
       </ul>
 
-      <Button
-        onClick={handleClick}
-        disabled={loading || isCurrentPlan}
-        variant={highlighted ? 'secondary' : 'default'}
-        className="w-full transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
-      >
-        {loading
-          ? 'Loading...'
-          : isCurrentPlan
-            ? 'Current plan'
-            : tier === 'free'
-              ? 'Get started free'
-              : `Upgrade to ${name}`}
-      </Button>
-
-      {tier !== 'free' && !isCurrentPlan && (
-        <p className={cn('mt-2 text-center text-xs', highlighted ? 'text-primary-foreground/50' : 'text-muted-foreground')}>
-          Cancel anytime
-        </p>
-      )}
+      {/* CTA button */}
+      <div className="mt-4">
+        {isFree ? (
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleClick}
+            disabled={isCurrentPlan}
+          >
+            {isCurrentPlan ? 'Current plan' : 'Install free'}
+          </Button>
+        ) : (
+          <Button
+            variant={highlighted ? 'default' : 'outline'}
+            className="w-full"
+            onClick={handleClick}
+            disabled={loading || isCurrentPlan}
+          >
+            {loading
+              ? 'Loading...'
+              : isCurrentPlan
+                ? 'Current plan'
+                : `Upgrade to ${name}`}
+          </Button>
+        )}
+      </div>
     </div>
   )
 }

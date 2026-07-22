@@ -52,7 +52,7 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
       </DialogHeader>
 
       <div className="mt-4 space-y-2">
-        <div className="rounded-md border border-border p-3 space-y-1 text-xs">
+        <div className="border border-border p-3 space-y-1 text-xs">
           <div className="font-semibold">Free</div>
           <ul className="text-muted-foreground space-y-0.5 ml-2">
             <li>5 groups, 50 tabs</li>

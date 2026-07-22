@@ -9,20 +9,44 @@ import { trackEvent } from '@/lib/analytics';
 
 export const GROUPS_QUERY_KEY = ['groups'] as const;
 
+async function getGroupsStateWithMigration() {
+  const state = await getGroupsState();
+  const now = Date.now();
+  let dirty = false;
+  state.available.forEach((g) => {
+    if (g.permanent) return;
+    g.windows.forEach((w) => {
+      w.tabs.forEach((t) => {
+        if (!t.savedAt) { t.savedAt = now; dirty = true; }
+      });
+    });
+  });
+  if (dirty) await saveGroupsState(state);
+  return state;
+}
+
+/** Reads all groups from IndexedDB via TanStack Query. staleTime:0 so the popup always gets the latest on open. */
 export function useGroups() {
   return useQuery({
     queryKey: GROUPS_QUERY_KEY,
-    queryFn: getGroupsState,
+    queryFn: getGroupsStateWithMigration,
+    /** always read fresh from IDB when popup opens; IndexedDB is cheap to query */
     staleTime: 0,
     refetchOnWindowFocus: false,
   });
 }
 
+/**
+ * Returns a typed mutation helper used by every group/window/tab mutation hook.
+ * Pattern: fetch fresh IDB state → optionally push undo snapshot → apply transform → persist → update cache.
+ * Pass `skipUndo=true` for operations that are too granular to undo (notes, info fields, Now Open sync).
+ */
 function useGroupsMutation() {
   const qc = useQueryClient();
   const pushUndo = useUIStore((s) => s.pushUndo);
 
   return (mutFn: (prev: GroupsState) => GroupsState, skipUndo = false) =>
+    /** fetchQuery (not getQueryData) guarantees we mutate the latest IDB state even if the cache is stale */
     qc.fetchQuery({ queryKey: GROUPS_QUERY_KEY, queryFn: getGroupsState }).then(async (prev) => {
       if (!skipUndo) pushUndo(prev);
       const next = mutFn(prev);
@@ -52,6 +76,11 @@ function getNowOpenUrls(state: GroupsState | undefined): Set<string> {
   return new Set(nowOpen.windows.flatMap((w) => w.tabs.map((t) => t.url)));
 }
 
+/**
+ * Removes a saved group from IndexedDB. If any of its tabs are live in Now Open,
+ * closes them in Chrome first. Permanent groups (Now Open) are silently rejected.
+ * Recalculates `active.index` so the sidebar never points to a stale slot.
+ */
 export function useDeleteGroup() {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
@@ -360,6 +389,11 @@ export function useToggleWindowStarred() {
   });
 }
 
+/**
+ * Toggles the starred flag on a group and re-sorts the sidebar into three zones:
+ * Now Open (permanent, always index 0), starred groups, then unstarred groups.
+ * Relative order within each zone is preserved; active.index is recalculated.
+ */
 export function useToggleGroupStar() {
   const mutate = useGroupsMutation();
 
@@ -398,6 +432,11 @@ export function useToggleGroupStar() {
 // ponytail: matches scheme: prefix — covers both about:blank and chrome://newtab
 export const RESTRICTED_URL_RE = /^(chrome|about|chrome-extension|moz-extension):/i;
 
+/**
+ * Toggles incognito mode for a window.
+ * For Now Open (permanent) windows, reopens the real browser window in incognito and closes the old one —
+ * `useCurrentTabs` will sync state automatically. For saved groups, only flips the flag in IndexedDB.
+ */
 export function useToggleWindowIncognito() {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
@@ -437,6 +476,11 @@ export function useToggleWindowIncognito() {
   });
 }
 
+/**
+ * Removes a tab from a group. If the tab's URL is live in Now Open, closes it in Chrome.
+ * Tabs with `id:0` are never sent to `chrome.tabs.remove` — they are saved copies, not live tabs.
+ * Auto-collapses the source window when it becomes empty and the group still has other windows.
+ */
 export function useDeleteTab() {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
@@ -520,6 +564,10 @@ export function useUpdateTabNote() {
   });
 }
 
+/**
+ * Overwrites a saved group's windows with a snapshot of the current Now Open (index 0) windows.
+ * Stamps `savedAt` on any tabs that don't already have it. Used by "Update from current tabs".
+ */
 export function useReplaceWithCurrent() {
   const mutate = useGroupsMutation();
 
@@ -545,6 +593,10 @@ export function useReplaceWithCurrent() {
   });
 }
 
+/**
+ * Prepends a snapshot of the current Now Open windows to a saved group.
+ * Unlike `useReplaceWithCurrent`, the group's existing windows are kept at the end.
+ */
 export function useMergeWithCurrent() {
   const mutate = useGroupsMutation();
 
@@ -639,6 +691,13 @@ export function useSortTabs() {
   });
 }
 
+/**
+ * Moves (or copies) a tab between groups, handling three cases:
+ * 1. **To Now Open**: opens the URL in Chrome; `useCurrentTabs` syncs the resulting tab automatically.
+ * 2. **From Now Open** (`copy=true`): stamps a saved copy without removing the live browser tab.
+ * 3. **Between saved groups**: splices from source, appends to dest window list; auto-collapses empty source windows.
+ * Also fetches `ogImage` from the content script when moving a live tab, and carries it through for saved tabs.
+ */
 export function useMoveTab() {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
@@ -750,6 +809,11 @@ export function useMoveTab() {
   });
 }
 
+/**
+ * Moves an entire window between groups. Mirrors `useMoveTab`'s Now Open destination logic:
+ * if the target is Now Open, opens the URLs in a new Chrome window and removes them from the source.
+ * For saved-to-saved moves, appends the window to the target (sorted by starred).
+ */
 export function useMoveWindow() {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
@@ -814,6 +878,11 @@ export function useMoveWindow() {
   });
 }
 
+/**
+ * Directly writes a full GroupsState to IndexedDB and updates the TanStack Query cache.
+ * Bypasses the standard mutation pattern (no undo snapshot). Used by undo/redo to restore
+ * a previous snapshot without triggering another undo entry.
+ */
 export function useSetGroupsState() {
   const qc = useQueryClient();
 
@@ -873,6 +942,7 @@ export function useRemoveStaleTabs() {
         const now = Date.now();
         g.windows = g.windows
           .map((w) => ({ ...w, tabs: w.tabs.filter((t) => !t.savedAt || now - t.savedAt <= staleThresholdMs) }))
+          /** keep the last window even when empty — a group with zero windows is an invalid state */
           .filter((w) => w.tabs.length > 0 || g.windows.length === 1);
         g.updatedAt = now;
         g.pendingSync = true;
@@ -913,6 +983,11 @@ export function useRestoreGroup() {
   });
 }
 
+/**
+ * Writes a reminder `{ fireAt, note }` to a tab in IndexedDB, persists the URL metadata to
+ * `chrome.storage.local`, and delegates alarm registration to the background script via message.
+ * Alarms are only available in background context — the popup must send `CREATE_ALARM` to create them.
+ */
 export function useSetTabReminder() {
   const mutate = useGroupsMutation();
 

@@ -9,11 +9,20 @@ async function getClientId(): Promise<string> {
   return id;
 }
 
+/**
+ * SHA-256 hashes a Supabase user ID for GA4 user_id — avoids sending raw UUIDs to Google.
+ * Returns a hex string. Called by the background script before sending the first event.
+ */
 export async function hashUserId(userId: string): Promise<string> {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(userId));
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+/**
+ * Fires a GA4 Measurement Protocol event. Fire-and-forget — errors are swallowed.
+ * No-ops silently when `VITE_GA4_MEASUREMENT_ID` or `VITE_GA4_API_SECRET` are unset
+ * (i.e. in local dev or CI), so it's safe to call unconditionally everywhere.
+ */
 export function trackEvent(name: string, params?: Record<string, string | number>): void {
   if (!MEASUREMENT_ID || !API_SECRET) return; // ponytail: no-op if not configured
   getClientId().then((clientId) => {

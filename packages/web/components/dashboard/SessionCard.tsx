@@ -1,12 +1,8 @@
 'use client'
 
-import * as Tooltip from '@radix-ui/react-tooltip'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Clock, Info, Layers, Trash2 } from 'lucide-react'
 
-// ponytail: inline datetime format — formatDate is date-only; no need to change shared util
+// ponytail: inline datetime format — no need for full Intl config overhead
 const formatDateTime = (date: string) =>
   new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(date))
 
@@ -23,6 +19,7 @@ interface SessionWindow {
 
 interface SessionGroup {
   name?: string
+  color?: string
   windows?: SessionWindow[]
 }
 
@@ -52,98 +49,60 @@ export function SessionCard({
   onRestore,
 }: SessionCardProps) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-1 min-w-0">
-            <CardTitle className="text-base font-semibold leading-tight truncate">
-              {name}
-            </CardTitle>
-            {groups && groups.length > 0 && (
-              <Tooltip.Provider delayDuration={200}>
-                <Tooltip.Root>
-                  <Tooltip.Trigger asChild>
-                    <button className="shrink-0 text-muted-foreground hover:text-foreground transition-colors" aria-label="Preview session contents">
-                      <Info className="h-3.5 w-3.5" />
-                    </button>
-                  </Tooltip.Trigger>
-                  <Tooltip.Portal>
-                    <Tooltip.Content
-                      className="z-50 max-w-xs rounded-md border bg-popover p-3 text-xs text-popover-foreground shadow-md"
-                      sideOffset={6}
-                    >
-                      <p className="font-semibold mb-2 text-sm">{name}</p>
-                      <ul className="space-y-1">
-                        {groups.map((g, i) => {
-                          const tabs = (g.windows ?? []).reduce(
-                            (sum, w) => sum + (w.tabs?.length ?? 0),
-                            0
-                          )
-                          return (
-                            <li key={i} className="flex items-center justify-between gap-4">
-                              <span className="text-foreground truncate max-w-[160px]">
-                                {g.name ?? `Group ${i + 1}`}
-                              </span>
-                              <span className="text-muted-foreground shrink-0">
-                                {p(tabs, 'tab')}
-                              </span>
-                            </li>
-                          )
-                        })}
-                      </ul>
-                      <Tooltip.Arrow className="fill-border" />
-                    </Tooltip.Content>
-                  </Tooltip.Portal>
-                </Tooltip.Root>
-              </Tooltip.Provider>
-            )}
-          </div>
-          <div className="flex items-center gap-1 shrink-0 flex-wrap">
-            <Badge variant="secondary" className="gap-1">
-              <Layers className="h-3 w-3" />
-              {p(groupCount, 'group')}
-            </Badge>
-            <Badge variant="secondary">{p(windowCount ?? 0, 'window')}</Badge>
-            <Badge variant="secondary">{p(tabCount ?? 0, 'tab')}</Badge>
-          </div>
+    <div className="border border-border flex">
+      {/* Left panel */}
+      <div className="flex-1 p-4">
+        <h3 className="font-bold mb-2" style={{ fontSize: '17px' }}>{name}</h3>
+        <div className="flex gap-2 mb-2">
+          <span className="text-[12px] bg-muted px-2 py-0.5 rounded-sm">{p(groupCount, 'group')}</span>
+          <span className="text-[12px] bg-muted px-2 py-0.5 rounded-sm">{p(windowCount, 'window')}</span>
+          <span className="text-[12px] bg-muted px-2 py-0.5 rounded-sm">{p(tabCount, 'tab')}</span>
         </div>
-      </CardHeader>
-      <CardContent>
+        <p className="text-[12px] text-muted-foreground mb-3">{formatDateTime(createdAt)}</p>
         {description && (
-          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-            {description}
-          </p>
+          <p className="text-[12px] italic text-muted-foreground mb-3">{description}</p>
         )}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Clock className="h-3 w-3" />
-            <span>{formatDateTime(createdAt)}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            {onRestore && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-7 text-xs"
-                onClick={() => onRestore(id)}
-              >
-                Restore
-              </Button>
-            )}
-            {onDelete && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                onClick={() => onDelete(id)}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                <span className="sr-only">Delete session</span>
-              </Button>
-            )}
-          </div>
+        <div className="flex gap-2">
+          {onRestore && (
+            <Button size="sm" onClick={() => onRestore(id)}>Restore session</Button>
+          )}
+          {onDelete && (
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-destructive hover:text-destructive"
+              onClick={() => onDelete(id)}
+            >
+              Delete
+            </Button>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      {/* Right panel — contents */}
+      {groups && groups.length > 0 && (
+        <div className="w-[280px] border-l-2 border-border p-4 shrink-0">
+          <h6 className="text-[11px] uppercase font-semibold text-muted-foreground mb-3">Contents</h6>
+          {groups.slice(0, 3).map((group, i) => {
+            const allTabs = (group.windows ?? []).flatMap((w) => w.tabs ?? [])
+            return (
+              <div key={i} className="mb-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <div
+                    className="rounded-sm shrink-0"
+                    style={{ width: '56px', height: '14px', background: group.color ?? 'var(--color-divider)' }}
+                  />
+                  <span className="font-bold text-[12px] truncate flex-1">{group.name ?? `Group ${i + 1}`}</span>
+                  <span className="text-[11px] text-muted-foreground ml-auto shrink-0">{allTabs.length} tabs</span>
+                </div>
+                {allTabs.slice(0, 2).map((tab, j) => (
+                  <p key={j} className="text-[11px] text-muted-foreground truncate pl-2">{tab.title || tab.url}</p>
+                ))}
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
   )
 }

@@ -148,41 +148,45 @@ describe('getGroupInfo', () => {
 
 describe('parseSearchQuery', () => {
   it('returns empty strings for an empty query', () => {
-    expect(parseSearchQuery('')).toEqual({ groupFilter: '', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: '' })
   })
 
   it('returns tabQuery only when no prefix token is present', () => {
-    expect(parseSearchQuery('github')).toEqual({ groupFilter: '', tagFilter: '', tabQuery: 'github' })
+    expect(parseSearchQuery('github')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'github' })
   })
 
-  it('returns groupFilter only when query is just an in: token', () => {
-    expect(parseSearchQuery('in:work')).toEqual({ groupFilter: 'work', tagFilter: '', tabQuery: '' })
+  it('returns groupFilter only when query is just a group: token', () => {
+    expect(parseSearchQuery('group:work')).toEqual({ groupFilter: 'work', windowFilter: '', tagFilter: '', tabQuery: '' })
   })
 
   // unquoted value is greedy — consumes to next prefix or end
-  it('unquoted in: consumes all remaining words as groupFilter', () => {
-    expect(parseSearchQuery('in:work github')).toEqual({ groupFilter: 'work github', tagFilter: '', tabQuery: '' })
+  it('unquoted group: consumes all remaining words as groupFilter', () => {
+    expect(parseSearchQuery('group:work github')).toEqual({ groupFilter: 'work github', windowFilter: '', tagFilter: '', tabQuery: '' })
   })
 
-  it('multi-word unquoted in: value', () => {
-    expect(parseSearchQuery('in:My Saved Group')).toEqual({ groupFilter: 'My Saved Group', tagFilter: '', tabQuery: '' })
+  it('multi-word unquoted group: value', () => {
+    expect(parseSearchQuery('group:My Saved Group')).toEqual({ groupFilter: 'My Saved Group', windowFilter: '', tagFilter: '', tabQuery: '' })
+  })
+
+  it('returns windowFilter when query uses window: prefix', () => {
+    expect(parseSearchQuery('window:Morning')).toEqual({ groupFilter: '', windowFilter: 'Morning', tagFilter: '', tabQuery: '' })
   })
 
   it('multi-word unquoted tag: value', () => {
     // ponytail: tag: greedy too — "work research" is the tagFilter, tabQuery empty
-    expect(parseSearchQuery('tag:work research')).toEqual({ groupFilter: '', tagFilter: 'work research', tabQuery: '' })
+    expect(parseSearchQuery('tag:work research')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: 'work research', tabQuery: '' })
   })
 
-  it('quoted in: value with plain text after', () => {
-    expect(parseSearchQuery('in:"My Group" open tabs')).toEqual({ groupFilter: 'My Group', tagFilter: '', tabQuery: 'open tabs' })
+  it('quoted group: value with plain text after', () => {
+    expect(parseSearchQuery('group:"My Group" open tabs')).toEqual({ groupFilter: 'My Group', windowFilter: '', tagFilter: '', tabQuery: 'open tabs' })
   })
 
   it('case-insensitive prefix matching', () => {
-    expect(parseSearchQuery('IN:Work')).toEqual({ groupFilter: 'Work', tagFilter: '', tabQuery: '' })
+    expect(parseSearchQuery('GROUP:Work')).toEqual({ groupFilter: 'Work', windowFilter: '', tagFilter: '', tabQuery: '' })
   })
 
-  it('does not treat embedded in: as a prefix', () => {
-    expect(parseSearchQuery('xyzin:work')).toEqual({ groupFilter: '', tagFilter: '', tabQuery: 'xyzin:work' })
+  it('does not treat embedded group: as a prefix', () => {
+    expect(parseSearchQuery('xyzgroup:work')).toEqual({ groupFilter: '', windowFilter: '', tagFilter: '', tabQuery: 'xyzgroup:work' })
   })
 })
 
@@ -210,15 +214,15 @@ describe('fuzzyMatch', () => {
 
 describe('formatGroupCounts', () => {
   it('uses singular for 1 window and 1 tab', () => {
-    expect(formatGroupCounts(1, 1)).toBe('1 Window | 1 Tab')
+    expect(formatGroupCounts(1, 1)).toBe('1 Window ◆ 1 Tab')
   })
 
   it('uses plural for counts greater than 1', () => {
-    expect(formatGroupCounts(2, 5)).toBe('2 Windows | 5 Tabs')
+    expect(formatGroupCounts(2, 5)).toBe('2 Windows ◆ 5 Tabs')
   })
 
   it('uses plural for zero counts', () => {
-    expect(formatGroupCounts(0, 0)).toBe('0 Windows | 0 Tabs')
+    expect(formatGroupCounts(0, 0)).toBe('0 Windows ◆ 0 Tabs')
   })
 })
 

@@ -3,6 +3,11 @@ import { matchUrlToRule } from '@/hooks/useUrlRules';
 import type { UrlRule } from '@/lib/types';
 import type { Tab } from '@/lib/types';
 
+/**
+ * Appends a newly-opened tab to the matched group in IndexedDB.
+ * Does NOT close the tab in Chrome — rule matching is purely additive (the tab stays open).
+ * Called by the background script after `matchUrlToRule` returns a non-null groupId.
+ */
 export async function applyUrlRule(
   tab: chrome.tabs.Tab,
   matchedGroupId: string | null

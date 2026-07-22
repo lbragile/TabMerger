@@ -44,6 +44,9 @@ interface UIState {
   undoStack: GroupsState[];
   redoStack: GroupsState[];
 
+  // Scroll-to-window: set when a search result selects a specific window; consumed and reset by WindowsPanel
+  scrollToWindowIndex: number | null;
+
   // Selection mode
   selectionMode: boolean;
   selectedItems: SelectedItem[];
@@ -52,6 +55,7 @@ interface UIState {
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
   closeModal: () => void;
   setActiveGroupIndex: (index: number) => void;
+  setScrollToWindowIndex: (index: number | null) => void;
   setSearchFilter: (filter: string) => void;
   setRenameTarget: (target: RenameTarget | null) => void;
   pushUndo: (state: GroupsState) => void;
@@ -68,9 +72,16 @@ interface UIState {
   clearSelection: () => void;
 }
 
+/**
+ * Central ephemeral UI store. Manages: active modal, active group index, search filter,
+ * rename target, undo/redo stack (capped at 10 GroupsState snapshots), and selection mode.
+ * None of this state is persisted — it resets when the popup closes. Use TanStack Query
+ * (via `useGroups`) for durable group/tab data.
+ */
 export const useUIStore = create<UIState>((set, get) => ({
   modal: { type: null },
   activeGroupIndex: 0,
+  scrollToWindowIndex: null,
   searchFilter: '',
   renameTarget: null,
   undoStack: [],
@@ -81,6 +92,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),
   setActiveGroupIndex: (index) => set({ activeGroupIndex: index }),
+  setScrollToWindowIndex: (index) => set({ scrollToWindowIndex: index }),
   setSearchFilter: (filter) => set({ searchFilter: filter }),
   setRenameTarget: (target) => set({ renameTarget: target }),
 
@@ -90,8 +102,10 @@ export const useUIStore = create<UIState>((set, get) => ({
       return { undoStack: stack, redoStack: [] };
     }),
 
-  // currentState = the live GroupsState at the moment of the gesture (from TanStack Query cache)
-  // It goes onto the opposite stack so the other direction can restore it.
+  /**
+   * Pops the top undo snapshot and returns it. Pushes `currentState` (the live TanStack Query
+   * cache value at the moment of the gesture) onto the redo stack so redo can reverse the undo.
+   */
   undo: (currentState: import('@/lib/types').GroupsState) => {
     const { undoStack, redoStack } = get();
     if (undoStack.length === 0) return undefined;
@@ -100,6 +114,10 @@ export const useUIStore = create<UIState>((set, get) => ({
     return top;
   },
 
+  /**
+   * Pops the top redo snapshot and returns it. Pushes `currentState` back onto the undo stack
+   * so the user can undo again after a redo.
+   */
   redo: (currentState: import('@/lib/types').GroupsState) => {
     const { undoStack, redoStack } = get();
     if (redoStack.length === 0) return undefined;

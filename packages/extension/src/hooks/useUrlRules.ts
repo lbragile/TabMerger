@@ -61,6 +61,7 @@ export function matchUrlToRule(url: string, rules: UrlRule[]): string | null {
     // ponytail: simple glob — only * wildcard, no ** or ? needed for domain patterns
     const escaped = rule.pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
     try {
+      /** strip scheme so patterns like "github.com/*" work without requiring "https://" */
       if (new RegExp(`^${escaped}$`).test(url.replace(/^https?:\/\//, ''))) {
         return rule.groupId;
       }

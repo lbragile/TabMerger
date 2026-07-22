@@ -1,10 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square } from 'lucide-react'
+import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 // ponytail: inline minimal types — web doesn't depend on @tabmerger/shared
 interface Tab { title?: string; url?: string; favIconUrl?: string }
@@ -17,6 +15,7 @@ interface DashboardGroup {
   windows: ExtWindow[]
   updated_at: string
   public_slug?: string | null
+  starred?: boolean
 }
 
 interface GroupGridProps {
@@ -68,7 +67,12 @@ function ShareButton({ groupId, initialSlug }: { groupId: string; initialSlug?: 
   }
 
   return (
-    <button onClick={publish} disabled={busy} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary" title="Share group">
+    <button
+      onClick={publish}
+      disabled={busy}
+      className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-transparent hover:border-border transition-colors"
+      title="Share group"
+    >
       <Share2 className="w-3 h-3" />
       {busy ? '…' : 'Share'}
     </button>
@@ -100,10 +104,12 @@ function GroupCard({
 }) {
   const [open, setOpen] = useState(false)
   const tabs = group.windows.flatMap((w) => w.tabs)
+  const firstThree = tabs.slice(0, 3)
+  const overflow = tabs.length - firstThree.length
 
   return (
-    <Card
-      className={`overflow-hidden relative ${selecting ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
+    <div
+      className={`border border-border bg-[var(--color-surface)] overflow-hidden rounded-none relative ${selecting ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
       onClick={selecting ? () => onToggle(group.id) : undefined}
     >
       {selecting && (
@@ -115,64 +121,59 @@ function GroupCard({
           {selected ? <CheckSquare className="w-4 h-4 text-primary" /> : <Square className="w-4 h-4" />}
         </button>
       )}
-      {/* color accent bar */}
-      <div className="h-1" style={{ background: group.color }} />
-      <CardHeader className="pb-2 pt-4 px-4">
-        <div className="flex items-center gap-2">
-          <span
-            className="w-3 h-3 rounded-full shrink-0"
-            style={{ background: group.color }}
-          />
-          <span className="font-medium text-sm truncate">{group.name}</span>
-        </div>
-        <div className="flex gap-2 mt-1">
-          <Badge variant="secondary" className="text-xs">
-            {group.windows.length} {group.windows.length === 1 ? 'window' : 'windows'}
-          </Badge>
-          <Badge variant="secondary" className="text-xs">
-            {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
-          </Badge>
-        </div>
-      </CardHeader>
 
-      {open && tabs.length > 0 && (
-        <CardContent className="px-4 pb-2">
-          <ul className="space-y-1 max-h-48 overflow-y-auto">
-            {tabs.map((tab, i) => (
+      {/* 6px color band */}
+      <div style={{ height: '6px', background: group.color }} />
+
+      <div className="px-4 pt-3 pb-3">
+        {/* Name + star */}
+        <div className="flex items-center gap-1.5 mb-1">
+          <span className="font-bold text-[15px] truncate flex-1">{group.name}</span>
+          {group.starred && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />}
+        </div>
+
+        {/* Meta */}
+        <p className="text-xs text-muted-foreground mb-3">
+          {group.windows.length} {group.windows.length === 1 ? 'window' : 'windows'} ·{' '}
+          {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
+          {isPro && ` · synced ${relativeTime(group.updated_at)}`}
+          {!isPro && ` · ${relativeTime(group.updated_at)}`}
+        </p>
+
+        {/* Expanded tabs */}
+        {open && tabs.length > 0 && (
+          <ul className="mb-3 space-y-1">
+            {firstThree.map((tab, i) => (
               <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground truncate">
-                {tab.favIconUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={tab.favIconUrl} alt="" className="w-3 h-3 shrink-0" />
-                ) : (
-                  <span className="w-3 h-3 shrink-0 rounded-sm bg-muted" />
-                )}
+                <span className="w-4 h-4 shrink-0 rounded-sm bg-muted flex items-center justify-center text-[9px] font-bold uppercase">
+                  {(tab.title ?? tab.url ?? '?').charAt(0)}
+                </span>
                 <span className="truncate">{tab.title || tab.url}</span>
               </li>
             ))}
+            {overflow > 0 && (
+              <li className="text-xs text-muted-foreground pl-6">+{overflow} more</li>
+            )}
           </ul>
-        </CardContent>
-      )}
+        )}
 
-      <CardFooter className="px-4 pb-3 pt-1 flex items-center justify-between">
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          {isPro && <Cloud className="w-3 h-3" />}
-          {isPro ? `Synced ${relativeTime(group.updated_at)}` : relativeTime(group.updated_at)}
-        </div>
+        {/* Action row */}
         {!selecting && (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
             {isPro && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
             {tabs.length > 0 && (
               <button
                 onClick={() => setOpen((v) => !v)}
-                className="text-xs text-primary hover:underline"
+                className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-transparent hover:border-border transition-colors"
               >
                 {open ? 'Hide tabs' : 'Show tabs'}
               </button>
             )}
+            {isPro && <Cloud className="w-3 h-3 text-primary/60 ml-auto" />}
           </div>
         )}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }
 
@@ -193,7 +194,7 @@ function GroupRow({
   const tabs = group.windows.flatMap((w) => w.tabs)
 
   return (
-    <div className={`rounded-lg border ${selected ? 'ring-2 ring-primary' : ''}`}>
+    <div className={`rounded-lg border border-border ${selected ? 'ring-2 ring-primary' : ''}`}>
       <div
         className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-muted/50"
         onClick={selecting ? () => onToggle(group.id) : () => setOpen((v) => !v)}
@@ -205,13 +206,11 @@ function GroupRow({
         )}
         <span className="w-3 h-3 rounded-full shrink-0" style={{ background: group.color }} />
         <span className="font-medium text-sm flex-1 truncate">{group.name}</span>
-        <div className="flex items-center gap-2 shrink-0">
-          <Badge variant="secondary" className="text-xs">
-            {group.windows.length}w · {tabs.length}t
-          </Badge>
-          {isPro && <Cloud className="w-3 h-3 text-muted-foreground" />}
+        <div className="flex items-center gap-2 shrink-0 text-xs text-muted-foreground">
+          <span>{group.windows.length}w · {tabs.length}t</span>
+          {isPro && <Cloud className="w-3 h-3" />}
           {isPro && !selecting && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
-          <span className="text-xs text-muted-foreground">{relativeTime(group.updated_at)}</span>
+          <span>{relativeTime(group.updated_at)}</span>
         </div>
       </div>
       {open && !selecting && tabs.length > 0 && (
@@ -289,6 +288,12 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
     }
   }
 
+  // Total tab count across all groups
+  const totalTabs = groups.reduce(
+    (sum, g) => sum + g.windows.reduce((ws, w) => ws + w.tabs.length, 0),
+    0
+  )
+
   if (groups.length === 0) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
@@ -301,12 +306,18 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
 
   return (
     <div>
+      {/* Page header */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm text-muted-foreground">{groups.length} groups</span>
-        <div className="flex gap-1">
+        <div className="flex items-center gap-3">
+          <h3 className="font-bold" style={{ fontSize: '24px' }}>Groups</h3>
+          <span className="text-sm text-muted-foreground">
+            {groups.length} {groups.length === 1 ? 'group' : 'groups'} · {totalTabs} tabs
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
           {isPro && (
             <Button
-              variant={selecting ? 'secondary' : 'ghost'}
+              variant="outline"
               size="sm"
               className="h-8 text-xs"
               onClick={() => selecting ? exitSelecting() : setSelecting(true)}
@@ -314,29 +325,28 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
               {selecting ? 'Cancel' : 'Select'}
             </Button>
           )}
-          <Button
-            variant={view === 'grid' ? 'secondary' : 'ghost'}
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => toggle('grid')}
-            aria-label="Grid view"
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={view === 'list' ? 'secondary' : 'ghost'}
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => toggle('list')}
-            aria-label="List view"
-          >
-            <List className="h-4 w-4" />
-          </Button>
+          {/* Grid/List segmented toggle */}
+          <div className="flex rounded-sm border border-border overflow-hidden ml-1">
+            <button
+              onClick={() => toggle('grid')}
+              className={`p-1.5 ${view === 'grid' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
+              aria-label="Grid view"
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => toggle('list')}
+              className={`p-1.5 ${view === 'list' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}
+              aria-label="List view"
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 
       {view === 'grid' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {groups.map((g) => (
             <GroupCard
               key={g.id}

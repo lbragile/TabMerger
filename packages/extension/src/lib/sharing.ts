@@ -5,6 +5,11 @@ export interface Entitlement {
   sharing: boolean
 }
 
+/**
+ * Creates a public share bundle by inserting the selected groups into the `shared_bundles` table.
+ * Requires an active Supabase session (Pro entitlement). Returns the full share URL
+ * (e.g. `https://tabmerger.app/share/<slug>`) for the caller to copy or display.
+ */
 export async function createSharedBundle(
   groupIds: string[],
   groups: Group[],

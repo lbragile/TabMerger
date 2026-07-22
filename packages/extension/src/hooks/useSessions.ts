@@ -17,6 +17,12 @@ export function useSessions() {
   });
 }
 
+/**
+ * Saves the current non-permanent groups as a named session snapshot.
+ * Local-first: writes to IndexedDB first, then best-effort syncs to Supabase.
+ * Enforces `FREE_SESSION_LIMIT` for users without the `hasSessions` entitlement.
+ * Throws `'SESSION_LIMIT'` (checked by the caller to show an upgrade prompt).
+ */
 export function useSaveSession() {
   const qc = useQueryClient();
   const { data: groupsState } = useGroups();
@@ -57,6 +63,10 @@ export function useSaveSession() {
   });
 }
 
+/**
+ * Deletes a session from IndexedDB and best-effort removes it from Supabase.
+ * Failure on the remote delete does not roll back the local delete.
+ */
 export function useDeleteSession() {
   const qc = useQueryClient();
   return useMutation({
@@ -76,6 +86,11 @@ export function useDeleteSession() {
   });
 }
 
+/**
+ * Restores a session by closing ALL current Chrome windows, then reopening the
+ * saved groups as new windows with their tabs in order. Destructive — no confirmation
+ * guard here; the calling component must confirm before invoking.
+ */
 export function useRestoreSession() {
   return useMutation({
     onSuccess: () => { trackEvent('session_restored'); },

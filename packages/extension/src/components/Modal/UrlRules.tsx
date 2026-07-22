@@ -66,7 +66,7 @@ export function UrlRulesModal({ onClose: _onClose }: UrlRulesModalProps) {
         {rules.map((rule, i) => {
           const group = savedGroups.find((g) => g.id === rule.groupId);
           return (
-            <div key={rule.id} className="flex items-center gap-2 text-xs bg-muted/40 rounded-md px-2 py-1.5">
+            <div key={rule.id} className="flex items-center gap-2 text-xs bg-muted/40 px-2 py-1.5">
               <Link className="h-3 w-3 shrink-0 text-muted-foreground" />
               <span className="flex-1 font-mono truncate" title={rule.pattern}>{rule.pattern}</span>
               <span className="shrink-0 text-muted-foreground">→</span>

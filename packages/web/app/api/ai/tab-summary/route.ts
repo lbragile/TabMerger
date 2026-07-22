@@ -3,6 +3,11 @@ import { createServiceRoleClient } from '@/lib/supabase/server'
 import { summarizeTab, type Tab } from '@/lib/ai'
 import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
 
+/**
+ * Generates a one-sentence summary of a single tab for the hover preview tooltip.
+ * Called by the extension via Bearer-token auth. Requires Pro AI entitlement;
+ * responds with 429 when the monthly request quota is exhausted, 403 if not subscribed.
+ */
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')

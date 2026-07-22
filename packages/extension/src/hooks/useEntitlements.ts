@@ -12,6 +12,11 @@ type SubRow = {
   stripe_price_id: string | null;
 };
 
+/**
+ * Maps a raw subscription row to a `Tier` enum value.
+ * A `canceled` status is treated as `free` regardless of the tier field,
+ * so canceled users immediately lose paid features rather than riding out the period.
+ */
 function resolveTier(data: SubRow | null): Tier {
   if (!data || data.status === 'canceled') return 'free';
   if (data.tier === 'pro_ai') return 'pro_ai';
@@ -36,6 +41,7 @@ export function isApproachingLimit(
   maxGroups: number,
   maxTabs: number
 ): boolean {
+  /** -1 / -5: warn one item before the hard wall so the upgrade prompt appears before the user is blocked */
   return groupCount >= maxGroups - 1 || tabCount >= maxTabs - 5;
 }
 
@@ -50,6 +56,11 @@ const DEMO_MODE = import.meta.env.VITE_DEMO_BUILD === 'true';
 
 const POLL_MS = 1000 * 30;
 
+/**
+ * Returns the current user's feature limits and subscription metadata.
+ * Polls Supabase every 30 s rather than using Realtime, to keep the entitlement path simple and offline-safe.
+ * In DEMO_MODE (marketing recordings only), always returns pro_ai limits without hitting Supabase.
+ */
 export function useEntitlements(): Entitlements & { loading: boolean } {
   const { user, loading: authLoading } = useAuth();
 
@@ -72,6 +83,7 @@ export function useEntitlements(): Entitlements & { loading: boolean } {
     cancelAtPeriodEnd: sub?.cancel_at_period_end ?? false,
     currentPeriodEnd: sub?.current_period_end ?? null,
     subscriptionStatus: sub?.status ?? null,
+    /** !!user guard: query is disabled when logged out, so isLoading would be false — but the guard documents intent */
     loading: authLoading || (!!user && isLoading)
   };
 }

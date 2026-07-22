@@ -61,6 +61,29 @@ export default async function AccountPage() {
         </p>
       </div>
 
+      {/* Stats grid */}
+      <div className="grid grid-cols-4 border-t-2 border-foreground border-b mb-5">
+        {[
+          { label: 'Groups synced', value: '24' },
+          { label: 'Tabs saved', value: '847' },
+          { label: 'Sessions', value: '12' },
+          { label: 'AI calls left', value: '47', accent: true },
+        ].map((stat, i) => (
+          <div
+            key={i}
+            className={`p-4 ${stat.accent ? 'bg-[var(--color-accent-100)]' : ''} ${i > 0 ? 'border-l border-border' : ''}`}
+          >
+            <p
+              className={`font-extrabold ${stat.accent ? 'text-[var(--color-accent)]' : ''}`}
+              style={{ fontSize: '28px' }}
+            >
+              {stat.value}
+            </p>
+            <p className="text-[12px] text-muted-foreground">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
       {/* Profile */}
       <Card>
         <CardHeader>

@@ -1,83 +1,84 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
 import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-background py-24 sm:py-32">
-      <div className="container flex flex-col items-center gap-8 text-center">
-        <div className="flex flex-col gap-4 max-w-3xl">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-            Organize your tabs.{' '}
-            <span className="text-primary">Reclaim your focus.</span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            TabMerger groups your open tabs into a clean, searchable panel —
-            saving memory and mental bandwidth.
-          </p>
-        </div>
-
-        {/* Browser install buttons */}
-        <div className="flex flex-col items-center gap-3">
-          {/* Primary CTA — Chrome */}
-          <Button size="lg" className="gap-2 px-8" asChild>
-            <a
-              href="https://chrome.google.com/webstore"
-              target="_blank"
-              rel="noopener noreferrer"
+    <section className="py-14 px-8 bg-background">
+      <div className="container">
+        <div className="grid gap-10 items-center" style={{ gridTemplateColumns: '5fr 6fr' }}>
+          {/* Left col */}
+          <div className="flex flex-col">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+              Tab manager for people with too many tabs
+            </p>
+            <h1
+              className="font-bold text-foreground mb-4"
+              style={{ fontSize: '52px', letterSpacing: '-0.02em', lineHeight: 1.02 }}
             >
-              <ChromeIcon size={20} />
-              Add to Chrome — It&apos;s Free
-            </a>
-          </Button>
+              Stop drowning in browser tabs.
+            </h1>
+            <p className="text-base text-muted-foreground mb-6" style={{ maxWidth: '38ch' }}>
+              Group, save and restore every window. Let AI file the mess into named groups —
+              synced to every machine you use.
+            </p>
 
-          {/* Secondary — Firefox + Edge */}
-          <div className="flex items-center gap-2">
-            <Button size="sm" variant="outline" className="gap-1.5" asChild>
-              <a
-                href="https://addons.mozilla.org/firefox/addon/tabmerger"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FirefoxIcon size={16} />
-                Add to Firefox
-              </a>
-            </Button>
-            <Button size="sm" variant="outline" className="gap-1.5" asChild>
-              <a
-                href="https://microsoftedge.microsoft.com/addons/detail/tabmerger"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <EdgeIcon size={16} />
-                Add to Edge
-              </a>
-            </Button>
+            {/* CTA row */}
+            <div className="flex flex-wrap items-center gap-2 mb-2.5">
+              <Button size="lg" className="gap-2" asChild>
+                <a
+                  href="https://chrome.google.com/webstore"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ChromeIcon size={18} />
+                  Install for Chrome — free
+                </a>
+              </Button>
+              <Button size="sm" variant="outline" className="gap-1.5" asChild>
+                <a
+                  href="https://addons.mozilla.org/firefox/addon/tabmerger"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FirefoxIcon size={15} />
+                  Firefox
+                </a>
+              </Button>
+              <Button size="sm" variant="outline" className="gap-1.5" asChild>
+                <a
+                  href="https://microsoftedge.microsoft.com/addons/detail/tabmerger"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <EdgeIcon size={15} />
+                  Edge
+                </a>
+              </Button>
+            </div>
+
+            <p className="text-xs text-muted-foreground">Free plan, no account needed.</p>
           </div>
 
-          <Link
-            href="/features"
-            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mt-1"
-          >
-            See all features
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          {/* Right col */}
+          <div className="relative">
+            {/* ponytail: "TRY IT" badge positioned top-left of the demo box */}
+            <div
+              className="absolute -top-3 -left-3 z-10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-foreground"
+              style={{ background: 'hsl(var(--primary))' }}
+            >
+              Try it — no install
+            </div>
+            <div
+              className="border-2 border-foreground bg-muted/50 flex items-center justify-center text-center p-6"
+              style={{ height: '320px' }}
+            >
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Interactive demo — the live popup, embedded and seeded with 24 sample tabs
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <svg className="h-4 w-4 fill-current text-yellow-500" viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            4.8 / 5 rating
-          </span>
-          <span>2,000+ users</span>
-          <span>Free to install</span>
-        </div>
-      </div>
-      {/* Decorative background */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-[50%] top-0 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-primary/5 blur-3xl" />
       </div>
     </section>
   )

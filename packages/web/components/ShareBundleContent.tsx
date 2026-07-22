@@ -1,4 +1,12 @@
 interface Tab { id: number; title?: string; url?: string; favIconUrl?: string }
+
+function safeUrl(u?: string): string | undefined {
+  if (!u) return undefined
+  try {
+    const p = new URL(u)
+    return p.protocol === 'http:' || p.protocol === 'https:' ? p.toString() : undefined
+  } catch { return undefined }
+}
 interface ExtWindow { id: number; tabs: Tab[]; incognito: boolean; focused: boolean }
 interface Group { id: string; name: string; color: string; windows: ExtWindow[] }
 
@@ -48,21 +56,26 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
           </div>
           {group.windows.map((win) => (
             <div key={win.id} className="ml-5 rounded-md border bg-card divide-y">
-              {win.tabs.map((tab) => (
-                <a
-                  key={tab.id}
-                  href={tab.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/50 transition-colors"
-                >
-                  {tab.favIconUrl && (
-                    // ponytail: no onerror fallback — broken favicons just disappear
-                    <img src={tab.favIconUrl} alt="" className="w-4 h-4 flex-shrink-0" />
-                  )}
-                  <span className="truncate">{tab.title ?? tab.url}</span>
-                </a>
-              ))}
+              {win.tabs.map((tab) => {
+                const href = safeUrl(tab.url)
+                const favicon = safeUrl(tab.favIconUrl)
+                const inner = (
+                  <>
+                    {favicon && <img src={favicon} alt="" className="w-4 h-4 flex-shrink-0" />}
+                    <span className="truncate">{tab.title ?? tab.url}</span>
+                  </>
+                )
+                return href ? (
+                  <a key={tab.id} href={href} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/50 transition-colors">
+                    {inner}
+                  </a>
+                ) : (
+                  <span key={tab.id} className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
+                    {inner}
+                  </span>
+                )
+              })}
             </div>
           ))}
         </div>

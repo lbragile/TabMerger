@@ -1,6 +1,11 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+/**
+ * Creates a Supabase client that reads/writes the user's session cookie, respecting RLS.
+ * Must be async because Next.js 15 made cookies() return a Promise — skipping await returns a stale object.
+ * Use in Server Components and API routes where the request user's identity should be enforced.
+ */
 export async function createClient() {
   const cookieStore = await cookies()
 
@@ -26,6 +31,11 @@ export async function createClient() {
   )
 }
 
+/**
+ * Creates a Supabase client using the service role key, bypassing RLS entirely.
+ * Required when there is no authenticated user (e.g. Stripe webhooks) or when validating
+ * an arbitrary JWT (e.g. AI routes called by the extension). Never expose to client components.
+ */
 export async function createServiceRoleClient() {
   const { createClient } = await import('@supabase/supabase-js')
   return createClient(

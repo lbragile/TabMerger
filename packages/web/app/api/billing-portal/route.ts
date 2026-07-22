@@ -2,6 +2,11 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 
+/**
+ * Opens a Stripe Billing Portal session so the user can manage or cancel their subscription.
+ * Called by the dashboard account page (session-cookie auth). Requires an existing Stripe customer ID
+ * on the profile; returns 400 if the user has never checked out (no billing account yet).
+ */
 export async function POST(_request: NextRequest) {
   const supabase = await createClient()
   const {

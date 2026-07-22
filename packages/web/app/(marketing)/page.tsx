@@ -1,6 +1,5 @@
 import { Hero } from '@/components/marketing/Hero'
 import { ReviewsStrip } from '@/components/marketing/ReviewsStrip'
-import { DemoSectionLoader } from '@/components/marketing/DemoSectionLoader'
 import { Features } from '@/components/marketing/Features'
 import { Testimonials } from '@/components/marketing/Testimonials'
 import { FAQ } from '@/components/marketing/FAQ'
@@ -14,9 +13,9 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Testimonials />
-      <DemoSectionLoader />
+      <ReviewsStrip />
       <Features />
+      <Testimonials />
       <FAQ />
     </>
   )

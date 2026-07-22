@@ -111,6 +111,11 @@ beforeEach(() => {
 
 // ─── useOpenWindow ────────────────────────────────────────────────────────────
 
+/**
+ * useOpenWindow — smart window-open logic that avoids creating duplicate browser windows.
+ * Tests verify: all-new URLs create a window, partial matches create only missing tabs,
+ * all-present URLs only focus, empty windows are no-ops, and blank URLs are filtered out.
+ */
 describe('useOpenWindow', () => {
   it('opens all URLs in a new window when no saved URLs are currently open', async () => {
     chromeMock.tabs.query.mockResolvedValue([])
@@ -206,6 +211,12 @@ describe('useOpenWindow', () => {
 
 // ─── useBulkDelete ────────────────────────────────────────────────────────────
 
+/**
+ * useBulkDelete — batch deletion of selected tabs/windows/groups.
+ * Key constraints under test: tabs with `id:0` must not call `chrome.tabs.remove`
+ * (they are saved copies, not live browser tabs); undo snapshot is always pushed before mutating;
+ * selection mode exits on success; empty items array is a complete no-op.
+ */
 describe('useBulkDelete', () => {
   it('calls chrome.tabs.remove for the tab IDs of all selected tabs', async () => {
     const nowOpen = createNowOpenGroup()
@@ -314,6 +325,11 @@ describe('useBulkDelete', () => {
 
 // ─── useBulkMoveToGroup ───────────────────────────────────────────────────────
 
+/**
+ * useBulkMoveToGroup — batch move of selected items to a target group.
+ * Tests verify: tabs are removed from source and added to target; group-type items
+ * are silently ignored (moving a group into a group is a no-op); selection mode exits on success.
+ */
 describe('useBulkMoveToGroup', () => {
   it('moves selected tabs from source group to target group', async () => {
     const nowOpen = createNowOpenGroup()
@@ -407,6 +423,12 @@ describe('useBulkMoveToGroup', () => {
 
 // ─── useToggleGroupStar ───────────────────────────────────────────────────────
 
+/**
+ * useToggleGroupStar — toggles starred flag and re-sorts groups into three zones:
+ * Now Open (permanent, always index 0), starred, then unstarred.
+ * Tests verify: starring moves group before unstarred; unstarring moves group after starred;
+ * Now Open invariant (permanent stays at index 0) is upheld after every sort.
+ */
 describe('useToggleGroupStar', () => {
   it('sorts newly starred groups before unstarred groups (Now Open stays at index 0)', async () => {
     const nowOpen = createNowOpenGroup()
@@ -512,6 +534,12 @@ describe('useToggleGroupStar', () => {
 
 // ─── useMoveTab ───────────────────────────────────────────────────────────────
 
+/**
+ * useMoveTab — moves or copies a tab between groups, with special handling for Now Open.
+ * Tests cover: copy:true leaves source intact and stamps id:0 on the copy (so delete guards
+ * won't close the live browser tab); copy:false removes from source; ogImage is fetched via
+ * content script for live tabs and carried through; sendMessage failures yield undefined ogImage.
+ */
 describe('useMoveTab', () => {
   it('copy:true — source group unchanged, target gains a copy with id:0', async () => {
     const nowOpen = createNowOpenGroup()
@@ -695,6 +723,12 @@ describe('useMoveTab', () => {
 
 // ─── useDeleteTab ─────────────────────────────────────────────────────────────
 
+/**
+ * useDeleteTab — removes a tab from a group, conditionally closing it in Chrome.
+ * Core invariant: tabs with `id:0` (saved copies from useMoveTab copy:true) must
+ * never trigger `chrome.tabs.remove` even if their URL happens to appear in Now Open.
+ * Tabs with a real numeric id are only closed if their URL is live in Now Open.
+ */
 describe('useDeleteTab', () => {
   it('does NOT call chrome.tabs.remove when the tab has id:0', async () => {
     const nowOpen = createNowOpenGroup()
@@ -754,6 +788,12 @@ function dragEvent(activeId: string, overId: string): DragEndEvent {
   return { active: { id: activeId, data: { current: undefined }, rect: { initial: null, translated: null } }, over: { id: overId, data: { current: undefined }, rect: { width: 0, height: 0, top: 0, bottom: 0, left: 0, right: 0 } }, collisions: [], delta: { x: 0, y: 0 }, activatorEvent: new Event('pointerdown') } as unknown as DragEndEvent
 }
 
+/**
+ * useGroupDndHandlers — drag-and-drop reordering of groups across starred/unstarred zones.
+ * Dropping a group into the starred zone promotes it (starred:true); into the unstarred zone
+ * demotes it (starred:false). Dragging within the same zone keeps the starred flag unchanged.
+ * Dragging the permanent Now Open group is always a no-op.
+ */
 describe('useGroupDndHandlers', () => {
   it('promotes an unstarred group to starred when dropped into the starred zone', async () => {
     const nowOpen = createNowOpenGroup()
@@ -875,6 +915,11 @@ describe('useGroupDndHandlers', () => {
 
 // ─── useWindowDndHandlers ─────────────────────────────────────────────────────
 
+/**
+ * useWindowDndHandlers (same-group) — drag-and-drop reordering of windows within a single group.
+ * Mirrors group DnD zone semantics: dragging into the starred zone promotes the window,
+ * dragging into the unstarred zone demotes it. After the drop, `sortWindowsByStarred` re-sorts.
+ */
 describe('useWindowDndHandlers (same-group)', () => {
   it('promotes an unstarred window to starred when dropped onto a starred window', async () => {
     const nowOpen = createNowOpenGroup()
@@ -960,6 +1005,12 @@ function chromeTab(overrides: Partial<chrome.tabs.Tab> = {}): chrome.tabs.Tab {
   } as chrome.tabs.Tab
 }
 
+/**
+ * useCurrentTabs — hook that keeps Now Open in sync with live Chrome tabs.
+ * Tests verify: chromeGroup metadata is attached when a tab belongs to a Chrome tab group;
+ * ungrouped tabs (groupId=-1) have no chromeGroup; updates go via setQueryData (not invalidate)
+ * so the UI never flickers due to a cache miss.
+ */
 describe('useCurrentTabs', () => {
   it('sets chromeGroup on Now Open tab when groupId matches a Chrome tab group', async () => {
     const nowOpen = createNowOpenGroup()
@@ -1035,6 +1086,12 @@ describe('useCurrentTabs', () => {
 
 // ─── useGroupDndHandlers — sequential drag (cache-read invariant) ─────────────
 
+/**
+ * useGroupDndHandlers — sequential drag regression test.
+ * Catches a prior bug where the second drag read stale state from IDB (sorted by updatedAt)
+ * instead of the TanStack Query cache, mis-placing the dragged group at index 1.
+ * Two sequential drags must each use the post-previous-drag cache state, not IDB.
+ */
 describe('useGroupDndHandlers — sequential drag', () => {
   it('group drag maintains order across two sequential drags (regression: cache not IDB)', async () => {
     // Seed: [NowOpen, GroupA*, GroupB*, GroupC, GroupD]
@@ -1103,6 +1160,12 @@ describe('useGroupDndHandlers — sequential drag', () => {
 
 // ─── useToggleWindowIncognito ─────────────────────────────────────────────────
 
+/**
+ * useToggleWindowIncognito — toggles incognito for a window, with different behavior per context.
+ * For Now Open windows: opens a real new Chrome window in (in)cognito and closes the old one.
+ * For saved groups: only flips the flag in IndexedDB, never touches the browser.
+ * Restricted URLs (chrome://, about:) are always filtered from the new window's URL list.
+ */
 describe('useToggleWindowIncognito', () => {
   /** Build a Now Open window with given tabs and incognito flag. */
   function nowOpenWindow(id: number, tabs: ReturnType<typeof tab>[], incognito = false): ExtWindow {

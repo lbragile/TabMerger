@@ -19,7 +19,9 @@ pnpm zip                    # Build all browser store zips
 # Quality checks
 pnpm lint                   # ESLint across extension + web
 pnpm type-check             # TypeScript check across all packages
-pnpm scan-secrets           # Check staged files for API keys / PII
+pnpm test               # Vitest unit tests (extension + web)
+pnpm test:e2e           # Playwright E2E (web app)
+pnpm scan-secrets       # Check staged files for API keys / PII
 ```
 
 ## Architecture
@@ -65,6 +67,8 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 - "Now Open" group is always index 0, `permanent: true`, never deleted, never pushed to undo stack
 - AI calls are server-side only — extension POSTs to Next.js API routes with Bearer token
 - Env vars use WXT Vite convention: `import.meta.env.VITE_*`
+- Saved tabs always have `id: 0` — use positional `{groupIndex, windowIndex, tabIndex}` for all mutations, never `tab.id`
+- `Window.tsx` has a `window: WindowType` prop that shadows the global `window` — use `globalThis` for any browser APIs in that file
 
 ## Web app (`packages/web/`)
 
@@ -106,10 +110,12 @@ Domain-specific agents are in `.claude/agents/`. Each agent carries accumulated 
 | `ai-features` | AI API routes (`/api/ai/*`), Anthropic SDK usage, prompt engineering, `useAI` hook, tab preview summaries |
 | `database` | Supabase schema changes, new migrations (`supabase/migrations/`), RLS policies, DB functions |
 | `payments` | Stripe products/prices, webhook handler, subscription entitlements, checkout flow, billing portal |
+| `payments-security-reviewer` | Security audit before merging any change to: webhook handler, checkout, `useEntitlements`, RLS policies on `subscriptions`/`ai_usage` |
 | `devops` | CI/CD workflows (`.github/`), WXT build config, browser store publish, Vercel deploy, release management |
 | `design-system` | shadcn/ui component creation/modification, Tailwind theme, design tokens, responsive layout, accessibility |
 | `pm` | Multi-item feature requests, bug lists, UX feedback, or any requirement that needs scoping before implementation — probes for detail, creates tasks, delegates to domain agents, always triggers test-writer after implementation |
 | `test-writer` | Writes and updates tests after any implementation batch — Vitest + jsdom for extension, Vitest + RTL for web. Always invoked by pm agent; also invoke directly after significant changes |
+| `code-commenter` | Adds or audits JSDoc `/** */` comments across extension and web — functions, hooks, API routes, and test files. Invoke for: "add comments to this file", "document the API routes", "run a JSDoc audit" |
 | `demo` | `packages/demo/` — Remotion video composition, the Playwright driver that records the extension, demo-script authoring. Delegates extension-side demo-mode code to `extension-dev` |
 
 **Pre-deploy validation agents** — run these proactively before reloading or deploying:
@@ -132,6 +138,16 @@ Write a learning when you discover:
 Do **not** write learnings for things that are obvious from reading the code, covered in official docs at face value, or ephemeral to a single task.
 
 The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded into every session and links to each file).
+
+## Active Hooks (`.claude/settings.json`)
+
+- **PreToolUse Edit|Write** — blocks edits to `.env*` and `pnpm-lock.yaml`
+- **PostToolUse Edit|Write** — runs `tsc --noEmit` on the extension after any `packages/extension/src/` edit (script: `.claude/hooks/tsc-check.py`)
+- **PostToolUse Edit|Write** — runs `pnpm test --run` for the owning package after any `__tests__/` or `.test.`/`.spec.` file edit (script: `.claude/hooks/test-check.py`)
+
+## MCP Tools
+
+- **context7** is installed. Use it automatically (resolve library id → get docs) whenever generating code that uses a library/framework, configuring tooling, or referencing any API — do not rely on training-data knowledge for library specifics.
 
 ## Before committing
 

@@ -5,6 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     srcDir: "src",
+    publicDir: "src/public",
     modules: ["@wxt-dev/module-react"], // HMR enabled by default — popup React components hot-reload via Fast Refresh; background/content scripts auto-reload on save
     vite: () => ({
         resolve: {
@@ -22,10 +23,17 @@ export default defineConfig({
     manifest: {
         name: "TabMerger",
         description:
-            "Merge and organize browser tabs into groups to reduce memory usage",
+            "Stop drowning in tabs. Save, group, and restore every window — with AI that organises the chaos for you.",
         incognito: "spanning",
         permissions: ["tabs", "tabGroups", "storage", "contextMenus", "alarms", "notifications"],
         host_permissions: ["<all_urls>"],
+        icons: {
+            16: '/icon/16.png',
+            32: '/icon/32.png',
+            48: '/icon/48.png',
+            96: '/icon/96.png',
+            128: '/icon/128.png',
+        },
         action: { default_popup: "popup.html" },
         web_accessible_resources: [
             { resources: ["images/*"], matches: ["<all_urls>"] },

@@ -3,6 +3,11 @@ import { createServiceRoleClient } from '@/lib/supabase/server'
 import { nameGroup, type Tab } from '@/lib/ai'
 import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
 
+/**
+ * Suggests a display name for a tab group based on its tab titles/URLs.
+ * Called by the extension via Bearer-token auth. Requires Pro AI entitlement;
+ * responds with 429 when the monthly request quota is exhausted, 403 if not subscribed.
+ */
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')

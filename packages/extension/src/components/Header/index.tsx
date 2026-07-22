@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
     Undo2,
     Redo2,
@@ -27,6 +28,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUIStore } from "@/stores/uiStore";
+import { SearchOverlay } from './SearchOverlay';
 import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
@@ -68,6 +70,8 @@ export function Header() {
         })),
     );
 
+    const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
+    const setScrollToWindowIndex = useUIStore((s) => s.setScrollToWindowIndex);
     const { user, signOut } = useAuth();
     const { aiFeatures, tier, sessions: hasSessions } = useEntitlements();
     const { data: sessionList = [] } = useSessions();
@@ -122,6 +126,24 @@ export function Header() {
         }
     };
 
+    const searchRef = useRef<HTMLInputElement>(null);
+    const [searchOpen, setSearchOpen] = useState(false);
+
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                setSearchOpen((o) => !o);
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, []);
+
+    useEffect(() => {
+        if (searchOpen) setTimeout(() => searchRef.current?.focus(), 0);
+    }, [searchOpen]);
+
     const userInitials = user?.email?.slice(0, 2).toUpperCase() ?? "TM";
     const currentTierLabel = tierLabel(tier);
 
@@ -132,22 +154,38 @@ export function Header() {
                 <img
                     src={logoUrl}
                     alt="TabMerger"
-                    className="h-5 w-5 rounded"
+                    className="h-5 w-5"
                 />
                 <span className="text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#00B4CC] to-[#F5921E]">
                     TabMerger
                 </span>
             </div>
 
-            {/* Search — centred in the middle column, capped at 360px */}
+            {/* Search trigger */}
             <div className="flex justify-center">
-                <Input
-                    placeholder='Search… try in:"fitness journey" abs or tag:"study session"'
-                    value={searchFilter}
-                    onChange={(e) => setSearchFilter(e.target.value)}
-                    className="h-7 text-xs max-w-[360px] w-full"
-                />
+                <button
+                    type="button"
+                    className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full border border-border bg-muted/40 text-xs text-muted-foreground hover:bg-muted transition-colors"
+                    onClick={() => setSearchOpen(true)}
+                    aria-label="Open search"
+                >
+                    <span className="flex-1 text-left truncate">
+                        {searchFilter || 'Search tabs and groups…'}
+                    </span>
+                    <kbd className="text-[10px] border border-border px-1 py-px font-mono shrink-0">Ctrl K</kbd>
+                </button>
             </div>
+
+            {/* Search overlay */}
+            {searchOpen && <SearchOverlay
+                query={searchFilter}
+                onQueryChange={setSearchFilter}
+                groupsState={groupsState}
+                onSelectGroup={(idx) => { setActiveGroupIndex(idx); setSearchFilter(''); setSearchOpen(false); }}
+                onSelectWindow={(groupIdx, winIdx) => { setActiveGroupIndex(groupIdx); setScrollToWindowIndex(winIdx); setSearchFilter(''); setSearchOpen(false); }}
+                onClose={() => setSearchOpen(false)}
+                inputRef={searchRef}
+            />}
 
             {/* Actions — pinned to the right */}
             <div className="flex items-center gap-0.5">
@@ -254,36 +292,21 @@ export function Header() {
                     </TooltipContent>
                 </Tooltip>
 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={() => openModal("settings")}
-                            aria-label="Settings"
-                        >
-                            <Settings className="h-3.5 w-3.5 text-muted-foreground" />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">Settings</TooltipContent>
-                </Tooltip>
-
                 {/* Profile dropdown — consolidated sign-in / account widget */}
                 <Tooltip>
                     <DropdownMenu>
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
-                                <button className="ml-0.5 flex items-center rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                <button className="ml-0.5 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                                     {user ? (
-                                        <Avatar className="h-6 w-6">
+                                        <Avatar className="h-6 w-6 ring-1 ring-border">
                                             <AvatarImage
                                                 src={
                                                     user.user_metadata
                                                         ?.avatar_url as string
                                                 }
                                             />
-                                            <AvatarFallback className="text-[10px]">
+                                            <AvatarFallback className="text-[10px] bg-black/10 dark:bg-white/15 text-muted-foreground">
                                                 {userInitials}
                                             </AvatarFallback>
                                         </Avatar>
@@ -338,6 +361,14 @@ export function Header() {
                                         </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem
+                                        className="text-xs cursor-pointer"
+                                        onClick={() => openModal("settings")}
+                                    >
+                                        <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                        Settings
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
                                         className="text-xs text-destructive focus:text-destructive"
                                         onClick={() => void signOut()}
                                     >
@@ -350,6 +381,14 @@ export function Header() {
                                     <div className="px-2 py-1.5 pointer-events-none select-none">
                                         <Badge variant="secondary" className="text-xs px-2 py-0.5">Free tier</Badge>
                                     </div>
+                                    <DropdownMenuItem
+                                        className="text-xs cursor-pointer"
+                                        onClick={() => openModal("settings")}
+                                    >
+                                        <Settings className="h-3.5 w-3.5 mr-2 shrink-0" />
+                                        Settings
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
                                     <DropdownMenuItem
                                         className="text-xs text-primary focus:text-primary font-medium"
                                         onClick={() => openModal("auth")}

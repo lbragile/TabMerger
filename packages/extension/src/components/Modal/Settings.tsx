@@ -262,7 +262,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         </TabsContent>
 
         <TabsContent value="account" className="space-y-4 mt-4">
-          <div className="rounded-md border border-border p-3 space-y-1">
+          <div className="border border-border p-3 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Plan</span>
               <span className="text-xs font-medium">{tierLabels[tier] ?? 'Free'}</span>
@@ -279,7 +279,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs"
+              className="w-full text-xs rounded-none"
               onClick={() =>
                 chrome.tabs.create({
                   url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`,
@@ -308,7 +308,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             <Button
               variant="outline"
               size="sm"
-              className="w-full text-xs"
+              className="w-full text-xs rounded-none"
               onClick={() => void handleManageBilling()}
               disabled={portalLoading}
             >
@@ -317,7 +317,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           )}
 
           {user && (
-            <Button variant="outline" onClick={() => void signOut()} className="w-full text-xs">
+            <Button variant="outline" onClick={() => void signOut()} className="w-full text-xs rounded-none">
               Sign out
             </Button>
           )}
@@ -338,7 +338,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs gap-1.5 shrink-0"
+              className="text-xs gap-1.5 shrink-0 rounded-none"
               onClick={handleExport}
             >
               <Download className="h-3.5 w-3.5" />
@@ -354,7 +354,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             <Button
               variant="outline"
               size="sm"
-              className="text-xs gap-1.5 shrink-0"
+              className="text-xs gap-1.5 shrink-0 rounded-none"
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-3.5 w-3.5" />
@@ -374,7 +374,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <Separator />
 
-          <Button variant="destructive" size="sm" className="w-full text-xs" onClick={handleClearAll}>
+          <Button variant="destructive" size="sm" className="w-full text-xs rounded-none" onClick={handleClearAll}>
             Clear all data
           </Button>
         </TabsContent>

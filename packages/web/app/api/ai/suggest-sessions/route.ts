@@ -3,6 +3,11 @@ import { createServiceRoleClient } from '@/lib/supabase/server'
 import { suggestSessions, type Tab } from '@/lib/ai'
 import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
 
+/**
+ * Recommends a saved-session name and description based on the current tab groups.
+ * Called by the extension via Bearer-token auth. Requires Pro AI entitlement;
+ * responds with 429 when the monthly request quota is exhausted, 403 if not subscribed.
+ */
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')

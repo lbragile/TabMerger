@@ -7,6 +7,7 @@ import { queryClient } from '@/lib/queryClient';
 import { App } from './App';
 import '@/styles/globals.css';
 
+
 if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -26,6 +27,7 @@ if (import.meta.env.VITE_SENTRY_DSN) {
     },
   });
 }
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -30,7 +30,7 @@ export function DeduplicateConfirmModal({ data, onClose }: DeduplicateConfirmMod
         </DialogDescription>
       </DialogHeader>
 
-      <ScrollArea className="max-h-48 mt-3 rounded-md border border-border">
+      <ScrollArea className="max-h-48 mt-3 border border-border">
         <ul className="p-2 space-y-1">
           {duplicates.map((tab) => (
             <li key={`${tab.id}-${tab.url}`} className="text-xs text-muted-foreground truncate px-1">

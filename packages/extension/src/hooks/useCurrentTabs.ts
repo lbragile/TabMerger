@@ -5,6 +5,11 @@ import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { getFaviconUrl, formatGroupCounts } from '@/lib/utils';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
+/**
+ * Converts a raw `chrome.tabs.Tab` to the app's `Tab` type.
+ * Attaches `chromeGroup` metadata when the tab belongs to a Chrome tab group —
+ * the group title and color come from the `groupMap` pre-built by the caller.
+ */
 export function chromeTabToTab(t: chrome.tabs.Tab, groupMap: Map<number, chrome.tabGroups.TabGroup>): Tab {
   const tab: Tab = {
     id: t.id ?? 0,
@@ -48,6 +53,12 @@ async function fetchOgImageForTab(tabId: number): Promise<string | null> {
   }
 }
 
+/**
+ * Rebuilds the Now Open group from live Chrome windows/tabs and persists it to IndexedDB.
+ * Carries previously-fetched `ogImage` and `note` values forward so they survive re-syncs.
+ * Strips the extension's own popup page from Now Open. Returns the updated `GroupsState`,
+ * or `undefined` on error or if there is no permanent group in IDB.
+ */
 async function syncNowOpen(): Promise<GroupsState | undefined> {
   try {
     const tabGroupsAvailable = typeof chrome.tabGroups?.query === 'function';
@@ -159,6 +170,12 @@ async function backfillOgImages(
   });
 }
 
+/**
+ * Keeps the Now Open group (index 0) in sync with live Chrome tabs.
+ * Runs an initial sync on mount (with ogImage backfill), then re-syncs on every
+ * tabs/windows Chrome event. Cleans up all listeners on unmount.
+ * Must be mounted exactly once — typically at the popup root.
+ */
 export function useCurrentTabs() {
   const qc = useQueryClient();
 

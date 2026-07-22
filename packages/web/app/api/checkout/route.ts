@@ -3,6 +3,12 @@ import { createClient } from '@/lib/supabase/server'
 import { createCheckoutSession, getStripePriceId } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
 
+/**
+ * Creates a Stripe Checkout session for upgrading to Pro or Pro AI.
+ * Called by the pricing page / upgrade flow (dashboard user, session-cookie auth).
+ * Passes the existing stripe_customer_id if present so Stripe reuses the billing account on re-subscribe.
+ * Returns a redirect URL; the client is responsible for navigating to it.
+ */
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
   const {

@@ -6,7 +6,7 @@ import {
   type Modifier
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Plus, ChevronDown, ChevronRight, RotateCcw, X } from 'lucide-react';
+import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ import { GroupItem } from './GroupItem';
 import type { GroupsState } from '@/lib/types';
 import { useDndSensors, useGroupDndHandlers } from '@/hooks/useDnd';
 import { useUIStore } from '@/stores/uiStore';
-import { useAddGroup, useRestoreGroup } from '@/hooks/useGroups';
+import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession } from '@/hooks/useSessions';
 import { pluralize } from '@/lib/utils';
@@ -44,6 +44,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const { maxGroups } = useEntitlements();
   const { mutateAsync: addGroup } = useAddGroup();
   const { mutate: restoreGroup } = useRestoreGroup();
+  const { mutate: deleteGroup } = useDeleteGroup();
   const [archivedOpen, setArchivedOpen] = useState(false);
   const [sessionsOpen, setSessionsOpen] = useState(false);
   const { data: sessions = [] } = useSessions();
@@ -108,7 +109,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     >
       {/* Groups list */}
       <ScrollArea className="flex-1">
-        <div className="p-1.5">
+        <div className="py-1.5">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -129,10 +130,10 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             </SortableContext>
           </DndContext>
 
-          <div className="flex justify-center">
+          <div className="px-1.5 mt-2">
           <Button
             variant="outline"
-            className="h-8 rounded-md px-3 mt-2 text-xs"
+            className="h-8 rounded-none px-3 text-xs w-full"
             onClick={handleNewGroup}
             disabled={selectionMode}
           >
@@ -141,120 +142,154 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           </Button>
           </div>
 
-          {/* Archived section */}
-          {archivedGroups.length > 0 && (
-            <div className="mt-3">
-              <button
-                type="button"
-                className="flex items-center gap-1 w-full px-1 py-0.5 text-[10px] text-muted-foreground hover:text-foreground transition-colors select-none"
-                onClick={() => setArchivedOpen((o) => !o)}
-              >
-                {archivedOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-                Archived ({archivedGroups.length})
-              </button>
-              {archivedOpen && (
-                <div className="mt-0.5 space-y-0.5">
-                  {archivedGroups.map(({ group, realIndex }) => (
-                    <div
-                      key={group.id}
-                      className="flex items-center gap-2 px-2 py-1.5 rounded-lg"
-                      style={{ background: 'rgba(255,255,255,0.05)' }}
+        </div>
+      </ScrollArea>
+
+      {/* Archived + Sessions — pinned above stats footer */}
+      <div
+        className="shrink-0"
+        style={{ borderTop: '1px solid var(--zone-sidebar-border)' }}
+      >
+        {archivedGroups.length > 0 && (
+          <div className="mt-1.5">
+            <button
+              type="button"
+              className="flex items-center gap-1 w-full px-2 py-0.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors select-none"
+              onClick={() => setArchivedOpen((o) => !o)}
+            >
+              {archivedOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+              ARCHIVED ({archivedGroups.length})
+            </button>
+            {archivedOpen && (
+              <div className="mt-0.5 max-h-28 overflow-y-auto">
+                {archivedGroups.map(({ group, realIndex }) => (
+                  <div
+                    key={group.id}
+                    className="flex items-center gap-1.5 px-2 py-1.5 transition-colors"
+                    style={{ borderLeft: `3px solid ${group.color}` }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--sidebar-hover-bg)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = ''; }}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <span className="block truncate text-[11px] text-muted-foreground">{group.name}</span>
+                      <span className="block text-[9px] text-muted-foreground/50">{timeAgo(group.updatedAt)}</span>
+                    </div>
+                    <span
+                      className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
+                      style={{ background: 'var(--sidebar-badge-bg)', color: 'var(--sidebar-text-muted)' }}
                     >
+                      <span>{group.windows.length}</span>
+                      <span className="opacity-40">◆</span>
+                      <span>{getGroupTabCount(group)}</span>
+                    </span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => restoreGroup(realIndex)}
+                          aria-label={`Restore ${group.name}`}
+                        >
+                          <RotateCcw className="h-3 w-3" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Restore group</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+                          onClick={() => deleteGroup(realIndex)}
+                          aria-label={`Delete ${group.name}`}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">Delete group</TooltipContent>
+                    </Tooltip>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {sessions.length > 0 && (
+          <div className={sessionsOpen ? 'mt-1.5' : 'mt-1.5 mb-1.5'}>
+            <button
+              type="button"
+              className="flex items-center gap-1 w-full px-2 py-0.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors select-none"
+              onClick={() => setSessionsOpen((o) => !o)}
+            >
+              {sessionsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+              SESSIONS ({sessions.length})
+            </button>
+            {sessionsOpen && (
+              <div className="mt-0.5 max-h-28 overflow-y-auto">
+                {sessions.map((session) => {
+                  const winCount = session.groups.reduce((a, g) => a + g.windows.length, 0);
+                  const tabCount = session.groups.reduce((a, g) => a + getGroupTabCount(g), 0);
+                  return (
+                    <div
+                      key={session.id}
+                      className="flex items-center gap-1.5 px-2 py-1.5 transition-colors"
+                      style={{ borderLeft: `3px solid ${session.groups[0]?.color ?? 'var(--sidebar-text-muted)'}` }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--sidebar-hover-bg)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = ''; }}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <span className="block truncate text-[11px] text-muted-foreground">{session.name}</span>
+                        <span className="block text-[9px] text-muted-foreground/50">{timeAgo(session.createdAt)}</span>
+                      </div>
                       <span
-                        className="h-2 w-2 shrink-0 rounded-full"
-                        style={{ backgroundColor: group.color }}
-                      />
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="flex-1 min-w-0 truncate text-[11px] text-muted-foreground">
-                            {group.name.length > 10 ? `${group.name.slice(0, 10)}…` : group.name}
-                          </span>
-                        </TooltipTrigger>
-                        {group.name.length > 10 && (
-                          <TooltipContent side="top">{group.name}</TooltipContent>
-                        )}
-                      </Tooltip>
-                      <span
-                        className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md shrink-0 whitespace-nowrap"
+                        className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-none shrink-0 whitespace-nowrap"
                         style={{ background: 'var(--sidebar-badge-bg)', color: 'var(--sidebar-text-muted)' }}
                       >
-                        <span>{group.windows.length}</span>
+                        <span>{session.groups.length}</span>
                         <span className="opacity-40">◆</span>
-                        <span>{getGroupTabCount(group)}</span>
+                        <span>{winCount}</span>
+                        <span className="opacity-40">◆</span>
+                        <span>{tabCount}</span>
                       </span>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
                             type="button"
                             className="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
-                            onClick={() => restoreGroup(realIndex)}
-                            aria-label={`Restore ${group.name}`}
+                            disabled={restoring}
+                            aria-label={`Restore session: ${session.name}`}
+                            onClick={() => {
+                              if (window.confirm('This will close all open windows. Continue?')) {
+                                restoreSession(session);
+                              }
+                            }}
                           >
                             <RotateCcw className="h-3 w-3" />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top">Restore group</TooltipContent>
+                        <TooltipContent side="top">Restore session</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+                            onClick={() => deleteSession(session.id)}
+                            aria-label={`Delete session ${session.name}`}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">Delete session</TooltipContent>
                       </Tooltip>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          {/* Sessions section */}
-          {sessions.length > 0 && (
-            <div className="mt-3">
-              <button
-                type="button"
-                className="flex items-center gap-1 w-full px-1 py-0.5 text-[10px] text-muted-foreground hover:text-foreground transition-colors select-none"
-                onClick={() => setSessionsOpen((o) => !o)}
-              >
-                {sessionsOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-                Sessions ({sessions.length})
-              </button>
-              {sessionsOpen && (
-                <div className="mt-0.5 space-y-0.5">
-                  {sessions.map((session) => (
-                    <div
-                      key={session.id}
-                      className="flex items-center gap-1 px-2 py-1.5 rounded-lg"
-                      style={{ background: 'rgba(255,255,255,0.05)' }}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="truncate text-[11px] text-foreground">
-                          {session.name.length > 14 ? `${session.name.slice(0, 14)}…` : session.name}
-                        </p>
-                        <p className="text-[9px] text-muted-foreground/60">{timeAgo(session.createdAt)}</p>
-                      </div>
-                      <button
-                        type="button"
-                        className="shrink-0 text-[10px] text-primary hover:underline px-1"
-                        disabled={restoring}
-                        aria-label={`Restore session: ${session.name}`}
-                        onClick={() => {
-                          if (window.confirm('This will close all open windows. Continue?')) {
-                            restoreSession(session);
-                          }
-                        }}
-                      >
-                        Restore
-                      </button>
-                      <button
-                        type="button"
-                        className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
-                        onClick={() => deleteSession(session.id)}
-                        aria-label={`Delete session ${session.name}`}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Footer — stats */}
       <div
@@ -269,8 +304,8 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           const tabCount = saved.reduce((acc, g) => acc + g.windows.reduce((a, w) => a + w.tabs.length, 0), 0);
           return (
             <p className="text-[10px] text-center text-muted-foreground">
-              {groupCount} {pluralize(groupCount, 'Group')} &middot;{' '}
-              {winCount} {pluralize(winCount, 'Window')} &middot;{' '}
+              {groupCount} {pluralize(groupCount, 'Group')} <span className="opacity-40">◆</span>{' '}
+              {winCount} {pluralize(winCount, 'Window')} <span className="opacity-40">◆</span>{' '}
               {tabCount} {pluralize(tabCount, 'Tab')}
             </p>
           );
