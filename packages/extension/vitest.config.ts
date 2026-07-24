@@ -14,5 +14,13 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/__tests__/setup.ts'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    // ponytail: integration tests (real IndexedDB / real Supabase) run via vitest.integration.config.ts only
+    exclude: ['**/node_modules/**', 'src/__tests__/integration/**'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.d.ts', 'src/components/ui/**', 'src/__tests__/integration/**'],
+      thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
+    },
   },
 })

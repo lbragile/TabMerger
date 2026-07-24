@@ -38,11 +38,13 @@ export function useAuth(): AuthState & {
         });
       }
     };
-    chrome.storage.local.onChanged.addListener(storageHandler);
+    // ponytail: guard — some test environments replace globalThis.chrome wholesale
+    // without a `storage` key (same pattern as the chrome.identity guard elsewhere).
+    chrome?.storage?.local?.onChanged?.addListener(storageHandler);
 
     return () => {
       listener.subscription.unsubscribe();
-      chrome.storage.local.onChanged.removeListener(storageHandler);
+      chrome?.storage?.local?.onChanged?.removeListener(storageHandler);
     };
   }, []);
 

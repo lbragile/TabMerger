@@ -1,9 +1,12 @@
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useDeleteGroup, useDeleteWindow, useDeleteTab } from '@/hooks/useGroups';
+import { useBulkDelete } from '@/hooks/useBulkActions';
+import type { SelectedItem } from '@/stores/uiStore';
+import { pluralize } from '@/lib/utils';
 
 interface DeleteConfirmModalProps {
-  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab';
+  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection';
   data: Record<string, unknown>;
   onClose: () => void;
 }
@@ -12,8 +15,11 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
   const { mutate: deleteGroup } = useDeleteGroup();
   const { mutate: deleteWindow } = useDeleteWindow();
   const { mutate: deleteTab } = useDeleteTab();
+  const { mutate: bulkDelete } = useBulkDelete();
 
   const isNowOpen = data.isNowOpen as boolean | undefined;
+  const items = data.items as SelectedItem[] | undefined;
+  const selectionNoun = items?.[0]?.type === 'tab' ? 'tab' : items?.[0]?.type === 'window' ? 'window' : 'group';
 
   const labels: Record<string, { title: string; description: string; confirm: string }> = {
     deleteGroup: {
@@ -35,6 +41,11 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
         : 'Are you sure you want to remove this tab?',
       confirm: isNowOpen ? 'Close' : 'Remove',
     },
+    deleteSelection: {
+      title: isNowOpen ? 'Close Selection' : 'Delete Selection',
+      description: `Are you sure you want to ${isNowOpen ? 'close' : 'delete'} ${items?.length ?? 0} ${pluralize(items?.length ?? 0, selectionNoun)}? This cannot be undone.`,
+      confirm: isNowOpen ? 'Close' : 'Delete',
+    },
   };
 
   const { title, description, confirm } = labels[type] ?? labels.deleteGroup;
@@ -53,6 +64,8 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
         windowIndex: data.windowIndex as number,
         tabIndex: data.tabIndex as number
       });
+    } else if (type === 'deleteSelection' && items) {
+      bulkDelete(items);
     }
     onClose();
   };

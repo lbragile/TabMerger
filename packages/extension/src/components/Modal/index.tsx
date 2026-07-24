@@ -23,6 +23,7 @@ export function ModalRoot() {
       case 'deleteGroup':
       case 'deleteWindow':
       case 'deleteTab':
+      case 'deleteSelection':
         return (
           <DeleteConfirmModal
             type={modal.type}

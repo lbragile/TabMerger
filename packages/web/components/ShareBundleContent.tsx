@@ -37,6 +37,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
     (sum, g) => sum + g.windows.reduce((ws, w) => ws + w.tabs.length, 0),
     0
   )
+  const totalWindows = bundle.groups.reduce((sum, g) => sum + g.windows.length, 0)
 
   if (bundle.groups.length === 0) {
     return <p className="text-muted-foreground">No groups in this bundle.</p>
@@ -44,8 +45,12 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-muted-foreground">{totalTabs} tabs across {bundle.groups.length} groups</p>
-      {bundle.groups.map((group) => (
+      <p className="text-sm text-muted-foreground">
+        {totalTabs} tabs across {totalWindows} windows in {bundle.groups.length} groups
+      </p>
+      {bundle.groups.map((group) => {
+        const groupTabs = group.windows.reduce((sum, w) => sum + w.tabs.length, 0)
+        return (
         <div key={group.id} className="space-y-3">
           <div className="flex items-center gap-2">
             <span
@@ -53,12 +58,22 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
               style={{ backgroundColor: group.color }}
             />
             <h2 className="font-semibold text-sm">{group.name}</h2>
+            <span className="text-xs text-muted-foreground">
+              {group.windows.length} windows &middot; {groupTabs} tabs
+            </span>
           </div>
-          {group.windows.map((win) => (
-            <div key={win.id} className="ml-5 rounded-md border bg-card divide-y">
-              {win.tabs.map((tab) => {
+          {group.windows.map((win, winIndex) => (
+            <div key={`${group.id}-win-${winIndex}`} className="ml-5 rounded-md border bg-card divide-y">
+              <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground">
+                <span>Window {winIndex + 1}</span>
+                {win.incognito && (
+                  <span className="rounded-sm bg-muted px-1.5 py-0.5 text-[10px] font-medium">Incognito</span>
+                )}
+              </div>
+              {win.tabs.map((tab, tabIndex) => {
                 const href = safeUrl(tab.url)
                 const favicon = safeUrl(tab.favIconUrl)
+                const key = `${group.id}-win-${winIndex}-tab-${tabIndex}`
                 const inner = (
                   <>
                     {favicon && <img src={favicon} alt="" className="w-4 h-4 flex-shrink-0" />}
@@ -66,12 +81,12 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
                   </>
                 )
                 return href ? (
-                  <a key={tab.id} href={href} target="_blank" rel="noopener noreferrer"
+                  <a key={key} href={href} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/50 transition-colors">
                     {inner}
                   </a>
                 ) : (
-                  <span key={tab.id} className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
+                  <span key={key} className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
                     {inner}
                   </span>
                 )
@@ -79,7 +94,8 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
             </div>
           ))}
         </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

@@ -7,8 +7,10 @@ const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 const DISMISSED_KEY = 'upgrade_cta_dismissed';
 
 export function UpgradeCTA() {
+  // ponytail: sessionStorage, not localStorage — nag banner reappears next
+  // browser session rather than being permanently dismissed.
   const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem(DISMISSED_KEY) === '1'
+    () => sessionStorage.getItem(DISMISSED_KEY) === '1'
   );
   const { data: groupsState } = useGroups();
   const { tier, maxGroups, maxTabs, subscriptionStatus, loading } = useEntitlements();
@@ -23,7 +25,7 @@ export function UpgradeCTA() {
   if (!isApproachingLimit(groupCount, totalTabs, maxGroups, maxTabs)) return null;
 
   function dismiss() {
-    localStorage.setItem(DISMISSED_KEY, '1');
+    sessionStorage.setItem(DISMISSED_KEY, '1');
     setDismissed(true);
   }
 

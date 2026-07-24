@@ -38,6 +38,20 @@ export async function pushPendingChanges(session: Session): Promise<void> {
 }
 
 /**
+ * Hard-deletes groups from Supabase by id. Best-effort / fire-and-forget — callers should
+ * `.catch()` this. Without this, `pullRemoteChanges` treats a locally-deleted-but-still-remote
+ * group as "remote-only" and resurrects it into IndexedDB on the next sync (e.g. popup reopen).
+ * No-op when there's no active session (free/non-synced users never pushed the group anyway).
+ */
+export async function deleteRemoteGroups(ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return;
+  const { error } = await supabase.from('groups').delete().in('id', ids).eq('user_id', session.user.id);
+  if (error) console.error('[SyncEngine] Failed to delete remote groups', error.message);
+}
+
+/**
  * Fetches all remote groups for the user and merges them with the local set using last-write-wins on `updatedAt`.
  * Remote-only groups are saved to IDB; local-only groups are kept as-is (they will be pushed on the next sync cycle).
  * Returns the merged list sorted: permanent group first, then non-archived by most recently updated.

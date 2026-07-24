@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid'
 import type { Group } from './types'
 
 export interface Entitlement {
@@ -28,11 +29,22 @@ export async function createSharedBundle(
 
   const selected = groups.filter((g) => groupIds.includes(g.id))
 
-  const { data, error } = await supabaseClient
+  let slug = nanoid(10)
+  let { data, error } = await supabaseClient
     .from('shared_bundles')
-    .insert({ user_id: session.user.id, groups: selected })
+    .insert({ user_id: session.user.id, groups_snapshot: selected, slug })
     .select()
     .single()
+
+  // ponytail: collision space is 62^10, retry once on unique-violation rather than looping
+  if (error?.code === '23505') {
+    slug = nanoid(10)
+    ;({ data, error } = await supabaseClient
+      .from('shared_bundles')
+      .insert({ user_id: session.user.id, groups_snapshot: selected, slug })
+      .select()
+      .single())
+  }
 
   if (error) throw new Error(error.message)
 

@@ -8,13 +8,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useUIStore } from '@/stores/uiStore';
 import { useGroups } from '@/hooks/useGroups';
-import { useBulkDelete, useBulkMoveToGroup, useBulkStar } from '@/hooks/useBulkActions';
+import { useBulkDelete, useBulkMoveToGroup, useBulkStar, parseGroupId } from '@/hooks/useBulkActions';
 import { cn, pluralize } from '@/lib/utils';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { createSharedBundle } from '@/lib/sharing';
+import { getSetting } from '@/lib/localDb';
 
 /** Maps a selection type to a human-readable plural noun. */
 function itemLabel(type: string, count: number): string {
@@ -31,6 +32,7 @@ function sourceGroupIndex(id: string): number {
 export function SelectionActionBar() {
   const selectedItems = useUIStore((s) => s.selectedItems);
   const exitSelectionMode = useUIStore((s) => s.exitSelectionMode);
+  const openModal = useUIStore((s) => s.openModal);
   const { data: groupsState } = useGroups();
   const { mutate: bulkDelete, isPending: isDeleting } = useBulkDelete();
   const { mutate: bulkMove, isPending: isMoving } = useBulkMoveToGroup();
@@ -47,8 +49,12 @@ export function SelectionActionBar() {
   const isPending = isDeleting || isMoving || isStarring || isSharing;
 
   async function handleShare() {
-    const groupIds = selectedItems.map((s) => s.id);
     const allGroups = groupsState?.available ?? [];
+    const groupIds = selectedItems
+      .map((s) => parseGroupId(s.id))
+      .filter((p): p is { groupIndex: number } => p !== null)
+      .map((p) => allGroups[p.groupIndex]?.id)
+      .filter((id): id is string => id !== undefined);
     const entitlement = { tier: entitlements.tier, sharing: entitlements.cloudSync };
     setIsSharing(true);
     try {
@@ -64,6 +70,18 @@ export function SelectionActionBar() {
 
   const srcIndex = sourceGroupIndex(selectedItems[0].id);
   const isNowOpen = groupsState?.available[srcIndex]?.permanent ?? false;
+
+  async function handleDelete() {
+    const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
+      'appSettings',
+      { confirmOnDelete: false }
+    );
+    if (confirmOnDelete) {
+      openModal('deleteSelection', { items: selectedItems, isNowOpen });
+    } else {
+      bulkDelete(selectedItems);
+    }
+  }
 
   return (
     <div
@@ -156,7 +174,7 @@ export function SelectionActionBar() {
         size="sm"
         className="h-7 px-2 text-xs gap-1"
         disabled={isPending}
-        onClick={() => bulkDelete(selectedItems)}
+        onClick={handleDelete}
       >
         <Trash2 className="h-3.5 w-3.5" />
         {isNowOpen ? 'Close' : 'Delete'}

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { X, MoveRight, CheckSquare2, CheckSquare, GripVertical, Lock, StickyNote, Clock, Pencil, Check } from 'lucide-react';
+import { X, MoveRight, CheckSquare, Square, GripVertical, Lock, StickyNote, Clock, Pencil, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TabPreview } from './TabPreview';
@@ -10,7 +10,7 @@ import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminde
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
-import { getSetting, saveGroupsState } from '@/lib/localDb';
+import { saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { saveCustomTitle, getDisplayTitle, notifySavedTabTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
@@ -137,7 +137,6 @@ const { mutate: deleteTab } = useDeleteTab();
     commitNote();
   };
 
-  const openModal = useUIStore((s) => s.openModal);
   const selectionMode = useUIStore((s) => s.selectionMode);
   const selectedItems = useUIStore((s) => s.selectedItems);
   const toggleSelection = useUIStore((s) => s.toggleSelection);
@@ -234,7 +233,7 @@ const { mutate: deleteTab } = useDeleteTab();
       )}
       tabIndex={0}
       role="listitem"
-      aria-label={tab.title || tab.url}
+      aria-label={getDisplayTitle(tab) || tab.url}
       data-group-index={groupIndex}
       data-window-index={windowIndex}
       data-tab-index={tabIndex}
@@ -361,17 +360,7 @@ const { mutate: deleteTab } = useDeleteTab();
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="text-xs text-destructive focus:text-destructive"
-            onClick={async () => {
-              const { confirmOnTabClose } = await getSetting<{ confirmOnTabClose: boolean }>(
-                'appSettings',
-                { confirmOnTabClose: false }
-              );
-              if (confirmOnTabClose) {
-                openModal('deleteTab', { groupIndex, windowIndex, tabIndex, isNowOpen });
-              } else {
-                deleteTab({ groupIndex, windowIndex, tabIndex });
-              }
-            }}
+            onClick={() => deleteTab({ groupIndex, windowIndex, tabIndex })}
           >
             <X className="h-3.5 w-3.5 mr-2" />
             {isNowOpen ? 'Close tab' : 'Remove tab'}
@@ -393,7 +382,7 @@ const { mutate: deleteTab } = useDeleteTab();
           {isSelected ? (
             <CheckSquare className="h-3.5 w-3.5 text-primary" />
           ) : (
-            <CheckSquare2 className="h-3.5 w-3.5 text-muted-foreground" />
+            <Square className="h-3.5 w-3.5" />
           )}
         </button>
       ) : (
@@ -442,11 +431,6 @@ const { mutate: deleteTab } = useDeleteTab();
           <span
             className="block truncate min-w-0 w-full text-xs leading-5 hover:underline"
             onClick={(e) => handleOpen(e)}
-            onDoubleClick={(e) => {
-              e.stopPropagation();
-              setTitleValue(getDisplayTitle(tab));
-              setEditingTitle(true);
-            }}
             onMouseDown={(e) => e.stopPropagation()}
           >
             {getDisplayTitle(tab) || tab.url}
@@ -544,17 +528,9 @@ const { mutate: deleteTab } = useDeleteTab();
             size="icon"
             className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
             aria-label={isNowOpen ? 'Close tab' : 'Remove tab'}
-            onClick={async (e) => {
+            onClick={(e) => {
               e.stopPropagation();
-              const { confirmOnTabClose } = await getSetting<{ confirmOnTabClose: boolean }>(
-                'appSettings',
-                { confirmOnTabClose: false }
-              );
-              if (confirmOnTabClose) {
-                openModal('deleteTab', { groupIndex, windowIndex, tabIndex, isNowOpen });
-              } else {
-                deleteTab({ groupIndex, windowIndex, tabIndex });
-              }
+              deleteTab({ groupIndex, windowIndex, tabIndex });
             }}
             onMouseDown={(e) => e.stopPropagation()}
           >

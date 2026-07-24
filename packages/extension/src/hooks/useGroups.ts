@@ -2,7 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { nanoid } from 'nanoid';
 import type { Group, GroupsState, Tab } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
-import { getGroupsState, saveGroupsState, deleteGroup as dbDeleteGroup } from '@/lib/localDb';
+import { getGroupsState, saveGroupsState } from '@/lib/localDb';
+import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
@@ -106,8 +107,10 @@ export function useDeleteGroup() {
         const group = available[groupIndex];
         if (!group || group.permanent) return prev;
 
+        // Fire-and-forget: hard-delete from Supabase so sync doesn't resurrect it on reload
+        deleteRemoteGroups([group.id]).catch(() => {});
+
         const newAvailable = available.filter((_, i) => i !== groupIndex);
-        void dbDeleteGroup(group.id);
 
         const newActiveIndex =
           active.index >= groupIndex && active.index > 0 ? active.index - 1 : active.index;

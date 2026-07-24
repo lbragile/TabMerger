@@ -249,11 +249,11 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
             <DropdownMenuItem
               className="text-xs text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
               onClick={async () => {
-                const { confirmOnWindowClose } = await getSetting<{ confirmOnWindowClose: boolean }>(
+                const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
                   'appSettings',
-                  { confirmOnWindowClose: true }
+                  { confirmOnDelete: false }
                 );
-                if (confirmOnWindowClose) {
+                if (confirmOnDelete) {
                   openModal('deleteWindow', { groupIndex, windowIndex, isNowOpen });
                 } else {
                   deleteWindow({ groupIndex, windowIndex });
@@ -405,11 +405,11 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
               <DropdownMenuItem
                 className="text-xs text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
                 onClick={async () => {
-                  const { confirmOnWindowClose } = await getSetting<{ confirmOnWindowClose: boolean }>(
+                  const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
                     'appSettings',
-                    { confirmOnWindowClose: true }
+                    { confirmOnDelete: false }
                   );
-                  if (confirmOnWindowClose) {
+                  if (confirmOnDelete) {
                     openModal('deleteWindow', { groupIndex, windowIndex, isNowOpen });
                   } else {
                     deleteWindow({ groupIndex, windowIndex });
@@ -457,7 +457,7 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
       )}
 
       {/* Tabs list */}
-      <div className={cn('py-0.5 px-3 overflow-y-auto', isCrossWindowTarget ? 'max-h-64' : 'max-h-52')}>
+      <div role="list" className={cn('py-0.5 px-3 overflow-y-auto', isCrossWindowTarget ? 'max-h-64' : 'max-h-52')}>
         <SortableContext items={tabIds} strategy={verticalListSortingStrategy}>
           {window.tabs.filter(Boolean).map((tab, tabIndex) => {
             const dndId = `tab-${tab.id}-${windowIndex}-${tabIndex}`;

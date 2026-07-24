@@ -59,6 +59,16 @@ supabase/migrations/
 
 **Always create new migrations** as numbered files (`004_*.sql`, `005_*.sql`). Never edit existing migrations.
 
+## Keep the schema doc in sync (mandatory)
+
+`docs/database-schema.md` is the canonical reference for all tables, columns, RLS policies, and how
+they link (ER diagram + prose). Whenever you add, alter, or drop a table/column/policy via a new
+migration, **update `docs/database-schema.md` in the same task** — do not treat it as a follow-up.
+This doc drifted out of sync once already (missing `organize_runs`, `ai_usage`, `shared_bundles`,
+and several `groups` columns) because schema changes shipped without a doc update; don't let that
+gap reopen. Also update `packages/shared/src/types/index.ts` if new columns need a corresponding
+TS type, or note the gap explicitly if you're not the one adding the type.
+
 ## Key triggers
 - `handle_new_user()` fires on `auth.users INSERT` → auto-creates `profiles` row + free `subscriptions` row
 - `update_updated_at()` fires `BEFORE UPDATE` on `groups` and `subscriptions`

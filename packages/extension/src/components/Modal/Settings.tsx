@@ -18,8 +18,7 @@ import { Download, Upload } from 'lucide-react';
 
 interface AppSettings {
   theme: 'light' | 'dark' | 'system';
-  confirmOnTabClose: boolean;
-  confirmOnWindowClose: boolean;
+  confirmOnDelete: boolean;
   syncEnabled: boolean;
   openTabOnClick: boolean;
   autoDedupOnMerge: boolean;
@@ -28,8 +27,7 @@ interface AppSettings {
 
 const DEFAULT_SETTINGS: AppSettings = {
   theme: 'system',
-  confirmOnTabClose: false,
-  confirmOnWindowClose: true,
+  confirmOnDelete: false,
   syncEnabled: true,
   openTabOnClick: true,
   autoDedupOnMerge: false,
@@ -195,23 +193,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-sm">Confirm tab removal</Label>
-              <p className="text-xs text-muted-foreground">Ask before removing a tab</p>
+              <Label className="text-sm">Confirm before deleting</Label>
+              <p className="text-xs text-muted-foreground">Ask before deleting groups or saved windows</p>
             </div>
             <Switch
-              checked={draft.confirmOnTabClose}
-              onCheckedChange={(v) => patch('confirmOnTabClose', v)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="text-sm">Confirm window removal</Label>
-              <p className="text-xs text-muted-foreground">Ask before removing a window</p>
-            </div>
-            <Switch
-              checked={draft.confirmOnWindowClose}
-              onCheckedChange={(v) => patch('confirmOnWindowClose', v)}
+              checked={draft.confirmOnDelete}
+              onCheckedChange={(v) => patch('confirmOnDelete', v)}
             />
           </div>
 

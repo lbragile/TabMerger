@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { GroupsState } from '@/lib/types';
+import { setSetting } from '@/lib/localDb';
 
 export type ModalType =
   | 'addGroup'
@@ -13,6 +14,7 @@ export type ModalType =
   | 'upgrade'
   | 'deduplicateGroup'
   | 'urlRules'
+  | 'deleteSelection'
   | null;
 
 interface ModalState {
@@ -91,7 +93,11 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),
-  setActiveGroupIndex: (index) => set({ activeGroupIndex: index }),
+  setActiveGroupIndex: (index) => {
+    set({ activeGroupIndex: index });
+    // ponytail: fire-and-forget; .catch silences IndexedDB-unavailable errors in test env
+    void setSetting('activeGroupIndex', index).catch(() => {});
+  },
   setScrollToWindowIndex: (index) => set({ scrollToWindowIndex: index }),
   setSearchFilter: (filter) => set({ searchFilter: filter }),
   setRenameTarget: (target) => set({ renameTarget: target }),

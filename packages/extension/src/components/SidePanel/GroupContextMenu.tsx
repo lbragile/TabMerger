@@ -35,6 +35,7 @@ import {
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
+import { getSetting } from '@/lib/localDb';
 import { toast } from 'sonner';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -94,6 +95,9 @@ export function GroupContextMenu({
       data-sidebar-group-index={groupIndex}
       onClick={onWrapperClick}
       onKeyDown={(e) => {
+        // Don't intercept keystrokes from nested inputs (e.g. rename field) — only
+        // the row itself should activate on Enter/Space.
+        if (e.target !== e.currentTarget) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onWrapperClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
@@ -203,7 +207,17 @@ export function GroupContextMenu({
               )}
               <DropdownMenuItem
                 className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
-                onClick={() => openModal('deleteGroup', { groupIndex, groupName: group.name })}
+                onClick={async () => {
+                  const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
+                    'appSettings',
+                    { confirmOnDelete: false }
+                  );
+                  if (confirmOnDelete) {
+                    openModal('deleteGroup', { groupIndex, groupName: group.name });
+                  } else {
+                    _deleteGroup(groupIndex);
+                  }
+                }}
               >
                 <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
                 <div><div>Delete group</div><div className="text-[10px] font-normal opacity-60">Permanently remove this group and its tabs</div></div>

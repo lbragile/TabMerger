@@ -27,6 +27,15 @@ export async function createClient() {
           }
         },
       },
+      auth: {
+        // ponytail: no middleware.ts exists to persist a refreshed session, and setAll above
+        // already discards every cookie write from a Server Component — so an auto-refresh
+        // here can never succeed. Left enabled, GoTrue still attempts (and logs) a refresh
+        // against any stale/invalid refresh-token cookie on every request, e.g. the public
+        // /share/[slug] page via the Navbar server component. Disabling it is a no-op for
+        // working sessions and removes the pointless failed-refresh noise for everyone else.
+        autoRefreshToken: false,
+      },
     }
   )
 }

@@ -3,11 +3,12 @@
  * All operations use the same IndexedDB-first mutation pattern as useGroups.ts.
  */
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { getGroupsState, saveGroupsState, deleteGroup as dbDeleteGroup } from '@/lib/localDb';
+import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { useUIStore } from '@/stores/uiStore';
 import type { SelectedItem } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY, RESTRICTED_URL_RE } from '@/hooks/useGroups';
 import { createWindow, getGroupInfo, sortWindowsByStarred } from '@/lib/utils';
+import { deleteRemoteGroups } from '@/lib/syncEngine';
 import type { Tab, Window as WindowType } from '@/lib/types';
 
 // ─── ID Parsers ───────────────────────────────────────────────────────────────
@@ -26,7 +27,7 @@ function parseWindowId(id: string): ParsedWindow | null {
   return m ? { groupIndex: +m[1], windowIndex: +m[2] } : null;
 }
 
-function parseGroupId(id: string): ParsedGroup | null {
+export function parseGroupId(id: string): ParsedGroup | null {
   const m = id.match(/^group-(\d+)$/);
   return m ? { groupIndex: +m[1] } : null;
 }
@@ -144,21 +145,25 @@ export function useBulkDelete() {
           // DESC so removing higher indices doesn't shift lower ones
           .sort((a, b) => b.groupIndex - a.groupIndex);
 
-        // Close browser tabs and schedule DB deletion for each group
-        for (const p of parsed) {
-          const group = state.available[p.groupIndex];
-          if (!group || group.permanent) continue;
-          const tabIds = group.windows.flatMap((w) => w.tabs.map((t) => t.id));
-          if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
-          void dbDeleteGroup(group.id);
-        }
-
         let available = [...state.available];
+        const deletedGroupIds: string[] = [];
+
         for (const p of parsed) {
           const group = available[p.groupIndex];
           if (!group || group.permanent) continue;
+          const tabIds = group.windows.flatMap((w) => w.tabs.map((t) => t.id));
+          if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
+        }
+
+        for (const p of parsed) {
+          const group = available[p.groupIndex];
+          if (!group || group.permanent) continue;
+          deletedGroupIds.push(group.id);
           available = available.filter((_, i) => i !== p.groupIndex);
         }
+
+        // Fire-and-forget: hard-delete from Supabase so sync doesn't resurrect these on reload
+        deleteRemoteGroups(deletedGroupIds).catch(() => {});
 
         const next = {
           ...state,

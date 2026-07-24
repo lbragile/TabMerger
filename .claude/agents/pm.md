@@ -84,9 +84,9 @@ Before spawning implementation agents, **always** spawn the `test-writer` agent 
 After implementation agents complete, **always** spawn the `test-writer` agent again with:
 - A summary of every file that was changed
 - The specific new behaviors introduced (what each task added/fixed)
-- Instruction to: (1) confirm the pre-written unit tests now PASS (red → green), (2) add any missing edge case unit tests, (3) write E2E tests for the full user flow
+- Instruction to: (1) confirm the pre-written unit tests now PASS (red → green), (2) add any missing edge case unit tests, (3) add/update integration tests (`packages/extension/src/__tests__/integration/`) if the change touches real IndexedDB persistence or Supabase sync, (4) write E2E tests for the full user flow, (5) confirm combined unit+integration coverage is still ≥80% on all four metrics (statements/branches/functions/lines) via `pnpm --filter @tabmerger/extension test -- --coverage`
 
-**The test-writer must confirm the full suite passes (including the previously-failing tests) before you mark any task complete.** If tests still fail, send the failure details back to the implementation agent for fixes. Loop until green.
+**The test-writer must confirm the full suite passes (including the previously-failing tests) AND that coverage is still ≥80% on all four metrics before you mark any task complete.** If tests still fail or coverage regressed below 80%, send the details back to the implementation agent (or the test-writer itself) for fixes. Loop until green and above threshold. This is a hard requirement — see CLAUDE.md's "Test coverage policy," never skip it.
 
 **Then ask the user to manually verify the feature works correctly** in the browser before closing the task. Use `AskUserQuestion` to ask: "Tests pass — can you reload the extension and confirm [specific behavior] works as expected?" Do not mark done until the user confirms or you have browser verification.
 

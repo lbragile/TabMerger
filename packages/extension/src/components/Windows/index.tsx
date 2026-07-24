@@ -41,7 +41,7 @@ import { useUIStore } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useQueryClient } from '@tanstack/react-query';
 import { saveGroupsState, getSetting } from '@/lib/localDb';
-import { parseSearchQuery, cn, formatGroupCounts } from '@/lib/utils';
+import { parseSearchQuery, cn, formatGroupCounts, sortWindowsByStarred } from '@/lib/utils';
 import { deduplicateTabs } from '@/lib/deduplication';
 import { toast } from 'sonner';
 
@@ -51,6 +51,7 @@ interface WindowsPanelProps {
 }
 
 const restrictToVerticalAxis: Modifier = ({ transform }) => ({ ...transform, x: 0 });
+
 
 // Positions the overlay's top-left at the cursor so it follows the pointer exactly
 const snapTabToCursor: Modifier = ({ activatorEvent, draggingNodeRect, transform }) => {
@@ -150,26 +151,23 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
 
   const windowIds = group.windows.map((_, i) => `window-${groupIndex}-${i}`);
   const { setNodeRef: setEndDropRef, isOver: isOverEnd } = useDroppable({ id: `windows-end-${groupIndex}` });
-
-  function findTabPos(windows: typeof group.windows, tabId: number) {
-    for (let wi = 0; wi < windows.length; wi++) {
-      const ti = windows[wi].tabs.findIndex((t) => t.id === tabId);
-      if (ti !== -1) return { winIdx: wi, tabIdx: ti };
-    }
-    return null;
-  }
+  // ponytail: plain ref + manual rect overlap in handleDragMove — @dnd-kit collision detection
+  // never selects this zone reliably because closestCenter always prefers nearby tabs
+  const newWinDropRef = useRef<HTMLDivElement>(null);
+  const [isOverNewWin, setIsOverNewWin] = useState(false);
 
   const handleDragStart = (e: DragStartEvent) => {
     const parsed = parseDndId(String(e.active.id));
     if (parsed.kind === 'tab') {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const grp = state?.available[groupIndex] ?? group;
-      const pos = findTabPos(grp.windows, parsed.tabId);
-      if (pos) {
-        setActiveTab(grp.windows[pos.winIdx].tabs[pos.tabIdx]);
+      // ponytail: use windowIndex/tabIndex from DnD ID directly — saved tabs all have id=0 so findByTabId would always return [0,0]
+      const tab = grp.windows[parsed.windowIndex]?.tabs[parsed.tabIndex];
+      if (tab) {
+        setActiveTab(tab);
         setIsDraggingTab(true);
-        setActiveWindowIndex(pos.winIdx);
-        dragStartWinRef.current = pos.winIdx;
+        setActiveWindowIndex(parsed.windowIndex);
+        dragStartWinRef.current = parsed.windowIndex;
       }
     } else if (parsed.kind === 'window') {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
@@ -180,26 +178,34 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
 
   // Fires on every pointer move — keeps insertion line smooth across the 50% threshold
   const handleDragMove = (e: DragMoveEvent) => {
+    // Manual overlap check for new-window zone (bypasses collision detection)
+    if (newWinDropRef.current) {
+      const translated = e.active.rect.current.translated;
+      if (translated) {
+        const zone = newWinDropRef.current.getBoundingClientRect();
+        setIsOverNewWin(
+          translated.top < zone.bottom && translated.top + translated.height > zone.top
+        );
+      }
+    }
+
     const { over } = e;
     if (!over || !activeTab) return;
     const to = parseDndId(String(over.id));
     if (to.kind === 'tab') {
-      const pos = findTabPos(group.windows, to.tabId);
-      if (pos) {
-        setActiveWindowIndex(pos.winIdx);
-        if (pos.winIdx !== dragStartWinRef.current) {
-          // Cross-window: compute before/after using cursor Y (translated.top) vs tab center
-          // snapTabToCursor pins ghost top-left to cursor, so translated.top ≈ cursor Y
-          const translated = e.active.rect.current.translated;
-          const overRect = e.over?.rect;
-          const position: 'before' | 'after' =
-            translated && overRect && translated.top > overRect.top + overRect.height / 2
-              ? 'after'
-              : 'before';
-          setInsertState({ tabId: String(over.id), position });
-        } else {
-          setInsertState(null);
-        }
+      setActiveWindowIndex(to.windowIndex);
+      if (to.windowIndex !== dragStartWinRef.current) {
+        // Cross-window: compute before/after using cursor Y (translated.top) vs tab center
+        // snapTabToCursor pins ghost top-left to cursor, so translated.top ≈ cursor Y
+        const translated = e.active.rect.current.translated;
+        const overRect = e.over?.rect;
+        const position: 'before' | 'after' =
+          translated && overRect && translated.top > overRect.top + overRect.height / 2
+            ? 'after'
+            : 'before';
+        setInsertState({ tabId: String(over.id), position });
+      } else {
+        setInsertState(null);
       }
     } else if (to.kind === 'window') {
       setActiveWindowIndex(to.windowIndex);
@@ -226,17 +232,20 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
     setIsDraggingTab(false);
     setActiveWindowIndex(null);
     setInsertState(null);
+    setIsOverNewWin(false);
     dragStartWinRef.current = null;
   };
 
   const handleDragEnd = async (e: DragEndEvent) => {
     const draggedTab = activeTab;
     const startWinIdx = dragStartWinRef.current;
+    const droppedOnNewWin = isOverNewWin;
     setActiveTab(null);
     setActiveWindow(null);
     setIsDraggingTab(false);
     setActiveWindowIndex(null);
     setInsertState(null);
+    setIsOverNewWin(false);
     dragStartWinRef.current = null;
 
     const { active, over } = e;
@@ -252,8 +261,9 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
         const grp = { ...available[groupIndex] };
         const windows = [...grp.windows];
         const [moved] = windows.splice(from.windowIndex, 1);
+        moved.starred = false; // sentinel is always below the unstarred zone
         windows.push(moved);
-        grp.windows = windows;
+        grp.windows = sortWindowsByStarred(windows);
         grp.updatedAt = Date.now();
         grp.pendingSync = true;
         available[groupIndex] = grp;
@@ -266,12 +276,30 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
     }
     if (from.kind !== 'tab' || !draggedTab || startWinIdx === null) return;
 
+    // New-window drop zone
+    if (droppedOnNewWin) {
+      if (!draggedTab || startWinIdx === null || group.permanent) return;
+      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      if (!state) return;
+      const windows = group.windows.map(w => ({ ...w, tabs: [...w.tabs] }));
+      const [moved] = windows[startWinIdx].tabs.splice(from.tabIndex, 1);
+      // ponytail: reuse same ExtWindow shape; id=0 is fine for saved tabs
+      windows.push({ id: 0, tabs: [moved], incognito: false, focused: false, starred: false });
+      const grp = { ...state.available[groupIndex], windows, updatedAt: Date.now(), pendingSync: true };
+      const available = [...state.available];
+      available[groupIndex] = grp;
+      const next = { ...state, available };
+      await saveGroupsState(next);
+      qc.setQueryData(GROUPS_QUERY_KEY, next);
+      return;
+    }
+
     const to = parseDndId(String(over.id));
     if (to.kind !== 'tab' && to.kind !== 'window') return;
 
-    // Resolve destination window + tab index
-    const srcPos = findTabPos(group.windows, draggedTab.id);
-    if (!srcPos) return;
+    // Use positional index from DnD ID — saved tabs all have id=0 so searching by id would always return [0,0]
+    const srcPos = { winIdx: from.windowIndex, tabIdx: from.tabIndex };
+    if (srcPos.winIdx < 0 || srcPos.tabIdx < 0) return;
 
     let destWinIdx: number;
     let destTabIdx: number;
@@ -498,6 +526,27 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
             {/* Sentinel drop zone — lets windows be placed after the last item */}
             <div ref={setEndDropRef} className={cn('h-4 transition-colors', isOverEnd && 'bg-primary/10')} />
 
+            {/* New-window drop zone — always in DOM; overlap tracked manually in handleDragMove */}
+            {!group.permanent && (
+              <div
+                ref={newWinDropRef}
+                className={cn(
+                  'transition-colors overflow-hidden',
+                  isDraggingTab
+                    ? cn(
+                        'mt-1.5 flex items-center justify-center gap-1.5 border-2 border-dashed py-3 text-xs font-medium',
+                        isOverNewWin
+                          ? 'border-primary bg-primary/15 text-primary'
+                          : 'border-muted-foreground/40 text-muted-foreground/70'
+                      )
+                    : 'h-0'
+                )}
+              >
+                <Plus className="h-3 w-3 shrink-0" />
+                Drop to create new window
+              </div>
+            )}
+
             {createPortal(
               <DragOverlay dropAnimation={null} modifiers={activeTab ? [snapTabToCursor] : [restrictToVerticalAxis]}>
                 {activeTab ? (
@@ -523,11 +572,11 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
             <p className="py-6 text-center text-sm text-muted-foreground">No windows in this group</p>
           )}
 
-          {!group.permanent && (
+          {!group.permanent && !isDraggingTab && !activeWindow && (
             <div>
               <Button
                 variant="outline"
-                className={cn('h-7 rounded-none px-3 text-xs w-full', group.windows.length > 0 ? 'mt-0.5' : 'mt-1')}
+                className={cn('h-7 rounded-none px-3 text-xs w-full', group.windows.length > 0 ? 'mt-px' : 'mt-1')}
                 onClick={() => addWindow({ groupIndex })}
                 disabled={selectionMode}
               >

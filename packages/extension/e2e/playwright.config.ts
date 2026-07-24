@@ -1,24 +1,22 @@
 import { defineConfig } from '@playwright/test';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const EXTENSION_PATH = path.resolve(__dirname, '../.output/chrome-mv3');
 
 export default defineConfig({
   testDir: './tests',
+  outputDir: './test-results',
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: './playwright-report', open: 'never' }],
+  ],
   timeout: 30_000,
+  // One retry — the URL-rule test navigates a real external page (github.com) inside the
+  // persistent context, which occasionally races with Now Open's live-tab sync.
+  retries: 1,
   use: {
-    // ponytail: headless: false required — Chrome extensions can't load headlessly
-    headless: false,
     viewport: { width: 800, height: 600 },
-    launchOptions: {
-      args: [
-        `--load-extension=${EXTENSION_PATH}`,
-        `--disable-extensions-except=${EXTENSION_PATH}`,
-      ],
-    },
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
   },
-  // Single worker: extension ID is global state shared across tests
+  // Single worker: each test gets its own persistent context via the fixture
   workers: 1,
 });

@@ -47,6 +47,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const { mutate: deleteGroup } = useDeleteGroup();
   const [archivedOpen, setArchivedOpen] = useState(false);
   const [sessionsOpen, setSessionsOpen] = useState(false);
+  const [isDraggingGroup, setIsDraggingGroup] = useState(false);
   const { data: sessions = [] } = useSessions();
   const { mutate: deleteSession } = useDeleteSession();
   const { mutate: restoreSession, isPending: restoring } = useRestoreSession();
@@ -114,7 +115,9 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             sensors={sensors}
             collisionDetection={closestCenter}
             modifiers={[restrictToVerticalAxis]}
-            onDragEnd={selectionMode ? () => {} : onDragEnd}
+            onDragStart={() => setIsDraggingGroup(true)}
+            onDragEnd={(e) => { setIsDraggingGroup(false); if (!selectionMode) onDragEnd(e); }}
+            onDragCancel={() => setIsDraggingGroup(false)}
           >
             <SortableContext items={groupIds} strategy={verticalListSortingStrategy}>
               {available.map(({ group, realIndex, isLocked }) => (
@@ -130,17 +133,19 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             </SortableContext>
           </DndContext>
 
-          <div className="px-1.5 mt-2">
-          <Button
-            variant="outline"
-            className="h-8 rounded-none px-3 text-xs w-full"
-            onClick={handleNewGroup}
-            disabled={selectionMode}
-          >
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            Add Group
-          </Button>
-          </div>
+          {!isDraggingGroup && (
+            <div className="px-1.5 mt-2">
+              <Button
+                variant="outline"
+                className="h-8 rounded-none px-3 text-xs w-full"
+                onClick={handleNewGroup}
+                disabled={selectionMode}
+              >
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Add Group
+              </Button>
+            </div>
+          )}
 
         </div>
       </ScrollArea>

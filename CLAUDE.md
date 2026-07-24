@@ -21,6 +21,8 @@ pnpm lint                   # ESLint across extension + web
 pnpm type-check             # TypeScript check across all packages
 pnpm test               # Vitest unit tests (extension + web)
 pnpm test:e2e           # Playwright E2E (web app)
+pnpm --filter @tabmerger/extension test:e2e     # Extension E2E tests
+pnpm --filter @tabmerger/extension test:e2e:ui  # Extension E2E — interactive Playwright UI dashboard
 pnpm scan-secrets       # Check staged files for API keys / PII
 ```
 
@@ -145,9 +147,26 @@ The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded
 - **PostToolUse Edit|Write** — runs `tsc --noEmit` on the extension after any `packages/extension/src/` edit (script: `.claude/hooks/tsc-check.py`)
 - **PostToolUse Edit|Write** — runs `pnpm test --run` for the owning package after any `__tests__/` or `.test.`/`.spec.` file edit (script: `.claude/hooks/test-check.py`)
 
+> **Hook requirement:** Hook commands use paths relative to the repo root. Always launch Claude Code from the repo root (`TabMerger/`), not from a package subdirectory. If hooks fail with "can't open file", the CWD is wrong — restart from the repo root.
+
 ## MCP Tools
 
 - **context7** is installed. Use it automatically (resolve library id → get docs) whenever generating code that uses a library/framework, configuring tooling, or referencing any API — do not rely on training-data knowledge for library specifics.
+
+## Test coverage policy (mandatory, non-skippable)
+
+> **This overrides any inclination to treat testing as optional or deferrable.**
+
+Any time a feature is added, changed, or removed — in the extension or the web app — the following is **required**, not optional, before the work is considered done:
+
+1. **Unit tests** updated or added for the changed logic (Vitest — jsdom for extension, RTL for web). Extension unit tests live under `packages/extension/src/__tests__/unit/`, mirroring the directory structure of `src/` (e.g. a test for `src/hooks/useGroups.ts` lives at `src/__tests__/unit/hooks/useGroups.test.ts`) — not co-located next to the source file.
+2. **Integration tests** updated or added when the change touches cross-boundary behavior — real IndexedDB round trips (`packages/extension/src/__tests__/integration/`, run via `pnpm --filter @tabmerger/extension test:integration`) or real Supabase sync/network behavior.
+3. **E2E tests** updated or added when the change touches user-visible flow (`packages/extension/e2e/tests/`, run via `pnpm --filter @tabmerger/extension test:e2e`).
+4. **Combined coverage from unit + integration tests must stay ≥80%** on all four metrics (statements, branches, functions, lines) — enforced via `vitest.config.ts` thresholds, checked with `pnpm --filter @tabmerger/extension test -- --coverage`. A change that drops any metric below 80% is not done until coverage is brought back up.
+
+This applies regardless of how small the change looks. Skipping any of the three test layers, or letting coverage regress below the threshold, is a defect in the work — not a follow-up item.
+
+**Enforcement:** the `test-writer` agent is the one that executes this policy and must be invoked after any implementation batch (already mandatory per the agent-routing table above). The `pm` agent must always trigger `test-writer` after delegating implementation work — never treat a feature as complete without that pass having run and confirmed all four checks above.
 
 ## Before committing
 

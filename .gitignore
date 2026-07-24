@@ -2,9 +2,13 @@
 .env.local
 .env.*.local
 .env
+.env.test
 
 # Claude Code local overrides (may contain API keys)
 .claude/settings.local.json
+
+# Claude Code session handoffs (local working notes, not project docs)
+.claude/handoffs/
 
 node_modules
 
@@ -34,6 +38,7 @@ out/
 
 # Supabase
 supabase/.temp/
+supabase/.branches/
 
 # Sentry
 .sentryclirc

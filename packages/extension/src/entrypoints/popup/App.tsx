@@ -9,6 +9,7 @@ import { AIGroupSuggestion } from '@/components/AIGroupSuggestion';
 import { SelectionActionBar } from '@/components/SelectionActionBar';
 import { useGroups } from '@/hooks/useGroups';
 import { useCurrentTabs } from '@/hooks/useCurrentTabs';
+import { getSetting } from '@/lib/localDb';
 import { useSync } from '@/hooks/useSync';
 import { useUIStore } from '@/stores/uiStore';
 import { parseSearchQuery, fuzzyMatch } from '@/lib/utils';
@@ -36,6 +37,17 @@ function AppContent() {
     sessionStorage.setItem('ext_opened', '1');
     trackEvent('extension_opened');
   }, []);
+
+  // Restore last active group across popup re-opens
+  useEffect(() => {
+    if (!groupsState) return;
+    getSetting('activeGroupIndex', 0).then((saved) => {
+      // Clamp: if saved index no longer valid (group deleted), fall back to 0
+      const clamped = saved < groupsState.available.length ? saved : 0;
+      setActiveGroupIndex(clamped);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!!groupsState]); // run once when groups first load
 
   useKeyboardNav({ groupCount: groupsState?.available.length ?? 0, focusedTabId: null });
 

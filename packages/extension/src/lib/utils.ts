@@ -79,7 +79,7 @@ export function getGroupTabCount(group: Group): number {
 
 /**
  * Format window and tab counts as full singular/plural words.
- * e.g. formatGroupCounts(1, 3) → "1 Window | 3 Tabs"
+ * e.g. formatGroupCounts(1, 3) → "1 Window ◆ 3 Tabs"
  */
 export function formatGroupCounts(windowCount: number, tabCount: number): string {
   return `${windowCount} ${pluralize(windowCount, 'Window')} ◆ ${tabCount} ${pluralize(tabCount, 'Tab')}`;

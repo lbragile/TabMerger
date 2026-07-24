@@ -165,7 +165,7 @@ export function Header() {
             <div className="flex justify-center">
                 <button
                     type="button"
-                    className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full border border-border bg-muted/40 text-xs text-muted-foreground hover:bg-muted transition-colors"
+                    className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full border border-border bg-muted/40 text-xs text-foreground/70 hover:bg-muted transition-colors"
                     onClick={() => setSearchOpen(true)}
                     aria-label="Open search"
                 >
@@ -297,7 +297,10 @@ export function Header() {
                     <DropdownMenu>
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
-                                <button className="ml-0.5 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                                <button
+                                    className="ml-0.5 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    aria-label={user ? 'Account menu' : 'Settings menu'}
+                                >
                                     {user ? (
                                         <Avatar className="h-6 w-6 ring-1 ring-border">
                                             <AvatarImage

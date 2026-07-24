@@ -10,15 +10,22 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // ponytail: chrome.storage.local instead of localStorage so background, popup, and
 // content scripts all share the same session store — required for the web-app auth
 // bridge (content script forwards token → background → setSession here).
-const chromeStorage = {
+// ponytail: guard chrome.storage — undefined in some test environments whose mocks
+// replace `globalThis.chrome` wholesale without a `storage` key (same pattern as the
+// existing chrome.identity guard). Falls back to a no-op store rather than crashing
+// the module-level Supabase client init.
+export const chromeStorage = {
   getItem: async (key: string): Promise<string | null> => {
+    if (!chrome?.storage?.local) return null;
     const result = await chrome.storage.local.get(key);
     return (result[key] as string | undefined) ?? null;
   },
   setItem: async (key: string, value: string): Promise<void> => {
+    if (!chrome?.storage?.local) return;
     await chrome.storage.local.set({ [key]: value });
   },
   removeItem: async (key: string): Promise<void> => {
+    if (!chrome?.storage?.local) return;
     await chrome.storage.local.remove(key);
   },
 };

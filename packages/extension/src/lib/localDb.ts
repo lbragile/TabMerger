@@ -107,17 +107,20 @@ export async function getGroupsState(): Promise<GroupsState> {
 
 export async function saveGroupsState(state: GroupsState): Promise<void> {
   const db = await getDb();
+
+  const keepIds = new Set(state.available.map((g) => g.id));
+
+  // Read existing keys outside the write transaction — avoids auto-commit between awaits
+  const allKeys = await db.getAllKeys('groups');
+  const orphanIds = (allKeys as string[]).filter((k) => !keepIds.has(k));
+
+  // Fire all writes in a single transaction with no internal awaits
   const tx = db.transaction(['groups', 'groupsState'], 'readwrite');
-
-  const groupsStore = tx.objectStore('groups');
-  const stateStore = tx.objectStore('groupsState');
-
-  // Save all groups
-  await Promise.all(state.available.map((g) => groupsStore.put(g)));
-
-  // Save active state + explicit group order so getGroupsState() restores drag order on reload
-  await stateStore.put({ id: 'state', active: state.active, order: state.available.map((g) => g.id) });
-
+  await Promise.all([
+    ...orphanIds.map((id) => tx.objectStore('groups').delete(id)),
+    ...state.available.map((g) => tx.objectStore('groups').put(g)),
+    tx.objectStore('groupsState').put({ id: 'state', active: state.active, order: state.available.map((g) => g.id) }),
+  ]);
   await tx.done;
 }
 

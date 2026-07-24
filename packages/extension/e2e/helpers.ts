@@ -1,20 +1,9 @@
 import { type BrowserContext, type Page } from '@playwright/test';
 
-/** Resolve the loaded extension's ID from its service worker URL. */
-export async function getExtensionId(context: BrowserContext): Promise<string> {
-  // Wait for the service worker to register
-  await context.waitForEvent('serviceworker', { timeout: 10_000 }).catch(() => null);
-  const workers = context.serviceWorkers();
-  if (workers.length === 0) throw new Error('No extension service worker found — was the extension built?');
-  const url = new URL(workers[0].url());
-  return url.hostname; // chrome-extension://<id>/background.js → hostname = id
-}
-
 /** Open the extension popup as a regular page (bypasses the 780×600 popup constraint). */
-export async function openPopup(context: BrowserContext): Promise<Page> {
-  const id = await getExtensionId(context);
+export async function openPopup(context: BrowserContext, extensionId: string): Promise<Page> {
   const page = await context.newPage();
-  await page.goto(`chrome-extension://${id}/popup.html`, { waitUntil: 'networkidle' });
+  await page.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
   return page;
 }
 
@@ -30,7 +19,12 @@ export async function seedIdb(
     color?: string;
     permanent?: boolean;
     starred?: boolean;
-    windows?: { id: number; tabs: { id: number; title: string; url: string }[]; incognito: boolean; focused: boolean }[];
+    windows?: {
+      id: number;
+      tabs: { id: number; title: string; url: string; favIconUrl?: string; ogImage?: string }[];
+      incognito: boolean;
+      focused: boolean;
+    }[];
   }[]
 ) {
   await page.evaluate(async (groups) => {
