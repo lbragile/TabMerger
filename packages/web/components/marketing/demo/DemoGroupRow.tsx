@@ -14,18 +14,22 @@ export function DemoGroupRow({
   isActive,
   onClick,
   onRename,
+  autoRename = false,
 }: {
   group: Group
   sortableId: string
   isActive: boolean
   onClick: () => void
   onRename: (name: string) => void
+  // ponytail: only newly-added groups pass true, so a fresh component instance opens
+  // straight into rename mode — matches the real popup's handleNewGroup UX
+  autoRename?: boolean
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: sortableId,
     disabled: group.permanent,
   })
-  const [renaming, setRenaming] = useState(false)
+  const [renaming, setRenaming] = useState(autoRename && !group.permanent)
   const [value, setValue] = useState(group.name)
   const inputRef = useRef<HTMLInputElement>(null)
 

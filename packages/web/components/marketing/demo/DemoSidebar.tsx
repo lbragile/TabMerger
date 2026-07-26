@@ -13,6 +13,7 @@ export function DemoSidebar({
   onSelect,
   onRename,
   onAddGroup,
+  autoRenameGroupId,
 }: {
   groups: Group[]
   activeGroupId: string
@@ -20,6 +21,7 @@ export function DemoSidebar({
   onSelect: (id: string) => void
   onRename: (id: string, name: string) => void
   onAddGroup: () => void
+  autoRenameGroupId?: string | null
 }) {
   return (
     <aside className="flex flex-col flex-shrink-0" style={{ width: 210, background: ZONE_BG, borderRight: `1px solid ${ZONE_BORDER}` }}>
@@ -48,6 +50,7 @@ export function DemoSidebar({
               isActive={group.id === activeGroupId}
               onClick={() => onSelect(group.id)}
               onRename={(name) => onRename(group.id, name)}
+              autoRename={group.id === autoRenameGroupId}
             />
           ))}
         </SortableContext>
