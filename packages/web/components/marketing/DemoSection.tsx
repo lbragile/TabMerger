@@ -4,11 +4,7 @@ import { useState } from 'react'
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import type { Group } from '@tabmerger/shared'
-import { PRESET_COLORS, DEFAULT_WINDOW_TITLE } from '@tabmerger/shared'
-
-// ponytail: shared DEFAULT_GROUP_TITLE is 'New' (extension's AddGroup modal placeholder), not
-// what the popup's sidebar "+" button actually names a fresh group — use the literal here.
-const NEW_GROUP_NAME = 'New Group'
+import { PRESET_COLORS, DEFAULT_WINDOW_TITLE, DEFAULT_GROUP_TITLE } from '@tabmerger/shared'
 import { DemoHeader } from './demo/DemoHeader'
 import { DemoSidebar } from './demo/DemoSidebar'
 import { DemoWindowsPanel } from './demo/DemoWindowsPanel'
@@ -37,7 +33,7 @@ export function DemoSection() {
       ...prev,
       {
         id,
-        name: NEW_GROUP_NAME,
+        name: DEFAULT_GROUP_TITLE,
         color,
         updatedAt: Date.now(),
         windows: [{ id: nextTabId(), tabs: [], incognito: false, focused: false, name: DEFAULT_WINDOW_TITLE }],

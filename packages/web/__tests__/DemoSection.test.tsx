@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, fireEvent, within } from '@testing-library/react'
+import { DEFAULT_GROUP_TITLE } from '@tabmerger/shared'
 import { DemoSection } from '@/components/marketing/DemoSection'
 
 describe('DemoSection', () => {
@@ -26,7 +27,7 @@ describe('DemoSection', () => {
     render(<DemoSection />)
     const groupCountBefore = screen.getAllByRole('button', { name: /add group/i })
     fireEvent.click(screen.getByTitle('Add group'))
-    expect(screen.getByDisplayValue(/new group/i)).toBeInTheDocument() // new group auto-enters rename, matching real popup's handleNewGroup
+    expect(screen.getByDisplayValue(new RegExp(DEFAULT_GROUP_TITLE, 'i'))).toBeInTheDocument() // new group auto-enters rename, matching real popup's handleNewGroup
   })
 
   it('deletes a tab when its close button is clicked', () => {
