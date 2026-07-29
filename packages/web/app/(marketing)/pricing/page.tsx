@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PricingTable } from '@/components/pricing/PricingTable'
-import { FAQ } from '@/components/marketing/FAQ'
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -42,9 +42,9 @@ export default async function PricingPage() {
         </div>
         <PricingTable currentTier={currentTier} />
       </div>
-      <div className="mt-16">
-        <FAQ />
-      </div>
+      <p className="text-center text-sm text-text2 mt-14">
+        Have more questions? See the <Link href="/faq" className="text-primary hover:underline">FAQ</Link>.
+      </p>
     </div>
   )
 }

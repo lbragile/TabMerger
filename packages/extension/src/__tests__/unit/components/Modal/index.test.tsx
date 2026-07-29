@@ -18,6 +18,8 @@ vi.mock('@/components/Modal/Auth', () => ({ AuthModal: () => <div data-testid="a
 vi.mock('@/components/Modal/UpgradePrompt', () => ({ UpgradePromptModal: ({ reason }: { reason: string }) => <div data-testid="upgrade">{reason}</div> }))
 vi.mock('@/components/Modal/DeduplicateConfirm', () => ({ DeduplicateConfirmModal: () => <div data-testid="dedupe" /> }))
 vi.mock('@/components/Modal/UrlRules', () => ({ UrlRulesModal: () => <div data-testid="urlRules" /> }))
+vi.mock('@/components/Modal/ReviewStaleTabs', () => ({ ReviewStaleTabsModal: () => <div data-testid="reviewStaleTabs" /> }))
+vi.mock('@/components/Modal/SaveSession', () => ({ SaveSessionModal: () => <div data-testid="saveSession" /> }))
 
 function mockState(modal: { type: string | null; data?: Record<string, unknown> }) {
   const closeModal = vi.fn()
@@ -43,13 +45,15 @@ describe('ModalRoot — routing', () => {
     ['auth', 'auth'],
     ['deduplicateGroup', 'dedupe'],
     ['urlRules', 'urlRules'],
+    ['reviewStaleTabs', 'reviewStaleTabs'],
+    ['saveSession', 'saveSession'],
   ])('routes modal.type=%s to the correct component', (type, testId) => {
     mockState({ type })
     render(<ModalRoot />)
     expect(screen.getByTestId(testId)).toBeTruthy()
   })
 
-  it.each(['deleteGroup', 'deleteWindow', 'deleteTab', 'deleteSelection'])(
+  it.each(['deleteGroup', 'deleteWindow', 'deleteTab', 'deleteSelection', 'clearAllData'])(
     'routes all delete variants (%s) to DeleteConfirmModal',
     (type) => {
       mockState({ type })
@@ -77,7 +81,7 @@ describe('ModalRoot — routing', () => {
   })
 
   it('renders nothing for an unknown modal type', () => {
-    // @ts-expect-error intentionally invalid type to hit the default branch
+    // intentionally invalid type to hit the default branch
     mockState({ type: 'bogus' })
     render(<ModalRoot />)
     expect(screen.queryByTestId('addGroup')).toBeNull()

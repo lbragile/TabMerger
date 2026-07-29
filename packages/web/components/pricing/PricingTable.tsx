@@ -15,32 +15,29 @@ export function PricingTable({ currentTier }: PricingTableProps) {
   return (
     <div className="flex flex-col items-center gap-10">
       {/* Segmented toggle */}
-      <div className="flex rounded-sm border border-border overflow-hidden text-sm">
+      <div className="inline-flex rounded-[10px] p-[3px] bg-surface3 border border-border text-sm">
         {(['monthly', 'yearly'] as const).map((opt) => (
           <button
             key={opt}
             onClick={() => setInterval(opt)}
             className={cn(
-              'px-5 py-2 font-medium transition-colors',
+              'h-[30px] px-4 rounded-lg font-medium transition-colors text-[13px] flex items-center gap-1.5 cursor-pointer',
               interval === opt
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-background text-muted-foreground hover:text-foreground'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             )}
           >
             {opt === 'monthly' ? 'Monthly' : 'Yearly'}
             {opt === 'yearly' && (
-              <span className="ml-1.5 text-[10px] font-bold">
-                {interval === 'yearly' ? '↓ Save ~27%' : 'Save ~27%'}
-              </span>
+              <span className="text-[11px] font-semibold text-primary">−10%</span>
             )}
           </button>
         ))}
       </div>
 
-      {/* Grid: 1fr 1.15fr 1fr */}
+      {/* Grid: 1fr 1.1fr 1fr */}
       <div
-        className="w-full max-w-5xl grid gap-4 items-start"
-        style={{ gridTemplateColumns: '1fr 1.15fr 1fr' }}
+        className="w-full max-w-5xl grid grid-cols-1 md:[grid-template-columns:1fr_1.1fr_1fr] gap-4 items-center"
       >
         <PricingCard
           tier="free"
@@ -65,23 +62,23 @@ export function PricingTable({ currentTier }: PricingTableProps) {
             interval={interval}
             highlighted
             currentTier={currentTier}
-            displayMonthly="$4/mo"
-            displayYearly="$38/yr"
-            yearlySubtext="$38/yr billed yearly"
+            displayMonthly={`$${TIERS.pro.monthlyPrice}`}
+            displayYearly={`$${TIERS.pro.yearlyPrice}`}
+            yearlySubtext={`$${TIERS.pro.yearlyPrice}/yr billed yearly`}
           />
         </div>
 
         <PricingCard
           tier="proAi"
-          name="Pro + AI"
+          name={TIERS.proAi.name}
           monthlyPrice={TIERS.proAi.monthlyPrice}
           yearlyPrice={TIERS.proAi.yearlyPrice}
           features={TIERS.proAi.features}
           interval={interval}
           currentTier={currentTier}
-          displayMonthly="$8/mo"
-          displayYearly="$76/yr"
-          yearlySubtext="$76/yr billed yearly"
+          displayMonthly={`$${TIERS.proAi.monthlyPrice}`}
+          displayYearly={`$${TIERS.proAi.yearlyPrice}`}
+          yearlySubtext={`$${TIERS.proAi.yearlyPrice}/yr billed yearly`}
         />
       </div>
 

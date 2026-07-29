@@ -1523,6 +1523,39 @@ describe('useWindowDndHandlers (same-group)', () => {
     void qc
   })
 
+  it('does not duplicate windows when dragging between two starred windows', async () => {
+    const nowOpen = createNowOpenGroup()
+    const g1 = createGroup('g1', 'Work')
+    const starredA = createWindow([tab(1, 'https://a.com')], 'StarredA', false, true)
+    const starredB = createWindow([tab(2, 'https://b.com')], 'StarredB', false, true)
+    const unstarredC = createWindow([tab(3, 'https://c.com')], 'UnstarredC', false, false)
+    g1.windows = [starredA, starredB, unstarredC]
+    const originalIds = g1.windows.map((w) => w.id)
+
+    const state = makeState([nowOpen, g1])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useWindowDndHandlers(1), { wrapper })
+
+    // Drag the unstarred window (index 2) to land between the two starred windows (index 1)
+    await act(async () => {
+      await result.current.onDragEnd(dragEvent('window-1-2', 'window-1-1'))
+    })
+
+    expect(saveGroupsState).toHaveBeenCalled()
+    const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
+    const savedWindows = saved.available[1].windows
+
+    // Same total count — no phantom/duplicated windows
+    expect(savedWindows).toHaveLength(3)
+    // Every original window id still present exactly once
+    const savedIds = savedWindows.map((w) => w.id)
+    expect(savedIds.sort()).toEqual([...originalIds].sort())
+    expect(new Set(savedIds).size).toBe(savedIds.length)
+
+    void qc
+  })
+
   it('is a no-op when there is no cached GroupsState', async () => {
     const { wrapper } = makeWrapper()
     const { result } = renderHook(() => useWindowDndHandlers(1), { wrapper })

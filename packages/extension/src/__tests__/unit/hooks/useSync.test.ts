@@ -48,6 +48,24 @@ beforeEach(() => {
   mockPullRemoteChanges.mockResolvedValue([nowOpen])
 })
 
+describe('useSync — appSettings invalidation on login (regression)', () => {
+  it('invalidates the shared appSettings query once a session appears, so already-mounted settings consumers refetch the correct persisted value', async () => {
+    mockUseAuth.mockReturnValue({ session: null })
+    mockUseEntitlements.mockReturnValue({ cloudSync: false })
+    const qc = new QueryClient()
+    const invalidateSpy = vi.spyOn(qc, 'invalidateQueries')
+    const { rerender } = renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
+    expect(invalidateSpy).not.toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['appSettings'] }))
+
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    rerender()
+
+    await waitFor(() =>
+      expect(invalidateSpy).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['appSettings'] }))
+    )
+  })
+})
+
 describe('useSync — gating', () => {
   it('does nothing when there is no session', async () => {
     mockUseAuth.mockReturnValue({ session: null })

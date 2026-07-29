@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star } from 'lucide-react'
+import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, ExternalLink, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 // ponytail: inline minimal types — web doesn't depend on @tabmerger/shared
@@ -79,6 +79,19 @@ function ShareButton({ groupId, initialSlug }: { groupId: string; initialSlug?: 
   )
 }
 
+function openAllTabs(group: DashboardGroup) {
+  group.windows.flatMap((w) => w.tabs).forEach((tab) => {
+    if (tab.url) window.open(tab.url, '_blank', 'noopener')
+  })
+}
+
+const STALE_MS = 30 * 24 * 60 * 60 * 1000
+// ponytail: proxy for "tabs over 30 days old" — we only track updated_at per group, not
+// per-tab age, so a recently-touched group with old tabs won't trigger this. Good enough for now.
+function isStale(updatedAt: string) {
+  return Date.now() - new Date(updatedAt).getTime() > STALE_MS
+}
+
 function relativeTime(iso: string) {
   const diff = Date.now() - new Date(iso).getTime()
   const mins = Math.floor(diff / 60000)
@@ -109,7 +122,11 @@ function GroupCard({
 
   return (
     <div
-      className={`border border-border bg-[var(--color-surface)] overflow-hidden rounded-none relative ${selecting ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
+      className={`rounded-[13px] border border-border overflow-hidden relative transition-shadow duration-200 hover:shadow-sh2 ${selecting ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
+      style={{
+        borderLeft: `4px solid ${group.color}`,
+        background: `linear-gradient(to right, ${group.color}14, transparent 40%), hsl(var(--surface))`,
+      }}
       onClick={selecting ? () => onToggle(group.id) : undefined}
     >
       {selecting && (
@@ -122,10 +139,7 @@ function GroupCard({
         </button>
       )}
 
-      {/* 6px color band */}
-      <div style={{ height: '6px', background: group.color }} />
-
-      <div className="px-4 pt-3 pb-3">
+      <div className="px-4 pt-3.5 pb-3">
         {/* Name + star */}
         <div className="flex items-center gap-1.5 mb-1">
           <span className="font-bold text-[15px] truncate flex-1">{group.name}</span>
@@ -140,27 +154,48 @@ function GroupCard({
           {!isPro && ` · ${relativeTime(group.updated_at)}`}
         </p>
 
-        {/* Expanded tabs */}
-        {open && tabs.length > 0 && (
-          <ul className="mb-3 space-y-1">
-            {firstThree.map((tab, i) => (
-              <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground truncate">
-                <span className="w-4 h-4 shrink-0 rounded-sm bg-muted flex items-center justify-center text-[9px] font-bold uppercase">
-                  {(tab.title ?? tab.url ?? '?').charAt(0)}
-                </span>
-                <span className="truncate">{tab.title || tab.url}</span>
-              </li>
-            ))}
-            {overflow > 0 && (
-              <li className="text-xs text-muted-foreground pl-6">+{overflow} more</li>
-            )}
-          </ul>
+        {isStale(group.updated_at) && (
+          <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mb-3">
+            <AlertTriangle className="w-3 h-3 shrink-0" />
+            Tabs may be stale — last synced over 30 days ago
+          </div>
+        )}
+
+        {/* Expanded tabs — CSS grid-rows trick for a smooth height animation without measuring content */}
+        {tabs.length > 0 && (
+          <div
+            className={`grid transition-[grid-template-rows] duration-200 ease-out ${open ? 'grid-rows-[1fr] mb-3' : 'grid-rows-[0fr]'}`}
+          >
+            <ul className="overflow-hidden space-y-1">
+              {firstThree.map((tab, i) => (
+                <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground truncate">
+                  <span className="w-4 h-4 shrink-0 rounded-sm bg-muted flex items-center justify-center text-[9px] font-bold uppercase">
+                    {(tab.title ?? tab.url ?? '?').charAt(0)}
+                  </span>
+                  <span className="truncate">{tab.title || tab.url}</span>
+                </li>
+              ))}
+              {overflow > 0 && (
+                <li className="text-xs text-muted-foreground pl-6">+{overflow} more</li>
+              )}
+            </ul>
+          </div>
         )}
 
         {/* Action row */}
         {!selecting && (
           <div className="flex items-center gap-1">
             {isPro && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
+            {tabs.length > 0 && (
+              <button
+                onClick={() => openAllTabs(group)}
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-transparent hover:border-border transition-colors"
+                title="Open all tabs in this group"
+              >
+                <ExternalLink className="w-3 h-3" />
+                Open all
+              </button>
+            )}
             {tabs.length > 0 && (
               <button
                 onClick={() => setOpen((v) => !v)}
@@ -210,6 +245,16 @@ function GroupRow({
           <span>{group.windows.length}w · {tabs.length}t</span>
           {isPro && <Cloud className="w-3 h-3" />}
           {isPro && !selecting && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
+          {!selecting && tabs.length > 0 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); openAllTabs(group) }}
+              className="flex items-center gap-1 hover:text-foreground"
+              title="Open all tabs in this group"
+            >
+              <ExternalLink className="w-3 h-3" />
+              Open all
+            </button>
+          )}
           <span>{relativeTime(group.updated_at)}</span>
         </div>
       </div>
@@ -243,6 +288,7 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
   const [selecting, setSelecting] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [sharing, setSharing] = useState(false)
+  const [sort, setSort] = useState<'recent' | 'name' | 'tabCount'>('recent')
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY) === 'list') setView('list')
@@ -294,6 +340,13 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
     0
   )
 
+  const tabCountOf = (g: DashboardGroup) => g.windows.reduce((ws, w) => ws + w.tabs.length, 0)
+  const sortedGroups = [...groups].sort((a, b) => {
+    if (sort === 'name') return a.name.localeCompare(b.name)
+    if (sort === 'tabCount') return tabCountOf(b) - tabCountOf(a)
+    return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+  })
+
   if (groups.length === 0) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
@@ -313,6 +366,19 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
           <span className="text-sm text-muted-foreground">
             {groups.length} {groups.length === 1 ? 'group' : 'groups'} · {totalTabs} tabs
           </span>
+          <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            Sort
+            <select
+              aria-label="Sort groups"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as typeof sort)}
+              className="h-7 rounded border border-border bg-background px-1.5 text-xs"
+            >
+              <option value="recent">Recent</option>
+              <option value="name">Name</option>
+              <option value="tabCount">Tab count</option>
+            </select>
+          </label>
         </div>
         <div className="flex items-center gap-1">
           {isPro && (
@@ -346,8 +412,8 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
       </div>
 
       {view === 'grid' ? (
-        <div className="grid grid-cols-3 gap-4">
-          {groups.map((g) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sortedGroups.map((g) => (
             <GroupCard
               key={g.id}
               group={g}
@@ -360,7 +426,7 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          {groups.map((g) => (
+          {sortedGroups.map((g) => (
             <GroupRow
               key={g.id}
               group={g}

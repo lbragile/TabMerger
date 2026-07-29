@@ -71,7 +71,7 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
   return (
     <Tooltip open={open} onOpenChange={handleOpenChange} delayDuration={400}>
       <TooltipTrigger asChild>
-        <span className="min-w-0 w-0 flex-1 overflow-hidden block">
+        <span className="min-w-0 w-full overflow-hidden block">
           {children}
         </span>
       </TooltipTrigger>

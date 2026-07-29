@@ -169,42 +169,55 @@ export default function FeaturesPage() {
           </div>
         </div>
 
-        {/* Feature sections */}
-        <div className="flex flex-col gap-24">
-          {featureSections.map((section) => (
-            <div key={section.title}>
-              <div className="mb-10">
-                <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.badge])}>
-                  {section.badge}
-                </span>
-                <h2 className="text-3xl font-bold tracking-tight">
-                  {section.title}
-                </h2>
-                <p className="mt-2 text-lg text-muted-foreground max-w-xl">
-                  {section.description}
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {section.features.map((feature) => {
+        {/* Feature sections — numbered rows, same format as the homepage teaser */}
+        <div className="flex flex-col gap-16 max-w-[960px] mx-auto">
+          {featureSections.map((section) => {
+            const isAi = section.badge === 'Pro AI'
+            const rows = (
+              <div className="flex flex-col">
+                {section.features.map((feature, i) => {
                   const Icon = feature.icon
                   return (
                     <div
                       key={feature.title}
-                      className="flex flex-col gap-3 rounded-xl border bg-background p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 hover:border-primary/30"
+                      className="grid grid-cols-1 sm:grid-cols-[64px_1fr_auto] gap-4 sm:gap-8 py-6 border-t border-border items-start"
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10">
+                      <div className="font-mono text-[13px] font-medium text-primary">
+                        {String(i + 1).padStart(2, '0')}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-[19px] tracking-tight mb-1.5">{feature.title}</h3>
+                        <p className="text-[14.5px] leading-relaxed text-text2">{feature.description}</p>
+                      </div>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 shrink-0">
                         <Icon className="h-5 w-5 text-primary" />
                       </div>
-                      <h3 className="font-semibold">{feature.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {feature.description}
-                      </p>
                     </div>
                   )
                 })}
               </div>
-            </div>
-          ))}
+            )
+            return (
+              <div key={section.title}>
+                <div className="mb-2">
+                  <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.badge])}>
+                    {section.badge}
+                  </span>
+                  <h2 className="text-3xl font-bold tracking-tight">
+                    {section.title}
+                  </h2>
+                  <p className="mt-2 text-lg text-text2 max-w-xl">
+                    {section.description}
+                  </p>
+                </div>
+                {isAi ? (
+                  <div className="rounded-2xl p-8 pt-0 bg-surface2 border border-border">{rows}</div>
+                ) : (
+                  rows
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

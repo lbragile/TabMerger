@@ -3,6 +3,7 @@
 .env.*.local
 .env
 .env.test
+.env.production
 
 # Claude Code local overrides (may contain API keys)
 .claude/settings.local.json
@@ -29,6 +30,10 @@ out/
 
 # Vite
 .vite/
+
+# Python (Claude Code hook scripts under .claude/hooks/)
+__pycache__/
+*.pyc
 
 # Cache
 .eslintcache

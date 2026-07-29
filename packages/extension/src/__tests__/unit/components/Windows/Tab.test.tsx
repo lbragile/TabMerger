@@ -157,6 +157,33 @@ describe('TabItem — basic rendering and open', () => {
     expect(titleEl.className).toMatch(/truncate/)
     expect(titleEl.className).toMatch(/min-w-0/)
   })
+
+  it('gives the title a fixed, smaller grid track so hostnames line up across rows', () => {
+    const t = makeTab({ title: 'Example Tab' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const titleGrid = screen.getByText('Example Tab').closest('div.grid')
+    expect(titleGrid?.className).toMatch(/grid-cols-\[12\.5rem_minmax\(0,1fr\)\]/)
+  })
+
+  it('renders the tab URL hostname (no protocol/path) with a truncate class', () => {
+    const t = makeTab({ url: 'https://www.example.com/some/deep/path?query=1' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const hostEl = screen.getByText('example.com')
+    expect(hostEl.className).toMatch(/truncate/)
+  })
+
+  it('keeps a gap between the title/hostname grid and the right-pinned indicators', () => {
+    const t = makeTab({ title: 'Example Tab' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const titleGrid = screen.getByText('Example Tab').closest('div.grid')
+    expect(titleGrid?.className).toMatch(/mr-2/)
+  })
+
+  it('omits the hostname row when the tab has no URL', () => {
+    const t = makeTab({ url: undefined, title: 'No URL Tab' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    expect(screen.queryByText('example.com')).not.toBeInTheDocument()
+  })
 })
 
 describe('TabItem — isLocked', () => {
@@ -303,6 +330,24 @@ describe('TabItem — reminder editor', () => {
     )
   })
 
+  it('uses the group color for the reminder icon when groupColor is provided', () => {
+    const t = makeTab({ reminder: { fireAt: Date.now() + 60_000 } })
+    render(
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} groupColor="rgb(1, 2, 3)" />,
+      { wrapper }
+    )
+    expect(screen.getByRole('button', { name: 'Edit tab reminder' })).toHaveStyle({ color: 'rgb(1, 2, 3)' })
+  })
+
+  it('falls back to DEFAULT_GROUP_COLOR for the reminder icon when groupColor is not provided', () => {
+    const t = makeTab({ reminder: { fireAt: Date.now() + 60_000 } })
+    render(
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />,
+      { wrapper }
+    )
+    expect(screen.getByRole('button', { name: 'Edit tab reminder' })).toHaveStyle({ color: 'rgba(128, 128, 128, 1)' })
+  })
+
   it('shows the reminder icon and clears the reminder from the context menu when a reminder exists', async () => {
     const user = userEvent.setup()
     const t = makeTab({ reminder: { fireAt: Date.now() + 60_000, note: 'follow up' } })
@@ -321,6 +366,15 @@ describe('TabItem — custom title / rename flow', () => {
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
     expect(screen.getByText('renamed')).toBeInTheDocument()
     expect(screen.getByText('My Renamed Tab')).toBeInTheDocument()
+  })
+
+  it('styles the "renamed" badge as a low-opacity pill matching the group color', () => {
+    const t = makeTab({ customTitle: 'My Renamed Tab' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} groupColor="rgba(10, 20, 30, 1)" />, { wrapper })
+    const badge = screen.getByLabelText('Custom title')
+    expect(badge).toHaveClass('rounded-none')
+    expect(badge.style.backgroundColor).toBe('rgba(10, 20, 30, 0.18)')
+    expect(badge.style.color).toBe('rgb(10, 20, 30)')
   })
 
   it('renames the tab title via context menu and commits on Enter', async () => {
@@ -488,6 +542,30 @@ describe('TabItem — stale badge', () => {
       { wrapper }
     )
     expect(screen.getByLabelText('Stale tab')).toBeInTheDocument()
+  })
+
+  it('uses the group color for the stale indicator when groupColor is provided', () => {
+    mockUseGroupsData.mockReturnValue({
+      data: { available: [makeGroup({ permanent: false })], active: { id: '', index: 0 } },
+    })
+    const t = makeTab({ savedAt: Date.now() - 100_000 })
+    render(
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} staleThresholdMs={1000} groupColor="rgb(1, 2, 3)" />,
+      { wrapper }
+    )
+    expect(screen.getByLabelText('Stale tab')).toHaveStyle({ backgroundColor: 'rgb(1, 2, 3)' })
+  })
+
+  it('falls back to DEFAULT_GROUP_COLOR for the stale indicator when groupColor is not provided', () => {
+    mockUseGroupsData.mockReturnValue({
+      data: { available: [makeGroup({ permanent: false })], active: { id: '', index: 0 } },
+    })
+    const t = makeTab({ savedAt: Date.now() - 100_000 })
+    render(
+      <TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} staleThresholdMs={1000} />,
+      { wrapper }
+    )
+    expect(screen.getByLabelText('Stale tab')).toHaveStyle({ backgroundColor: 'rgba(128, 128, 128, 1)' })
   })
 
   it('does not render the stale indicator for the Now Open group even if savedAt is old', () => {

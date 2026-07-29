@@ -1,26 +1,28 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
+import { DemoSection } from './DemoSection'
 
 export function Hero() {
   return (
     <section className="py-14 px-8 bg-background">
       <div className="container">
-        <div className="grid gap-10 items-center" style={{ gridTemplateColumns: '5fr 6fr' }}>
-          {/* Left col */}
-          <div className="flex flex-col">
+        <div className="grid gap-10 items-center grid-cols-1 md:grid-cols-[1fr_1fr]">
+          {/* Left col — capped width + ml-auto pulls the text block toward the
+              center gutter instead of hugging the far-left edge of the section. */}
+          <div className="flex flex-col md:max-w-[34rem] md:ml-auto">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
               Tab manager for people with too many tabs
             </p>
             <h1
-              className="font-bold text-foreground mb-4"
-              style={{ fontSize: '52px', letterSpacing: '-0.02em', lineHeight: 1.02 }}
+              className="font-bold text-foreground mb-4 text-4xl md:text-[52px]"
+              style={{ letterSpacing: '-0.02em', lineHeight: 1.02 }}
             >
               Stop drowning in browser tabs.
             </h1>
             <p className="text-base text-muted-foreground mb-6" style={{ maxWidth: '38ch' }}>
-              Group, save and restore every window. Let AI file the mess into named groups —
-              synced to every machine you use.
+              TabMerger folds every open window into named, colour-coded groups you can search,
+              share and restore — on any machine, in one click.
             </p>
 
             {/* CTA row */}
@@ -62,21 +64,7 @@ export function Hero() {
 
           {/* Right col */}
           <div className="relative">
-            {/* ponytail: "TRY IT" badge positioned top-left of the demo box */}
-            <div
-              className="absolute -top-3 -left-3 z-10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary-foreground"
-              style={{ background: 'hsl(var(--primary))' }}
-            >
-              Try it — no install
-            </div>
-            <div
-              className="border-2 border-foreground bg-muted/50 flex items-center justify-center text-center p-6"
-              style={{ height: '320px' }}
-            >
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Interactive demo — the live popup, embedded and seeded with 24 sample tabs
-              </p>
-            </div>
+            <DemoSection />
           </div>
         </div>
       </div>

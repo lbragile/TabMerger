@@ -9,7 +9,7 @@ export interface Entitlement {
 /**
  * Creates a public share bundle by inserting the selected groups into the `shared_bundles` table.
  * Requires an active Supabase session (Pro entitlement). Returns the full share URL
- * (e.g. `https://tabmerger.app/share/<slug>`) for the caller to copy or display.
+ * (e.g. `https://tabmerger.vercel.app/share/<slug>`) for the caller to copy or display.
  */
 export async function createSharedBundle(
   groupIds: string[],
@@ -48,6 +48,6 @@ export async function createSharedBundle(
 
   if (error) throw new Error(error.message)
 
-  const base = import.meta.env.VITE_WEB_APP_URL ?? 'https://tabmerger.app'
+  const base = import.meta.env.VITE_WEB_APP_URL ?? 'https://tabmerger.vercel.app'
   return `${base}/share/${data.slug}`
 }

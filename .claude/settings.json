@@ -2,7 +2,10 @@
   "enabledMcpjsonServers": [
     "stripe",
     "playwright",
-    "chrome-devtools"
+    "chrome-devtools",
+    "context7",
+    "supabase",
+    "github"
   ],
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true
@@ -15,6 +18,14 @@
           {
             "type": "command",
             "command": "python3 -c \"import sys,json,re; d=json.load(sys.stdin); p=d.get('file_path',''); blocked=bool(re.search(r'\\.env($|\\.)|pnpm-lock\\.yaml',p)); print('Blocked: '+p+' is a protected file — edit manually.',file=sys.stderr) if blocked else None; sys.exit(1 if blocked else 0)\""
+          },
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,os,subprocess; data=sys.stdin.buffer.read(); root=subprocess.run(['git','rev-parse','--show-toplevel'],capture_output=True,text=True).stdout.strip(); sys.stdin=__import__('io').TextIOWrapper(__import__('io').BytesIO(data)); exec(open(os.path.join(root,'.claude','hooks','protect-migrations.py')).read())\""
+          },
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,os,subprocess; data=sys.stdin.buffer.read(); root=subprocess.run(['git','rev-parse','--show-toplevel'],capture_output=True,text=True).stdout.strip(); sys.stdin=__import__('io').TextIOWrapper(__import__('io').BytesIO(data)); exec(open(os.path.join(root,'.claude','hooks','protect-workflows.py')).read())\""
           }
         ]
       }
@@ -30,6 +41,10 @@
           {
             "type": "command",
             "command": "python3 -c \"import sys,os,subprocess,types; data=sys.stdin.buffer.read(); root=subprocess.run(['git','rev-parse','--show-toplevel'],capture_output=True,text=True).stdout.strip(); sys.stdin=__import__('io').TextIOWrapper(__import__('io').BytesIO(data)); exec(open(os.path.join(root,'.claude','hooks','test-check.py')).read())\""
+          },
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,os,subprocess,types; data=sys.stdin.buffer.read(); root=subprocess.run(['git','rev-parse','--show-toplevel'],capture_output=True,text=True).stdout.strip(); sys.stdin=__import__('io').TextIOWrapper(__import__('io').BytesIO(data)); exec(open(os.path.join(root,'.claude','hooks','web-tsc-check.py')).read())\""
           }
         ]
       }

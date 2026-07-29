@@ -48,13 +48,14 @@ function makeRequest(body: string, sig = 'test-sig') {
 }
 
 function makeSubscription(overrides: Record<string, unknown> = {}) {
+  const currentPeriodEnd = (overrides.current_period_end as number | undefined) ?? 1800000000
   return {
     id: 'sub_test123',
     customer: 'cus_test123',
     status: 'active',
-    current_period_end: 1800000000,
+    current_period_end: currentPeriodEnd,
     cancel_at_period_end: false,
-    items: { data: [{ price: { id: 'price_pro_monthly' } }] },
+    items: { data: [{ price: { id: 'price_pro_monthly' }, current_period_end: currentPeriodEnd }] },
     metadata: { user_id: 'user-uuid-1' },
     ...overrides,
   }
@@ -208,6 +209,32 @@ describe('POST /api/webhooks/stripe', () => {
     expect(subscriptionUpdateSpy).toHaveBeenCalledWith(
       expect.objectContaining({ status: 'canceled' })
     )
+  })
+
+  it('rejects a request with no stripe-signature header', async () => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const req = new NextRequest('http://localhost/api/webhooks/stripe', {
+      method: 'POST',
+      headers: { 'content-type': 'text/plain' },
+      body: '{}',
+    })
+
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    expect(mockConstructEvent).not.toHaveBeenCalled()
+  })
+
+  it('rejects a request with an invalid signature', async () => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockImplementation(() => {
+      throw new Error('signature mismatch')
+    })
+
+    const res = await POST(makeRequest('{}', 'bad-sig'))
+    expect(res.status).toBe(400)
+    const body = await res.json()
+    expect(body.error).toContain('signature verification failed')
+    expect(mockUpsert).not.toHaveBeenCalled()
   })
 
   it('invoice.payment_failed sets status to past_due', async () => {

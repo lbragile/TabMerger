@@ -272,3 +272,36 @@ describe('syncNowOpen — ogImage/note carryover', () => {
     unmount()
   })
 })
+
+describe('syncNowOpen — starred flag and order carryover (regression)', () => {
+  it('preserves a starred Now Open window\'s starred flag across a tab-event re-sync', async () => {
+    const nowOpen = createNowOpenGroup()
+    // Previously synced state: window 2 was starred by the user via drag/star toggle
+    nowOpen.windows = [
+      { id: 1, incognito: false, focused: false, starred: false, tabs: [{ id: 10, url: 'https://a.com', title: 'A', favIconUrl: '', pinned: false }] },
+      { id: 2, incognito: false, focused: false, starred: true, tabs: [{ id: 20, url: 'https://b.com', title: 'B', favIconUrl: '', pinned: false }] },
+    ]
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    chromeMock.windows.getAll.mockResolvedValue([chromeWindow(1), chromeWindow(2)])
+    chromeMock.tabs.query.mockResolvedValue([
+      chromeTab({ id: 10, windowId: 1, url: 'https://a.com' }),
+      chromeTab({ id: 20, windowId: 2, url: 'https://b.com' }),
+    ])
+
+    const { qc, wrapper } = makeWrapper()
+    const { unmount } = renderHook(() => useCurrentTabs(), { wrapper })
+
+    // Initial mount sync, then simulate a chrome.tabs.onUpdated event re-sync (e.g. favicon load)
+    await act(async () => {})
+    const handleChange = chromeMock.tabs.onUpdated.addListener.mock.calls[0][0]
+    await act(async () => { await handleChange() })
+
+    const cached = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)
+    const windowById = new Map(cached?.available[0].windows.map((w) => [w.id, w]))
+    expect(windowById.get(2)?.starred).toBe(true)
+    // Starred window zone-clamped to the front, same as sortWindowsByStarred elsewhere
+    expect(cached?.available[0].windows[0].id).toBe(2)
+    unmount()
+  })
+})

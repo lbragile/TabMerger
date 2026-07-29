@@ -168,7 +168,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         ) : (
           savedGroupCount > 1 ? (
             <span
-              className="cursor-grab touch-none shrink-0 opacity-30 group-hover:opacity-100 transition-opacity"
+              className="cursor-grab active:cursor-grabbing touch-none shrink-0 opacity-30 group-hover:opacity-100 transition-opacity"
               style={{ color: 'var(--sidebar-text-subtle)' }}
               {...(selectionMode ? {} : { ...attributes, ...listeners })}
               aria-label={selectionMode ? undefined : 'Drag to reorder group'}

@@ -38,6 +38,24 @@ export default defineContentScript({
     }
     // -------------------------------------------------------------------------
 
+    // --- Extension-installed signal for the web app --------------------------
+    // Lets dashboard pages detect the extension is installed without any
+    // reliable browser API for that. Only fires on the web app's own origin
+    // (no reason to broadcast on every page the content script runs on).
+    // Web app listens via window.addEventListener('message', ...) and checks
+    // event.data.source === 'tabmerger-extension' && event.data.type === 'INSTALLED'.
+    if (WEB_APP_ORIGIN && location.origin === new URL(WEB_APP_ORIGIN).origin) {
+      window.postMessage(
+        {
+          source: 'tabmerger-extension',
+          type: 'INSTALLED',
+          version: chrome.runtime.getManifest().version
+        },
+        window.location.origin
+      );
+    }
+    // -------------------------------------------------------------------------
+
     // Expose page metadata for tab preview (title, og:description, etc.)
     const getMeta = () => {
       const ogDesc = document

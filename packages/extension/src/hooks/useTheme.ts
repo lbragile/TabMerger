@@ -1,37 +1,27 @@
 import { useEffect } from 'react';
-import { getSetting } from '@/lib/localDb';
-import { applyTheme, type AppTheme } from '@/lib/theme';
+import { applyTheme } from '@/lib/theme';
+import { useAppSettings } from '@/hooks/useAppSettings';
 
 /**
- * On mount: reads the saved theme from IndexedDB and applies it (no flash).
- * Registers a matchMedia listener so 'system' mode updates live when the OS
- * theme changes.  Call once near the app root.
+ * Applies the saved theme (light/dark/system) whenever it changes — on mount,
+ * after a save in the Settings modal (both share the reactive `appSettings`
+ * query, so no popup reopen is needed), and when the OS colour scheme changes
+ * while the pref is 'system'.
  */
 export function useTheme(): void {
+  const { data: settings } = useAppSettings();
+  const theme = settings?.theme ?? 'system';
+
   useEffect(() => {
-    let cancelled = false;
+    applyTheme(theme);
+  }, [theme]);
 
-    // Read saved preference and apply before first paint
-    getSetting<{ theme?: AppTheme }>('appSettings', {}).then((settings) => {
-      if (!cancelled) {
-        applyTheme(settings.theme ?? 'system');
-      }
-    });
-
-    // Watch OS colour-scheme changes; only acts when pref is 'system'
+  useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemChange = () => {
-      getSetting<{ theme?: AppTheme }>('appSettings', {}).then((settings) => {
-        if (settings.theme === 'system' || !settings.theme) {
-          applyTheme('system');
-        }
-      });
+      if (theme === 'system') applyTheme('system');
     };
-
     mq.addEventListener('change', handleSystemChange);
-    return () => {
-      cancelled = true;
-      mq.removeEventListener('change', handleSystemChange);
-    };
-  }, []);
+    return () => mq.removeEventListener('change', handleSystemChange);
+  }, [theme]);
 }

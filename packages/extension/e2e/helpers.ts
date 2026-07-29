@@ -1,6 +1,6 @@
 import { type BrowserContext, type Page } from '@playwright/test';
 
-/** Open the extension popup as a regular page (bypasses the 780×600 popup constraint). */
+/** Open the extension popup as a regular page (bypasses the 800×600 popup constraint). */
 export async function openPopup(context: BrowserContext, extensionId: string): Promise<Page> {
   const page = await context.newPage();
   await page.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });

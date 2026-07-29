@@ -17,7 +17,11 @@ beforeEach(() => {
   document.head.innerHTML = ''
   document.title = ''
   globalThis.chrome = {
-    runtime: { onMessage: { addListener: vi.fn() }, sendMessage: vi.fn() },
+    runtime: {
+      onMessage: { addListener: vi.fn() },
+      sendMessage: vi.fn(),
+      getManifest: vi.fn(() => ({ version: '1.2.3' })),
+    },
   } as unknown as typeof chrome
 })
 
@@ -65,6 +69,35 @@ describe('content script — GET_PAGE_META message handler', () => {
     const sendResponse = vi.fn()
     listener({ type: 'GET_PAGE_META' }, {}, sendResponse)
     expect(sendResponse).toHaveBeenCalledWith(expect.objectContaining({ description: 'Plain desc' }))
+  })
+})
+
+describe('content script — extension-installed signal', () => {
+  // Order matters here: this vitest+WXT setup only honors ONE transition of
+  // VITE_WEB_APP_URL away from its default ('') per test file — a later vi.stubEnv
+  // call to a *different* non-empty value silently keeps the first one. So the
+  // "no match" case (which relies on the untouched default) must run before the
+  // "match" case performs its one allowed transition, and this block must run before
+  // any other describe below re-stubs the env var.
+  it('does not post the signal when WEB_APP_ORIGIN does not match the current page', async () => {
+    // VITE_WEB_APP_URL is '' from beforeEach's default stub — never matches.
+    const postMessageSpy = vi.spyOn(window, 'postMessage')
+
+    await loadAndRun()
+
+    expect(postMessageSpy).not.toHaveBeenCalled()
+  })
+
+  it('posts an INSTALLED message to the page origin when on the web-app origin', async () => {
+    vi.stubEnv('VITE_WEB_APP_URL', window.location.origin)
+    const postMessageSpy = vi.spyOn(window, 'postMessage')
+
+    await loadAndRun()
+
+    expect(postMessageSpy).toHaveBeenCalledWith(
+      { source: 'tabmerger-extension', type: 'INSTALLED', version: '1.2.3' },
+      window.location.origin
+    )
   })
 })
 

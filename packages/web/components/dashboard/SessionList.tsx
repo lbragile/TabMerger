@@ -59,15 +59,18 @@ export function SessionList({ sessions, isPro }: SessionListProps) {
     }
   }
 
+  const addCard = (
+    <div className="rounded-[13px] border border-dashed border-border p-4 flex flex-col items-center justify-center text-center gap-1 min-h-[140px]">
+      <PlusCircle className="h-6 w-6 text-muted-foreground mb-1" />
+      <p className="text-sm font-medium">Save current tabs as a session</p>
+      <p className="text-xs text-muted-foreground">Needs the extension — takes one click</p>
+    </div>
+  )
+
   if (sessions.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed p-8 text-center">
-        <PlusCircle className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-        <p className="text-sm font-medium mb-1">No sessions yet</p>
-        <p className="text-xs text-muted-foreground">
-          Open the extension and click &quot;Save session&quot; to capture your
-          current tab groups.
-        </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {addCard}
       </div>
     )
   }
@@ -95,6 +98,7 @@ export function SessionList({ sessions, isPro }: SessionListProps) {
             onDelete={handleDelete}
           />
         ))}
+        {addCard}
       </div>
       {!isPro && (
         <p className="mt-3 text-xs text-muted-foreground">

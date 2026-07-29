@@ -6,24 +6,49 @@ export const metadata: Metadata = {
   description: 'How TabMerger collects, uses, and protects your data.',
 }
 
+const TOC = [
+  { id: 'what-we-collect', label: 'What we collect' },
+  { id: 'how-stored', label: 'How data is stored' },
+  { id: 'third-party', label: 'Third-party processors' },
+  { id: 'retention', label: 'Data retention' },
+  { id: 'your-rights', label: 'Your rights' },
+  { id: 'cookies', label: 'Cookies & storage' },
+  { id: 'children', label: "Children's privacy" },
+  { id: 'changes', label: 'Changes to this policy' },
+  { id: 'contact', label: 'Contact' },
+]
+
 export default function PrivacyPage() {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-3xl">
-      {/* Header */}
-      <div className="mb-10 pb-8 border-b">
-        <p className="text-sm text-muted-foreground mb-2">Legal</p>
-        <h1 className="text-4xl font-bold tracking-tight mb-3">Privacy Policy</h1>
-        <p className="text-muted-foreground">Last updated: July 16, 2026</p>
+    <div className="container mx-auto px-4 py-16 max-w-5xl">
+      {/* Header — brand-soft callout, distinct from Terms' neutral treatment */}
+      <div className="mb-11 rounded-2xl bg-accent border border-primary/20 px-8 py-7">
+        <h1 className="text-[34px] font-semibold tracking-tight mb-2.5">Privacy, in plain English</h1>
+        <p className="max-w-xl text-[15.5px] text-text2 leading-relaxed">
+          TabMerger is an indie product. We collect only what we need to operate the service, we
+          never sell it, and you can delete all of it at any time. Questions?{' '}
+          <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
+        </p>
+        <div className="mt-3.5 text-xs text-text3">Last updated: July 16, 2026</div>
       </div>
 
-      {/* Intro */}
-      <div className="mb-10 p-4 rounded-lg bg-muted/50 border text-sm text-muted-foreground">
-        TabMerger is an indie product. We collect only what we need to operate the service and
-        never sell your data. Questions? <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
+        {/* Sticky TOC — wide screens only */}
+        <nav className="hidden lg:flex sticky top-24 flex-col gap-2">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-text3 mb-1">On this page</div>
+          {TOC.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className="text-[13px] text-text2 hover:text-primary transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
 
-      <div className="space-y-10">
-        <section>
+      <div className="space-y-10 max-w-2xl">
+        <section id="what-we-collect" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">1. What We Collect and Why</h2>
           <div className="space-y-5 text-muted-foreground leading-relaxed">
             <div>
@@ -49,7 +74,7 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        <section>
+        <section id="how-stored" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">2. How Data Is Stored</h2>
           <div className="divide-y divide-border rounded-lg border overflow-hidden text-sm">
             <div className="flex gap-4 px-4 py-3">
@@ -67,7 +92,7 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        <section>
+        <section id="third-party" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">3. Third-Party Processors</h2>
           <p className="text-muted-foreground text-sm mb-4">We share data with the following processors only to the extent necessary to operate the service.</p>
           <div className="divide-y divide-border rounded-lg border overflow-hidden text-sm">
@@ -88,7 +113,7 @@ export default function PrivacyPage() {
           <p className="text-muted-foreground text-sm mt-2">We do not sell your data to any third party.</p>
         </section>
 
-        <section>
+        <section id="retention" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">4. Data Retention</h2>
           <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <p>We retain your account data for as long as your account is active. If you delete your account, all associated data stored in Supabase — including your profile, groups, and sessions — is permanently deleted.</p>
@@ -97,7 +122,7 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        <section>
+        <section id="your-rights" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">5. Your Rights</h2>
           <p className="text-muted-foreground text-sm mb-4">Depending on where you reside, you may have rights under laws such as the GDPR (EU/UK) or CCPA (California):</p>
           <ul className="space-y-2 text-sm">
@@ -117,29 +142,30 @@ export default function PrivacyPage() {
           <p className="text-muted-foreground text-sm mt-4">To exercise any of these rights, <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">contact us</Link>. We will respond within 30 days.</p>
         </section>
 
-        <section>
+        <section id="cookies" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">6. Cookies and Local Storage</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">TabMerger uses cookies solely for session management (Supabase Auth) when you are signed in to the web app. We do not use tracking or advertising cookies. The extension stores data in IndexedDB and <code className="text-xs bg-muted px-1.5 py-0.5 rounded">chrome.storage.local</code>, not in browser cookies.</p>
         </section>
 
-        <section>
+        <section id="children" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">7. Children's Privacy</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">TabMerger is not directed at children under 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">contact us</Link> and we will delete it promptly.</p>
         </section>
 
-        <section>
+        <section id="changes" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">8. Changes to This Policy</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">We may update this policy as the product evolves. Material changes will be communicated via email or a notice in the app. The "last updated" date at the top of this page will always reflect the most recent revision. Continued use of TabMerger after changes constitutes acceptance of the revised policy.</p>
         </section>
 
-        <section>
+        <section id="contact" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">9. Contact</h2>
           <p className="text-muted-foreground text-sm">For privacy-related questions or requests, use our <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">contact page</Link>.</p>
         </section>
-      </div>
 
-      <div className="mt-12 pt-8 border-t flex gap-4 text-sm text-muted-foreground">
-        <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service →</Link>
+        <div className="pt-6 border-t flex gap-4 text-sm text-muted-foreground">
+          <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service →</Link>
+        </div>
+      </div>
       </div>
     </div>
   )

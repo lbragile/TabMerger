@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useCleanupSuggestions } from "@/hooks/useCleanupSuggestions";
 import { useRemoveStaleTabs } from "@/hooks/useGroups";
 import { useUIStore } from "@/stores/uiStore";
+import { getSetting } from "@/lib/localDb";
 
 const DISMISSED_KEY = "cleanup_banner_dismissed_until";
 
@@ -18,7 +19,7 @@ export function CleanupSuggestionBanner() {
     const { staleTabs, staleGroupIndexes, staleThresholdDays, thresholdMs } =
         useCleanupSuggestions();
     const { mutateAsync: removeStaleTabs } = useRemoveStaleTabs();
-    const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
+    const openModal = useUIStore((s) => s.openModal);
 
     if (dismissed || staleTabs.length < 5) return null;
 
@@ -33,11 +34,10 @@ export function CleanupSuggestionBanner() {
     }
 
     function review() {
-        if (staleGroupIndexes.length > 0)
-            setActiveGroupIndex(staleGroupIndexes[0]);
+        openModal("reviewStaleTabs", { staleTabs, onRemoveAll: removeAll });
     }
 
-    async function removeAll() {
+    async function doRemoveAll() {
         for (const groupIndex of staleGroupIndexes) {
             await removeStaleTabs({
                 groupIndex,
@@ -48,47 +48,41 @@ export function CleanupSuggestionBanner() {
         dismiss();
     }
 
+    async function removeAll() {
+        const { confirmOnDelete } = await getSetting("appSettings", { confirmOnDelete: false });
+        if (confirmOnDelete) {
+            openModal("removeStaleTabs", { count, onConfirm: doRemoveAll });
+        } else {
+            await doRemoveAll();
+        }
+    }
+
     return (
         <div
-            className="flex items-center gap-2 px-3 text-xs shrink-0"
-            style={{
-                height: 38,
-                background: "#E6EBF0",
-                color: "var(--color-neutral-700)",
-            }}
+            className="flex items-center gap-2 px-3 text-xs shrink-0 bg-primary/10 text-primary"
+            style={{ height: 38 }}
         >
             <span className="flex-1 truncate">
                 {count} tabs were saved over {staleThresholdDays} days ago.
             </span>
             <button
-                className="shrink-0 border px-2 py-0.5 text-xs hover:opacity-80 transition-opacity"
-                style={{
-                    borderColor: "var(--color-divider)",
-                    color: "var(--color-neutral-700)",
-                }}
+                className="shrink-0 border border-primary/40 text-primary px-2 py-0.5 text-xs hover:bg-primary/10 transition-colors"
                 onClick={review}
             >
                 Review
             </button>
             <button
-                className="shrink-0 border px-2 py-0.5 text-xs hover:opacity-80 transition-opacity"
-                style={{
-                    borderColor: "var(--color-divider)",
-                    color: "var(--color-neutral-700)",
-                }}
+                className="shrink-0 border border-primary/40 text-primary px-2 py-0.5 text-xs hover:bg-primary/10 transition-colors"
                 onClick={removeAll}
             >
                 Remove stale
             </button>
             <button
-                className="shrink-0 hover:opacity-70 transition-opacity ml-1"
+                className="shrink-0 text-primary hover:opacity-70 transition-opacity ml-1"
                 onClick={dismiss}
                 aria-label="Dismiss"
             >
-                <X
-                    className="h-3.5 w-3.5"
-                    style={{ color: "var(--color-neutral-600)" }}
-                />
+                <X className="h-3.5 w-3.5" />
             </button>
         </div>
     );

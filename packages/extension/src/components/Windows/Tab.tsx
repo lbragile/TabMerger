@@ -15,8 +15,27 @@ import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { saveCustomTitle, getDisplayTitle, notifySavedTabTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
+import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
+
+// ponytail: group colors are stored as rgba(...) strings; swap the alpha for a low-opacity pill background
+function withAlpha(rgba: string, alpha: number): string {
+  const m = rgba.match(/rgba?\(([^)]+)\)/);
+  if (!m) return rgba;
+  const [r, g, b] = m[1].split(',').map((s) => s.trim());
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// ponytail: hostname-only display for narrow popup rows; full URL doesn't fit
+function getUrlHostname(url?: string): string {
+  if (!url) return '';
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
 
 const CHROME_GROUP_COLOR_MAP: Record<string, string> = {
   blue: '#1a73e8',
@@ -56,7 +75,7 @@ interface TabItemProps {
   staleThresholdMs?: number;
 }
 
-export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount: _siblingCount, isDraggingTab, activeWindowIndex, searchFilter, tagFilter, groupColor: _groupColor, isLocked = false, staleThresholdMs }: TabItemProps) {
+export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount: _siblingCount, isDraggingTab, activeWindowIndex, searchFilter, tagFilter, groupColor, isLocked = false, staleThresholdMs }: TabItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: `tab-${tab.id}-${windowIndex}-${tabIndex}`
   });
@@ -406,14 +425,20 @@ const { mutate: deleteTab } = useDeleteTab();
           />
         </span>
         {isStale && (
-          <span className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-amber-400 ring-1 ring-background" aria-label="Stale tab" />
+          <span
+            className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full ring-1 ring-background"
+            style={{ backgroundColor: groupColor || DEFAULT_GROUP_COLOR }}
+            aria-label="Stale tab"
+          />
         )}
       </span>
 
-      {/* Title + tag — compact, tag sits right after text */}
-      <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden">
+      {/* Title + hostname — two-column grid so the hostname column starts at a
+          consistent x-offset across rows regardless of title length, instead
+          of trailing directly after variable-width title text in a flex row. */}
+      <div className="grid grid-cols-[12.5rem_minmax(0,1fr)] items-center gap-x-1.5 min-w-0 flex-1 overflow-hidden mr-2">
         {editingTitle ? (
-          <>
+          <div className="col-span-2 flex items-center gap-1 min-w-0">
             <input
               ref={titleInputRef}
               className="min-w-0 flex-1 text-xs leading-5 bg-background border border-primary/50 pl-1 focus:outline-none focus:ring-1 focus:ring-primary"
@@ -425,120 +450,139 @@ const { mutate: deleteTab } = useDeleteTab();
             />
             <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={() => void commitTitle(titleValue)}><Check className="h-2.5 w-2.5" /></button>
             <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={() => setEditingTitle(false)}><X className="h-2.5 w-2.5" /></button>
-          </>
+          </div>
         ) : (
-        <TabPreview tab={tab} isLive={isNowOpen}>
-          <span
-            className="block truncate min-w-0 w-full text-xs leading-5 hover:underline"
-            onClick={(e) => handleOpen(e)}
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            {getDisplayTitle(tab) || tab.url}
-          </span>
-        </TabPreview>
-        )}
+          <>
+            <TabPreview tab={tab} isLive={isNowOpen}>
+              <span
+                className="block truncate min-w-0 text-xs leading-5 hover:underline"
+                onClick={(e) => handleOpen(e)}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
+                {getDisplayTitle(tab) || tab.url}
+              </span>
+            </TabPreview>
 
-        {tab.chromeGroup && (
-          isNowOpen ? (
-            <button
-              type="button"
-              className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0 hover:brightness-110 cursor-pointer focus-visible:ring-1 focus-visible:ring-ring"
-              style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
-              onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
-              onMouseDown={(e) => e.stopPropagation()}
-              aria-label={`Reopen Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
-            >
-              {tab.chromeGroup.name || ' '}
-            </button>
-          ) : (
-            <span
-              className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0"
-              style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
-              onMouseDown={(e) => e.stopPropagation()}
-              aria-label={`Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
-            >
-              {tab.chromeGroup.name || ' '}
-            </span>
-          )
-        )}
-        {tab.customTitle && (
-          <span
-            className="relative z-10 text-[9px] px-1 py-0 leading-4 border shrink-0 flex items-center gap-0.5 whitespace-nowrap"
-            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', borderColor: 'transparent' }}
-            aria-label="Custom title"
-          >
-            <Pencil className="h-2 w-2" />
-            renamed
-          </span>
+            {getUrlHostname(tab.url) ? (
+              <span className="truncate shrink min-w-0 text-[10px] text-muted-foreground justify-self-start">
+                {getUrlHostname(tab.url)}
+              </span>
+            ) : (
+              <span />
+            )}
+          </>
         )}
       </div>
 
-      {/* Note icon — only shown when tab has a note */}
-      {tab.note && !isLocked && !selectionMode && !editingTitle && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              type="button"
-              className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
-              onClick={(e) => { e.stopPropagation(); setNoteOpen(true); }}
-              onMouseDown={(e) => e.stopPropagation()}
-              aria-label="Edit tab note"
-            >
-              <StickyNote className="h-3 w-3" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>Edit note</TooltipContent>
-        </Tooltip>
-      )}
+      {/* Right-pinned indicator cluster — chromeGroup badge, renamed pill, note,
+          reminder, and delete/lock all live here so adding the hostname column
+          above never shoves them around per-row. */}
+      {!editingTitle && (
+        <div className="flex items-center gap-1 shrink-0 ml-auto">
+          {tab.chromeGroup && (
+            isNowOpen ? (
+              <button
+                type="button"
+                className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0 hover:brightness-110 cursor-pointer focus-visible:ring-1 focus-visible:ring-ring"
+                style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
+                onClick={(e) => { e.stopPropagation(); void handleReopenGroup(); }}
+                onMouseDown={(e) => e.stopPropagation()}
+                aria-label={`Reopen Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
+              >
+                {tab.chromeGroup.name || ' '}
+              </button>
+            ) : (
+              <span
+                className="relative z-10 text-[9px] px-1 py-0 max-w-[60px] truncate leading-4 border shrink-0"
+                style={{ backgroundColor: CHROME_GROUP_COLOR_MAP[tab.chromeGroup.color] ?? '#80868b', color: 'white', borderColor: 'transparent' }}
+                onMouseDown={(e) => e.stopPropagation()}
+                aria-label={`Chrome group: ${tab.chromeGroup.name || 'unnamed'}`}
+              >
+                {tab.chromeGroup.name || ' '}
+              </span>
+            )
+          )}
 
-      {/* Clock icon — only shown when tab has a reminder */}
-      {tab.reminder && !isLocked && !selectionMode && !editingTitle && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              type="button"
-              className="h-4 w-4 shrink-0 flex items-center justify-center text-amber-500/70 hover:text-amber-500 focus-visible:ring-1 focus-visible:ring-ring"
-              onClick={(e) => { e.stopPropagation(); setReminderOpen(true); }}
-              onMouseDown={(e) => e.stopPropagation()}
-              aria-label="Edit tab reminder"
+          {tab.customTitle && (
+            <span
+              className="relative z-10 text-[9px] px-1.5 py-0 leading-4 rounded-none shrink-0 flex items-center gap-0.5 whitespace-nowrap"
+              style={{ backgroundColor: withAlpha(groupColor || DEFAULT_GROUP_COLOR, 0.18), color: groupColor || DEFAULT_GROUP_COLOR }}
+              aria-label="Custom title"
             >
-              <Clock className="h-3 w-3" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent className="text-xs">
-            Reminder: {new Date(tab.reminder.fireAt).toLocaleString()}
-            {tab.reminder.note ? ` — ${tab.reminder.note}` : ''}
-          </TooltipContent>
-        </Tooltip>
-      )}
-
-      {!editingTitle && (isLocked ? (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/60">
-              <Lock className="h-3 w-3" />
+              <Pencil className="h-2 w-2" />
+              renamed
             </span>
-          </TooltipTrigger>
-          <TooltipContent>Upgrade to Pro to access this tab</TooltipContent>
-        </Tooltip>
-      ) : selectionMode ? <span className="h-4 w-4 shrink-0" /> : <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
-            aria-label={isNowOpen ? 'Close tab' : 'Remove tab'}
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteTab({ groupIndex, windowIndex, tabIndex });
-            }}
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            <X className="h-3 w-3" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent className="bg-destructive text-destructive-foreground">{isNowOpen ? 'Close tab' : 'Remove tab'}</TooltipContent>
-      </Tooltip>)}
+          )}
+
+          {/* Note icon — only shown when tab has a note */}
+          {tab.note && !isLocked && !selectionMode && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
+                  onClick={(e) => { e.stopPropagation(); setNoteOpen(true); }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  aria-label="Edit tab note"
+                >
+                  <StickyNote className="h-3 w-3" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Edit note</TooltipContent>
+            </Tooltip>
+          )}
+
+          {/* Clock icon — only shown when tab has a reminder */}
+          {tab.reminder && !isLocked && !selectionMode && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="h-4 w-4 shrink-0 flex items-center justify-center hover:opacity-80 focus-visible:ring-1 focus-visible:ring-ring"
+                  style={{ color: groupColor || DEFAULT_GROUP_COLOR }}
+                  onClick={(e) => { e.stopPropagation(); setReminderOpen(true); }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  aria-label="Edit tab reminder"
+                >
+                  <Clock className="h-3 w-3" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="text-xs">
+                Reminder: {new Date(tab.reminder.fireAt).toLocaleString()}
+                {tab.reminder.note ? ` — ${tab.reminder.note}` : ''}
+              </TooltipContent>
+            </Tooltip>
+          )}
+
+          {isLocked ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="h-4 w-4 shrink-0 flex items-center justify-center text-muted-foreground/60">
+                  <Lock className="h-3 w-3" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>Upgrade to Pro to access this tab</TooltipContent>
+            </Tooltip>
+          ) : selectionMode ? <span className="h-4 w-4 shrink-0" /> : <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
+                aria-label={isNowOpen ? 'Close tab' : 'Remove tab'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteTab({ groupIndex, windowIndex, tabIndex });
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-destructive text-destructive-foreground">{isNowOpen ? 'Close tab' : 'Remove tab'}</TooltipContent>
+          </Tooltip>}
+        </div>
+      )}
     </div>
 
     {/* Inline reminder editor */}

@@ -109,21 +109,23 @@ export function Header() {
         }
     };
 
-    const handleSaveSession = async () => {
-        const name = window.prompt('Session name:');
-        if (!name?.trim()) return;
-        try {
-            await saveSession({ name: name.trim(), sessionCount: sessionList.length, hasSessions });
-            toast.success('Session saved');
-        } catch (err) {
-            if (err instanceof Error && err.message === 'SESSION_LIMIT') {
-                toast.error('Free plan allows up to 3 sessions.', {
-                    action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
-                });
-            } else {
-                toast.error('Failed to save session');
+    const handleSaveSession = () => {
+        openModal('saveSession', {
+            onSave: async (name: string) => {
+                try {
+                    await saveSession({ name, sessionCount: sessionList.length, hasSessions });
+                    toast.success('Session saved');
+                } catch (err) {
+                    if (err instanceof Error && err.message === 'SESSION_LIMIT') {
+                        toast.error('Free plan allows up to 3 sessions.', {
+                            action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+                        });
+                    } else {
+                        toast.error('Failed to save session');
+                    }
+                }
             }
-        }
+        });
     };
 
     const searchRef = useRef<HTMLInputElement>(null);
@@ -275,10 +277,11 @@ export function Header() {
                             className={cn(
                                 "h-7 w-7",
                                 aiLoading && "animate-pulse",
-                                !aiFeatures && "opacity-50",
+                                !aiFeatures && "opacity-50 cursor-not-allowed",
                             )}
                             onClick={aiFeatures ? handleAIGroup : () => openModal('upgrade')}
                             disabled={aiLoading}
+                            aria-disabled={!aiFeatures}
                             aria-label="AI Auto-group"
                         >
                             <Sparkles className={cn(
@@ -298,23 +301,23 @@ export function Header() {
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
                                 <button
-                                    className="ml-0.5 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    className="ml-0.5 flex items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     aria-label={user ? 'Account menu' : 'Settings menu'}
                                 >
                                     {user ? (
-                                        <Avatar className="h-6 w-6 ring-1 ring-border">
+                                        <Avatar className="h-6 w-6 ring-1 ring-border hover:ring-primary/60 transition-all">
                                             <AvatarImage
                                                 src={
                                                     user.user_metadata
                                                         ?.avatar_url as string
                                                 }
                                             />
-                                            <AvatarFallback className="text-[10px] bg-black/10 dark:bg-white/15 text-muted-foreground">
+                                            <AvatarFallback className="text-[10px] font-medium bg-primary/20 text-primary">
                                                 {userInitials}
                                             </AvatarFallback>
                                         </Avatar>
                                     ) : (
-                                        <UserCircle className="h-5 w-5 text-muted-foreground" />
+                                        <UserCircle className="h-5 w-5 text-foreground/70 hover:text-foreground transition-colors" />
                                     )}
                                 </button>
                             </DropdownMenuTrigger>
@@ -372,7 +375,7 @@ export function Header() {
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
-                                        className="text-xs text-destructive focus:text-destructive"
+                                        className="text-xs text-destructive focus:bg-destructive/10 focus:text-destructive"
                                         onClick={() => void signOut()}
                                     >
                                         Sign out

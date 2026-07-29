@@ -15,6 +15,10 @@ export type ModalType =
   | 'deduplicateGroup'
   | 'urlRules'
   | 'deleteSelection'
+  | 'removeStaleTabs'
+  | 'reviewStaleTabs'
+  | 'clearAllData'
+  | 'saveSession'
   | null;
 
 interface ModalState {

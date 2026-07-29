@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Check } from 'lucide-react'
+import { Check, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface PricingCardProps {
@@ -77,75 +77,62 @@ export function PricingCard({
   return (
     <div
       className={cn(
-        'flex flex-col border p-5',
-        highlighted
-          ? 'border-2 border-foreground p-[26px] bg-muted/30'
-          : 'border-border bg-background'
+        'flex flex-col rounded-2xl p-6 border border-border bg-surface',
+        highlighted && 'shadow-[var(--sh3)] border-primary/30 p-7'
       )}
-      style={highlighted ? { boxShadow: '0 4px 24px rgba(0,0,0,0.10)' } : undefined}
     >
       {/* Title row */}
-      <div className="flex items-center gap-2 mb-3">
-        <h6 className={cn('text-sm font-semibold', highlighted ? 'text-foreground' : 'text-muted-foreground')}>
-          {name}
-        </h6>
+      <div className="flex items-center justify-between gap-2 mb-2.5">
+        <h6 className="text-sm font-semibold">{name}</h6>
         {highlighted && (
-          <span
-            className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 text-primary-foreground"
-            style={{ background: 'hsl(var(--primary))' }}
-          >
+          <span className="text-[9.5px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-primary/15 text-primary">
             Recommended
           </span>
         )}
+        {tier === 'proAi' && <span className="text-primary text-xs">✦</span>}
       </div>
 
       {/* Price */}
-      <div className="flex items-baseline gap-1 mb-1">
-        <span className="font-extrabold" style={{ fontSize: '42px' }}>
+      <div className="flex items-baseline gap-1.5 mb-5">
+        <span
+          className={cn('font-semibold tracking-tight', highlighted ? 'text-[44px]' : 'text-4xl')}
+        >
           {displayPrice}
+        </span>
+        <span className="text-[13px] text-text3">
+          {rawPrice === 0 ? 'forever' : interval === 'monthly' ? '/mo' : '/yr'}
         </span>
       </div>
       {interval === 'yearly' && rawPrice > 0 && yearlySubtext && (
-        <p className="text-muted-foreground mb-4" style={{ fontSize: '11.5px' }}>
+        <p className="-mt-4 mb-5 text-[11.5px] text-text3">
           {yearlySubtext}
         </p>
       )}
-      {(!yearlySubtext || interval !== 'yearly' || rawPrice === 0) && (
-        <div className="mb-4" />
-      )}
-
-      {/* AI demo placeholder — proAi only */}
-      {tier === 'proAi' && (
-        <div
-          className="bg-muted border border-border flex items-center justify-center text-xs text-muted-foreground mb-4"
-          style={{ height: '56px' }}
-        >
-          Live AI demo
-        </div>
-      )}
+      {isFree && <p className="-mt-4 mb-5 text-[11.5px] text-text3">No credit card required</p>}
 
       {/* Feature list */}
-      <ul className="flex flex-col flex-1">
+      <ul className="flex flex-col gap-2 mb-6 text-[13.5px]">
         {features.map((feature) => (
-          <li
-            key={feature}
-            className={cn(
-              'flex items-center gap-2 border-t border-border py-1.5 text-sm',
-              highlighted && 'font-medium'
+          <li key={feature} className="flex items-center gap-2 text-text2">
+            {/* ponytail: "Everything in X" line confirms an already-established capability →
+                checkmark. Every other line is new to this tier → +. Free has no "Everything in"
+                line, so all of its features are +. */}
+            {feature.startsWith('Everything in ') ? (
+              <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
+            ) : (
+              <Plus className="h-3.5 w-3.5 shrink-0 text-primary" />
             )}
-          >
-            <Check className="h-3.5 w-3.5 shrink-0 text-primary" />
             <span>{feature}</span>
           </li>
         ))}
       </ul>
 
       {/* CTA button */}
-      <div className="mt-4">
+      <div className="mt-auto">
         {isFree ? (
           <Button
             variant="outline"
-            className="w-full"
+            className="w-full rounded-[10px]"
             onClick={handleClick}
             disabled={isCurrentPlan}
           >
@@ -153,8 +140,11 @@ export function PricingCard({
           </Button>
         ) : (
           <Button
-            variant={highlighted ? 'default' : 'outline'}
-            className="w-full"
+            className={cn(
+              'w-full rounded-[10px]',
+              highlighted && 'bg-primary text-primary-foreground shadow-[0_10px_26px_-10px_rgba(0,180,204,0.9)] hover:bg-primary/90'
+            )}
+            variant={highlighted ? 'default' : 'secondary'}
             onClick={handleClick}
             disabled={loading || isCurrentPlan}
           >

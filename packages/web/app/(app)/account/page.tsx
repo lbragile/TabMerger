@@ -10,9 +10,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { absoluteUrl, formatDate } from '@/lib/utils'
+import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 
 export const metadata: Metadata = {
   title: 'Account',
@@ -61,25 +61,22 @@ export default async function AccountPage() {
         </p>
       </div>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-4 border-t-2 border-foreground border-b mb-5">
+      {/* Usage summary */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-1">
         {[
           { label: 'Groups synced', value: '24' },
           { label: 'Tabs saved', value: '847' },
           { label: 'Sessions', value: '12' },
-          { label: 'AI calls left', value: '47', accent: true },
+          { label: 'AI calls left', value: currentTier === 'pro_ai' ? '47' : '0', accent: currentTier === 'pro_ai' },
         ].map((stat, i) => (
           <div
             key={i}
-            className={`p-4 ${stat.accent ? 'bg-[var(--color-accent-100)]' : ''} ${i > 0 ? 'border-l border-border' : ''}`}
+            className={`rounded-[13px] border p-4 ${stat.accent ? 'bg-accent border-primary/20' : 'bg-surface border-border'}`}
           >
-            <p
-              className={`font-extrabold ${stat.accent ? 'text-[var(--color-accent)]' : ''}`}
-              style={{ fontSize: '28px' }}
-            >
+            <p className={`font-semibold tracking-tight ${stat.accent ? 'text-primary' : ''}`} style={{ fontSize: '26px' }}>
               {stat.value}
             </p>
-            <p className="text-[12px] text-muted-foreground">{stat.label}</p>
+            <p className="text-[12px] text-text2 mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -118,49 +115,28 @@ export default async function AccountPage() {
           <CardDescription>Manage your plan and billing.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">Current plan</p>
-              <div className="flex items-center gap-2 mt-1">
-                <Badge variant={isPaid ? 'default' : 'secondary'}>
-                  {currentTier === 'pro_ai'
-                    ? 'Pro AI'
-                    : currentTier === 'pro'
-                      ? 'Pro'
-                      : 'Free'}
-                </Badge>
-                {subscription?.status && subscription.status !== 'active' && (
-                  <Badge variant="destructive">{subscription.status}</Badge>
-                )}
-              </div>
-            </div>
-            {isPaid && billingPortalUrl ? (
-              <Button variant="outline" size="sm" asChild>
-                <a href={billingPortalUrl}>Manage billing</a>
-              </Button>
-            ) : !isPaid ? (
-              <Button size="sm" asChild>
-                <Link href="/pricing">Upgrade</Link>
-              </Button>
-            ) : null}
-          </div>
+          <SubscriptionBadge
+            tier={currentTier}
+            status={subscription?.status}
+            currentPeriodEnd={isPaid ? subscription?.current_period_end : undefined}
+            priceId={subscription?.stripe_price_id}
+            action={
+              isPaid && billingPortalUrl ? (
+                <Button variant="outline" size="sm" asChild>
+                  <a href={billingPortalUrl}>Manage billing</a>
+                </Button>
+              ) : !isPaid ? (
+                <Button size="sm" asChild>
+                  <Link href="/pricing">Upgrade</Link>
+                </Button>
+              ) : undefined
+            }
+          />
 
           {isPaid && billingPortalUrl && (
             <p className="text-xs text-muted-foreground">
               You can cancel anytime via <strong>Manage billing</strong>. You keep access until the end of your current billing period.
             </p>
-          )}
-
-          {subscription?.current_period_end && isPaid && (
-            <>
-              <Separator />
-              <div>
-                <p className="text-sm font-medium">Next billing date</p>
-                <p className="text-sm text-muted-foreground">
-                  {formatDate(subscription.current_period_end)}
-                </p>
-              </div>
-            </>
           )}
         </CardContent>
       </Card>

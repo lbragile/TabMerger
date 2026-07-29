@@ -10,6 +10,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
 
 export async function Navbar() {
     const supabase = await createClient();
@@ -22,36 +24,50 @@ export async function Navbar() {
         : undefined;
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-14 items-center">
-                <div className="mr-4 flex">
-                    <Link href="/" className="mr-6 flex items-center space-x-2">
+        <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
+            <div className="container relative flex items-center">
+                <div className="mr-8 flex items-center">
+                    <Link href="/" className="mr-8 flex items-center gap-[9px]">
                         <Image
                             src="/logo.png"
                             alt="TabMerger"
-                            width={28}
-                            height={28}
+                            width={26}
+                            height={26}
                             className="rounded-md"
                         />
-                        <span className="font-bold text-lg">TabMerger</span>
+                        <span className="text-[15px] font-semibold tracking-tight">TabMerger</span>
                     </Link>
-                    <nav className="flex items-center space-x-6 text-sm font-medium">
+                    <MobileNavToggle />
+                    <nav className="hidden items-center gap-1 text-[13.5px] md:flex">
                         <Link
                             href="/features"
-                            className="transition-colors hover:text-foreground/80 text-foreground/75"
+                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
                         >
                             Features
                         </Link>
                         <Link
                             href="/pricing"
-                            className="transition-colors hover:text-foreground/80 text-foreground/75"
+                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
                         >
                             Pricing
+                        </Link>
+                        <Link
+                            href="/changelog"
+                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                        >
+                            Changelog
+                        </Link>
+                        <Link
+                            href="/faq"
+                            className="flex h-8 items-center rounded-lg px-3 text-text2 transition-colors hover:bg-surface2 hover:text-foreground"
+                        >
+                            FAQ
                         </Link>
                     </nav>
                 </div>
                 <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
+                        <ThemeToggle />
                         {user ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>

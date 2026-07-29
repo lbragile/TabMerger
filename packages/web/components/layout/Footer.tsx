@@ -20,7 +20,7 @@ export function Footer() {
                         Organize your tabs. Reclaim your focus.
                     </p>
                 </div>
-                <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+                <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
                     <div className="flex flex-col gap-2">
                         <h3 className="text-sm font-semibold">Product</h3>
                         <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
@@ -46,6 +46,14 @@ export function Footer() {
                                     className="hover:text-foreground transition-colors"
                                 >
                                     Changelog
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/faq"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    FAQ
                                 </Link>
                             </li>
                         </ul>
@@ -96,6 +104,19 @@ export function Footer() {
                                     className="hover:text-foreground transition-colors"
                                 >
                                     Contact
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h3 className="text-sm font-semibold">Public</h3>
+                        <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                            <li>
+                                <Link
+                                    href="/share/demo"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    Shared group demo
                                 </Link>
                             </li>
                         </ul>

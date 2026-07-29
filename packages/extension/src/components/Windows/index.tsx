@@ -41,9 +41,11 @@ import { useUIStore } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useQueryClient } from '@tanstack/react-query';
 import { saveGroupsState, getSetting } from '@/lib/localDb';
+import { useAppSettings } from '@/hooks/useAppSettings';
 import { parseSearchQuery, cn, formatGroupCounts, sortWindowsByStarred } from '@/lib/utils';
 import { deduplicateTabs } from '@/lib/deduplication';
 import { toast } from 'sonner';
+import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 
 interface WindowsPanelProps {
   group: Group;
@@ -118,13 +120,10 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   const noteContainerRef = useRef<HTMLDivElement>(null);
   const noteTextareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const [staleThresholdMs, setStaleThresholdMs] = useState(30 * 24 * 60 * 60 * 1000);
-  useEffect(() => {
-    getSetting<{ staleThresholdDays?: number }>('appSettings', {}).then((s) => {
-      const days = s.staleThresholdDays ?? 30;
-      setStaleThresholdMs(days * 24 * 60 * 60 * 1000);
-    });
-  }, []);
+  // Reactive: subscribes to the shared appSettings query so a Settings-modal save
+  // updates this threshold immediately, without needing the popup reopened.
+  const { data: appSettings } = useAppSettings();
+  const staleThresholdMs = (appSettings?.staleThresholdDays ?? 30) * 24 * 60 * 60 * 1000;
 
   const { mutate: removeStaleTabs } = useRemoveStaleTabs();
 
@@ -133,7 +132,16 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
     0
   );
 
-  const handleRemoveStaleTabs = () => removeStaleTabs({ groupIndex, staleThresholdMs });
+  const doRemoveStaleTabs = () => removeStaleTabs({ groupIndex, staleThresholdMs });
+
+  const handleRemoveStaleTabs = async () => {
+    const { confirmOnDelete } = await getSetting('appSettings', { confirmOnDelete: false });
+    if (confirmOnDelete) {
+      openModal('removeStaleTabs', { count: staleCount, onConfirm: doRemoveStaleTabs });
+    } else {
+      doRemoveStaleTabs();
+    }
+  };
 
   useEffect(() => {
     if (noteOpen) {
@@ -173,6 +181,10 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const grp = state?.available[groupIndex] ?? group;
       setActiveWindow(grp.windows[parsed.windowIndex] ?? null);
+      // Track by index, not window.id — saved/added windows commonly share id=0,
+      // so an id match would mark every same-id window as "being dragged" (opacity-0),
+      // making them all vanish mid-drag instead of just the one under the cursor.
+      dragStartWinRef.current = parsed.windowIndex;
     }
   };
 
@@ -367,8 +379,9 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6 text-amber-500 hover:text-amber-600 hover:bg-amber-500/10"
-                  onClick={handleRemoveStaleTabs}
+                  className="h-6 w-6 hover:opacity-80"
+                  style={{ color: group.color || DEFAULT_GROUP_COLOR }}
+                  onClick={() => void handleRemoveStaleTabs()}
                   aria-label={`Remove ${staleCount} stale tab${staleCount !== 1 ? 's' : ''}`}
                 >
                   <Clock className="h-3.5 w-3.5" />
@@ -498,7 +511,11 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
                   els: [
                     ...els,
                     <WindowItem
-                      key={window.id}
+                      // ponytail: window.id is not unique within a group (e.g. windows added
+                      // via "+ Add Window" all get id:0) — use the same position-based id as
+                      // windowIds/SortableContext to avoid React key collisions duplicating DOM
+                      // nodes during DnD reorders between windows that share an id.
+                      key={windowIds[windowIndex]}
                       window={window}
                       groupIndex={groupIndex}
                       windowIndex={windowIndex}
@@ -509,7 +526,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
                       dragStartWinIndex={dragStartWinRef.current}
                       insertState={insertState}
                       groupColor={group.color}
-                      isBeingDragged={activeWindow != null && window.id === activeWindow.id}
+                      isBeingDragged={activeWindow != null && windowIndex === dragStartWinRef.current}
                       searchFilter={searchFilter}
                       tagFilter={tagFilter}
                       tabOffset={offset}
@@ -524,7 +541,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
             </SortableContext>
 
             {/* Sentinel drop zone — lets windows be placed after the last item */}
-            <div ref={setEndDropRef} className={cn('h-4 transition-colors', isOverEnd && 'bg-primary/10')} />
+            <div ref={setEndDropRef} className={cn('h-1.5 transition-colors', isOverEnd && 'bg-primary/10')} />
 
             {/* New-window drop zone — always in DOM; overlap tracked manually in handleDragMove */}
             {!group.permanent && (
@@ -576,7 +593,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
             <div>
               <Button
                 variant="outline"
-                className={cn('h-7 rounded-none px-3 text-xs w-full', group.windows.length > 0 ? 'mt-px' : 'mt-1')}
+                className={cn('h-7 rounded-none px-3 text-xs w-full', group.windows.length > 0 ? 'mt-px' : 'mt-0.5')}
                 onClick={() => addWindow({ groupIndex })}
                 disabled={selectionMode}
               >

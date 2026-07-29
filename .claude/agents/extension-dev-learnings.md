@@ -33,3 +33,9 @@ All app settings live in IndexedDB under the key `'appSettings'` as one object (
 ## Stale indicators: read threshold once at panel level, pass down
 
 For per-tab derived state that depends on a setting (like stale age), read the setting once at `WindowsPanel` level via `useEffect` + `useState`, then pass the threshold as a prop through `WindowItem` → `TabItem`. Avoids N async reads per render.
+
+## vi.stubEnv + window.location: only one non-default transition per test file
+
+In `content.test.ts` (jsdom + vi.resetModules), both `window.location` reassignment and `vi.stubEnv('VITE_WEB_APP_URL', ...)` only reliably honor ONE transition away from the initial default per test file. A first switch from the default ('' env / initial jsdom location) to some value A works; a later test's attempt to switch to a *different* value B silently keeps A (no error, just wrong value used by the freshly re-imported module). This bit content.test.ts when adding a new describe block with both a "matches" and "doesn't match" case.
+
+Workaround: order tests so the case relying on the untouched default (env `''` / unmodified location) runs FIRST in the file, and any test performing a real transition to a non-default value runs after. Don't try to transition to two different non-default values across separate tests in the same file — pick one canonical non-default value (e.g. `window.location.origin` itself) and reuse it everywhere needed.

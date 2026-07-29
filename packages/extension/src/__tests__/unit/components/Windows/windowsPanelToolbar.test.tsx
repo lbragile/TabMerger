@@ -239,6 +239,29 @@ describe('WindowsPanel — stale tabs badge', () => {
     expect(mockRemoveStaleTabs).toHaveBeenCalledWith(expect.objectContaining({ groupIndex: 0 }))
   })
 
+  it('opens the removeStaleTabs confirm modal instead of removing directly when confirmOnDelete=true', async () => {
+    mockGetSetting.mockResolvedValue({ staleThresholdDays: 1, confirmOnDelete: true })
+    const staleTab = makeTab({ savedAt: Date.now() - 2 * 24 * 60 * 60 * 1000 })
+    const group = makeGroup({ permanent: false, windows: [makeWindow({ tabs: [staleTab] })] })
+    const user = userEvent.setup()
+    wrap(<WindowsPanel group={group} groupIndex={0} />)
+
+    const btn = await screen.findByRole('button', { name: /remove 1 stale tab/i })
+    await user.click(btn)
+    expect(mockOpenModal).toHaveBeenCalledWith('removeStaleTabs', expect.objectContaining({ count: 1 }))
+    expect(mockRemoveStaleTabs).not.toHaveBeenCalled()
+  })
+
+  it('styles the stale-tabs button to match the group color', async () => {
+    mockGetSetting.mockResolvedValue({ staleThresholdDays: 1 })
+    const staleTab = makeTab({ savedAt: Date.now() - 2 * 24 * 60 * 60 * 1000 })
+    const group = makeGroup({ permanent: false, color: 'rgba(10,20,30,1)', windows: [makeWindow({ tabs: [staleTab] })] })
+    wrap(<WindowsPanel group={group} groupIndex={0} />)
+
+    const btn = await screen.findByRole('button', { name: /remove 1 stale tab/i })
+    expect(btn).toHaveStyle({ color: 'rgba(10,20,30,1)' })
+  })
+
   it('never shows the stale-tabs button for a permanent (Now Open) group', async () => {
     mockGetSetting.mockResolvedValue({ staleThresholdDays: 1 })
     const staleTab = makeTab({ savedAt: Date.now() - 2 * 24 * 60 * 60 * 1000 })
@@ -312,5 +335,20 @@ describe('WindowsPanel — empty state and Add Window guard', () => {
     wrap(<WindowsPanel group={group} groupIndex={3} />)
     await user.click(screen.getByRole('button', { name: /add window/i }))
     expect(mockAddWindow).toHaveBeenCalledWith({ groupIndex: 3 })
+  })
+})
+
+describe('WindowsPanel — window/tab count header', () => {
+  it('sums tabs across every window regardless of stale-tab data on individual tabs', () => {
+    const group = makeGroup({
+      windows: Array.from({ length: 6 }, (_, i) =>
+        makeWindow({
+          id: i + 1,
+          tabs: [makeTab({ id: i + 1, savedAt: i % 2 === 0 ? Date.now() - 100 * 24 * 60 * 60 * 1000 : undefined })],
+        })
+      ),
+    })
+    wrap(<WindowsPanel group={group} groupIndex={0} />)
+    expect(screen.getByText('6 Windows ◆ 6 Tabs')).toBeInTheDocument()
   })
 })

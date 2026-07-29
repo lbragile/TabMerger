@@ -7,6 +7,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@tabmerger/shared': path.resolve(__dirname, '../shared/src/index.ts'),
     },
   },
   test: {

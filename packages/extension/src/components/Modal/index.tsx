@@ -9,6 +9,8 @@ import { AuthModal } from './Auth';
 import { UpgradePromptModal } from './UpgradePrompt';
 import { DeduplicateConfirmModal } from './DeduplicateConfirm';
 import { UrlRulesModal } from './UrlRules';
+import { ReviewStaleTabsModal } from './ReviewStaleTabs';
+import { SaveSessionModal } from './SaveSession';
 
 export function ModalRoot() {
   const modal = useUIStore((s) => s.modal);
@@ -24,6 +26,8 @@ export function ModalRoot() {
       case 'deleteWindow':
       case 'deleteTab':
       case 'deleteSelection':
+      case 'removeStaleTabs':
+      case 'clearAllData':
         return (
           <DeleteConfirmModal
             type={modal.type}
@@ -31,6 +35,8 @@ export function ModalRoot() {
             onClose={closeModal}
           />
         );
+      case 'saveSession':
+        return <SaveSessionModal data={modal.data ?? {}} onClose={closeModal} />;
       case 'note':
         return <NoteModal data={modal.data ?? {}} onClose={closeModal} />;
       case 'importExport':
@@ -45,6 +51,8 @@ export function ModalRoot() {
         return <DeduplicateConfirmModal data={modal.data ?? {}} onClose={closeModal} />;
       case 'urlRules':
         return <UrlRulesModal onClose={closeModal} />;
+      case 'reviewStaleTabs':
+        return <ReviewStaleTabsModal data={modal.data ?? {}} onClose={closeModal} />;
       default:
         return null;
     }

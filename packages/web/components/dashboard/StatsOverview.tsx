@@ -1,29 +1,55 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Layers, Globe, Clock } from 'lucide-react'
+import { Layers, Globe, Clock, FileStack, Sparkles } from 'lucide-react'
 
 interface StatsOverviewProps {
+  tabCount: number
   groupCount: number
   sessionCount: number
   memberSince: string
+  aiUsage?: { used: number; limit: number }
+}
+
+// ponytail: heuristic MB-per-tab figure, not a measurement — Chrome doesn't expose real
+// per-tab memory to a web app. ~4.2MB/tab is a rough average from public browser-memory studies.
+const MB_PER_TAB = 4.2
+
+function formatMemory(tabCount: number) {
+  const mb = tabCount * MB_PER_TAB
+  if (mb >= 1024) return `${(mb / 1024).toFixed(1)} GB`
+  return `${Math.round(mb)} MB`
 }
 
 export function StatsOverview({
+  tabCount,
   groupCount,
   sessionCount,
   memberSince,
+  aiUsage,
 }: StatsOverviewProps) {
   const stats = [
     {
-      label: 'Tab Groups',
+      label: 'Tabs saved',
+      value: tabCount,
+      icon: FileStack,
+      description: 'Tabs across all synced groups',
+    },
+    {
+      label: 'Groups synced',
       value: groupCount,
       icon: Layers,
       description: 'Groups synced in cloud',
     },
     {
-      label: 'Sessions Saved',
+      label: 'Sessions stored',
       value: sessionCount,
       icon: Clock,
       description: 'Browsing sessions stored',
+    },
+    {
+      label: 'Memory reclaimed',
+      value: formatMemory(tabCount),
+      icon: Globe,
+      description: 'Estimated, not measured',
     },
     {
       label: 'Member Since',
@@ -34,10 +60,20 @@ export function StatsOverview({
       icon: Globe,
       description: 'Account created',
     },
+    ...(aiUsage
+      ? [
+          {
+            label: 'AI calls this month',
+            value: `${aiUsage.used}/${aiUsage.limit}`,
+            icon: Sparkles,
+            description: 'Pro AI monthly usage',
+          },
+        ]
+      : []),
   ]
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       {stats.map((stat) => {
         const Icon = stat.icon
         return (

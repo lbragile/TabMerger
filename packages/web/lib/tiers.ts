@@ -19,6 +19,7 @@ export const TIERS = {
     stripeMonthlyPriceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
     stripeYearlyPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
     features: [
+      'Everything in Free',
       'Unlimited groups & tabs',
       'Cloud sync across devices',
       'Session save & restore',
@@ -55,4 +56,25 @@ export function getStripePriceId(
   return interval === 'monthly'
     ? tierConfig.stripeMonthlyPriceId
     : tierConfig.stripeYearlyPriceId
+}
+
+/**
+ * Reverse-looks-up a Stripe price ID (as stored on `subscriptions.stripe_price_id`)
+ * against the known Pro/Pro AI price IDs to recover the display cost and billing
+ * interval. Returns null if the price ID doesn't match a known tier (e.g. a
+ * discontinued/legacy price).
+ */
+export function getPriceInfo(
+  priceId: string | null | undefined
+): { amount: number; interval: BillingInterval } | null {
+  if (!priceId) return null
+  for (const tier of [TIERS.pro, TIERS.proAi] as const) {
+    if (priceId === tier.stripeMonthlyPriceId) {
+      return { amount: tier.monthlyPrice, interval: 'monthly' }
+    }
+    if (priceId === tier.stripeYearlyPriceId) {
+      return { amount: tier.yearlyPrice, interval: 'yearly' }
+    }
+  }
+  return null
 }

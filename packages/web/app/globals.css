@@ -24,6 +24,27 @@
   --color-popover-foreground: hsl(var(--popover-foreground));
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
+  --color-surface: hsl(var(--surface));
+  --color-surface2: hsl(var(--surface2));
+  --color-surface3: hsl(var(--surface3));
+  --color-border2: hsl(var(--border2));
+  --color-line: hsl(var(--line));
+  --color-text2: hsl(var(--text2));
+  --color-text3: hsl(var(--text3));
+  --color-ink: hsl(var(--ink));
+  --color-ink-foreground: hsl(var(--ink-foreground));
+  --color-ok: hsl(var(--ok));
+  --color-ok-soft: hsl(var(--ok-soft));
+  --color-violet: hsl(var(--violet));
+  --color-violet-soft: hsl(var(--violet-soft));
+  --color-feat-bg: hsl(var(--feat-bg));
+  --color-feat-foreground: hsl(var(--feat-foreground));
+  --color-feat-foreground2: hsl(var(--feat-foreground2));
+  --shadow-sh1: var(--sh1);
+  --shadow-sh2: var(--sh2);
+  --shadow-sh3: var(--sh3);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -47,46 +68,72 @@
   to { height: 0; }
 }
 
+/* Global disabled cursor — root-cause fallback alongside the shared Button/dropdown/select
+   primitives' disabled:cursor-not-allowed classes, for any raw <button disabled> elsewhere. */
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 @layer base {
   :root {
-    /* Subtle blue-gray background so white cards pop */
-    --background: 210 25% 97%;
-    --foreground: 220 25% 10%;
+    /* Design-import tokens (TabMerger.dc.html) — warm off-white ground */
+    --background: 60 20% 98%;
+    --foreground: 213 27% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 10%;
+    --card-foreground: 213 27% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 10%;
+    --popover-foreground: 213 27% 8%;
     /* Brand cyan */
-    --primary: 193 100% 38%;
+    --primary: 189 100% 40%;
     --primary-foreground: 0 0% 100%;
     /* Brand orange */
-    --secondary: 33 95% 52%;
+    --secondary: 33 90% 55%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 210 30% 93%;
-    --muted-foreground: 215 18% 46%;
-    --accent: 193 70% 92%;
-    --accent-foreground: 193 100% 22%;
+    --muted: 60 8% 95%;
+    --muted-foreground: 220 14% 34%;
+    --accent: 33 84% 94%;
+    --accent-foreground: 28 82% 30%;
     --gradient-brand: linear-gradient(135deg, #00B4CC 0%, #008C9E 50%, #F5921E 100%);
     --gradient-brand-subtle: linear-gradient(135deg, hsl(193 60% 94%) 0%, hsl(33 100% 95%) 100%);
-    --destructive: 0 84% 58%;
+    --destructive: 357 66% 47%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 22% 86%;
-    --input: 214 22% 86%;
-    /* Cyan focus rings — on-brand and highly visible */
-    --ring: 193 100% 38%;
+    --border: 60 9% 89%;
+    --input: 60 9% 89%;
+    --ring: 189 100% 40%;
     --radius: 0.75rem;
+
+    /* Extra surface/elevation tokens from the design spec — not covered by
+       the shadcn palette above. Used via arbitrary values, e.g. bg-[var(--surface2)] */
+    --surface: 0 0% 100%;
+    --surface2: 60 9% 95%;
+    --surface3: 60 8% 94%;
+    --border2: 60 6% 85%;
+    --line: 48 15% 93%;
+    --text2: 216 15% 32%;
+    --text3: 213 12% 38%;
+    --ink: 213 27% 8%;
+    --ink-foreground: 0 0% 100%;
+    --ok: 152 73% 27%;
+    --ok-soft: 152 73% 94%;
+    --violet: 248 51% 52%;
+    --violet-soft: 248 65% 96%;
+    --feat-bg: 213 27% 8%;
+    --feat-foreground: 220 16% 95%;
+    --feat-foreground2: 220 12% 68%;
+    --sh1: 0 1px 2px rgba(16, 20, 24, 0.06);
+    --sh2: 0 4px 12px -4px rgba(16, 20, 24, 0.12);
+    --sh3: 0 24px 48px -24px rgba(16, 20, 24, 0.35);
   }
 
   .dark {
-    /* Deep navy — not black, has real depth */
+    /* Deep navy ground, matching the design spec's dark theme */
     --background: 220 30% 7%;
     --foreground: 210 28% 94%;
-    /* Cards lift off the background */
     --card: 220 25% 11%;
     --card-foreground: 210 28% 94%;
     --popover: 220 25% 11%;
     --popover-foreground: 210 28% 94%;
-    /* Brighter cyan/orange for dark contrast */
     --primary: 193 85% 58%;
     --primary-foreground: 193 100% 8%;
     --secondary: 33 90% 60%;
@@ -103,6 +150,26 @@
     --input: 220 20% 19%;
     --ring: 193 85% 58%;
     --radius: 0.75rem;
+
+    --surface: 220 25% 11%;
+    --surface2: 220 22% 9%;
+    --surface3: 220 20% 15%;
+    --border2: 220 16% 22%;
+    --line: 220 18% 16%;
+    --text2: 220 20% 71%;
+    --text3: 217 14% 62%;
+    --ink: 210 28% 94%;
+    --ink-foreground: 220 30% 7%;
+    --ok: 152 60% 62%;
+    --ok-soft: 152 50% 16%;
+    --violet: 248 88% 83%;
+    --violet-soft: 248 60% 20%;
+    --feat-bg: 220 22% 14%;
+    --feat-foreground: 220 16% 95%;
+    --feat-foreground2: 216 12% 65%;
+    --sh1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --sh2: 0 8px 20px -8px rgba(0, 0, 0, 0.6);
+    --sh3: 0 30px 60px -28px rgba(0, 0, 0, 0.85);
   }
 }
 

@@ -6,33 +6,16 @@ import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { getSetting, setSetting } from '@/lib/localDb';
 import { applyTheme } from '@/lib/theme';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
 import { useGroups, useImportGroups } from '@/hooks/useGroups';
+import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
 import { importGroups, parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
 import { exportGroups } from '@/lib/importExport';
 import { toast } from 'sonner';
 import { Download, Upload } from 'lucide-react';
-
-interface AppSettings {
-  theme: 'light' | 'dark' | 'system';
-  confirmOnDelete: boolean;
-  syncEnabled: boolean;
-  openTabOnClick: boolean;
-  autoDedupOnMerge: boolean;
-  staleThresholdDays: 7 | 14 | 30 | 60;
-}
-
-const DEFAULT_SETTINGS: AppSettings = {
-  theme: 'system',
-  confirmOnDelete: false,
-  syncEnabled: true,
-  openTabOnClick: true,
-  autoDedupOnMerge: false,
-  staleThresholdDays: 30
-};
+import { useUIStore } from '@/stores/uiStore';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -43,21 +26,34 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ onClose }: SettingsModalProps) {
-  const [saved, setSaved] = useState<AppSettings>(DEFAULT_SETTINGS);
-  const [draft, setDraft] = useState<AppSettings>(DEFAULT_SETTINGS);
-  const { tier, cloudSync } = useEntitlements();
+  const [activeTab, setActiveTab] = useState('general');
+  // `saved` is the query's current value (reactive — reflects saves made elsewhere,
+  // e.g. another mount of this modal, and refetches after login via useSync's invalidate).
+  const { data: saved = DEFAULT_APP_SETTINGS } = useAppSettings();
+  const { mutateAsync: saveAppSettings } = useSaveAppSettings();
+  const [draft, setDraft] = useState<AppSettings>(saved);
+  const { tier, cloudSync, currentPeriodEnd } = useEntitlements();
   const { user, session, signOut } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
   const { data: groupsState } = useGroups();
   const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const openModal = useUIStore((s) => s.openModal);
 
+  // Re-seed the draft whenever the underlying query value changes (initial load
+  // resolving, a save made elsewhere, or a post-login refetch) — but only while
+  // the user has no unsaved edits, so this never clobbers in-progress changes.
+  const prevSavedRef = useRef(saved);
   useEffect(() => {
-    getSetting<AppSettings>('appSettings', DEFAULT_SETTINGS).then((s) => {
-      setSaved(s);
-      setDraft(s);
-    });
-  }, []);
+    if (saved !== prevSavedRef.current) {
+      // Capture the previous value before mutating the ref — setDraft's updater runs
+      // asynchronously, so reading prevSavedRef.current from inside it would see the
+      // already-mutated value instead of the one we need to compare the draft against.
+      const previouslySynced = prevSavedRef.current;
+      prevSavedRef.current = saved;
+      setDraft((prev) => (settingsEqual(prev, previouslySynced) ? saved : prev));
+    }
+  }, [saved]);
 
   const isDirty = !settingsEqual(draft, saved);
 
@@ -66,18 +62,16 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   };
 
   const handleSave = async () => {
-    await setSetting('appSettings', draft);
-    setSaved(draft);
+    await saveAppSettings(draft);
     applyTheme(draft.theme);
     toast.success('Settings saved');
   };
 
   const handleRestoreDefaults = () => {
-    setDraft(DEFAULT_SETTINGS);
+    setDraft(DEFAULT_APP_SETTINGS);
   };
 
-  const handleClearAll = async () => {
-    if (!confirm('This will delete all groups and settings. Continue?')) return;
+  const performClearAll = async () => {
     const db = await import('@/lib/localDb').then((m) => m.getDb());
     await db.clear('groups');
     await db.clear('groupsState');
@@ -85,6 +79,10 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     await db.clear('settings');
     toast.success('All data cleared');
     onClose();
+  };
+
+  const handleClearAll = () => {
+    openModal('clearAllData', { onConfirm: () => void performClearAll() });
   };
 
   const handleExport = () => {
@@ -155,7 +153,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         <DialogTitle>Settings</DialogTitle>
       </DialogHeader>
 
-      <Tabs defaultValue="general" className="mt-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
         <TabsList className="w-full">
           <TabsTrigger value="general" className="flex-1 text-xs">
             General
@@ -188,8 +186,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </SelectContent>
             </Select>
           </div>
-
-          <Separator />
 
           <div className="flex items-center justify-between">
             <div>
@@ -224,7 +220,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             />
           </div>
 
-          <Separator />
+          {cloudSync && (
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Cloud sync</Label>
+                <p className="text-xs text-muted-foreground">Sync groups across your devices</p>
+              </div>
+              <Switch
+                checked={draft.syncEnabled}
+                onCheckedChange={(v) => patch('syncEnabled', v)}
+              />
+            </div>
+          )}
 
           <div className="flex items-center justify-between">
             <div>
@@ -254,6 +261,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <span className="text-xs text-muted-foreground">Plan</span>
               <span className="text-xs font-medium">{tierLabels[tier] ?? 'Free'}</span>
             </div>
+            {tier !== 'free' && currentPeriodEnd && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Renews</span>
+                <span className="text-xs font-medium">
+                  {new Date(currentPeriodEnd).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </span>
+              </div>
+            )}
             {user && (
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Email</span>
@@ -276,19 +295,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             >
               Upgrade to Pro
             </Button>
-          )}
-
-          {cloudSync && (
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-sm">Cloud sync</Label>
-                <p className="text-xs text-muted-foreground">Sync groups to Supabase</p>
-              </div>
-              <Switch
-                checked={draft.syncEnabled}
-                onCheckedChange={(v) => patch('syncEnabled', v)}
-              />
-            </div>
           )}
 
           {tier !== 'free' && (
@@ -367,30 +373,32 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         </TabsContent>
       </Tabs>
 
-      {/* Footer — only shown for settings that need saving (General + Account sync toggle) */}
-      <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-xs text-muted-foreground"
-          onClick={handleRestoreDefaults}
-        >
-          Restore defaults
-        </Button>
-        <div className="flex items-center gap-2">
-          {isDirty && (
-            <span className="text-xs text-muted-foreground">Unsaved changes</span>
-          )}
+      {/* Footer — only shown for the General tab, which now owns the cloud sync toggle too */}
+      {activeTab === 'general' && (
+        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-2">
           <Button
+            variant="ghost"
             size="sm"
-            className="text-xs"
-            disabled={!isDirty}
-            onClick={() => void handleSave()}
+            className="text-xs text-muted-foreground"
+            onClick={handleRestoreDefaults}
           >
-            Save changes
+            Restore defaults
           </Button>
+          <div className="flex items-center gap-2">
+            {isDirty && (
+              <span className="text-xs text-muted-foreground">Unsaved changes</span>
+            )}
+            <Button
+              size="sm"
+              className="text-xs"
+              disabled={!isDirty}
+              onClick={() => void handleSave()}
+            >
+              Save changes
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

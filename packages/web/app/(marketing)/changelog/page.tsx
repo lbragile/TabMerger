@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Changelog — TabMerger',
@@ -54,46 +55,75 @@ const CHANGELOG: ChangeEntry[] = [
 ]
 
 const badgeClass: Record<ChangeType, string> = {
-  New: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
-  Improved: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
+  New: 'bg-ok-soft text-ok',
+  Improved: 'bg-accent text-accent-foreground',
   Fixed: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+}
+
+// ponytail: a version is "major" (gets the hero treatment) when its patch and
+// minor segments are both zero, e.g. v2.0.0 — matches semver convention.
+function isMajorVersion(version: string) {
+  return /^v\d+\.0\.0$/.test(version)
+}
+
+function anchorId(version: string) {
+  return version.replace(/\./g, '-')
 }
 
 export default function ChangelogPage() {
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
-      <div className="mb-10 pb-8 border-b">
-        <p className="text-sm text-muted-foreground mb-2">Product</p>
-        <h1 className="text-4xl font-bold tracking-tight mb-3">Changelog</h1>
-        <p className="text-muted-foreground">New features, improvements, and fixes — newest first.</p>
+      <div className="mb-12 pb-8 border-b border-line">
+        <p className="text-sm text-text3 mb-2">Product</p>
+        <h1 className="text-4xl font-semibold tracking-tight mb-3">Changelog</h1>
+        <p className="text-text2">Everything we shipped, newest first.</p>
       </div>
 
-      {/* ponytail: plain relative div timeline, no library needed */}
-      <div className="relative pl-6 border-l border-border space-y-12">
-        {CHANGELOG.map((entry) => (
-          <div key={entry.version} className="relative">
-            {/* Timeline dot */}
-            <div className="absolute -left-[1.8125rem] top-1 w-3 h-3 rounded-full bg-primary border-2 border-background" />
-
-            <div className="mb-4 flex items-baseline gap-3">
-              <span className="text-lg font-semibold">{entry.version}</span>
-              <span className="text-sm text-muted-foreground">{entry.date}</span>
-            </div>
-
-            <ul className="space-y-2.5">
-              {entry.changes.map((change, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-sm">
-                  <span
-                    className={`mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${badgeClass[change.type]}`}
-                  >
-                    {change.type}
+      <div className="flex flex-col">
+        {CHANGELOG.map((entry) => {
+          const major = isMajorVersion(entry.version)
+          return (
+            <div
+              key={entry.version}
+              id={anchorId(entry.version)}
+              className={cn(
+                'grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-6 sm:gap-8 py-7 border-t border-line scroll-mt-24',
+                major && 'rounded-2xl border-t-0 -mx-6 px-6 py-8 mb-4 bg-surface2'
+              )}
+            >
+              <div>
+                <a
+                  href={`#${anchorId(entry.version)}`}
+                  className="font-mono font-semibold text-base tracking-tight hover:text-primary transition-colors"
+                >
+                  {entry.version}
+                </a>
+                <div className="text-xs text-text3 mt-1">{entry.date}</div>
+                {major && (
+                  <span className="inline-block mt-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                    Major release
                   </span>
-                  <span className="text-muted-foreground leading-relaxed">{change.text}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                )}
+              </div>
+
+              <ul className="flex flex-col gap-3">
+                {entry.changes.map((change, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm">
+                    <span
+                      className={cn(
+                        'mt-0.5 shrink-0 rounded-md px-2 py-0.5 text-[9.5px] font-semibold uppercase tracking-wide min-w-[64px] text-center',
+                        badgeClass[change.type]
+                      )}
+                    >
+                      {change.type}
+                    </span>
+                    <span className="text-text2 leading-relaxed">{change.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

@@ -77,7 +77,7 @@ describe('ShareBundleContent — Feature 64 multi-group share page', () => {
 
     const githubLink = screen.getByRole('link', { name: /github/i })
     // Public share page — tabs render as <a target="_blank">
-    expect(githubLink).toHaveAttribute('href', 'https://github.com')
+    expect(githubLink).toHaveAttribute('href', 'https://github.com/')
     expect(githubLink).toHaveAttribute('target', '_blank')
 
     openSpy.mockRestore()

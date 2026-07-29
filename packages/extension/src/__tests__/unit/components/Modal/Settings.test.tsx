@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { SettingsModal } from '@/components/Modal/Settings'
 
@@ -19,6 +20,7 @@ const {
   mockImportGroupsMutate,
   mockExportGroups,
   mockGetDb,
+  mockOpenModal,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -29,6 +31,7 @@ const {
   mockImportGroupsMutate: vi.fn(),
   mockExportGroups: vi.fn().mockReturnValue('{}'),
   mockGetDb: vi.fn().mockResolvedValue({ clear: vi.fn().mockResolvedValue(undefined) }),
+  mockOpenModal: vi.fn(),
 }))
 
 vi.mock('@/lib/localDb', () => ({
@@ -52,6 +55,7 @@ vi.mock('@/lib/importExport', () => ({
   exportGroups: mockExportGroups,
 }))
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
 
 const DEFAULT_SETTINGS = {
   theme: 'system',
@@ -62,8 +66,13 @@ const DEFAULT_SETTINGS = {
   staleThresholdDays: 30,
 }
 
-function renderModal() {
-  return render(<Dialog open><DialogContent><SettingsModal onClose={vi.fn()} /></DialogContent></Dialog>)
+function renderModal(onClose = vi.fn()) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return render(
+    <QueryClientProvider client={qc}>
+      <Dialog open><DialogContent><SettingsModal onClose={onClose} /></DialogContent></Dialog>
+    </QueryClientProvider>
+  )
 }
 
 beforeEach(() => {
@@ -73,9 +82,48 @@ beforeEach(() => {
   mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
   mockUseGroups.mockReturnValue({ data: { available: [] } })
   globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
-  globalThis.confirm = vi.fn().mockReturnValue(true)
+  globalThis.confirm = vi.fn().mockReturnValue(true) // still used by the Import flow's confirm()
   globalThis.URL.createObjectURL = vi.fn().mockReturnValue('blob:x')
   globalThis.URL.revokeObjectURL = vi.fn()
+})
+
+describe('SettingsModal — reactive settings (regression)', () => {
+  it('reflects a setting saved elsewhere in the same popup session without remounting (shared appSettings query)', async () => {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    render(
+      <QueryClientProvider client={qc}>
+        <Dialog open><DialogContent><SettingsModal onClose={vi.fn()} /></DialogContent></Dialog>
+      </QueryClientProvider>
+    )
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getAllByRole('switch')[0]).not.toBeChecked()
+
+    // Simulate another part of the app (or another mount of this modal) saving confirmOnDelete: true
+    // and invalidating the shared query — this modal should pick it up without being reopened.
+    mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, confirmOnDelete: true })
+    await qc.invalidateQueries({ queryKey: ['appSettings'] })
+
+    await waitFor(() => expect(screen.getAllByRole('switch')[0]).toBeChecked())
+  })
+
+  it('refetches the correct persisted settings after the appSettings query is invalidated on login (regression)', async () => {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    mockGetSetting.mockResolvedValueOnce({ ...DEFAULT_SETTINGS, autoDedupOnMerge: false })
+    render(
+      <QueryClientProvider client={qc}>
+        <Dialog open><DialogContent><SettingsModal onClose={vi.fn()} /></DialogContent></Dialog>
+      </QueryClientProvider>
+    )
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getAllByRole('switch')[2]).not.toBeChecked()
+
+    // Simulate useSync's post-login invalidate (see hooks/useSync.ts) picking up the
+    // authoritative IndexedDB value once a session appears.
+    mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, autoDedupOnMerge: true })
+    await qc.invalidateQueries({ queryKey: ['appSettings'] })
+
+    await waitFor(() => expect(screen.getAllByRole('switch')[2]).toBeChecked())
+  })
 })
 
 describe('SettingsModal — dirty state and save', () => {
@@ -105,6 +153,46 @@ describe('SettingsModal — dirty state and save', () => {
   })
 })
 
+describe('SettingsModal — General tab cloud sync', () => {
+  it('does not show cloud sync toggle when cloudSync entitlement is false', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.queryByText('Cloud sync')).toBeNull()
+  })
+
+  it('shows cloud sync toggle in the General tab when cloudSync entitlement is true', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('Cloud sync')).toBeTruthy()
+  })
+})
+
+describe('SettingsModal — footer visibility', () => {
+  it('shows the Save/Restore footer on the General tab', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByRole('button', { name: /save changes/i })).toBeTruthy()
+    expect(screen.getByRole('button', { name: /restore defaults/i })).toBeTruthy()
+  })
+
+  it('hides the Save/Restore footer on the Account tab', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(screen.queryByRole('button', { name: /save changes/i })).toBeNull()
+    expect(screen.queryByRole('button', { name: /restore defaults/i })).toBeNull()
+  })
+
+  it('hides the Save/Restore footer on the Data tab', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^data$/i)
+    expect(screen.queryByRole('button', { name: /save changes/i })).toBeNull()
+    expect(screen.queryByRole('button', { name: /restore defaults/i })).toBeNull()
+  })
+})
+
 describe('SettingsModal — Account tab', () => {
   it('shows "Upgrade to Pro" for free tier without cloudSync', async () => {
     renderModal()
@@ -113,13 +201,13 @@ describe('SettingsModal — Account tab', () => {
     expect(screen.getByRole('button', { name: /upgrade to pro/i })).toBeTruthy()
   })
 
-  it('shows cloud sync toggle instead when cloudSync entitlement is true', async () => {
+  it('does not show cloud sync toggle in Account tab even when cloudSync entitlement is true', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
     expect(screen.queryByRole('button', { name: /upgrade to pro/i })).toBeNull()
-    expect(screen.getByText('Cloud sync')).toBeTruthy()
+    expect(screen.queryByText('Cloud sync')).toBeNull()
   })
 
   it('shows Sign out button when a user is signed in', async () => {
@@ -141,26 +229,28 @@ describe('SettingsModal — Data tab', () => {
     expect(mockExportGroups).toHaveBeenCalledWith([{ name: 'g' }])
   })
 
-  it('Clear all data requires confirm() and clears all IndexedDB stores', async () => {
+  it('Clear all data opens the clearAllData confirm modal instead of window.confirm()', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^data$/i)
+    fireEvent.click(screen.getByRole('button', { name: /clear all data/i }))
+    expect(mockOpenModal).toHaveBeenCalledWith('clearAllData', { onConfirm: expect.any(Function) })
+    expect(mockGetDb).not.toHaveBeenCalled()
+  })
+
+  it('confirming the clearAllData modal clears all IndexedDB stores', async () => {
     const clearMock = vi.fn().mockResolvedValue(undefined)
     mockGetDb.mockResolvedValue({ clear: clearMock })
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^data$/i)
     fireEvent.click(screen.getByRole('button', { name: /clear all data/i }))
+    const onConfirm = mockOpenModal.mock.calls[0][1].onConfirm as () => void
+    onConfirm()
     await waitFor(() => expect(clearMock).toHaveBeenCalledWith('groups'))
     expect(clearMock).toHaveBeenCalledWith('groupsState')
     expect(clearMock).toHaveBeenCalledWith('sessions')
     expect(clearMock).toHaveBeenCalledWith('settings')
-  })
-
-  it('Clear all data does nothing if the user cancels the confirm dialog', async () => {
-    globalThis.confirm = vi.fn().mockReturnValue(false)
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/^data$/i)
-    fireEvent.click(screen.getByRole('button', { name: /clear all data/i }))
-    expect(mockGetDb).not.toHaveBeenCalled()
   })
 
   function fileInput() {

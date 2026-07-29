@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { LayoutDashboard, Settings } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
 
 export default async function AppLayout({
   children,
@@ -31,8 +33,8 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center justify-between">
+      <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
+        <div className="container flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center space-x-2">
               <Image src="/logo.png" alt="TabMerger" width={24} height={24} className="rounded-md" />
@@ -54,6 +56,9 @@ export default async function AppLayout({
             </nav>
           </div>
 
+          <div className="flex items-center gap-2.5">
+          <SyncIndicator userId={user.id} />
+          <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -61,7 +66,7 @@ export default async function AppLayout({
                 className="relative h-8 w-8 rounded-full"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+                  <AvatarFallback className="text-xs font-medium bg-primary/20 text-primary">{initials}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -77,15 +82,16 @@ export default async function AppLayout({
                 <Link href="/account">Account settings</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
+              <DropdownMenuItem asChild className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                 <form action="/api/auth/sign-out" method="POST">
-                  <button type="submit" className="w-full text-left">
+                  <button type="submit" className="w-full text-left cursor-pointer">
                     Sign out
                   </button>
                 </form>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          </div>
         </div>
       </header>
       <main className="flex-1 container py-8">{children}</main>

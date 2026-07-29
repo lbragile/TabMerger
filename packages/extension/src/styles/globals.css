@@ -118,9 +118,24 @@
   }
 }
 
+/* Global clickable cursor — root-cause fix instead of per-element cursor-pointer classes.
+   Excludes disabled/aria-disabled elements so they keep the default/not-allowed cursor. */
+button:not(:disabled):not([aria-disabled="true"]),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+select,
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 /* Popup fixed dimensions */
 body {
-  width: 780px;
+  width: 800px;
   height: 600px;
   overflow: hidden;
   margin: 0;

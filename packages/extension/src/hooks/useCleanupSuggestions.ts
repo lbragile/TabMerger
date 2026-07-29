@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useGroups } from '@/hooks/useGroups';
-import { getSetting } from '@/lib/localDb';
+import { useAppSettings } from '@/hooks/useAppSettings';
 import type { Tab } from '@/lib/types';
 
 const MIN_STALE = 5;
@@ -13,13 +12,8 @@ const MIN_STALE = 5;
  */
 export function useCleanupSuggestions() {
   const { data: groupsState } = useGroups();
-  const [thresholdDays, setThresholdDays] = useState(30);
-
-  useEffect(() => {
-    getSetting<{ staleThresholdDays?: number }>('appSettings', {}).then((s) =>
-      setThresholdDays(s.staleThresholdDays ?? 30)
-    );
-  }, []);
+  const { data: settings } = useAppSettings();
+  const thresholdDays = settings?.staleThresholdDays ?? 30;
 
   const thresholdMs = thresholdDays * 24 * 60 * 60 * 1000;
   const now = Date.now();

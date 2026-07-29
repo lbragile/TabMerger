@@ -1,12 +1,17 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Zap } from 'lucide-react'
+import { Zap, Calendar } from 'lucide-react'
+import { getPriceInfo } from '@/lib/tiers'
 
 interface SubscriptionBadgeProps {
   tier: 'free' | 'pro' | 'pro_ai'
   status?: string
   currentPeriodEnd?: string
+  /** `subscriptions.stripe_price_id` — used to recover the display cost/interval. */
+  priceId?: string | null
+  /** Overrides the default free-tier "Upgrade" button (e.g. account page's "Manage billing" link). */
+  action?: React.ReactNode
 }
 
 const tierConfig = {
@@ -19,9 +24,15 @@ export function SubscriptionBadge({
   tier,
   status,
   currentPeriodEnd,
+  priceId,
+  action,
 }: SubscriptionBadgeProps) {
   const config = tierConfig[tier] ?? tierConfig.free
-  const isActive = !status || status === 'active'
+  // ponytail: show billing info for any non-canceled paid status (active, trialing, past_due) —
+  // a past-due or trialing sub still has a real upcoming charge/renewal date worth surfacing,
+  // hiding it only when the subscription is actually gone.
+  const isActive = !status || status !== 'canceled'
+  const priceInfo = tier !== 'free' ? getPriceInfo(priceId) : null
 
   return (
     <div className="flex items-center gap-3 rounded-lg border p-4">
@@ -36,22 +47,33 @@ export function SubscriptionBadge({
             <Badge variant="destructive">{status}</Badge>
           )}
         </div>
-        {currentPeriodEnd && isActive && tier !== 'free' && (
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Renews{' '}
-            {new Date(currentPeriodEnd).toLocaleDateString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric',
-            })}
+        {isActive && tier !== 'free' && (priceInfo || currentPeriodEnd) && (
+          <p className="flex items-center gap-1.5 text-sm font-medium text-foreground mt-1">
+            {currentPeriodEnd && (
+              <>
+                <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
+                Renews{' '}
+                {new Date(currentPeriodEnd).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })}
+              </>
+            )}
+            {priceInfo && (
+              <span className="text-muted-foreground font-normal">
+                {currentPeriodEnd && ' · '}${priceInfo.amount.toFixed(2)}/
+                {priceInfo.interval === 'monthly' ? 'mo' : 'yr'}
+              </span>
+            )}
           </p>
         )}
       </div>
-      {tier === 'free' && (
+      {action ?? (tier === 'free' && (
         <Button size="sm" asChild>
           <Link href="/pricing">Upgrade</Link>
         </Button>
-      )}
+      ))}
     </div>
   )
 }

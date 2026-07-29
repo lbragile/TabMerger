@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Layers } from 'lucide-react'
+import Image from 'next/image'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
@@ -75,7 +75,7 @@ export default function SignUpPage() {
 
   if (verificationSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-sm text-center">
           <CardHeader>
             <CardTitle>Verify your email</CardTitle>
@@ -97,26 +97,24 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-sm flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <Link href="/" className="flex items-center gap-2">
-            <Layers className="h-8 w-8 text-primary" />
-          </Link>
-          <h1 className="text-2xl font-bold">Create an account</h1>
-          <p className="text-sm text-muted-foreground">
-            Get started with TabMerger for free
-          </p>
-        </div>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      {/* Left — auth form, conversion moment */}
+      <div className="flex flex-col p-6 sm:p-11 bg-background">
+        <Link href="/" className="flex items-center gap-2 mb-auto">
+          <Image src="/logo.png" alt="TabMerger" width={26} height={26} className="rounded-md" />
+          <span className="font-semibold tracking-tight">TabMerger</span>
+        </Link>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Sign up</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
+        <div className="w-full max-w-[380px] mx-auto py-10">
+          <h1 className="text-[30px] font-semibold tracking-tight mb-2">Create your account</h1>
+          <p className="text-[14.5px] text-text2 mb-7">
+            Free forever for 5 groups. No card required.
+          </p>
+
+          <div className="flex flex-col gap-4">
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full h-11 rounded-[11px]"
               onClick={handleGoogle}
               disabled={loading}
               type="button"
@@ -129,14 +127,13 @@ export default function SignUpPage() {
               </svg>
               Continue with Google
             </Button>
-            <div className="relative w-full">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">or</span>
-              </div>
+
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-text3">or</span>
+              <div className="flex-1 h-px bg-border" />
             </div>
+
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="email">Email</Label>
@@ -148,6 +145,7 @@ export default function SignUpPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
+                  className="h-11 rounded-[10px]"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -161,6 +159,7 @@ export default function SignUpPage() {
                   required
                   minLength={8}
                   autoComplete="new-password"
+                  className="h-11 rounded-[10px]"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -173,27 +172,42 @@ export default function SignUpPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   autoComplete="new-password"
+                  className="h-11 rounded-[10px]"
                 />
               </div>
               {error && (
                 <p className="text-sm text-destructive">{error}</p>
               )}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Creating account...' : 'Create account'}
+              <Button type="submit" className="w-full h-[46px] rounded-[11px] shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
+                {loading ? 'Creating account...' : 'Continue'}
               </Button>
             </form>
-          </CardContent>
-        </Card>
+          </div>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
-          <Link
-            href="/auth/sign-in"
-            className="underline underline-offset-4 hover:text-foreground"
-          >
-            Sign in
-          </Link>
-        </p>
+          <p className="text-[13.5px] text-text2 mt-5">
+            Already have one?{' '}
+            <Link href="/auth/sign-in" className="text-primary font-medium hover:underline">
+              Sign in
+            </Link>
+          </p>
+        </div>
+
+        <div className="text-xs text-text3">
+          Protected by industry-standard encryption.{' '}
+          <Link href="/privacy" className="text-primary hover:underline">Privacy</Link>
+        </div>
+      </div>
+
+      {/* Right — brand panel, hidden on mobile */}
+      <div className="hidden lg:flex flex-col justify-center gap-7 p-11 bg-surface2 border-l border-border">
+        <div className="max-w-[420px]">
+          <h2 className="text-[22px] font-semibold tracking-tight leading-tight mb-2.5">
+            1,308 tabs — one tidy panel.
+          </h2>
+          <p className="text-[14.5px] text-text2 leading-relaxed">
+            Signing up turns on cloud sync, sessions and shared links.
+          </p>
+        </div>
       </div>
     </div>
   )

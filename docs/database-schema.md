@@ -1,6 +1,6 @@
 # Database Schema Reference
 
-Source of truth: `supabase/migrations/001` through `010`. Read the actual SQL before trusting
+Source of truth: `supabase/migrations/001` through `011`. Read the actual SQL before trusting
 this doc for anything security-relevant — it's a snapshot, not a replacement for the migrations.
 
 ## Migration history
@@ -17,6 +17,7 @@ this doc for anything security-relevant — it's a snapshot, not a replacement f
 | 008 | `008_groups_missing_columns.sql` | Adds `permanent`, `starred`, `archived`, `note` to `groups` (columns existed on the TS `Group` type but were missing from the DB — caused live sync failures) |
 | 009 | `009_create_shared_bundles.sql` | Adds `shared_bundles` table (immutable public share snapshots) + RLS |
 | 010 | `010_grant_table_privileges.sql` | Grants-only migration, no schema change — see callout below |
+| 011 | `011_enable_realtime_groups.sql` | Adds `public.groups` to the `supabase_realtime` publication so clients (e.g. the web dashboard's `SyncIndicator`) can subscribe to live `postgres_changes` events. No RLS change — existing `groups` policies (owner-only, `auth.uid() = user_id`) already gate Realtime subscriptions. |
 
 > **Keeping hosted Cloud in sync:** migrations 009 and 010 existed in this repo and were applied
 > to the local Supabase CLI stack, but were never pushed to the hosted Supabase Cloud project.

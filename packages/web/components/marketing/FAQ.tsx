@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 const faqs = [
@@ -42,50 +42,73 @@ const faqs = [
   },
 ]
 
-function FAQItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = useState(false)
+function FAQItem({
+  question,
+  answer,
+  defaultOpen = false,
+}: {
+  question: string
+  answer: string
+  defaultOpen?: boolean
+}) {
+  const [open, setOpen] = useState(defaultOpen)
   // ponytail: stable id from question text for aria-controls
   const id = `faq-${question.slice(0, 20).replace(/\s+/g, '-').toLowerCase()}`
 
   return (
-    <div className="border-b last:border-b-0">
+    <div className="border-t border-line">
       <button
-        className="flex w-full items-center justify-between py-4 text-left text-sm font-medium hover:text-foreground/80 transition-colors"
+        className="flex w-full items-center gap-4 py-[18px] text-left transition-colors hover:text-primary"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={id}
       >
-        {question}
-        <ChevronDown
-          className={cn(
-            'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200',
-            open && 'rotate-180'
-          )}
-          aria-hidden="true"
-        />
+        <span className="flex-1 font-semibold text-[15px]">{question}</span>
+        <span className="text-[15px] text-text3 shrink-0" aria-hidden="true">
+          {open ? '−' : '+'}
+        </span>
       </button>
-      {open && (
-        <div id={id} className="pb-4 text-sm text-muted-foreground leading-relaxed">
-          {answer}
+      {/* ponytail: CSS grid-rows trick for height animation without measuring content */}
+      <div
+        id={id}
+        className={cn(
+          'grid transition-[grid-template-rows] duration-200 ease-out',
+          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        )}
+        aria-hidden={!open}
+      >
+        <div className="overflow-hidden">
+          <p className="-mt-1 pb-[18px] text-[14px] leading-[1.7] text-text2">{answer}</p>
         </div>
-      )}
+      </div>
     </div>
   )
 }
 
 export function FAQ() {
   return (
-    <section className="py-24 bg-muted/30">
-      <div className="container max-w-3xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Frequently asked questions
-          </h2>
+    <section className="py-16 sm:py-[72px] px-6 sm:px-11 border-b border-border">
+      <div className="container max-w-[960px] grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
+        <div className="sm:col-span-1">
+          <h1 className="font-semibold tracking-tight mb-2 text-[28px] sm:text-[34px] leading-tight">
+            Frequently asked
+          </h1>
+          <p className="text-text2 text-sm mb-6">
+            Still unsure about something? We answer email in under a day.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center h-10 px-5 rounded-[10px] border border-input bg-background hover:bg-accent hover:text-accent-foreground text-[13.5px] font-medium transition-colors"
+          >
+            Contact support
+          </Link>
         </div>
-        <div className="rounded-lg border bg-background p-6">
-          {faqs.map((faq) => (
-            <FAQItem key={faq.question} {...faq} />
+
+        <div className="sm:col-span-2 flex flex-col">
+          {faqs.map((faq, i) => (
+            <FAQItem key={faq.question} {...faq} defaultOpen={i === 0} />
           ))}
+          <div className="border-t border-line" />
         </div>
       </div>
     </section>

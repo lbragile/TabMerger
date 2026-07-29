@@ -58,4 +58,36 @@ test.describe('Public share page', () => {
     expect(href).toMatch(/^https?:\/\//)
     expect(await firstLink.getAttribute('target')).toBe('_blank')
   })
+
+  // ponytail: same env-gated pattern as the test above — requires a seeded bundle,
+  // skipped in CI unless E2E_SHARE_SLUG is provided.
+  test('"Open all tabs" and "Open all windows" open one popup per valid tab URL', async ({
+    page,
+    context,
+  }) => {
+    const slug = process.env.E2E_SHARE_SLUG
+    if (!slug) {
+      test.skip()
+      return
+    }
+    await page.goto(`/share/${slug}`)
+
+    const openAllTabsBtn = page.getByRole('button', { name: /open all tabs/i }).first()
+    await expect(openAllTabsBtn).toBeVisible()
+
+    const [popup1] = await Promise.all([
+      context.waitForEvent('page'),
+      openAllTabsBtn.click(),
+    ])
+    expect(popup1.url()).toMatch(/^https?:\/\//)
+
+    const openAllWindowsBtn = page.getByRole('button', { name: /open all windows/i }).first()
+    await expect(openAllWindowsBtn).toBeVisible()
+
+    const [popup2] = await Promise.all([
+      context.waitForEvent('page'),
+      openAllWindowsBtn.click(),
+    ])
+    expect(popup2.url()).toMatch(/^https?:\/\//)
+  })
 })

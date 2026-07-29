@@ -50,4 +50,19 @@ test.describe('Landing page', () => {
     await page.goto('/')
     await expect(page.getByText('Rachel D.').first()).toBeVisible()
   })
+
+  test('renders without horizontal overflow at mobile viewport width', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await page.goto('/')
+
+    // documentElement.scrollWidth should never exceed the viewport width — any excess
+    // means something (fixed-width popup mock, unconditional grid-cols-3, etc.) is
+    // forcing horizontal scroll on mobile.
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+    expect(scrollWidth).toBeLessThanOrEqual(375)
+
+    // Hero's two-column grid must collapse to a single column below `md`.
+    const heading = page.getByRole('heading', { name: /Stop drowning in browser tabs/i })
+    await expect(heading).toBeVisible()
+  })
 })

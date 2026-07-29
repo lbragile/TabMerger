@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -15,9 +15,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Layers } from 'lucide-react'
+import Image from 'next/image'
 
 export default function SignInPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignInForm />
+    </Suspense>
+  )
+}
+
+function SignInForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') ?? '/dashboard'
@@ -83,7 +91,7 @@ export default function SignInPage() {
 
   if (magicLinkSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
         <Card className="w-full max-w-sm text-center">
           <CardHeader>
             <CardTitle>Check your email</CardTitle>
@@ -103,83 +111,26 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-sm flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <Link href="/" className="flex items-center gap-2">
-            <Layers className="h-8 w-8 text-primary" />
-          </Link>
-          <h1 className="text-2xl font-bold">Welcome back</h1>
-          <p className="text-sm text-muted-foreground">
-            Sign in to your TabMerger account
-          </p>
-        </div>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      {/* Left — auth form, conversion moment */}
+      <div className="flex flex-col p-6 sm:p-11 bg-background">
+        <Link href="/" className="flex items-center gap-2 mb-auto">
+          <Image src="/logo.png" alt="TabMerger" width={26} height={26} className="rounded-md" />
+          <span className="font-semibold tracking-tight">TabMerger</span>
+        </Link>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Sign in</CardTitle>
-            {fromExtension && (
-              <CardDescription>
-                Sign in to sync your tabs across devices via the extension.
-              </CardDescription>
-            )}
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleEmailPassword} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="/auth/forgot-password"
-                    className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                />
-              </div>
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign in'}
-              </Button>
-            </form>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-3">
-            <div className="relative w-full">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  or
-                </span>
-              </div>
-            </div>
+        <div className="w-full max-w-[380px] mx-auto py-10">
+          <h1 className="text-[30px] font-semibold tracking-tight mb-2">Welcome back</h1>
+          <p className="text-[14.5px] text-text2 mb-7">
+            {fromExtension
+              ? 'Sign in to sync your tabs across devices via the extension.'
+              : 'Sign in to sync your groups across devices.'}
+          </p>
+
+          <form onSubmit={handleEmailPassword} className="flex flex-col gap-4">
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full h-11 rounded-[11px]"
               onClick={handleGoogle}
               disabled={loading}
               type="button"
@@ -192,27 +143,88 @@ export default function SignInPage() {
               </svg>
               Continue with Google
             </Button>
+
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-text3">or</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="h-11 rounded-[10px]"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Forgot?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                className="h-11 rounded-[10px]"
+              />
+            </div>
+            {error && (
+              <p className="text-sm text-destructive">{error}</p>
+            )}
+            <Button type="submit" className="w-full h-[46px] rounded-[11px] shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
+              {loading ? 'Signing in...' : 'Continue'}
+            </Button>
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full h-9 text-xs rounded-[10px]"
               onClick={handleMagicLink}
               disabled={loading}
               type="button"
             >
               Send magic link
             </Button>
-          </CardFooter>
-        </Card>
+          </form>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
-          <Link
-            href="/auth/sign-up"
-            className="underline underline-offset-4 hover:text-foreground"
-          >
-            Sign up
-          </Link>
-        </p>
+          <p className="text-[13.5px] text-text2 mt-5">
+            No account?{' '}
+            <Link href="/auth/sign-up" className="text-primary font-medium hover:underline">
+              Sign up free
+            </Link>
+          </p>
+        </div>
+
+        <div className="text-xs text-text3">
+          Protected by industry-standard encryption.{' '}
+          <Link href="/privacy" className="text-primary hover:underline">Privacy</Link>
+        </div>
+      </div>
+
+      {/* Right — brand panel, hidden on mobile */}
+      <div className="hidden lg:flex flex-col justify-center gap-7 p-11 bg-surface2 border-l border-border">
+        <div className="max-w-[420px]">
+          <h2 className="text-[22px] font-semibold tracking-tight leading-tight mb-2.5">
+            1,308 tabs — one tidy panel.
+          </h2>
+          <p className="text-[14.5px] text-text2 leading-relaxed">
+            Signing in turns on cloud sync, sessions and shared links.
+          </p>
+        </div>
       </div>
     </div>
   )

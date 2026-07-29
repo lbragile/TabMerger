@@ -48,7 +48,7 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 **Framework:** [WXT](https://wxt.dev) — Vite-based, MV3/MV2 cross-browser, built-in HMR.
 
 **Entry points:**
-- `src/entrypoints/popup/` — 780×600px popup UI (fixed size, no outer scrollbars)
+- `src/entrypoints/popup/` — 800×600px popup UI (fixed size, no outer scrollbars — Chrome's popup cap)
 - `src/entrypoints/background.ts` — alarms, context menus, tab badge, periodic sync
 - `src/entrypoints/content.ts` — tab metadata collection for preview feature
 
@@ -111,14 +111,20 @@ Domain-specific agents are in `.claude/agents/`. Each agent carries accumulated 
 | `web-dev` | Any file under `packages/web/` — Next.js pages, API routes (non-AI), auth, dashboard, marketing site |
 | `ai-features` | AI API routes (`/api/ai/*`), Anthropic SDK usage, prompt engineering, `useAI` hook, tab preview summaries |
 | `database` | Supabase schema changes, new migrations (`supabase/migrations/`), RLS policies, DB functions |
+| `migration-reviewer` | Before applying any new Supabase migration — checks for missing RLS, missing indexes on FK columns, destructive changes without a rollback path, policy gaps |
 | `payments` | Stripe products/prices, webhook handler, subscription entitlements, checkout flow, billing portal |
 | `payments-security-reviewer` | Security audit before merging any change to: webhook handler, checkout, `useEntitlements`, RLS policies on `subscriptions`/`ai_usage` |
+| `entitlements-auditor` | Whenever `useEntitlements.ts` or `packages/shared/src/constants/index.ts` (`PRICING_TIERS`/`FREE_TIER_LIMITS`) change, or a pricing/tier-limit change is proposed — catches drift between what's sold and what's enforced |
+| `coverage-reporter` | After `test-writer` finishes a batch — reports the ≥80% coverage delta instead of re-deriving pass/fail by hand |
+| `sync-conflict-auditor` | Whenever `syncEngine.ts` or `localDb.ts` change, or debugging a sync-related bug — last-write-wins races, offline reconciliation, delete-vs-resurrect correctness |
+| `accessibility-auditor` | After significant UI changes to the popup or web app, or when asked for an a11y check — keyboard nav, ARIA, focus management, contrast |
 | `devops` | CI/CD workflows (`.github/`), WXT build config, browser store publish, Vercel deploy, release management |
-| `design-system` | shadcn/ui component creation/modification, Tailwind theme, design tokens, responsive layout, accessibility |
+| `design-system` | shadcn/ui component creation/modification, Tailwind theme, design tokens, responsive layout. For accessibility specifically, use `accessibility-auditor` |
 | `pm` | Multi-item feature requests, bug lists, UX feedback, or any requirement that needs scoping before implementation — probes for detail, creates tasks, delegates to domain agents, always triggers test-writer after implementation |
 | `test-writer` | Writes and updates tests after any implementation batch — Vitest + jsdom for extension, Vitest + RTL for web. Always invoked by pm agent; also invoke directly after significant changes |
 | `code-commenter` | Adds or audits JSDoc `/** */` comments across extension and web — functions, hooks, API routes, and test files. Invoke for: "add comments to this file", "document the API routes", "run a JSDoc audit" |
 | `demo` | `packages/demo/` — Remotion video composition, the Playwright driver that records the extension, demo-script authoring. Delegates extension-side demo-mode code to `extension-dev` |
+| `changelog-drafter` | Drafting release notes from a commit range for `semantic-release` — part of the `release-checklist` skill's version-bump step, or on request |
 
 **Pre-deploy validation agents** — run these proactively before reloading or deploying:
 
@@ -144,7 +150,10 @@ The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded
 ## Active Hooks (`.claude/settings.json`)
 
 - **PreToolUse Edit|Write** — blocks edits to `.env*` and `pnpm-lock.yaml`
+- **PreToolUse Edit|Write** — blocks edits to already-applied `supabase/migrations/*.sql` files; new schema changes must be a new migration file (script: `.claude/hooks/protect-migrations.py`)
+- **PreToolUse Edit|Write** — blocks edits to `.github/workflows/*.yml` — CI gates require explicit confirmation, edit manually (script: `.claude/hooks/protect-workflows.py`)
 - **PostToolUse Edit|Write** — runs `tsc --noEmit` on the extension after any `packages/extension/src/` edit (script: `.claude/hooks/tsc-check.py`)
+- **PostToolUse Edit|Write** — runs `type-check` on the web package after any `packages/web/` edit (script: `.claude/hooks/web-tsc-check.py`)
 - **PostToolUse Edit|Write** — runs `pnpm test --run` for the owning package after any `__tests__/` or `.test.`/`.spec.` file edit (script: `.claude/hooks/test-check.py`)
 
 > **Hook requirement:** Hook commands use paths relative to the repo root. Always launch Claude Code from the repo root (`TabMerger/`), not from a package subdirectory. If hooks fail with "can't open file", the CWD is wrong — restart from the repo root.
@@ -152,6 +161,11 @@ The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded
 ## MCP Tools
 
 - **context7** is installed. Use it automatically (resolve library id → get docs) whenever generating code that uses a library/framework, configuring tooling, or referencing any API — do not rely on training-data knowledge for library specifics.
+- **supabase** MCP is installed for schema introspection (`list_tables`, `get_advisors`, `get_logs`) — prefer it over guessing schema shape when working on migrations or RLS. Requires `SUPABASE_PROJECT_REF` (project slug, from the Supabase dashboard URL) and `SUPABASE_ACCESS_TOKEN` (dashboard → Account → Access Tokens). Export both as shell env vars — these are MCP-process credentials, not app config, so they do **not** go in `.env`/`.env.local`.
+- **github** MCP is installed for PR/issue/check-run access — prefer it over parsing `gh` CLI text output. Requires `GITHUB_PERSONAL_ACCESS_TOKEN` (fine-grained PAT, `repo` scope on this repo) exported as a shell env var, same reason as above.
+- **sentry** MCP is configured in `.mcp.json` but not yet enabled in `.claude/settings.json` — enable once Sentry (or another error tracker) is actually adopted; requires `SENTRY_AUTH_TOKEN`/`SENTRY_ORG`, same env-var handling as above.
+- **playwright** / **chrome-devtools** MCPs are installed for browser automation (E2E debugging, live DOM/console/network inspection) — no auth required, work out of the box.
+- If an MCP tool call fails with an auth/connection error, check the relevant env var is exported in the shell Claude Code was launched from (`echo $VAR_NAME`) — a missing var is the most common cause, not a broken server config.
 
 ## Test coverage policy (mandatory, non-skippable)
 

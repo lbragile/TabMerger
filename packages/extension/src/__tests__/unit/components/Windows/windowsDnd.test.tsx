@@ -570,6 +570,49 @@ describe('Saved tabs with id=0 (the real invariant)', () => {
   })
 })
 
+describe('Window key uniqueness (phantom/duplicate window bug)', () => {
+  it('renders one WindowItem per window even when two windows share id=0 (e.g. both added via "+ Add Window")', async () => {
+    const nowOpen = makeGroup({ id: 'now-open', permanent: true, windows: [] })
+    // Two starred windows both with id=0 — this used to collide via `key={window.id}`
+    const winA: ExtWindow = { id: 0, tabs: [{ ...TAB_A }], incognito: false, focused: false, starred: true }
+    const winB: ExtWindow = { id: 0, tabs: [{ ...TAB_B }], incognito: false, focused: false, starred: true }
+    const winC: ExtWindow = { id: 0, tabs: [{ ...TAB_C }], incognito: false, focused: false }
+    const saved = makeGroup({ id: 'saved-1', windows: [winA, winB, winC] })
+    const state = makeState([nowOpen, saved])
+    setupPanel(saved, 1, state)
+
+    // Exactly 3 window rows rendered — no duplicated/phantom entries from key collisions
+    const rows = document.querySelectorAll('[data-window-index]')
+    expect(rows.length).toBe(3)
+  })
+})
+
+describe('Window drag mid-drag visibility (disappearing windows bug)', () => {
+  it('only the dragged window gets opacity-0; windows sharing id=0 stay visible', async () => {
+    const nowOpen = makeGroup({ id: 'now-open', permanent: true, windows: [] })
+    // Three windows all sharing id=0 (e.g. all added via "+ Add Window") — a bug
+    // matched isBeingDragged by window.id, so dragging one hid all of them.
+    const winA: ExtWindow = { id: 0, tabs: [{ ...TAB_A }], incognito: false, focused: false }
+    const winB: ExtWindow = { id: 0, tabs: [{ ...TAB_B }], incognito: false, focused: false }
+    const winC: ExtWindow = { id: 0, tabs: [{ ...TAB_C }], incognito: false, focused: false }
+    const saved = makeGroup({ id: 'saved-1', windows: [winA, winB, winC] })
+    const state = makeState([nowOpen, saved])
+    setupPanel(saved, 1, state)
+
+    // Drag window at index 1 (winB)
+    await act(async () => { getOnDragStart()!(makeDragStart('window-1-1')) })
+
+    const rows = document.querySelectorAll('[data-window-index]')
+    expect(rows.length).toBe(3)
+
+    const hidden = Array.from(rows).map((r) => (r as HTMLElement).className.includes('opacity-0'))
+    // Only the dragged window (index 1) should be hidden; the other two (sharing id=0) must remain visible.
+    expect(hidden[0]).toBe(false)
+    expect(hidden[1]).toBe(true)
+    expect(hidden[2]).toBe(false)
+  })
+})
+
 describe('DnD guard cases', () => {
   it('dragEnd with no over target is a no-op', async () => {
     const nowOpen = makeGroup({ id: 'now-open', permanent: true, windows: [] })

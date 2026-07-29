@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState, Window, Tab } from '@/lib/types';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
-import { getFaviconUrl, formatGroupCounts } from '@/lib/utils';
+import { getFaviconUrl, formatGroupCounts, sortWindowsByStarred } from '@/lib/utils';
 import { GROUPS_QUERY_KEY } from './useGroups';
 
 /**
@@ -30,14 +30,15 @@ export function chromeTabToTab(t: chrome.tabs.Tab, groupMap: Map<number, chrome.
 function chromeWindowToWindow(
   w: chrome.windows.Window,
   tabs: chrome.tabs.Tab[],
-  groupMap: Map<number, chrome.tabGroups.TabGroup>
+  groupMap: Map<number, chrome.tabGroups.TabGroup>,
+  starred: boolean
 ): Window {
   return {
     id: w.id ?? 0,
     tabs: tabs.map((t) => chromeTabToTab(t, groupMap)),
     incognito: w.incognito,
     focused: w.focused,
-    starred: false,
+    starred,
     name: 'Window'
   };
 }
@@ -92,14 +93,30 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
       tabsByWindow.set(windowId, tabs.filter((t) => !t.url?.startsWith(ownExtensionPrefix)));
     }
 
-    const nowOpenWindows: Window[] = chromeWindows
+    // Carry over previously-set starred flag + relative order so drag/star actions on
+    // Now Open windows survive the next tab event instead of being wiped by the rebuild below.
+    const prevNowOpen = state.available.find((g) => g.permanent);
+    const prevStarredById = new Map<number, boolean>();
+    const prevOrderById = new Map<number, number>();
+    prevNowOpen?.windows.forEach((w, i) => {
+      prevStarredById.set(w.id, w.starred ?? false);
+      prevOrderById.set(w.id, i);
+    });
+
+    let nowOpenWindows: Window[] = chromeWindows
       .filter((w) => w.type === 'normal' && w.id !== undefined)
-      .map((w) => chromeWindowToWindow(w, tabsByWindow.get(w.id!) ?? [], groupMap))
+      .map((w) => chromeWindowToWindow(w, tabsByWindow.get(w.id!) ?? [], groupMap, prevStarredById.get(w.id!) ?? false))
       .filter((w) => w.tabs.length > 0);
+
+    // Preserve prior relative order (new windows fall to the end of their zone), then
+    // re-clamp into starred/unstarred zones — both sorts are stable.
+    nowOpenWindows = nowOpenWindows
+      .slice()
+      .sort((a, b) => (prevOrderById.get(a.id) ?? Infinity) - (prevOrderById.get(b.id) ?? Infinity));
+    nowOpenWindows = sortWindowsByStarred(nowOpenWindows);
 
     // Carry over previously-fetched ogImages so they survive re-syncs.
     // Also schedule a background fetch for tabs that don't have one yet.
-    const prevNowOpen = state.available.find((g) => g.permanent);
     const prevOgImages = new Map<string, string>();
     const prevNotes = new Map<string, string>();
     prevNowOpen?.windows.forEach((w) => w.tabs.forEach((t) => {

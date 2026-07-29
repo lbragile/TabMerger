@@ -528,20 +528,25 @@ describe('Header — save session', () => {
     mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
   })
 
-  it('does nothing when the user cancels the name prompt', async () => {
-    vi.spyOn(window, 'prompt').mockReturnValue(null)
+  /** Header now opens the 'saveSession' modal instead of window.prompt(); grab the onSave callback it passed. */
+  async function clickSaveSessionAndGetOnSave() {
     const user = userEvent.setup()
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /save session/i }))
+    expect(baseUIState.openModal).toHaveBeenCalledWith('saveSession', { onSave: expect.any(Function) })
+    const [, data] = (baseUIState.openModal as ReturnType<typeof vi.fn>).mock.calls[0]
+    return data.onSave as (name: string) => Promise<void>
+  }
+
+  it('opens the saveSession modal instead of window.prompt()', async () => {
+    await clickSaveSessionAndGetOnSave()
     expect(mockSaveSessionMutateAsync).not.toHaveBeenCalled()
   })
 
   it('saves the session and shows a success toast', async () => {
-    vi.spyOn(window, 'prompt').mockReturnValue('My Session')
     mockSaveSessionMutateAsync.mockResolvedValue(undefined)
-    const user = userEvent.setup()
-    wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /save session/i }))
+    const onSave = await clickSaveSessionAndGetOnSave()
+    await onSave('My Session')
     expect(mockSaveSessionMutateAsync).toHaveBeenCalledWith(
       expect.objectContaining({ name: 'My Session' })
     )
@@ -549,11 +554,9 @@ describe('Header — save session', () => {
   })
 
   it('shows an upgrade-prompt toast when the free session limit is hit', async () => {
-    vi.spyOn(window, 'prompt').mockReturnValue('My Session')
     mockSaveSessionMutateAsync.mockRejectedValue(new Error('SESSION_LIMIT'))
-    const user = userEvent.setup()
-    wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /save session/i }))
+    const onSave = await clickSaveSessionAndGetOnSave()
+    await onSave('My Session')
     expect(mockToastError).toHaveBeenCalledWith(
       'Free plan allows up to 3 sessions.',
       expect.objectContaining({ action: expect.objectContaining({ label: 'Upgrade' }) })
@@ -561,11 +564,9 @@ describe('Header — save session', () => {
   })
 
   it('shows a generic failure toast for non-limit errors', async () => {
-    vi.spyOn(window, 'prompt').mockReturnValue('My Session')
     mockSaveSessionMutateAsync.mockRejectedValue(new Error('network down'))
-    const user = userEvent.setup()
-    wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /save session/i }))
+    const onSave = await clickSaveSessionAndGetOnSave()
+    await onSave('My Session')
     expect(mockToastError).toHaveBeenCalledWith('Failed to save session')
   })
 })

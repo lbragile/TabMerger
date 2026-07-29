@@ -5,6 +5,7 @@ import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 import { GROUPS_QUERY_KEY } from './useGroups';
+import { APP_SETTINGS_QUERY_KEY } from './useAppSettings';
 
 export function useSync() {
   const { session } = useAuth();
@@ -48,6 +49,16 @@ export function useSync() {
     globalThis.addEventListener('online', handleOnline);
     return () => globalThis.removeEventListener('online', handleOnline);
   }, [session, cloudSync, doSync]);
+
+  // Settings live in local IndexedDB only (never synced to Supabase), so login itself
+  // never changes their value — but the Settings query may have been cached (e.g. by
+  // useTheme/useCleanupSuggestions/the Settings modal) before this session existed.
+  // Invalidate on every session change so all subscribers re-read the authoritative
+  // IndexedDB value immediately, without requiring the popup to be reopened.
+  useEffect(() => {
+    if (!session) return;
+    void qc.invalidateQueries({ queryKey: APP_SETTINGS_QUERY_KEY });
+  }, [session, qc]);
 
   // Subscribe to real-time changes
   useEffect(() => {
