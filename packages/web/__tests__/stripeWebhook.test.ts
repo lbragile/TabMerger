@@ -211,6 +211,83 @@ describe('POST /api/webhooks/stripe', () => {
     )
   })
 
+  it('fires a GA4 checkout_completed event with tier/value/currency/billing on success', async () => {
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = 'G-TEST123'
+    process.env.GA_API_SECRET = 'secret_test'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const subscription = makeSubscription({
+      items: {
+        data: [{ price: { id: 'price_pro_monthly', unit_amount: 399 }, current_period_end: 1800000000 }],
+      },
+    })
+    mockSubscriptionsRetrieve.mockResolvedValue(subscription)
+
+    mockConstructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          mode: 'subscription',
+          subscription: 'sub_test123',
+          customer: 'cus_test123',
+          metadata: { user_id: 'user-uuid-1' },
+        },
+      },
+    })
+
+    const res = await POST(makeRequest('{}'))
+    expect(res.status).toBe(200)
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('https://www.google-analytics.com/mp/collect?measurement_id=G-TEST123&api_secret=secret_test'),
+      expect.objectContaining({ method: 'POST' })
+    )
+    const callBody = JSON.parse(fetchMock.mock.calls[0][1].body)
+    expect(callBody.events[0]).toEqual({
+      name: 'checkout_completed',
+      params: { tier: 'pro', value: 3.99, currency: 'usd', billing: 'monthly' },
+    })
+    // client_id must not be the raw Stripe/Supabase user id
+    expect(callBody.client_id).not.toBe('user-uuid-1')
+    expect(typeof callBody.client_id).toBe('string')
+
+    vi.unstubAllGlobals()
+    delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+    delete process.env.GA_API_SECRET
+  })
+
+  it('a GA4 POST failure does not break the webhook success response', async () => {
+    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = 'G-TEST123'
+    process.env.GA_API_SECRET = 'secret_test'
+    const fetchMock = vi.fn().mockRejectedValue(new Error('network down'))
+    vi.stubGlobal('fetch', fetchMock)
+
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const subscription = makeSubscription()
+    mockSubscriptionsRetrieve.mockResolvedValue(subscription)
+
+    mockConstructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          mode: 'subscription',
+          subscription: 'sub_test123',
+          customer: 'cus_test123',
+          metadata: { user_id: 'user-uuid-1' },
+        },
+      },
+    })
+
+    const res = await POST(makeRequest('{}'))
+    expect(res.status).toBe(200)
+    expect(fetchMock).toHaveBeenCalled()
+
+    vi.unstubAllGlobals()
+    delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+    delete process.env.GA_API_SECRET
+  })
+
   it('rejects a request with no stripe-signature header', async () => {
     const { POST } = await import('@/app/api/webhooks/stripe/route')
     const req = new NextRequest('http://localhost/api/webhooks/stripe', {

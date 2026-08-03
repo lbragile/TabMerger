@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -13,6 +13,11 @@ const {
   mockSignInWithPassword,
   mockSignUp,
   mockSignOut,
+  mockSignInWithOtp,
+  mockSignInWithOAuth,
+  mockExchangeCodeForSession,
+  mockSetSession,
+  mockUpdateUser,
 } = vi.hoisted(() => ({
   mockGetSession: vi.fn().mockResolvedValue({ data: { session: null } }),
   mockOnAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
@@ -20,6 +25,11 @@ const {
   mockSignInWithPassword: vi.fn(),
   mockSignUp: vi.fn(),
   mockSignOut: vi.fn(),
+  mockSignInWithOtp: vi.fn(),
+  mockSignInWithOAuth: vi.fn(),
+  mockExchangeCodeForSession: vi.fn(),
+  mockSetSession: vi.fn(),
+  mockUpdateUser: vi.fn(),
 }))
 
 vi.mock('@/lib/supabase', () => ({
@@ -31,6 +41,11 @@ vi.mock('@/lib/supabase', () => ({
       signInWithPassword: mockSignInWithPassword,
       signUp: mockSignUp,
       signOut: mockSignOut,
+      signInWithOtp: mockSignInWithOtp,
+      signInWithOAuth: mockSignInWithOAuth,
+      exchangeCodeForSession: mockExchangeCodeForSession,
+      setSession: mockSetSession,
+      updateUser: mockUpdateUser,
     },
   },
 }))
@@ -75,13 +90,92 @@ describe('useAuth — resetPassword', () => {
     ).rejects.toThrow('Email not found')
   })
 
-  it('does not expose signInWithGoogle', async () => {
+})
+
+describe('useAuth — updatePassword', () => {
+  it('calls updateUser with the given password', async () => {
+    mockUpdateUser.mockResolvedValue({ error: null })
+
     const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
-    // Flush the mount effect's getSession().then(setState) before asserting —
-    // otherwise that state update lands after the test body, outside act().
-    await act(async () => {})
-    // ponytail: runtime check that the removed method is gone
-    expect((result.current as unknown as Record<string, unknown>).signInWithGoogle).toBeUndefined()
+
+    await act(async () => {
+      await result.current.updatePassword('newSecurePass1')
+    })
+
+    expect(mockUpdateUser).toHaveBeenCalledWith({ password: 'newSecurePass1' })
+  })
+
+  it('throws when Supabase returns an error', async () => {
+    mockUpdateUser.mockResolvedValue({ error: new Error('Password too weak') })
+
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+
+    await expect(
+      act(async () => { await result.current.updatePassword('weak') })
+    ).rejects.toThrow('Password too weak')
+  })
+})
+
+describe('useAuth — signInWithMagicLink', () => {
+  it('calls signInWithOtp with the given email', async () => {
+    mockSignInWithOtp.mockResolvedValue({ error: null })
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+    await act(async () => {
+      await result.current.signInWithMagicLink('user@example.com')
+    })
+    expect(mockSignInWithOtp).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'user@example.com' })
+    )
+  })
+
+  it('throws when Supabase returns an error', async () => {
+    mockSignInWithOtp.mockResolvedValue({ error: new Error('rate limited') })
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+    await expect(
+      act(async () => { await result.current.signInWithMagicLink('user@example.com') })
+    ).rejects.toThrow('rate limited')
+  })
+})
+
+describe('useAuth — signInWithGoogle', () => {
+  // ponytail: the actual OAuth flow (launchWebAuthFlow, code exchange) now runs in
+  // the background service worker (lib/googleOAuthFlow.ts + its own tests) — MV3
+  // popups close on blur, which launchWebAuthFlow triggers, killing any promise
+  // started from the popup. This hook is now just a message + response check.
+  const originalChrome = (globalThis as { chrome?: unknown }).chrome
+
+  afterEach(() => {
+    ;(globalThis as { chrome?: unknown }).chrome = originalChrome
+  })
+
+  it('throws when chrome.runtime is unavailable', async () => {
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = {}
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+    await expect(
+      act(async () => { await result.current.signInWithGoogle() })
+    ).rejects.toThrow('unavailable')
+  })
+
+  it('resolves when the background reports success', async () => {
+    const sendMessage = vi.fn().mockResolvedValue({ ok: true })
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = { runtime: { sendMessage } }
+
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+    await act(async () => {
+      await result.current.signInWithGoogle()
+    })
+
+    expect(sendMessage).toHaveBeenCalledWith({ type: 'SIGN_IN_WITH_GOOGLE' })
+  })
+
+  it('throws with the background-reported error message on failure', async () => {
+    const sendMessage = vi.fn().mockResolvedValue({ ok: false, error: 'Google sign-in was cancelled' })
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = { runtime: { sendMessage } }
+
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+    await expect(
+      act(async () => { await result.current.signInWithGoogle() })
+    ).rejects.toThrow('Google sign-in was cancelled')
   })
 })
 

@@ -107,6 +107,8 @@ export function useDeleteGroup() {
         const group = available[groupIndex];
         if (!group || group.permanent) return prev;
 
+        trackEvent('group_deleted');
+
         // Fire-and-forget: hard-delete from Supabase so sync doesn't resurrect it on reload
         deleteRemoteGroups([group.id]).catch(() => {});
 
@@ -181,7 +183,8 @@ export function useUpdateGroupName() {
           pendingSync: true
         };
         return { ...prev, available };
-      })
+      }),
+    onSuccess: () => { trackEvent('group_renamed'); }
   });
 }
 
@@ -708,7 +711,10 @@ export function useMoveTab() {
   return useMutation({
     onSuccess: (_data, { toGroupIndex }) => {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      if (!state?.available[toGroupIndex]?.permanent) trackEvent('tab_saved', { count: 1 });
+      if (!state?.available[toGroupIndex]?.permanent) {
+        trackEvent('tab_saved', { count: 1 });
+        trackEvent('tabs_saved', { count: 1 });
+      }
     },
     mutationFn: async ({
       fromGroupIndex,

@@ -13,6 +13,7 @@ import type { GroupsState } from '@/lib/types';
 import { sortWindowsByStarred } from '@/lib/utils';
 import { GROUPS_QUERY_KEY } from './useGroups';
 import { useUIStore } from '@/stores/uiStore';
+import { trackEvent } from '@/lib/analytics';
 
 /**
  * DnD ID format:
@@ -91,6 +92,7 @@ export function useGroupDndHandlers() {
       const next = { ...state, active: { id: moved.id, index: finalIndex }, available: zoneSorted };
       await saveGroupsState(next);
       qc.setQueryData(GROUPS_QUERY_KEY, next);
+      trackEvent('dnd_reorder', { kind: 'group' });
 
       // Keep the dragged group selected at its new position (Task 12)
       setActiveGroupIndex(finalIndex);
@@ -136,6 +138,7 @@ export function useWindowDndHandlers(groupIndex: number) {
         const next = { ...state, available };
         await saveGroupsState(next);
         qc.setQueryData(GROUPS_QUERY_KEY, next);
+        trackEvent('dnd_reorder', { kind: 'window' });
         return;
       }
 
@@ -156,6 +159,7 @@ export function useWindowDndHandlers(groupIndex: number) {
         const next = { ...state, available };
         await saveGroupsState(next);
         qc.setQueryData(GROUPS_QUERY_KEY, next);
+        trackEvent('dnd_reorder', { kind: 'window_cross_group' });
       }
     },
     [qc, groupIndex]

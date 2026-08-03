@@ -4,12 +4,24 @@ import userEvent from '@testing-library/user-event'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { AuthModal } from '@/components/Modal/Auth'
 
-const { mockSignIn, mockSignUp, mockResetPassword, mockSignOut, mockUseAuth } = vi.hoisted(() => ({
+const {
+  mockSignIn,
+  mockSignUp,
+  mockResetPassword,
+  mockSignOut,
+  mockUseAuth,
+  mockSignInWithMagicLink,
+  mockSignInWithGoogle,
+  mockUpdatePassword,
+} = vi.hoisted(() => ({
   mockSignIn: vi.fn(),
   mockSignUp: vi.fn(),
   mockResetPassword: vi.fn(),
   mockSignOut: vi.fn(),
   mockUseAuth: vi.fn(),
+  mockSignInWithMagicLink: vi.fn(),
+  mockSignInWithGoogle: vi.fn(),
+  mockUpdatePassword: vi.fn(),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
@@ -27,6 +39,9 @@ beforeEach(() => {
     signIn: mockSignIn,
     signUp: mockSignUp,
     resetPassword: mockResetPassword,
+    signInWithMagicLink: mockSignInWithMagicLink,
+    signInWithGoogle: mockSignInWithGoogle,
+    updatePassword: mockUpdatePassword,
     signOut: mockSignOut,
   })
 })
@@ -97,6 +112,33 @@ describe('AuthModal — signed out', () => {
     await user.click(screen.getByRole('button', { name: /create account/i }))
     await waitFor(() => expect(screen.getByText('Check your email')).toBeTruthy())
   })
+
+  it('sends a magic link from the Magic Link tab', async () => {
+    mockSignInWithMagicLink.mockResolvedValue(undefined)
+    const user = userEvent.setup()
+    renderModal()
+    await user.click(screen.getByRole('tab', { name: /magic link/i }))
+    await user.type(screen.getByLabelText('Email'), 'magic@example.com')
+    await user.click(screen.getByRole('button', { name: /send magic link/i }))
+    await waitFor(() => expect(mockSignInWithMagicLink).toHaveBeenCalledWith('magic@example.com'))
+    await waitFor(() => expect(screen.getByText('Check your email')).toBeTruthy())
+  })
+
+  it('signs in with Google and closes on success', async () => {
+    mockSignInWithGoogle.mockResolvedValue(undefined)
+    const { onClose } = renderModal()
+    fireEvent.click(screen.getByRole('button', { name: /continue with google/i }))
+    await waitFor(() => expect(mockSignInWithGoogle).toHaveBeenCalled())
+    await waitFor(() => expect(onClose).toHaveBeenCalled())
+  })
+
+  it('shows a toast error when Google sign-in fails', async () => {
+    mockSignInWithGoogle.mockRejectedValue(new Error('cancelled'))
+    const { onClose } = renderModal()
+    fireEvent.click(screen.getByRole('button', { name: /continue with google/i }))
+    await waitFor(() => expect(mockSignInWithGoogle).toHaveBeenCalled())
+    expect(onClose).not.toHaveBeenCalled()
+  })
 })
 
 describe('AuthModal — signed in', () => {
@@ -111,5 +153,40 @@ describe('AuthModal — signed in', () => {
     fireEvent.click(screen.getByRole('button', { name: /sign out/i }))
     await waitFor(() => expect(mockSignOut).toHaveBeenCalled())
     await waitFor(() => expect(onClose).toHaveBeenCalled())
+  })
+
+  it('labels the form "Set a password" and explains why for an OAuth-only account', () => {
+    mockUseAuth.mockReturnValue({
+      user: { email: 'user@example.com', identities: [{ provider: 'google' }] },
+      signIn: mockSignIn, signUp: mockSignUp, resetPassword: mockResetPassword,
+      updatePassword: mockUpdatePassword, signOut: mockSignOut,
+    })
+    renderModal()
+    expect(screen.getByText('Set a password')).toBeTruthy()
+    expect(screen.getByText(/created via Google\/magic link/i)).toBeTruthy()
+  })
+
+  it('labels the form "Change password" for an account that already has one', () => {
+    mockUseAuth.mockReturnValue({
+      user: { email: 'user@example.com', identities: [{ provider: 'email' }] },
+      signIn: mockSignIn, signUp: mockSignUp, resetPassword: mockResetPassword,
+      updatePassword: mockUpdatePassword, signOut: mockSignOut,
+    })
+    renderModal()
+    expect(screen.getByText('Change password')).toBeTruthy()
+    expect(screen.queryByText(/created via Google\/magic link/i)).toBeFalsy()
+  })
+
+  it('calls updatePassword with the entered value on submit', async () => {
+    mockUseAuth.mockReturnValue({
+      user: { email: 'user@example.com', identities: [{ provider: 'google' }] },
+      signIn: mockSignIn, signUp: mockSignUp, resetPassword: mockResetPassword,
+      updatePassword: mockUpdatePassword, signOut: mockSignOut,
+    })
+    mockUpdatePassword.mockResolvedValue(undefined)
+    renderModal()
+    fireEvent.change(screen.getByLabelText(/set a password/i), { target: { value: 'NewPassw0rd' } })
+    fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
+    await waitFor(() => expect(mockUpdatePassword).toHaveBeenCalledWith('NewPassw0rd'))
   })
 })

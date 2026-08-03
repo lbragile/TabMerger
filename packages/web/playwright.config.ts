@@ -14,6 +14,13 @@ export default defineConfig({
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'setup', testMatch: /auth\.setup\.ts/, teardown: 'teardown' },
+    { name: 'teardown', testMatch: /auth\.teardown\.ts/ },
+    {
+      name: 'authenticated',
+      use: { ...devices['Desktop Chrome'], storageState: 'e2e/.auth/user.json' },
+      dependencies: ['setup'],
+    },
   ],
   webServer: {
     command: 'pnpm dev',

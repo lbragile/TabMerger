@@ -1,5 +1,9 @@
+import { useEffect } from 'react';
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { useUIStore } from '@/stores/uiStore';
+import { trackEvent } from '@/lib/analytics';
 
 interface UpgradePromptModalProps {
   reason?: string;
@@ -30,6 +34,14 @@ const REASON_MESSAGES: Record<string, { title: string; description: string }> = 
 };
 
 export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps) {
+  const { user } = useAuth();
+  const openModal = useUIStore((s) => s.openModal);
+
+  useEffect(() => {
+    trackEvent('upgrade_prompt_shown', { source: reason ?? 'upgrade_prompt' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { title, description } =
     REASON_MESSAGES[reason ?? ''] ?? {
       title: 'Upgrade TabMerger',
@@ -37,6 +49,7 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
     };
 
   const handleUpgrade = () => {
+    trackEvent('upgrade_clicked', { source: reason ?? 'upgrade_prompt' });
     chrome.tabs.create({
       url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`,
       active: true
@@ -44,11 +57,19 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
     onClose();
   };
 
+  const handleSignIn = () => {
+    onClose();
+    openModal('auth');
+  };
+
   return (
     <>
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
+        <DialogDescription>
+          {description}
+          {!user && ' Already have a Pro account? Sign in to restore it on this device.'}
+        </DialogDescription>
       </DialogHeader>
 
       <div className="mt-4 space-y-2">
@@ -78,6 +99,11 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
         <Button variant="outline" onClick={onClose}>
           Maybe later
         </Button>
+        {!user && (
+          <Button variant="outline" onClick={handleSignIn}>
+            Sign in
+          </Button>
+        )}
         <Button onClick={handleUpgrade}>Upgrade now</Button>
       </DialogFooter>
     </>

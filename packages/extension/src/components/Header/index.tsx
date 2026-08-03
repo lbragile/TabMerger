@@ -13,7 +13,6 @@ import {
 import logoUrl from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Tooltip,
@@ -37,6 +36,7 @@ import { useGroups, useSetGroupsState } from "@/hooks/useGroups";
 import { useSessions, useSaveSession } from "@/hooks/useSessions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 /** Map an internal tier key to a human-readable label. */
 function tierLabel(tier: string): string {
@@ -72,6 +72,17 @@ export function Header() {
 
     const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
     const setScrollToWindowIndex = useUIStore((s) => s.setScrollToWindowIndex);
+    // ponytail: fire once per non-empty search "session" — reset when the field clears
+    const searchTrackedRef = useRef(false);
+    const handleSearchQueryChange = (q: string) => {
+        if (q && !searchTrackedRef.current) {
+            searchTrackedRef.current = true;
+            trackEvent('search_used');
+        } else if (!q) {
+            searchTrackedRef.current = false;
+        }
+        setSearchFilter(q);
+    };
     const { user, signOut } = useAuth();
     const { aiFeatures, tier, sessions: hasSessions } = useEntitlements();
     const { data: sessionList = [] } = useSessions();
@@ -150,9 +161,13 @@ export function Header() {
     const currentTierLabel = tierLabel(tier);
 
     return (
-        <header className="grid grid-cols-[210px_1fr_auto] items-center gap-2 px-3 py-2 border-b border-border shrink-0 bg-zone-header">
-            {/* Logo — pinned to the left */}
-            <div className="flex items-center gap-1.5">
+        <header className="flex items-stretch border-b border-border shrink-0 bg-zone-header">
+            {/* Logo — pinned to the left; width matches SidePanel exactly so the
+                boundary below (sidebar/main split at 240px) lines up with this one. */}
+            <div
+                className="flex items-center gap-1.5 px-3 shrink-0"
+                style={{ width: 240 }}
+            >
                 <img
                     src={logoUrl}
                     alt="TabMerger"
@@ -163,8 +178,8 @@ export function Header() {
                 </span>
             </div>
 
-            {/* Search trigger */}
-            <div className="flex justify-center">
+            {/* Search trigger — px-3 matches WindowsPanel toolbar's inset below it */}
+            <div className="flex justify-start items-center flex-1 min-w-0 px-3 py-2">
                 <button
                     type="button"
                     className="flex items-center gap-2 h-7 px-3 max-w-[360px] w-full border border-border bg-muted/40 text-xs text-foreground/70 hover:bg-muted transition-colors"
@@ -181,7 +196,7 @@ export function Header() {
             {/* Search overlay */}
             {searchOpen && <SearchOverlay
                 query={searchFilter}
-                onQueryChange={setSearchFilter}
+                onQueryChange={handleSearchQueryChange}
                 groupsState={groupsState}
                 onSelectGroup={(idx) => { setActiveGroupIndex(idx); setSearchFilter(''); setSearchOpen(false); }}
                 onSelectWindow={(groupIdx, winIdx) => { setActiveGroupIndex(groupIdx); setScrollToWindowIndex(winIdx); setSearchFilter(''); setSearchOpen(false); }}
@@ -190,7 +205,7 @@ export function Header() {
             />}
 
             {/* Actions — pinned to the right */}
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0.5 pr-3 py-2 shrink-0">
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button

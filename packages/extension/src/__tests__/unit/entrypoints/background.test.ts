@@ -6,13 +6,16 @@ let capturedMain: (() => void) | undefined
   capturedMain = fn
 }
 
-const { mockGetGroupsState, mockSaveGroupsState, mockGetAllUrlRules, mockMatchUrlToRule, mockApplyUrlRule } = vi.hoisted(() => ({
+const { mockGetGroupsState, mockSaveGroupsState, mockGetAllUrlRules, mockMatchUrlToRule, mockApplyUrlRule, mockRunGoogleOAuthFlow } = vi.hoisted(() => ({
   mockGetGroupsState: vi.fn(),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
   mockGetAllUrlRules: vi.fn().mockResolvedValue([]),
   mockMatchUrlToRule: vi.fn().mockReturnValue(null),
   mockApplyUrlRule: vi.fn().mockResolvedValue(undefined),
+  mockRunGoogleOAuthFlow: vi.fn().mockResolvedValue(undefined),
 }))
+
+vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuthFlow }))
 
 vi.mock('@/lib/localDb', () => ({
   getGroupsState: mockGetGroupsState,
@@ -90,6 +93,7 @@ beforeEach(async () => {
   mockGetAllUrlRules.mockReset().mockResolvedValue([])
   mockMatchUrlToRule.mockReset().mockReturnValue(null)
   mockApplyUrlRule.mockReset().mockResolvedValue(undefined)
+  mockRunGoogleOAuthFlow.mockReset().mockResolvedValue(undefined)
   capturedMain = undefined
   stub = makeChromeStub()
   globalThis.chrome = stub.chrome as unknown as typeof chrome
@@ -115,7 +119,7 @@ describe('background — context menu building', () => {
 
   it('rebuilds menus on runtime.onInstalled', async () => {
     stub.chrome.contextMenus.create.mockClear()
-    stub.listeners.onInstalled[0]()
+    stub.listeners.onInstalled[0]({ reason: 'update' })
     await new Promise((r) => setTimeout(r, 0))
     expect(stub.chrome.contextMenus.create).toHaveBeenCalled()
   })
@@ -133,6 +137,36 @@ describe('background — SYNC_AUTH message', () => {
     ;(supabase.auth.setSession as ReturnType<typeof vi.fn>).mockClear()
     stub.listeners.onMessage[0]({ type: 'SYNC_AUTH', accessToken: 'a' })
     expect(supabase.auth.setSession).not.toHaveBeenCalled()
+  })
+})
+
+describe('background — SIGN_IN_WITH_GOOGLE message', () => {
+  it('runs the OAuth flow and responds ok on success, keeping the channel open', () => {
+    const sendResponse = vi.fn()
+    const keepOpen = stub.listeners.onMessage[1]({ type: 'SIGN_IN_WITH_GOOGLE' }, {}, sendResponse)
+    expect(keepOpen).toBe(true)
+    expect(mockRunGoogleOAuthFlow).toHaveBeenCalled()
+    return new Promise((resolve) => setTimeout(() => {
+      expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+      resolve(undefined)
+    }, 0))
+  })
+
+  it('responds with ok: false and the error message on failure', () => {
+    mockRunGoogleOAuthFlow.mockRejectedValue(new Error('Google sign-in was cancelled'))
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[1]({ type: 'SIGN_IN_WITH_GOOGLE' }, {}, sendResponse)
+    return new Promise((resolve) => setTimeout(() => {
+      expect(sendResponse).toHaveBeenCalledWith({ ok: false, error: 'Google sign-in was cancelled' })
+      resolve(undefined)
+    }, 0))
+  })
+
+  it('ignores unrelated message types', () => {
+    const sendResponse = vi.fn()
+    const result = stub.listeners.onMessage[1]({ type: 'SYNC_AUTH' }, {}, sendResponse)
+    expect(result).toBeUndefined()
+    expect(mockRunGoogleOAuthFlow).not.toHaveBeenCalled()
   })
 })
 

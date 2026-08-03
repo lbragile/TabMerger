@@ -53,9 +53,11 @@ vi.mock('@/lib/localDb', () => ({
   getGroupsState: vi.fn(),
 }))
 vi.mock('@/lib/syncEngine', () => ({ deleteRemoteGroups: vi.fn().mockResolvedValue(undefined) }))
+vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
 
 import { saveGroupsState, getGroupsState } from '@/lib/localDb'
 import { deleteRemoteGroups } from '@/lib/syncEngine'
+import { trackEvent } from '@/lib/analytics'
 
 globalThis.chrome = {
   tabs: {
@@ -108,6 +110,7 @@ describe('useAddGroup', () => {
 
     expect(lastSaved().available).toHaveLength(2)
     expect(lastSaved().available[1].name).toBe('New Group')
+    expect(trackEvent).toHaveBeenCalledWith('group_created')
   })
 })
 
@@ -148,6 +151,7 @@ describe('useUpdateGroupColor / useUpdateGroupName / useUpdateGroupInfo / useUpd
     const { result } = renderHook(() => useUpdateGroupName(), { wrapper })
     await act(async () => { await result.current.mutateAsync({ groupIndex: 0, name: 'Renamed' }) })
     expect(lastSaved().available[0].name).toBe('Renamed')
+    expect(trackEvent).toHaveBeenCalledWith('group_renamed')
   })
 
   it('updates info without pushing undo', async () => {
@@ -497,6 +501,7 @@ describe('useDeleteGroup', () => {
 
     expect(chrome.tabs.remove).not.toHaveBeenCalled()
     expect(deleteRemoteGroups).not.toHaveBeenCalled()
+    expect(trackEvent).not.toHaveBeenCalledWith('group_deleted')
   })
 
   it('closes live browser tabs whose URLs are open in Now Open, and hard-deletes remotely', async () => {
@@ -515,6 +520,7 @@ describe('useDeleteGroup', () => {
     expect(chrome.tabs.remove).toHaveBeenCalledWith([1])
     expect(deleteRemoteGroups).toHaveBeenCalledWith(['a'])
     expect(lastSaved().available).toHaveLength(1)
+    expect(trackEvent).toHaveBeenCalledWith('group_deleted')
   })
 
   it('does not call chrome.tabs.remove when no tabs are live in Now Open', async () => {
@@ -765,8 +771,25 @@ describe('useMoveTab', () => {
     await act(async () => {
       await result.current.mutateAsync({ fromGroupIndex: 0, fromWindowIndex: 0, fromTabIndex: 0, toGroupIndex: 1 })
     })
-    // no throw = onSuccess ran without error; behavior asserted indirectly via saved state
     expect(lastSaved().available[1].windows[0].tabs).toHaveLength(1)
+    expect(trackEvent).toHaveBeenCalledWith('tabs_saved', { count: 1 })
+  })
+
+  it('does not fire tabs_saved analytics when the destination is the permanent Now Open group', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = []
+    const from = createGroup('from', 'From')
+    from.windows = [win([tab(0, 'https://a.com')])]
+    const state = makeState([nowOpen, from], 1)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveTab(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 1, fromWindowIndex: 0, fromTabIndex: 0, toGroupIndex: 0 })
+    })
+    expect(trackEvent).not.toHaveBeenCalledWith('tabs_saved', expect.anything())
   })
 
   it('collapses the source window between two saved groups when it becomes empty', async () => {

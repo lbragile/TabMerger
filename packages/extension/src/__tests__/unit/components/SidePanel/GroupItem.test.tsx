@@ -131,10 +131,12 @@ describe('GroupItem', () => {
     expect(screen.getAllByText('1').length).toBeGreaterThan(0)
   })
 
-  it('truncates long names and shows tooltip content available', () => {
+  it('renders long names in full with CSS truncation (no manual character slicing)', () => {
     const group = makeGroup({ name: 'A Very Long Group Name Here' })
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
-    expect(screen.getByText(/A Very Lon…/)).toBeTruthy()
+    const nameEl = screen.getByText('A Very Long Group Name Here')
+    expect(nameEl).toBeTruthy()
+    expect(nameEl.className).toMatch(/truncate/)
   })
 
   it('calls onClick when wrapper is clicked normally', () => {

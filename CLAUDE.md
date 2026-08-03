@@ -21,8 +21,10 @@ pnpm lint                   # ESLint across extension + web
 pnpm type-check             # TypeScript check across all packages
 pnpm test               # Vitest unit tests (extension + web)
 pnpm test:e2e           # Playwright E2E (web app)
-pnpm --filter @tabmerger/extension test:e2e     # Extension E2E tests
-pnpm --filter @tabmerger/extension test:e2e:ui  # Extension E2E — interactive Playwright UI dashboard
+pnpm test:visual        # Playwright visual regression (extension + web, @visual-tagged specs)
+pnpm --filter @tabmerger/extension test:e2e         # Extension E2E tests
+pnpm --filter @tabmerger/extension test:e2e:ui      # Extension E2E — interactive Playwright UI dashboard
+pnpm --filter @tabmerger/extension test:integration # Extension integration tests (real IndexedDB round trips)
 pnpm scan-secrets       # Check staged files for API keys / PII
 ```
 
@@ -71,6 +73,7 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 - Env vars use WXT Vite convention: `import.meta.env.VITE_*`
 - Saved tabs always have `id: 0` — use positional `{groupIndex, windowIndex, tabIndex}` for all mutations, never `tab.id`
 - `Window.tsx` has a `window: WindowType` prop that shadows the global `window` — use `globalThis` for any browser APIs in that file
+- `SidePanel/index.tsx`'s sidebar width and `Header/index.tsx`'s logo-column width must stay numerically identical (currently 240px) so the sidebar/main-content boundary lines up with the header above it — a mismatch here isn't just cosmetic, it silently breaks the sidebar/header seam. Also watch for outer padding/gap on the header container itself competing with this value (a flex/grid box model that adds its own `px`/`gap` on top of the shared width will misalign the two even when the width numbers match).
 
 ## Web app (`packages/web/`)
 

@@ -3,14 +3,18 @@ import type { GroupsState, Group, Tab } from './types';
 
 // ponytail: demo-only fixture, not wired into any production data path
 
-function tab(id: number, title: string, url: string): Tab {
+function tab(id: number, title: string, url: string, savedAt?: number): Tab {
   return {
     id,
     title,
     url,
-    favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${new URL(url).origin}`
+    favIconUrl: `https://s2.googleusercontent.com/s2/favicons?domain_url=${new URL(url).origin}`,
+    ...(savedAt !== undefined ? { savedAt } : {})
   };
 }
+
+// ponytail: 40 days ago so these demo tabs cross the default 30-day stale threshold
+const STALE_SAVED_AT = Date.now() - 40 * 24 * 60 * 60 * 1000;
 
 const work: Group = {
   id: nanoid(10),
@@ -83,11 +87,11 @@ const readingList: Group = {
       incognito: false,
       focused: false,
       tabs: [
-        tab(13, 'The Pragmatic Programmer — Notes', 'https://en.wikipedia.org/wiki/The_Pragmatic_Programmer'),
-        tab(14, 'A Philosophy of Software Design', 'https://web.stanford.edu/~ouster/cgi-bin/book.php'),
-        tab(15, 'Building a Second Brain — YouTube', 'https://www.youtube.com/results?search_query=building+a+second+brain'),
-        tab(16, 'Hacker News', 'https://news.ycombinator.com/'),
-        tab(17, 'CSS Tricks — A Guide to Flexbox', 'https://css-tricks.com/snippets/css/a-guide-to-flexbox/')
+        tab(13, 'The Pragmatic Programmer — Notes', 'https://en.wikipedia.org/wiki/The_Pragmatic_Programmer', STALE_SAVED_AT),
+        tab(14, 'A Philosophy of Software Design', 'https://web.stanford.edu/~ouster/cgi-bin/book.php', STALE_SAVED_AT),
+        tab(15, 'Building a Second Brain — YouTube', 'https://www.youtube.com/results?search_query=building+a+second+brain', STALE_SAVED_AT),
+        tab(16, 'Hacker News', 'https://news.ycombinator.com/', STALE_SAVED_AT),
+        tab(17, 'CSS Tricks — A Guide to Flexbox', 'https://css-tricks.com/snippets/css/a-guide-to-flexbox/', STALE_SAVED_AT)
       ]
     }
   ]

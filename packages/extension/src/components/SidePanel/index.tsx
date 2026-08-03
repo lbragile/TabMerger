@@ -20,6 +20,7 @@ import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession } from '@/hooks/useSessions';
 import { pluralize } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
+import { trackEvent } from '@/lib/analytics';
 
 // ponytail: no date-fns dep needed for this
 function timeAgo(ms: number): string {
@@ -89,6 +90,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     // All non-permanent groups count toward the limit (archived included — archiving doesn't free up slots)
     const activeCount = raw.filter((g) => !g.permanent).length;
     if (activeCount >= maxGroups) {
+      trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
       toast.error(`Free plan allows up to ${maxGroups} groups.`, {
         action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
       });
@@ -106,7 +108,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   return (
     <div
       className="flex flex-col h-full shrink-0 bg-zone-sidebar"
-      style={{ width: 210, borderRight: '1px solid var(--zone-sidebar-border)' }}
+      style={{ width: 240, minWidth: 240, borderRight: '1px solid var(--zone-sidebar-border)' }}
     >
       {/* Groups list */}
       <ScrollArea className="flex-1">

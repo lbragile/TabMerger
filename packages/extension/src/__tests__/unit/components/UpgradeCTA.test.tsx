@@ -6,10 +6,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // ─── Hoisted mocks ────────────────────────────────────────────────────────────
 
-const { mockUseEntitlements, mockUseGroups } = vi.hoisted(() => {
+const { mockUseEntitlements, mockUseGroups, mockTrackEvent } = vi.hoisted(() => {
   const mockUseEntitlements = vi.fn()
   const mockUseGroups = vi.fn()
-  return { mockUseEntitlements, mockUseGroups }
+  const mockTrackEvent = vi.fn()
+  return { mockUseEntitlements, mockUseGroups, mockTrackEvent }
 })
 
 vi.mock('@/hooks/useEntitlements', () => ({
@@ -21,6 +22,8 @@ vi.mock('@/hooks/useEntitlements', () => ({
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: mockUseGroups,
 }))
+
+vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 
 // chrome.tabs.create stub
 const mockTabsCreate = vi.fn()
@@ -87,13 +90,15 @@ describe('UpgradeCTA', () => {
     mockUseGroups.mockReturnValue(approachingGroupsState)
     await renderCTA()
     expect(screen.getByText(/approaching the free limit/)).toBeInTheDocument()
+    expect(mockTrackEvent).toHaveBeenCalledWith('upgrade_prompt_shown', { source: 'nag_banner' })
   })
 
-  it('does not render for pro users', async () => {
+  it('does not render for pro users, and does not track upgrade_prompt_shown', async () => {
     mockUseEntitlements.mockReturnValue(freeEntitlements({ tier: 'pro', maxGroups: Infinity, maxTabs: Infinity }))
     mockUseGroups.mockReturnValue(approachingGroupsState)
     const { container } = await renderCTA()
     expect(container.firstChild).toBeNull()
+    expect(mockTrackEvent).not.toHaveBeenCalled()
   })
 
   it('does not render when subscriptionStatus is not null (e.g. past_due)', async () => {
@@ -131,6 +136,7 @@ describe('UpgradeCTA', () => {
     await renderCTA()
     await user.click(screen.getByRole('button', { name: /upgrade/i }))
     expect(mockTabsCreate).toHaveBeenCalledWith(expect.objectContaining({ url: expect.stringContaining('/pricing') }))
+    expect(mockTrackEvent).toHaveBeenCalledWith('upgrade_clicked', { source: 'nag_banner' })
   })
 
   it('does not render if already dismissed in sessionStorage', async () => {

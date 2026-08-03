@@ -13,9 +13,11 @@ import { useGroups, useImportGroups } from '@/hooks/useGroups';
 import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
 import { importGroups, parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
 import { exportGroups } from '@/lib/importExport';
+import { enterDemoMode } from '@/lib/demo';
 import { toast } from 'sonner';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
+import { trackEvent } from '@/lib/analytics';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -57,11 +59,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
   const isDirty = !settingsEqual(draft, saved);
 
+  // upgrade_prompt_shown pairs with the upgrade_clicked fired below — fire once per mount when the CTA is visible
+  useEffect(() => {
+    if (!cloudSync) trackEvent('upgrade_prompt_shown', { source: 'settings' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const patch = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSave = async () => {
+    if (draft.syncEnabled && !saved.syncEnabled) trackEvent('sync_enabled');
     await saveAppSettings(draft);
     applyTheme(draft.theme);
     toast.success('Settings saved');
@@ -164,6 +173,11 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <TabsTrigger value="data" className="flex-1 text-xs">
             Data
           </TabsTrigger>
+          {(import.meta.env.DEV || import.meta.env.VITE_DEMO_BUILD === 'true') && (
+            <TabsTrigger value="dev" className="flex-1 text-xs">
+              Dev
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="general" className="space-y-4 mt-4">
@@ -286,12 +300,13 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               variant="outline"
               size="sm"
               className="w-full text-xs rounded-none"
-              onClick={() =>
+              onClick={() => {
+                trackEvent('upgrade_clicked', { source: 'settings' });
                 chrome.tabs.create({
                   url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`,
                   active: true
-                })
-              }
+                });
+              }}
             >
               Upgrade to Pro
             </Button>
@@ -371,6 +386,49 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             Clear all data
           </Button>
         </TabsContent>
+
+        {(import.meta.env.DEV || import.meta.env.VITE_DEMO_BUILD === 'true') && (
+          <TabsContent value="dev" className="space-y-4 mt-4">
+            {/* ponytail: hook for the Playwright/Remotion marketing demo pipeline — kept
+                visible in demo builds too (not just DEV) since recording runs against one */}
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Demo Mode</Label>
+                <p className="text-xs text-muted-foreground">Seed sample data for the marketing demo pipeline</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs shrink-0 rounded-none"
+                onClick={() => void enterDemoMode()}
+              >
+                Enter
+              </Button>
+            </div>
+
+            {import.meta.env.DEV && (
+              <>
+                <Separator />
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-sm">Sentry</Label>
+                    <p className="text-xs text-muted-foreground">Throw a test error to verify reporting</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs shrink-0 rounded-none text-destructive hover:text-destructive"
+                    onClick={() => {
+                      throw new Error('Sentry test error — thrown from Settings > Dev (dev only)');
+                    }}
+                  >
+                    Throw error
+                  </Button>
+                </div>
+              </>
+            )}
+          </TabsContent>
+        )}
       </Tabs>
 
       {/* Footer — only shown for the General tab, which now owns the cloud sync toggle too */}

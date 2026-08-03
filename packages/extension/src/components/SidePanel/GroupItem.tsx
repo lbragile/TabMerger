@@ -245,12 +245,10 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     setRenameTarget({ kind: 'group', groupIndex });
                   }}
                 >
-                  {group.name.length > 10 ? `${group.name.slice(0, 10)}…` : group.name}
+                  {group.name}
                 </span>
               </TooltipTrigger>
-              {group.name.length > 10 && (
-                <TooltipContent side="top">{group.name}</TooltipContent>
-              )}
+              <TooltipContent side="top">{group.name}</TooltipContent>
             </Tooltip>
           )}
         </div>

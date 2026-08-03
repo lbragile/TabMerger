@@ -26,4 +26,7 @@ const nextConfig: NextConfig = {
 export default withSentryConfig(nextConfig, {
   silent: true,
   telemetry: false,
+  // Routes Sentry requests through our own origin so ad blockers that target
+  // *.ingest.sentry.io (uBlock, Brave Shields, etc.) don't silently drop events.
+  tunnelRoute: '/sentry-tunnel',
 })

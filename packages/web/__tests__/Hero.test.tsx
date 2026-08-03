@@ -3,12 +3,16 @@ import { describe, it, expect } from 'vitest'
 import { Hero } from '@/components/marketing/Hero'
 
 describe('Hero', () => {
-  it('renders the looped demo video instead of the interactive mock', () => {
+  it('renders the demo section instead of the interactive mock', () => {
+    // ponytail: theme/fallback selection logic is covered directly in
+    // DemoSection.test.tsx — this just asserts Hero mounts a video (the
+    // themed renders are present on disk in this checkout, default theme is
+    // light) instead of the old interactive mock UI.
     const { container } = render(<Hero />)
 
     const video = container.querySelector('video')
     expect(video).not.toBeNull()
-    expect(video?.getAttribute('src')).toMatch(/tabmerger-demo\.mp4\?v=[\d.]+$/)
+    expect(video?.getAttribute('src')).toMatch(/tabmerger-demo-light\.mp4\?v=[\d.]+$/)
   })
 
   it('lays out the two-column grid responsively (single column on mobile)', () => {

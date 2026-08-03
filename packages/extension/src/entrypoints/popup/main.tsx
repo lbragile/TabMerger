@@ -13,6 +13,15 @@ if (import.meta.env.VITE_SENTRY_DSN) {
     dsn: import.meta.env.VITE_SENTRY_DSN,
     environment: import.meta.env.MODE,
     sendDefaultPii: false,
+    // Session Replay: the popup is a real DOM page (unlike the background service
+    // worker, which has no window/DOM and can't run this), so replayIntegration works
+    // here. But the popup typically lives only a few seconds (closes on blur), so a
+    // "session" replay is mostly just the on-error tail — low background sample,
+    // full capture on error, same as the web app. maskAllText/blockAllMedia default
+    // to true — keep them, tab titles/URLs are user data.
+    integrations: [Sentry.replayIntegration()],
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
     // ponytail: strip browsing URLs from events — tab URLs are user PII
     beforeSend(event: ErrorEvent) {
       if (event.request) event.request = { ...event.request, url: '[redacted]', headers: {} }

@@ -21,6 +21,8 @@ const {
   mockExportGroups,
   mockGetDb,
   mockOpenModal,
+  mockEnterDemoMode,
+  mockTrackEvent,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -32,7 +34,13 @@ const {
   mockExportGroups: vi.fn().mockReturnValue('{}'),
   mockGetDb: vi.fn().mockResolvedValue({ clear: vi.fn().mockResolvedValue(undefined) }),
   mockOpenModal: vi.fn(),
+  mockEnterDemoMode: vi.fn().mockResolvedValue(undefined),
+  mockTrackEvent: vi.fn(),
 }))
+
+vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
+
+vi.mock('@/lib/demo', () => ({ enterDemoMode: mockEnterDemoMode }))
 
 vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
@@ -141,6 +149,21 @@ describe('SettingsModal — dirty state and save', () => {
     expect(saveBtn).not.toBeDisabled()
     fireEvent.click(saveBtn)
     await waitFor(() => expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ confirmOnDelete: true })))
+    // confirmOnDelete is not the sync toggle — sync_enabled must not fire for this save
+    expect(mockTrackEvent).not.toHaveBeenCalledWith('sync_enabled')
+  })
+
+  it('tracks sync_enabled only on a false→true syncEnabled transition, not on save in general', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, syncEnabled: false })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await waitFor(() => expect(screen.getAllByRole('switch')[3]).not.toBeChecked())
+    const syncSwitch = screen.getAllByRole('switch')[3]
+    fireEvent.click(syncSwitch)
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+    await waitFor(() => expect(mockSetSetting).toHaveBeenCalled())
+    expect(mockTrackEvent).toHaveBeenCalledWith('sync_enabled')
   })
 
   it('Restore defaults resets the draft back to defaults (Save becomes disabled again)', async () => {
@@ -158,6 +181,19 @@ describe('SettingsModal — General tab cloud sync', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     expect(screen.queryByText('Cloud sync')).toBeNull()
+  })
+
+  it('tracks upgrade_prompt_shown on mount when cloudSync entitlement is false', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(mockTrackEvent).toHaveBeenCalledWith('upgrade_prompt_shown', { source: 'settings' })
+  })
+
+  it('does not track upgrade_prompt_shown on mount when cloudSync entitlement is true', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(mockTrackEvent).not.toHaveBeenCalledWith('upgrade_prompt_shown', expect.anything())
   })
 
   it('shows cloud sync toggle in the General tab when cloudSync entitlement is true', async () => {
@@ -199,6 +235,14 @@ describe('SettingsModal — Account tab', () => {
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
     expect(screen.getByRole('button', { name: /upgrade to pro/i })).toBeTruthy()
+  })
+
+  it('tracks upgrade_clicked when "Upgrade to Pro" is clicked', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    fireEvent.click(screen.getByRole('button', { name: /upgrade to pro/i }))
+    expect(mockTrackEvent).toHaveBeenCalledWith('upgrade_clicked', { source: 'settings' })
   })
 
   it('does not show cloud sync toggle in Account tab even when cloudSync entitlement is true', async () => {
@@ -286,6 +330,28 @@ describe('SettingsModal — Data tab', () => {
     fireEvent.change(fileInput(), { target: { files: [file] } })
     await waitFor(() => expect(globalThis.confirm).toHaveBeenCalled())
     expect(mockImportGroupsMutate).not.toHaveBeenCalled()
+  })
+})
+
+describe('SettingsModal — Dev tab (dev-only)', () => {
+  // ponytail: import.meta.env.DEV is true under Vitest, so the gate is exercised via its DEV branch here.
+  it('shows a Demo Mode entry in the Dev tab in dev builds and calls enterDemoMode on click', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^dev$/i)
+    const demoBtn = screen.getByRole('button', { name: 'Enter' })
+    fireEvent.click(demoBtn)
+    await waitFor(() => expect(mockEnterDemoMode).toHaveBeenCalled())
+  })
+
+  it('shows a Sentry test-error button in the Dev tab', async () => {
+    // ponytail: not exercising the click — it deliberately throws for Sentry's
+    // real window error listener to catch, which jsdom/React re-raises as an
+    // uncaught test-runner exception rather than a catchable synchronous throw.
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^dev$/i)
+    expect(screen.getByRole('button', { name: 'Throw error' })).toBeInTheDocument()
   })
 })
 

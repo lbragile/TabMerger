@@ -22,6 +22,7 @@ export default defineConfig({
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.d.ts', 'src/components/ui/**', 'src/__tests__/integration/**'],
       thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
+      reporter: ['text', 'json-summary', 'json'], // json-summary → coverage/coverage-summary.json, consumed by scripts/ci/coverage-delta.mjs
     },
   },
 })

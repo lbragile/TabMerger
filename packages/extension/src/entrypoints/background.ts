@@ -1,5 +1,8 @@
+import * as Sentry from '@sentry/browser';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
+import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
+import { trackEvent } from '@/lib/analytics';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 
 type Scope = 'current' | 'left' | 'right' | 'excluding';
@@ -84,7 +87,28 @@ async function reRegisterReminders() {
 }
 
 export default defineBackground(() => {
-  chrome.runtime.onInstalled.addListener(() => void buildMenus());
+  // MV3 background is a service worker (`self`, no `window`/DOM) — placed inside
+  // this callback (not module scope) because WXT statically imports entrypoint
+  // files during dev-server startup to detect manifest metadata, and `self` isn't
+  // a full service-worker global in that analysis pass. defaultIntegrations assume
+  // a window, so they're disabled and errors are reported via self's error events.
+  if (import.meta.env.VITE_SENTRY_DSN) {
+    Sentry.init({
+      dsn: import.meta.env.VITE_SENTRY_DSN,
+      environment: import.meta.env.MODE,
+      sendDefaultPii: false,
+      defaultIntegrations: false,
+    });
+    self.addEventListener('error', (event) => Sentry.captureException(event.error ?? event.message));
+    self.addEventListener('unhandledrejection', (event) => Sentry.captureException(event.reason));
+  }
+
+  chrome.runtime.onInstalled.addListener((details) => {
+    void buildMenus();
+    trackEvent(details.reason === 'install' ? 'extension_installed' : 'extension_updated', {
+      reason: details.reason,
+    });
+  });
   chrome.runtime.onStartup.addListener(() => { void buildMenus(); void reRegisterReminders(); });
   void buildMenus();
   void reRegisterReminders();
@@ -103,6 +127,20 @@ export default defineBackground(() => {
     }
     if (m?.type === 'CLEAR_ALARM' && m.name) {
       void chrome.alarms.clear(m.name);
+    }
+  });
+
+  // Google sign-in must run here, not in the popup: MV3 popups close the instant
+  // they lose focus, and launchWebAuthFlow opens a window that steals it — see
+  // runGoogleOAuthFlow's doc comment. The popup awaits this response but doesn't
+  // need it to succeed (if the popup already closed, sendResponse just no-ops) —
+  // the session lands via chrome.storage.onChanged the next time it opens either way.
+  chrome.runtime.onMessage.addListener((msg: unknown, _sender, sendResponse) => {
+    if ((msg as { type?: string })?.type === 'SIGN_IN_WITH_GOOGLE') {
+      runGoogleOAuthFlow()
+        .then(() => sendResponse({ ok: true }))
+        .catch((err) => sendResponse({ ok: false, error: err instanceof Error ? err.message : String(err) }));
+      return true; // keep the message channel open for the async sendResponse above
     }
   });
 

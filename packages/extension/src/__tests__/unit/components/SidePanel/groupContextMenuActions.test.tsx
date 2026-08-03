@@ -27,6 +27,7 @@ const {
   mockToastError,
   mockGetSetting,
   mockUseGroupsData,
+  mockTrackEvent,
 } = vi.hoisted(() => ({
   mockDeleteGroup: vi.fn(),
   mockDuplicateGroup: vi.fn(),
@@ -42,7 +43,10 @@ const {
   mockToastError: vi.fn(),
   mockGetSetting: vi.fn().mockResolvedValue({ confirmOnDelete: false }),
   mockUseGroupsData: vi.fn(() => ({ available: [{}, {}, {}] })),
+  mockTrackEvent: vi.fn(),
 }))
+
+vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 
 vi.mock('@/hooks/useGroups', () => ({
   useDeleteGroup: () => ({ mutate: mockDeleteGroup }),
@@ -147,6 +151,7 @@ describe('GroupContextMenu — item actions', () => {
     await user.click(screen.getByText('Duplicate'))
     expect(mockDuplicateGroup).toHaveBeenCalledWith(1)
     expect(mockToastError).not.toHaveBeenCalled()
+    expect(mockTrackEvent).not.toHaveBeenCalledWith('entitlement_limit_hit', expect.anything())
   })
 
   it('shows an upgrade toast instead of duplicating when at the free-tier group limit', async () => {
@@ -159,6 +164,7 @@ describe('GroupContextMenu — item actions', () => {
       'Free plan allows up to 2 groups.',
       expect.objectContaining({ action: expect.objectContaining({ label: 'Upgrade' }) })
     )
+    expect(mockTrackEvent).toHaveBeenCalledWith('entitlement_limit_hit', { limit: 'maxGroups' })
   })
 
   it('replaces and merges with current for non-permanent groups', async () => {
@@ -184,6 +190,7 @@ describe('GroupContextMenu — item actions', () => {
     renderGroup(withTabs)
     await user.click(screen.getByText('Open all in new window'))
     expect(chrome.windows.create).toHaveBeenCalledWith({ url: ['https://a.com'] })
+    expect(mockTrackEvent).toHaveBeenCalledWith('session_restored', { source: 'open_all' })
   })
 
   it('disables "Open all in new window" when the group has no http(s) tabs', () => {

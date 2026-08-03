@@ -5,7 +5,8 @@
     "chrome-devtools",
     "context7",
     "supabase",
-    "github"
+    "github",
+    "sentry"
   ],
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true
@@ -45,6 +46,10 @@
           {
             "type": "command",
             "command": "python3 -c \"import sys,os,subprocess,types; data=sys.stdin.buffer.read(); root=subprocess.run(['git','rev-parse','--show-toplevel'],capture_output=True,text=True).stdout.strip(); sys.stdin=__import__('io').TextIOWrapper(__import__('io').BytesIO(data)); exec(open(os.path.join(root,'.claude','hooks','web-tsc-check.py')).read())\""
+          },
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,os,subprocess,types; data=sys.stdin.buffer.read(); root=subprocess.run(['git','rev-parse','--show-toplevel'],capture_output=True,text=True).stdout.strip(); sys.stdin=__import__('io').TextIOWrapper(__import__('io').BytesIO(data)); exec(open(os.path.join(root,'.claude','hooks','lint-check.py')).read())\""
           }
         ]
       }

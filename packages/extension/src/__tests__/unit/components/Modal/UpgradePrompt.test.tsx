@@ -3,12 +3,21 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { UpgradePromptModal } from '@/components/Modal/UpgradePrompt'
 
+const mockUseAuth = vi.fn()
+const mockOpenModal = vi.fn()
+const mockTrackEvent = vi.hoisted(() => vi.fn())
+
+vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
+vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
+vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
+
 function renderModal(ui: React.ReactElement) {
   return render(<Dialog open><DialogContent>{ui}</DialogContent></Dialog>)
 }
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mockUseAuth.mockReturnValue({ user: null })
   globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
 })
 
@@ -16,6 +25,17 @@ describe('UpgradePromptModal — reason messages', () => {
   it('shows the maxGroups message', () => {
     renderModal(<UpgradePromptModal reason="maxGroups" onClose={vi.fn()} />)
     expect(screen.getByText('Group Limit Reached')).toBeTruthy()
+  })
+
+  it('tracks upgrade_prompt_shown once on mount with the reason as source', () => {
+    renderModal(<UpgradePromptModal reason="maxGroups" onClose={vi.fn()} />)
+    expect(mockTrackEvent).toHaveBeenCalledWith('upgrade_prompt_shown', { source: 'maxGroups' })
+    expect(mockTrackEvent).toHaveBeenCalledTimes(1)
+  })
+
+  it('tracks upgrade_prompt_shown with source "upgrade_prompt" when no reason is given', () => {
+    renderModal(<UpgradePromptModal onClose={vi.fn()} />)
+    expect(mockTrackEvent).toHaveBeenCalledWith('upgrade_prompt_shown', { source: 'upgrade_prompt' })
   })
 
   it('shows the maxTabs message', () => {
@@ -46,6 +66,7 @@ describe('UpgradePromptModal — actions', () => {
     fireEvent.click(screen.getByRole('button', { name: /upgrade now/i }))
     expect(chrome.tabs.create).toHaveBeenCalledWith(expect.objectContaining({ active: true, url: expect.stringContaining('/pricing') }))
     expect(onClose).toHaveBeenCalled()
+    expect(mockTrackEvent).toHaveBeenCalledWith('upgrade_clicked', { source: 'maxGroups' })
   })
 
   it('"Maybe later" closes without opening a tab', () => {
@@ -54,5 +75,30 @@ describe('UpgradePromptModal — actions', () => {
     fireEvent.click(screen.getByRole('button', { name: /maybe later/i }))
     expect(chrome.tabs.create).not.toHaveBeenCalled()
     expect(onClose).toHaveBeenCalled()
+  })
+})
+
+describe('UpgradePromptModal — signed-out sign-in offer', () => {
+  it('shows a "Sign in" option and restore hint when signed out', () => {
+    mockUseAuth.mockReturnValue({ user: null })
+    renderModal(<UpgradePromptModal reason="maxGroups" onClose={vi.fn()} />)
+    expect(screen.getByRole('button', { name: /^sign in$/i })).toBeTruthy()
+    expect(screen.getByText(/already have a pro account\? sign in to restore it/i)).toBeTruthy()
+  })
+
+  it('opens the auth modal and closes on "Sign in"', () => {
+    mockUseAuth.mockReturnValue({ user: null })
+    const onClose = vi.fn()
+    renderModal(<UpgradePromptModal reason="maxGroups" onClose={onClose} />)
+    fireEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+    expect(mockOpenModal).toHaveBeenCalledWith('auth')
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('hides the "Sign in" option and restore hint when already signed in', () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1' } })
+    renderModal(<UpgradePromptModal reason="maxGroups" onClose={vi.fn()} />)
+    expect(screen.queryByRole('button', { name: /^sign in$/i })).toBeNull()
+    expect(screen.queryByText(/already have a pro account/i)).toBeNull()
   })
 })

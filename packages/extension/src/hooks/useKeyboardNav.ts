@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import type React from 'react'
 import { useUIStore } from '@/stores/uiStore'
-import { useUndoRedo } from '@/hooks/useUndoRedo'
 import { useAddGroup, useDeleteTab } from '@/hooks/useGroups'
 
 export interface KeyboardNavOptions {
@@ -40,7 +39,6 @@ function getFocusedTabInfo(): { groupIndex: number; windowIndex: number; tabInde
 }
 
 export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: KeyboardNavOptions) {
-  const { undo, redo } = useUndoRedo()
   const { mutate: addGroup } = useAddGroup()
   // ponytail: cast needed because tests pass a string id; real callers use the DOM fallback path
   const { mutate: deleteTabMutate } = useDeleteTab()
@@ -55,14 +53,6 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
 
       if (e.ctrlKey || e.metaKey) {
         switch (e.key.toLowerCase()) {
-          case 'z':
-            e.preventDefault()
-            void undo()
-            break
-          case 'y':
-            e.preventDefault()
-            void redo()
-            break
           case 'g':
             e.preventDefault()
             addGroup({})
@@ -124,7 +114,7 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
 
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
-  }, [undo, redo, addGroup, deleteTab, deleteTabMutate, activeGroupIndex, setActiveGroupIndex, groupCount, focusedTabId, searchInputRef, openModal])
+  }, [addGroup, deleteTab, deleteTabMutate, activeGroupIndex, setActiveGroupIndex, groupCount, focusedTabId, searchInputRef, openModal])
 
   return { focusedGroupIndex: activeGroupIndex }
 }

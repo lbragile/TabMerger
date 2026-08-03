@@ -23,6 +23,7 @@ const {
   mockSaveSessionMutateAsync,
   mockUseGroupsData,
   mockSetGroupsState,
+  mockTrackEvent,
 } = vi.hoisted(() => ({
   mockAddGroupMutateAsync: vi.fn().mockResolvedValue({}),
   mockUseEntitlements: vi.fn(),
@@ -35,7 +36,10 @@ const {
   mockSaveSessionMutateAsync: vi.fn(),
   mockUseGroupsData: vi.fn(() => ({ data: null })),
   mockSetGroupsState: vi.fn(),
+  mockTrackEvent: vi.fn(),
 }))
+
+vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 
 // ─── DnD stubs (shared) ───────────────────────────────────────────────────────
 
@@ -217,6 +221,7 @@ describe('SidePanel — Add Group limit excludes Now Open', () => {
       expect.objectContaining({ action: expect.objectContaining({ label: 'Upgrade' }) })
     )
     expect(mockAddGroupMutateAsync).not.toHaveBeenCalled()
+    expect(mockTrackEvent).toHaveBeenCalledWith('entitlement_limit_hit', { limit: 'maxGroups' })
   })
 
   it('adds a group when 4 saved groups + Now Open exist (5 total)', async () => {
@@ -230,6 +235,7 @@ describe('SidePanel — Add Group limit excludes Now Open', () => {
 
     expect(mockToastError).not.toHaveBeenCalled()
     expect(mockAddGroupMutateAsync).toHaveBeenCalled()
+    expect(mockTrackEvent).not.toHaveBeenCalledWith('entitlement_limit_hit', expect.anything())
   })
 })
 
@@ -318,6 +324,30 @@ describe('Header — Upgrade to Pro menu item', () => {
     await openProfileMenu()
 
     expect(screen.queryByText('Upgrade to Pro')).toBeNull()
+  })
+})
+
+// ─── Header/SidePanel — column alignment ─────────────────────────────────────
+// Regression test: header's logo cell must be the same 240px width + right
+// border as SidePanel's root, flush against the left edge with no outer gap —
+// otherwise the search box in the header drifts out of alignment with the
+// sidebar/main-content boundary below it.
+
+describe('Header — logo column alignment with SidePanel', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
+    mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5 })
+  })
+
+  it('gives the logo cell the same 240px width as SidePanel, with no leading padding on <header>', () => {
+    const { container } = wrap(React.createElement(Header))
+    const header = container.querySelector('header')
+    expect(header?.className).not.toMatch(/\bpx-3\b/)
+
+    const logoCell = header?.firstElementChild as HTMLElement
+    expect(logoCell.style.width).toBe('240px')
   })
 })
 
@@ -616,5 +646,27 @@ describe('Header — search overlay + selection mode + sign out', () => {
     await user.click(buttons[buttons.length - 1])
     await user.click(screen.getByText('Sign in'))
     expect(baseUIState.openModal).toHaveBeenCalledWith('auth')
+  })
+
+  it('tracks search_used once on the first non-empty keystroke, not on every keystroke', async () => {
+    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: /open search/i }))
+    const input = screen.getByRole('textbox')
+    await user.type(input, 'abc')
+    expect(mockTrackEvent).toHaveBeenCalledWith('search_used')
+    expect(mockTrackEvent).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not track search_used when the query is cleared back to empty', async () => {
+    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: /open search/i }))
+    const input = screen.getByRole('textbox')
+    await user.type(input, 'a')
+    await user.clear(input)
+    expect(mockTrackEvent).toHaveBeenCalledTimes(1)
   })
 })

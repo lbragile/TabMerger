@@ -20,8 +20,9 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "cd e2e && playwright test",
+    "test:e2e": "cd e2e && playwright test --grep-invert @visual",
     "test:e2e:ui": "cd e2e && playwright test --ui",
+    "test:visual": "cd e2e && playwright test --grep @visual",
     "analyze": "ANALYZE=true wxt build"
   },
   "dependencies": {

@@ -34,7 +34,7 @@ export function useAutoGroup() {
   const { aiFeatures } = useEntitlements();
 
   return useMutation({
-    onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'group' }); },
+    onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'group' }); trackEvent('ai_auto_group_used'); },
     mutationFn: async (tabs: Tab[]) => {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -106,6 +106,7 @@ export function useTabSummary() {
   const { aiFeatures } = useEntitlements();
 
   return useMutation({
+    onSuccess: (data) => { if (data.summary) trackEvent('ai_summary_used'); },
     mutationFn: async ({ url, title }: { url: string; title: string }) => {
       if (!aiFeatures || !session?.access_token) return { summary: null };
 

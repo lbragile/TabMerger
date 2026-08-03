@@ -25,7 +25,7 @@ export default defineConfig({
         description:
             "Stop drowning in tabs. Save, group, and restore every window — with AI that organises the chaos for you.",
         incognito: "spanning",
-        permissions: ["tabs", "tabGroups", "storage", "contextMenus", "alarms", "notifications"],
+        permissions: ["tabs", "tabGroups", "storage", "contextMenus", "alarms", "notifications", "identity"],
         host_permissions: ["<all_urls>"],
         icons: {
             16: '/icon/16.png',

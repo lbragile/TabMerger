@@ -4,8 +4,15 @@
   "private": true,
   "description": "Playwright recording + Remotion rendering pipeline for the TabMerger walkthrough video",
   "scripts": {
-    "record": "tsx record.ts",
-    "render": "remotion render remotion/Root.tsx WalkthroughDemo out/tabmerger-demo.mp4",
+    "studio": "remotion studio remotion/Root.tsx",
+    "record:dark": "tsx record.ts dark",
+    "record:light": "tsx record.ts light",
+    "render:dark": "remotion render remotion/Root.tsx WalkthroughDemoDark out/tabmerger-demo-dark.mp4 --crf=16",
+    "render:light": "remotion render remotion/Root.tsx WalkthroughDemoLight out/tabmerger-demo-light.mp4 --crf=16",
+    "render:promo-dark": "remotion render remotion/Root.tsx PromoDark out/tabmerger-promo-dark.mp4 --crf=16",
+    "render:promo-light": "remotion render remotion/Root.tsx PromoLight out/tabmerger-promo-light.mp4 --crf=16",
+    "render:promo-dark-vertical": "remotion render remotion/Root.tsx PromoDarkVertical out/tabmerger-promo-dark-vertical.mp4 --crf=16",
+    "render:promo-light-vertical": "remotion render remotion/Root.tsx PromoLightVertical out/tabmerger-promo-light-vertical.mp4 --crf=16",
     "screenshots": "tsx screenshots.ts",
     "store-assets": "tsx render-store-assets.ts"
   },

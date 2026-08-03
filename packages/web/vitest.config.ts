@@ -26,6 +26,7 @@ export default defineConfig({
         'app/**/page.tsx',
       ],
       thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
+      reporter: ['text', 'json-summary', 'json'], // json-summary → coverage/coverage-summary.json, consumed by scripts/ci/coverage-delta.mjs
     },
   },
 })

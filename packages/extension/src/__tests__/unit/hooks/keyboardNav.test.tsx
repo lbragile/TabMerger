@@ -11,9 +11,7 @@ import { useUIStore } from '@/stores/uiStore'
 
 // ─── Hoisted mocks (must be available when vi.mock factories run) ─────────────
 
-const { mockUndo, mockRedo, mockAddGroup, mockDeleteTab } = vi.hoisted(() => ({
-  mockUndo: vi.fn(),
-  mockRedo: vi.fn(),
+const { mockAddGroup, mockDeleteTab } = vi.hoisted(() => ({
   mockAddGroup: vi.fn(),
   mockDeleteTab: vi.fn(),
 }))
@@ -33,15 +31,6 @@ vi.mock('@/hooks/useGroups', () => ({
   useDeleteTab: vi.fn(() => ({ mutate: mockDeleteTab })),
 }))
 
-vi.mock('@/hooks/useUndoRedo', () => ({
-  useUndoRedo: vi.fn(() => ({
-    canUndo: true,
-    canRedo: true,
-    undo: mockUndo,
-    redo: mockRedo,
-  })),
-}))
-
 // ─── Reset state ──────────────────────────────────────────────────────────────
 
 beforeEach(() => {
@@ -55,8 +44,6 @@ beforeEach(() => {
     selectionMode: false,
     selectedItems: [],
   })
-  mockUndo.mockClear()
-  mockRedo.mockClear()
   mockAddGroup.mockClear()
   mockDeleteTab.mockClear()
 })
@@ -66,20 +53,6 @@ import { useKeyboardNav } from '@/hooks/useKeyboardNav'
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('useKeyboardNav', () => {
-  it('Ctrl+Z calls undo()', async () => {
-    const user = userEvent.setup()
-    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
-    await user.keyboard('{Control>}z{/Control}')
-    expect(mockUndo).toHaveBeenCalledTimes(1)
-  })
-
-  it('Ctrl+Y calls redo()', async () => {
-    const user = userEvent.setup()
-    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
-    await user.keyboard('{Control>}y{/Control}')
-    expect(mockRedo).toHaveBeenCalledTimes(1)
-  })
-
   it('Ctrl+G calls the add-group handler', async () => {
     const user = userEvent.setup()
     renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))

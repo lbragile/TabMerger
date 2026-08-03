@@ -15,14 +15,19 @@ import { AbsoluteFill, Img, staticFile, useVideoConfig } from "remotion";
 // seam look like it was cutting one duplicated window in half rather than
 // showing two distinct scenes. "open-popup" (the Now Open group) reads as
 // a clearly different scene from the dark side's Research view.
-const LIGHT_SCREENSHOT_ID = "open-popup";
-const DARK_SCREENSHOT_ID = "dark-mode";
+// screenshots.ts now captures every screenshot in both themes as
+// `${stepId}-${theme}.png` (no more standalone one-off "dark-mode" capture).
+const LIGHT_SCREENSHOT_ID = "open-popup-light";
+// ponytail: 2026-08-01 — "view-groups" step no longer exists (see
+// screenshots.ts's SCREENSHOT_STEP_IDS comment); "view-new-group" is its
+// replacement (the new storyboard's organized-group payoff shot).
+const DARK_SCREENSHOT_ID = "view-new-group-dark";
 // Dedicated promo-only capture (screenshots.ts, not a demo-script step) —
 // Research group after "Split windows": one group whose tabs are spread
 // across multiple windows, proving multi-window support.
 const MULTI_WINDOW_SCREENSHOT_ID = "multi-window";
 
-// objectFit "contain" so the full 780x600 popup is visible, uncropped.
+// objectFit "contain" so the full 800x600 popup is visible, uncropped.
 function Scene({ screenshotId, style }: { screenshotId: string; style?: React.CSSProperties }) {
     return (
         <Img
@@ -115,7 +120,7 @@ function MarqueeTile() {
             </div>
 
             {/* Multi-window proof, tucked in the bottom-left corner */}
-            <MultiWindowInset style={{ left: 24, bottom: 20, width: 260, aspectRatio: "780 / 600" }} />
+            <MultiWindowInset style={{ left: 24, bottom: 20, width: 260, aspectRatio: "800 / 600" }} />
         </AbsoluteFill>
     );
 }
@@ -137,7 +142,7 @@ function SmallTile() {
                     objectPosition: "left center",
                 }}
             />
-            <MultiWindowInset style={{ right: 12, bottom: 12, width: 130, aspectRatio: "780 / 600" }} />
+            <MultiWindowInset style={{ right: 12, bottom: 12, width: 130, aspectRatio: "800 / 600" }} />
         </AbsoluteFill>
     );
 }

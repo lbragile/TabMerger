@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { X, Zap } from 'lucide-react';
 import { useGroups } from '@/hooks/useGroups';
 import { useEntitlements, isApproachingLimit } from '@/hooks/useEntitlements';
+import { trackEvent } from '@/lib/analytics';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 const DISMISSED_KEY = 'upgrade_cta_dismissed';
@@ -14,15 +15,21 @@ export function UpgradeCTA() {
   );
   const { data: groupsState } = useGroups();
   const { tier, maxGroups, maxTabs, subscriptionStatus, loading } = useEntitlements();
+  const trackedRef = useRef(false);
 
-  if (loading || dismissed || tier !== 'free' || subscriptionStatus !== null || !groupsState) return null;
-
+  const eligible = !loading && !dismissed && tier === 'free' && subscriptionStatus === null && !!groupsState;
   // exclude Now Open (index 0) only — archived groups still count toward the limit
-  const saved = groupsState.available.slice(1);
+  const saved = eligible ? groupsState!.available.slice(1) : [];
   const groupCount = saved.length;
   const totalTabs = saved.reduce((sum, g) => sum + g.windows.reduce((ws, w) => ws + w.tabs.length, 0), 0);
+  const shown = eligible && isApproachingLimit(groupCount, totalTabs, maxGroups, maxTabs);
 
-  if (!isApproachingLimit(groupCount, totalTabs, maxGroups, maxTabs)) return null;
+  if (shown && !trackedRef.current) {
+    trackedRef.current = true;
+    trackEvent('upgrade_prompt_shown', { source: 'nag_banner' });
+  }
+
+  if (!shown) return null;
 
   function dismiss() {
     sessionStorage.setItem(DISMISSED_KEY, '1');
@@ -37,7 +44,10 @@ export function UpgradeCTA() {
       </span>
       <button
         className="font-semibold underline underline-offset-2 hover:no-underline shrink-0"
-        onClick={() => chrome.tabs.create({ url: `${WEB_APP_URL}/pricing` })}
+        onClick={() => {
+          trackEvent('upgrade_clicked', { source: 'nag_banner' });
+          chrome.tabs.create({ url: `${WEB_APP_URL}/pricing` });
+        }}
       >
         Upgrade
       </button>

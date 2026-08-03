@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 import { absoluteUrl, formatDate } from '@/lib/utils'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
+import { SetPasswordForm } from '@/components/account/SetPasswordForm'
 
 export const metadata: Metadata = {
   title: 'Account',
@@ -25,6 +26,8 @@ export default async function AccountPage() {
   } = await supabase.auth.getUser()
 
   if (!user) return null
+
+  const hasPasswordIdentity = user.identities?.some((i) => i.provider === 'email') ?? false
 
   const [{ data: profile }, { data: subscription }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
@@ -105,6 +108,8 @@ export default async function AccountPage() {
               </p>
             </div>
           </div>
+          <Separator />
+          <SetPasswordForm hasPassword={hasPasswordIdentity} />
         </CardContent>
       </Card>
 

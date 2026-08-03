@@ -55,6 +55,7 @@ describe('useAutoGroup', () => {
       expect.objectContaining({ headers: expect.objectContaining({ Authorization: 'Bearer tok123' }) })
     )
     expect(mockTrackEvent).toHaveBeenCalledWith('ai_feature_used', { feature_name: 'group' })
+    expect(mockTrackEvent).toHaveBeenCalledWith('ai_auto_group_used')
   })
 
   it('throws a descriptive error when the API responds with a non-ok status', async () => {
@@ -130,5 +131,15 @@ describe('useTabSummary', () => {
     const { result } = renderHook(() => useTabSummary(), { wrapper: makeWrapper() })
     const res = await act(async () => result.current.mutateAsync({ url: 'https://a.com', title: 'A' }))
     expect(res).toEqual({ summary: 'a summary' })
+    expect(mockTrackEvent).toHaveBeenCalledWith('ai_summary_used')
+  })
+
+  it('does not track ai_summary_used when the API returns a null/empty summary', async () => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ summary: null }) })
+    const { result } = renderHook(() => useTabSummary(), { wrapper: makeWrapper() })
+    await act(async () => result.current.mutateAsync({ url: 'https://a.com', title: 'A' }))
+    expect(mockTrackEvent).not.toHaveBeenCalledWith('ai_summary_used')
   })
 })

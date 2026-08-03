@@ -7,6 +7,7 @@ allowBuilds:
   '@sentry/cli': false
   '@swc/core': true
   cbor-extract: true
+  core-js: false
   esbuild: true
   sharp: true
   spawn-sync: true

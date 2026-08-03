@@ -25,7 +25,10 @@ vi.mock('@/stores/uiStore', () => ({
     selector({ setActiveGroupIndex: vi.fn() }),
 }))
 
+vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
+
 import { saveGroupsState } from '@/lib/localDb'
+import { trackEvent } from '@/lib/analytics'
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -84,6 +87,7 @@ describe('useGroupDndHandlers — group reorder', () => {
     const persisted = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
     expect(persisted.available[1].id).toBe('g2')
     expect(persisted.available[2].id).toBe('g1')
+    expect(trackEvent).toHaveBeenCalledWith('dnd_reorder', { kind: 'group' })
   })
 
   it('is a no-op when active === over (same position)', async () => {
@@ -101,6 +105,7 @@ describe('useGroupDndHandlers — group reorder', () => {
       await result.current.onDragEnd(makeDragEnd('group-1', 'group-1'))
     })
     expect(saveGroupsState).not.toHaveBeenCalled()
+    expect(trackEvent).not.toHaveBeenCalled()
   })
 
   it('blocks moving the permanent (Now Open) group', async () => {

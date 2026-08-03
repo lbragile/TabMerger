@@ -1,4 +1,4 @@
-// Composites a raw 780x600 popup screenshot (from screenshots/raw/*.png,
+// Composites a raw 800x600 popup screenshot (from screenshots/raw/*.png,
 // captured by ../../screenshots.ts) onto a branded 1280x800 canvas — Chrome
 // Web Store screenshots must be full-canvas, not a bare popup crop.
 import React from "react";
@@ -18,7 +18,7 @@ export function ScreenshotFrame({ screenshotId }: { screenshotId: string }) {
             <Img
                 src={staticFile(`screenshots/raw/${screenshotId}.png`)}
                 style={{
-                    width: 780,
+                    width: 800,
                     height: 600,
                     borderRadius: 12,
                     boxShadow: "0 24px 64px rgba(0,0,0,0.5)",

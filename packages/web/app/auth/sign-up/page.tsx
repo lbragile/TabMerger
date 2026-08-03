@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { trackEvent } from '@/lib/analytics'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -26,6 +27,7 @@ export default function SignUpPage() {
   const supabase = createClient()
 
   async function handleGoogle() {
+    trackEvent('sign_up_completed', { method: 'google' })
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/api/auth/callback` },
@@ -69,6 +71,7 @@ export default function SignUpPage() {
       return
     }
 
+    trackEvent('sign_up_completed', { method: 'password' })
     setVerificationSent(true)
     setLoading(false)
   }

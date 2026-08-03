@@ -3,10 +3,14 @@ name: CI
 # ──────────────────────────────────────────────────────────────────────────────
 # Required status checks — wire these up in GitHub repo Settings →
 # Branches → master → Branch protection rules → "Require status checks":
-#   • Secret Scan       (scan-secrets)
-#   • Type Check        (type-check)
-#   • Lint              (lint)
-#   • Unit Tests        (unit-tests)
+#   • Secret Scan          (scan-secrets)
+#   • Type Check           (type-check)
+#   • Lint                 (lint)
+#   • Unit Tests           (unit-tests)
+#   • Coverage Delta       (coverage-delta)
+#   • Integration Tests    (integration-tests)
+#   • E2E Tests            (e2e-extension, e2e-web)
+#   • Visual Regression    (visual-regression)   ← non-blocking until snapshots are committed, see note below
 #
 # dep-audit is intentionally non-blocking (continue-on-error: true) so
 # Renovate/Dependabot PRs can still land even with transitive advisories.
@@ -31,12 +35,10 @@ jobs:
 
       - name: Scan for secrets and PII
         run: |
-          # Scan all files tracked in this commit (not just staged, since CI checks full tree)
           git ls-files | xargs grep -lE \
             'AKIA[0-9A-Z]{16}|sk_live_[0-9a-zA-Z]{24,}|sk_test_[0-9a-zA-Z]{24,}|whsec_[0-9a-zA-Z]{32,}|sk-ant-[a-zA-Z0-9\-_]{32,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----' \
             2>/dev/null && echo "::error::Secret pattern found in repository" && exit 1 || true
 
-          # Block committed .env files (only .env.example is allowed)
           git ls-files | grep -E '^\.env(\.[a-z]+)?$' | grep -v '\.example$' \
             && echo "::error::.env file found in repository" && exit 1 || true
 
@@ -45,125 +47,297 @@ jobs:
   dep-audit:
     name: Dependency Audit (non-blocking)
     runs-on: ubuntu-latest
-    continue-on-error: true  # ponytail: warn only — Renovate PRs must not be blocked by transitive advisories
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Audit for high/critical vulnerabilities
-        run: pnpm audit --audit-level=high
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=high
 
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Type-check shared
-        run: pnpm --filter @tabmerger/shared type-check
-
-      - name: Type-check extension
-        run: pnpm --filter @tabmerger/extension type-check
-
-      - name: Type-check web
-        run: pnpm --filter @tabmerger/web type-check
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/shared type-check
+      - run: pnpm --filter @tabmerger/extension type-check
+      - run: pnpm --filter @tabmerger/web type-check
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/extension lint
+      - run: pnpm --filter @tabmerger/web lint
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint extension
-        run: pnpm --filter @tabmerger/extension lint
-
-      - name: Lint web
-        run: pnpm --filter @tabmerger/web lint
-
+  # ── Gate 1: unit tests + coverage floor (each package's `test` script runs
+  # `vitest run`; the ≥80% floor is enforced by vitest.config.ts `thresholds`,
+  # which now fails the job itself if any metric drops below 80%). This job
+  # additionally uploads coverage-summary.json for the delta check below, and
+  # — only on master push — publishes it as the new baseline artifact.
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
+      - run: pnpm install --frozen-lockfile
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Test extension (with coverage)
+        run: pnpm --filter @tabmerger/extension test:coverage
 
-      - name: Test extension
-        run: pnpm --filter @tabmerger/extension test
+      - name: Test web (with coverage)
+        run: pnpm --filter @tabmerger/web test -- --coverage
 
-      - name: Test web
-        run: pnpm --filter @tabmerger/web test
+      - name: Upload coverage summaries (for delta comparison)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary-${{ github.sha }}
+          path: |
+            packages/extension/coverage/coverage-summary.json
+            packages/web/coverage/coverage-summary.json
+          retention-days: 14
+
+      # Baseline for future PRs to diff against — only refreshed on master,
+      # so a bad PR can never poison the baseline other PRs compare to.
+      - name: Publish coverage baseline (master only)
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-baseline
+          path: |
+            packages/extension/coverage/coverage-summary.json
+            packages/web/coverage/coverage-summary.json
+          retention-days: 90
+          overwrite: true
+
+  # ── Gate 1b: "no significant regression" check — diffs this run's coverage
+  # against the latest master baseline artifact. Uses dawidd6/action-download-artifact
+  # since actions/download-artifact can't pull artifacts from a different
+  # workflow run. Soft-skips (no baseline yet, e.g. first run ever) rather
+  # than failing, per scripts/ci/coverage-delta.mjs's own no-op-if-missing behavior.
+  coverage-delta:
+    name: Coverage Delta
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download current coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-summary-${{ github.sha }}
+          path: current
+
+      - name: Download baseline coverage from master
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true # ponytail: no baseline yet (e.g. very first run) → coverage-delta.mjs no-ops on missing file
+        with:
+          workflow: ci.yml
+          branch: master
+          name: coverage-baseline
+          path: baseline
+
+      - name: Compare extension coverage
+        run: |
+          node scripts/ci/coverage-delta.mjs \
+            baseline/packages/extension/coverage/coverage-summary.json \
+            current/packages/extension/coverage/coverage-summary.json \
+            2
+
+      - name: Compare web coverage
+        run: |
+          node scripts/ci/coverage-delta.mjs \
+            baseline/packages/web/coverage/coverage-summary.json \
+            current/packages/web/coverage/coverage-summary.json \
+            2
+
+  # ── Gate 2: integration tests (real IndexedDB round trips) ──
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/extension test:integration
+
+  # ── Gate 3: E2E — both fixture sets, non-visual specs only (visual specs
+  # are split into their own job below so a snapshot mismatch doesn't block
+  # on functional E2E and vice versa) ──
+  e2e-extension:
+    name: E2E Tests (Extension)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/extension exec playwright install --with-deps chromium
+      - run: pnpm --filter @tabmerger/extension build
+      - run: pnpm --filter @tabmerger/extension test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: extension-e2e-report
+          path: packages/extension/e2e/playwright-report/
+          retention-days: 7
+
+  e2e-web:
+    name: E2E Tests (Web)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @tabmerger/web test:e2e
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          # ponytail: required by e2e/auth.setup.ts's ephemeral-user admin API calls
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: web-e2e-report
+          path: packages/web/playwright-report/
+          retention-days: 7
+
+  # ── Gate 4: visual regression — conditional/graceful. Checks whether each
+  # package actually has a `test:visual` script AND at least one *.spec.ts
+  # under its visual-test path before running, so this job is a silent no-op
+  # (not a failure) on branches where the suite hasn't landed yet. Once
+  # baseline screenshots (*-snapshots/ dirs) are committed, first real run
+  # will fail until baselines are generated with `--update-snapshots` —
+  # that's expected, not a bug in this job.
+  visual-regression:
+    name: Visual Regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Detect visual suite
+        id: detect
+        run: |
+          EXT_HAS_VISUAL=false
+          WEB_HAS_VISUAL=false
+          if grep -q '"test:visual"' packages/extension/package.json && \
+             compgen -G "packages/extension/e2e/tests/*.spec.ts" > /dev/null && \
+             grep -rl "@visual\|visual.spec" packages/extension/e2e/tests >/dev/null 2>&1; then
+            EXT_HAS_VISUAL=true
+          fi
+          if grep -q '"test:visual"' packages/web/package.json && \
+             compgen -G "packages/web/e2e/*.spec.ts" > /dev/null && \
+             grep -rl "@visual\|visual.spec" packages/web/e2e >/dev/null 2>&1; then
+            WEB_HAS_VISUAL=true
+          fi
+          echo "ext=$EXT_HAS_VISUAL" >> "$GITHUB_OUTPUT"
+          echo "web=$WEB_HAS_VISUAL" >> "$GITHUB_OUTPUT"
+
+      - name: Install Playwright browsers
+        if: steps.detect.outputs.ext == 'true' || steps.detect.outputs.web == 'true'
+        run: |
+          [ "${{ steps.detect.outputs.ext }}" = "true" ] && pnpm --filter @tabmerger/extension exec playwright install --with-deps chromium
+          [ "${{ steps.detect.outputs.web }}" = "true" ] && pnpm --filter @tabmerger/web exec playwright install --with-deps chromium
+          exit 0
+
+      - name: Build extension
+        if: steps.detect.outputs.ext == 'true'
+        run: pnpm --filter @tabmerger/extension build
+
+      - name: Visual tests (extension)
+        if: steps.detect.outputs.ext == 'true'
+        run: pnpm --filter @tabmerger/extension test:visual
+
+      - name: Visual tests (web)
+        if: steps.detect.outputs.web == 'true'
+        run: pnpm --filter @tabmerger/web test:visual
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+
+      - name: No visual suite found
+        if: steps.detect.outputs.ext != 'true' && steps.detect.outputs.web != 'true'
+        run: echo "No visual regression suite detected in either package — skipping (not a failure)."
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-diff-report
+          path: |
+            packages/extension/e2e/playwright-report/
+            packages/web/playwright-report/
+          retention-days: 7
 
   build-extension:
     name: Build Extension (Chrome MV3)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build extension
-        run: pnpm --filter @tabmerger/extension build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/extension build
 
       - name: Check bundle size budget
         run: |
@@ -176,8 +350,7 @@ jobs:
           fi
           echo "Bundle OK"
 
-      - name: Upload bundle size report
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: extension-bundle
           path: packages/extension/.output/chrome-mv3/
@@ -188,22 +361,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build web app
-        run: pnpm --filter @tabmerger/web build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/web build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
@@ -213,7 +379,18 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: [scan-secrets, type-check, lint, unit-tests]
+    needs:
+      [
+        scan-secrets,
+        type-check,
+        lint,
+        unit-tests,
+        coverage-delta,
+        integration-tests,
+        e2e-extension,
+        e2e-web,
+        visual-regression,
+      ]
     permissions:
       contents: write
       issues: write
@@ -223,20 +400,14 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-
       - uses: pnpm/action-setup@v4
         with:
           version: latest
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
+      - run: pnpm install --frozen-lockfile
       - name: Release
         run: pnpm exec semantic-release
         env:

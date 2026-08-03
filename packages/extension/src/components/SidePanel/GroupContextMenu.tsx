@@ -39,6 +39,7 @@ import { getSetting } from '@/lib/localDb';
 import { toast } from 'sonner';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { trackEvent } from '@/lib/analytics';
 
 interface GroupContextMenuProps {
   group: Group;
@@ -133,6 +134,7 @@ export function GroupContextMenu({
 
           <DropdownMenuItem onClick={() => {
             if ((groupsState?.available.length ?? 1) - 1 >= maxGroups) {
+              trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
               toast.error(`Free plan allows up to ${maxGroups} groups.`, {
                 action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
               });
@@ -146,6 +148,9 @@ export function GroupContextMenu({
 
           <DropdownMenuSeparator />
 
+          {/* ponytail: these two blocks + their trailing separator are grouped so a
+              permanent group (both blocks hidden) collapses to a single separator
+              instead of rendering two adjacent ones. */}
           {!group.permanent && (
             <>
               <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
@@ -156,23 +161,21 @@ export function GroupContextMenu({
                 <GitMerge className="h-3.5 w-3.5 mr-2 shrink-0" />
                 <div><div>Merge with current</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
               </DropdownMenuItem>
+              {(() => {
+                const urls = group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http')));
+                return (
+                  <DropdownMenuItem
+                    disabled={urls.length === 0}
+                    onClick={() => { trackEvent('session_restored', { source: 'open_all' }); chrome.windows.create({ url: urls }); }}
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0" />
+                    <div><div>Open all in new window</div><div className="text-[10px] text-muted-foreground font-normal">Open every tab in this group in a new window</div></div>
+                  </DropdownMenuItem>
+                );
+              })()}
+              <DropdownMenuSeparator />
             </>
           )}
-
-          {!group.permanent && (() => {
-            const urls = group.windows.flatMap(w => w.tabs.map(t => t.url).filter(u => u?.startsWith('http')));
-            return (
-              <DropdownMenuItem
-                disabled={urls.length === 0}
-                onClick={() => chrome.windows.create({ url: urls })}
-              >
-                <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Open all in new window</div><div className="text-[10px] text-muted-foreground font-normal">Open every tab in this group in a new window</div></div>
-              </DropdownMenuItem>
-            );
-          })()}
-
-          <DropdownMenuSeparator />
 
           <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
             <Layers className="h-3.5 w-3.5 mr-2 shrink-0" />

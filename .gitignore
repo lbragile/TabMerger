@@ -59,6 +59,13 @@ test-results/
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# Ephemeral E2E auth session (Supabase session cookie + test user id)
+packages/web/e2e/.auth/
+
+# Stray Playwright/Chromium user-data-dir profiles (path-mangling artifact
+# from temp-dir launch options landing in the repo instead of the OS temp dir)
+**/*pw-debug-data*/
 *.zip
 *.webm
 *.png
@@ -66,3 +73,6 @@ test-results/
 !packages/extension/public/**/*.png
 !packages/web/public/**/*.png
 !packages/web/app/**/*.png
+# Playwright visual regression baselines — committed intentionally, update via --update-snapshots
+!packages/web/e2e/**/*-snapshots/**/*.png
+!packages/extension/e2e/**/*-snapshots/**/*.png
