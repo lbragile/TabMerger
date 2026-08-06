@@ -141,7 +141,9 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
   };
 
   const targetGroups =
-    groupsState?.available.map((g, i) => ({ group: g, index: i })).filter(({ index }) => index !== groupIndex) ?? [];
+    groupsState?.available
+      .map((g, i) => ({ group: g, index: i }))
+      .filter(({ group, index }) => index !== groupIndex && !group.archived) ?? [];
 
   const committedType = selectedItems[0]?.type ?? null;
   const showCheckbox = selectionMode && (!committedType || committedType === 'window');

@@ -4,9 +4,20 @@ import { checkAndIncrementAIUsage, AI_MONTHLY_CAP } from '@/lib/ai-usage'
 
 const upsert = vi.fn(async () => ({ error: null }))
 
-/** Minimal Supabase stub: `subscriptions` resolves via .single(), `ai_usage` via .maybeSingle(). */
-function makeSupabase(sub: unknown, usage: unknown) {
+/**
+ * Minimal Supabase stub: `subscriptions` resolves via .single(), `ai_usage` via
+ * .maybeSingle(), and `ai_credit_purchases` is awaited directly (no terminal
+ * method), like a real multi-row select — so it's made thenable.
+ */
+function makeSupabase(sub: unknown, usage: unknown, purchases: { credits: number }[] = []) {
   const from = vi.fn((table: string) => {
+    if (table === 'ai_credit_purchases') {
+      const b: Record<string, unknown> = {}
+      b.select = () => b
+      b.eq = () => b
+      b.then = (resolve: (v: { data: unknown }) => void) => resolve({ data: purchases })
+      return b
+    }
     const b: Record<string, unknown> = { upsert }
     b.select = () => b
     b.eq = () => b
@@ -86,5 +97,65 @@ describe('checkAndIncrementAIUsage', () => {
       expect.objectContaining({ month: '2026-12' }),
       expect.anything()
     )
+  })
+})
+
+// NOT YET IMPLEMENTED: checkAndIncrementAIUsage must also sum the current month's
+// ai_credit_purchases.credits for the user and extend the cap by that amount.
+// These fail until that logic is added.
+describe('checkAndIncrementAIUsage — purchased AI credit packs extend the monthly cap', () => {
+  it('behaves exactly as today when the user has 0 purchased credits (cap stays at 100)', async () => {
+    const { supabase } = makeSupabase(
+      { tier: 'pro_ai', status: 'active' },
+      { request_count: AI_MONTHLY_CAP },
+      []
+    )
+    expect(await checkAndIncrementAIUsage(supabase, 'u1')).toEqual({ allowed: false, remaining: 0 })
+  })
+
+  it('allows a request past the base cap when purchased credits cover it', async () => {
+    const { supabase } = makeSupabase(
+      { tier: 'pro_ai', status: 'active' },
+      { request_count: AI_MONTHLY_CAP },
+      [{ credits: 50 }]
+    )
+    expect(await checkAndIncrementAIUsage(supabase, 'u1')).toEqual({
+      allowed: true,
+      remaining: AI_MONTHLY_CAP + 50 - (AI_MONTHLY_CAP + 1),
+    })
+  })
+
+  it('sums multiple credit-pack purchases for the same month', async () => {
+    const { supabase } = makeSupabase(
+      { tier: 'pro_ai', status: 'active' },
+      { request_count: AI_MONTHLY_CAP },
+      [{ credits: 50 }, { credits: 50 }]
+    )
+    expect(await checkAndIncrementAIUsage(supabase, 'u1')).toEqual({
+      allowed: true,
+      remaining: AI_MONTHLY_CAP + 100 - (AI_MONTHLY_CAP + 1),
+    })
+  })
+
+  it('denies once request_count exceeds base cap + purchased credits', async () => {
+    const { supabase } = makeSupabase(
+      { tier: 'pro_ai', status: 'active' },
+      { request_count: AI_MONTHLY_CAP + 50 },
+      [{ credits: 50 }]
+    )
+    expect(await checkAndIncrementAIUsage(supabase, 'u1')).toEqual({ allowed: false, remaining: 0 })
+    expect(upsert).not.toHaveBeenCalled()
+  })
+
+  it('remaining reflects the purchased-credit-extended cap, not just the base cap', async () => {
+    const { supabase } = makeSupabase(
+      { tier: 'pro_ai', status: 'active' },
+      { request_count: 0 },
+      [{ credits: 50 }]
+    )
+    expect(await checkAndIncrementAIUsage(supabase, 'u1')).toEqual({
+      allowed: true,
+      remaining: AI_MONTHLY_CAP + 50 - 1,
+    })
   })
 })

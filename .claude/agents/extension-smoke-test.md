@@ -2,6 +2,7 @@
 name: extension-smoke-test
 description: Pre-reload smoke test for the WXT browser extension. Run this agent before reloading the extension in Chrome to catch TypeScript errors, broken imports, and runtime issues before they surface in the browser. Use proactively after any significant change to packages/extension/.
 memory: project
+color: orange
 ---
 
 # Extension Smoke Test Agent

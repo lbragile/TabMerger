@@ -15,6 +15,7 @@ tools:
   - Grep
   - Bash
   - WebFetch
+color: orange
 ---
 
 # DevOps Agent

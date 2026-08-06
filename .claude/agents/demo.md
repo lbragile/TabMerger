@@ -16,6 +16,7 @@ tools:
   - Grep
   - Bash
   - Agent
+color: pink
 ---
 
 # Demo Video Agent

@@ -50,7 +50,7 @@ export function SetPasswordForm({ hasPassword }: SetPasswordFormProps) {
           autoComplete="new-password"
         />
       </div>
-      <Button type="submit" size="sm" disabled={loading || !password}>
+      <Button type="submit" size="sm" className="h-10" disabled={loading || !password}>
         {loading ? 'Saving...' : 'Save'}
       </Button>
     </form>

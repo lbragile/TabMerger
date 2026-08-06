@@ -14,6 +14,7 @@ tools:
   - Glob
   - Grep
   - Bash
+color: blue
 ---
 
 # Test Writer Agent

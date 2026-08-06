@@ -37,4 +37,28 @@ test.describe('Window management', () => {
 
     await expect(page.getByRole('listitem', { name: 'Jira Board' })).not.toBeVisible({ timeout: 3_000 });
   });
+
+  // Regression check for a CSS-cascade bug: a global `[role="button"]:not([aria-disabled="true"])`
+  // rule (globals.css) has higher specificity than Tailwind's `.cursor-grab` utility and was
+  // silently forcing `cursor: pointer` on every @dnd-kit drag handle (useSortable() spreads
+  // role="button" + aria-roledescription="sortable" onto handles). A jsdom/class-presence test
+  // can't catch this — jsdom doesn't resolve real CSS cascade/specificity — so this asserts the
+  // actual computed style in a real browser, the same way the bug was originally found.
+  test('tab drag handle keeps grab cursor despite global [role="button"] cursor rule', async ({
+    context,
+    extensionId,
+  }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
+
+    await page.getByRole('button', { name: 'Work' }).click();
+
+    const handle = page.getByLabel('Drag to reorder tab').first();
+    await expect(handle).toBeVisible();
+    await expect(handle).toHaveAttribute('role', 'button');
+    await expect(handle).toHaveAttribute('aria-roledescription', 'sortable');
+
+    const cursor = await handle.evaluate((el) => getComputedStyle(el).cursor);
+    expect(cursor).toBe('grab');
+  });
 });

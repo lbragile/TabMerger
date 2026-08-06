@@ -43,6 +43,7 @@ import {
   useToggleGroupStar,
   useMoveTab,
   useGroups,
+  useApplyAIGroups,
   GROUPS_QUERY_KEY,
 } from '@/hooks/useGroups'
 import { createGroup, createNowOpenGroup } from '@/lib/utils'
@@ -161,6 +162,18 @@ describe('useUpdateGroupColor / useUpdateGroupName / useUpdateGroupInfo / useUpd
     const { result } = renderHook(() => useUpdateGroupInfo(), { wrapper })
     await act(async () => { await result.current.mutateAsync({ groupIndex: 0, info: '3 tabs' }) })
     expect(lastSaved().available[0].info).toBe('3 tabs')
+    // info updates must still mark pendingSync so the change reaches Supabase (sync bug regression)
+    expect(lastSaved().available[0].pendingSync).toBe(true)
+  })
+
+  it('does not set pendingSync when updating info on the permanent Now Open group', async () => {
+    const nowOpen = { ...createGroup('now-open', 'Now Open'), permanent: true, pendingSync: false }
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useUpdateGroupInfo(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, info: '3 tabs' }) })
+    expect(lastSaved().available[0].pendingSync).toBeFalsy()
   })
 
   it('updates note', async () => {
@@ -1086,5 +1099,71 @@ describe('useGroups — savedAt migration', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
     expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+})
+
+describe('useApplyAIGroups', () => {
+  it('creates a new saved group per suggestion, moving matching Now Open tabs by real tab id', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://work.com', 'Work'), tab(12, 'https://fun.com', 'Fun')])]
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
+
+    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    await act(async () => {
+      outcome = await result.current.mutateAsync([
+        { name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] },
+        { name: 'Fun', color: 'rgba(2,2,2,1)', tabIds: [12] },
+      ])
+    })
+
+    expect(outcome).toEqual({ appliedGroups: 2, appliedTabs: 2 })
+    const saved = lastSaved()
+    expect(saved.available).toHaveLength(3)
+    expect(saved.available[1].name).toBe('Work')
+    expect(saved.available[1].windows[0].tabs[0]).toMatchObject({ id: 0, url: 'https://work.com' })
+    expect(saved.available[2].name).toBe('Fun')
+    expect(saved.available[2].windows[0].tabs[0]).toMatchObject({ id: 0, url: 'https://fun.com' })
+    expect(saved.available[0].windows).toHaveLength(1)
+    expect(saved.available[0].windows[0].tabs).toHaveLength(0)
+  })
+
+  it('skips a suggestion whose tabIds do not match any live Now Open tab, writing nothing and reporting zero applied', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://work.com', 'Work')])]
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
+
+    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    await act(async () => {
+      outcome = await result.current.mutateAsync([{ name: 'Ghost', color: 'rgba(1,1,1,1)', tabIds: [999] }])
+    })
+
+    expect(outcome).toEqual({ appliedGroups: 0, appliedTabs: 0 })
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('leaves Now Open with an empty window rather than zero windows when every tab is grouped away', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://work.com', 'Work')])]
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync([{ name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] }])
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[0].windows).toHaveLength(1)
+    expect(saved.available[0].windows[0].tabs).toHaveLength(0)
   })
 })

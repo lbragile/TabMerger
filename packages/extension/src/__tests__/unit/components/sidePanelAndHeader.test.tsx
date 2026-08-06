@@ -18,11 +18,13 @@ const {
   mockUseAuth,
   mockToastError,
   mockToastSuccess,
+  mockToastInfo,
   mockAutoGroupMutateAsync,
   mockUseAutoGroupState,
   mockSaveSessionMutateAsync,
   mockUseGroupsData,
   mockSetGroupsState,
+  mockApplyAIGroupsMutateAsync,
   mockTrackEvent,
 } = vi.hoisted(() => ({
   mockAddGroupMutateAsync: vi.fn().mockResolvedValue({}),
@@ -31,11 +33,13 @@ const {
   mockUseAuth: vi.fn(),
   mockToastError: vi.fn(),
   mockToastSuccess: vi.fn(),
+  mockToastInfo: vi.fn(),
   mockAutoGroupMutateAsync: vi.fn(),
   mockUseAutoGroupState: vi.fn(() => ({ isPending: false })),
   mockSaveSessionMutateAsync: vi.fn(),
   mockUseGroupsData: vi.fn(() => ({ data: null })),
   mockSetGroupsState: vi.fn(),
+  mockApplyAIGroupsMutateAsync: vi.fn().mockResolvedValue({}),
   mockTrackEvent: vi.fn(),
 }))
 
@@ -70,6 +74,7 @@ vi.mock('@dnd-kit/utilities', () => ({
 vi.mock('@/hooks/useDnd', () => ({
   useDndSensors: () => [],
   useGroupDndHandlers: () => ({ onDragEnd: vi.fn() }),
+  setBodyDragCursor: vi.fn(),
   useWindowDndHandlers: () => ({ onDragEnd: vi.fn() }),
   parseDndId: vi.fn(),
 }))
@@ -101,6 +106,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useAddGroup: () => ({ mutateAsync: mockAddGroupMutateAsync }),
   useGroups: () => mockUseGroupsData(),
   useSetGroupsState: () => mockSetGroupsState,
+  useApplyAIGroups: () => ({ mutateAsync: mockApplyAIGroupsMutateAsync }),
   useAddWindow: () => ({ mutate: vi.fn() }),
   useReplaceWithCurrent: () => ({ mutate: vi.fn() }),
   useMergeWithCurrent: () => ({ mutate: vi.fn() }),
@@ -140,7 +146,7 @@ vi.mock('@/hooks/useSessions', () => ({
 }))
 
 vi.mock('sonner', () => ({
-  toast: { error: mockToastError, success: mockToastSuccess },
+  toast: { error: mockToastError, success: mockToastSuccess, info: mockToastInfo },
 }))
 
 // ─── Chrome stub ─────────────────────────────────────────────────────────────
@@ -515,19 +521,72 @@ describe('Header — AI auto-group', () => {
     expect(mockAutoGroupMutateAsync).not.toHaveBeenCalled()
   })
 
-  it('calls autoGroup with Now Open tabs and shows a success toast', async () => {
+  it('calls autoGroup with Now Open tabs, applies the suggestions, and shows a pluralized success toast', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
     const tab = { id: 1, title: 'T', url: 'https://a.com' }
     const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
     mockUseGroupsData.mockReturnValue({ data: groupsState })
-    mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{}, {}] })
+    const suggestions = [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }, { name: 'Other', color: 'rgba(0,0,0,1)', tabIds: [2] }]
+    mockAutoGroupMutateAsync.mockResolvedValue({ groups: suggestions })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 2, appliedTabs: 2 })
 
     const user = userEvent.setup()
     wrap(React.createElement(Header))
     await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
 
     expect(mockAutoGroupMutateAsync).toHaveBeenCalledWith([tab])
-    expect(mockToastSuccess).toHaveBeenCalledWith('AI suggested 2 groups')
+    expect(mockApplyAIGroupsMutateAsync).toHaveBeenCalledWith(suggestions)
+    expect(mockToastSuccess).toHaveBeenCalledWith('AI created 2 groups', expect.anything())
+  })
+
+  it('shows a singular "1 group" toast when only one group is suggested', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
+    mockUseGroupsData.mockReturnValue({ data: groupsState })
+    mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }] })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 1, appliedTabs: 1 })
+
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+
+    expect(mockToastSuccess).toHaveBeenCalledWith('AI created 1 group', expect.anything())
+  })
+
+  it('shows an info toast (not a false-positive success) when none of the suggested tabIds match a live Now Open tab', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
+    mockUseGroupsData.mockReturnValue({ data: groupsState })
+    mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Ghost', color: 'rgba(0,0,0,1)', tabIds: [999] }] })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 0, appliedTabs: 0 })
+
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+
+    expect(mockToastSuccess).not.toHaveBeenCalled()
+    expect(mockToastInfo).toHaveBeenCalledWith("No matching tabs found for AI's suggestion")
+  })
+
+  it('caps applied suggestions to remaining free-tier group slots and warns about skipped ones', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: true, maxGroups: 1 })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    const groupsState = makeGroupsState([
+      makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] }),
+    ])
+    mockUseGroupsData.mockReturnValue({ data: groupsState })
+    const suggestions = [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }, { name: 'Other', color: 'rgba(0,0,0,1)', tabIds: [2] }]
+    mockAutoGroupMutateAsync.mockResolvedValue({ groups: suggestions })
+    mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 1, appliedTabs: 1 })
+
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+
+    expect(mockApplyAIGroupsMutateAsync).toHaveBeenCalledWith([suggestions[0]])
+    expect(mockToastSuccess).toHaveBeenCalledWith('AI created 1 group', expect.objectContaining({ description: expect.stringContaining('1 more suggested') }))
   })
 
   it('logs an error without throwing when autoGroup rejects', async () => {

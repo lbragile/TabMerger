@@ -40,7 +40,19 @@ export async function checkAndIncrementAIUsage(
     .maybeSingle()
 
   const currentCount = existing?.request_count ?? 0
-  if (currentCount >= AI_MONTHLY_CAP) {
+
+  // 2b. Purchased credit packs extend this month's cap
+  const { data: purchases } = await supabase
+    .from('ai_credit_purchases')
+    .select('credits')
+    .eq('user_id', userId)
+    .eq('month', month)
+
+  const cap =
+    AI_MONTHLY_CAP +
+    ((purchases as { credits: number }[] | null) ?? []).reduce((sum, p) => sum + p.credits, 0)
+
+  if (currentCount >= cap) {
     return { allowed: false, remaining: 0 }
   }
 
@@ -52,5 +64,5 @@ export async function checkAndIncrementAIUsage(
       { onConflict: 'user_id,month' }
     )
 
-  return { allowed: true, remaining: AI_MONTHLY_CAP - (currentCount + 1) }
+  return { allowed: true, remaining: cap - (currentCount + 1) }
 }

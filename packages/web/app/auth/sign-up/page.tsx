@@ -117,7 +117,7 @@ export default function SignUpPage() {
           <div className="flex flex-col gap-4">
             <Button
               variant="outline"
-              className="w-full h-11 rounded-[11px]"
+              className="w-full h-11 rounded-lg"
               onClick={handleGoogle}
               disabled={loading}
               type="button"
@@ -148,7 +148,7 @@ export default function SignUpPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="h-11 rounded-[10px]"
+                  className="h-11 rounded-md"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -162,7 +162,7 @@ export default function SignUpPage() {
                   required
                   minLength={8}
                   autoComplete="new-password"
-                  className="h-11 rounded-[10px]"
+                  className="h-11 rounded-md"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -175,13 +175,13 @@ export default function SignUpPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   autoComplete="new-password"
-                  className="h-11 rounded-[10px]"
+                  className="h-11 rounded-md"
                 />
               </div>
               {error && (
                 <p className="text-sm text-destructive">{error}</p>
               )}
-              <Button type="submit" className="w-full h-[46px] rounded-[11px] shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
+              <Button type="submit" className="w-full h-[46px] rounded-lg shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
                 {loading ? 'Creating account...' : 'Continue'}
               </Button>
             </form>

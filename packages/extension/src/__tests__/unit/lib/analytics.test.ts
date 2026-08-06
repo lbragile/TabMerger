@@ -21,7 +21,7 @@ describe('trackEvent', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({}))
   })
 
-  it('is a no-op (does not fetch) when GA4 env vars are unset', () => {
+  it('is a no-op (does not fetch) when VITE_WEB_APP_URL is unset', () => {
     trackEvent('test_event', { foo: 'bar' })
     expect(fetch).not.toHaveBeenCalled()
   })
@@ -30,12 +30,11 @@ describe('trackEvent', () => {
 describe('trackEvent — configured', () => {
   beforeEach(() => {
     vi.resetModules()
-    vi.stubEnv('VITE_GA4_MEASUREMENT_ID', 'G-TEST')
-    vi.stubEnv('VITE_GA4_API_SECRET', 'secret')
+    vi.stubEnv('VITE_WEB_APP_URL', 'http://localhost:3000')
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({}))
   })
 
-  it('fetches an existing client id and posts the event', async () => {
+  it('fetches an existing client id and posts the event to the /api/track proxy', async () => {
     ;(globalThis as { chrome: Record<string, unknown> }).chrome = {
       storage: {
         local: {
@@ -48,8 +47,11 @@ describe('trackEvent — configured', () => {
     mod.trackEvent('page_view', { page: 'popup' })
     await new Promise((r) => setTimeout(r, 0))
     expect(fetch).toHaveBeenCalledWith(
-      expect.stringContaining('measurement_id=G-TEST'),
-      expect.objectContaining({ method: 'POST' })
+      'http://localhost:3000/api/track',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ event: 'page_view', params: { page: 'popup' }, client_id: 'existing-id' }),
+      })
     )
   })
 

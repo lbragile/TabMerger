@@ -11,6 +11,7 @@ tools:
   - Read
   - Glob
   - Grep
+color: red
 ---
 
 # Sync Conflict Auditor

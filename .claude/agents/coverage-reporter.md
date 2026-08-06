@@ -9,6 +9,7 @@ model: haiku
 tools:
   - Bash
   - Read
+color: green
 ---
 
 # Coverage Reporter

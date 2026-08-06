@@ -60,7 +60,7 @@ export function SessionList({ sessions, isPro }: SessionListProps) {
   }
 
   const addCard = (
-    <div className="rounded-[13px] border border-dashed border-border p-4 flex flex-col items-center justify-center text-center gap-1 min-h-[140px]">
+    <div className="rounded-lg border border-dashed border-border p-4 flex flex-col items-center justify-center text-center gap-1 min-h-[140px]">
       <PlusCircle className="h-6 w-6 text-muted-foreground mb-1" />
       <p className="text-sm font-medium">Save current tabs as a session</p>
       <p className="text-xs text-muted-foreground">Needs the extension — takes one click</p>

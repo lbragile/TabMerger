@@ -8,6 +8,12 @@ export interface AppSettings {
   openTabOnClick: boolean;
   autoDedupOnMerge: boolean;
   staleThresholdDays: 7 | 14 | 30 | 60;
+  aiDailyThrottle: boolean;
+  aiAutoGroupEnabled: boolean;
+  aiNameGroupEnabled: boolean;
+  aiSuggestSessionsEnabled: boolean;
+  aiOrganizeEnabled: boolean;
+  aiTabSummaryEnabled: boolean;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -16,7 +22,13 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   syncEnabled: true,
   openTabOnClick: true,
   autoDedupOnMerge: false,
-  staleThresholdDays: 30
+  staleThresholdDays: 30,
+  aiDailyThrottle: true,
+  aiAutoGroupEnabled: true,
+  aiNameGroupEnabled: true,
+  aiSuggestSessionsEnabled: true,
+  aiOrganizeEnabled: true,
+  aiTabSummaryEnabled: true
 };
 
 export const APP_SETTINGS_QUERY_KEY = ['appSettings'] as const;

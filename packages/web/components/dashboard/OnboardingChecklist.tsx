@@ -97,10 +97,10 @@ export function OnboardingChecklist({ isSignedIn, isPro }: Props) {
         aria-valuenow={doneCount}
         aria-valuemin={0}
         aria-valuemax={4}
-        className="h-1.5 w-full rounded-full bg-blue-100 dark:bg-blue-500/20 overflow-hidden mb-3"
+        className="h-1.5 w-full rounded-md bg-blue-100 dark:bg-blue-500/20 overflow-hidden mb-3"
       >
         <div
-          className="h-full rounded-full bg-blue-500 dark:bg-blue-400 transition-all"
+          className="h-full rounded-md bg-blue-500 dark:bg-blue-400 transition-all"
           style={{ width: `${(doneCount / 4) * 100}%` }}
         />
       </div>

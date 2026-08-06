@@ -3,7 +3,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 vi.mock('@/entrypoints/popup/App', () => ({ App: () => null }))
 
 const mockInit = vi.fn()
-vi.mock('@sentry/browser', () => ({ init: (...args: unknown[]) => mockInit(...args) }))
+const mockReplayIntegration = vi.fn(() => ({ name: 'Replay' }))
+vi.mock('@sentry/browser', () => ({
+  init: (...args: unknown[]) => mockInit(...args),
+  replayIntegration: () => mockReplayIntegration(),
+}))
 
 describe('popup main entrypoint', () => {
   beforeEach(() => {
@@ -13,6 +17,7 @@ describe('popup main entrypoint', () => {
   })
 
   it('renders the App into #root without initializing Sentry when DSN is unset', async () => {
+    vi.stubEnv('VITE_SENTRY_DSN', '')
     await import('@/entrypoints/popup/main')
     expect(mockInit).not.toHaveBeenCalled()
     expect(document.getElementById('root')).not.toBeNull()

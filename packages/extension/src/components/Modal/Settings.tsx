@@ -11,9 +11,11 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAuth } from '@/hooks/useAuth';
 import { useGroups, useImportGroups } from '@/hooks/useGroups';
 import { useAppSettings, useSaveAppSettings, DEFAULT_APP_SETTINGS, type AppSettings } from '@/hooks/useAppSettings';
+import { useAiUsage } from '@/hooks/useAiUsage';
 import { importGroups, parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
 import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
+import { OtherDevices } from '@/components/Settings/OtherDevices';
 import { toast } from 'sonner';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
@@ -34,7 +36,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { data: saved = DEFAULT_APP_SETTINGS } = useAppSettings();
   const { mutateAsync: saveAppSettings } = useSaveAppSettings();
   const [draft, setDraft] = useState<AppSettings>(saved);
-  const { tier, cloudSync, currentPeriodEnd } = useEntitlements();
+  const { tier, cloudSync, currentPeriodEnd, aiFeatures } = useEntitlements();
+  const { remaining: aiUsageRemaining, cap: aiUsageCap, loading: aiUsageLoading } = useAiUsage();
   const { user, session, signOut } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
   const { data: groupsState } = useGroups();
@@ -173,6 +176,16 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <TabsTrigger value="data" className="flex-1 text-xs">
             Data
           </TabsTrigger>
+          {tier !== 'free' && (
+            <TabsTrigger value="devices" className="flex-1 text-xs">
+              Devices
+            </TabsTrigger>
+          )}
+          {aiFeatures && (
+            <TabsTrigger value="ai" className="flex-1 text-xs">
+              AI
+            </TabsTrigger>
+          )}
           {(import.meta.env.DEV || import.meta.env.VITE_DEMO_BUILD === 'true') && (
             <TabsTrigger value="dev" className="flex-1 text-xs">
               Dev
@@ -180,7 +193,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           )}
         </TabsList>
 
-        <TabsContent value="general" className="space-y-4 mt-4">
+        <div className="mt-4 max-h-[320px] overflow-y-auto pr-1">
+        <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <Label className="text-sm">Theme</Label>
@@ -267,9 +281,26 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </SelectContent>
             </Select>
           </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">URL rules</Label>
+              <p className="text-xs text-muted-foreground">
+                Auto-assign newly-opened tabs to a group by URL pattern
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs shrink-0 rounded-none"
+              onClick={() => openModal('urlRules')}
+            >
+              Manage
+            </Button>
+          </div>
         </TabsContent>
 
-        <TabsContent value="account" className="space-y-4 mt-4">
+        <TabsContent value="account" className="space-y-4">
           <div className="border border-border p-3 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Plan</span>
@@ -291,6 +322,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Email</span>
                 <span className="text-xs">{user.email}</span>
+              </div>
+            )}
+            {aiFeatures && (
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">AI calls left this month</span>
+                <span className="text-xs font-medium">
+                  {aiUsageLoading ? '…' : `${aiUsageRemaining} / ${aiUsageCap}`}
+                </span>
               </div>
             )}
           </div>
@@ -325,13 +364,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           )}
 
           {user && (
-            <Button variant="outline" onClick={() => void signOut()} className="w-full text-xs rounded-none">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void signOut()}
+              className="w-full text-xs rounded-none hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
+            >
               Sign out
             </Button>
           )}
         </TabsContent>
 
-        <TabsContent value="data" className="space-y-4 mt-4">
+        <TabsContent value="data" className="space-y-4">
           <p className="text-xs text-muted-foreground">
             TabMerger stores all data locally in IndexedDB. Cloud sync requires a Pro account.
           </p>
@@ -387,8 +431,95 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           </Button>
         </TabsContent>
 
+        {tier !== 'free' && (
+          <TabsContent value="devices" className="space-y-4">
+            <OtherDevices />
+          </TabsContent>
+        )}
+
+        {aiFeatures && (
+          <TabsContent value="ai" className="space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Every AI action below draws from the same monthly AI quota (see Account tab).
+              Turn off features you don&apos;t use to save quota for the ones you do.
+            </p>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Auto-group</Label>
+                <p className="text-xs text-muted-foreground">Group open tabs with AI</p>
+              </div>
+              <Switch
+                checked={draft.aiAutoGroupEnabled}
+                onCheckedChange={(v) => patch('aiAutoGroupEnabled', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Name group</Label>
+                <p className="text-xs text-muted-foreground">Suggest a name for a group with AI</p>
+              </div>
+              <Switch
+                checked={draft.aiNameGroupEnabled}
+                onCheckedChange={(v) => patch('aiNameGroupEnabled', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Suggest sessions</Label>
+                <p className="text-xs text-muted-foreground">Background banner suggesting when to save a session</p>
+              </div>
+              <Switch
+                checked={draft.aiSuggestSessionsEnabled}
+                onCheckedChange={(v) => patch('aiSuggestSessionsEnabled', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Organize</Label>
+                <p className="text-xs text-muted-foreground">Reorganize all groups with AI</p>
+              </div>
+              <Switch
+                checked={draft.aiOrganizeEnabled}
+                onCheckedChange={(v) => patch('aiOrganizeEnabled', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Tab preview summaries</Label>
+                <p className="text-xs text-muted-foreground">AI summary on tab hover preview</p>
+              </div>
+              <Switch
+                checked={draft.aiTabSummaryEnabled}
+                onCheckedChange={(v) => patch('aiTabSummaryEnabled', v)}
+              />
+            </div>
+
+            <Separator />
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-sm">Limit automatic AI suggestions to once a day</Label>
+                <p className="text-xs text-muted-foreground">
+                  The background suggest-sessions banner fires at most once per day to protect
+                  your monthly AI quota. AI actions you trigger manually (Auto-group, Name group,
+                  Organize) are never limited by this.
+                </p>
+              </div>
+              <Switch
+                checked={draft.aiDailyThrottle}
+                onCheckedChange={(v) => patch('aiDailyThrottle', v)}
+              />
+            </div>
+          </TabsContent>
+        )}
+
         {(import.meta.env.DEV || import.meta.env.VITE_DEMO_BUILD === 'true') && (
-          <TabsContent value="dev" className="space-y-4 mt-4">
+          <TabsContent value="dev" className="space-y-4">
             {/* ponytail: hook for the Playwright/Remotion marketing demo pipeline — kept
                 visible in demo builds too (not just DEV) since recording runs against one */}
             <div className="flex items-center justify-between">
@@ -429,6 +560,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             )}
           </TabsContent>
         )}
+        </div>
       </Tabs>
 
       {/* Footer — only shown for the General tab, which now owns the cloud sync toggle too */}

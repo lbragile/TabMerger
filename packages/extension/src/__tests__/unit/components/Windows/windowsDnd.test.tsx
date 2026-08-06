@@ -108,6 +108,7 @@ vi.mock('@dnd-kit/utilities', () => ({
 vi.mock('@/hooks/useDnd', () => ({
   useDndSensors: () => [],
   useWindowDndHandlers: () => ({ onDragEnd: vi.fn() }),
+  setBodyDragCursor: vi.fn(),
   parseDndId: (id: string) => {
     const parts = id.split('-')
     const kind = parts[0]

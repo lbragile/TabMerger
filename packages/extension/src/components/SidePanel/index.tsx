@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GroupItem } from './GroupItem';
 import type { GroupsState } from '@/lib/types';
-import { useDndSensors, useGroupDndHandlers } from '@/hooks/useDnd';
+import { useDndSensors, useGroupDndHandlers, setBodyDragCursor } from '@/hooks/useDnd';
 import { useUIStore } from '@/stores/uiStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
@@ -117,9 +117,9 @@ export function SidePanel({ groupsState }: SidePanelProps) {
             sensors={sensors}
             collisionDetection={closestCenter}
             modifiers={[restrictToVerticalAxis]}
-            onDragStart={() => setIsDraggingGroup(true)}
-            onDragEnd={(e) => { setIsDraggingGroup(false); if (!selectionMode) onDragEnd(e); }}
-            onDragCancel={() => setIsDraggingGroup(false)}
+            onDragStart={() => { setBodyDragCursor(true); setIsDraggingGroup(true); }}
+            onDragEnd={(e) => { setBodyDragCursor(false); setIsDraggingGroup(false); if (!selectionMode) onDragEnd(e); }}
+            onDragCancel={() => { setBodyDragCursor(false); setIsDraggingGroup(false); }}
           >
             <SortableContext items={groupIds} strategy={verticalListSortingStrategy}>
               {available.map(({ group, realIndex, isLocked }) => (

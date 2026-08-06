@@ -12,6 +12,7 @@ tools:
   - Read
   - Glob
   - Grep
+color: red
 ---
 
 # Accessibility Auditor

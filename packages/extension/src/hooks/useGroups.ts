@@ -196,7 +196,14 @@ export function useUpdateGroupInfo() {
       mutate(
         (prev) => {
           const available = [...prev.available];
-          available[groupIndex] = { ...available[groupIndex], info };
+          const group = available[groupIndex];
+          // ponytail: info-only edits skip undo (too granular), but must still mark pendingSync
+          // so the change actually reaches Supabase — Now Open is exempt like every other mutation.
+          available[groupIndex] = {
+            ...group,
+            info,
+            ...(group.permanent ? {} : { updatedAt: Date.now(), pendingSync: true })
+          };
           return { ...prev, available };
         },
         true // skip undo for info updates
@@ -1072,6 +1079,74 @@ export function useClearTabReminder() {
       const alarmName = `reminder-${tabId}-${groupIndex}-${windowIndex}-${tabIndex}`;
       chrome.runtime.sendMessage({ type: 'CLEAR_ALARM', name: alarmName }).catch(() => {});
       chrome.storage.local.remove(alarmName).catch(() => {});
+    }
+  });
+}
+
+/**
+ * Applies AI auto-group suggestions: for each `{ name, color, tabIds }`, creates a new
+ * saved group containing the matching live tabs (matched by real Chrome tab id, since
+ * Now Open's tabs — unlike saved-tab copies — carry real ids, not the `id:0` sentinel)
+ * and removes them from the Now Open snapshot. The browser tabs themselves are left open —
+ * `useCurrentTabs` will re-sync them into Now Open on the next tick, same as any other
+ * Now Open → saved move (see `useMoveTab`).
+ */
+export function useApplyAIGroups() {
+  const qc = useQueryClient();
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    // Returns how many groups/tabs were actually created — a suggestion whose tabIds
+    // don't match any live Now Open tab (e.g. a stale AI response) is silently skipped
+    // by the loop below, so the caller can't infer success from suggestions.length alone.
+    mutationFn: async (suggestions: { name: string; color: string; tabIds: number[] }[]) => {
+      // Bail before touching mutate() (no undo snapshot, no IDB write) if nothing will match
+      const nowOpenIds = new Set(
+        (qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available[0]?.windows ?? []).flatMap((w) =>
+          w.tabs.map((t) => t.id)
+        )
+      );
+      if (!suggestions.some((s) => s.tabIds.some((id) => nowOpenIds.has(id)))) {
+        return { appliedGroups: 0, appliedTabs: 0 };
+      }
+
+      let appliedGroups = 0;
+      let appliedTabs = 0;
+
+      await mutate((prev) => {
+        const available = [...prev.available];
+        const nowOpen = { ...available[0] };
+        let windows = nowOpen.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
+        const now = Date.now();
+        const newGroups: Group[] = [];
+
+        for (const suggestion of suggestions) {
+          const idSet = new Set(suggestion.tabIds);
+          const movedTabs: Tab[] = [];
+          windows = windows.map((w) => {
+            const [keep, taken] = [w.tabs.filter((t) => !idSet.has(t.id)), w.tabs.filter((t) => idSet.has(t.id))];
+            movedTabs.push(...taken.map((t) => ({ ...t, id: 0, savedAt: now })));
+            return { ...w, tabs: keep };
+          });
+          if (movedTabs.length === 0) continue;
+
+          const group = createGroup(nanoid(10), suggestion.name, suggestion.color);
+          group.windows = [createWindow(movedTabs)];
+          group.info = getGroupInfo(group);
+          newGroups.push(group);
+          appliedGroups++;
+          appliedTabs += movedTabs.length;
+        }
+
+        // Drop emptied windows, but never let Now Open end up with zero windows
+        const finalWindows = windows.filter((w) => w.tabs.length > 0);
+        nowOpen.windows = finalWindows.length > 0 ? finalWindows : windows.slice(0, 1);
+        available[0] = nowOpen;
+
+        return { ...prev, available: [...available, ...newGroups] };
+      });
+
+      return { appliedGroups, appliedTabs };
     }
   });
 }

@@ -39,6 +39,7 @@ beforeEach(() => {
     activeGroupIndex: 0,
     searchFilter: '',
     renameTarget: null,
+    noteTarget: null,
     undoStack: [],
     redoStack: [],
     selectionMode: false,
@@ -117,6 +118,38 @@ describe('useKeyboardNav', () => {
     renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
     await user.keyboard('{Delete}')
     expect(mockDeleteTab).not.toHaveBeenCalled()
+  })
+
+  it('F2 sets renameTarget for the focused tab row', async () => {
+    const user = userEvent.setup()
+    render(<div tabIndex={0} data-testid="tabrow" data-group-index="0" data-window-index="1" data-tab-index="2" />)
+    screen.getByTestId('tabrow').focus()
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    await user.keyboard('{F2}')
+    expect(useUIStore.getState().renameTarget).toEqual({ kind: 'tab', groupIndex: 0, windowIndex: 1, tabIndex: 2 })
+  })
+
+  it('F2 does nothing when no tab row is focused', async () => {
+    const user = userEvent.setup()
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    await user.keyboard('{F2}')
+    expect(useUIStore.getState().renameTarget).toBeNull()
+  })
+
+  it('N sets noteTarget for the focused tab row', async () => {
+    const user = userEvent.setup()
+    render(<div tabIndex={0} data-testid="tabrow" data-group-index="1" data-window-index="0" data-tab-index="3" />)
+    screen.getByTestId('tabrow').focus()
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    await user.keyboard('n')
+    expect(useUIStore.getState().noteTarget).toEqual({ groupIndex: 1, windowIndex: 0, tabIndex: 3 })
+  })
+
+  it('N does nothing when no tab row is focused', async () => {
+    const user = userEvent.setup()
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    await user.keyboard('n')
+    expect(useUIStore.getState().noteTarget).toBeNull()
   })
 })
 

@@ -165,11 +165,24 @@ describe('TabItem — basic rendering and open', () => {
     expect(titleGrid?.className).toMatch(/grid-cols-\[12\.5rem_minmax\(0,1fr\)\]/)
   })
 
-  it('renders the tab URL hostname (no protocol/path) with a truncate class', () => {
+  it('renders the tab URL hostname + path (no protocol/query/hash) with a truncate class', () => {
     const t = makeTab({ url: 'https://www.example.com/some/deep/path?query=1' })
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
-    const hostEl = screen.getByText('example.com')
+    const hostEl = screen.getByText('example.com/some/deep/path')
     expect(hostEl.className).toMatch(/truncate/)
+  })
+
+  it('shows a bare hostname (no trailing slash) for root-path URLs', () => {
+    const t = makeTab({ url: 'https://www.example.com/' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    expect(screen.getByText('example.com')).toBeInTheDocument()
+  })
+
+  it('truncates a very long path itself, keeping the hostname intact', () => {
+    const t = makeTab({ url: 'https://example.com/this/is/a/very/long/path/segment/that/keeps/going' })
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const el = screen.getByText(/^example\.com\/.*\.\.\.$/)
+    expect(el.textContent).toBe('example.com/this/is/a/very...')
   })
 
   it('keeps a gap between the title/hostname grid and the right-pinned indicators', () => {
@@ -496,6 +509,26 @@ describe('TabItem — target groups (move to group)', () => {
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
     fireEvent.contextMenu(screen.getByRole('listitem'))
     expect(await screen.findByText(/copy to group/i)).toBeInTheDocument()
+  })
+
+  it('excludes archived groups from the move-to-group submenu', async () => {
+    const user = userEvent.setup()
+    mockUseGroupsData.mockReturnValue({
+      data: {
+        available: [
+          makeGroup({ id: 'src', name: 'Source' }),
+          makeGroup({ id: 'dst', name: 'Dest' }),
+          makeGroup({ id: 'arch', name: 'Archived', archived: true }),
+        ],
+        active: { id: '', index: 0 },
+      },
+    })
+    const t = makeTab()
+    render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    fireEvent.contextMenu(screen.getByRole('listitem'))
+    await user.click(await screen.findByText(/move to group/i))
+    expect(await screen.findByText('Dest')).toBeInTheDocument()
+    expect(screen.queryByText('Archived')).not.toBeInTheDocument()
   })
 })
 

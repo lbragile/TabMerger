@@ -16,6 +16,7 @@ tools:
   - Grep
   - Bash
   - WebFetch
+color: purple
 ---
 
 # AI Features Agent

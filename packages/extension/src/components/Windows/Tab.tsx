@@ -27,11 +27,15 @@ function withAlpha(rgba: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-// ponytail: hostname-only display for narrow popup rows; full URL doesn't fit
-function getUrlHostname(url?: string): string {
+// ponytail: hostname + path (no query/hash) display; column already truncates via CSS
+function getUrlDisplay(url?: string): string {
   if (!url) return '';
   try {
-    return new URL(url).hostname.replace(/^www\./, '');
+    const u = new URL(url);
+    const hostname = u.hostname.replace(/^www\./, '');
+    let path = u.pathname.replace(/\/$/, '');
+    if (path.length > 15) path = `${path.slice(0, 15)}...`;
+    return path ? `${hostname}${path}` : hostname;
   } catch {
     return '';
   }
@@ -160,6 +164,36 @@ const { mutate: deleteTab } = useDeleteTab();
   const selectedItems = useUIStore((s) => s.selectedItems);
   const toggleSelection = useUIStore((s) => s.toggleSelection);
   const enterSelectionMode = useUIStore((s) => s.enterSelectionMode);
+  const renameTarget = useUIStore((s) => s.renameTarget);
+  const setRenameTarget = useUIStore((s) => s.setRenameTarget);
+  const noteTarget = useUIStore((s) => s.noteTarget);
+  const setNoteTarget = useUIStore((s) => s.setNoteTarget);
+
+  // Global keyboard shortcuts (F2 rename, N add-note) signal this specific tab row via uiStore
+  // since editingTitle/noteOpen are local component state — consume + clear on match.
+  useEffect(() => {
+    if (
+      renameTarget?.kind === 'tab' &&
+      renameTarget.groupIndex === groupIndex &&
+      renameTarget.windowIndex === windowIndex &&
+      renameTarget.tabIndex === tabIndex
+    ) {
+      setTitleValue(getDisplayTitle(tab));
+      setEditingTitle(true);
+      setRenameTarget(null);
+    }
+  }, [renameTarget, groupIndex, windowIndex, tabIndex, tab, setRenameTarget]);
+
+  useEffect(() => {
+    if (
+      noteTarget?.groupIndex === groupIndex &&
+      noteTarget.windowIndex === windowIndex &&
+      noteTarget.tabIndex === tabIndex
+    ) {
+      setNoteOpen(true);
+      setNoteTarget(null);
+    }
+  }, [noteTarget, groupIndex, windowIndex, tabIndex, setNoteTarget]);
 
   // Suppress transforms on tabs in non-active windows so they don't animate during cross-window drag
   const suppressTransform = isDraggingTab && activeWindowIndex !== windowIndex;
@@ -202,9 +236,11 @@ const { mutate: deleteTab } = useDeleteTab();
   // 6c: tag filter — tab must match chromeGroup name if tagFilter is set
   const tagMatch = !tagFilter || (tab.chromeGroup != null && fuzzyMatch(tab.chromeGroup.name, tagFilter));
 
-  // Build list of groups this tab can be moved to (all except the current group)
+  // Build list of groups this tab can be moved to (all except the current group and archived groups)
   const targetGroups =
-    groupsState?.available.map((g, i) => ({ group: g, index: i })).filter(({ index }) => index !== groupIndex) ?? [];
+    groupsState?.available
+      .map((g, i) => ({ group: g, index: i }))
+      .filter(({ group, index }) => index !== groupIndex && !group.archived) ?? [];
 
   // When the source is Now Open (permanent), copy the tab instead of moving it
   const isNowOpen = groupsState?.available[groupIndex]?.permanent ?? false;
@@ -463,9 +499,9 @@ const { mutate: deleteTab } = useDeleteTab();
               </span>
             </TabPreview>
 
-            {getUrlHostname(tab.url) ? (
+            {getUrlDisplay(tab.url) ? (
               <span className="truncate shrink min-w-0 text-[10px] text-muted-foreground justify-self-start">
-                {getUrlHostname(tab.url)}
+                {getUrlDisplay(tab.url)}
               </span>
             ) : (
               <span />

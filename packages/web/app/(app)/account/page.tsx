@@ -14,6 +14,9 @@ import Link from 'next/link'
 import { absoluteUrl, formatDate } from '@/lib/utils'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 import { SetPasswordForm } from '@/components/account/SetPasswordForm'
+import { DevicesSection } from '@/components/account/DevicesSection'
+import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
+import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
 
 export const metadata: Metadata = {
   title: 'Account',
@@ -29,7 +32,7 @@ export default async function AccountPage() {
 
   const hasPasswordIdentity = user.identities?.some((i) => i.provider === 'email') ?? false
 
-  const [{ data: profile }, { data: subscription }] = await Promise.all([
+  const [{ data: profile }, { data: subscription }, { data: devices }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase
       .from('subscriptions')
@@ -38,10 +41,40 @@ export default async function AccountPage() {
       .order('created_at', { ascending: false })
       .limit(1)
       .single(),
+    supabase
+      .from('device_sessions')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('last_active', { ascending: false }),
   ])
+
+  // ponytail: dev-only mock data — only fires in `next dev` (never in `next build`/deploy),
+  // and only when the real query is empty, so it can never mask real rows. Delete when no longer needed.
+  // Timestamps are static (not Date.now()-derived) to satisfy the render-purity lint rule.
+  const mockDeviceRows = [
+    { id: 'mock-1', device_id: 'mock-1', device_name: 'MacBook Pro', now_open_snapshot: null, last_active: '2026-08-05T09:58:00.000Z' },
+    { id: 'mock-2', device_id: 'mock-2', device_name: 'Work Desktop', now_open_snapshot: null, last_active: '2026-08-05T07:00:00.000Z' },
+    { id: 'mock-3', device_id: 'mock-3', device_name: 'Chrome on Linux', now_open_snapshot: null, last_active: '2026-07-31T10:00:00.000Z' },
+  ]
+  const deviceRows =
+    devices && devices.length === 0 && process.env.NODE_ENV === 'development'
+      ? mockDeviceRows
+      : (devices ?? [])
 
   const currentTier = subscription?.tier ?? 'free'
   const isPaid = currentTier !== 'free' && subscription?.status === 'active'
+
+  let aiCallsLeft = 0
+  if (currentTier === 'pro_ai') {
+    const month = new Date().toISOString().slice(0, 7)
+    const { data: usage } = await supabase
+      .from('ai_usage')
+      .select('request_count')
+      .eq('user_id', user.id)
+      .eq('month', month)
+      .maybeSingle()
+    aiCallsLeft = AI_MONTHLY_CAP - (usage?.request_count ?? 0)
+  }
 
   let billingPortalUrl: string | null = null
   if (isPaid && profile?.stripe_customer_id) {
@@ -70,11 +103,11 @@ export default async function AccountPage() {
           { label: 'Groups synced', value: '24' },
           { label: 'Tabs saved', value: '847' },
           { label: 'Sessions', value: '12' },
-          { label: 'AI calls left', value: currentTier === 'pro_ai' ? '47' : '0', accent: currentTier === 'pro_ai' },
+          { label: 'AI calls left', value: currentTier === 'pro_ai' ? String(aiCallsLeft) : '0', accent: currentTier === 'pro_ai' },
         ].map((stat, i) => (
           <div
             key={i}
-            className={`rounded-[13px] border p-4 ${stat.accent ? 'bg-accent border-primary/20' : 'bg-surface border-border'}`}
+            className={`rounded-lg border p-4 ${stat.accent ? 'bg-accent border-primary/20' : 'bg-surface border-border'}`}
           >
             <p className={`font-semibold tracking-tight ${stat.accent ? 'text-primary' : ''}`} style={{ fontSize: '26px' }}>
               {stat.value}
@@ -83,6 +116,12 @@ export default async function AccountPage() {
           </div>
         ))}
       </div>
+
+      {currentTier === 'pro_ai' && aiCallsLeft <= 0 && (
+        <div className="-mt-3">
+          <BuyCreditsButton />
+        </div>
+      )}
 
       {/* Profile */}
       <Card>
@@ -127,7 +166,7 @@ export default async function AccountPage() {
             priceId={subscription?.stripe_price_id}
             action={
               isPaid && billingPortalUrl ? (
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="sm" className="w-32" asChild>
                   <a href={billingPortalUrl}>Manage billing</a>
                 </Button>
               ) : !isPaid ? (
@@ -146,15 +185,17 @@ export default async function AccountPage() {
         </CardContent>
       </Card>
 
-      {/* Session management */}
+      {/* Devices */}
       <Card>
         <CardHeader>
-          <CardTitle>Sessions</CardTitle>
+          <CardTitle>Devices</CardTitle>
           <CardDescription>
-            Manage your active sessions across devices.
+            Devices syncing your groups and tabs. Pro and Pro AI only.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-4">
+          <DevicesSection initialDevices={deviceRows} userId={user.id} />
+          <Separator />
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium">Sign out of all devices</p>
@@ -163,7 +204,12 @@ export default async function AccountPage() {
               </p>
             </div>
             <form action="/api/auth/sign-out" method="POST">
-              <Button type="submit" variant="outline" size="sm">
+              <Button
+                type="submit"
+                variant="outline"
+                size="sm"
+                className="w-32 hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
+              >
                 Sign out
               </Button>
             </form>

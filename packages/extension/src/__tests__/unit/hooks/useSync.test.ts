@@ -113,6 +113,24 @@ describe('useSync — syncing', () => {
     expect(saved.available.map((g: { id: string }) => g.id)).toEqual(['now', 'a', 'b'])
   })
 
+  it('re-runs doSync on a poll interval so edits made after mount while the popup stays open still get pushed (regression)', async () => {
+    vi.useFakeTimers()
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    const qc = new QueryClient()
+    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
+
+    await vi.waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalledTimes(1))
+
+    await vi.advanceTimersByTimeAsync(30_000)
+    expect(mockPushPendingChanges).toHaveBeenCalledTimes(2)
+
+    await vi.advanceTimersByTimeAsync(30_000)
+    expect(mockPushPendingChanges).toHaveBeenCalledTimes(3)
+
+    vi.useRealTimers()
+  })
+
   it('subscribes to remote changes and merges an update using last-write-wins on updatedAt', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })

@@ -43,7 +43,7 @@ async function _buildMenus() {
   let groups: Awaited<ReturnType<typeof getGroupsState>>['available'] = [];
   try {
     const state = await getGroupsState();
-    groups = state.available.filter((g) => !g.permanent);
+    groups = state.available.filter((g) => !g.permanent && !g.archived);
   } catch {
     // IDB not ready — leave empty
   }
@@ -141,6 +141,15 @@ export default defineBackground(() => {
         .then(() => sendResponse({ ok: true }))
         .catch((err) => sendResponse({ ok: false, error: err instanceof Error ? err.message : String(err) }));
       return true; // keep the message channel open for the async sendResponse above
+    }
+  });
+
+  // On-demand install probe for externally_connectable (see wxt.config.ts) — the web app
+  // sends { type: 'PING' } via chrome.runtime.sendMessage(extensionId, ...) and checks the
+  // response vs. chrome.runtime.lastError, avoiding the content script's page-load race.
+  chrome.runtime.onMessageExternal.addListener((msg: unknown, _sender, sendResponse) => {
+    if ((msg as { type?: string })?.type === 'PING') {
+      sendResponse({ type: 'PONG', version: chrome.runtime.getManifest().version });
     }
   });
 

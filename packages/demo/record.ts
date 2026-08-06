@@ -132,7 +132,36 @@ async function main() {
         // rename the file on close. The setup page's video is unused/discarded.
         await setupPage.close();
 
+        // ponytail: ROOT CAUSE of "Q4 Launch" vanishing on every relaunch —
+        // launchDemoContext always wipes USER_DATA_DIR and re-enters demo
+        // mode from scratch (fresh seed data), so a relaunched attempt's
+        // popup never saw any of the DOM/IndexedDB mutations earlier steps
+        // (create-group, rename-window, etc.) made in this same recording
+        // pass. Resuming straight into `remaining` steps assumed state
+        // carried over across relaunches; it doesn't. Replay every
+        // already-recorded step's action first (same context, no video kept
+        // — the existing .webm is already good) to rebuild the exact app
+        // state the crash interrupted, before recording what's actually
+        // still missing.
+        const alreadyRecorded = recordedSteps.filter((step) => fs.existsSync(stepFile(step.id)));
         try {
+            for (const step of alreadyRecorded) {
+                const page = await context.newPage();
+                await page.setViewportSize({ width: 800, height: 600 });
+                await page.goto(popupUrl);
+                await page
+                    .getByText("Now Open", { exact: true })
+                    .first()
+                    .waitFor({ state: "visible", timeout: 5000 })
+                    .catch(() => null);
+                await runStepAction(page, step.action, step.durationMs + LEADING_TRIM_MS);
+                const video = page.video();
+                await page.close();
+                // Discard the replay's own recording — stepFile(step.id)
+                // already holds the real clip from the attempt that recorded
+                // it successfully.
+                if (video) await video.delete().catch(() => null);
+            }
             for (const step of remaining) {
                 console.log(`[demo] step: ${step.id}`);
                 const page = await context.newPage();

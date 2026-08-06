@@ -2,13 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
-import {
-  useUrlRules,
-  useAddUrlRule,
-  useDeleteUrlRule,
-  useReorderUrlRule,
-  matchUrlToRule,
-} from '@/hooks/useUrlRules'
+import { useUrlRules, useSaveUrlRules, matchUrlToRule } from '@/hooks/useUrlRules'
 import type { UrlRule } from '@/lib/types'
 
 const { mockGetSetting, mockSetSetting } = vi.hoisted(() => ({
@@ -35,69 +29,31 @@ describe('useUrlRules query', () => {
   })
 })
 
-describe('useAddUrlRule', () => {
+describe('useSaveUrlRules', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('appends a new rule and persists it', async () => {
-    mockGetSetting.mockResolvedValue([])
+  it('persists the whole array in one write and updates the query cache', async () => {
     const { qc, wrapper } = makeWrapper()
-    const { result } = renderHook(() => useAddUrlRule(), { wrapper })
-    await act(async () => {
-      await result.current.mutateAsync({ pattern: 'github.com/*', groupId: 'g1' })
-    })
-    expect(mockSetSetting).toHaveBeenCalledWith('urlRules', [
-      expect.objectContaining({ pattern: 'github.com/*', groupId: 'g1' }),
-    ])
-    expect(qc.getQueryData(['urlRules'])).toHaveLength(1)
-  })
-
-  it('uses cached query data instead of re-reading settings when cache is warm', async () => {
-    const { qc, wrapper } = makeWrapper()
-    qc.setQueryData(['urlRules'], [{ id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 }])
-    const { result } = renderHook(() => useAddUrlRule(), { wrapper })
-    await act(async () => {
-      await result.current.mutateAsync({ pattern: 'b.com', groupId: 'g2' })
-    })
-    expect(mockGetSetting).not.toHaveBeenCalled()
-    expect((qc.getQueryData(['urlRules']) as UrlRule[]).length).toBe(2)
-  })
-})
-
-describe('useDeleteUrlRule', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('removes the matching rule by id', async () => {
-    const { qc, wrapper } = makeWrapper()
-    qc.setQueryData(['urlRules'], [
+    const { result } = renderHook(() => useSaveUrlRules(), { wrapper })
+    const rules: UrlRule[] = [
       { id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 },
       { id: 'r2', pattern: 'b.com', groupId: 'g2', createdAt: 2 },
-    ])
-    const { result } = renderHook(() => useDeleteUrlRule(), { wrapper })
+    ]
     await act(async () => {
-      await result.current.mutateAsync('r1')
+      await result.current.mutateAsync(rules)
     })
-    const next = qc.getQueryData(['urlRules']) as UrlRule[]
-    expect(next).toHaveLength(1)
-    expect(next[0].id).toBe('r2')
+    expect(mockSetSetting).toHaveBeenCalledTimes(1)
+    expect(mockSetSetting).toHaveBeenCalledWith('urlRules', rules)
+    expect(qc.getQueryData(['urlRules'])).toEqual(rules)
   })
-})
 
-describe('useReorderUrlRule', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('moves a rule from one index to another', async () => {
-    const { qc, wrapper } = makeWrapper()
-    qc.setQueryData(['urlRules'], [
-      { id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 },
-      { id: 'r2', pattern: 'b.com', groupId: 'g2', createdAt: 2 },
-      { id: 'r3', pattern: 'c.com', groupId: 'g3', createdAt: 3 },
-    ])
-    const { result } = renderHook(() => useReorderUrlRule(), { wrapper })
+  it('persists an empty array when all rules were deleted from the draft', async () => {
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useSaveUrlRules(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ from: 0, to: 2 })
+      await result.current.mutateAsync([])
     })
-    const next = qc.getQueryData(['urlRules']) as UrlRule[]
-    expect(next.map((r) => r.id)).toEqual(['r2', 'r3', 'r1'])
+    expect(mockSetSetting).toHaveBeenCalledWith('urlRules', [])
   })
 })
 

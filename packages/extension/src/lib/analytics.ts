@@ -1,5 +1,4 @@
-const MEASUREMENT_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID as string | undefined;
-const API_SECRET = import.meta.env.VITE_GA4_API_SECRET as string | undefined;
+const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string | undefined;
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_API_KEY as string | undefined;
 const POSTHOG_HOST = (import.meta.env.VITE_POSTHOG_HOST as string | undefined) || 'https://us.i.posthog.com';
 
@@ -21,21 +20,20 @@ export async function hashUserId(userId: string): Promise<string> {
 }
 
 /**
- * Fires a GA4 Measurement Protocol event. Fire-and-forget — errors are swallowed.
- * No-ops silently when `VITE_GA4_MEASUREMENT_ID` or `VITE_GA4_API_SECRET` are unset
- * (i.e. in local dev or CI), so it's safe to call unconditionally everywhere.
+ * Fires a GA4 event via the server-side proxy at `${VITE_WEB_APP_URL}/api/track` —
+ * the extension no longer holds the GA4 measurement ID or API secret (both are
+ * server-only now), so nothing in the shipped bundle can be extracted to spoof events.
+ * Fire-and-forget — errors are swallowed.
  */
 export function trackEvent(name: string, params?: Record<string, string | number>): void {
   trackPostHogEvent(name, params); // mirror every GA4 event to PostHog (no-ops if unconfigured)
-  if (!MEASUREMENT_ID || !API_SECRET) return; // ponytail: no-op if not configured
+  if (!WEB_APP_URL) return; // ponytail: no-op if not configured
   getClientId().then((clientId) => {
-    fetch(
-      `https://www.google-analytics.com/mp/collect?measurement_id=${MEASUREMENT_ID}&api_secret=${API_SECRET}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({ client_id: clientId, events: [{ name, params }] }),
-      }
-    ).catch(() => {}); // fire-and-forget
+    fetch(`${WEB_APP_URL}/api/track`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: name, params, client_id: clientId }),
+    }).catch(() => {}); // fire-and-forget
   }).catch(() => {});
 }
 

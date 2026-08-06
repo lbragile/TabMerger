@@ -257,11 +257,6 @@ describe('GET /api/ai/organize', () => {
     expect((await organizeGET(req(url('?runId=r')))).status).toBe(401)
   })
 
-  it('403s when not entitled', async () => {
-    mockCheckUsage.mockResolvedValue({ allowed: false, remaining: 0 })
-    expect((await organizeGET(req(url('?runId=r')))).status).toBe(403)
-  })
-
   it('400s when runId is missing', async () => {
     const res = await organizeGET(req(url()))
     expect(res.status).toBe(400)

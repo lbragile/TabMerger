@@ -1,9 +1,13 @@
 import { useState, useCallback, useRef } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { useTabSummary } from '@/hooks/useAI';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import type { Tab } from '@/lib/types';
+
+// ponytail: module-level cache — lives for the popup session, cleared on close
+const summaryCache = new Map<string, string>();
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
@@ -36,7 +40,8 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ogImage, setOgImage] = useState<string | null>(null);
-  const [summary, setSummary] = useState<string | null>(null);
+  const [summary, setSummary] = useState<string | null>(summaryCache.get(tab.url) ?? null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
   const fetchedRef = useRef(false);
 
   const handleOpenChange = useCallback(async (isOpen: boolean) => {
@@ -44,7 +49,6 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
     if (!isOpen) {
       fetchedRef.current = false;
       setOgImage(null);
-      setSummary(null);
       setLoading(false);
       return;
     }
@@ -53,20 +57,28 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
     setLoading(true);
     const tabId = isLive ? (tab as Tab & { id?: number }).id ?? 0 : 0;
     try {
-      if (!aiFeatures) {
-        const img = tab.ogImage ?? await fetchOgImage(tabId, tab.url);
-        setOgImage(img ?? null);
-      } else {
-        const [img, result] = await Promise.all([
-          fetchOgImage(tabId, tab.url),
-          fetchSummary({ url: tab.url, title: tab.title }),
-        ]);
-        setOgImage(tab.ogImage ?? img ?? null);
-        setSummary(result.summary ?? null);
-      }
+      const img = tab.ogImage ?? await fetchOgImage(tabId, tab.url);
+      setOgImage(img ?? null);
     } catch { /* ignore */ }
     setLoading(false);
-  }, [isLive, tab, aiFeatures, fetchSummary]);
+  }, [isLive, tab]);
+
+  const generateSummary = useCallback(async () => {
+    const cached = summaryCache.get(tab.url);
+    if (cached) {
+      setSummary(cached);
+      return;
+    }
+    setSummaryLoading(true);
+    try {
+      const result = await fetchSummary({ url: tab.url, title: tab.title });
+      if (result.summary) {
+        summaryCache.set(tab.url, result.summary);
+        setSummary(result.summary);
+      }
+    } catch { /* ignore */ }
+    setSummaryLoading(false);
+  }, [tab, fetchSummary]);
 
   return (
     <Tooltip open={open} onOpenChange={handleOpenChange} delayDuration={400}>
@@ -115,14 +127,24 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
               </div>
             )}
             {aiFeatures && (
-              loading ? (
+              summaryLoading ? (
                 <div className="mt-2 space-y-1">
                   <Skeleton className="h-3 w-full" />
                   <Skeleton className="h-3 w-3/4" />
                 </div>
               ) : summary ? (
                 <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{summary}</p>
-              ) : null
+              ) : (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-2 h-6 text-xs"
+                  onClick={generateSummary}
+                >
+                  ✨ Generate summary
+                </Button>
+              )
             )}
           </div>
         </div>

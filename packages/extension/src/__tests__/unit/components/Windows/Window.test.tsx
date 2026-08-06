@@ -264,6 +264,27 @@ describe('WindowItem', () => {
     expect(screen.getByText(/copy to group/i)).toBeTruthy()
   })
 
+  it('excludes archived groups from the move-to-group submenu', async () => {
+    const user = userEvent.setup()
+    mockUseGroups.mockReturnValue({
+      data: {
+        available: [
+          { id: 'g0', permanent: true, name: 'Now Open', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+          { id: 'g1', permanent: false, name: 'Saved', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+          { id: 'g2', permanent: false, name: 'Other', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+          { id: 'g3', permanent: false, name: 'Archived', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0, archived: true },
+        ],
+        active: { id: 'g1', index: 1 },
+      },
+    })
+    renderWindow(makeWindow())
+    const header = document.querySelector('[data-window-index="0"] .group.relative') as HTMLElement
+    fireEvent.contextMenu(header)
+    await user.hover(screen.getByText(/move to group/i))
+    expect(await screen.findByText('Other')).toBeTruthy()
+    expect(screen.queryByText('Archived')).not.toBeInTheDocument()
+  })
+
   it('deletes the window directly when confirmOnDelete is false', async () => {
     mockGetSetting.mockResolvedValue({ confirmOnDelete: false })
     renderWindow(makeWindow())

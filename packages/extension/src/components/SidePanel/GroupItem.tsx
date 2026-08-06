@@ -8,10 +8,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { GroupContextMenu } from './GroupContextMenu';
 import { ColorPicker } from '@/components/ColorPicker';
 import type { Group } from '@/lib/types';
-import { useUpdateGroupName, useUpdateGroupColor, useToggleGroupStar, useGroups } from '@/hooks/useGroups';
+import { useUpdateGroupName, useUpdateGroupColor, useToggleGroupStar, useGroups, useDeleteGroup } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
+import { DEFAULT_GROUP_TITLE } from '@/lib/types';
 
 interface GroupItemProps {
   group: Group;
@@ -49,9 +50,23 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   const { mutate: updateGroupName } = useUpdateGroupName();
   const { mutate: updateGroupColor } = useUpdateGroupColor();
   const { mutate: toggleGroupStar } = useToggleGroupStar();
+  const { mutate: deleteGroup } = useDeleteGroup();
 
   const [editValue, setEditValue] = useState(group.name);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // ponytail: only show the name tooltip when the text is actually clipped
+  const nameRef = useRef<HTMLSpanElement>(null);
+  const [isNameTruncated, setIsNameTruncated] = useState(false);
+  useEffect(() => {
+    const el = nameRef.current;
+    if (!el) return;
+    const measure = () => setIsNameTruncated(el.scrollWidth > el.clientWidth);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [group.name]);
 
   const isRenaming = renameTarget?.kind === 'group' && renameTarget.groupIndex === groupIndex;
 
@@ -69,10 +84,27 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
     return () => clearTimeout(id);
   }, [isRenaming, group.name]);
 
+  // ponytail: a freshly-created group is only "real" once the user commits a
+  // non-placeholder name. Explicit cancel (X button / Escape) before that
+  // deletes the phantom "temp group" entry. Blur/Enter must NOT delete —
+  // that fires on any click-away (e.g. going to add tabs), so it just
+  // commits/reverts like a normal rename, same as an existing group.
+  const isAbandonedFreshGroup = () =>
+    !group.permanent &&
+    group.name === DEFAULT_GROUP_TITLE &&
+    (!editValue.trim() || editValue.trim() === DEFAULT_GROUP_TITLE);
+
   const handleRename = () => {
     if (group.permanent) { setRenameTarget(null); return; }
     if (editValue.trim()) {
       updateGroupName({ groupIndex, name: editValue.trim() });
+    }
+    setRenameTarget(null);
+  };
+
+  const handleCancelRename = () => {
+    if (isAbandonedFreshGroup()) {
+      deleteGroup(groupIndex);
     }
     setRenameTarget(null);
   };
@@ -225,18 +257,19 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 size={1}
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); if (e.key === 'Escape') handleCancelRename(); }}
                 onBlur={handleRename}
                 className="min-w-0 flex-1 bg-transparent outline-none text-xs"
                 style={{ borderBottom: '1px solid rgba(0,180,204,0.6)', color: 'var(--sidebar-text-active)' }}
               />
               <button type="button" aria-label="Save" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleRename(); }}><Check className="h-2.5 w-2.5" /></button>
-              <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); setRenameTarget(null); }}><X className="h-2.5 w-2.5" /></button>
+              <button type="button" aria-label="Cancel" className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground" onMouseDown={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); handleCancelRename(); }}><X className="h-2.5 w-2.5" /></button>
             </div>
           ) : (
-            <Tooltip>
+            <Tooltip open={isNameTruncated ? undefined : false}>
               <TooltipTrigger asChild>
                 <span
+                  ref={nameRef}
                   className="block truncate text-xs font-medium"
                   style={{ color: isActive ? 'var(--sidebar-text-active)' : 'var(--sidebar-text-inactive)' }}
                   onDoubleClick={(e) => {

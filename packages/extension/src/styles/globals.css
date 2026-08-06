@@ -119,9 +119,16 @@
 }
 
 /* Global clickable cursor — root-cause fix instead of per-element cursor-pointer classes.
-   Excludes disabled/aria-disabled elements so they keep the default/not-allowed cursor. */
+   Excludes disabled/aria-disabled elements so they keep the default/not-allowed cursor.
+   Also excludes [aria-roledescription="sortable"] — @dnd-kit's useSortable() spreads
+   role="button" onto every drag handle (Tab.tsx/GroupItem.tsx/Window.tsx) via its
+   `attributes` object, which has higher specificity than Tailwind's single-class
+   `.cursor-grab`/`.active\:cursor-grabbing` utilities and was silently forcing
+   `cursor: pointer` on every handle instead — confirmed by walking
+   document.styleSheets for every rule matching the handle at runtime, not by
+   reading the source in isolation. */
 button:not(:disabled):not([aria-disabled="true"]),
-[role="button"]:not([aria-disabled="true"]),
+[role="button"]:not([aria-disabled="true"]):not([aria-roledescription="sortable"]),
 a[href],
 select,
 summary {

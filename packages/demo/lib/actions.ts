@@ -968,10 +968,19 @@ const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
         await page.waitForTimeout(500); // let the empty note field's location register before typing starts
         await typeText(textarea, "Ship checklist: QA sign-off, changelog, store screenshots", 30);
         await page.waitForTimeout(300);
+        // Grab the zoom origin BEFORE committing — Ctrl+Enter unmounts this
+        // textarea (replaced by the saved note's static text), so calling
+        // originFraction(textarea) after commit re-resolves a locator for an
+        // element that no longer exists and hangs for the full 30s
+        // actionability timeout instead of returning undefined. That hang
+        // was throwing out of this whole step (not caught by the softer
+        // placeholder-not-found guard above), tearing down the browser
+        // context mid-step on attempt 1 of every dark recording run.
+        const origin = await originFraction(textarea);
         await pressWithIndicator(page, "Control+Enter", "Ctrl+Enter");
         // Hold on the saved note text — the resulting UI update.
         await page.waitForTimeout(900);
-        return originFraction(textarea);
+        return origin;
     },
 };
 

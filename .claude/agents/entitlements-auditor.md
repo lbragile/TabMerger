@@ -12,6 +12,7 @@ tools:
   - Read
   - Glob
   - Grep
+color: purple
 ---
 
 # Entitlements Auditor

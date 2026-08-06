@@ -26,7 +26,6 @@
     "analyze": "ANALYZE=true wxt build"
   },
   "dependencies": {
-    "@tabmerger/shared": "workspace:*",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -45,6 +44,7 @@
     "@radix-ui/react-tooltip": "^1.2.12",
     "@sentry/browser": "^10.66.0",
     "@supabase/supabase-js": "^2.110.7",
+    "@tabmerger/shared": "workspace:*",
     "@tanstack/react-query": "^5.101.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -83,5 +83,10 @@
     "typescript": "^5.9.3",
     "vitest": "^4.1.10",
     "wxt": "^0.20.27"
+  },
+  "msw": {
+    "workerDirectory": [
+      "src\\public"
+    ]
   }
 }

@@ -16,6 +16,7 @@ tools:
   - Grep
   - Bash
   - Agent
+color: green
 ---
 
 # Web Developer Agent

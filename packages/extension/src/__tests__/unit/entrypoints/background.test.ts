@@ -47,7 +47,9 @@ function makeChromeStub() {
         onInstalled: on('onInstalled'),
         onStartup: on('onStartup'),
         onMessage: on('onMessage'),
+        onMessageExternal: on('onMessageExternal'),
         getURL: vi.fn().mockReturnValue('icon.png'),
+        getManifest: vi.fn().mockReturnValue({ version: '2.9.0' }),
       },
       contextMenus: {
         removeAll: vi.fn().mockResolvedValue(undefined),
@@ -123,6 +125,23 @@ describe('background — context menu building', () => {
     await new Promise((r) => setTimeout(r, 0))
     expect(stub.chrome.contextMenus.create).toHaveBeenCalled()
   })
+
+  it('excludes archived groups from the save-to-group scope submenus', async () => {
+    mockGetGroupsState.mockResolvedValue({
+      available: [
+        { id: 'now', permanent: true, windows: [] },
+        { id: 'g1', permanent: false, windows: [], name: 'Work' },
+        { id: 'g2', permanent: false, archived: true, windows: [], name: 'Archived' },
+      ],
+      active: { id: 'now', index: 0 },
+    })
+    stub.chrome.contextMenus.create.mockClear()
+    stub.listeners.onInstalled[0]({ reason: 'update' })
+    await new Promise((r) => setTimeout(r, 0))
+    const ids = stub.chrome.contextMenus.create.mock.calls.map((c) => c[0].id)
+    expect(ids).toContain('tm-scope-current-g1')
+    expect(ids).not.toContain('tm-scope-current-g2')
+  })
 })
 
 describe('background — SYNC_AUTH message', () => {
@@ -167,6 +186,20 @@ describe('background — SIGN_IN_WITH_GOOGLE message', () => {
     const result = stub.listeners.onMessage[1]({ type: 'SYNC_AUTH' }, {}, sendResponse)
     expect(result).toBeUndefined()
     expect(mockRunGoogleOAuthFlow).not.toHaveBeenCalled()
+  })
+})
+
+describe('background — externally_connectable PING (install probe)', () => {
+  it('responds PONG with the manifest version', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'PING' }, {}, sendResponse)
+    expect(sendResponse).toHaveBeenCalledWith({ type: 'PONG', version: '2.9.0' })
+  })
+
+  it('ignores unrelated external message types', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'OTHER' }, {}, sendResponse)
+    expect(sendResponse).not.toHaveBeenCalled()
   })
 })
 

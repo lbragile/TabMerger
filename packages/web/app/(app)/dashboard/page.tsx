@@ -101,7 +101,10 @@ export default async function DashboardPage({
         <div>
           <div className="flex items-center gap-2 mb-1">
             <h1 className="text-2xl font-bold">Good morning, {firstNameFromEmail(user.email ?? '')}</h1>
-            <Badge variant="secondary" className="capitalize">
+            <Badge
+              variant={currentTier === 'pro' ? 'default' : 'secondary'}
+              className="capitalize rounded-md"
+            >
               {currentTier === 'pro_ai' ? 'Pro AI' : currentTier}
             </Badge>
           </div>

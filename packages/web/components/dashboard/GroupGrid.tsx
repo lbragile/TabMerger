@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, ExternalLink, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
 // ponytail: inline minimal types — web doesn't depend on @tabmerger/shared
 interface Tab { title?: string; url?: string; favIconUrl?: string }
@@ -59,23 +60,42 @@ function ShareButton({ groupId, initialSlug }: { groupId: string; initialSlug?: 
         <button onClick={copyLink} className="text-xs text-primary hover:underline">
           {copied ? 'Copied!' : 'Copy link'}
         </button>
-        <button onClick={unpublish} disabled={busy} className="text-muted-foreground hover:text-destructive" title="Unpublish">
-          <X className="w-3 h-3" />
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={unpublish}
+                disabled={busy}
+                aria-label="Unpublish"
+                className="text-muted-foreground hover:text-destructive rounded-md p-0.5"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top">Unpublish — make this group private again</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     )
   }
 
   return (
-    <button
-      onClick={publish}
-      disabled={busy}
-      className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-transparent hover:border-border transition-colors"
-      title="Share group"
-    >
-      <Share2 className="w-3 h-3" />
-      {busy ? '…' : 'Share'}
-    </button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={publish}
+            disabled={busy}
+            aria-label="Share group"
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors"
+          >
+            <Share2 className="w-3 h-3" />
+            {busy ? '…' : 'Share'}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top">Make this group public and get a shareable link</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
@@ -122,7 +142,7 @@ function GroupCard({
 
   return (
     <div
-      className={`rounded-[13px] border border-border overflow-hidden relative transition-shadow duration-200 hover:shadow-sh2 ${selecting ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
+      className={`rounded-lg border border-border overflow-hidden relative transition-shadow duration-200 hover:shadow-sh2 ${selecting ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
       style={{
         borderLeft: `4px solid ${group.color}`,
         background: `linear-gradient(to right, ${group.color}14, transparent 40%), hsl(var(--surface))`,
@@ -155,7 +175,7 @@ function GroupCard({
         </p>
 
         {isStale(group.updated_at) && (
-          <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mb-3">
+          <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2 py-1 mb-3">
             <AlertTriangle className="w-3 h-3 shrink-0" />
             Tabs may be stale — last synced over 30 days ago
           </div>
@@ -189,7 +209,7 @@ function GroupCard({
             {tabs.length > 0 && (
               <button
                 onClick={() => openAllTabs(group)}
-                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-transparent hover:border-border transition-colors"
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors"
                 title="Open all tabs in this group"
               >
                 <ExternalLink className="w-3 h-3" />
@@ -199,7 +219,7 @@ function GroupCard({
             {tabs.length > 0 && (
               <button
                 onClick={() => setOpen((v) => !v)}
-                className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded border border-transparent hover:border-border transition-colors"
+                className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors"
               >
                 {open ? 'Hide tabs' : 'Show tabs'}
               </button>
@@ -372,7 +392,7 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
               aria-label="Sort groups"
               value={sort}
               onChange={(e) => setSort(e.target.value as typeof sort)}
-              className="h-7 rounded border border-border bg-background px-1.5 text-xs"
+              className="h-7 rounded-md border border-border bg-background px-1.5 text-xs"
             >
               <option value="recent">Recent</option>
               <option value="name">Name</option>

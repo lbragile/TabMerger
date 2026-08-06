@@ -130,7 +130,7 @@ function SignInForm() {
           <form onSubmit={handleEmailPassword} className="flex flex-col gap-4">
             <Button
               variant="outline"
-              className="w-full h-11 rounded-[11px]"
+              className="w-full h-11 rounded-lg"
               onClick={handleGoogle}
               disabled={loading}
               type="button"
@@ -160,7 +160,7 @@ function SignInForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="h-11 rounded-[10px]"
+                className="h-11 rounded-md"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -181,18 +181,18 @@ function SignInForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="h-11 rounded-[10px]"
+                className="h-11 rounded-md"
               />
             </div>
             {error && (
               <p className="text-sm text-destructive">{error}</p>
             )}
-            <Button type="submit" className="w-full h-[46px] rounded-[11px] shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
+            <Button type="submit" className="w-full h-[46px] rounded-lg shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
               {loading ? 'Signing in...' : 'Continue'}
             </Button>
             <Button
               variant="outline"
-              className="w-full h-9 text-xs rounded-[10px]"
+              className="w-full h-9 text-xs rounded-md"
               onClick={handleMagicLink}
               disabled={loading}
               type="button"

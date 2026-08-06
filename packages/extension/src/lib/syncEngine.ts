@@ -3,6 +3,28 @@ import type { Group } from './types';
 import { supabase } from './supabase';
 import { getPendingSyncGroups, markGroupSynced, saveGroup } from './localDb';
 
+/** Upserts a single group to Supabase and marks it synced locally on success. Shared by push paths. */
+async function pushGroup(session: Session, group: Group): Promise<void> {
+  const { error } = await supabase.from('groups').upsert({
+    id: group.id,
+    user_id: session.user.id,
+    name: group.name,
+    color: group.color,
+    updated_at: new Date(group.updatedAt).toISOString(),
+    windows: group.windows,
+    starred: group.starred ?? false,
+    archived: group.archived ?? false,
+    note: group.note ?? null,
+    info: group.info ?? ''
+  });
+
+  if (!error) {
+    await markGroupSynced(group.id);
+  } else {
+    console.error('[SyncEngine] Failed to push group', group.id, error.message);
+  }
+}
+
 /**
  * Upserts all locally-modified groups (pendingSync=true) to Supabase, then clears the flag.
  * Permanent groups (Now Open) are explicitly excluded — they are device-local by design.
@@ -13,27 +35,8 @@ export async function pushPendingChanges(session: Session): Promise<void> {
   const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent);
   if (pending.length === 0) return;
 
-  const userId = session.user.id;
-
   for (const group of pending) {
-    const { error } = await supabase.from('groups').upsert({
-      id: group.id,
-      user_id: userId,
-      name: group.name,
-      color: group.color,
-      updated_at: new Date(group.updatedAt).toISOString(),
-      windows: group.windows,
-      starred: group.starred ?? false,
-      archived: group.archived ?? false,
-      note: group.note ?? null,
-      info: group.info ?? ''
-    });
-
-    if (!error) {
-      await markGroupSynced(group.id);
-    } else {
-      console.error('[SyncEngine] Failed to push group', group.id, error.message);
-    }
+    await pushGroup(session, group);
   }
 }
 

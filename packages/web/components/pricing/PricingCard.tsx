@@ -85,7 +85,7 @@ export function PricingCard({
       <div className="flex items-center justify-between gap-2 mb-2.5">
         <h6 className="text-sm font-semibold">{name}</h6>
         {highlighted && (
-          <span className="text-[9.5px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-primary/15 text-primary">
+          <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary/15 text-primary self-center">
             Recommended
           </span>
         )}
@@ -132,7 +132,7 @@ export function PricingCard({
         {isFree ? (
           <Button
             variant="outline"
-            className="w-full rounded-[10px]"
+            className="w-full rounded-lg"
             onClick={handleClick}
             disabled={isCurrentPlan}
           >
@@ -141,7 +141,7 @@ export function PricingCard({
         ) : (
           <Button
             className={cn(
-              'w-full rounded-[10px]',
+              'w-full rounded-lg',
               highlighted && 'bg-primary text-primary-foreground shadow-[0_10px_26px_-10px_rgba(0,180,204,0.9)] hover:bg-primary/90'
             )}
             variant={highlighted ? 'default' : 'secondary'}

@@ -4,6 +4,10 @@ import { describe, it, expect, vi } from 'vitest'
 // Both pages are async server components — mock their data dependencies and child
 // components so we can `await` and render just the layout markup under test.
 
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: () => ({ auth: { updateUser: vi.fn() } }),
+}))
+
 vi.mock('@/lib/supabase/server', () => ({
   createClient: async () => ({
     auth: {

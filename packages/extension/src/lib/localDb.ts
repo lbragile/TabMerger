@@ -153,7 +153,14 @@ export async function deleteSession(id: string): Promise<void> {
 export async function getSetting<T>(key: string, defaultValue: T): Promise<T> {
   const db = await getDb();
   const record = await db.get('settings', key);
-  return record !== undefined ? (record as { id: string; value: T }).value : defaultValue;
+  if (record === undefined) return defaultValue;
+  const stored = (record as { id: string; value: T }).value;
+  // Merge over defaultValue so fields added after a user's settings object was last
+  // saved (e.g. aiDailyThrottle) fall back to their default instead of being undefined —
+  // without this, new settings silently render "off" for any existing install.
+  return typeof defaultValue === 'object' && defaultValue !== null && typeof stored === 'object' && stored !== null
+    ? { ...defaultValue, ...stored }
+    : stored;
 }
 
 export async function setSetting<T>(key: string, value: T): Promise<void> {

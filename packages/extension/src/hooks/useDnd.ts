@@ -36,6 +36,13 @@ export function parseDndId(id: string) {
   };
 }
 
+// ponytail: DragOverlay ghost has pointer-events-none, so the pointer hit-tests
+// through it during an active drag — the source element's `active:cursor-grabbing`
+// class never actually controls the cursor. Force it at the body level instead.
+export function setBodyDragCursor(active: boolean) {
+  document.body.style.cursor = active ? 'grabbing' : '';
+}
+
 export function useDndSensors() {
   return useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),

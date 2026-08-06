@@ -46,8 +46,13 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-xs: calc(var(--radius) - 0.5rem);
+  --radius-xl: calc(var(--radius) + 0.125rem);
+  --radius-2xl: calc(var(--radius) + 0.25rem);
+  --radius-3xl: calc(var(--radius) + 0.375rem);
+  --radius-full: 50%;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-marquee: marquee 40s linear infinite;
@@ -101,7 +106,7 @@ button:disabled,
     --border: 60 9% 89%;
     --input: 60 9% 89%;
     --ring: 189 100% 40%;
-    --radius: 0.75rem;
+    --radius: 0rem;
 
     /* Extra surface/elevation tokens from the design spec — not covered by
        the shadcn palette above. Used via arbitrary values, e.g. bg-[var(--surface2)] */
@@ -149,7 +154,7 @@ button:disabled,
     --border: 220 20% 19%;
     --input: 220 20% 19%;
     --ring: 193 85% 58%;
-    --radius: 0.75rem;
+    --radius: 0rem;
 
     --surface: 220 25% 11%;
     --surface2: 220 22% 9%;

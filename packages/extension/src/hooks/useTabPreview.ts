@@ -56,22 +56,32 @@ export function useTabPreview(url: string, title: string, aiEnabled: boolean, ta
       graceRef.current = true;
       setTimeout(() => { graceRef.current = false; }, 500);
       setState((s) => ({ ...s, visible: true, loading: true }));
-      if (!aiEnabled) {
-        const ogImage = storedOgImage ?? await fetchOgImage(tabId ?? 0, url);
-        setState({ visible: true, summary: null, ogImage: ogImage ?? null, loading: false });
-        return;
-      }
       try {
         const ogImage = storedOgImage ?? await fetchOgImage(tabId ?? 0, url);
-        const cached = summaryCache.get(url);
-        const summary = cached ?? (await fetchSummary({ url, title })).summary ?? null;
-        if (summary && !cached) summaryCache.set(url, summary);
-        setState({ visible: true, summary, ogImage: ogImage ?? null, loading: false });
+        const cached = aiEnabled ? summaryCache.get(url) ?? null : null;
+        setState({ visible: true, summary: cached, ogImage: ogImage ?? null, loading: false });
       } catch {
         setState({ visible: true, summary: null, ogImage: null, loading: false });
       }
     }, 400);
-  }, [url, title, fetchSummary, aiEnabled, tabId, storedOgImage]);
+  }, [url, aiEnabled, tabId, storedOgImage]);
+
+  /** Click-triggered AI summary fetch — reuses the module-level cache. */
+  const generateSummary = useCallback(async () => {
+    const cached = summaryCache.get(url);
+    if (cached) {
+      setState((s) => ({ ...s, summary: cached }));
+      return;
+    }
+    setState((s) => ({ ...s, loading: true }));
+    try {
+      const summary = (await fetchSummary({ url, title })).summary ?? null;
+      if (summary) summaryCache.set(url, summary);
+      setState((s) => ({ ...s, summary, loading: false }));
+    } catch {
+      setState((s) => ({ ...s, loading: false }));
+    }
+  }, [url, title, fetchSummary]);
 
   const handleMouseLeave = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -85,5 +95,5 @@ export function useTabPreview(url: string, title: string, aiEnabled: boolean, ta
     if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
   }, []);
 
-  return { ...state, handleMouseEnter, handleMouseLeave, cancelLeave };
+  return { ...state, handleMouseEnter, handleMouseLeave, cancelLeave, generateSummary };
 }

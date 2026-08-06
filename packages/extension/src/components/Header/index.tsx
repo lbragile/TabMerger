@@ -32,7 +32,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAutoGroup } from "@/hooks/useAI";
-import { useGroups, useSetGroupsState } from "@/hooks/useGroups";
+import { useGroups, useSetGroupsState, useApplyAIGroups } from "@/hooks/useGroups";
 import { useSessions, useSaveSession } from "@/hooks/useSessions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -84,12 +84,13 @@ export function Header() {
         setSearchFilter(q);
     };
     const { user, signOut } = useAuth();
-    const { aiFeatures, tier, sessions: hasSessions } = useEntitlements();
+    const { aiFeatures, tier, maxGroups, sessions: hasSessions } = useEntitlements();
     const { data: sessionList = [] } = useSessions();
     const { mutateAsync: saveSession } = useSaveSession();
     const { data: groupsState } = useGroups();
     const setGroupsState = useSetGroupsState();
     const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
+    const { mutateAsync: applyAIGroups } = useApplyAIGroups();
 
     const handleUndo = async () => {
         if (!groupsState) return;
@@ -113,10 +114,36 @@ export function Header() {
         }
         try {
             const result = await autoGroup(tabs);
-            // Show suggestion — actual application handled by AIGroupSuggestion component
-            toast.success(`AI suggested ${result.groups.length} groups`);
+            if (result.groups.length === 0) {
+                toast.info("AI didn't find any groups to create");
+                return;
+            }
+
+            // Cap to remaining free-tier group slots, same limit manual "New group" enforces
+            const activeCount = groupsState.available.filter((g) => !g.permanent).length;
+            const remaining = isFinite(maxGroups) ? Math.max(0, maxGroups - activeCount) : result.groups.length;
+            const suggestions = result.groups.slice(0, remaining);
+            if (suggestions.length === 0) {
+                trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
+                toast.error(`Free plan allows up to ${maxGroups} groups.`, {
+                    action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+                });
+                return;
+            }
+
+            const { appliedGroups } = await applyAIGroups(suggestions);
+            if (appliedGroups === 0) {
+                toast.info("No matching tabs found for AI's suggestion");
+                return;
+            }
+            toast.success(`AI created ${appliedGroups} group${appliedGroups === 1 ? '' : 's'}`, {
+                ...(suggestions.length < result.groups.length
+                    ? { description: `${result.groups.length - suggestions.length} more suggested but skipped — free plan limit reached.` }
+                    : {})
+            });
         } catch (err) {
             console.error("[TabMerger] AI grouping failed:", err);
+            toast.error("AI grouping failed");
         }
     };
 

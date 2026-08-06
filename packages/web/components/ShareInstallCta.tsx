@@ -11,7 +11,7 @@ export function ShareInstallCta() {
         href="https://chrome.google.com/webstore"
         target="_blank"
         rel="noopener noreferrer"
-        className="shrink-0 inline-flex items-center gap-2 h-10 px-5 rounded-[10px] text-white text-[13.5px] font-medium shadow-sh2 hover:shadow-sh3 hover:-translate-y-px transition-all"
+        className="shrink-0 inline-flex items-center gap-2 h-10 px-5 rounded-md text-white text-[13.5px] font-medium shadow-sh2 hover:shadow-sh3 hover:-translate-y-px transition-all"
         style={{ backgroundImage: 'var(--gradient-brand)' }}
       >
         <ChromeIcon size={16} />

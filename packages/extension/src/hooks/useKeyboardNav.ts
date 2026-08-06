@@ -46,6 +46,8 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex)
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex)
   const openModal = useUIStore((s) => s.openModal)
+  const setRenameTarget = useUIStore((s) => s.setRenameTarget)
+  const setNoteTarget = useUIStore((s) => s.setNoteTarget)
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -89,6 +91,26 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
         return
       }
 
+      // F2: rename focused tab (standard OS rename convention)
+      if (e.key === 'F2') {
+        const tabInfo = getFocusedTabInfo()
+        if (tabInfo) {
+          e.preventDefault()
+          setRenameTarget({ kind: 'tab', ...tabInfo })
+        }
+        return
+      }
+
+      // N: add/edit note on focused tab
+      if (e.key.toLowerCase() === 'n') {
+        const tabInfo = getFocusedTabInfo()
+        if (tabInfo) {
+          e.preventDefault()
+          setNoteTarget(tabInfo)
+        }
+        return
+      }
+
       if (e.key === 'Delete') {
         // Caller-provided string id takes priority (used by tests and explicit-focus callers)
         if (focusedTabId != null) {
@@ -114,7 +136,7 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
 
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
-  }, [addGroup, deleteTab, deleteTabMutate, activeGroupIndex, setActiveGroupIndex, groupCount, focusedTabId, searchInputRef, openModal])
+  }, [addGroup, deleteTab, deleteTabMutate, activeGroupIndex, setActiveGroupIndex, groupCount, focusedTabId, searchInputRef, openModal, setRenameTarget, setNoteTarget])
 
   return { focusedGroupIndex: activeGroupIndex }
 }

@@ -3,7 +3,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState, Window, Tab } from '@/lib/types';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { getFaviconUrl, formatGroupCounts, sortWindowsByStarred } from '@/lib/utils';
+import { pushDeviceSession } from '@/lib/deviceSessions';
 import { GROUPS_QUERY_KEY } from './useGroups';
+import { useEntitlements } from './useEntitlements';
 
 /**
  * Converts a raw `chrome.tabs.Tab` to the app's `Tab` type.
@@ -195,6 +197,7 @@ async function backfillOgImages(
  */
 export function useCurrentTabs() {
   const qc = useQueryClient();
+  const { tier } = useEntitlements();
 
   useEffect(() => {
     let mounted = true;
@@ -203,6 +206,9 @@ export function useCurrentTabs() {
       const next = await syncNowOpen();
       if (!mounted || !next) return;
       qc.setQueryData(GROUPS_QUERY_KEY, next);
+      // ponytail: pushDeviceSession no-ops for free tier internally (and debounce-schedules
+      // cheaply either way), so no extra guard needed here — see deviceSessions.ts doPush().
+      pushDeviceSession(next, tier);
       if (fetchOg) {
         const nowOpen = next.available.find((g) => g.permanent);
         const missing = (nowOpen?.windows ?? []).flatMap((w) =>

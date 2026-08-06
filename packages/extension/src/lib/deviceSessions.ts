@@ -1,0 +1,204 @@
+import type { DeviceSession } from '@tabmerger/shared';
+import type { GroupsState, Tier } from './types';
+import { getSetting, setSetting } from './localDb';
+import { supabase } from './supabase';
+
+/** Rapid Now Open changes (tab open/close bursts) coalesce into a single push after this window. */
+export const DEVICE_SESSION_DEBOUNCE_MS = 2000;
+
+const DEVICE_ID_KEY = 'deviceId';
+const STALE_DEVICE_DAYS = 30;
+
+let pending: Promise<string> | null = null;
+
+async function generateAndPersistDeviceId(): Promise<string> {
+  const existing = await getSetting<string | undefined>(DEVICE_ID_KEY, undefined);
+  if (existing) return existing;
+
+  const id = crypto.randomUUID();
+  await setSetting(DEVICE_ID_KEY, id);
+  return id;
+}
+
+/**
+ * Returns this device's persisted UUID, generating and storing one on first call. Idempotent.
+ * Concurrent cold-cache callers (e.g. useCurrentTabs + OtherDevices on mount) share one
+ * in-flight generate+persist instead of racing separate crypto.randomUUID() writes.
+ */
+export async function getOrCreateDeviceId(): Promise<string> {
+  if (!pending) {
+    pending = generateAndPersistDeviceId().finally(() => {
+      pending = null;
+    });
+  }
+  return pending;
+}
+
+/** Parses a simple "Browser on OS" label from a userAgent string, e.g. "Chrome on Windows". */
+export function getDeviceName(userAgent: string): string {
+  const browserMatch = userAgent.match(/(Chrome|Firefox|Edg|Safari)\/[\d.]+/);
+  const browser = browserMatch ? (browserMatch[1] === 'Edg' ? 'Edge' : browserMatch[1]) : null;
+
+  let os: string | null = null;
+  if (/Windows/.test(userAgent)) os = 'Windows';
+  else if (/Mac OS X|Macintosh/.test(userAgent)) os = 'Mac';
+  else if (/Linux/.test(userAgent)) os = 'Linux';
+  else if (/Android/.test(userAgent)) os = 'Android';
+
+  if (!browser || !os) return 'Unknown device';
+  return `${browser} on ${os}`;
+}
+
+let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+let latestState: GroupsState | undefined;
+let latestTier: Tier = 'pro';
+
+async function doPush(): Promise<void> {
+  const state = latestState;
+  const tier = latestTier;
+  debounceTimer = undefined;
+  latestState = undefined;
+  if (!state || tier === 'free') return;
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+  if (!session) return;
+
+  const deviceId = await getOrCreateDeviceId();
+  const deviceName = getDeviceName(navigator.userAgent);
+  const nowOpen = state.available.find((g) => g.permanent);
+
+  const { error } = await supabase.from('device_sessions').upsert({
+    user_id: session.user.id,
+    device_id: deviceId,
+    device_name: deviceName,
+    now_open_snapshot: { windows: nowOpen?.windows ?? [] },
+    last_active: new Date().toISOString()
+  });
+
+  // ponytail: failed push is silently dropped, no retry queue (unlike syncEngine.ts pendingSync) — acceptable, this is
+  // best-effort presence data, not sync-critical; upgrade path: persist a pending flag and retry on next tab event.
+  if (error) console.error('[deviceSessions] Failed to push device session', error.message);
+}
+
+/**
+ * Debounced push of the current device's Now Open snapshot to Supabase.
+ * No-op for free tier (checked at push time, not schedule time, so the debounce still coalesces).
+ * Call on every Now Open change; rapid calls within `DEVICE_SESSION_DEBOUNCE_MS` collapse into one push.
+ */
+export function pushDeviceSession(state: GroupsState, tier: Tier = 'pro'): void {
+  // ponytail: if the popup closes within the debounce window the pending push is lost (MV3 popups are torn down on
+  // close) until the next tab-change event — acceptable, best-effort presence; upgrade path: move debounce/push to
+  // the background service worker if staleness becomes a real complaint.
+  latestState = state;
+  latestTier = tier;
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => void doPush(), DEVICE_SESSION_DEBOUNCE_MS);
+}
+
+/** Fetches other devices' sessions (excludes own device_id), active within the last 30 days. No-op for free tier. */
+export async function fetchOtherDeviceSessions(tier: Tier): Promise<DeviceSession[]> {
+  if (tier === 'free') return [];
+
+  const ownDeviceId = await getOrCreateDeviceId();
+  const cutoff = new Date(Date.now() - STALE_DEVICE_DAYS * 24 * 60 * 60 * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .from('device_sessions')
+    .select('*')
+    .neq('device_id', ownDeviceId)
+    .gte('last_active', cutoff)
+    .order('last_active', { ascending: false });
+
+  if (error || !data) {
+    if (error) console.error('[deviceSessions] Failed to fetch other devices', error.message);
+    return [];
+  }
+
+  // ponytail: dev-only mock data — only fires in `pnpm dev:extension` (import.meta.env.DEV is
+  // compiled to `false` and dead-code-eliminated by Vite in production builds) and only when the
+  // real query legitimately returned nothing, so it can never mask or override real rows. Lets us
+  // visually verify the Other Devices UI without writing rows into the prod Supabase table.
+  // Delete this block once no longer needed.
+  if (import.meta.env.DEV && data.length === 0) {
+    return getMockDeviceSessions();
+  }
+
+  return data as DeviceSession[];
+}
+
+// ponytail: dev-only mock data, see call site above. Not a real DeviceSession[] source — never
+// imported outside this file.
+function getMockDeviceSessions(): DeviceSession[] {
+  const now = Date.now();
+  // note: OtherDevices.tsx expects an `id` field alongside DeviceSession (Supabase row pk), see its
+  // local DeviceSessionRow type — included here even though it's not on the shared DeviceSession type.
+  return [
+    {
+      id: 'mock-device-1',
+      device_id: 'mock-device-1',
+      device_name: 'Chrome on Mac',
+      last_active: new Date(now - 5 * 60 * 1000).toISOString(),
+      now_open_snapshot: {
+        windows: [
+          {
+            tabs: [
+              { title: 'GitHub - TabMerger', url: 'https://github.com/example/tabmerger' },
+              { title: 'Supabase Dashboard', url: 'https://supabase.com/dashboard' }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id: 'mock-device-2',
+      device_id: 'mock-device-2',
+      device_name: 'Firefox on Windows',
+      last_active: new Date(now - 3 * 60 * 60 * 1000).toISOString(),
+      now_open_snapshot: {
+        windows: [{ tabs: [{ title: 'MDN Web Docs', url: 'https://developer.mozilla.org' }] }]
+      }
+    },
+    {
+      id: 'mock-device-3',
+      device_id: 'mock-device-3',
+      device_name: 'Edge on Windows',
+      last_active: new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      now_open_snapshot: { windows: [] }
+    }
+  ] as unknown as DeviceSession[];
+}
+
+/** Removes device_sessions rows by id — RLS scopes deletes to the owning user, filtered explicitly too. */
+export async function removeDevices(deviceIds: string[]): Promise<void> {
+  if (deviceIds.length === 0) return;
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+  if (!session) return;
+
+  const { error } = await supabase
+    .from('device_sessions')
+    .delete()
+    .in('id', deviceIds)
+    .eq('user_id', session.user.id);
+  if (error) console.error('[deviceSessions] Failed to remove devices', error.message);
+}
+
+/** Renames this device — updates device_name for own device_id only. */
+export async function renameDevice(newName: string): Promise<void> {
+  const ownDeviceId = await getOrCreateDeviceId();
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+  if (!session) return;
+
+  // defense-in-depth: RLS already scopes updates to the owning user, but filter explicitly too.
+  const { error } = await supabase
+    .from('device_sessions')
+    .update({ device_name: newName })
+    .eq('device_id', ownDeviceId)
+    .eq('user_id', session.user.id);
+  if (error) console.error('[deviceSessions] Failed to rename device', error.message);
+}

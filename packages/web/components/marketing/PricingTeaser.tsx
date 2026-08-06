@@ -22,7 +22,7 @@ export function PricingTeaser() {
         </h2>
 
         {/* Monthly/Yearly toggle — mirrors the full pricing page's pill toggle */}
-        <div className="inline-flex rounded-[10px] p-[3px] bg-surface3 border border-border text-sm mb-8">
+        <div className="inline-flex rounded-lg p-[3px] bg-surface3 border border-border text-sm mb-8">
           {(['monthly', 'yearly'] as const).map((opt) => (
             <button
               key={opt}
@@ -58,7 +58,7 @@ export function PricingTeaser() {
                   <span />
                   <p className="text-sm font-semibold">{tier.name}</p>
                   {t.highlighted ? (
-                    <span className="justify-self-end text-[9.5px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-primary/15 text-primary">
+                    <span className="inline-flex items-center justify-self-end self-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary/15 text-primary">
                       Recommended
                     </span>
                   ) : (
@@ -80,7 +80,7 @@ export function PricingTeaser() {
 
         <Link
           href="/pricing"
-          className="inline-flex items-center gap-1.5 h-10 px-5 rounded-[10px] bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 h-10 px-5 rounded-lg bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors mb-4"
         >
           See full pricing
           <span aria-hidden="true">→</span>

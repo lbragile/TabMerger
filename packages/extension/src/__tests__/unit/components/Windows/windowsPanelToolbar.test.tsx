@@ -65,6 +65,7 @@ vi.mock('@/components/Windows/Window', () => ({
 vi.mock('@/hooks/useDnd', () => ({
   useDndSensors: () => [],
   useWindowDndHandlers: () => ({ onDragEnd: vi.fn() }),
+  setBodyDragCursor: vi.fn(),
   parseDndId: vi.fn(() => ({ kind: 'tab', tabId: 0, groupIndex: 0, windowIndex: 0, tabIndex: 0 })),
 }))
 

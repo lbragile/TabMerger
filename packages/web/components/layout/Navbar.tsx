@@ -73,11 +73,11 @@ export async function Navbar() {
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         variant="ghost"
-                                        className="relative h-8 w-8 rounded-full"
+                                        className="relative h-8 w-8 rounded-md"
                                         aria-label="Account menu"
                                     >
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarFallback className="text-xs">
+                                        <Avatar className="h-8 w-8 rounded-md">
+                                            <AvatarFallback className="text-xs rounded-md">
                                                 {initials}
                                             </AvatarFallback>
                                         </Avatar>

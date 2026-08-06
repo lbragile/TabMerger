@@ -98,7 +98,7 @@ export function FAQ() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center h-10 px-5 rounded-[10px] border border-input bg-background hover:bg-accent hover:text-accent-foreground text-[13.5px] font-medium transition-colors"
+            className="inline-flex items-center h-10 px-5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground text-[13.5px] font-medium transition-colors"
           >
             Contact support
           </Link>

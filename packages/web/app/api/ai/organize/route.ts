@@ -83,14 +83,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { allowed } = await checkAndIncrementAIUsage(supabase, user.id)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Pro AI subscription required or monthly limit reached' },
-      { status: 403 }
-    )
-  }
-
   const { searchParams } = new URL(request.url)
   const runId = searchParams.get('runId')
 

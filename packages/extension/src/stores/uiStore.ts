@@ -27,9 +27,16 @@ interface ModalState {
 }
 
 interface RenameTarget {
-  kind: 'group' | 'window';
+  kind: 'group' | 'window' | 'tab';
   groupIndex: number;
   windowIndex?: number;
+  tabIndex?: number;
+}
+
+export interface TabPositionTarget {
+  groupIndex: number;
+  windowIndex: number;
+  tabIndex: number;
 }
 
 export type SelectionItemType = 'tab' | 'window' | 'group';
@@ -45,6 +52,8 @@ interface UIState {
   activeGroupIndex: number;
   searchFilter: string;
   renameTarget: RenameTarget | null;
+  /** Set by a global keyboard shortcut to open the note editor for a specific tab row (consumed + cleared by TabItem). */
+  noteTarget: TabPositionTarget | null;
 
   // Undo/redo stack (max 10)
   undoStack: GroupsState[];
@@ -64,6 +73,7 @@ interface UIState {
   setScrollToWindowIndex: (index: number | null) => void;
   setSearchFilter: (filter: string) => void;
   setRenameTarget: (target: RenameTarget | null) => void;
+  setNoteTarget: (target: TabPositionTarget | null) => void;
   pushUndo: (state: GroupsState) => void;
   undo: (currentState: GroupsState) => GroupsState | undefined;
   redo: (currentState: GroupsState) => GroupsState | undefined;
@@ -90,6 +100,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   scrollToWindowIndex: null,
   searchFilter: '',
   renameTarget: null,
+  noteTarget: null,
   undoStack: [],
   redoStack: [],
   selectionMode: false,
@@ -105,6 +116,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   setScrollToWindowIndex: (index) => set({ scrollToWindowIndex: index }),
   setSearchFilter: (filter) => set({ searchFilter: filter }),
   setRenameTarget: (target) => set({ renameTarget: target }),
+  setNoteTarget: (target) => set({ noteTarget: target }),
 
   pushUndo: (state) =>
     set((prev) => {

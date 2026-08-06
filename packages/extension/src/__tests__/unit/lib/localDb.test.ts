@@ -121,6 +121,14 @@ describe('localDb — settings', () => {
     const value = await getSetting('appSettings', { theme: 'system' })
     expect(value).toEqual({ theme: 'dark' })
   })
+
+  it('getSetting merges a field added to the default after the record was last saved, instead of returning undefined for it', async () => {
+    const { getSetting, setSetting } = await freshLocalDb()
+    // Simulate a pre-existing install whose stored settings predate a newly-added field.
+    await setSetting('appSettings', { theme: 'dark' })
+    const value = await getSetting('appSettings', { theme: 'system', aiDailyThrottle: true })
+    expect(value).toEqual({ theme: 'dark', aiDailyThrottle: true })
+  })
 })
 
 describe('localDb — sync-related helpers', () => {

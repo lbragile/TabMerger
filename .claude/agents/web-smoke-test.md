@@ -2,6 +2,7 @@
 name: web-smoke-test
 description: Pre-deploy smoke test for the Next.js 15 web app. Run before restarting the dev server or deploying to Vercel. Catches TypeScript errors, broken API routes, missing env vars, and Next.js-specific pitfalls like un-awaited cookies() or wrong server/client component boundaries.
 memory: project
+color: yellow
 ---
 
 # Web App Smoke Test Agent

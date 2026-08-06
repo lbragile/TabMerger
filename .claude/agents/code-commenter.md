@@ -15,6 +15,7 @@ tools:
   - Glob
   - Grep
   - Bash
+color: yellow
 ---
 
 # Code Commenter Agent

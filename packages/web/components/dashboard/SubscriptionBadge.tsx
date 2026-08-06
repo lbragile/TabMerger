@@ -17,7 +17,7 @@ interface SubscriptionBadgeProps {
 const tierConfig = {
   free: { label: 'Free', variant: 'secondary' as const },
   pro: { label: 'Pro', variant: 'default' as const },
-  pro_ai: { label: 'Pro AI', variant: 'default' as const },
+  pro_ai: { label: 'Pro AI', variant: 'secondary' as const },
 }
 
 export function SubscriptionBadge({
@@ -35,16 +35,16 @@ export function SubscriptionBadge({
   const priceInfo = tier !== 'free' ? getPriceInfo(priceId) : null
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border p-4">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+    <div className="flex items-center gap-3 border p-4">
+      <div className="flex h-10 w-10 items-center justify-center bg-primary/10">
         <Zap className="h-5 w-5 text-primary" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <p className="font-medium">Current plan</p>
-          <Badge variant={config.variant}>{config.label}</Badge>
+          <Badge variant={config.variant} className="rounded-md">{config.label}</Badge>
           {status && status !== 'active' && (
-            <Badge variant="destructive">{status}</Badge>
+            <Badge variant="destructive" className="rounded-md">{status}</Badge>
           )}
         </div>
         {isActive && tier !== 'free' && (priceInfo || currentPeriodEnd) && (

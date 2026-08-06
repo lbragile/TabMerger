@@ -1,8 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Check, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface SyncIndicatorProps {
   userId: string
@@ -20,21 +23,49 @@ interface SyncIndicatorProps {
  * replication is a `database` agent change, not something to route around here.
  */
 export function SyncIndicator({ userId }: SyncIndicatorProps) {
+  const router = useRouter()
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null)
   const [justSynced, setJustSynced] = useState(false)
+  const [justChecked, setJustChecked] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
 
-  useEffect(() => {
+  const fetchLatestSync = useCallback(async () => {
     const supabase = createClient()
-
-    supabase
+    const { data, error } = await supabase
       .from('groups')
       .select('updated_at')
       .eq('user_id', userId)
       .order('updated_at', { ascending: false })
       .limit(1)
-      .then(({ data }) => {
-        if (data?.[0]?.updated_at) setLastSyncedAt(new Date(data[0].updated_at as string))
-      })
+    if (error) console.error('[SyncIndicator] Failed to fetch latest sync', error.message)
+    if (!data?.[0]?.updated_at) return null
+    const date = new Date(data[0].updated_at as string)
+    setLastSyncedAt(date)
+    return date
+  }, [userId])
+
+  const handleRefreshClick = useCallback(async () => {
+    setRefreshing(true)
+    const before = lastSyncedAt?.getTime()
+    try {
+      const after = await fetchLatestSync()
+      if (after && after.getTime() !== before) {
+        setJustSynced(true)
+        setTimeout(() => setJustSynced(false), 2000)
+      } else {
+        setJustChecked(true)
+        setTimeout(() => setJustChecked(false), 2000)
+      }
+    } finally {
+      setRefreshing(false)
+    }
+    router.refresh()
+  }, [fetchLatestSync, lastSyncedAt, router])
+
+  useEffect(() => {
+    const supabase = createClient()
+
+    fetchLatestSync()
 
     const channel = supabase
       .channel(`groups-sync-${userId}`)
@@ -53,7 +84,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [userId])
+  }, [userId, fetchLatestSync])
 
   const label = justSynced
     ? 'Syncing...'
@@ -64,7 +95,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
   return (
     <div
       className={cn(
-        'hidden items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium sm:flex',
+        'hidden items-center gap-1.5 rounded-md border py-1 pl-2.5 pr-1 text-xs font-medium sm:flex',
         justSynced
           ? 'border-amber-600/30 bg-amber-500/20 text-amber-700 dark:text-amber-400'
           : lastSyncedAt
@@ -79,6 +110,26 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
         )}
       />
       {label}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={handleRefreshClick}
+              disabled={refreshing}
+              aria-label="Refresh sync status"
+              className="cursor-pointer rounded-md p-1 text-current/70 transition-colors hover:bg-black/10 hover:text-current disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white/10"
+            >
+              {justChecked ? (
+                <Check className="h-3.5 w-3.5" />
+              ) : (
+                <RefreshCw className={cn('h-3.5 w-3.5', refreshing && 'animate-spin')} />
+              )}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="top">Re-sync now</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   )
 }

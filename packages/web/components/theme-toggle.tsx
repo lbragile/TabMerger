@@ -13,7 +13,7 @@ export function ThemeToggle() {
       size="icon"
       onClick={toggleTheme}
       aria-label="Toggle theme"
-      className="h-[34px] w-[34px] rounded-[9px] border-border2 text-text2 hover:bg-surface2 hover:text-foreground"
+      className="h-[34px] w-[34px] rounded-sm border-border2 text-text2 hover:bg-surface2 hover:text-foreground"
     >
       {theme === 'dark' ? (
         <Sun className="h-4 w-4" />

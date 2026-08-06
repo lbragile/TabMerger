@@ -4,7 +4,7 @@ import Image from "next/image";
 export function Footer() {
     return (
         <footer className="border-t bg-background">
-            <div className="container flex flex-col gap-6 py-10 md:flex-row md:justify-between">
+            <div className="container flex flex-col gap-6 px-6 py-10 sm:px-10 md:flex-row md:justify-between lg:px-16">
                 <div className="flex flex-col gap-2">
                     <Link href="/" className="flex items-center space-x-2">
                         <Image
@@ -123,7 +123,7 @@ export function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="container border-t py-6">
+            <div className="container border-t px-6 py-6 sm:px-10 lg:px-16">
                 <p className="text-center text-sm text-muted-foreground">
                     &copy; {new Date().getFullYear()} TabMerger. All rights
                     reserved.

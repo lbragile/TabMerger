@@ -10,6 +10,7 @@ tools:
   - Read
   - Bash
   - Grep
+color: blue
 ---
 
 # Changelog Drafter

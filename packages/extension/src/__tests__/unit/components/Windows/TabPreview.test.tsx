@@ -50,12 +50,28 @@ describe('TabPreview', () => {
     await waitFor(() => expect(screen.queryByText('No preview')).toBeNull())
   })
 
-  it('fetches AI summary and shows it when aiFeatures is enabled', async () => {
+  it('does not auto-fetch AI summary on hover, but shows a Generate summary button', async () => {
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    const user = userEvent.setup()
+    wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
+    await user.hover(screen.getByText('Example Page'))
+    await waitFor(() => expect(screen.getAllByRole('button', { name: /generate summary/i, hidden: true }).length).toBeGreaterThan(0))
+    expect(mockFetchSummary).not.toHaveBeenCalled()
+  })
+
+  it('fetches AI summary when the Generate summary button is clicked', async () => {
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     mockFetchSummary.mockResolvedValue({ summary: 'A concise page summary.' })
     const user = userEvent.setup()
     wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
     await user.hover(screen.getByText('Example Page'))
+    const buttons = await waitFor(() => {
+      const found = screen.getAllByRole('button', { name: /generate summary/i, hidden: true })
+      expect(found.length).toBeGreaterThan(0)
+      return found
+    })
+    const button = buttons[0]
+    await user.click(button)
     await waitFor(() => expect(screen.getAllByText('A concise page summary.').length).toBeGreaterThan(0))
     expect(mockFetchSummary).toHaveBeenCalledWith({ url: 'https://example.com', title: 'Example Page' })
   })

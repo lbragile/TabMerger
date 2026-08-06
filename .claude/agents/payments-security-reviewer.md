@@ -12,6 +12,7 @@ tools:
     - Read
     - Glob
     - Grep
+color: pink
 ---
 
 # Payments Security Reviewer

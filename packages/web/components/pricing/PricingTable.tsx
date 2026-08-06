@@ -15,7 +15,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
   return (
     <div className="flex flex-col items-center gap-10">
       {/* Segmented toggle */}
-      <div className="inline-flex rounded-[10px] p-[3px] bg-surface3 border border-border text-sm">
+      <div className="inline-flex rounded-md p-[3px] bg-surface3 border border-border text-sm">
         {(['monthly', 'yearly'] as const).map((opt) => (
           <button
             key={opt}

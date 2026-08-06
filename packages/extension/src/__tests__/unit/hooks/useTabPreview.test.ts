@@ -80,8 +80,27 @@ describe('useTabPreview', () => {
 
     expect(result.current.ogImage).toBe('https://example.com/og.png')
     expect(sendMessageMock).not.toHaveBeenCalled()
-    // AI summary still fetched for Pro AI users
+    // AI summary is NOT auto-fetched on hover — only via generateSummary()
+    expect(mockFetchSummary).not.toHaveBeenCalled()
+    expect(result.current.summary).toBeNull()
+  })
+
+  it('fetches AI summary only when generateSummary is called', async () => {
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(
+      () => useTabPreview('https://example.com', 'Example', true, 0, 'https://example.com/og.png'),
+      { wrapper }
+    )
+
+    await triggerHover(result.current.handleMouseEnter)
+    expect(mockFetchSummary).not.toHaveBeenCalled()
+
+    await act(async () => {
+      await result.current.generateSummary()
+    })
+
     expect(mockFetchSummary).toHaveBeenCalledWith({ url: 'https://example.com', title: 'Example' })
+    expect(result.current.summary).toBe('A summary')
   })
 
   it('falls back to sendMessage when storedOgImage is absent (free user, tabId=0)', async () => {

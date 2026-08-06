@@ -48,6 +48,7 @@ vi.mock('@dnd-kit/sortable', () => ({
 vi.mock('@/hooks/useDnd', () => ({
   useDndSensors: () => [],
   useGroupDndHandlers: () => ({ onDragEnd: vi.fn() }),
+  setBodyDragCursor: vi.fn(),
 }))
 
 vi.mock('@/components/SidePanel/GroupItem', () => ({

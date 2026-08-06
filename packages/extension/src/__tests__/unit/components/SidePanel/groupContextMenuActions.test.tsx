@@ -137,13 +137,6 @@ describe('GroupContextMenu — item actions', () => {
     expect(screen.getByText('Edit note')).toBeTruthy()
   })
 
-  it('opens URL rules modal', async () => {
-    const user = userEvent.setup()
-    renderGroup(makeGroup())
-    await user.click(screen.getByText('Manage URL rules'))
-    expect(mockOpenModal).toHaveBeenCalledWith('urlRules')
-  })
-
   it('duplicates the group when under the free-tier group limit', async () => {
     mockUseGroupsData.mockReturnValue({ available: [{}, {}] }) // 2 groups - 1 = 1 < maxGroups(2)
     const user = userEvent.setup()

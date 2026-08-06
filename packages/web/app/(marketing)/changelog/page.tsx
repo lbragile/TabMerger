@@ -17,7 +17,7 @@ interface ChangeEntry {
 const CHANGELOG: ChangeEntry[] = [
   {
     version: 'v2.1.0',
-    date: 'July 2026',
+    date: 'July 28, 2026',
     changes: [
       { type: 'New', text: 'Tab notes — add a private note to any tab, visible in the preview panel' },
       { type: 'New', text: 'Onboarding checklist shown to new users on first open' },
@@ -30,7 +30,7 @@ const CHANGELOG: ChangeEntry[] = [
   },
   {
     version: 'v2.0.1',
-    date: 'June 2026',
+    date: 'June 12, 2026',
     changes: [
       { type: 'New', text: 'Context-menu integration — right-click any tab in Chrome to send it to a TabMerger group' },
       { type: 'New', text: 'Session save & restore — snapshot your entire workspace and reload it later (Pro)' },
@@ -42,7 +42,7 @@ const CHANGELOG: ChangeEntry[] = [
   },
   {
     version: 'v2.0.0',
-    date: 'May 2026',
+    date: 'May 4, 2026',
     changes: [
       { type: 'New', text: 'Full rewrite as a pnpm monorepo: WXT-powered extension (MV3) + Next.js 15 marketing site + Supabase backend' },
       { type: 'New', text: 'Pro and Pro AI subscription tiers via Stripe — unlimited groups, cloud sync, and AI features' },
@@ -74,13 +74,12 @@ export default function ChangelogPage() {
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
       <div className="mb-12 pb-8 border-b border-line">
-        <p className="text-sm text-text3 mb-2">Product</p>
         <h1 className="text-4xl font-semibold tracking-tight mb-3">Changelog</h1>
         <p className="text-text2">Everything we shipped, newest first.</p>
       </div>
 
       <div className="flex flex-col">
-        {CHANGELOG.map((entry) => {
+        {CHANGELOG.map((entry, index) => {
           const major = isMajorVersion(entry.version)
           return (
             <div
@@ -88,6 +87,7 @@ export default function ChangelogPage() {
               id={anchorId(entry.version)}
               className={cn(
                 'grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-6 sm:gap-8 py-7 border-t border-line scroll-mt-24',
+                index === 0 && 'border-t-0',
                 major && 'rounded-2xl border-t-0 -mx-6 px-6 py-8 mb-4 bg-surface2'
               )}
             >
@@ -100,7 +100,7 @@ export default function ChangelogPage() {
                 </a>
                 <div className="text-xs text-text3 mt-1">{entry.date}</div>
                 {major && (
-                  <span className="inline-block mt-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                  <span className="inline-block mt-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-primary/15 text-primary">
                     Major release
                   </span>
                 )}

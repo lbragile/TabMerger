@@ -62,10 +62,10 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
       {bundle.groups.map((group) => {
         const groupTabs = group.windows.reduce((sum, w) => sum + w.tabs.length, 0)
         return (
-        <div key={group.id} className="rounded-[14px] border border-border bg-surface overflow-hidden shadow-sh1">
+        <div key={group.id} className="rounded-xl border border-border bg-surface overflow-hidden shadow-sh1">
           <div className="flex items-center gap-2.5 px-4 py-3 border-b border-line bg-surface2">
             <span
-              className="w-[7px] h-6 rounded-[4px] inline-block flex-shrink-0"
+              className="w-[7px] h-6 rounded-xs inline-block flex-shrink-0"
               style={{ backgroundColor: group.color }}
             />
             <h2 className="font-semibold text-[15px]">{group.name}</h2>
@@ -84,7 +84,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
           </div>
           <div className="p-2 flex flex-col gap-2">
           {group.windows.map((win, winIndex) => (
-            <div key={`${group.id}-win-${winIndex}`} className="rounded-[9px] border border-line divide-y divide-line">
+            <div key={`${group.id}-win-${winIndex}`} className="rounded-sm border border-line divide-y divide-line">
               <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-text3">
                 <span>Window {winIndex + 1}</span>
                 {win.incognito && (
@@ -111,11 +111,11 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
                 const inner = (
                   <>
                     {favicon ? (
-                      <span className="h-[18px] w-[18px] flex-shrink-0 overflow-hidden rounded-[5px] border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 flex items-center justify-center">
+                      <span className="h-[18px] w-[18px] flex-shrink-0 overflow-hidden rounded-xs border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 flex items-center justify-center">
                         <img src={favicon} alt="" className="w-3 h-3" />
                       </span>
                     ) : (
-                      <span className="h-[18px] w-[18px] flex-shrink-0 rounded-[5px] bg-surface3" />
+                      <span className="h-[18px] w-[18px] flex-shrink-0 rounded-xs bg-surface3" />
                     )}
                     <span className="flex-1 min-w-0 truncate">{tab.title ?? tab.url}</span>
                     {hostname && (

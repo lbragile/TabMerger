@@ -1,6 +1,6 @@
 # Database Schema Reference
 
-Source of truth: `supabase/migrations/001` through `011`. Read the actual SQL before trusting
+Source of truth: `supabase/migrations/001` through `014`. Read the actual SQL before trusting
 this doc for anything security-relevant — it's a snapshot, not a replacement for the migrations.
 
 ## Migration history
@@ -18,6 +18,9 @@ this doc for anything security-relevant — it's a snapshot, not a replacement f
 | 009 | `009_create_shared_bundles.sql` | Adds `shared_bundles` table (immutable public share snapshots) + RLS |
 | 010 | `010_grant_table_privileges.sql` | Grants-only migration, no schema change — see callout below |
 | 011 | `011_enable_realtime_groups.sql` | Adds `public.groups` to the `supabase_realtime` publication so clients (e.g. the web dashboard's `SyncIndicator`) can subscribe to live `postgres_changes` events. No RLS change — existing `groups` policies (owner-only, `auth.uid() = user_id`) already gate Realtime subscriptions. |
+| 012 | `012_dedupe_and_unique_subscriptions.sql` | Dedupes/uniques `subscriptions` rows — no `device_sessions`-relevant schema impact. |
+| 013 | `013_create_device_sessions.sql` | Adds `device_sessions` table (per-device "Now Open" snapshots for the "Continue on other device" feature) + RLS |
+| 014 | `014_ai_credit_purchases.sql` | Adds `ai_credit_purchases` table (one-time purchased AI credit packs, month-scoped, idempotent via `stripe_checkout_session_id`) + RLS |
 
 > **Keeping hosted Cloud in sync:** migrations 009 and 010 existed in this repo and were applied
 > to the local Supabase CLI stack, but were never pushed to the hosted Supabase Cloud project.
@@ -159,6 +162,35 @@ policy for regular users — increments happen via the service role in the AI AP
 
 Note: also FKs to `auth.users` directly, not `public.profiles`.
 
+### `ai_credit_purchases`
+One-time purchased AI credit packs (e.g. "+50 calls for $2.99") that top up a user's `ai_usage`
+allowance for that calendar month. Credits expire at month-end, same cadence as the free monthly
+cap — no rollover, no running balance across months. Kept as a separate table (not a column on
+`ai_usage`) so each Stripe checkout session is recorded individually, giving idempotency against
+webhook redelivery.
+
+| Column | Type | Constraints |
+|---|---|---|
+| `id` | `uuid` | PK, default `gen_random_uuid()` |
+| `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
+| `month` | `text` | not null — format `'YYYY-MM'`, matches `ai_usage.month` |
+| `credits` | `integer` | not null |
+| `stripe_checkout_session_id` | `text` | not null, unique — enforces idempotency on webhook redelivery |
+| `created_at` | `timestamptz` | not null, default `now()` |
+
+Index: `ai_credit_purchases_user_month_idx` on `(user_id, month)`.
+
+**RLS:** `"Users can read own credit purchases"` — select only, `auth.uid() = user_id`. No
+insert/update policy for regular users — only the Stripe webhook, using the service-role client,
+writes purchase rows.
+
+Note: also FKs to `auth.users` directly, not `public.profiles`.
+
+**For the `ai-features` agent:** `checkAndIncrementAIUsage()`'s cap check currently compares
+`request_count` against the flat `AI_MONTHLY_CAP`. It needs to become `request_count <
+AI_MONTHLY_CAP + purchased_credits`, where `purchased_credits` is the sum of `credits` from
+`ai_credit_purchases` for that `user_id`+`month` (not implemented in this migration).
+
 ### `shared_bundles`
 Immutable public share snapshots (added migration 009) — distinct from `groups.public_slug`
 single-group sharing; this is for sharing a *bundle* of multiple groups at once.
@@ -185,6 +217,32 @@ single-group sharing; this is for sharing a *bundle* of multiple groups at once.
 Not yet reflected in `packages/shared/src/types/index.ts` — no `SharedBundle` TS type exists as of
 this migration; add one if/when the sharing feature lands app-side.
 
+### `device_sessions`
+Per-device "Now Open" snapshots, added migration 013 for the "Continue on other device" feature.
+Each device the extension has synced from registers/updates one row here; other devices of the
+**same** user can read it to pull that device's tabs. No cross-user sharing.
+
+| Column | Type | Constraints |
+|---|---|---|
+| `id` | `uuid` | PK, default `gen_random_uuid()` |
+| `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
+| `device_id` | `text` | not null — client-generated `crypto.randomUUID()`, unique **per user** only (composite unique with `user_id`, not globally unique) |
+| `device_name` | `text` | not null — user-editable, defaults to a UA-derived string set by the client |
+| `now_open_snapshot` | `jsonb` | not null, default `'[]'` — snapshot of the "Now Open" group's tabs at last push |
+| `last_active` | `timestamptz` | not null, default `now()` |
+| `created_at` | `timestamptz` | not null, default `now()` |
+| — | — | `unique(user_id, device_id)` |
+
+**RLS:** full owner CRUD — `device_sessions_select_owner`, `_insert_owner`, `_update_owner`,
+`_delete_owner`, all gated on `auth.uid() = user_id`. No public/cross-user access; "other devices"
+means other devices of the same authenticated user, not a sharing mechanism.
+
+**Index:** `device_sessions_user_id_last_active_idx` on `(user_id, last_active)` — supports a
+30-day staleness query (e.g. `where last_active > now() - interval '30 days'`) filtered by user.
+
+Not yet reflected in `packages/shared/src/types/index.ts` — no `DeviceSession` TS type exists yet;
+add one when the extension/web client code for this feature lands.
+
 ## Grants (migration 010)
 
 Local `supabase` CLI stacks don't provision the schema-level `anon`/`authenticated` grants that
@@ -206,6 +264,7 @@ erDiagram
     auth_users ||--o{ organize_runs : "user_id"
     auth_users ||--o{ ai_usage : "user_id"
     auth_users ||--o{ shared_bundles : "user_id (nullable)"
+    auth_users ||--o{ device_sessions : "user_id"
 
     groups {
         text id PK
@@ -255,7 +314,7 @@ fully in sync with the migrations:
 
 - `SupabaseGroup` is missing `public_slug`, `view_count`, `permanent`, `starred`, `archived`,
   `note` (added by migrations 007/008).
-- No TS type exists yet for `organize_runs`, `ai_usage`, or `shared_bundles`.
+- No TS type exists yet for `organize_runs`, `ai_usage`, `shared_bundles`, or `device_sessions`.
 - `Subscription` doesn't model `cancel_at_period_end` or `stripe_price_id` (added by migration 005).
 
 None of this blocks anything today (the app reads/writes the fields it needs via loosely-typed

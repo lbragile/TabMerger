@@ -23,6 +23,7 @@ const {
   mockOpenModal,
   mockEnterDemoMode,
   mockTrackEvent,
+  mockUseAiUsage,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -36,6 +37,7 @@ const {
   mockOpenModal: vi.fn(),
   mockEnterDemoMode: vi.fn().mockResolvedValue(undefined),
   mockTrackEvent: vi.fn(),
+  mockUseAiUsage: vi.fn(),
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -51,10 +53,12 @@ vi.mock('@/lib/localDb', () => ({
 vi.mock('@/lib/theme', () => ({ applyTheme: mockApplyTheme }))
 
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
+vi.mock('@/hooks/useAiUsage', () => ({ useAiUsage: () => mockUseAiUsage() }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
   useImportGroups: () => ({ mutate: mockImportGroupsMutate }),
+  GROUPS_QUERY_KEY: ['groups'],
 }))
 vi.mock('@/lib/importExport', () => ({
   importGroups: vi.fn().mockReturnValue([{ name: 'g' }]),
@@ -63,6 +67,7 @@ vi.mock('@/lib/importExport', () => ({
   exportGroups: mockExportGroups,
 }))
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock('@/components/Settings/OtherDevices', () => ({ OtherDevices: () => <div>Other devices panel</div> }))
 vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
 
 const DEFAULT_SETTINGS = {
@@ -72,6 +77,12 @@ const DEFAULT_SETTINGS = {
   openTabOnClick: true,
   autoDedupOnMerge: false,
   staleThresholdDays: 30,
+  aiDailyThrottle: true,
+  aiAutoGroupEnabled: true,
+  aiNameGroupEnabled: true,
+  aiSuggestSessionsEnabled: true,
+  aiOrganizeEnabled: true,
+  aiTabSummaryEnabled: true,
 }
 
 function renderModal(onClose = vi.fn()) {
@@ -87,12 +98,67 @@ beforeEach(() => {
   vi.clearAllMocks()
   mockGetSetting.mockResolvedValue(DEFAULT_SETTINGS)
   mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false })
+  mockUseAiUsage.mockReturnValue({ used: 0, remaining: 100, cap: 100, loading: false })
   mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
   mockUseGroups.mockReturnValue({ data: { available: [] } })
   globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
   globalThis.confirm = vi.fn().mockReturnValue(true) // still used by the Import flow's confirm()
   globalThis.URL.createObjectURL = vi.fn().mockReturnValue('blob:x')
   globalThis.URL.revokeObjectURL = vi.fn()
+})
+
+describe('SettingsModal — Devices tab', () => {
+  it('hides the Devices tab entirely for free tier', () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false })
+    renderModal()
+    expect(screen.queryByRole('tab', { name: /devices/i })).not.toBeInTheDocument()
+  })
+
+  it('shows the Devices tab for pro tier and renders OtherDevices when selected', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    renderModal()
+    await goToTab(/devices/i)
+    expect(await screen.findByText('Other devices panel')).toBeInTheDocument()
+  })
+})
+
+describe('SettingsModal — AI tab', () => {
+  it('hides the AI tab entirely when the user lacks aiFeatures', () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true, aiFeatures: false })
+    renderModal()
+    expect(screen.queryByRole('tab', { name: /^ai$/i })).not.toBeInTheDocument()
+  })
+
+  it('shows 5 independent per-feature toggles, all on by default, and no master switch', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    renderModal()
+    await goToTab(/^ai$/i)
+    expect(screen.getAllByText(/auto-group/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/name group/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/suggest sessions/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/organize/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/tab preview summaries/i).length).toBeGreaterThan(0)
+    expect(screen.queryByText(/ai features enabled/i)).not.toBeInTheDocument()
+    const switches = screen.getAllByRole('switch')
+    switches.forEach((s) => expect(s).toBeChecked())
+  })
+})
+
+describe('SettingsModal — Account tab AI usage indicator', () => {
+  it('shows AI calls remaining for Pro AI users', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
+    mockUseAiUsage.mockReturnValue({ used: 3, remaining: 97, cap: 100, loading: false })
+    renderModal()
+    await goToTab(/account/i)
+    expect(await screen.findByText('97 / 100')).toBeInTheDocument()
+  })
+
+  it('hides the AI usage indicator for non-Pro-AI users', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, aiFeatures: false })
+    renderModal()
+    await goToTab(/account/i)
+    expect(screen.queryByText(/AI calls left this month/i)).not.toBeInTheDocument()
+  })
 })
 
 describe('SettingsModal — reactive settings (regression)', () => {
@@ -201,6 +267,17 @@ describe('SettingsModal — General tab cloud sync', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     expect(screen.getByText('Cloud sync')).toBeTruthy()
+  })
+})
+
+describe('SettingsModal — General tab URL rules entry point', () => {
+  it('shows a "Manage" button for URL rules that opens the urlRules modal', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('URL rules')).toBeTruthy()
+    await user.click(screen.getByRole('button', { name: 'Manage' }))
+    expect(mockOpenModal).toHaveBeenCalledWith('urlRules')
   })
 })
 

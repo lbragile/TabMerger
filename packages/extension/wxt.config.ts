@@ -38,6 +38,17 @@ export default defineConfig({
         web_accessible_resources: [
             { resources: ["images/*"], matches: ["<all_urls>"] },
         ],
+        // Lets the web app probe install status on demand via chrome.runtime.sendMessage
+        // (no page-load race, unlike the content-script postMessage broadcast below).
+        // CHROME_EXTENSION_ID is the published Chrome Web Store ID (unset until first
+        // publish — see docs/PUBLISHING.md); the dev ID is fixed for this repo's unpacked
+        // build path. ponytail: filter(Boolean) so an unset published ID doesn't ship as "".
+        externally_connectable: {
+            matches: process.env.VITE_WEB_APP_URL ? [`${process.env.VITE_WEB_APP_URL}/*`] : [],
+            ids: [process.env.CHROME_EXTENSION_ID, "ogadhgghhdbaohdcajfakeogcamicdkm"].filter(
+                (id): id is string => Boolean(id)
+            ),
+        },
         browser_specific_settings: {
             gecko: {
                 id: "tabmerger@lbragile.com",

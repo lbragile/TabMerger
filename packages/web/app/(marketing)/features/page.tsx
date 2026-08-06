@@ -174,13 +174,13 @@ export default function FeaturesPage() {
           {featureSections.map((section) => {
             const isAi = section.badge === 'Pro AI'
             const rows = (
-              <div className="flex flex-col">
+              <div className="flex flex-col divide-y divide-border">
                 {section.features.map((feature, i) => {
                   const Icon = feature.icon
                   return (
                     <div
                       key={feature.title}
-                      className="grid grid-cols-1 sm:grid-cols-[64px_1fr_auto] gap-4 sm:gap-8 py-6 border-t border-border items-start"
+                      className="grid grid-cols-1 sm:grid-cols-[64px_1fr_auto] gap-4 sm:gap-8 py-6 items-start"
                     >
                       <div className="font-mono text-[13px] font-medium text-primary">
                         {String(i + 1).padStart(2, '0')}
@@ -200,7 +200,7 @@ export default function FeaturesPage() {
             return (
               <div key={section.title}>
                 <div className="mb-2">
-                  <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.badge])}>
+                  <span className={cn('inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.badge])}>
                     {section.badge}
                   </span>
                   <h2 className="text-3xl font-bold tracking-tight">
@@ -211,7 +211,7 @@ export default function FeaturesPage() {
                   </p>
                 </div>
                 {isAi ? (
-                  <div className="rounded-2xl p-8 pt-0 bg-surface2 border border-border">{rows}</div>
+                  <div className="rounded-md p-8 bg-surface2 border border-border">{rows}</div>
                 ) : (
                   rows
                 )}

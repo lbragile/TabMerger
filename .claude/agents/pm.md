@@ -17,6 +17,7 @@ tools:
   - TaskUpdate
   - TaskList
   - Agent
+color: cyan
 ---
 
 # Product Manager Agent

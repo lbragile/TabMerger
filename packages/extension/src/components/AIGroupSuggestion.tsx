@@ -40,6 +40,10 @@ export function AIGroupSuggestion() {
         setStored(next);
         chrome.storage.local.set({ [STORAGE_KEY]: next });
       })
+      // ponytail: no separate "attempted" marker needed on failure/empty result —
+      // useSuggestSessions marks the day as used before the network call runs
+      // (see enforceDailyThrottle in useAI.ts), so a retry on the next popup open
+      // this same day short-circuits with "Already used today" instead of re-firing.
       .catch(() => {});
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageReady, loading, aiFeatures]);

@@ -38,10 +38,24 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 }
 
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </React.StrictMode>
-);
+async function bootstrap() {
+  // ponytail: dev-only fetch intercept for /api/ai/* so iterating on AI UI
+  // doesn't burn real Anthropic cost or require a running web app + Supabase
+  // session. Never bundled into production — import.meta.env.DEV is
+  // statically replaced and dead-code-eliminated by Vite/WXT at build time.
+  // See src/mocks/devFetchMock.ts for why this isn't MSW's setupWorker.
+  if (import.meta.env.DEV) {
+    const { installDevFetchMock } = await import('@/mocks/devFetchMock');
+    installDevFetchMock();
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </React.StrictMode>
+  );
+}
+
+bootstrap();

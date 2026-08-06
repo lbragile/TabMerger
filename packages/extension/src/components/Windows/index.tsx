@@ -36,7 +36,7 @@ import {
   useRemoveStaleTabs,
   GROUPS_QUERY_KEY
 } from '@/hooks/useGroups';
-import { useDndSensors, useWindowDndHandlers, parseDndId } from '@/hooks/useDnd';
+import { useDndSensors, useWindowDndHandlers, parseDndId, setBodyDragCursor } from '@/hooks/useDnd';
 import { useUIStore } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useQueryClient } from '@tanstack/react-query';
@@ -165,6 +165,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   const [isOverNewWin, setIsOverNewWin] = useState(false);
 
   const handleDragStart = (e: DragStartEvent) => {
+    setBodyDragCursor(true);
     const parsed = parseDndId(String(e.active.id));
     if (parsed.kind === 'tab') {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
@@ -239,6 +240,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   };
 
   const handleDragCancel = () => {
+    setBodyDragCursor(false);
     setActiveTab(null);
     setActiveWindow(null);
     setIsDraggingTab(false);
@@ -249,6 +251,7 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
   };
 
   const handleDragEnd = async (e: DragEndEvent) => {
+    setBodyDragCursor(false);
     const draggedTab = activeTab;
     const startWinIdx = dragStartWinRef.current;
     const droppedOnNewWin = isOverNewWin;

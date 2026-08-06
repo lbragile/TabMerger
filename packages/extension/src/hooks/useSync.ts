@@ -7,6 +7,12 @@ import { useEntitlements } from './useEntitlements';
 import { GROUPS_QUERY_KEY } from './useGroups';
 import { APP_SETTINGS_QUERY_KEY } from './useAppSettings';
 
+// ponytail: matches useEntitlements' POLL_MS — push-only sync had no re-trigger once the
+// popup stayed mounted past its initial sync (e.g. pinned open via DevTools during a long
+// session), so edits made after mount silently never reached Supabase until the popup was
+// closed and reopened. Periodic re-sync closes that gap without needing a pendingSync watcher.
+const SYNC_POLL_MS = 1000 * 30;
+
 export function useSync() {
   const { session } = useAuth();
   const { cloudSync } = useEntitlements();
@@ -47,7 +53,13 @@ export function useSync() {
 
     const handleOnline = () => void doSync();
     globalThis.addEventListener('online', handleOnline);
-    return () => globalThis.removeEventListener('online', handleOnline);
+
+    const interval = setInterval(() => void doSync(), SYNC_POLL_MS);
+
+    return () => {
+      globalThis.removeEventListener('online', handleOnline);
+      clearInterval(interval);
+    };
   }, [session, cloudSync, doSync]);
 
   // Settings live in local IndexedDB only (never synced to Supabase), so login itself

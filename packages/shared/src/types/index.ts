@@ -139,6 +139,14 @@ export interface AISuggestSessionsResponse {
   suggestion: string;
 }
 
+// "Continue on other device" — device_sessions table (see supabase/migrations/013_create_device_sessions.sql)
+export interface DeviceSession {
+  device_id: string;
+  device_name: string;
+  now_open_snapshot: unknown; // Group['windows'] snapshot, jsonb — kept loose so malformed rows don't throw
+  last_active: string; // ISO datetime
+}
+
 // Pricing
 export interface PricingTier {
   id: SubscriptionTier;

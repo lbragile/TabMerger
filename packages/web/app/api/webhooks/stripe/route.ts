@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createHash } from 'crypto'
-import { stripe } from '@/lib/stripe'
+import { stripe, AI_CREDIT_PACK_SIZE } from '@/lib/stripe'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import type Stripe from 'stripe'
 
@@ -40,6 +40,13 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
+
+        if (session.mode === 'payment') {
+          if (session.metadata?.type === 'ai_credit_pack') {
+            await creditAiCreditPack(supabase, session)
+          }
+          break
+        }
 
         if (session.mode !== 'subscription') break
 
@@ -150,6 +157,36 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ received: true })
+}
+
+/**
+ * Grants a one-time AI credit pack purchase. Idempotent on stripe_checkout_session_id
+ * (unique constraint on ai_credit_purchases) — Stripe can redeliver checkout.session.completed,
+ * and a duplicate insert must be a no-op, not a double credit.
+ */
+async function creditAiCreditPack(
+  supabase: Awaited<ReturnType<typeof createServiceRoleClient>>,
+  session: Stripe.Checkout.Session
+) {
+  const userId = session.metadata?.user_id
+  if (!userId) {
+    console.error('ai_credit_pack checkout.session.completed missing user_id metadata', session.id)
+    return
+  }
+
+  const month = new Date().toISOString().slice(0, 7)
+
+  const { error } = await supabase.from('ai_credit_purchases').insert({
+    user_id: userId,
+    month,
+    credits: AI_CREDIT_PACK_SIZE,
+    stripe_checkout_session_id: session.id,
+  })
+
+  // Unique violation on stripe_checkout_session_id = already credited this event, not an error.
+  if (error && error.code !== '23505') {
+    console.error('creditAiCreditPack insert error:', error)
+  }
 }
 
 /**

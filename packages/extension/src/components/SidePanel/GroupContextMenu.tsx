@@ -17,8 +17,7 @@ import {
   SplitSquareHorizontal,
   SortAsc,
   ExternalLink,
-  Archive,
-  Link
+  Archive
 } from 'lucide-react';
 import {
   useDeleteGroup,
@@ -125,11 +124,6 @@ export function GroupContextMenu({
           <DropdownMenuItem onClick={() => openModal('note', { groupIndex, groupId: group.id })}>
             <FileText className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>{group.note ? 'Edit note' : 'Add note'}</div><div className="text-[10px] text-muted-foreground font-normal">{group.note ? 'Update the note for this group' : 'Attach a note to this group'}</div></div>
-          </DropdownMenuItem>
-
-          <DropdownMenuItem onClick={() => openModal('urlRules')}>
-            <Link className="h-3.5 w-3.5 mr-2 shrink-0" />
-            <div><div>Manage URL rules</div><div className="text-[10px] text-muted-foreground font-normal">Auto-assign tabs to groups by URL pattern</div></div>
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => {

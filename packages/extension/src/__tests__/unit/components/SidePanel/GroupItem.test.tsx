@@ -1,21 +1,24 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { GroupItem } from '@/components/SidePanel/GroupItem'
 import type { Group } from '@/lib/types'
+import { DEFAULT_GROUP_TITLE } from '@/lib/types'
 
 const {
   mockUpdateGroupName,
   mockUpdateGroupColor,
   mockToggleGroupStar,
+  mockDeleteGroup,
   mockUseGroups,
   mockUseUIStore,
 } = vi.hoisted(() => ({
   mockUpdateGroupName: vi.fn(),
   mockUpdateGroupColor: vi.fn(),
   mockToggleGroupStar: vi.fn(),
+  mockDeleteGroup: vi.fn(),
   mockUseGroups: vi.fn(),
   mockUseUIStore: vi.fn(),
 }))
@@ -79,12 +82,29 @@ vi.mock('@/hooks/useGroups', () => ({
   useUpdateGroupName: () => ({ mutate: mockUpdateGroupName }),
   useUpdateGroupColor: () => ({ mutate: mockUpdateGroupColor }),
   useToggleGroupStar: () => ({ mutate: mockToggleGroupStar }),
+  useDeleteGroup: () => ({ mutate: mockDeleteGroup }),
   useGroups: () => mockUseGroups(),
 }))
 
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector),
 }))
+
+// ponytail: jsdom has no ResizeObserver; stub fires the callback once synchronously on observe(),
+// which is enough to exercise the truncation measurement effect in tests.
+class MockResizeObserver {
+  callback: ResizeObserverCallback
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback
+  }
+  observe(target: Element) {
+    this.callback([{ target } as ResizeObserverEntry], this as unknown as ResizeObserver)
+  }
+  unobserve() {}
+  disconnect() {}
+}
+// @ts-expect-error - test stub
+global.ResizeObserver = MockResizeObserver
 
 function makeGroup(overrides: Partial<Group> = {}): Group {
   return {
@@ -219,7 +239,95 @@ describe('GroupItem', () => {
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
     fireEvent.click(screen.getByRole('button', { name: /cancel/i }))
     expect(mockUpdateGroupName).not.toHaveBeenCalled()
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
     expect(baseUIState.setRenameTarget).toHaveBeenCalledWith(null)
+  })
+
+  it('deletes a freshly-created group (still named DEFAULT_GROUP_TITLE) when rename is cancelled via the X button', () => {
+    const group = makeGroup({ name: DEFAULT_GROUP_TITLE })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, renameTarget: { kind: 'group', groupIndex: 0 } })
+    )
+    wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+    fireEvent.click(screen.getByRole('button', { name: /cancel/i }))
+    expect(mockDeleteGroup).toHaveBeenCalledWith(0)
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
+    expect(baseUIState.setRenameTarget).toHaveBeenCalledWith(null)
+  })
+
+  it('deletes a freshly-created group when rename is cancelled via Escape', () => {
+    const group = makeGroup({ name: DEFAULT_GROUP_TITLE })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, renameTarget: { kind: 'group', groupIndex: 1 } })
+    )
+    wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+    const input = screen.getByDisplayValue(DEFAULT_GROUP_TITLE) as HTMLInputElement
+    fireEvent.keyDown(input, { key: 'Escape' })
+    expect(mockDeleteGroup).toHaveBeenCalledWith(1)
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
+  })
+
+  it('does NOT delete a freshly-created group on plain Enter with unchanged default text — commits it as-is', () => {
+    const group = makeGroup({ name: DEFAULT_GROUP_TITLE })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, renameTarget: { kind: 'group', groupIndex: 1 } })
+    )
+    wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+    const input = screen.getByDisplayValue(DEFAULT_GROUP_TITLE) as HTMLInputElement
+    // No fireEvent.change — simulates a user who never typed anything before Enter/blur
+    fireEvent.keyDown(input, { key: 'Enter' })
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+    expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 1, name: DEFAULT_GROUP_TITLE })
+  })
+
+  it('does NOT delete a freshly-created group on blur (e.g. clicking away to add tabs) — reverts/commits like a normal rename', () => {
+    const group = makeGroup({ name: DEFAULT_GROUP_TITLE })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, renameTarget: { kind: 'group', groupIndex: 1 } })
+    )
+    wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+    const input = screen.getByDisplayValue(DEFAULT_GROUP_TITLE) as HTMLInputElement
+    fireEvent.blur(input)
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+  })
+
+  it('does NOT delete a freshly-created group on blur with emptied text — just closes rename without committing', () => {
+    const group = makeGroup({ name: DEFAULT_GROUP_TITLE })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, renameTarget: { kind: 'group', groupIndex: 1 } })
+    )
+    wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+    const input = screen.getByDisplayValue(DEFAULT_GROUP_TITLE) as HTMLInputElement
+    fireEvent.change(input, { target: { value: '   ' } })
+    fireEvent.blur(input)
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
+  })
+
+  it('does NOT delete an existing group whose name still equals DEFAULT_GROUP_TITLE by user choice, once a real name is committed', () => {
+    const group = makeGroup({ name: DEFAULT_GROUP_TITLE })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, renameTarget: { kind: 'group', groupIndex: 0 } })
+    )
+    wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+    const input = screen.getByDisplayValue(DEFAULT_GROUP_TITLE) as HTMLInputElement
+    fireEvent.change(input, { target: { value: 'My Real Group' } })
+    fireEvent.keyDown(input, { key: 'Enter' })
+    expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 0, name: 'My Real Group' })
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+  })
+
+  it('does not delete an existing (already-named) group when its rename is cancelled empty', () => {
+    const group = makeGroup({ name: 'Existing Group' })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, renameTarget: { kind: 'group', groupIndex: 0 } })
+    )
+    wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+    const input = screen.getByDisplayValue('Existing Group') as HTMLInputElement
+    fireEvent.change(input, { target: { value: '' } })
+    fireEvent.keyDown(input, { key: 'Enter' })
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
   })
 
   it('does not rename permanent group — resets rename target instead', () => {
@@ -315,6 +423,38 @@ describe('GroupItem', () => {
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
     const star = screen.getByRole('button', { name: /unpin group/i }).querySelector('svg') as SVGElement
     expect(star.style.fill).toBe('rgb(9, 9, 9)')
+  })
+
+  describe('name tooltip truncation gating', () => {
+    let scrollWidthSpy: ReturnType<typeof vi.spyOn>
+    let clientWidthSpy: ReturnType<typeof vi.spyOn>
+
+    afterEach(() => {
+      scrollWidthSpy?.mockRestore()
+      clientWidthSpy?.mockRestore()
+    })
+
+    it('suppresses the tooltip (open=false) when the name is not truncated', () => {
+      scrollWidthSpy = vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(100)
+      clientWidthSpy = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100)
+      const group = makeGroup({ name: 'Short' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+      fireEvent.mouseEnter(screen.getByText('Short'))
+      // Radix suppresses opening entirely when open={false}; the tooltip content should not appear.
+      expect(screen.queryByText('Short', { selector: '[role="tooltip"] *' })).toBeNull()
+    })
+
+    it('allows the tooltip to open when the name is truncated', () => {
+      scrollWidthSpy = vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(200)
+      clientWidthSpy = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100)
+      const group = makeGroup({ name: 'A Very Long Truncated Name' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+      const nameEl = screen.getByText('A Very Long Truncated Name')
+      expect(nameEl).toBeTruthy()
+      // open prop is undefined (default hover behavior) rather than forced false — no throw,
+      // and the element is present and eligible for hover-triggered tooltip content.
+      fireEvent.mouseEnter(nameEl)
+    })
   })
 
   it('opens the context menu on right-click', () => {

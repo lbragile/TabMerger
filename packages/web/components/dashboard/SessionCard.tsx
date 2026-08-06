@@ -49,7 +49,7 @@ export function SessionCard({
   onRestore,
 }: SessionCardProps) {
   return (
-    <div className="border border-border rounded-[13px] overflow-hidden bg-surface flex flex-col md:flex-row transition-shadow duration-200 hover:shadow-sh2">
+    <div className="border border-border rounded-lg overflow-hidden bg-surface flex flex-col md:flex-row transition-shadow duration-200 hover:shadow-sh2">
       {/* Left panel */}
       <div className="flex-1 p-4">
         <h3 className="font-bold mb-2" style={{ fontSize: '17px' }}>{name}</h3>
