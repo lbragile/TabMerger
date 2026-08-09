@@ -36,15 +36,17 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const groups: { name: string; tabs: Tab[] }[] = body.groups
+  const groups: { id: string; name: string; tabs: Tab[] }[] = body.groups
 
   if (!Array.isArray(groups) || groups.length === 0) {
     return NextResponse.json({ error: 'groups array required' }, { status: 400 })
   }
 
   try {
-    const suggestion = await suggestSessions(groups)
-    return NextResponse.json({ suggestion }, {
+    const { message, staleGroupIds } = await suggestSessions(groups)
+    // `suggestion` is a deprecated alias for `message`, kept so the currently-shipped
+    // extension banner (AIGroupSuggestion) keeps working against a newer server.
+    return NextResponse.json({ message, staleGroupIds, suggestion: message }, {
       headers: { 'X-AI-Requests-Remaining': String(remaining) },
     })
   } catch (err) {

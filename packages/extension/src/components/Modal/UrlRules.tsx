@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -41,6 +41,22 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
 
   // Saved groups only (exclude Now Open at index 0)
   const savedGroups = groupsState?.available.slice(1).filter((g) => !g.archived) ?? [];
+
+  // One-time sweep of rules orphaned before deleteRulesForGroupIds existed (or from any other
+  // gap) — self-heals on open rather than requiring a manual per-rule delete. Runs exactly once
+  // (not on every groupsState refetch) so it never clobbers in-progress, unsaved draft edits.
+  const swept = useRef(false);
+  useEffect(() => {
+    if (swept.current || !groupsState) return;
+    swept.current = true;
+    const validIds = new Set(groupsState.available.map((g) => g.id));
+    setDraft((prev) => {
+      const cleaned = prev.filter((r) => validIds.has(r.groupId));
+      if (cleaned.length !== prev.length) void saveRules(cleaned);
+      return cleaned.length === prev.length ? prev : cleaned;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupsState]);
 
   const handleAdd = (pattern: string, groupId: string) => {
     if (atLimit) {

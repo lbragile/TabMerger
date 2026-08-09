@@ -32,6 +32,9 @@ jobs:
 
       - name: Build and zip Chrome (MV3)
         working-directory: packages/extension
+        env:
+          VITE_WEB_APP_URL: https://tabmerger.vercel.app
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
         run: pnpm wxt zip
 
       - name: Build and zip Firefox

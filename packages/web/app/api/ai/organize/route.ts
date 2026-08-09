@@ -2,8 +2,48 @@ import { randomBytes } from 'crypto'
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { start, getRun } from 'workflow/api'
-import { tabOrganizerWorkflow } from '@/lib/workflows/tabOrganizer'
+import { tabOrganizerWorkflow, type ClientGroup } from '@/lib/workflows/tabOrganizer'
 import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
+
+/**
+ * Reads an optional client-supplied `groups` payload from the POST body.
+ *
+ * E2E-encrypted users must send their locally-decrypted groups here, because
+ * `groups.windows` in Supabase is ciphertext the server can never read. Callers
+ * that send nothing (unencrypted users, older extension builds) get the original
+ * server-side DB read — this is additive, not a breaking change.
+ *
+ * Returns `null` for an absent/empty/malformed payload rather than erroring, so
+ * a bad body degrades to the DB path instead of failing the request.
+ */
+async function readClientGroups(request: NextRequest): Promise<ClientGroup[] | null> {
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return null // empty body — the historical `{}`-or-nothing case
+  }
+
+  const groups = (body as { groups?: unknown })?.groups
+  if (!Array.isArray(groups) || groups.length === 0) return null
+
+  const valid = groups.every(
+    (g): g is ClientGroup =>
+      !!g &&
+      typeof g === 'object' &&
+      typeof (g as ClientGroup).id === 'string' &&
+      typeof (g as ClientGroup).name === 'string' &&
+      Array.isArray((g as ClientGroup).tabs)
+  )
+  if (!valid) return null
+
+  return (groups as ClientGroup[]).map((g) => ({
+    id: g.id,
+    name: g.name,
+    tabs: g.tabs,
+    ...(typeof g.permanent === 'boolean' ? { permanent: g.permanent } : {}),
+  }))
+}
 
 /**
  * Extracts and validates the caller's identity from the Authorization header.
@@ -42,6 +82,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Read before the usage check so a malformed body never burns a quota unit.
+  const clientGroups = await readClientGroups(request)
+
   const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id)
   if (!allowed) {
     return NextResponse.json(
@@ -52,7 +95,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const hookToken = `org-${user.id}-${randomBytes(16).toString('hex')}`
-    const run = await start(tabOrganizerWorkflow, [user.id, hookToken])
+    const run = await start(tabOrganizerWorkflow, [user.id, hookToken, clientGroups])
 
     // Store runId → userId so the GET stream can verify ownership (Issue 3)
     await supabase.from('organize_runs').insert({ run_id: run.runId, user_id: user.id })

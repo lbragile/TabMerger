@@ -4,8 +4,8 @@ import { createCreditPackCheckoutSession } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
 
 /**
- * Creates a one-time Stripe Checkout session for an AI credit pack top-up
- * (+50 AI calls for the current month, no rollover). Only useful to pro_ai users who've hit
+ * Creates a one-time Stripe Checkout session for an AI credit top-up
+ * (extra AI calls for the current month, no rollover). Only useful to pro_ai users who've hit
  * AI_MONTHLY_CAP, but not gated on tier here — the AI routes are the enforcement point;
  * a non-pro_ai user buying credits just won't have anything to spend them against.
  */
@@ -25,9 +25,18 @@ export async function POST(request: NextRequest) {
     .eq('id', user.id)
     .single()
 
+  // Trust boundary: request comes from a UI input value. Clamp to [50, 500] — at $0.10/call,
+  // anything below 50 calls ($5) risks Stripe's $0.50 minimum-charge floor and gets eaten by
+  // per-transaction processing fees, so 50 is the smallest amount actually worth selling.
+  const body = await request.json().catch(() => ({}))
+  const rawQuantity = Number(body?.quantity)
+  const quantity =
+    Number.isInteger(rawQuantity) && rawQuantity >= 50 && rawQuantity <= 500 ? rawQuantity : 50
+
   try {
     const url = await createCreditPackCheckoutSession({
       userId: user.id,
+      quantity,
       customerEmail: user.email,
       customerId: profile?.stripe_customer_id ?? undefined,
       successUrl: absoluteUrl('/dashboard?credits=1'),

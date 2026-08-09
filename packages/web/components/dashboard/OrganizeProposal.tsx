@@ -5,27 +5,32 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
-// TODO: import from @tabmerger/shared or packages/web/lib/workflows/tabOrganizer.ts once that file exists
-type ReorganizeAction =
-  | { type: 'merge'; groupIds: string[]; newName: string }
-  | { type: 'rename'; groupId: string; newName: string }
-  | { type: 'delete'; groupId: string; reason: string }
-  | { type: 'reorder'; groupIds: string[] }
+// Type-only import: erased at compile time, so the workflow module (and its
+// server-only `workflow` / service-role Supabase imports) never reaches the bundle.
+import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
 
 interface Props {
   runId: string
   token: string
   supabaseToken: string
+  /**
+   * True when any of the user's groups are stored as client-side ciphertext.
+   * The web dashboard isn't an E2EE client yet (no passphrase prompt / data key
+   * here), so it has no plaintext to review and approving would apply only the
+   * content-free actions server-side. Refuse explicitly rather than showing a
+   * proposal derived from unreadable data.
+   */
+  encrypted?: boolean
 }
 
 function actionLabel(action: ReorganizeAction): string {
   switch (action.type) {
     case 'merge':
-      return `Merge ${action.groupIds.length} groups → "${action.newName}"`
+      return `Merge ${action.sourceGroupId} → ${action.targetGroupId}`
     case 'rename':
       return `Rename group → "${action.newName}"`
     case 'delete':
-      return `Delete group (reason: ${action.reason})`
+      return `Delete group ${action.groupId}`
     case 'reorder':
       return `Reorder groups: ${action.groupIds.join(', ')}`
   }
@@ -38,7 +43,7 @@ const TYPE_VARIANT: Record<ReorganizeAction['type'], 'default' | 'secondary' | '
   reorder: 'outline',
 }
 
-export function OrganizeProposal({ runId, token, supabaseToken }: Props) {
+export function OrganizeProposal({ runId, token, supabaseToken, encrypted = false }: Props) {
   const [actions, setActions] = useState<ReorganizeAction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -46,6 +51,7 @@ export function OrganizeProposal({ runId, token, supabaseToken }: Props) {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
+    if (encrypted) return
     let cancelled = false
 
     async function stream() {
@@ -69,8 +75,9 @@ export function OrganizeProposal({ runId, token, supabaseToken }: Props) {
           try {
             const parsed = JSON.parse(buf) as ReorganizeAction[]
             if (!cancelled) {
-              // ponytail: filter "Now Open" as a safety net; backend already guards this
-              setActions(parsed.filter((a) => !('newName' in a && a.newName === 'Now Open')))
+              // ponytail: filter renames-to-"Now Open" as a safety net; applyChanges
+              // already guards the permanent group server-side.
+              setActions(parsed.filter((a) => !(a.type === 'rename' && a.newName === 'Now Open')))
             }
           } catch {
             // incomplete JSON — keep buffering
@@ -85,7 +92,7 @@ export function OrganizeProposal({ runId, token, supabaseToken }: Props) {
 
     stream()
     return () => { cancelled = true }
-  }, [runId, supabaseToken])
+  }, [runId, supabaseToken, encrypted])
 
   async function handleDecision(approved: boolean) {
     setSubmitting(true)
@@ -105,6 +112,21 @@ export function OrganizeProposal({ runId, token, supabaseToken }: Props) {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (encrypted) {
+    return (
+      <Card className="border-amber-200 bg-amber-50">
+        <CardHeader>
+          <CardTitle className="text-base">AI Organization Proposal</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0 text-sm text-amber-900">
+          AI organise isn&apos;t available for end-to-end encrypted groups on the web yet —
+          your groups are encrypted and this page can&apos;t read them. Run it from the
+          TabMerger extension instead.
+        </CardContent>
+      </Card>
+    )
   }
 
   if (status === 'approved') {

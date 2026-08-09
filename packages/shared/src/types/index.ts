@@ -88,6 +88,8 @@ export interface SupabaseGroup {
   position: number;
   windows: ExtWindow[]; // stored as jsonb
   info?: string;
+  window_count: number; // denormalized plaintext count, maintained by client on every write
+  tab_count: number; // denormalized plaintext count, maintained by client on every write
   updated_at: string;
   created_at: string;
 }
@@ -136,6 +138,11 @@ export interface AISuggestSessionsRequest {
 }
 
 export interface AISuggestSessionsResponse {
+  /** Banner text, max ~100 chars. */
+  message: string;
+  /** `Group.id` values the message refers to — lets the UI offer a per-group archive action. */
+  staleGroupIds: string[];
+  /** @deprecated alias for `message`; remove once the extension banner migrates. */
   suggestion: string;
 }
 

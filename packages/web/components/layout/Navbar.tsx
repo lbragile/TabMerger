@@ -12,6 +12,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MobileNavToggle } from "@/components/layout/MobileNavToggle";
+import { SignOutForm } from "@/components/auth/SignOutForm";
 
 export async function Navbar() {
     const supabase = await createClient();
@@ -102,17 +103,14 @@ export async function Navbar() {
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem asChild>
-                                        <form
-                                            action="/api/auth/sign-out"
-                                            method="POST"
-                                        >
+                                        <SignOutForm>
                                             <button
                                                 className="w-full text-left"
                                                 type="submit"
                                             >
                                                 Sign out
                                             </button>
-                                        </form>
+                                        </SignOutForm>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>

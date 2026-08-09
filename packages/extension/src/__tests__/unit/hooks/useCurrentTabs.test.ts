@@ -18,6 +18,16 @@ vi.mock('@/lib/localDb', () => ({
   getGroupsState: vi.fn(),
 }))
 
+// mocked per-test so we can flip `tier` across a rerender to exercise the tierRef fix
+const mockUseEntitlements = vi.fn()
+vi.mock('@/hooks/useEntitlements', () => ({
+  useEntitlements: () => mockUseEntitlements(),
+}))
+
+vi.mock('@/lib/deviceSessions', () => ({
+  pushDeviceSession: vi.fn(),
+}))
+
 const chromeMock = {
   tabs: {
     query: vi.fn(),
@@ -40,6 +50,7 @@ const chromeMock = {
 globalThis.chrome = chromeMock as unknown as typeof chrome
 
 import { saveGroupsState, getGroupsState } from '@/lib/localDb'
+import { pushDeviceSession } from '@/lib/deviceSessions'
 
 function makeWrapper() {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
@@ -71,6 +82,36 @@ beforeEach(() => {
   chromeMock.tabGroups.query.mockResolvedValue([])
   chromeMock.tabs.sendMessage.mockResolvedValue({})
   ;(saveGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(undefined)
+  mockUseEntitlements.mockReturnValue({ tier: 'free' })
+})
+
+describe('useCurrentTabs — tier closure regression', () => {
+  it('pushes the CURRENT tier (not the mount-time tier) on a later tab event', async () => {
+    const state = makeState([createNowOpenGroup()])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    chromeMock.windows.getAll.mockResolvedValue([chromeWindow(1)])
+    chromeMock.tabs.query.mockResolvedValue([chromeTab({ id: 10, windowId: 1 })])
+
+    mockUseEntitlements.mockReturnValue({ tier: 'free' })
+    const { wrapper } = makeWrapper()
+    const { rerender, unmount } = renderHook(() => useCurrentTabs(), { wrapper })
+
+    // Initial mount sync — subscription query hasn't resolved yet, tier is still 'free'.
+    await act(async () => {})
+    expect(pushDeviceSession).toHaveBeenCalledWith(expect.anything(), 'free')
+
+    // Subscription resolves; component rerenders with the real tier.
+    mockUseEntitlements.mockReturnValue({ tier: 'pro' })
+    rerender()
+
+    const handleChange = chromeMock.tabs.onUpdated.addListener.mock.calls[0][0]
+    await act(async () => { await handleChange() })
+
+    expect(pushDeviceSession).toHaveBeenLastCalledWith(expect.anything(), 'pro')
+    // Listeners were registered exactly once — the tab-event effect must not have re-run.
+    expect(chromeMock.tabs.onUpdated.addListener).toHaveBeenCalledTimes(1)
+    unmount()
+  })
 })
 
 describe('syncNowOpen — error handling', () => {

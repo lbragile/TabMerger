@@ -6,7 +6,7 @@ import type { SelectedItem } from '@/stores/uiStore';
 import { pluralize } from '@/lib/utils';
 
 interface DeleteConfirmModalProps {
-  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection' | 'removeStaleTabs' | 'clearAllData';
+  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection' | 'removeStaleTabs' | 'archiveStaleGroups' | 'clearAllData';
   data: Record<string, unknown>;
   onClose: () => void;
 }
@@ -51,6 +51,11 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
       description: `Are you sure you want to remove ${data.count as number} stale ${pluralize(data.count as number, 'tab')}? This cannot be undone.`,
       confirm: 'Remove',
     },
+    archiveStaleGroups: {
+      title: 'Archive Stale Groups',
+      description: `Are you sure you want to archive ${data.count as number} stale ${pluralize(data.count as number, 'group')}?`,
+      confirm: 'Archive',
+    },
     clearAllData: {
       title: 'Clear All Data',
       description: 'This will permanently delete all groups, saved sessions, and settings. This cannot be undone.',
@@ -76,7 +81,7 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
       });
     } else if (type === 'deleteSelection' && items) {
       bulkDelete(items);
-    } else if (type === 'removeStaleTabs' || type === 'clearAllData') {
+    } else if (type === 'removeStaleTabs' || type === 'archiveStaleGroups' || type === 'clearAllData') {
       (data.onConfirm as () => void)?.();
     }
     onClose();

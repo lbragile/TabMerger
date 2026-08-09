@@ -31,12 +31,14 @@ import { SearchOverlay } from './SearchOverlay';
 import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
-import { useAutoGroup } from "@/hooks/useAI";
+import { useAutoGroup, useOrganizeTabs, QuotaExceededError } from "@/hooks/useAI";
+import { useAppSettings } from "@/hooks/useAppSettings";
 import { useGroups, useSetGroupsState, useApplyAIGroups } from "@/hooks/useGroups";
 import { useSessions, useSaveSession } from "@/hooks/useSessions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
+import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
 
 /** Map an internal tier key to a human-readable label. */
 function tierLabel(tier: string): string {
@@ -91,6 +93,9 @@ export function Header() {
     const setGroupsState = useSetGroupsState();
     const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
     const { mutateAsync: applyAIGroups } = useApplyAIGroups();
+    const { mutateAsync: organizeTabs, isPending: organizeLoading } = useOrganizeTabs();
+    const { data: appSettings } = useAppSettings();
+    const [aiQuotaExceeded, setAiQuotaExceeded] = useState(false);
 
     const handleUndo = async () => {
         if (!groupsState) return;
@@ -112,6 +117,7 @@ export function Header() {
             toast.error("No tabs open to group");
             return;
         }
+        setAiQuotaExceeded(false);
         try {
             const result = await autoGroup(tabs);
             if (result.groups.length === 0) {
@@ -142,8 +148,31 @@ export function Header() {
                     : {})
             });
         } catch (err) {
+            if (err instanceof QuotaExceededError) {
+                setAiQuotaExceeded(true);
+                return;
+            }
             console.error("[TabMerger] AI grouping failed:", err);
             toast.error("AI grouping failed");
+        }
+    };
+
+    // Kicks off the durable tab-organizer workflow server-side; the run itself streams
+    // progress and asks for approval in the web dashboard's OrganizeProposal component
+    // (packages/web/components/dashboard/OrganizeProposal.tsx), not here — the popup's
+    // job is just to start it and hand off.
+    const handleOrganize = async () => {
+        setAiQuotaExceeded(false);
+        try {
+            await organizeTabs();
+            toast.success('Organize started — review the proposal in your dashboard');
+            chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/dashboard` });
+        } catch (err) {
+            if (err instanceof QuotaExceededError) {
+                setAiQuotaExceeded(true);
+                return;
+            }
+            toast.error(err instanceof Error ? err.message : 'Could not start organize');
         }
     };
 
@@ -188,6 +217,7 @@ export function Header() {
     const currentTierLabel = tierLabel(tier);
 
     return (
+        <>
         <header className="flex items-stretch border-b border-border shrink-0 bg-zone-header">
             {/* Logo — pinned to the left; width matches SidePanel exactly so the
                 boundary below (sidebar/main split at 240px) lines up with this one. */}
@@ -311,31 +341,56 @@ export function Header() {
                     </TooltipContent>
                 </Tooltip>
 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className={cn(
-                                "h-7 w-7",
-                                aiLoading && "animate-pulse",
-                                !aiFeatures && "opacity-50 cursor-not-allowed",
+                <DropdownMenu>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className={cn(
+                                        "h-7 w-7",
+                                        (aiLoading || organizeLoading) && "animate-pulse",
+                                        !aiFeatures && "opacity-50 cursor-not-allowed",
+                                    )}
+                                    onClick={aiFeatures ? undefined : () => openModal('upgrade')}
+                                    disabled={aiLoading || organizeLoading}
+                                    aria-disabled={!aiFeatures}
+                                    aria-label="AI actions"
+                                >
+                                    <Sparkles className={cn(
+                                        "h-3.5 w-3.5",
+                                        aiFeatures ? "text-purple-500" : "text-muted-foreground",
+                                    )} />
+                                </Button>
+                            </DropdownMenuTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                            {aiFeatures ? 'AI actions' : 'Pro AI required — click to upgrade'}
+                        </TooltipContent>
+                    </Tooltip>
+
+                    {aiFeatures && (
+                        <DropdownMenuContent align="end" className="w-52 text-xs">
+                            {appSettings?.aiAutoGroupEnabled !== false && (
+                                <DropdownMenuItem onClick={() => void handleAIGroup()}>
+                                    <div>
+                                        <div>Auto-group</div>
+                                        <div className="text-[10px] text-muted-foreground font-normal">Group open tabs with AI</div>
+                                    </div>
+                                </DropdownMenuItem>
                             )}
-                            onClick={aiFeatures ? handleAIGroup : () => openModal('upgrade')}
-                            disabled={aiLoading}
-                            aria-disabled={!aiFeatures}
-                            aria-label="AI Auto-group"
-                        >
-                            <Sparkles className={cn(
-                                "h-3.5 w-3.5",
-                                aiFeatures ? "text-purple-500" : "text-muted-foreground",
-                            )} />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                        {aiFeatures ? 'AI Auto-group' : 'Pro AI required — click to upgrade'}
-                    </TooltipContent>
-                </Tooltip>
+                            {appSettings?.aiOrganizeEnabled !== false && (
+                                <DropdownMenuItem onClick={() => void handleOrganize()}>
+                                    <div>
+                                        <div>Organize</div>
+                                        <div className="text-[10px] text-muted-foreground font-normal">Reorganize all groups with AI</div>
+                                    </div>
+                                </DropdownMenuItem>
+                            )}
+                        </DropdownMenuContent>
+                    )}
+                </DropdownMenu>
 
                 {/* Profile dropdown — consolidated sign-in / account widget */}
                 <Tooltip>
@@ -451,5 +506,7 @@ export function Header() {
                 </Tooltip>
             </div>
         </header>
+        {aiQuotaExceeded && <AIQuotaExceededPrompt />}
+        </>
     );
 }

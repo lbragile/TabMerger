@@ -18,8 +18,10 @@ vi.mock('@/lib/localDb', () => ({
   setSetting: vi.fn().mockResolvedValue(undefined),
 }))
 vi.mock('@/lib/syncEngine', () => ({ deleteRemoteGroups: vi.fn().mockResolvedValue(undefined) }))
+vi.mock('@/hooks/useUrlRules', () => ({ deleteRulesForGroupIds: vi.fn().mockResolvedValue(undefined) }))
 
 import { saveGroupsState, getGroupsState } from '@/lib/localDb'
+import { deleteRulesForGroupIds } from '@/hooks/useUrlRules'
 
 globalThis.chrome = {
   tabs: { remove: vi.fn().mockResolvedValue(undefined), create: vi.fn().mockResolvedValue(undefined) },
@@ -96,6 +98,20 @@ describe('useBulkDelete — malformed ids and cross-group/window comparator bran
     })
 
     expect(lastSaved().available).toHaveLength(1)
+  })
+
+  it('cleans up URL rules pointing at bulk-deleted groups', async () => {
+    const group = createGroup('a', 'A')
+    const state = makeState([group])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkDelete(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync([{ type: 'group' as const, id: 'group-0' }])
+    })
+
+    expect(deleteRulesForGroupIds).toHaveBeenCalledWith(['a'])
   })
 
   it('sorts tab selections across different groups (groupIndex tiebreak) and same window (tabIndex tiebreak)', async () => {

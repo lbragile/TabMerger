@@ -70,7 +70,7 @@ beforeEach(() => {
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('createSharedBundle — Feature 63', () => {
-  it('posts the correct groups snapshot to the shared_bundles table', async () => {
+  it('posts an encrypted {v,iv,ct} snapshot to the shared_bundles table, never plaintext', async () => {
     const client = makeMockSupabase()
     const g1 = makeGroup({ name: 'Work' })
     const g2 = makeGroup({ name: 'Research' })
@@ -82,12 +82,18 @@ describe('createSharedBundle — Feature 63', () => {
     // groups_snapshot is the real column name (see supabase/migrations/009_create_shared_bundles.sql);
     // regression guard for a shipped bug where the extension inserted a nonexistent `groups` key.
     expect(insertArg).not.toHaveProperty('groups')
-    expect(insertArg).toMatchObject({
-      groups_snapshot: expect.arrayContaining([
-        expect.objectContaining({ name: 'Work' }),
-        expect.objectContaining({ name: 'Research' }),
-      ]),
+    // Security regression guard: the extension share path used to insert the plaintext
+    // groups array (leaking titles/URLs/notes); it must now match the web app's
+    // E2E-encrypted {v:1,iv,ct} shape produced by @tabmerger/shared's encryptBlob.
+    expect(insertArg.groups_snapshot).toMatchObject({
+      v: 1,
+      iv: expect.any(String),
+      ct: expect.any(String),
     })
+    const serialized = JSON.stringify(insertArg.groups_snapshot)
+    expect(serialized).not.toContain('Work')
+    expect(serialized).not.toContain('Research')
+    expect(serialized).not.toContain('github.com')
     // regression guard: `slug` is `not null unique` with no DB default (see
     // supabase/migrations/009_create_shared_bundles.sql) — must be generated client-side.
     expect(insertArg.slug).toEqual(expect.any(String))
@@ -95,7 +101,7 @@ describe('createSharedBundle — Feature 63', () => {
     expect(insertArg.slug).toMatch(/^[A-Za-z0-9_-]+$/)
   })
 
-  it('returns a URL containing the slug from the DB response', async () => {
+  it('returns a URL containing the slug and a #key= fragment, matching the web share-link format', async () => {
     const client = makeMockSupabase()
     const g = makeGroup()
 
@@ -103,6 +109,7 @@ describe('createSharedBundle — Feature 63', () => {
 
     expect(url).toContain('abc123')
     expect(url).toMatch(/^https?:\/\//)
+    expect(url).toMatch(/#key=[A-Za-z0-9+/=]+$/)
   })
 
   it('rejects if 0 groups are selected', async () => {

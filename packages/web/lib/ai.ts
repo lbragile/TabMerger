@@ -74,21 +74,58 @@ export async function summarizeTab(tab: Tab): Promise<string> {
   return content.text.trim()
 }
 
+export interface SessionSuggestion {
+  /** Human-readable banner text, max ~100 chars. */
+  message: string
+  /** `Group.id` values the message is about, so the UI can offer a per-group action. */
+  staleGroupIds: string[]
+}
+
+/**
+ * Suggests how the user could consolidate/archive their groups.
+ *
+ * The model only ever reasons over group *names* — it is never shown or asked to echo
+ * `Group.id`, because model-invented IDs would silently point at the wrong group.
+ * The names it flags are mapped back to IDs here from the caller's own input array.
+ */
 export async function suggestSessions(
-  groups: { name: string; tabs: Tab[] }[]
-): Promise<string> {
+  groups: { id: string; name: string; tabs: Tab[] }[]
+): Promise<SessionSuggestion> {
   const message = await anthropic.messages.create({
     model: AI_MODEL,
     max_tokens: 1024,
     messages: [
       {
         role: 'user',
-        content: `Based on these tab groups, suggest how the user could organize their browsing sessions for better productivity. Be specific and actionable.\n\n${JSON.stringify(groups, null, 2)}`,
+        content: `Based on these tab groups, suggest how the user could organize their browsing sessions for better productivity. Be specific and actionable.
+
+Also identify which of these groups the suggestion is about — the ones that look stale, redundant, or worth archiving/merging. Refer to them by their exact "name" as given below. Use an empty array if none apply.
+
+Respond with JSON only. No explanation. Schema:
+{"message": "<one sentence, max 100 characters>", "staleGroups": ["<exact group name>", ...]}
+
+${JSON.stringify(groups, null, 2)}`,
       },
     ],
   })
 
   const content = message.content[0]
   if (content.type !== 'text') throw new Error('Unexpected response type')
-  return content.text.trim()
+
+  const jsonMatch = content.text.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) throw new Error('No JSON object found in response')
+
+  const parsed = JSON.parse(jsonMatch[0]) as { message?: string; staleGroups?: unknown }
+  const flagged = Array.isArray(parsed.staleGroups) ? parsed.staleGroups : []
+
+  const byName = new Map(groups.map((g) => [g.name.trim().toLowerCase(), g.id]))
+  const staleGroupIds = [
+    ...new Set(
+      flagged
+        .map((n) => (typeof n === 'string' ? byName.get(n.trim().toLowerCase()) : undefined))
+        .filter((id): id is string => Boolean(id))
+    ),
+  ]
+
+  return { message: (parsed.message ?? '').trim(), staleGroupIds }
 }

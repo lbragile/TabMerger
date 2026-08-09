@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { checkAndIncrementAIUsage, AI_MONTHLY_CAP } from '@/lib/ai-usage'
+import { checkAndIncrementAIUsage, getEffectiveCap, AI_MONTHLY_CAP } from '@/lib/ai-usage'
 
 const upsert = vi.fn(async () => ({ error: null }))
 
@@ -100,9 +100,24 @@ describe('checkAndIncrementAIUsage', () => {
   })
 })
 
-// NOT YET IMPLEMENTED: checkAndIncrementAIUsage must also sum the current month's
-// ai_credit_purchases.credits for the user and extend the cap by that amount.
-// These fail until that logic is added.
+describe('getEffectiveCap', () => {
+  it('returns the base cap when there are no purchases', async () => {
+    const { supabase } = makeSupabase(null, null, [])
+    expect(await getEffectiveCap(supabase, 'u1')).toBe(AI_MONTHLY_CAP)
+  })
+
+  it('adds the sum of the month\'s purchased credit packs', async () => {
+    const { supabase } = makeSupabase(null, null, [{ credits: 50 }, { credits: 25 }])
+    expect(await getEffectiveCap(supabase, 'u1')).toBe(AI_MONTHLY_CAP + 75)
+  })
+
+  it('queries ai_credit_purchases for the given month', async () => {
+    const { supabase, from } = makeSupabase(null, null, [])
+    await getEffectiveCap(supabase, 'u1', '2025-01')
+    expect(from).toHaveBeenCalledWith('ai_credit_purchases')
+  })
+})
+
 describe('checkAndIncrementAIUsage — purchased AI credit packs extend the monthly cap', () => {
   it('behaves exactly as today when the user has 0 purchased credits (cap stays at 100)', async () => {
     const { supabase } = makeSupabase(

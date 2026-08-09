@@ -19,6 +19,7 @@ import { useKeyboardNav } from '@/hooks/useKeyboardNav';
 import { SubscriptionStatusBanner } from '@/components/SubscriptionStatusBanner';
 import { UpgradeCTA } from '@/components/UpgradeCTA';
 import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
+import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker';
 
 function AppContent() {
   const { data: groupsState, isLoading } = useGroups();
@@ -28,9 +29,27 @@ function AppContent() {
   const selectionMode = useUIStore((s) => s.selectionMode);
   const selectedItems = useUIStore((s) => s.selectedItems);
   const exitSelectionMode = useUIStore((s) => s.exitSelectionMode);
+  const openModal = useUIStore((s) => s.openModal);
 
   // Apply saved theme (light/dark/system) before anything renders
   useTheme();
+
+  // A global keyboard shortcut may have stashed tabs awaiting a destination-group
+  // choice (background.ts). Only honor it if fresh — older than ~30s means the user
+  // likely opened the popup normally afterward and shouldn't see a stale prompt.
+  useEffect(() => {
+    chrome.storage.session?.get(PENDING_SHORTCUT_SAVE_KEY).then((res) => {
+      const pending = res?.[PENDING_SHORTCUT_SAVE_KEY] as
+        | { tabs: unknown[]; stashedAt: number }
+        | undefined;
+      if (!pending) return;
+      if (Date.now() - pending.stashedAt > 30_000) {
+        void chrome.storage.session.remove(PENDING_SHORTCUT_SAVE_KEY);
+        return;
+      }
+      openModal('shortcutSavePicker', { tabs: pending.tabs });
+    });
+  }, [openModal]);
 
   useEffect(() => {
     if (sessionStorage.getItem('ext_opened')) return;

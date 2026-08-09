@@ -4,6 +4,7 @@ import type { Group, GroupsState, Tab } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
+import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
@@ -119,6 +120,9 @@ export function useDeleteGroup() {
         const newActiveId = newAvailable[newActiveIndex]?.id ?? newAvailable[0]?.id ?? '';
 
         return { active: { id: newActiveId, index: newActiveIndex }, available: newAvailable };
+      }).then((next) => {
+        if (target && !target.permanent) deleteRulesForGroupIds([target.id]).catch(() => {});
+        return next;
       });
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY })
@@ -1148,6 +1152,38 @@ export function useApplyAIGroups() {
 
       return { appliedGroups, appliedTabs };
     }
+  });
+}
+
+/**
+ * Saves a batch of tabs (from a global keyboard shortcut) as a new window into an
+ * existing group, or into a brand-new "Quick Save" group when `groupId` is omitted.
+ * Mirrors background.ts's `appendTabsToGroup`, used when the picker modal isn't reachable.
+ */
+export function useSaveShortcutTabs() {
+  const mutate = useGroupsMutation();
+
+  return useMutation({
+    mutationFn: ({ tabs, groupId }: { tabs: Tab[]; groupId?: string }) =>
+      mutate((prev) => {
+        const available = [...prev.available];
+        let targetIndex = groupId ? available.findIndex((g) => g.id === groupId && !g.permanent) : -1;
+
+        if (targetIndex < 0 && !groupId) {
+          available.push(createGroup(undefined, 'Quick Save'));
+          targetIndex = available.length - 1;
+        }
+        if (targetIndex < 0) return prev;
+
+        const group = { ...available[targetIndex] };
+        group.windows = [...group.windows, createWindow(tabs)];
+        group.updatedAt = Date.now();
+        group.pendingSync = true;
+        group.info = getGroupInfo(group);
+        available[targetIndex] = group;
+        return { ...prev, available };
+      }),
+    onSuccess: () => { trackEvent('tabs_saved', { count: 1 }); }
   });
 }
 

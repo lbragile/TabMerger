@@ -9,6 +9,11 @@ if (!(globalThis as { chrome?: unknown }).chrome) {
   ;(globalThis as { chrome?: unknown }).chrome = {}
 }
 const chromeStub = (globalThis as { chrome: Record<string, unknown> }).chrome
+// ponytail: real in-memory Map behind storage.session (not just resolved-{} stubs like
+// local/sync above) — encryptionKey.ts round-trips a CryptoKey through get/set/remove and
+// several tests assert that value survives a `vi.resetModules()` module reset, so the stub
+// needs actual read-your-writes semantics, not a canned empty response.
+const sessionStore = new Map<string, unknown>()
 chromeStub.storage ??= {
   local: {
     get: vi.fn().mockResolvedValue({}),
@@ -19,5 +24,14 @@ chromeStub.storage ??= {
   sync: {
     get: vi.fn().mockResolvedValue({}),
     set: vi.fn().mockResolvedValue(undefined),
+  },
+  session: {
+    get: vi.fn(async (key: string) => (sessionStore.has(key) ? { [key]: sessionStore.get(key) } : {})),
+    set: vi.fn(async (items: Record<string, unknown>) => {
+      for (const [k, v] of Object.entries(items)) sessionStore.set(k, v)
+    }),
+    remove: vi.fn(async (key: string) => {
+      sessionStore.delete(key)
+    }),
   },
 }

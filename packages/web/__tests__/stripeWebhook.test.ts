@@ -16,12 +16,14 @@ import { NextRequest } from 'next/server'
 const mockConstructEvent = vi.fn()
 const mockSubscriptionsRetrieve = vi.fn()
 const mockPortalSessionCreate = vi.fn()
+const mockListLineItems = vi.fn().mockResolvedValue({ data: [{ quantity: 1 }] })
 
 vi.mock('@/lib/stripe', () => ({
   stripe: {
     webhooks: { constructEvent: mockConstructEvent },
     subscriptions: { retrieve: mockSubscriptionsRetrieve },
     billingPortal: { sessions: { create: mockPortalSessionCreate } },
+    checkout: { sessions: { listLineItems: mockListLineItems } },
   },
 }))
 
@@ -339,6 +341,35 @@ describe('POST /api/webhooks/stripe', () => {
         args.some((a) => (a as Record<string, unknown>)?.status === 'past_due')
       )
     expect(didSetPastDue).toBe(true)
+  })
+
+  it('checkout.session.completed (payment mode, ai_credit_pack) credits the purchased quantity directly', async () => {
+    const mockInsert = vi.fn().mockResolvedValue({ error: null })
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'ai_credit_purchases') return { insert: mockInsert }
+      return { upsert: mockUpsert, update: mockUpdate }
+    })
+    mockListLineItems.mockResolvedValue({ data: [{ quantity: 3 }] })
+
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_test123',
+          mode: 'payment',
+          customer: 'cus_test123',
+          metadata: { user_id: 'user-uuid-1', type: 'ai_credit_pack' },
+        },
+      },
+    })
+
+    const res = await POST(makeRequest('{}'))
+    expect(res.status).toBe(200)
+    expect(mockListLineItems).toHaveBeenCalledWith('cs_test123', { limit: 1 })
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({ user_id: 'user-uuid-1', credits: 3, stripe_checkout_session_id: 'cs_test123' })
+    )
   })
 })
 

@@ -22,12 +22,16 @@ const {
   mockSortTabs,
   mockArchiveGroup,
   mockRestoreGroup,
+  mockUpdateGroupName,
   mockOpenModal,
   mockSetRenameTarget,
   mockToastError,
   mockGetSetting,
   mockUseGroupsData,
   mockTrackEvent,
+  mockUseEntitlements,
+  mockUseAppSettings,
+  mockNameGroup,
 } = vi.hoisted(() => ({
   mockDeleteGroup: vi.fn(),
   mockDuplicateGroup: vi.fn(),
@@ -38,12 +42,16 @@ const {
   mockSortTabs: vi.fn(),
   mockArchiveGroup: vi.fn(),
   mockRestoreGroup: vi.fn(),
+  mockUpdateGroupName: vi.fn(),
   mockOpenModal: vi.fn(),
   mockSetRenameTarget: vi.fn(),
   mockToastError: vi.fn(),
   mockGetSetting: vi.fn().mockResolvedValue({ confirmOnDelete: false }),
   mockUseGroupsData: vi.fn(() => ({ available: [{}, {}, {}] })),
   mockTrackEvent: vi.fn(),
+  mockUseEntitlements: vi.fn(() => ({ maxGroups: 2, aiFeatures: false })),
+  mockUseAppSettings: vi.fn(() => ({ data: { aiNameGroupEnabled: true } })),
+  mockNameGroup: vi.fn(),
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -58,10 +66,21 @@ vi.mock('@/hooks/useGroups', () => ({
   useSortTabs: () => ({ mutate: mockSortTabs }),
   useArchiveGroup: () => ({ mutate: mockArchiveGroup }),
   useRestoreGroup: () => ({ mutate: mockRestoreGroup }),
+  useUpdateGroupName: () => ({ mutate: mockUpdateGroupName }),
   useGroups: () => ({ data: mockUseGroupsData() }),
 }))
 
-vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ maxGroups: 2 }) }))
+vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
+
+vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => mockUseAppSettings() }))
+
+const { QuotaExceededError } = vi.hoisted(() => ({
+  QuotaExceededError: class QuotaExceededError extends Error {},
+}))
+vi.mock('@/hooks/useAI', () => ({
+  useNameGroup: () => ({ mutateAsync: mockNameGroup }),
+  QuotaExceededError,
+}))
 
 vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))
 
@@ -110,6 +129,74 @@ beforeEach(() => {
   vi.clearAllMocks()
   mockGetSetting.mockResolvedValue({ confirmOnDelete: false })
   mockUseGroupsData.mockReturnValue({ available: [{}, {}, {}] })
+  mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: false })
+  mockUseAppSettings.mockReturnValue({ data: { aiNameGroupEnabled: true } })
+})
+
+describe('GroupContextMenu — AI rename', () => {
+  const groupWithTabs = () =>
+    makeGroup({
+      windows: [{ id: 1, tabs: [{ id: 1, title: 'A', url: 'https://a.com' }], starred: false, incognito: false, focused: false }],
+    })
+
+  it('hides "AI rename" when aiFeatures is off', () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: false })
+    renderGroup(groupWithTabs())
+    expect(screen.queryByText('AI rename')).toBeNull()
+  })
+
+  it('hides "AI rename" when aiNameGroupEnabled is explicitly false', () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    mockUseAppSettings.mockReturnValue({ data: { aiNameGroupEnabled: false } })
+    renderGroup(groupWithTabs())
+    expect(screen.queryByText('AI rename')).toBeNull()
+  })
+
+  it('hides "AI rename" for the permanent group even with aiFeatures on', () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    renderGroup(makeGroup({ ...groupWithTabs(), permanent: true }))
+    expect(screen.queryByText('AI rename')).toBeNull()
+  })
+
+  it('shows "AI rename" when aiFeatures on, setting enabled, and group not permanent', () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    renderGroup(groupWithTabs())
+    expect(screen.getByText('AI rename')).toBeTruthy()
+  })
+
+  it('calls nameGroup then updateGroupName with the returned name', async () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    mockNameGroup.mockResolvedValue({ name: 'Suggested Name' })
+    const user = userEvent.setup()
+    renderGroup(groupWithTabs())
+    await user.click(screen.getByText('AI rename'))
+    expect(mockNameGroup).toHaveBeenCalledWith([{ id: 1, title: 'A', url: 'https://a.com' }])
+    expect(mockUpdateGroupName).toHaveBeenCalledWith({ groupIndex: 1, name: 'Suggested Name' })
+  })
+
+  it('shows a quota toast (not a generic error) on QuotaExceededError', async () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    mockNameGroup.mockRejectedValue(new QuotaExceededError('quota'))
+    const user = userEvent.setup()
+    renderGroup(groupWithTabs())
+    await user.click(screen.getByText('AI rename'))
+    await vi.waitFor(() => expect(mockToastError).toHaveBeenCalled())
+    expect(mockToastError).toHaveBeenCalledWith(
+      "You've used all your AI calls for this month.",
+      expect.objectContaining({ action: expect.objectContaining({ label: 'Buy more' }) })
+    )
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
+  })
+
+  it('shows a generic error toast on other errors', async () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, aiFeatures: true })
+    mockNameGroup.mockRejectedValue(new Error('boom'))
+    const user = userEvent.setup()
+    renderGroup(groupWithTabs())
+    await user.click(screen.getByText('AI rename'))
+    await vi.waitFor(() => expect(mockToastError).toHaveBeenCalledWith('boom'))
+    expect(mockUpdateGroupName).not.toHaveBeenCalled()
+  })
 })
 
 describe('GroupContextMenu — item actions', () => {

@@ -4,17 +4,22 @@ import { describe, it, expect, vi } from 'vitest'
 // SharePage is an async server component — mock its data dependency.
 
 function mockSupabase(data: Record<string, unknown> | null) {
-  vi.doMock('@/lib/supabase/server', () => ({
-    createClient: async () => ({
+  process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co'
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'test-key'
+  vi.doMock('@supabase/supabase-js', () => ({
+    createClient: () => ({
       from: () => {
         const builder: Record<string, unknown> = {}
         const chain = () => builder
         builder.select = chain
         builder.eq = chain
-        builder.single = async () => ({ data })
+        builder.single = async () => ({ data, error: data ? null : { code: 'PGRST116' } })
         return builder
       },
     }),
+  }))
+  vi.doMock('next/headers', () => ({
+    headers: async () => new Map([['host', 'tabmerger.vercel.app']]),
   }))
 }
 

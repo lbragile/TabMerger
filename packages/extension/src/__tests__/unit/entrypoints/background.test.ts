@@ -56,7 +56,13 @@ function makeChromeStub() {
         create: vi.fn(),
         onClicked: on('onClicked'),
       },
-      storage: { local: { get: vi.fn().mockResolvedValue({}), remove: vi.fn() } },
+      commands: {
+        onCommand: on('onCommand'),
+      },
+      storage: {
+        local: { get: vi.fn().mockResolvedValue({}), remove: vi.fn() },
+        session: { set: vi.fn().mockResolvedValue(undefined), get: vi.fn().mockResolvedValue({}), remove: vi.fn() },
+      },
       alarms: {
         getAll: vi.fn().mockResolvedValue([]),
         create: vi.fn(),
@@ -81,6 +87,8 @@ function makeChromeStub() {
       action: {
         setBadgeText: vi.fn().mockResolvedValue(undefined),
         setBadgeBackgroundColor: vi.fn().mockResolvedValue(undefined),
+        // openPopup intentionally omitted by default — feature-detected; tests that need
+        // the picker path add it explicitly (mirrors Firefox MV2 / older Chrome lacking it)
       },
     },
   }
@@ -279,6 +287,167 @@ describe('background — context menu click (save-to-group)', () => {
       clicked,
     ])
     await stub.listeners.onClicked[0]({ menuItemId: 'tm-scope-excluding-g1' }, clicked)
+    expect(mockSaveGroupsState).not.toHaveBeenCalled()
+  })
+})
+
+describe('background — global keyboard shortcut (save-current-tab command)', () => {
+  it('ignores unrelated command names', async () => {
+    await stub.listeners.onCommand[0]('some-other-command')
+    expect(stub.chrome.tabs.query).not.toHaveBeenCalled()
+  })
+
+  it('does nothing when there is no active tab or it is a chrome:// tab', async () => {
+    stub.chrome.tabs.query.mockResolvedValue([{ id: 1, url: 'chrome://newtab' }])
+    await stub.listeners.onCommand[0]('save-current-tab')
+    expect(mockSaveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('appends the active tab to the first non-permanent saved group', async () => {
+    mockGetGroupsState.mockResolvedValue({
+      available: [
+        { id: 'now', permanent: true, windows: [] },
+        { id: 'g1', permanent: false, windows: [], name: 'Work' },
+      ],
+      active: { id: 'now', index: 0 },
+    })
+    stub.chrome.tabs.query.mockResolvedValue([{ id: 1, url: 'https://a.com', title: 'A' }])
+    await stub.listeners.onCommand[0]('save-current-tab')
+    expect(mockSaveGroupsState).toHaveBeenCalled()
+    const saved = mockSaveGroupsState.mock.calls[0][0]
+    const g1 = saved.available.find((g: { id: string }) => g.id === 'g1')
+    expect(g1.windows).toHaveLength(1)
+    expect(g1.windows[0].tabs[0].url).toBe('https://a.com')
+  })
+
+  it('creates a new "Quick Save" group when no saved groups exist yet', async () => {
+    mockGetGroupsState.mockResolvedValue({
+      available: [{ id: 'now', permanent: true, windows: [] }],
+      active: { id: 'now', index: 0 },
+    })
+    stub.chrome.tabs.query.mockResolvedValue([{ id: 1, url: 'https://a.com', title: 'A' }])
+    await stub.listeners.onCommand[0]('save-current-tab')
+    expect(mockSaveGroupsState).toHaveBeenCalled()
+    const saved = mockSaveGroupsState.mock.calls[0][0]
+    const quickSave = saved.available.find((g: { name: string }) => g.name === 'Quick Save')
+    expect(quickSave).toBeDefined()
+    expect(quickSave.windows[0].tabs[0].url).toBe('https://a.com')
+  })
+})
+
+describe('background — global keyboard shortcut group picker', () => {
+  it('stashes tabs in session storage and opens the popup instead of saving immediately when openPopup is supported', async () => {
+    stub.chrome.action.openPopup = vi.fn().mockResolvedValue(undefined)
+    stub.chrome.tabs.query.mockResolvedValue([{ id: 1, url: 'https://a.com', title: 'A' }])
+    await stub.listeners.onCommand[0]('save-current-tab')
+
+    expect(mockSaveGroupsState).not.toHaveBeenCalled()
+    expect(stub.chrome.storage.session.set).toHaveBeenCalledWith(
+      expect.objectContaining({
+        pendingShortcutSave: expect.objectContaining({
+          scope: 'current',
+          tabs: expect.arrayContaining([expect.objectContaining({ url: 'https://a.com' })]),
+        }),
+      })
+    )
+    expect(stub.chrome.action.openPopup).toHaveBeenCalled()
+  })
+
+  it('falls back to immediate save when openPopup is unsupported (e.g. Firefox MV2)', async () => {
+    mockGetGroupsState.mockResolvedValue({
+      available: [
+        { id: 'now', permanent: true, windows: [] },
+        { id: 'g1', permanent: false, windows: [], name: 'Work' },
+      ],
+      active: { id: 'now', index: 0 },
+    })
+    stub.chrome.tabs.query.mockResolvedValue([{ id: 1, url: 'https://a.com', title: 'A' }])
+    await stub.listeners.onCommand[0]('save-current-tab')
+
+    expect(stub.chrome.storage.session.set).not.toHaveBeenCalled()
+    expect(mockSaveGroupsState).toHaveBeenCalled()
+  })
+
+  it('falls back to immediate save when openPopup rejects', async () => {
+    stub.chrome.action.openPopup = vi.fn().mockRejectedValue(new Error('no recent user gesture'))
+    mockGetGroupsState.mockResolvedValue({
+      available: [
+        { id: 'now', permanent: true, windows: [] },
+        { id: 'g1', permanent: false, windows: [], name: 'Work' },
+      ],
+      active: { id: 'now', index: 0 },
+    })
+    stub.chrome.tabs.query.mockResolvedValue([{ id: 1, url: 'https://a.com', title: 'A' }])
+    await stub.listeners.onCommand[0]('save-current-tab')
+
+    expect(stub.chrome.action.openPopup).toHaveBeenCalled()
+    expect(mockSaveGroupsState).toHaveBeenCalled()
+  })
+})
+
+describe('background — global keyboard shortcuts (save-tabs-left / save-tabs-right / save-other-tabs)', () => {
+  beforeEach(() => {
+    mockGetGroupsState.mockResolvedValue({
+      available: [
+        { id: 'now', permanent: true, windows: [] },
+        { id: 'g1', permanent: false, windows: [], name: 'Work' },
+      ],
+      active: { id: 'now', index: 0 },
+    })
+  })
+
+  const allTabs = [
+    { id: 1, index: 0, windowId: 1, url: 'https://left.com', title: 'Left' },
+    { id: 2, index: 1, windowId: 1, url: 'https://active.com', title: 'Active' },
+    { id: 3, index: 2, windowId: 1, url: 'https://right.com', title: 'Right' },
+  ]
+
+  it('save-tabs-left appends only tabs with index < active tab index', async () => {
+    stub.chrome.tabs.query
+      .mockResolvedValueOnce([allTabs[1]]) // active tab lookup
+      .mockResolvedValueOnce(allTabs) // window tab list
+    await stub.listeners.onCommand[0]('save-tabs-left')
+    const saved = mockSaveGroupsState.mock.calls[0][0]
+    const g1 = saved.available.find((g: { id: string }) => g.id === 'g1')
+    expect(g1.windows[0].tabs.map((t: { url: string }) => t.url)).toEqual(['https://left.com'])
+  })
+
+  it('save-tabs-right appends only tabs with index > active tab index', async () => {
+    stub.chrome.tabs.query
+      .mockResolvedValueOnce([allTabs[1]])
+      .mockResolvedValueOnce(allTabs)
+    await stub.listeners.onCommand[0]('save-tabs-right')
+    const saved = mockSaveGroupsState.mock.calls[0][0]
+    const g1 = saved.available.find((g: { id: string }) => g.id === 'g1')
+    expect(g1.windows[0].tabs.map((t: { url: string }) => t.url)).toEqual(['https://right.com'])
+  })
+
+  it('save-other-tabs appends every tab except the active one', async () => {
+    stub.chrome.tabs.query
+      .mockResolvedValueOnce([allTabs[1]])
+      .mockResolvedValueOnce(allTabs)
+    await stub.listeners.onCommand[0]('save-other-tabs')
+    const saved = mockSaveGroupsState.mock.calls[0][0]
+    const g1 = saved.available.find((g: { id: string }) => g.id === 'g1')
+    expect(g1.windows[0].tabs.map((t: { url: string }) => t.url)).toEqual(['https://left.com', 'https://right.com'])
+  })
+
+  it('drops chrome:// tabs from the left/right/excluding selection', async () => {
+    const withChrome = [
+      { id: 0, index: 0, windowId: 1, url: 'chrome://newtab', title: 'NTP' },
+      allTabs[1],
+      allTabs[2],
+    ]
+    stub.chrome.tabs.query
+      .mockResolvedValueOnce([allTabs[1]])
+      .mockResolvedValueOnce(withChrome)
+    await stub.listeners.onCommand[0]('save-tabs-left')
+    expect(mockSaveGroupsState).not.toHaveBeenCalled() // only the chrome:// tab was to the left, filtered out
+  })
+
+  it('does nothing when the active tab is a chrome:// tab', async () => {
+    stub.chrome.tabs.query.mockResolvedValueOnce([{ id: 1, url: 'chrome://newtab' }])
+    await stub.listeners.onCommand[0]('save-tabs-right')
     expect(mockSaveGroupsState).not.toHaveBeenCalled()
   })
 })

@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import { generateDataKey, encryptBlob, exportKeyToBase64 } from '@tabmerger/shared'
 import type { Group } from './types'
 
 export interface Entitlement {
@@ -7,9 +8,12 @@ export interface Entitlement {
 }
 
 /**
- * Creates a public share bundle by inserting the selected groups into the `shared_bundles` table.
- * Requires an active Supabase session (Pro entitlement). Returns the full share URL
- * (e.g. `https://tabmerger.vercel.app/share/<slug>`) for the caller to copy or display.
+ * Creates a public share bundle by inserting the selected groups (encrypted)
+ * into the `shared_bundles` table. Requires an active Supabase session (Pro
+ * entitlement). Matches the web dashboard's share-bundle scheme: a fresh
+ * random per-share AES key encrypts the snapshot client-side into
+ * `{v:1,iv,ct}` before insert, and the key is embedded only in the returned
+ * URL's `#key=` fragment — it's never sent to the server and never persisted.
  */
 export async function createSharedBundle(
   groupIds: string[],
@@ -29,10 +33,15 @@ export async function createSharedBundle(
 
   const selected = groups.filter((g) => groupIds.includes(g.id))
 
+  const dataKey = await generateDataKey()
+  const encrypted = await encryptBlob(dataKey, selected)
+  const key = await exportKeyToBase64(dataKey)
+  const groups_snapshot = { v: 1, ...encrypted }
+
   let slug = nanoid(10)
   let { data, error } = await supabaseClient
     .from('shared_bundles')
-    .insert({ user_id: session.user.id, groups_snapshot: selected, slug })
+    .insert({ user_id: session.user.id, groups_snapshot, slug })
     .select()
     .single()
 
@@ -41,7 +50,7 @@ export async function createSharedBundle(
     slug = nanoid(10)
     ;({ data, error } = await supabaseClient
       .from('shared_bundles')
-      .insert({ user_id: session.user.id, groups_snapshot: selected, slug })
+      .insert({ user_id: session.user.id, groups_snapshot, slug })
       .select()
       .single())
   }
@@ -49,5 +58,5 @@ export async function createSharedBundle(
   if (error) throw new Error(error.message)
 
   const base = import.meta.env.VITE_WEB_APP_URL ?? 'https://tabmerger.vercel.app'
-  return `${base}/share/${data.slug}`
+  return `${base}/share/${data.slug}#key=${key}`
 }

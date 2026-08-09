@@ -158,6 +158,10 @@ export async function getSetting<T>(key: string, defaultValue: T): Promise<T> {
   // Merge over defaultValue so fields added after a user's settings object was last
   // saved (e.g. aiDailyThrottle) fall back to their default instead of being undefined —
   // without this, new settings silently render "off" for any existing install.
+  // Arrays are excluded from the merge: `{ ...[], ...storedArray }` produces a plain
+  // object (spreading into `{}` always drops array-ness), which broke iteration for
+  // any array-defaulted setting (e.g. urlRules) the moment a value had been saved.
+  if (Array.isArray(defaultValue)) return stored;
   return typeof defaultValue === 'object' && defaultValue !== null && typeof stored === 'object' && stored !== null
     ? { ...defaultValue, ...stored }
     : stored;
@@ -180,4 +184,16 @@ export async function markGroupSynced(id: string): Promise<void> {
   if (group) {
     await db.put('groups', { ...group, pendingSync: false });
   }
+}
+
+/** Marks every local group dirty so the next push re-sends all of them — used right after
+ * encryption setup so existing Supabase rows (still plaintext) get overwritten with ciphertext. */
+export async function markAllGroupsPendingSync(): Promise<void> {
+  const db = await getDb();
+  const all = await db.getAll('groups');
+  const tx = db.transaction('groups', 'readwrite');
+  await Promise.all([
+    ...all.map((g) => tx.store.put({ ...g, pendingSync: true })),
+    tx.done
+  ]);
 }

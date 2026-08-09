@@ -388,15 +388,17 @@ the "merge related tabs" suggestion is deferred (needs AI).
 - Stored in Supabase `pgvector` column
 - Query → embed → cosine similarity search → ranked results
 
-### AI-004 — E2E encryption for synced data
-**Agent:** `extension-dev` + `database`  
-**Spec:** Client-side AES-256-GCM encryption of group data before it reaches Supabase.
+### AI-004 — E2E encryption for synced data ✅ done
+**Agent:** `extension-dev` + `database` + `web-dev` + `ai-features`
+**Spec:** Client-side AES-256-GCM envelope encryption of `groups`, `sessions`, and `device_sessions` content before it reaches Supabase.
 
-- Key derived from user passphrase via PBKDF2 (salt stored in `chrome.storage.local`)
-- Encrypt in `pushPendingChanges`, decrypt in `pullRemoteChanges` — ~200 lines wrapping the existing sync engine
-- Opt-in toggle in extension Settings; disabling encryption decrypts and re-uploads in plaintext
-- **Constraint:** mutually exclusive with AI features (`pro_ai` tier) — AI routes read from Supabase server-side and cannot process ciphertext. UI must warn clearly when enabling encryption that AI organize/group features will be disabled.
-- Decision log: `chrome.storage.sync` was considered as a no-server alternative but ruled out — 100KB hard limit breaks silently for heavy users, and it's Chrome-only (no Firefox/Edge sync).
+- Data key generated per-account, wrapped with a PBKDF2-derived (600k iterations) passphrase key; only the wrapped key and salt live in a new `encryption_keys` table (RLS owner-scoped) — the passphrase itself never leaves the client.
+- Mandatory, on by default for every signed-in Pro user — no opt-in toggle. First sync with no `encryption_keys` row triggers a blocking one-time setup modal; sync stays queued (never falls back to plaintext) until it's completed.
+- `groups.windows`/`name`/`note`/`info`, `sessions.groups`/`name`, and `device_sessions.now_open_snapshot` are all encrypted as `{v:1,iv,ct}` blobs; `color`/`updated_at`/`device_name`/counts stay plaintext (needed for sync ordering/SSR stats without the key).
+- AI compatibility resolved via client-decrypt-and-send: the `organize` route now accepts client-decrypted content in the request body instead of reading `groups` server-side; encrypted groups are skipped (not overwritten) during server-side merge writeback.
+- Public sharing uses a fresh per-share key embedded only in the URL fragment (`#key=...`), never sent to the server — both the web dashboard and the extension's Selection action bar share creation paths encrypt identically.
+- The web dashboard is a second E2EE client: `packages/web/lib/encryption/context.tsx` provides the same unlock flow (passphrase → PBKDF2 → unwrap) as the extension, gating `GroupGrid`/`SessionList`/`DevicesSection` behind a passphrase prompt when locked.
+- Self-healing: a one-time local migration flag re-marks all groups dirty on first sync after key setup (and retroactively for accounts that set up before this flag existed), so existing plaintext rows get re-pushed encrypted without manual intervention.
 
 ### AI-003 — Meeting prep mode
 **Agent:** `ai-features` + `extension-dev`  
@@ -560,10 +562,10 @@ Added `"alarms"` and `"notifications"` to `wxt.config.ts` manifest permissions. 
 | 21 | AI-001 (smart cleanup) | Low | M | ✅ done |
 | 22 | WEB-003 (referral) | Low | L | — |
 | 23 | EXT-005b (bookmark/OneTab import) | Low | S | ✅ done |
-| 24 | AI-004 (E2E encryption) | Low | S | — |
+| 24 | AI-004 (E2E encryption) | Low | L | ✅ done |
 | 25 | DEV-005 (GA4 analytics via Measurement Protocol) | Medium | S | ✅ done |
 | 26 | WEB-004 (public group sharing) | Medium | S | ✅ done |
 
-**✅ Done:** PAY-001, PAY-002, WEB-005b, WEB-005a, WEB-005, WEB-006, EXT-001, EXT-004, EXT-005 (JSON), EXT-006, EXT-008, WEB-001, DEV-003
+**✅ Done:** PAY-001, PAY-002, WEB-005b, WEB-005a, WEB-005, WEB-006, EXT-001, EXT-004, EXT-005 (JSON), EXT-006, EXT-008, WEB-001, DEV-003, AI-004
 
 S = small (1-2 days), M = medium (3-5 days), L = large (1-2 weeks)

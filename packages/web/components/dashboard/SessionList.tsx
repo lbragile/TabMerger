@@ -1,8 +1,11 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useEffect, useState, useMemo, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/shared'
+import { useEncryptionKey } from '@/lib/encryption/context'
+import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
 import { SessionCard } from './SessionCard'
 import { Button } from '@/components/ui/button'
 import { PlusCircle } from 'lucide-react'
@@ -30,14 +33,60 @@ interface Session {
   created_at: string
 }
 
+/** Raw row shape from Supabase — `groups` (and `name`, when encrypted) is ciphertext until decrypted client-side. */
+interface RawSession extends Omit<Session, 'groups'> {
+  groups: SessionGroup[] | EncryptedBlob
+}
+
+interface EncryptedSessionContent {
+  name: string
+  groups: SessionGroup[]
+}
+
+/** Decrypts every encrypted-blob session with the session's data key — mirrors GroupGrid's useDecryptedGroups. */
+function useDecryptedSessions(sessions: RawSession[]) {
+  const { dataKey } = useEncryptionKey()
+  const [decrypted, setDecrypted] = useState<Session[]>([])
+  const hasEncrypted = useMemo(() => sessions.some((s) => isEncryptedBlob(s.groups)), [sessions])
+
+  useEffect(() => {
+    if (!hasEncrypted) {
+      setDecrypted(sessions as Session[])
+      return
+    }
+    if (!dataKey) return
+    let cancelled = false
+    ;(async () => {
+      const results = await Promise.all(
+        sessions.map(async (s) => {
+          if (!isEncryptedBlob(s.groups)) return s as Session
+          try {
+            const content = await decryptBlob<EncryptedSessionContent>(dataKey, s.groups)
+            return { ...s, name: content.name, groups: content.groups }
+          } catch {
+            return { ...s, name: '(locked)', groups: [] }
+          }
+        })
+      )
+      if (!cancelled) setDecrypted(results)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [sessions, hasEncrypted, dataKey])
+
+  return { sessions: decrypted, needsUnlock: hasEncrypted && !dataKey }
+}
+
 interface SessionListProps {
-  sessions: Session[]
+  sessions: RawSession[]
   isPro: boolean
 }
 
-export function SessionList({ sessions, isPro }: SessionListProps) {
+export function SessionList({ sessions: rawSessions, isPro }: SessionListProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+  const { sessions, needsUnlock } = useDecryptedSessions(rawSessions)
 
   function handleRestore(session: Session) {
     const urls = session.groups.flatMap((g) =>
@@ -66,6 +115,10 @@ export function SessionList({ sessions, isPro }: SessionListProps) {
       <p className="text-xs text-muted-foreground">Needs the extension — takes one click</p>
     </div>
   )
+
+  if (needsUnlock) {
+    return <PassphrasePrompt label="Your sessions are end-to-end encrypted. Enter your passphrase to view them here." />
+  }
 
   if (sessions.length === 0) {
     return (

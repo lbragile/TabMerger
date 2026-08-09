@@ -68,4 +68,15 @@ describe('OnboardingChecklist compact banner restyle', () => {
     render(<OnboardingChecklist isSignedIn={false} isPro={false} />)
     expect(screen.getByText('2 of 4 done')).toBeInTheDocument()
   })
+
+  it('keeps showing all-done steps instead of auto-dismissing, dismissible only via the header X', () => {
+    localStorage.setItem('tm_extension_installed', '1')
+    render(<OnboardingChecklist isSignedIn={true} isPro={true} />)
+    expect(screen.getByText('4 of 4 done')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Done' })).not.toBeInTheDocument()
+
+    act(() => { screen.getByRole('button', { name: 'Dismiss' }).click() })
+    expect(screen.queryByText('4 of 4 done')).not.toBeInTheDocument()
+    expect(localStorage.getItem('tm_onboarding_dismissed')).toBe('1')
+  })
 })

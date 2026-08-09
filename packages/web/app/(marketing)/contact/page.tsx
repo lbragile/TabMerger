@@ -34,7 +34,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16 max-w-xl">
+    <div className="container py-16 max-w-xl">
       {/* Header */}
       <div className="mb-10 pb-8 border-b">
         <p className="text-sm text-muted-foreground mb-2">Support</p>

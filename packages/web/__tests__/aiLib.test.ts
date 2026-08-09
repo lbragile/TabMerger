@@ -59,10 +59,55 @@ describe('lib/ai', () => {
     expect(result).toBe('A React documentation page.')
   })
 
-  it('suggestSessions returns the trimmed text response', async () => {
-    mockCreate.mockResolvedValue(textMessage('Group your work tabs into one session.'))
-    const { suggestSessions } = await import('@/lib/ai')
-    const result = await suggestSessions([{ name: 'Dev', tabs: TABS }])
-    expect(result).toBe('Group your work tabs into one session.')
+  describe('suggestSessions', () => {
+    const GROUPS = [
+      { id: 'g1', name: 'Dev', tabs: TABS },
+      { id: 'g2', name: 'Shopping', tabs: TABS },
+    ]
+
+    it('maps flagged group names back to their ids', async () => {
+      mockCreate.mockResolvedValue(
+        textMessage('{"message":"  Archive these.  ","staleGroups":["Shopping"]}')
+      )
+      const { suggestSessions } = await import('@/lib/ai')
+      expect(await suggestSessions(GROUPS)).toEqual({
+        message: 'Archive these.',
+        staleGroupIds: ['g2'],
+      })
+    })
+
+    it('matches names case- and whitespace-insensitively and dedupes', async () => {
+      mockCreate.mockResolvedValue(
+        textMessage('{"message":"x","staleGroups":[" dev ","DEV","Dev"]}')
+      )
+      const { suggestSessions } = await import('@/lib/ai')
+      expect((await suggestSessions(GROUPS)).staleGroupIds).toEqual(['g1'])
+    })
+
+    it('drops hallucinated group names and non-strings', async () => {
+      mockCreate.mockResolvedValue(
+        textMessage('Sure:\n{"message":"x","staleGroups":["Nonexistent",42,null,"g1"]}')
+      )
+      const { suggestSessions } = await import('@/lib/ai')
+      expect((await suggestSessions(GROUPS)).staleGroupIds).toEqual([])
+    })
+
+    it('tolerates a missing/invalid staleGroups field', async () => {
+      mockCreate.mockResolvedValue(textMessage('{"message":"x"}'))
+      const { suggestSessions } = await import('@/lib/ai')
+      expect(await suggestSessions(GROUPS)).toEqual({ message: 'x', staleGroupIds: [] })
+    })
+
+    it('throws when no JSON object is found', async () => {
+      mockCreate.mockResolvedValue(textMessage('no json here'))
+      const { suggestSessions } = await import('@/lib/ai')
+      await expect(suggestSessions(GROUPS)).rejects.toThrow('No JSON object found')
+    })
+
+    it('throws on a non-text content block', async () => {
+      mockCreate.mockResolvedValue({ content: [{ type: 'image' }] })
+      const { suggestSessions } = await import('@/lib/ai')
+      await expect(suggestSessions(GROUPS)).rejects.toThrow('Unexpected response type')
+    })
   })
 })

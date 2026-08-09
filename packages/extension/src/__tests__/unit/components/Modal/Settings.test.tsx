@@ -24,6 +24,10 @@ const {
   mockEnterDemoMode,
   mockTrackEvent,
   mockUseAiUsage,
+  mockSetDevAiUsage,
+  mockHasEncryptionKey,
+  mockGetDataKey,
+  mockUnlockEncryption,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -38,6 +42,16 @@ const {
   mockEnterDemoMode: vi.fn().mockResolvedValue(undefined),
   mockTrackEvent: vi.fn(),
   mockUseAiUsage: vi.fn(),
+  mockSetDevAiUsage: vi.fn().mockResolvedValue(undefined),
+  mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
+  mockGetDataKey: vi.fn().mockResolvedValue(null),
+  mockUnlockEncryption: vi.fn().mockResolvedValue(true),
+}))
+
+vi.mock('@/lib/encryptionKey', () => ({
+  hasEncryptionKey: mockHasEncryptionKey,
+  getDataKey: mockGetDataKey,
+  unlockEncryption: mockUnlockEncryption,
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -54,6 +68,7 @@ vi.mock('@/lib/theme', () => ({ applyTheme: mockApplyTheme }))
 
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/hooks/useAiUsage', () => ({ useAiUsage: () => mockUseAiUsage() }))
+vi.mock('@/mocks/devAiUsage', () => ({ setDevAiUsage: mockSetDevAiUsage }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => mockUseGroups(),
@@ -105,6 +120,8 @@ beforeEach(() => {
   globalThis.confirm = vi.fn().mockReturnValue(true) // still used by the Import flow's confirm()
   globalThis.URL.createObjectURL = vi.fn().mockReturnValue('blob:x')
   globalThis.URL.revokeObjectURL = vi.fn()
+  mockHasEncryptionKey.mockResolvedValue(false)
+  mockGetDataKey.mockReturnValue(null)
 })
 
 describe('SettingsModal — Devices tab', () => {
@@ -430,6 +447,71 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
     await goToTab(/^dev$/i)
     expect(screen.getByRole('button', { name: 'Throw error' })).toBeInTheDocument()
   })
+
+  it('writes the entered value via setDevAiUsage and invalidates aiUsage on Set', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^dev$/i)
+    const input = screen.getByDisplayValue('0')
+    fireEvent.change(input, { target: { value: '95' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Set' }))
+    await waitFor(() => expect(mockSetDevAiUsage).toHaveBeenCalledWith(95))
+  })
+
+  it('resets the mocked AI usage count to 0 on Reset', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^dev$/i)
+    fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
+    await waitFor(() => expect(mockSetDevAiUsage).toHaveBeenCalledWith(0))
+  })
+
+  it('syncs the dev usage count to the real backend when signed in', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
+    globalThis.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ count: 95 }) })
+    const { toast } = await import('sonner')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^dev$/i)
+    const input = screen.getByDisplayValue('0')
+    fireEvent.change(input, { target: { value: '95' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Set' }))
+    await waitFor(() => expect(mockSetDevAiUsage).toHaveBeenCalledWith(95))
+    await waitFor(() =>
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        expect.stringContaining('/api/ai/dev-usage'),
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({ Authorization: 'Bearer tok' }),
+          body: JSON.stringify({ count: 95 }),
+        }),
+      ),
+    )
+    await waitFor(() => expect(toast.success).toHaveBeenCalled())
+  })
+
+  it('shows an error toast when the real-backend sync fails', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
+    globalThis.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500, text: async () => 'boom' })
+    const { toast } = await import('sonner')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^dev$/i)
+    fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Failed to sync AI usage to server'))
+  })
+
+  it('shows an error toast when not signed in, without calling fetch', async () => {
+    mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
+    globalThis.fetch = vi.fn()
+    const { toast } = await import('sonner')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^dev$/i)
+    fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Sign in to sync AI usage to the server'))
+    expect(globalThis.fetch).not.toHaveBeenCalled()
+  })
 })
 
 describe('SettingsModal — billing portal', () => {
@@ -470,3 +552,64 @@ describe('SettingsModal — billing portal', () => {
     expect(screen.queryByRole('button', { name: /manage billing/i })).toBeNull()
   })
 })
+
+describe('SettingsModal — Account tab encryption', () => {
+  it('does not show the encryption section without cloudSync', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(screen.queryByText('End-to-end encryption')).toBeNull()
+  })
+
+  it('shows no Unlock button when encryption has not been set up yet (nothing to unlock)', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(await screen.findByText('End-to-end encryption')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Unlock' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Enable' })).toBeNull()
+  })
+
+  it('shows an Unlock prompt when a key exists but is locked this session', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue(null)
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    await user.click(await screen.findByRole('button', { name: 'Unlock' }))
+    await user.type(screen.getByPlaceholderText('Passphrase'), 'my passphrase')
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
+    await waitFor(() => expect(mockUnlockEncryption).toHaveBeenCalledWith('my passphrase'))
+  })
+
+  it('shows a wrong-passphrase error when unlockEncryption returns false', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue(null)
+    mockUnlockEncryption.mockResolvedValue(false)
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    await user.click(await screen.findByRole('button', { name: 'Unlock' }))
+    await user.type(await screen.findByPlaceholderText('Passphrase'), 'wrong pass')
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
+    expect(await screen.findByText('Wrong passphrase')).toBeInTheDocument()
+  })
+
+  it('shows a confirmation message when already unlocked this session (no Unlock button)', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({ fake: 'key' } as unknown as CryptoKey)
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(await screen.findByText('Unlocked for this session.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Unlock' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Turn off' })).toBeNull()
+  })
+})
+

@@ -72,7 +72,7 @@ function anchorId(version: string) {
 
 export default function ChangelogPage() {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-3xl">
+    <div className="container py-16 max-w-3xl">
       <div className="mb-12 pb-8 border-b border-line">
         <h1 className="text-4xl font-semibold tracking-tight mb-3">Changelog</h1>
         <p className="text-text2">Everything we shipped, newest first.</p>

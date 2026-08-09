@@ -4,7 +4,10 @@ import type { Tab, Group } from '@/lib/types';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 import { useAppSettings } from './useAppSettings';
+import { useAiUsage } from './useAiUsage';
+import { useGroups } from './useGroups';
 import { wasCalledToday, markCalledToday } from '@/lib/aiThrottle';
+import { hasEncryptionKey } from '@/lib/encryptionKey';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 
@@ -37,7 +40,7 @@ async function enforceDailyThrottle(action: string, throttleEnabled: boolean) {
  * Sends a `Bearer` token because the extension runs on a different origin and
  * cannot use session cookies. The web app's API routes verify this JWT server-side.
  */
-async function aiPost<T>(path: string, body: unknown, token: string): Promise<T> {
+export async function aiPost<T>(path: string, body: unknown, token: string): Promise<T> {
   const res = await fetch(`${WEB_APP_URL}${path}`, {
     method: 'POST',
     headers: {
@@ -61,12 +64,22 @@ function withQuotaFlag<T extends { error: unknown }>(mutation: T): T & { isQuota
   return { ...mutation, isQuotaExceeded: mutation.error instanceof QuotaExceededError };
 }
 
+// ponytail: proactive client-side check reusing useAiUsage()'s already-cached
+// `remaining` count — avoids a network round trip when we already know the
+// server will 429. `remaining` is only known once useAiUsage() has fetched at
+// least once; undefined/NaN-safe via the `<= 0` check only firing once it's a
+// real number.
+function assertQuotaRemaining(remaining: number) {
+  if (remaining <= 0) throw new QuotaExceededError('AI request failed: 429 quota exceeded (client-side check)');
+}
+
 export function useAutoGroup() {
   const { session } = useAuth();
   const { aiFeatures } = useEntitlements();
   const { data: settings } = useAppSettings();
+  const { remaining } = useAiUsage();
 
-  return useMutation({
+  return withQuotaFlag(useMutation({
     onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'group' }); trackEvent('ai_auto_group_used'); },
     // ponytail: no daily throttle — this is a manual button click, always run it
     // (subject to the existing server-side monthly quota only).
@@ -74,6 +87,7 @@ export function useAutoGroup() {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiAutoGroupEnabled === false) throw new Error('Auto-group is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
+      assertQuotaRemaining(remaining);
 
       return aiPost<{ groups: { name: string; color: string; tabIds: number[] }[] }>(
         '/api/ai/group-tabs',
@@ -81,33 +95,36 @@ export function useAutoGroup() {
         session.access_token
       );
     }
-  });
+  }));
 }
 
 export function useNameGroup() {
   const { session } = useAuth();
   const { aiFeatures } = useEntitlements();
   const { data: settings } = useAppSettings();
+  const { remaining } = useAiUsage();
 
-  return useMutation({
+  return withQuotaFlag(useMutation({
     onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'name' }); },
     // ponytail: no daily throttle — manual, always run it.
     mutationFn: async (tabs: Tab[]) => {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiNameGroupEnabled === false) throw new Error('Name group is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
+      assertQuotaRemaining(remaining);
 
       return aiPost<{ name: string }>('/api/ai/name-group', { tabs }, session.access_token);
     }
-  });
+  }));
 }
 
 export function useSuggestSessions() {
   const { session } = useAuth();
   const { aiFeatures } = useEntitlements();
   const { data: settings } = useAppSettings();
+  const { remaining } = useAiUsage();
 
-  return useMutation({
+  return withQuotaFlag(useMutation({
     onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'suggest' }); },
     // Throttled — this is only ever invoked automatically by AIGroupSuggestion's
     // background effect (not a manual button), so it's the case the daily throttle
@@ -116,55 +133,78 @@ export function useSuggestSessions() {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiSuggestSessionsEnabled === false) throw new Error('Suggest sessions is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
+      assertQuotaRemaining(remaining);
       await enforceDailyThrottle('suggest-sessions', settings?.aiDailyThrottle ?? true);
 
-      return aiPost<{ suggestion: string }>(
+      // `id` is sent so the server can return staleGroupIds the UI can act on per group.
+      // `suggestion` is a deprecated alias for `message` — drop it once AIGroupSuggestion migrates.
+      return aiPost<{ message: string; staleGroupIds: string[]; suggestion: string }>(
         '/api/ai/suggest-sessions',
-        { groups: recentGroups.map((g) => ({ name: g.name, tabs: g.windows.flatMap((w) => w.tabs) })) },
+        { groups: recentGroups.map((g) => ({ id: g.id, name: g.name, tabs: g.windows.flatMap((w) => w.tabs) })) },
         session.access_token
       );
     }
-  });
+  }));
 }
 
 export function useOrganizeTabs() {
   const { session } = useAuth();
   const { aiFeatures } = useEntitlements();
   const { data: settings } = useAppSettings();
+  const { remaining } = useAiUsage();
+  const { data: groupsState } = useGroups();
 
-  return useMutation({
+  return withQuotaFlag(useMutation({
     onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'organize' }); },
     // ponytail: no daily throttle — manual, always run it.
     mutationFn: async () => {
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiOrganizeEnabled === false) throw new Error('Organize is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
+      assertQuotaRemaining(remaining);
+
+      // Once encryption is set up, `groups.windows` in Supabase is ciphertext the
+      // server can't read, so the plaintext for the prompt has to come from our
+      // already-decrypted local state. Array order carries the "Now Open is
+      // index 0" invariant, and `permanent` is sent explicitly so the server
+      // doesn't have to infer it.
+      const groups = (await hasEncryptionKey())
+        ? groupsState?.available.map((g) => ({
+            id: g.id,
+            name: g.name,
+            permanent: g.permanent ?? false,
+            tabs: g.windows.flatMap((w) => w.tabs)
+          }))
+        : undefined;
 
       return aiPost<{ runId: string; token: string }>(
         '/api/ai/organize',
-        {}, // ponytail: no body — server derives userId from Bearer token
+        // ponytail: empty body for unencrypted users — the server reads the DB itself.
+        groups?.length ? { groups } : {},
         session.access_token
       );
     }
-  });
+  }));
 }
 
 export function useTabSummary() {
   const { session } = useAuth();
   const { aiFeatures } = useEntitlements();
   const { data: settings } = useAppSettings();
+  const { remaining } = useAiUsage();
 
   // ponytail: no daily throttle here — hover-to-preview is arguably user-initiated
   // (the user is actively hovering a specific tab), and per-URL results are already
   // cached for the popup session (see summaryCache in useTabPreview.ts), so repeat
   // hovers of the same tab don't re-hit the API anyway. A once-a-day cap would also
   // break the feature after the first hover of the day, which isn't the intent here.
-  return useMutation({
+  return withQuotaFlag(useMutation({
     onSuccess: (data) => { if (data.summary) trackEvent('ai_summary_used'); },
     mutationFn: async ({ url, title }: { url: string; title: string }) => {
       if (!aiFeatures || !session?.access_token || settings?.aiTabSummaryEnabled === false) {
         return { summary: null };
       }
+      assertQuotaRemaining(remaining);
 
       return aiPost<{ summary: string }>(
         '/api/ai/tab-summary',
@@ -172,5 +212,5 @@ export function useTabSummary() {
         session.access_token
       );
     }
-  });
+  }));
 }

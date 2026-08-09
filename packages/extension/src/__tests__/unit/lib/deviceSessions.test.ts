@@ -5,16 +5,38 @@ const {
   mockGetSetting,
   mockSetSetting,
   mockGetSession,
+  mockHasEncryptionKey,
+  mockGetDataKey,
+  mockEncryptBlob,
+  mockDecryptBlob,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn(),
   mockGetSession: vi.fn(),
+  mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
+  mockGetDataKey: vi.fn().mockReturnValue(null),
+  mockEncryptBlob: vi.fn().mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' }),
+  mockDecryptBlob: vi.fn(),
 }))
 
 vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
   setSetting: mockSetSetting,
 }))
+
+vi.mock('@/lib/encryptionKey', () => ({
+  hasEncryptionKey: () => mockHasEncryptionKey(),
+  getDataKey: () => mockGetDataKey(),
+}))
+
+vi.mock('@tabmerger/shared', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@tabmerger/shared')>()
+  return {
+    ...actual,
+    encryptBlob: (...args: unknown[]) => mockEncryptBlob(...args),
+    decryptBlob: (...args: unknown[]) => mockDecryptBlob(...args),
+  }
+})
 
 // ─── Supabase mock — client/builder separation (client must NOT be thenable) ──
 function makeBuilder(responses: Array<{ data: unknown; error: unknown }>) {
@@ -89,6 +111,10 @@ beforeEach(() => {
   vi.clearAllMocks()
   currentBuilder = makeBuilder([])
   mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } }, error: null })
+  mockHasEncryptionKey.mockResolvedValue(false)
+  mockGetDataKey.mockReturnValue(null)
+  mockEncryptBlob.mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' })
+  mockDecryptBlob.mockReset()
   vi.useFakeTimers()
 })
 
@@ -104,7 +130,22 @@ describe('getOrCreateDeviceId', () => {
     const id = await getOrCreateDeviceId()
 
     expect(id).toMatch(/^[0-9a-f-]{36}$/i)
-    expect(mockSetSetting).toHaveBeenCalledWith('deviceId', id)
+    expect(mockSetSetting).toHaveBeenCalledWith('deviceId:u1', id)
+  })
+
+  it('scopes the device id per signed-in user — two different users get two different ids', async () => {
+    mockGetSetting.mockResolvedValue(undefined)
+    mockSetSetting.mockResolvedValue(undefined)
+    mockGetSession.mockResolvedValueOnce({ data: { session: { user: { id: 'user-a' } } }, error: null })
+
+    const idA = await getOrCreateDeviceId()
+
+    mockGetSession.mockResolvedValueOnce({ data: { session: { user: { id: 'user-b' } } }, error: null })
+    const idB = await getOrCreateDeviceId()
+
+    expect(idA).not.toBe(idB)
+    expect(mockSetSetting).toHaveBeenCalledWith('deviceId:user-a', idA)
+    expect(mockSetSetting).toHaveBeenCalledWith('deviceId:user-b', idB)
   })
 
   it('is idempotent — returns the same UUID once persisted', async () => {
@@ -233,7 +274,8 @@ describe('fetchOtherDeviceSessions', () => {
     expect(currentBuilder.from).toHaveBeenCalledWith('device_sessions')
     expect(currentBuilder.neq).toHaveBeenCalledWith('device_id', 'd1')
     expect(currentBuilder.gte).toHaveBeenCalled()
-    expect(result).toEqual([fresh])
+    // Dev env appends mock devices alongside real ones — real row is still present.
+    expect(result).toContainEqual(fresh)
     expect(result).not.toContainEqual(stale)
   })
 
@@ -255,7 +297,8 @@ describe('fetchOtherDeviceSessions', () => {
 
     const result = await fetchOtherDeviceSessions('pro')
 
-    expect(result).toHaveLength(1)
+    // Dev env appends mock devices alongside the one real (malformed) row.
+    expect(result).toContainEqual(malformed)
     expect(result[0].now_open_snapshot).toBeFalsy()
   })
 })
@@ -274,8 +317,8 @@ describe('renameDevice', () => {
   })
 
   it('is a no-op when there is no active session (logged out)', async () => {
-    mockGetSetting.mockResolvedValueOnce('d1')
-    mockGetSession.mockResolvedValueOnce({ data: { session: null }, error: null })
+    mockGetSetting.mockResolvedValue('d1')
+    mockGetSession.mockResolvedValue({ data: { session: null }, error: null })
     currentBuilder = makeBuilder([])
 
     await renameDevice('New name')
@@ -311,6 +354,57 @@ describe('removeDevices', () => {
     await removeDevices(['row-1'])
 
     expect(currentBuilder.delete).not.toHaveBeenCalled()
+  })
+})
+
+describe('device session encryption', () => {
+  it('encrypts now_open_snapshot before push when encryption is enabled and unlocked', async () => {
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
+
+    pushDeviceSession(makeGroupsState(2))
+    await vi.advanceTimersByTimeAsync(DEVICE_SESSION_DEBOUNCE_MS)
+
+    const payload = (currentBuilder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    expect(payload.now_open_snapshot).toEqual({ v: 1, iv: 'iv-stub', ct: 'ct-stub' })
+  })
+
+  it('skips the push when encryption is enabled but the key is locked', async () => {
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue(null)
+
+    pushDeviceSession(makeGroupsState(2))
+    await vi.advanceTimersByTimeAsync(DEVICE_SESSION_DEBOUNCE_MS)
+
+    expect(currentBuilder.upsert).not.toHaveBeenCalled()
+  })
+
+  it('decrypts an encrypted now_open_snapshot when fetching other devices with an unlocked key', async () => {
+    const decryptedContent = { windows: [{ tabs: [{ title: 'T', url: 'https://a.com' }] }] }
+    mockDecryptBlob.mockResolvedValue(decryptedContent)
+    const encryptedRow = { device_id: 'd2', device_name: 'Chrome on Mac', now_open_snapshot: { v: 1, iv: 'x', ct: 'y' }, last_active: new Date().toISOString() }
+    currentBuilder = makeBuilder([{ data: [encryptedRow], error: null }])
+    mockGetSetting.mockResolvedValueOnce('d1')
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
+
+    const result = await fetchOtherDeviceSessions('pro')
+
+    const decoded = result.find((d) => d.device_id === 'd2')
+    expect(decoded?.now_open_snapshot).toEqual(decryptedContent)
+  })
+
+  it('returns now_open_snapshot: null (degrades like a malformed row) when an encrypted row is locked', async () => {
+    const encryptedRow = { device_id: 'd2', device_name: 'Chrome on Mac', now_open_snapshot: { v: 1, iv: 'x', ct: 'y' }, last_active: new Date().toISOString() }
+    currentBuilder = makeBuilder([{ data: [encryptedRow], error: null }])
+    mockGetSetting.mockResolvedValueOnce('d1')
+    mockGetDataKey.mockReturnValue(null)
+
+    const result = await fetchOtherDeviceSessions('pro')
+
+    const decoded = result.find((d) => d.device_id === 'd2')
+    expect(decoded?.now_open_snapshot).toBeNull()
   })
 })
 

@@ -24,7 +24,7 @@ const TOC = [
 
 export default function TermsPage() {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-5xl">
+    <div className="container py-16 max-w-5xl">
       {/* Header — distinct neutral/surface treatment vs Privacy's brand-soft callout */}
       <div className="mb-11 rounded-2xl bg-surface2 border border-border px-8 py-7">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-text3 mb-2.5">Legal</p>

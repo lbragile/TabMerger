@@ -17,7 +17,7 @@ vi.mock('@/lib/supabase/server', () => ({
 }))
 
 // Import after mocks
-import { applyChanges } from '@/lib/workflows/tabOrganizer'
+import { applyChanges, fetchUserData, type ClientGroup } from '@/lib/workflows/tabOrganizer'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 
 // ─── Supabase mock builder ────────────────────────────────────────────────────
@@ -92,7 +92,71 @@ const G2: MockRow = {
   windows: [{ id: 1, tabs: [{ url: 'https://example.com' }] }],
 }
 
+/** A group whose content is client-side ciphertext — the server can never read it. */
+const ENCRYPTED: MockRow = {
+  id: 'enc1',
+  name: '', // encrypted rows store '' here; the real name lives inside the blob
+  color: '#00f',
+  position: 3,
+  windows: { v: 1, iv: 'aXY=', ct: 'Y3Q=' },
+}
+
 // ─── Tests ───────────────────────────────────────────────────────────────────
+
+describe('fetchUserData', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('reads from Supabase when no client payload is supplied', async () => {
+    const { client, builder } = makeSupabaseMock([NOW_OPEN, G2])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await fetchUserData('user-123', null)
+
+    expect(builder.select).toHaveBeenCalledWith('id, name, color, position, windows')
+    expect(result).toHaveLength(2)
+    expect(result[0]).toMatchObject({ id: 'now-open', position: 0, permanent: true })
+    expect(result[1]).toMatchObject({ id: 'g2', position: 2, permanent: false })
+    expect(result[1].windows).toEqual(G2.windows)
+  })
+
+  it('uses the client payload verbatim and never touches Supabase', async () => {
+    const { client } = makeSupabaseMock([])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const clientGroups: ClientGroup[] = [
+      { id: 'c0', name: 'Now Open', tabs: [{ url: 'https://a' }] },
+      { id: 'c1', name: 'Work', tabs: [{ url: 'https://b' }] },
+    ]
+    const result = await fetchUserData('user-123', clientGroups)
+
+    expect(client.from).not.toHaveBeenCalled()
+    // index doubles as position; index 0 is the permanent "Now Open" group
+    expect(result[0]).toMatchObject({ id: 'c0', position: 0, permanent: true })
+    expect(result[1]).toMatchObject({ id: 'c1', position: 1, permanent: false })
+    expect(result[1].windows).toEqual([{ tabs: clientGroups[1].tabs }])
+  })
+
+  it('honours an explicit `permanent` flag over the index-0 default', async () => {
+    const { client } = makeSupabaseMock([])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await fetchUserData('user-123', [
+      { id: 'c0', name: 'Work', tabs: [], permanent: false },
+      { id: 'c1', name: 'Now Open', tabs: [], permanent: true },
+    ])
+
+    expect(result[0].permanent).toBe(false)
+    expect(result[1].permanent).toBe(true)
+  })
+
+  it('falls back to an empty windows array for null DB windows', async () => {
+    const { client } = makeSupabaseMock([{ ...G1, windows: null }])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await fetchUserData('user-123', null)
+    expect(result[0].windows).toEqual([])
+  })
+})
 
 describe('applyChanges', () => {
   beforeEach(() => {
@@ -175,6 +239,52 @@ describe('applyChanges', () => {
     expect(result.applied).toBe(2)
     expect(result.skipped).toHaveLength(0)
     expect(builder.update).toHaveBeenCalledWith({ name: 'Dev Work' })
+    expect(builder.delete).toHaveBeenCalled()
+  })
+
+  // ── E2EE writeback guards ──────────────────────────────────────────────────
+  // The server has no decryption key, so it must refuse any content-bearing
+  // write to an encrypted group rather than clobbering it with plaintext.
+
+  it('skips rename of an encrypted group instead of writing plaintext name', async () => {
+    const { client, builder } = makeSupabaseMock([NOW_OPEN, ENCRYPTED])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const action: ReorganizeAction = { type: 'rename', groupId: 'enc1', newName: 'Docs' }
+    const result = await applyChanges('user-123', [action])
+
+    expect(result.applied).toBe(0)
+    expect(result.skipped).toEqual([action])
+    expect(builder.update).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['source', { type: 'merge', sourceGroupId: 'enc1', targetGroupId: 'g1' }],
+    ['target', { type: 'merge', sourceGroupId: 'g1', targetGroupId: 'enc1' }],
+  ])('skips merge when the %s group is encrypted', async (_label, action) => {
+    const { client, builder } = makeSupabaseMock([NOW_OPEN, G1, ENCRYPTED])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await applyChanges('user-123', [action as ReorganizeAction])
+
+    expect(result.applied).toBe(0)
+    expect(result.skipped).toEqual([action])
+    expect(builder.update).not.toHaveBeenCalled()
+    expect(builder.delete).not.toHaveBeenCalled()
+  })
+
+  it('still applies content-free delete and reorder for encrypted groups', async () => {
+    const { client, builder } = makeSupabaseMock([NOW_OPEN, ENCRYPTED])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await applyChanges('user-123', [
+      { type: 'reorder', groupIds: ['now-open', 'enc1'] },
+      { type: 'delete', groupId: 'enc1' },
+    ])
+
+    expect(result.applied).toBe(2)
+    expect(result.skipped).toHaveLength(0)
+    expect(builder.update).toHaveBeenCalledWith({ position: 1 })
     expect(builder.delete).toHaveBeenCalled()
   })
 

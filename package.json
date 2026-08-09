@@ -15,7 +15,7 @@
     "zip": "pnpm --filter @tabmerger/extension zip",
     "lint": "pnpm --filter @tabmerger/extension lint && pnpm --filter @tabmerger/web lint",
     "type-check": "pnpm -r type-check",
-    "test": "pnpm -r --filter @tabmerger/extension --filter @tabmerger/web test",
+    "test": "pnpm -r --filter @tabmerger/extension --filter @tabmerger/web --filter @tabmerger/shared test",
     "test:e2e": "pnpm --filter @tabmerger/web test:e2e",
     "test:visual": "pnpm --filter @tabmerger/web test:visual && pnpm --filter @tabmerger/extension test:visual",
     "demo:record": "pnpm --filter @tabmerger/demo record",

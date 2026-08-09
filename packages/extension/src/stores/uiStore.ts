@@ -19,6 +19,10 @@ export type ModalType =
   | 'reviewStaleTabs'
   | 'clearAllData'
   | 'saveSession'
+  | 'shortcutSavePicker'
+  | 'reviewStaleGroup'
+  | 'archiveStaleGroups'
+  | 'encryptionSetup'
   | null;
 
 interface ModalState {

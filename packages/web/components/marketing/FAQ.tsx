@@ -33,7 +33,7 @@ const faqs = [
   {
     question: 'Is my data private?',
     answer:
-      'We take privacy seriously. Your tab data is encrypted in transit and at rest. We never sell your data. Free tier data is stored locally only — nothing leaves your browser.',
+      'We take privacy seriously. Free tier data is stored locally only — nothing leaves your browser. Pro cloud sync data is end-to-end encrypted on your device with a passphrase only you know before it ever reaches our servers — we store only ciphertext and cannot read your groups or tabs. We never sell your data.',
   },
   {
     question: 'What happens to my groups if I downgrade?',

@@ -55,9 +55,11 @@ vi.mock('@/lib/localDb', () => ({
 }))
 vi.mock('@/lib/syncEngine', () => ({ deleteRemoteGroups: vi.fn().mockResolvedValue(undefined) }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
+vi.mock('@/hooks/useUrlRules', () => ({ deleteRulesForGroupIds: vi.fn().mockResolvedValue(undefined) }))
 
 import { saveGroupsState, getGroupsState } from '@/lib/localDb'
 import { deleteRemoteGroups } from '@/lib/syncEngine'
+import { deleteRulesForGroupIds } from '@/hooks/useUrlRules'
 import { trackEvent } from '@/lib/analytics'
 
 globalThis.chrome = {
@@ -534,6 +536,7 @@ describe('useDeleteGroup', () => {
     expect(deleteRemoteGroups).toHaveBeenCalledWith(['a'])
     expect(lastSaved().available).toHaveLength(1)
     expect(trackEvent).toHaveBeenCalledWith('group_deleted')
+    expect(deleteRulesForGroupIds).toHaveBeenCalledWith(['a'])
   })
 
   it('does not call chrome.tabs.remove when no tabs are live in Now Open', async () => {

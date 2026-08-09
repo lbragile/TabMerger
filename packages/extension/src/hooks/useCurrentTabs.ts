@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState, Window, Tab } from '@/lib/types';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
@@ -199,6 +199,17 @@ export function useCurrentTabs() {
   const qc = useQueryClient();
   const { tier } = useEntitlements();
 
+  // ponytail: doSync's effect below intentionally has a stable [qc] dep array so the 8
+  // chrome.tabs/windows listeners aren't torn down/re-registered on every entitlements
+  // poll (useEntitlements refetches every 30s). tierRef lets doSync read the CURRENT tier
+  // without needing `tier` in that effect's deps — closing over `tier` directly previously
+  // froze it at 'free' (the first-render value, before the subscription query resolves) for
+  // the lifetime of the popup, silently breaking device-session pushes for every user, always.
+  const tierRef = useRef(tier);
+  useEffect(() => {
+    tierRef.current = tier;
+  }, [tier]);
+
   useEffect(() => {
     let mounted = true;
 
@@ -208,7 +219,7 @@ export function useCurrentTabs() {
       qc.setQueryData(GROUPS_QUERY_KEY, next);
       // ponytail: pushDeviceSession no-ops for free tier internally (and debounce-schedules
       // cheaply either way), so no extra guard needed here — see deviceSessions.ts doPush().
-      pushDeviceSession(next, tier);
+      pushDeviceSession(next, tierRef.current);
       if (fetchOg) {
         const nowOpen = next.available.find((g) => g.permanent);
         const missing = (nowOpen?.windows ?? []).flatMap((w) =>

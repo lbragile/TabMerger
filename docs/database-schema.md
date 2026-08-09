@@ -73,7 +73,7 @@ TS counterpart: `Subscription` (camelCase). Note the TS type doesn't yet model
 
 ### `groups`
 Local-first synced tab groups. Extension writes to IndexedDB first, then upserts here via
-`syncEngine.ts`. Columns accumulated across migrations 001, 007, 008.
+`syncEngine.ts`. Columns accumulated across migrations 001, 007, 008, 016.
 
 | Column | Type | Constraints |
 |---|---|---|
@@ -91,6 +91,8 @@ Local-first synced tab groups. Extension writes to IndexedDB first, then upserts
 | `permanent` | `boolean` | added in 008, not null, default `false` — true only for the "Now Open" group |
 | `starred` | `boolean` | added in 008, not null, default `false` |
 | `archived` | `boolean` | added in 008, not null, default `false` |
+| `window_count` | `integer` | added in 016, not null, default `0` — denormalized plaintext count, maintained by the client on every write so SSR stat tiles work even once `windows` is E2EE ciphertext |
+| `tab_count` | `integer` | added in 016, not null, default `0` — denormalized plaintext count, maintained by the client on every write, same reason as `window_count` |
 | `note` | `text` | added in 008, nullable |
 
 **RLS:** full owner CRUD — `groups_select_own`, `groups_insert_own`, `groups_update_own`,

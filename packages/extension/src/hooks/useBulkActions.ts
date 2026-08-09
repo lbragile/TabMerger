@@ -9,6 +9,7 @@ import type { SelectedItem } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY, RESTRICTED_URL_RE } from '@/hooks/useGroups';
 import { createWindow, getGroupInfo, sortWindowsByStarred } from '@/lib/utils';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
+import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import type { Tab, Window as WindowType } from '@/lib/types';
 
 // ─── ID Parsers ───────────────────────────────────────────────────────────────
@@ -164,6 +165,7 @@ export function useBulkDelete() {
 
         // Fire-and-forget: hard-delete from Supabase so sync doesn't resurrect these on reload
         deleteRemoteGroups(deletedGroupIds).catch(() => {});
+        deleteRulesForGroupIds(deletedGroupIds).catch(() => {});
 
         const next = {
           ...state,

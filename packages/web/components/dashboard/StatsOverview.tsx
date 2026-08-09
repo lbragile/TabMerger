@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Layers, Globe, Clock, FileStack, Sparkles } from 'lucide-react'
+import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
 
 interface StatsOverviewProps {
   tabCount: number
@@ -84,7 +85,15 @@ export function StatsOverview({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">{stat.description}</p>
+              <p className="text-xs text-muted-foreground">
+                {stat.description}
+                {stat.label === 'AI calls this month' && aiUsage && aiUsage.used >= aiUsage.limit && (
+                  <>
+                    {' · '}
+                    <BuyCreditsButton />
+                  </>
+                )}
+              </p>
             </CardContent>
           </Card>
         )

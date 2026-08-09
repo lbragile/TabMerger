@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, ExternalLink, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
-// ponytail: inline minimal types — web doesn't depend on @tabmerger/shared
+import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/shared'
+import { useEncryptionKey } from '@/lib/encryption/context'
+import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
+
 interface Tab { title?: string; url?: string; favIconUrl?: string }
 interface ExtWindow { tabs: Tab[] }
 
@@ -19,9 +22,58 @@ interface DashboardGroup {
   starred?: boolean
 }
 
+/** Raw row shape from Supabase — `windows` (and `name`, when encrypted) is ciphertext until decrypted client-side. */
+interface RawDashboardGroup extends Omit<DashboardGroup, 'windows'> {
+  windows: ExtWindow[] | EncryptedBlob
+}
+
+interface EncryptedGroupContent {
+  name: string
+  windows: ExtWindow[]
+  note?: string | null
+  info?: string
+}
+
 interface GroupGridProps {
-  groups: DashboardGroup[]
+  groups: RawDashboardGroup[]
   isPro: boolean
+}
+
+/** Decrypts every encrypted-blob group with the session's data key. Groups that are
+ * already plaintext (legacy rows, or before encryption setup completes) pass through. */
+function useDecryptedGroups(groups: RawDashboardGroup[]) {
+  const { dataKey } = useEncryptionKey()
+  const [decrypted, setDecrypted] = useState<DashboardGroup[]>([])
+  const hasEncrypted = useMemo(() => groups.some((g) => isEncryptedBlob(g.windows)), [groups])
+
+  useEffect(() => {
+    if (!hasEncrypted) {
+      setDecrypted(groups as DashboardGroup[])
+      return
+    }
+    if (!dataKey) return
+    let cancelled = false
+    ;(async () => {
+      const results = await Promise.all(
+        groups.map(async (g) => {
+          if (!isEncryptedBlob(g.windows)) return g as DashboardGroup
+          try {
+            const content = await decryptBlob<EncryptedGroupContent>(dataKey, g.windows)
+            return { ...g, name: content.name, windows: content.windows }
+          } catch {
+            // wrong/rotated key — fall back to a visibly-locked placeholder rather than crashing
+            return { ...g, name: '(locked)', windows: [] }
+          }
+        })
+      )
+      if (!cancelled) setDecrypted(results)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [groups, hasEncrypted, dataKey])
+
+  return { groups: decrypted, needsUnlock: hasEncrypted && !dataKey }
 }
 
 
@@ -301,7 +353,8 @@ function GroupRow({
 
 const STORAGE_KEY = 'tm-dashboard-view'
 
-export function GroupGrid({ groups, isPro }: GroupGridProps) {
+export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
+  const { groups, needsUnlock } = useDecryptedGroups(rawGroups)
   // SSR-safe: localStorage is not available on the server. Must start with a consistent
   // default and sync after mount — calling localStorage in useState initializer crashes SSR.
   const [view, setView] = useState<'grid' | 'list'>('grid')
@@ -342,8 +395,10 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
         body: JSON.stringify({ groupIds: [...selected] }),
       })
       if (!res.ok) throw new Error('Failed to create bundle')
-      const { slug } = await res.json()
-      const url = `${window.location.origin}/share/${slug}`
+      const { slug, key } = await res.json()
+      // Key lives only in the URL fragment — never sent to any server (fragments
+      // aren't transmitted over HTTP), so the share link itself is the only place it exists.
+      const url = `${window.location.origin}/share/${slug}#key=${key}`
       await navigator.clipboard.writeText(url)
       toast.success('Link copied! Share page is live.')
       exitSelecting()
@@ -366,6 +421,10 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
     if (sort === 'tabCount') return tabCountOf(b) - tabCountOf(a)
     return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
   })
+
+  if (needsUnlock) {
+    return <PassphrasePrompt label="Your groups are end-to-end encrypted. Enter your passphrase to view them here." />
+  }
 
   if (groups.length === 0) {
     return (
@@ -461,13 +520,13 @@ export function GroupGrid({ groups, isPro }: GroupGridProps) {
 
       {/* ponytail: floating bar — only rendered when items are selected */}
       {selecting && selected.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-popover border shadow-lg rounded-full px-4 py-2 z-50">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-popover border shadow-lg rounded-none px-4 py-2 z-50">
           <span className="text-sm font-medium">{selected.size} selected</span>
-          <Button size="sm" onClick={shareBundle} disabled={sharing}>
+          <Button size="sm" className="rounded-none" onClick={shareBundle} disabled={sharing}>
             <Share2 className="w-4 h-4 mr-1" />
             {sharing ? 'Creating…' : 'Share selected'}
           </Button>
-          <button onClick={exitSelecting} className="text-muted-foreground hover:text-foreground" aria-label="Cancel selection">
+          <button onClick={exitSelecting} className="text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Cancel selection">
             <X className="w-4 h-4" />
           </button>
         </div>

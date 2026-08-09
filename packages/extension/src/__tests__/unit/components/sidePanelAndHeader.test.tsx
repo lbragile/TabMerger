@@ -26,6 +26,10 @@ const {
   mockSetGroupsState,
   mockApplyAIGroupsMutateAsync,
   mockTrackEvent,
+  MockQuotaExceededError,
+  mockOrganizeTabsMutateAsync,
+  mockUseOrganizeState,
+  mockUseAppSettings,
 } = vi.hoisted(() => ({
   mockAddGroupMutateAsync: vi.fn().mockResolvedValue({}),
   mockUseEntitlements: vi.fn(),
@@ -41,6 +45,12 @@ const {
   mockSetGroupsState: vi.fn(),
   mockApplyAIGroupsMutateAsync: vi.fn().mockResolvedValue({}),
   mockTrackEvent: vi.fn(),
+  MockQuotaExceededError: class extends Error {
+    isQuotaExceeded = true as const
+  },
+  mockOrganizeTabsMutateAsync: vi.fn(),
+  mockUseOrganizeState: vi.fn(() => ({ isPending: false })),
+  mockUseAppSettings: vi.fn(() => ({ data: { aiAutoGroupEnabled: true, aiOrganizeEnabled: true } })),
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -136,6 +146,16 @@ vi.mock('@/hooks/useAuth', () => ({
 
 vi.mock('@/hooks/useAI', () => ({
   useAutoGroup: () => ({ mutateAsync: mockAutoGroupMutateAsync, ...mockUseAutoGroupState() }),
+  useOrganizeTabs: () => ({ mutateAsync: mockOrganizeTabsMutateAsync, ...mockUseOrganizeState() }),
+  QuotaExceededError: MockQuotaExceededError,
+}))
+
+vi.mock('@/hooks/useAppSettings', () => ({
+  useAppSettings: () => mockUseAppSettings(),
+}))
+
+vi.mock('@/components/AIQuotaExceededPrompt', () => ({
+  AIQuotaExceededPrompt: () => React.createElement('div', { 'data-testid': 'ai-quota-exceeded-prompt' }, 'Buy 50 more AI calls'),
 }))
 
 vi.mock('@/hooks/useSessions', () => ({
@@ -488,24 +508,60 @@ describe('Header — undo/redo', () => {
 
 // ─── Header — AI auto-group ───────────────────────────────────────────────────
 
-describe('Header — AI auto-group', () => {
+describe('Header — AI dropdown (Auto-group / Organize)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
     mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+    mockUseAppSettings.mockReturnValue({ data: { aiAutoGroupEnabled: true, aiOrganizeEnabled: true } })
   })
 
-  it('opens the upgrade modal instead of grouping when AI features are not entitled', async () => {
+  /** Opens the AI dropdown and clicks the named menu item ("Auto-group" or "Organize"). */
+  async function clickAIMenuItem(name: RegExp) {
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: /ai actions/i }))
+    await user.click(await screen.findByText(name))
+    return user
+  }
+
+  it('opens the upgrade modal instead of a menu when AI features are not entitled', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5 })
     const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [{ id: 1, title: 'T', url: 'https://a.com' }], starred: false, incognito: false, focused: false }] })])
     mockUseGroupsData.mockReturnValue({ data: groupsState })
 
     const user = userEvent.setup()
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+    await user.click(screen.getByRole('button', { name: /ai actions/i }))
 
     expect(baseUIState.openModal).toHaveBeenCalledWith('upgrade')
     expect(mockAutoGroupMutateAsync).not.toHaveBeenCalled()
+    expect(screen.queryByText(/auto-group/i)).toBeNull()
+  })
+
+  it('hides the Auto-group menu item when aiAutoGroupEnabled is off in Settings', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    mockUseAppSettings.mockReturnValue({ data: { aiAutoGroupEnabled: false, aiOrganizeEnabled: true } })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: /ai actions/i }))
+
+    expect(screen.queryByText('Auto-group')).toBeNull()
+    expect(await screen.findByText('Organize')).toBeTruthy()
+  })
+
+  it('hides the Organize menu item when aiOrganizeEnabled is off in Settings', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    mockUseAppSettings.mockReturnValue({ data: { aiAutoGroupEnabled: true, aiOrganizeEnabled: false } })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+
+    const user = userEvent.setup()
+    wrap(React.createElement(Header))
+    await user.click(screen.getByRole('button', { name: /ai actions/i }))
+
+    expect(await screen.findByText('Auto-group')).toBeTruthy()
+    expect(screen.queryByText('Organize')).toBeNull()
   })
 
   it('toasts an error and does not call autoGroup when Now Open has no tabs', async () => {
@@ -513,9 +569,8 @@ describe('Header — AI auto-group', () => {
     const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [] })])
     mockUseGroupsData.mockReturnValue({ data: groupsState })
 
-    const user = userEvent.setup()
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+    await clickAIMenuItem(/^auto-group$/i)
 
     expect(mockToastError).toHaveBeenCalledWith('No tabs open to group')
     expect(mockAutoGroupMutateAsync).not.toHaveBeenCalled()
@@ -530,9 +585,8 @@ describe('Header — AI auto-group', () => {
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: suggestions })
     mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 2, appliedTabs: 2 })
 
-    const user = userEvent.setup()
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+    await clickAIMenuItem(/^auto-group$/i)
 
     expect(mockAutoGroupMutateAsync).toHaveBeenCalledWith([tab])
     expect(mockApplyAIGroupsMutateAsync).toHaveBeenCalledWith(suggestions)
@@ -547,9 +601,8 @@ describe('Header — AI auto-group', () => {
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }] })
     mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 1, appliedTabs: 1 })
 
-    const user = userEvent.setup()
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+    await clickAIMenuItem(/^auto-group$/i)
 
     expect(mockToastSuccess).toHaveBeenCalledWith('AI created 1 group', expect.anything())
   })
@@ -562,9 +615,8 @@ describe('Header — AI auto-group', () => {
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Ghost', color: 'rgba(0,0,0,1)', tabIds: [999] }] })
     mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 0, appliedTabs: 0 })
 
-    const user = userEvent.setup()
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+    await clickAIMenuItem(/^auto-group$/i)
 
     expect(mockToastSuccess).not.toHaveBeenCalled()
     expect(mockToastInfo).toHaveBeenCalledWith("No matching tabs found for AI's suggestion")
@@ -581,9 +633,8 @@ describe('Header — AI auto-group', () => {
     mockAutoGroupMutateAsync.mockResolvedValue({ groups: suggestions })
     mockApplyAIGroupsMutateAsync.mockResolvedValue({ appliedGroups: 1, appliedTabs: 1 })
 
-    const user = userEvent.setup()
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+    await clickAIMenuItem(/^auto-group$/i)
 
     expect(mockApplyAIGroupsMutateAsync).toHaveBeenCalledWith([suggestions[0]])
     expect(mockToastSuccess).toHaveBeenCalledWith('AI created 1 group', expect.objectContaining({ description: expect.stringContaining('1 more suggested') }))
@@ -597,12 +648,50 @@ describe('Header — AI auto-group', () => {
     mockAutoGroupMutateAsync.mockRejectedValue(new Error('AI down'))
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    const user = userEvent.setup()
     wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /ai auto-group/i }))
+    await clickAIMenuItem(/^auto-group$/i)
 
     expect(consoleSpy).toHaveBeenCalled()
     consoleSpy.mockRestore()
+  })
+
+  it('shows the AI quota-exceeded CTA instead of a generic error toast when autoGroup rejects with QuotaExceededError', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
+    mockUseGroupsData.mockReturnValue({ data: groupsState })
+    mockAutoGroupMutateAsync.mockRejectedValue(new MockQuotaExceededError('quota exceeded'))
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^auto-group$/i)
+
+    expect(await screen.findByTestId('ai-quota-exceeded-prompt')).toBeTruthy()
+    expect(mockToastError).not.toHaveBeenCalledWith('AI grouping failed')
+  })
+
+  it('calls organizeTabs, shows a success toast, and opens the dashboard tab', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+    mockOrganizeTabsMutateAsync.mockResolvedValue(undefined)
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^organize$/i)
+
+    expect(mockOrganizeTabsMutateAsync).toHaveBeenCalled()
+    expect(mockToastSuccess).toHaveBeenCalledWith('Organize started — review the proposal in your dashboard')
+    expect(chrome.tabs.create).toHaveBeenCalledWith({ url: expect.stringContaining('/dashboard') })
+  })
+
+  it('shows the AI quota-exceeded CTA (not a generic error toast) when organizeTabs rejects with QuotaExceededError', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', aiFeatures: true, maxGroups: Infinity })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+    mockOrganizeTabsMutateAsync.mockRejectedValue(new MockQuotaExceededError('quota exceeded'))
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^organize$/i)
+
+    expect(await screen.findByTestId('ai-quota-exceeded-prompt')).toBeTruthy()
+    expect(mockToastError).not.toHaveBeenCalled()
   })
 })
 

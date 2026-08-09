@@ -96,7 +96,7 @@ const simpleRoutes = [
     bad: [{}, { tabs: [] }, { tabs: 'nope' }],
     aiMock: () => mockGroupTabs,
     aiValue: [{ name: 'Docs', color: 'rgba(1,1,1,1)', tabIds: [1] }],
-    key: 'groups',
+    expected: { groups: [{ name: 'Docs', color: 'rgba(1,1,1,1)', tabIds: [1] }] },
     errorMessage: 'Failed to group tabs',
     badMessage: 'tabs array required',
   },
@@ -108,7 +108,7 @@ const simpleRoutes = [
     bad: [{}, { tabs: [] }],
     aiMock: () => mockNameGroup,
     aiValue: 'Dev Tools',
-    key: 'name',
+    expected: { name: 'Dev Tools' },
     errorMessage: 'Failed to name group',
     badMessage: 'tabs array required',
   },
@@ -120,7 +120,7 @@ const simpleRoutes = [
     bad: [{}, { tab: { title: 'x', url: 'y' } }],
     aiMock: () => mockSummarizeTab,
     aiValue: 'A documentation page.',
-    key: 'summary',
+    expected: { summary: 'A documentation page.' },
     errorMessage: 'Failed to summarize tab',
     badMessage: 'tab object required',
   },
@@ -128,11 +128,15 @@ const simpleRoutes = [
     name: 'suggest-sessions',
     handler: suggestSessionsPOST,
     url: 'http://localhost/api/ai/suggest-sessions',
-    body: { groups: [{ name: 'Work', tabs: TABS }] },
+    body: { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] },
     bad: [{}, { groups: [] }],
     aiMock: () => mockSuggestSessions,
-    aiValue: 'Save Work as a session.',
-    key: 'suggestion',
+    aiValue: { message: 'Save Work as a session.', staleGroupIds: ['g1'] },
+    expected: {
+      message: 'Save Work as a session.',
+      staleGroupIds: ['g1'],
+      suggestion: 'Save Work as a session.',
+    },
     errorMessage: 'Failed to suggest sessions',
     badMessage: 'groups array required',
   },
@@ -143,7 +147,7 @@ describe.each(simpleRoutes)('POST /api/ai/$name', (route) => {
     route.aiMock().mockResolvedValue(route.aiValue)
     const res = await route.handler(req(route.url, route.body))
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ [route.key]: route.aiValue })
+    expect(await res.json()).toEqual(route.expected)
     expect(res.headers.get('X-AI-Requests-Remaining')).toBe('42')
     expect(mockCheckUsage).toHaveBeenCalledWith(mockSupabase, USER_ID)
   })
@@ -204,9 +208,41 @@ describe('POST /api/ai/organize', () => {
     const json = await res.json()
     expect(json.runId).toBe('run-1')
     expect(json.token).toMatch(new RegExp(`^org-${USER_ID}-[0-9a-f]{32}$`))
-    expect(mockStart).toHaveBeenCalledWith('wf', [USER_ID, json.token])
+    expect(mockStart).toHaveBeenCalledWith('wf', [USER_ID, json.token, null])
     expect(mockFrom).toHaveBeenCalledWith('organize_runs')
     expect(insert).toHaveBeenCalledWith({ run_id: 'run-1', user_id: USER_ID })
+  })
+
+  it('forwards a client-supplied groups payload to the workflow (E2EE path)', async () => {
+    mockStart.mockResolvedValue({ runId: 'run-2' })
+    mockFrom.mockReturnValue({ insert: vi.fn(() => builder({ data: null, error: null })) })
+
+    const groups = [
+      { id: 'g0', name: 'Now Open', permanent: true, tabs: [{ title: 'A', url: 'https://a' }] },
+      { id: 'g1', name: 'Work', tabs: [{ title: 'B', url: 'https://b' }] },
+    ]
+    const res = await organizePOST(req(url, { groups }))
+    expect(res.status).toBe(200)
+
+    const [, args] = mockStart.mock.calls[0]
+    expect(args[2]).toEqual([
+      { id: 'g0', name: 'Now Open', tabs: groups[0].tabs, permanent: true },
+      { id: 'g1', name: 'Work', tabs: groups[1].tabs },
+    ])
+  })
+
+  it.each([
+    ['empty body', {}],
+    ['empty groups array', { groups: [] }],
+    ['non-array groups', { groups: 'nope' }],
+    ['malformed group entries', { groups: [{ id: 1, name: 'x', tabs: [] }] }],
+    ['group missing tabs', { groups: [{ id: 'g1', name: 'x' }] }],
+  ])('falls back to the DB path for %s', async (_label, body) => {
+    mockStart.mockResolvedValue({ runId: 'run-3' })
+    mockFrom.mockReturnValue({ insert: vi.fn(() => builder({ data: null, error: null })) })
+
+    expect((await organizePOST(req(url, body))).status).toBe(200)
+    expect(mockStart.mock.calls[0][1][2]).toBeNull()
   })
 
   it('401s without a token', async () => {

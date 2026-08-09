@@ -2,8 +2,9 @@ import { useState, useCallback, useRef } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { useTabSummary } from '@/hooks/useAI';
+import { useTabSummary, QuotaExceededError } from '@/hooks/useAI';
 import { useEntitlements } from '@/hooks/useEntitlements';
+import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
 import type { Tab } from '@/lib/types';
 
 // ponytail: module-level cache — lives for the popup session, cleared on close
@@ -11,7 +12,7 @@ const summaryCache = new Map<string, string>();
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
-async function fetchOgImage(tabId: number, url?: string): Promise<string | null> {
+async function fetchOgImageFromContentScript(tabId: number, url?: string): Promise<string | null> {
   let id = tabId > 0 ? tabId : 0;
   if (!id && url) {
     try {
@@ -28,6 +29,28 @@ async function fetchOgImage(tabId: number, url?: string): Promise<string | null>
   }
 }
 
+// ponytail: falls back to the web app's server-side og:image scraper
+// (packages/web/app/api/og-preview) when there's no live tab/content script
+// to ask — covers saved/closed tabs, which is most of them.
+async function fetchOgImageFromServer(url: string): Promise<string | null> {
+  try {
+    const webAppUrl = import.meta.env.VITE_WEB_APP_URL as string | undefined;
+    if (!webAppUrl) return null;
+    const res = await fetch(`${webAppUrl}/api/og-preview?url=${encodeURIComponent(url)}`);
+    if (!res.ok) return null;
+    const data = (await res.json()) as { ogImage?: string | null };
+    return data.ogImage ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchOgImage(tabId: number, url?: string): Promise<string | null> {
+  const fromContentScript = await fetchOgImageFromContentScript(tabId, url);
+  if (fromContentScript) return fromContentScript;
+  return url ? fetchOgImageFromServer(url) : null;
+}
+
 interface TabPreviewProps {
   tab: Tab;
   isLive?: boolean;
@@ -42,6 +65,7 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
   const [ogImage, setOgImage] = useState<string | null>(null);
   const [summary, setSummary] = useState<string | null>(summaryCache.get(tab.url) ?? null);
   const [summaryLoading, setSummaryLoading] = useState(false);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
   const fetchedRef = useRef(false);
 
   const handleOpenChange = useCallback(async (isOpen: boolean) => {
@@ -76,7 +100,9 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
         summaryCache.set(tab.url, result.summary);
         setSummary(result.summary);
       }
-    } catch { /* ignore */ }
+    } catch (err) {
+      if (err instanceof QuotaExceededError) setQuotaExceeded(true);
+    }
     setSummaryLoading(false);
   }, [tab, fetchSummary]);
 
@@ -134,6 +160,10 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
                 </div>
               ) : summary ? (
                 <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{summary}</p>
+              ) : quotaExceeded ? (
+                <div className="mt-2">
+                  <AIQuotaExceededPrompt />
+                </div>
               ) : (
                 <Button
                   type="button"

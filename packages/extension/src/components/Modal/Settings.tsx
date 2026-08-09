@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { setDevAiUsage } from '@/mocks/devAiUsage';
+import { aiPost } from '@/hooks/useAI';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { applyTheme } from '@/lib/theme';
@@ -20,6 +24,7 @@ import { toast } from 'sonner';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
+import { hasEncryptionKey, getDataKey, unlockEncryption } from '@/lib/encryptionKey';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -31,6 +36,8 @@ interface SettingsModalProps {
 
 export function SettingsModal({ onClose }: SettingsModalProps) {
   const [activeTab, setActiveTab] = useState('general');
+  const [devUsageInput, setDevUsageInput] = useState('0');
+  const queryClient = useQueryClient();
   // `saved` is the query's current value (reactive — reflects saves made elsewhere,
   // e.g. another mount of this modal, and refetches after login via useSync's invalidate).
   const { data: saved = DEFAULT_APP_SETTINGS } = useAppSettings();
@@ -44,6 +51,61 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const openModal = useUIStore((s) => s.openModal);
+
+  // Encryption is on by default for everyone (no opt-out) — this just mirrors whether
+  // setup has happened yet and whether the in-memory data key is unlocked this session
+  // (cleared on every service worker / popup reload). If setup hasn't happened, the
+  // mandatory EncryptionSetupModal (triggered from useSync) handles it, not this tab.
+  const [encHasKey, setEncHasKey] = useState(false);
+  const [encUnlocked, setEncUnlocked] = useState(false);
+  const [encUnlocking, setEncUnlocking] = useState(false);
+  const [encPass1, setEncPass1] = useState('');
+  const [encError, setEncError] = useState('');
+  const [encBusy, setEncBusy] = useState(false);
+
+  useEffect(() => {
+    void hasEncryptionKey().then((v) => {
+      setEncHasKey(v);
+    });
+    void (async () => setEncUnlocked(!!(await getDataKey())))();
+  }, []);
+
+  const handleEncUnlock = async () => {
+    setEncError('');
+    setEncBusy(true);
+    try {
+      const ok = await unlockEncryption(encPass1);
+      if (!ok) {
+        setEncError('Wrong passphrase');
+        return;
+      }
+      setEncUnlocked(true);
+      setEncUnlocking(false);
+      setEncPass1('');
+      toast.success('Unlocked');
+    } finally {
+      setEncBusy(false);
+    }
+  };
+
+  // Sets the dev-only local mock counter (still read by useAiUsage in DEV — see its
+  // own comment) AND writes the same count to the real Supabase ai_usage table via
+  // /api/ai/dev-usage, so real server-side quota enforcement can be exercised
+  // end-to-end for the signed-in account, not just the local mock UI state.
+  const handleSyncDevUsage = async (count: number) => {
+    await setDevAiUsage(count);
+    queryClient.invalidateQueries({ queryKey: ['aiUsage', user?.id] });
+    if (!session?.access_token) {
+      toast.error('Sign in to sync AI usage to the server');
+      return;
+    }
+    try {
+      await aiPost<{ count: number }>('/api/ai/dev-usage', { count }, session.access_token);
+      toast.success(`Server AI usage set to ${count}`);
+    } catch {
+      toast.error('Failed to sync AI usage to server');
+    }
+  };
 
   // Re-seed the draft whenever the underlying query value changes (initial load
   // resolving, a save made elsewhere, or a post-login refetch) — but only while
@@ -363,6 +425,63 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </Button>
           )}
 
+          {cloudSync && (
+            <>
+              <Separator />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-sm">End-to-end encryption</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Your synced group and tab data is end-to-end encrypted with a passphrase
+                      only you know.
+                    </p>
+                  </div>
+                  {encHasKey && !encUnlocked && !encUnlocking && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs shrink-0 rounded-none"
+                      onClick={() => setEncUnlocking(true)}
+                    >
+                      Unlock
+                    </Button>
+                  )}
+                </div>
+
+                {encHasKey && encUnlocked && (
+                  <p className="text-xs text-muted-foreground">Unlocked for this session.</p>
+                )}
+
+                {encHasKey && !encUnlocked && encUnlocking && (
+                  <div className="border border-border p-3 space-y-2">
+                    <p className="text-xs text-muted-foreground">
+                      Enter your encryption passphrase to unlock synced data on this device.
+                      There is no way to recover your data if you forget it — it never leaves
+                      your device and TabMerger cannot reset it for you.
+                    </p>
+                    <Input
+                      type="password"
+                      placeholder="Passphrase"
+                      value={encPass1}
+                      onChange={(e) => setEncPass1(e.target.value)}
+                      className="h-8 text-xs rounded-none"
+                    />
+                    {encError && <p className="text-xs text-destructive">{encError}</p>}
+                    <Button
+                      size="sm"
+                      className="text-xs w-full"
+                      disabled={encBusy || !encPass1}
+                      onClick={() => void handleEncUnlock()}
+                    >
+                      Unlock
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
           {user && (
             <Button
               variant="outline"
@@ -539,6 +658,41 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             {import.meta.env.DEV && (
               <>
+                <Separator />
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <Label className="text-sm">Mocked AI usage count</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Sets the AI call counter (out of {aiUsageCap}) locally and syncs it to your
+                      real Supabase account, so server-side quota enforcement can be tested end-to-end.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Input
+                      type="number"
+                      min={0}
+                      value={devUsageInput}
+                      onChange={(e) => setDevUsageInput(e.target.value)}
+                      className="w-16 h-8 text-xs rounded-none"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs rounded-none"
+                      onClick={() => void handleSyncDevUsage(Number(devUsageInput) || 0)}
+                    >
+                      Set
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs rounded-none"
+                      onClick={() => void handleSyncDevUsage(0)}
+                    >
+                      Reset
+                    </Button>
+                  </div>
+                </div>
                 <Separator />
                 <div className="flex items-center justify-between">
                   <div>

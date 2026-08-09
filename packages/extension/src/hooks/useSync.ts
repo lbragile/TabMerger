@@ -1,7 +1,10 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { pushPendingChanges, pullRemoteChanges, subscribeToRemoteChanges } from '@/lib/syncEngine';
-import { getGroupsState, saveGroupsState } from '@/lib/localDb';
+import { getGroupsState, saveGroupsState, getSetting, setSetting, markAllGroupsPendingSync } from '@/lib/localDb';
+import { hasEncryptionKey, getDataKey, ENCRYPTION_MIGRATION_DONE_KEY } from '@/lib/encryptionKey';
+import { useUIStore } from '@/stores/uiStore';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 import { GROUPS_QUERY_KEY } from './useGroups';
@@ -17,9 +20,53 @@ export function useSync() {
   const { session } = useAuth();
   const { cloudSync } = useEntitlements();
   const qc = useQueryClient();
+  const modal = useUIStore((s) => s.modal);
+  const openModal = useUIStore((s) => s.openModal);
+  const closeModal = useUIStore((s) => s.closeModal);
+  // Tracks whether the "unlock to sync" toast has already been shown this popup session —
+  // the data key is in-memory only and resets on every popup close, so doSync's poll would
+  // otherwise re-toast every 30s forever. One nudge per session is enough; the user can
+  // always unlock via Settings > Account.
+  const lockedToastShownRef = useRef(false);
 
   const doSync = useCallback(async () => {
     if (!session || !cloudSync) return;
+
+    // Encryption is on by default for everyone — a signed-in Pro user with no
+    // `encryption_keys` row yet has never completed setup. Block push/pull (never fall
+    // back to plaintext) and prompt for a one-time passphrase instead. Only steal focus
+    // from an unrelated open modal if nothing else is already showing.
+    if (!(await hasEncryptionKey())) {
+      if (!modal.type || modal.type === 'encryptionSetup') openModal('encryptionSetup');
+      return;
+    }
+    if (modal.type === 'encryptionSetup') closeModal();
+
+    // Key exists but wasn't unlocked this session (MV3 popups are fully torn down on close,
+    // so the in-memory data key resets every time) — push/pull would silently skip every
+    // group (see syncEngine's locked-skip warnings), so bail out here instead of burning a
+    // request, and surface a *dismissible* nudge rather than the blocking setup modal —
+    // the risk here is "stays unsynced," not "no key exists at all," so it doesn't warrant
+    // stealing focus on every popup open.
+    if (!(await getDataKey())) {
+      if (!lockedToastShownRef.current) {
+        lockedToastShownRef.current = true;
+        toast.info('Sync is locked', {
+          description: 'Unlock encryption in Settings > Account to resume syncing.',
+          action: { label: 'Settings', onClick: () => openModal('settings') }
+        });
+      }
+      return;
+    }
+
+    // Self-heal accounts that completed encryption setup before markAllGroupsPendingSync
+    // was added to setupEncryption() — those groups have a data key but were never
+    // re-marked dirty, so they're permanently stuck plaintext on the server. Runs once
+    // per account (flag), then pushPendingChanges below picks up the now-dirty groups.
+    if (!(await getSetting(ENCRYPTION_MIGRATION_DONE_KEY, false))) {
+      await markAllGroupsPendingSync();
+      await setSetting(ENCRYPTION_MIGRATION_DONE_KEY, true);
+    }
 
     try {
       const state = await getGroupsState();
@@ -43,7 +90,7 @@ export function useSync() {
     } catch (err) {
       console.error('[useSync] sync error', err);
     }
-  }, [session, cloudSync, qc]);
+  }, [session, cloudSync, qc, modal.type, openModal, closeModal]);
 
   // Sync on mount + when online
   useEffect(() => {

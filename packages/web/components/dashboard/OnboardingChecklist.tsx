@@ -21,9 +21,11 @@ interface Step {
 
 export function OnboardingChecklist({ isSignedIn, isPro }: Props) {
   const [dismissed, setDismissed] = useState(false)
-  // Read localStorage after mount — direct access in useState initializer crashes SSR
+  // Read localStorage after mount, in an effect rather than a lazy useState initializer —
+  // reading it during the client's first render (matching SSR's `false`) would mismatch
+  // the server-rendered HTML. This is a one-time external-storage read, not cascading state.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setDismissed(localStorage.getItem(STORAGE_KEY) === '1') }, [])
-  const [allDoneSeen, setAllDoneSeen] = useState(false)
   const extensionInstalled = useExtensionInstalled()
 
   const steps: Step[] = [
@@ -55,17 +57,7 @@ export function OnboardingChecklist({ isSignedIn, isPro }: Props) {
     },
   ]
 
-  const allDone = steps.every((s) => s.done)
   const doneCount = steps.filter((s) => s.done).length
-
-  useEffect(() => {
-    if (allDone && !allDoneSeen) {
-      const t = setTimeout(() => {
-        dismiss()
-      }, 3000)
-      return () => clearTimeout(t)
-    }
-  }, [allDone, allDoneSeen])
 
   function dismiss() {
     localStorage.setItem(STORAGE_KEY, '1')
@@ -127,12 +119,6 @@ export function OnboardingChecklist({ isSignedIn, isPro }: Props) {
           )
         })}
       </div>
-
-      {allDone && (
-        <Button size="sm" className="mt-2" onClick={() => { setAllDoneSeen(true); dismiss() }}>
-          Done
-        </Button>
-      )}
     </div>
   )
 }

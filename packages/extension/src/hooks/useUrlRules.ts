@@ -30,6 +30,21 @@ export function useSaveUrlRules() {
   });
 }
 
+/**
+ * Removes any URL rules pointing at a deleted group. Call this from every group-delete
+ * path (single or bulk) so rules never orphan-point at a nonexistent groupId.
+ * ponytail: not undo-aware — the undo/redo stack only snapshots GroupsState, not the
+ * separate urlRules setting, so a group restored via undo won't bring its rules back.
+ * Acceptable: URL rules are a secondary/settings-level feature, not core group data.
+ */
+export async function deleteRulesForGroupIds(groupIds: string[]): Promise<void> {
+  if (groupIds.length === 0) return;
+  const idSet = new Set(groupIds);
+  const rules = await loadRules();
+  const filtered = rules.filter((r) => !idSet.has(r.groupId));
+  if (filtered.length !== rules.length) await persistRules(filtered);
+}
+
 /** Returns the groupId for the first matching rule, or null if none match. */
 export function matchUrlToRule(url: string, rules: UrlRule[]): string | null {
   for (const rule of rules) {

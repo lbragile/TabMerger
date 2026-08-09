@@ -10,6 +10,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { Sparkles, Plus } from 'lucide-react'
+import { getEffectiveCap } from '@/lib/ai-usage'
+import { isEncryptedBlob } from '@tabmerger/shared'
 
 // ponytail: capitalize the whole email local-part as a first name proxy — no profile
 // display-name column exists yet, and splitting on '.' would mangle names like "mary.jane"
@@ -53,7 +55,7 @@ export default async function DashboardPage({
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     /** Free tier cap enforced at the query level so the UI never accidentally renders groups the user shouldn't see */
-    supabase.from('groups').select('id, name, color, windows, updated_at, public_slug').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
+    supabase.from('groups').select('id, name, color, windows, updated_at, public_slug, window_count, tab_count').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
     supabase
       .from('sessions')
       .select('*')
@@ -61,9 +63,11 @@ export default async function DashboardPage({
       .order('created_at', { ascending: false }),
   ])
 
+  // ponytail: uses the denormalized tab_count column (maintained client-side on every push),
+  // not group.windows content — windows is ciphertext for encrypted users and the server
+  // never holds the key to reduce over it.
   const tabCount = (groups ?? []).reduce(
-    (sum: number, g: { windows?: { tabs?: unknown[] }[] }) =>
-      sum + (g.windows ?? []).reduce((ws: number, w) => ws + (w.tabs?.length ?? 0), 0),
+    (sum: number, g: { tab_count?: number }) => sum + (g.tab_count ?? 0),
     0
   )
 
@@ -76,8 +80,10 @@ export default async function DashboardPage({
       .eq('user_id', user.id)
       .eq('month', month)
       .single()
-    // ponytail: 100/month cap is hardcoded per the migration comment — no plan-limits table yet
-    aiUsage = { used: usage?.request_count ?? 0, limit: 100 }
+    aiUsage = {
+      used: usage?.request_count ?? 0,
+      limit: await getEffectiveCap(supabase, user.id, month),
+    }
   }
 
   const { organizeRunId, organizeToken } = params
@@ -163,6 +169,7 @@ export default async function DashboardPage({
           runId={organizeRunId}
           token={organizeToken}
           supabaseToken={organizeSession}
+          encrypted={(groups ?? []).some((g: { windows?: unknown }) => isEncryptedBlob(g.windows))}
         />
       )}
 
@@ -174,7 +181,8 @@ export default async function DashboardPage({
 
       <div>
         <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>
-        <SessionList sessions={sessions ?? []} isPro={isPro} />
+        {/* ponytail: cast because Supabase infers groups as Json, not SessionGroup[] */}
+        <SessionList sessions={(sessions ?? []) as never} isPro={isPro} />
       </div>
     </div>
   )

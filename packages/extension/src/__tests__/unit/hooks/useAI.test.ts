@@ -1,20 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAutoGroup, useNameGroup, useSuggestSessions, useOrganizeTabs, useTabSummary } from '@/hooks/useAI'
 
-const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings } = vi.hoisted(() => ({
+const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings, mockUseAiUsage, mockHasEncryptionKey } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
   mockTrackEvent: vi.fn(),
   mockUseAppSettings: vi.fn(),
+  mockUseAiUsage: vi.fn(),
+  mockHasEncryptionKey: vi.fn(),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => mockUseAppSettings() }))
+vi.mock('@/hooks/useAiUsage', () => ({ useAiUsage: () => mockUseAiUsage() }))
+// ponytail: useOrganizeTabs checks hasEncryptionKey() to decide whether to send plaintext
+// groups in the request body; default false (unencrypted/legacy path) unless a test overrides it.
+vi.mock('@/lib/encryptionKey', () => ({ hasEncryptionKey: mockHasEncryptionKey }))
 
 function makeWrapper() {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
@@ -37,6 +43,8 @@ beforeEach(() => {
   })
   ;(chrome.storage.local.get as ReturnType<typeof vi.fn>).mockResolvedValue({})
   ;(chrome.storage.local.set as ReturnType<typeof vi.fn>).mockResolvedValue(undefined)
+  mockUseAiUsage.mockReturnValue({ remaining: 100, used: 0, cap: 100, loading: false })
+  mockHasEncryptionKey.mockResolvedValue(false)
 })
 
 describe('useAutoGroup', () => {
@@ -103,6 +111,28 @@ describe('useSuggestSessions', () => {
     const { result } = renderHook(() => useSuggestSessions(), { wrapper: makeWrapper() })
     await act(async () => { await result.current.mutateAsync([]) })
     expect(globalThis.fetch).toHaveBeenCalledWith(expect.stringContaining('/api/ai/suggest-sessions'), expect.anything())
+  })
+
+  it('sends each group id so the response can carry actionable staleGroupIds', async () => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: true,
+      json: async () => ({ message: 'x', staleGroupIds: ['g1'], suggestion: 'x' })
+    })
+    const groups = [{
+      id: 'g1',
+      name: 'Dev',
+      color: 'rgba(0,0,0,1)',
+      updatedAt: 0,
+      windows: [{ id: 1, incognito: false, focused: false, tabs: [{ id: 0, title: 'T', url: 'https://a.com' }] }]
+    }]
+    const { result } = renderHook(() => useSuggestSessions(), { wrapper: makeWrapper() })
+    await act(async () => { await result.current.mutateAsync(groups) })
+    const body = JSON.parse((globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body)
+    expect(body.groups).toEqual([
+      { id: 'g1', name: 'Dev', tabs: [{ id: 0, title: 'T', url: 'https://a.com' }] }
+    ])
   })
 
   it('is a background/automatic trigger, so it is throttled to once per day when aiDailyThrottle is on', async () => {
@@ -253,10 +283,12 @@ describe('quota-exceeded (429) handling — not yet implemented', () => {
       ok: false, status: 429, text: async () => 'quota exceeded',
     })
     const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
-    await act(async () => {
-      await result.current.mutateAsync([]).catch(() => {})
-    })
-    expect(result.current.isQuotaExceeded).toBe(true)
+    act(() => { result.current.mutateAsync([]).catch(() => {}) })
+    // ponytail: react-query's mutation observer notifies subscribers on a
+    // separate tick from the mutateAsync promise settling, so a single
+    // act(async () => await mutateAsync(...)) can read stale (pre-error)
+    // hook state — poll with waitFor instead.
+    await waitFor(() => expect(result.current.isQuotaExceeded).toBe(true))
   })
 
   it('a 429 error thrown by the shared fetch helper is tagged isQuotaExceeded, unlike a 500', async () => {
@@ -275,6 +307,53 @@ describe('quota-exceeded (429) handling — not yet implemented', () => {
       }
     })
     expect((caught as { isQuotaExceeded?: boolean } | undefined)?.isQuotaExceeded).toBe(true)
+  })
+})
+
+describe('proactive client-side quota throttle (remaining <= 0)', () => {
+  beforeEach(() => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    mockUseAiUsage.mockReturnValue({ remaining: 0, used: 100, cap: 100, loading: false })
+  })
+
+  it('useAutoGroup throws QuotaExceededError without calling fetch when remaining is 0', async () => {
+    const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
+    await expect(act(async () => { await result.current.mutateAsync([]) })).rejects.toThrow()
+    await waitFor(() => expect(result.current.isQuotaExceeded).toBe(true))
+    expect(globalThis.fetch).not.toHaveBeenCalled()
+  })
+
+  it('useNameGroup throws without calling fetch when remaining is 0', async () => {
+    const { result } = renderHook(() => useNameGroup(), { wrapper: makeWrapper() })
+    await expect(act(async () => { await result.current.mutateAsync([]) })).rejects.toThrow()
+    expect(globalThis.fetch).not.toHaveBeenCalled()
+  })
+
+  it('useSuggestSessions throws without calling fetch when remaining is 0', async () => {
+    const { result } = renderHook(() => useSuggestSessions(), { wrapper: makeWrapper() })
+    await expect(act(async () => { await result.current.mutateAsync([]) })).rejects.toThrow()
+    expect(globalThis.fetch).not.toHaveBeenCalled()
+  })
+
+  it('useOrganizeTabs throws without calling fetch when remaining is 0', async () => {
+    const { result } = renderHook(() => useOrganizeTabs(), { wrapper: makeWrapper() })
+    await expect(act(async () => { await result.current.mutateAsync() })).rejects.toThrow()
+    expect(globalThis.fetch).not.toHaveBeenCalled()
+  })
+
+  it('useTabSummary throws without calling fetch when remaining is 0', async () => {
+    const { result } = renderHook(() => useTabSummary(), { wrapper: makeWrapper() })
+    await expect(act(async () => { await result.current.mutateAsync({ url: 'https://a.com', title: 'A' }) })).rejects.toThrow()
+    expect(globalThis.fetch).not.toHaveBeenCalled()
+  })
+
+  it('runs normally (calls fetch) when remaining is positive', async () => {
+    mockUseAiUsage.mockReturnValue({ remaining: 5, used: 95, cap: 100, loading: false })
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ groups: [] }) })
+    const { result } = renderHook(() => useAutoGroup(), { wrapper: makeWrapper() })
+    await act(async () => { await result.current.mutateAsync([]) })
+    expect(globalThis.fetch).toHaveBeenCalled()
   })
 })
 

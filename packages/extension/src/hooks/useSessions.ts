@@ -1,9 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
+import { encryptBlob } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
 import { getSessions, saveSession, deleteSession } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
+import { hasEncryptionKey, getDataKey } from '@/lib/encryptionKey';
 import { useGroups } from './useGroups';
 
 export const SESSIONS_QUERY_KEY = ['sessions'] as const;
@@ -46,11 +48,27 @@ export function useSaveSession() {
       try {
         const { data: { session: authSession } } = await supabase.auth.getSession();
         if (authSession) {
+          let name: string = session.name;
+          let groupsField: Session['groups'] | { v: 1; iv: string; ct: string } = session.groups;
+
+          if (await hasEncryptionKey()) {
+            const dataKey = await getDataKey();
+            if (!dataKey) {
+              // ponytail: locked — never push plaintext session content. Local save already
+              // succeeded above; the remote copy is simply skipped until unlocked (same as pushGroup).
+              console.warn('[TabMerger] Encryption enabled but key is locked — skipping session sync for', session.id);
+              return session;
+            }
+            const { iv, ct } = await encryptBlob(dataKey, { name: session.name, groups: session.groups });
+            groupsField = { v: 1, iv, ct };
+            name = '';
+          }
+
           await supabase.from('sessions').upsert({
             id: session.id,
             user_id: authSession.user.id,
-            name: session.name,
-            groups: session.groups,
+            name,
+            groups: groupsField,
             created_at: new Date(session.createdAt).toISOString(),
           });
         }

@@ -69,6 +69,43 @@ describe('lib/stripe', () => {
     ).rejects.toThrow('Failed to create checkout session')
   })
 
+  it('createCreditPackCheckoutSession defaults to quantity 50', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/c1' })
+    vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')
+    const { createCreditPackCheckoutSession } = await import('@/lib/stripe')
+
+    await createCreditPackCheckoutSession({
+      userId: 'user-1',
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+    })
+
+    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        line_items: [{ price: 'price_credit_pack', quantity: 50, adjustable_quantity: { enabled: true, minimum: 50, maximum: 500 } }]
+      })
+    )
+  })
+
+  it('createCreditPackCheckoutSession passes a custom quantity through to the line item', async () => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/c2' })
+    vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')
+    const { createCreditPackCheckoutSession } = await import('@/lib/stripe')
+
+    await createCreditPackCheckoutSession({
+      userId: 'user-1',
+      quantity: 150,
+      successUrl: 'https://app/success',
+      cancelUrl: 'https://app/cancel',
+    })
+
+    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        line_items: [{ price: 'price_credit_pack', quantity: 150, adjustable_quantity: { enabled: true, minimum: 50, maximum: 500 } }]
+      })
+    )
+  })
+
   it('createBillingPortalSession returns the portal URL', async () => {
     mockPortalCreate.mockResolvedValue({ url: 'https://billing.stripe.com/p1' })
     const { createBillingPortalSession } = await import('@/lib/stripe')

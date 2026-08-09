@@ -1,21 +1,59 @@
 import type { Session } from '@supabase/supabase-js';
+import { encryptBlob, decryptBlob, isEncryptedBlob, type EncryptedBlob } from '@tabmerger/shared';
 import type { Group } from './types';
 import { supabase } from './supabase';
-import { getPendingSyncGroups, markGroupSynced, saveGroup } from './localDb';
+import { getPendingSyncGroups, markGroupSynced, saveGroup, getSetting, setSetting } from './localDb';
+import { hasEncryptionKey, getDataKey } from './encryptionKey';
+
+interface EncryptedContent {
+  name: string;
+  windows: Group['windows'];
+  note: string | null | undefined;
+  info: string | undefined;
+}
 
 /** Upserts a single group to Supabase and marks it synced locally on success. Shared by push paths. */
 async function pushGroup(session: Session, group: Group): Promise<void> {
+  let windowsField: Group['windows'] | EncryptedBlob = group.windows;
+  let name = group.name;
+  let note = group.note ?? null;
+  let info = group.info ?? '';
+
+  if (await hasEncryptionKey()) {
+    const dataKey = await getDataKey();
+    if (!dataKey) {
+      // ponytail: locked (e.g. worker restarted, passphrase not re-entered this session) —
+      // never fall back to plaintext push. Leave pendingSync so this retries once unlocked.
+      console.warn('[SyncEngine] Encryption enabled but key is locked — skipping push for', group.id);
+      return;
+    }
+    const { iv, ct } = await encryptBlob(dataKey, {
+      name: group.name,
+      windows: group.windows,
+      note: group.note,
+      info: group.info
+    } satisfies EncryptedContent);
+    windowsField = { v: 1, iv, ct };
+    name = '';
+    note = null;
+    info = '';
+  }
+
   const { error } = await supabase.from('groups').upsert({
     id: group.id,
     user_id: session.user.id,
-    name: group.name,
+    name,
     color: group.color,
     updated_at: new Date(group.updatedAt).toISOString(),
-    windows: group.windows,
+    windows: windowsField,
     starred: group.starred ?? false,
     archived: group.archived ?? false,
-    note: group.note ?? null,
-    info: group.info ?? ''
+    note,
+    info,
+    // Denormalized plaintext counts so SSR pages can show stats without holding the
+    // decryption key — always computed from the real (pre-encryption) content.
+    window_count: group.windows.length,
+    tab_count: group.windows.reduce((sum, w) => sum + w.tabs.length, 0)
   });
 
   if (!error) {
@@ -23,6 +61,44 @@ async function pushGroup(session: Session, group: Group): Promise<void> {
   } else {
     console.error('[SyncEngine] Failed to push group', group.id, error.message);
   }
+}
+
+/** Decrypts an encrypted row's `windows` blob back into `{name, windows, note, info}`, or returns null if locked. */
+async function decryptRow(row: Record<string, unknown>): Promise<EncryptedContent | null> {
+  const dataKey = await getDataKey();
+  if (!dataKey) return null;
+  return decryptBlob<EncryptedContent>(dataKey, row.windows as EncryptedBlob);
+}
+
+/** Builds a `Group` from a raw Supabase row, decrypting it first if it's in the encrypted shape. Returns null if it's encrypted but locked (skip — retry once unlocked). */
+async function rowToGroup(row: Record<string, unknown>): Promise<Group | null> {
+  const encrypted = isEncryptedBlob(row.windows);
+  let name = row.name as string;
+  let windows = row.windows as Group['windows'];
+  let note = (row.note as string | null) ?? undefined;
+  let info = row.info as string;
+
+  if (encrypted) {
+    const content = await decryptRow(row);
+    if (!content) return null;
+    name = content.name;
+    windows = content.windows;
+    note = content.note ?? undefined;
+    info = content.info ?? '';
+  }
+
+  return {
+    id: row.id as string,
+    name,
+    color: row.color as string,
+    updatedAt: new Date(row.updated_at as string).getTime(),
+    windows,
+    starred: (row.starred as boolean) ?? false,
+    archived: (row.archived as boolean) ?? false,
+    note,
+    info,
+    pendingSync: false
+  };
 }
 
 /**
@@ -40,18 +116,39 @@ export async function pushPendingChanges(session: Session): Promise<void> {
   }
 }
 
+// Persisted (survives popup close / SW restart) set of group ids whose remote delete is in
+// flight or hasn't been confirmed gone yet. `pullRemoteChanges` treats any id in here as
+// "not present" regardless of what the remote row currently says, closing the race where a
+// poll/mount pull lands between the optimistic local removal and the DELETE actually landing
+// on Supabase (see deleteRemoteGroups) and would otherwise resurrect the group.
+const PENDING_DELETE_KEY = 'pendingDeleteGroupIds';
+
+async function getPendingDeleteIds(): Promise<string[]> {
+  return getSetting<string[]>(PENDING_DELETE_KEY, []);
+}
+
 /**
  * Hard-deletes groups from Supabase by id. Best-effort / fire-and-forget — callers should
- * `.catch()` this. Without this, `pullRemoteChanges` treats a locally-deleted-but-still-remote
- * group as "remote-only" and resurrects it into IndexedDB on the next sync (e.g. popup reopen).
- * No-op when there's no active session (free/non-synced users never pushed the group anyway).
+ * `.catch()` this. The ids are recorded as "pending delete" (in IDB settings, not just an
+ * in-memory flag) *before* the network call so `pullRemoteChanges` can filter them out of the
+ * merge even if a sync pull races ahead of this DELETE actually landing on Supabase.
+ * No-op (network-wise) when there's no active session (free/non-synced users never pushed the
+ * group anyway) — but the ids are still marked pending so a subsequent sign-in doesn't resurrect
+ * a group that was deleted while signed out.
  */
 export async function deleteRemoteGroups(ids: string[]): Promise<void> {
   if (ids.length === 0) return;
+  const existing = await getPendingDeleteIds();
+  await setSetting(PENDING_DELETE_KEY, Array.from(new Set([...existing, ...ids])));
+
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
   const { error } = await supabase.from('groups').delete().in('id', ids).eq('user_id', session.user.id);
   if (error) console.error('[SyncEngine] Failed to delete remote groups', error.message);
+  // On success or failure we leave the ids marked pending — `pullRemoteChanges` self-heals by
+  // clearing an id once a pull confirms the row is actually gone from Supabase, which also
+  // covers the failure case via retry-on-next-pending-sync-push (groups are never re-created
+  // with the same id, so there's nothing else to reconcile).
 }
 
 /**
@@ -73,31 +170,34 @@ export async function pullRemoteChanges(session: Session, localGroups: Group[]):
     return localGroups;
   }
 
+  const decoded = await Promise.all(data.map((row) => rowToGroup(row)));
   const remoteMap = new Map(
-    data.map((row) => [
-      row.id as string,
-      {
-        id: row.id as string,
-        name: row.name as string,
-        color: row.color as string,
-        updatedAt: new Date(row.updated_at as string).getTime(),
-        windows: row.windows as Group['windows'],
-        starred: (row.starred as boolean) ?? false,
-        archived: (row.archived as boolean) ?? false,
-        note: (row.note as string | null) ?? undefined,
-        info: row.info as string,
-        pendingSync: false
-      } satisfies Group
-    ])
+    decoded
+      .filter((g): g is Group => g !== null) // ponytail: encrypted-but-locked rows are skipped, retried once unlocked
+      .map((g) => [g.id, g])
   );
 
   const localMap = new Map(localGroups.map((g) => [g.id, g]));
+
+  // Race guard: ids whose remote delete is in flight/unconfirmed are treated as absent from
+  // BOTH sides below, so a pull that lands before the DELETE reaches Supabase can't resurrect
+  // them. Self-heal: once a pending id is actually gone from `remoteMap`, drop it from the set.
+  const pendingDeletes = await getPendingDeleteIds();
+  if (pendingDeletes.length > 0) {
+    const stillRemote = pendingDeletes.filter((id) => remoteMap.has(id));
+    if (stillRemote.length !== pendingDeletes.length) {
+      await setSetting(PENDING_DELETE_KEY, stillRemote);
+    }
+  }
+  const pendingDeleteSet = new Set(pendingDeletes);
 
   let merged: Group[] = [];
 
   // Merge: last-write-wins by updatedAt
   const allIds = new Set([...remoteMap.keys(), ...localMap.keys()]);
   for (const id of allIds) {
+    if (pendingDeleteSet.has(id)) continue;
+
     const remote = remoteMap.get(id);
     const local = localMap.get(id);
 
@@ -146,21 +246,17 @@ export async function subscribeToRemoteChanges(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'groups', filter: `user_id=eq.${userId}` },
       async (payload) => {
-        /** Deletions are represented by the `archived` flag, not hard deletes in Supabase */
+        // Deletes are real hard deletes (see deleteRemoteGroups), not an `archived` flag flip.
+        // ponytail: we don't act on the Realtime DELETE event itself here — `pullRemoteChanges`
+        // currently only prevents *re-adding* a group a device itself just deleted (via the
+        // pending-delete guard above); it does not yet remove a group on OTHER devices when a
+        // different device hard-deletes it (their `localMap`-only branch keeps it). That's a
+        // separate propagation gap, not the resurrection race this guard closes — worth a
+        // dedicated fix (e.g. a tombstone list) if cross-device delete sync is reported broken.
         if (payload.eventType === 'DELETE') return;
         const row = payload.new as Record<string, unknown>;
-        const group: Group = {
-          id: row.id as string,
-          name: row.name as string,
-          color: row.color as string,
-          updatedAt: new Date(row.updated_at as string).getTime(),
-          windows: row.windows as Group['windows'],
-          starred: (row.starred as boolean) ?? false,
-          archived: (row.archived as boolean) ?? false,
-          note: (row.note as string | null) ?? undefined,
-          info: row.info as string,
-          pendingSync: false
-        };
+        const group = await rowToGroup(row);
+        if (!group) return; // encrypted but locked — skip, will be picked up on next pull once unlocked
         await saveGroup(group);
         onUpdate(group);
       }

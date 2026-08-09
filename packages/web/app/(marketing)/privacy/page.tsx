@@ -20,7 +20,7 @@ const TOC = [
 
 export default function PrivacyPage() {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-5xl">
+    <div className="container py-16 max-w-5xl">
       {/* Header — brand-soft callout, distinct from Terms' neutral treatment */}
       <div className="mb-11 rounded-2xl bg-accent border border-primary/20 px-8 py-7">
         <h1 className="text-[34px] font-semibold tracking-tight mb-2.5">Privacy, in plain English</h1>
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Tab and group data</h3>
-              <p>Tab URLs, titles, and favicon URLs so you can organize and restore them. On the free tier this data lives exclusively in your browser's IndexedDB — it never leaves your device. Pro subscribers who enable cloud sync have this data stored in Supabase so it is available across devices.</p>
+              <p>Tab URLs, titles, and favicon URLs so you can organize and restore them. On the free tier this data lives exclusively in your browser's IndexedDB — it never leaves your device. Pro subscribers who enable cloud sync have this data end-to-end encrypted on your device before it is ever sent to our servers. We store only ciphertext in Supabase: the encryption key is derived from a passphrase that only you know, is never transmitted to us, and is never recoverable by TabMerger. This means we cannot read your group or tab data, and neither could anyone who gained unauthorized access to our database.</p>
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Subscription and billing</h3>
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Supabase (Pro)</span>
-              <span className="text-muted-foreground">Account profile, groups, and sessions in a PostgreSQL database. Encrypted at rest and in transit.</span>
+              <span className="text-muted-foreground">Account profile in a PostgreSQL database, encrypted at rest and in transit by our infrastructure. Groups and sessions are additionally end-to-end encrypted client-side before upload — we store only ciphertext and never hold the key, so this content is unreadable to us.</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Stripe</span>

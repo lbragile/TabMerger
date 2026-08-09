@@ -6,19 +6,30 @@ import { useSessions, useSaveSession, useDeleteSession, useRestoreSession } from
 import { createGroup, createWindow, createTab } from '@/lib/utils'
 import type { GroupsState, Session } from '@/lib/types'
 
-const { mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent } = vi.hoisted(() => ({
+const { mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting } = vi.hoisted(() => ({
   mockGetSessions: vi.fn().mockResolvedValue([]),
   mockSaveSession: vi.fn().mockResolvedValue(undefined),
   mockDeleteSession: vi.fn().mockResolvedValue(undefined),
   mockTrackEvent: vi.fn(),
+  mockGetSetting: vi.fn().mockResolvedValue(false),
 }))
 
 vi.mock('@/lib/localDb', () => ({
   getSessions: mockGetSessions,
   saveSession: mockSaveSession,
   deleteSession: mockDeleteSession,
+  getSetting: mockGetSetting,
 }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
+
+const mockGetDataKey = vi.fn<() => CryptoKey | null>().mockReturnValue(null)
+vi.mock('@/lib/encryptionKey', () => ({
+  hasEncryptionKey: () => mockGetSetting('encryptionEnabled', false),
+  getDataKey: () => mockGetDataKey(),
+}))
+
+const mockEncryptBlob = vi.fn().mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' })
+vi.mock('@tabmerger/shared', () => ({ encryptBlob: (...args: unknown[]) => mockEncryptBlob(...args) }))
 
 // ─── Supabase thenable builder mock — see agent-memory feedback_supabase_mock ──
 const builder: Record<string, unknown> = {}
@@ -64,6 +75,8 @@ describe('useSaveSession', () => {
     idx = 0
     responses = []
     mockGetSession.mockResolvedValue({ data: { session: null } })
+    mockGetSetting.mockResolvedValue(false)
+    mockGetDataKey.mockReturnValue(null)
     const g = createGroup(undefined, 'Saved')
     g.windows = [createWindow([createTab('T1', 'https://a.com')])]
     const nowOpen = createGroup(undefined, 'Now Open')
@@ -109,6 +122,32 @@ describe('useSaveSession', () => {
     })
     expect(mockFrom).toHaveBeenCalledWith('sessions')
     expect((builder.upsert as ReturnType<typeof vi.fn>)).toHaveBeenCalled()
+  })
+
+  it('encrypts name/groups before upsert when encryption is enabled and unlocked', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
+    responses = [{ data: null, error: null }]
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+    })
+    const upserted = (builder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    expect(upserted.name).toBe('')
+    expect(upserted.groups).toEqual({ v: 1, iv: 'iv-stub', ct: 'ct-stub' })
+  })
+
+  it('skips the remote push when encryption is enabled but the key is locked', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue(null)
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+    })
+    expect((builder.upsert as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
+    expect(mockSaveSession).toHaveBeenCalled() // local save still happens
   })
 
   it('does not call Supabase upsert when there is no auth session', async () => {

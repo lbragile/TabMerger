@@ -1,4 +1,38 @@
 import { aiFixtures } from './handlers';
+import { incrementDevAiUsage, getDevAiUsage } from './devAiUsage';
+import { supabase } from '@/lib/supabase';
+import { queryClient } from '@/lib/queryClient';
+
+const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
+
+// ponytail: fire-and-forget, best-effort sync of the local dev mock counter to the
+// real Supabase ai_usage table, so server-side quota enforcement stays exercisable
+// while clicking through AI features in dev — never surfaces errors to the caller
+// (no session yet, network down, or /api/ai/dev-usage 404ing outside dev deploys
+// are all expected/ignorable here).
+async function syncDevUsageToServer(realFetch: typeof window.fetch) {
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session?.access_token) return;
+
+    const count = await getDevAiUsage();
+    const res = await realFetch(`${WEB_APP_URL}/api/ai/dev-usage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ count }),
+    });
+    if (!res.ok) return;
+
+    queryClient.invalidateQueries({ queryKey: ['aiUsage', session.user.id] });
+  } catch {
+    // silent — dev-only convenience sync, never block/surface to the caller
+  }
+}
 
 /**
  * Dev-only fetch interception for /api/ai/* calls.
@@ -23,6 +57,9 @@ export function installDevFetchMock() {
 
     if (fixture) {
       console.info(`[dev-mock] intercepted ${pathname}`);
+      // fire-and-forget, mirrors server-side usage tracking; chain the real-DB sync
+      // after the local increment resolves so it posts the up-to-date count
+      void incrementDevAiUsage().then(() => syncDevUsageToServer(realFetch));
       const body = typeof fixture === 'function' ? fixture(JSON.parse((init?.body as string) ?? '{}')) : fixture;
       return new Response(JSON.stringify(body), {
         status: 200,

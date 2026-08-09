@@ -91,17 +91,17 @@ describe('OrganizeProposal', () => {
     global.fetch = vi.fn().mockResolvedValue(
       streamResponse([
         JSON.stringify([
-          { type: 'merge', groupIds: ['g1', 'g2'], newName: 'Work' },
+          { type: 'merge', sourceGroupId: 'g1', targetGroupId: 'g2' },
           { type: 'rename', groupId: 'g3', newName: 'Research' },
-          { type: 'delete', groupId: 'g4', reason: 'empty' },
+          { type: 'delete', groupId: 'g4' },
           { type: 'reorder', groupIds: ['g1', 'g2', 'g3'] },
         ]),
       ])
     )
     render(<OrganizeProposal {...PROPS} />)
-    await waitFor(() => expect(screen.getByText(/merge 2 groups/i)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/merge g1 → g2/i)).toBeInTheDocument())
     expect(screen.getByText(/rename group → "research"/i)).toBeInTheDocument()
-    expect(screen.getByText(/delete group \(reason: empty\)/i)).toBeInTheDocument()
+    expect(screen.getByText(/delete group g4/i)).toBeInTheDocument()
     expect(screen.getByText(/reorder groups: g1, g2, g3/i)).toBeInTheDocument()
   })
 
@@ -151,6 +151,19 @@ describe('OrganizeProposal', () => {
     await user.click(screen.getByRole('button', { name: /approve/i }))
 
     await waitFor(() => expect(screen.getByText(/server error 500/i)).toBeInTheDocument())
+  })
+
+  // E2EE: the dashboard has no data key, so it must refuse rather than review
+  // a proposal derived from groups it cannot read.
+  it('refuses to stream or approve when the user is encrypted', async () => {
+    const fetchMock = vi.fn()
+    global.fetch = fetchMock
+
+    render(<OrganizeProposal {...PROPS} encrypted />)
+
+    expect(screen.getByText(/end-to-end encrypted groups/i)).toBeInTheDocument()
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(screen.queryByRole('button', { name: /approve/i })).not.toBeInTheDocument()
   })
 
   it('disables Approve when there are no actions', async () => {

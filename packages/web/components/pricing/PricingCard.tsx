@@ -5,6 +5,15 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Check, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
+
+// ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
+// and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
+// so `currentTier` (always DB shape) compares correctly against this card's `tier` prop.
+const TIER_RANK: Record<string, number> = { free: 0, pro: 1, proAi: 2, pro_ai: 2 }
+function normalizeTier(tier: string) {
+  return tier === 'proAi' ? 'pro_ai' : tier
+}
 
 interface PricingCardProps {
   name: string
@@ -37,8 +46,13 @@ export function PricingCard({
   const [loading, setLoading] = useState(false)
 
   const rawPrice = interval === 'monthly' ? monthlyPrice : yearlyPrice
-  const isCurrentPlan = currentTier === tier
+  const isCurrentPlan = !!currentTier && normalizeTier(currentTier) === normalizeTier(tier)
   const isFree = tier === 'free'
+  // A signed-out visitor has no currentTier — treat as free/below every paid card.
+  const isBelowCurrentTier =
+    !!currentTier && TIER_RANK[normalizeTier(tier)] < TIER_RANK[normalizeTier(currentTier)]
+  // Never recommend a tier the user already has or has surpassed.
+  const showRecommended = highlighted && !isCurrentPlan && !isBelowCurrentTier
 
   // Display price: use override strings if provided, otherwise format from number
   const displayPrice =
@@ -54,10 +68,13 @@ export function PricingCard({
 
     setLoading(true)
     try {
-      const res = await fetch('/api/checkout', {
+      // Downgrading to an already-active Stripe subscription must go through the billing
+      // portal (which changes the existing subscription's price) — a fresh /api/checkout
+      // call would create a second, separate subscription instead of switching plans.
+      const res = await fetch(isBelowCurrentTier ? '/api/billing-portal' : '/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier, interval }),
+        body: isBelowCurrentTier ? undefined : JSON.stringify({ tier, interval }),
       })
 
       if (res.status === 401) {
@@ -78,13 +95,19 @@ export function PricingCard({
     <div
       className={cn(
         'flex flex-col rounded-2xl p-6 border border-border bg-surface',
-        highlighted && 'shadow-[var(--sh3)] border-primary/30 p-7'
+        highlighted && 'shadow-[var(--sh3)] border-primary/30 p-7',
+        isCurrentPlan && 'border-primary/40'
       )}
     >
       {/* Title row */}
       <div className="flex items-center justify-between gap-2 mb-2.5">
         <h6 className="text-sm font-semibold">{name}</h6>
-        {highlighted && (
+        {isCurrentPlan && (
+          <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary text-primary-foreground self-center">
+            Current
+          </span>
+        )}
+        {showRecommended && (
           <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary/15 text-primary self-center">
             Recommended
           </span>
@@ -125,34 +148,48 @@ export function PricingCard({
             <span>{feature}</span>
           </li>
         ))}
+        {tier === 'proAi' && (
+          <li className="flex items-center gap-2 text-text2">
+            <Plus className="h-3.5 w-3.5 shrink-0 text-primary" />
+            <span>{AI_MONTHLY_CAP} AI requests / month</span>
+          </li>
+        )}
       </ul>
 
-      {/* CTA button */}
+      {/* CTA button — omitted for the current plan (badge already says so), except Free,
+          which always offers the install link since "installed" isn't a Stripe state. */}
       <div className="mt-auto">
         {isFree ? (
           <Button
             variant="outline"
             className="w-full rounded-lg"
             onClick={handleClick}
-            disabled={isCurrentPlan}
           >
-            {isCurrentPlan ? 'Current plan' : 'Install free'}
+            Install free
+          </Button>
+        ) : isCurrentPlan ? null : isBelowCurrentTier ? (
+          // Downgrading an active Stripe subscription is a price change on the *existing*
+          // subscription, not a new one — route through the billing portal (handleClick
+          // hits /api/billing-portal here), never /api/checkout.
+          <Button
+            variant="secondary"
+            className="w-full rounded-lg"
+            onClick={handleClick}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : `Downgrade to ${name}`}
           </Button>
         ) : (
           <Button
             className={cn(
               'w-full rounded-lg',
-              highlighted && 'bg-primary text-primary-foreground shadow-[0_10px_26px_-10px_rgba(0,180,204,0.9)] hover:bg-primary/90'
+              highlighted && 'bg-primary text-primary-foreground hover:bg-primary/90'
             )}
             variant={highlighted ? 'default' : 'secondary'}
             onClick={handleClick}
-            disabled={loading || isCurrentPlan}
+            disabled={loading}
           >
-            {loading
-              ? 'Loading...'
-              : isCurrentPlan
-                ? 'Current plan'
-                : `Upgrade to ${name}`}
+            {loading ? 'Loading...' : `Upgrade to ${name}`}
           </Button>
         )}
       </div>

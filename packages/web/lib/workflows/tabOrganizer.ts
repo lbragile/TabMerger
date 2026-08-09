@@ -1,6 +1,7 @@
 import { createHook, getWritable } from "workflow";
 import { DurableAgent } from "@workflow/ai/agent";
 import { z } from "zod";
+import { isEncryptedBlob } from "@tabmerger/shared";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 
 /**
@@ -51,10 +52,45 @@ interface SerializableGroup {
   windows: unknown; // ExtWindow[] as stored jsonb — opaque here, passed through
 }
 
+/**
+ * Plaintext group content supplied by the client in the POST body, mirroring
+ * the payload `/api/ai/suggest-sessions` already accepts. Required for E2E-
+ * encrypted users: `groups.windows` is ciphertext the server can never decrypt,
+ * so the only source of plaintext for the prompt is the client's decrypted
+ * in-memory state.
+ */
+export interface ClientGroup {
+  id: string;
+  name: string;
+  tabs: unknown[];
+  /** Optional; defaults to "index 0 is Now Open", matching the DB's position-0 rule. */
+  permanent?: boolean;
+}
+
 // --- Steps ------------------------------------------------------------------
 
-async function fetchUserData(userId: string): Promise<SerializableGroup[]> {
+export async function fetchUserData(
+  userId: string,
+  clientGroups: ClientGroup[] | null
+): Promise<SerializableGroup[]> {
   "use step";
+
+  if (clientGroups) {
+    // Array order is the client's own group order, so the index doubles as
+    // `position` and index 0 is the permanent "Now Open" group — the same
+    // invariant the DB path derives from `position === 0`.
+    return clientGroups.map((g, i) => ({
+      id: g.id,
+      name: g.name,
+      color: "",
+      position: i,
+      permanent: g.permanent ?? i === 0,
+      // The prompt only ever reads tab titles/URLs; one synthetic window is
+      // enough and avoids shipping the full window tree over the wire.
+      windows: [{ tabs: g.tabs }],
+    }));
+  }
+
   const supabase = await createServiceRoleClient();
   const { data, error } = await supabase
     .from("groups")
@@ -97,6 +133,22 @@ export async function applyChanges(
   );
   const isPermanent = (id: string) => groups.get(id)?.permanent === true;
 
+  /**
+   * True when the group's stored content is client-side ciphertext.
+   *
+   * The server holds no decryption key by design, so it can neither read the
+   * group's real name (the `name` column is written as '' for encrypted rows,
+   * with the real name inside the blob) nor concatenate two `windows` trees.
+   * Any content-bearing write here would therefore silently destroy or
+   * shadow the user's data. Such actions are refused and reported via
+   * `skipped` so the client can re-apply them locally, where the sync engine
+   * re-encrypts and pushes them through the normal path.
+   *
+   * Position-only (`reorder`) and row-level (`delete`) actions touch no
+   * plaintext and stay server-side for encrypted and plaintext users alike.
+   */
+  const isCiphertext = (id: string) => isEncryptedBlob(groups.get(id)?.windows);
+
   const skipped: ReorganizeAction[] = [];
   let applied = 0;
 
@@ -107,6 +159,19 @@ export async function applyChanges(
       continue;
     }
     if (action.type === "merge" && isPermanent(action.sourceGroupId)) {
+      skipped.push(action);
+      continue;
+    }
+
+    // E2EE guard — see isCiphertext.
+    if (action.type === "rename" && isCiphertext(action.groupId)) {
+      skipped.push(action);
+      continue;
+    }
+    if (
+      action.type === "merge" &&
+      (isCiphertext(action.sourceGroupId) || isCiphertext(action.targetGroupId))
+    ) {
       skipped.push(action);
       continue;
     }
@@ -190,10 +255,14 @@ export interface ApprovalPayload {
   actions?: ReorganizeAction[];
 }
 
-export async function tabOrganizerWorkflow(userId: string, hookToken: string) {
+export async function tabOrganizerWorkflow(
+  userId: string,
+  hookToken: string,
+  clientGroups: ClientGroup[] | null = null
+) {
   "use workflow";
 
-  const groups = await fetchUserData(userId);
+  const groups = await fetchUserData(userId, clientGroups);
 
   const agent = new DurableAgent({
     model: "anthropic/claude-sonnet-4-6",

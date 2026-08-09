@@ -11,6 +11,9 @@ import { DeduplicateConfirmModal } from './DeduplicateConfirm';
 import { UrlRulesModal } from './UrlRules';
 import { ReviewStaleTabsModal } from './ReviewStaleTabs';
 import { SaveSessionModal } from './SaveSession';
+import { ShortcutSavePickerModal } from './ShortcutSavePicker';
+import { ReviewStaleGroupModal } from './ReviewStaleGroup';
+import { EncryptionSetupModal } from './EncryptionSetup';
 
 export function ModalRoot() {
   const modal = useUIStore((s) => s.modal);
@@ -27,6 +30,7 @@ export function ModalRoot() {
       case 'deleteTab':
       case 'deleteSelection':
       case 'removeStaleTabs':
+      case 'archiveStaleGroups':
       case 'clearAllData':
         return (
           <DeleteConfirmModal
@@ -53,6 +57,12 @@ export function ModalRoot() {
         return <UrlRulesModal onClose={closeModal} />;
       case 'reviewStaleTabs':
         return <ReviewStaleTabsModal data={modal.data ?? {}} onClose={closeModal} />;
+      case 'shortcutSavePicker':
+        return <ShortcutSavePickerModal data={modal.data ?? {}} onClose={closeModal} />;
+      case 'reviewStaleGroup':
+        return <ReviewStaleGroupModal data={modal.data ?? {}} onClose={closeModal} />;
+      case 'encryptionSetup':
+        return <EncryptionSetupModal onClose={closeModal} />;
       default:
         return null;
     }

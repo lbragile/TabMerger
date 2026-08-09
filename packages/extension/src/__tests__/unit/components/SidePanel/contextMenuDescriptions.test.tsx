@@ -33,6 +33,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useSortTabs: () => ({ mutate: vi.fn() }),
   useArchiveGroup: () => ({ mutate: vi.fn() }),
   useRestoreGroup: () => ({ mutate: vi.fn() }),
+  useUpdateGroupName: () => ({ mutate: vi.fn() }),
   useGroups: () => mockUseGroups(),
   GROUPS_QUERY_KEY: ['groups'],
 }))
@@ -49,6 +50,9 @@ vi.mock('@/components/ColorPicker', () => ({
 vi.mock('@/hooks/useEntitlements', () => ({
   useEntitlements: () => mockUseEntitlements(),
 }))
+
+vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => ({ data: {} }) }))
+vi.mock('@/hooks/useAI', () => ({ useNameGroup: () => ({ mutateAsync: vi.fn() }), QuotaExceededError: class extends Error {} }))
 
 vi.mock('sonner', () => ({
   toast: { error: mockToastError },

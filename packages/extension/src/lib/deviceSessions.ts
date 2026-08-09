@@ -1,33 +1,47 @@
 import type { DeviceSession } from '@tabmerger/shared';
+import { encryptBlob, decryptBlob, isEncryptedBlob, type EncryptedBlob } from '@tabmerger/shared';
 import type { GroupsState, Tier } from './types';
 import { getSetting, setSetting } from './localDb';
 import { supabase } from './supabase';
+import { hasEncryptionKey, getDataKey } from './encryptionKey';
 
 /** Rapid Now Open changes (tab open/close bursts) coalesce into a single push after this window. */
 export const DEVICE_SESSION_DEBOUNCE_MS = 2000;
 
-const DEVICE_ID_KEY = 'deviceId';
 const STALE_DEVICE_DAYS = 30;
 
+// keyed per signed-in user — see generateAndPersistDeviceId for why.
 let pending: Promise<string> | null = null;
+let pendingForUserId: string | undefined;
 
-async function generateAndPersistDeviceId(): Promise<string> {
-  const existing = await getSetting<string | undefined>(DEVICE_ID_KEY, undefined);
+async function generateAndPersistDeviceId(settingKey: string): Promise<string> {
+  const existing = await getSetting<string | undefined>(settingKey, undefined);
   if (existing) return existing;
 
   const id = crypto.randomUUID();
-  await setSetting(DEVICE_ID_KEY, id);
+  await setSetting(settingKey, id);
   return id;
 }
 
 /**
- * Returns this device's persisted UUID, generating and storing one on first call. Idempotent.
- * Concurrent cold-cache callers (e.g. useCurrentTabs + OtherDevices on mount) share one
- * in-flight generate+persist instead of racing separate crypto.randomUUID() writes.
+ * Returns this (browser, signed-in account) pair's persisted UUID, generating and storing one on
+ * first call. Idempotent per user. Scoped by `deviceId:${userId}` — a single unscoped key
+ * previously made every account signed into the same browser profile report the SAME device_id,
+ * which is cosmetically wrong (RLS already isolates device_sessions rows per user, so this was
+ * never a data leak, just an identity mixup). Falls back to an unscoped key pre-auth (rare: only
+ * reachable if a caller invokes this before checking for a session).
+ * Concurrent cold-cache callers (e.g. useCurrentTabs + OtherDevices on mount) for the SAME user
+ * share one in-flight generate+persist instead of racing separate crypto.randomUUID() writes.
  */
 export async function getOrCreateDeviceId(): Promise<string> {
-  if (!pending) {
-    pending = generateAndPersistDeviceId().finally(() => {
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+  const settingKey = session ? `deviceId:${session.user.id}` : 'deviceId';
+
+  if (!pending || pendingForUserId !== session?.user.id) {
+    pendingForUserId = session?.user.id;
+    pending = generateAndPersistDeviceId(settingKey).finally(() => {
       pending = null;
     });
   }
@@ -69,11 +83,27 @@ async function doPush(): Promise<void> {
   const deviceName = getDeviceName(navigator.userAgent);
   const nowOpen = state.available.find((g) => g.permanent);
 
+  let snapshotField: { windows: GroupsState['available'][number]['windows'] } | EncryptedBlob = {
+    windows: nowOpen?.windows ?? []
+  };
+
+  if (await hasEncryptionKey()) {
+    const dataKey = await getDataKey();
+    if (!dataKey) {
+      // ponytail: locked — never push a plaintext Now Open snapshot. Skip this push,
+      // it'll retry on the next debounced tab-change once unlocked (same as pushGroup).
+      console.warn('[deviceSessions] Encryption enabled but key is locked — skipping device session push');
+      return;
+    }
+    const { iv, ct } = await encryptBlob(dataKey, snapshotField);
+    snapshotField = { v: 1, iv, ct };
+  }
+
   const { error } = await supabase.from('device_sessions').upsert({
     user_id: session.user.id,
     device_id: deviceId,
     device_name: deviceName,
-    now_open_snapshot: { windows: nowOpen?.windows ?? [] },
+    now_open_snapshot: snapshotField,
     last_active: new Date().toISOString()
   });
 
@@ -116,16 +146,28 @@ export async function fetchOtherDeviceSessions(tier: Tier): Promise<DeviceSessio
     return [];
   }
 
+  const decoded = await Promise.all((data as DeviceSession[]).map(async (row) => {
+    if (!isEncryptedBlob(row.now_open_snapshot)) return row;
+    const dataKey = await getDataKey();
+    if (!dataKey) return { ...row, now_open_snapshot: null }; // locked — degrade to "no snapshot", same as a malformed row
+    try {
+      const content = await decryptBlob<{ windows: unknown }>(dataKey, row.now_open_snapshot);
+      return { ...row, now_open_snapshot: content };
+    } catch {
+      return { ...row, now_open_snapshot: null };
+    }
+  }));
+
   // ponytail: dev-only mock data — only fires in `pnpm dev:extension` (import.meta.env.DEV is
-  // compiled to `false` and dead-code-eliminated by Vite in production builds) and only when the
-  // real query legitimately returned nothing, so it can never mask or override real rows. Lets us
-  // visually verify the Other Devices UI without writing rows into the prod Supabase table.
+  // compiled to `false` and dead-code-eliminated by Vite in production builds). Appended
+  // alongside real rows (not just as an empty-state fallback) so the Other Devices UI can be
+  // visually verified with a mix of real + mock devices during development.
   // Delete this block once no longer needed.
-  if (import.meta.env.DEV && data.length === 0) {
-    return getMockDeviceSessions();
+  if (import.meta.env.DEV) {
+    return [...decoded, ...getMockDeviceSessions()];
   }
 
-  return data as DeviceSession[];
+  return decoded;
 }
 
 // ponytail: dev-only mock data, see call site above. Not a real DeviceSession[] source — never

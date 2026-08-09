@@ -15,8 +15,9 @@ import { absoluteUrl, formatDate } from '@/lib/utils'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 import { SetPasswordForm } from '@/components/account/SetPasswordForm'
 import { DevicesSection } from '@/components/account/DevicesSection'
-import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
+import { getEffectiveCap } from '@/lib/ai-usage'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
+import { SignOutForm } from '@/components/auth/SignOutForm'
 
 export const metadata: Metadata = {
   title: 'Account',
@@ -48,8 +49,9 @@ export default async function AccountPage() {
       .order('last_active', { ascending: false }),
   ])
 
-  // ponytail: dev-only mock data — only fires in `next dev` (never in `next build`/deploy),
-  // and only when the real query is empty, so it can never mask real rows. Delete when no longer needed.
+  // ponytail: dev-only mock data — only fires in `next dev` (never in `next build`/deploy).
+  // Appended alongside real rows (not just as an empty-state fallback) so the Devices UI can be
+  // visually verified with a mix of real + mock devices during development.
   // Timestamps are static (not Date.now()-derived) to satisfy the render-purity lint rule.
   const mockDeviceRows = [
     { id: 'mock-1', device_id: 'mock-1', device_name: 'MacBook Pro', now_open_snapshot: null, last_active: '2026-08-05T09:58:00.000Z' },
@@ -57,9 +59,7 @@ export default async function AccountPage() {
     { id: 'mock-3', device_id: 'mock-3', device_name: 'Chrome on Linux', now_open_snapshot: null, last_active: '2026-07-31T10:00:00.000Z' },
   ]
   const deviceRows =
-    devices && devices.length === 0 && process.env.NODE_ENV === 'development'
-      ? mockDeviceRows
-      : (devices ?? [])
+    process.env.NODE_ENV === 'development' ? [...(devices ?? []), ...mockDeviceRows] : (devices ?? [])
 
   const currentTier = subscription?.tier ?? 'free'
   const isPaid = currentTier !== 'free' && subscription?.status === 'active'
@@ -73,7 +73,8 @@ export default async function AccountPage() {
       .eq('user_id', user.id)
       .eq('month', month)
       .maybeSingle()
-    aiCallsLeft = AI_MONTHLY_CAP - (usage?.request_count ?? 0)
+    const cap = await getEffectiveCap(supabase, user.id, month)
+    aiCallsLeft = cap - (usage?.request_count ?? 0)
   }
 
   let billingPortalUrl: string | null = null
@@ -112,16 +113,15 @@ export default async function AccountPage() {
             <p className={`font-semibold tracking-tight ${stat.accent ? 'text-primary' : ''}`} style={{ fontSize: '26px' }}>
               {stat.value}
             </p>
-            <p className="text-[12px] text-text2 mt-0.5">{stat.label}</p>
+            <p className="text-[12px] text-text2 mt-0.5 flex items-center gap-1.5 flex-wrap">
+              {stat.label}
+              {stat.label === 'AI calls left' && currentTier === 'pro_ai' && aiCallsLeft <= 0 && (
+                <BuyCreditsButton />
+              )}
+            </p>
           </div>
         ))}
       </div>
-
-      {currentTier === 'pro_ai' && aiCallsLeft <= 0 && (
-        <div className="-mt-3">
-          <BuyCreditsButton />
-        </div>
-      )}
 
       {/* Profile */}
       <Card>
@@ -203,7 +203,7 @@ export default async function AccountPage() {
                 This will revoke all active sessions.
               </p>
             </div>
-            <form action="/api/auth/sign-out" method="POST">
+            <SignOutForm>
               <Button
                 type="submit"
                 variant="outline"
@@ -212,7 +212,7 @@ export default async function AccountPage() {
               >
                 Sign out
               </Button>
-            </form>
+            </SignOutForm>
           </div>
         </CardContent>
       </Card>

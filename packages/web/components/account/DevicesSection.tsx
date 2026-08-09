@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { DeviceSession } from '@tabmerger/shared'
+import { isEncryptedBlob, decryptBlob } from '@tabmerger/shared'
+import { useEncryptionKey } from '@/lib/encryption/context'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -58,7 +60,34 @@ function formatRelativeTime(iso: string): string {
 }
 
 export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) {
+  const { dataKey } = useEncryptionKey()
   const [devices, setDevices] = useState(initialDevices)
+
+  // Decrypt any encrypted now_open_snapshot blobs once a data key is available. Rows that
+  // can't be decrypted (locked, or no encryption) fall through to snapshotCounts() below,
+  // which already degrades to "no count shown" for a non-array `windows` — same graceful
+  // path used for genuinely malformed rows, no separate "locked" UI needed.
+  useEffect(() => {
+    if (!dataKey) return
+    let cancelled = false
+    ;(async () => {
+      const next = await Promise.all(
+        initialDevices.map(async (d) => {
+          if (!isEncryptedBlob(d.now_open_snapshot)) return d
+          try {
+            const content = await decryptBlob<{ windows: unknown }>(dataKey, d.now_open_snapshot)
+            return { ...d, now_open_snapshot: content }
+          } catch {
+            return d
+          }
+        })
+      )
+      if (!cancelled) setDevices(next)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [dataKey, initialDevices])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
   const [deleteTarget, setDeleteTarget] = useState<DeviceRow | null>(null)

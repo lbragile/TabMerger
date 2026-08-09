@@ -3,6 +3,7 @@ import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
 import { trackEvent } from '@/lib/analytics';
+import { createGroup } from '@/lib/utils';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 
 type Scope = 'current' | 'left' | 'right' | 'excluding';
@@ -31,6 +32,33 @@ const SCOPE_LABELS: Record<Scope, string> = {
   excluding: 'Save all other tabs',
 };
 
+// Shared by the context-menu handler and the global keyboard shortcuts: picks the
+// subset of tabs in a window for a given scope, filtering out chrome:// urls.
+export function tabsForScope(
+  scope: Scope,
+  contextTab: chrome.tabs.Tab,
+  allTabs: chrome.tabs.Tab[]
+): TmTab[] {
+  const sorted = [...allTabs].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+  let selected: chrome.tabs.Tab[];
+  switch (scope) {
+    case 'current':   selected = [contextTab]; break;
+    case 'left':      selected = sorted.filter((t) => t.index < contextTab.index); break;
+    case 'right':     selected = sorted.filter((t) => t.index > contextTab.index); break;
+    case 'excluding': selected = sorted.filter((t) => t.id !== contextTab.id); break;
+  }
+
+  return selected
+    .filter((t) => t.url && !t.url.startsWith('chrome://'))
+    .map((t, i) => ({
+      id: t.id ?? Date.now() + i,
+      title: t.title ?? t.url ?? '',
+      url: t.url ?? '',
+      favIconUrl: t.favIconUrl,
+      pinned: t.pinned,
+    }));
+}
+
 let _building = false;
 async function buildMenus() {
   if (_building) return;
@@ -50,14 +78,17 @@ async function _buildMenus() {
 
   await chrome.contextMenus.removeAll();
 
-  // 'tab' context (tab-strip right-click) exists at runtime but is absent from @types/chrome stubs
+  // 'tab' context (tab-strip right-click) exists at runtime but is absent from @types/chrome stubs.
+  // 'page' is included too — right-clicking the page body is the far more common gesture than
+  // right-clicking the tab strip itself, and omitting it made the menu appear "missing" to users.
   const TAB_CTX = 'tab' as chrome.contextMenus.ContextType;
-  chrome.contextMenus.create({ id: 'tm-add', title: 'Save to TabMerger', contexts: [TAB_CTX] });
+  const CONTEXTS: chrome.contextMenus.ContextType[] = [TAB_CTX, 'page'];
+  chrome.contextMenus.create({ id: 'tm-add', title: 'Save to TabMerger', contexts: CONTEXTS });
 
   for (const scope of Object.keys(SCOPE_LABELS) as Scope[]) {
-    chrome.contextMenus.create({ id: `tm-scope-${scope}`, parentId: 'tm-add', title: SCOPE_LABELS[scope], contexts: [TAB_CTX] });
+    chrome.contextMenus.create({ id: `tm-scope-${scope}`, parentId: 'tm-add', title: SCOPE_LABELS[scope], contexts: CONTEXTS });
     if (groups.length === 0) {
-      chrome.contextMenus.create({ id: `tm-scope-${scope}-none`, parentId: `tm-scope-${scope}`, title: 'No saved groups yet', contexts: [TAB_CTX], enabled: false });
+      chrome.contextMenus.create({ id: `tm-scope-${scope}-none`, parentId: `tm-scope-${scope}`, title: 'No saved groups yet', contexts: CONTEXTS, enabled: false });
     } else {
       for (const group of groups) {
         const tabCount = group.windows.reduce((n, w) => n + w.tabs.length, 0);
@@ -65,7 +96,7 @@ async function _buildMenus() {
           id: `tm-scope-${scope}-${group.id}`,
           parentId: `tm-scope-${scope}`,
           title: `${colorEmoji(group.color)} ${group.name} (${group.windows.length}w · ${tabCount}t)`,
-          contexts: [TAB_CTX],
+          contexts: CONTEXTS,
         });
       }
     }
@@ -153,39 +184,22 @@ export default defineBackground(() => {
     }
   });
 
-  chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    const menuId = String(info.menuItemId);
-    const scopeMatch = menuId.match(/^tm-scope-(current|left|right|excluding)-(.+)$/);
-    if (!scopeMatch || !tab?.windowId || tab.index === undefined) return;
-    const scope = scopeMatch[1] as Scope;
-    const groupId = scopeMatch[2];
-
-    const allChromeTabs = await chrome.tabs.query({ windowId: tab.windowId });
-    allChromeTabs.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-
-    let selected: typeof allChromeTabs;
-    switch (scope) {
-      case 'current':   selected = [tab]; break;
-      case 'left':      selected = allChromeTabs.filter((t) => t.index < tab.index); break;
-      case 'right':     selected = allChromeTabs.filter((t) => t.index > tab.index); break;
-      case 'excluding': selected = allChromeTabs.filter((t) => t.id !== tab.id); break;
-    }
-
-    const tmTabs: TmTab[] = selected
-      .filter((t) => t.url && !t.url.startsWith('chrome://'))
-      .map((t, i) => ({
-        id: t.id ?? Date.now() + i,
-        title: t.title ?? t.url ?? '',
-        url: t.url ?? '',
-        favIconUrl: t.favIconUrl,
-        pinned: t.pinned,
-      }));
-
+  // Appends tabs as a new window to an existing (non-permanent) group. If groupId is
+  // omitted, targets the first non-permanent group, creating a "Quick Save" group if
+  // none exist yet — used by the global keyboard shortcut, which has no menu selection.
+  async function appendTabsToGroup(tmTabs: TmTab[], groupId?: string) {
     if (tmTabs.length === 0) return;
 
     const state = await getGroupsState();
     const available = [...state.available];
-    const targetIndex = available.findIndex((g) => g.id === groupId && !g.permanent);
+    let targetIndex = groupId
+      ? available.findIndex((g) => g.id === groupId && !g.permanent)
+      : available.findIndex((g) => !g.permanent);
+
+    if (targetIndex < 0 && !groupId) {
+      available.push(createGroup(undefined, 'Quick Save'));
+      targetIndex = available.length - 1;
+    }
     if (targetIndex < 0) return;
 
     const group = { ...available[targetIndex] };
@@ -196,6 +210,67 @@ export default defineBackground(() => {
     available[targetIndex] = group;
 
     await saveGroupsState({ ...state, available });
+  }
+
+  chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+    const menuId = String(info.menuItemId);
+    const scopeMatch = menuId.match(/^tm-scope-(current|left|right|excluding)-(.+)$/);
+    if (!scopeMatch || !tab?.windowId || tab.index === undefined) return;
+    const scope = scopeMatch[1] as Scope;
+    const groupId = scopeMatch[2];
+
+    const allChromeTabs = await chrome.tabs.query({ windowId: tab.windowId });
+    const tmTabs = tabsForScope(scope, tab, allChromeTabs);
+
+    await appendTabsToGroup(tmTabs, groupId);
+  });
+
+  // Global OS-level shortcuts (chrome://extensions/shortcuts) — work even when the
+  // popup isn't open. Reuse the same scope-filtering logic as the context menu, but
+  // always target the first non-permanent group (no menu selection to pick from).
+  const COMMAND_SCOPES: Record<string, Scope> = {
+    'save-current-tab': 'current',
+    'save-tabs-left': 'left',
+    'save-tabs-right': 'right',
+    'save-other-tabs': 'excluding',
+  };
+
+  chrome.commands.onCommand.addListener(async (command) => {
+    const scope = COMMAND_SCOPES[command];
+    if (!scope) return;
+
+    // chrome.action.openPopup() must be the very first thing this listener does —
+    // Chrome only permits it within a short recency window of the triggering user
+    // gesture. Querying tabs first (as this used to do, even just once) crosses an
+    // await boundary before ever reaching openPopup(), which can push past that
+    // window and cause a silent rejection — indistinguishable from "the shortcut
+    // does nothing" once it falls through to the invisible immediate-save fallback.
+    // Firefox MV2 / older Chrome don't have chrome.action.openPopup at all.
+    let popupOpened = false;
+    if (typeof chrome.action.openPopup === 'function') {
+      try {
+        await chrome.action.openPopup();
+        popupOpened = true;
+      } catch {
+        popupOpened = false;
+      }
+    }
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab?.url || tab.url.startsWith('chrome://')) return;
+
+    const allTabs = await chrome.tabs.query({ windowId: tab.windowId });
+    const tmTabs = tabsForScope(scope, tab, allTabs);
+    if (tmTabs.length === 0) return;
+
+    if (popupOpened) {
+      await chrome.storage.session.set({
+        pendingShortcutSave: { tabs: tmTabs, scope, stashedAt: Date.now() }
+      });
+      return;
+    }
+
+    await appendTabsToGroup(tmTabs);
   });
 
   // Badge: live tab count

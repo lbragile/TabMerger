@@ -148,6 +148,28 @@ URL: [url]
 
 ---
 
+## Manual QA Checklist
+
+Sign in as a `pro_ai` account, open the popup (right-click → Inspect to get DevTools), trigger
+each action below, and confirm a 200 response with the expected shape (not 403/429).
+
+| Feature | Trigger | Where to look |
+|---|---|---|
+| Auto-group (`useAutoGroup`) | Select tabs → "AI Auto-group" in Header | Groups get created/renamed; watch Network tab for `POST /api/ai/group-tabs` |
+| Name group (`useNameGroup`) | Right-click a group → AI rename (if wired) | Group title updates; `POST /api/ai/name-group` |
+| Suggest sessions (`useSuggestSessions`) | Automatic, once/day, on popup open (Pro AI) | Purple banner at top of popup; `POST /api/ai/suggest-sessions` |
+| Organize tabs (`useOrganizeTabs`) | Settings → Organize | `POST /api/ai/organize`, returns `{ runId, token }` |
+| Tab summary (`useTabSummary`) | Hover a tab | Tooltip text; `POST /api/ai/tab-summary` |
+
+**Quota metering:** after each call, check the `ai_usage` row for that user in Supabase —
+`remaining` should decrement (also visible via the `X-AI-Requests-Remaining` response header).
+
+**Quota-exceeded path:** either exhaust the monthly cap for real, or temporarily lower
+`AI_MONTHLY_CAP` in `packages/web/lib/ai-usage.ts` locally, then confirm `AIQuotaExceededPrompt`
+renders in place of a generic error (extension side: `packages/extension/src/components/AIQuotaExceededPrompt.tsx`).
+
+---
+
 ## Security Architecture
 
 Every AI route follows this exact security check order:

@@ -8,6 +8,27 @@ function currentMonth(): string {
 }
 
 /**
+ * Effective monthly cap = base cap + any credit packs purchased for `month`.
+ * Shared by enforcement and by the dashboard/account usage displays so they can't drift.
+ */
+export async function getEffectiveCap(
+  supabase: SupabaseClient,
+  userId: string,
+  month: string = currentMonth()
+): Promise<number> {
+  const { data: purchases } = await supabase
+    .from('ai_credit_purchases')
+    .select('credits')
+    .eq('user_id', userId)
+    .eq('month', month)
+
+  return (
+    AI_MONTHLY_CAP +
+    ((purchases as { credits: number }[] | null) ?? []).reduce((sum, p) => sum + p.credits, 0)
+  )
+}
+
+/**
  * Checks pro_ai subscription, increments ai_usage, and returns remaining count.
  * Returns { allowed: false } if not subscribed or cap exceeded.
  *
@@ -42,15 +63,7 @@ export async function checkAndIncrementAIUsage(
   const currentCount = existing?.request_count ?? 0
 
   // 2b. Purchased credit packs extend this month's cap
-  const { data: purchases } = await supabase
-    .from('ai_credit_purchases')
-    .select('credits')
-    .eq('user_id', userId)
-    .eq('month', month)
-
-  const cap =
-    AI_MONTHLY_CAP +
-    ((purchases as { credits: number }[] | null) ?? []).reduce((sum, p) => sum + p.credits, 0)
+  const cap = await getEffectiveCap(supabase, userId, month)
 
   if (currentCount >= cap) {
     return { allowed: false, remaining: 0 }

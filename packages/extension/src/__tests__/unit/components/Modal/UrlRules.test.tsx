@@ -69,10 +69,20 @@ describe('UrlRulesModal — listing rules', () => {
     expect(screen.getByText('Work')).toBeTruthy()
   })
 
-  it('shows "(deleted group)" when the rule targets a group that no longer exists', () => {
+  it('self-heals: sweeps out a rule targeting a group that no longer exists and persists the cleanup', () => {
+    mockUseUrlRules.mockReturnValue({ data: [{ id: 'r1', pattern: 'x.com/*', groupId: 'gone' }] })
+    renderModal()
+    expect(screen.queryByText('(deleted group)')).toBeNull()
+    expect(screen.getByText('No rules yet.')).toBeTruthy()
+    expect(mockSaveRules).toHaveBeenCalledWith([])
+  })
+
+  it('shows "(deleted group)" for an orphaned rule while groups are still loading (sweep not yet run)', () => {
+    mockUseGroups.mockReturnValue({ data: undefined })
     mockUseUrlRules.mockReturnValue({ data: [{ id: 'r1', pattern: 'x.com/*', groupId: 'gone' }] })
     renderModal()
     expect(screen.getByText('(deleted group)')).toBeTruthy()
+    expect(mockSaveRules).not.toHaveBeenCalled()
   })
 
   it('deletes a rule from the draft without persisting until outer Save', () => {

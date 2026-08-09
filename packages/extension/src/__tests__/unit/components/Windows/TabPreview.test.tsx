@@ -11,8 +11,18 @@ const { mockUseEntitlements, mockFetchSummary } = vi.hoisted(() => ({
   mockFetchSummary: vi.fn(),
 }))
 
+const MockQuotaExceededError = vi.hoisted(() => class extends Error {
+  isQuotaExceeded = true as const
+})
+
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
-vi.mock('@/hooks/useAI', () => ({ useTabSummary: () => ({ mutateAsync: mockFetchSummary }) }))
+vi.mock('@/hooks/useAI', () => ({
+  useTabSummary: () => ({ mutateAsync: mockFetchSummary }),
+  QuotaExceededError: MockQuotaExceededError,
+}))
+vi.mock('@/components/AIQuotaExceededPrompt', () => ({
+  AIQuotaExceededPrompt: () => React.createElement('div', null, 'Buy more AI calls'),
+}))
 
 function makeTab(overrides: Partial<Tab> = {}): Tab {
   return { id: 1, title: 'Example Page', url: 'https://example.com', ...overrides }
@@ -76,6 +86,22 @@ describe('TabPreview', () => {
     expect(mockFetchSummary).toHaveBeenCalledWith({ url: 'https://example.com', title: 'Example Page' })
   })
 
+  it('shows the buy-more-AI-calls CTA instead of silently failing when generateSummary hits a quota-exceeded error', async () => {
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    mockFetchSummary.mockRejectedValue(new MockQuotaExceededError('quota exceeded'))
+    const user = userEvent.setup()
+    wrap(React.createElement(TabPreview, { tab: makeTab({ url: 'https://quota-exceeded-example.com' }) }, React.createElement('span', null, 'Example Page')))
+    await user.hover(screen.getByText('Example Page'))
+    const buttons = await waitFor(() => {
+      const found = screen.getAllByRole('button', { name: /generate summary/i, hidden: true })
+      expect(found.length).toBeGreaterThan(0)
+      return found
+    })
+    await user.click(buttons[0])
+    await waitFor(() => expect(screen.getAllByText('Buy more AI calls').length).toBeGreaterThan(0))
+    expect(screen.queryByRole('button', { name: /generate summary/i, hidden: true })).toBeNull()
+  })
+
   it('only fetches the preview once across repeated opens (fetchedRef guard)', async () => {
     const user = userEvent.setup()
     wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
@@ -83,5 +109,45 @@ describe('TabPreview', () => {
     await user.hover(trigger)
     await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
     expect(chrome.tabs.sendMessage).not.toHaveBeenCalled()
+  })
+
+  describe('server og-image fallback', () => {
+    beforeEach(() => {
+      vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+    })
+
+    it('live tab: falls back to the server route when the content script yields nothing', async () => {
+      vi.stubGlobal('chrome', { tabs: { query: vi.fn().mockResolvedValue([]), sendMessage: vi.fn().mockRejectedValue(new Error('no receiver')) } })
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: 'https://img.example.com/server.png' }) }))
+      const user = userEvent.setup()
+      wrap(React.createElement(TabPreview, { tab: makeTab({ id: 42 }), isLive: true }, React.createElement('span', null, 'Example Page')))
+      await user.hover(screen.getByText('Example Page'))
+      await waitFor(() => expect(fetch).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview?url=https%3A%2F%2Fexample.com'))
+      // ponytail: assert on the rendered <img src> rather than "No preview" absence —
+      // jsdom fires the <img>'s onError synchronously (it can't actually load images),
+      // which would otherwise flip the fallback back on right after this resolves.
+      await waitFor(() => expect(document.querySelector('img[src="https://img.example.com/server.png"]')).not.toBeNull())
+    })
+
+    it('saved/non-live tab: goes straight to the server route without messaging chrome.tabs', async () => {
+      const sendMessage = vi.fn()
+      vi.stubGlobal('chrome', { tabs: { query: vi.fn().mockResolvedValue([]), sendMessage } })
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: 'https://img.example.com/server.png' }) }))
+      const user = userEvent.setup()
+      wrap(React.createElement(TabPreview, { tab: makeTab(), isLive: false }, React.createElement('span', null, 'Example Page')))
+      await user.hover(screen.getByText('Example Page'))
+      await waitFor(() => expect(fetch).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview?url=https%3A%2F%2Fexample.com'))
+      await waitFor(() => expect(document.querySelector('img[src="https://img.example.com/server.png"]')).not.toBeNull())
+      expect(sendMessage).not.toHaveBeenCalled()
+    })
+
+    it('shows "No preview" without crashing when the server route also returns null', async () => {
+      vi.stubGlobal('chrome', { tabs: { query: vi.fn().mockResolvedValue([]), sendMessage: vi.fn().mockRejectedValue(new Error('no receiver')) } })
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: null }) }))
+      const user = userEvent.setup()
+      wrap(React.createElement(TabPreview, { tab: makeTab(), isLive: false }, React.createElement('span', null, 'Example Page')))
+      await user.hover(screen.getByText('Example Page'))
+      await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
+    })
   })
 })

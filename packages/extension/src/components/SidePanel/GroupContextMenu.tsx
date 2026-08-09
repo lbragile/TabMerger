@@ -17,7 +17,8 @@ import {
   SplitSquareHorizontal,
   SortAsc,
   ExternalLink,
-  Archive
+  Archive,
+  Sparkles
 } from 'lucide-react';
 import {
   useDeleteGroup,
@@ -30,10 +31,13 @@ import {
   useSortTabs,
   useGroups,
   useArchiveGroup,
-  useRestoreGroup
+  useRestoreGroup,
+  useUpdateGroupName
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
+import { useAppSettings } from '@/hooks/useAppSettings';
+import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
 import { getSetting } from '@/lib/localDb';
 import { toast } from 'sonner';
 import type { Group } from '@/lib/types';
@@ -81,8 +85,32 @@ export function GroupContextMenu({
   const { mutate: uniteWindows } = useUniteWindows();
   const { mutate: splitWindows } = useSplitWindows();
   const { mutate: sortTabs } = useSortTabs();
+  const { mutate: updateGroupName } = useUpdateGroupName();
+  const { aiFeatures } = useEntitlements();
+  const { data: appSettings } = useAppSettings();
+  const { mutateAsync: nameGroup } = useNameGroup();
   const openModal = useUIStore((s) => s.openModal);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
+
+  const handleAIRename = async () => {
+    const tabs = group.windows.flatMap((w) => w.tabs);
+    if (tabs.length === 0) {
+      toast.error('No tabs in this group to name');
+      return;
+    }
+    try {
+      const { name } = await nameGroup(tabs);
+      updateGroupName({ groupIndex, name });
+    } catch (err) {
+      if (err instanceof QuotaExceededError) {
+        toast.error("You've used all your AI calls for this month.", {
+          action: { label: 'Buy more', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+        });
+        return;
+      }
+      toast.error(err instanceof Error ? err.message : 'AI rename failed');
+    }
+  };
 
   return (
     <div
@@ -118,6 +146,13 @@ export function GroupContextMenu({
             <DropdownMenuItem onClick={() => setRenameTarget({ kind: 'group', groupIndex })}>
               <Edit3 className="h-3.5 w-3.5 mr-2 shrink-0" />
               <div><div>Rename</div><div className="text-[10px] text-muted-foreground font-normal">Set a new name for this group</div></div>
+            </DropdownMenuItem>
+          )}
+
+          {!group.permanent && aiFeatures && appSettings?.aiNameGroupEnabled !== false && (
+            <DropdownMenuItem onClick={handleAIRename}>
+              <Sparkles className="h-3.5 w-3.5 mr-2 shrink-0" />
+              <div><div>AI rename</div><div className="text-[10px] text-muted-foreground font-normal">Suggest a name for this group with AI</div></div>
             </DropdownMenuItem>
           )}
 

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createHash } from 'crypto'
-import { stripe, AI_CREDIT_PACK_SIZE } from '@/lib/stripe'
+import { stripe } from '@/lib/stripe'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import type Stripe from 'stripe'
 
@@ -176,10 +176,16 @@ async function creditAiCreditPack(
 
   const month = new Date().toISOString().slice(0, 7)
 
+  // session.line_items isn't populated unless expanded at creation time, so pull the
+  // actual purchased quantity back from Stripe rather than assuming a fixed amount.
+  // quantity is already a per-call count (not a pack multiplier) since the price is per-call.
+  const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 1 })
+  const quantity = lineItems.data[0]?.quantity ?? 1
+
   const { error } = await supabase.from('ai_credit_purchases').insert({
     user_id: userId,
     month,
-    credits: AI_CREDIT_PACK_SIZE,
+    credits: quantity,
     stripe_checkout_session_id: session.id,
   })
 

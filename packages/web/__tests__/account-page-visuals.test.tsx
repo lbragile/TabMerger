@@ -5,7 +5,7 @@ vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({ auth: { updateUser: vi.fn() } }),
 }))
 
-function mockSupabase(tier: string) {
+function mockSupabase(tier: string, usedCount = 53, purchases: { credits: number }[] = []) {
   vi.doMock('@/lib/supabase/server', () => ({
     createClient: async () => ({
       auth: {
@@ -22,9 +22,11 @@ function mockSupabase(tier: string) {
           table === 'subscriptions'
             ? { data: { tier, status: 'active', current_period_end: null } }
             : { data: { created_at: '2024-01-01' } }
-        // device_sessions query is awaited directly (no .single()) — make the builder thenable
-        // so `await` resolves it to an empty result, same as a real empty Supabase response.
-        builder.then = (resolve: (v: { data: unknown }) => void) => resolve({ data: [] })
+        builder.maybeSingle = async () => ({ data: { request_count: usedCount } })
+        // device_sessions + ai_credit_purchases queries are awaited directly (no .single()) —
+        // make the builder thenable so `await` resolves to a multi-row result.
+        builder.then = (resolve: (v: { data: unknown }) => void) =>
+          resolve({ data: table === 'ai_credit_purchases' ? purchases : [] })
         return builder
       },
     }),
@@ -60,11 +62,20 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     expect(card?.textContent).toContain('47')
     expect(card?.className).toMatch(/border-primary/)
   })
+
+  it('adds purchased credit packs to the cap when computing AI calls left', async () => {
+    vi.resetModules()
+    mockSupabase('pro_ai', 100, [{ credits: 50 }, { credits: 50 }])
+    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    render((await AccountPage()) as React.ReactElement)
+
+    // 100 base + 100 purchased - 100 used
+    expect(screen.getByText('AI calls left').closest('div')?.textContent).toContain('100')
+  })
 })
 
-// NOT YET IMPLEMENTED: page.tsx doesn't render a "Buy more AI calls" button yet.
-describe('AccountPage — buy more AI calls (not yet implemented)', () => {
-  it('shows a "Buy more AI calls" button for a pro_ai user who has exhausted their monthly cap', async () => {
+describe('AccountPage — buy more AI calls', () => {
+  it('shows a "Get more" CTA for a pro_ai user who has exhausted their monthly cap', async () => {
     vi.resetModules()
     vi.doMock('@/lib/supabase/server', () => ({
       createClient: async () => ({
@@ -96,7 +107,7 @@ describe('AccountPage — buy more AI calls (not yet implemented)', () => {
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
-    expect(screen.getByRole('button', { name: /buy more ai calls/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /get more/i })).toBeInTheDocument()
   })
 })
 

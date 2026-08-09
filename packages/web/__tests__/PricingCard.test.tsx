@@ -63,10 +63,10 @@ describe('PricingCard', () => {
     expect(container.querySelectorAll('.lucide-check').length).toBe(0)
   })
 
-  it('disables and labels button "Current plan" when tier matches currentTier', () => {
+  it('shows "Current" badge and no CTA button when tier matches currentTier', () => {
     render(<PricingCard {...baseProps} currentTier="pro" />)
-    const btn = screen.getByRole('button', { name: 'Current plan' })
-    expect(btn).toBeDisabled()
+    expect(screen.getByText('Current')).toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 
   it('POSTs to /api/checkout and redirects to returned url on click', async () => {
@@ -94,5 +94,102 @@ describe('PricingCard', () => {
     render(<PricingCard {...baseProps} />)
     await user.click(screen.getByRole('button', { name: /Upgrade to Pro/ }))
     expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/pricing')
+  })
+
+  it('recognizes "proAi" tier prop as current plan when currentTier is the DB value "pro_ai"', () => {
+    render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro_ai" />)
+    expect(screen.getByText('Current')).toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('shows "Upgrade to X" for a tier above the current tier', () => {
+    render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro" />)
+    expect(screen.getByRole('button', { name: /Upgrade to Pro AI/ })).toBeInTheDocument()
+  })
+
+  it('shows "Downgrade to X" for a paid tier below the current tier, not "Upgrade"', () => {
+    render(<PricingCard {...baseProps} tier="pro" name="Pro" currentTier="pro_ai" />)
+    expect(screen.getByRole('button', { name: 'Downgrade to Pro' })).toBeInTheDocument()
+    expect(screen.queryByText(/Upgrade to Pro/)).not.toBeInTheDocument()
+  })
+
+  it('POSTs to /api/billing-portal (not /api/checkout) and redirects when the downgrade CTA is clicked', async () => {
+    ;(global.fetch as any).mockResolvedValue({
+      status: 200,
+      json: async () => ({ url: 'https://billing.example.com/portal' }),
+    })
+    delete (window as any).location
+    ;(window as any).location = { href: '' }
+
+    const user = userEvent.setup()
+    render(<PricingCard {...baseProps} tier="pro" name="Pro" currentTier="pro_ai" />)
+    await user.click(screen.getByRole('button', { name: 'Downgrade to Pro' }))
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/billing-portal',
+      expect.objectContaining({ method: 'POST' })
+    )
+    expect(global.fetch).not.toHaveBeenCalledWith(
+      '/api/checkout',
+      expect.anything()
+    )
+    expect(window.location.href).toBe('https://billing.example.com/portal')
+  })
+
+  it('free card still says "Install free" (not "Upgrade"/"Downgrade") for a paid user, since free is never above current tier', () => {
+    render(<PricingCard {...baseProps} tier="free" name="Free" monthlyPrice={0} yearlyPrice={0} currentTier="pro" />)
+    expect(screen.getByText('Install free')).toBeInTheDocument()
+  })
+
+  it('free card keeps its "Install free" CTA even when free is the current plan (no CTA suppression, unlike paid tiers)', () => {
+    render(<PricingCard {...baseProps} tier="free" name="Free" monthlyPrice={0} yearlyPrice={0} currentTier="free" />)
+    expect(screen.getByRole('button', { name: 'Install free' })).toBeInTheDocument()
+    expect(screen.getByText('Current')).toBeInTheDocument()
+  })
+
+  it('signed-out visitor (no currentTier) sees default CTAs with no "Current"/"Downgrade" labels', () => {
+    render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" />)
+    expect(screen.getByRole('button', { name: /Upgrade to Pro AI/ })).toBeInTheDocument()
+    expect(screen.queryByText('Current')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Downgrade/)).not.toBeInTheDocument()
+  })
+
+  it('hides "Recommended" on the highlighted (Pro) card when it is the current plan', () => {
+    render(<PricingCard {...baseProps} highlighted currentTier="pro" />)
+    expect(screen.queryByText('Recommended')).not.toBeInTheDocument()
+  })
+
+  it('shows a solid, high-contrast primary-branded "Current" badge on the card matching currentTier', () => {
+    const { container } = render(<PricingCard {...baseProps} currentTier="pro" />)
+    const badge = screen.getByText('Current')
+    expect(badge.className).toMatch(/bg-primary\b/)
+    expect(badge.className).toMatch(/text-primary-foreground/)
+    const card = container.firstChild as HTMLElement
+    expect(card.className).toMatch(/border-primary\/40/)
+  })
+
+  it('shows the AI monthly request quota as a feature line on the Pro AI card only', () => {
+    render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" />)
+    expect(screen.getByText(/AI requests \/ month/)).toBeInTheDocument()
+  })
+
+  it('does not show the AI quota line on the Pro card', () => {
+    render(<PricingCard {...baseProps} tier="pro" />)
+    expect(screen.queryByText(/AI requests \/ month/)).not.toBeInTheDocument()
+  })
+
+  it('hides "Recommended" on the highlighted (Pro) card when the user is on a higher tier (Pro AI)', () => {
+    render(<PricingCard {...baseProps} highlighted currentTier="pro_ai" />)
+    expect(screen.queryByText('Recommended')).not.toBeInTheDocument()
+  })
+
+  it('still shows "Recommended" on the highlighted (Pro) card for a free user', () => {
+    render(<PricingCard {...baseProps} highlighted currentTier="free" />)
+    expect(screen.getByText('Recommended')).toBeInTheDocument()
+  })
+
+  it('still shows "Recommended" on the highlighted (Pro) card for a signed-out visitor', () => {
+    render(<PricingCard {...baseProps} highlighted />)
+    expect(screen.getByText('Recommended')).toBeInTheDocument()
   })
 })

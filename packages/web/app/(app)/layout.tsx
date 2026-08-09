@@ -14,6 +14,7 @@ import {
 import { LayoutDashboard, Settings } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
+import { EncryptionKeyProvider } from '@/lib/encryption/context'
 
 export default async function AppLayout({
   children,
@@ -32,9 +33,10 @@ export default async function AppLayout({
   const initials = user.email?.slice(0, 2).toUpperCase() ?? '??'
 
   return (
+    <EncryptionKeyProvider>
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
-        <div className="container flex items-center justify-between">
+      <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background">
+        <div className="container flex items-center justify-between px-6 sm:px-8 lg:px-10">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center space-x-2">
               <Image src="/logo.png" alt="TabMerger" width={24} height={24} className="rounded-md" />
@@ -94,7 +96,8 @@ export default async function AppLayout({
           </div>
         </div>
       </header>
-      <main className="flex-1 container py-8">{children}</main>
+      <main className="flex-1 container px-6 sm:px-8 lg:px-10 py-8">{children}</main>
     </div>
+    </EncryptionKeyProvider>
   )
 }
