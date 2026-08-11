@@ -95,8 +95,8 @@ export default function ForgotPasswordPage() {
                 />
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Sending...' : 'Send reset link'}
+              <Button type="submit" className="w-full" disabled={loading} loading={loading}>
+                Send reset link
               </Button>
             </form>
           </CardContent>

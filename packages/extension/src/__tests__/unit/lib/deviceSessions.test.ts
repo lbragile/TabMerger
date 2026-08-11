@@ -78,7 +78,7 @@ import {
   getOrCreateDeviceId,
   getDeviceName,
   pushDeviceSession,
-  fetchOtherDeviceSessions,
+  fetchDeviceSessions,
   renameDevice,
   removeDevices,
   DEVICE_SESSION_DEBOUNCE_MS,
@@ -254,25 +254,24 @@ describe('entitlement gating', () => {
     expect(currentBuilder.from).toHaveBeenCalledWith('device_sessions')
   })
 
-  it('does not fetch other devices for free tier', async () => {
-    const result = await fetchOtherDeviceSessions('free')
+  it('does not fetch devices for free tier', async () => {
+    const result = await fetchDeviceSessions('free')
     expect(result).toEqual([])
     expect(currentBuilder.from).not.toHaveBeenCalled()
   })
 })
 
-describe('fetchOtherDeviceSessions', () => {
-  it('excludes own device and filters devices older than 30 days', async () => {
+describe('fetchDeviceSessions', () => {
+  it('includes own device and filters devices older than 30 days', async () => {
     const now = Date.now()
     const fresh = { device_id: 'd2', device_name: 'Chrome on Mac', now_open_snapshot: { windows: [] }, last_active: new Date(now - 1000 * 60 * 5).toISOString() }
     const stale = { device_id: 'd3', device_name: 'Firefox on Linux', now_open_snapshot: { windows: [] }, last_active: new Date(now - 1000 * 60 * 60 * 24 * 31).toISOString() }
     currentBuilder = makeBuilder([{ data: [fresh], error: null }])
     mockGetSetting.mockResolvedValueOnce('d1')
 
-    const result = await fetchOtherDeviceSessions('pro')
+    const result = await fetchDeviceSessions('pro')
 
     expect(currentBuilder.from).toHaveBeenCalledWith('device_sessions')
-    expect(currentBuilder.neq).toHaveBeenCalledWith('device_id', 'd1')
     expect(currentBuilder.gte).toHaveBeenCalled()
     // Dev env appends mock devices alongside real ones — real row is still present.
     expect(result).toContainEqual(fresh)
@@ -284,7 +283,7 @@ describe('fetchOtherDeviceSessions', () => {
     currentBuilder = makeBuilder([{ data: [], error: null }])
     mockGetSetting.mockResolvedValueOnce('d1')
 
-    const result = await fetchOtherDeviceSessions('pro')
+    const result = await fetchDeviceSessions('pro')
 
     expect(result).toEqual([])
     vi.unstubAllEnvs()
@@ -295,7 +294,7 @@ describe('fetchOtherDeviceSessions', () => {
     currentBuilder = makeBuilder([{ data: [malformed], error: null }])
     mockGetSetting.mockResolvedValueOnce('d1')
 
-    const result = await fetchOtherDeviceSessions('pro')
+    const result = await fetchDeviceSessions('pro')
 
     // Dev env appends mock devices alongside the one real (malformed) row.
     expect(result).toContainEqual(malformed)
@@ -389,7 +388,7 @@ describe('device session encryption', () => {
     mockGetSetting.mockResolvedValueOnce('d1')
     mockGetDataKey.mockReturnValue({} as CryptoKey)
 
-    const result = await fetchOtherDeviceSessions('pro')
+    const result = await fetchDeviceSessions('pro')
 
     const decoded = result.find((d) => d.device_id === 'd2')
     expect(decoded?.now_open_snapshot).toEqual(decryptedContent)
@@ -401,7 +400,7 @@ describe('device session encryption', () => {
     mockGetSetting.mockResolvedValueOnce('d1')
     mockGetDataKey.mockReturnValue(null)
 
-    const result = await fetchOtherDeviceSessions('pro')
+    const result = await fetchDeviceSessions('pro')
 
     const decoded = result.find((d) => d.device_id === 'd2')
     expect(decoded?.now_open_snapshot).toBeNull()

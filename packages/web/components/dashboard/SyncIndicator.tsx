@@ -3,9 +3,42 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Check, RefreshCw } from 'lucide-react'
+import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
+import { EXTENSION_ID } from '@/lib/extensionId'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+
+type SyncNowResponse = { ok: boolean; reason?: string; message?: string }
+
+const SYNC_NOW_REASON_MESSAGES: Record<string, string> = {
+  locked: 'Open the extension and unlock encryption to sync.',
+  'no-session': 'Sign in to the extension to sync.',
+  error: 'Sync failed — try again from the extension.',
+}
+
+// Sends { type: 'SYNC_NOW' } to the extension's background worker via externally_connectable
+// (same channel useExtensionInstalled's PING probe uses) and waits for its real push+pull
+// result. Resolves `null` — not a rejection — when the extension isn't installed/reachable in
+// this browser, so callers can fall back to a plain Supabase re-read instead of hard-failing.
+function requestExtensionSyncNow(): Promise<SyncNowResponse | null> {
+  return new Promise((resolve) => {
+    const runtime = typeof chrome === 'undefined' ? undefined : chrome.runtime
+    if (!runtime?.sendMessage) {
+      resolve(null)
+      return
+    }
+    const timeout = setTimeout(() => resolve(null), 5000)
+    runtime.sendMessage(EXTENSION_ID, { type: 'SYNC_NOW' }, (response) => {
+      clearTimeout(timeout)
+      if (runtime.lastError || !response) {
+        resolve(null)
+        return
+      }
+      resolve(response as SyncNowResponse)
+    })
+  })
+}
 
 interface SyncIndicatorProps {
   userId: string
@@ -48,6 +81,17 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
     setRefreshing(true)
     const before = lastSyncedAt?.getTime()
     try {
+      const syncResult = await requestExtensionSyncNow()
+      // null = extension not installed/reachable in this browser — fall back to just
+      // re-reading Supabase (the old behavior) rather than blocking the button on it.
+      if (syncResult && !syncResult.ok) {
+        toast.error(
+          syncResult.reason && SYNC_NOW_REASON_MESSAGES[syncResult.reason]
+            ? SYNC_NOW_REASON_MESSAGES[syncResult.reason]
+            : (syncResult.message ?? 'Sync failed.')
+        )
+      }
+
       const after = await fetchLatestSync()
       if (after && after.getTime() !== before) {
         setJustSynced(true)

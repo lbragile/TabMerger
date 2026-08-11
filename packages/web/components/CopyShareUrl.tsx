@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 
 /**
@@ -10,9 +10,16 @@ import { Check, Copy } from 'lucide-react'
  */
 export function CopyShareUrl({ url }: { url: string }) {
   const [copied, setCopied] = useState(false)
+  // The `url` prop is server-computed and can never include the `#key=` fragment — fragments
+  // aren't sent over HTTP, so the server has no way to know it. Read it client-side instead,
+  // otherwise this button silently strips the decryption key from an encrypted share link.
+  const [fullUrl, setFullUrl] = useState(url)
+  useEffect(() => {
+    setFullUrl(url + window.location.hash)
+  }, [url])
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(url)
+    await navigator.clipboard.writeText(fullUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
   }
@@ -24,7 +31,7 @@ export function CopyShareUrl({ url }: { url: string }) {
       className="flex items-center gap-2 max-w-full h-8 px-2.5 rounded-md bg-surface2 border border-border text-[12.5px] text-text2 hover:text-text hover:border-border2 transition-colors"
       aria-label="Copy share link"
     >
-      <span className="truncate font-mono">{url}</span>
+      <span className="truncate font-mono">{fullUrl}</span>
       {copied ? <Check className="h-3.5 w-3.5 shrink-0 text-primary" /> : <Copy className="h-3.5 w-3.5 shrink-0" />}
     </button>
   )

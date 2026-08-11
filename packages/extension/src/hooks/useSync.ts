@@ -1,14 +1,14 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { pushPendingChanges, pullRemoteChanges, subscribeToRemoteChanges } from '@/lib/syncEngine';
-import { getGroupsState, saveGroupsState, getSetting, setSetting, markAllGroupsPendingSync } from '@/lib/localDb';
-import { hasEncryptionKey, getDataKey, ENCRYPTION_MIGRATION_DONE_KEY } from '@/lib/encryptionKey';
+import { performSync, subscribeToRemoteChanges } from '@/lib/syncEngine';
+import { getGroupsState, saveGroupsState, getSetting, setSetting, markAllGroupsPendingSync, getSessions } from '@/lib/localDb';
+import { hasEncryptionKey, getDataKey, ENCRYPTION_MIGRATION_DONE_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/encryptionKey';
 import { useUIStore } from '@/stores/uiStore';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 import { GROUPS_QUERY_KEY } from './useGroups';
 import { APP_SETTINGS_QUERY_KEY } from './useAppSettings';
+import { pushSessionToSupabase } from './useSessions';
 
 // ponytail: matches useEntitlements' POLL_MS — push-only sync had no re-trigger once the
 // popup stayed mounted past its initial sync (e.g. pinned open via DevTools during a long
@@ -23,11 +23,6 @@ export function useSync() {
   const modal = useUIStore((s) => s.modal);
   const openModal = useUIStore((s) => s.openModal);
   const closeModal = useUIStore((s) => s.closeModal);
-  // Tracks whether the "unlock to sync" toast has already been shown this popup session —
-  // the data key is in-memory only and resets on every popup close, so doSync's poll would
-  // otherwise re-toast every 30s forever. One nudge per session is enough; the user can
-  // always unlock via Settings > Account.
-  const lockedToastShownRef = useRef(false);
 
   const doSync = useCallback(async () => {
     if (!session || !cloudSync) return;
@@ -40,24 +35,18 @@ export function useSync() {
       if (!modal.type || modal.type === 'encryptionSetup') openModal('encryptionSetup');
       return;
     }
-    if (modal.type === 'encryptionSetup') closeModal();
 
-    // Key exists but wasn't unlocked this session (MV3 popups are fully torn down on close,
-    // so the in-memory data key resets every time) — push/pull would silently skip every
-    // group (see syncEngine's locked-skip warnings), so bail out here instead of burning a
-    // request, and surface a *dismissible* nudge rather than the blocking setup modal —
-    // the risk here is "stays unsynced," not "no key exists at all," so it doesn't warrant
-    // stealing focus on every popup open.
+    // Key exists but this profile has never unlocked it (brand-new browser profile/device,
+    // or right after an explicit sign-out) — once unlocked, `chrome.storage.local` persists
+    // the data key forever (see encryptionKey.ts), so this is a one-time-per-device prompt,
+    // not a recurring nuisance. Reuses the same modal as first-time setup (it self-detects
+    // which mode to show) rather than a dismissible toast, since there's no longer an inline
+    // unlock affordance in Settings to point the user at.
     if (!(await getDataKey())) {
-      if (!lockedToastShownRef.current) {
-        lockedToastShownRef.current = true;
-        toast.info('Sync is locked', {
-          description: 'Unlock encryption in Settings > Account to resume syncing.',
-          action: { label: 'Settings', onClick: () => openModal('settings') }
-        });
-      }
+      if (!modal.type || modal.type === 'encryptionSetup') openModal('encryptionSetup');
       return;
     }
+    if (modal.type === 'encryptionSetup') closeModal();
 
     // Self-heal accounts that completed encryption setup before markAllGroupsPendingSync
     // was added to setupEncryption() — those groups have a data key but were never
@@ -68,25 +57,25 @@ export function useSync() {
       await setSetting(ENCRYPTION_MIGRATION_DONE_KEY, true);
     }
 
+    // Same self-heal as above, but for sessions — those have no pendingSync flag or push
+    // loop (useSaveSession only uploads on explicit save), so any session saved before
+    // encryption was set up is stuck plaintext on the server forever unless re-uploaded
+    // directly. Separate flag from ENCRYPTION_MIGRATION_DONE_KEY (see its definition).
+    if (!(await getSetting(SESSIONS_MIGRATION_DONE_KEY, false))) {
+      const sessions = await getSessions();
+      for (const s of sessions) {
+        try {
+          await pushSessionToSupabase(s);
+        } catch (e) {
+          console.warn('[useSync] session self-heal push failed', s.id, e);
+        }
+      }
+      await setSetting(SESSIONS_MIGRATION_DONE_KEY, true);
+    }
+
     try {
-      const state = await getGroupsState();
-      await pushPendingChanges(session);
-      const merged = await pullRemoteChanges(session, state.available);
-
-      // Re-apply local drag order: pull returns groups sorted by updatedAt which
-      // stomps the user's drag order. Re-sort merged using the locally-saved order;
-      // any groups new from remote land at the end.
-      const localOrder = state.available.map((g) => g.id);
-      const posMap = new Map(localOrder.map((id, i) => [id, i]));
-      const reordered = [...merged].sort((a, b) => {
-        if (a.permanent && !b.permanent) return -1;
-        if (!a.permanent && b.permanent) return 1;
-        return (posMap.get(a.id) ?? Infinity) - (posMap.get(b.id) ?? Infinity);
-      });
-
-      const next = { ...state, available: reordered };
-      await saveGroupsState(next);
-      qc.setQueryData(GROUPS_QUERY_KEY, next);
+      await performSync(session);
+      qc.setQueryData(GROUPS_QUERY_KEY, await getGroupsState());
     } catch (err) {
       console.error('[useSync] sync error', err);
     }

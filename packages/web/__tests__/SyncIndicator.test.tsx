@@ -1,11 +1,16 @@
 import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
 
 let changeHandler: ((payload: unknown) => void) | undefined
 const removeChannel = vi.fn()
 const select = vi.fn()
+
+const toastError = vi.fn()
+vi.mock('sonner', () => ({
+  toast: { error: (...args: unknown[]) => toastError(...args) },
+}))
 
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({
@@ -33,6 +38,12 @@ describe('SyncIndicator', () => {
     changeHandler = undefined
     removeChannel.mockClear()
     select.mockReset()
+    toastError.mockClear()
+    delete window.chrome
+  })
+
+  afterEach(() => {
+    delete window.chrome
   })
 
   it('shows "No sync yet" when there is no prior group data', async () => {
@@ -90,6 +101,56 @@ describe('SyncIndicator', () => {
     resolveSelect({ data: [] })
     await clickPromise
     await waitFor(() => expect(button).not.toBeDisabled())
+  })
+
+  it('sends SYNC_NOW to the extension and re-reads Supabase only after it responds ok', async () => {
+    select.mockResolvedValueOnce({ data: [] })
+    render(<SyncIndicator userId="user-1" />)
+    await waitFor(() => expect(screen.getByText('No sync yet')).toBeInTheDocument())
+
+    const sendMessage = vi.fn((_id: string, _msg: unknown, cb: (r: unknown) => void) => cb({ ok: true }))
+    // @ts-expect-error - test-only global stub
+    window.chrome = { runtime: { sendMessage } }
+
+    select.mockResolvedValueOnce({ data: [{ updated_at: new Date().toISOString() }] })
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Refresh sync status' }))
+
+    await waitFor(() => expect(screen.getByText(/Synced/)).toBeInTheDocument())
+    expect(sendMessage).toHaveBeenCalledWith(expect.any(String), { type: 'SYNC_NOW' }, expect.any(Function))
+    expect(toastError).not.toHaveBeenCalled()
+  })
+
+  it('falls back to a plain Supabase re-read when the extension is not installed/reachable', async () => {
+    select.mockResolvedValueOnce({ data: [] })
+    render(<SyncIndicator userId="user-1" />)
+    await waitFor(() => expect(screen.getByText('No sync yet')).toBeInTheDocument())
+
+    // no window.chrome at all — simulates a browser without the extension installed
+    select.mockResolvedValueOnce({ data: [{ updated_at: new Date().toISOString() }] })
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Refresh sync status' }))
+
+    await waitFor(() => expect(screen.getByText(/Synced/)).toBeInTheDocument())
+    expect(toastError).not.toHaveBeenCalled()
+  })
+
+  it('surfaces a "locked" reason from the extension as a toast', async () => {
+    select.mockResolvedValueOnce({ data: [] })
+    render(<SyncIndicator userId="user-1" />)
+    await waitFor(() => expect(screen.getByText('No sync yet')).toBeInTheDocument())
+
+    const sendMessage = vi.fn((_id: string, _msg: unknown, cb: (r: unknown) => void) =>
+      cb({ ok: false, reason: 'locked' })
+    )
+    // @ts-expect-error - test-only global stub
+    window.chrome = { runtime: { sendMessage } }
+
+    select.mockResolvedValueOnce({ data: [] })
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Refresh sync status' }))
+
+    await waitFor(() => expect(toastError).toHaveBeenCalledWith('Open the extension and unlock encryption to sync.'))
   })
 
   it('uses a styled Tooltip trigger instead of a native title attribute', () => {

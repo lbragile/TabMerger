@@ -74,6 +74,8 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 - Saved tabs always have `id: 0` — use positional `{groupIndex, windowIndex, tabIndex}` for all mutations, never `tab.id`
 - `Window.tsx` has a `window: WindowType` prop that shadows the global `window` — use `globalThis` for any browser APIs in that file
 - `SidePanel/index.tsx`'s sidebar width and `Header/index.tsx`'s logo-column width must stay numerically identical (currently 240px) so the sidebar/main-content boundary lines up with the header above it — a mismatch here isn't just cosmetic, it silently breaks the sidebar/header seam. Also watch for outer padding/gap on the header container itself competing with this value (a flex/grid box model that adds its own `px`/`gap` on top of the shared width will misalign the two even when the width numbers match).
+- E2E encryption is mandatory (no opt-out) for every signed-in Pro user: `groups.windows/name/note/info`, `sessions.groups/name/description`, and `device_sessions.now_open_snapshot` are all `{v:1,iv,ct}` ciphertext in Supabase — the server never holds the key. Unwrapped data key lives in `chrome.storage.local` (persists across browser restarts; unlock is one-time-ever per device), never in `chrome.storage.session`/disk in any other recoverable form. See `packages/extension/src/lib/encryptionKey.ts` and the `encrypted-column-auditor` agent.
+- Fixed 800×600 popup + no outer scrollbars means any modal/panel overflow must be fixed via proper `min-w-0` propagation through the whole flex/grid ancestor chain, never via `overflow-x-auto` on an inner container (it won't actually contain the overflow) or by widening the modal.
 
 ## Web app (`packages/web/`)
 
@@ -89,6 +91,7 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 - Supabase server client (`lib/supabase/server.ts`) must be async for the same reason
 - Stripe webhook handler **must** use `req.text()` — `req.json()` destroys the raw body needed for signature verification
 - Service role client bypasses RLS — only use in webhook handlers and AI routes, never client-side
+- Any server-side `.select()` on `groups`/`sessions`/`device_sessions`/`shared_bundles` that reads `windows`/`groups`/`now_open_snapshot`/`groups_snapshot` is reading ciphertext for every real account — routes needing that content must accept it client-decrypted in the request body instead (see the `organize` and `share-bundle` routes for the pattern). Run `encrypted-column-auditor` before merging any new route touching these tables.
 
 ## Shared package (`packages/shared/`)
 
@@ -115,6 +118,7 @@ Domain-specific agents are in `.claude/agents/`. Each agent carries accumulated 
 | `ai-features` | AI API routes (`/api/ai/*`), Anthropic SDK usage, prompt engineering, `useAI` hook, tab preview summaries |
 | `database` | Supabase schema changes, new migrations (`supabase/migrations/`), RLS policies, DB functions |
 | `migration-reviewer` | Before applying any new Supabase migration — checks for missing RLS, missing indexes on FK columns, destructive changes without a rollback path, policy gaps |
+| `encrypted-column-auditor` | Before merging any new or changed route under `packages/web/app/api/` — flags server-side reads of E2E-encrypted content columns (`groups.windows`, `sessions.groups`, `device_sessions.now_open_snapshot`, `shared_bundles.groups_snapshot`) that assume plaintext, the exact bug class behind two real production crashes (`organize`, `share-bundle`) |
 | `payments` | Stripe products/prices, webhook handler, subscription entitlements, checkout flow, billing portal |
 | `payments-security-reviewer` | Security audit before merging any change to: webhook handler, checkout, `useEntitlements`, RLS policies on `subscriptions`/`ai_usage` |
 | `entitlements-auditor` | Whenever `useEntitlements.ts` or `packages/shared/src/constants/index.ts` (`PRICING_TIERS`/`FREE_TIER_LIMITS`) change, or a pricing/tier-limit change is proposed — catches drift between what's sold and what's enforced |
@@ -150,6 +154,10 @@ Do **not** write learnings for things that are obvious from reading the code, co
 
 The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded into every session and links to each file).
 
+## Skills (`.claude/skills/`)
+
+User-invocable via `/skill-name`. Notable ones: `verify-sync`/`encrypt-status` (check whether extension changes have actually reached Supabase, and encrypted-vs-plaintext row counts per table), `reencrypt-legacy-share` (walk a user through replacing an old plaintext public share link), `new-migration`, `pr-check`, `release-checklist`, `scan` (secrets), `api-doc`.
+
 ## Active Hooks (`.claude/settings.json`)
 
 - **PreToolUse Edit|Write** — blocks edits to `.env*` and `pnpm-lock.yaml`
@@ -158,6 +166,9 @@ The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded
 - **PostToolUse Edit|Write** — runs `tsc --noEmit` on the extension after any `packages/extension/src/` edit (script: `.claude/hooks/tsc-check.py`)
 - **PostToolUse Edit|Write** — runs `type-check` on the web package after any `packages/web/` edit (script: `.claude/hooks/web-tsc-check.py`)
 - **PostToolUse Edit|Write** — runs `pnpm test --run` for the owning package after any `__tests__/` or `.test.`/`.spec.` file edit (script: `.claude/hooks/test-check.py`)
+- **PostToolUse Edit|Write** — runs ESLint on the touched package (script: `.claude/hooks/lint-check.py`)
+- **PreToolUse Edit|Write** — non-blocking reminder when editing a shared UI primitive under `components/ui/` (script: `.claude/hooks/shared-ui-reminder.py`)
+- **PostToolUse Edit|Write** — non-blocking reminder when editing `packages/shared/src/crypto/index.ts` (script: `.claude/hooks/crypto-change-reminder.py`)
 
 > **Hook requirement:** Hook commands use paths relative to the repo root. Always launch Claude Code from the repo root (`TabMerger/`), not from a package subdirectory. If hooks fail with "can't open file", the CWD is wrong — restart from the repo root.
 
@@ -166,7 +177,7 @@ The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded
 - **context7** is installed. Use it automatically (resolve library id → get docs) whenever generating code that uses a library/framework, configuring tooling, or referencing any API — do not rely on training-data knowledge for library specifics.
 - **supabase** MCP is installed for schema introspection (`list_tables`, `get_advisors`, `get_logs`) — prefer it over guessing schema shape when working on migrations or RLS. Requires `SUPABASE_PROJECT_REF` (project slug, from the Supabase dashboard URL) and `SUPABASE_ACCESS_TOKEN` (dashboard → Account → Access Tokens). Export both as shell env vars — these are MCP-process credentials, not app config, so they do **not** go in `.env`/`.env.local`.
 - **github** MCP is installed for PR/issue/check-run access — prefer it over parsing `gh` CLI text output. Requires `GITHUB_PERSONAL_ACCESS_TOKEN` (fine-grained PAT, `repo` scope on this repo) exported as a shell env var, same reason as above.
-- **sentry** MCP is configured in `.mcp.json` but not yet enabled in `.claude/settings.json` — enable once Sentry (or another error tracker) is actually adopted; requires `SENTRY_AUTH_TOKEN`/`SENTRY_ORG`, same env-var handling as above.
+- **sentry** MCP is enabled — requires `SENTRY_AUTH_TOKEN`/`SENTRY_ORG` exported as shell env vars, same handling as above.
 - **playwright** / **chrome-devtools** MCPs are installed for browser automation (E2E debugging, live DOM/console/network inspection) — no auth required, work out of the box.
 - If an MCP tool call fails with an auth/connection error, check the relevant env var is exported in the shell Claude Code was launched from (`echo $VAR_NAME`) — a missing var is the most common cause, not a broken server config.
 

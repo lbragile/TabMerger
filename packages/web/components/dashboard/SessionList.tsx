@@ -7,8 +7,6 @@ import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/sha
 import { useEncryptionKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
 import { SessionCard } from './SessionCard'
-import { Button } from '@/components/ui/button'
-import { PlusCircle } from 'lucide-react'
 import Link from 'next/link'
 
 interface SessionTab {
@@ -41,6 +39,7 @@ interface RawSession extends Omit<Session, 'groups'> {
 interface EncryptedSessionContent {
   name: string
   groups: SessionGroup[]
+  description?: string
 }
 
 /** Decrypts every encrypted-blob session with the session's data key — mirrors GroupGrid's useDecryptedGroups. */
@@ -62,7 +61,7 @@ function useDecryptedSessions(sessions: RawSession[]) {
           if (!isEncryptedBlob(s.groups)) return s as Session
           try {
             const content = await decryptBlob<EncryptedSessionContent>(dataKey, s.groups)
-            return { ...s, name: content.name, groups: content.groups }
+            return { ...s, name: content.name, groups: content.groups, description: content.description }
           } catch {
             return { ...s, name: '(locked)', groups: [] }
           }
@@ -108,29 +107,17 @@ export function SessionList({ sessions: rawSessions, isPro }: SessionListProps) 
     }
   }
 
-  const addCard = (
-    <div className="rounded-lg border border-dashed border-border p-4 flex flex-col items-center justify-center text-center gap-1 min-h-[140px]">
-      <PlusCircle className="h-6 w-6 text-muted-foreground mb-1" />
-      <p className="text-sm font-medium">Save current tabs as a session</p>
-      <p className="text-xs text-muted-foreground">Needs the extension — takes one click</p>
-    </div>
-  )
-
   if (needsUnlock) {
     return <PassphrasePrompt label="Your sessions are end-to-end encrypted. Enter your passphrase to view them here." />
   }
 
   if (sessions.length === 0) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {addCard}
-      </div>
-    )
+    return <p className="text-sm text-muted-foreground">No saved sessions yet.</p>
   }
 
   return (
     <div className={isPending ? 'opacity-70 pointer-events-none' : ''}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0">
         {sessions.map((session) => (
           <SessionCard
             key={session.id}
@@ -151,7 +138,6 @@ export function SessionList({ sessions: rawSessions, isPro }: SessionListProps) 
             onDelete={handleDelete}
           />
         ))}
-        {addCard}
       </div>
       {!isPro && (
         <p className="mt-3 text-xs text-muted-foreground">

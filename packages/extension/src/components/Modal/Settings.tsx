@@ -24,7 +24,6 @@ import { toast } from 'sonner';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
-import { hasEncryptionKey, getDataKey, unlockEncryption } from '@/lib/encryptionKey';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -51,42 +50,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const openModal = useUIStore((s) => s.openModal);
-
-  // Encryption is on by default for everyone (no opt-out) — this just mirrors whether
-  // setup has happened yet and whether the in-memory data key is unlocked this session
-  // (cleared on every service worker / popup reload). If setup hasn't happened, the
-  // mandatory EncryptionSetupModal (triggered from useSync) handles it, not this tab.
-  const [encHasKey, setEncHasKey] = useState(false);
-  const [encUnlocked, setEncUnlocked] = useState(false);
-  const [encUnlocking, setEncUnlocking] = useState(false);
-  const [encPass1, setEncPass1] = useState('');
-  const [encError, setEncError] = useState('');
-  const [encBusy, setEncBusy] = useState(false);
-
-  useEffect(() => {
-    void hasEncryptionKey().then((v) => {
-      setEncHasKey(v);
-    });
-    void (async () => setEncUnlocked(!!(await getDataKey())))();
-  }, []);
-
-  const handleEncUnlock = async () => {
-    setEncError('');
-    setEncBusy(true);
-    try {
-      const ok = await unlockEncryption(encPass1);
-      if (!ok) {
-        setEncError('Wrong passphrase');
-        return;
-      }
-      setEncUnlocked(true);
-      setEncUnlocking(false);
-      setEncPass1('');
-      toast.success('Unlocked');
-    } finally {
-      setEncBusy(false);
-    }
-  };
 
   // Sets the dev-only local mock counter (still read by useAiUsage in DEV — see its
   // own comment) AND writes the same count to the real Supabase ai_usage table via
@@ -227,7 +190,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         <DialogTitle>Settings</DialogTitle>
       </DialogHeader>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4 min-w-0">
         <TabsList className="w-full">
           <TabsTrigger value="general" className="flex-1 text-xs">
             General
@@ -255,7 +218,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           )}
         </TabsList>
 
-        <div className="mt-4 max-h-[320px] overflow-y-auto pr-1">
+        <div className="mt-4 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden pr-1">
         <TabsContent value="general" className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -423,63 +386,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             >
               {portalLoading ? 'Opening...' : 'Manage billing'}
             </Button>
-          )}
-
-          {cloudSync && (
-            <>
-              <Separator />
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label className="text-sm">End-to-end encryption</Label>
-                    <p className="text-xs text-muted-foreground">
-                      Your synced group and tab data is end-to-end encrypted with a passphrase
-                      only you know.
-                    </p>
-                  </div>
-                  {encHasKey && !encUnlocked && !encUnlocking && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs shrink-0 rounded-none"
-                      onClick={() => setEncUnlocking(true)}
-                    >
-                      Unlock
-                    </Button>
-                  )}
-                </div>
-
-                {encHasKey && encUnlocked && (
-                  <p className="text-xs text-muted-foreground">Unlocked for this session.</p>
-                )}
-
-                {encHasKey && !encUnlocked && encUnlocking && (
-                  <div className="border border-border p-3 space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      Enter your encryption passphrase to unlock synced data on this device.
-                      There is no way to recover your data if you forget it — it never leaves
-                      your device and TabMerger cannot reset it for you.
-                    </p>
-                    <Input
-                      type="password"
-                      placeholder="Passphrase"
-                      value={encPass1}
-                      onChange={(e) => setEncPass1(e.target.value)}
-                      className="h-8 text-xs rounded-none"
-                    />
-                    {encError && <p className="text-xs text-destructive">{encError}</p>}
-                    <Button
-                      size="sm"
-                      className="text-xs w-full"
-                      disabled={encBusy || !encPass1}
-                      onClick={() => void handleEncUnlock()}
-                    >
-                      Unlock
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </>
           )}
 
           {user && (

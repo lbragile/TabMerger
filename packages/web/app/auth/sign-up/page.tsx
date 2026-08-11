@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import {
   Card,
@@ -20,6 +21,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordVisible, setPasswordVisible] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [verificationSent, setVerificationSent] = useState(false)
@@ -120,6 +122,7 @@ export default function SignUpPage() {
               className="w-full h-11 rounded-lg"
               onClick={handleGoogle}
               disabled={loading}
+              loading={loading}
               type="button"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" aria-hidden="true">
@@ -153,9 +156,8 @@ export default function SignUpPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   placeholder="At least 8 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -163,26 +165,29 @@ export default function SignUpPage() {
                   minLength={8}
                   autoComplete="new-password"
                   className="h-11 rounded-md"
+                  visible={passwordVisible}
+                  onVisibleChange={setPasswordVisible}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="confirm-password">Confirm password</Label>
-                <Input
+                <PasswordInput
                   id="confirm-password"
-                  type="password"
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   autoComplete="new-password"
                   className="h-11 rounded-md"
+                  visible={passwordVisible}
+                  showToggle={false}
                 />
               </div>
               {error && (
                 <p className="text-sm text-destructive">{error}</p>
               )}
-              <Button type="submit" className="w-full h-[46px] rounded-lg shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
-                {loading ? 'Creating account...' : 'Continue'}
+              <Button type="submit" className="w-full h-[46px] rounded-lg shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading} loading={loading}>
+                Continue
               </Button>
             </form>
           </div>

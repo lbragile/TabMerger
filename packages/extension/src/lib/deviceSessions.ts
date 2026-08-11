@@ -127,22 +127,20 @@ export function pushDeviceSession(state: GroupsState, tier: Tier = 'pro'): void 
   debounceTimer = setTimeout(() => void doPush(), DEVICE_SESSION_DEBOUNCE_MS);
 }
 
-/** Fetches other devices' sessions (excludes own device_id), active within the last 30 days. No-op for free tier. */
-export async function fetchOtherDeviceSessions(tier: Tier): Promise<DeviceSession[]> {
+/** Fetches all of this account's devices (including this one), active within the last 30 days. No-op for free tier. */
+export async function fetchDeviceSessions(tier: Tier): Promise<DeviceSession[]> {
   if (tier === 'free') return [];
 
-  const ownDeviceId = await getOrCreateDeviceId();
   const cutoff = new Date(Date.now() - STALE_DEVICE_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
     .from('device_sessions')
     .select('*')
-    .neq('device_id', ownDeviceId)
     .gte('last_active', cutoff)
     .order('last_active', { ascending: false });
 
   if (error || !data) {
-    if (error) console.error('[deviceSessions] Failed to fetch other devices', error.message);
+    if (error) console.error('[deviceSessions] Failed to fetch devices', error.message);
     return [];
   }
 

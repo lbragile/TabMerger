@@ -73,6 +73,15 @@
   to { height: 0; }
 }
 
+/* Global pointer cursor for every clickable control — Tailwind v4's preflight no longer sets
+   cursor:pointer on <button> (unlike v3), so raw <button>/[role=button] elements that don't go
+   through the shared Button primitive (which sets it explicitly) were silently missing it. One
+   rule here beats auditing every call site. Disabled state below takes priority via source order. */
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
 /* Global disabled cursor — root-cause fallback alongside the shared Button/dropdown/select
    primitives' disabled:cursor-not-allowed classes, for any raw <button disabled> elsewhere. */
 button:disabled,

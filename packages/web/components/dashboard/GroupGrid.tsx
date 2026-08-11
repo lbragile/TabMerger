@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, ExternalLink, AlertTriangle } from 'lucide-react'
+import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, ExternalLink, AlertTriangle, ChevronDown, ChevronRight, Archive, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
@@ -20,6 +20,7 @@ interface DashboardGroup {
   updated_at: string
   public_slug?: string | null
   starred?: boolean
+  archived?: boolean
 }
 
 /** Raw row shape from Supabase — `windows` (and `name`, when encrypted) is ciphertext until decrypted client-side. */
@@ -141,8 +142,8 @@ function ShareButton({ groupId, initialSlug }: { groupId: string; initialSlug?: 
             aria-label="Share group"
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors"
           >
-            <Share2 className="w-3 h-3" />
-            {busy ? '…' : 'Share'}
+            {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Share2 className="w-3 h-3" />}
+            Share
           </button>
         </TooltipTrigger>
         <TooltipContent side="top">Make this group public and get a shareable link</TooltipContent>
@@ -180,12 +181,14 @@ function GroupCard({
   selecting,
   selected,
   onToggle,
+  readOnly = false,
 }: {
   group: DashboardGroup
   isPro: boolean
   selecting: boolean
   selected: boolean
   onToggle: (id: string) => void
+  readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const tabs = group.windows.flatMap((w) => w.tabs)
@@ -201,7 +204,7 @@ function GroupCard({
       }}
       onClick={selecting ? () => onToggle(group.id) : undefined}
     >
-      {selecting && (
+      {selecting && !readOnly && (
         <button
           className="absolute top-2 right-2 z-10 text-muted-foreground hover:text-primary"
           onClick={(e) => { e.stopPropagation(); onToggle(group.id) }}
@@ -216,6 +219,7 @@ function GroupCard({
         <div className="flex items-center gap-1.5 mb-1">
           <span className="font-bold text-[15px] truncate flex-1">{group.name}</span>
           {group.starred && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400 shrink-0" />}
+          {readOnly && <Archive className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
         </div>
 
         {/* Meta */}
@@ -257,7 +261,7 @@ function GroupCard({
         {/* Action row */}
         {!selecting && (
           <div className="flex items-center gap-1">
-            {isPro && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
+            {isPro && !readOnly && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
             {tabs.length > 0 && (
               <button
                 onClick={() => openAllTabs(group)}
@@ -271,12 +275,12 @@ function GroupCard({
             {tabs.length > 0 && (
               <button
                 onClick={() => setOpen((v) => !v)}
-                className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors"
+                className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
               >
                 {open ? 'Hide tabs' : 'Show tabs'}
               </button>
             )}
-            {isPro && <Cloud className="w-3 h-3 text-primary/60 ml-auto" />}
+            {isPro && !readOnly && <Cloud className="w-3 h-3 text-primary/60 ml-auto" />}
           </div>
         )}
       </div>
@@ -290,12 +294,14 @@ function GroupRow({
   selecting,
   selected,
   onToggle,
+  readOnly = false,
 }: {
   group: DashboardGroup
   isPro: boolean
   selecting: boolean
   selected: boolean
   onToggle: (id: string) => void
+  readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const tabs = group.windows.flatMap((w) => w.tabs)
@@ -304,9 +310,9 @@ function GroupRow({
     <div className={`rounded-lg border border-border ${selected ? 'ring-2 ring-primary' : ''}`}>
       <div
         className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-muted/50"
-        onClick={selecting ? () => onToggle(group.id) : () => setOpen((v) => !v)}
+        onClick={selecting && !readOnly ? () => onToggle(group.id) : () => setOpen((v) => !v)}
       >
-        {selecting && (
+        {selecting && !readOnly && (
           <span className="shrink-0 text-muted-foreground">
             {selected ? <CheckSquare className="w-4 h-4 text-primary" /> : <Square className="w-4 h-4" />}
           </span>
@@ -315,8 +321,9 @@ function GroupRow({
         <span className="font-medium text-sm flex-1 truncate">{group.name}</span>
         <div className="flex items-center gap-2 shrink-0 text-xs text-muted-foreground">
           <span>{group.windows.length}w · {tabs.length}t</span>
-          {isPro && <Cloud className="w-3 h-3" />}
-          {isPro && !selecting && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
+          {readOnly && <Archive className="w-3 h-3" />}
+          {isPro && !readOnly && <Cloud className="w-3 h-3" />}
+          {isPro && !selecting && !readOnly && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
           {!selecting && tabs.length > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); openAllTabs(group) }}
@@ -330,7 +337,7 @@ function GroupRow({
           <span>{relativeTime(group.updated_at)}</span>
         </div>
       </div>
-      {open && !selecting && tabs.length > 0 && (
+      {open && (!selecting || readOnly) && tabs.length > 0 && (
         <div className="border-t px-4 py-2">
           <ul className="space-y-1">
             {tabs.map((tab, i) => (
@@ -362,6 +369,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [sharing, setSharing] = useState(false)
   const [sort, setSort] = useState<'recent' | 'name' | 'tabCount'>('recent')
+  const [archivedOpen, setArchivedOpen] = useState(false)
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY) === 'list') setView('list')
@@ -389,10 +397,15 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
     if (selected.size === 0) return
     setSharing(true)
     try {
+      // Send already-decrypted content — the server can't read `windows` itself
+      // (it's ciphertext in the DB for every E2E-encrypted account).
+      const shareGroups = groups
+        .filter((g) => selected.has(g.id))
+        .map((g) => ({ id: g.id, name: g.name, color: g.color, windows: g.windows }))
       const res = await fetch('/api/share-bundle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ groupIds: [...selected] }),
+        body: JSON.stringify({ groups: shareGroups }),
       })
       if (!res.ok) throw new Error('Failed to create bundle')
       const { slug, key } = await res.json()
@@ -409,18 +422,25 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
     }
   }
 
-  // Total tab count across all groups
-  const totalTabs = groups.reduce(
+  // Active vs archived split, mirroring the extension's SidePanel — stats and the main
+  // grid exclude archived groups; archived groups get their own collapsed section below.
+  const activeGroups = groups.filter((g) => !g.archived)
+  const archivedGroups = groups.filter((g) => g.archived)
+
+  // Total tab count across active groups only
+  const totalTabs = activeGroups.reduce(
     (sum, g) => sum + g.windows.reduce((ws, w) => ws + w.tabs.length, 0),
     0
   )
 
   const tabCountOf = (g: DashboardGroup) => g.windows.reduce((ws, w) => ws + w.tabs.length, 0)
-  const sortedGroups = [...groups].sort((a, b) => {
+  const sortFn = (a: DashboardGroup, b: DashboardGroup) => {
     if (sort === 'name') return a.name.localeCompare(b.name)
     if (sort === 'tabCount') return tabCountOf(b) - tabCountOf(a)
     return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-  })
+  }
+  const sortedGroups = [...activeGroups].sort(sortFn)
+  const sortedArchivedGroups = [...archivedGroups].sort(sortFn)
 
   if (needsUnlock) {
     return <PassphrasePrompt label="Your groups are end-to-end encrypted. Enter your passphrase to view them here." />
@@ -443,7 +463,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
         <div className="flex items-center gap-3">
           <h3 className="font-bold" style={{ fontSize: '24px' }}>Groups</h3>
           <span className="text-sm text-muted-foreground">
-            {groups.length} {groups.length === 1 ? 'group' : 'groups'} · {totalTabs} tabs
+            {activeGroups.length} {activeGroups.length === 1 ? 'group' : 'groups'} · {totalTabs} tabs
           </span>
           <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
             Sort
@@ -518,13 +538,59 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
         </div>
       )}
 
+      {/* Archived groups — collapsed by default, read-only (no web API to unarchive/mutate
+          groups yet; the extension owns group mutation, matching "New group" being disabled
+          on web too). Show/open-all remain available since they're non-mutating. */}
+      {archivedGroups.length > 0 && (
+        <div className="mt-6">
+          <button
+            onClick={() => setArchivedOpen((v) => !v)}
+            className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground uppercase tracking-wide mb-2"
+          >
+            {archivedOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+            Archived ({archivedGroups.length})
+          </button>
+          {archivedOpen && (
+            view === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sortedArchivedGroups.map((g) => (
+                  <GroupCard
+                    key={g.id}
+                    group={g}
+                    isPro={isPro}
+                    selecting={false}
+                    selected={false}
+                    onToggle={() => {}}
+                    readOnly
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {sortedArchivedGroups.map((g) => (
+                  <GroupRow
+                    key={g.id}
+                    group={g}
+                    isPro={isPro}
+                    selecting={false}
+                    selected={false}
+                    onToggle={() => {}}
+                    readOnly
+                  />
+                ))}
+              </div>
+            )
+          )}
+        </div>
+      )}
+
       {/* ponytail: floating bar — only rendered when items are selected */}
       {selecting && selected.size > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-popover border shadow-lg rounded-none px-4 py-2 z-50">
           <span className="text-sm font-medium">{selected.size} selected</span>
-          <Button size="sm" className="rounded-none" onClick={shareBundle} disabled={sharing}>
-            <Share2 className="w-4 h-4 mr-1" />
-            {sharing ? 'Creating…' : 'Share selected'}
+          <Button size="sm" className="rounded-none" onClick={shareBundle} disabled={sharing} loading={sharing}>
+            {!sharing && <Share2 className="w-4 h-4 mr-1" />}
+            Share selected
           </Button>
           <button onClick={exitSelecting} className="text-muted-foreground hover:text-foreground cursor-pointer" aria-label="Cancel selection">
             <X className="w-4 h-4" />

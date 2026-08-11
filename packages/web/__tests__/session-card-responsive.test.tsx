@@ -1,11 +1,10 @@
 /**
- * Mobile-responsiveness sweep — SessionCard
- *
- * Covers the unplanned fix found during the design-system responsive batch:
- * outer row switches flex-col (mobile) -> flex-row (md+), and the contents
- * side panel swaps its border from top (mobile) to left (md+).
+ * SessionCard layout — single-column card (replaces the old flex-row +
+ * fixed-width side panel, which overflowed at 3-column grid density).
+ * Contents are now a collapsible section instead of a side panel, so the
+ * card no longer needs a responsive row/column swap.
  */
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { SessionCard } from '@/components/dashboard/SessionCard'
 
@@ -24,17 +23,21 @@ const BASE_PROPS = {
   ],
 }
 
-describe('SessionCard — responsive layout', () => {
-  it('stacks the outer row vertically on mobile and switches to row layout at md+', () => {
+describe('SessionCard — layout', () => {
+  it('is a single-column card that can shrink to its grid track (min-w-0, no fixed-width panel)', () => {
     render(<SessionCard {...BASE_PROPS} onRestore={vi.fn()} />)
     const outer = screen.getByText('My Session').closest('div.border')
-    expect(outer).toHaveClass('flex', 'flex-col', 'md:flex-row')
+    expect(outer).toHaveClass('min-w-0')
+    expect(outer).not.toHaveClass('flex-row')
   })
 
-  it('swaps the contents panel border from top (mobile) to left (md+) and goes full-width on mobile', () => {
+  it('hides contents behind a "Show contents" toggle and reveals them on click', () => {
     render(<SessionCard {...BASE_PROPS} onRestore={vi.fn()} />)
-    const contentsPanel = screen.getByText('Contents').closest('div')
-    expect(contentsPanel).toHaveClass('w-full', 'md:w-[280px]', 'border-t-2', 'md:border-t-0', 'md:border-l-2')
+    expect(screen.queryByText('Group A')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText(/Show contents/i))
+    expect(screen.getByText('Group A')).toBeInTheDocument()
+    fireEvent.click(screen.getByText(/Hide contents/i))
+    expect(screen.queryByText('Group A')).not.toBeInTheDocument()
   })
 
   it('renders the count badges with the new bg-surface3 rounded-md styling', () => {

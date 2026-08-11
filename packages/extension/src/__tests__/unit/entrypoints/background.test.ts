@@ -6,13 +6,28 @@ let capturedMain: (() => void) | undefined
   capturedMain = fn
 }
 
-const { mockGetGroupsState, mockSaveGroupsState, mockGetAllUrlRules, mockMatchUrlToRule, mockApplyUrlRule, mockRunGoogleOAuthFlow } = vi.hoisted(() => ({
+const {
+  mockGetGroupsState,
+  mockSaveGroupsState,
+  mockGetAllUrlRules,
+  mockMatchUrlToRule,
+  mockApplyUrlRule,
+  mockRunGoogleOAuthFlow,
+  mockGetSession,
+  mockHasEncryptionKey,
+  mockGetDataKey,
+  mockPerformSync,
+} = vi.hoisted(() => ({
   mockGetGroupsState: vi.fn(),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
   mockGetAllUrlRules: vi.fn().mockResolvedValue([]),
   mockMatchUrlToRule: vi.fn().mockReturnValue(null),
   mockApplyUrlRule: vi.fn().mockResolvedValue(undefined),
   mockRunGoogleOAuthFlow: vi.fn().mockResolvedValue(undefined),
+  mockGetSession: vi.fn(),
+  mockHasEncryptionKey: vi.fn(),
+  mockGetDataKey: vi.fn(),
+  mockPerformSync: vi.fn(),
 }))
 
 vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuthFlow }))
@@ -23,7 +38,16 @@ vi.mock('@/lib/localDb', () => ({
 }))
 
 vi.mock('@/lib/supabase', () => ({
-  supabase: { auth: { setSession: vi.fn() } },
+  supabase: { auth: { setSession: vi.fn(), getSession: mockGetSession } },
+}))
+
+vi.mock('@/lib/encryptionKey', () => ({
+  hasEncryptionKey: mockHasEncryptionKey,
+  getDataKey: mockGetDataKey,
+}))
+
+vi.mock('@/lib/syncEngine', () => ({
+  performSync: mockPerformSync,
 }))
 
 vi.mock('@/lib/urlRuleEngine', () => ({
@@ -104,6 +128,10 @@ beforeEach(async () => {
   mockMatchUrlToRule.mockReset().mockReturnValue(null)
   mockApplyUrlRule.mockReset().mockResolvedValue(undefined)
   mockRunGoogleOAuthFlow.mockReset().mockResolvedValue(undefined)
+  mockGetSession.mockReset().mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+  mockHasEncryptionKey.mockReset().mockResolvedValue(true)
+  mockGetDataKey.mockReset().mockResolvedValue('key')
+  mockPerformSync.mockReset().mockResolvedValue([])
   capturedMain = undefined
   stub = makeChromeStub()
   globalThis.chrome = stub.chrome as unknown as typeof chrome
@@ -208,6 +236,56 @@ describe('background — externally_connectable PING (install probe)', () => {
     const sendResponse = vi.fn()
     stub.listeners.onMessageExternal[0]({ type: 'OTHER' }, {}, sendResponse)
     expect(sendResponse).not.toHaveBeenCalled()
+  })
+})
+
+describe('background — externally_connectable SYNC_NOW (web dashboard trigger)', () => {
+  it('runs a real push+pull sync and responds ok: true', async () => {
+    const sendResponse = vi.fn()
+    const keepOpen = stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    expect(keepOpen).toBe(true)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(mockPerformSync).toHaveBeenCalledWith({ user: { id: 'u1' } })
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+  })
+
+  it('responds ok: false, reason: no-session when signed out', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith({ ok: false, reason: 'no-session' })
+    expect(mockPerformSync).not.toHaveBeenCalled()
+  })
+
+  it('responds ok: false, reason: locked when encryption setup was never completed', async () => {
+    mockHasEncryptionKey.mockResolvedValue(false)
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith(
+      expect.objectContaining({ ok: false, reason: 'locked' })
+    )
+    expect(mockPerformSync).not.toHaveBeenCalled()
+  })
+
+  it('responds ok: false, reason: locked when the data key was never unlocked this worker lifetime', async () => {
+    mockGetDataKey.mockResolvedValue(null)
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith(
+      expect.objectContaining({ ok: false, reason: 'locked' })
+    )
+    expect(mockPerformSync).not.toHaveBeenCalled()
+  })
+
+  it('responds ok: false, reason: error on unexpected failure, without leaking group content', async () => {
+    mockPerformSync.mockRejectedValue(new Error('network down'))
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith({ ok: false, reason: 'error', message: 'network down' })
   })
 })
 

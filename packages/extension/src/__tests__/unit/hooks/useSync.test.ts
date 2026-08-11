@@ -19,7 +19,8 @@ const {
   mockGetSetting,
   mockSetSetting,
   mockMarkAllGroupsPendingSync,
-  mockToastInfo,
+  mockGetSessions,
+  mockPushSessionToSupabase,
 } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
@@ -38,7 +39,8 @@ const {
   mockGetSetting: vi.fn().mockResolvedValue(true),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
   mockMarkAllGroupsPendingSync: vi.fn().mockResolvedValue(undefined),
-  mockToastInfo: vi.fn(),
+  mockGetSessions: vi.fn().mockResolvedValue([]),
+  mockPushSessionToSupabase: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
@@ -47,6 +49,25 @@ vi.mock('@/lib/syncEngine', () => ({
   pushPendingChanges: mockPushPendingChanges,
   pullRemoteChanges: mockPullRemoteChanges,
   subscribeToRemoteChanges: mockSubscribeToRemoteChanges,
+  // performSync is the extracted push+pull+save core (see syncEngine.ts) — reimplemented here
+  // against the same push/pull/save mocks so existing call-count/argument assertions on those
+  // mocks still hold after useSync.ts started routing through performSync instead of calling
+  // push/pull directly.
+  performSync: async (session: unknown) => {
+    const state = await mockGetGroupsState();
+    await mockPushPendingChanges(session);
+    const merged = await mockPullRemoteChanges(session, state.available);
+    const localOrder = state.available.map((g: { id: string }) => g.id);
+    const posMap = new Map<string, number>(localOrder.map((id: string, i: number) => [id, i]));
+    const reordered = [...merged].sort((a: { id: string; permanent?: boolean }, b: { id: string; permanent?: boolean }) => {
+      if (a.permanent && !b.permanent) return -1;
+      if (!a.permanent && b.permanent) return 1;
+      return (posMap.get(a.id) ?? Infinity) - (posMap.get(b.id) ?? Infinity);
+    });
+    const next = { ...state, available: reordered };
+    await mockSaveGroupsState(next);
+    return reordered;
+  },
 }))
 vi.mock('@/lib/localDb', () => ({
   getGroupsState: mockGetGroupsState,
@@ -54,14 +75,17 @@ vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
   setSetting: mockSetSetting,
   markAllGroupsPendingSync: mockMarkAllGroupsPendingSync,
+  getSessions: mockGetSessions,
 }))
 vi.mock('@/lib/encryptionKey', () => ({
   hasEncryptionKey: mockHasEncryptionKey,
   getDataKey: mockGetDataKey,
   ENCRYPTION_MIGRATION_DONE_KEY: 'encryptionMigrationDone',
+  SESSIONS_MIGRATION_DONE_KEY: 'sessionsEncryptionMigrationDone',
 }))
-vi.mock('sonner', () => ({ toast: { info: mockToastInfo } }))
-
+vi.mock('@/hooks/useSessions', () => ({
+  pushSessionToSupabase: mockPushSessionToSupabase,
+}))
 function makeWrapper(qc: QueryClient) {
   return ({ children }: { children: React.ReactNode }) =>
     React.createElement(QueryClientProvider, { client: qc }, children)
@@ -177,8 +201,52 @@ describe('useSync — encryption migration self-heal', () => {
   })
 })
 
-describe('useSync — locked data key (regression: encrypted accounts never synced after popup reopen)', () => {
-  it('skips push/pull and shows a dismissible nudge when a key exists but is not unlocked this session', async () => {
+describe('useSync — sessions encryption migration self-heal', () => {
+  beforeEach(() => {
+    mockGetSessions.mockResolvedValue([])
+    mockPushSessionToSupabase.mockClear()
+  })
+
+  it('re-uploads every locally-saved session and sets the sessions migration flag once, when it never ran', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    // Groups migration already done, sessions migration is not.
+    mockGetSetting.mockImplementation((key: string) =>
+      Promise.resolve(key === 'sessionsEncryptionMigrationDone' ? false : true)
+    )
+    const sessionA = { id: 's1', name: 'A', groups: [], createdAt: 1 }
+    const sessionB = { id: 's2', name: 'B', groups: [], createdAt: 2 }
+    mockGetSessions.mockResolvedValue([sessionA, sessionB])
+
+    const qc = new QueryClient()
+    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
+
+    await waitFor(() => expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(2))
+    expect(mockPushSessionToSupabase).toHaveBeenCalledWith(sessionA)
+    expect(mockPushSessionToSupabase).toHaveBeenCalledWith(sessionB)
+    await waitFor(() =>
+      expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', true)
+    )
+  })
+
+  it('does not re-run the sessions self-heal once its flag is already set', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetSetting.mockResolvedValue(true)
+
+    const qc = new QueryClient()
+    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
+
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
+    expect(mockGetSessions).not.toHaveBeenCalled()
+  })
+})
+
+describe('useSync — locked data key (one-time-per-device unlock; key persists in chrome.storage.local afterward)', () => {
+  it('skips push/pull and opens the encryptionSetup modal (unlock mode) when a key exists but this profile has never unlocked it', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
     mockHasEncryptionKey.mockResolvedValue(true)
@@ -187,32 +255,12 @@ describe('useSync — locked data key (regression: encrypted accounts never sync
     const qc = new QueryClient()
     renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
 
-    await waitFor(() => expect(mockToastInfo).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(useUIStore.getState().modal.type).toBe('encryptionSetup'))
     expect(mockPushPendingChanges).not.toHaveBeenCalled()
     expect(mockPullRemoteChanges).not.toHaveBeenCalled()
-    // Must not steal focus like the mandatory setup modal does
-    expect(useUIStore.getState().modal.type).toBeNull()
   })
 
-  it('only shows the locked-sync toast once per session even across poll re-runs', async () => {
-    vi.useFakeTimers()
-    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
-    mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
-    mockGetDataKey.mockReturnValue(null)
-
-    const qc = new QueryClient()
-    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
-
-    await vi.waitFor(() => expect(mockToastInfo).toHaveBeenCalledTimes(1))
-    await vi.advanceTimersByTimeAsync(30_000)
-    await vi.advanceTimersByTimeAsync(30_000)
-    expect(mockToastInfo).toHaveBeenCalledTimes(1)
-
-    vi.useRealTimers()
-  })
-
-  it('resumes syncing once the key is unlocked', async () => {
+  it('resumes syncing once the key is unlocked, without opening any modal', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
     mockHasEncryptionKey.mockResolvedValue(true)
@@ -222,7 +270,7 @@ describe('useSync — locked data key (regression: encrypted accounts never sync
     renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
 
     await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
-    expect(mockToastInfo).not.toHaveBeenCalled()
+    expect(useUIStore.getState().modal.type).toBeNull()
   })
 })
 

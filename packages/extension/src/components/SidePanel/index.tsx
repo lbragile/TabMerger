@@ -246,6 +246,11 @@ export function SidePanel({ groupsState }: SidePanelProps) {
                     >
                       <div className="flex-1 min-w-0">
                         <span className="block truncate text-[11px] text-muted-foreground">{session.name}</span>
+                        {session.description && (
+                          <span className="block truncate text-[9px] text-muted-foreground/70 italic" title={session.description}>
+                            {session.description}
+                          </span>
+                        )}
                         <span className="block text-[9px] text-muted-foreground/50">{timeAgo(session.createdAt)}</span>
                       </div>
                       <span

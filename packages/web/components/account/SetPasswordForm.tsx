@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 
@@ -41,17 +41,16 @@ export function SetPasswordForm({ hasPassword }: SetPasswordFormProps) {
         <Label htmlFor="new-password" className="text-sm font-medium">
           {hasPassword ? 'Change password' : 'Set a password'}
         </Label>
-        <Input
+        <PasswordInput
           id="new-password"
-          type="password"
           placeholder="••••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="new-password"
         />
       </div>
-      <Button type="submit" size="sm" className="h-10" disabled={loading || !password}>
-        {loading ? 'Saving...' : 'Save'}
+      <Button type="submit" size="sm" className="h-10" disabled={loading || !password} loading={loading}>
+        Save
       </Button>
     </form>
   )

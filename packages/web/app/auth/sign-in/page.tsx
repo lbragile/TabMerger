@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import {
   Card,
@@ -133,6 +134,7 @@ function SignInForm() {
               className="w-full h-11 rounded-lg"
               onClick={handleGoogle}
               disabled={loading}
+              loading={loading}
               type="button"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" aria-hidden="true">
@@ -173,9 +175,8 @@ function SignInForm() {
                   Forgot?
                 </Link>
               </div>
-              <Input
+              <PasswordInput
                 id="password"
-                type="password"
                 placeholder="••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -187,14 +188,15 @@ function SignInForm() {
             {error && (
               <p className="text-sm text-destructive">{error}</p>
             )}
-            <Button type="submit" className="w-full h-[46px] rounded-lg shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading}>
-              {loading ? 'Signing in...' : 'Continue'}
+            <Button type="submit" className="w-full h-[46px] rounded-lg shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading} loading={loading}>
+              Continue
             </Button>
             <Button
               variant="outline"
               className="w-full h-9 text-xs rounded-md"
               onClick={handleMagicLink}
               disabled={loading}
+              loading={loading}
               type="button"
             >
               Send magic link

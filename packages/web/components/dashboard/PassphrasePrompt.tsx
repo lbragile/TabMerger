@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { PasswordInput } from '@/components/ui/password-input'
 import { useEncryptionKey } from '@/lib/encryption/context'
 
 /**
@@ -35,16 +35,15 @@ export function PassphrasePrompt({ label = 'Enter your encryption passphrase to 
       <Lock className="w-5 h-5 text-muted-foreground" />
       <p className="text-sm text-muted-foreground max-w-sm">{label}</p>
       <div className="flex items-center gap-2 w-full max-w-xs">
-        <Input
-          type="password"
+        <PasswordInput
           value={passphrase}
           onChange={(e) => setPassphrase(e.target.value)}
           placeholder="Passphrase"
           aria-label="Encryption passphrase"
           autoComplete="off"
         />
-        <Button type="submit" size="sm" disabled={busy || !passphrase}>
-          {busy ? 'Unlocking…' : 'Unlock'}
+        <Button type="submit" size="sm" disabled={busy || !passphrase} loading={busy}>
+          Unlock
         </Button>
       </div>
       {error && <p className="text-xs text-destructive">Incorrect passphrase.</p>}

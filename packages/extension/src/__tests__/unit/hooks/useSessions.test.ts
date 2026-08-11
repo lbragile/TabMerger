@@ -124,18 +124,34 @@ describe('useSaveSession', () => {
     expect((builder.upsert as ReturnType<typeof vi.fn>)).toHaveBeenCalled()
   })
 
-  it('encrypts name/groups before upsert when encryption is enabled and unlocked', async () => {
+  it('encrypts name/groups/description before upsert when encryption is enabled and unlocked', async () => {
     mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
     mockGetSetting.mockResolvedValue(true)
     mockGetDataKey.mockReturnValue({} as CryptoKey)
     responses = [{ data: null, error: null }]
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', description: 'Weekend reading', sessionCount: 0, hasSessions: false })
     })
     const upserted = (builder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
     expect(upserted.name).toBe('')
+    expect(upserted.description).toBeNull()
     expect(upserted.groups).toEqual({ v: 1, iv: 'iv-stub', ct: 'ct-stub' })
+    expect(mockEncryptBlob).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ name: 'My Session', description: 'Weekend reading' })
+    )
+  })
+
+  it('includes the plaintext description in the upsert when encryption is off', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    responses = [{ data: null, error: null }]
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', description: 'Weekend reading', sessionCount: 0, hasSessions: false })
+    })
+    const upserted = (builder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    expect(upserted.description).toBe('Weekend reading')
   })
 
   it('skips the remote push when encryption is enabled but the key is locked', async () => {

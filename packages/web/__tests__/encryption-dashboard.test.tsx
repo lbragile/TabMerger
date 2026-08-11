@@ -3,8 +3,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 import { EncryptionKeyProvider, useEncryptionKey, clearAllCachedDataKeys } from '@/lib/encryption/context'
 
+// A prior test's successful unlock caches the key in real sessionStorage (jsdom), which
+// otherwise leaks into later tests expecting a fresh 'locked'/'no-key' state.
+beforeEach(() => {
+  clearAllCachedDataKeys()
+})
+
 const mockGetUser = vi.fn(async () => ({ data: { user: { id: 'u1' } } }))
-const mockMaybeSingle = vi.fn(async () => ({ data: { user_id: 'u1', salt: 'AAAA', wrapped_key: 'wk', wrap_iv: 'iv', kdf_iterations: 1000 } }))
+const mockMaybeSingle = vi.fn(async (): Promise<{ data: { user_id: string; salt: string; wrapped_key: string; wrap_iv: string; kdf_iterations: number } | null }> => ({
+  data: { user_id: 'u1', salt: 'AAAA', wrapped_key: 'wk', wrap_iv: 'iv', kdf_iterations: 1000 }
+}))
 
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({

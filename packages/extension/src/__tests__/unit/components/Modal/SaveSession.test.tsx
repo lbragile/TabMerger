@@ -30,11 +30,27 @@ describe('SaveSessionModal', () => {
     expect(onClose).not.toHaveBeenCalled()
   })
 
-  it('calls onSave with the trimmed name and closes on submit', () => {
+  it('calls onSave with the trimmed name and undefined description and closes on submit', () => {
     const { onSave, onClose } = renderModal()
     fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: '  My Session  ' } })
     fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
-    expect(onSave).toHaveBeenCalledWith('My Session')
+    expect(onSave).toHaveBeenCalledWith('My Session', undefined)
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('renders an optional description field and passes the trimmed value through on save', () => {
+    const { onSave } = renderModal()
+    fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: 'My Session' } })
+    fireEvent.change(screen.getByLabelText(/description/i), { target: { value: '  Weekend reading  ' } })
+    fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
+    expect(onSave).toHaveBeenCalledWith('My Session', 'Weekend reading')
+  })
+
+  it('does not require a description to save', () => {
+    const { onSave, onClose } = renderModal()
+    fireEvent.change(screen.getByLabelText(/session name/i), { target: { value: 'My Session' } })
+    fireEvent.click(screen.getByRole('button', { name: /^save$/i }))
+    expect(onSave).toHaveBeenCalledWith('My Session', undefined)
     expect(onClose).toHaveBeenCalled()
   })
 

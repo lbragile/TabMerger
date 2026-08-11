@@ -2,9 +2,36 @@ import * as Sentry from '@sentry/browser';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
+import { performSync } from '@/lib/syncEngine';
+import { hasEncryptionKey, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
+
+type SyncNowResult = { ok: true } | { ok: false; reason: 'no-session' | 'locked' | 'error'; message?: string };
+
+// Triggered by the web dashboard's "Re-sync now" button via externally_connectable — runs a
+// real push+pull sync from the background context instead of just re-reading Supabase, so the
+// dashboard reflects changes the extension hasn't pushed yet. The background worker's in-memory
+// data key resets on every SW restart same as the popup's does (see chrome.storage.session fix),
+// so an account whose encryption was never unlocked THIS worker lifetime reports 'locked' rather
+// than silently no-op'ing — the web UI surfaces that as "open the extension and unlock".
+async function handleSyncNow(): Promise<SyncNowResult> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return { ok: false, reason: 'no-session' };
+    if (!(await hasEncryptionKey())) {
+      return { ok: false, reason: 'locked', message: 'Open the extension to finish encryption setup.' };
+    }
+    if (!(await getDataKey())) {
+      return { ok: false, reason: 'locked', message: 'Open the extension and unlock encryption to sync.' };
+    }
+    await performSync(session);
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, reason: 'error', message: err instanceof Error ? err.message : String(err) };
+  }
+}
 
 type Scope = 'current' | 'left' | 'right' | 'excluding';
 
@@ -179,8 +206,14 @@ export default defineBackground(() => {
   // sends { type: 'PING' } via chrome.runtime.sendMessage(extensionId, ...) and checks the
   // response vs. chrome.runtime.lastError, avoiding the content script's page-load race.
   chrome.runtime.onMessageExternal.addListener((msg: unknown, _sender, sendResponse) => {
-    if ((msg as { type?: string })?.type === 'PING') {
+    const type = (msg as { type?: string })?.type;
+    if (type === 'PING') {
       sendResponse({ type: 'PONG', version: chrome.runtime.getManifest().version });
+      return;
+    }
+    if (type === 'SYNC_NOW') {
+      void handleSyncNow().then(sendResponse);
+      return true; // keep the message channel open for the async sendResponse above
     }
   });
 

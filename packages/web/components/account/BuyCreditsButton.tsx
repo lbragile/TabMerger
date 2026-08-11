@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 /**
@@ -31,11 +32,12 @@ export function BuyCreditsButton() {
   return (
     <button
       type="button"
-      className="text-primary hover:underline disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+      className="inline-flex items-center gap-1 text-primary hover:underline disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
       onClick={handleClick}
       disabled={loading}
     >
-      {loading ? 'Loading...' : 'Get more'}
+      {loading && <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />}
+      Get more
     </button>
   )
 }

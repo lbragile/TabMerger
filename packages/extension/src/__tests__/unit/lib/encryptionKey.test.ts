@@ -8,7 +8,9 @@ const {
   mockDeriveWrappingKey,
   mockGenerateDataKey,
   mockWrapDataKey,
-  mockUnwrapDataKey
+  mockUnwrapDataKey,
+  mockExportKeyToBase64,
+  mockImportKeyFromBase64
 } = vi.hoisted(() => ({
   mockGetSession: vi.fn(),
   mockFrom: vi.fn(),
@@ -17,7 +19,9 @@ const {
   mockDeriveWrappingKey: vi.fn(),
   mockGenerateDataKey: vi.fn(),
   mockWrapDataKey: vi.fn(),
-  mockUnwrapDataKey: vi.fn()
+  mockUnwrapDataKey: vi.fn(),
+  mockExportKeyToBase64: vi.fn(),
+  mockImportKeyFromBase64: vi.fn()
 }))
 
 vi.mock('@/lib/supabase', () => ({
@@ -35,7 +39,9 @@ vi.mock('@tabmerger/shared', () => ({
   deriveWrappingKey: mockDeriveWrappingKey,
   generateDataKey: mockGenerateDataKey,
   wrapDataKey: mockWrapDataKey,
-  unwrapDataKey: mockUnwrapDataKey
+  unwrapDataKey: mockUnwrapDataKey,
+  exportKeyToBase64: mockExportKeyToBase64,
+  importKeyFromBase64: mockImportKeyFromBase64
 }))
 
 const fakeDataKey = { type: 'data-key' } as unknown as CryptoKey
@@ -59,6 +65,10 @@ beforeEach(() => {
   vi.clearAllMocks()
   vi.resetModules() // ponytail: cachedDataKey is module-scope state — force a fresh module per test
   mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+  // Single key round-trips through these tests, so a fixed base64 stand-in is enough —
+  // export always yields it, import always yields the one fakeDataKey back.
+  mockExportKeyToBase64.mockResolvedValue('b64-fake-data-key')
+  mockImportKeyFromBase64.mockResolvedValue(fakeDataKey)
 })
 
 describe('setupEncryption', () => {
@@ -148,7 +158,7 @@ describe('getDataKey / hasEncryptionKey', () => {
     expect(await getDataKey()).toBeNull()
   })
 
-  it('survives popup teardown: unlock, reset module state, re-import — getDataKey still returns the key without re-unlocking', async () => {
+  it('survives popup teardown AND browser restart: unlock, reset module state, re-import — getDataKey still returns the key without re-unlocking', async () => {
     mockFrom.mockReturnValue(
       makeSelectBuilder({ salt: btoa('salt'), wrapped_key: 'wrapped', wrap_iv: 'iv1', kdf_iterations: 600000 })
     )
@@ -163,7 +173,7 @@ describe('getDataKey / hasEncryptionKey', () => {
     vi.resetModules()
     const mod2 = await import('@/lib/encryptionKey')
 
-    // No unlockEncryption() call here — the key must come back from chrome.storage.session.
+    // No unlockEncryption() call here — the key must come back from chrome.storage.local.
     expect(await mod2.getDataKey()).toBe(fakeDataKey)
   })
 

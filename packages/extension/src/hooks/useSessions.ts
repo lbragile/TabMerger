@@ -20,6 +20,43 @@ export function useSessions() {
 }
 
 /**
+ * Best-effort upserts a single local session to Supabase, encrypting `{name, groups}`
+ * when encryption is set up (never pushes plaintext if a key exists but is locked —
+ * caller should skip/retry later in that case, same as pushGroup/doSync). Shared by
+ * `useSaveSession`'s explicit save action and `useSync`'s session self-heal, since
+ * sessions have no `pendingSync` flag or push loop of their own.
+ */
+export async function pushSessionToSupabase(session: Session): Promise<void> {
+  const { data: { session: authSession } } = await supabase.auth.getSession();
+  if (!authSession) return;
+
+  let name: string = session.name;
+  let description: string | null = session.description ?? null;
+  let groupsField: Session['groups'] | { v: 1; iv: string; ct: string } = session.groups;
+
+  if (await hasEncryptionKey()) {
+    const dataKey = await getDataKey();
+    if (!dataKey) {
+      console.warn('[TabMerger] Encryption enabled but key is locked — skipping session sync for', session.id);
+      return;
+    }
+    const { iv, ct } = await encryptBlob(dataKey, { name: session.name, groups: session.groups, description: session.description });
+    groupsField = { v: 1, iv, ct };
+    name = '';
+    description = null;
+  }
+
+  await supabase.from('sessions').upsert({
+    id: session.id,
+    user_id: authSession.user.id,
+    name,
+    description,
+    groups: groupsField,
+    created_at: new Date(session.createdAt).toISOString(),
+  });
+}
+
+/**
  * Saves the current non-permanent groups as a named session snapshot.
  * Local-first: writes to IndexedDB first, then best-effort syncs to Supabase.
  * Enforces `FREE_SESSION_LIMIT` for users without the `hasSessions` entitlement.
@@ -30,7 +67,7 @@ export function useSaveSession() {
   const { data: groupsState } = useGroups();
 
   return useMutation({
-    mutationFn: async ({ name, sessionCount, hasSessions }: { name: string; sessionCount: number; hasSessions: boolean }) => {
+    mutationFn: async ({ name, description, sessionCount, hasSessions }: { name: string; description?: string; sessionCount: number; hasSessions: boolean }) => {
       // ponytail: free tier gets 3 sessions; pro+ unlimited (hasSessions = entitlement)
       if (!hasSessions && sessionCount >= FREE_SESSION_LIMIT) {
         throw new Error('SESSION_LIMIT');
@@ -40,38 +77,14 @@ export function useSaveSession() {
       const session: Session = {
         id: nanoid(10),
         name,
+        description,
         groups,
         createdAt: Date.now(),
       };
       await saveSession(session);
       // ponytail: best-effort Supabase sync — local save already succeeded
       try {
-        const { data: { session: authSession } } = await supabase.auth.getSession();
-        if (authSession) {
-          let name: string = session.name;
-          let groupsField: Session['groups'] | { v: 1; iv: string; ct: string } = session.groups;
-
-          if (await hasEncryptionKey()) {
-            const dataKey = await getDataKey();
-            if (!dataKey) {
-              // ponytail: locked — never push plaintext session content. Local save already
-              // succeeded above; the remote copy is simply skipped until unlocked (same as pushGroup).
-              console.warn('[TabMerger] Encryption enabled but key is locked — skipping session sync for', session.id);
-              return session;
-            }
-            const { iv, ct } = await encryptBlob(dataKey, { name: session.name, groups: session.groups });
-            groupsField = { v: 1, iv, ct };
-            name = '';
-          }
-
-          await supabase.from('sessions').upsert({
-            id: session.id,
-            user_id: authSession.user.id,
-            name,
-            groups: groupsField,
-            created_at: new Date(session.createdAt).toISOString(),
-          });
-        }
+        await pushSessionToSupabase(session);
       } catch (e) {
         console.warn('[TabMerger] Session sync to Supabase failed', e);
       }

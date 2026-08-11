@@ -1,6 +1,8 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+import { RotateCcw, Trash2 } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 // ponytail: inline datetime format — no need for full Intl config overhead
 const formatDateTime = (date: string) =>
@@ -48,76 +50,111 @@ export function SessionCard({
   onDelete,
   onRestore,
 }: SessionCardProps) {
+  const [open, setOpen] = useState(false)
+  const hasContents = !!groups && groups.length > 0
+
   return (
-    <div className="border border-border rounded-lg overflow-hidden bg-surface flex flex-col md:flex-row transition-shadow duration-200 hover:shadow-sh2">
-      {/* Left panel */}
-      <div className="flex-1 p-4">
-        <h3 className="font-bold mb-2" style={{ fontSize: '17px' }}>{name}</h3>
-        <div className="flex gap-2 mb-2">
-          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(groupCount, 'group')}</span>
-          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(windowCount ?? 0, 'window')}</span>
-          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(tabCount, 'tab')}</span>
-        </div>
-        {groups && groups.length > 0 && tabCount > 0 && (
-          <div className="flex h-1.5 w-full rounded-full overflow-hidden mb-2">
-            {groups.map((group, i) => {
-              const groupTabs = (group.windows ?? []).reduce((s, w) => s + (w.tabs?.length ?? 0), 0)
-              return (
-                <div
-                  key={i}
-                  data-testid="progress-segment"
-                  style={{
-                    width: `${(groupTabs / tabCount) * 100}%`,
-                    background: group.color ?? 'var(--color-divider)',
-                  }}
-                />
-              )
-            })}
-          </div>
-        )}
-        <p className="text-[12px] text-muted-foreground mb-3">{formatDateTime(createdAt)}</p>
-        {description && (
-          <p className="text-[12px] italic text-muted-foreground mb-3">{description}</p>
-        )}
-        <div className="flex gap-2">
-          {onRestore && (
-            <Button size="sm" onClick={() => onRestore(id)}>Restore session</Button>
-          )}
-          {onDelete && (
-            <Button
-              size="sm"
-              variant="ghost"
-              className="text-destructive hover:text-destructive"
-              onClick={() => onDelete(id)}
-            >
-              Delete
-            </Button>
-          )}
+    // min-w-0 lets this card shrink to its grid track instead of being pushed wide by
+    // long titles/urls inside — the earlier overflow came from flex children defaulting
+    // to min-width:auto and a hard-coded w-[280px] side panel that didn't fit at 3-up.
+    <div className="min-w-0 border border-border rounded-lg overflow-hidden bg-surface p-4 transition-shadow duration-200 hover:shadow-sh2">
+      <div className="flex items-start justify-between gap-2 mb-2">
+        <h3 className="font-bold truncate min-w-0" style={{ fontSize: '17px' }}>{name}</h3>
+        <div className="flex items-center gap-1 shrink-0">
+          <TooltipProvider>
+            {onRestore && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => onRestore(id)}
+                    aria-label="Restore session"
+                    className="text-muted-foreground hover:text-foreground rounded-md p-1"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top">Restore session</TooltipContent>
+              </Tooltip>
+            )}
+            {onDelete && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => onDelete(id)}
+                    aria-label="Delete session"
+                    className="text-destructive hover:text-destructive/80 rounded-md p-1"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top">Delete session</TooltipContent>
+              </Tooltip>
+            )}
+          </TooltipProvider>
         </div>
       </div>
-
-      {/* Right panel — contents */}
-      {groups && groups.length > 0 && (
-        <div className="w-full md:w-[280px] border-t-2 md:border-t-0 md:border-l-2 border-border p-4 shrink-0">
-          <h6 className="text-[11px] uppercase font-semibold text-muted-foreground mb-3">Contents</h6>
-          {groups.slice(0, 3).map((group, i) => {
-            const allTabs = (group.windows ?? []).flatMap((w) => w.tabs ?? [])
+      <div className="flex flex-wrap gap-2 mb-2">
+        <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(groupCount, 'group')}</span>
+        <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(windowCount ?? 0, 'window')}</span>
+        <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(tabCount, 'tab')}</span>
+      </div>
+      {hasContents && tabCount > 0 && (
+        <div className="flex h-1.5 w-full rounded-full overflow-hidden mb-2">
+          {groups!.map((group, i) => {
+            const groupTabs = (group.windows ?? []).reduce((s, w) => s + (w.tabs?.length ?? 0), 0)
             return (
-              <div key={i} className="mb-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <div
-                    className="rounded-sm shrink-0"
-                    style={{ width: '56px', height: '14px', background: group.color ?? 'var(--color-divider)' }}
-                  />
-                  <span className="font-bold text-[12px] truncate flex-1">{group.name ?? `Group ${i + 1}`}</span>
-                  <span className="text-[11px] text-muted-foreground ml-auto shrink-0">{allTabs.length} tabs</span>
-                </div>
-                {allTabs.slice(0, 2).map((tab, j) => (
-                  <p key={j} className="text-[11px] text-muted-foreground truncate pl-2">{tab.title || tab.url}</p>
-                ))}
-              </div>
+              <div
+                key={i}
+                data-testid="progress-segment"
+                style={{
+                  width: `${(groupTabs / tabCount) * 100}%`,
+                  background: group.color ?? 'var(--color-divider)',
+                }}
+              />
             )
           })}
+        </div>
+      )}
+      <p className="text-[12px] text-text2 mb-3">{formatDateTime(createdAt)}</p>
+      {description && (
+        <p className="text-[12px] italic text-text2 mb-3 truncate">{description}</p>
+      )}
+
+      {/* Contents — collapsed by default, mirrors GroupGrid's "Show tabs" pattern instead
+          of a fixed-width side panel (which is what overflowed at 3-column density). */}
+      {hasContents && (
+        <div className="mb-3">
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="text-xs text-text2 hover:text-foreground px-2 py-1 -ml-2 rounded-md border border-transparent hover:border-border transition-colors cursor-pointer"
+          >
+            {open ? 'Hide contents' : `Show contents (${groups!.length})`}
+          </button>
+          {open && (
+            <div className="mt-2 space-y-2">
+              {groups!.slice(0, 3).map((group, i) => {
+                const allTabs = (group.windows ?? []).flatMap((w) => w.tabs ?? [])
+                return (
+                  <div key={i} className="min-w-0">
+                    <div className="flex items-center gap-2 mb-1 min-w-0">
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ background: group.color ?? 'var(--color-divider)' }}
+                      />
+                      <span className="font-bold text-[12px] truncate flex-1 min-w-0">{group.name ?? `Group ${i + 1}`}</span>
+                      <span className="text-[11px] text-muted-foreground shrink-0">{allTabs.length} tabs</span>
+                    </div>
+                    {allTabs.slice(0, 2).map((tab, j) => (
+                      <p key={j} className="text-[11px] text-muted-foreground truncate pl-4">{tab.title || tab.url}</p>
+                    ))}
+                  </div>
+                )
+              })}
+              {groups!.length > 3 && (
+                <p className="text-[11px] text-muted-foreground">+{groups!.length - 3} more groups</p>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

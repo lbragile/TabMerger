@@ -3,35 +3,45 @@ import {
   deriveWrappingKey,
   generateDataKey,
   wrapDataKey,
-  unwrapDataKey
+  unwrapDataKey,
+  exportKeyToBase64,
+  importKeyFromBase64
 } from '@tabmerger/shared';
 import { supabase } from './supabase';
 import { setSetting, markAllGroupsPendingSync } from './localDb';
 
 export const ENCRYPTION_MIGRATION_DONE_KEY = 'encryptionMigrationDone';
+// ponytail: separate flag from ENCRYPTION_MIGRATION_DONE_KEY — an account could have
+// already flipped that flag before sessions existed/were touched, which would skip this
+// self-heal if it piggybacked on the same key.
+export const SESSIONS_MIGRATION_DONE_KEY = 'sessionsEncryptionMigrationDone';
 
 // Module-scope fast path for the lifetime of this JS context (background worker
-// or popup). Also mirrored into chrome.storage.session (memory-only, cleared on
-// browser restart, never written to disk) scoped per-user-id below so a torn-down
-// popup can re-read it without forcing the user to re-enter their passphrase —
-// `chrome.storage.session` supports storing live CryptoKey objects directly via
-// structured clone (confirmed against Chrome's own extension samples), so the
-// non-extractable key itself is cached, never an exported/leakable form of it.
+// or popup). Also persisted to `chrome.storage.local` (disk, survives popup teardown
+// AND full browser restart) scoped per-user-id below so unlock is truly one-time —
+// deliberate product/security tradeoff, see learnings_persistent_unlock_local_storage.md
+// (supersedes the earlier chrome.storage.session-based approach in
+// learnings_encryption_locked_sync_silent_gap.md). `chrome.storage.local` JSON-serializes
+// values, so it CANNOT hold a live CryptoKey object the way `chrome.storage.session` could
+// (confirmed: storage.session uses structured clone, storage.local does not) — the key is
+// exported to raw base64 (requires `extractable: true`, see unlockEncryption below) before
+// storing, then re-imported non-extractable on read.
 let cachedDataKey: CryptoKey | null = null;
 
-function sessionKeyFor(userId: string): string {
+function localKeyFor(userId: string): string {
   return `dataKey_${userId}`;
 }
 
 async function cacheDataKey(dataKey: CryptoKey, userId: string): Promise<void> {
   cachedDataKey = dataKey;
-  await chrome.storage.session.set({ [sessionKeyFor(userId)]: dataKey });
+  const b64 = await exportKeyToBase64(dataKey);
+  await chrome.storage.local.set({ [localKeyFor(userId)]: b64 });
 }
 
-/** Clears the cached data key (module + session storage) for a specific user — call on sign-out. */
+/** Clears the cached data key (module + persisted local storage) for a specific user — call on sign-out. */
 export async function clearCachedDataKey(userId: string): Promise<void> {
   cachedDataKey = null;
-  await chrome.storage.session.remove(sessionKeyFor(userId));
+  await chrome.storage.local.remove(localKeyFor(userId));
 }
 
 function bufToBase64(buf: Uint8Array): string {
@@ -90,7 +100,9 @@ export async function unlockEncryption(passphrase: string): Promise<boolean> {
   try {
     const salt = base64ToBuf(row.salt as string);
     const wrappingKey = await deriveWrappingKey(passphrase, salt, row.kdf_iterations as number);
-    const dataKey = await unwrapDataKey(row.wrapped_key as string, row.wrap_iv as string, wrappingKey);
+    // extractable: true — cacheDataKey needs to export this key to base64 to persist it in
+    // chrome.storage.local (see module comment above); it's never exported again after that.
+    const dataKey = await unwrapDataKey(row.wrapped_key as string, row.wrap_iv as string, wrappingKey, true);
     await cacheDataKey(dataKey, session.user.id);
     return true;
   } catch {
@@ -100,10 +112,10 @@ export async function unlockEncryption(passphrase: string): Promise<boolean> {
 }
 
 /**
- * Returns the cached unwrapped data key, or null if never unlocked / locked.
- * Checks the module-scope fast path first, then falls back to `chrome.storage.session`
- * (survives popup teardown within the same browser session — see cacheDataKey above).
- * Async because the storage.session read and the session-user lookup are both async.
+ * Returns the cached unwrapped data key, or null if never unlocked this profile / signed out.
+ * Checks the module-scope fast path first, then falls back to `chrome.storage.local`
+ * (persists to disk, survives popup teardown AND full browser restart — see cacheDataKey
+ * above). Async because the storage.local read and the session-user lookup are both async.
  */
 export async function getDataKey(): Promise<CryptoKey | null> {
   if (cachedDataKey) return cachedDataKey;
@@ -111,10 +123,12 @@ export async function getDataKey(): Promise<CryptoKey | null> {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return null;
 
-  const key = sessionKeyFor(session.user.id);
-  const stored = (await chrome.storage.session.get(key)) as Record<string, CryptoKey | undefined>;
-  const dataKey = stored[key] ?? null;
-  if (dataKey) cachedDataKey = dataKey;
+  const key = localKeyFor(session.user.id);
+  const stored = (await chrome.storage.local.get(key)) as Record<string, string | undefined>;
+  const b64 = stored[key];
+  if (!b64) return null;
+  const dataKey = await importKeyFromBase64(b64);
+  cachedDataKey = dataKey;
   return dataKey;
 }
 

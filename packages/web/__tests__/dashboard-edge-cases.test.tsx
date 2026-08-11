@@ -202,7 +202,7 @@ describe('SessionList restore/delete (previously uncovered branches)', () => {
         isPro={false}
       />
     )
-    fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete session' }))
     await waitFor(() => expect(fetchSpy).toHaveBeenCalledWith('/api/sessions/s1', { method: 'DELETE' }))
     expect(screen.getByText(/Free plan: up to 3 sessions/i)).toBeInTheDocument()
     fetchSpy.mockRestore()

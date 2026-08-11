@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { EXTENSION_ID } from '@/lib/extensionId'
 
 // ponytail: no @types/chrome dep in this package — minimal ambient shape for the
 // one API surface we touch (externally_connectable sendMessage probe).
@@ -11,7 +12,7 @@ declare global {
         sendMessage?: (
           extensionId: string,
           message: unknown,
-          callback: (response?: { type?: string; version?: string }) => void
+          callback: (response?: { type?: string; version?: string; ok?: boolean; reason?: string; message?: string }) => void
         ) => void
         lastError?: { message?: string }
       }
@@ -21,10 +22,6 @@ declare global {
 }
 
 const STORAGE_KEY = 'tm_extension_installed'
-
-// Dev unpacked build ID, used when no published Chrome Web Store ID is configured.
-const DEV_EXTENSION_ID = 'ogadhgghhdbaohdcajfakeogcamicdkm'
-const EXTENSION_ID = process.env.NEXT_PUBLIC_CHROME_EXTENSION_ID || DEV_EXTENSION_ID
 
 /**
  * Detects whether the TabMerger extension is installed via two redundant signals:

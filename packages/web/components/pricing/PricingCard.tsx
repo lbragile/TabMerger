@@ -176,8 +176,9 @@ export function PricingCard({
             className="w-full rounded-lg"
             onClick={handleClick}
             disabled={loading}
+            loading={loading}
           >
-            {loading ? 'Loading...' : `Downgrade to ${name}`}
+            {`Downgrade to ${name}`}
           </Button>
         ) : (
           <Button
@@ -188,8 +189,9 @@ export function PricingCard({
             variant={highlighted ? 'default' : 'secondary'}
             onClick={handleClick}
             disabled={loading}
+            loading={loading}
           >
-            {loading ? 'Loading...' : `Upgrade to ${name}`}
+            {`Upgrade to ${name}`}
           </Button>
         )}
       </div>

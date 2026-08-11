@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { setupEncryption } from '@/lib/encryptionKey';
+import { PasswordInput } from '@/components/ui/password-input';
+import { setupEncryption, unlockEncryption, hasEncryptionKey } from '@/lib/encryptionKey';
 import { toast } from 'sonner';
 
 interface EncryptionSetupModalProps {
@@ -10,19 +10,33 @@ interface EncryptionSetupModalProps {
 }
 
 /**
- * One-time, mandatory passphrase setup shown the first time a signed-in Pro user's data
- * would otherwise sync without an `encryption_keys` row yet (encryption is on-by-default,
- * no opt-out). Sync stays blocked/queued (see useSync) until this completes. Closing without
- * setting up just re-prompts on the next sync attempt rather than falling back to plaintext.
+ * Handles both encryption states in one modal, triggered from useSync's doSync gate:
+ * - No `encryption_keys` row yet → first-time passphrase setup (mandatory, on-by-default).
+ * - Row exists but the data key isn't unlocked on this profile yet (brand-new browser
+ *   profile/device, or a fresh sign-in right after sign-out) → single-field unlock.
+ * Once unlocked, the data key persists in `chrome.storage.local` forever (see
+ * encryptionKey.ts) — this modal should not reappear again barring explicit sign-out.
+ * Closing without completing just re-prompts on the next sync attempt rather than
+ * falling back to plaintext.
  */
 export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
+  const [mode, setMode] = useState<'checking' | 'setup' | 'unlock'>('checking');
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    void hasEncryptionKey().then((v) => setMode(v ? 'unlock' : 'setup'));
+  }, []);
 
   const handleSetup = async () => {
     setError('');
+    if (/\s/.test(pass1)) {
+      setError('Passphrase cannot contain spaces');
+      return;
+    }
     if (pass1.length < 8) {
       setError('Passphrase must be at least 8 characters');
       return;
@@ -43,6 +57,72 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
     }
   };
 
+  const handleUnlock = async () => {
+    setError('');
+    if (pass1 !== pass2) {
+      setError('Passphrases do not match');
+      return;
+    }
+    setBusy(true);
+    try {
+      const ok = await unlockEncryption(pass1);
+      if (!ok) {
+        setError('Wrong passphrase');
+        return;
+      }
+      toast.success('Encryption passphrase set');
+      onClose();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (mode === 'checking') return null;
+
+  if (mode === 'unlock') {
+    return (
+      <>
+        <DialogHeader>
+          <DialogTitle>Unlock encryption</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <p className="text-xs text-muted-foreground">
+            Enter your encryption passphrase to unlock synced data on this device. This is a
+            one-time step per device — you won&apos;t be asked again unless you sign out. There
+            is no way to recover your data if you forget it — it never leaves your device and
+            TabMerger cannot reset it for you.
+          </p>
+          <PasswordInput
+            placeholder="Passphrase"
+            value={pass1}
+            onChange={(e) => setPass1(e.target.value)}
+            className="h-8 text-xs rounded-none"
+            visible={visible}
+            onVisibleChange={setVisible}
+          />
+          <PasswordInput
+            placeholder="Confirm passphrase"
+            value={pass2}
+            onChange={(e) => setPass2(e.target.value)}
+            className="h-8 text-xs rounded-none"
+            visible={visible}
+            showToggle={false}
+          />
+          {error && <p className="text-xs text-destructive">{error}</p>}
+          <Button
+            size="sm"
+            className="text-xs w-full"
+            disabled={busy || !pass1 || !pass2}
+            loading={busy}
+            onClick={() => void handleUnlock()}
+          >
+            Save
+          </Button>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <DialogHeader>
@@ -54,25 +134,28 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
           know. Choose one now — there is no way to recover your data if you forget it, it
           never leaves your device and TabMerger cannot reset it for you.
         </p>
-        <Input
-          type="password"
+        <PasswordInput
           placeholder="New passphrase"
           value={pass1}
           onChange={(e) => setPass1(e.target.value)}
           className="h-8 text-xs rounded-none"
+          visible={visible}
+          onVisibleChange={setVisible}
         />
-        <Input
-          type="password"
+        <PasswordInput
           placeholder="Confirm passphrase"
           value={pass2}
           onChange={(e) => setPass2(e.target.value)}
           className="h-8 text-xs rounded-none"
+          visible={visible}
+          showToggle={false}
         />
         {error && <p className="text-xs text-destructive">{error}</p>}
         <Button
           size="sm"
           className="text-xs w-full"
           disabled={busy || !pass1 || !pass2}
+          loading={busy}
           onClick={() => void handleSetup()}
         >
           Set up encryption

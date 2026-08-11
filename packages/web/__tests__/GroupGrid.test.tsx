@@ -53,6 +53,61 @@ describe('GroupGrid', () => {
   })
 })
 
+describe('GroupGrid share flow', () => {
+  it('sends decrypted group content (not just ids) to /api/share-bundle', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({ slug: 'abc123', key: 'fake-key' }),
+    } as Response)
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
+
+    render(<GroupGrid groups={groups} isPro={true} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select' }))
+    fireEvent.click(screen.getByLabelText('Select'))
+    fireEvent.click(screen.getByRole('button', { name: /Share selected/i }))
+
+    await screen.findByRole('button', { name: /Select/i })
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/share-bundle',
+      expect.objectContaining({
+        method: 'POST',
+        body: expect.stringContaining('"windows"'),
+      })
+    )
+    const call = fetchSpy.mock.calls.find(([url]) => url === '/api/share-bundle')
+    const sentBody = JSON.parse((call?.[1] as RequestInit).body as string)
+    expect(sentBody.groupIds).toBeUndefined()
+    expect(sentBody.groups[0]).toMatchObject({ id: 'g1', name: 'Work', color: 'rgba(0,180,204,1)' })
+    expect(sentBody.groups[0].windows[0].tabs[0].title).toBe('Tab 1')
+
+    fetchSpy.mockRestore()
+  })
+
+  it('shows a spinner on the Share selected button while the request is in flight', async () => {
+    let resolveFetch!: (v: Response) => void
+    const fetchSpy = vi.spyOn(global, 'fetch').mockReturnValue(
+      new Promise((resolve) => { resolveFetch = resolve })
+    )
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
+
+    render(<GroupGrid groups={groups} isPro={true} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select' }))
+    fireEvent.click(screen.getByLabelText('Select'))
+    const button = screen.getByRole('button', { name: /Share selected/i })
+    fireEvent.click(button)
+
+    expect(button).toBeDisabled()
+    expect(button.querySelector('svg.animate-spin')).toBeInTheDocument()
+
+    resolveFetch({ ok: true, json: async () => ({ slug: 'abc123', key: 'fake-key' }) } as Response)
+    await screen.findByRole('button', { name: /Select/i })
+    fetchSpy.mockRestore()
+  })
+})
+
 describe('GroupGrid "Open all" button', () => {
   it('calls window.open once per tab URL in the group', () => {
     const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
@@ -159,5 +214,54 @@ describe('GroupGrid stale-tabs warning', () => {
     ]
     render(<GroupGrid groups={freshGroups} isPro={false} />)
     expect(screen.queryByText(/may be stale/i)).not.toBeInTheDocument()
+  })
+})
+
+describe('GroupGrid archived groups', () => {
+  const mixedGroups = [
+    {
+      id: 'g-active',
+      name: 'Active One',
+      color: 'rgba(0,0,0,1)',
+      windows: [{ tabs: [{ title: 'T', url: 'https://x.com' }] }],
+      updated_at: new Date().toISOString(),
+      archived: false,
+    },
+    {
+      id: 'g-archived',
+      name: 'Archived One',
+      color: 'rgba(0,0,0,1)',
+      windows: [{ tabs: [{ title: 'T2', url: 'https://y.com' }] }],
+      updated_at: new Date().toISOString(),
+      archived: true,
+    },
+  ]
+
+  it('excludes archived groups from the main active grid', () => {
+    render(<GroupGrid groups={mixedGroups} isPro={false} />)
+    expect(screen.getByText('Active One')).toBeInTheDocument()
+    // Archived group name only appears after expanding the archived section, not up front.
+    expect(screen.queryByText('Archived One')).not.toBeInTheDocument()
+  })
+
+  it('shows a collapsed "Archived (N)" toggle and reveals archived groups on click', () => {
+    render(<GroupGrid groups={mixedGroups} isPro={false} />)
+    const toggle = screen.getByRole('button', { name: /Archived \(1\)/i })
+    expect(toggle).toBeInTheDocument()
+    expect(screen.queryByText('Archived One')).not.toBeInTheDocument()
+
+    fireEvent.click(toggle)
+    expect(screen.getByText('Archived One')).toBeInTheDocument()
+  })
+
+  it('excludes archived groups from the header group/tab counts', () => {
+    render(<GroupGrid groups={mixedGroups} isPro={false} />)
+    expect(screen.getByText(/1 group · 1 tabs/i)).toBeInTheDocument()
+  })
+
+  it('renders the archived count correctly when groups are pre-decrypted (plaintext) and does not require a passphrase', () => {
+    render(<GroupGrid groups={mixedGroups} isPro={false} />)
+    expect(screen.queryByText(/enter your passphrase/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Archived \(1\)/i })).toBeInTheDocument()
   })
 })

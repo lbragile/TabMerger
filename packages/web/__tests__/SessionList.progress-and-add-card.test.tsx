@@ -32,22 +32,9 @@ describe('SessionCard colored progress-bar strip', () => {
   })
 })
 
-describe('SessionList trailing "+" card', () => {
-  it('renders a "Save current tabs as a session" card after populated sessions', () => {
-    render(
-      <SessionList
-        sessions={[
-          { id: 's1', name: 'Session 1', groups: [], created_at: new Date().toISOString() },
-        ]}
-        isPro={true}
-      />
-    )
-    expect(screen.getByText(/Save current tabs as a session/i)).toBeInTheDocument()
-    expect(screen.getByText(/Needs the extension/i)).toBeInTheDocument()
-  })
-
-  it('still renders the trailing "+" card when there are zero sessions', () => {
+describe('SessionList empty state', () => {
+  it('shows a plain "No saved sessions yet." message when there are zero sessions', () => {
     render(<SessionList sessions={[]} isPro={true} />)
-    expect(screen.getByText(/Save current tabs as a session/i)).toBeInTheDocument()
+    expect(screen.getByText('No saved sessions yet.')).toBeInTheDocument()
   })
 })

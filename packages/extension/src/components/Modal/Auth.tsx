@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
@@ -161,15 +162,14 @@ export function AuthModal({ onClose }: AuthModalProps) {
               </p>
             )}
             <div className="flex items-center gap-2">
-              <Input
+              <PasswordInput
                 id="account-password"
-                type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="flex-1"
               />
-              <Button type="submit" size="sm" disabled={passwordSaving || newPassword.length < 8}>
-                {passwordSaving ? 'Saving...' : 'Save'}
+              <Button type="submit" size="sm" disabled={passwordSaving || newPassword.length < 8} loading={passwordSaving}>
+                Save
               </Button>
             </div>
             <PasswordStrength password={newPassword} />
@@ -202,8 +202,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
               autoFocus
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Sending...' : 'Send reset email'}
+          <Button type="submit" className="w-full" disabled={loading} loading={loading}>
+            Send reset email
           </Button>
           <Button type="button" variant="ghost" className="w-full text-xs" onClick={() => setForgotPassword(false)}>
             Back to sign in
@@ -257,6 +257,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
           className="w-full"
           onClick={handleGoogle}
           disabled={googleLoading}
+          loading={googleLoading}
           type="button"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4 mr-2" aria-hidden="true">
@@ -265,7 +266,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-          {googleLoading ? 'Signing in...' : 'Continue with Google'}
+          Continue with Google
         </Button>
 
         <div className="flex items-center gap-3">
@@ -302,9 +303,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="signin-password">Password</Label>
-                <Input
+                <PasswordInput
                   id="signin-password"
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -317,8 +317,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   Forgot password?
                 </button>
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign In'}
+              <Button type="submit" className="w-full" disabled={loading} loading={loading}>
+                Sign In
               </Button>
             </form>
           </TabsContent>
@@ -337,17 +337,16 @@ export function AuthModal({ onClose }: AuthModalProps) {
               </div>
               <div className="space-y-1">
                 <Label htmlFor="signup-password">Password</Label>
-                <Input
+                <PasswordInput
                   id="signup-password"
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <PasswordStrength password={password} />
               </div>
-              <Button type="submit" className="w-full" disabled={loading || !passwordValid}>
-                {loading ? 'Creating account...' : 'Create Account'}
+              <Button type="submit" className="w-full" disabled={loading || !passwordValid} loading={loading}>
+                Create Account
               </Button>
             </form>
           </TabsContent>
@@ -364,8 +363,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Sending...' : 'Send magic link'}
+              <Button type="submit" className="w-full" disabled={loading} loading={loading}>
+                Send magic link
               </Button>
             </form>
           </TabsContent>

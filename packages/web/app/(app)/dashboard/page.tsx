@@ -55,7 +55,7 @@ export default async function DashboardPage({
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     /** Free tier cap enforced at the query level so the UI never accidentally renders groups the user shouldn't see */
-    supabase.from('groups').select('id, name, color, windows, updated_at, public_slug, window_count, tab_count').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
+    supabase.from('groups').select('id, name, color, windows, updated_at, public_slug, window_count, tab_count, archived').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
     supabase
       .from('sessions')
       .select('*')
@@ -65,8 +65,10 @@ export default async function DashboardPage({
 
   // ponytail: uses the denormalized tab_count column (maintained client-side on every push),
   // not group.windows content — windows is ciphertext for encrypted users and the server
-  // never holds the key to reduce over it.
-  const tabCount = (groups ?? []).reduce(
+  // never holds the key to reduce over it. Stats exclude archived groups, matching the
+  // extension's SidePanel behavior.
+  const activeGroups = (groups ?? []).filter((g: { archived?: boolean }) => !g.archived)
+  const tabCount = activeGroups.reduce(
     (sum: number, g: { tab_count?: number }) => sum + (g.tab_count ?? 0),
     0
   )
@@ -151,7 +153,7 @@ export default async function DashboardPage({
 
       <StatsOverview
         tabCount={tabCount}
-        groupCount={groups?.length ?? 0}
+        groupCount={activeGroups.length}
         sessionCount={sessions?.length ?? 0}
         memberSince={profile?.created_at ?? user.created_at}
         aiUsage={aiUsage}

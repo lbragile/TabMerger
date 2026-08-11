@@ -51,6 +51,18 @@ describe('SetPasswordForm', () => {
     await waitFor(() => expect(mockToastSuccess).toHaveBeenCalled())
   })
 
+  it('shows a spinner on the Save button while saving', async () => {
+    let resolveUpdate!: (v: { error: null }) => void
+    mockUpdateUser.mockReturnValueOnce(new Promise((resolve) => { resolveUpdate = resolve }))
+    render(<SetPasswordForm hasPassword={false} />)
+    fireEvent.change(screen.getByLabelText(/set a password/i), { target: { value: 'NewPassw0rd' } })
+    const button = screen.getByRole('button', { name: /save/i })
+    fireEvent.click(button)
+    await waitFor(() => expect(button).toBeDisabled())
+    expect(button.querySelector('svg')).toBeInTheDocument()
+    resolveUpdate({ error: null })
+  })
+
   it('shows a toast error when Supabase returns an error', async () => {
     mockUpdateUser.mockResolvedValue({ error: { message: 'Password too weak' } })
     render(<SetPasswordForm hasPassword={false} />)

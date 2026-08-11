@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
 interface SaveSessionModalProps {
@@ -12,8 +13,9 @@ interface SaveSessionModalProps {
 /** Data-tab equivalent of Header's "Save session" action — replaces window.prompt(). */
 export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState(false);
-  const onSave = data.onSave as (name: string) => void | Promise<void>;
+  const onSave = data.onSave as (name: string, description?: string) => void | Promise<void>;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
       setError(true);
       return;
     }
-    void onSave(trimmed);
+    void onSave(trimmed, description.trim() || undefined);
     onClose();
   };
 
@@ -45,6 +47,17 @@ export function SaveSessionModal({ data, onClose }: SaveSessionModalProps) {
           autoFocus
         />
         {error && <p className="text-xs text-destructive">Session name is required</p>}
+      </div>
+
+      <div className="space-y-1.5 pb-4">
+        <Label htmlFor="session-description" className="mb-1.5 block">Description (optional)</Label>
+        <Textarea
+          id="session-description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="What's this session for?"
+          rows={3}
+        />
       </div>
 
       <DialogFooter>

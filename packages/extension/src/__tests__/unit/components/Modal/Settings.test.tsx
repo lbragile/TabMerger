@@ -27,7 +27,6 @@ const {
   mockSetDevAiUsage,
   mockHasEncryptionKey,
   mockGetDataKey,
-  mockUnlockEncryption,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -45,13 +44,11 @@ const {
   mockSetDevAiUsage: vi.fn().mockResolvedValue(undefined),
   mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
   mockGetDataKey: vi.fn().mockResolvedValue(null),
-  mockUnlockEncryption: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
   hasEncryptionKey: mockHasEncryptionKey,
   getDataKey: mockGetDataKey,
-  unlockEncryption: mockUnlockEncryption,
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -554,61 +551,17 @@ describe('SettingsModal — billing portal', () => {
 })
 
 describe('SettingsModal — Account tab encryption', () => {
-  it('does not show the encryption section without cloudSync', async () => {
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/account/i)
-    expect(screen.queryByText('End-to-end encryption')).toBeNull()
-  })
-
-  it('shows no Unlock button when encryption has not been set up yet (nothing to unlock)', async () => {
-    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/account/i)
-    expect(await screen.findByText('End-to-end encryption')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Unlock' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Enable' })).toBeNull()
-  })
-
-  it('shows an Unlock prompt when a key exists but is locked this session', async () => {
-    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
-    mockGetDataKey.mockReturnValue(null)
-    const user = userEvent.setup()
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/account/i)
-    await user.click(await screen.findByRole('button', { name: 'Unlock' }))
-    await user.type(screen.getByPlaceholderText('Passphrase'), 'my passphrase')
-    await user.click(screen.getByRole('button', { name: 'Unlock' }))
-    await waitFor(() => expect(mockUnlockEncryption).toHaveBeenCalledWith('my passphrase'))
-  })
-
-  it('shows a wrong-passphrase error when unlockEncryption returns false', async () => {
-    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
-    mockGetDataKey.mockReturnValue(null)
-    mockUnlockEncryption.mockResolvedValue(false)
-    const user = userEvent.setup()
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    await goToTab(/account/i)
-    await user.click(await screen.findByRole('button', { name: 'Unlock' }))
-    await user.type(await screen.findByPlaceholderText('Passphrase'), 'wrong pass')
-    await user.click(screen.getByRole('button', { name: 'Unlock' }))
-    expect(await screen.findByText('Wrong passphrase')).toBeInTheDocument()
-  })
-
-  it('shows a confirmation message when already unlocked this session (no Unlock button)', async () => {
+  it('never renders an encryption section — setup/unlock is handled entirely by the mandatory encryptionSetup modal, not this tab', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
     mockHasEncryptionKey.mockResolvedValue(true)
     mockGetDataKey.mockReturnValue({ fake: 'key' } as unknown as CryptoKey)
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
-    expect(await screen.findByText('Unlocked for this session.')).toBeInTheDocument()
+    expect(screen.queryByText('End-to-end encryption')).toBeNull()
+    expect(screen.queryByText(/unlocked on this device/i)).toBeNull()
     expect(screen.queryByRole('button', { name: 'Unlock' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Enable' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Turn off' })).toBeNull()
   })
 })

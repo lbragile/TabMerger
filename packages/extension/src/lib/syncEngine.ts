@@ -2,7 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { encryptBlob, decryptBlob, isEncryptedBlob, type EncryptedBlob } from '@tabmerger/shared';
 import type { Group } from './types';
 import { supabase } from './supabase';
-import { getPendingSyncGroups, markGroupSynced, saveGroup, getSetting, setSetting } from './localDb';
+import { getGroupsState, saveGroupsState, getPendingSyncGroups, markGroupSynced, saveGroup, getSetting, setSetting } from './localDb';
 import { hasEncryptionKey, getDataKey } from './encryptionKey';
 
 interface EncryptedContent {
@@ -227,6 +227,35 @@ export async function pullRemoteChanges(session: Session, localGroups: Group[]):
     ...merged.filter((g) => g.permanent),
     ...merged.filter((g) => !g.permanent).sort((a, b) => b.updatedAt - a.updatedAt)
   ];
+}
+
+/**
+ * Runs one push+pull sync cycle and persists the merged result to IDB — the core of
+ * `useSync`'s `doSync`, extracted so the background service worker (no React lifecycle,
+ * no queryClient) can trigger a real sync too, not just re-read Supabase. Callers are
+ * responsible for encryption-lock/session gating before calling this (see `useSync.ts`
+ * and background.ts's `SYNC_NOW` handler) — this function assumes the caller already
+ * confirmed there's an unlocked data key if encryption is on.
+ */
+export async function performSync(session: Session): Promise<Group[]> {
+  const state = await getGroupsState();
+  await pushPendingChanges(session);
+  const merged = await pullRemoteChanges(session, state.available);
+
+  // Re-apply local drag order: pull returns groups sorted by updatedAt which stomps the
+  // user's drag order. Re-sort merged using the locally-saved order; any groups new from
+  // remote land at the end.
+  const localOrder = state.available.map((g) => g.id);
+  const posMap = new Map(localOrder.map((id, i) => [id, i]));
+  const reordered = [...merged].sort((a, b) => {
+    if (a.permanent && !b.permanent) return -1;
+    if (!a.permanent && b.permanent) return 1;
+    return (posMap.get(a.id) ?? Infinity) - (posMap.get(b.id) ?? Infinity);
+  });
+
+  const next = { ...state, available: reordered };
+  await saveGroupsState(next);
+  return reordered;
 }
 
 /**

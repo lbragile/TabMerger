@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { DeviceSession } from '@tabmerger/shared';
 import { useEntitlements } from '@/hooks/useEntitlements';
-import { fetchOtherDeviceSessions, renameDevice, removeDevices, getOrCreateDeviceId } from '@/lib/deviceSessions';
+import { fetchDeviceSessions, renameDevice, removeDevices, getOrCreateDeviceId } from '@/lib/deviceSessions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -14,7 +13,7 @@ import {
   DialogDescription,
   DialogFooter
 } from '@/components/ui/dialog';
-import { ChevronDown, ChevronRight, ExternalLink, Laptop } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, ExternalLink, Laptop, Pencil, X } from 'lucide-react';
 
 // ponytail: Supabase '*' select returns `id` (the row's primary key) but the shared DeviceSession
 // type omits it (device_id is the app-level identity used everywhere else). Extend locally rather
@@ -60,42 +59,56 @@ function snapshotWindowCount(snapshot: unknown): number {
 }
 
 /**
- * "Continue on other device" Settings panel — lists this account's other devices
- * (own device excluded) with their last-known Now Open tabs. Opening a tab is a
- * local, read-only handoff via chrome.tabs.create; nothing is written back to
- * Supabase or to the remote device's row. "Restore N tabs" in the expanded
- * list is the same handoff batched across every tab in the snapshot.
+ * "Continue on other device" Settings panel — lists every device on this account,
+ * including this one (marked "(this device)"), with their last-known Now Open
+ * tabs. Opening a tab is a local, read-only handoff via chrome.tabs.create;
+ * nothing is written back to Supabase or to the remote device's row. "Restore N
+ * tabs" in the expanded list is the same handoff batched across every tab in
+ * the snapshot.
  */
 export function OtherDevices() {
   const { tier } = useEntitlements();
   const queryClient = useQueryClient();
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [deviceName, setDeviceName] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [editingDeviceId, setEditingDeviceId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
 
   const { data: devices = [] } = useQuery({
-    queryKey: ['otherDeviceSessions', tier],
-    queryFn: () => fetchOtherDeviceSessions(tier) as Promise<DeviceSessionRow[]>,
+    queryKey: ['deviceSessions', tier],
+    queryFn: () => fetchDeviceSessions(tier) as Promise<DeviceSessionRow[]>,
     enabled: tier !== 'free',
     staleTime: 30_000
   });
 
-  useQuery({
-    queryKey: ['ownDeviceName'],
-    queryFn: async () => {
-      const id = await getOrCreateDeviceId();
-      setDeviceName((prev) => prev || id);
-      return id;
-    },
+  const { data: ownDeviceId } = useQuery({
+    queryKey: ['ownDeviceId'],
+    queryFn: () => getOrCreateDeviceId(),
     enabled: tier !== 'free'
   });
 
   if (tier === 'free') return null;
 
-  const handleRename = () => {
-    const trimmed = deviceName.trim();
-    if (trimmed) renameDevice(trimmed);
+  const startRename = (device: DeviceSessionRow) => {
+    setEditingDeviceId(device.device_id);
+    setEditingName(device.device_name);
+  };
+
+  const saveRename = async (deviceId: string) => {
+    const trimmed = editingName.trim();
+    setEditingDeviceId(null);
+    if (!trimmed) return;
+
+    // Optimistic update — renameDevice()'s Supabase write hasn't landed yet, so a naive
+    // invalidate+refetch here can race it and read back the OLD name, making the rename
+    // appear to "not take" for a beat before eventually flipping. Update the cache directly
+    // instead of waiting on a round trip, then reconcile with the server in the background.
+    queryClient.setQueryData<DeviceSessionRow[]>(['deviceSessions', tier], (prev) =>
+      prev?.map((d) => (d.device_id === deviceId ? { ...d, device_name: trimmed } : d))
+    );
+    await renameDevice(trimmed);
+    queryClient.invalidateQueries({ queryKey: ['deviceSessions', tier] });
   };
 
   const openTab = (tab: SnapshotTab) => {
@@ -127,25 +140,10 @@ export function OtherDevices() {
 
   return (
     <div className="space-y-3">
-      <div className="space-y-1">
-        <Label htmlFor="this-device-name">This device name</Label>
-        <Input
-          id="this-device-name"
-          aria-label="This device name"
-          value={deviceName}
-          onChange={(e) => setDeviceName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleRename();
-          }}
-          onBlur={handleRename}
-          className="h-8 text-xs"
-        />
-      </div>
-
       <div>
-        <p className="text-xs font-medium mb-1.5">Other devices</p>
+        <p className="text-xs font-medium mb-1.5">Devices</p>
         {devices.length === 0 ? (
-          <p className="text-xs text-muted-foreground py-4 text-center">No other devices yet.</p>
+          <p className="text-xs text-muted-foreground py-4 text-center">No devices yet.</p>
         ) : (
           <>
             {selectedIds.length > 0 && (
@@ -162,18 +160,28 @@ export function OtherDevices() {
               </div>
             )}
             <div className="max-h-64 overflow-y-auto pr-1 space-y-1.5">
-              {devices.map((device) => (
-                <DeviceRow
-                  key={device.device_id}
-                  device={device}
-                  isExpanded={expanded === device.device_id}
-                  isSelected={selectedIds.includes(device.id)}
-                  onToggle={() => setExpanded((prev) => (prev === device.device_id ? null : device.device_id))}
-                  onToggleSelected={() => toggleSelected(device.id)}
-                  onOpenTab={openTab}
-                  onRestoreAll={restoreDevice}
-                />
-              ))}
+              {devices.map((device) => {
+                const isCurrentDevice = device.device_id === ownDeviceId;
+                return (
+                  <DeviceRow
+                    key={device.device_id}
+                    device={device}
+                    isCurrentDevice={isCurrentDevice}
+                    isExpanded={expanded === device.device_id}
+                    isSelected={selectedIds.includes(device.id)}
+                    isEditing={editingDeviceId === device.device_id}
+                    editingName={editingName}
+                    onEditingNameChange={setEditingName}
+                    onStartRename={() => startRename(device)}
+                    onSaveRename={() => void saveRename(device.device_id)}
+                    onCancelRename={() => setEditingDeviceId(null)}
+                    onToggle={() => setExpanded((prev) => (prev === device.device_id ? null : device.device_id))}
+                    onToggleSelected={() => toggleSelected(device.id)}
+                    onOpenTab={openTab}
+                    onRestoreAll={restoreDevice}
+                  />
+                );
+              })}
             </div>
           </>
         )}
@@ -204,47 +212,128 @@ export function OtherDevices() {
 
 interface DeviceRowProps {
   device: DeviceSession;
+  isCurrentDevice: boolean;
   isExpanded: boolean;
   isSelected: boolean;
+  isEditing: boolean;
+  editingName: string;
+  onEditingNameChange: (value: string) => void;
+  onStartRename: () => void;
+  onSaveRename: () => void;
+  onCancelRename: () => void;
   onToggle: () => void;
   onToggleSelected: () => void;
   onOpenTab: (tab: SnapshotTab) => void;
   onRestoreAll: (tabs: SnapshotTab[]) => void;
 }
 
-function DeviceRow({ device, isExpanded, isSelected, onToggle, onToggleSelected, onOpenTab, onRestoreAll }: DeviceRowProps) {
+function DeviceRow({
+  device,
+  isCurrentDevice,
+  isExpanded,
+  isSelected,
+  isEditing,
+  editingName,
+  onEditingNameChange,
+  onStartRename,
+  onSaveRename,
+  onCancelRename,
+  onToggle,
+  onToggleSelected,
+  onOpenTab,
+  onRestoreAll
+}: DeviceRowProps) {
   const tabs = snapshotTabs(device.now_open_snapshot);
   const windowCount = snapshotWindowCount(device.now_open_snapshot);
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditing) editInputRef.current?.focus();
+  }, [isEditing]);
 
   return (
-    <div className="border border-border">
-      <div className="flex items-center gap-2 px-2 py-1.5">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={onToggleSelected}
-          onClick={(e) => e.stopPropagation()}
-          aria-label={`Select ${device.device_name}`}
-          className="shrink-0"
-        />
-        <button
-          type="button"
-          onClick={onToggle}
-          className="flex-1 min-w-0 flex items-center gap-2 text-xs text-left"
-        >
-          {isExpanded ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />}
-          <span className="flex-1 min-w-0 flex items-center gap-1">
+    <div className="min-w-0 border border-border">
+      <div className="flex min-w-0 items-center gap-2 px-2 py-1.5">
+        {!isCurrentDevice && (
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={onToggleSelected}
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`Select ${device.device_name}`}
+            className="shrink-0"
+          />
+        )}
+        {isEditing ? (
+          <div className="flex-1 min-w-0 flex items-center gap-1">
             <Laptop className="h-3 w-3 shrink-0 text-primary" />
-            <span className="min-w-0 truncate font-medium">{device.device_name}</span>
-          </span>
-          <span className="text-muted-foreground shrink-0">{relativeAgo(device.last_active)}</span>
-          <span className="text-muted-foreground shrink-0 truncate">
-            {windowCount} {windowCount === 1 ? 'window' : 'windows'} · {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
-          </span>
-        </button>
+            <Input
+              ref={editInputRef}
+              value={editingName}
+              onChange={(e) => onEditingNameChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') onSaveRename();
+                if (e.key === 'Escape') onCancelRename();
+              }}
+              aria-label="This device name"
+              className="h-6 text-xs"
+            />
+            <button
+              type="button"
+              aria-label="Save"
+              className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-primary/20 hover:bg-primary/40 text-primary"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => { e.stopPropagation(); onSaveRename(); }}
+            >
+              <Check className="h-2.5 w-2.5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Cancel"
+              className="shrink-0 flex items-center justify-center h-4 w-4 rounded-sm bg-muted/60 hover:bg-muted text-muted-foreground"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => { e.stopPropagation(); onCancelRename(); }}
+            >
+              <X className="h-2.5 w-2.5" />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={onToggle}
+            className="flex-1 min-w-0 flex items-center gap-2 text-xs text-left"
+          >
+            {isExpanded ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />}
+            <span className="flex-1 min-w-0 flex items-center gap-1">
+              <Laptop className="h-3 w-3 shrink-0 text-primary" />
+              <span className="min-w-0 truncate font-medium">{device.device_name}</span>
+              {isCurrentDevice && (
+                <span className="shrink-0 text-muted-foreground font-normal">(this device)</span>
+              )}
+            </span>
+            <span className="text-muted-foreground shrink-0">{relativeAgo(device.last_active)}</span>
+            <span className="text-muted-foreground shrink-0 truncate">
+              {windowCount} {windowCount === 1 ? 'window' : 'windows'} · {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
+            </span>
+          </button>
+        )}
+        {isCurrentDevice && !isEditing && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-5 w-5 p-0 shrink-0"
+            aria-label="Rename this device"
+            onClick={(e) => {
+              e.stopPropagation();
+              onStartRename();
+            }}
+          >
+            <Pencil className="h-3 w-3" />
+          </Button>
+        )}
       </div>
       {isExpanded && (
-        <div className="border-t border-border px-2 py-1.5 space-y-1">
+        <div className="min-w-0 border-t border-border px-2 py-1.5 space-y-1">
           {tabs.length === 0 && <p className="text-xs text-muted-foreground">No tabs.</p>}
           {tabs.length > 0 && (
             <div className="flex justify-end">
@@ -259,7 +348,7 @@ function DeviceRow({ device, isExpanded, isSelected, onToggle, onToggleSelected,
             </div>
           )}
           {tabs.map((tab, i) => (
-            <div key={i} className="flex items-center gap-2 text-xs">
+            <div key={i} className="flex min-w-0 items-center gap-2 text-xs">
               <span className="flex-1 min-w-0 truncate" title={tab.title ?? tab.url}>
                 {tab.title || tab.url}
               </span>

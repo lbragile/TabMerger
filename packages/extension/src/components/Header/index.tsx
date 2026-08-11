@@ -178,9 +178,9 @@ export function Header() {
 
     const handleSaveSession = () => {
         openModal('saveSession', {
-            onSave: async (name: string) => {
+            onSave: async (name: string, description?: string) => {
                 try {
-                    await saveSession({ name, sessionCount: sessionList.length, hasSessions });
+                    await saveSession({ name, description, sessionCount: sessionList.length, hasSessions });
                     toast.success('Session saved');
                 } catch (err) {
                     if (err instanceof Error && err.message === 'SESSION_LIMIT') {
