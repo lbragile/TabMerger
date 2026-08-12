@@ -38,7 +38,6 @@ export async function Navbar() {
                         />
                         <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">TabMerger</span>
                     </Link>
-                    <MobileNavToggle />
                     <nav className="hidden items-center gap-1 text-[13.5px] md:flex">
                         <Link
                             href="/features"
@@ -66,66 +65,70 @@ export async function Navbar() {
                         </Link>
                     </nav>
                 </div>
-                <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+                <div className="flex flex-1 items-center justify-end space-x-2">
                     <div className="flex items-center gap-2.5">
                         <ThemeToggle />
-                        {user ? (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        className="relative h-8 w-8 rounded-md"
-                                        aria-label="Account menu"
+                        {/* Sign-in/account controls move into the mobile hamburger panel below md */}
+                        <div className="hidden items-center gap-2.5 md:flex">
+                            {user ? (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            className="relative h-8 w-8 rounded-md"
+                                            aria-label="Account menu"
+                                        >
+                                            <Avatar className="h-8 w-8 rounded-md">
+                                                <AvatarFallback className="text-xs rounded-md">
+                                                    {initials}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        className="w-56"
+                                        align="end"
+                                        forceMount
                                     >
-                                        <Avatar className="h-8 w-8 rounded-md">
-                                            <AvatarFallback className="text-xs rounded-md">
-                                                {initials}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <div className="flex flex-col space-y-1 p-2">
+                                            <p className="text-sm font-medium leading-none">
+                                                {user.email}
+                                            </p>
+                                        </div>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/dashboard">Dashboard</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem asChild>
+                                            <Link href="/account">Account</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem asChild>
+                                            <SignOutForm>
+                                                <button
+                                                    className="w-full text-left"
+                                                    type="submit"
+                                                >
+                                                    Sign out
+                                                </button>
+                                            </SignOutForm>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            ) : (
+                                <>
+                                    <Button variant="ghost" size="sm" asChild>
+                                        <Link href="/auth/sign-in">Sign in</Link>
                                     </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    className="w-56"
-                                    align="end"
-                                    forceMount
-                                >
-                                    <div className="flex flex-col space-y-1 p-2">
-                                        <p className="text-sm font-medium leading-none">
-                                            {user.email}
-                                        </p>
-                                    </div>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/dashboard">Dashboard</Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/account">Account</Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem asChild>
-                                        <SignOutForm>
-                                            <button
-                                                className="w-full text-left"
-                                                type="submit"
-                                            >
-                                                Sign out
-                                            </button>
-                                        </SignOutForm>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        ) : (
-                            <>
-                                <Button variant="ghost" size="sm" asChild>
-                                    <Link href="/auth/sign-in">Sign in</Link>
-                                </Button>
-                                <Button size="sm" asChild>
-                                    <Link href="/auth/sign-up">
-                                        Get started
-                                    </Link>
-                                </Button>
-                            </>
-                        )}
+                                    <Button size="sm" asChild>
+                                        <Link href="/auth/sign-up">
+                                            Get started
+                                        </Link>
+                                    </Button>
+                                </>
+                            )}
+                        </div>
+                        <MobileNavToggle email={user?.email} initials={initials} />
                     </div>
                 </div>
             </div>

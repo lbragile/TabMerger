@@ -58,6 +58,9 @@ export const metadata: Metadata = {
     description:
       'TabMerger groups your open tabs into a clean, searchable panel — saving memory and mental bandwidth.',
   },
+  verification: {
+    google: 'OW3tfEcFL_xiCb5p0XfnF7B1BILkp-gkxDuNg4XZFK8',
+  },
 }
 
 export default function RootLayout({
