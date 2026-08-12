@@ -12,7 +12,7 @@ function mockSupabase(tier: string, usedCount = 53, purchases: { credits: number
         getUser: async () => ({ data: { user: { id: 'u1', email: 'user@example.com', created_at: '2024-01-01' } } }),
       },
       from: (table: string) => {
-        const builder: Record<string, unknown> & PromiseLike<{ data: unknown }> = {} as never
+        const builder: Record<string, unknown> = {}
         const chain = () => builder
         builder.select = chain
         builder.eq = chain
@@ -83,7 +83,7 @@ describe('AccountPage — buy more AI calls', () => {
           getUser: async () => ({ data: { user: { id: 'u1', email: 'user@example.com', created_at: '2024-01-01' } } }),
         },
         from: (table: string) => {
-          const builder: Record<string, unknown> & PromiseLike<{ data: unknown }> = {} as never
+          const builder: Record<string, unknown> = {}
           const chain = () => builder
           builder.select = chain
           builder.eq = chain

@@ -10,10 +10,14 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const createServerClient = vi.fn(() => ({ mocked: true }))
+const createServerClient = vi.fn(
+  (_url: string, _key: string, _options?: { auth?: { autoRefreshToken?: boolean } }) => ({
+    mocked: true,
+  })
+)
 
 vi.mock('@supabase/ssr', () => ({
-  createServerClient: (...args: unknown[]) => createServerClient(...args),
+  createServerClient: (...args: Parameters<typeof createServerClient>) => createServerClient(...args),
 }))
 
 vi.mock('next/headers', () => ({
@@ -35,7 +39,7 @@ describe('lib/supabase/server createClient', () => {
     await createClient()
 
     expect(createServerClient).toHaveBeenCalledTimes(1)
-    const options = createServerClient.mock.calls[0][2] as { auth?: { autoRefreshToken?: boolean } }
-    expect(options.auth?.autoRefreshToken).toBe(false)
+    const options = createServerClient.mock.calls[0][2]
+    expect(options?.auth?.autoRefreshToken).toBe(false)
   })
 })

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { lookup } from 'node:dns/promises'
 import { isIP } from 'node:net'
 import { request as httpRequest } from 'node:http'
-import { request as httpsRequest } from 'node:https'
+import { request as httpsRequest, type RequestOptions as HttpsRequestOptions } from 'node:https'
 import { gunzipSync, brotliDecompressSync, inflateSync } from 'node:zlib'
 import type { LookupAddress } from 'node:dns'
 
@@ -111,36 +111,44 @@ function fetchPinnedHop(
 ): Promise<{ body: string } | { redirectTo: string }> {
   const requestFn = parsed.protocol === 'https:' ? httpsRequest : httpRequest
 
+  // @types/node's RequestOptions doesn't declare `autoSelectFamily`, but Node
+  // forwards http(s).request options straight through to net.connect() at
+  // runtime, where it is honored — this widens the type to match actual
+  // runtime behavior instead of suppressing the check.
+  type RequestOptionsWithFamily = HttpsRequestOptions & { autoSelectFamily?: boolean }
+
   return new Promise((resolve, reject) => {
-    const req = requestFn(
-      {
-        protocol: parsed.protocol,
-        hostname: parsed.hostname,
-        port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
-        path: `${parsed.pathname}${parsed.search}`,
-        servername: parsed.protocol === 'https:' ? parsed.hostname : undefined,
-        headers: {
-          'User-Agent': 'TabMergerBot/1.0 (+https://tabmerger.com)',
-          'Accept-Encoding': 'gzip, deflate, br',
-          Host: parsed.host,
-        },
-        timeout: FETCH_TIMEOUT_MS,
-        // Node 20+'s Happy Eyeballs (autoSelectFamily, on by default) races multiple
-        // resolved addresses and calls a custom `lookup` with `options.all: true`,
-        // expecting an array-style `(err, addresses[])` callback instead of the
-        // classic `(err, address, family)` one — mismatching that throws
-        // ERR_INVALID_IP_ADDRESS internally and silently kills every request. We
-        // already resolved + validated the address ourselves, so there's nothing
-        // for Happy Eyeballs to race; disable it and keep the simple single-address
-        // lookup signature.
-        autoSelectFamily: false,
-        // Pins the connection to the pre-validated address(es) instead of
-        // letting Node re-resolve the hostname at connect time.
-        lookup: (_hostname, _options, callback) => {
-          const preferred = addresses.find((a) => a.family === 4) ?? addresses[0]
-          callback(null, preferred.address, preferred.family)
-        },
+    const options: RequestOptionsWithFamily = {
+      protocol: parsed.protocol,
+      hostname: parsed.hostname,
+      port: parsed.port || (parsed.protocol === 'https:' ? '443' : '80'),
+      path: `${parsed.pathname}${parsed.search}`,
+      servername: parsed.protocol === 'https:' ? parsed.hostname : undefined,
+      headers: {
+        'User-Agent': 'TabMergerBot/1.0 (+https://tabmerger.com)',
+        'Accept-Encoding': 'gzip, deflate, br',
+        Host: parsed.host,
       },
+      timeout: FETCH_TIMEOUT_MS,
+      // Node 20+'s Happy Eyeballs (autoSelectFamily, on by default) races multiple
+      // resolved addresses and calls a custom `lookup` with `options.all: true`,
+      // expecting an array-style `(err, addresses[])` callback instead of the
+      // classic `(err, address, family)` one — mismatching that throws
+      // ERR_INVALID_IP_ADDRESS internally and silently kills every request. We
+      // already resolved + validated the address ourselves, so there's nothing
+      // for Happy Eyeballs to race; disable it and keep the simple single-address
+      // lookup signature.
+      autoSelectFamily: false,
+      // Pins the connection to the pre-validated address(es) instead of
+      // letting Node re-resolve the hostname at connect time.
+      lookup: (_hostname, _options, callback) => {
+        const preferred = addresses.find((a) => a.family === 4) ?? addresses[0]
+        callback(null, preferred.address, preferred.family)
+      },
+    }
+
+    const req = requestFn(
+      options,
       (res) => {
         const status = res.statusCode ?? 0
         if (status >= 300 && status < 400 && res.headers.location) {

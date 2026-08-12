@@ -17,6 +17,7 @@ allowBuilds:
   cbor-extract: true
   core-js: false
   esbuild: true
+  msw: true
   sharp: true
   spawn-sync: true
   unrs-resolver: true
