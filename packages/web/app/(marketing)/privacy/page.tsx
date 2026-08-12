@@ -30,7 +30,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: July 16, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: August 11, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -58,8 +58,8 @@ export default function PrivacyPage() {
               <p>When you use AI features, the titles and URLs of your open tabs are sent to the Anthropic Claude API to generate a response over an encrypted connection. Anthropic does not use API request content to train its models and does not retain it beyond their standard API data handling terms. Tab content is not stored by us beyond what you have already saved in your groups.</p>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Analytics <span className="normal-case font-normal">(planned)</span></h3>
-              <p>We plan to use Google Analytics 4 with an anonymous client ID stored in <code className="text-xs bg-muted px-1.5 py-0.5 rounded">chrome.storage.local</code>. This will collect aggregate usage patterns without linking activity to your identity. No personally identifiable information will be sent. This feature is not yet active; this policy will be updated when it is enabled.</p>
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Analytics</h3>
+              <p>We use Google Analytics 4 on the web app to collect aggregate usage patterns (page views, feature usage). GA4 assigns an anonymous client identifier and we do not link this data to your account identity. No personally identifiable information is sent to Google. We also use PostHog for product analytics and session replay on the web app, with all form inputs masked by default; this data is likewise not linked to your account beyond what's needed to improve the product.</p>
             </div>
           </div>
         </section>
@@ -90,8 +90,9 @@ export default function PrivacyPage() {
               { name: 'Supabase', purpose: 'Database, authentication, and file storage', url: 'https://supabase.com/privacy' },
               { name: 'Stripe', purpose: 'Payment processing and subscription management', url: 'https://stripe.com/privacy' },
               { name: 'Sentry', purpose: 'Error monitoring — stack traces and metadata only. All URLs and tab data are stripped via a beforeSend filter before any data leaves your device.', url: 'https://sentry.io/privacy/' },
-              { name: 'Anthropic *', purpose: 'Claude API for AI features (Pro AI tier only)', url: 'https://www.anthropic.com/privacy' },
-              { name: 'Google Analytics *', purpose: 'Anonymous aggregate analytics', url: 'https://policies.google.com/privacy' },
+              { name: 'Anthropic', purpose: 'Claude API for AI features (Pro AI tier only)', url: 'https://www.anthropic.com/privacy' },
+              { name: 'Google Analytics', purpose: 'Anonymous aggregate analytics', url: 'https://policies.google.com/privacy' },
+              { name: 'PostHog', purpose: 'Product analytics and session replay, with form inputs masked by default', url: 'https://posthog.com/privacy' },
             ].map(({ name, purpose, url }) => (
               <div key={name} className="flex gap-4 px-4 py-3">
                 <a href={url} target="_blank" rel="noopener noreferrer" className="font-medium w-40 shrink-0 hover:underline">{name}</a>
@@ -99,7 +100,6 @@ export default function PrivacyPage() {
               </div>
             ))}
           </div>
-          <p className="text-muted-foreground text-xs mt-3">* Planned — not yet active. This policy will be updated when enabled.</p>
           <p className="text-muted-foreground text-sm mt-2">We do not sell your data to any third party.</p>
         </section>
 

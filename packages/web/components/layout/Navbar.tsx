@@ -28,7 +28,7 @@ export async function Navbar() {
         <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background px-4">
             <div className="container relative flex items-center">
                 <div className="mr-8 flex items-center">
-                    <Link href="/" className="mr-8 flex items-center gap-[9px]">
+                    <Link href="/" className="mr-8 flex shrink-0 items-center gap-[9px]">
                         <Image
                             src="/logo.png"
                             alt="TabMerger"
@@ -36,7 +36,7 @@ export async function Navbar() {
                             height={26}
                             className="rounded-md"
                         />
-                        <span className="text-[15px] font-semibold tracking-tight">TabMerger</span>
+                        <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">TabMerger</span>
                     </Link>
                     <MobileNavToggle />
                     <nav className="hidden items-center gap-1 text-[13.5px] md:flex">

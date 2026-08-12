@@ -76,3 +76,4 @@ packages/web/e2e/.auth/
 # Playwright visual regression baselines — committed intentionally, update via --update-snapshots
 !packages/web/e2e/**/*-snapshots/**/*.png
 !packages/extension/e2e/**/*-snapshots/**/*.png
+.vercel

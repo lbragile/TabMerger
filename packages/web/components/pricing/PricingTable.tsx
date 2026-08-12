@@ -51,8 +51,8 @@ export function PricingTable({ currentTier }: PricingTableProps) {
           displayYearly="$0"
         />
 
-        {/* Pro — highlighted, comes first on mobile */}
-        <div className="order-first md:order-none">
+        {/* Pro — highlighted, same order as desktop */}
+        <div>
           <PricingCard
             tier="pro"
             name={TIERS.pro.name}
