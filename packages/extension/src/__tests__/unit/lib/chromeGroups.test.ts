@@ -25,14 +25,14 @@ describe('openTabInChromeGroup', () => {
     vi.stubGlobal('chrome', {
       tabs: { create: vi.fn().mockResolvedValue({ id: 1, windowId: 1 }) },
     })
-    await openTabInChromeGroup({ id: 1, title: 'T', url: 'https://a.com', chromeGroup: { name: 'G', color: 'blue' } })
+    await openTabInChromeGroup({ id: 1, title: 'T', url: 'https://a.com', chromeGroup: { id: 0, name: 'G', color: 'blue' } })
     expect(chrome.tabs.create).toHaveBeenCalled()
   })
 
   it('reuses an existing chrome tab group with the same title', async () => {
     ;(chrome.tabGroups.query as ReturnType<typeof vi.fn>).mockResolvedValue([{ id: 7 }])
     await openTabInChromeGroup(
-      { id: 1, title: 'T', url: 'https://a.com', chromeGroup: { name: 'Work', color: 'blue' } },
+      { id: 1, title: 'T', url: 'https://a.com', chromeGroup: { id: 7, name: 'Work', color: 'blue' } },
       10,
       true
     )
@@ -42,7 +42,7 @@ describe('openTabInChromeGroup', () => {
   })
 
   it('creates a new chrome tab group and sets its title/color when none exists', async () => {
-    await openTabInChromeGroup({ id: 1, title: 'T', url: 'https://a.com', chromeGroup: { name: 'Work', color: 'blue' } })
+    await openTabInChromeGroup({ id: 1, title: 'T', url: 'https://a.com', chromeGroup: { id: 0, name: 'Work', color: 'blue' } })
     expect(chrome.tabs.group).toHaveBeenCalledWith({ tabIds: [5], createProperties: { windowId: 10 } })
     expect(chrome.tabGroups.update).toHaveBeenCalledWith(99, { title: 'Work', color: 'blue' })
   })

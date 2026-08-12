@@ -51,7 +51,7 @@ export function PricingTeaser() {
                 key={t.key}
                 className={cn(
                   'rounded-2xl border p-6 relative',
-                  t.highlighted ? 'bg-surface shadow-[var(--sh3)] border-primary/30' : 'bg-surface border-border'
+                  t.highlighted ? 'bg-surface shadow-sh3 border-primary/30' : 'bg-surface border-border'
                 )}
               >
                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-2">

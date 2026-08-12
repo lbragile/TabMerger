@@ -30,7 +30,7 @@ const {
   mockDeleteGroup: vi.fn(),
   mockRestoreSession: vi.fn(),
   mockDeleteSession: vi.fn(),
-  mockUseSessionsData: vi.fn(() => ({ data: [] })),
+  mockUseSessionsData: vi.fn((): { data: Session[] } => ({ data: [] })),
   mockUseRestoreSessionState: vi.fn(() => ({ isPending: false })),
   mockSetActiveGroupIndex: vi.fn(),
 }))

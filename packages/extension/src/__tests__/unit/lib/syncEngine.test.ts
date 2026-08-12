@@ -50,14 +50,15 @@ vi.mock('@tabmerger/shared', () => ({
 // ─── Supabase mock — client/builder separation (client must NOT be thenable) ──
 
 function makeBuilder(responses: Array<{ data: unknown; error: unknown }>) {
-  const builder: Record<string, unknown> = {}
-  builder.from = vi.fn().mockReturnValue(builder)
-  builder.select = vi.fn().mockReturnValue(builder)
-  builder.upsert = vi.fn().mockReturnValue(builder)
-  builder.delete = vi.fn().mockReturnValue(builder)
-  builder.eq = vi.fn().mockReturnValue(builder)
-  builder.in = vi.fn().mockReturnValue(builder)
-  builder.order = vi.fn().mockReturnValue(builder)
+  const builder: Record<string, (...args: unknown[]) => unknown> = {}
+  const method = () => vi.fn((..._args: unknown[]) => builder)
+  builder.from = method()
+  builder.select = method()
+  builder.upsert = method()
+  builder.delete = method()
+  builder.eq = method()
+  builder.in = method()
+  builder.order = method()
   let idx = 0
   Object.defineProperty(builder, 'then', {
     get() {

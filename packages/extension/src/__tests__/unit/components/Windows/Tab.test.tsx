@@ -5,7 +5,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { TabItem } from '@/components/Windows/Tab'
-import type { Tab, Group, GroupsState } from '@/lib/types'
+import type { Tab, Group, GroupsState, UrlRule } from '@/lib/types'
 
 const {
   mockDeleteTab,
@@ -28,7 +28,7 @@ const {
   mockUseGroupsData: vi.fn(),
   mockToggleSelection: vi.fn(),
   mockEnterSelectionMode: vi.fn(),
-  mockUseUrlRulesData: vi.fn(() => ({ data: [] })),
+  mockUseUrlRulesData: vi.fn((): { data: UrlRule[] } => ({ data: [] })),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
   mockOpenTabInChromeGroup: vi.fn().mockResolvedValue(undefined),
 }))
@@ -534,7 +534,7 @@ describe('TabItem — target groups (move to group)', () => {
 
 describe('TabItem — url-rule auto-save suggestion (Now Open only)', () => {
   it('shows an Auto-save item when a matching rule and target group exist', async () => {
-    mockUseUrlRulesData.mockReturnValue({ data: [{ id: 'r1', pattern: 'example.com', groupId: 'dst' }] })
+    mockUseUrlRulesData.mockReturnValue({ data: [{ id: 'r1', pattern: 'example.com', groupId: 'dst', createdAt: 0 }] })
     mockUseGroupsData.mockReturnValue({
       data: {
         available: [makeGroup({ id: 'src', permanent: true, name: 'Now Open' }), makeGroup({ id: 'dst', name: 'Work' })],
@@ -548,7 +548,7 @@ describe('TabItem — url-rule auto-save suggestion (Now Open only)', () => {
   })
 
   it('does not show an Auto-save item when no rule matches', async () => {
-    mockUseUrlRulesData.mockReturnValue({ data: [{ id: 'r1', pattern: 'nomatch.com', groupId: 'dst' }] })
+    mockUseUrlRulesData.mockReturnValue({ data: [{ id: 'r1', pattern: 'nomatch.com', groupId: 'dst', createdAt: 0 }] })
     mockUseGroupsData.mockReturnValue({
       data: {
         available: [makeGroup({ id: 'src', permanent: true, name: 'Now Open' }), makeGroup({ id: 'dst', name: 'Work' })],

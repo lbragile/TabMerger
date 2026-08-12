@@ -95,7 +95,7 @@ export function PricingCard({
     <div
       className={cn(
         'flex flex-col rounded-2xl p-6 border border-border bg-surface',
-        highlighted && 'shadow-[var(--sh3)] border-primary/30 p-7',
+        highlighted && 'shadow-sh3 border-primary/30 p-7',
         isCurrentPlan && 'border-primary/40'
       )}
     >

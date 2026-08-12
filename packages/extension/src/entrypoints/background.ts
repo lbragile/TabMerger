@@ -105,11 +105,10 @@ async function _buildMenus() {
 
   await chrome.contextMenus.removeAll();
 
-  // 'tab' context (tab-strip right-click) exists at runtime but is absent from @types/chrome stubs.
-  // 'page' is included too — right-clicking the page body is the far more common gesture than
-  // right-clicking the tab strip itself, and omitting it made the menu appear "missing" to users.
-  const TAB_CTX = 'tab' as chrome.contextMenus.ContextType;
-  const CONTEXTS: chrome.contextMenus.ContextType[] = [TAB_CTX, 'page'];
+  // 'page' is included alongside 'tab' — right-clicking the page body is the far more common
+  // gesture than right-clicking the tab strip itself, and omitting it made the menu appear
+  // "missing" to users.
+  const CONTEXTS: chrome.contextMenus.CreateProperties['contexts'] = ['tab', 'page'];
   chrome.contextMenus.create({ id: 'tm-add', title: 'Save to TabMerger', contexts: CONTEXTS });
 
   for (const scope of Object.keys(SCOPE_LABELS) as Scope[]) {

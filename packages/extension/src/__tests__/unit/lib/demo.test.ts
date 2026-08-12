@@ -27,7 +27,7 @@ describe('enterDemoMode', () => {
 
   it('creates a fresh window and closes every other window, keeping the fresh one', async () => {
     await enterDemoMode()
-    const chromeWindows = (globalThis as { chrome: { windows: { remove: ReturnType<typeof vi.fn> } } }).chrome.windows
+    const chromeWindows = (globalThis as unknown as { chrome: { windows: { remove: ReturnType<typeof vi.fn> } } }).chrome.windows
     expect(chromeWindows.remove).toHaveBeenCalledTimes(2)
     expect(chromeWindows.remove).toHaveBeenCalledWith(1)
     expect(chromeWindows.remove).toHaveBeenCalledWith(2)
@@ -43,7 +43,7 @@ describe('enterDemoMode', () => {
       },
     }
     await enterDemoMode()
-    const chromeWindows = (globalThis as { chrome: { windows: { remove: ReturnType<typeof vi.fn> } } }).chrome.windows
+    const chromeWindows = (globalThis as unknown as { chrome: { windows: { remove: ReturnType<typeof vi.fn> } } }).chrome.windows
     expect(chromeWindows.remove).not.toHaveBeenCalled()
   })
 })

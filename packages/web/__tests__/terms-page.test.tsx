@@ -56,17 +56,17 @@ describe('TermsPage', () => {
     expect(accounts?.className).not.toContain('bg-accent')
   })
 
-  it('gives the billing TOC link distinguishing text styling not shared by other links', () => {
+  it('highlights the first TOC link as active by default (scroll-spy falls back statically in jsdom)', () => {
     render(<TermsPage />)
     const nav = document.querySelector('nav')
-    const billingLink = Array.from(nav?.querySelectorAll('a') ?? []).find(
-      (a) => a.getAttribute('href') === '#billing'
+    const firstLink = Array.from(nav?.querySelectorAll('a') ?? []).find(
+      (a) => a.getAttribute('href') === '#description'
     )
-    expect(billingLink?.className).toContain('text-primary')
-    expect(billingLink?.className).toContain('font-medium')
+    expect(firstLink?.className).toContain('text-primary')
+    expect(firstLink?.className).toContain('font-medium')
 
     const otherLink = Array.from(nav?.querySelectorAll('a') ?? []).find(
-      (a) => a.getAttribute('href') === '#accounts'
+      (a) => a.getAttribute('href') === '#billing'
     )
     expect(otherLink?.className).not.toContain('font-medium')
   })

@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Cross-browser tab manager with AI grouping, cloud sync, and session management",
   "private": true,
-  "packageManager": "pnpm@11.15.1",
+  "packageManager": "pnpm@11.21.0",
   "scripts": {
     "dev": "pnpm --parallel --filter @tabmerger/extension --filter @tabmerger/web dev",
     "dev:extension": "pnpm --filter @tabmerger/extension dev",
@@ -25,13 +25,13 @@
     "scan-secrets": "bash scripts/scan-secrets.sh"
   },
   "devDependencies": {
-    "next": "^16.2.10",
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^12.0.9",
     "husky": "^9.1.7",
+    "next": "^16.3.0",
     "semantic-release": "^25.0.8"
   },
   "commitlint": {

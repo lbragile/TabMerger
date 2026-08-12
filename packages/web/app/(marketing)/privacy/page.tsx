@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { LegalToc } from '@/components/legal-toc'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy — TabMerger',
@@ -22,7 +23,7 @@ export default function PrivacyPage() {
   return (
     <div className="container py-16 max-w-5xl">
       {/* Header — brand-soft callout, distinct from Terms' neutral treatment */}
-      <div className="mb-11 rounded-2xl bg-accent border border-primary/20 px-8 py-7">
+      <div className="mb-11 rounded-none bg-accent border border-primary/20 px-8 py-7">
         <h1 className="text-[34px] font-semibold tracking-tight mb-2.5">Privacy, in plain English</h1>
         <p className="max-w-xl text-[15.5px] text-text2 leading-relaxed">
           TabMerger is an indie product. We collect only what we need to operate the service, we
@@ -34,18 +35,7 @@ export default function PrivacyPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
         {/* Sticky TOC — wide screens only */}
-        <nav className="hidden lg:flex sticky top-24 flex-col gap-2">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-text3 mb-1">On this page</div>
-          {TOC.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className="text-[13px] text-text2 hover:text-primary transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <LegalToc items={TOC} heading="On this page" />
 
       <div className="space-y-10 max-w-2xl">
         <section id="what-we-collect" className="scroll-mt-24">
@@ -76,7 +66,7 @@ export default function PrivacyPage() {
 
         <section id="how-stored" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">2. How Data Is Stored</h2>
-          <div className="divide-y divide-border rounded-lg border overflow-hidden text-sm">
+          <div className="divide-y divide-border rounded-none border overflow-hidden text-sm">
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Local (all tiers)</span>
               <span className="text-muted-foreground">Tab and group data in browser IndexedDB. Under your control — not transmitted anywhere unless you enable sync.</span>
@@ -95,7 +85,7 @@ export default function PrivacyPage() {
         <section id="third-party" className="scroll-mt-24">
           <h2 className="text-xl font-semibold mb-4">3. Third-Party Processors</h2>
           <p className="text-muted-foreground text-sm mb-4">We share data with the following processors only to the extent necessary to operate the service.</p>
-          <div className="divide-y divide-border rounded-lg border overflow-hidden text-sm">
+          <div className="divide-y divide-border rounded-none border overflow-hidden text-sm">
             {[
               { name: 'Supabase', purpose: 'Database, authentication, and file storage', url: 'https://supabase.com/privacy' },
               { name: 'Stripe', purpose: 'Payment processing and subscription management', url: 'https://stripe.com/privacy' },

@@ -113,6 +113,7 @@ function makeChromeStub() {
         setBadgeBackgroundColor: vi.fn().mockResolvedValue(undefined),
         // openPopup intentionally omitted by default — feature-detected; tests that need
         // the picker path add it explicitly (mirrors Firefox MV2 / older Chrome lacking it)
+        openPopup: undefined as (() => Promise<void>) | undefined,
       },
     },
   }

@@ -29,7 +29,7 @@ function makeTab(overrides: Partial<Tab> = {}): Tab {
 }
 
 function wrap(ui: React.ReactElement) {
-  return render(React.createElement(TooltipProvider, { delayDuration: 0 }, ui))
+  return render(<TooltipProvider delayDuration={0}>{ui}</TooltipProvider>)
 }
 
 describe('TabPreview', () => {
@@ -40,14 +40,14 @@ describe('TabPreview', () => {
   })
 
   it('renders trigger children without showing tooltip content initially', () => {
-    wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
+    wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     expect(screen.getByText('Example Page')).toBeTruthy()
     expect(screen.queryByText('https://example.com')).toBeNull()
   })
 
   it('shows tab title/url and falls back to no-preview state on hover (non-AI tier)', async () => {
     const user = userEvent.setup()
-    wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
+    wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     await waitFor(() => expect(screen.getAllByText('https://example.com').length).toBeGreaterThan(0))
     await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
@@ -55,7 +55,7 @@ describe('TabPreview', () => {
 
   it('uses the pre-supplied ogImage without calling chrome.tabs when tab.ogImage is set', async () => {
     const user = userEvent.setup()
-    wrap(React.createElement(TabPreview, { tab: makeTab({ ogImage: 'https://img.example.com/x.png' }) }, React.createElement('span', null, 'Example Page')))
+    wrap(<TabPreview tab={makeTab({ ogImage: 'https://img.example.com/x.png' })}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     await waitFor(() => expect(screen.queryByText('No preview')).toBeNull())
   })
@@ -63,7 +63,7 @@ describe('TabPreview', () => {
   it('does not auto-fetch AI summary on hover, but shows a Generate summary button', async () => {
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     const user = userEvent.setup()
-    wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
+    wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     await waitFor(() => expect(screen.getAllByRole('button', { name: /generate summary/i, hidden: true }).length).toBeGreaterThan(0))
     expect(mockFetchSummary).not.toHaveBeenCalled()
@@ -73,7 +73,7 @@ describe('TabPreview', () => {
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     mockFetchSummary.mockResolvedValue({ summary: 'A concise page summary.' })
     const user = userEvent.setup()
-    wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
+    wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     const buttons = await waitFor(() => {
       const found = screen.getAllByRole('button', { name: /generate summary/i, hidden: true })
@@ -90,7 +90,7 @@ describe('TabPreview', () => {
     mockUseEntitlements.mockReturnValue({ aiFeatures: true })
     mockFetchSummary.mockRejectedValue(new MockQuotaExceededError('quota exceeded'))
     const user = userEvent.setup()
-    wrap(React.createElement(TabPreview, { tab: makeTab({ url: 'https://quota-exceeded-example.com' }) }, React.createElement('span', null, 'Example Page')))
+    wrap(<TabPreview tab={makeTab({ url: 'https://quota-exceeded-example.com' })}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     const buttons = await waitFor(() => {
       const found = screen.getAllByRole('button', { name: /generate summary/i, hidden: true })
@@ -104,7 +104,7 @@ describe('TabPreview', () => {
 
   it('only fetches the preview once across repeated opens (fetchedRef guard)', async () => {
     const user = userEvent.setup()
-    wrap(React.createElement(TabPreview, { tab: makeTab() }, React.createElement('span', null, 'Example Page')))
+    wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     const trigger = screen.getByText('Example Page')
     await user.hover(trigger)
     await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
@@ -120,7 +120,7 @@ describe('TabPreview', () => {
       vi.stubGlobal('chrome', { tabs: { query: vi.fn().mockResolvedValue([]), sendMessage: vi.fn().mockRejectedValue(new Error('no receiver')) } })
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: 'https://img.example.com/server.png' }) }))
       const user = userEvent.setup()
-      wrap(React.createElement(TabPreview, { tab: makeTab({ id: 42 }), isLive: true }, React.createElement('span', null, 'Example Page')))
+      wrap(<TabPreview tab={makeTab({ id: 42 })} isLive={true}><span>Example Page</span></TabPreview>)
       await user.hover(screen.getByText('Example Page'))
       await waitFor(() => expect(fetch).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview?url=https%3A%2F%2Fexample.com'))
       // ponytail: assert on the rendered <img src> rather than "No preview" absence —
@@ -134,7 +134,7 @@ describe('TabPreview', () => {
       vi.stubGlobal('chrome', { tabs: { query: vi.fn().mockResolvedValue([]), sendMessage } })
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: 'https://img.example.com/server.png' }) }))
       const user = userEvent.setup()
-      wrap(React.createElement(TabPreview, { tab: makeTab(), isLive: false }, React.createElement('span', null, 'Example Page')))
+      wrap(<TabPreview {...{ tab: makeTab(), isLive: false }}><span>Example Page</span></TabPreview>)
       await user.hover(screen.getByText('Example Page'))
       await waitFor(() => expect(fetch).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview?url=https%3A%2F%2Fexample.com'))
       await waitFor(() => expect(document.querySelector('img[src="https://img.example.com/server.png"]')).not.toBeNull())
@@ -145,7 +145,7 @@ describe('TabPreview', () => {
       vi.stubGlobal('chrome', { tabs: { query: vi.fn().mockResolvedValue([]), sendMessage: vi.fn().mockRejectedValue(new Error('no receiver')) } })
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: null }) }))
       const user = userEvent.setup()
-      wrap(React.createElement(TabPreview, { tab: makeTab(), isLive: false }, React.createElement('span', null, 'Example Page')))
+      wrap(<TabPreview {...{ tab: makeTab(), isLive: false }}><span>Example Page</span></TabPreview>)
       await user.hover(screen.getByText('Example Page'))
       await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
     })

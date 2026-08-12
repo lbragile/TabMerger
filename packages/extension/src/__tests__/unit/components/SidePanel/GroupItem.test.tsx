@@ -103,8 +103,7 @@ class MockResizeObserver {
   unobserve() {}
   disconnect() {}
 }
-// @ts-expect-error - test stub
-global.ResizeObserver = MockResizeObserver
+global.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver
 
 function makeGroup(overrides: Partial<Group> = {}): Group {
   return {

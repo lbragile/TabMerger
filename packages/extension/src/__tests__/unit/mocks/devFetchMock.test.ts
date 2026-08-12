@@ -95,7 +95,7 @@ describe('installDevFetchMock — /api/ai/group-tabs', () => {
     await new Promise((r) => setTimeout(r, 0))
     await new Promise((r) => setTimeout(r, 0))
 
-    const syncCall = realFetchSpy.mock.calls.find(([url]) => String(url).includes('/api/ai/dev-usage'))
+    const syncCall = realFetchSpy.mock.calls.find(([url]: [RequestInfo | URL, RequestInit?]) => String(url).includes('/api/ai/dev-usage'))
     expect(syncCall).toBeTruthy()
     const [, init] = syncCall!
     expect((init as RequestInit).headers).toMatchObject({ Authorization: 'Bearer tok-123' })
@@ -126,7 +126,7 @@ describe('installDevFetchMock — /api/ai/group-tabs', () => {
     await new Promise((r) => setTimeout(r, 0))
     await new Promise((r) => setTimeout(r, 0))
 
-    expect(realFetchSpy.mock.calls.some(([url]) => String(url).includes('/api/ai/dev-usage'))).toBe(false)
+    expect(realFetchSpy.mock.calls.some(([url]: [RequestInfo | URL, RequestInit?]) => String(url).includes('/api/ai/dev-usage'))).toBe(false)
   })
 
   it('fails silently when the sync network call rejects', async () => {

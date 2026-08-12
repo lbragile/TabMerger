@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
+import { LegalToc } from '@/components/legal-toc'
 
 export const metadata: Metadata = {
   title: 'Terms of Service — TabMerger',
@@ -26,7 +26,7 @@ export default function TermsPage() {
   return (
     <div className="container py-16 max-w-5xl">
       {/* Header — distinct neutral/surface treatment vs Privacy's brand-soft callout */}
-      <div className="mb-11 rounded-2xl bg-surface2 border border-border px-8 py-7">
+      <div className="mb-11 rounded-none bg-surface2 border border-border px-8 py-7">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-text3 mb-2.5">Legal</p>
         <h1 className="text-[34px] font-semibold tracking-tight mb-2.5">Terms of Service</h1>
         <p className="max-w-xl text-[15.5px] text-text2 leading-relaxed">
@@ -37,21 +37,7 @@ export default function TermsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
-        <nav className="hidden lg:flex sticky top-24 flex-col gap-2">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-text3 mb-1">Sections</div>
-          {TOC.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={cn(
-                'text-[13px] transition-colors',
-                item.id === 'billing' ? 'text-primary font-medium' : 'text-text2 hover:text-primary'
-              )}
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <LegalToc items={TOC} heading="Sections" />
 
       <div className="space-y-10 max-w-2xl">
         <section id="description" className="scroll-mt-24">
@@ -71,7 +57,7 @@ export default function TermsPage() {
           </div>
         </section>
 
-        <section id="billing" className="scroll-mt-24 rounded-xl bg-accent border border-primary/20 p-6">
+        <section id="billing" className="scroll-mt-24 rounded-none bg-accent border border-primary/20 p-6">
           <h2 className="text-xl font-semibold mb-4">3. Subscriptions and Billing</h2>
           <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <p>Paid subscriptions are billed in advance on a monthly or annual cycle through Stripe. Your subscription renews automatically at the end of each billing period unless you cancel before the renewal date.</p>

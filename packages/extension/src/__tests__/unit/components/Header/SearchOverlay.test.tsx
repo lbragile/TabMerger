@@ -14,7 +14,7 @@ function makeGroupsState(): GroupsState {
           {
             id: 1, name: 'Main', starred: false, incognito: false, focused: false,
             tabs: [
-              { id: 1, title: 'React docs', url: 'https://react.dev', chromeGroup: { name: 'Dev', color: 'blue' } },
+              { id: 1, title: 'React docs', url: 'https://react.dev', chromeGroup: { id: 0, name: 'Dev', color: 'blue' } },
               { id: 2, title: 'Vue docs', url: 'https://vuejs.org' },
             ],
           },
