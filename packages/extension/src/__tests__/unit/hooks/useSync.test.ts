@@ -4,6 +4,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useSync } from '@/hooks/useSync'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
+import { SESSIONS_QUERY_KEY } from '@/hooks/useSessions'
 import { useUIStore } from '@/stores/uiStore'
 
 const {
@@ -21,6 +22,7 @@ const {
   mockMarkAllGroupsPendingSync,
   mockGetSessions,
   mockPushSessionToSupabase,
+  mockClearLocalAccountData,
 } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
@@ -41,6 +43,7 @@ const {
   mockMarkAllGroupsPendingSync: vi.fn().mockResolvedValue(undefined),
   mockGetSessions: vi.fn().mockResolvedValue([]),
   mockPushSessionToSupabase: vi.fn().mockResolvedValue(undefined),
+  mockClearLocalAccountData: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
@@ -76,6 +79,7 @@ vi.mock('@/lib/localDb', () => ({
   setSetting: mockSetSetting,
   markAllGroupsPendingSync: mockMarkAllGroupsPendingSync,
   getSessions: mockGetSessions,
+  clearLocalAccountData: mockClearLocalAccountData,
 }))
 vi.mock('@/lib/encryptionKey', () => ({
   hasEncryptionKey: mockHasEncryptionKey,
@@ -85,6 +89,7 @@ vi.mock('@/lib/encryptionKey', () => ({
 }))
 vi.mock('@/hooks/useSessions', () => ({
   pushSessionToSupabase: mockPushSessionToSupabase,
+  SESSIONS_QUERY_KEY: ['sessions'],
 }))
 function makeWrapper(qc: QueryClient) {
   return ({ children }: { children: React.ReactNode }) =>
@@ -99,7 +104,12 @@ beforeEach(() => {
   mockPullRemoteChanges.mockResolvedValue([nowOpen])
   mockHasEncryptionKey.mockResolvedValue(true)
   mockGetDataKey.mockReturnValue({})
-  mockGetSetting.mockResolvedValue(true)
+  // Key-aware: everything defaults to "already done" (true) except the last-signed-in-user
+  // tracker, which must default to its real default (null via the caller's defaultValue arg)
+  // so existing tests don't unexpectedly trip the account-switch clear below.
+  mockGetSetting.mockImplementation((key: string, defaultValue: unknown) =>
+    Promise.resolve(key === 'lastSignedInUserId' ? defaultValue : true)
+  )
 })
 
 describe('useSync — appSettings invalidation on login (regression)', () => {
@@ -366,5 +376,56 @@ describe('useSync — syncing', () => {
     await waitFor(() => expect(mockSaveGroupsState).toHaveBeenCalled())
     const lastCall = mockSaveGroupsState.mock.calls.at(-1)?.[0]
     expect(lastCall.available.find((g: { id: string }) => g.id === 'x').name).toBe('Fresh Local')
+  })
+})
+
+describe('useSync — cross-account local data isolation', () => {
+  it('clears local groups/sessions when a DIFFERENT account signs in on this device', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'userB' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: false }) // must fire even without cloudSync
+    mockGetSetting.mockImplementation((key: string, defaultValue: unknown) =>
+      Promise.resolve(key === 'lastSignedInUserId' ? 'userA' : defaultValue)
+    )
+
+    const qc = new QueryClient()
+    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
+
+    await waitFor(() => expect(mockClearLocalAccountData).toHaveBeenCalled())
+    await waitFor(() =>
+      expect(mockSetSetting).toHaveBeenCalledWith('lastSignedInUserId', 'userB')
+    )
+    expect(qc.getQueryData(SESSIONS_QUERY_KEY)).toEqual([])
+  })
+
+  it('does NOT clear on first-ever sign-in (no previously recorded user id)', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'userA' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: false })
+    mockGetSetting.mockImplementation((key: string, defaultValue: unknown) =>
+      Promise.resolve(key === 'lastSignedInUserId' ? null : defaultValue)
+    )
+
+    const qc = new QueryClient()
+    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
+
+    await waitFor(() =>
+      expect(mockSetSetting).toHaveBeenCalledWith('lastSignedInUserId', 'userA')
+    )
+    expect(mockClearLocalAccountData).not.toHaveBeenCalled()
+  })
+
+  it('does NOT clear on a token refresh for the SAME user id', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'userA' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: false })
+    mockGetSetting.mockImplementation((key: string, defaultValue: unknown) =>
+      Promise.resolve(key === 'lastSignedInUserId' ? 'userA' : defaultValue)
+    )
+
+    const qc = new QueryClient()
+    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
+
+    await waitFor(() =>
+      expect(mockSetSetting).toHaveBeenCalledWith('lastSignedInUserId', 'userA')
+    )
+    expect(mockClearLocalAccountData).not.toHaveBeenCalled()
   })
 })

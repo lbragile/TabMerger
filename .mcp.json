@@ -7,6 +7,13 @@
         "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
       }
     },
+    "stripe-live": {
+      "command": "npx",
+      "args": ["-y", "@stripe/mcp", "--tools=all"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY_LIVE}"
+      }
+    },
     "playwright": {
       "command": "npx",
       "args": ["-y", "@playwright/mcp@latest"]

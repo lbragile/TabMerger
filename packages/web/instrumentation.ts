@@ -7,6 +7,7 @@ export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     Sentry.init({
       dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      environment: process.env.VERCEL_ENV ?? 'development',
       sendDefaultPii: false,
       beforeSend: scrubEvent,
     })
@@ -15,6 +16,7 @@ export async function register() {
   if (process.env.NEXT_RUNTIME === 'edge') {
     Sentry.init({
       dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+      environment: process.env.VERCEL_ENV ?? 'development',
       sendDefaultPii: false,
       beforeSend: scrubEvent,
     })

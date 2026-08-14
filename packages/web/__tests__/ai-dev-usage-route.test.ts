@@ -53,7 +53,7 @@ describe('POST /api/ai/dev-usage', () => {
     expect(row).toEqual({
       user_id: USER_ID,
       month: new Date().toISOString().slice(0, 7),
-      request_count: 98,
+      credits_used: 98,
     })
     expect(opts).toEqual({ onConflict: 'user_id,month' })
   })
@@ -62,7 +62,7 @@ describe('POST /api/ai/dev-usage', () => {
     const res = await POST(req({ count: 0 }))
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ count: 0 })
-    expect(mockUpsert.mock.calls[0][0].request_count).toBe(0)
+    expect(mockUpsert.mock.calls[0][0].credits_used).toBe(0)
   })
 
   it('reset (count: 0) also clears this month\'s credit purchases', async () => {

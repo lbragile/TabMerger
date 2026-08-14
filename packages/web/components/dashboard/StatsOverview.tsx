@@ -64,7 +64,7 @@ export function StatsOverview({
     ...(aiUsage
       ? [
           {
-            label: 'AI calls this month',
+            label: 'AI credits this month',
             value: `${aiUsage.used}/${aiUsage.limit}`,
             icon: Sparkles,
             description: 'Pro AI monthly usage',
@@ -87,7 +87,7 @@ export function StatsOverview({
               <div className="text-2xl font-bold">{stat.value}</div>
               <p className="text-xs text-muted-foreground">
                 {stat.description}
-                {stat.label === 'AI calls this month' && aiUsage && aiUsage.used >= aiUsage.limit && (
+                {stat.label === 'AI credits this month' && aiUsage && aiUsage.used >= aiUsage.limit && (
                   <>
                     {' · '}
                     <BuyCreditsButton />

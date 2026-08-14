@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { summarizeTab, type Tab } from '@/lib/ai'
-import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
+import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
 
 /**
  * Generates a one-sentence summary of a single tab for the hover preview tooltip.
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id)
+  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.tabSummary)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Pro AI subscription required or monthly limit reached' },

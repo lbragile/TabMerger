@@ -22,7 +22,7 @@ function mockSupabase(tier: string, usedCount = 53, purchases: { credits: number
           table === 'subscriptions'
             ? { data: { tier, status: 'active', current_period_end: null } }
             : { data: { created_at: '2024-01-01' } }
-        builder.maybeSingle = async () => ({ data: { request_count: usedCount } })
+        builder.maybeSingle = async () => ({ data: { credits_used: usedCount } })
         // device_sessions + ai_credit_purchases queries are awaited directly (no .single()) —
         // make the builder thenable so `await` resolves to a multi-row result.
         builder.then = (resolve: (v: { data: unknown }) => void) =>
@@ -44,7 +44,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
-    const label = screen.getByText('AI calls left')
+    const label = screen.getByText('AI credits left')
     const card = label.closest('div')
     expect(card?.textContent).toContain('0')
     expect(card?.className).not.toMatch(/border-primary/)
@@ -57,9 +57,9 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     const jsx = await AccountPage()
     render(jsx as React.ReactElement)
 
-    const label = screen.getByText('AI calls left')
+    const label = screen.getByText('AI credits left')
     const card = label.closest('div')
-    expect(card?.textContent).toContain('47')
+    expect(card?.textContent).toContain('247')
     expect(card?.className).toMatch(/border-primary/)
   })
 
@@ -69,8 +69,8 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     const { default: AccountPage } = await import('@/app/(app)/account/page')
     render((await AccountPage()) as React.ReactElement)
 
-    // 100 base + 100 purchased - 100 used
-    expect(screen.getByText('AI calls left').closest('div')?.textContent).toContain('100')
+    // 300 base + 100 purchased - 100 used
+    expect(screen.getByText('AI credits left').closest('div')?.textContent).toContain('300')
   })
 })
 
@@ -91,7 +91,7 @@ describe('AccountPage — buy more AI calls', () => {
           builder.limit = chain
           builder.single = async () => {
             if (table === 'subscriptions') return { data: { tier: 'pro_ai', status: 'active', current_period_end: null } }
-            if (table === 'ai_usage') return { data: { request_count: 100 } }
+            if (table === 'ai_usage') return { data: { credits_used: 300 } }
             return { data: { created_at: '2024-01-01' } }
           }
           builder.maybeSingle = builder.single

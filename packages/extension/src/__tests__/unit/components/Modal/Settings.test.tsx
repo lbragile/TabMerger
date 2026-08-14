@@ -27,6 +27,7 @@ const {
   mockSetDevAiUsage,
   mockHasEncryptionKey,
   mockGetDataKey,
+  mockResetEncryption,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -44,11 +45,13 @@ const {
   mockSetDevAiUsage: vi.fn().mockResolvedValue(undefined),
   mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
   mockGetDataKey: vi.fn().mockResolvedValue(null),
+  mockResetEncryption: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
   hasEncryptionKey: mockHasEncryptionKey,
   getDataKey: mockGetDataKey,
+  resetEncryption: mockResetEncryption,
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -159,7 +162,7 @@ describe('SettingsModal — AI tab', () => {
 })
 
 describe('SettingsModal — Account tab AI usage indicator', () => {
-  it('shows AI calls remaining for Pro AI users', async () => {
+  it('shows AI credits remaining for Pro AI users', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro_ai', cloudSync: true, aiFeatures: true })
     mockUseAiUsage.mockReturnValue({ used: 3, remaining: 97, cap: 100, loading: false })
     renderModal()
@@ -171,7 +174,7 @@ describe('SettingsModal — Account tab AI usage indicator', () => {
     mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, aiFeatures: false })
     renderModal()
     await goToTab(/account/i)
-    expect(screen.queryByText(/AI calls left this month/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/AI credits left this month/i)).not.toBeInTheDocument()
   })
 })
 
@@ -563,6 +566,69 @@ describe('SettingsModal — Account tab encryption', () => {
     expect(screen.queryByRole('button', { name: 'Unlock' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Enable' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Turn off' })).toBeNull()
+  })
+})
+
+describe('SettingsModal — Reset encryption passphrase', () => {
+  it('hides the reset button when the user has no encryption key set up', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
+    mockHasEncryptionKey.mockResolvedValue(false)
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(screen.queryByRole('button', { name: /reset encryption passphrase/i })).toBeNull()
+  })
+
+  it('hides the reset button when signed out', async () => {
+    mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(screen.queryByRole('button', { name: /reset encryption passphrase/i })).toBeNull()
+  })
+
+  it('shows the reset button when set up, opens a confirm modal (not a bare click) on click', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    const btn = await screen.findByRole('button', { name: /reset encryption passphrase/i })
+    fireEvent.click(btn)
+    expect(mockResetEncryption).not.toHaveBeenCalled()
+    expect(mockOpenModal).toHaveBeenCalledWith('resetEncryption', { onConfirm: expect.any(Function) })
+  })
+
+  it('confirming calls resetEncryption then opens the encryptionSetup modal', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    const { toast } = await import('sonner')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    const btn = await screen.findByRole('button', { name: /reset encryption passphrase/i })
+    fireEvent.click(btn)
+    const onConfirm = mockOpenModal.mock.calls.find((c) => c[0] === 'resetEncryption')?.[1].onConfirm as () => void
+    onConfirm()
+    await waitFor(() => expect(mockResetEncryption).toHaveBeenCalled())
+    await waitFor(() => expect(toast.success).toHaveBeenCalled())
+    await waitFor(() => expect(mockOpenModal).toHaveBeenCalledWith('encryptionSetup'))
+  })
+
+  it('shows an error toast when resetEncryption fails, without opening encryptionSetup', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockResetEncryption.mockRejectedValueOnce(new Error('boom'))
+    const { toast } = await import('sonner')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    const btn = await screen.findByRole('button', { name: /reset encryption passphrase/i })
+    fireEvent.click(btn)
+    const onConfirm = mockOpenModal.mock.calls.find((c) => c[0] === 'resetEncryption')?.[1].onConfirm as () => void
+    onConfirm()
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('boom'))
+    expect(mockOpenModal).not.toHaveBeenCalledWith('encryptionSetup')
   })
 })
 

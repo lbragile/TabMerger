@@ -10,7 +10,7 @@ beforeEach(() => {
 describe('AIQuotaExceededPrompt', () => {
   it('renders the buy-more-credits CTA', () => {
     render(<AIQuotaExceededPrompt />)
-    expect(screen.getByText(/used all your ai calls/i)).toBeTruthy()
+    expect(screen.getByText(/used all your ai credits/i)).toBeTruthy()
     expect(screen.getByRole('button', { name: /get more/i })).toBeTruthy()
   })
 

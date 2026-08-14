@@ -10,7 +10,7 @@ describe('FeaturesPage', () => {
     const aiSection = aiHeading.closest('div')?.parentElement as HTMLElement
     const wrapper = aiSection.querySelector('.bg-surface2')
     expect(wrapper).not.toBeNull()
-    expect(wrapper?.className).toMatch(/rounded-2xl/)
+    expect(wrapper?.className).toMatch(/rounded-md/)
     expect(wrapper?.className).toMatch(/border border-border/)
     expect(wrapper?.className).toMatch(/p-8/)
   })

@@ -103,7 +103,7 @@ export function GroupContextMenu({
       updateGroupName({ groupIndex, name });
     } catch (err) {
       if (err instanceof QuotaExceededError) {
-        toast.error("You've used all your AI calls for this month.", {
+        toast.error("You've used all your AI credits for this month.", {
           action: { label: 'Buy more', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
         });
         return;

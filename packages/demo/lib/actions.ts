@@ -184,7 +184,15 @@ const CHAOS_WINDOW_SETS = [
 
 type ZoomOrigin = { x: number; y: number } | undefined;
 
-const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
+// ponytail: optional 2nd arg, only used by screenshots.ts to grab a store
+// screenshot WHILE a popover/menu/drag is mid-flight instead of only after
+// it commits — record.ts never passes it, so video timing/behavior is
+// unchanged. Only the 3 handlers below that actually have an
+// open-but-not-yet-committed state (colorNewGroup, addWindowNote,
+// crossWindowTabDrag) call it; every other handler ignores the param.
+type MidGestureHook = () => Promise<void>;
+
+const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promise<ZoomOrigin | void>> = {
     // ponytail: REPLACED 2026-07-31 — the old version opened 40 tabs in ONE
     // window, which (per direct feedback) doesn't read as "chaos across your
     // whole browser," just a long list. `chrome.windows.create` is called
@@ -714,13 +722,16 @@ const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
     // (already renamed by createGroup, same persisted profile/session).
     // Zoomed in and held after the swatch click so the sidebar dot's color
     // change is clearly visible as the resulting UI update.
-    async colorNewGroup(page) {
+    async colorNewGroup(page, midGesture) {
         const groupRow = page
             .getByText("Q4 Launch", { exact: true })
             .first()
             .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' group ')][1]");
         await clickWithRipple(groupRow.locator("button.rounded-full"));
         await page.waitForTimeout(300);
+        // Picker is open with all preset swatches visible but nothing
+        // committed yet — the interesting mid-gesture moment for a still.
+        await midGesture?.();
         // PRESET_COLORS index 8 (pink) — visibly distinct from every seeded
         // group's color (see changeGroupColor's ponytail comment on index 5
         // already being taken by "Research").
@@ -817,7 +828,7 @@ const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
     // assumed. After moveTabToNewWindow, "Q4 Launch" has 2 windows, so the
     // first and last drag handles in DOM order are guaranteed to be in
     // different windows.
-    async crossWindowTabDrag(page) {
+    async crossWindowTabDrag(page, midGesture) {
         await clickWithRipple(page.getByText("Q4 Launch", { exact: true }).first());
         await page.waitForTimeout(300);
         const handles = page.locator('[aria-label="Drag to reorder tab"]');
@@ -841,6 +852,10 @@ const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
         await page.mouse.move(sx, sy - 10, { steps: 5 });
         await page.waitForTimeout(120 + Math.random() * 80);
         await naturalMouseMove(page, { x: sx, y: sy }, { x: tx, y: ty }, { overshoot: true });
+        // Mouse is still down over the drop target — @dnd-kit's DragOverlay
+        // + drop-indicator are on screen, nothing committed. Capture here,
+        // before mouse.up, not after.
+        await midGesture?.();
         await page.waitForTimeout(200 + Math.random() * 150);
         await page.mouse.up();
         await page.waitForTimeout(300);
@@ -934,7 +949,7 @@ const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
     // Window.tsx/GroupItem.tsx (window rename, group rename, note editor),
     // none uniquely aria-labeled — Ctrl+Enter is the real, unambiguous, and
     // more interesting-to-show commit path.
-    async addWindowNote(page) {
+    async addWindowNote(page, midGesture) {
         await clickWithRipple(page.getByText("Q4 Launch", { exact: true }).first());
         await page.waitForTimeout(300);
         const windowHeader = page.locator(".bg-card").first().locator("> div").first();
@@ -968,6 +983,9 @@ const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
         await page.waitForTimeout(500); // let the empty note field's location register before typing starts
         await typeText(textarea, "Ship checklist: QA sign-off, changelog, store screenshots", 30);
         await page.waitForTimeout(300);
+        // Textarea open, text typed, nothing saved yet — the mid-gesture
+        // moment. Must run before Ctrl+Enter below unmounts the textarea.
+        await midGesture?.();
         // Grab the zoom origin BEFORE committing — Ctrl+Enter unmounts this
         // textarea (replaced by the saved note's static text), so calling
         // originFraction(textarea) after commit re-resolves a locator for an
@@ -984,12 +1002,17 @@ const actions: Record<string, (page: Page) => Promise<ZoomOrigin | void>> = {
     },
 };
 
-export async function runStepAction(page: Page, action: string, minDurationMs: number): Promise<ZoomOrigin> {
+export async function runStepAction(
+    page: Page,
+    action: string,
+    minDurationMs: number,
+    midGesture?: MidGestureHook,
+): Promise<ZoomOrigin> {
     const handler = actions[action];
     const start = Date.now();
     let origin: ZoomOrigin;
     if (handler) {
-        origin = (await handler(page)) || undefined;
+        origin = (await handler(page, midGesture)) || undefined;
     }
     const elapsed = Date.now() - start;
     if (elapsed < minDurationMs) {

@@ -183,3 +183,22 @@ describe('localDb — deleteGroup', () => {
     expect(state.available.find((g) => g.id === 'g1')).toBeUndefined()
   })
 })
+
+describe('localDb — clearLocalAccountData', () => {
+  it('wipes groups, groupsState, and sessions so a different account starts clean', async () => {
+    const { getGroupsState, saveGroup, saveSession, clearLocalAccountData } = await freshLocalDb()
+    await getGroupsState()
+    await saveGroup({ id: 'g1', name: 'Work', color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+    await saveSession({ id: 's1', name: 'Old', createdAt: 100, groups: [] })
+
+    await clearLocalAccountData()
+
+    const { getSessions } = await import('@/lib/localDb')
+    expect(await getSessions()).toHaveLength(0)
+    // getGroupsState regenerates a fresh "Now Open" since the store is empty
+    const state = await getGroupsState()
+    expect(state.available).toHaveLength(1)
+    expect(state.available[0].permanent).toBe(true)
+    expect(state.available.find((g) => g.id === 'g1')).toBeUndefined()
+  })
+})

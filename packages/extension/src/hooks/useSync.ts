@@ -1,14 +1,27 @@
 import { useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { performSync, subscribeToRemoteChanges } from '@/lib/syncEngine';
-import { getGroupsState, saveGroupsState, getSetting, setSetting, markAllGroupsPendingSync, getSessions } from '@/lib/localDb';
+import {
+  getGroupsState,
+  saveGroupsState,
+  getSetting,
+  setSetting,
+  markAllGroupsPendingSync,
+  getSessions,
+  clearLocalAccountData
+} from '@/lib/localDb';
 import { hasEncryptionKey, getDataKey, ENCRYPTION_MIGRATION_DONE_KEY, SESSIONS_MIGRATION_DONE_KEY } from '@/lib/encryptionKey';
 import { useUIStore } from '@/stores/uiStore';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 import { GROUPS_QUERY_KEY } from './useGroups';
 import { APP_SETTINGS_QUERY_KEY } from './useAppSettings';
-import { pushSessionToSupabase } from './useSessions';
+import { SESSIONS_QUERY_KEY, pushSessionToSupabase } from './useSessions';
+
+// Persisted (not per-session) so it survives popup teardown/service worker restarts —
+// the only way to detect "a genuinely different account just signed in on this device"
+// vs. a normal token refresh for the same account.
+const LAST_USER_ID_KEY = 'lastSignedInUserId';
 
 // ponytail: matches useEntitlements' POLL_MS — push-only sync had no re-trigger once the
 // popup stayed mounted past its initial sync (e.g. pinned open via DevTools during a long
@@ -97,6 +110,29 @@ export function useSync() {
       clearInterval(interval);
     };
   }, [session, cloudSync, doSync]);
+
+  // Detects a genuinely different Supabase account signing in on this device (e.g. two
+  // test accounts sharing a browser profile) and wipes local groups/sessions before that
+  // account's data can be treated as "mine, push these" — which previously caused an
+  // upsert to a DIFFERENT account's row (same locally-generated id) to be rejected by RLS.
+  // Deliberately conservative: only fires when a PREVIOUSLY RECORDED non-null user id
+  // differs from the CURRENT non-null user id. A null->user transition (first-ever sign-in)
+  // and a same-user token refresh both leave lastUserId unchanged from the current id, so
+  // neither triggers a clear. Runs independent of the cloudSync entitlement gate above —
+  // the local-storage collision risk exists even for a free-tier signed-in user.
+  const userId = session?.user.id;
+  useEffect(() => {
+    if (!userId) return;
+    void (async () => {
+      const lastUserId = await getSetting<string | null>(LAST_USER_ID_KEY, null);
+      if (lastUserId && lastUserId !== userId) {
+        await clearLocalAccountData();
+        qc.setQueryData(GROUPS_QUERY_KEY, await getGroupsState());
+        qc.setQueryData(SESSIONS_QUERY_KEY, []);
+      }
+      await setSetting(LAST_USER_ID_KEY, userId);
+    })();
+  }, [userId, qc]);
 
   // Settings live in local IndexedDB only (never synced to Supabase), so login itself
   // never changes their value — but the Settings query may have been cached (e.g. by

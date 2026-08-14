@@ -6,7 +6,7 @@ import type { SelectedItem } from '@/stores/uiStore';
 import { pluralize } from '@/lib/utils';
 
 interface DeleteConfirmModalProps {
-  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection' | 'removeStaleTabs' | 'archiveStaleGroups' | 'clearAllData';
+  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection' | 'removeStaleTabs' | 'archiveStaleGroups' | 'clearAllData' | 'resetEncryption';
   data: Record<string, unknown>;
   onClose: () => void;
 }
@@ -61,6 +61,12 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
       description: 'This will permanently delete all groups, saved sessions, and settings. This cannot be undone.',
       confirm: 'Clear All Data',
     },
+    resetEncryption: {
+      title: 'Reset Encryption Passphrase',
+      description:
+        "This cannot be undone. All synced groups, sessions, and notes encrypted under your current passphrase will become permanently inaccessible. You'll set up a new passphrase and start syncing fresh.",
+      confirm: 'Reset Passphrase',
+    },
   };
 
   const { title, description, confirm } = labels[type] ?? labels.deleteGroup;
@@ -81,7 +87,7 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
       });
     } else if (type === 'deleteSelection' && items) {
       bulkDelete(items);
-    } else if (type === 'removeStaleTabs' || type === 'archiveStaleGroups' || type === 'clearAllData') {
+    } else if (type === 'removeStaleTabs' || type === 'archiveStaleGroups' || type === 'clearAllData' || type === 'resetEncryption') {
       (data.onConfirm as () => void)?.();
     }
     onClose();

@@ -32,6 +32,7 @@ export function ModalRoot() {
       case 'removeStaleTabs':
       case 'archiveStaleGroups':
       case 'clearAllData':
+      case 'resetEncryption':
         return (
           <DeleteConfirmModal
             type={modal.type}

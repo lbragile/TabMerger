@@ -58,23 +58,27 @@ export default async function AccountPage() {
     { id: 'mock-2', device_id: 'mock-2', device_name: 'Work Desktop', now_open_snapshot: null, last_active: '2026-08-05T07:00:00.000Z' },
     { id: 'mock-3', device_id: 'mock-3', device_name: 'Chrome on Linux', now_open_snapshot: null, last_active: '2026-07-31T10:00:00.000Z' },
   ]
+  // Rows are ordered by last_active desc — same device can end up with more than one
+  // device_id (e.g. extension storage cleared/reinstalled regenerates a fresh UUID), so
+  // keep only the first (most recent) row per device_name to avoid listing it twice.
+  const dedupedDevices = (devices ?? []).filter((d, i, arr) => arr.findIndex((x) => x.device_name === d.device_name) === i)
   const deviceRows =
-    process.env.NODE_ENV === 'development' ? [...(devices ?? []), ...mockDeviceRows] : (devices ?? [])
+    process.env.NODE_ENV === 'development' ? [...dedupedDevices, ...mockDeviceRows] : dedupedDevices
 
   const currentTier = subscription?.tier ?? 'free'
   const isPaid = currentTier !== 'free' && subscription?.status === 'active'
 
-  let aiCallsLeft = 0
+  let aiCreditsLeft = 0
   if (currentTier === 'pro_ai') {
     const month = new Date().toISOString().slice(0, 7)
     const { data: usage } = await supabase
       .from('ai_usage')
-      .select('request_count')
+      .select('credits_used')
       .eq('user_id', user.id)
       .eq('month', month)
       .maybeSingle()
     const cap = await getEffectiveCap(supabase, user.id, month)
-    aiCallsLeft = cap - (usage?.request_count ?? 0)
+    aiCreditsLeft = cap - (usage?.credits_used ?? 0)
   }
 
   let billingPortalUrl: string | null = null
@@ -104,7 +108,7 @@ export default async function AccountPage() {
           { label: 'Groups synced', value: '24' },
           { label: 'Tabs saved', value: '847' },
           { label: 'Sessions', value: '12' },
-          { label: 'AI calls left', value: currentTier === 'pro_ai' ? String(aiCallsLeft) : '0', accent: currentTier === 'pro_ai' },
+          { label: 'AI credits left', value: currentTier === 'pro_ai' ? String(aiCreditsLeft) : '0', accent: currentTier === 'pro_ai' },
         ].map((stat, i) => (
           <div
             key={i}
@@ -115,7 +119,7 @@ export default async function AccountPage() {
             </p>
             <p className="text-[12px] text-text2 mt-0.5 flex items-center gap-1.5 flex-wrap">
               {stat.label}
-              {stat.label === 'AI calls left' && currentTier === 'pro_ai' && aiCallsLeft <= 0 && (
+              {stat.label === 'AI credits left' && currentTier === 'pro_ai' && aiCreditsLeft <= 0 && (
                 <BuyCreditsButton />
               )}
             </p>

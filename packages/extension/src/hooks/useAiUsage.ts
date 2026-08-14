@@ -7,7 +7,7 @@ import { useEntitlements } from './useEntitlements';
 // ponytail: duplicated from packages/web/lib/ai-usage.ts rather than shared — that
 // file also exports a service-role usage-incrementing function which must stay
 // server-only. Keep this constant in sync if AI_MONTHLY_CAP ever changes.
-export const AI_MONTHLY_CAP = 100;
+export const AI_MONTHLY_CAP = 300;
 
 function currentMonth(): string {
   return new Date().toISOString().slice(0, 7);
@@ -16,13 +16,13 @@ function currentMonth(): string {
 async function fetchUsageCount(userId: string): Promise<number> {
   const { data, error } = await supabase
     .from('ai_usage')
-    .select('request_count')
+    .select('credits_used')
     .eq('user_id', userId)
     .eq('month', currentMonth())
     .maybeSingle();
 
   if (error) return 0;
-  return data?.request_count ?? 0;
+  return data?.credits_used ?? 0;
 }
 
 /** Base cap + credit packs purchased for the current month (mirrors web's getEffectiveCap). */
@@ -41,7 +41,7 @@ async function fetchEffectiveCap(userId: string): Promise<number> {
 }
 
 /**
- * Returns remaining AI calls for the current calendar month, Pro AI users only.
+ * Returns remaining AI credits for the current calendar month, Pro AI users only.
  * Mirrors the web app's account page usage indicator (same `ai_usage` table + cap).
  */
 export function useAiUsage() {

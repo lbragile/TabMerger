@@ -151,7 +151,7 @@ export function PricingCard({
         {tier === 'proAi' && (
           <li className="flex items-center gap-2 text-text2">
             <Plus className="h-3.5 w-3.5 shrink-0 text-primary" />
-            <span>{AI_MONTHLY_CAP} AI requests / month</span>
+            <span>{AI_MONTHLY_CAP} AI credits / month</span>
           </li>
         )}
       </ul>

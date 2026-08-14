@@ -19,7 +19,8 @@ vi.mock('@/lib/supabase/server', () => ({
 
 const mockCheckUsage = vi.fn()
 vi.mock('@/lib/ai-usage', () => ({
-  AI_MONTHLY_CAP: 100,
+  AI_MONTHLY_CAP: 300,
+  CREDIT_COSTS: { nameGroup: 1, tabSummary: 1, suggestSessions: 5, groupTabs: 8 },
   checkAndIncrementAIUsage: (...args: unknown[]) => mockCheckUsage(...args),
 }))
 
@@ -92,6 +93,7 @@ const simpleRoutes = [
     name: 'group-tabs',
     handler: groupTabsPOST,
     url: 'http://localhost/api/ai/group-tabs',
+    cost: 8,
     body: { tabs: TABS },
     bad: [{}, { tabs: [] }, { tabs: 'nope' }] as Record<string, unknown>[],
     aiMock: () => mockGroupTabs,
@@ -104,6 +106,7 @@ const simpleRoutes = [
     name: 'name-group',
     handler: nameGroupPOST,
     url: 'http://localhost/api/ai/name-group',
+    cost: 1,
     body: { tabs: TABS },
     bad: [{}, { tabs: [] }] as Record<string, unknown>[],
     aiMock: () => mockNameGroup,
@@ -116,6 +119,7 @@ const simpleRoutes = [
     name: 'tab-summary',
     handler: tabSummaryPOST,
     url: 'http://localhost/api/ai/tab-summary',
+    cost: 1,
     body: { tab: TABS[0] },
     bad: [{}, { tab: { title: 'x', url: 'y' } }] as Record<string, unknown>[],
     aiMock: () => mockSummarizeTab,
@@ -128,6 +132,7 @@ const simpleRoutes = [
     name: 'suggest-sessions',
     handler: suggestSessionsPOST,
     url: 'http://localhost/api/ai/suggest-sessions',
+    cost: 5,
     body: { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] },
     bad: [{}, { groups: [] }] as Record<string, unknown>[],
     aiMock: () => mockSuggestSessions,
@@ -149,7 +154,7 @@ describe.each(simpleRoutes)('POST /api/ai/$name', (route) => {
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual(route.expected)
     expect(res.headers.get('X-AI-Requests-Remaining')).toBe('42')
-    expect(mockCheckUsage).toHaveBeenCalledWith(mockSupabase, USER_ID)
+    expect(mockCheckUsage).toHaveBeenCalledWith(mockSupabase, USER_ID, route.cost)
   })
 
   it('401s with no Authorization header', async () => {

@@ -32,7 +32,7 @@ vi.mock('@/hooks/useBulkActions', () => ({
   },
 }))
 
-const groupsState = {
+let groupsState = {
   available: [
     { permanent: true, id: 'g0', name: 'Now Open', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
     { permanent: false, id: 'g1', name: 'Saved Group', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
@@ -72,6 +72,13 @@ beforeEach(() => {
   vi.clearAllMocks()
   mockGetSetting.mockResolvedValue({ confirmOnDelete: false })
   entitlements = { tier: 'free', cloudSync: false }
+  groupsState = {
+    available: [
+      { permanent: true, id: 'g0', name: 'Now Open', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+      { permanent: false, id: 'g1', name: 'Saved Group', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+    ],
+    active: { id: '', index: 1 },
+  }
 })
 
 describe('SelectionActionBar — tab selection (window-N id, non-permanent group)', () => {
@@ -93,6 +100,29 @@ describe('SelectionActionBar — tab selection (window-N id, non-permanent group
     await user.click(screen.getByRole('button', { name: /move to group/i }))
     await user.click(screen.getByText('Saved Group'))
     expect(mockBulkMove).toHaveBeenCalledWith({ items: selectedItems, targetGroupIndex: 1 })
+  })
+})
+
+describe('SelectionActionBar — move/copy target list excludes archived groups', () => {
+  beforeEach(() => {
+    selectedItems = [{ type: 'tab', id: 'window-1-tab-0' }]
+    groupsState = {
+      available: [
+        { permanent: true, id: 'g0', name: 'Now Open', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+        { permanent: false, id: 'g1', name: 'Saved Group', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+        // @ts-expect-error -- archived isn't in this file's minimal mock type, only needed for this test
+        { permanent: false, archived: true, id: 'g2', name: 'Archived Group', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+      ],
+      active: { id: '', index: 1 },
+    }
+  })
+
+  it('does not list an archived group as a move/copy target', async () => {
+    const user = userEvent.setup()
+    wrap(React.createElement(SelectionActionBar))
+    await user.click(screen.getByRole('button', { name: /move to group/i }))
+    expect(screen.getByText('Saved Group')).toBeInTheDocument()
+    expect(screen.queryByText('Archived Group')).not.toBeInTheDocument()
   })
 })
 

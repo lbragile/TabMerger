@@ -11,7 +11,7 @@ import { hasEncryptionKey } from '@/lib/encryptionKey';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 
-/** Thrown by {@link aiPost} on a 429 so callers can distinguish "out of AI calls" from any other failure. */
+/** Thrown by {@link aiPost} on a 429 so callers can distinguish "out of AI credits" from any other failure. */
 export class QuotaExceededError extends Error {
   isQuotaExceeded = true as const;
 }
@@ -59,7 +59,7 @@ export async function aiPost<T>(path: string, body: unknown, token: string): Pro
   return res.json() as Promise<T>;
 }
 
-/** Derives isQuotaExceeded from a mutation's settled error so components can show a "buy more AI calls" prompt instead of a generic error. */
+/** Derives isQuotaExceeded from a mutation's settled error so components can show a "buy more AI credits" prompt instead of a generic error. */
 function withQuotaFlag<T extends { error: unknown }>(mutation: T): T & { isQuotaExceeded: boolean } {
   return { ...mutation, isQuotaExceeded: mutation.error instanceof QuotaExceededError };
 }

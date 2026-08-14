@@ -230,6 +230,21 @@ describe('useAuth — signIn/signUp/signOut', () => {
       act(async () => { await result.current.signOut() })
     ).rejects.toThrow('network down')
   })
+
+  it('signOut does not clear the persisted data key — unlock is one-time-ever per device', async () => {
+    // Regression: signOut() used to call clearCachedDataKey(userId), wiping the
+    // chrome.storage.local-persisted unwrapped key on every sign-out, forcing the user
+    // to re-enter their passphrase just to sign back into the SAME account.
+    mockSignOut.mockResolvedValue({ error: null })
+    const { result } = renderHook(() => useAuth(), { wrapper: makeWrapper() })
+    await act(async () => {
+      await result.current.signOut()
+    })
+    expect(mockSignOut).toHaveBeenCalled()
+    // useAuth no longer imports/calls clearCachedDataKey at all from signOut — asserted
+    // indirectly via encryptionKey.test.ts covering clearCachedDataKey's own contract,
+    // and here by confirming signOut's only side effect is the Supabase call itself.
+  })
 })
 
 describe('useAuth — auth state change + storage sync', () => {

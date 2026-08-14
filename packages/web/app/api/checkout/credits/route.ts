@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
     .eq('id', user.id)
     .single()
 
-  // Trust boundary: request comes from a UI input value. Clamp to [50, 500] — at $0.10/call,
-  // anything below 50 calls ($5) risks Stripe's $0.50 minimum-charge floor and gets eaten by
+  // Trust boundary: request comes from a UI input value. Clamp to [50, 500] — at $0.05/credit,
+  // anything below 50 credits ($2.50) risks Stripe's $0.50 minimum-charge floor and gets eaten by
   // per-transaction processing fees, so 50 is the smallest amount actually worth selling.
   const body = await request.json().catch(() => ({}))
   const rawQuantity = Number(body?.quantity)

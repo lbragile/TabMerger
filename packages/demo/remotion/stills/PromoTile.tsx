@@ -98,7 +98,21 @@ function MarqueeTile() {
                 />
             </svg>
 
-            {/* Logo + tagline in the top-left corner, away from the seam */}
+            {/* Logo + headline in the top-left corner, away from the seam.
+                Headline is now the dominant element (larger, high-contrast
+                white-on-scrim) so "organize your tabs" reads before anything
+                else — the light/dark split is supporting detail, not the
+                lead. */}
+            <div
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "48%",
+                    height: 140,
+                    background: "linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0))",
+                }}
+            />
             <div style={{ position: "absolute", left: 24, top: 20, display: "flex", alignItems: "center", gap: 10 }}>
                 <Img src={staticFile("logo.png")} style={{ width: 36, height: 36 }} />
                 <div style={{ color: "white", fontFamily: "sans-serif", fontWeight: 800, fontSize: 22 }}>
@@ -109,18 +123,36 @@ function MarqueeTile() {
                 style={{
                     position: "absolute",
                     left: 24,
-                    top: 68,
+                    top: 64,
+                    color: "white",
+                    fontFamily: "sans-serif",
+                    fontWeight: 800,
+                    fontSize: 32,
+                    lineHeight: 1.2,
+                    textShadow: "0 2px 10px rgba(0,0,0,0.7)",
+                }}
+            >
+                Organize your tabs.
+            </div>
+            <div
+                style={{
+                    position: "absolute",
+                    left: 24,
+                    top: 108,
                     color: "rgba(255,255,255,0.9)",
                     fontFamily: "sans-serif",
                     fontWeight: 700,
-                    fontSize: 20,
+                    fontSize: 18,
                 }}
             >
                 Light or dark. Always organized.
             </div>
 
-            {/* Multi-window proof, tucked in the bottom-left corner */}
-            <MultiWindowInset style={{ left: 24, bottom: 20, width: 260, aspectRatio: "800 / 600" }} />
+            {/* Multi-window proof, tucked in the top-right corner of the
+                light-mode side — clear of both the seam and the headline, so
+                it reads as a distinct supporting detail instead of visual
+                noise crossing the cut. */}
+            <MultiWindowInset style={{ right: 24, top: 20, width: 220, aspectRatio: "800 / 600" }} />
         </AbsoluteFill>
     );
 }
@@ -128,21 +160,57 @@ function MarqueeTile() {
 function SmallTile() {
     return (
         <AbsoluteFill style={{ backgroundColor: "#0b0f14" }}>
-            {/* Full-bleed dark-mode hero — cropped (not letterboxed) and
-                left-anchored so the sidebar/group list (the most legible,
-                recognizable part of the UI) fills the frame instead of
-                floating in empty space. */}
-            <Img
-                src={staticFile(`screenshots/raw/${DARK_SCREENSHOT_ID}.png`)}
+            {/* Zoomed hero: at 440x280 the full popup (sidebar + window panel
+                together) reduces every tab title to unreadable mush. Scale
+                the screenshot up ~1.8x and anchor top-left so ONLY the
+                colored group sidebar — the single most recognizable, legible
+                "this is a tab organizer" moment — fills the frame, instead
+                of cramming two illegible panels in side by side. */}
+            <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+                <Img
+                    src={staticFile(`screenshots/raw/${DARK_SCREENSHOT_ID}.png`)}
+                    style={{
+                        position: "absolute",
+                        width: "180%",
+                        height: "180%",
+                        objectFit: "cover",
+                        objectPosition: "left top",
+                        left: 0,
+                        top: -40,
+                    }}
+                />
+            </div>
+            {/* Scrim behind the headline — the screenshot's own dark UI chrome
+                isn't reliably dark right at the top edge (light-mode sidebars,
+                bright favicons), so text needs its own contrast floor. */}
+            <div
                 style={{
                     position: "absolute",
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    objectPosition: "left center",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 78,
+                    background: "linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0))",
                 }}
             />
-            <MultiWindowInset style={{ right: 12, bottom: 12, width: 130, aspectRatio: "800 / 600" }} />
+            <div
+                style={{
+                    position: "absolute",
+                    top: 10,
+                    left: 12,
+                    right: 12,
+                    color: "white",
+                    fontFamily: "sans-serif",
+                    fontWeight: 800,
+                    fontSize: 23,
+                    lineHeight: 1.15,
+                    textShadow: "0 2px 8px rgba(0,0,0,0.9)",
+                }}
+            >
+                Organize your tabs.
+                <br />
+                Find them again.
+            </div>
         </AbsoluteFill>
     );
 }

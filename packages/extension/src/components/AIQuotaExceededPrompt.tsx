@@ -19,7 +19,7 @@ export function AIQuotaExceededPrompt() {
     <div className="flex items-center gap-2 px-3 py-2 bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 text-xs">
       <Sparkles className="h-3.5 w-3.5 text-purple-500 shrink-0" />
       <p className="flex-1 text-purple-700 dark:text-purple-300">
-        You&apos;ve used all your AI calls for this month.
+        You&apos;ve used all your AI credits for this month.
       </p>
       <button
         type="button"

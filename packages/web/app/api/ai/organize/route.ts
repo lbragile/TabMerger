@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 import { start, getRun } from 'workflow/api'
 import { tabOrganizerWorkflow, type ClientGroup } from '@/lib/workflows/tabOrganizer'
-import { checkAndIncrementAIUsage } from '@/lib/ai-usage'
+import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
 
 /**
  * Reads an optional client-supplied `groups` payload from the POST body.
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   // Read before the usage check so a malformed body never burns a quota unit.
   const clientGroups = await readClientGroups(request)
 
-  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id)
+  const { allowed, remaining } = await checkAndIncrementAIUsage(supabase, user.id, CREDIT_COSTS.groupTabs)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Pro AI subscription required or monthly limit reached' },

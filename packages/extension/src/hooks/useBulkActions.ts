@@ -233,9 +233,13 @@ export function useBulkMoveToGroup() {
 
         // Collect tabs in ASC order (natural reading order) before mutating
         const parsedAsc = [...parsedDesc].reverse();
-        const tabsToMove: Tab[] = parsedAsc
-          .map((p) => state.available[p.groupIndex]?.windows[p.windowIndex]?.tabs[p.tabIndex])
-          .filter((t): t is Tab => t !== undefined);
+        const tabsToMoveWithSource = parsedAsc
+          .map((p) => ({
+            tab: state.available[p.groupIndex]?.windows[p.windowIndex]?.tabs[p.tabIndex],
+            sourceKey: `${p.groupIndex}:${p.windowIndex}`
+          }))
+          .filter((t): t is { tab: Tab; sourceKey: string } => t.tab !== undefined);
+        const tabsToMove: Tab[] = tabsToMoveWithSource.map((t) => t.tab);
 
         // Remove from source positions in DESC order (avoids index drift)
         // Now Open (permanent) sources are copies — never remove from them
@@ -264,8 +268,15 @@ export function useBulkMoveToGroup() {
           }
           // Don't insert into Now Open IndexedDB — the sync handles it
         } else {
-          // Add each tab as its own window in the target group
-          const newWindows = tabsToMove.map((tab) => createWindow([tab]));
+          // Group tabs by their original source window so tabs that were
+          // together stay together as one window in the target group
+          const bySource = new Map<string, Tab[]>();
+          for (const { tab, sourceKey } of tabsToMoveWithSource) {
+            const bucket = bySource.get(sourceKey);
+            if (bucket) bucket.push(tab);
+            else bySource.set(sourceKey, [tab]);
+          }
+          const newWindows = [...bySource.values()].map((tabs) => createWindow(tabs));
           const targetGrp = available[targetGroupIndex];
           available[targetGroupIndex] = {
             ...targetGrp,

@@ -105,7 +105,7 @@ async function doPush(): Promise<void> {
     device_name: deviceName,
     now_open_snapshot: snapshotField,
     last_active: new Date().toISOString()
-  });
+  }, { onConflict: 'user_id,device_id' });
 
   // ponytail: failed push is silently dropped, no retry queue (unlike syncEngine.ts pendingSync) — acceptable, this is
   // best-effort presence data, not sync-critical; upgrade path: persist a pending flag and retry on next tab event.
@@ -125,6 +125,16 @@ export function pushDeviceSession(state: GroupsState, tier: Tier = 'pro'): void 
   latestTier = tier;
   if (debounceTimer) clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => void doPush(), DEVICE_SESSION_DEBOUNCE_MS);
+}
+
+/** Keeps only the first row per device_name — call on a list already ordered by last_active desc. */
+export function dedupeByDeviceName<T extends { device_name: string }>(rows: T[]): T[] {
+  const seen = new Set<string>();
+  return rows.filter((row) => {
+    if (seen.has(row.device_name)) return false;
+    seen.add(row.device_name);
+    return true;
+  });
 }
 
 /** Fetches all of this account's devices (including this one), active within the last 30 days. No-op for free tier. */
@@ -156,16 +166,22 @@ export async function fetchDeviceSessions(tier: Tier): Promise<DeviceSession[]> 
     }
   }));
 
+  // Same device can end up with more than one device_id row (e.g. extension storage
+  // cleared/reinstalled regenerates a fresh UUID). Rows are already ordered by
+  // last_active desc, so keeping the first occurrence per device_name keeps the
+  // most recent row and drops older duplicates of the same physical device.
+  const deduped = dedupeByDeviceName(decoded);
+
   // ponytail: dev-only mock data — only fires in `pnpm dev:extension` (import.meta.env.DEV is
   // compiled to `false` and dead-code-eliminated by Vite in production builds). Appended
   // alongside real rows (not just as an empty-state fallback) so the Other Devices UI can be
   // visually verified with a mix of real + mock devices during development.
   // Delete this block once no longer needed.
   if (import.meta.env.DEV) {
-    return [...decoded, ...getMockDeviceSessions()];
+    return [...deduped, ...getMockDeviceSessions()];
   }
 
-  return decoded;
+  return deduped;
 }
 
 // ponytail: dev-only mock data, see call site above. Not a real DeviceSession[] source — never

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { nanoid } from 'nanoid'
 import { supabase } from '@/lib/supabase'
 import { pushPendingChanges, pullRemoteChanges, deleteRemoteGroups } from '@/lib/syncEngine'
-import { saveGroup, getPendingSyncGroups } from '@/lib/localDb'
+import { saveGroup, getPendingSyncGroups, getGroupsState } from '@/lib/localDb'
 import { createGroup } from '@/lib/utils'
 import type { Group } from '@/lib/types'
 import type { Session } from '@supabase/supabase-js'
@@ -80,5 +80,26 @@ describe.skipIf(!hasTestBranch)('syncEngine — real Supabase branch integration
 
     const { data: after } = await supabase.from('groups').select('id').eq('id', group.id)
     expect(after).toHaveLength(0)
+  })
+
+  it('removes a group from local IDB when it was deleted remotely by another device (real IDB round trip)', async () => {
+    // Simulate: this device already synced the group (pendingSync:false) and saved it to IDB —
+    // then a different device (or the web dashboard) hard-deleted it on Supabase directly,
+    // bypassing this device's deleteRemoteGroups/pendingDeleteGroupIds entirely.
+    const group: Group = { ...createGroup(nanoid(10), 'Integration Remote-Delete Test'), pendingSync: true }
+    await saveGroup(group)
+    await pushPendingChanges(session) // marks pendingSync:false locally, row now exists remotely
+
+    // Remove the row directly (not via deleteRemoteGroups, so no pendingDeleteGroupIds entry is set)
+    await supabase.from('groups').delete().eq('id', group.id)
+
+    const state = await getGroupsState()
+    expect(state.available.some((g) => g.id === group.id)).toBe(true) // still present locally pre-pull
+
+    const merged = await pullRemoteChanges(session, state.available)
+    expect(merged.some((g) => g.id === group.id)).toBe(false)
+
+    const stateAfter = await getGroupsState()
+    expect(stateAfter.available.some((g) => g.id === group.id)).toBe(false) // deleteGroup actually persisted to IDB
   })
 })

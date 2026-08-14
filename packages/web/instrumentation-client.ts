@@ -4,6 +4,7 @@ import { scrubEvent } from '@/lib/sentry-scrubber';
 if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? 'development',
     sendDefaultPii: false,
     beforeSend: scrubEvent,
     // Session Replay: low background sample, full capture on error (crash-context video).

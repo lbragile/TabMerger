@@ -7,6 +7,7 @@ const {
   mockGetPendingSyncGroups,
   mockMarkGroupSynced,
   mockSaveGroup,
+  mockDeleteGroup,
   mockGetSession,
   mockHasEncryptionKey,
   mockGetDataKey,
@@ -18,6 +19,7 @@ const {
   mockGetPendingSyncGroups: vi.fn(),
   mockMarkGroupSynced: vi.fn(),
   mockSaveGroup: vi.fn(),
+  mockDeleteGroup: vi.fn(),
   mockGetSession: vi.fn(),
   mockHasEncryptionKey: vi.fn(),
   mockGetDataKey: vi.fn(),
@@ -31,6 +33,7 @@ vi.mock('@/lib/localDb', () => ({
   getPendingSyncGroups: mockGetPendingSyncGroups,
   markGroupSynced: mockMarkGroupSynced,
   saveGroup: mockSaveGroup,
+  deleteGroup: mockDeleteGroup,
   getSetting: mockGetSetting,
   setSetting: mockSetSetting,
 }))
@@ -166,6 +169,19 @@ describe('pushGroup — encryption', () => {
     expect(mockMarkGroupSynced).toHaveBeenCalledWith('g1')
   })
 
+  it('an unexpected throw pushing one group (e.g. encryptBlob failing) does not abort the rest of the batch', async () => {
+    mockGetPendingSyncGroups.mockResolvedValue([makeGroup({ id: 'g1' }), makeGroup({ id: 'g2' })])
+    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({ fake: 'key' })
+    mockEncryptBlob.mockRejectedValueOnce(new Error('malformed content')).mockResolvedValueOnce({ iv: 'iv2', ct: 'ct2' })
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+
+    await pushPendingChanges(makeSession('u1'))
+
+    expect(mockMarkGroupSynced).not.toHaveBeenCalledWith('g1')
+    expect(mockMarkGroupSynced).toHaveBeenCalledWith('g2')
+  })
+
   it('skips the push (leaves pendingSync) when encryption is enabled but the key is locked', async () => {
     mockGetPendingSyncGroups.mockResolvedValue([makeGroup({ id: 'g1' })])
     mockHasEncryptionKey.mockResolvedValue(true)
@@ -293,6 +309,42 @@ describe('pullRemoteChanges', () => {
     expect(mockSetSetting).toHaveBeenCalledWith('pendingDeleteGroupIds', ['g2'])
   })
 
+  it('removes a group that was deleted remotely: previously-synced (pendingSync:false), absent from remote, not in this device\'s own pendingDeleteGroupIds', async () => {
+    currentBuilder = makeBuilder([{ data: [], error: null }])
+    const local = [makeGroup({ id: 'g1', pendingSync: false })]
+    const result = await pullRemoteChanges(makeSession(), local)
+    expect(result.find((g) => g.id === 'g1')).toBeUndefined()
+    expect(mockDeleteGroup).toHaveBeenCalledWith('g1')
+    // must not be re-pushed — deleteGroup, not saveGroup/upsert
+    expect(mockSaveGroup).not.toHaveBeenCalled()
+  })
+
+  it('keeps a genuinely new/unpushed local-only group (pendingSync:true) and does not delete it', async () => {
+    currentBuilder = makeBuilder([{ data: [], error: null }])
+    const local = [makeGroup({ id: 'g1', pendingSync: true })]
+    const result = await pullRemoteChanges(makeSession(), local)
+    expect(result.find((g) => g.id === 'g1')).toBeDefined()
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+  })
+
+  it('does not delete this device\'s own recent delete (pendingDeleteGroupIds wins over the new remote-deletion logic)', async () => {
+    settingsStore['pendingDeleteGroupIds'] = ['g1']
+    currentBuilder = makeBuilder([{ data: [], error: null }])
+    const local = [makeGroup({ id: 'g1', pendingSync: false })]
+    const result = await pullRemoteChanges(makeSession(), local)
+    expect(result.find((g) => g.id === 'g1')).toBeUndefined()
+    // Already handled by the pendingDeleteSet `continue` guard — deleteGroup should not be called again
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+  })
+
+  it('never deletes the permanent Now Open group even if pendingSync:false and absent from remote', async () => {
+    currentBuilder = makeBuilder([{ data: [], error: null }])
+    const local = [makeGroup({ id: 'now', permanent: true, pendingSync: false })]
+    const result = await pullRemoteChanges(makeSession(), local)
+    expect(result.find((g) => g.id === 'now')).toBeDefined()
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+  })
+
   it('deduplicates permanent groups, keeping the one with the lowest updatedAt', async () => {
     currentBuilder = makeBuilder([{
       data: [{ id: 'now-remote', name: 'Now Open', color: '#fff', updated_at: new Date(500).toISOString(), windows: [], starred: false, archived: false, note: null, info: '' }],
@@ -306,7 +358,7 @@ describe('pullRemoteChanges', () => {
 })
 
 describe('subscribeToRemoteChanges', () => {
-  it('saves and forwards updates for INSERT/UPDATE events, ignoring DELETE', async () => {
+  it('deletes the local group immediately on a live Realtime DELETE event', async () => {
     let handler: (payload: unknown) => Promise<void> = async () => {}
     mockChannelOn.mockImplementation((_event, _filter, cb) => {
       handler = cb
@@ -315,8 +367,32 @@ describe('subscribeToRemoteChanges', () => {
     const onUpdate = vi.fn()
     await subscribeToRemoteChanges(makeSession('u1'), onUpdate)
 
-    await handler({ eventType: 'DELETE', new: {} })
+    await handler({ eventType: 'DELETE', old: { id: 'g1' } })
+    expect(mockDeleteGroup).toHaveBeenCalledWith('g1')
     expect(onUpdate).not.toHaveBeenCalled()
+  })
+
+  it('skips the Realtime DELETE if this device already has the id in pendingDeleteGroupIds (avoids a redundant second delete)', async () => {
+    settingsStore['pendingDeleteGroupIds'] = ['g1']
+    let handler: (payload: unknown) => Promise<void> = async () => {}
+    mockChannelOn.mockImplementation((_event, _filter, cb) => {
+      handler = cb
+      return { subscribe: mockChannelSubscribe.mockReturnValue({}) }
+    })
+    await subscribeToRemoteChanges(makeSession('u1'), vi.fn())
+
+    await handler({ eventType: 'DELETE', old: { id: 'g1' } })
+    expect(mockDeleteGroup).not.toHaveBeenCalled()
+  })
+
+  it('saves and forwards updates for INSERT/UPDATE events', async () => {
+    let handler: (payload: unknown) => Promise<void> = async () => {}
+    mockChannelOn.mockImplementation((_event, _filter, cb) => {
+      handler = cb
+      return { subscribe: mockChannelSubscribe.mockReturnValue({}) }
+    })
+    const onUpdate = vi.fn()
+    await subscribeToRemoteChanges(makeSession('u1'), onUpdate)
 
     await handler({
       eventType: 'UPDATE',

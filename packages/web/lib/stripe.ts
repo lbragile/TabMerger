@@ -88,7 +88,7 @@ export async function createCreditPackCheckoutSession({
     // adjustable_quantity lets the customer change the call count on Stripe's own
     // Checkout page, not just before landing there — mirrors the same 50-500 clamp
     // the /api/checkout/credits route already enforces server-side on `quantity`.
-    // Minimum is 50 (not 1) since at $0.10/call a smaller purchase risks Stripe's
+    // Minimum is 50 (not 1) since at $0.05/credit a smaller purchase risks Stripe's
     // $0.50 minimum-charge floor and gets eaten by per-transaction processing fees.
     line_items: [{ price: priceId, quantity, adjustable_quantity: { enabled: true, minimum: 50, maximum: 500 } }],
     // Shows an opt-in "Save my payment method for future purchases" checkbox on

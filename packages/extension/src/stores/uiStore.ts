@@ -23,6 +23,7 @@ export type ModalType =
   | 'reviewStaleGroup'
   | 'archiveStaleGroups'
   | 'encryptionSetup'
+  | 'resetEncryption'
   | null;
 
 interface ModalState {

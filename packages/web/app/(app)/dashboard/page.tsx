@@ -78,12 +78,12 @@ export default async function DashboardPage({
     const month = new Date().toISOString().slice(0, 7)
     const { data: usage } = await supabase
       .from('ai_usage')
-      .select('request_count')
+      .select('credits_used')
       .eq('user_id', user.id)
       .eq('month', month)
       .single()
     aiUsage = {
-      used: usage?.request_count ?? 0,
+      used: usage?.credits_used ?? 0,
       limit: await getEffectiveCap(supabase, user.id, month),
     }
   }

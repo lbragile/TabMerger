@@ -54,7 +54,21 @@ async function main() {
 
         for (const step of demoScript) {
             if (step.textCard) continue; // text-only scene, no popup state to capture
-            await runStepAction(page, step.action, Math.min(step.durationMs, 1500));
+            // ponytail: coordinator ask — screenshots for these 3 steps must
+            // show the interaction MID-GESTURE (popover/menu open, drag in
+            // flight), not the resting before/after state page.screenshot()
+            // below would otherwise capture once runStepAction returns. The
+            // handlers themselves call this hook at the interesting moment
+            // (see actions.ts's colorNewGroup/addWindowNote/crossWindowTabDrag).
+            const midGestureIds = new Set(["color-new-group", "add-window-note", "cross-window-tab-drag"]);
+            const midGesture = midGestureIds.has(step.id)
+                ? async () => {
+                      const file = path.join(RAW_DIR, `${step.id}-${theme}.png`);
+                      await page.screenshot({ path: file });
+                      console.log(`[screenshots] saved ${file} (mid-gesture)`);
+                  }
+                : undefined;
+            await runStepAction(page, step.action, Math.min(step.durationMs, 1500), midGesture);
             // ponytail: leftover cursor/focus state from a prior step's real
             // interaction can intercept the NEXT step's click even when that
             // step isn't one we screenshot. Two distinct leftover-state bugs,
@@ -77,7 +91,7 @@ async function main() {
             await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
             await page.mouse.move(0, 0);
             await page.waitForTimeout(200);
-            if (SCREENSHOT_STEP_IDS.includes(step.id)) {
+            if (SCREENSHOT_STEP_IDS.includes(step.id) && !midGestureIds.has(step.id)) {
                 const file = path.join(RAW_DIR, `${step.id}-${theme}.png`);
                 await page.screenshot({ path: file });
                 console.log(`[screenshots] saved ${file}`);

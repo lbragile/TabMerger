@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { StatsOverview } from '@/components/dashboard/StatsOverview'
 
 describe('StatsOverview 5-card expansion', () => {
-  it('renders 4 cards when aiUsage is undefined (no AI calls card)', () => {
+  it('renders 4 cards when aiUsage is undefined (no AI credits card)', () => {
     render(
       <StatsOverview
         tabCount={42}
@@ -16,10 +16,10 @@ describe('StatsOverview 5-card expansion', () => {
     expect(screen.getByText('Groups synced')).toBeInTheDocument()
     expect(screen.getByText('Sessions stored')).toBeInTheDocument()
     expect(screen.getByText('Memory reclaimed')).toBeInTheDocument()
-    expect(screen.queryByText('AI calls this month')).not.toBeInTheDocument()
+    expect(screen.queryByText('AI credits this month')).not.toBeInTheDocument()
   })
 
-  it('renders 5 cards including "AI calls this month" when aiUsage is provided', () => {
+  it('renders 5 cards including "AI credits this month" when aiUsage is provided', () => {
     render(
       <StatsOverview
         tabCount={42}
@@ -29,7 +29,7 @@ describe('StatsOverview 5-card expansion', () => {
         aiUsage={{ used: 7, limit: 50 }}
       />
     )
-    expect(screen.getByText('AI calls this month')).toBeInTheDocument()
+    expect(screen.getByText('AI credits this month')).toBeInTheDocument()
     expect(screen.getByText('7/50')).toBeInTheDocument()
   })
 

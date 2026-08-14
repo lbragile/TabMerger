@@ -71,6 +71,12 @@ export function SelectionActionBar() {
   const srcIndex = sourceGroupIndex(selectedItems[0].id);
   const isNowOpen = groupsState?.available[srcIndex]?.permanent ?? false;
 
+  // Same archived exclusion as Tab.tsx/Window.tsx's per-item "move to group" menus.
+  const targetGroups =
+    groupsState?.available
+      .map((group, index) => ({ group, index }))
+      .filter(({ group }) => !group.archived) ?? [];
+
   async function handleDelete() {
     const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
       'appSettings',
@@ -110,7 +116,7 @@ export function SelectionActionBar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="text-xs max-h-56 overflow-y-auto">
-            {groupsState.available.map((group, index) => (
+            {targetGroups.map(({ group, index }) => (
               <DropdownMenuItem
                 key={group.id}
                 className="text-xs"

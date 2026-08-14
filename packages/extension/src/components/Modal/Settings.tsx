@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
+import { hasEncryptionKey, resetEncryption } from '@/lib/encryptionKey';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -50,6 +51,25 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const openModal = useUIStore((s) => s.openModal);
+  const [canResetEncryption, setCanResetEncryption] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    void hasEncryptionKey().then(setCanResetEncryption);
+  }, [user]);
+
+  const handleResetEncryption = () => {
+    openModal('resetEncryption', {
+      onConfirm: () => {
+        void resetEncryption()
+          .then(() => {
+            toast.success('Encryption reset — set up a new passphrase');
+            openModal('encryptionSetup');
+          })
+          .catch((e) => toast.error(e instanceof Error ? e.message : 'Failed to reset encryption'));
+      }
+    });
+  };
 
   // Sets the dev-only local mock counter (still read by useAiUsage in DEV — see its
   // own comment) AND writes the same count to the real Supabase ai_usage table via
@@ -351,7 +371,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             )}
             {aiFeatures && (
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">AI calls left this month</span>
+                <span className="text-xs text-muted-foreground">AI credits left this month</span>
                 <span className="text-xs font-medium">
                   {aiUsageLoading ? '…' : `${aiUsageRemaining} / ${aiUsageCap}`}
                 </span>
@@ -385,6 +405,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               disabled={portalLoading}
             >
               {portalLoading ? 'Opening...' : 'Manage billing'}
+            </Button>
+          )}
+
+          {canResetEncryption && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleResetEncryption}
+              className="w-full text-xs rounded-none hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
+            >
+              Reset encryption passphrase
             </Button>
           )}
 
@@ -569,7 +600,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                   <div>
                     <Label className="text-sm">Mocked AI usage count</Label>
                     <p className="text-xs text-muted-foreground">
-                      Sets the AI call counter (out of {aiUsageCap}) locally and syncs it to your
+                      Sets the AI credit counter (out of {aiUsageCap}) locally and syncs it to your
                       real Supabase account, so server-side quota enforcement can be tested end-to-end.
                     </p>
                   </div>

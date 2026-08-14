@@ -182,7 +182,7 @@ describe('GroupContextMenu — AI rename', () => {
     await user.click(screen.getByText('AI rename'))
     await vi.waitFor(() => expect(mockToastError).toHaveBeenCalled())
     expect(mockToastError).toHaveBeenCalledWith(
-      "You've used all your AI calls for this month.",
+      "You've used all your AI credits for this month.",
       expect.objectContaining({ action: expect.objectContaining({ label: 'Buy more' }) })
     )
     expect(mockUpdateGroupName).not.toHaveBeenCalled()

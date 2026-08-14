@@ -271,6 +271,93 @@ describe('useBulkMoveToGroup — cross-group comparator, permanent-source guard,
     expect(targetTabCount).toBe(3)
   })
 
+  it('keeps multiple tabs from the same source window together as one window in the target group', async () => {
+    const groupA = createGroup('a', 'A')
+    groupA.windows = [win([tab(1, 'https://a1.com'), tab(2, 'https://a2.com'), tab(3, 'https://a3.com')])]
+    const target = createGroup('t', 'Target')
+    target.windows = []
+    const state = makeState([groupA, target])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        items: [
+          { type: 'tab' as const, id: 'tab-0-0-0' },
+          { type: 'tab' as const, id: 'tab-0-0-2' },
+        ],
+        targetGroupIndex: 1,
+      })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows).toHaveLength(1)
+    expect(saved.available[1].windows[0].tabs.map((t) => t.url)).toEqual(['https://a1.com', 'https://a3.com'])
+  })
+
+  it('creates separate windows in the target group for tabs from different source windows', async () => {
+    const groupA = createGroup('a', 'A')
+    groupA.windows = [win([tab(1, 'https://a1.com')])]
+    const groupB = createGroup('b', 'B')
+    groupB.windows = [win([tab(2, 'https://b1.com')])]
+    const target = createGroup('t', 'Target')
+    target.windows = []
+    const state = makeState([groupA, groupB, target])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        items: [
+          { type: 'tab' as const, id: 'tab-0-0-0' },
+          { type: 'tab' as const, id: 'tab-1-0-0' },
+        ],
+        targetGroupIndex: 2,
+      })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[2].windows).toHaveLength(2)
+    expect(saved.available[2].windows.map((w) => w.tabs.map((t) => t.url))).toEqual([
+      ['https://a1.com'],
+      ['https://b1.com'],
+    ])
+  })
+
+  it('mixed selection: 2 tabs from window A + 1 tab from window B produces exactly 2 target windows', async () => {
+    const groupA = createGroup('a', 'A')
+    groupA.windows = [
+      win([tab(1, 'https://a1.com'), tab(2, 'https://a2.com')]),
+      win([tab(3, 'https://a-win2.com')]),
+    ]
+    const target = createGroup('t', 'Target')
+    target.windows = []
+    const state = makeState([groupA, target])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        items: [
+          { type: 'tab' as const, id: 'tab-0-0-0' },
+          { type: 'tab' as const, id: 'tab-0-0-1' },
+          { type: 'tab' as const, id: 'tab-0-1-0' },
+        ],
+        targetGroupIndex: 1,
+      })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows).toHaveLength(2)
+    expect(saved.available[1].windows.map((w) => w.tabs.map((t) => t.url))).toEqual([
+      ['https://a1.com', 'https://a2.com'],
+      ['https://a-win2.com'],
+    ])
+  })
+
   it('does not remove tabs from a permanent (Now Open) source group when moving elsewhere', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = [win([tab(5, 'https://live.com')])]

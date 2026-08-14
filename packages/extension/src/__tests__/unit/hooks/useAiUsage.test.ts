@@ -22,7 +22,7 @@ function stubSupabase(requestCount: number, purchases: { credits: number }[]) {
     const b: Record<string, unknown> = {}
     b.select = () => b
     b.eq = () => b
-    b.maybeSingle = async () => ({ data: { request_count: requestCount }, error: null })
+    b.maybeSingle = async () => ({ data: { credits_used: requestCount }, error: null })
     b.then = (resolve: (v: unknown) => void) => resolve({ data: purchases, error: null })
     void table
     return b
@@ -49,8 +49,8 @@ describe('useAiUsage — dev mode', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
 
     expect(result.current.used).toBe(42)
-    expect(result.current.remaining).toBe(58)
-    expect(result.current.cap).toBe(100)
+    expect(result.current.remaining).toBe(258)
+    expect(result.current.cap).toBe(300)
     expect(mockGetDevAiUsage).toHaveBeenCalled()
   })
 
@@ -63,7 +63,7 @@ describe('useAiUsage — dev mode', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
 
     expect(result.current.used).toBe(0)
-    expect(result.current.remaining).toBe(100)
+    expect(result.current.remaining).toBe(300)
   })
 })
 
@@ -83,8 +83,8 @@ describe('useAiUsage — real Supabase path', () => {
     const result = await renderReal()
 
     expect(result.current.used).toBe(30)
-    expect(result.current.cap).toBe(100)
-    expect(result.current.remaining).toBe(70)
+    expect(result.current.cap).toBe(300)
+    expect(result.current.remaining).toBe(270)
     expect(mockGetDevAiUsage).not.toHaveBeenCalled()
   })
 
@@ -92,8 +92,8 @@ describe('useAiUsage — real Supabase path', () => {
     stubSupabase(120, [{ credits: 50 }, { credits: 50 }])
     const result = await renderReal()
 
-    expect(result.current.cap).toBe(200)
-    expect(result.current.remaining).toBe(80)
+    expect(result.current.cap).toBe(400)
+    expect(result.current.remaining).toBe(280)
     expect(mockFrom).toHaveBeenCalledWith('ai_credit_purchases')
   })
 })

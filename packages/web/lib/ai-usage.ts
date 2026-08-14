@@ -1,6 +1,14 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 
-export const AI_MONTHLY_CAP = 100
+export const AI_MONTHLY_CAP = 300
+
+/** Per-route credit weight — mirrors Haiku token cost. Imported by ai/*\/route.ts. */
+export const CREDIT_COSTS = {
+  nameGroup: 1,
+  tabSummary: 1,
+  suggestSessions: 5,
+  groupTabs: 8,
+} as const
 
 /** Returns the current month as 'YYYY-MM' in UTC. */
 function currentMonth(): string {
@@ -8,7 +16,7 @@ function currentMonth(): string {
 }
 
 /**
- * Effective monthly cap = base cap + any credit packs purchased for `month`.
+ * Effective monthly credit cap = base cap + any credit packs purchased for `month`.
  * Shared by enforcement and by the dashboard/account usage displays so they can't drift.
  */
 export async function getEffectiveCap(
@@ -29,15 +37,18 @@ export async function getEffectiveCap(
 }
 
 /**
- * Checks pro_ai subscription, increments ai_usage, and returns remaining count.
- * Returns { allowed: false } if not subscribed or cap exceeded.
+ * Checks pro_ai subscription, adds `cost` credits to ai_usage, and returns remaining balance.
+ * Returns { allowed: false } if not subscribed or the call would exceed the credit pool.
  *
- * ponytail: read-then-update has a small race window but 100 req/month cap
- * is not a financial boundary — acceptable without a DB-level lock or RPC.
+ * ponytail: read-then-update has a small race window but 300 credit/month pool
+ * is not a financial boundary — acceptable without a DB-level lock or RPC. The
+ * `currentCount + cost > cap` guard (not `>=`) still stops a single expensive
+ * call from pushing usage over the pool even if a race lets two calls read stale counts.
  */
 export async function checkAndIncrementAIUsage(
   supabase: SupabaseClient,
-  userId: string
+  userId: string,
+  cost: number
 ): Promise<{ allowed: boolean; remaining: number }> {
   // 1. Verify pro_ai subscription
   const { data: sub } = await supabase
@@ -55,27 +66,27 @@ export async function checkAndIncrementAIUsage(
   // 2. Read current usage
   const { data: existing } = await supabase
     .from('ai_usage')
-    .select('request_count')
+    .select('credits_used')
     .eq('user_id', userId)
     .eq('month', month)
     .maybeSingle()
 
-  const currentCount = existing?.request_count ?? 0
+  const currentCount = existing?.credits_used ?? 0
 
   // 2b. Purchased credit packs extend this month's cap
   const cap = await getEffectiveCap(supabase, userId, month)
 
-  if (currentCount >= cap) {
+  if (currentCount + cost > cap) {
     return { allowed: false, remaining: 0 }
   }
 
-  // 3. Upsert incremented count
+  // 3. Upsert incremented credit total
   await supabase
     .from('ai_usage')
     .upsert(
-      { user_id: userId, month, request_count: currentCount + 1 },
+      { user_id: userId, month, credits_used: currentCount + cost },
       { onConflict: 'user_id,month' }
     )
 
-  return { allowed: true, remaining: cap - (currentCount + 1) }
+  return { allowed: true, remaining: cap - (currentCount + cost) }
 }

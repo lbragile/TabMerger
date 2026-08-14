@@ -293,7 +293,9 @@ export async function launchDemoContext(
     // <Label>, not the button's accessible name) — click() on the old
     // `getByRole("button", { name: "Demo Mode" })` just timed out waiting
     // for a button that no longer exists under that name.
-    await page.getByRole("tab", { name: "Dev" }).click();
+    // exact: true — a "Devices" tab was added alongside "Dev" and the
+    // fuzzy match now resolves to both (strict-mode violation).
+    await page.getByRole("tab", { name: "Dev", exact: true }).click();
 
     // ponytail: enterDemoMode() (packages/extension/src/lib/demo.ts) opens a
     // fresh blank window and closes every other window to reset browser

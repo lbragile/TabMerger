@@ -188,6 +188,22 @@ export async function markGroupSynced(id: string): Promise<void> {
 
 /** Marks every local group dirty so the next push re-sends all of them — used right after
  * encryption setup so existing Supabase rows (still plaintext) get overwritten with ciphertext. */
+/** Wipes local groups/sessions state — used when the signed-in Supabase account changes
+ * (see useSync's last-signed-in-user check) so a different account never inherits the
+ * previous account's locally-cached data (which would get pushed as "mine" and collide
+ * with that account's own rows under RLS). Settings are intentionally left alone — they're
+ * device-level prefs, not per-account data. */
+export async function clearLocalAccountData(): Promise<void> {
+  const db = await getDb();
+  const tx = db.transaction(['groups', 'groupsState', 'sessions'], 'readwrite');
+  await Promise.all([
+    tx.objectStore('groups').clear(),
+    tx.objectStore('groupsState').clear(),
+    tx.objectStore('sessions').clear(),
+    tx.done
+  ]);
+}
+
 export async function markAllGroupsPendingSync(): Promise<void> {
   const db = await getDb();
   const all = await db.getAll('groups');

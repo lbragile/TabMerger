@@ -2,7 +2,7 @@ import type { Session } from '@supabase/supabase-js';
 import { encryptBlob, decryptBlob, isEncryptedBlob, type EncryptedBlob } from '@tabmerger/shared';
 import type { Group } from './types';
 import { supabase } from './supabase';
-import { getGroupsState, saveGroupsState, getPendingSyncGroups, markGroupSynced, saveGroup, getSetting, setSetting } from './localDb';
+import { getGroupsState, saveGroupsState, getPendingSyncGroups, markGroupSynced, saveGroup, deleteGroup, getSetting, setSetting } from './localDb';
 import { hasEncryptionKey, getDataKey } from './encryptionKey';
 
 interface EncryptedContent {
@@ -14,52 +14,59 @@ interface EncryptedContent {
 
 /** Upserts a single group to Supabase and marks it synced locally on success. Shared by push paths. */
 async function pushGroup(session: Session, group: Group): Promise<void> {
-  let windowsField: Group['windows'] | EncryptedBlob = group.windows;
-  let name = group.name;
-  let note = group.note ?? null;
-  let info = group.info ?? '';
+  // ponytail: whole body wrapped — a throw here (e.g. encryptBlob choking on a malformed/
+  // oversized field for one specific group) must not propagate out to the caller's for-loop,
+  // which would silently abort every group after it in the same push batch.
+  try {
+    let windowsField: Group['windows'] | EncryptedBlob = group.windows;
+    let name = group.name;
+    let note = group.note ?? null;
+    let info = group.info ?? '';
 
-  if (await hasEncryptionKey()) {
-    const dataKey = await getDataKey();
-    if (!dataKey) {
-      // ponytail: locked (e.g. worker restarted, passphrase not re-entered this session) —
-      // never fall back to plaintext push. Leave pendingSync so this retries once unlocked.
-      console.warn('[SyncEngine] Encryption enabled but key is locked — skipping push for', group.id);
-      return;
+    if (await hasEncryptionKey()) {
+      const dataKey = await getDataKey();
+      if (!dataKey) {
+        // ponytail: locked (e.g. worker restarted, passphrase not re-entered this session) —
+        // never fall back to plaintext push. Leave pendingSync so this retries once unlocked.
+        console.warn('[SyncEngine] Encryption enabled but key is locked — skipping push for', group.id);
+        return;
+      }
+      const { iv, ct } = await encryptBlob(dataKey, {
+        name: group.name,
+        windows: group.windows,
+        note: group.note,
+        info: group.info
+      } satisfies EncryptedContent);
+      windowsField = { v: 1, iv, ct };
+      name = '';
+      note = null;
+      info = '';
     }
-    const { iv, ct } = await encryptBlob(dataKey, {
-      name: group.name,
-      windows: group.windows,
-      note: group.note,
-      info: group.info
-    } satisfies EncryptedContent);
-    windowsField = { v: 1, iv, ct };
-    name = '';
-    note = null;
-    info = '';
-  }
 
-  const { error } = await supabase.from('groups').upsert({
-    id: group.id,
-    user_id: session.user.id,
-    name,
-    color: group.color,
-    updated_at: new Date(group.updatedAt).toISOString(),
-    windows: windowsField,
-    starred: group.starred ?? false,
-    archived: group.archived ?? false,
-    note,
-    info,
-    // Denormalized plaintext counts so SSR pages can show stats without holding the
-    // decryption key — always computed from the real (pre-encryption) content.
-    window_count: group.windows.length,
-    tab_count: group.windows.reduce((sum, w) => sum + w.tabs.length, 0)
-  });
+    const { error } = await supabase.from('groups').upsert({
+      id: group.id,
+      user_id: session.user.id,
+      name,
+      color: group.color,
+      updated_at: new Date(group.updatedAt).toISOString(),
+      windows: windowsField,
+      starred: group.starred ?? false,
+      archived: group.archived ?? false,
+      note,
+      info,
+      // Denormalized plaintext counts so SSR pages can show stats without holding the
+      // decryption key — always computed from the real (pre-encryption) content.
+      window_count: group.windows.length,
+      tab_count: group.windows.reduce((sum, w) => sum + w.tabs.length, 0)
+    });
 
-  if (!error) {
-    await markGroupSynced(group.id);
-  } else {
-    console.error('[SyncEngine] Failed to push group', group.id, error.message);
+    if (!error) {
+      await markGroupSynced(group.id);
+    } else {
+      console.error('[SyncEngine] Failed to push group', group.id, error.message);
+    }
+  } catch (err) {
+    console.error('[SyncEngine] Unexpected error pushing group', group.id, err);
   }
 }
 
@@ -211,7 +218,15 @@ export async function pullRemoteChanges(session: Session, localGroups: Group[]):
       merged.push(remote);
       await saveGroup(remote);
     } else if (local) {
-      merged.push(local);
+      // Local-only: either genuinely new/unpushed (pendingSync:true — keep, push next cycle)
+      // or previously-synced (pendingSync:false) and now missing from remote entirely, which
+      // (now that pendingDeleteSet already filtered out this device's own in-flight deletes
+      // above) can only mean it was deleted remotely — drop it locally instead of resurrecting it.
+      if (local.permanent || local.pendingSync) {
+        merged.push(local);
+      } else {
+        await deleteGroup(local.id);
+      }
     }
   }
 
@@ -275,14 +290,20 @@ export async function subscribeToRemoteChanges(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'groups', filter: `user_id=eq.${userId}` },
       async (payload) => {
-        // Deletes are real hard deletes (see deleteRemoteGroups), not an `archived` flag flip.
-        // ponytail: we don't act on the Realtime DELETE event itself here — `pullRemoteChanges`
-        // currently only prevents *re-adding* a group a device itself just deleted (via the
-        // pending-delete guard above); it does not yet remove a group on OTHER devices when a
-        // different device hard-deletes it (their `localMap`-only branch keeps it). That's a
-        // separate propagation gap, not the resurrection race this guard closes — worth a
-        // dedicated fix (e.g. a tombstone list) if cross-device delete sync is reported broken.
-        if (payload.eventType === 'DELETE') return;
+        // Deletes are real hard deletes (see deleteRemoteGroups). Propagate immediately to this
+        // device's IDB rather than waiting for the next pull, using the same pendingSync/
+        // pendingDeleteGroupIds safety logic as pullRemoteChanges: skip if this device's own
+        // delete is already in flight for the id (avoids a redundant/racy second delete), and
+        // never touch the permanent "Now Open" group (it never has a matching remote row anyway).
+        if (payload.eventType === 'DELETE') {
+          const deletedRow = payload.old as Record<string, unknown> | undefined;
+          const deletedId = deletedRow?.id as string | undefined;
+          if (!deletedId) return;
+          const pendingDeletes = await getPendingDeleteIds();
+          if (pendingDeletes.includes(deletedId)) return;
+          await deleteGroup(deletedId);
+          return;
+        }
         const row = payload.new as Record<string, unknown>;
         const group = await rowToGroup(row);
         if (!group) return; // encrypted but locked — skip, will be picked up on next pull once unlocked

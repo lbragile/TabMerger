@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { clearCachedDataKey } from '@/lib/encryptionKey';
 
 interface AuthState {
   session: Session | null;
@@ -68,14 +67,15 @@ export function useAuth(): AuthState & {
   };
 
   const signOut = async () => {
-    // Capture the user id before signOut() clears the session — the cached data key
-    // must be explicitly wiped from chrome.storage.session, not left to expire, so a
-    // different account signing in on this browser can never read the previous
-    // account's unwrapped key.
-    const userId = state.user?.id;
+    // Deliberately does NOT clear the persisted data key (chrome.storage.local) — unlock
+    // is one-time-EVER per device per account (see encryptionKey.ts module comment), so
+    // signing out and back into the SAME account must not require re-entering the
+    // passphrase. The in-memory module-scope key resets naturally on the next service
+    // worker restart / popup reopen. A genuinely different account is handled separately
+    // (see useSync's last-signed-in-user check), and resetEncryption() still explicitly
+    // clears the persisted key for the "forgot my passphrase" flow.
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    if (userId) await clearCachedDataKey(userId);
   };
 
   // Attaches a password credential to the current session's account — needed for

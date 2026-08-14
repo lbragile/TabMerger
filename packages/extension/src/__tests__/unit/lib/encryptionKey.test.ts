@@ -152,6 +152,46 @@ describe('unlockEncryption', () => {
   })
 })
 
+describe('resetEncryption', () => {
+  function makeDeleteBuilder(error: unknown = null) {
+    const b: Record<string, unknown> = {}
+    b.delete = () => b
+    b.eq = vi.fn().mockResolvedValue({ error })
+    return b
+  }
+
+  it('deletes the encryption_keys row and clears the cached data key', async () => {
+    mockFrom.mockReturnValue(makeDeleteBuilder(null))
+    const { resetEncryption, getDataKey } = await import('@/lib/encryptionKey')
+
+    await resetEncryption()
+
+    expect(mockFrom).toHaveBeenCalledWith('encryption_keys')
+    expect(await getDataKey()).toBeNull()
+  })
+
+  it('throws when there is no active session', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: null } })
+    const { resetEncryption } = await import('@/lib/encryptionKey')
+    await expect(resetEncryption()).rejects.toThrow()
+  })
+
+  it('throws when the delete fails', async () => {
+    mockFrom.mockReturnValue(makeDeleteBuilder({ message: 'db down' }))
+    const { resetEncryption } = await import('@/lib/encryptionKey')
+    await expect(resetEncryption()).rejects.toThrow('db down')
+  })
+
+  it('re-arms the sessions self-heal flag so pre-existing sessions re-push under the new key', async () => {
+    mockFrom.mockReturnValue(makeDeleteBuilder(null))
+    const { resetEncryption, SESSIONS_MIGRATION_DONE_KEY } = await import('@/lib/encryptionKey')
+
+    await resetEncryption()
+
+    expect(mockSetSetting).toHaveBeenCalledWith(SESSIONS_MIGRATION_DONE_KEY, false)
+  })
+})
+
 describe('getDataKey / hasEncryptionKey', () => {
   it('returns null before any setup/unlock call', async () => {
     const { getDataKey } = await import('@/lib/encryptionKey')

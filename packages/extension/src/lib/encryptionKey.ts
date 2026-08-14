@@ -133,6 +133,29 @@ export async function getDataKey(): Promise<CryptoKey | null> {
 }
 
 /**
+ * Deletes the current user's `encryption_keys` row and clears the locally cached data key,
+ * forcing them back into first-time setup with a brand new passphrase. Used for the
+ * self-serve "forgot my passphrase" flow — irreversibly abandons access to anything encrypted
+ * under the old key (existing `groups`/`sessions`/`device_sessions` rows are left as-is; they
+ * get re-encrypted and re-uploaded once the user completes `setupEncryption` again, same as
+ * the plaintext-migration path already inside `setupEncryption`).
+ */
+export async function resetEncryption(): Promise<void> {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error('Must be signed in to reset encryption');
+
+  const { error } = await supabase.from('encryption_keys').delete().eq('user_id', session.user.id);
+  if (error) throw new Error(error.message);
+
+  await clearCachedDataKey(session.user.id);
+  // Re-arm the sessions self-heal (see useSync.ts) so pre-existing local sessions that were
+  // already migrated under the OLD key get re-pushed encrypted under the new one once
+  // setupEncryption() completes again — otherwise this flag being already `true` from before
+  // the reset would skip that self-heal forever, leaving those sessions stuck local-only.
+  await setSetting(SESSIONS_MIGRATION_DONE_KEY, false);
+}
+
+/**
  * Whether the currently signed-in account has completed the one-time encryption setup (an
  * `encryption_keys` row exists for THIS user) — distinct from whether the data key is
  * unlocked *this session*, which is `getDataKey() !== null`. Encryption is on-by-default for

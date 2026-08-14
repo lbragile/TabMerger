@@ -103,3 +103,25 @@ describe('DeleteConfirmModal — clearAllData', () => {
     expect(onConfirm).not.toHaveBeenCalled()
   })
 })
+
+describe('DeleteConfirmModal — resetEncryption', () => {
+  it('warns the action is destructive/irreversible and invokes onConfirm only when confirmed', () => {
+    const onConfirm = vi.fn()
+    const onClose = vi.fn()
+    renderModal(<DeleteConfirmModal type="resetEncryption" data={{ onConfirm }} onClose={onClose} />)
+    expect(screen.getByRole('heading', { name: 'Reset Encryption Passphrase' })).toBeTruthy()
+    expect(screen.getByText(/cannot be undone/i)).toBeTruthy()
+    expect(screen.getByText(/permanently inaccessible/i)).toBeTruthy()
+    expect(onConfirm).not.toHaveBeenCalled()
+    fireEvent.click(getDestructiveButton(/reset passphrase/i))
+    expect(onConfirm).toHaveBeenCalled()
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('does not call onConfirm when Cancel is clicked', () => {
+    const onConfirm = vi.fn()
+    renderModal(<DeleteConfirmModal type="resetEncryption" data={{ onConfirm }} onClose={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: /^cancel$/i }))
+    expect(onConfirm).not.toHaveBeenCalled()
+  })
+})

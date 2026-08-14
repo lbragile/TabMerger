@@ -148,14 +148,16 @@ Note: FK targets `auth.users` directly, not `public.profiles`, unlike every othe
 schema.
 
 ### `ai_usage`
-Per-user, per-month AI request counter — enforces the pro_ai tier's 100 requests/month quota.
+Per-user, per-month AI credit counter — enforces the pro_ai tier's monthly credit quota. As of
+migration 017, `credits_used` accumulates a *weighted* cost per call (e.g. `group-tabs` costs ~8x
+`name-group`) rather than a flat call count — renamed from `request_count` to reflect this.
 
 | Column | Type | Constraints |
 |---|---|---|
 | `id` | `uuid` | PK, default `gen_random_uuid()` |
 | `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
 | `month` | `text` | not null — format `'YYYY-MM'` |
-| `request_count` | `integer` | not null, default `0` |
+| `credits_used` | `integer` | not null, default `0` |
 | — | — | `unique(user_id, month)` — one row per user per month |
 
 **RLS:** `"Users can read own usage"` — select only, `auth.uid() = user_id`. No insert/update
@@ -189,9 +191,11 @@ writes purchase rows.
 Note: also FKs to `auth.users` directly, not `public.profiles`.
 
 **For the `ai-features` agent:** `checkAndIncrementAIUsage()`'s cap check currently compares
-`request_count` against the flat `AI_MONTHLY_CAP`. It needs to become `request_count <
-AI_MONTHLY_CAP + purchased_credits`, where `purchased_credits` is the sum of `credits` from
-`ai_credit_purchases` for that `user_id`+`month` (not implemented in this migration).
+`credits_used` (renamed from `request_count` in migration 017) against the flat `AI_MONTHLY_CAP`.
+It needs to become `credits_used + weighted_cost <= AI_MONTHLY_CAP + purchased_credits`, where
+`purchased_credits` is the sum of `credits` from `ai_credit_purchases` for that `user_id`+`month`
+(not implemented in this migration — application-code changes are tracked separately by the
+payments/ai-features agents).
 
 ### `shared_bundles`
 Immutable public share snapshots (added migration 009) — distinct from `groups.public_slug`

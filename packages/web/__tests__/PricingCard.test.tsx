@@ -38,7 +38,7 @@ describe('PricingCard', () => {
     const card = container.firstChild as HTMLElement
     expect(card.className).toMatch(/bg-surface\b/)
     expect(card.className).not.toMatch(/feat-bg/)
-    expect(card.className).toMatch(/shadow-\[var\(--sh3\)\]/)
+    expect(card.className).toMatch(/shadow-sh3/)
     expect(screen.getByText('Recommended')).toBeInTheDocument()
   })
 
@@ -170,12 +170,12 @@ describe('PricingCard', () => {
 
   it('shows the AI monthly request quota as a feature line on the Pro AI card only', () => {
     render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" />)
-    expect(screen.getByText(/AI requests \/ month/)).toBeInTheDocument()
+    expect(screen.getByText(/AI credits \/ month/)).toBeInTheDocument()
   })
 
   it('does not show the AI quota line on the Pro card', () => {
     render(<PricingCard {...baseProps} tier="pro" />)
-    expect(screen.queryByText(/AI requests \/ month/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/AI credits \/ month/)).not.toBeInTheDocument()
   })
 
   it('hides "Recommended" on the highlighted (Pro) card when the user is on a higher tier (Pro AI)', () => {

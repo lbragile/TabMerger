@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
 
 /**
- * Dev-only: sets the authenticated user's `ai_usage.request_count` for the
+ * Dev-only: sets the authenticated user's `ai_usage.credits_used` for the
  * current UTC month to an exact value, so the real quota path in
  * `checkAndIncrementAIUsage` can be exercised end-to-end (near-cap, reset-to-0).
  *
@@ -39,14 +39,14 @@ export async function POST(request: NextRequest) {
   const month = new Date().toISOString().slice(0, 7)
   const { error } = await supabase
     .from('ai_usage')
-    .upsert({ user_id: user.id, month, request_count: count }, { onConflict: 'user_id,month' })
+    .upsert({ user_id: user.id, month, credits_used: count }, { onConflict: 'user_id,month' })
 
   if (error) {
     return NextResponse.json({ error: 'Failed to set usage' }, { status: 500 })
   }
 
   // Reset (count === 0) also clears test credit-pack purchases so the UI shows
-  // /100 again — getEffectiveCap() adds this month's purchased credits to the base cap.
+  // /300 again — getEffectiveCap() adds this month's purchased credits to the base cap.
   // A non-zero "set to N" deliberately leaves purchases alone.
   if (count === 0) {
     const { error: purchaseError } = await supabase

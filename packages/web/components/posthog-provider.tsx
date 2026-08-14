@@ -27,6 +27,7 @@ export function PostHogProvider() {
         maskAllInputs: true,
       },
     })
+    posthog.register({ environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? 'development' })
   }, [])
 
   return null

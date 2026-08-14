@@ -21,7 +21,7 @@ function mockDashboard(purchases: { credits: number }[]) {
         builder.limit = chain
         builder.single = async () => {
           if (table === 'subscriptions') return { data: { tier: 'pro_ai', status: 'active' } }
-          if (table === 'ai_usage') return { data: { request_count: 100 } }
+          if (table === 'ai_usage') return { data: { credits_used: 100 } }
           return { data: { created_at: '2024-01-01' } }
         }
         builder.then = (resolve: (v: unknown) => void) =>
@@ -44,7 +44,7 @@ describe('DashboardPage — AI usage limit', () => {
     const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
-    expect(screen.getByText('100/100')).toBeInTheDocument()
+    expect(screen.getByText('100/300')).toBeInTheDocument()
   })
 
   it('extends the displayed limit by purchased credit packs', async () => {
@@ -52,6 +52,6 @@ describe('DashboardPage — AI usage limit', () => {
     const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
-    expect(screen.getByText('100/200')).toBeInTheDocument()
+    expect(screen.getByText('100/400')).toBeInTheDocument()
   })
 })
