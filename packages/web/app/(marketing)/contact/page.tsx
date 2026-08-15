@@ -6,14 +6,31 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 // Note: metadata must be in a separate server component when using 'use client'.
 // SEO is handled via the layout's default metadata.
 
 type Status = 'idle' | 'sending' | 'sent' | 'error'
 
+const SUBJECT_OPTIONS = [
+  'Bug report',
+  'Billing question',
+  'Feature request',
+  'Account help',
+  'Other',
+] as const
+
 export default function ContactPage() {
   const [status, setStatus] = useState<Status>('idle')
+  const [subjectOption, setSubjectOption] = useState<string>('')
+  const [otherSubject, setOtherSubject] = useState('')
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -22,6 +39,7 @@ export default function ContactPage() {
     setStatus('sending')
     const form = e.currentTarget
     const data = new FormData(form)
+    const subject = subjectOption === 'Other' ? otherSubject : subjectOption
 
     try {
       const res = await fetch('/api/contact', {
@@ -29,7 +47,7 @@ export default function ContactPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: data.get('email'),
-          subject: data.get('subject'),
+          subject,
           message: data.get('message'),
         }),
       })
@@ -93,14 +111,34 @@ export default function ContactPage() {
 
           <div className="space-y-1.5">
             <Label htmlFor="subject">Subject</Label>
-            <Input
-              id="subject"
-              name="subject"
-              type="text"
-              required
-              placeholder="Bug report, billing question, feature request…"
-            />
+            <Select value={subjectOption} onValueChange={setSubjectOption} required name="subject">
+              <SelectTrigger id="subject" className="w-full">
+                <SelectValue placeholder="Select a reason…" />
+              </SelectTrigger>
+              <SelectContent>
+                {SUBJECT_OPTIONS.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+
+          {subjectOption === 'Other' && (
+            <div className="space-y-1.5">
+              <Label htmlFor="other-subject">Please specify</Label>
+              <Input
+                id="other-subject"
+                name="other-subject"
+                type="text"
+                required
+                value={otherSubject}
+                onChange={(e) => setOtherSubject(e.target.value)}
+                placeholder="What's this about?"
+              />
+            </div>
+          )}
 
           <div className="space-y-1.5">
             <Label htmlFor="message">Message</Label>

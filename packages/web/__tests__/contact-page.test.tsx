@@ -10,7 +10,8 @@ describe('ContactPage', () => {
 
   async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
     await user.type(screen.getByLabelText(/email/i), 'user@example.com')
-    await user.type(screen.getByLabelText(/subject/i), 'Billing question')
+    await user.click(screen.getByRole('combobox', { name: /subject/i }))
+    await user.click(await screen.findByRole('option', { name: 'Billing question' }))
     await user.type(screen.getByLabelText(/message/i), 'Please help with my subscription.')
     await user.click(screen.getByRole('button', { name: /send message/i }))
   }
@@ -57,5 +58,27 @@ describe('ContactPage', () => {
     await fillAndSubmit(user)
 
     expect(await screen.findByText(/something went wrong/i)).toBeInTheDocument()
+  })
+
+  it('reveals a free-text field and sends its value when "Other" is selected', async () => {
+    const user = userEvent.setup()
+    render(<ContactPage />)
+
+    await user.type(screen.getByLabelText(/email/i), 'user@example.com')
+    await user.click(screen.getByRole('combobox', { name: /subject/i }))
+    await user.click(await screen.findByRole('option', { name: 'Other' }))
+    await user.type(screen.getByLabelText(/please specify/i), 'Partnership inquiry')
+    await user.type(screen.getByLabelText(/message/i), 'Details about a partnership.')
+    await user.click(screen.getByRole('button', { name: /send message/i }))
+
+    expect(globalThis.fetch).toHaveBeenCalledWith('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: 'user@example.com',
+        subject: 'Partnership inquiry',
+        message: 'Details about a partnership.',
+      }),
+    })
   })
 })

@@ -14,6 +14,16 @@ beforeEach(() => {
   localStorage.clear()
 })
 
+// jsdom doesn't implement the Pointer Events API (hasPointerCapture/setPointerCapture/
+// scrollIntoView) that Radix UI's Select relies on for its open/close and scroll behavior —
+// without these no-op stubs, clicking a Select in a test throws "not a function".
+if (typeof window !== 'undefined') {
+  Element.prototype.hasPointerCapture ??= () => false
+  Element.prototype.setPointerCapture ??= () => {}
+  Element.prototype.releasePointerCapture ??= () => {}
+  Element.prototype.scrollIntoView ??= () => {}
+}
+
 // Next.js Link renders as <a> in tests
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: unknown }) => (
