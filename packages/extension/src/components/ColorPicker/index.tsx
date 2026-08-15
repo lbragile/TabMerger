@@ -79,7 +79,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
       </div>
 
       {/* Custom hex text input — stays within the popup DOM, no system dialog */}
-      <div className="px-1 pb-1.5 pt-1 border-t border-border/50 flex items-center gap-2">
+      <div className="px-1 pb-1.5 pt-1 flex items-center gap-2">
         <span className="text-[10px] text-muted-foreground shrink-0">Custom</span>
         {/* Live colour preview swatch */}
         <span
