@@ -24,7 +24,7 @@ export function ModalRoot() {
   const content = () => {
     switch (modal.type) {
       case 'addGroup':
-        return <AddGroupModal onClose={closeModal} />;
+        return <AddGroupModal onClose={closeModal} data={modal.data} />;
       case 'deleteGroup':
       case 'deleteWindow':
       case 'deleteTab':

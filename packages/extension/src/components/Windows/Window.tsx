@@ -32,6 +32,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { TabItem } from './Tab';
+import { CreateGroupMenuItem } from './CreateGroupMenuItem';
 import type { Window as WindowType } from '@/lib/types';
 import {
   useDeleteWindow,
@@ -236,6 +237,9 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
                     No other groups
                   </DropdownMenuItem>
                 )}
+                <CreateGroupMenuItem
+                  onCreated={(index) => moveWindow({ fromGroupIndex: groupIndex, windowIndex, toGroupIndex: index })}
+                />
               </DropdownMenuSubContent>
             </DropdownMenuSub>
             <DropdownMenuSeparator />

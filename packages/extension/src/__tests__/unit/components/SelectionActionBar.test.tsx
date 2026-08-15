@@ -44,7 +44,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useGroups: () => ({ data: groupsState }),
 }))
 
-let entitlements = { tier: 'free', cloudSync: false }
+let entitlements: { tier: string; cloudSync: boolean; maxGroups: number } = { tier: 'free', cloudSync: false, maxGroups: 5 }
 vi.mock('@/hooks/useEntitlements', () => ({
   useEntitlements: () => entitlements,
 }))
@@ -71,7 +71,7 @@ function wrap(ui: React.ReactElement) {
 beforeEach(() => {
   vi.clearAllMocks()
   mockGetSetting.mockResolvedValue({ confirmOnDelete: false })
-  entitlements = { tier: 'free', cloudSync: false }
+  entitlements = { tier: 'free', cloudSync: false, maxGroups: 5 }
   groupsState = {
     available: [
       { permanent: true, id: 'g0', name: 'Now Open', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
@@ -100,6 +100,19 @@ describe('SelectionActionBar — tab selection (window-N id, non-permanent group
     await user.click(screen.getByRole('button', { name: /move to group/i }))
     await user.click(screen.getByText('Saved Group'))
     expect(mockBulkMove).toHaveBeenCalledWith({ items: selectedItems, targetGroupIndex: 1 })
+  })
+
+  it('shows "Create new group…" in the move-to-group menu and wires bulkMove through its onCreated callback', async () => {
+    const user = userEvent.setup()
+    wrap(React.createElement(SelectionActionBar))
+    await user.click(screen.getByRole('button', { name: /move to group/i }))
+    const createItem = await screen.findByText('Create new group…')
+    await user.click(createItem)
+    expect(mockOpenModal).toHaveBeenCalledWith('addGroup', { onCreated: expect.any(Function) })
+
+    const onCreated = mockOpenModal.mock.calls[0][1].onCreated as (groupIndex: number) => void
+    onCreated(4)
+    expect(mockBulkMove).toHaveBeenCalledWith({ items: selectedItems, targetGroupIndex: 4 })
   })
 })
 
@@ -171,7 +184,7 @@ describe('SelectionActionBar — share flow', () => {
   })
 
   it('copies the share URL to the clipboard on success (pro entitlement enables the button)', async () => {
-    entitlements = { tier: 'pro', cloudSync: true }
+    entitlements = { tier: 'pro', cloudSync: true, maxGroups: 999 }
     mockCreateSharedBundle.mockResolvedValue('https://tabmerger.app/s/abc')
     const user = userEvent.setup()
     const writeText = vi.fn().mockResolvedValue(undefined)
@@ -192,7 +205,7 @@ describe('SelectionActionBar — share flow', () => {
   })
 
   it('shows an error toast when createSharedBundle rejects with an Error', async () => {
-    entitlements = { tier: 'pro', cloudSync: true }
+    entitlements = { tier: 'pro', cloudSync: true, maxGroups: 999 }
     mockCreateSharedBundle.mockRejectedValue(new Error('network down'))
     const user = userEvent.setup()
     wrap(React.createElement(SelectionActionBar))
@@ -204,7 +217,7 @@ describe('SelectionActionBar — share flow', () => {
 describe('SelectionActionBar — delete respects confirmOnDelete', () => {
   beforeEach(() => {
     selectedItems = [{ type: 'group', id: 'group-1' }]
-    entitlements = { tier: 'pro', cloudSync: true }
+    entitlements = { tier: 'pro', cloudSync: true, maxGroups: 999 }
   })
 
   it('calls bulkDelete directly when confirmOnDelete=false', async () => {

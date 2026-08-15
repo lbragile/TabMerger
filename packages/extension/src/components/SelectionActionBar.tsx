@@ -11,6 +11,7 @@ import { useGroups } from '@/hooks/useGroups';
 import { useBulkDelete, useBulkMoveToGroup, useBulkStar, parseGroupId } from '@/hooks/useBulkActions';
 import { cn, pluralize } from '@/lib/utils';
 import { useState } from 'react';
+import { CreateGroupMenuItem } from '@/components/Windows/CreateGroupMenuItem';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 import { useEntitlements } from '@/hooks/useEntitlements';
@@ -129,6 +130,9 @@ export function SelectionActionBar() {
                 <span className="truncate">{group.name}</span>
               </DropdownMenuItem>
             ))}
+            <CreateGroupMenuItem
+              onCreated={(index) => bulkMove({ items: selectedItems, targetGroupIndex: index })}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       )}

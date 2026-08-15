@@ -4,22 +4,39 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ColorPicker } from '@/components/ColorPicker';
-import { useAddGroup } from '@/hooks/useGroups';
+import { useAddGroup, useGroups } from '@/hooks/useGroups';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 
 interface AddGroupModalProps {
   onClose: () => void;
+  /** Optional — set when this modal was opened from a "Create new group" move/copy menu item. */
+  data?: Record<string, unknown>;
 }
 
-export function AddGroupModal({ onClose }: AddGroupModalProps) {
+export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
   const [name, setName] = useState(DEFAULT_GROUP_TITLE);
   const [color, setColor] = useState(DEFAULT_GROUP_COLOR);
   const { mutate: addGroup, isPending } = useAddGroup();
+  const { data: groupsState } = useGroups();
+  const onCreated = data?.onCreated as ((groupIndex: number) => void) | undefined;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addGroup({ name: name.trim() || DEFAULT_GROUP_TITLE, color });
-    onClose();
+    // New group is always appended, so its index is the current length — capture before the mutation lands.
+    const newIndex = groupsState?.available.length ?? 0;
+    // Close only after the mutation settles — closing synchronously unmounts this component
+    // (and its useAddGroup() observer) before the async mutationFn resolves, so the mutate-level
+    // onSuccess below (tied to that observer, not the mutation cache) would silently never fire,
+    // meaning onCreated (which does the actual move/copy) never runs even though the group is created.
+    addGroup(
+      { name: name.trim() || DEFAULT_GROUP_TITLE, color },
+      {
+        onSuccess: () => {
+          onCreated?.(newIndex);
+          onClose();
+        },
+      }
+    );
   };
 
   return (

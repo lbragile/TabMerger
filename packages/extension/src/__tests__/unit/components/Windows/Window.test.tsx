@@ -52,6 +52,7 @@ vi.mock('@/hooks/useGroups', () => ({
 }))
 
 vi.mock('@/hooks/useOpenWindow', () => ({ useOpenWindow: () => mockOpenWindow }))
+vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ maxGroups: 5 }) }))
 vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))
 vi.mock('@/components/Windows/Tab', () => ({
   TabItem: ({ tab }: { tab: { title: string } }) => React.createElement('div', { 'data-testid': 'tab-item' }, tab.title),
@@ -283,6 +284,23 @@ describe('WindowItem', () => {
     await user.hover(screen.getByText(/move to group/i))
     expect(await screen.findByText('Other')).toBeTruthy()
     expect(screen.queryByText('Archived')).not.toBeInTheDocument()
+  })
+
+  it('shows "Create new group…" in the move-to-group submenu and wires moveWindow through its onCreated callback', async () => {
+    const user = userEvent.setup()
+    renderWindow(makeWindow(), 1)
+    const header = document.querySelector('[data-window-index="0"] .group.relative') as HTMLElement
+    fireEvent.contextMenu(header)
+    await user.hover(screen.getByText(/move to group/i))
+    const createItem = await screen.findByText('Create new group…')
+    fireEvent.click(createItem)
+    expect(baseUIState.openModal).toHaveBeenCalledWith('addGroup', { onCreated: expect.any(Function) })
+
+    const onCreated = (baseUIState.openModal as ReturnType<typeof vi.fn>).mock.calls[0][1].onCreated as (
+      groupIndex: number
+    ) => void
+    onCreated(7)
+    expect(mockMoveWindow).toHaveBeenCalledWith({ fromGroupIndex: 1, windowIndex: 0, toGroupIndex: 7 })
   })
 
   it('deletes the window directly when confirmOnDelete is false', async () => {
