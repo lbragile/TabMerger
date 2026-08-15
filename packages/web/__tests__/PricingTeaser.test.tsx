@@ -25,8 +25,8 @@ describe('PricingTeaser', () => {
     render(<PricingTeaser />)
 
     await user.click(screen.getByRole('button', { name: /yearly/i }))
-    expect(screen.getByText('$34.99')).toBeInTheDocument()
-    expect(screen.getByText('$69.99')).toBeInTheDocument()
+    expect(screen.getByText('$42.99')).toBeInTheDocument()
+    expect(screen.getByText('$85.99')).toBeInTheDocument()
     expect(screen.queryByText('$3.99')).not.toBeInTheDocument()
     expect(screen.queryByText('$7.99')).not.toBeInTheDocument()
     // free tier always $0 regardless of toggle
@@ -36,8 +36,8 @@ describe('PricingTeaser', () => {
     await user.click(screen.getByRole('button', { name: /monthly/i }))
     expect(screen.getByText('$3.99')).toBeInTheDocument()
     expect(screen.getByText('$7.99')).toBeInTheDocument()
-    expect(screen.queryByText('$34.99')).not.toBeInTheDocument()
-    expect(screen.queryByText('$69.99')).not.toBeInTheDocument()
+    expect(screen.queryByText('$42.99')).not.toBeInTheDocument()
+    expect(screen.queryByText('$85.99')).not.toBeInTheDocument()
   })
 
   it('renders a one-sentence blurb summarizing who each tier is for', () => {

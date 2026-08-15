@@ -16,7 +16,7 @@ describe('PricingTable', () => {
 
     await user.click(screen.getByRole('button', { name: /Yearly/ }))
 
-    expect(screen.getByText('$34.99')).toBeInTheDocument()
+    expect(screen.getByText('$42.99')).toBeInTheDocument()
     expect(screen.queryByText('$3.99')).not.toBeInTheDocument()
   })
 

@@ -15,7 +15,7 @@ export const TIERS = {
   pro: {
     name: 'Pro',
     monthlyPrice: 3.99,
-    yearlyPrice: 34.99,
+    yearlyPrice: 42.99,
     stripeMonthlyPriceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
     stripeYearlyPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
     features: [
@@ -31,7 +31,7 @@ export const TIERS = {
   proAi: {
     name: 'Pro AI',
     monthlyPrice: 7.99,
-    yearlyPrice: 69.99,
+    yearlyPrice: 85.99,
     stripeMonthlyPriceId: process.env.STRIPE_PRO_AI_MONTHLY_PRICE_ID,
     stripeYearlyPriceId: process.env.STRIPE_PRO_AI_YEARLY_PRICE_ID,
     features: [

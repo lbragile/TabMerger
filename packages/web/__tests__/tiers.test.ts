@@ -31,7 +31,7 @@ describe('getStripePriceId / getPriceInfo', () => {
 
   it('resolves a known pro AI yearly price id to its display cost', async () => {
     const { getPriceInfo } = await import('@/lib/tiers')
-    expect(getPriceInfo('price_proai_yearly')).toEqual({ amount: 69.99, interval: 'yearly' })
+    expect(getPriceInfo('price_proai_yearly')).toEqual({ amount: 85.99, interval: 'yearly' })
   })
 
   it('returns null for an unknown/legacy price id', async () => {
