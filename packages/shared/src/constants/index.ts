@@ -41,7 +41,7 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'pro',
     name: 'Pro',
     monthlyPrice: 3.99,
-    yearlyPrice: 34.99,
+    yearlyPrice: 42.99,
     features: [
       'Unlimited groups & tabs',
       'Cloud sync across devices',
@@ -56,7 +56,7 @@ export const PRICING_TIERS: PricingTier[] = [
     id: 'pro_ai',
     name: 'Pro AI',
     monthlyPrice: 7.99,
-    yearlyPrice: 69.99,
+    yearlyPrice: 85.99,
     features: [
       'Everything in Pro',
       'AI auto-grouping',
