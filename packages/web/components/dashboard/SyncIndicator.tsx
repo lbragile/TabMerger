@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { EXTENSION_ID } from '@/lib/extensionId'
+import { useSyncExtensionAuth } from '@/lib/hooks/useSyncExtensionAuth'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type SyncNowResponse = { ok: boolean; reason?: string; message?: string }
@@ -57,6 +58,7 @@ interface SyncIndicatorProps {
  */
 export function SyncIndicator({ userId }: SyncIndicatorProps) {
   const router = useRouter()
+  useSyncExtensionAuth()
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null)
   const [justSynced, setJustSynced] = useState(false)
   const [justChecked, setJustChecked] = useState(false)

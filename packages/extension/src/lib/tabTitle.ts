@@ -22,19 +22,3 @@ export async function saveCustomTitle(tabId: number, title: string): Promise<voi
 export function getDisplayTitle(tab: Tab): string {
   return tab.customTitle?.trim() || tab.title
 }
-
-export async function notifySavedTabTitle(opts: {
-  browserTabId: number
-  customTitle: string
-  tabId: number
-}): Promise<void> {
-  try {
-    await chrome.tabs.sendMessage(opts.browserTabId, {
-      type: 'SET_TAB_TITLE',
-      title: opts.customTitle,
-      tabId: opts.tabId,
-    })
-  } catch (err) {
-    console.error('notifySavedTabTitle: sendMessage failed', err)
-  }
-}

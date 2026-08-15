@@ -241,6 +241,8 @@ describe('SettingsModal — dirty state and save', () => {
     mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, syncEnabled: false })
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    // Switch order: confirmOnDelete(0), openTabOnClick(1), autoDedupOnMerge(2),
+    // cloud sync(3) — cloud sync only renders when cloudSync is true.
     await waitFor(() => expect(screen.getAllByRole('switch')[3]).not.toBeChecked())
     const syncSwitch = screen.getAllByRole('switch')[3]
     fireEvent.click(syncSwitch)

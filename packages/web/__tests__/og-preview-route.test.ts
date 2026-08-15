@@ -74,7 +74,7 @@ describe('GET /api/og-preview', () => {
     const { GET } = await import('@/app/api/og-preview/route')
     const res = await GET(req('javascript:alert(1)'))
     expect(res.status).toBe(400)
-    expect(await res.json()).toEqual({ ogImage: null })
+    expect(await res.json()).toEqual({ ogImage: null, description: null })
   })
 
   it('rejects an unparseable url', async () => {
@@ -134,7 +134,7 @@ describe('GET /api/og-preview', () => {
     const { GET } = await import('@/app/api/og-preview/route')
     const res = await GET(req('https://example.com/article'))
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/img.png' })
+    expect(await res.json()).toEqual({ ogImage: 'https://example.com/img.png', description: null })
   })
 
   it('falls back to twitter:image when og:image is absent', async () => {
@@ -142,7 +142,7 @@ describe('GET /api/og-preview', () => {
     mockRequestModules({ statusCode: 200, headers: {}, body: html })
     const { GET } = await import('@/app/api/og-preview/route')
     const res = await GET(req('https://example.com/article2'))
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/tw.png' })
+    expect(await res.json()).toEqual({ ogImage: 'https://example.com/tw.png', description: null })
   })
 
   it('returns null ogImage without leaking error details when the upstream fetch fails', async () => {
@@ -151,7 +151,7 @@ describe('GET /api/og-preview', () => {
     const res = await GET(req('https://example.com/broken'))
     expect(res.status).toBe(200)
     const body = await res.json()
-    expect(body).toEqual({ ogImage: null })
+    expect(body).toEqual({ ogImage: null, description: null })
   })
 
   it('follows a redirect to a public host and re-validates it', async () => {
@@ -182,7 +182,7 @@ describe('GET /api/og-preview', () => {
     vi.doMock('node:https', () => ({ request: requestFn, default: { request: requestFn } }))
     const { GET } = await import('@/app/api/og-preview/route')
     const res = await GET(req('https://example.com/redirector'))
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/final.png' })
+    expect(await res.json()).toEqual({ ogImage: 'https://example.com/final.png', description: null })
     expect(requestFn).toHaveBeenCalledTimes(2)
   })
 
@@ -209,7 +209,33 @@ describe('GET /api/og-preview', () => {
     const { GET } = await import('@/app/api/og-preview/route')
     const res = await GET(req('https://example.com/evil-redirector'))
     const body = await res.json()
-    expect(body).toEqual({ ogImage: null })
+    expect(body).toEqual({ ogImage: null, description: null })
     expect(call).toBe(1) // never followed the redirect to the private host
+  })
+
+  it('extracts description, preferring og:description over the plain description tag', async () => {
+    const html = `<head><meta name="description" content="plain"><meta property="og:description" content="og desc"></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { GET } = await import('@/app/api/og-preview/route')
+    const res = await GET(req('https://example.com/desc'))
+    expect(await res.json()).toEqual({ ogImage: null, description: 'og desc' })
+  })
+
+  it('falls back to the plain description tag when og:description is absent', async () => {
+    const html = `<head><meta name="description" content="plain desc"></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { GET } = await import('@/app/api/og-preview/route')
+    const res = await GET(req('https://example.com/desc2'))
+    expect(await res.json()).toEqual({ ogImage: null, description: 'plain desc' })
+  })
+
+  it('truncates an absurdly long description to 500 chars', async () => {
+    const longDesc = 'a'.repeat(1000)
+    const html = `<head><meta name="description" content="${longDesc}"></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { GET } = await import('@/app/api/og-preview/route')
+    const res = await GET(req('https://example.com/desc3'))
+    const body = await res.json()
+    expect(body.description).toHaveLength(500)
   })
 })

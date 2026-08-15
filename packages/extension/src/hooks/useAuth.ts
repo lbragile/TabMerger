@@ -86,9 +86,9 @@ export function useAuth(): AuthState & {
   };
 
   // Popups close on blur, so the user finishes this in a browser tab, not the popup.
-  // The content script (src/entrypoints/content.ts) already scans the web app's
-  // localStorage for the resulting Supabase session and forwards it to the
-  // background via a SYNC_AUTH message — no extra hand-off needed here.
+  // The web app sends the resulting Supabase session to the background via
+  // externally_connectable SYNC_AUTH (chrome.runtime.sendMessage(extensionId, ...)) —
+  // no extra hand-off needed here.
   const signInWithMagicLink = async (email: string) => {
     const webAppUrl = import.meta.env.VITE_WEB_APP_URL as string | undefined;
     const { error } = await supabase.auth.signInWithOtp({

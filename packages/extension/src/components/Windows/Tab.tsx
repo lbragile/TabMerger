@@ -5,6 +5,7 @@ import { X, MoveRight, CheckSquare, Square, GripVertical, Lock, StickyNote, Cloc
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TabPreview } from './TabPreview';
+import { CreateGroupMenuItem } from './CreateGroupMenuItem';
 import type { Tab as TabType } from '@/lib/types';
 import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminder, useClearTabReminder, GROUPS_QUERY_KEY } from '@/hooks/useGroups';
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
@@ -12,7 +13,7 @@ import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
 import { saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
-import { saveCustomTitle, getDisplayTitle, notifySavedTabTitle } from '@/lib/tabTitle';
+import { getDisplayTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
@@ -345,6 +346,17 @@ const { mutate: deleteTab } = useDeleteTab();
                   No other groups
                 </DropdownMenuItem>
               )}
+              <CreateGroupMenuItem
+                onCreated={(index) =>
+                  moveTab({
+                    fromGroupIndex: groupIndex,
+                    fromWindowIndex: windowIndex,
+                    fromTabIndex: tabIndex,
+                    toGroupIndex: index,
+                    copy: isNowOpen
+                  })
+                }
+              />
             </DropdownMenuSubContent>
           </DropdownMenuSub>
           {isNowOpen && urlRules.length > 0 && (() => {
@@ -489,7 +501,7 @@ const { mutate: deleteTab } = useDeleteTab();
           </div>
         ) : (
           <>
-            <TabPreview tab={tab} isLive={isNowOpen}>
+            <TabPreview tab={tab}>
               <span
                 className="block truncate min-w-0 text-xs leading-5 hover:underline"
                 onClick={(e) => handleOpen(e)}

@@ -4,6 +4,12 @@ import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 
+function getExtensionName(mode: string): string {
+    if (mode === "beta") return "TabMerger BETA";
+    if (mode === "development") return "TabMerger DEV";
+    return "TabMerger";
+}
+
 export default defineConfig({
     srcDir: "src",
     publicDir: "src/public",
@@ -33,10 +39,12 @@ export default defineConfig({
     // — this is why externally_connectable was empty in every build, not just prod.
     manifest: ({ mode }) => {
         const env = loadEnv(mode, process.cwd(), "");
+        const isBeta = mode === "beta";
         return {
-            name: "TabMerger",
-            description:
-                "Stop drowning in tabs. Save, group, and restore every window in one place.",
+            name: getExtensionName(mode),
+            description: isBeta
+                ? "THIS EXTENSION IS FOR BETA TESTING"
+                : "Stop drowning in tabs. Save, group, and restore every window in one place.",
             incognito: "spanning",
             permissions: [
                 "tabs",
@@ -47,7 +55,11 @@ export default defineConfig({
                 "notifications",
                 "identity",
             ],
-            host_permissions: ["<all_urls>"],
+            // No host_permissions of any kind (required or optional) — Tab Preview's
+            // OG-image read goes through the web app's server-side scraper
+            // (packages/web/app/api/og-preview) instead of in-page script injection,
+            // keeping the extension out of Chrome Web Store's elevated review tier
+            // for "reads/changes all your data on every site you visit".
             icons: {
                 16: "/icon/16.png",
                 32: "/icon/32.png",
@@ -102,9 +114,6 @@ export default defineConfig({
                     description: "Save all other tabs to TabMerger",
                 },
             },
-            web_accessible_resources: [
-                { resources: ["images/*"], matches: ["<all_urls>"] },
-            ],
             // Lets the web app probe install status on demand via chrome.runtime.sendMessage
             // (no page-load race, unlike the content-script postMessage broadcast below).
             // CHROME_EXTENSION_ID is the published Chrome Web Store ID (unset until first
@@ -115,7 +124,9 @@ export default defineConfig({
                     ? [`${env.VITE_WEB_APP_URL}/*`]
                     : [],
                 ids: [
-                    env.CHROME_EXTENSION_ID,
+                    isBeta
+                        ? env.CHROME_EXTENSION_ID_BETA
+                        : env.CHROME_EXTENSION_ID,
                     "ogadhgghhdbaohdcajfakeogcamicdkm",
                 ].filter((id): id is string => Boolean(id)),
             },
@@ -131,6 +142,20 @@ export default defineConfig({
     dev: {
         server: { port: 3001 },
     },
+    // ponytail: zip config is a static object (not a per-mode callback like
+    // `manifest`), so mode is read straight off argv here at config-load time
+    // — same process as the `wxt zip -b chrome --mode beta` CLI invocation.
+    // Only override the filename for non-default modes so beta builds don't
+    // overwrite prod zips in .output/; prod keeps WXT's default
+    // '{{name}}-{{version}}-{{browser}}.zip' template — CI's publish.yml
+    // references that exact path.
+    zip: (() => {
+        const modeFlagIndex = process.argv.indexOf("--mode");
+        const mode = modeFlagIndex !== -1 ? process.argv[modeFlagIndex + 1] : "production";
+        return mode === "production"
+            ? {}
+            : { artifactTemplate: "{{name}}-{{mode}}-{{version}}-{{browser}}.zip" };
+    })(),
     webExt: {
         chromiumArgs: ["--user-data-dir=.wxt/chrome-data", "--no-first-run"],
         startUrls: ["about:blank"],

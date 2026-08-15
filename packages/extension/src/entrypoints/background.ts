@@ -170,14 +170,8 @@ export default defineBackground(() => {
   void buildMenus();
   void reRegisterReminders();
 
-  // Auth bridge: content script forwards the web-app Supabase session here so
-  // we can call setSession() which writes to chrome.storage.local — the popup's
-  // supabase client picks it up via chrome.storage.onChanged.
   chrome.runtime.onMessage.addListener((msg: unknown) => {
-    const m = msg as { type?: string; accessToken?: string; refreshToken?: string; name?: string; delayInMinutes?: number };
-    if (m?.type === 'SYNC_AUTH' && m.accessToken && m.refreshToken) {
-      void supabase.auth.setSession({ access_token: m.accessToken, refresh_token: m.refreshToken });
-    }
+    const m = msg as { type?: string; name?: string; delayInMinutes?: number };
     // Alarm helpers — chrome.alarms only available in background, not popup
     if (m?.type === 'CREATE_ALARM' && m.name && m.delayInMinutes) {
       chrome.alarms.create(m.name, { delayInMinutes: m.delayInMinutes });
@@ -201,18 +195,27 @@ export default defineBackground(() => {
     }
   });
 
-  // On-demand install probe for externally_connectable (see wxt.config.ts) — the web app
-  // sends { type: 'PING' } via chrome.runtime.sendMessage(extensionId, ...) and checks the
-  // response vs. chrome.runtime.lastError, avoiding the content script's page-load race.
+  // externally_connectable (see wxt.config.ts) — the web app talks to this listener via
+  // chrome.runtime.sendMessage(extensionId, ...), which requires no host permission at all
+  // (unlike the content script this used to be routed through).
   chrome.runtime.onMessageExternal.addListener((msg: unknown, _sender, sendResponse) => {
-    const type = (msg as { type?: string })?.type;
-    if (type === 'PING') {
+    const m = msg as { type?: string; accessToken?: string; refreshToken?: string };
+    // On-demand install probe: web app checks the response vs. chrome.runtime.lastError.
+    if (m.type === 'PING') {
       sendResponse({ type: 'PONG', version: chrome.runtime.getManifest().version });
       return;
     }
-    if (type === 'SYNC_NOW') {
+    if (m.type === 'SYNC_NOW') {
       void handleSyncNow().then(sendResponse);
       return true; // keep the message channel open for the async sendResponse above
+    }
+    // Auth bridge: the web app forwards the Supabase session it just signed in with here so
+    // we can call setSession(), which writes to chrome.storage.local — the popup's supabase
+    // client picks it up via chrome.storage.onChanged. Replaces the old content-script scrape
+    // of the web app's localStorage.
+    if (m.type === 'SYNC_AUTH' && m.accessToken && m.refreshToken) {
+      void supabase.auth.setSession({ access_token: m.accessToken, refresh_token: m.refreshToken });
+      return;
     }
   });
 

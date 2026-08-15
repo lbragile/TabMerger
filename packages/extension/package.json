@@ -13,6 +13,7 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "zip:edge": "wxt zip -b edge",
+    "zip:beta": "wxt zip -b chrome --mode beta",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --max-warnings=0",
     "test": "vitest run",

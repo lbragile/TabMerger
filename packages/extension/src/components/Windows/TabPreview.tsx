@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useTabSummary, QuotaExceededError } from '@/hooks/useAI';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
+import { getPageMetaForTab } from '@/lib/tabAccess';
 import type { Tab } from '@/lib/types';
 
 // ponytail: module-level cache — lives for the popup session, cleared on close
@@ -12,52 +13,12 @@ const summaryCache = new Map<string, string>();
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
-async function fetchOgImageFromContentScript(tabId: number, url?: string): Promise<string | null> {
-  let id = tabId > 0 ? tabId : 0;
-  if (!id && url) {
-    try {
-      const matches = await chrome.tabs.query({ url });
-      id = matches[0]?.id ?? 0;
-    } catch { /* ignore */ }
-  }
-  if (!id) return null;
-  try {
-    const meta = await chrome.tabs.sendMessage(id, { type: 'GET_PAGE_META' });
-    return (meta as { ogImage?: string | null })?.ogImage ?? null;
-  } catch {
-    return null;
-  }
-}
-
-// ponytail: falls back to the web app's server-side og:image scraper
-// (packages/web/app/api/og-preview) when there's no live tab/content script
-// to ask — covers saved/closed tabs, which is most of them.
-async function fetchOgImageFromServer(url: string): Promise<string | null> {
-  try {
-    const webAppUrl = import.meta.env.VITE_WEB_APP_URL as string | undefined;
-    if (!webAppUrl) return null;
-    const res = await fetch(`${webAppUrl}/api/og-preview?url=${encodeURIComponent(url)}`);
-    if (!res.ok) return null;
-    const data = (await res.json()) as { ogImage?: string | null };
-    return data.ogImage ?? null;
-  } catch {
-    return null;
-  }
-}
-
-async function fetchOgImage(tabId: number, url?: string): Promise<string | null> {
-  const fromContentScript = await fetchOgImageFromContentScript(tabId, url);
-  if (fromContentScript) return fromContentScript;
-  return url ? fetchOgImageFromServer(url) : null;
-}
-
 interface TabPreviewProps {
   tab: Tab;
-  isLive?: boolean;
   children: React.ReactNode;
 }
 
-export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
+export function TabPreview({ tab, children }: TabPreviewProps) {
   const { aiFeatures } = useEntitlements();
   const { mutateAsync: fetchSummary } = useTabSummary();
   const [open, setOpen] = useState(false);
@@ -79,13 +40,12 @@ export function TabPreview({ tab, isLive, children }: TabPreviewProps) {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
     setLoading(true);
-    const tabId = isLive ? (tab as Tab & { id?: number }).id ?? 0 : 0;
     try {
-      const img = tab.ogImage ?? await fetchOgImage(tabId, tab.url);
-      setOgImage(img ?? null);
+      const meta = tab.ogImage ? null : await getPageMetaForTab(tab.url);
+      setOgImage(tab.ogImage ?? meta?.ogImage ?? null);
     } catch { /* ignore */ }
     setLoading(false);
-  }, [isLive, tab]);
+  }, [tab]);
 
   const generateSummary = useCallback(async () => {
     const cached = summaryCache.get(tab.url);

@@ -1,11 +1,10 @@
 /**
  * Feature 66 — Tab title editing (extension)
  *
- * ALL tests FAIL until:
- *  - Tab type gains `customTitle?: string`
- *  - saveCustomTitle(tabId, title) is implemented in localDb
- *  - getDisplayTitle(tab) is implemented
- *  - background sends SET_TAB_TITLE message when a saved tab is opened
+ * Covers the data-model rename: a custom title saved to a tab in IndexedDB and
+ * displayed in TabMerger's own UI. This is independent of any live-browser-tab
+ * DOM write — that path (notifySavedTabTitle / SET_TAB_TITLE) was removed
+ * entirely; custom titles never propagate to the actual open tab's document.title.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 // ponytail: these exports don't exist yet — imports will fail (red phase)
@@ -55,7 +54,6 @@ import { getGroupsState, saveGroupsState } from '@/lib/localDb'
 
 globalThis.chrome = {
   tabs: {
-    sendMessage: vi.fn().mockResolvedValue({}),
     query: vi.fn(),
     onCreated: { addListener: vi.fn(), removeListener: vi.fn() },
     onRemoved: { addListener: vi.fn(), removeListener: vi.fn() },
@@ -135,32 +133,5 @@ describe('getDisplayTitle — Feature 66', () => {
     // ponytail: "   ".trim() is "" — treat as no custom title
     const tab = makeTab({ customTitle: '   ' })
     expect(getDisplayTitle(tab)).toBe('GitHub')
-  })
-})
-
-describe('SET_TAB_TITLE content script message — Feature 66', () => {
-  it('sends SET_TAB_TITLE message with title and tabId when a saved tab is opened', async () => {
-    // Simulates background notifying content script of a saved tab's customTitle
-    // ponytail: import the function that registers this side effect
-    const { notifySavedTabTitle } = await import('@/lib/tabTitle')
-
-    await notifySavedTabTitle({ browserTabId: 55, customTitle: 'My Tab', tabId: 1 })
-
-    expect(chrome.tabs.sendMessage).toHaveBeenCalledWith(
-      55,
-      { type: 'SET_TAB_TITLE', title: 'My Tab', tabId: 1 }
-    )
-  })
-
-  it('does not throw when sendMessage rejects (best-effort, fire-and-forget)', async () => {
-    ;(chrome.tabs.sendMessage as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
-      new Error('Tab not found')
-    )
-    const { notifySavedTabTitle } = await import('@/lib/tabTitle')
-
-    // Must not throw
-    await expect(
-      notifySavedTabTitle({ browserTabId: 99, customTitle: 'Test', tabId: 2 })
-    ).resolves.not.toThrow()
   })
 })

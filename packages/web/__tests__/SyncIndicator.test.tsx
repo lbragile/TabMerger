@@ -14,6 +14,9 @@ vi.mock('sonner', () => ({
 
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({
+    auth: {
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: vi.fn() } } }),
+    },
     from: () => ({
       select: () => ({
         eq: () => ({

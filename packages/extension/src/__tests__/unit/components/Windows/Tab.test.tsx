@@ -19,6 +19,7 @@ const {
   mockUseUrlRulesData,
   mockSaveGroupsState,
   mockOpenTabInChromeGroup,
+  mockOpenModal,
 } = vi.hoisted(() => ({
   mockDeleteTab: vi.fn(),
   mockMoveTab: vi.fn(),
@@ -31,6 +32,7 @@ const {
   mockUseUrlRulesData: vi.fn((): { data: UrlRule[] } => ({ data: [] })),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
   mockOpenTabInChromeGroup: vi.fn().mockResolvedValue(undefined),
+  mockOpenModal: vi.fn(),
 }))
 
 vi.mock('@/lib/localDb', () => ({
@@ -73,6 +75,10 @@ vi.mock('@/hooks/useGroups', () => ({
   GROUPS_QUERY_KEY: ['groups'],
 }))
 
+vi.mock('@/hooks/useEntitlements', () => ({
+  useEntitlements: () => ({ maxGroups: 5 }),
+}))
+
 vi.mock('@/hooks/useUrlRules', () => ({
   useUrlRules: () => mockUseUrlRulesData(),
   matchUrlToRule: vi.fn((url: string | undefined, rules: Array<{ pattern: string; groupId: string }>) => {
@@ -89,7 +95,7 @@ let selectionState = {
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: (selector: (s: object) => unknown) =>
     selector({
-      openModal: vi.fn(),
+      openModal: mockOpenModal,
       selectionMode: selectionState.selectionMode,
       selectedItems: selectionState.selectedItems,
       toggleSelection: mockToggleSelection,
@@ -529,6 +535,33 @@ describe('TabItem — target groups (move to group)', () => {
     await user.click(await screen.findByText(/move to group/i))
     expect(await screen.findByText('Dest')).toBeInTheDocument()
     expect(screen.queryByText('Archived')).not.toBeInTheDocument()
+  })
+
+  it('shows "Create new group…" in the move-to-group submenu and wires moveTab through its onCreated callback', async () => {
+    mockUseGroupsData.mockReturnValue({
+      data: {
+        available: [makeGroup({ id: 'src', name: 'Source' }), makeGroup({ id: 'dst', name: 'Dest' })],
+        active: { id: '', index: 0 },
+      },
+    })
+    const user = userEvent.setup()
+    const t = makeTab()
+    render(<TabItem tab={t} groupIndex={0} windowIndex={1} tabIndex={2} siblingCount={1} />, { wrapper })
+    fireEvent.contextMenu(screen.getByRole('listitem'))
+    await user.click(await screen.findByText(/move to group/i))
+    const createItem = await screen.findByText('Create new group…')
+    fireEvent.click(createItem)
+    expect(mockOpenModal).toHaveBeenCalledWith('addGroup', { onCreated: expect.any(Function) })
+
+    const onCreated = mockOpenModal.mock.calls[0][1].onCreated as (groupIndex: number) => void
+    onCreated(5)
+    expect(mockMoveTab).toHaveBeenCalledWith({
+      fromGroupIndex: 0,
+      fromWindowIndex: 1,
+      fromTabIndex: 2,
+      toGroupIndex: 5,
+      copy: false,
+    })
   })
 })
 

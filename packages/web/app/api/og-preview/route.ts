@@ -10,8 +10,10 @@ import type { LookupAddress } from 'node:dns'
  * GET /api/og-preview?url=<encoded url>
  *
  * Fetches a third-party page server-side and extracts its og:image (or
- * twitter:image) meta tag, so the public share page can show a live preview
- * even when the extension never captured one at save time.
+ * twitter:image) and description meta tags, so the public share page can
+ * show a live preview even when the extension never captured one at save
+ * time, and so the extension's tab preview tooltip can get title/description
+ * /image without needing an `<all_urls>` host permission.
  *
  * This is a real SSRF surface — it's unauthenticated and fetches
  * user-supplied URLs — so every private/loopback/link-local destination is
@@ -40,7 +42,12 @@ const MAX_REDIRECTS = 3
 
 // ponytail: module-level Map cache with lazy expiry check on read — no LRU
 // eviction infra, add if this route ever sees enough unique URLs to matter.
-const cache = new Map<string, { ogImage: string | null; expires: number }>()
+const cache = new Map<
+  string,
+  { ogImage: string | null; description: string | null; expires: number }
+>()
+
+const MAX_DESCRIPTION_LENGTH = 500
 
 function isPrivateHost(hostname: string): boolean {
   const h = hostname.toLowerCase()
@@ -96,6 +103,28 @@ function extractOgImage(html: string): string | null {
     head.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i) ??
     head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i)
   return twitterMatch ? twitterMatch[1] : null
+}
+
+/**
+ * Extracts the page description: prefer `og:description`, fall back to the
+ * standard `name="description"` meta tag. Result is plain text (not echoed
+ * as a URL like ogImage), so the only hardening needed is a length cap —
+ * a malicious page can't set a 1MB meta tag and bloat the cache/response.
+ */
+function extractDescription(html: string): string | null {
+  const headMatch = html.match(/<head[\s\S]*?<\/head>/i)
+  const head = headMatch ? headMatch[0] : html.slice(0, 50_000)
+
+  const ogMatch =
+    head.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i) ??
+    head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:description["']/i)
+  const value =
+    ogMatch?.[1] ??
+    (head.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i) ??
+      head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i))?.[1] ??
+    null
+
+  return value ? value.slice(0, MAX_DESCRIPTION_LENGTH) : null
 }
 
 /**
@@ -226,33 +255,46 @@ async function fetchCapped(startUrl: string): Promise<string> {
   throw new Error('too many redirects')
 }
 
+// Public, unauthenticated, cookie-free endpoint — safe to allow any origin.
+// The extension calls this cross-origin (chrome-extension://...) with no
+// host_permissions to bypass CORS, so without this header every fetch()
+// fails silently client-side and Tab Preview just shows nothing.
+function jsonResponse(body: unknown, init?: { status?: number }): NextResponse {
+  return NextResponse.json(body, {
+    ...init,
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  })
+}
+
 export async function GET(req: NextRequest) {
   const raw = req.nextUrl.searchParams.get('url')
-  if (!raw) return NextResponse.json({ ogImage: null }, { status: 400 })
+  if (!raw) return jsonResponse({ ogImage: null, description: null }, { status: 400 })
 
   let parsed: URL
   try {
     parsed = new URL(raw)
   } catch {
-    return NextResponse.json({ ogImage: null }, { status: 400 })
+    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
   }
   if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-    return NextResponse.json({ ogImage: null }, { status: 400 })
+    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
   }
   if (!(await resolveAndValidate(parsed.hostname))) {
-    return NextResponse.json({ ogImage: null }, { status: 400 })
+    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
   }
 
   const cacheKey = parsed.toString()
   const cached = cache.get(cacheKey)
   if (cached && cached.expires > Date.now()) {
-    return NextResponse.json({ ogImage: cached.ogImage })
+    return jsonResponse({ ogImage: cached.ogImage, description: cached.description })
   }
 
   let ogImage: string | null = null
+  let description: string | null = null
   try {
     const html = await fetchCapped(cacheKey)
     ogImage = extractOgImage(html)
+    description = extractDescription(html)
     // Only accept absolute http(s) image URLs — never echo relative paths
     // or javascript: schemes back to the client.
     if (ogImage) {
@@ -265,8 +307,9 @@ export async function GET(req: NextRequest) {
     }
   } catch {
     ogImage = null // never leak fetch/parse error details to the client
+    description = null
   }
 
-  cache.set(cacheKey, { ogImage, expires: Date.now() + CACHE_TTL_MS })
-  return NextResponse.json({ ogImage })
+  cache.set(cacheKey, { ogImage, description, expires: Date.now() + CACHE_TTL_MS })
+  return jsonResponse({ ogImage, description })
 }

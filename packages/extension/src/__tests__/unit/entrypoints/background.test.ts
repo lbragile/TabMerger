@@ -181,17 +181,19 @@ describe('background — context menu building', () => {
   })
 })
 
-describe('background — SYNC_AUTH message', () => {
+describe('background — externally_connectable SYNC_AUTH (web app auth bridge)', () => {
   it('forwards the access/refresh token to supabase.auth.setSession', async () => {
     const { supabase } = await import('@/lib/supabase')
-    stub.listeners.onMessage[0]({ type: 'SYNC_AUTH', accessToken: 'a', refreshToken: 'b' })
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_AUTH', accessToken: 'a', refreshToken: 'b' }, {}, sendResponse)
     expect(supabase.auth.setSession).toHaveBeenCalledWith({ access_token: 'a', refresh_token: 'b' })
   })
 
   it('ignores SYNC_AUTH messages missing a token', async () => {
     const { supabase } = await import('@/lib/supabase')
     ;(supabase.auth.setSession as ReturnType<typeof vi.fn>).mockClear()
-    stub.listeners.onMessage[0]({ type: 'SYNC_AUTH', accessToken: 'a' })
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_AUTH', accessToken: 'a' }, {}, sendResponse)
     expect(supabase.auth.setSession).not.toHaveBeenCalled()
   })
 })

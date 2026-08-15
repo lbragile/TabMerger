@@ -4,6 +4,7 @@
 .env
 .env.test
 .env.production
+.env.beta
 
 # Claude Code local overrides (may contain API keys)
 .claude/settings.local.json
