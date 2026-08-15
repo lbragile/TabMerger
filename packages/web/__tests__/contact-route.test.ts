@@ -1,0 +1,106 @@
+/**
+ * Unit tests for POST /api/contact — validation, rate limiting, and the
+ * Resend send call. `resend` is mocked (not real network) — same
+ * external-effect-mocking pattern as og-preview-route.test.ts.
+ */
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { NextRequest } from 'next/server'
+
+const sendMock = vi.fn()
+vi.mock('resend', () => ({
+  Resend: vi.fn().mockImplementation(function (this: { emails: { send: typeof sendMock } }) {
+    this.emails = { send: sendMock }
+  }),
+}))
+
+function req(body: unknown, ip = '1.2.3.4') {
+  return new NextRequest('http://localhost/api/contact', {
+    method: 'POST',
+    headers: { 'x-forwarded-for': ip },
+    body: JSON.stringify(body),
+  })
+}
+
+const validBody = { email: 'user@example.com', subject: 'Hello', message: 'A real message.' }
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  sendMock.mockResolvedValue({ data: { id: 'abc' }, error: null })
+})
+
+describe('POST /api/contact', () => {
+  it('rejects an invalid email', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req({ ...validBody, email: 'not-an-email' }))
+    expect(res.status).toBe(400)
+    expect(await res.json()).toEqual({ ok: false })
+    expect(sendMock).not.toHaveBeenCalled()
+  })
+
+  it('rejects an empty subject', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req({ ...validBody, subject: '  ' }))
+    expect(res.status).toBe(400)
+  })
+
+  it('rejects an empty message', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req({ ...validBody, message: '' }))
+    expect(res.status).toBe(400)
+  })
+
+  it('rejects a subject over the max length', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req({ ...validBody, subject: 'a'.repeat(201) }))
+    expect(res.status).toBe(400)
+  })
+
+  it('rejects a message over the max length', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req({ ...validBody, message: 'a'.repeat(5001) }))
+    expect(res.status).toBe(400)
+  })
+
+  it('sends via Resend with replyTo set to the submitter email on the happy path', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req(validBody, '9.9.9.9'))
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ ok: true })
+    expect(sendMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'tabmerger.support@gmail.com',
+        replyTo: 'user@example.com',
+        subject: expect.stringContaining('Hello'),
+      })
+    )
+  })
+
+  it('returns 500 without leaking details when Resend errors', async () => {
+    sendMock.mockResolvedValue({ data: null, error: { message: 'boom' } })
+    const { POST } = await import('@/app/api/contact/route')
+    const res = await POST(req(validBody, '9.9.9.8'))
+    expect(res.status).toBe(500)
+    expect(await res.json()).toEqual({ ok: false })
+  })
+
+  it('rate limits after N requests from the same IP', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    const ip = '5.5.5.5'
+    for (let i = 0; i < 5; i++) {
+      const res = await POST(req(validBody, ip))
+      expect(res.status).toBe(200)
+    }
+    const limited = await POST(req(validBody, ip))
+    expect(limited.status).toBe(429)
+    expect(await limited.json()).toEqual({ ok: false })
+  })
+
+  it('does not rate limit a different IP', async () => {
+    const { POST } = await import('@/app/api/contact/route')
+    for (let i = 0; i < 5; i++) {
+      await POST(req(validBody, '6.6.6.6'))
+    }
+    const res = await POST(req(validBody, '7.7.7.7'))
+    expect(res.status).toBe(200)
+  })
+})

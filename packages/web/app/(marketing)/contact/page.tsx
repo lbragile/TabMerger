@@ -15,6 +15,8 @@ type Status = 'idle' | 'sending' | 'sent' | 'error'
 export default function ContactPage() {
   const [status, setStatus] = useState<Status>('idle')
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus('sending')
@@ -22,13 +24,27 @@ export default function ContactPage() {
     const data = new FormData(form)
 
     try {
-      const res = await fetch('https://formspree.io/f/placeholder', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: data.get('email'),
+          subject: data.get('subject'),
+          message: data.get('message'),
+        }),
       })
-      setStatus(res.ok ? 'sent' : 'error')
+      if (res.ok) {
+        setStatus('sent')
+      } else {
+        setErrorMessage(
+          res.status === 429
+            ? 'Too many messages sent — try again later.'
+            : null
+        )
+        setStatus('error')
+      }
     } catch {
+      setErrorMessage(null)
       setStatus('error')
     }
   }
@@ -98,7 +114,9 @@ export default function ContactPage() {
           </div>
 
           {status === 'error' && (
-            <p className="text-sm text-destructive">Something went wrong. Please try again or email us directly.</p>
+            <p className="text-sm text-destructive">
+              {errorMessage ?? 'Something went wrong. Please try again or email us directly.'}
+            </p>
           )}
 
           <Button type="submit" className="w-full" disabled={status === 'sending'}>
