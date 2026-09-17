@@ -53,7 +53,54 @@ export async function getDb(): Promise<IDBPDatabase<TabMergerDB>> {
   return dbInstance;
 }
 
+/**
+ * Tail of the serialized `saveGroupsState` chain. Reads wait for it (read-your-writes).
+ *
+ * Why: callers write the query cache optimistically and THEN `await saveGroupsState`
+ * (the DnD drop commits the cache synchronously for a single-paint drop). The write's
+ * readwrite transaction is only created after internal awaits, so a `getGroupsState`
+ * started in that gap — e.g. `useGroups` (staleTime 0) refetching because the drop just
+ * mounted a component — read the PRE-write state and overwrote the fresh cache with it.
+ * Measured in the real popup: a tab dropped on a sprung-open group painted correctly for
+ * 3 frames, then reverted when that refetch resolved ~150ms later, while IDB was correct.
+ */
+let groupsWriteTail: Promise<void> = Promise.resolve();
+
+/**
+ * Incremented SYNCHRONOUSLY each time a groups write is issued. A read captures it at
+ * start; if a write was issued while that read was in flight (after it already waited
+ * for the tail), the read may have opened its transaction before the write and must
+ * re-read. This is what lets a refetch that started BEFORE a DnD drop self-correct to
+ * the post-drop state — instead of the drop cancelling in-flight queries, which rejected
+ * any mutation that had joined that fetch (TanStack hands joiners the raw fetch promise).
+ */
+let groupsWriteGen = 0;
+
+/** A read never loops forever under a continuous write stream (e.g. Now Open churn). */
+const MAX_READ_ATTEMPTS = 5;
+
+/**
+ * The in-flight "empty DB → create Now Open" initialization. Two first-run readers that
+ * both observe an empty DB (e.g. `useGroups` + `useCurrentTabs`) must share ONE created
+ * group: with serialized writes, a second creation would delete the first one's group
+ * (orphan prune) and leave that caller's cache pointing at a missing id.
+ * `issuedGen` = the write generation after its write was issued. A reader whose read
+ * started at or after that generation read AFTER the write, so an empty DB there means
+ * the store was wiped since — it creates a fresh group instead of reusing a stale one.
+ */
+let emptyInit: { promise: Promise<GroupsState>; issuedGen: number } | null = null;
+
 export async function getGroupsState(): Promise<GroupsState> {
+  for (let attempt = 1; ; attempt++) {
+    const startGen = groupsWriteGen;
+    // Never observe a state older than a write that has already been issued.
+    await groupsWriteTail;
+    const result = await readGroupsStateOnce(startGen);
+    if (groupsWriteGen === startGen || attempt >= MAX_READ_ATTEMPTS) return result;
+  }
+}
+
+async function readGroupsStateOnce(startGen: number): Promise<GroupsState> {
   const db = await getDb();
   const tx = db.transaction(['groups', 'groupsState'], 'readonly');
 
@@ -93,19 +140,56 @@ export async function getGroupsState(): Promise<GroupsState> {
   }
 
   if (sorted.length === 0) {
-    const nowOpen = createNowOpenGroup();
-    await saveGroupsState({
-      active: { id: nowOpen.id, index: 0 },
-      available: [nowOpen]
-    });
-    return { active: { id: nowOpen.id, index: 0 }, available: [nowOpen] };
+    if (!emptyInit || startGen >= emptyInit.issuedGen) {
+      const nowOpen = createNowOpenGroup();
+      const initial: GroupsState = { active: { id: nowOpen.id, index: 0 }, available: [nowOpen] };
+      const write = saveGroupsState(initial);
+      const entry = {
+        issuedGen: groupsWriteGen,
+        promise: write.then(
+          () => initial,
+          (err: unknown) => {
+            if (emptyInit === entry) emptyInit = null; // let the next read retry
+            throw err;
+          }
+        )
+      };
+      emptyInit = entry;
+    }
+    const shared = await emptyInit.promise;
+    // Fresh objects per caller — callers (e.g. the savedAt migration) mutate what they get.
+    return { active: { ...shared.active }, available: shared.available.map((g) => ({ ...g, windows: [...g.windows] })) };
   }
 
   const active = stateRecord?.active ?? { id: sorted[0].id, index: 0 };
   return { active, available: sorted };
 }
 
-export async function saveGroupsState(state: GroupsState): Promise<void> {
+/**
+ * Persist the full groups state. Writes are SERIALIZED (issued order = applied order)
+ * and `getGroupsState` waits for the tail — see {@link groupsWriteTail}.
+ */
+export function saveGroupsState(state: GroupsState): Promise<void> {
+  groupsWriteGen++;
+  const prev = groupsWriteTail;
+  let release!: () => void;
+  // The queue tail is a SEPARATE promise that only ever resolves, so a failed write can't
+  // wedge later reads/writes — and the promise returned below has NO handler attached, so
+  // an unawaited caller's failure (quota, abort) still raises `unhandledrejection` (Sentry).
+  groupsWriteTail = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  return (async () => {
+    await prev;
+    try {
+      await writeGroupsState(state);
+    } finally {
+      release();
+    }
+  })();
+}
+
+async function writeGroupsState(state: GroupsState): Promise<void> {
   const db = await getDb();
 
   const keepIds = new Set(state.available.map((g) => g.id));

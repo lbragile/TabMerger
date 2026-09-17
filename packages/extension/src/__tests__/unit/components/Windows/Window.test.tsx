@@ -64,6 +64,8 @@ const baseUIState = {
   selectedItems: [] as { type: string; id: string }[],
   toggleSelection: vi.fn(),
   enterSelectionMode: vi.fn(),
+  selectRange: vi.fn(),
+  selectionAnchor: null as { type: string; id: string } | null,
 }
 
 vi.mock('@/stores/uiStore', () => ({
@@ -177,8 +179,30 @@ describe('WindowItem', () => {
       selector({ ...baseUIState, selectionMode: true })
     )
     renderWindow(makeWindow())
-    fireEvent.click(screen.getByRole('button', { name: /select window/i }))
+    const checkbox = screen.getByRole('checkbox', { name: 'Select Test Window' })
+    expect(checkbox.getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(checkbox)
     expect(baseUIState.toggleSelection).toHaveBeenCalledWith({ type: 'window', id: 'window-1-0' })
+  })
+
+  it('Shift+click on the window checkbox extends the RANGE instead of toggling', () => {
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, selectionMode: true })
+    )
+    renderWindow(makeWindow())
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Select Test Window' }), { shiftKey: true })
+    expect(baseUIState.selectRange).toHaveBeenCalledWith({ type: 'window', id: 'window-1-0' }, expect.any(Array))
+    expect(baseUIState.toggleSelection).not.toHaveBeenCalled()
+  })
+
+  it('a selected window card uses a full-opacity primary ring (contrast)', () => {
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, selectionMode: true, selectedItems: [{ type: 'window', id: 'window-1-0' }] })
+    )
+    renderWindow(makeWindow())
+    const card = document.querySelector('[data-window-index="0"]') as HTMLElement
+    expect(card.className.split(' ')).toContain('ring-primary')
+    expect(card.className).not.toContain('ring-primary/70')
   })
 
   it('ctrl+click on header enters selection mode and toggles this window', () => {
@@ -187,6 +211,54 @@ describe('WindowItem', () => {
     fireEvent.click(header, { ctrlKey: true })
     expect(baseUIState.enterSelectionMode).toHaveBeenCalled()
     expect(baseUIState.toggleSelection).toHaveBeenCalledWith({ type: 'window', id: 'window-1-0' })
+  })
+
+  it('in selection mode the window grip stays draggable, with the checkbox right after it; the card carries its DnD model id', () => {
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, selectionMode: true })
+    )
+    wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] }))
+    const grip = document.querySelector('[aria-label="Drag to reorder window: Test Window"]')
+    expect(grip?.getAttribute('draggable')).toBe('true')
+    const checkbox = screen.getByRole('checkbox', { name: 'Select Test Window' })
+    expect(grip!.compareDocumentPosition(checkbox) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(document.querySelector('[data-window-index="0"]')!.getAttribute('data-tm-dnd-id')).toBe('g1::w0')
+  })
+
+  it('Shift+Space on the window GRIP range-selects instead of picking the window up; plain Space does not range-select', () => {
+    wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] }))
+    const grip = document.querySelector('[aria-label="Drag to reorder window: Test Window"]') as HTMLElement
+    const ev = fireEvent.keyDown(grip, { key: ' ', code: 'Space', shiftKey: true })
+    expect(ev).toBe(false) // preventDefault — the activator never sees it
+    expect(baseUIState.selectRange).toHaveBeenCalledWith({ type: 'window', id: 'window-1-0' }, expect.any(Array))
+    vi.mocked(baseUIState.selectRange).mockClear()
+    fireEvent.keyDown(grip, { key: ' ', code: 'Space' })
+    expect(baseUIState.selectRange).not.toHaveBeenCalled()
+  })
+
+  it('shift+click on the header selects the window RANGE from the anchor (same group) and blocks text selection', () => {
+    mockUseGroups.mockReturnValue({
+      data: {
+        active: { id: 'g1', index: 1 },
+        available: [
+          { id: 'g0', permanent: true, name: 'Now Open', color: 'rgba(0,0,0,1)', windows: [], updatedAt: 0 },
+          { id: 'g1', permanent: false, name: 'Saved', color: 'rgba(0,0,0,1)', windows: [makeWindow(), makeWindow(), makeWindow()], updatedAt: 0 },
+        ],
+      },
+    })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, selectionMode: true, selectionAnchor: { type: 'window', id: 'window-1-2' } })
+    )
+    renderWindow(makeWindow())
+    const header = document.querySelector('[data-window-index="0"] .group.relative') as HTMLElement
+    fireEvent.click(header, { shiftKey: true })
+    expect(baseUIState.selectRange).toHaveBeenCalledWith({ type: 'window', id: 'window-1-0' }, [
+      { type: 'window', id: 'window-1-0' },
+      { type: 'window', id: 'window-1-1' },
+      { type: 'window', id: 'window-1-2' },
+    ])
+    expect(baseUIState.toggleSelection).not.toHaveBeenCalled()
+    expect(fireEvent.mouseDown(header, { shiftKey: true })).toBe(false)
   })
 
   it('"More options" menu: marks incognito', async () => {

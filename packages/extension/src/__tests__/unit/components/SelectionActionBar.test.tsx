@@ -176,6 +176,41 @@ describe('SelectionActionBar — group selection', () => {
     await user.click(screen.getByRole('button', { name: /cancel selection/i }))
     expect(mockExit).toHaveBeenCalled()
   })
+
+  it('Cancel hands keyboard focus to the header selection toggle BEFORE the bar unmounts', async () => {
+    const toggle = document.createElement('button')
+    toggle.setAttribute('aria-label', 'Exit selection mode')
+    document.body.appendChild(toggle)
+    try {
+      const user = userEvent.setup()
+      wrap(React.createElement(SelectionActionBar))
+      const cancel = screen.getByRole('button', { name: /cancel selection/i })
+      cancel.focus()
+      await user.keyboard('{Enter}')
+      expect(mockExit).toHaveBeenCalled()
+      expect(document.activeElement).toBe(toggle)
+    } finally {
+      toggle.remove()
+    }
+  })
+
+  it('a bulk action that empties the selection while focus is in the bar → focus is restored, not left on <body>', async () => {
+    const toggle = document.createElement('button')
+    toggle.setAttribute('aria-label', 'Select items')
+    document.body.appendChild(toggle)
+    try {
+      const view = wrap(React.createElement(SelectionActionBar))
+      screen.getByRole('button', { name: /cancel selection/i }).focus()
+      // the bulk mutation finished: the store selection is now empty → the bar renders nothing
+      selectedItems = []
+      view.rerender(
+        React.createElement(QueryClientProvider, { client: new QueryClient() }, React.createElement(SelectionActionBar))
+      )
+      await waitFor(() => expect(document.activeElement).toBe(toggle))
+    } finally {
+      toggle.remove()
+    }
+  })
 })
 
 describe('SelectionActionBar — share flow', () => {

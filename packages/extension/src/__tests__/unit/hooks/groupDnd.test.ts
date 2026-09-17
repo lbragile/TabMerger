@@ -1,231 +1,123 @@
 /**
- * groupDnd.test.ts
+ * groupDnd.test.ts  — REWRITTEN for the DnD rework (RED PHASE)
  *
- * Unit tests for useGroupDndHandlers (sidebar group reordering).
- * Covers: basic reorder, guard cases (permanent group, index 0 drop),
- * zone enforcement (starred stays in starred zone), and active group tracking.
+ * WHAT CHANGED & WHY:
+ *   The old file tested `useGroupDndHandlers` from `@/hooks/useDnd`, driving it with
+ *   string ids ("group-1", "group-2", "tab-5-0-0") parsed by `parseDndId`. Both the
+ *   hook and `parseDndId` are being removed: sidebar group reordering now goes
+ *   through the pure `applyMove(model, state, active, over)` in `@/lib/dndMove`, with
+ *   refs shaped `{ type:'group', id, index? }` where `id` is a synthesized model id
+ *   from `buildDndModel`. The guard cases (no permanent-group drag, no drop before
+ *   index 0, zone enforcement, no-op on non-group over) are re-expressed against that
+ *   pure API. Analytics assertions were dropped from this layer — `applyMove` is pure
+ *   and does not emit `trackEvent` (that moves to the handler hook).
+ *
+ * These MUST fail now with "Cannot find module '@/lib/dndMove'". Green once reworked.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
-import React from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import type { DragEndEvent } from '@dnd-kit/core'
-import { useGroupDndHandlers } from '@/hooks/useDnd'
+import { describe, it, expect } from 'vitest'
+import { canDrop, applyMove } from '@/lib/dndMove'
+import { buildDndModel } from '@/hooks/useDndModel'
 import type { Group, GroupsState } from '@/lib/types'
 
-// ─── Mocks ────────────────────────────────────────────────────────────────────
-
-vi.mock('@/lib/localDb', () => ({
-  setSetting: vi.fn().mockResolvedValue(undefined),
-  saveGroupsState: vi.fn().mockResolvedValue(undefined),
-}))
-
-vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) =>
-    selector({ setActiveGroupIndex: vi.fn() }),
-}))
-
-vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
-
-import { saveGroupsState } from '@/lib/localDb'
-import { trackEvent } from '@/lib/analytics'
-
-// ─── Fixtures ─────────────────────────────────────────────────────────────────
-
 function makeGroup(id: string, overrides: Partial<Group> = {}): Group {
-  return {
-    id,
-    name: id,
-    color: 'rgba(0,0,0,1)',
-    updatedAt: 0,
-    windows: [],
-    permanent: false,
-    ...overrides,
-  }
+  return { id, name: id, color: 'rgba(0,0,0,1)', updatedAt: 0, windows: [], permanent: false, ...overrides }
 }
-
 function makeState(groups: Group[]): GroupsState {
   return { active: { id: groups[0].id, index: 0 }, available: groups }
 }
-
-function makeDragEnd(activeId: string, overId: string): DragEndEvent {
-  return {
-    active: { id: activeId, data: { current: undefined }, rect: { current: { initial: null, translated: null } } },
-    over: { id: overId, data: { current: undefined }, rect: null, disabled: false },
-    delta: { x: 0, y: 0 },
-    activatorEvent: new MouseEvent('pointerdown'),
-    collisions: [],
-  } as unknown as DragEndEvent
+function m(s: GroupsState) {
+  const model = buildDndModel(s)
+  return { model, gid: (i: number) => model.groupIds[i] }
 }
+const gref = (id: string, index?: number) => ({ type: 'group' as const, id, index })
 
-function setup(state: GroupsState) {
-  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-  qc.setQueryData(['groups'], state)
-  const wrapper = ({ children }: { children: React.ReactNode }) =>
-    React.createElement(QueryClientProvider, { client: qc }, children)
-  const { result } = renderHook(() => useGroupDndHandlers(), { wrapper })
-  return { qc, result }
-}
+describe('group reorder via applyMove', () => {
+  it('moves group from render index 1 to index 2 and returns a new persisted state', () => {
+    const s = makeState([makeGroup('now-open', { permanent: true }), makeGroup('g1'), makeGroup('g2')])
+    const { model, gid } = m(s)
 
-beforeEach(() => { vi.clearAllMocks() })
+    const res = applyMove(model, s, gref(gid(1)), gref(gid(2), 2))
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
-
-describe('useGroupDndHandlers — group reorder', () => {
-  it('moves group from index 1 to index 2 and persists', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const g1 = makeGroup('g1')
-    const g2 = makeGroup('g2')
-    const state = makeState([nowOpen, g1, g2])
-    const { qc, result } = setup(state)
-
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-1', 'group-2'))
-    })
-
-    expect(saveGroupsState).toHaveBeenCalledOnce()
-    const persisted = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
-    expect(persisted.available[1].id).toBe('g2')
-    expect(persisted.available[2].id).toBe('g1')
-    expect(trackEvent).toHaveBeenCalledWith('dnd_reorder', { kind: 'group' })
+    expect(res.next.available[1].id).toBe('g2')
+    expect(res.next.available[2].id).toBe('g1')
+    expect(res.undoable).toBe(true)
   })
 
-  it('is a no-op when active === over (same position)', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const g1 = makeGroup('g1')
-    const state = makeState([nowOpen, g1])
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    qc.setQueryData(['groups'], state)
-    const wrapper = ({ children }: { children: React.ReactNode }) =>
-      React.createElement(QueryClientProvider, { client: qc }, children)
-    const { result } = renderHook(() => useGroupDndHandlers(), { wrapper })
-
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-1', 'group-1'))
-    })
-    expect(saveGroupsState).not.toHaveBeenCalled()
-    expect(trackEvent).not.toHaveBeenCalled()
+  it('rejects dragging the permanent (Now Open) group', () => {
+    const s = makeState([makeGroup('now-open', { permanent: true }), makeGroup('g1')])
+    const { model, gid } = m(s)
+    expect(canDrop(model, gref(gid(0)), gref(gid(1)))).toBe(false)
   })
 
-  it('blocks moving the permanent (Now Open) group', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const g1 = makeGroup('g1')
-    const state = makeState([nowOpen, g1])
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    qc.setQueryData(['groups'], state)
-    const wrapper = ({ children }: { children: React.ReactNode }) =>
-      React.createElement(QueryClientProvider, { client: qc }, children)
-    const { result } = renderHook(() => useGroupDndHandlers(), { wrapper })
-
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-0', 'group-1'))
-    })
-    expect(saveGroupsState).not.toHaveBeenCalled()
+  it('rejects a drop at index 0 (before the permanent group)', () => {
+    const s = makeState([makeGroup('now-open', { permanent: true }), makeGroup('g1'), makeGroup('g2')])
+    const { model, gid } = m(s)
+    expect(canDrop(model, gref(gid(2)), gref(gid(0), 0))).toBe(false)
   })
 
-  it('blocks dropping at index 0 (before the permanent group)', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const g1 = makeGroup('g1')
-    const g2 = makeGroup('g2')
-    const state = makeState([nowOpen, g1, g2])
+  it('enforces zone order: an unstarred group dropped into the starred zone is clamped below the starred groups', () => {
+    const s = makeState([
+      makeGroup('now-open', { permanent: true }),
+      makeGroup('starred', { starred: true }),
+      makeGroup('g1'),
+      makeGroup('g2'),
+    ])
+    const { model, gid } = m(s)
+    const res = applyMove(model, s, gref(gid(2)), gref(gid(1), 1))
 
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    qc.setQueryData(['groups'], state)
-    const wrapper = ({ children }: { children: React.ReactNode }) =>
-      React.createElement(QueryClientProvider, { client: qc }, children)
-    const { result } = renderHook(() => useGroupDndHandlers(), { wrapper })
-
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-2', 'group-0'))
-    })
-    expect(saveGroupsState).not.toHaveBeenCalled()
-  })
-
-  it('enforces zone order: starred groups stay before unstarred after reorder', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const starred = makeGroup('starred', { starred: true })
-    const g1 = makeGroup('g1')
-    const g2 = makeGroup('g2')
-    // Order: [nowOpen, starred, g1, g2] — dragging g1 to starred zone
-    const state = makeState([nowOpen, starred, g1, g2])
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    qc.setQueryData(['groups'], state)
-    const wrapper = ({ children }: { children: React.ReactNode }) =>
-      React.createElement(QueryClientProvider, { client: qc }, children)
-    const { result } = renderHook(() => useGroupDndHandlers(), { wrapper })
-
-    // Drag g1 (index 2) onto starred (index 1) — g1 picks up starred=true
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-2', 'group-1'))
-    })
-
-    expect(saveGroupsState).toHaveBeenCalledOnce()
-    const persisted = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
-    // Zone enforcement: nowOpen, then all starred, then unstarred
-    expect(persisted.available[0].permanent).toBe(true)
-    const starredOnes = persisted.available.slice(1).filter((g) => g.starred)
-    const unstarredOnes = persisted.available.slice(1).filter((g) => !g.starred)
-    // All starred before any unstarred
-    const firstUnstarredIdx = persisted.available.findIndex((g, i) => i > 0 && !g.starred)
-    const lastStarredIdx = persisted.available.reduce((acc, g, i) => (g.starred ? i : acc), -1)
+    expect(res.next.available[0].permanent).toBe(true)
+    const firstUnstarredIdx = res.next.available.findIndex((g, i) => i > 0 && !g.starred)
+    const lastStarredIdx = res.next.available.reduce((acc, g, i) => (g.starred ? i : acc), -1)
     expect(lastStarredIdx).toBeLessThan(firstUnstarredIdx)
-    expect(starredOnes.length).toBeGreaterThan(0)
-    expect(unstarredOnes.length).toBeGreaterThan(0)
+    // moved group did not silently acquire starred
+    expect(res.next.available.find((g) => g.id === 'g1')!.starred).toBeFalsy()
   })
 
-  it('is a no-op when over element is not a group', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const g1 = makeGroup('g1')
-    const state = makeState([nowOpen, g1])
-
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    qc.setQueryData(['groups'], state)
-    const wrapper = ({ children }: { children: React.ReactNode }) =>
-      React.createElement(QueryClientProvider, { client: qc }, children)
-    const { result } = renderHook(() => useGroupDndHandlers(), { wrapper })
-
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-1', 'window-0-0'))
-    })
-    expect(saveGroupsState).not.toHaveBeenCalled()
+  it('is not a legal drop when the "over" target is a window rather than a group row', () => {
+    const s = makeState([
+      makeGroup('now-open', { permanent: true }),
+      { ...makeGroup('g1'), windows: [{ id: 0, tabs: [], incognito: false, focused: false }] },
+    ])
+    const { model, gid } = m(s)
+    const windowId = model.groups[gid(1)].windowIds[0]
+    expect(canDrop(model, gref(gid(1)), { type: 'window', id: windowId } as never)).toBe(false)
   })
+})
 
-  it('is a no-op when there is no cached GroupsState', async () => {
-    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-    const wrapper = ({ children }: { children: React.ReactNode }) =>
-      React.createElement(QueryClientProvider, { client: qc }, children)
-    const { result } = renderHook(() => useGroupDndHandlers(), { wrapper })
+describe('sequential group drags stay consistent (ported from the removed useGroupDndHandlers block)', () => {
+  it('two back-to-back drags each operate on the prior result, not stale state', () => {
+    // [NowOpen, GroupA*, GroupB*, GroupC, GroupD]
+    const s0 = makeState([
+      makeGroup('now-open', { permanent: true }),
+      makeGroup('a', { starred: true }),
+      makeGroup('b', { starred: true }),
+      makeGroup('c'),
+      makeGroup('d'),
+    ])
 
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-1', 'group-2'))
-    })
-    expect(saveGroupsState).not.toHaveBeenCalled()
-  })
+    // Drag 1: GroupD (render idx 4) → onto GroupB (render idx 2)
+    const m0 = buildDndModel(s0)
+    const r1 = applyMove(m0, s0, gref(m0.groupIds[4]), gref(m0.groupIds[2], 2))
+    const s1 = r1.next
+    // Now Open still first
+    expect(s1.available[0].permanent).toBe(true)
+    const dIdx1 = s1.available.findIndex((g) => g.id === 'd')
+    const cIdx1 = s1.available.findIndex((g) => g.id === 'c')
+    // starred groups stay ahead of unstarred; d + c are the unstarred tail in original order
+    expect(dIdx1).toBeLessThan(cIdx1)
 
-  it('is a no-op when active and over ids are identical', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const g1 = makeGroup('g1')
-    const state = makeState([nowOpen, g1])
-    const { result } = setup(state)
+    // Drag 2: GroupC → onto GroupB, feeding the POST-drag-1 state back in
+    const m1 = buildDndModel(s1)
+    const cRenderIdx = s1.available.findIndex((g) => g.id === 'c')
+    const bRenderIdx = s1.available.findIndex((g) => g.id === 'b')
+    const r2 = applyMove(m1, s1, gref(m1.groupIds[cRenderIdx]), gref(m1.groupIds[bRenderIdx], bRenderIdx))
+    const s2 = r2.next
 
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('group-1', 'group-1'))
-    })
-    expect(saveGroupsState).not.toHaveBeenCalled()
-  })
-
-  it('is a no-op when the dragged item is a tab (parseDndId tab-kind branch)', async () => {
-    const nowOpen = makeGroup('now-open', { permanent: true })
-    const g1 = makeGroup('g1')
-    const state = makeState([nowOpen, g1])
-    const { result } = setup(state)
-
-    await act(async () => {
-      await result.current.onDragEnd(makeDragEnd('tab-5-0-0', 'group-1'))
-    })
-    expect(saveGroupsState).not.toHaveBeenCalled()
+    expect(s2.available[0].permanent).toBe(true)
+    // C must NOT have jumped to index 1 (the old updatedAt-sort bug)
+    const cIdx2 = s2.available.findIndex((g) => g.id === 'c')
+    expect(cIdx2).toBeGreaterThan(1)
+    // no window/group loss across the two drags
+    expect(s2.available.map((g) => g.id).sort()).toEqual(['a', 'b', 'c', 'd', 'now-open'])
   })
 })

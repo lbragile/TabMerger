@@ -7,6 +7,7 @@
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "build": "wxt build",
+    "build:dev": "wxt build --mode development",
     "build:firefox": "wxt build -b firefox",
     "build:edge": "wxt build -b edge",
     "build:extension:demo": "wxt build -m demo",
@@ -24,6 +25,12 @@
     "test:e2e": "cd e2e && playwright test --grep-invert @visual",
     "test:e2e:ui": "cd e2e && playwright test --ui",
     "test:visual": "cd e2e && playwright test --grep @visual",
+    "repro:dnd": "cd e2e && playwright test --config repro/playwright.repro.config.ts",
+    "repro:dnd:popup": "cd e2e && playwright test --config repro/playwright.repro.config.ts popupInstrumented",
+    "repro:dnd:matrix": "cd e2e && playwright test --config repro/playwright.repro.config.ts dndMatrix",
+    "seed:dev": "wxt build --mode development && cd e2e && playwright test --config repro/playwright.seed.config.ts",
+    "seed:dev:wipe": "wxt build --mode development && cd e2e && playwright test --config repro/playwright.seed.wipe.config.ts",
+    "seed:dev:reset": "node -e \"require('fs').rmSync('e2e/test-results/seed-profile',{recursive:true,force:true});console.log('[seed:dev] removed e2e/test-results/seed-profile')\"",
     "analyze": "ANALYZE=true wxt build"
   },
   "dependencies": {

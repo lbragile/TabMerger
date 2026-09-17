@@ -50,8 +50,51 @@ beforeEach(() => {
 })
 
 import { useKeyboardNav } from '@/hooks/useKeyboardNav'
+import { setDndDragLive, clearDndDragLive } from '@/lib/dndMultiDrag'
+import { afterEach } from 'vitest'
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
+
+describe('useKeyboardNav — never fights a drag or an already-handled key', () => {
+  afterEach(() => clearDndDragLive())
+
+  it.each(['keyboard', 'pointer'] as const)('ArrowDown/ArrowUp do NOT change activeGroupIndex while a %s drag is live', (kind) => {
+    useUIStore.setState({ activeGroupIndex: 1 })
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    setDndDragLive(kind)
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown', bubbles: true }))
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', code: 'ArrowUp', bubbles: true }))
+    })
+    expect(useUIStore.getState().activeGroupIndex).toBe(1)
+    // …and once the drag ends, arrows navigate again
+    clearDndDragLive()
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown', bubbles: true }))
+    })
+    expect(useUIStore.getState().activeGroupIndex).toBe(2)
+  })
+
+  it('ignores a key another handler already consumed (defaultPrevented)', () => {
+    useUIStore.setState({ activeGroupIndex: 1 })
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    const ev = new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown', bubbles: true, cancelable: true })
+    ev.preventDefault()
+    act(() => {
+      document.dispatchEvent(ev)
+    })
+    expect(useUIStore.getState().activeGroupIndex).toBe(1)
+  })
+
+  it('Ctrl+G does not add a group mid-drag', () => {
+    renderHook(() => useKeyboardNav({ groupCount: 3, focusedTabId: null }))
+    setDndDragLive('keyboard')
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'g', ctrlKey: true, bubbles: true }))
+    })
+    expect(mockAddGroup).not.toHaveBeenCalled()
+  })
+})
 
 describe('useKeyboardNav', () => {
   it('Ctrl+G calls the add-group handler', async () => {

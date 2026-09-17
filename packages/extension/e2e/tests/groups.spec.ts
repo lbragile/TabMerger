@@ -106,8 +106,12 @@ test.describe('Group management', () => {
   });
 });
 
-test.describe('DnD starring auto-behavior', () => {
-  test('dropping a group above a starred group auto-stars the dragged group', async ({ context, extensionId }) => {
+test.describe('DnD zone behavior (drag no longer auto-stars)', () => {
+  // The unified DnD rework deliberately DROPPED drag-to-(un)star: dragging a group
+  // only reorders it, clamped to the starred/unstarred zone boundary. The dragged
+  // group's `starred` flag is never mutated by the drag itself (see dndMove.ts
+  // `moveGroup` + unit specs groupDnd.test.ts / dndMove.test.ts #19).
+  test('dropping a plain group into the starred zone does NOT star it (clamped to boundary)', async ({ context, extensionId }) => {
     const STARRED = {
       id: 'starredgrp1',
       name: 'Starred Group',
@@ -127,8 +131,6 @@ test.describe('DnD starring auto-behavior', () => {
     await seedAndReload(page, [NOW_OPEN, STARRED, PLAIN]);
 
     const items = page.locator('[data-sidebar-group-index]');
-    // Drag must originate from the grip handle — dnd-kit listeners are only
-    // attached to `[aria-label="Drag to reorder group"]`, not the whole row.
     const fromBox = await items.nth(2).getByRole('button', { name: 'Drag to reorder group' }).boundingBox();
     const toBox = await items.nth(1).boundingBox();
     if (!fromBox || !toBox) throw new Error('Bounding boxes missing');
@@ -152,10 +154,13 @@ test.describe('DnD starring auto-behavior', () => {
         };
       });
     });
-    expect(plainStarred).toBe(true);
+    // NEW behavior: the drag never flips the flag
+    expect(plainStarred).toBe(false);
+    // and the starred group is still ahead of the plain one in the sidebar
+    expect(await items.nth(1).getAttribute('aria-label')).toBe('Starred Group');
   });
 
-  test('dropping a group below a non-starred group auto-unstars it', async ({ context, extensionId }) => {
+  test('dropping a starred group into the unstarred zone does NOT un-star it', async ({ context, extensionId }) => {
     const STARRED = {
       id: 'starredgrp2',
       name: 'Was Starred',
@@ -186,7 +191,7 @@ test.describe('DnD starring auto-behavior', () => {
     await page.mouse.up();
     await page.waitForTimeout(600);
 
-    const wasStarred = await page.evaluate(async () => {
+    const stillStarred = await page.evaluate(async () => {
       return new Promise<boolean>((resolve) => {
         const req = indexedDB.open('tabmerger', 1);
         req.onsuccess = () => {
@@ -198,6 +203,7 @@ test.describe('DnD starring auto-behavior', () => {
         };
       });
     });
-    expect(wasStarred).toBe(false);
+    // NEW behavior: still starred; the engine just clamps it to the zone boundary
+    expect(stillStarred).toBe(true);
   });
 });

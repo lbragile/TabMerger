@@ -9,10 +9,13 @@ import { GroupContextMenu } from './GroupContextMenu';
 import { ColorPicker } from '@/components/ColorPicker';
 import type { Group } from '@/lib/types';
 import { useUpdateGroupName, useUpdateGroupColor, useToggleGroupStar, useGroups, useDeleteGroup } from '@/hooks/useGroups';
+import { useDndContext } from '@/components/dnd/DndProvider';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
 import { DEFAULT_GROUP_TITLE } from '@/lib/types';
+import { gapTransformFor } from '@/lib/dndInsertion';
+import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 
 interface GroupItemProps {
   group: Group;
@@ -25,14 +28,24 @@ interface GroupItemProps {
 export function GroupItem({ group, groupIndex, isActive, isLocked = false, onClick }: GroupItemProps) {
   const { data: groupsState } = useGroups();
   const savedGroupCount = (groupsState?.available ?? []).filter((g) => !g.permanent).length;
+  // MODEL id — the group's real `group.id` (not positional "group-N"). Same id for
+  // sortable + droppable so a dragged window/tab can land on the row (cross-group move).
   const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } =
-    useSortable({ id: `group-${groupIndex}` });
+    useSortable({ id: group.id, data: { type: 'group', groupId: group.id, index: groupIndex } });
 
-  // Also make it droppable for window combine
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-    id: `group-${groupIndex}`,
-    data: { type: 'group', groupIndex }
+    id: group.id,
+    data: { type: 'group', groupId: group.id, index: groupIndex }
   });
+
+  // A non-anchor row that is part of an active multi-drag selection dims to 0.4.
+  const { isDragging: dndDragging, active: dndActive, gap } = useDndContext();
+  const keyboardDrag = dndActive?.keyboard === true;
+  const isDimmedBySelection =
+    dndDragging &&
+    !!dndActive?.selectionIds &&
+    dndActive.selectionIds.includes(group.id) &&
+    dndActive.id !== group.id;
 
   const setNodeRef = (node: HTMLElement | null) => {
     setSortableRef(node);
@@ -110,9 +123,16 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   };
 
   const tabCount = getGroupTabCount(group);
+  // `Html5DragSensor` runs a native HTML5 drag; in the MV3 popup Chrome aborts it
+  // the moment the dragged group row (an ancestor of its grip) mutates. So: no
+  // live `transform`, a STABLE `transition` (dnd-kit's flips mid-drag), and no
+  // `isDragging` class toggle (see className). Ghost card is the affordance.
+  // Insertion-gap transform while a native drag has collapsed its source row.
+  const gapTransform = gapTransformFor(gap, group.id);
+  // Keyboard drags (no native session) DO render the live transform — see Tab.tsx.
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition
+    transform: isDragging && !keyboardDrag ? undefined : gapTransform !== null ? gapTransform : CSS.Transform.toString(transform),
+    transition: 'transform 200ms ease'
   };
 
   // Derive selection state for this group
@@ -147,6 +167,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       wrapperRef={setNodeRef}
       wrapperStyle={{
         ...style,
+        opacity: isDimmedBySelection ? 0.4 : undefined,
         background:
           isSelected
             ? 'rgba(0, 180, 204, 0.15)'
@@ -154,14 +175,20 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             ? 'rgba(255,255,255,0.12)'
             : undefined,
         borderLeft: isActive ? `3px solid ${group.color}` : '3px solid transparent',
-        outline: isSelected ? '2px solid rgba(0, 180, 204, 0.5)' : undefined,
+        // --sidebar-text-active: ≈14.5:1 (light) / 14:1 (dark) against the selected tint.
+        // The old full-opacity rgba(0,180,204) outline was only ≈2.0:1 in the light theme.
+        outline: isSelected ? '2px solid var(--sidebar-text-active)' : undefined,
         outlineOffset: '-2px',
       }}
       wrapperClassName={cn(
         'group flex items-center gap-2 px-2.5 py-2 select-none transition-colors',
         isLocked ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
-        isDragging && 'opacity-50',
-        isOver && 'ring-1 ring-white/30 ring-inset',
+        // No `isDragging` class toggle, and suppress the `isOver` ring when THIS
+        // row is the drag source — mutating the dragged row's className mid-drag
+        // aborts the native HTML5 drag in the MV3 popup. Ghost is the affordance.
+        isOver && dndActive?.id !== group.id && 'ring-1 ring-white/30 ring-inset',
+        // KEYBOARD drags only (C4 doesn't apply): lift the dragged row.
+        isDragging && keyboardDrag && 'relative z-10 shadow-lg ring-2 ring-ring',
       )}
       onWrapperClick={handleWrapperClick}
       onWrapperContextMenu={(e) => {
@@ -187,7 +214,9 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             type="button"
             className="shrink-0 flex items-center justify-center h-4 w-4 text-(--sidebar-text-inactive) hover:text-(--sidebar-text-active) transition-colors"
             onClick={handleCheckboxClick}
-            aria-label={isSelected ? 'Deselect group' : 'Select group'}
+            role="checkbox"
+            aria-checked={isSelected}
+            aria-label={`Select ${group.name}`}
           >
             {isSelected ? (
               <CheckSquare className="h-3.5 w-3.5 text-accent-foreground" />
@@ -200,10 +229,16 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         ) : (
           savedGroupCount > 1 ? (
             <span
-              className="cursor-grab active:cursor-grabbing touch-none shrink-0 opacity-30 group-hover:opacity-100 transition-opacity"
+              className="cursor-grab active:cursor-grabbing touch-none shrink-0 opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-opacity"
               style={{ color: 'var(--sidebar-text-subtle)' }}
+              // Native onDragStart activator (see useDnd.ts + dndHtml5Sensor) needs
+              // `draggable` set — dnd-kit only spreads `listeners`, never the attr.
+              draggable={!selectionMode && !DND_POINTER_PROBE_ACTIVE}
               {...(selectionMode ? {} : { ...attributes, ...listeners })}
-              aria-label={selectionMode ? undefined : 'Drag to reorder group'}
+              // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
+              // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
+              // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
+              aria-label={selectionMode ? undefined : `Drag to reorder group: ${group.name}`}
               onClick={(e) => e.stopPropagation()}
             >
               <GripVertical className="h-3 w-3" />
@@ -221,7 +256,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 <PopoverTrigger asChild>
                   <button
                     type="button"
-                    className="h-2.5 w-2.5 shrink-0 rounded-full transition-all hover:scale-125 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+                    className="h-2.5 w-2.5 shrink-0 rounded-full transition-all hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                     style={{ backgroundColor: group.color }}
                     onClick={(e) => e.stopPropagation()}
                     aria-label="Change group color"

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, Fragment } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {
@@ -48,17 +48,20 @@ import { useUIStore } from '@/stores/uiStore';
 import { cn, pluralize } from '@/lib/utils';
 import { getSetting } from '@/lib/localDb';
 import { useOpenWindow } from '@/hooks/useOpenWindow';
+import { useDndContext } from '@/components/dnd/DndProvider';
+import { dndListStyle, gapGrowthFor, gapTransformFor } from '@/lib/dndInsertion';
+import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
+import { selectionRange } from '@/lib/selectionRange';
+import { isDndDragLive } from '@/lib/dndMultiDrag';
 
 interface WindowProps {
+  /** parent group's model id — window sortable id is `${groupId}::w${windowIndex}` */
+  groupId?: string;
   window: WindowType;
   groupIndex: number;
   windowIndex: number;
   siblingCount: number;
   tabIds: string[];
-  isDraggingTab?: boolean;
-  activeWindowIndex?: number | null;
-  dragStartWinIndex?: number | null;
-  insertState?: { tabId: string; position: 'before' | 'after' } | null;
   groupColor?: string;
   isBeingDragged?: boolean;
   searchFilter?: string;
@@ -68,10 +71,15 @@ interface WindowProps {
   staleThresholdMs?: number;
 }
 
-export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabIds, isDraggingTab, activeWindowIndex, dragStartWinIndex, insertState, groupColor, isBeingDragged, searchFilter, tagFilter, tabOffset = 0, maxTabs = Infinity, staleThresholdMs }: WindowProps) {
+export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCount, tabIds, groupColor, searchFilter, tagFilter, tabOffset = 0, maxTabs = Infinity, staleThresholdMs }: WindowProps) {
+  const sortableId = `${groupId}::w${windowIndex}`;
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: `window-${groupIndex}-${windowIndex}`
+    id: sortableId,
+    data: { type: 'window', groupId }
   });
+  const { gap, active: dndActive } = useDndContext();
+  const keyboardDrag = dndActive?.keyboard === true;
+  const windowTitle = window.name ?? `Window ${windowIndex + 1}`;
 
   const [isEditing, setIsEditing] = useState(false);
   const [nameValue, setNameValue] = useState(window.name ?? 'Window');
@@ -118,21 +126,23 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
   const selectedItems = useUIStore((s) => s.selectedItems);
   const toggleSelection = useUIStore((s) => s.toggleSelection);
   const enterSelectionMode = useUIStore((s) => s.enterSelectionMode);
+  const selectRange = useUIStore((s) => s.selectRange);
+  const selectionAnchor = useUIStore((s) => s.selectionAnchor);
 
-  // Suppress window transform during tab drags (prevents windows jumping horizontally)
+  // `Html5DragSensor` runs a native HTML5 drag; in the MV3 popup Chrome aborts it
+  // the moment the dragged window (an ancestor of its grip) mutates. So: no live
+  // `transform` on the dragged window, a STABLE `transition` string (dnd-kit's
+  // value flips mid-drag), and no `isDragging`/`isBeingDragged` class toggle
+  // (see className). The ghost card is the drag affordance.
+  // While a native drag has collapsed its source row, siblings render the
+  // insertion-gap transform (`gap`) instead of the strategy transform.
+  const gapTransform = gapTransformFor(gap, sortableId);
+  // Keyboard drags (no native session) DO render the live transform — see Tab.tsx.
   const style = {
-    transform: (isDraggingTab || isBeingDragged) ? undefined : CSS.Transform.toString(transform),
-    transition: (isDraggingTab || isBeingDragged) ? undefined : transition,
+    transform: isDragging && !keyboardDrag ? undefined : gapTransform !== null ? gapTransform : CSS.Transform.toString(transform),
+    transition: 'transform 200ms ease',
     ...(window.starred ? { borderLeftColor: groupColor ?? 'hsl(var(--primary))' } : {})
   };
-
-  // Cross-window drop target: active window that is NOT the drag source
-  const isCrossWindowTarget =
-    isDraggingTab && activeWindowIndex === windowIndex && windowIndex !== dragStartWinIndex;
-  // ponytail: parse rgba(R,G,B,1) → rgba(R,G,B,0.4) for glow; fallback to transparent
-  const glowStyle = isCrossWindowTarget && groupColor
-    ? { boxShadow: `0 0 0 2px ${groupColor.replace(/,\s*[\d.]+\)$/, ', 0.4)')}` }
-    : {};
 
   const handleRename = () => {
     if (nameValue.trim()) {
@@ -153,10 +163,23 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    // Shift on the checkbox (click, or Shift+Space with it focused) extends a range.
+    if (e.shiftKey) {
+      const item = { type: 'window' as const, id: selectionId };
+      selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+      return;
+    }
     toggleSelection({ type: 'window', id: selectionId });
   };
 
   const handleHeaderClick = (e: React.MouseEvent) => {
+    // Shift+click extends the selection from the anchor to this window (same group)
+    if (e.shiftKey) {
+      e.stopPropagation();
+      const item = { type: 'window' as const, id: selectionId };
+      selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+      return;
+    }
     if (e.ctrlKey || e.metaKey) {
       e.stopPropagation();
       enterSelectionMode();
@@ -178,13 +201,22 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
     <div
       ref={setNodeRef}
       data-window-index={windowIndex}
-      style={{ ...style, ...glowStyle }}
+      data-tm-dnd-id={sortableId}
+      style={style}
       className={cn(
         'border border-border bg-card mb-2 p-1 transition-shadow min-w-0 overflow-hidden',
-        isBeingDragged ? 'opacity-0' : isDragging && 'opacity-50 shadow-lg',
+        // No `isDragging` / `isBeingDragged` class toggle — mutating the dragged
+        // window's className mid-drag aborts the native HTML5 drag in the MV3
+        // popup. The ghost card is the drag affordance.
         window.starred && 'border-l-2',
         window.incognito && 'bg-muted/30',
-        isSelected && 'ring-2 ring-primary/70'
+        isSelected && 'ring-2 ring-primary',
+        // KEYBOARD drags only (C4 doesn't apply): lift the dragged window, mark selected companions.
+        isDragging && keyboardDrag && 'relative z-10 shadow-lg ring-2 ring-ring',
+        keyboardDrag &&
+          !isDragging &&
+          dndActive?.selectionIds?.includes(sortableId) &&
+          'outline-dashed outline-1 -outline-offset-1 outline-foreground'
       )}
     >
       {window.incognito && (
@@ -197,7 +229,14 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
       {/* Window header */}
       <div
         className="group relative flex items-center gap-1.5 px-1.5 py-1 border-b border-border/50"
+        // Static (never toggled): keyboard-drop focus lands on this header's first control
+        // when the window has no grip (a group's only window) — see `dndFocus`.
+        data-window-header=""
         onClick={handleHeaderClick}
+        // Shift+click must not extend the browser's TEXT selection.
+        onMouseDown={(e) => {
+          if (e.shiftKey) e.preventDefault();
+        }}
         onContextMenu={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -272,12 +311,46 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {showCheckbox ? (
+        {/* Drag grip stays live in selection mode (dragging a selected window drags the
+            selection); the checkbox sits right after it. */}
+        {siblingCount > 1 ? (
+          <span
+            className="opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
+            // Native onDragStart activator (see useDnd.ts + dndHtml5Sensor) needs
+            // `draggable` set — dnd-kit only spreads `listeners`, never the attr.
+            draggable={!DND_POINTER_PROBE_ACTIVE}
+            {...attributes}
+            {...listeners}
+            // AFTER the spread, delegating: Shift+Space range-selects (dnd-kit's activator
+            // ignores modifiers and would pick the window up); every other key reaches dnd-kit.
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if ((e.key === ' ' || e.code === 'Space') && e.shiftKey && !isDndDragLive()) {
+                e.preventDefault();
+                e.stopPropagation();
+                const item = { type: 'window' as const, id: selectionId };
+                selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+                return;
+              }
+              (listeners as { onKeyDown?: (e: React.KeyboardEvent) => void } | undefined)?.onKeyDown?.(e);
+            }}
+            // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
+            // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
+            // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
+            aria-label={`Drag to reorder window: ${windowTitle}`}
+          >
+            <GripVertical className="h-3.5 w-3.5" />
+          </span>
+        ) : (
+          <span className="h-3.5 w-3.5 shrink-0" />
+        )}
+        {showCheckbox && (
           <button
             type="button"
             className="shrink-0 flex items-center justify-center h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
             onClick={handleCheckboxClick}
-            aria-label={isSelected ? 'Deselect window' : 'Select window'}
+            role="checkbox"
+            aria-checked={isSelected}
+            aria-label={`Select ${windowTitle}`}
           >
             {isSelected ? (
               <CheckSquare className="h-3.5 w-3.5 text-primary" />
@@ -285,16 +358,6 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
               <Square className="h-3.5 w-3.5" />
             )}
           </button>
-        ) : siblingCount > 1 ? (
-          <span
-            className="opacity-30 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
-            {...(selectionMode ? {} : { ...attributes, ...listeners })}
-            aria-label={selectionMode ? undefined : 'Drag to reorder window'}
-          >
-            <GripVertical className="h-3.5 w-3.5" />
-          </span>
-        ) : (
-          <span className="h-3.5 w-3.5 shrink-0" />
         )}
 
         <div className="flex-1 min-w-0">
@@ -463,39 +526,29 @@ export function WindowItem({ window, groupIndex, windowIndex, siblingCount, tabI
       )}
 
       {/* Tabs list */}
-      <div role="list" className={cn('py-0.5 px-3 overflow-y-auto', isCrossWindowTarget ? 'max-h-64' : 'max-h-52')}>
+      <div
+        role="list"
+        data-tm-dnd-list=""
+        className="py-0.5 px-3 overflow-y-auto max-h-52"
+        style={dndListStyle(gapGrowthFor(gap, sortableId), '0.125rem')}
+      >
         <SortableContext items={tabIds} strategy={verticalListSortingStrategy}>
-          {window.tabs.filter(Boolean).map((tab, tabIndex) => {
-            const dndId = `tab-${tab.id}-${windowIndex}-${tabIndex}`;
-            return (
-              <Fragment key={dndId}>
-                {isCrossWindowTarget && insertState?.tabId === dndId && insertState.position === 'before' && (
-                  <div className="mx-1 my-0.5 h-0.5 rounded-sm" style={{ background: groupColor }} />
-                )}
-                <TabItem
-                  tab={tab}
-                  groupIndex={groupIndex}
-                  windowIndex={windowIndex}
-                  tabIndex={tabIndex}
-                  siblingCount={window.tabs.length}
-                  isDraggingTab={isDraggingTab}
-                  activeWindowIndex={activeWindowIndex}
-                  searchFilter={searchFilter}
-                  tagFilter={tagFilter}
-                  groupColor={groupColor}
-                  isLocked={isFinite(maxTabs) && tabOffset + tabIndex >= maxTabs}
-                  staleThresholdMs={staleThresholdMs}
-                />
-                {isCrossWindowTarget && insertState?.tabId === dndId && insertState.position === 'after' && (
-                  <div className="mx-1 my-0.5 h-0.5 rounded-sm" style={{ background: groupColor }} />
-                )}
-              </Fragment>
-            );
-          })}
-          {/* Insertion line at end when hovering empty window area */}
-          {isCrossWindowTarget && insertState?.tabId === '__end__' && (
-            <div className="mx-1 my-0.5 h-0.5 rounded-sm" style={{ background: groupColor }} />
-          )}
+          {window.tabs.filter(Boolean).map((tab, tabIndex) => (
+            <TabItem
+              key={`${groupId}::w${windowIndex}::t${tabIndex}`}
+              groupId={groupId}
+              tab={tab}
+              groupIndex={groupIndex}
+              windowIndex={windowIndex}
+              tabIndex={tabIndex}
+              siblingCount={window.tabs.length}
+              searchFilter={searchFilter}
+              tagFilter={tagFilter}
+              groupColor={groupColor}
+              isLocked={isFinite(maxTabs) && tabOffset + tabIndex >= maxTabs}
+              staleThresholdMs={staleThresholdMs}
+            />
+          ))}
         </SortableContext>
         {window.tabs.length === 0 && (
           <p className="px-3 py-1.5 text-xs text-muted-foreground italic">Empty window</p>

@@ -18,6 +18,13 @@ vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 vi.mock('@/stores/uiStore', () => ({ useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector) }))
 
+// App now hoists a single real <DndProvider> around the panels; mock it here (the
+// panels themselves are already stubbed) so this suite needs no QueryClient.
+vi.mock('@/components/dnd/DndProvider', () => ({
+  DndProvider: ({ children }: { children: unknown }) => <>{children as never}</>,
+  useDndContext: () => ({ overrideState: null, active: null, isDragging: false }),
+}))
+
 vi.mock('@/components/Header', () => ({ Header: () => <div data-testid="header" /> }))
 vi.mock('@/components/SidePanel', () => ({ SidePanel: () => <div data-testid="sidepanel" /> }))
 vi.mock('@/components/Windows', () => ({ WindowsPanel: ({ groupIndex }: { groupIndex: number }) => <div data-testid="windowspanel">{groupIndex}</div> }))
@@ -93,6 +100,47 @@ describe('App — loaded state', () => {
     )
     render(<App />)
     expect(screen.getByTestId('selectionbar')).toBeTruthy()
+  })
+
+  it('Escape exits selection mode — but NOT when a keyboard drag already consumed it (defaultPrevented)', () => {
+    mockGroupsState([{ id: 'now', name: 'Now Open' }])
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, selectionMode: true })
+    )
+    render(<App />)
+    // dnd-kit's KeyboardSensor cancels the drag with preventDefault on its document listener
+    const consumed = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    consumed.preventDefault()
+    window.dispatchEvent(consumed)
+    expect(baseUIState.exitSelectionMode).not.toHaveBeenCalled()
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+    expect(baseUIState.exitSelectionMode).toHaveBeenCalledTimes(1)
+  })
+
+  it('Escape with focus on a selection checkbox hands focus to its row before the checkbox unmounts', () => {
+    mockGroupsState([{ id: 'now', name: 'Now Open' }])
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+      selector({ ...baseUIState, selectionMode: true })
+    )
+    render(<App />)
+    const row = document.createElement('div')
+    row.setAttribute('role', 'listitem')
+    row.tabIndex = 0
+    const checkbox = document.createElement('button')
+    checkbox.setAttribute('role', 'checkbox')
+    row.appendChild(checkbox)
+    document.body.appendChild(row)
+    checkbox.focus()
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+    expect(document.activeElement).toBe(row)
+    expect(baseUIState.exitSelectionMode).toHaveBeenCalled()
+    row.remove()
+  })
+
+  it('always mounts the selection live region (outside the DnD provider)', () => {
+    mockGroupsState([{ id: 'now', name: 'Now Open' }])
+    render(<App />)
+    expect(screen.getByTestId('selection-announcer').getAttribute('role')).toBe('status')
   })
 
   it('shows "No group selected" when available is empty', () => {

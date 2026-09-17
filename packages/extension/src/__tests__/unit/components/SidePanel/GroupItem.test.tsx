@@ -190,7 +190,8 @@ describe('GroupItem', () => {
     )
     const group = makeGroup()
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
-    const checkbox = screen.getByRole('button', { name: /select group/i })
+    const checkbox = screen.getByRole('checkbox', { name: `Select ${group.name}` })
+    expect(checkbox.getAttribute('aria-checked')).toBe('false')
     fireEvent.click(checkbox)
     expect(baseUIState.toggleSelection).toHaveBeenCalledWith({ type: 'group', id: 'group-0' })
   })
@@ -201,7 +202,7 @@ describe('GroupItem', () => {
     )
     const group = makeGroup({ permanent: true, name: 'Now Open' })
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
-    expect(screen.queryByRole('button', { name: /select group/i })).toBeNull()
+    expect(screen.queryByRole('checkbox')).toBeNull()
   })
 
   it('shows lock icon and tooltip when isLocked, hiding the star button', () => {
@@ -373,20 +374,20 @@ describe('GroupItem', () => {
     )
     const group = makeGroup()
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
-    expect(screen.queryByRole('button', { name: /select group/i })).toBeNull()
+    expect(screen.queryByRole('checkbox')).toBeNull()
   })
 
   it('shows a static placeholder (no drag handle) for the permanent group', () => {
     const group = makeGroup({ permanent: true, name: 'Now Open' })
     const { container } = wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
-    expect(container.querySelector('[aria-label="Drag to reorder group"]')).toBeNull()
+    expect(container.querySelector('[aria-label^="Drag to reorder group"]')).toBeNull()
   })
 
   it('shows a static placeholder (no drag handle) when there is only one saved group', () => {
     mockUseGroups.mockReturnValue({ data: { available: [makeGroup({ permanent: true })], active: { id: '', index: 0 } } })
     const group = makeGroup()
     const { container } = wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
-    expect(container.querySelector('[aria-label="Drag to reorder group"]')).toBeNull()
+    expect(container.querySelector('[aria-label^="Drag to reorder group"]')).toBeNull()
   })
 
   it('applies the selected background/outline style when isSelected', () => {
@@ -396,7 +397,12 @@ describe('GroupItem', () => {
     const group = makeGroup()
     wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
     const wrapper = screen.getByTestId('group-wrapper')
-    expect(wrapper.style.outline).toContain('rgba(0, 180, 204, 0.5)')
+    // full opacity (jsdom normalises rgba(…, 1) to rgb(…)); the old 50% outline failed 3:1 contrast
+    // ≥3:1 in both themes: --sidebar-text-active (≈14.5:1 light / 14:1 dark on the selected
+    // tint). The old rgba(0,180,204) outline was ≈2.0:1 in the light theme.
+    expect(wrapper.getAttribute('style') ?? '').toContain('var(--sidebar-text-active)')
+    expect(wrapper.getAttribute('style') ?? '').not.toMatch(/0,\s*180,\s*204,\s*1\)/)
+    expect(wrapper.style.outline).not.toContain('0.5')
   })
 
   it('applies mouse-enter/leave hover background only when not active/selected/menu-open', () => {

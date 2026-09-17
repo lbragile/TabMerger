@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import type React from 'react'
 import { useUIStore } from '@/stores/uiStore'
 import { useAddGroup, useDeleteTab } from '@/hooks/useGroups'
+import { isDndDragLive } from '@/lib/dndMultiDrag'
 
 export interface KeyboardNavOptions {
   groupCount: number
@@ -51,6 +52,11 @@ export function useKeyboardNav({ groupCount, focusedTabId, searchInputRef }: Key
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
+      // A key another handler already consumed (a row's own Enter/Space, a menu's Arrow),
+      // or ANY key while a drag is live: dnd-kit's KeyboardSensor adds its document
+      // listener in a setTimeout at pickup, so this one runs FIRST for every Arrow — and
+      // switching the active group would swap the panel and unmount the dragged row.
+      if (e.defaultPrevented || isDndDragLive()) return
       if (isEditableTarget()) return
 
       if (e.ctrlKey || e.metaKey) {

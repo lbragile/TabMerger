@@ -10,13 +10,18 @@ import { useUIStore } from '@/stores/uiStore';
 import { useGroups } from '@/hooks/useGroups';
 import { useBulkDelete, useBulkMoveToGroup, useBulkStar, parseGroupId } from '@/hooks/useBulkActions';
 import { cn, pluralize } from '@/lib/utils';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CreateGroupMenuItem } from '@/components/Windows/CreateGroupMenuItem';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabase';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { createSharedBundle } from '@/lib/sharing';
 import { getSetting } from '@/lib/localDb';
+import {
+  moveFocusOutOfSelectionControls,
+  SELECTION_ACTION_BAR_ATTR,
+  selectionFocusFallback
+} from '@/lib/selectionFocus';
 
 /** Maps a selection type to a human-readable plural noun. */
 function itemLabel(type: string, count: number): string {
@@ -41,7 +46,19 @@ export function SelectionActionBar() {
   const entitlements = useEntitlements();
   const [isSharing, setIsSharing] = useState(false);
 
-  if (selectedItems.length === 0) return null;
+  // The bar unmounts as soon as the selection empties — e.g. once a bulk delete/move
+  // finishes. If focus was inside it (or on its Move menu, which hands focus back to the
+  // trigger when it closes), focus would fall to <body>; put it somewhere that survives.
+  const focusWasInside = useRef(false);
+  const count = selectedItems.length;
+  useEffect(() => {
+    if (count > 0 || !focusWasInside.current) return;
+    focusWasInside.current = false;
+    const active = typeof document !== 'undefined' ? document.activeElement : null;
+    if (!active || active === document.body) selectionFocusFallback()?.focus();
+  }, [count]);
+
+  if (count === 0) return null;
 
   const type = selectedItems[0].type;
   const canMove = type !== 'group';
@@ -90,12 +107,29 @@ export function SelectionActionBar() {
     }
   }
 
+  function handleCancel() {
+    // The Cancel button itself is about to unmount with the bar.
+    moveFocusOutOfSelectionControls();
+    exitSelectionMode();
+  }
+
   return (
     <div
+      {...{ [SELECTION_ACTION_BAR_ATTR]: '' }}
       className={cn(
         'flex items-center gap-2 px-3 py-2 border-t border-border bg-muted/60 backdrop-blur-sm shrink-0',
         'text-xs'
       )}
+      onFocus={() => {
+        focusWasInside.current = true;
+      }}
+      onBlur={(e) => {
+        const to = e.relatedTarget as Node | null;
+        // Moving into the Move menu (portalled) still counts: Radix returns focus to the trigger.
+        if (to && !e.currentTarget.contains(to) && !(to as Element).closest?.('[role="menu"]')) {
+          focusWasInside.current = false;
+        }
+      }}
     >
       {/* Count label */}
       <span className="flex-1 font-medium text-foreground">
@@ -196,7 +230,7 @@ export function SelectionActionBar() {
         size="icon"
         className="h-7 w-7 shrink-0"
         disabled={isPending}
-        onClick={exitSelectionMode}
+        onClick={handleCancel}
         aria-label="Cancel selection"
       >
         <X className="h-3.5 w-3.5" />

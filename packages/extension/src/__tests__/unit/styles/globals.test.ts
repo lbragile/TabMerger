@@ -44,3 +44,31 @@ describe('globals.css — [role="button"] cursor rule / @dnd-kit coupling', () =
     expect(src).toMatch(/\.\.\.attributes/);
   });
 });
+
+/**
+ * Reduced motion reaches the shared Radix primitives (dropdown / popover / tooltip zoom-slide
+ * animations, the switch thumb) through globals.css rather than edits to components/ui/*.
+ * Static check only: jsdom does not evaluate media queries.
+ */
+describe('globals.css — prefers-reduced-motion covers popovers, menus, tooltips and the switch', () => {
+  const css = readFileSync(path.resolve(__dirname, '../../../styles/globals.css'), 'utf-8');
+  const block = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+
+  it('the reduced-motion block exists', () => {
+    expect(css).toContain('@media (prefers-reduced-motion: reduce)');
+  });
+
+  it.each(['.animate-in', '.animate-out', '[data-radix-popper-content-wrapper] > *'])('kills animation on %s', (selector) => {
+    expect(block).toContain(selector);
+    expect(block).toMatch(/animation:\s*none\s*!important/);
+  });
+
+  it('kills the switch thumb transition', () => {
+    expect(block).toContain('[role="switch"] > *');
+  });
+
+  it('the group colour swatch hover zoom is disabled under reduced motion', () => {
+    const src = readFileSync(path.resolve(__dirname, '../../../components/SidePanel/GroupItem.tsx'), 'utf-8');
+    expect(src).toMatch(/hover:scale-125[^"]*motion-reduce:hover:scale-100/);
+  });
+});

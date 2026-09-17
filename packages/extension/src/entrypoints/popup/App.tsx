@@ -4,9 +4,11 @@ import { Toaster } from 'sonner';
 import { Header } from '@/components/Header';
 import { SidePanel } from '@/components/SidePanel';
 import { WindowsPanel } from '@/components/Windows';
+import { DndProvider } from '@/components/dnd/DndProvider';
 import { ModalRoot } from '@/components/Modal';
 import { AIGroupSuggestion } from '@/components/AIGroupSuggestion';
 import { SelectionActionBar } from '@/components/SelectionActionBar';
+import { SelectionAnnouncer } from '@/components/SelectionAnnouncer';
 import { useGroups } from '@/hooks/useGroups';
 import { useCurrentTabs } from '@/hooks/useCurrentTabs';
 import { getSetting } from '@/lib/localDb';
@@ -20,6 +22,8 @@ import { SubscriptionStatusBanner } from '@/components/SubscriptionStatusBanner'
 import { UpgradeCTA } from '@/components/UpgradeCTA';
 import { CleanupSuggestionBanner } from '@/components/CleanupSuggestionBanner';
 import { PENDING_SHORTCUT_SAVE_KEY } from '@/components/Modal/ShortcutSavePicker';
+// Exiting selection mode unmounts every checkbox and the action bar; keep focus off <body>.
+import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
 
 function AppContent() {
   const { data: groupsState, isLoading } = useGroups();
@@ -90,9 +94,12 @@ function AppContent() {
   // Escape key exits selection mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectionMode) {
-        exitSelectionMode();
-      }
+      // Already consumed — e.g. dnd-kit's KeyboardSensor cancelling a keyboard drag (its
+      // document listener runs before this window one). That Escape cancels the DRAG; it
+      // must not also wipe the selection being dragged.
+      if (e.key !== 'Escape' || !selectionMode || e.defaultPrevented) return;
+      moveFocusOutOfSelectionControls();
+      exitSelectionMode();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -116,18 +123,22 @@ function AppContent() {
       <UpgradeCTA />
       <CleanupSuggestionBanner />
       <AIGroupSuggestion />
-      <div className="flex flex-1 min-h-0">
-        <SidePanel groupsState={groupsState} />
-        <main className="flex-1 min-w-0 overflow-hidden">
-          {activeGroup ? (
-            <WindowsPanel group={activeGroup} groupIndex={safeActiveIndex} />
-          ) : (
-            <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-              No group selected
-            </div>
-          )}
-        </main>
-      </div>
+      {/* ONE unified DnD context spanning the sidebar + the windows panel. The
+          nested <DndProvider> inside <WindowsPanel> degrades to a passthrough. */}
+      <DndProvider>
+        <div className="flex flex-1 min-h-0">
+          <SidePanel groupsState={groupsState} />
+          <main className="flex-1 min-w-0 overflow-hidden">
+            {activeGroup ? (
+              <WindowsPanel group={activeGroup} groupIndex={safeActiveIndex} />
+            ) : (
+              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
+                No group selected
+              </div>
+            )}
+          </main>
+        </div>
+      </DndProvider>
       {/* Floating action bar — visible when ≥1 item is selected */}
       {selectedItems.length > 0 && <SelectionActionBar />}
     </div>
@@ -138,6 +149,8 @@ export function App() {
   return (
     <TooltipProvider delayDuration={400}>
       <AppContent />
+      {/* Always mounted, outside <DndProvider>: announces selection changes. */}
+      <SelectionAnnouncer />
       <ModalRoot />
       <Toaster
         position="bottom-right"

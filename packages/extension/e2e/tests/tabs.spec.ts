@@ -102,3 +102,46 @@ test.describe('Tab management', () => {
     await expect(page.getByRole('listitem', { name: 'Jira Board' })).not.toBeVisible({ timeout: 3_000 });
   });
 });
+
+// ─── Unified DnD: cross-window tab drag inside one group ──────────────────────
+
+test.describe('Tab drag — across windows within a group (unified DnD)', () => {
+  test('dragging a tab from window 1 onto a tab in window 0 moves it into window 0', async ({
+    context,
+    extensionId,
+  }) => {
+    const page = await openPopup(context, extensionId);
+    // WORK_GROUP: window 0 = [Jira Board, Confluence], window 1 = [Slack]
+    await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
+    await page.getByRole('button', { name: 'Work' }).click();
+
+    const slackRow = page.getByRole('listitem', { name: 'Slack' });
+    await slackRow.hover();
+    const fromBox = await slackRow.getByLabel('Drag to reorder tab').boundingBox();
+    const toBox = await page.getByRole('listitem', { name: 'Jira Board' }).boundingBox();
+    if (!fromBox || !toBox) throw new Error('Could not locate tab rows for drag');
+
+    await page.mouse.move(fromBox.x + fromBox.width / 2, fromBox.y + fromBox.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(fromBox.x + fromBox.width / 2, fromBox.y + fromBox.height / 2 + 8, { steps: 3 });
+    await page.mouse.move(toBox.x + toBox.width / 2, toBox.y + toBox.height / 2, { steps: 12 });
+    await page.mouse.up();
+    await page.waitForTimeout(600);
+
+    // Assert against persisted IndexedDB — resilient to render timing in the panel.
+    const window0Urls = await page.evaluate(async () => {
+      return new Promise<string[]>((resolve) => {
+        const req = indexedDB.open('tabmerger', 1);
+        req.onsuccess = () => {
+          const db = req.result;
+          const tx = db.transaction('groups', 'readonly');
+          tx.objectStore('groups').get('workgrp0001').onsuccess = (e) => {
+            const g = (e.target as IDBRequest).result;
+            resolve((g?.windows?.[0]?.tabs ?? []).map((t: { url: string }) => t.url));
+          };
+        };
+      });
+    });
+    expect(window0Urls).toContain('https://app.slack.com');
+  });
+});

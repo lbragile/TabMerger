@@ -11,12 +11,17 @@ import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminde
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
+import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { getDisplayTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
+import { useDndContext } from '@/components/dnd/DndProvider';
+import { gapTransformFor } from '@/lib/dndInsertion';
+import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
+import { selectionRange } from '@/lib/selectionRange';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
@@ -66,12 +71,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 interface TabItemProps {
+  /** parent group's model id — tab sortable id is `${groupId}::w${windowIndex}::t${tabIndex}` */
+  groupId?: string;
   tab: TabType;
   groupIndex: number;
   windowIndex: number;
   tabIndex: number;
   siblingCount: number;
+  /** @deprecated vestigial — the unified SortableContext no longer needs drag-suppression hints */
   isDraggingTab?: boolean;
+  /** @deprecated vestigial */
   activeWindowIndex?: number | null;
   searchFilter?: string;
   tagFilter?: string;
@@ -80,10 +89,14 @@ interface TabItemProps {
   staleThresholdMs?: number;
 }
 
-export function TabItem({ tab, groupIndex, windowIndex, tabIndex, siblingCount: _siblingCount, isDraggingTab, activeWindowIndex, searchFilter, tagFilter, groupColor, isLocked = false, staleThresholdMs }: TabItemProps) {
+export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, siblingCount: _siblingCount, searchFilter, tagFilter, groupColor, isLocked = false, staleThresholdMs }: TabItemProps) {
+  const sortableId = `${groupId}::w${windowIndex}::t${tabIndex}`;
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: `tab-${tab.id}-${windowIndex}-${tabIndex}`
+    id: sortableId,
+    data: { type: 'tab', groupId, windowId: `${groupId}::w${windowIndex}` }
   });
+  const { gap, active: dndActive } = useDndContext();
+  const keyboardDrag = dndActive?.keyboard === true;
 const { mutate: deleteTab } = useDeleteTab();
   const { mutate: moveTab } = useMoveTab();
   const { data: urlRules = [] } = useUrlRules();
@@ -162,9 +175,39 @@ const { mutate: deleteTab } = useDeleteTab();
   };
 
   const selectionMode = useUIStore((s) => s.selectionMode);
+  // Drag-handle wiring from @dnd-kit. The unified sensor set (see useDnd.ts +
+  // @/lib/dndHtml5Sensor) activates on the NATIVE `onDragStart` event, which
+  // dnd-kit puts in `listeners` — so the handle must ALSO be `draggable` (dnd-kit
+  // never sets that attr). Native HTML5 drag is the only sensing that works in
+  // the real MV3 toolbar popup (it withholds the pointermove stream). The extra
+  // `onMouseDown` below only stops the press bubbling to row-level handlers (row
+  // click / selection); it composes any `onMouseDown` `listeners` might carry.
+  // The grip stays live in selection mode: dragging a SELECTED row drags the whole
+  // selection (multi-drag), so the checkbox sits next to the grip instead of replacing it.
+  const dragHandleProps = { ...attributes, ...listeners };
+  /**
+   * Shift+Space on the grip = range select (the keyboard Shift+click). dnd-kit's keyboard
+   * activator ignores modifiers and would PICK THE TAB UP instead, so it is handled here
+   * first; every other key goes to dnd-kit (plain Space/Enter still pick up).
+   */
+  const onDragHandleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === ' ' || e.code === 'Space') && e.shiftKey && !isDndDragLive()) {
+      e.preventDefault();
+      e.stopPropagation();
+      extendRange();
+      return;
+    }
+    (dragHandleProps as { onKeyDown?: (e: React.KeyboardEvent) => void }).onKeyDown?.(e);
+  };
+  const onDragHandleMouseDown = (e: React.MouseEvent) => {
+    (dragHandleProps as { onMouseDown?: (e: React.MouseEvent) => void }).onMouseDown?.(e);
+    e.stopPropagation();
+  };
   const selectedItems = useUIStore((s) => s.selectedItems);
   const toggleSelection = useUIStore((s) => s.toggleSelection);
   const enterSelectionMode = useUIStore((s) => s.enterSelectionMode);
+  const selectRange = useUIStore((s) => s.selectRange);
+  const selectionAnchor = useUIStore((s) => s.selectionAnchor);
   const renameTarget = useUIStore((s) => s.renameTarget);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const noteTarget = useUIStore((s) => s.noteTarget);
@@ -196,17 +239,26 @@ const { mutate: deleteTab } = useDeleteTab();
     }
   }, [noteTarget, groupIndex, windowIndex, tabIndex, setNoteTarget]);
 
-  // Suppress transforms on tabs in non-active windows so they don't animate during cross-window drag
-  const suppressTransform = isDraggingTab && activeWindowIndex !== windowIndex;
+  // `Html5DragSensor` runs a NATIVE HTML5 drag. In the MV3 toolbar popup Chrome
+  // aborts it the instant the dragged row (an ancestor of the grip) mutates —
+  // a `transform`, a `class`, or a `style` change all count. So the dragged row:
+  //   - never gets a live `transform` (`isDragging ? undefined`) — the ghost moves
+  //   - uses a STABLE `transition` string (dnd-kit's value flips mid-drag)
+  //   - does NOT toggle any `isDragging` class (see className below)
+  // Sibling rows animate via the insertion-gap transform while a native drag has
+  // collapsed its source row (`gap`), else via their strategy `transform`.
+  const gapTransform = gapTransformFor(gap, sortableId);
+  // A KEYBOARD drag has no native session (C4 doesn't apply) and no ghost, so there the
+  // dragged row DOES follow dnd-kit's transform — otherwise a sighted keyboard user sees nothing move.
   const style = {
-    transform: suppressTransform ? undefined : CSS.Transform.toString(transform),
-    transition: suppressTransform ? undefined : transition
+    transform: isDragging && !keyboardDrag ? undefined : gapTransform !== null ? gapTransform : CSS.Transform.toString(transform),
+    transition: 'transform 200ms ease'
   };
 
   const handleOpen = async (e?: React.MouseEvent) => {
     if (isLocked) return;
-    // Skip opening the tab when Ctrl/Cmd is held — that gesture is for selection
-    if (e && (e.ctrlKey || e.metaKey)) return;
+    // Skip opening the tab when Ctrl/Cmd/Shift is held — those gestures are for selection
+    if (e && (e.ctrlKey || e.metaKey || e.shiftKey)) return;
     if (!tab.url) return;
     if (tab.chromeGroup && chrome.tabGroups) {
       await openTabInChromeGroup(tab, undefined, true);
@@ -258,13 +310,34 @@ const { mutate: deleteTab } = useDeleteTab();
   const selectionId = `tab-${groupIndex}-${windowIndex}-${tabIndex}`;
   const isSelected = selectedItems.some((s) => s.id === selectionId);
 
+  const tabTitle = getDisplayTitle(tab) || tab.url || 'tab';
+
+  const extendRange = () => {
+    const item = { type: 'tab' as const, id: selectionId };
+    selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+  };
+
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    // Shift on the checkbox (click, or Shift+Space with it focused) extends a range.
+    if (e.shiftKey) {
+      extendRange();
+      return;
+    }
     toggleSelection({ type: 'tab', id: selectionId });
   };
 
   const handleRowClick = (e: React.MouseEvent) => {
+    // Shift+click extends the selection from the anchor to this tab (visual order; may
+    // span windows, never groups — see `selectionRange`)
+    if (e.shiftKey) {
+      e.stopPropagation();
+      e.preventDefault();
+      const item = { type: 'tab' as const, id: selectionId };
+      selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+      return;
+    }
     // Ctrl/Cmd+click anywhere on the row enters selection and toggles this tab
     if (e.ctrlKey || e.metaKey) {
       e.stopPropagation();
@@ -280,12 +353,23 @@ const { mutate: deleteTab } = useDeleteTab();
       ref={setNodeRef}
       style={style}
       className={cn(
-        'group relative flex items-center gap-1 min-w-0 px-1.5 py-0.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        'group relative flex items-center gap-1 min-w-0 px-1.5 py-0.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         isLocked ? 'cursor-not-allowed opacity-60' : 'hover:bg-accent/50 cursor-pointer',
-        isDragging && 'opacity-30 border border-dashed border-primary/40',
+        // NOTE: no `isDragging` class here on purpose — mutating the dragged row's
+        // className mid-drag aborts the native HTML5 drag in the MV3 popup. The
+        // ghost card is the drag affordance.
         searchFilter && !isHighlighted && 'opacity-30',
         tagFilter && !tagMatch && 'opacity-30',
-        isSelected && 'bg-primary/10 ring-1 ring-primary/50'
+        // Selected: tint + a 3px inset bar in --foreground (the old 50% primary ring was ~1.7:1).
+        // `isSelected` never flips synchronously inside `dragstart` (clearing is rAF-deferred).
+        isSelected && 'bg-primary/10 shadow-[inset_3px_0_0_0_var(--color-foreground)]',
+        // KEYBOARD drags only (no native session → C4 doesn't apply): lift the dragged row and
+        // mark the other selected rows travelling with it.
+        isDragging && keyboardDrag && 'relative z-10 bg-card shadow-lg ring-2 ring-ring',
+        keyboardDrag &&
+          !isDragging &&
+          dndActive?.selectionIds?.includes(sortableId) &&
+          'outline-dashed outline-1 -outline-offset-1 outline-foreground'
       )}
       tabIndex={0}
       role="listitem"
@@ -293,8 +377,24 @@ const { mutate: deleteTab } = useDeleteTab();
       data-group-index={groupIndex}
       data-window-index={windowIndex}
       data-tab-index={tabIndex}
+      data-tm-dnd-id={sortableId}
       onClick={handleRowClick}
+      // Shift+click must not extend the browser's TEXT selection across rows.
+      onMouseDown={(e) => {
+        if (e.shiftKey) e.preventDefault();
+      }}
       onKeyDown={(e) => {
+        // Only the row ITSELF activates. Keys from nested controls bubble up here, and
+        // dnd-kit's keyboard activator on the grip calls `preventDefault` but NOT
+        // `stopPropagation` — without this, a Space/Enter pickup or drop on the grip (or
+        // Space on the checkbox) would also open the tab and dismiss the popup.
+        if (e.target !== e.currentTarget) return;
+        // Shift+Space on a focused row: keyboard equivalent of Shift+click (range select).
+        if (e.key === ' ' && e.shiftKey && !editingTitle) {
+          e.preventDefault();
+          extendRange();
+          return;
+        }
         if ((e.key === 'Enter' || e.key === ' ') && !isLocked && !editingTitle) {
           e.preventDefault();
           void handleOpen();
@@ -435,16 +535,35 @@ const { mutate: deleteTab } = useDeleteTab();
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Single slot: checkbox in selection mode, drag handle otherwise */}
+      {/* Drag grip — ALWAYS present: a selection is dragged from any selected row's grip.
+          In selection mode the checkbox sits right after it. */}
       {editingTitle ? (
         <span className="h-3 w-3 shrink-0" />
-      ) : showCheckbox ? (
+      ) : (
+        <span
+          className="opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground transition-opacity touch-none"
+          draggable={!DND_POINTER_PROBE_ACTIVE}
+          {...dragHandleProps}
+          // `aria-pressed` is left to dnd-kit (it flips at pickup): an attribute-only change,
+          // even synchronously inside `dragstart`, does NOT abort the native drag — measured
+          // with `gripAriaPressed` in e2e/repro/popupAbortWindow.repro.ts (spec C4).
+          // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
+          aria-label={`Drag to reorder tab: ${tabTitle}`}
+          onMouseDown={onDragHandleMouseDown}
+          onKeyDown={onDragHandleKeyDown}
+        >
+          <GripVertical className="h-3 w-3" />
+        </span>
+      )}
+      {!editingTitle && showCheckbox && (
         <button
           type="button"
           className="shrink-0 flex items-center justify-center h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
           onClick={handleCheckboxClick}
           onMouseDown={(e) => e.stopPropagation()}
-          aria-label={isSelected ? 'Deselect tab' : 'Select tab'}
+          role="checkbox"
+          aria-checked={isSelected}
+          aria-label={`Select ${tabTitle}`}
         >
           {isSelected ? (
             <CheckSquare className="h-3.5 w-3.5 text-primary" />
@@ -452,15 +571,6 @@ const { mutate: deleteTab } = useDeleteTab();
             <Square className="h-3.5 w-3.5" />
           )}
         </button>
-      ) : (
-        <span
-          className="opacity-30 group-hover:opacity-100 cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground transition-opacity touch-none"
-          {...(selectionMode ? {} : { ...attributes, ...listeners })}
-          aria-label={selectionMode ? undefined : 'Drag to reorder tab'}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          <GripVertical className="h-3 w-3" />
-        </span>
       )}
 
       <span className="relative h-3.5 w-3.5 shrink-0">
@@ -616,7 +726,7 @@ const { mutate: deleteTab } = useDeleteTab();
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
+                className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 transition-opacity text-destructive/60 hover:text-destructive hover:bg-destructive/10"
                 aria-label={isNowOpen ? 'Close tab' : 'Remove tab'}
                 onClick={(e) => {
                   e.stopPropagation();

@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/browser';
 import type { Breadcrumb, ErrorEvent } from '@sentry/browser';
 import { queryClient } from '@/lib/queryClient';
 import { App } from './App';
+import { installDndPointerProbe } from '@/lib/dndPointerProbe';
 import '@/styles/globals.css';
 
 
@@ -48,6 +49,10 @@ async function bootstrap() {
     const { installDevFetchMock } = await import('@/mocks/devFetchMock');
     installDevFetchMock();
   }
+
+  // Diagnostic-only pointer-stream probe; a no-op (no listeners) unless
+  // localStorage.tm_dnd_pointer_probe === '1'. See @/lib/dndPointerProbe.
+  installDndPointerProbe();
 
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

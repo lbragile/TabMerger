@@ -20,6 +20,7 @@ const {
   mockSaveGroupsState,
   mockOpenTabInChromeGroup,
   mockOpenModal,
+  mockSelectRange,
 } = vi.hoisted(() => ({
   mockDeleteTab: vi.fn(),
   mockMoveTab: vi.fn(),
@@ -33,6 +34,7 @@ const {
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
   mockOpenTabInChromeGroup: vi.fn().mockResolvedValue(undefined),
   mockOpenModal: vi.fn(),
+  mockSelectRange: vi.fn(),
 }))
 
 vi.mock('@/lib/localDb', () => ({
@@ -46,10 +48,12 @@ vi.mock('@/lib/chromeGroups', () => ({
   openTabInChromeGroup: mockOpenTabInChromeGroup,
 }))
 
+// dnd-kit's spread listeners — a spy so tests can prove which keys still reach the activator.
+const sortableListeners = vi.hoisted(() => ({ onKeyDown: vi.fn() }))
 vi.mock('@dnd-kit/sortable', () => ({
   useSortable: () => ({
     attributes: {},
-    listeners: {},
+    listeners: sortableListeners,
     setNodeRef: vi.fn(),
     transform: null,
     transition: undefined,
@@ -87,9 +91,13 @@ vi.mock('@/hooks/useUrlRules', () => ({
   }),
 }))
 
-let selectionState = {
+let selectionState: {
+  selectionMode: boolean
+  selectedItems: Array<{ type: string; id: string }>
+  selectionAnchor?: { type: string; id: string } | null
+} = {
   selectionMode: false,
-  selectedItems: [] as Array<{ type: string; id: string }>,
+  selectedItems: [],
 }
 
 vi.mock('@/stores/uiStore', () => ({
@@ -100,6 +108,8 @@ vi.mock('@/stores/uiStore', () => ({
       selectedItems: selectionState.selectedItems,
       toggleSelection: mockToggleSelection,
       enterSelectionMode: mockEnterSelectionMode,
+      selectRange: mockSelectRange,
+      selectionAnchor: selectionState.selectionAnchor ?? null,
     }),
 }))
 
@@ -260,29 +270,106 @@ describe('TabItem — Now Open vs saved group labeling', () => {
   })
 })
 
+describe('TabItem — keyboard: keys from nested controls never open the tab', () => {
+  // dnd-kit's keyboard activator on the grip calls preventDefault but NOT stopPropagation,
+  // so a Space/Enter pickup (and drop) bubbled to the row and opened the tab — which
+  // dismisses the toolbar popup mid keyboard-drag.
+  it.each([' ', 'Enter'])('%j on the drag GRIP does not call chrome.tabs.create', (key) => {
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const grip = document.querySelector('[aria-label^="Drag to reorder"]') as HTMLElement
+    fireEvent.keyDown(grip, { key, code: key === ' ' ? 'Space' : 'Enter' })
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('Space on the selection CHECKBOX does not open the tab either', () => {
+    selectionState = { selectionMode: true, selectedItems: [] }
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    fireEvent.keyDown(screen.getByRole('checkbox'), { key: ' ', code: 'Space' })
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('Enter on the focused ROW itself still opens the tab', () => {
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    fireEvent.keyDown(screen.getByRole('listitem'), { key: 'Enter', code: 'Enter' })
+    expect(globalThis.chrome.tabs.create).toHaveBeenCalledTimes(1)
+  })
+
+  it('Shift+Space on the focused row selects the RANGE and does not open the tab', () => {
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    fireEvent.keyDown(screen.getByRole('listitem'), { key: ' ', code: 'Space', shiftKey: true })
+    expect(mockSelectRange).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' }, expect.any(Array))
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('Shift+Space on the GRIP range-selects and never reaches dnd-kit (its activator ignores modifiers); plain Space still does', () => {
+    sortableListeners.onKeyDown.mockClear()
+    mockSelectRange.mockClear()
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const grip = document.querySelector('[aria-label^="Drag to reorder"]') as HTMLElement
+    const shifted = fireEvent.keyDown(grip, { key: ' ', code: 'Space', shiftKey: true })
+    expect(shifted).toBe(false)
+    expect(mockSelectRange).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' }, expect.any(Array))
+    expect(sortableListeners.onKeyDown).not.toHaveBeenCalled()
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+
+    mockSelectRange.mockClear()
+    fireEvent.keyDown(grip, { key: ' ', code: 'Space' })
+    expect(sortableListeners.onKeyDown).toHaveBeenCalledTimes(1)
+    expect(mockSelectRange).not.toHaveBeenCalled()
+  })
+
+  it('the grip ring is ring-ring (≥3:1), not ring-primary (2.73:1 on a selected light row)', () => {
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const grip = document.querySelector('[aria-label^="Drag to reorder"]') as HTMLElement
+    const row = screen.getByRole('listitem')
+    for (const el of [grip, row]) {
+      expect(el.className).toContain('focus-visible:ring-ring')
+      expect(el.className).not.toContain('ring-primary')
+    }
+  })
+
+  it('the grip becomes fully visible + ringed on keyboard focus (static classes only)', () => {
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const grip = document.querySelector('[aria-label^="Drag to reorder"]') as HTMLElement
+    expect(grip.className).toContain('focus-visible:opacity-100')
+    expect(grip.className).toContain('group-focus-within:opacity-100')
+    expect(grip.className).toContain('focus-visible:ring-2')
+  })
+})
+
 describe('TabItem — selection mode', () => {
-  it('shows a checkbox instead of the drag handle, toggles selection on click', async () => {
+  it('shows a checkbox (next to the still-draggable grip) and toggles selection on click', async () => {
     selectionState = { selectionMode: true, selectedItems: [] }
     const user = userEvent.setup()
     const t = makeTab()
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
-    const checkbox = screen.getByRole('button', { name: 'Select tab' })
+    // a real checkbox, named after the TAB (not a generic "Select tab" repeated on every row)
+    const checkbox = screen.getByRole('checkbox', { name: 'Select My Tab' })
+    expect(checkbox.getAttribute('aria-checked')).toBe('false')
     await user.click(checkbox)
     expect(mockToggleSelection).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' })
   })
 
-  it('shows "Deselect tab" label when this tab is already selected', () => {
+  it('exposes the selected state via aria-checked when this tab is already selected', () => {
     selectionState = { selectionMode: true, selectedItems: [{ type: 'tab', id: 'tab-0-0-0' }] }
     const t = makeTab()
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
-    expect(screen.getByRole('button', { name: 'Deselect tab' })).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'Select My Tab' }).getAttribute('aria-checked')).toBe('true')
+  })
+
+  it('Shift+click on the checkbox extends the RANGE instead of toggling', () => {
+    selectionState = { selectionMode: true, selectedItems: [] }
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Select My Tab' }), { shiftKey: true })
+    expect(mockSelectRange).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' }, expect.any(Array))
+    expect(mockToggleSelection).not.toHaveBeenCalled()
   })
 
   it('hides the checkbox when a non-tab type is already committed to the selection', () => {
     selectionState = { selectionMode: true, selectedItems: [{ type: 'window', id: 'window-0-0' }] }
     const t = makeTab()
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
-    expect(screen.queryByRole('button', { name: /select tab/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
   })
 
   it('ctrl+click on the row enters selection mode and toggles the tab', () => {
@@ -292,6 +379,53 @@ describe('TabItem — selection mode', () => {
     expect(mockEnterSelectionMode).toHaveBeenCalled()
     expect(mockToggleSelection).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' })
     expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('in selection mode the drag grip is STILL present and draggable (a selection is dragged from its grip), with the checkbox right after it', () => {
+    selectionState = { selectionMode: true, selectedItems: [{ type: 'tab', id: 'tab-0-0-0' }] }
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    // Label is descriptive but keeps the "Drag to reorder" prefix the DnD sensor selects on.
+    const grip = document.querySelector('[aria-label="Drag to reorder tab: My Tab"]')
+    expect(grip).not.toBeNull()
+    expect(grip!.matches('[aria-label^="Drag to reorder"]')).toBe(true)
+    expect(grip!.getAttribute('draggable')).toBe('true')
+    const checkbox = screen.getByRole('checkbox', { name: 'Select My Tab' })
+    expect(grip!.compareDocumentPosition(checkbox) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('the row carries its positional DnD model id (multi-drag finds the other selected rows by it)', () => {
+    render(<TabItem groupId="g1" tab={makeTab()} groupIndex={0} windowIndex={1} tabIndex={2} siblingCount={3} />, { wrapper })
+    expect(screen.getByRole('listitem').getAttribute('data-tm-dnd-id')).toBe('g1::w1::t2')
+  })
+
+  it('shift+click selects the RANGE from the anchor (spanning windows, visual order) and never opens the tab', () => {
+    mockUseGroupsData.mockReturnValue({
+      data: {
+        available: [
+          makeGroup({
+            windows: [
+              { id: 0, tabs: [makeTab(), makeTab()], incognito: false, focused: false },
+              { id: 0, tabs: [makeTab()], incognito: false, focused: false },
+            ],
+          }),
+        ],
+        active: { id: 'g1', index: 0 },
+      },
+    })
+    selectionState = {
+      selectionMode: true,
+      selectedItems: [{ type: 'tab', id: 'tab-0-0-1' }],
+      selectionAnchor: { type: 'tab', id: 'tab-0-0-1' },
+    }
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={1} tabIndex={0} siblingCount={1} />, { wrapper })
+    fireEvent.click(screen.getByText('My Tab'), { shiftKey: true })
+    expect(mockSelectRange).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-1-0' }, [
+      { type: 'tab', id: 'tab-0-0-1' },
+      { type: 'tab', id: 'tab-0-1-0' },
+    ])
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+    // shift+mousedown must not start a browser text selection across rows
+    expect(fireEvent.mouseDown(screen.getByRole('listitem'), { shiftKey: true })).toBe(false)
   })
 })
 

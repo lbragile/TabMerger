@@ -13,6 +13,133 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
+// REGRESSION GUARD — read-your-writes.
+// Callers write the query cache first and then `await saveGroupsState` (the DnD drop does
+// this for a single-paint commit). A `useGroups` refetch (staleTime 0) that started in that
+// gap used to open its readonly transaction BEFORE the write's readwrite transaction and
+// resolve with the pre-write state, overwriting the fresh cache. Measured in the real popup:
+// a tab dropped on a sprung-open group painted, then reverted ~150ms later.
+describe('localDb — read-your-writes (a read never observes state older than an issued write)', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
+  it('a getGroupsState started right after a NOT-awaited saveGroupsState resolves with the NEW state', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const nowOpen = initial.available[0]
+    await saveGroupsState({ active: initial.active, available: [nowOpen, grp('a')] })
+
+    // optimistic-cache pattern: write issued, refetch starts before the write settles
+    const write = saveGroupsState({ active: { id: 'b', index: 1 }, available: [nowOpen, grp('b'), grp('a')] })
+    const read = getGroupsState()
+
+    const result = await read
+    expect(result.available.map((g) => g.id)).toEqual([nowOpen.id, 'b', 'a'])
+    expect(result.active).toEqual({ id: 'b', index: 1 })
+    await write
+  })
+
+  it('overlapping writes apply in call order — the last issued write wins', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const nowOpen = initial.available[0]
+
+    const w1 = saveGroupsState({ active: initial.active, available: [nowOpen, grp('first')] })
+    const w2 = saveGroupsState({ active: initial.active, available: [nowOpen, grp('second')] })
+    await Promise.all([w1, w2])
+
+    expect((await getGroupsState()).available.map((g) => g.id)).toEqual([nowOpen.id, 'second'])
+  })
+
+  it('a failed write rejects for its caller but does not wedge later reads or writes', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const nowOpen = initial.available[0]
+
+    // no keyPath value → IndexedDB DataError inside the write
+    const bad = saveGroupsState({ active: initial.active, available: [nowOpen, { name: 'no-id' } as unknown as ReturnType<typeof grp>] })
+    await expect(bad).rejects.toBeTruthy()
+
+    await saveGroupsState({ active: initial.active, available: [nowOpen, grp('after')] })
+    const result = await getGroupsState()
+    expect(result.available.map((g) => g.id)).toContain('after')
+  })
+
+  // Audit #6: issue bad write, good write and read WITHOUT awaiting between them.
+  it('a failed write blocks neither a good write nor a read issued right behind it (no awaits in between)', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const nowOpen = initial.available[0]
+
+    const bad = saveGroupsState({ active: initial.active, available: [nowOpen, { name: 'no-id' } as unknown as ReturnType<typeof grp>] })
+    const good = saveGroupsState({ active: initial.active, available: [nowOpen, grp('good')] })
+    const read = getGroupsState()
+
+    await expect(bad).rejects.toBeTruthy()
+    await expect(good).resolves.toBeUndefined()
+    expect((await read).available.map((g) => g.id)).toEqual([nowOpen.id, 'good'])
+  })
+
+  // Audit #6: the returned promise must carry no handler, or `void saveGroupsState(...)`
+  // failures (quota / abort) never reach `unhandledrejection` → Sentry.
+  it('a failed write nobody awaits still surfaces as an unhandled rejection', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const saved = process.listeners('unhandledRejection')
+    process.removeAllListeners('unhandledRejection')
+    const seen: unknown[] = []
+    const onUnhandled = (reason: unknown) => {
+      seen.push(reason)
+    }
+    process.on('unhandledRejection', onUnhandled)
+    try {
+      void saveGroupsState({ active: initial.active, available: [initial.available[0], { name: 'no-id' } as unknown as ReturnType<typeof grp>] })
+      await vi.waitFor(() => expect(seen).toHaveLength(1), { timeout: 3000 })
+    } finally {
+      process.off('unhandledRejection', onUnhandled)
+      saved.forEach((l) => process.on('unhandledRejection', l as (...args: unknown[]) => void))
+    }
+  })
+
+  // Audit #3: a read that already waited for the tail and THEN sees a write issued must
+  // re-read — this is what lets a pre-drop refetch self-correct without cancelQueries.
+  it('a read already in flight when a write is issued resolves with the NEW state (write-generation re-read)', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const nowOpen = initial.available[0]
+    await saveGroupsState({ active: initial.active, available: [nowOpen, grp('old')] })
+
+    const read = getGroupsState() // started first
+    const write = saveGroupsState({ active: initial.active, available: [nowOpen, grp('new')] })
+
+    expect((await read).available.map((g) => g.id)).toEqual([nowOpen.id, 'new'])
+    await write
+  })
+
+  // Audit #10: two first-run readers of an empty DB share ONE Now Open group.
+  it('concurrent reads of an EMPTY db create exactly one Now Open group and both callers get its id', async () => {
+    const { getGroupsState } = await freshLocalDb()
+    const [a, b] = await Promise.all([getGroupsState(), getGroupsState()])
+    expect(a.available).toHaveLength(1)
+    expect(b.available).toHaveLength(1)
+    expect(a.available[0].id).toBe(b.available[0].id)
+    expect(a.available[0]).not.toBe(b.available[0]) // separate objects per caller
+    const after = await getGroupsState()
+    expect(after.available.filter((g) => g.permanent).map((g) => g.id)).toEqual([a.available[0].id])
+  })
+
+  it('an empty db read AFTER the first init settled and the store was wiped creates a fresh group (no stale memo)', async () => {
+    const { getGroupsState, clearLocalAccountData } = await freshLocalDb()
+    const first = await getGroupsState()
+    await clearLocalAccountData()
+    const second = await getGroupsState()
+    expect(second.available).toHaveLength(1)
+    expect(second.available[0].permanent).toBe(true)
+    const again = await getGroupsState()
+    expect(again.available.map((g) => g.id)).toEqual([second.available[0].id])
+    expect(first.available[0].id).toBeTruthy()
+  })
+})
+
 describe('localDb — getGroupsState', () => {
   it('creates and returns a "Now Open" permanent group when the DB is empty', async () => {
     const { getGroupsState } = await freshLocalDb()

@@ -1,92 +1,66 @@
+/**
+ * dnd.test.tsx  — REWRITTEN for the DnD rework (RED PHASE)
+ *
+ * WHAT CHANGED & WHY:
+ *   The old file rendered <WindowsPanel> with a stubbed per-panel <DndContext> and
+ *   asserted that dragging a window "delegates to onWindowDragEnd" (a separate
+ *   `useWindowDndHandlers` hook) and that WindowsPanel itself never calls
+ *   `saveGroupsState`. After the rework there is ONE unified <DndContext> and no
+ *   delegation hop — the panel's own `onDragEnd` runs the pure `applyMove` and
+ *   persists the result. This test is re-expressed as: dragging a window inside a
+ *   saved group commits the reorder through the unified handler and writes it back
+ *   to the query cache. The old string ids ("window-1-0") are replaced by
+ *   synthesized model ids from `buildDndModel`.
+ *
+ *   Tab move-logic assertions that used to live here now live in
+ *   `src/__tests__/unit/lib/dndMove.test.ts` (pure) and
+ *   `src/__tests__/unit/components/Windows/unifiedDnd.test.tsx` (reflow/overlay).
+ *
+ * MUST fail now with "Cannot find module '@/hooks/useDndModel'". Green once reworked.
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, act } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { buildDndModel } from '@/hooks/useDndModel'
 import { WindowsPanel } from '@/components/Windows'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
-import type { DragEndEvent, DragStartEvent, DragOverEvent } from '@dnd-kit/core'
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 
-// ─── vi.hoisted — capture DndContext handlers after render ────────────────────
-
-const { getOnDragStart, setOnDragStart, getOnDragOver, setOnDragOver, getOnDragEnd, setOnDragEnd } = vi.hoisted(() => {
-  let _start: ((e: DragStartEvent) => void) | undefined
-  let _over: ((e: DragOverEvent) => void) | undefined
-  let _end: ((e: DragEndEvent) => void) | undefined
-  return {
-    getOnDragStart: () => _start,
-    setOnDragStart: (h: (e: DragStartEvent) => void) => { _start = h },
-    getOnDragOver: () => _over,
-    setOnDragOver: (h: (e: DragOverEvent) => void) => { _over = h },
-    getOnDragEnd: () => _end,
-    setOnDragEnd: (h: (e: DragEndEvent) => void) => { _end = h },
-  }
+const cap = vi.hoisted(() => {
+  const s: { onDragStart?: (e: DragStartEvent) => void; onDragEnd?: (e: DragEndEvent) => void; count: number } = { count: 0 }
+  return s
 })
 
-// ─── DnD stubs ────────────────────────────────────────────────────────────────
-
 vi.mock('@dnd-kit/core', () => ({
-  DndContext: ({
-    children, onDragStart, onDragOver, onDragEnd,
-  }: {
-    children: React.ReactNode
-    onDragStart?: (e: DragStartEvent) => void
-    onDragOver?: (e: DragOverEvent) => void
-    onDragEnd?: (e: DragEndEvent) => void
-  }) => {
-    if (onDragStart) setOnDragStart(onDragStart)
-    if (onDragOver) setOnDragOver(onDragOver)
-    if (onDragEnd) setOnDragEnd(onDragEnd)
-    return React.createElement(React.Fragment, null, children)
+  DndContext: (p: { children: React.ReactNode; onDragStart?: (e: DragStartEvent) => void; onDragEnd?: (e: DragEndEvent) => void }) => {
+    cap.count += 1
+    cap.onDragStart = p.onDragStart
+    cap.onDragEnd = p.onDragEnd
+    return React.createElement(React.Fragment, null, p.children)
   },
   closestCenter: vi.fn(),
+  pointerWithin: vi.fn(() => []),
+  rectIntersection: vi.fn(() => []),
   useDroppable: () => ({ setNodeRef: vi.fn(), isOver: false }),
-  DragOverlay: () => null,
+  useSensor: vi.fn(() => ({})),
+  useSensors: vi.fn(() => []),
+  PointerSensor: class {},
+  KeyboardSensor: class {},
+  MouseSensor: class {},
+  TouchSensor: class {},
+  DragOverlay: ({ children }: { children?: React.ReactNode }) => React.createElement(React.Fragment, null, children),
 }))
-
 vi.mock('@dnd-kit/sortable', () => ({
   SortableContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   verticalListSortingStrategy: vi.fn(),
-  arrayMove: <T,>(arr: T[], from: number, to: number): T[] => {
-    const a = [...arr]; const [item] = a.splice(from, 1); a.splice(to, 0, item); return a;
-  },
+  sortableKeyboardCoordinates: vi.fn(),
+  arrayMove: <T,>(a: T[], f: number, t: number): T[] => { const c = [...a]; const [x] = c.splice(f, 1); c.splice(t, 0, x); return c },
   useSortable: () => ({ attributes: {}, listeners: {}, setNodeRef: vi.fn(), transform: null, transition: null, isDragging: false }),
 }))
-
-vi.mock('@dnd-kit/utilities', () => ({
-  CSS: { Transform: { toString: () => '' } },
-}))
-
-// ─── useDnd — keep real parseDndId, stub hooks ───────────────────────────────
-
-vi.mock('@/hooks/useDnd', () => ({
-  useDndSensors: () => [],
-  useWindowDndHandlers: () => ({ onDragEnd: vi.fn() }),
-  setBodyDragCursor: vi.fn(),
-  parseDndId: (id: string) => {
-    const parts = id.split('-')
-    const kind = parts[0]
-    if (kind === 'tab') {
-      return { kind, tabId: parseInt(parts[1], 10), groupIndex: 0, windowIndex: parseInt(parts[2] ?? '0', 10), tabIndex: parseInt(parts[3] ?? '0', 10) }
-    }
-    return {
-      kind,
-      tabId: NaN,
-      groupIndex: parseInt(parts[1] ?? '0', 10),
-      windowIndex: parseInt(parts[2] ?? '0', 10),
-      tabIndex: parseInt(parts[3] ?? '0', 10),
-    }
-  },
-}))
-
-// ─── Stub WindowItem to avoid its heavy deps ─────────────────────────────────
-
-vi.mock('@/components/Windows/Window', () => ({
-  WindowItem: () => React.createElement('div', { 'data-testid': 'window-item' }),
-}))
-
-// ─── useGroups — all hooks + GROUPS_QUERY_KEY ─────────────────────────────────
-
+vi.mock('@dnd-kit/utilities', () => ({ CSS: { Transform: { toString: () => '' } } }))
+vi.mock('@/components/Windows/Window', () => ({ WindowItem: () => React.createElement('div', { 'data-testid': 'window-item' }) }))
 vi.mock('@/hooks/useGroups', () => ({
   useAddWindow: () => ({ mutate: vi.fn() }),
   useReplaceWithCurrent: () => ({ mutate: vi.fn() }),
@@ -99,146 +73,70 @@ vi.mock('@/hooks/useGroups', () => ({
   useRemoveStaleTabs: () => ({ mutate: vi.fn() }),
   GROUPS_QUERY_KEY: ['groups'],
 }))
-
-// ─── uiStore — static return ──────────────────────────────────────────────────
-
 vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) =>
-    selector({
-      searchFilter: '',
-      selectionMode: false,
-      selectedItems: [],
-      openModal: vi.fn(),
-    }),
+  useUIStore: (sel: (s: object) => unknown) =>
+    sel({ searchFilter: '', selectionMode: false, selectedItems: [], scrollToWindowIndex: null, activeGroupIndex: 0, openModal: vi.fn(), setScrollToWindowIndex: vi.fn(), pushUndo: vi.fn() }),
 }))
-
-// ─── localDb ─────────────────────────────────────────────────────────────────
-
 vi.mock('@/lib/localDb', () => ({
   setSetting: vi.fn().mockResolvedValue(undefined),
   getSetting: vi.fn().mockResolvedValue({}),
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: vi.fn(),
 }))
+vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ data: { maxTabs: Infinity } }) }))
+vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => ({ data: {} }) }))
 
 import { saveGroupsState } from '@/lib/localDb'
 
-// ─── Chrome stub ─────────────────────────────────────────────────────────────
-
-const chromeMock = {
-  tabs: { move: vi.fn().mockResolvedValue({}) },
-  tabGroups: { query: vi.fn().mockResolvedValue([]) },
-}
+const chromeMock = { tabs: { move: vi.fn().mockResolvedValue({}) }, tabGroups: { query: vi.fn().mockResolvedValue([]) } }
 globalThis.chrome = chromeMock as unknown as typeof chrome
 
-// ─── Fixtures ─────────────────────────────────────────────────────────────────
+const TAB_A: Tab = { id: 0, title: 'Tab A', url: 'https://a.com' }
+const TAB_B: Tab = { id: 0, title: 'Tab B', url: 'https://b.com' }
 
-const TAB_A: Tab = { id: 101, title: 'Tab A', url: 'https://a.com' }
-const TAB_B: Tab = { id: 102, title: 'Tab B', url: 'https://b.com' }
-const TAB_C: Tab = { id: 103, title: 'Tab C', url: 'https://c.com' }
-
-function makeWin(id: number, tabs: Tab[]): ExtWindow {
-  return { id, tabs, incognito: false, focused: false }
+function makeWin(tabs: Tab[], name: string): ExtWindow {
+  return { id: 0, tabs, incognito: false, focused: false, name }
 }
-
-function makeGroup(overrides: Partial<Group> & { windows: ExtWindow[] }): Group {
-  return {
-    id: 'g1',
-    name: 'Test Group',
-    color: 'rgba(0,0,0,1)',
-    updatedAt: 0,
-    permanent: false,
-    ...overrides,
-  }
+function makeGroup(over: Partial<Group> & { windows: ExtWindow[] }): Group {
+  return { id: 'g1', name: 'Test Group', color: 'rgba(0,0,0,1)', updatedAt: 0, permanent: false, ...over }
 }
-
 function makeState(groups: Group[]): GroupsState {
   return { active: { id: groups[0].id, index: 0 }, available: groups }
 }
-
-function makeActive(id: string) {
-  return { id, data: { current: undefined }, rect: { current: { initial: null, translated: null } } }
-}
-
-function makeOver(id: string) {
-  return { id, data: { current: undefined }, rect: null, disabled: false }
-}
-
-function makeDragStart(activeId: string): DragStartEvent {
-  return {
-    active: makeActive(activeId),
-    activatorEvent: new MouseEvent('pointerdown'),
-    collisions: [],
-    delta: { x: 0, y: 0 },
-  } as unknown as DragStartEvent
-}
-
-function makeDragOver(activeId: string, overId: string, cursorBelow = false): DragOverEvent {
-  const translated = cursorBelow
-    ? { top: 100, height: 24, left: 0, width: 200, bottom: 124, right: 200 }
-    : null
-  const overRect = cursorBelow
-    ? { top: 50, height: 24, left: 0, width: 200, bottom: 74, right: 200 }
-    : null
-  return {
-    active: { ...makeActive(activeId), rect: { current: { initial: null, translated } } },
-    over: { ...makeOver(overId), rect: overRect },
-    activatorEvent: new MouseEvent('pointermove'),
-    collisions: [],
-    delta: { x: 0, y: 0 },
-  } as unknown as DragOverEvent
-}
-
-function makeDragEnd(activeId: string, overId: string): DragEndEvent {
-  return {
-    active: makeActive(activeId),
-    over: makeOver(overId),
-    delta: { x: 0, y: 0 },
-    activatorEvent: new MouseEvent('pointerdown'),
-    collisions: [],
-  } as unknown as DragEndEvent
-}
-
-// ─── Setup helper ─────────────────────────────────────────────────────────────
-
-function setup(group: Group, groupIndex: number, seedState?: GroupsState) {
+function setup(group: Group, groupIndex: number, seed: GroupsState) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-  if (seedState) qc.setQueryData(['groups'], seedState)
+  qc.setQueryData(['groups'], seed)
   render(
     React.createElement(QueryClientProvider, { client: qc },
-      React.createElement(TooltipProvider, null,
-        React.createElement(WindowsPanel, { group, groupIndex })
-      )
-    )
+      React.createElement(TooltipProvider, null, React.createElement(WindowsPanel, { group, groupIndex })),
+    ),
   )
   return { qc }
 }
 
-// ─── Reset ────────────────────────────────────────────────────────────────────
-
 beforeEach(() => {
   vi.clearAllMocks()
-  chromeMock.tabs.move.mockResolvedValue({})
+  cap.count = 0
 })
 
-// ─── Tests ────────────────────────────────────────────────────────────────────
-// Tab DnD (same-window sort, Now Open chrome.tabs.move) is now handled entirely
-// inside WindowItem's per-window DndContext — not WindowsPanel. Tests for that
-// logic live in windowsDnd.test.tsx.
+describe('WindowsPanel — unified DnD, window reorder inside a saved group', () => {
+  it('commits a window reorder through the single unified onDragEnd and persists it', async () => {
+    const nowOpen = makeGroup({ id: 'now-open', permanent: true, windows: [] })
+    const saved = makeGroup({ id: 'saved-1', windows: [makeWin([{ ...TAB_A }], 'w0'), makeWin([{ ...TAB_B }], 'w1')] })
+    const state = makeState([nowOpen, saved])
+    const { qc } = setup(saved, 1, state)
 
-describe('WindowsPanel handleDragEnd — saved group (window reorder only)', () => {
-  it('delegates to onWindowDragEnd when a window is dragged', async () => {
-    const saved = makeGroup({
-      id: 'saved-1',
-      windows: [makeWin(10, [TAB_A]), makeWin(20, [TAB_B])],
-    })
-    setup(saved, 1)
+    expect(cap.count).toBe(1) // exactly one DndContext for the whole panel
 
-    // dragStart captures the window; dragEnd delegates to useWindowDndHandlers
-    await act(async () => { getOnDragStart()!(makeDragStart('window-1-0')) })
-    await act(async () => { getOnDragEnd()!(makeDragEnd('window-1-0', 'window-1-1')) })
+    const model = buildDndModel(state)
+    const savedGid = model.groupIds[1]
+    const [w0, w1] = model.groups[savedGid].windowIds
 
-    // saveGroupsState not called by WindowsPanel (window reorder is handled by useWindowDndHandlers mock)
-    expect(saveGroupsState).not.toHaveBeenCalled()
+    await act(async () => { cap.onDragStart!({ active: { id: w0 } } as unknown as DragStartEvent) })
+    await act(async () => { await cap.onDragEnd!({ active: { id: w0 }, over: { id: w1 } } as unknown as DragEndEvent) })
+
+    const next = qc.getQueryData<GroupsState>(['groups'])!
+    expect(next.available[1].windows.map((w) => w.name)).toEqual(['w1', 'w0'])
+    expect(saveGroupsState).toHaveBeenCalledOnce()
   })
 })

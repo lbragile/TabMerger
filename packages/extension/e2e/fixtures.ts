@@ -1,9 +1,17 @@
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const EXTENSION_PATH = path.resolve(__dirname, '../.output/chrome-mv3');
+// Prefer a dev-mode build (`wxt build -m development`) when present: it is bundled
+// against `.env.local` (valid local Supabase URL) so the popup actually mounts.
+// The default `.output/chrome-mv3` is a production build — if `.env.production`
+// still holds placeholder values (`https://<prod-project-ref>.supabase.co`),
+// `new URL()` inside supabase-js throws and the popup renders blank.
+const EXTENSION_PATH = fs.existsSync(path.resolve(__dirname, '../.output/chrome-mv3-dev'))
+  ? path.resolve(__dirname, '../.output/chrome-mv3-dev')
+  : path.resolve(__dirname, '../.output/chrome-mv3');
 
 /**
  * Custom Playwright fixture that uses chromium.launchPersistentContext so the
@@ -14,8 +22,12 @@ export const test = base.extend<{ context: BrowserContext; extensionId: string }
   // Override the built-in context fixture
   context: async ({}, use) => {
     const context = await chromium.launchPersistentContext('', {
+      // `--headless=new` is Chromium's modern headless: it loads MV3 extensions
+      // (old headless does not) and keeps CI/local runs windowless. Playwright's
+      // own `headless` flag stays false so it doesn't inject old-headless args.
       headless: false,
       args: [
+        '--headless=new',
         `--load-extension=${EXTENSION_PATH}`,
         `--disable-extensions-except=${EXTENSION_PATH}`,
         '--no-first-run',

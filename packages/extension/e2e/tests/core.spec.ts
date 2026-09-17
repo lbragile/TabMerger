@@ -75,7 +75,7 @@ test.describe('Core — sidebar and basic invariants', () => {
     await page.getByRole('button', { name: 'Work Stuff' }).click();
 
     await page.getByRole('button', { name: /select/i }).click();
-    await page.getByRole('button', { name: /select tab/i }).first().click();
+    await page.getByRole('checkbox', { name: /^select /i }).first().click();
     await page.getByRole('button', { name: /delete/i }).click();
 
     await expect(page.getByText('Jira Board')).not.toBeVisible();

@@ -3,8 +3,9 @@
  * badge visibility (permanent vs saved group), group note editor, empty-group
  * message, deduplicate no-op, and Add Window selectionMode guard.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, act } from '@testing-library/react'
+import { clearDndDragLive, setDndDragLive } from '@/lib/dndMultiDrag'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -25,6 +26,7 @@ const {
   mockToastInfo,
   mockOpenModal,
   mockGetSetting,
+  mockExitSelectionMode,
 } = vi.hoisted(() => ({
   mockReplaceWithCurrent: vi.fn(),
   mockMergeWithCurrent: vi.fn(),
@@ -38,6 +40,7 @@ const {
   mockToastInfo: vi.fn(),
   mockOpenModal: vi.fn(),
   mockGetSetting: vi.fn(),
+  mockExitSelectionMode: vi.fn(),
 }))
 
 vi.mock('@dnd-kit/core', () => ({
@@ -82,22 +85,31 @@ vi.mock('@/hooks/useGroups', () => ({
   GROUPS_QUERY_KEY: ['groups'],
 }))
 
+let entitledMaxTabs = Infinity
 vi.mock('@/hooks/useEntitlements', () => ({
-  useEntitlements: () => ({ maxTabs: Infinity, tier: 'pro', aiFeatures: false }),
+  useEntitlements: () => ({ maxTabs: entitledMaxTabs, tier: 'pro', aiFeatures: false }),
 }))
 
 let selectionMode = false
+let selectedItems: Array<{ type: string; id: string }> = []
+let searchFilterState = ''
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: (selector: (s: object) => unknown) =>
     selector({
-      searchFilter: '',
+      searchFilter: searchFilterState,
       scrollToWindowIndex: null,
       setScrollToWindowIndex: vi.fn(),
       activeGroupIndex: 0,
       selectionMode,
+      selectedItems,
+      exitSelectionMode: mockExitSelectionMode,
       openModal: mockOpenModal,
+      setSelection: mockSetSelection,
+      enterSelectionMode: mockEnterSelectionMode,
     }),
 }))
+const mockSetSelection = vi.fn()
+const mockEnterSelectionMode = vi.fn()
 
 vi.mock('@/lib/localDb', () => ({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
@@ -137,6 +149,7 @@ function wrap(ui: React.ReactElement) {
 beforeEach(() => {
   vi.clearAllMocks()
   selectionMode = false
+  selectedItems = []
   mockGetSetting.mockResolvedValue({})
 })
 
@@ -145,6 +158,90 @@ async function openMenu() {
   await user.click(screen.getByRole('button', { name: /more group options/i }))
   return user
 }
+
+describe('WindowsPanel — Ctrl/Cmd+A selects everything in the panel', () => {
+  const twoWindows = () => makeGroup({ windows: [makeWindow({ tabs: [makeTab(), makeTab()] }), makeWindow({ tabs: [makeTab()] })] })
+
+  it('selects every TAB of this group and enters selection mode (and suppresses page select-all)', () => {
+    wrap(<WindowsPanel group={twoWindows()} groupIndex={2} />)
+    const panel = screen.getByTestId('windows-panel-scroll')
+    const ev = fireEvent.keyDown(panel, { key: 'a', ctrlKey: true })
+    expect(ev).toBe(false) // preventDefault
+    expect(mockEnterSelectionMode).toHaveBeenCalled()
+    expect(mockSetSelection).toHaveBeenCalledWith([
+      { type: 'tab', id: 'tab-2-0-0' },
+      { type: 'tab', id: 'tab-2-0-1' },
+      { type: 'tab', id: 'tab-2-1-0' },
+    ])
+  })
+
+  it('selects every WINDOW when windows are the current selection type (Cmd+A too)', () => {
+    selectedItems = [{ type: 'window', id: 'window-2-0' }]
+    wrap(<WindowsPanel group={twoWindows()} groupIndex={2} />)
+    fireEvent.keyDown(screen.getByTestId('windows-panel-scroll'), { key: 'A', metaKey: true })
+    expect(mockSetSelection).toHaveBeenCalledWith([
+      { type: 'window', id: 'window-2-0' },
+      { type: 'window', id: 'window-2-1' },
+    ])
+  })
+
+  it('ignores plain A, Ctrl+Shift+A, text inputs, and an empty group', () => {
+    const { unmount } = wrap(<WindowsPanel group={twoWindows()} groupIndex={2} />)
+    const panel = screen.getByTestId('windows-panel-scroll')
+    fireEvent.keyDown(panel, { key: 'a' })
+    fireEvent.keyDown(panel, { key: 'a', ctrlKey: true, shiftKey: true })
+    const input = document.createElement('input')
+    panel.appendChild(input)
+    fireEvent.keyDown(input, { key: 'a', ctrlKey: true })
+    unmount()
+    wrap(<WindowsPanel group={makeGroup({ windows: [] })} groupIndex={2} />)
+    fireEvent.keyDown(screen.getByTestId('windows-panel-scroll'), { key: 'a', ctrlKey: true })
+    expect(mockSetSelection).not.toHaveBeenCalled()
+  })
+})
+
+describe('WindowsPanel — Ctrl/Cmd+A only selects what the user can act on', () => {
+  beforeEach(() => {
+    searchFilterState = ''
+    entitledMaxTabs = Infinity
+  })
+  afterEach(() => {
+    searchFilterState = ''
+    entitledMaxTabs = Infinity
+    clearDndDragLive()
+  })
+
+  it('does nothing while a drag is live (it would change what the drag carries)', () => {
+    setDndDragLive('keyboard')
+    wrap(<WindowsPanel group={makeGroup({ windows: [makeWindow({ tabs: [makeTab(), makeTab()] })] })} groupIndex={2} />)
+    const ev = fireEvent.keyDown(screen.getByTestId('windows-panel-scroll'), { key: 'a', ctrlKey: true })
+    expect(ev).toBe(true) // not preventDefault-ed
+    expect(mockSetSelection).not.toHaveBeenCalled()
+  })
+
+  it('skips tabs dimmed out by the search filter', () => {
+    searchFilterState = 'github'
+    const group = makeGroup({
+      windows: [
+        makeWindow({ tabs: [makeTab({ title: 'GitHub', url: 'https://github.com' }), makeTab({ title: 'Mail', url: 'https://mail.example.com' })] }),
+      ],
+    })
+    wrap(<WindowsPanel group={group} groupIndex={2} />)
+    fireEvent.keyDown(screen.getByTestId('windows-panel-scroll'), { key: 'a', ctrlKey: true })
+    expect(mockSetSelection).toHaveBeenCalledWith([{ type: 'tab', id: 'tab-2-0-0' }])
+  })
+
+  it('skips tabs locked by the free-tier limit (counted across windows)', () => {
+    entitledMaxTabs = 2
+    const group = makeGroup({ windows: [makeWindow({ tabs: [makeTab(), makeTab()] }), makeWindow({ tabs: [makeTab()] })] })
+    wrap(<WindowsPanel group={group} groupIndex={2} />)
+    fireEvent.keyDown(screen.getByTestId('windows-panel-scroll'), { key: 'a', ctrlKey: true })
+    expect(mockSetSelection).toHaveBeenCalledWith([
+      { type: 'tab', id: 'tab-2-0-0' },
+      { type: 'tab', id: 'tab-2-0-1' },
+    ])
+  })
+})
 
 describe('WindowsPanel — toolbar dropdown mutations', () => {
   it('dispatches replaceWithCurrent', async () => {
@@ -351,5 +448,27 @@ describe('WindowsPanel — window/tab count header', () => {
     })
     wrap(<WindowsPanel group={group} groupIndex={0} />)
     expect(screen.getByText('6 Windows ◆ 6 Tabs')).toBeInTheDocument()
+  })
+})
+
+describe('WindowsPanel — clicking empty panel space clears the selection', () => {
+  it('a click on empty panel space exits selection mode when items are selected', () => {
+    selectionMode = true
+    selectedItems = [{ type: 'tab', id: 'tab-1-0-0' }]
+    wrap(<WindowsPanel group={makeGroup()} groupIndex={1} />)
+    fireEvent.click(screen.getByTestId('windows-panel-scroll'))
+    expect(mockExitSelectionMode).toHaveBeenCalledTimes(1)
+  })
+
+  it('a click on a control inside the panel does not clear it, and with nothing selected a click does nothing', () => {
+    selectedItems = [{ type: 'tab', id: 'tab-1-0-0' }]
+    wrap(<WindowsPanel group={makeGroup()} groupIndex={1} />)
+    fireEvent.click(screen.getByRole('button', { name: /add window/i }))
+    expect(mockExitSelectionMode).not.toHaveBeenCalled()
+
+    selectedItems = []
+    wrap(<WindowsPanel group={makeGroup({ id: 'g2' })} groupIndex={2} />)
+    fireEvent.click(screen.getAllByTestId('windows-panel-scroll')[1])
+    expect(mockExitSelectionMode).not.toHaveBeenCalled()
   })
 })

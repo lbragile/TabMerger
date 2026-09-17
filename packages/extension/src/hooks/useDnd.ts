@@ -1,177 +1,69 @@
-import { useCallback } from 'react';
-import {
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent
-} from '@dnd-kit/core';
+import { KeyboardSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { useQueryClient } from '@tanstack/react-query';
-import { saveGroupsState } from '@/lib/localDb';
-import type { GroupsState } from '@/lib/types';
-import { sortWindowsByStarred } from '@/lib/utils';
-import { GROUPS_QUERY_KEY } from './useGroups';
-import { useUIStore } from '@/stores/uiStore';
-import { trackEvent } from '@/lib/analytics';
+import { Html5DragSensor } from '@/lib/dndHtml5Sensor';
+import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
+import { motionScrollBehavior } from '@/lib/reducedMotion';
+
+// The unified DnD layer lives in `useDndHandlers` + `@/components/dnd/DndProvider`,
+// keyed off the normalised model from `@/hooks/useDndModel` (no string-id parsing).
+// `export *` (not a named re-export) keeps `@/hooks/useDnd` a valid runtime import
+// site for `useDndHandlers` without registering a SECOND auto-import entry for the
+// name — a named `export { useDndHandlers } from …` here collides with
+// `DndProvider`'s direct `@/hooks/useDndHandlers` import ("Duplicated imports" warn).
+// Prefer importing from `@/hooks/useDndHandlers` directly in new code.
+export * from './useDndHandlers';
+
+// NOTE: `setBodyDragCursor` used to be defined here (a leftover from the
+// pre-native-drag `<DragOverlay>` era). The real, wired-up version now lives
+// as a private helper inside `useDndHandlers.ts` (called from `onDragStart`/
+// `reset`) — see its doc comment there for why it's effectively inert during
+// a native-HTML5-driven drag (the primary path in this popup) but still
+// matters for `KeyboardSensor` drags. This export was dead (nothing in
+// production imported it from here — only test mocks stubbed the whole
+// `@/hooks/useDnd` module, which doesn't need the real export to exist).
 
 /**
- * DnD ID format:
- *   tab:    "tab-{tabId}-{winIdx}-{tabIdx}"  ← unique even when tab.id duplicates across windows
- *   window: "window-{groupIdx}-{windowIdx}"
- *   group:  "group-{groupIdx}"
+ * Sensor set for the ONE unified popup drag layer.
+ *
+ * The primary sensor MUST be {@link Html5DragSensor}. Despite the name it is now a
+ * DUAL-PATH sensor: its activator is still the native `onDragStart` (so the drag
+ * handles in `Tab.tsx` / `Window.tsx` / `GroupItem.tsx` still need their `draggable`
+ * attr), but it decides PER PRESS whether to let the native drag run or to cancel it
+ * and drive the drag from pointer events instead — see `@/lib/dndPressTracker` for
+ * the decision and `@/lib/dndHtml5Sensor` for both paths.
+ *
+ * The original real-popup finding (three drags with `tm_dnd_debug` on and the old
+ * `Mv3PointerSensor` wired) was that the popup delivers only the FIRST sub-5px
+ * `pointermove` after `pointerdown` and then nothing until the press ends, so a
+ * move-delta sensor never crosses its threshold. That log could not tell "the popup
+ * withheld the stream" apart from "a native drag took the stream over and ended it
+ * with a `pointercancel`" — the ordinary behaviour of any `draggable` element. The
+ * dual path measures which one it is on every real drag instead of assuming.
+ *
+ * `@/lib/dndPointerSensor` (`getMv3PointerSensor`) is kept in the tree but is NO
+ * LONGER wired here — it documents the dead end of a *standalone* pointer sensor
+ * (its problem was that it had to win the drag before `dragstart`; the dual path
+ * doesn't, because it decides AT `dragstart`).
+ *
+ * No `activationConstraint` on the drag sensor: the browser's own native drag
+ * threshold (a few px before `dragstart` fires) already stops a plain click on a
+ * handle from starting a drag.
+ *
+ * `TouchSensor` covers touchscreen laptops / Chromebooks — touch gets implicit
+ * capture and delivers `touchmove` fine in the popup, and Chrome doesn't start an
+ * HTML5 drag from touch, so the stock sensor is correct there. `KeyboardSensor`
+ * keeps the layer accessible.
  */
-export function parseDndId(id: string) {
-  const parts = id.split('-');
-  const kind = parts[0];
-  if (kind === 'tab') {
-    return { kind, tabId: parseInt(parts[1], 10), groupIndex: 0, windowIndex: parseInt(parts[2] ?? '0', 10), tabIndex: parseInt(parts[3] ?? '0', 10) };
-  }
-  return {
-    kind,
-    tabId: NaN,
-    groupIndex: parseInt(parts[1] ?? '0', 10),
-    windowIndex: parseInt(parts[2] ?? '0', 10),
-    tabIndex: parseInt(parts[3] ?? '0', 10)
-  };
-}
-
-// ponytail: DragOverlay ghost has pointer-events-none, so the pointer hit-tests
-// through it during an active drag — the source element's `active:cursor-grabbing`
-// class never actually controls the cursor. Force it at the body level instead.
-export function setBodyDragCursor(active: boolean) {
-  document.body.style.cursor = active ? 'grabbing' : '';
-}
-
 export function useDndSensors() {
-  return useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
+  const html5 = useSensor(Html5DragSensor);
+  const touch = useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } });
+  // Reduced motion: the sensor scrolls the moved item into view instantly, not smoothly.
+  const keyboard = useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+    scrollBehavior: motionScrollBehavior()
+  });
+  // Diagnostic pointer-stream probe (`@/lib/dndPointerProbe`, localStorage flag,
+  // off for every real user): leave the HTML5 sensor out so no drag can start and
+  // the probe measures the raw pointer stream of a grip press.
+  return useSensors(...(DND_POINTER_PROBE_ACTIVE ? [] : [html5]), touch, keyboard);
 }
-
-export function useGroupDndHandlers() {
-  const qc = useQueryClient();
-  const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
-
-  const onDragEnd = useCallback(
-    async (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) return;
-
-      const from = parseDndId(String(active.id));
-      const to = parseDndId(String(over.id));
-
-      if (from.kind !== 'group' || to.kind !== 'group') return;
-
-      // Read from query cache — same order the UI renders — not IDB which re-sorts by updatedAt
-      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      if (!state) return;
-      const available = [...state.available];
-
-      // Don't allow moving the permanent group
-      if (available[from.groupIndex]?.permanent) return;
-      // Don't allow dropping before the permanent group
-      if (to.groupIndex === 0) return;
-
-      const dropTarget = available[to.groupIndex];
-      const shouldBeStarred = dropTarget?.starred ?? false;
-
-      const [moved] = available.splice(from.groupIndex, 1);
-      moved.starred = shouldBeStarred; // ponytail: match zone before re-sort clamps position
-      moved.updatedAt = Date.now();
-      moved.pendingSync = true;
-      available.splice(to.groupIndex, 0, moved);
-
-      // Enforce zone order: Now Open → starred → unstarred.
-      // Re-sorting after the splice preserves relative order within each zone
-      // while clamping cross-zone drops to the zone boundary.
-      const nowOpenGroup = available[0];
-      const rest = available.slice(1);
-      const zoneSorted = [
-        nowOpenGroup,
-        ...rest.filter((g) => g.starred),
-        ...rest.filter((g) => !g.starred)
-      ];
-      const newIndex = zoneSorted.findIndex((g) => g.id === moved.id);
-
-      const finalIndex = newIndex >= 0 ? newIndex : to.groupIndex;
-      const next = { ...state, active: { id: moved.id, index: finalIndex }, available: zoneSorted };
-      await saveGroupsState(next);
-      qc.setQueryData(GROUPS_QUERY_KEY, next);
-      trackEvent('dnd_reorder', { kind: 'group' });
-
-      // Keep the dragged group selected at its new position (Task 12)
-      setActiveGroupIndex(finalIndex);
-    },
-    [qc, setActiveGroupIndex]
-  );
-
-  return { onDragEnd };
-}
-
-export function useWindowDndHandlers(groupIndex: number) {
-  const qc = useQueryClient();
-
-  const onDragEnd = useCallback(
-    async (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) return;
-
-      const from = parseDndId(String(active.id));
-      const to = parseDndId(String(over.id));
-
-      if (from.kind !== 'window') return;
-
-      // Read from query cache — same order the UI renders — not IDB which re-sorts by updatedAt
-      const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      if (!state) return;
-      const available = [...state.available];
-      const group = { ...available[groupIndex] };
-      const windows = [...group.windows];
-
-      // Move within same group
-      if (to.kind === 'window' && to.groupIndex === groupIndex) {
-        const dropTarget = windows[to.windowIndex];
-        const shouldBeStarred = dropTarget?.starred ?? false;
-
-        const [moved] = windows.splice(from.windowIndex, 1);
-        moved.starred = shouldBeStarred; // ponytail: match zone before re-sort clamps position
-        windows.splice(to.windowIndex, 0, moved);
-        group.windows = sortWindowsByStarred(windows);
-        group.updatedAt = Date.now();
-        group.pendingSync = true;
-        available[groupIndex] = group;
-        const next = { ...state, available };
-        await saveGroupsState(next);
-        qc.setQueryData(GROUPS_QUERY_KEY, next);
-        trackEvent('dnd_reorder', { kind: 'window' });
-        return;
-      }
-
-      // Drop onto a different group (sidebar combine)
-      if (to.kind === 'group' && to.groupIndex !== groupIndex) {
-        const [moved] = windows.splice(from.windowIndex, 1);
-        moved.focused = false;
-        moved.starred = false;
-
-        available[groupIndex] = { ...group, windows, updatedAt: Date.now(), pendingSync: true };
-
-        const targetGroup = { ...available[to.groupIndex] };
-        targetGroup.windows = sortWindowsByStarred([moved, ...targetGroup.windows]);
-        targetGroup.updatedAt = Date.now();
-        targetGroup.pendingSync = true;
-        available[to.groupIndex] = targetGroup;
-
-        const next = { ...state, available };
-        await saveGroupsState(next);
-        qc.setQueryData(GROUPS_QUERY_KEY, next);
-        trackEvent('dnd_reorder', { kind: 'window_cross_group' });
-      }
-    },
-    [qc, groupIndex]
-  );
-
-  return { onDragEnd };
-}
-

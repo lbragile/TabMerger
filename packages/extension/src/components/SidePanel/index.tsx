@@ -1,10 +1,4 @@
 import { useEffect, useState } from 'react';
-import {
-  DndContext,
-  closestCenter,
-
-  type Modifier
-} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -13,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GroupItem } from './GroupItem';
 import type { GroupsState } from '@/lib/types';
-import { useDndSensors, useGroupDndHandlers, setBodyDragCursor } from '@/hooks/useDnd';
+import { useDndContext } from '@/components/dnd/DndProvider';
+import { dndListStyle, gapGrowthFor } from '@/lib/dndInsertion';
 import { useUIStore } from '@/stores/uiStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
@@ -36,8 +31,7 @@ interface SidePanelProps {
 }
 
 export function SidePanel({ groupsState }: SidePanelProps) {
-  const sensors = useDndSensors();
-  const { onDragEnd } = useGroupDndHandlers();
+  const { isDragging, gap } = useDndContext();
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
   const selectionMode = useUIStore((s) => s.selectionMode);
@@ -48,7 +42,6 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const { mutate: deleteGroup } = useDeleteGroup();
   const [archivedOpen, setArchivedOpen] = useState(false);
   const [sessionsOpen, setSessionsOpen] = useState(false);
-  const [isDraggingGroup, setIsDraggingGroup] = useState(false);
   const { data: sessions = [] } = useSessions();
   const { mutate: deleteSession } = useDeleteSession();
   const { mutate: restoreSession, isPending: restoring } = useRestoreSession();
@@ -84,7 +77,9 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     if (!g.permanent) savedDisplayIdx++;
     return { group: g, realIndex, isLocked };
   });
-  const groupIds = available.map(({ realIndex }) => `group-${realIndex}`);
+  // MODEL ids — each visible group's real `group.id` (not positional "group-N").
+  // Sensors / collision / drag handlers all come from the app-level <DndProvider>.
+  const groupModelIds = available.map(({ group }) => group.id);
 
   const handleNewGroup = async () => {
     // All non-permanent groups count toward the limit (archived included — archiving doesn't free up slots)
@@ -102,9 +97,6 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     setRenameTarget({ kind: 'group', groupIndex: newIndex });
   };
 
-  // Restrict group reordering to vertical axis only
-  const restrictToVerticalAxis: Modifier = ({ transform }) => ({ ...transform, x: 0 });
-
   return (
     <div
       className="flex flex-col h-full shrink-0 bg-zone-sidebar"
@@ -113,41 +105,36 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       {/* Groups list */}
       <ScrollArea className="flex-1">
         <div className="py-1.5">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis]}
-            onDragStart={() => { setBodyDragCursor(true); setIsDraggingGroup(true); }}
-            onDragEnd={(e) => { setBodyDragCursor(false); setIsDraggingGroup(false); if (!selectionMode) onDragEnd(e); }}
-            onDragCancel={() => { setBodyDragCursor(false); setIsDraggingGroup(false); }}
-          >
-            <SortableContext items={groupIds} strategy={verticalListSortingStrategy}>
-              {available.map(({ group, realIndex, isLocked }) => (
-                <GroupItem
-                  key={group.id}
-                  group={group}
-                  groupIndex={realIndex}
-                  isActive={realIndex === activeGroupIndex}
-                  isLocked={isLocked}
-                  onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
+          {/* List wrapper: grows by the gap height while a group drag's gap is here. */}
+          <div data-tm-dnd-list="" style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
+          <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>
+            {available.map(({ group, realIndex, isLocked }) => (
+              <GroupItem
+                key={group.id}
+                group={group}
+                groupIndex={realIndex}
+                isActive={realIndex === activeGroupIndex}
+                isLocked={isLocked}
+                onClick={() => !selectionMode && setActiveGroupIndex(realIndex)}
+              />
+            ))}
+          </SortableContext>
+          </div>
 
-          {!isDraggingGroup && (
-            <div className="px-1.5 mt-2">
-              <Button
-                variant="outline"
-                className="h-8 rounded-none px-3 text-xs w-full"
-                onClick={handleNewGroup}
-                disabled={selectionMode}
-              >
-                <Plus className="h-3.5 w-3.5 mr-1" />
-                Add Group
-              </Button>
-            </div>
-          )}
+          {/* Kept mounted during a drag: unmounting removes a child from an
+              ancestor of a dragged group row → aborts the native HTML5 drag in
+              the MV3 popup. Hidden, not unmounted, while dragging. */}
+          <div className={isDragging ? 'px-1.5 mt-2 invisible' : 'px-1.5 mt-2'}>
+            <Button
+              variant="outline"
+              className="h-8 rounded-none px-3 text-xs w-full"
+              onClick={handleNewGroup}
+              disabled={selectionMode || isDragging}
+            >
+              <Plus className="h-3.5 w-3.5 mr-1" />
+              Add Group
+            </Button>
+          </div>
 
         </div>
       </ScrollArea>

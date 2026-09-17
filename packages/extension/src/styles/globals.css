@@ -176,3 +176,49 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
+
+/* DnD: no row transform transitions during the frames where the native-drag source
+   collapses (drag start) or the drop commits — `Html5DragSensor` sets this attribute
+   around exactly those frames. Rows hardcode `transition: transform 200ms`, which
+   would otherwise slide siblings from their pre-change position (visible snap). */
+html[data-tm-dnd-instant] [data-tab-index],
+html[data-tm-dnd-instant] [data-window-index],
+html[data-tm-dnd-instant] [data-sidebar-group-index],
+html[data-tm-dnd-instant] [data-tm-dnd-list] {
+  transition: none !important;
+}
+
+/* DnD: `grabbing` cursor for the whole duration of a POINTER-driven drag
+   (`Html5DragSensor`'s pointer path sets this attribute — see `setDndGrabbingCursor`).
+   `!important` on a descendant selector because nearly every row/button sets its own
+   `cursor` (`cursor-grab`, `cursor-pointer`, …), which an inherited value loses to.
+   Static CSS, no DOM mutation, so it can't perturb a drag (spec C4). It has no effect
+   during a NATIVE drag, where the OS owns the cursor (spec C5) — the attribute is
+   never set on that path. */
+html[data-tm-dnd-grabbing],
+html[data-tm-dnd-grabbing] * {
+  cursor: grabbing !important;
+}
+
+/* Reduced motion: the same DnD rows/lists never animate (sibling shifts, gap, keyboard
+   drag transforms). Static CSS — no DOM mutation, so safe during a native drag (C4). */
+@media (prefers-reduced-motion: reduce) {
+  [data-tab-index],
+  [data-window-index],
+  [data-sidebar-group-index],
+  [data-tm-dnd-list] {
+    transition: none !important;
+  }
+  /* Radix menus, popovers and tooltips (`animate-in`/`animate-out` zoom, slide and fade in
+     components/ui/*). With no animation, Radix Presence unmounts on close immediately. */
+  .animate-in,
+  .animate-out,
+  [data-radix-popper-content-wrapper] > * {
+    animation: none !important;
+  }
+  /* Switch thumb slide (components/ui/switch.tsx). */
+  [role="switch"],
+  [role="switch"] > * {
+    transition: none !important;
+  }
+}

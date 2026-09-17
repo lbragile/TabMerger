@@ -70,6 +70,8 @@ interface UIState {
   // Selection mode
   selectionMode: boolean;
   selectedItems: SelectedItem[];
+  /** Shift+click range anchor: the last item toggled ON (Ctrl/Cmd+click or checkbox). */
+  selectionAnchor: SelectedItem | null;
 
   // Actions
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
@@ -90,6 +92,14 @@ interface UIState {
   toggleSelectionMode: () => void;
   /** Toggles an item. Auto-clears selection if switching to a different type. */
   toggleSelection: (item: SelectedItem) => void;
+  /**
+   * Shift+click: enter selection mode and ADD `range` (anchor → `item` inclusive, visual
+   * order, computed by `selectionRange`) to the selection. An empty `range` (no usable
+   * anchor) selects just `item` and makes it the anchor. Type switch clears first.
+   */
+  selectRange: (item: SelectedItem, range: SelectedItem[]) => void;
+  /** Replace the selection wholesale (e.g. remapped to new positions after a drop). */
+  setSelection: (items: SelectedItem[]) => void;
   clearSelection: () => void;
 }
 
@@ -110,6 +120,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   redoStack: [],
   selectionMode: false,
   selectedItems: [],
+  selectionAnchor: null,
 
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),
@@ -157,13 +168,14 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   enterSelectionMode: () => set({ selectionMode: true }),
 
-  exitSelectionMode: () => set({ selectionMode: false, selectedItems: [] }),
+  exitSelectionMode: () => set({ selectionMode: false, selectedItems: [], selectionAnchor: null }),
 
   toggleSelectionMode: () =>
     set((prev) => ({
       selectionMode: !prev.selectionMode,
       // Clear items when leaving selection mode
-      selectedItems: prev.selectionMode ? [] : prev.selectedItems
+      selectedItems: prev.selectionMode ? [] : prev.selectedItems,
+      selectionAnchor: prev.selectionMode ? null : prev.selectionAnchor
     })),
 
   toggleSelection: (item) =>
@@ -174,9 +186,26 @@ export const useUIStore = create<UIState>((set, get) => ({
       const base = committedType && committedType !== item.type ? [] : selectedItems;
       const exists = base.some((s) => s.id === item.id);
       return {
-        selectedItems: exists ? base.filter((s) => s.id !== item.id) : [...base, item]
+        selectedItems: exists ? base.filter((s) => s.id !== item.id) : [...base, item],
+        selectionAnchor: exists ? (prev.selectionAnchor?.id === item.id ? null : prev.selectionAnchor) : item
       };
     }),
 
-  clearSelection: () => set({ selectedItems: [] })
+  selectRange: (item, range) =>
+    set((prev) => {
+      const committedType = prev.selectedItems[0]?.type;
+      const base = committedType && committedType !== item.type ? [] : prev.selectedItems;
+      const additions = range.length > 0 ? range : [item];
+      const have = new Set(base.map((s) => s.id));
+      return {
+        selectionMode: true,
+        selectedItems: [...base, ...additions.filter((s) => s.type === item.type && !have.has(s.id))],
+        // A range extends FROM the anchor, so it stays; with no usable anchor the clicked item becomes it.
+        selectionAnchor: range.length > 0 && prev.selectionAnchor ? prev.selectionAnchor : item
+      };
+    }),
+
+  setSelection: (items) => set({ selectedItems: items, selectionAnchor: items[0] ?? null }),
+
+  clearSelection: () => set({ selectedItems: [], selectionAnchor: null })
 }));
