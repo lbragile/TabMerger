@@ -196,7 +196,17 @@ async function creditAiCreditPack(
 }
 
 /**
- * Writes or updates a subscription row keyed on the Stripe subscription ID.
+ * Writes or updates a subscription row keyed on user_id (one row per user, enforced by the
+ * subscriptions_user_id_key UNIQUE constraint from migration 012).
+ *
+ * The conflict target is user_id, NOT id: every user already has a subscription row created by
+ * the handle_new_user() signup trigger with id = 'free_<uuid>'. On a first purchase the Stripe
+ * subscription id is brand new, so an onConflict:'id' upsert would attempt an INSERT that then
+ * violates the user_id UNIQUE constraint (Postgres 23505) — the error was logged and swallowed,
+ * leaving the user stuck on 'free'. Conflicting on user_id instead rewrites that existing row in
+ * place: its id becomes the Stripe subscription id and tier/status/period are updated. It also
+ * still handles the genuine insert case (no row for the user) since upsert covers both.
+ *
  * Derives the app tier from the price ID via env-var mapping; defaults to 'free' on unknown prices.
  * Side-effect: logs errors but does not throw — webhook must always return 200 to avoid Stripe retries.
  */
@@ -222,7 +232,7 @@ async function upsertSubscription(
         : null,
       updated_at: new Date().toISOString(),
     },
-    { onConflict: 'id' }
+    { onConflict: 'user_id' }
   )
   if (error) console.error('upsertSubscription error:', error)
 }

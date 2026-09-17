@@ -159,6 +159,53 @@ describe('POST /api/webhooks/stripe', () => {
     expect(calls[1][0]).toMatchObject({ cancel_at_period_end: false, stripe_price_id: 'price_pro_monthly' })
   })
 
+  it('first purchase upgrades the pre-existing free row in place (onConflict: user_id, not id)', async () => {
+    // On signup the handle_new_user() trigger inserts a subscriptions row with
+    // id = 'free_<uuid>' holding this user_id. A first purchase creates a brand-new
+    // Stripe subscription id, so conflicting on `id` would attempt an INSERT that
+    // violates the UNIQUE(user_id) constraint (Postgres 23505) and the user stays
+    // on 'free'. The upsert must target user_id so the existing row is rewritten:
+    // its id becomes the Stripe sub id and tier/status are upgraded — no duplicate row.
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const subscription = makeSubscription({ id: 'sub_firstpurchase' })
+    mockSubscriptionsRetrieve.mockResolvedValue(subscription)
+
+    mockConstructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          mode: 'subscription',
+          subscription: 'sub_firstpurchase',
+          customer: 'cus_test123',
+          metadata: { user_id: 'user-uuid-1' },
+        },
+      },
+    })
+
+    const res = await POST(makeRequest('{}'))
+    expect(res.status).toBe(200)
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'sub_firstpurchase', user_id: 'user-uuid-1', tier: 'pro' }),
+      { onConflict: 'user_id' }
+    )
+    // Never conflict on `id` — that is the bug that left first-time buyers on 'free'.
+    expect(mockUpsert).not.toHaveBeenCalledWith(expect.anything(), { onConflict: 'id' })
+  })
+
+  it('customer.subscription.updated also upserts on user_id so the row stays unique per user', async () => {
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    const subscription = makeSubscription({ cancel_at_period_end: true })
+
+    mockConstructEvent.mockReturnValue({
+      type: 'customer.subscription.updated',
+      data: { object: subscription },
+    })
+
+    const res = await POST(makeRequest('{}'))
+    expect(res.status).toBe(200)
+    expect(mockUpsert).toHaveBeenCalledWith(expect.any(Object), { onConflict: 'user_id' })
+  })
+
   it('customer.subscription.updated with cancel_at_period_end=true updates the DB row', async () => {
     const { POST } = await import('@/app/api/webhooks/stripe/route')
     const subscription = makeSubscription({
