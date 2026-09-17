@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "skills": {
+    "stripe-docs": {
+      "source": "docs.stripe.com",
+      "sourceUrl": "https://docs.stripe.com",
+      "sourceType": "well-known",
+      "computedHash": "7f8b47057d65cdc55c60ed870bf6ad508907e5d981fca77781b4964de54d985f",
+      "wellKnownDigest": "sha256:a2d407ba808bce05731557fa7b92022376545e363a8958012253a3b82def71a6"
+    }
+  }
+}

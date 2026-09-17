@@ -6,6 +6,10 @@
 .env.production
 .env.beta
 
+# direnv — local per-directory env (MCP credentials, etc.)
+.envrc
+.direnv/
+
 # Claude Code local overrides (may contain API keys)
 .claude/settings.local.json
 
@@ -71,7 +75,7 @@ packages/web/e2e/.auth/
 *.webm
 *.png
 !public/**/*.png
-!packages/extension/public/**/*.png
+!packages/extension/src/**/*.png
 !packages/web/public/**/*.png
 !packages/web/app/**/*.png
 # Playwright visual regression baselines — committed intentionally, update via --update-snapshots
