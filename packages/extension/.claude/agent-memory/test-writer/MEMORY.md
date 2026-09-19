@@ -1,3 +1,3 @@
 # Memory index
 
-- [E2E not runnable locally](e2e-not-runnable-locally.md) — Playwright popup renders blank here; also lint broken. Unit + integration are the reliable local gates.
+- [E2E IS runnable locally (2026-09-17 correction)](e2e-runnable-locally.md) — build:dev first, then the suite passes; group-row queries need `exact: true`, checkbox queries need scoping to `[role="listitem"]`.
