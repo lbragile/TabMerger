@@ -7,7 +7,7 @@ test.describe('Search', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     // Search is a button that opens an overlay with a focused input — not a persistent textbox
     await page.getByRole('button', { name: 'Open search' }).click();
@@ -26,7 +26,7 @@ test.describe('Search', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     await page.getByRole('button', { name: 'Open search' }).click();
     await page.waitForTimeout(50);

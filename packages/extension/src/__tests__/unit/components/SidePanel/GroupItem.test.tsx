@@ -48,6 +48,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
     wrapperRef,
     wrapperClassName,
     wrapperStyle,
+    wrapperDndId,
     onWrapperClick,
     onWrapperContextMenu,
     onWrapperMouseEnter,
@@ -57,6 +58,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
     wrapperRef?: (node: HTMLElement | null) => void
     wrapperClassName?: string
     wrapperStyle?: React.CSSProperties
+    wrapperDndId?: string
     onWrapperClick?: React.MouseEventHandler<HTMLDivElement>
     onWrapperContextMenu?: React.MouseEventHandler<HTMLDivElement>
     onWrapperMouseEnter?: React.MouseEventHandler<HTMLDivElement>
@@ -66,6 +68,7 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
       'div',
       {
         'data-testid': 'group-wrapper',
+        'data-tm-dnd-id': wrapperDndId,
         ref: wrapperRef,
         className: wrapperClassName,
         style: wrapperStyle,
@@ -127,6 +130,8 @@ const baseUIState = {
   selectedItems: [] as { type: string; id: string }[],
   toggleSelection: vi.fn(),
   enterSelectionMode: vi.fn(),
+  selectRange: vi.fn(),
+  selectionAnchor: null as { type: string; id: string } | null,
 }
 
 function wrap(ui: React.ReactElement) {
@@ -469,5 +474,65 @@ describe('GroupItem', () => {
     fireEvent.contextMenu(screen.getByTestId('group-wrapper'))
     // No assertion needed beyond "did not throw" — contextMenuOpen state is internal,
     // but this exercises the onWrapperContextMenu branch for coverage.
+  })
+  /**
+   * 2a — a multi-group selection has to be DRAGGABLE. The grip used to be REPLACED by
+   * the checkbox in selection mode, so a selection of groups had no drag affordance at
+   * all and could never be moved. Both are shown now, exactly as in Tab.tsx / Window.tsx.
+   */
+  describe('selection mode shows grip AND checkbox (2a)', () => {
+    const selecting = (over: Partial<typeof baseUIState> = {}) =>
+      mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+        selector({ ...baseUIState, selectionMode: true, ...over })
+      )
+
+    it('renders a draggable grip next to the checkbox', () => {
+      selecting()
+      const group = makeGroup({ name: 'Work' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+      const grip = screen.getByLabelText('Drag to reorder group: Work')
+      expect(grip.getAttribute('draggable')).toBe('true')
+      expect(screen.getByRole('checkbox', { name: 'Select Work' })).toBeTruthy()
+    })
+
+    it('keeps the grip out of Now Open (it is never reorderable)', () => {
+      selecting()
+      const group = makeGroup({ permanent: true, name: 'Now Open' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+      expect(screen.queryByLabelText(/^Drag to reorder group/)).toBeNull()
+    })
+
+    it('exposes the row id the multi-drag registry collapses/counts by', () => {
+      selecting()
+      const group = makeGroup({ name: 'Work' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+      expect(screen.getByTestId('group-wrapper').getAttribute('data-tm-dnd-id')).toBe(group.id)
+    })
+
+    it('Shift+click on the row and on the checkbox both extend a sidebar range', () => {
+      const selectRange = vi.fn()
+      selecting({ selectRange, selectionAnchor: { type: 'group', id: 'group-0' } })
+      const group = makeGroup({ name: 'Work' })
+      const onClick = vi.fn()
+      wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick }))
+
+      fireEvent.click(screen.getByTestId('group-wrapper'), { shiftKey: true })
+      expect(onClick).not.toHaveBeenCalled()
+      expect(selectRange).toHaveBeenCalledWith({ type: 'group', id: 'group-1' }, expect.any(Array))
+
+      selectRange.mockClear()
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Select Work' }), { shiftKey: true })
+      expect(selectRange).toHaveBeenCalledWith({ type: 'group', id: 'group-1' }, expect.any(Array))
+      expect(baseUIState.toggleSelection).not.toHaveBeenCalled()
+    })
+
+    it('Shift+Space on the grip extends the range instead of picking the group up', () => {
+      const selectRange = vi.fn()
+      selecting({ selectRange, selectionAnchor: { type: 'group', id: 'group-0' } })
+      const group = makeGroup({ name: 'Work' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+      fireEvent.keyDown(screen.getByLabelText('Drag to reorder group: Work'), { key: ' ', shiftKey: true })
+      expect(selectRange).toHaveBeenCalledWith({ type: 'group', id: 'group-1' }, expect.any(Array))
+    })
   })
 })

@@ -34,6 +34,8 @@ import { getSetting } from '@/lib/localDb';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { parseSearchQuery, formatGroupCounts, cn, fuzzyMatch } from '@/lib/utils';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
+import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { deduplicateTabs } from '@/lib/deduplication';
 import { toast } from 'sonner';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
@@ -51,6 +53,13 @@ interface WindowsPanelProps {
  * and toggling its visibility / `isOver` class is safe. Dropping a tab here →
  * `useDndHandlers` resolves `${groupId}::new-window` and `dndMove` creates a
  * fresh window in this group containing the tab(s).
+ *
+ * It is ABSOLUTELY POSITIONED over the "Add Window" button (which is hidden for the
+ * whole drag, so the two are never wanted at once). Keeping it in the flow meant an
+ * `invisible` 36px box permanently padded the list — the "big gap above Add Window" —
+ * while collapsing that box on drag start would resize an ANCESTOR of the dragged row
+ * at exactly the moment Chrome aborts a native drag (spec C4). Overlaying costs no
+ * layout in either state.
  */
 function NewWindowDropZone({
   groupId,
@@ -72,10 +81,10 @@ function NewWindowDropZone({
       data-testid="new-window-dropzone"
       aria-hidden={!activeForTab}
       className={cn(
-        'mt-1 flex h-9 items-center justify-center border border-dashed text-[11px] font-medium transition-colors',
+        'absolute inset-0 z-10 flex items-center justify-center border border-dashed text-[11px] font-medium transition-colors',
         // Text in --foreground: primary-tinted 11px text was below 4.5:1 contrast.
         activeForTab
-          ? 'border-primary text-foreground'
+          ? 'border-primary text-foreground bg-background'
           : 'invisible pointer-events-none border-transparent',
         isOver && activeForTab && 'bg-primary/10 border-primary text-foreground'
       )}
@@ -159,11 +168,15 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
   };
 
   // Clicking EMPTY panel space (not a window card or a control) clears the selection,
-  // same as Escape.
+  // same as Escape. NOTE: `useSelectionClickAway` (mounted by App) now exits on a plain
+  // click ANYWHERE outside the selection controls, which subsumes this — but the panel
+  // also renders standalone (tests, and without the app-level hook), so it stays as the
+  // panel's own guarantee. Exiting twice is idempotent.
   const handlePanelClick = (e: React.MouseEvent) => {
     if (!hasSelection) return;
     const target = e.target as Element | null;
     if (target?.closest?.('[data-window-index], button, a, input, textarea, [role="menuitem"]')) return;
+    moveFocusOutOfSelectionControls();
     exitSelectionMode?.();
   };
 
@@ -188,8 +201,15 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
 
   const [noteOpen, setNoteOpen] = useState(false);
   const [noteValue, setNoteValue] = useState('');
+  const [groupMenuOpen, setGroupMenuOpen] = useState(false);
   const noteContainerRef = useRef<HTMLDivElement>(null);
   const noteTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Starting a multi-select closes the panel's own overlays (see `useCloseOnOverlayDismiss`).
+  useCloseOnOverlayDismiss(() => {
+    setGroupMenuOpen(false);
+    setNoteOpen(false);
+  });
 
   const { data: appSettings } = useAppSettings();
   const staleThresholdMs = (appSettings?.staleThresholdDays ?? 30) * 24 * 60 * 60 * 1000;
@@ -269,7 +289,8 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
               <TooltipContent side="bottom">Edit note</TooltipContent>
             </Tooltip>
           )}
-          <DropdownMenu>
+          {/* Controlled so `useCloseOnOverlayDismiss` can shut it when a multi-select starts. */}
+          <DropdownMenu open={groupMenuOpen} onOpenChange={setGroupMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="More group options">
                 <MoreHorizontal className="h-3.5 w-3.5" />
@@ -407,27 +428,30 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
           )}
 
           {!group.permanent && (
-            <NewWindowDropZone
-              groupId={group.id}
-              groupIndex={groupIndex}
-              activeForTab={dnd.active?.type === 'tab'}
-            />
-          )}
-
-          {!group.permanent && (
-            // Kept mounted during a drag on purpose: unmounting it removes a child
-            // from an ANCESTOR of the dragged row, which aborts the native HTML5
-            // drag in the MV3 toolbar popup. Just hide it while dragging.
-            <div className={cn(dnd.isDragging && 'invisible')}>
-              <Button
-                variant="outline"
-                className="h-7 rounded-none px-3 text-xs w-full mt-px"
-                onClick={() => addWindow({ groupIndex })}
-                disabled={selectionMode || dnd.isDragging}
-              >
-                <Plus className="h-3.5 w-3.5 mr-1" />
-                Add Window
-              </Button>
+            // "Add Window" + the new-window drop zone share ONE box (the zone overlays
+            // the button). NO margin of its own: every window card already carries
+            // `mb-2`, so the gap above the button is exactly 8px — the SAME 8px the
+            // sidebar's `mt-2` puts above "Add Group" (group rows have no margin).
+            // Both children stay MOUNTED for the whole drag: unmounting either removes a
+            // child from an ANCESTOR of the dragged row, which aborts the native HTML5
+            // drag in the MV3 popup (C4).
+            <div className="relative">
+              <NewWindowDropZone
+                groupId={group.id}
+                groupIndex={groupIndex}
+                activeForTab={dnd.active?.type === 'tab'}
+              />
+              <div className={cn(dnd.isDragging && 'invisible')}>
+                <Button
+                  variant="outline"
+                  className="h-7 rounded-none px-3 text-xs w-full"
+                  onClick={() => addWindow({ groupIndex })}
+                  disabled={selectionMode || dnd.isDragging}
+                >
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  Add Window
+                </Button>
+              </div>
             </div>
           )}
         </div>

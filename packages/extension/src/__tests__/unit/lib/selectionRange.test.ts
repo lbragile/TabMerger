@@ -44,7 +44,52 @@ describe('selectionRange', () => {
     expect(selectionRange(state, T(1, 5, 0), T(1, 0, 0))).toEqual([])
     expect(selectionRange(state, T(7, 0, 0), T(7, 0, 1))).toEqual([])
     expect(selectionRange(undefined, T(1, 0, 0), T(1, 0, 1))).toEqual([])
-    expect(selectionRange(state, { type: 'group', id: 'group-1' }, { type: 'group', id: 'group-2' })).toEqual([])
     expect(selectionRange(state, { type: 'tab', id: 'garbage' }, T(1, 0, 0))).toEqual([])
+  })
+})
+
+/**
+ * 2a — sidebar GROUP ranges. Groups run down `state.available`, not the windows panel,
+ * and the permanent "Now Open" row can never be part of a selection (nothing you can do
+ * to a selection is legal for it).
+ */
+describe('selectionRange — groups', () => {
+  const G = (gi: number) => ({ type: 'group' as const, id: `group-${gi}` })
+  const sidebar: GroupsState = {
+    active: { id: 'now', index: 0 },
+    available: [
+      { ...group('now', []), permanent: true },
+      group('a', []),
+      group('b', []),
+      { ...group('arch', []), archived: true },
+      group('c', [])
+    ]
+  }
+
+  it('selects an inclusive run down the sidebar', () => {
+    expect(selectionRange(sidebar, G(1), G(2))).toEqual([G(1), G(2)])
+  })
+
+  it('works backwards and returns sidebar order', () => {
+    expect(selectionRange(sidebar, G(4), G(1))).toEqual([G(1), G(2), G(4)])
+  })
+
+  it('never includes "Now Open", even when it is between the two ends', () => {
+    // Now Open isn't in the ordered list at all, so it can be neither end nor a member.
+    expect(selectionRange(sidebar, G(0), G(2))).toEqual([])
+    expect(selectionRange(sidebar, G(2), G(0))).toEqual([])
+    expect(selectionRange(sidebar, G(1), G(4)).some((s) => s.id === 'group-0')).toBe(false)
+  })
+
+  it('skips archived groups (they are not in the sortable list)', () => {
+    expect(selectionRange(sidebar, G(2), G(4))).toEqual([G(2), G(4)])
+    expect(selectionRange(sidebar, G(3), G(4))).toEqual([])
+  })
+
+  it('needs a same-type anchor and a real state', () => {
+    expect(selectionRange(sidebar, null, G(1))).toEqual([])
+    expect(selectionRange(sidebar, W(1, 0), G(1))).toEqual([])
+    expect(selectionRange(undefined, G(1), G(2))).toEqual([])
+    expect(selectionRange(sidebar, G(9), G(1))).toEqual([])
   })
 })

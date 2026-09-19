@@ -18,7 +18,7 @@ import { scenarios, PRIMARY_GROUP_ID, PRIMARY_GROUP_NAME } from './settings';
 test('popup DnD — single tab reorder with [tm-dnd] instrumentation', async () => {
   const s = await startPopupSession(scenarios.minimal);
   try {
-    await s.popup.getByRole('button', { name: PRIMARY_GROUP_NAME }).click();
+    await s.popup.getByRole('button', { name: PRIMARY_GROUP_NAME, exact: true }).click();
     await s.popup.waitForTimeout(300);
 
     const handles = s.popup.getByLabel('Drag to reorder tab');

@@ -72,6 +72,9 @@ function makeChromeStub() {
         onStartup: on('onStartup'),
         onMessage: on('onMessage'),
         onMessageExternal: on('onMessageExternal'),
+        // Popup → worker port used to close Now Open tabs the popup must not close itself
+        // (an ACTIVE tab; closing the popup's anchor dismisses it — spec C7).
+        onConnect: on('onConnect'),
         getURL: vi.fn().mockReturnValue('icon.png'),
         getManifest: vi.fn().mockReturnValue({ version: '2.9.0' }),
       },
@@ -104,6 +107,7 @@ function makeChromeStub() {
         onUpdated: on('tabsOnUpdated'),
         query: vi.fn().mockResolvedValue([]),
         create: vi.fn(),
+        remove: vi.fn().mockResolvedValue(undefined),
       },
       windows: {
         getAll: vi.fn().mockResolvedValue([]),
@@ -140,6 +144,65 @@ beforeEach(async () => {
   await import('@/entrypoints/background')
   capturedMain!()
   await new Promise((r) => setTimeout(r, 0)) // flush initial buildMenus/reRegisterReminders
+})
+
+describe('background — deferred tab close (drag out of Now Open)', () => {
+  /** Connect a fake popup port and return its message/disconnect hooks. */
+  function connect(name = 'tm-close-tabs-on-popup-close') {
+    const messageCbs: ((msg: unknown) => void)[] = []
+    const disconnectCbs: (() => void)[] = []
+    stub.listeners.onConnect[0]({
+      name,
+      onMessage: { addListener: (cb: (msg: unknown) => void) => messageCbs.push(cb) },
+      onDisconnect: { addListener: (cb: () => void) => disconnectCbs.push(cb) },
+    })
+    return {
+      post: (msg: unknown) => messageCbs.forEach((cb) => cb(msg)),
+      disconnect: () => disconnectCbs.forEach((cb) => cb()),
+      connected: messageCbs.length > 0,
+    }
+  }
+
+  it('closes the queued tabs only once the popup port DISCONNECTS, not when they arrive', () => {
+    const port = connect()
+    port.post({ tabIds: [7, 8] })
+    // Still open: the popup is alive, and closing its anchor tab would dismiss it (C7).
+    expect(stub.chrome.tabs.remove).not.toHaveBeenCalled()
+    port.disconnect()
+    expect(stub.chrome.tabs.remove).toHaveBeenCalledWith([7, 8])
+  })
+
+  it('accumulates ids across messages and de-duplicates them', () => {
+    const port = connect()
+    port.post({ tabIds: [7] })
+    port.post({ tabIds: [7, 9] })
+    port.disconnect()
+    expect(stub.chrome.tabs.remove).toHaveBeenCalledWith([7, 9])
+  })
+
+  it('ignores junk payloads and the saved-tab sentinel id 0', () => {
+    const port = connect()
+    port.post({ tabIds: [0, -1, 'x'] })
+    port.post(undefined)
+    port.post({})
+    port.disconnect()
+    expect(stub.chrome.tabs.remove).not.toHaveBeenCalled()
+  })
+
+  it('ignores ports with a different name (other features may open their own)', () => {
+    const port = connect('something-else')
+    expect(port.connected).toBe(false)
+  })
+
+  it('falls back to closing tabs one by one when the batch remove rejects', async () => {
+    stub.chrome.tabs.remove.mockRejectedValueOnce(new Error('one already gone'))
+    const port = connect()
+    port.post({ tabIds: [7, 8] })
+    port.disconnect()
+    await new Promise((r) => setTimeout(r, 0))
+    expect(stub.chrome.tabs.remove).toHaveBeenCalledWith(7)
+    expect(stub.chrome.tabs.remove).toHaveBeenCalledWith(8)
+  })
 })
 
 describe('background — context menu building', () => {

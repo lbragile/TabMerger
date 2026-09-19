@@ -333,7 +333,7 @@ describe('applyMove — cross-group', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('applyMove — Now Open delegation', () => {
-  it('23. dragging a live tab OUT of Now Open into a saved group is a COPY: saved group gets a detached copy, available[0] not mutated, NO chrome side-effect (the real tab stays open), not undoable', () => {
+  it('23. dragging a live tab OUT of Now Open into a saved group MOVES it: saved group gets a detached copy, available[0] not mutated, a tabs.remove closes the real tab, not undoable', () => {
     const s = state([
       group('now-open', [liveWin(500, [liveTab(9, 'live-9'), liveTab(10, 'live-10')])], { permanent: true }),
       group('saved-a', [win([tab('a1')])]),
@@ -350,8 +350,10 @@ describe('applyMove — Now Open delegation', () => {
     expect(copy!.savedAt).toEqual(expect.any(Number))
     // Now Open group in `next` is NOT directly mutated (it re-syncs from the browser)
     expect(res.next.available[0]).toEqual(s.available[0])
-    // copy semantics: closing the real tab would dismiss the toolbar popup mid-drop
-    expect(res.sideEffects).toEqual([])
+    // MOVE semantics: the real tab is closed. `runSideEffects` defers an ACTIVE tab to
+    // popup teardown so the popup's anchor tab can't dismiss it mid-drop (spec C7).
+    expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9] }])
+    // Undo can't faithfully reopen a closed tab, so the move stays out of the stack.
     expect(res.undoable).toBe(false)
   })
 
@@ -426,16 +428,19 @@ describe('applyMove — Now Open delegation', () => {
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// REGRESSION GUARD — dragging OUT of Now Open never closes a real tab/window
+// Dragging OUT of Now Open is a MOVE (user request, 2026-09-17): the destination
+// gets a detached copy AND the real tab is closed.
 //
-// Dragging a live Now Open tab/window into a saved group used to emit
-// `tabs.remove`. Closing the ACTIVE tab of the window the toolbar popup is
-// anchored to makes Chrome dismiss the popup instantly (a window drag also closed
-// the user's real browser window). Out-of-Now-Open drags are COPIES, consistent
-// with Tab.tsx's "Copy to group" context-menu rule.
+// The hazard this replaced a copy with is spec C7: closing the ACTIVE tab of the
+// window the toolbar popup is anchored to makes Chrome dismiss the popup instantly,
+// which used to kill the commit mid-flight. `applyMove` stays pure and just names the
+// ids; `runSideEffects` closes only NON-active tabs itself and defers every active one
+// to the background worker, which closes it when the popup goes away (see
+// `dndNowOpenMoveOut.test.ts`). The guard that survives here: a `tabs.remove` may only
+// ever appear for a Now Open → saved drop, and may only ever name REAL (non-zero) ids.
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a real tab', () => {
+describe('applyMove — a drag out of Now Open closes exactly the real tabs it moved', () => {
   function liveState() {
     return state([
       group(
@@ -455,7 +460,7 @@ describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a 
     return ref.groupIndex ?? -1
   }
 
-  it('exhaustive sweep: every single-item (tab/window/group) drag over every target emits no tabs.remove, and every Now Open → saved drop emits NO side effect at all', () => {
+  it('exhaustive sweep: a tabs.remove is emitted ONLY for a Now Open → saved drop, and always names real (non-zero) live tab ids', () => {
     const s = liveState()
     const m = buildDndModel(s)
     const actives = [
@@ -472,16 +477,24 @@ describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a 
     for (const a of actives) {
       for (const o of overs) {
         const res = applyMove(m, s, a, o)
-        expect(res.sideEffects.map((e) => e.type as string)).not.toContain('tabs.remove')
+        const removals = res.sideEffects.filter((e) => e.type === 'tabs.remove')
 
         const srcGi = a.type === 'group' ? -1 : destGroupIndex(m, a)
         const dstGi = destGroupIndex(m, o)
         if (srcGi === 0 && dstGi > 0 && res.next !== s) {
           outOfNowOpenCommits++
-          expect(res.sideEffects).toEqual([])
+          // The move closes the real tab(s) — and only ever REAL ids: a saved tab is
+          // `id: 0`, and passing 0 to chrome.tabs.remove would be a bug.
+          expect(removals).toHaveLength(1)
+          const ids = (removals[0] as { tabIds: number[] }).tabIds
+          expect(ids.length).toBeGreaterThan(0)
+          expect(ids.every((id) => Number.isInteger(id) && id > 0)).toBe(true)
           expect(res.undoable).toBe(false)
-          // Now Open is never mutated by an out-drag
+          // Now Open is never mutated by an out-drag — it re-syncs from the browser.
           expect(res.next.available[0]).toEqual(s.available[0])
+        } else {
+          // Every other drag is non-destructive.
+          expect(removals).toEqual([])
         }
       }
     }
@@ -489,7 +502,7 @@ describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a 
     expect(outOfNowOpenCommits).toBeGreaterThan(10)
   })
 
-  it('single live TAB onto a saved tab / window / group row / new-window zone → copy lands, sideEffects []', () => {
+  it('single live TAB onto a saved tab / window / group row / new-window zone → detached copy lands and the real tab is closed', () => {
     const s = liveState()
     const { m, tabRef, winRef, groupRef, groupId } = model(s)
     const targets = [
@@ -504,12 +517,12 @@ describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a 
       const destGi = o.type === 'group' && o.id === groupId(2) ? 2 : 1
       const titles = res.next.available[destGi].windows.flatMap((w) => w.tabs.map((t) => t.title))
       expect(titles).toContain('live-9')
-      expect(res.sideEffects).toEqual([])
+      expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9] }])
       expect(res.next.available[0]).toEqual(s.available[0])
     }
   })
 
-  it('live WINDOW onto a saved group → detached window copy lands, sideEffects [] (the real browser window stays open)', () => {
+  it('live WINDOW onto a saved group → detached window copy lands and EVERY tab of the real window is closed (the window goes with its last tab)', () => {
     const s = liveState()
     const { m, winRef, groupRef } = model(s)
     const res = applyMove(m, s, winRef(0, 0), groupRef(1))
@@ -518,11 +531,11 @@ describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a 
     expect(copy.id).toBe(0)
     expect(copy.tabs.map((t) => t.title)).toEqual(['live-9', 'live-10'])
     expect(copy.tabs.every((t) => t.id === 0)).toBe(true)
-    expect(res.sideEffects).toEqual([])
+    expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10] }])
     expect(res.undoable).toBe(false)
   })
 
-  it('multi-TAB and multi-WINDOW selections out of Now Open emit no tabs.remove (sideEffects [])', () => {
+  it('multi-TAB and multi-WINDOW selections out of Now Open close every live member exactly once', () => {
     const s = liveState()
     const { m, tabRef, winRef, groupRef, tabId, windowId } = model(s)
 
@@ -532,7 +545,7 @@ describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a 
       { ...tabRef(0, 0, 0), selectionIds: [tabId(0, 0, 0), tabId(0, 0, 1)] },
       groupRef(1),
     )
-    expect(multiTab.sideEffects).toEqual([])
+    expect(multiTab.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10] }])
     expect(multiTab.undoable).toBe(false)
 
     const multiWin = applyMove(
@@ -541,7 +554,8 @@ describe('applyMove — REGRESSION GUARD: no drag out of Now Open ever closes a 
       { ...winRef(0, 0), selectionIds: [windowId(0, 0), windowId(0, 1)] },
       groupRef(1),
     )
-    expect(multiWin.sideEffects).toEqual([])
+    // both live windows → all three of their real tabs
+    expect(multiWin.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10, 11] }])
     expect(multiWin.undoable).toBe(false)
   })
 
@@ -735,46 +749,85 @@ describe('applyMove — a sidebar GROUP ROW drop adds a NEW window (tabs + windo
   })
 })
 
-describe('applyMove — a move that EMPTIES its saved source window removes that window in the same commit', () => {
-  it('cross-group tab → group row: the emptied source window is gone, the source keeps its other windows', () => {
+/**
+ * User rule (2026-09-18): an emptied window is KEPT. It renders as an empty window card,
+ * still counts in the badges, and is still a drop target — removing a window is always an
+ * explicit action, never a side effect of dragging its last tab away. This reverses the
+ * earlier "prune emptied windows in the same commit" behaviour and lines DnD up with
+ * `useGroups`, which now also keeps them.
+ */
+describe('applyMove — a move that EMPTIES its saved source window LEAVES that window in place', () => {
+  it('cross-group tab → group row: the emptied source window STAYS, as an empty window', () => {
     const s = state([NOW_OPEN_EMPTY(), savedTwoWin('saved-a'), group('saved-b', [win([tab('b1')])])])
     const { m, tabRef, groupRef } = model(s)
     const res = applyMove(m, s, tabRef(1, 1, 0), groupRef(2)) // t4 is w1's only tab
-    expect(titles(res.next.available[1])).toEqual([['t1', 't2', 't3']])
+    expect(titles(res.next.available[1])).toEqual([['t1', 't2', 't3'], []])
     expect(titles(res.next.available[2])).toEqual([['b1'], ['t4']])
     expect(res.undoable).toBe(true)
   })
 
-  it('cross-group tab onto a tab: a source group whose only window emptied ends with zero windows', () => {
+  it('a tab can be dropped straight BACK into the window a move emptied', () => {
+    const s = state([NOW_OPEN_EMPTY(), group('saved-a', [win([tab('t1')]), win([])]), group('saved-b', [win([tab('b1')])])])
+    const { m, tabRef, winRef } = model(s)
+    expect(canDrop(m, tabRef(2, 0, 0), winRef(1, 1))).toBe(true)
+    const res = applyMove(m, s, tabRef(2, 0, 0), winRef(1, 1))
+    expect(titles(res.next.available[1])).toEqual([['t1'], ['b1']])
+  })
+
+  it("a group's ONLY window dragged to another group leaves the source with zero windows (and is undoable)", () => {
+    // The move was never blocked by `canDrop` — the UI just hid the grip when a group had
+    // one window. Now that the grip always renders, the engine has to behave sanely: the
+    // source group is emptied, NOT deleted, and stays a legal drop target.
+    const s = state([NOW_OPEN_EMPTY(), group('saved-a', [win([tab('solo1'), tab('solo2')])]), group('saved-b', [win([tab('b1')])])])
+    const { m, winRef, groupRef } = model(s)
+    const res = applyMove(m, s, winRef(1, 0), groupRef(2))
+    expect(titles(res.next.available[1])).toEqual([])
+    expect(titles(res.next.available[2])).toEqual([['b1'], ['solo1', 'solo2']])
+    expect(res.next.available[1]).toBeDefined() // never auto-deleted
+    expect(res.undoable).toBe(true)
+    expect(res.sideEffects).toEqual([])
+  })
+
+  it('a group left with ZERO windows is still a valid target: a tab dropped on its row makes a new window', () => {
+    const s = state([NOW_OPEN_EMPTY(), group('saved-a', []), group('saved-b', [win([tab('b1')])])])
+    const { m, tabRef, groupRef } = model(s)
+    expect(canDrop(m, tabRef(2, 0, 0), groupRef(1))).toBe(true)
+    const res = applyMove(m, s, tabRef(2, 0, 0), groupRef(1))
+    expect(titles(res.next.available[1])).toEqual([['b1']])
+    // …and group b keeps its now-empty window rather than dropping to zero windows.
+    expect(titles(res.next.available[2])).toEqual([[]])
+  })
+
+  it('cross-group tab onto a tab: a source group whose only window emptied keeps that empty window', () => {
     const s = state([NOW_OPEN_EMPTY(), group('saved-a', [win([tab('solo')])]), group('saved-b', [win([tab('b1')])])])
     const { m, tabRef } = model(s)
     const res = applyMove(m, s, tabRef(1, 0, 0), { ...tabRef(2, 0, 0), index: 0 })
-    expect(res.next.available[1].windows).toEqual([])
+    expect(titles(res.next.available[1])).toEqual([[]])
     expect(titles(res.next.available[2])).toEqual([['solo', 'b1']])
   })
 
-  it('same-group cross-window move that empties the source window removes it (the destination still gets the tab at its index)', () => {
+  it('same-group cross-window move keeps the emptied source window (the destination still gets the tab at its index)', () => {
     const s = state([NOW_OPEN_EMPTY(), group('saved-a', [win([tab('x')]), win([tab('y1'), tab('y2')])])])
     const { m, tabRef, winRef } = model(s)
     const res = applyMove(m, s, tabRef(1, 0, 0), { ...winRef(1, 1), index: 1 })
-    expect(titles(res.next.available[1])).toEqual([['y1', 'x', 'y2']])
+    expect(titles(res.next.available[1])).toEqual([[], ['y1', 'x', 'y2']])
   })
 
-  it('a same-group group-row drop of a window\'s only tab: the tab lands in a new last window, the emptied one is removed', () => {
+  it('a same-group group-row drop of a window\'s only tab: the tab lands in a new last window and the emptied one stays', () => {
     const s = state([NOW_OPEN_EMPTY(), savedTwoWin('saved-a')])
     const { m, tabRef, groupRef } = model(s)
     const res = applyMove(m, s, tabRef(1, 1, 0), groupRef(1)) // t4 alone in w1 → own row
-    expect(titles(res.next.available[1])).toEqual([['t1', 't2', 't3'], ['t4']])
+    expect(titles(res.next.available[1])).toEqual([['t1', 't2', 't3'], [], ['t4']])
   })
 
-  it('saved tab → a live Now Open tab: the emptied saved source window is removed too; tabs.create opens it in the BACKGROUND', () => {
+  it('saved tab → a live Now Open tab: the emptied saved source window stays; tabs.create opens it in the BACKGROUND', () => {
     const s = state([
       group('now-open', [liveWin(800, [liveTab(1, 'n1')])], { permanent: true }),
       group('saved-a', [win([tab('k')]), win([tab('go', { url: 'https://go.example' })])]),
     ])
     const { m, tabRef } = model(s)
     const res = applyMove(m, s, tabRef(1, 1, 0), tabRef(0, 0, 0))
-    expect(titles(res.next.available[1])).toEqual([['k']])
+    expect(titles(res.next.available[1])).toEqual([['k'], []])
     // `active: false` — activating a tab in the popup's anchor window dismisses the popup (phase-1 open risk)
     expect(res.sideEffects).toEqual([{ type: 'tabs.create', windowId: 800, url: 'https://go.example', index: 0, active: false }])
     expect(res.next.available[0]).toEqual(s.available[0])

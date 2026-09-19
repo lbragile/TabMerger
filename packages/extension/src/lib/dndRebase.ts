@@ -45,6 +45,8 @@ import type { GroupsState, Tab, Window as ExtWindow, Group } from '@/lib/types';
  */
 
 const NEW_WINDOW_SUFFIX = '::new-window';
+/** Kept in sync with `NEW_GROUP_ID` in `@/lib/dndMove` (duplicated to keep this file import-free of it). */
+const NEW_GROUP_ID = '::new-group';
 
 type Match = { ok: true; id: string } | { ok: false; reason: 'gone' | 'ambiguous' };
 const GONE: Match = { ok: false, reason: 'gone' };
@@ -59,7 +61,12 @@ function tabIdentity(t: Tab): string {
     t.customTitle ?? null,
     t.title ?? null,
     t.note ?? null,
-    t.pinned ?? false
+    t.pinned ?? false,
+    // A reminder is the last user-visible per-tab field that could tell two otherwise
+    // identical saved tabs apart. Including it shrinks the residual duplicate-identity
+    // risk to fields the user can't see (`favIconUrl`, `chromeGroup`) — a wrong pick
+    // there is cosmetic, not a wrong move.
+    t.reminder?.fireAt ?? null
   ])}`;
 }
 
@@ -203,6 +210,9 @@ function rebaseWindow(ctx: Ctx, id: string): Match {
 }
 
 function rebaseId(ctx: Ctx, id: string): Match {
+  // The "new group" zone is a fixed sentinel that names no existing group, so there is
+  // nothing to re-resolve: it is valid against ANY current state.
+  if (id === NEW_GROUP_ID) return { ok: true, id };
   if (id.endsWith(NEW_WINDOW_SUFFIX)) {
     return ctx.curModel.groups[id.slice(0, -NEW_WINDOW_SUFFIX.length)] ? { ok: true, id } : GONE;
   }
@@ -223,6 +233,7 @@ function memberDeleted(ctx: Ctx, id: string): boolean {
 
 /** Re-point a ref's positional extras (`index`, `groupIndex`) at the current state. */
 function refreshRef(curModel: DndModel, ref: DndRef, id: string): DndRef {
+  if (ref.type === 'new-group') return { ...ref, id, index: undefined, groupIndex: undefined };
   if (ref.type === 'new-window') {
     const g = curModel.groups[id.slice(0, -NEW_WINDOW_SUFFIX.length)];
     return { ...ref, id, groupIndex: g?.index };

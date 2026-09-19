@@ -17,7 +17,7 @@ test.describe('Group management', () => {
     await page.keyboard.type('Dev Work');
     await page.keyboard.press('Enter');
 
-    await expect(page.getByRole('button', { name: 'Dev Work' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Dev Work', exact: true })).toBeVisible();
   });
 
   test('rename group — Cancel button restores original name', async ({ context, extensionId }) => {
@@ -34,7 +34,7 @@ test.describe('Group management', () => {
     // Cancel button uses onMouseDown preventDefault to avoid blur-commit, then cancels
     await page.getByRole('button', { name: 'Cancel' }).click();
 
-    await expect(page.getByRole('button', { name: 'Work' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Work', exact: true })).toBeVisible();
     await expect(page.getByText('Should Not Save')).not.toBeVisible();
   });
 
@@ -50,18 +50,18 @@ test.describe('Group management', () => {
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Enter');
 
-    await expect(page.getByRole('button', { name: 'Work' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Work', exact: true })).toBeVisible();
   });
 
   test('delete group without confirmOnDelete — immediate, no modal', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click({ button: 'right' });
+    await page.getByRole('button', { name: 'Work', exact: true }).click({ button: 'right' });
     await page.waitForTimeout(200);
     await page.getByText('Delete group').click();
 
-    await expect(page.getByRole('button', { name: 'Work' })).not.toBeVisible({ timeout: 3_000 });
+    await expect(page.getByRole('button', { name: 'Work', exact: true })).not.toBeVisible({ timeout: 3_000 });
   });
 
   test('delete group with confirmOnDelete — modal appears and confirms deletion', async ({ context, extensionId }) => {
@@ -70,7 +70,7 @@ test.describe('Group management', () => {
     await seedConfirmOnDelete(page, true);
     await page.reload({ waitUntil: 'networkidle' });
 
-    await page.getByRole('button', { name: 'Work' }).click({ button: 'right' });
+    await page.getByRole('button', { name: 'Work', exact: true }).click({ button: 'right' });
     await page.waitForTimeout(200);
     await page.getByText('Delete group').click();
 
@@ -78,7 +78,7 @@ test.describe('Group management', () => {
     await expect(modal).toBeVisible({ timeout: 3_000 });
     await modal.getByRole('button', { name: 'Delete' }).click();
 
-    await expect(page.getByRole('button', { name: 'Work' })).not.toBeVisible({ timeout: 3_000 });
+    await expect(page.getByRole('button', { name: 'Work', exact: true })).not.toBeVisible({ timeout: 3_000 });
   });
 
   test('starring a group moves it above non-starred groups', async ({ context, extensionId }) => {

@@ -225,6 +225,16 @@ describe('WindowItem', () => {
     expect(document.querySelector('[data-window-index="0"]')!.getAttribute('data-tm-dnd-id')).toBe('g1::w0')
   })
 
+  it('a group with ONE window still gets a drag grip — moving the last window to another group is allowed', () => {
+    // Previously gated on `siblingCount > 1`, which left a one-window group window
+    // undraggable (and unreachable by keyboard drag) even though `canDrop` allowed the
+    // move. The source group is simply left empty; it is never auto-deleted.
+    wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 1, tabIds: [] }))
+    const grip = document.querySelector('[aria-label="Drag to reorder window: Test Window"]')
+    expect(grip).not.toBeNull()
+    expect(grip!.getAttribute('draggable')).toBe('true')
+  })
+
   it('Shift+Space on the window GRIP range-selects instead of picking the window up; plain Space does not range-select', () => {
     wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] }))
     const grip = document.querySelector('[aria-label="Drag to reorder window: Test Window"]') as HTMLElement

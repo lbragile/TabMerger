@@ -33,6 +33,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { TabItem } from './Tab';
 import { CreateGroupMenuItem } from './CreateGroupMenuItem';
+import { useRovingRow } from '@/hooks/useRovingRow';
+import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import type { Window as WindowType } from '@/lib/types';
 import {
   useDeleteWindow,
@@ -60,6 +62,7 @@ interface WindowProps {
   window: WindowType;
   groupIndex: number;
   windowIndex: number;
+  /** Windows in this group. No longer gates the drag grip (a lone window is draggable too). */
   siblingCount: number;
   tabIds: string[];
   groupColor?: string;
@@ -71,15 +74,23 @@ interface WindowProps {
   staleThresholdMs?: number;
 }
 
-export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCount, tabIds, groupColor, searchFilter, tagFilter, tabOffset = 0, maxTabs = Infinity, staleThresholdMs }: WindowProps) {
+export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCount: _siblingCount, tabIds, groupColor, searchFilter, tagFilter, tabOffset = 0, maxTabs = Infinity, staleThresholdMs }: WindowProps) {
   const sortableId = `${groupId}::w${windowIndex}`;
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: sortableId,
-    data: { type: 'window', groupId }
+    // `starred` is the row's ZONE (starred windows are pinned to the top of the group), so
+    // the collision layer can clamp the insertion gap into it — see `@/lib/dndInsertion`.
+    data: { type: 'window', groupId, starred: !!window.starred }
   });
   const { gap, active: dndActive } = useDndContext();
   const keyboardDrag = dndActive?.keyboard === true;
   const windowTitle = window.name ?? `Window ${windowIndex + 1}`;
+  // The header row is ONE Tab stop (a11y M3): `role="toolbar"` + `tabIndex=0` on the
+  // container, `useRovingRow` pinning every control to -1 and walking them with
+  // Left/Right/Home/End. `toolbar` is chosen over a bare `group` precisely because it is
+  // the ARIA pattern screen readers already describe as arrow-navigable, so the roving
+  // affordance is announced without an extra `aria-describedby` on every row.
+  const headerRoving = useRovingRow<HTMLDivElement>();
 
   const [isEditing, setIsEditing] = useState(false);
   const [nameValue, setNameValue] = useState(window.name ?? 'Window');
@@ -98,7 +109,16 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
   }, [isEditing]);
 
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
+
+  // Starting a multi-select must not leave this window's menus / note editor floating
+  // over the rows the user is about to tick (see `useCloseOnOverlayDismiss`).
+  useCloseOnOverlayDismiss(() => {
+    setContextMenuOpen(false);
+    setMoreMenuOpen(false);
+    setNoteOpen(false);
+  });
   const [noteValue, setNoteValue] = useState('');
   const noteTextareaRef = useRef<HTMLTextAreaElement>(null);
   const noteContainerRef = useRef<HTMLDivElement>(null);
@@ -228,10 +248,21 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
 
       {/* Window header */}
       <div
-        className="group relative flex items-center gap-1.5 px-1.5 py-1 border-b border-border/50"
-        // Static (never toggled): keyboard-drop focus lands on this header's first control
-        // when the window has no grip (a group's only window) — see `dndFocus`.
+        ref={headerRoving.ref}
+        className="group relative flex items-center gap-1.5 px-1.5 py-1 border-b border-border/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        // Static (never toggled): keyboard-drop focus lands on the header itself when the
+        // window has no grip (a group's only window) — see `dndFocus`.
         data-window-header=""
+        // ONE Tab stop for the whole header; Left/Right/Home/End walk grip → checkbox →
+        // note → star → "More". `toolbar` is the ARIA pattern for exactly that, and it
+        // announces the affordance, which a bare focusable `div` would not.
+        tabIndex={0}
+        role="toolbar"
+        aria-label={`${windowTitle} controls`}
+        onKeyDown={(e) => {
+          // Inert mid-drag, so dnd-kit still receives the arrows (spec C13).
+          headerRoving.onKeyDown(e);
+        }}
         onClick={handleHeaderClick}
         // Shift+click must not extend the browser's TEXT selection.
         onMouseDown={(e) => {
@@ -312,37 +343,42 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         </DropdownMenu>
 
         {/* Drag grip stays live in selection mode (dragging a selected window drags the
-            selection); the checkbox sits right after it. */}
-        {siblingCount > 1 ? (
-          <span
-            className="opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
-            // Native onDragStart activator (see useDnd.ts + dndHtml5Sensor) needs
-            // `draggable` set — dnd-kit only spreads `listeners`, never the attr.
-            draggable={!DND_POINTER_PROBE_ACTIVE}
-            {...attributes}
-            {...listeners}
-            // AFTER the spread, delegating: Shift+Space range-selects (dnd-kit's activator
-            // ignores modifiers and would pick the window up); every other key reaches dnd-kit.
-            onKeyDown={(e: React.KeyboardEvent) => {
-              if ((e.key === ' ' || e.code === 'Space') && e.shiftKey && !isDndDragLive()) {
-                e.preventDefault();
-                e.stopPropagation();
-                const item = { type: 'window' as const, id: selectionId };
-                selectRange(item, selectionRange(groupsState, selectionAnchor, item));
-                return;
-              }
-              (listeners as { onKeyDown?: (e: React.KeyboardEvent) => void } | undefined)?.onKeyDown?.(e);
-            }}
-            // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
-            // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
-            // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
-            aria-label={`Drag to reorder window: ${windowTitle}`}
-          >
-            <GripVertical className="h-3.5 w-3.5" />
-          </span>
-        ) : (
-          <span className="h-3.5 w-3.5 shrink-0" />
-        )}
+            selection); the checkbox sits right after it.
+
+            Rendered even when this is the group's ONLY window: moving that window to
+            another group is a legitimate move (the source group is simply left empty —
+            it is never auto-deleted), and gating this on `siblingCount > 1` made that
+            window undraggable and unreachable by keyboard drag. */}
+        <span
+          className="opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground touch-none transition-opacity"
+          // Native onDragStart activator (see useDnd.ts + dndHtml5Sensor) needs
+          // `draggable` set — dnd-kit only spreads `listeners`, never the attr.
+          draggable={!DND_POINTER_PROBE_ACTIVE}
+          {...attributes}
+          {...listeners}
+          // AFTER the spread: dnd-kit's `attributes` DECLARE `tabIndex: 0` and React
+          // re-applies a declared prop every render, so `useRovingRow`'s effect alone
+          // cannot hold the grip out of the Tab order (same fix as Tab.tsx's grip).
+          tabIndex={-1}
+          // AFTER the spread, delegating: Shift+Space range-selects (dnd-kit's activator
+          // ignores modifiers and would pick the window up); every other key reaches dnd-kit.
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if ((e.key === ' ' || e.code === 'Space') && e.shiftKey && !isDndDragLive()) {
+              e.preventDefault();
+              e.stopPropagation();
+              const item = { type: 'window' as const, id: selectionId };
+              selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+              return;
+            }
+            (listeners as { onKeyDown?: (e: React.KeyboardEvent) => void } | undefined)?.onKeyDown?.(e);
+          }}
+          // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
+          // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
+          // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
+          aria-label={`Drag to reorder window: ${windowTitle}`}
+        >
+          <GripVertical className="h-3.5 w-3.5" />
+        </span>
         {showCheckbox && (
           <button
             type="button"
@@ -434,7 +470,8 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         )}
 
         <Tooltip>
-          <DropdownMenu>
+          {/* Controlled so `useCloseOnOverlayDismiss` can shut it when a multi-select starts. */}
+          <DropdownMenu open={moreMenuOpen} onOpenChange={setMoreMenuOpen}>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild disabled={selectionMode}>
                 <Button variant="ghost" size="icon" className={selectionMode ? 'h-5 w-5 invisible' : 'h-5 w-5 text-muted-foreground'} aria-label="More window options">

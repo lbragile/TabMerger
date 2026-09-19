@@ -7,7 +7,7 @@ test.describe('Undo / Redo', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     const tabRow = page.getByRole('listitem', { name: 'Confluence' });
     await tabRow.hover();

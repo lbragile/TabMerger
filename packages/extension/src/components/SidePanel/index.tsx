@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
 import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,6 +10,8 @@ import { GroupItem } from './GroupItem';
 import type { GroupsState } from '@/lib/types';
 import { useDndContext } from '@/components/dnd/DndProvider';
 import { dndListStyle, gapGrowthFor } from '@/lib/dndInsertion';
+import { NEW_GROUP_ID, setNewGroupZoneGate } from '@/hooks/useDndHandlers';
+import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
@@ -30,8 +33,51 @@ interface SidePanelProps {
   groupsState: GroupsState;
 }
 
+/**
+ * Sidebar "drop here for a new group" zone — the mirror of `NewWindowDropZone` in the
+ * windows panel. Visible while a TAB or WINDOW drag is live; dropping here creates a
+ * fresh group holding the dragged item(s) (`moveToNewGroup` in `@/lib/dndMove`), and a
+ * whole multi-selection lands in ONE new group.
+ *
+ * Constraints it exists to satisfy (spec C4):
+ *  - ALWAYS mounted — unmounting a child of a group grip's ancestor aborts the native
+ *    HTML5 drag; only `invisible` / `pointer-events-none` are toggled;
+ *  - absolutely positioned, so nothing in the sidebar changes height mid-drag;
+ *  - rendered AFTER the group `SortableContext`, so it is never an ancestor of any grip.
+ *
+ * At the free-tier group cap it is HIDDEN (user decision, 2026-09-18): `active` is false,
+ * so it renders exactly as it does when no drag is running — `invisible`,
+ * `pointer-events-none`, `aria-hidden`, droppable disabled — and NO upgrade toast fires,
+ * because there is nothing to drop on. It is still MOUNTED, so C4 holds. The cap is
+ * published through `setNewGroupZoneGate` so `onDragEnd` can refuse a drop that the
+ * throttled `dragover` stream (C2) resolved to this id anyway. The "Add Group" button's
+ * own at-cap behaviour (warn + upgrade toast) is unchanged.
+ */
+function NewGroupDropZone({ active }: { active: boolean }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: NEW_GROUP_ID,
+    data: { type: 'new-group' },
+    disabled: !active
+  });
+  return (
+    <div
+      ref={setNodeRef}
+      data-testid="new-group-dropzone"
+      aria-hidden={!active}
+      className={cn(
+        'absolute inset-y-0 left-1.5 right-1.5 z-10 flex items-center justify-center border border-dashed text-[11px] font-medium transition-colors',
+        active ? 'border-primary text-foreground bg-zone-sidebar' : 'invisible pointer-events-none border-transparent',
+        isOver && active && 'bg-primary/10 border-primary text-foreground'
+      )}
+    >
+      <Plus className="h-3.5 w-3.5 mr-1 shrink-0" />
+      Drop for a new group
+    </div>
+  );
+}
+
 export function SidePanel({ groupsState }: SidePanelProps) {
-  const { isDragging, gap } = useDndContext();
+  const { isDragging, gap, active } = useDndContext();
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
   const selectionMode = useUIStore((s) => s.selectionMode);
@@ -81,14 +127,31 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   // Sensors / collision / drag handlers all come from the app-level <DndProvider>.
   const groupModelIds = available.map(({ group }) => group.id);
 
+  // All non-permanent groups count toward the limit (archived included — archiving
+  // doesn't free up slots).
+  const atGroupLimit = raw.filter((g) => !g.permanent).length >= maxGroups;
+  const warnGroupLimit = useCallback(() => {
+    trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
+    toast.error(`Free plan allows up to ${maxGroups} groups.`, {
+      action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
+    });
+  }, [maxGroups]);
+
+  // The "new group" drop zone takes tab AND window drags (a group is already a group),
+  // and is hidden outright at the free-group cap (user decision, 2026-09-18).
+  const dropZoneActive = (active?.type === 'tab' || active?.type === 'window') && !atGroupLimit;
+
+  // Publish the entitlement gate for the drop zone: `applyMove` is pure and `onDragEnd`
+  // often resolves the target without dnd-kit's `over.data` (throttled `dragover`, C2),
+  // so a drop can still name this id even though the zone is disabled — it is refused
+  // there, silently, since a hidden zone was never offered to the user.
+  useEffect(() => {
+    setNewGroupZoneGate(atGroupLimit);
+  }, [atGroupLimit]);
+
   const handleNewGroup = async () => {
-    // All non-permanent groups count toward the limit (archived included — archiving doesn't free up slots)
-    const activeCount = raw.filter((g) => !g.permanent).length;
-    if (activeCount >= maxGroups) {
-      trackEvent('entitlement_limit_hit', { limit: 'maxGroups' });
-      toast.error(`Free plan allows up to ${maxGroups} groups.`, {
-        action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
-      });
+    if (atGroupLimit) {
+      warnGroupLimit();
       return;
     }
     const newIndex = raw.length;
@@ -121,19 +184,25 @@ export function SidePanel({ groupsState }: SidePanelProps) {
           </SortableContext>
           </div>
 
-          {/* Kept mounted during a drag: unmounting removes a child from an
-              ancestor of a dragged group row → aborts the native HTML5 drag in
-              the MV3 popup. Hidden, not unmounted, while dragging. */}
-          <div className={isDragging ? 'px-1.5 mt-2 invisible' : 'px-1.5 mt-2'}>
-            <Button
-              variant="outline"
-              className="h-8 rounded-none px-3 text-xs w-full"
-              onClick={handleNewGroup}
-              disabled={selectionMode || isDragging}
-            >
-              <Plus className="h-3.5 w-3.5 mr-1" />
-              Add Group
-            </Button>
+          {/* "Add Group" button + the "new group" drop zone share ONE box: they are never
+              useful at the same time (the button is hidden for the whole drag), so the
+              zone is absolutely positioned OVER it. That keeps the layout byte-identical
+              whether or not a drag is running — no ancestor of a group grip ever changes
+              height, which is what aborts a native HTML5 drag in the MV3 popup (C4).
+              Both children stay MOUNTED for the same reason; only visibility flips. */}
+          <div className="relative px-1.5 mt-2">
+            <NewGroupDropZone active={dropZoneActive} />
+            <div className={isDragging ? 'invisible' : undefined}>
+              <Button
+                variant="outline"
+                className="h-8 rounded-none px-3 text-xs w-full"
+                onClick={handleNewGroup}
+                disabled={selectionMode || isDragging}
+              >
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Add Group
+              </Button>
+            </div>
           </div>
 
         </div>

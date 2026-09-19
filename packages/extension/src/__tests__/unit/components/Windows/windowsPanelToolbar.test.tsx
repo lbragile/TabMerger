@@ -434,6 +434,30 @@ describe('WindowsPanel — empty state and Add Window guard', () => {
     await user.click(screen.getByRole('button', { name: /add window/i }))
     expect(mockAddWindow).toHaveBeenCalledWith({ groupIndex: 3 })
   })
+
+  /**
+   * 2c — the "Add Window" button used to sit ~40px below the last window because the
+   * ALWAYS-MOUNTED new-window drop zone was `invisible` but still in the flow. The zone
+   * is now absolutely positioned over the button, so the only gap is a single `mt-2` —
+   * the same 8px the sidebar uses above "Add Group".
+   */
+  it('puts the new-window drop zone OVER the Add Window button, leaving only the window card gap', () => {
+    const group = makeGroup()
+    wrap(<WindowsPanel group={group} groupIndex={0} />)
+    const zone = screen.getByTestId('new-window-dropzone')
+    expect(zone.className).toMatch(/absolute/)
+    expect(zone.className).not.toMatch(/\bmt-\d/)
+    const box = zone.parentElement!
+    expect(box.className).toMatch(/relative/)
+    // No top margin of its own: every window card already carries `mb-2`, so the gap
+    // above the button is the same 8px the sidebar's `mt-2` puts above "Add Group"
+    // (sidebar group rows have no margin of their own).
+    expect(box.className).not.toMatch(/\bmt-/)
+    // Both children survive the whole drag — neither may be unmounted (spec C4).
+    expect(box.textContent).toMatch(/Add Window/)
+    // The button itself no longer carries its own top margin.
+    expect(screen.getByRole('button', { name: /add window/i }).className).not.toMatch(/\bmt-/)
+  })
 })
 
 describe('WindowsPanel — window/tab count header', () => {

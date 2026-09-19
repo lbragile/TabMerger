@@ -148,7 +148,7 @@ describe('unified DnD commit path — real IndexedDB round trips', () => {
     expect(rB.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['x1', 'x2'], ['t1', 't3']])
   })
 
-  it('a cross-group drop that EMPTIES its source window removes that window in the same persisted commit', async () => {
+  it('a cross-group drop that EMPTIES its source window PERSISTS that window, now empty', async () => {
     const nowOpen = group('now', 'Now Open', [], { permanent: true })
     const groupA = group('g-a', 'Group A', [win([tab('only')]), win([tab('stay')])])
     const groupB = group('g-b', 'Group B', [win([tab('b1')])])
@@ -160,11 +160,12 @@ describe('unified DnD commit path — real IndexedDB round trips', () => {
     await drag(result, model.windows[model.groups['g-a'].windowIds[0]].tabIds[0], 'g-b')
 
     const reloaded = await getGroupsState()
-    expect(reloaded.available.find((g) => g.id === 'g-a')!.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['stay']])
+    // User rule (2026-09-18): an emptied window is KEPT — and that survives the round trip.
+    expect(reloaded.available.find((g) => g.id === 'g-a')!.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([[], ['stay']])
     expect(reloaded.available.find((g) => g.id === 'g-b')!.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['b1'], ['only']])
   })
 
-  it('multi-tab selection across TWO windows dropped on a THIRD window position persists ONE contiguous block in original order; sources and the emptied window are gone after reload', async () => {
+  it('multi-tab selection across TWO windows dropped on a THIRD window position persists ONE contiguous block in original order; the emptied source window survives the reload', async () => {
     const nowOpen = group('now', 'Now Open', [], { permanent: true })
     const groupA = group('g-a', 'Group A', [win([tab('t1'), tab('t2')]), win([tab('t3')])])
     const groupB = group('g-b', 'Group B', [win([tab('x1'), tab('x2')])])
@@ -177,7 +178,8 @@ describe('unified DnD commit path — real IndexedDB round trips', () => {
 
     const reloaded = await getGroupsState()
     expect(reloaded.available.find((g) => g.id === 'g-b')!.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['x1', 't1', 't3', 'x2']])
-    expect(reloaded.available.find((g) => g.id === 'g-a')!.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['t2']])
+    // w1 (t3) was emptied by the move and is KEPT.
+    expect(reloaded.available.find((g) => g.id === 'g-a')!.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['t2'], []])
   })
 
   it('a multi-selection COPIED out of Now Open persists detached copies (id 0 + savedAt) and never writes the live ids', async () => {

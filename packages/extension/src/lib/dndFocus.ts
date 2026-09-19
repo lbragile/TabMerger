@@ -18,11 +18,14 @@ const rowSel = (id: string) => `[data-tm-dnd-id="${id.replace(/["\\]/g, '\\$&')}
 export function focusSelectorsForItem(id: string): string[] {
   if (/::w\d+::t\d+$/.test(id)) return [`${rowSel(id)} ${GRIP}`, rowSel(id)];
   if (/::w\d+$/.test(id)) {
-    // A group's ONLY window renders no grip: land on its header's first real control
-    // (checkbox / note / star / menu — the hidden context-menu trigger is aria-hidden)
-    // before falling back to its first tab row.
+    // Fallbacks for a window whose grip isn't in the DOM yet (it is rendered for every
+    // window now, including a group's only one, but the commit may still be painting):
+    // the header, which is a single focusable `role="toolbar"` stop (a11y M3 roving
+    // tabindex — from there Left/Right reach note/star/"More"), then the header's first
+    // real control for any header that is not focusable, then its first tab row.
     return [
       `${rowSel(id)} [aria-label^="Drag to reorder window"]`,
+      `${rowSel(id)} [data-window-header]`,
       `${rowSel(id)} [data-window-header] button:not([aria-hidden="true"])`,
       `${rowSel(id)} [role="listitem"]`
     ];

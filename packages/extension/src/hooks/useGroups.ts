@@ -125,7 +125,11 @@ export function useDeleteGroup() {
         return next;
       });
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY })
+    // `cancelRefetch: false` is MANDATORY on the groups key (spec C11). The default
+    // (`true`) CANCELS an in-flight groups fetch, and TanStack rejects every promise
+    // joined to it — including any `fetchQuery`/mutation a concurrent user action is
+    // awaiting, which silently loses that action. Refetch by joining, never by cancelling.
+    onSuccess: () => qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false })
   });
 }
 
@@ -527,14 +531,12 @@ export function useDeleteTab() {
         const windows = [...available[groupIndex].windows];
         const tabs = windows[windowIndex].tabs.filter((_, i) => i !== tabIndex);
 
-        // Task 15: auto-close the source window if it becomes empty and the group has > 1 window
-        let updatedWindows: typeof windows;
-        if (tabs.length === 0 && windows.length > 1) {
-          updatedWindows = windows.filter((_, i) => i !== windowIndex);
-        } else {
-          windows[windowIndex] = { ...windows[windowIndex], tabs };
-          updatedWindows = windows;
-        }
+        // An emptied window is KEPT (user rule, 2026-09-18 — this reverses the old
+        // "auto-close the source window" behaviour). An empty window card still renders,
+        // still counts in the badges and is still a drop target, so removing a window is
+        // always an explicit action. `dndMove` keeps them for the same reason.
+        windows[windowIndex] = { ...windows[windowIndex], tabs };
+        const updatedWindows = windows;
 
         available[groupIndex] = {
           ...available[groupIndex],
@@ -772,10 +774,8 @@ export function useMoveTab() {
           const fromGroup = { ...available[fromGroupIndex] };
           const fromWindows = fromGroup.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
           fromWindows[fromWindowIndex].tabs.splice(fromTabIndex, 1);
-          fromGroup.windows =
-            fromWindows[fromWindowIndex].tabs.length === 0 && fromWindows.length > 1
-              ? fromWindows.filter((_, i) => i !== fromWindowIndex)
-              : fromWindows;
+          // An emptied source window is KEPT (user rule, 2026-09-18).
+          fromGroup.windows = fromWindows;
           fromGroup.updatedAt = Date.now();
           fromGroup.pendingSync = true;
           fromGroup.info = getGroupInfo(fromGroup);
@@ -801,13 +801,8 @@ export function useMoveTab() {
           // Preserve existing savedAt when moving between saved groups; stamp if from Now Open
           movedTab = { ...movedTab, ogImage, savedAt: movedTab.savedAt ?? savedAt };
 
-          // Task 15: auto-close empty source window if the group still has other windows
-          const finalFromWindows =
-            fromWindows[fromWindowIndex].tabs.length === 0 && fromWindows.length > 1
-              ? fromWindows.filter((_, i) => i !== fromWindowIndex)
-              : fromWindows;
-
-          fromGroup.windows = finalFromWindows;
+          // An emptied source window is KEPT (user rule, 2026-09-18).
+          fromGroup.windows = fromWindows;
           fromGroup.updatedAt = Date.now();
           fromGroup.pendingSync = true;
           fromGroup.info = getGroupInfo(fromGroup);

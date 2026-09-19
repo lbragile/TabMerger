@@ -26,7 +26,7 @@ import { SidePanel } from '@/components/SidePanel'
 import { GroupItem } from '@/components/SidePanel/GroupItem'
 import type { Group, GroupsState } from '@/lib/types'
 
-const { cap, mockUseGroupDndHandlers, mockUseUIStore, mockUseGroups, mockUseDndContext } = vi.hoisted(() => ({
+const { cap, mockUseGroupDndHandlers, mockUseUIStore, mockUseGroups, mockUseDndContext, mockUseEntitlements } = vi.hoisted(() => ({
   cap: {
     dndContextCount: 0,
     sortableContextItems: [] as unknown[][],
@@ -38,7 +38,8 @@ const { cap, mockUseGroupDndHandlers, mockUseUIStore, mockUseGroups, mockUseDndC
   mockUseGroupDndHandlers: vi.fn(() => ({ onDragEnd: vi.fn() })),
   mockUseUIStore: vi.fn(),
   mockUseGroups: vi.fn(),
-  mockUseDndContext: vi.fn(() => ({ overrideState: null, active: null, isDragging: false }))
+  mockUseDndContext: vi.fn(() => ({ overrideState: null, active: null, isDragging: false })),
+  mockUseEntitlements: vi.fn(() => ({ maxGroups: Infinity, tier: 'pro' }))
 }))
 
 vi.mock('@dnd-kit/core', () => ({
@@ -122,7 +123,7 @@ vi.mock('@/hooks/useGroups', () => ({
 }))
 
 vi.mock('@/hooks/useEntitlements', () => ({
-  useEntitlements: () => ({ maxGroups: Infinity, tier: 'pro' }),
+  useEntitlements: () => mockUseEntitlements(),
   isOverFreeLimit: () => false
 }))
 
@@ -172,7 +173,9 @@ const baseUIState = {
   renameTarget: null as unknown,
   selectedItems: [] as { type: string; id: string }[],
   toggleSelection: vi.fn(),
-  enterSelectionMode: vi.fn()
+  enterSelectionMode: vi.fn(),
+  selectRange: vi.fn(),
+  selectionAnchor: null as unknown
 }
 
 function wrap(ui: React.ReactElement) {
@@ -192,6 +195,7 @@ beforeEach(() => {
   mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
   mockUseGroups.mockReturnValue({ data: { available: [makeGroup(), makeGroup()], active: { id: '', index: 0 } } })
   mockUseDndContext.mockReturnValue({ overrideState: null, active: null, isDragging: false })
+  mockUseEntitlements.mockReturnValue({ maxGroups: Infinity, tier: 'pro' })
 })
 
 vi.mock('@/stores/uiStore', () => ({
@@ -274,5 +278,109 @@ describe('GroupItem — model-id sortable & droppable (item 3)', () => {
     renderItem(makeGroup({ id: 'grp-xyz' }), 2)
     const wrapper = screen.getByTestId('group-wrapper')
     expect(wrapper.style.opacity).toBe('0.4')
+  })
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2b — the sidebar "drop here for a new group" zone
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('SidePanel — "new group" drop zone (2b)', () => {
+  const state = makeGroupsState([
+    makeGroup({ id: 'now', permanent: true, name: 'Now Open' }),
+    makeGroup({ id: 'alpha', name: 'Alpha' })
+  ])
+  const zone = () => screen.getByTestId('new-group-dropzone')
+  const dragging = (type: string | null) =>
+    mockUseDndContext.mockReturnValue({
+      overrideState: null,
+      active: (type ? { id: 'x', type } : null) as never,
+      isDragging: !!type
+    })
+
+  it('is ALWAYS mounted, and hidden + inert when no drag is running (C4)', () => {
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(zone().className).toMatch(/invisible/)
+    expect(zone().className).toMatch(/pointer-events-none/)
+    expect(zone().getAttribute('aria-hidden')).toBe('true')
+  })
+
+  it('stays mounted and only flips visibility during a TAB drag', () => {
+    dragging('tab')
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(zone().className).not.toMatch(/invisible/)
+    expect(zone().getAttribute('aria-hidden')).toBe('false')
+    expect(zone().textContent).toMatch(/new group/i)
+  })
+
+  it('is active for a WINDOW drag too, but not for a GROUP drag', () => {
+    dragging('window')
+    const a = wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(a.getByTestId('new-group-dropzone').className).not.toMatch(/invisible/)
+    a.unmount()
+    dragging('group')
+    const b = wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(b.getByTestId('new-group-dropzone').className).toMatch(/invisible/)
+  })
+
+  it('registers the shared NEW_GROUP_ID droppable, disabled unless a tab/window drag is live', async () => {
+    const { NEW_GROUP_ID } = await import('@/lib/dndMove')
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    const idle = cap.droppableCalls.find((c) => c.id === NEW_GROUP_ID)
+    expect(idle).toBeTruthy()
+    expect((idle as { disabled?: boolean }).disabled).toBe(true)
+    expect(idle!.data).toEqual({ type: 'new-group' })
+
+    cap.droppableCalls = []
+    dragging('tab')
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    const live = cap.droppableCalls.find((c) => c.id === NEW_GROUP_ID)
+    expect((live as { disabled?: boolean }).disabled).toBe(false)
+  })
+
+  it('takes NO layout: it is absolutely positioned over the "Add Group" button', () => {
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(zone().className).toMatch(/absolute/)
+    expect(zone().parentElement!.className).toMatch(/relative/)
+    // The button is its sibling inside that same box.
+    expect(zone().parentElement!.textContent).toMatch(/Add Group/)
+  })
+
+  it('at the free-group cap the zone is HIDDEN, inert and silent — but still mounted (C4)', async () => {
+    const { setNewGroupZoneGate, getNewGroupZoneGate } = await import('@/hooks/useDndHandlers')
+    setNewGroupZoneGate(false)
+    // 2 saved groups, limit 2 → at the cap.
+    const capped = makeGroupsState([
+      makeGroup({ id: 'now', permanent: true, name: 'Now Open' }),
+      makeGroup({ id: 'alpha', name: 'Alpha' }),
+      makeGroup({ id: 'beta', name: 'Beta' })
+    ])
+    mockUseEntitlements.mockReturnValue({ maxGroups: 2, tier: 'free' })
+    cap.droppableCalls = []
+    dragging('tab')
+    wrap(React.createElement(SidePanel, { groupsState: capped }))
+    // User decision 2026-09-18: hide it rather than show-then-warn.
+    const el = screen.getByTestId('new-group-dropzone')
+    expect(el).toBeTruthy() // never unmounted mid-drag
+    expect(el.className).toMatch(/invisible/)
+    expect(el.className).toMatch(/pointer-events-none/)
+    expect(el.getAttribute('aria-hidden')).toBe('true')
+    const { NEW_GROUP_ID } = await import('@/lib/dndMove')
+    const droppable = cap.droppableCalls.find((c) => c.id === NEW_GROUP_ID)
+    expect((droppable as { disabled?: boolean }).disabled).toBe(true)
+    // No toast: nothing was offered, so there is nothing to explain.
+    const { toast } = await import('sonner')
+    expect(toast.error).not.toHaveBeenCalled()
+    // The cap is still published, so a drop resolved from the throttled stream is refused.
+    expect(getNewGroupZoneGate().atLimit).toBe(true)
+  })
+
+  it('below the cap the gate reads false, so the zone takes drops normally', async () => {
+    const { getNewGroupZoneGate } = await import('@/hooks/useDndHandlers')
+    mockUseEntitlements.mockReturnValue({ maxGroups: 5, tier: 'free' })
+    dragging('tab')
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(screen.getByTestId('new-group-dropzone').className).not.toMatch(/invisible/)
+    expect(getNewGroupZoneGate().atLimit).toBe(false)
   })
 })

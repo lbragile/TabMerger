@@ -115,7 +115,7 @@ describe('multi-drag: the selection moves as one block and stays selected at its
       pending = result.current.onDragEnd(endEvt('work::w1::t0', 'play::w0::t1', { type: 'tab' })) as Promise<void>
     })
     // before the IDB write resolves: cache AND selection already reflect the drop
-    expect(shape(qc.getQueryData<GroupsState>(['groups']))).toMatchObject({ work: [['a2', 'a3']], play: [['p1', 'a1', 'b1', 'b2', 'p2']] })
+    expect(shape(qc.getQueryData<GroupsState>(['groups']))).toMatchObject({ work: [['a2', 'a3'], []], play: [['p1', 'a1', 'b1', 'b2', 'p2']] })
     expect(useUIStore.getState().selectedItems).toEqual([T(2, 0, 1), T(2, 0, 2), T(2, 0, 3)])
     expect(useUIStore.getState().selectionMode).toBe(true)
     await act(async () => {
@@ -217,12 +217,13 @@ describe('multi-drag: the selection moves as one block and stays selected at its
   })
 })
 
-describe('groups stay single-drag', () => {
-  it('a selected group is never promoted to a multi-drag; the reorder remaps the selected groups by id', async () => {
-    useUIStore.setState({ selectionMode: true, selectedItems: [{ type: 'group', id: 'group-1' }, { type: 'group', id: 'group-3' }] })
+describe('group drags', () => {
+  it('a single selected group still commits as a single move and remaps the selected groups by id', async () => {
+    useUIStore.setState({ selectionMode: true, selectedItems: [{ type: 'group', id: 'group-1' }] })
     const { result } = setup()
     const data = { type: 'group', groupId: 'work', index: 1 }
     start(result, 'work', data)
+    // One selected group is not a multi-drag.
     expect(result.current.active?.selectionIds).toBeUndefined()
     await act(async () => {
       await result.current.onDragEnd({
@@ -231,7 +232,140 @@ describe('groups stay single-drag', () => {
       } as unknown as DragEndEvent)
     })
     // now, play, misc, work
-    expect(useUIStore.getState().selectedItems).toEqual([{ type: 'group', id: 'group-3' }, { type: 'group', id: 'group-2' }])
+    expect(useUIStore.getState().selectedItems).toEqual([{ type: 'group', id: 'group-3' }])
+  })
+
+  it('a multi-group selection IS promoted and moves as one contiguous block, remapped by id', async () => {
+    // Select "work" (1) and "misc" (3) — deliberately NON-contiguous.
+    useUIStore.setState({
+      selectionMode: true,
+      selectedItems: [{ type: 'group', id: 'group-1' }, { type: 'group', id: 'group-3' }]
+    })
+    const { qc, result } = setup()
+    const data = { type: 'group', groupId: 'work', index: 1 }
+    start(result, 'work', data)
+    expect(result.current.active?.selectionIds).toEqual(['work', 'misc'])
+    expect(getDndDragCount()).toBe(2)
+    await act(async () => {
+      await result.current.onDragEnd({
+        active: { id: 'work', data: { current: data } },
+        over: { id: 'play', data: { current: { type: 'group', groupId: 'play', index: 2 } } }
+      } as unknown as DragEndEvent)
+    })
+    // The block lands where "play" was — after Now Open, before play.
+    expect(qc.getQueryData<GroupsState>(['groups'])!.available.map((g) => g.id)).toEqual([
+      'now',
+      'work',
+      'misc',
+      'play'
+    ])
+    // Both stay selected, at their new indices; the anchor stays the active group.
+    expect(useUIStore.getState().selectedItems).toEqual([
+      { type: 'group', id: 'group-1' },
+      { type: 'group', id: 'group-2' }
+    ])
+    expect(useUIStore.getState().activeGroupIndex).toBe(1)
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
+  })
+
+  it('never carries the permanent Now Open group, even when the store selection includes it', () => {
+    useUIStore.setState({
+      selectionMode: true,
+      selectedItems: [
+        { type: 'group', id: 'group-0' },
+        { type: 'group', id: 'group-1' },
+        { type: 'group', id: 'group-3' }
+      ]
+    })
+    const { result } = setup()
+    start(result, 'work', { type: 'group', groupId: 'work', index: 1 })
+    expect(result.current.active?.selectionIds).toEqual(['work', 'misc'])
+  })
+
+  /**
+   * Spec §6.1: the gap also says which SIDE of the anchor the block lands on. The sidebar
+   * has no container droppable, so "past the last row" can only be expressed as
+   * `commitAfter` — if that never reaches the engine, a drop at the bottom of the list
+   * silently lands one slot short.
+   */
+  it('carries the gap\'s commitAfter through to the commit: a block dropped past the last row lands AFTER it', async () => {
+    useUIStore.setState({
+      selectionMode: true,
+      selectedItems: [{ type: 'group', id: 'group-1' }, { type: 'group', id: 'group-2' }]
+    })
+    const { qc, result } = setup()
+    const data = { type: 'group', groupId: 'work', index: 1 }
+    start(result, 'work', data)
+    act(() => {
+      result.current.onSourceCollapse(32)
+    })
+    const tmInsertion = {
+      type: 'group',
+      containerKey: 'groups',
+      index: 1,
+      sameContainer: true,
+      shiftIds: [],
+      commitOverId: 'misc',
+      commitAfter: true
+    } as unknown as DndInsertion
+    await act(async () => {
+      await result.current.onDragEnd({
+        active: { id: 'work', data: { current: data } },
+        over: { id: 'misc', data: { current: { type: 'group', groupId: 'misc', index: 3 } } },
+        collisions: [{ id: 'misc', data: { tmInsertion } }]
+      } as unknown as DragEndEvent)
+    })
+    expect(qc.getQueryData<GroupsState>(['groups'])!.available.map((g) => g.id)).toEqual([
+      'now',
+      'misc',
+      'work',
+      'play'
+    ])
+  })
+
+  it('…and the same drop with commitAfter:false lands BEFORE the anchor', async () => {
+    useUIStore.setState({
+      selectionMode: true,
+      selectedItems: [{ type: 'group', id: 'group-1' }, { type: 'group', id: 'group-2' }]
+    })
+    const { qc, result } = setup()
+    const data = { type: 'group', groupId: 'work', index: 1 }
+    start(result, 'work', data)
+    act(() => {
+      result.current.onSourceCollapse(32)
+    })
+    const tmInsertion = {
+      type: 'group',
+      containerKey: 'groups',
+      index: 0,
+      sameContainer: true,
+      shiftIds: ['misc'],
+      commitOverId: 'misc',
+      commitAfter: false
+    } as unknown as DndInsertion
+    await act(async () => {
+      await result.current.onDragEnd({
+        active: { id: 'work', data: { current: data } },
+        over: { id: 'misc', data: { current: { type: 'group', groupId: 'misc', index: 3 } } },
+        collisions: [{ id: 'misc', data: { tmInsertion } }]
+      } as unknown as DragEndEvent)
+    })
+    expect(qc.getQueryData<GroupsState>(['groups'])!.available.map((g) => g.id)).toEqual([
+      'now',
+      'work',
+      'play',
+      'misc'
+    ])
+  })
+
+  it('drops a promoted selection back to single-drag when Now Open was the only other member', () => {
+    useUIStore.setState({
+      selectionMode: true,
+      selectedItems: [{ type: 'group', id: 'group-0' }, { type: 'group', id: 'group-1' }]
+    })
+    const { result } = setup()
+    start(result, 'work', { type: 'group', groupId: 'work', index: 1 })
+    expect(result.current.active?.selectionIds).toBeUndefined()
   })
 })
 

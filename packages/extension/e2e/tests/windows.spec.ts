@@ -7,7 +7,7 @@ test.describe('Window management', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     // Window delete is via MoreHorizontal dropdown — no direct delete button
     await page.getByRole('button', { name: 'More window options' }).first().click();
@@ -24,7 +24,7 @@ test.describe('Window management', () => {
     await seedConfirmOnDelete(page, true);
     await page.reload({ waitUntil: 'networkidle' });
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     await page.getByRole('button', { name: 'More window options' }).first().click();
     await page.waitForTimeout(200);
@@ -51,7 +51,7 @@ test.describe('Window management', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     const handle = page.getByLabel('Drag to reorder tab').first();
     await expect(handle).toBeVisible();
@@ -93,7 +93,7 @@ test.describe('Window drag — onto a different group (unified DnD)', () => {
     const page = await openPopup(context, extensionId);
     // WORK_GROUP has 2 windows; ANOTHER_GROUP (Reading List) has 1.
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP, ANOTHER_GROUP]);
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     const before = await readGroupWindowCount(page, 'anothergrp1');
     expect(before.count).toBe(1);
@@ -127,7 +127,7 @@ test.describe('Window drag — onto a different group (unified DnD)', () => {
   }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP, ANOTHER_GROUP]);
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
     // Work is the active group — its Slack tab is visible, Reading List's is not.
     await expect(page.getByRole('listitem', { name: 'Slack' })).toBeVisible();
     await expect(page.getByRole('listitem', { name: 'Hacker News' })).toHaveCount(0);

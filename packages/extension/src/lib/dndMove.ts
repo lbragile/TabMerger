@@ -1,6 +1,6 @@
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types';
 import type { DndModel } from '@/hooks/useDndModel';
-import { sortWindowsByStarred } from '@/lib/utils';
+import { createGroup } from '@/lib/utils';
 
 /**
  * Pure DnD move engine for the unified popup drag layer.
@@ -12,35 +12,68 @@ import { sortWindowsByStarred } from '@/lib/utils';
  * enter the undo stack). `applyMove` only rearranges already-decrypted in-memory
  * state — the commit still goes through the normal `saveGroupsState` path.
  *
- * Dragging anything OUT of Now Open into a saved group is a COPY and emits NO side
- * effect — it never closes a real tab or window. Closing the active tab of the window
- * the toolbar popup is anchored to makes Chrome dismiss the popup instantly (and a
- * whole-window drag would close the user's real browser window). It also matches the
- * tab context menu's "Copy to group" rule for Now Open. Copies are DETACHED: `id: 0`
- * plus `savedAt` — a saved tab carrying a real browser id would let a later "remove
- * tab" in `useGroups` close the real tab. The only Now Open side effects are
- * non-destructive: `tabs.move` (reorder within Now Open) and `tabs.create` /
- * `windows.create` (saved item dropped INTO Now Open). Every `windows.create` carries
- * `focused: false` and every `tabs.create` carries `active: false`: a newly focused
- * window or activated tab takes focus away from the window the toolbar popup is
- * anchored to, which dismisses the popup (same failure class as closing its tab).
+ * Dragging anything OUT of Now Open into a saved group MOVES it: the destination gains a
+ * DETACHED copy (`id: 0` plus `savedAt` — a saved tab carrying a real browser id would
+ * let a later "remove tab" in `useGroups` close the real tab) and the real browser tabs
+ * are closed through a `tabs.remove` side effect. It stays `undoable: false`, because
+ * undo cannot faithfully reopen a closed tab (history, scroll position, form state).
+ *
+ * `tabs.remove` is the ONE destructive side effect, and it is deliberately not executed
+ * verbatim: `runSideEffects` closes only tabs that are NOT active in their window, and
+ * hands every ACTIVE tab to the background worker to close once the popup goes away.
+ * Closing the active tab of the window the toolbar popup is anchored to dismisses the
+ * popup instantly (spec C7), which used to kill the commit mid-flight. Persistence runs
+ * before side effects, so the move survives even if the popup does die.
+ *
+ * `available[permIndex]` is NOT edited here: Now Open mirrors the real browser, and
+ * `useCurrentTabs` re-syncs it as the closes land. A deferred (active) tab therefore
+ * legitimately stays visible until the popup closes.
+ *
+ * The other Now Open side effects are non-destructive: `tabs.move` (reorder within Now
+ * Open) and `tabs.create` / `windows.create` (saved item dropped INTO Now Open). Every
+ * `windows.create` carries `focused: false` and every `tabs.create` carries
+ * `active: false`: a newly focused window or activated tab takes focus away from the
+ * window the toolbar popup is anchored to, which dismisses the popup (same failure class
+ * as closing its tab).
  *
  * Dropping a tab or window on a sidebar GROUP ROW (not a specific window inside it)
  * always adds it as a NEW window at the end of that group — including the item's own
- * group. On the Now Open row that means a new REAL browser window. A move that empties
- * its saved source window removes that window in the same commit.
+ * group. On the Now Open row that means a new REAL browser window.
+ *
+ * A move that EMPTIES its saved source window LEAVES THAT WINDOW IN PLACE (user rule,
+ * 2026-09-18 — this reverses the earlier "prune emptied windows" behaviour). An empty
+ * window card still renders, still counts in the group's badges, and is still a drop
+ * target, so tabs can be dragged straight back into it. Together with a group's last
+ * window now being draggable out, no DnD path silently deletes structure the user made;
+ * removing a window is always an explicit action. `useGroups`'s tab delete / move-tab
+ * paths keep emptied windows for the same reason.
  *
  * MULTI-ITEM (`selectionIds`): the whole selection moves as ONE contiguous block in its
  * original relative order (source group, window, tab index), as ONE undoable op.
+ * This covers sidebar GROUPS too: a multi-group selection re-enters as one contiguous
+ * block at the gap, never at index 0 (see {@link moveGroupsMulti}).
  * `ApplyMoveResult.landed` reports where the moved items ended up so the handler can
  * remap the positional selection ids in the same commit.
  */
 /**
- * `'new-window'` is a DROP-ONLY pseudo-type: the always-mounted "drop here for a
- * new window" zone at the end of the windows list (visible only during a tab
- * drag). It is never an `active` ref.
+ * Two DROP-ONLY pseudo-types, neither of which is ever an `active` ref:
+ *  - `'new-window'` — the always-mounted "drop here for a new window" zone at the end
+ *    of the windows list (visible only during a TAB drag).
+ *  - `'new-group'` — the always-mounted "drop here for a new group" zone at the end of
+ *    the SIDEBAR list (visible during a TAB or WINDOW drag). Dropping there creates a
+ *    fresh group (same `createGroup` defaults as the "Add Group" button) and runs the
+ *    ordinary "dropped on a group row" move into it, so a tab lands in one new window
+ *    and a whole selection lands in ONE new group.
  */
-export type DndRefType = 'tab' | 'window' | 'group' | 'new-window';
+export type DndRefType = 'tab' | 'window' | 'group' | 'new-window' | 'new-group';
+
+/**
+ * Droppable id of the sidebar "new group" zone. Unlike `${groupId}::new-window` there is
+ * exactly ONE of these in the popup, so it is a fixed sentinel rather than a suffix. The
+ * `::` prefix keeps it outside every real model id (`groupId::wN::tN`, and `groupId` is a
+ * `nanoid(10)`), so `idInModel` / `rebaseId` can never confuse it for a node.
+ */
+export const NEW_GROUP_ID = '::new-group';
 
 export interface DndRef {
   type: DndRefType;
@@ -52,6 +85,18 @@ export interface DndRef {
   groupIndex?: number;
   /** target insertion index when dropping between siblings */
   index?: number;
+  /**
+   * Identity-anchored ordering (spec §6.1): the dragged block lands immediately AFTER the
+   * target instead of before it. Set by the insertion layer from the gap the user actually
+   * saw (`DndInsertion.commitAfter`), so "at the very end of the list/zone" needs no
+   * sentinel — it is "after the last non-dragged sibling".
+   *
+   * Absent means "derive it": a drop resolved from `over` alone (keyboard drags, a
+   * throttled native drop with no collisions) follows dnd-kit's arrayMove convention —
+   * dropping a SINGLE item on a row below it takes that row's slot, i.e. lands after it.
+   * A multi-item block defaults to "before the target", which is what the gap draws.
+   */
+  after?: boolean;
   /** multi-select: all dragged model ids (must be a single type); drag anchor === `id` */
   selectionIds?: string[];
 }
@@ -62,7 +107,14 @@ export type DndSideEffect =
   /** `focused` is always `false` — a focused new window dismisses the toolbar popup. */
   | { type: 'windows.create'; url: string | string[]; focused: false }
   /** `active` is always `false` — activating a tab in the popup's window dismisses the popup. */
-  | { type: 'tabs.create'; windowId: number; url: string; index?: number; active: false };
+  | { type: 'tabs.create'; windowId: number; url: string; index?: number; active: false }
+  /**
+   * Real Now Open tabs the user dragged OUT into a saved group: the move closes them.
+   * `runSideEffects` splits these — non-active tabs close immediately, an ACTIVE tab is
+   * deferred to popup teardown so closing the popup's anchor tab can't dismiss it
+   * mid-commit (spec C7). Always accompanied by detached copies in the destination.
+   */
+  | { type: 'tabs.remove'; tabIds: number[] };
 
 export interface TabPosition {
   groupIndex: number;
@@ -103,6 +155,7 @@ interface HydratedRef {
   windowIndex: number;
   tabIndex: number;
   index?: number;
+  after?: boolean;
   selectionIds?: string[];
 }
 
@@ -120,6 +173,7 @@ function hydrate(model: DndModel, ref: DndRef): HydratedRef | null {
       windowIndex: t.windowIndex,
       tabIndex: t.tabIndex,
       index: ref.index,
+      after: ref.after,
       selectionIds: ref.selectionIds
     };
   }
@@ -134,6 +188,21 @@ function hydrate(model: DndModel, ref: DndRef): HydratedRef | null {
       windowIndex: w.windowIndex,
       tabIndex: -1,
       index: ref.index,
+      after: ref.after,
+      selectionIds: ref.selectionIds
+    };
+  }
+
+  if (type === 'new-group') {
+    // Drop-only sentinel with no position at all — the group it creates doesn't exist yet.
+    return {
+      type,
+      id: ref.id,
+      groupIndex: -1,
+      windowIndex: -1,
+      tabIndex: -1,
+      index: ref.index,
+      after: ref.after,
       selectionIds: ref.selectionIds
     };
   }
@@ -148,6 +217,7 @@ function hydrate(model: DndModel, ref: DndRef): HydratedRef | null {
       windowIndex: -1,
       tabIndex: -1,
       index: ref.index,
+      after: ref.after,
       selectionIds: ref.selectionIds
     };
   }
@@ -161,6 +231,7 @@ function hydrate(model: DndModel, ref: DndRef): HydratedRef | null {
     windowIndex: -1,
     tabIndex: -1,
     index: ref.index,
+    after: ref.after,
     selectionIds: ref.selectionIds
   };
 }
@@ -175,6 +246,74 @@ function groupIndexOf(model: DndModel, id: string): number | undefined {
   return model.tabs[id]?.groupIndex ?? model.windows[id]?.groupIndex;
 }
 
+// ─── zones (starred-first) ──────────────────────────────────────────────────
+//
+// Two of the three lists are ZONED: the sidebar pins starred GROUPS above unstarred ones,
+// and a group's window list pins starred WINDOWS above unstarred ones. That pinning is an
+// invariant, not a preference, so an item can only ever occupy a position inside its own
+// zone. Spec §6.1: ordering is applied as remove-then-insert against an IDENTITY anchor,
+// and the zone normalisation runs on the OTHERS *before* the block goes in — never as a
+// re-sort of the whole list afterwards, which used to split a mixed selection apart and
+// move the block away from the gap the user was shown.
+
+/** Zone of a starrable item: 0 = starred (pinned first), 1 = unstarred. */
+export function zoneRank(item: { starred?: boolean } | undefined): number {
+  return item?.starred ? 0 : 1;
+}
+
+/** Stable starred-first normalisation. Identity-preserving, so anchors stay findable. */
+function normaliseZones<T extends { starred?: boolean }>(items: T[]): T[] {
+  return [...items.filter((i) => i.starred), ...items.filter((i) => !i.starred)];
+}
+
+/**
+ * Where a removed block re-enters `rest` — the ONE ordering primitive for zoned lists.
+ *
+ * `rest` is the list with the block already removed and its zones normalised. `anchor` is
+ * an item OF `rest` (never a block member — `canDrop` refuses a selected item as its own
+ * target) matched by object identity, so index drift from the removal is impossible:
+ *   - no anchor (a group-row "append" target, or an anchor deleted mid-drag) → end of list
+ *   - `after` → immediately after the anchor, else immediately before it
+ * The result is then CLAMPED into the block's own zone (and never above `minIndex`, which
+ * keeps a group block below the permanent "Now Open" row). Clamping slides the WHOLE block;
+ * it can never split or reorder it.
+ */
+function blockInsertIndex<T extends { starred?: boolean }>(
+  rest: T[],
+  anchor: T | undefined,
+  after: boolean,
+  blockRank: number,
+  minIndex = 0
+): number {
+  const found = anchor ? rest.indexOf(anchor) : -1;
+  const at = found < 0 ? rest.length : found + (after ? 1 : 0);
+  let above = 0;
+  let same = 0;
+  for (let i = minIndex; i < rest.length; i++) {
+    const r = zoneRank(rest[i]);
+    if (r < blockRank) above++;
+    else if (r === blockRank) same++;
+  }
+  const lo = minIndex + above;
+  return Math.min(Math.max(at, lo), lo + same);
+}
+
+/**
+ * A selection spanning BOTH zones (some starred, some not) is rejected outright, exactly
+ * like a mixed-TYPE selection: starred items are pinned above unstarred ones, so no single
+ * contiguous landing place exists and any insertion would tear the block in two. Refusing
+ * predictably beats splitting silently.
+ */
+function spansZones(model: DndModel, ref: DndRef): boolean {
+  if (!ref.selectionIds || ref.selectionIds.length <= 1) return false;
+  const ranks = new Set<number>();
+  for (const id of ref.selectionIds) {
+    const item = model.groups[id] ?? model.windows[id];
+    if (item) ranks.add(zoneRank(item));
+  }
+  return ranks.size > 1;
+}
+
 // ─── canDrop ────────────────────────────────────────────────────────────────
 
 export function canDrop(model: DndModel, active: DndRef, over: DndRef): boolean {
@@ -186,18 +325,31 @@ export function canDrop(model: DndModel, active: DndRef, over: DndRef): boolean 
   if (!aKind || !oKind) return false;
 
   if (isMixedSelection(model, active)) return false;
+  // Starred groups/windows are pinned above unstarred ones — a block straddling that
+  // boundary can't land contiguously anywhere (spec §6.1).
+  if (spansZones(model, active)) return false;
   // A selected item is never a target for its own selection (it is collapsed out of the list).
   if (active.selectionIds && active.selectionIds.length > 1 && active.selectionIds.includes(over.id)) return false;
 
   if (aKind === 'group') {
-    // The permanent "Now Open" group is not reorderable…
+    // The permanent "Now Open" group is not reorderable — as the anchor OR as any
+    // member of a multi-group selection (a Ctrl+A-ish selection could include it).
     if (active.id === model.permanentGroupId) return false;
-    // …and nothing may land before it.
+    if (model.permanentGroupId) {
+      const ids = active.selectionIds && active.selectionIds.length > 1 ? active.selectionIds : [];
+      if (ids.includes(model.permanentGroupId)) return false;
+    }
+    // …and nothing may land before it. Groups only ever target other group ROWS —
+    // never the "new group" zone (a group is already a group).
     if (oKind !== 'group') return false;
     if (over.index === 0) return false;
     if (over.id === model.permanentGroupId) return false;
     return true;
   }
+
+  // The sidebar "new group" zone accepts any tab/window drag, including a copy out of
+  // Now Open. It has no identity of its own, so it can never be a selected member.
+  if (oKind === 'new-group') return aKind === 'tab' || aKind === 'window';
 
   // A LIVE Now Open tab/window dropped on the Now Open row itself: "add as a new
   // window" would mean tearing a real tab out from under the popup (C7 class), so
@@ -255,15 +407,6 @@ function emptyWindow(): ExtWindow {
   return { id: 0, tabs: [], incognito: false, focused: false, starred: false };
 }
 
-/**
- * Remove window `wi` of (an already-cloned) saved group if a move just emptied it, so
- * no empty saved window is left behind — in the same commit as the move. Never call
- * it on Now Open (that group re-syncs from the browser).
- */
-function pruneEmptyWindow(g: Group, wi: number): void {
-  if (g.windows[wi] && g.windows[wi].tabs.length === 0) g.windows.splice(wi, 1);
-}
-
 /** Strip "position-ish" / live-only flags from a tab that's being moved or copied. */
 function detachTab(tab: Tab): Tab {
   const { pinned, ...rest } = tab;
@@ -276,7 +419,15 @@ function copyLiveTab(tab: Tab): Tab {
   return { ...detachTab(tab), savedAt: Date.now() };
 }
 
-/** A saved, detached copy of a LIVE Now Open window (the real window stays open). */
+/**
+ * Real browser tab ids among `tabs` — what a drag OUT of Now Open has to close. Saved
+ * tabs are all `id: 0`, so the filter doubles as a "this really is a live tab" guard.
+ */
+function liveTabIds(tabs: Tab[]): number[] {
+  return tabs.map((t) => t.id).filter((id): id is number => typeof id === 'number' && id > 0);
+}
+
+/** A saved, detached copy of a LIVE Now Open window (the real window's tabs are closed). */
 function copyLiveWindow(w: ExtWindow): ExtWindow {
   return {
     ...w,
@@ -330,7 +481,15 @@ export function applyMove(
 
   const permIndex = groupsState.available.findIndex((g) => g.permanent);
 
-  if (a.type === 'group') return moveGroup(groupsState, a, o);
+  if (a.type === 'group') {
+    if (activeRaw.selectionIds && activeRaw.selectionIds.length > 1) {
+      return moveGroupsMulti(model, groupsState, a, o, activeRaw.selectionIds);
+    }
+    return moveGroup(groupsState, a, o);
+  }
+  if (o.type === 'new-group') {
+    return moveToNewGroup(model, groupsState, a, permIndex, activeRaw.selectionIds);
+  }
   if (a.type === 'window') {
     if (activeRaw.selectionIds && activeRaw.selectionIds.length > 1) {
       return moveWindowsMulti(model, groupsState, o, permIndex, activeRaw.selectionIds);
@@ -342,32 +501,175 @@ export function applyMove(
 
 // ─── group reorder ──────────────────────────────────────────────────────────
 
-function moveGroup(s: GroupsState, a: HydratedRef, o: HydratedRef): ApplyMoveResult {
-  const fromIdx = a.groupIndex;
-  const toIdx = o.index ?? o.groupIndex;
-  if (fromIdx < 0 || s.available[fromIdx]?.permanent) return NOOP(s);
-  if (toIdx <= 0) return NOOP(s);
-
-  const available = s.available.slice();
-  const moved = bump(available[fromIdx]);
-  available.splice(fromIdx, 1);
-  available.splice(Math.min(Math.max(toIdx, 1), available.length), 0, moved);
-
-  // Zone order: Now Open → starred → unstarred. Re-sorting after the splice keeps
-  // relative order within each zone while clamping cross-zone drops to the boundary.
-  const head = available[0];
-  const rest = available.slice(1);
-  const zoneSorted = [head, ...rest.filter((g) => g.starred), ...rest.filter((g) => !g.starred)];
-  const finalIndex = Math.max(0, zoneSorted.findIndex((g) => g.id === moved.id));
+/**
+ * The ONE sidebar reorder, shared by {@link moveGroup} and {@link moveGroupsMulti}.
+ *
+ * Remove every dragged group, normalise the zones of what's LEFT, then insert the whole
+ * block — in its original sidebar order — immediately before (or after) the anchor group,
+ * clamped into its own zone and never above index 0. Because the block goes in last,
+ * nothing can move it afterwards: the gap the user saw IS the committed position.
+ */
+function reorderGroups(
+  s: GroupsState,
+  movedIdx: number[],
+  o: HydratedRef,
+  activeId: string,
+  after: boolean
+): ApplyMoveResult {
+  const movedSet = new Set(movedIdx);
+  const moved = movedIdx.map((i) => bump(s.available[i]));
+  const rawRest = s.available.filter((_g, i) => !movedSet.has(i));
+  if (rawRest.length === 0 || moved.length === 0) return NOOP(s);
+  // `rawRest[0]` is the permanent "Now Open" row (it can never be part of the block), and
+  // it is pinned: only the groups BELOW it are zone-normalised.
+  const rest = [rawRest[0], ...normaliseZones(rawRest.slice(1))];
+  const anchor = rest.find((g) => g.id === o.id);
+  const at = blockInsertIndex(rest, anchor, after, zoneRank(moved[0]), 1);
+  const available = [...rest.slice(0, at), ...moved, ...rest.slice(at)];
+  const index = Math.max(0, available.findIndex((g) => g.id === activeId));
 
   return {
-    next: { ...s, active: { id: moved.id, index: finalIndex }, available: zoneSorted },
+    next: { ...s, active: { id: activeId, index }, available },
     sideEffects: [],
     undoable: true
   };
 }
 
+function moveGroup(s: GroupsState, a: HydratedRef, o: HydratedRef): ApplyMoveResult {
+  const fromIdx = a.groupIndex;
+  const toIdx = o.index ?? o.groupIndex;
+  if (fromIdx < 0 || s.available[fromIdx]?.permanent) return NOOP(s);
+  if (toIdx <= 0) return NOOP(s);
+  // Pointer drags carry the gap's own answer; a keyboard / `over`-only drop falls back to
+  // dnd-kit's arrayMove convention (drop on a row below you → take its slot).
+  return reorderGroups(s, [fromIdx], o, a.id, o.after ?? toIdx > fromIdx);
+}
+
+/**
+ * Multi-group reorder — the sidebar analogue of {@link moveTabsMulti} /
+ * {@link moveWindowsMulti}. Every selected group leaves its slot and the whole set
+ * re-enters as ONE contiguous block at the drop gap, in its ORIGINAL relative order,
+ * as ONE undoable op.
+ *
+ * Invariants kept from the single-group path:
+ *  - "Now Open" is never part of the block and never moves (rejected in `canDrop`, and
+ *    re-checked here because `applyMove` is the last line of defence);
+ *  - nothing lands at index 0 — the block is clamped to index ≥ 1;
+ *  - starred groups stay ahead of unstarred ones, but the block is placed INTO its own
+ *    zone rather than being re-sorted afterwards (spec §6.1 — the old post-insert sort
+ *    split mixed selections apart and moved the block away from the drawn gap; a selection
+ *    spanning both zones is now refused by `canDrop` instead);
+ *  - the DRAG ANCHOR stays the active group, exactly as a single-group drag does.
+ *
+ * The insertion point is the ANCHOR GROUP's identity ("immediately before group X"), so
+ * pulling the block out first can't slide the target slot by however many selected groups
+ * happened to sit above it.
+ */
+function moveGroupsMulti(
+  model: DndModel,
+  s: GroupsState,
+  a: HydratedRef,
+  o: HydratedRef,
+  selectionIds: string[]
+): ApplyMoveResult {
+  const permIndex = s.available.findIndex((g) => g.permanent);
+  const selIdx = Array.from(
+    new Set(
+      selectionIds
+        .map((id) => model.groups[id]?.index)
+        .filter((i): i is number => typeof i === 'number' && i >= 0)
+    )
+  ).sort((x, y) => x - y);
+  if (selIdx.length < 2) return NOOP(s);
+  // Now Open can never be carried, and a group that vanished mid-drag is not ours to move.
+  if (selIdx.some((i) => i === 0 || i === permIndex || !s.available[i] || s.available[i].permanent)) {
+    return NOOP(s);
+  }
+
+  const toIdx = o.index ?? o.groupIndex;
+  if (toIdx <= 0) return NOOP(s);
+
+  // A block defaults to landing BEFORE the anchor — which is exactly where the gap is
+  // drawn — unless the insertion layer says the gap was past the last sibling.
+  return reorderGroups(s, selIdx, o, a.id, o.after ?? false);
+}
+
+/**
+ * Sidebar "drop here for a new group" zone. Creates ONE group with the same defaults as
+ * the "Add Group" button (`createGroup` → `DEFAULT_GROUP_TITLE` + `DEFAULT_GROUP_COLOR`)
+ * and then replays the ordinary "dropped on a group ROW" move into it, so every existing
+ * rule is reused verbatim:
+ *  - a tab (or a multi-tab selection) → ONE new window inside the new group,
+ *  - a window (or a multi-window selection) → the window(s) as the new group's contents,
+ *  - Now Open sources are MOVED: a detached copy lands here and the real tabs are closed
+ *    through `tabs.remove` (actives deferred to popup teardown, C7); not undoable.
+ *
+ * The new group is left ACTIVE so the user can see where the drop landed — otherwise the
+ * items would vanish into a group that isn't on screen. If the underlying move turns out
+ * to be a no-op the whole thing is discarded, so a bad drop can never leave an empty
+ * group behind.
+ *
+ * NOTE: entitlement gating (free tier ≤ N groups) is NOT here — `applyMove` is pure and
+ * has no access to the subscription. `useDndHandlers` rejects the drop before calling it.
+ */
+function moveToNewGroup(
+  model: DndModel,
+  s: GroupsState,
+  a: HydratedRef,
+  permIndex: number,
+  selectionIds?: string[]
+): ApplyMoveResult {
+  if (a.type !== 'tab' && a.type !== 'window') return NOOP(s);
+  const fresh = createGroup();
+  const withNew: GroupsState = { ...s, available: [...s.available, fresh] };
+  // A synthetic "group row" target: `resolveTabDest` / `moveWindow` already treat a group
+  // row as "append as a new last window", which is exactly the wanted shape.
+  const target: HydratedRef = {
+    type: 'group',
+    id: fresh.id,
+    groupIndex: withNew.available.length - 1,
+    windowIndex: -1,
+    tabIndex: -1
+  };
+
+  const multi = !!selectionIds && selectionIds.length > 1;
+  const res =
+    a.type === 'window'
+      ? multi
+        ? moveWindowsMulti(model, withNew, target, permIndex, selectionIds!)
+        : moveWindow(withNew, a, target, permIndex)
+      : moveTab(model, withNew, a, target, permIndex, selectionIds);
+
+  // Nothing actually moved → don't strand an empty group in the sidebar.
+  if (res.next === withNew || res.next === s) return NOOP(s);
+  const index = res.next.available.findIndex((g) => g.id === fresh.id);
+  if (index < 0) return NOOP(s);
+  return { ...res, next: { ...res.next, active: { id: fresh.id, index } } };
+}
+
 // ─── window moves ───────────────────────────────────────────────────────────
+
+/**
+ * Pre-removal index of the window a drop is anchored to, or -1 for "append" targets (a
+ * sidebar group row / the new-group zone). Resolved against the array that will actually
+ * be mutated — `cloneGroup` makes fresh window objects, so an object taken from the
+ * pre-clone state would never be found again.
+ */
+function windowAnchorIndex(o: HydratedRef): number {
+  return o.type === 'window' ? o.index ?? o.windowIndex : -1;
+}
+
+/**
+ * Put `moved` into `dst` as one contiguous block: normalise the zones of the windows
+ * already there, then insert before/after `anchor` (identity), clamped into the block's
+ * own starred/unstarred zone. `dst.windows` must already have the moved windows removed,
+ * and `anchor` must have been read from `dst.windows` BEFORE that removal.
+ */
+function placeWindows(dst: Group, moved: ExtWindow[], anchor: ExtWindow | undefined, after: boolean): void {
+  const rest = normaliseZones(dst.windows);
+  const at = blockInsertIndex(rest, anchor, after, zoneRank(moved[0]));
+  dst.windows = [...rest.slice(0, at), ...moved, ...rest.slice(at)];
+}
 
 function moveWindow(s: GroupsState, a: HydratedRef, o: HydratedRef, permIndex: number): ApplyMoveResult {
   const srcGi = a.groupIndex;
@@ -378,23 +680,26 @@ function moveWindow(s: GroupsState, a: HydratedRef, o: HydratedRef, permIndex: n
     // handler layer — nothing to mutate in the model here.
     if (o.groupIndex === permIndex) return NOOP(s);
 
-    // A LIVE "Now Open" window dragged onto a saved group is a COPY: the saved group
-    // gains a detached copy (tabs `id:0`, not focused/starred) and the real browser
-    // window stays open — NO side effect. Closing it would close the user's actual
-    // window and dismiss the toolbar popup mid-drop (see module doc).
-    // `available[permIndex]` is left untouched — Now Open re-syncs from the browser.
+    // A LIVE "Now Open" window dragged onto a saved group MOVES it: the saved group gains
+    // a detached copy (tabs `id:0`, not focused/starred) and every real tab of that window
+    // is closed via `tabs.remove` — which closes the real window once its last tab goes.
+    // The executor defers the window's ACTIVE tab to popup teardown, so the popup is never
+    // dismissed mid-commit (spec C7). `available[permIndex]` is left untouched — Now Open
+    // re-syncs from the browser.
     const liveW = s.available[permIndex].windows[a.windowIndex];
     if (!liveW) return NOOP(s);
 
     const available = s.available.slice();
     const dst = cloneGroup(available[o.groupIndex]);
+    const anchorIdx = windowAnchorIndex(o);
     const copy = copyLiveWindow(liveW);
-    dst.windows = sortWindowsByStarred([...dst.windows, copy]);
+    placeWindows(dst, [copy], anchorIdx >= 0 ? dst.windows[anchorIdx] : undefined, o.after ?? false);
     available[o.groupIndex] = bump(dst);
 
+    const closing = liveTabIds(liveW.tabs);
     return {
       next: { ...s, available },
-      sideEffects: [],
+      sideEffects: closing.length > 0 ? [{ type: 'tabs.remove', tabIds: closing }] : [],
       undoable: false,
       landed: { type: 'window', positions: locateWindows(available, o.groupIndex, [copy]) }
     };
@@ -422,12 +727,12 @@ function moveWindow(s: GroupsState, a: HydratedRef, o: HydratedRef, permIndex: n
     (o.type === 'window' && o.groupIndex === srcGi) || (o.type === 'group' && o.groupIndex === srcGi);
 
   if (sameGroup) {
+    // Group row → the END of the window's own zone; a window target → before/after it.
+    const toW = windowAnchorIndex(o);
+    const anchor = toW >= 0 ? src.windows[toW] : undefined;
     const [movedW] = src.windows.splice(a.windowIndex, 1);
     if (!movedW) return NOOP(s);
-    // Group row → a new window at the END of the group; a window target → arrayMove.
-    const toW = o.type === 'window' ? o.index ?? o.windowIndex : src.windows.length;
-    src.windows.splice(Math.min(Math.max(toW, 0), src.windows.length), 0, movedW);
-    src.windows = sortWindowsByStarred(src.windows);
+    placeWindows(src, [movedW], anchor, o.after ?? (toW > a.windowIndex));
     available[srcGi] = bump(src);
     return {
       next: { ...s, available },
@@ -437,22 +742,18 @@ function moveWindow(s: GroupsState, a: HydratedRef, o: HydratedRef, permIndex: n
     };
   }
 
-  // Cross-group: a group row appends it as a new window at the end; a window in the
-  // target's list (after spring-open) inserts it BEFORE that window, which is where
-  // `dndInsertion` draws the gap. Then re-run the starred-first invariant.
+  // Cross-group: a group row appends it at the end of its zone; a window in the target's
+  // list (after spring-open) inserts it BEFORE that window, which is where `dndInsertion`
+  // draws the gap. Nothing is removed from the target, so there is no arrayMove direction.
   const dstGi = o.groupIndex;
   const [movedW] = src.windows.splice(a.windowIndex, 1);
   if (!movedW) return NOOP(s);
   available[srcGi] = bump(src);
 
   const dst = cloneGroup(available[dstGi]);
-  const at =
-    o.type === 'window'
-      ? Math.min(Math.max(o.index ?? o.windowIndex, 0), dst.windows.length)
-      : dst.windows.length;
+  const anchorIdx = windowAnchorIndex(o);
   const inserted = { ...movedW, focused: false };
-  dst.windows.splice(at, 0, inserted);
-  dst.windows = sortWindowsByStarred(dst.windows);
+  placeWindows(dst, [inserted], anchorIdx >= 0 ? dst.windows[anchorIdx] : undefined, o.after ?? false);
   available[dstGi] = bump(dst);
 
   return {
@@ -534,10 +835,10 @@ function moveTab(
   }
 
   if (srcIsPerm && !destIsPerm) {
-    // Drag a live tab OUT of Now Open into a saved group is a COPY: the saved group
-    // gets a detached copy and the real tab stays open — NO side effect. Closing the
-    // popup's own active tab makes Chrome dismiss the popup mid-drop; this also matches
-    // Tab.tsx's "Copy to group" context-menu rule. available[permIndex] is untouched.
+    // Drag a live tab OUT of Now Open into a saved group MOVES it: the saved group gets a
+    // detached copy and the real tab is closed via `tabs.remove` (deferred by the executor
+    // if it is the active/anchor tab — spec C7). `available[permIndex]` is untouched;
+    // `useCurrentTabs` re-syncs Now Open once the close lands.
     const realTab = s.available[permIndex].windows[srcWi]?.tabs[srcTi];
     if (!realTab) return NOOP(s);
 
@@ -551,9 +852,10 @@ function moveTab(
     dst.windows[destWi].tabs.splice(insertAt, 0, copy);
     available[dest.groupIndex] = bump(dst);
 
+    const closing = liveTabIds([realTab]);
     return {
       next: { ...s, available },
-      sideEffects: [],
+      sideEffects: closing.length > 0 ? [{ type: 'tabs.remove', tabIds: closing }] : [],
       undoable: false,
       landed: { type: 'tab', positions: locateTabs(available, dest.groupIndex, [copy]) }
     };
@@ -567,7 +869,7 @@ function moveTab(
     const src = cloneGroup(available[srcGi]);
     const [movedTab] = src.windows[srcWi]?.tabs.splice(srcTi, 1) ?? [];
     if (!movedTab) return NOOP(s);
-    pruneEmptyWindow(src, srcWi);
+    // The emptied source window STAYS (user rule, 2026-09-18) — see the module doc.
     available[srcGi] = bump(src);
 
     const nowOpen = s.available[permIndex];
@@ -613,10 +915,9 @@ function moveTab(
   const insertAt = dest.createdWindow ? 0 : dest.index;
   const inserted = sameGroup ? sourceTab : detachTab(sourceTab);
   dst.windows[destWi].tabs.splice(insertAt, 0, inserted);
-  // An emptied source window goes away in this same commit. Pruned AFTER the insert
-  // on purpose: `destWi` indexes the pre-removal window list when `dst === src`.
-  pruneEmptyWindow(src, srcWi);
-
+  // The source window is LEFT IN PLACE even if that emptied it (user rule, 2026-09-18):
+  // an empty window card is a usable drop target, and silently deleting structure the
+  // user built was the surprise this replaced.
   available[srcGi] = bump(src);
   if (!sameGroup) available[dest.groupIndex] = bump(dst);
 
@@ -630,7 +931,11 @@ function moveTab(
 
 // ─── multi-item tab move ────────────────────────────────────────────────────
 
-/** Remove the listed tabs from (already-cloned) groups, descending per window so indices don't drift. */
+/**
+ * Remove the listed tabs from (already-cloned) groups, descending per window so indices
+ * don't drift. Windows this empties are deliberately LEFT BEHIND (user rule, 2026-09-18);
+ * the returned window list is kept for callers that need to know which were touched.
+ */
 function removeTabs(available: Group[], tabs: TabPosition[]): Array<{ gi: number; wi: number }> {
   const perWindow = new Map<string, { gi: number; wi: number; tis: number[] }>();
   tabs.forEach((t) => {
@@ -648,18 +953,10 @@ function removeTabs(available: Group[], tabs: TabPosition[]): Array<{ gi: number
   return [...perWindow.values()].map(({ gi, wi }) => ({ gi, wi }));
 }
 
-/** Remove the saved windows a move emptied — descending per group so earlier indices don't drift. */
-function pruneEmptied(available: Group[], touchedWindows: Array<{ gi: number; wi: number }>, permIndex: number): void {
-  touchedWindows
-    .filter(({ gi }) => gi !== permIndex)
-    .sort((x, y) => x.gi - y.gi || y.wi - x.wi)
-    .forEach(({ gi, wi }) => pruneEmptyWindow(available[gi], wi));
-}
-
 /**
  * A multi-tab selection moves as ONE contiguous block in original order. Sources in
- * Now Open are COPIED (detached, `savedAt`), saved sources are moved and their emptied
- * windows pruned. Dropped INTO Now Open: saved sources leave their groups and real tabs
+ * Now Open are MOVED (detached copy + `tabs.remove`), saved sources are moved and any
+ * window they empty is KEPT. Dropped INTO Now Open: saved sources leave their groups and real tabs
  * open (one unfocused window on the Now Open row, background tabs at a live position);
  * live sources reorder via one contiguous `tabs.move`.
  */
@@ -701,7 +998,7 @@ function moveTabsMulti(
     touched.forEach((gi) => {
       available[gi] = cloneGroup(available[gi]);
     });
-    pruneEmptied(available, removeTabs(available, savedSel), permIndex);
+    removeTabs(available, savedSel); // emptied source windows are kept (user rule)
     touched.forEach((gi) => {
       available[gi] = bump(available[gi]);
     });
@@ -756,21 +1053,22 @@ function moveTabsMulti(
   const removedBeforeInDest = savedSel.filter(
     (t) => t.groupIndex === dest.groupIndex && t.windowIndex === destWi && t.tabIndex < dest.index
   ).length;
-  const emptiedCandidates = removeTabs(available, savedSel);
+  removeTabs(available, savedSel); // emptied source windows are kept (user rule)
 
   const insertAt = Math.max(0, (dest.createdWindow ? 0 : dest.index) - removedBeforeInDest);
   available[dest.groupIndex].windows[destWi].tabs.splice(insertAt, 0, ...inserted);
-
-  // Pruned AFTER the insert: the indices above are pre-removal.
-  pruneEmptied(available, emptiedCandidates, permIndex);
 
   touched.forEach((gi) => {
     if (!isPerm(gi)) available[gi] = bump(available[gi]);
   });
 
+  // Live members are MOVED, not copied: close their real tabs (the executor defers any
+  // active one to popup teardown). Saved members need no side effect.
+  const closingTabs = liveTabIds(liveSel.map((t) => orig(t)!));
+
   return {
     next: { ...s, available },
-    sideEffects: [],
+    sideEffects: closingTabs.length > 0 ? [{ type: 'tabs.remove', tabIds: closingTabs }] : [],
     undoable: liveSel.length === 0,
     landed: { type: 'tab', positions: locateTabs(available, dest.groupIndex, inserted) }
   };
@@ -780,10 +1078,11 @@ function moveTabsMulti(
 
 /**
  * Analogue of {@link moveTabsMulti} for a multi-window selection. Moves the WHOLE
- * ordered run (sorted by source groupIndex then windowIndex) as ONE undoable op,
- * re-running the starred-first invariant in the target. Live Now Open windows are
- * COPIED (detached). A drop INTO Now Open opens one real unfocused window per selected
- * SAVED window (`undoable:false`).
+ * ordered run (sorted by source groupIndex then windowIndex) as ONE undoable op, landing
+ * it inside its own starred/unstarred zone in the target (spec §6.1; a selection spanning
+ * both zones is refused by `canDrop`). Live Now Open windows are COPIED (detached). A drop
+ * INTO Now Open opens one real unfocused window per selected SAVED window
+ * (`undoable:false`).
  */
 function moveWindowsMulti(
   model: DndModel,
@@ -849,24 +1148,26 @@ function moveWindowsMulti(
       : { ...orig(w)!, focused: false, tabs: orig(w)!.tabs.map((t) => (t.id === 0 ? t : { ...t, id: 0 })) }
   );
 
-  const dropIndex = o.type === 'window' ? o.index ?? o.windowIndex : -1;
-  const removedBeforeInDst =
-    dropIndex >= 0 ? savedSel.filter((w) => w.groupIndex === dstGi && w.windowIndex < dropIndex).length : 0;
+  // Anchor by IDENTITY, read before the removal: subtracting "how many selected windows
+  // sat above the drop index" only works while the indices still line up, and it said
+  // nothing about which zone the block belonged in.
+  const dropIndex = windowAnchorIndex(o);
+  const anchor = dropIndex >= 0 ? available[dstGi].windows[dropIndex] : undefined;
 
   removeWindows(available);
 
-  const insertAt =
-    dropIndex >= 0 ? Math.max(0, dropIndex - removedBeforeInDst) : available[dstGi].windows.length;
-  available[dstGi].windows.splice(Math.min(insertAt, available[dstGi].windows.length), 0, ...movedWindows);
-  available[dstGi].windows = sortWindowsByStarred(available[dstGi].windows);
+  placeWindows(available[dstGi], movedWindows, anchor, o.after ?? false);
 
   touched.forEach((gi) => {
     if (!isPerm(gi)) available[gi] = bump(available[gi]);
   });
 
+  // Live windows are MOVED: close every real tab they hold (the executor defers actives).
+  const closingWindowTabs = liveTabIds(liveSel.flatMap((w) => orig(w)!.tabs));
+
   return {
     next: { ...s, available },
-    sideEffects: [],
+    sideEffects: closingWindowTabs.length > 0 ? [{ type: 'tabs.remove', tabIds: closingWindowTabs }] : [],
     undoable: liveSel.length === 0,
     landed: { type: 'window', positions: locateWindows(available, dstGi, movedWindows) }
   };

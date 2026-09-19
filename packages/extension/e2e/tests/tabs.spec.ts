@@ -16,7 +16,7 @@ test.describe('Tab management', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
     await openRenameTab(page, 'Jira Board');
 
     const input = page.getByRole('textbox');
@@ -36,7 +36,7 @@ test.describe('Tab management', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
     await openRenameTab(page, 'Jira Board');
 
     const input = page.getByRole('textbox');
@@ -53,7 +53,7 @@ test.describe('Tab management', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
     await openRenameTab(page, 'Jira Board');
 
     await page.getByRole('textbox').click();
@@ -68,7 +68,7 @@ test.describe('Tab management', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
     await openRenameTab(page, 'Confluence');
 
     await page.getByRole('textbox').click();
@@ -80,7 +80,7 @@ test.describe('Tab management', () => {
     // wait for the renamed title to render before reloading, or the write can lose the race.
     await expect(page.getByText('Wiki Home')).toBeVisible();
     await page.reload({ waitUntil: 'networkidle' });
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     await expect(page.getByText('Wiki Home')).toBeVisible();
   });
@@ -91,7 +91,7 @@ test.describe('Tab management', () => {
     await seedConfirmOnDelete(page, true);
     await page.reload({ waitUntil: 'networkidle' });
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     // Tab delete button is opacity-0 until hover
     const tabRow = page.getByRole('listitem', { name: 'Jira Board' });
@@ -113,7 +113,7 @@ test.describe('Tab drag — across windows within a group (unified DnD)', () => 
     const page = await openPopup(context, extensionId);
     // WORK_GROUP: window 0 = [Jira Board, Confluence], window 1 = [Slack]
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     const slackRow = page.getByRole('listitem', { name: 'Slack' });
     await slackRow.hover();

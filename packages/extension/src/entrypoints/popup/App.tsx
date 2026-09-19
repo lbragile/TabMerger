@@ -8,6 +8,7 @@ import { DndProvider } from '@/components/dnd/DndProvider';
 import { ModalRoot } from '@/components/Modal';
 import { AIGroupSuggestion } from '@/components/AIGroupSuggestion';
 import { SelectionActionBar } from '@/components/SelectionActionBar';
+import { useSelectionClickAway } from '@/hooks/useSelectionClickAway';
 import { SelectionAnnouncer } from '@/components/SelectionAnnouncer';
 import { useGroups } from '@/hooks/useGroups';
 import { useCurrentTabs } from '@/hooks/useCurrentTabs';
@@ -104,6 +105,9 @@ function AppContent() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectionMode, exitSelectionMode]);
+
+  // A plain click anywhere that isn't a selection control also exits — see the hook.
+  useSelectionClickAway(selectionMode, exitSelectionMode);
 
   if (isLoading || !groupsState) {
     return (

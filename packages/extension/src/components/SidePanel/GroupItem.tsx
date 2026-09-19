@@ -15,6 +15,10 @@ import { cn } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
 import { DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { gapTransformFor } from '@/lib/dndInsertion';
+import { selectionRange } from '@/lib/selectionRange';
+import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { useRovingRow } from '@/hooks/useRovingRow';
+import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 
 interface GroupItemProps {
@@ -30,13 +34,14 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   const savedGroupCount = (groupsState?.available ?? []).filter((g) => !g.permanent).length;
   // MODEL id — the group's real `group.id` (not positional "group-N"). Same id for
   // sortable + droppable so a dragged window/tab can land on the row (cross-group move).
+  // `starred` rides along because it is the row's ZONE, not decoration: starred groups are
+  // pinned above unstarred ones, and the DnD collision layer clamps the insertion gap into
+  // the dragged block's own zone (`@/lib/dndInsertion`, spec §6.1).
+  const dndData = { type: 'group', groupId: group.id, index: groupIndex, starred: !!group.starred };
   const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } =
-    useSortable({ id: group.id, data: { type: 'group', groupId: group.id, index: groupIndex } });
+    useSortable({ id: group.id, data: dndData });
 
-  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-    id: group.id,
-    data: { type: 'group', groupId: group.id, index: groupIndex }
-  });
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({ id: group.id, data: dndData });
 
   // A non-anchor row that is part of an active multi-drag selection dims to 0.4.
   const { isDragging: dndDragging, active: dndActive, gap } = useDndContext();
@@ -47,19 +52,33 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
     dndActive.selectionIds.includes(group.id) &&
     dndActive.id !== group.id;
 
+  // Roving tabindex (a11y M3): the sidebar ROW is the only Tab stop; Left/Right walk its
+  // controls (grip, checkbox, colour swatch, star).
+  const roving = useRovingRow<HTMLElement>();
   const setNodeRef = (node: HTMLElement | null) => {
     setSortableRef(node);
     setDroppableRef(node);
+    roving.ref(node);
   };
 
   const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
+
+  // Starting a multi-select closes this row's context menu and colour picker — the picker
+  // in particular is non-modal, so it can otherwise sit open over the sidebar while the
+  // user ticks group checkboxes.
+  useCloseOnOverlayDismiss(() => {
+    setContextMenuOpen(false);
+    setColorPickerOpen(false);
+  });
   const renameTarget = useUIStore((s) => s.renameTarget);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const selectionMode = useUIStore((s) => s.selectionMode);
   const selectedItems = useUIStore((s) => s.selectedItems);
   const toggleSelection = useUIStore((s) => s.toggleSelection);
   const enterSelectionMode = useUIStore((s) => s.enterSelectionMode);
+  const selectRange = useUIStore((s) => s.selectRange);
+  const selectionAnchor = useUIStore((s) => s.selectionAnchor);
   const { mutate: updateGroupName } = useUpdateGroupName();
   const { mutate: updateGroupColor } = useUpdateGroupColor();
   const { mutate: toggleGroupStar } = useToggleGroupStar();
@@ -141,13 +160,51 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   const selectionId = `group-${groupIndex}`;
   const isSelected = selectedItems.some((s) => s.id === selectionId);
 
+  const extendRange = () => {
+    const item = { type: 'group' as const, id: selectionId };
+    enterSelectionMode();
+    selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+  };
+
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    // Shift on the checkbox (click, or Shift+Space with it focused) extends a range.
+    if (e.shiftKey) {
+      extendRange();
+      return;
+    }
     toggleSelection({ type: 'group', id: selectionId });
+  };
+
+  // Same composition as Tab.tsx / Window.tsx: forward dnd-kit's own listener FIRST, then
+  // stop the event so the row's click/keydown handler doesn't also fire. Shift+Space on a
+  // focused grip is the keyboard Shift+click; dnd-kit's activator ignores modifiers and
+  // would pick the group UP instead, so it is intercepted before being forwarded.
+  const dragHandleProps = { ...attributes, ...listeners };
+  const onDragHandleMouseDown = (e: React.MouseEvent) => {
+    (dragHandleProps as { onMouseDown?: (e: React.MouseEvent) => void }).onMouseDown?.(e);
+    e.stopPropagation();
+  };
+  const onDragHandleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === ' ' || e.code === 'Space') && e.shiftKey && !isDndDragLive()) {
+      e.preventDefault();
+      e.stopPropagation();
+      extendRange();
+      return;
+    }
+    (dragHandleProps as { onKeyDown?: (e: React.KeyboardEvent) => void }).onKeyDown?.(e);
   };
 
   const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isLocked) return;
+    // Shift+click extends the sidebar selection from the anchor down to this group.
+    if (e.shiftKey && !group.permanent) {
+      e.stopPropagation();
+      enterSelectionMode();
+      const item = { type: 'group' as const, id: selectionId };
+      selectRange(item, selectionRange(groupsState, selectionAnchor, item));
+      return;
+    }
     // Ctrl+click anywhere on the group row enters selection mode and toggles this group
     if (e.ctrlKey || e.metaKey) {
       e.stopPropagation();
@@ -165,6 +222,9 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       open={contextMenuOpen}
       onOpenChange={setContextMenuOpen}
       wrapperRef={setNodeRef}
+      // Static row id for the multi-drag registry (collapse + `+N`) and focus-by-identity.
+      wrapperDndId={group.id}
+      onWrapperKeyDown={roving.onKeyDown}
       wrapperStyle={{
         ...style,
         opacity: isDimmedBySelection ? 0.4 : undefined,
@@ -208,12 +268,40 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
         }
       }}
     >
-        {/* Single slot: checkbox in selection mode, drag handle otherwise */}
-        {showCheckbox ? (
+        {/* Drag grip — ALWAYS present for a saved group (never for Now Open, which can't
+            be reordered). In selection mode the checkbox sits right after it, exactly as
+            in Tab.tsx / Window.tsx: replacing the grip with the checkbox used to make a
+            multi-group selection impossible to drag at all. */}
+        {group.permanent || savedGroupCount <= 1 ? (
+          <span className="h-3 w-3 shrink-0" aria-hidden="true" />
+        ) : (
+          <span
+            className="cursor-grab active:cursor-grabbing touch-none shrink-0 opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-opacity"
+            style={{ color: 'var(--sidebar-text-subtle)' }}
+            // Native onDragStart activator (see useDnd.ts + dndHtml5Sensor) needs
+            // `draggable` set — dnd-kit only spreads `listeners`, never the attr.
+            draggable={!DND_POINTER_PROBE_ACTIVE}
+            {...dragHandleProps}
+            // AFTER the spread — see the matching note in Tab.tsx: dnd-kit DECLARES
+            // `tabIndex: 0` here, so only an explicit prop can hold the roving -1.
+            tabIndex={-1}
+            // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
+            // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
+            // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
+            aria-label={`Drag to reorder group: ${group.name}`}
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={onDragHandleMouseDown}
+            onKeyDown={onDragHandleKeyDown}
+          >
+            <GripVertical className="h-3 w-3" />
+          </span>
+        )}
+        {showCheckbox && (
           <button
             type="button"
             className="shrink-0 flex items-center justify-center h-4 w-4 text-(--sidebar-text-inactive) hover:text-(--sidebar-text-active) transition-colors"
             onClick={handleCheckboxClick}
+            onMouseDown={(e) => e.stopPropagation()}
             role="checkbox"
             aria-checked={isSelected}
             aria-label={`Select ${group.name}`}
@@ -224,28 +312,6 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
               <Square className="h-3.5 w-3.5" />
             )}
           </button>
-        ) : group.permanent ? (
-          <span className="h-3 w-3 shrink-0" aria-hidden="true" />
-        ) : (
-          savedGroupCount > 1 ? (
-            <span
-              className="cursor-grab active:cursor-grabbing touch-none shrink-0 opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-opacity"
-              style={{ color: 'var(--sidebar-text-subtle)' }}
-              // Native onDragStart activator (see useDnd.ts + dndHtml5Sensor) needs
-              // `draggable` set — dnd-kit only spreads `listeners`, never the attr.
-              draggable={!selectionMode && !DND_POINTER_PROBE_ACTIVE}
-              {...(selectionMode ? {} : { ...attributes, ...listeners })}
-              // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
-              // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
-              // Keep the "Drag to reorder" PREFIX: the DnD sensor/visuals select the grip by it.
-              aria-label={selectionMode ? undefined : `Drag to reorder group: ${group.name}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <GripVertical className="h-3 w-3" />
-            </span>
-          ) : (
-            <span className="h-3 w-3 shrink-0" />
-          )
         )}
 
         {/* Color swatch — opens color picker on click; hidden while renaming */}

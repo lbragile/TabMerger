@@ -29,6 +29,7 @@ import {
   type InsertionCandidate
 } from '@/lib/dndInsertion';
 import { getDndDragSelection } from '@/lib/dndMultiDrag';
+import { dndDebugLog } from '@/lib/dndDebug';
 import { DND_SCREEN_READER_INSTRUCTIONS } from '@/lib/dndAnnouncements';
 import type { GroupsState } from '@/lib/types';
 
@@ -97,7 +98,39 @@ export const unifiedCollision: CollisionDetection = (args) => {
     // For group drags, do NOT fall back to the unfiltered hits — that would
     // re-admit the Now Open row. An empty result = "no valid target here".
     if (activeType === 'group') return filtered;
-    return filtered.length > 0 ? filtered : hits;
+    if (filtered.length > 0) return filtered;
+    // No window/group-type hit at the pointer — only a bare tab (or nothing). This is
+    // DEFENSE IN DEPTH for the spring-open cross-group window-drop bug (spec C15): the
+    // CONFIRMED root cause is dnd-kit's own `over` STATE (not this collision result)
+    // lagging the live collision layer by a render right after `setActiveGroupIndex`
+    // swaps the windows panel — see the model-based redirect in `commitDrop`
+    // (`useDndHandlers.ts`), which is what actually fixes the repro. This branch never
+    // fired in that repro (confirmed via a `dndDebugLog` probe), but if `pointerWithin`
+    // ever genuinely returns only a tab hit for a window drag (no window/group hit at
+    // all), a bare tab hit would otherwise flow through to `onDragEnd` as
+    // `over.type === 'tab'`, which `canDrop` correctly REJECTS for a window drag (spec:
+    // window → window | group only) — "nothing commits". Resolve it up to its OWN
+    // window container instead: every allowed WINDOW target is itself either a window
+    // or a group row, never a tab, so this can only turn a rejected drop into the right
+    // one, never a wrong one.
+    if (activeType === 'window') {
+      const tabHit = hits.find((hit) => {
+        const d = args.droppableContainers.find((c) => c.id === hit.id)?.data?.current as
+          | { type?: string }
+          | undefined;
+        return d?.type === 'tab';
+      });
+      const windowId = tabHit
+        ? (args.droppableContainers.find((c) => c.id === tabHit.id)?.data?.current as { windowId?: string } | undefined)
+            ?.windowId
+        : undefined;
+      const windowContainer = windowId ? args.droppableContainers.find((c) => c.id === windowId) : undefined;
+      if (windowContainer) {
+        dndDebugLog('collision:window-fallback-tab', { tabHitId: tabHit ? String(tabHit.id) : null, windowId });
+        return [{ id: windowContainer.id, data: { droppableContainer: windowContainer, value: 0 } }];
+      }
+    }
+    return hits;
   };
 
   const pointer = asCollisions(pointerWithin(args));
@@ -110,7 +143,17 @@ export const unifiedCollision: CollisionDetection = (args) => {
   return sameTypeOnly(asCollisions(closestCenter(args)));
 };
 
-type SortableData = { type?: string; windowId?: string; groupId?: string; index?: number };
+type SortableData = { type?: string; windowId?: string; groupId?: string; index?: number; starred?: boolean };
+
+/**
+ * Zone of a group/window row — starred rows are pinned above unstarred ones, so this is
+ * what stops the gap being drawn at a position the commit could never honour (spec §6.1).
+ * Tabs are unzoned (`undefined` disables clamping).
+ */
+function zoneOf(type: string | undefined, data: SortableData | undefined): number | undefined {
+  if (type !== 'group' && type !== 'window') return undefined;
+  return data?.starred ? 0 : 1;
+}
 
 /**
  * Decorate the winning collision with `data.tmInsertion` — the pointer-driven
@@ -141,10 +184,15 @@ export function attachInsertion(args: Parameters<CollisionDetection>[0], hits: C
       : args.pointerCoordinates?.y;
     if (typeof probeY !== 'number' || !Number.isFinite(probeY)) return hits;
 
+    const activeZone = zoneOf(activeType, activeData);
+    const selectionIds = getDndDragSelection() ?? undefined;
     const candidates: InsertionCandidate[] = [];
+    /** A selection straddling the starred boundary is refused at drop (`canDrop`) — draw no gap for it. */
+    let spansZones = false;
     for (const c of args.droppableContainers) {
       const d = c.data?.current as SortableData | undefined;
       if (d?.type !== activeType) continue;
+      if (selectionIds?.has(String(c.id)) && zoneOf(activeType, d) !== activeZone) spansZones = true;
       if (activeType === 'group' && d.index === 0) continue; // "Now Open" never moves
       const rect = args.droppableRects.get(c.id);
       const key = containerKeyOf(activeType, String(c.id), d);
@@ -154,9 +202,11 @@ export function attachInsertion(args: Parameters<CollisionDetection>[0], hits: C
         type: activeType,
         containerKey: key,
         order: orderOf(activeType, String(c.id), d),
-        centerY: rect.top + rect.height / 2
+        centerY: rect.top + rect.height / 2,
+        zone: zoneOf(activeType, d)
       });
     }
+    if (spansZones) return hits;
     const activeId = String(args.active.id);
     const insertion = computeInsertion({
       activeId,
@@ -168,7 +218,8 @@ export function attachInsertion(args: Parameters<CollisionDetection>[0], hits: C
       probeY,
       gapHeight,
       // multi-drag: the other selected rows are collapsed, never slots the gap sits between
-      selectionIds: getDndDragSelection() ?? undefined
+      selectionIds,
+      activeZone
     });
     if (!insertion) return hits;
     return [{ ...first, data: { ...(first.data ?? {}), tmInsertion: insertion } }, ...hits.slice(1)];

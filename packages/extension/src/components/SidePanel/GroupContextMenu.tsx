@@ -54,6 +54,15 @@ interface GroupContextMenuProps {
   wrapperRef?: (node: HTMLElement | null) => void;
   wrapperStyle?: React.CSSProperties;
   wrapperClassName?: string;
+  /**
+   * The row's positional DnD model id, rendered as `data-tm-dnd-id`. `dndMultiDrag` /
+   * `dndDragVisuals` / `dndFocus` find rows through this STATIC attribute — without it a
+   * multi-GROUP drag can't collapse the other selected sidebar rows or count them in the
+   * ghost's `+N` badge.
+   */
+  wrapperDndId?: string;
+  /** Roving-tabindex key handler for the row (see `useRovingRow`); runs before the row's own. */
+  onWrapperKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onWrapperClick?: React.MouseEventHandler<HTMLDivElement>;
   onWrapperContextMenu?: React.MouseEventHandler<HTMLDivElement>;
   onWrapperMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -69,6 +78,8 @@ export function GroupContextMenu({
   wrapperRef,
   wrapperStyle,
   wrapperClassName,
+  wrapperDndId,
+  onWrapperKeyDown,
   onWrapperClick,
   onWrapperContextMenu,
   onWrapperMouseEnter,
@@ -121,8 +132,13 @@ export function GroupContextMenu({
       role="button"
       aria-label={group.name}
       data-sidebar-group-index={groupIndex}
+      data-tm-dnd-id={wrapperDndId}
       onClick={onWrapperClick}
       onKeyDown={(e) => {
+        // Roving tabindex first: Left/Right/Home/End walk this row's controls. It is
+        // inert mid-drag, so a keyboard drag's arrows still reach dnd-kit.
+        onWrapperKeyDown?.(e);
+        if (e.defaultPrevented) return;
         // Don't intercept keystrokes from nested inputs (e.g. rename field) — only
         // the row itself should activate on Enter/Space.
         if (e.target !== e.currentTarget) return;

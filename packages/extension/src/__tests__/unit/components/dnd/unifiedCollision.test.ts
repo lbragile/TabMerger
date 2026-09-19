@@ -165,4 +165,60 @@ describe('unifiedCollision cascade', () => {
     )
     expect(out).toEqual([])
   })
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Spring-open cross-group WINDOW drop bug: after `setActiveGroupIndex` swaps
+  // the windows panel to the sprung-open group, that group's window container
+  // can be absent from a collision pass its own child tab rows already appear
+  // in (see `learnings_dnd_spring_open_window_drop.md`). A bare tab hit must
+  // never reach `onDragEnd` as the WINDOW drag's target — `canDrop` correctly
+  // rejects window→tab, so "nothing commits". `sameTypeOnly` must redirect it
+  // up to its own window container instead.
+  // ───────────────────────────────────────────────────────────────────────────
+  it('window drag: a lone TAB hit (no window/group hit at all) is redirected to its OWN window container', () => {
+    pointerWithin.mockReturnValue([hit('g::w1::t0')])
+    const windowContainer = { id: 'g::w1', data: { current: { type: 'window', groupId: 'g', starred: false } } }
+    const out = unifiedCollision(
+      args({
+        active: { id: 'g::w0', data: { current: { type: 'window' } } } as never,
+        droppableContainers: [
+          { id: 'g::w1::t0', data: { current: { type: 'tab', groupId: 'g', windowId: 'g::w1' } } },
+          windowContainer,
+        ] as never,
+      })
+    )
+    expect(out).toHaveLength(1)
+    expect(out[0].id).toBe('g::w1')
+    expect((out[0].data as { droppableContainer?: { id: string } } | undefined)?.droppableContainer?.id).toBe(
+      'g::w1'
+    )
+  })
+
+  it('window drag: a lone TAB hit whose window container is not (yet) registered falls through unchanged', () => {
+    pointerWithin.mockReturnValue([hit('g::w1::t0')])
+    const out = unifiedCollision(
+      args({
+        active: { id: 'g::w0', data: { current: { type: 'window' } } } as never,
+        droppableContainers: [
+          // the window container itself is missing from the registry
+          { id: 'g::w1::t0', data: { current: { type: 'tab', groupId: 'g', windowId: 'g::w1' } } },
+        ] as never,
+      })
+    )
+    expect(out.map((c) => c.id)).toEqual(['g::w1::t0'])
+  })
+
+  it('window drag: an existing window/group hit is never touched by the tab-redirect fallback', () => {
+    pointerWithin.mockReturnValue([hit('g::w1'), hit('g::w1::t0')])
+    const out = unifiedCollision(
+      args({
+        active: { id: 'g::w0', data: { current: { type: 'window' } } } as never,
+        droppableContainers: [
+          { id: 'g::w1', data: { current: { type: 'window', groupId: 'g' } } },
+          { id: 'g::w1::t0', data: { current: { type: 'tab', groupId: 'g', windowId: 'g::w1' } } },
+        ] as never,
+      })
+    )
+    expect(out.map((c) => c.id)).toEqual(['g::w1'])
+  })
 })

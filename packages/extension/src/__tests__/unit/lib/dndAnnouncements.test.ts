@@ -182,7 +182,7 @@ describe('describeDropCommitted', () => {
     expect(text).toBe('Moved tab GitHub to Window 2 of group Play, position 1 of 1. Group Play is not shown.')
   })
 
-  it('a multi-selection copied out of Now Open says Copied + open tabs stay open', () => {
+  it('a multi-selection MOVED out of Now Open says Moved + the open tabs are closed', () => {
     const next: GroupsState = { ...before, available: [before.available[0], before.available[1], group('play', 'Play', [win([tab('Video'), tab('Live'), tab('X')])])] }
     const text = describeDropCommitted({
       before,
@@ -193,7 +193,7 @@ describe('describeDropCommitted', () => {
       sideEffects: [],
       activeGroupIndex: 2
     })
-    expect(text).toBe('Copied 2 tabs to Window 1 of group Play, starting at position 2 of 3. The open tabs stay open.')
+    expect(text).toBe('Moved 2 tabs to Window 1 of group Play, starting at position 2 of 3. The open tabs are closed.')
   })
 
   it('windows, group reorders and Now Open destinations', () => {

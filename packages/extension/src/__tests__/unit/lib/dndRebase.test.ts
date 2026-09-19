@@ -259,3 +259,55 @@ describe('rebaseMove', () => {
     expect(run(snap, cur2, { type: 'tab', id: 'g::w0::t0' }, { type: 'tab', id: 'h::w0::t0' })).toBeNull()
   })
 })
+
+/**
+ * Third-audit LOW item (2026-09-16): a tab's REMINDER is part of its rebase identity.
+ *
+ * Two saved tabs with the same URL/title but different reminders used to share one
+ * identity, so a mid-drag shift could resolve the drag onto the wrong one. The remaining
+ * unshared fields (`favIconUrl`, `chromeGroup`) are cosmetic, so a wrong pick there can no
+ * longer move or delete the wrong tab's user-visible content.
+ */
+describe('tab identity includes the reminder', () => {
+  it('tells two otherwise-identical tabs apart, so a shift resolves the right one', () => {
+    const early = tab('dup', { reminder: { fireAt: 1000 } })
+    const late = tab('dup', { reminder: { fireAt: 2000 } })
+    const snap = state([group('g', [win([early, late])])])
+    // A tab is inserted above them mid-drag: positions shift by one.
+    const cur = state([group('g', [win([tab('new'), early, late])], { updatedAt: 9 })])
+    // The SECOND duplicate (t1 → t2) must still be the one with fireAt 2000.
+    const res = run(snap, cur, { type: 'tab', id: 'g::w0::t1' }, { type: 'group', id: 'g' })
+    expect(res!.active.id).toBe('g::w0::t2')
+  })
+
+  it('treats a reminder change as an EDIT, not the same tab', () => {
+    const snap = state([group('g', [win([tab('x', { reminder: { fireAt: 1000 } })])]), group('h', [win([tab('y')])])])
+    const cur = state([
+      group('g', [win([tab('x', { reminder: { fireAt: 5555 } })])], { updatedAt: 9 }),
+      group('h', [win([tab('y')])])
+    ])
+    // The snapshot tab no longer exists under that identity → the drop cancels.
+    expect(run(snap, cur, { type: 'tab', id: 'g::w0::t0' }, { type: 'group', id: 'h' })).toBeNull()
+  })
+
+  it('a tab with no reminder is unaffected (identity stays stable across an untouched group)', () => {
+    const snap = state([group('g', [win([tab('a'), tab('b')])]), group('h', [win([tab('z')])])])
+    const cur = state([group('g', [win([tab('a'), tab('b')])], { updatedAt: 9 }), group('h', [win([tab('z')])])])
+    const res = run(snap, cur, { type: 'tab', id: 'g::w0::t1' }, { type: 'group', id: 'h' })
+    expect(res!.active.id).toBe('g::w0::t1')
+  })
+})
+
+/**
+ * 2b — the sidebar "new group" sentinel names no existing group, so it survives ANY
+ * mid-drag change to the cache and never needs re-resolving.
+ */
+describe('the "new group" drop target', () => {
+  it('rebases onto any current state without a model lookup', () => {
+    const snap = state([group('g', [win([tab('a')])])])
+    const cur = state([group('g', [win([tab('a')])], { updatedAt: 9 }), group('added', [win([tab('n')])])])
+    const res = run(snap, cur, { type: 'tab', id: 'g::w0::t0' }, { type: 'new-group', id: '::new-group' })
+    expect(res!.over).toEqual({ type: 'new-group', id: '::new-group', index: undefined, groupIndex: undefined })
+    expect(res!.active.id).toBe('g::w0::t0')
+  })
+})

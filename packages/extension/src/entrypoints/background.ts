@@ -7,6 +7,7 @@ import { hasEncryptionKey, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
+import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
 
 type SyncNowResult = { ok: true } | { ok: false; reason: 'no-session' | 'locked' | 'error'; message?: string };
 
@@ -169,6 +170,29 @@ export default defineBackground(() => {
   chrome.runtime.onStartup.addListener(() => { void buildMenus(); void reRegisterReminders(); });
   void buildMenus();
   void reRegisterReminders();
+
+  // Tabs the popup dragged OUT of "Now Open" that it must not close itself: closing the
+  // ACTIVE tab of the popup's anchor window dismisses the popup instantly (spec C7), which
+  // used to kill the drop commit. The popup posts the ids down a long-lived port and we
+  // close them when that port disconnects — i.e. the moment the popup goes away, whatever
+  // made it go away. The open port also keeps this worker alive until then, so the close
+  // can't be lost to worker eviction.
+  chrome.runtime.onConnect.addListener((port) => {
+    if (port.name !== DEFERRED_CLOSE_PORT) return;
+    const pending = new Set<number>();
+    port.onMessage.addListener((msg: unknown) => {
+      const ids = (msg as DeferredCloseMessage | undefined)?.tabIds;
+      if (Array.isArray(ids)) ids.forEach((id) => { if (typeof id === 'number' && id > 0) pending.add(id); });
+    });
+    port.onDisconnect.addListener(() => {
+      if (pending.size === 0) return;
+      // Best effort: a tab the user already closed makes `remove` reject, which must not
+      // take the rest of the batch down.
+      void chrome.tabs.remove([...pending]).catch(() => {
+        pending.forEach((id) => void chrome.tabs.remove(id).catch(() => {}));
+      });
+    });
+  });
 
   chrome.runtime.onMessage.addListener((msg: unknown) => {
     const m = msg as { type?: string; name?: string; delayInMinutes?: number };

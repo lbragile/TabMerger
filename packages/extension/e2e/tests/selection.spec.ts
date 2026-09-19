@@ -7,14 +7,14 @@ test.describe('Selection mode', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     // Header toggle is "Select items" when off, "Exit selection mode" when on —
     // per-row selection controls are role="checkbox" named "Select <title>", not buttons.
     const selBtn = page.getByRole('button', { name: 'Select items' });
     await selBtn.click();
 
-    await expect(page.getByRole('checkbox', { name: /^select /i }).first()).toBeVisible();
+    await expect(page.getByRole('listitem').getByRole('checkbox', { name: /^select /i }).first()).toBeVisible();
 
     // Exit selection mode
     await page.getByRole('button', { name: 'Exit selection mode' }).click();
@@ -25,11 +25,11 @@ test.describe('Selection mode', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     await page.getByRole('button', { name: /select/i }).click();
 
-    const checkboxBtns = page.getByRole('checkbox', { name: /^select /i });
+    const checkboxBtns = page.getByRole('listitem').getByRole('checkbox', { name: /^select /i });
     await checkboxBtns.nth(0).click();
     await checkboxBtns.nth(1).click();
 

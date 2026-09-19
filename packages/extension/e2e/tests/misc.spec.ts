@@ -8,7 +8,7 @@ test.describe('Notes', () => {
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
     // Open note via context menu on the Work sidebar item
-    await page.getByRole('button', { name: 'Work' }).click({ button: 'right' });
+    await page.getByRole('button', { name: 'Work', exact: true }).click({ button: 'right' });
     await page.waitForTimeout(200);
     await page.getByText('Add note').click();
 
@@ -18,7 +18,7 @@ test.describe('Notes', () => {
     await page.reload({ waitUntil: 'networkidle' });
 
     // Menu item changes to "Edit note" once a note exists
-    await page.getByRole('button', { name: 'Work' }).click({ button: 'right' });
+    await page.getByRole('button', { name: 'Work', exact: true }).click({ button: 'right' });
     await page.waitForTimeout(200);
     await page.getByText('Edit note').click();
 

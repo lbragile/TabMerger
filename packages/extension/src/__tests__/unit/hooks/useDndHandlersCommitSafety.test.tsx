@@ -362,3 +362,117 @@ describe('#17 a partial multi-move is announced as partial', () => {
     expect(save).not.toHaveBeenCalled()
   })
 })
+
+/**
+ * Third-audit LOW items (2026-09-16) — the SYNCHRONOUS-THROW rollback path.
+ *
+ * Before: `onDragEnd`'s catch ran `rollback(p)` and only cleared the drag state in
+ * `finally`, so rollback's two `!isDndDragLive()` guards were ALWAYS false there (nothing
+ * was ever restored), and it popped the undo entry + announced a failure even when the
+ * throw happened AFTER `saveGroupsState` had been issued — for a write that will almost
+ * certainly land. It also dropped that write's promise, so a real failure went unnoticed.
+ */
+describe('a throw AFTER the write was issued is handled as a probable SUCCESS', () => {
+  const realSetSelection = useUIStore.getState().setSelection
+
+  afterEach(() => {
+    useUIStore.setState({ setSelection: realSetSelection })
+  })
+
+  /** Drag a selected tab so `setSelection` (post-cache-write) is on the commit path. */
+  function throwAfterWrite(persist: Promise<void>) {
+    save.mockReturnValueOnce(persist)
+    useUIStore.setState({
+      selectionMode: true,
+      selectedItems: [
+        { type: 'tab', id: 'tab-1-0-0' },
+        { type: 'tab', id: 'tab-1-1-0' }
+      ],
+      setSelection: () => {
+        throw new Error('boom-after-write')
+      }
+    })
+    return setup()
+  }
+
+  it('keeps the undo entry, announces nothing, and still awaits the write', async () => {
+    const d = deferred<void>()
+    const { result, qc } = throwAfterWrite(d.promise)
+    start(result, 'work::w0::t0')
+    // `onDragEnd` now AWAITS the issued write on this path — settle it, or it hangs
+    // (which is itself the proof that the promise is no longer dropped on the floor).
+    await act(async () => {
+      const p = result.current.onDragEnd(endEvent('work::w0::t0', 'play', 'group'))
+      d.resolve()
+      await p
+    })
+
+    // The cache write happened, so the move is real: undo must survive.
+    expect(useUIStore.getState().undoStack).toHaveLength(1)
+    expect(liveRegionText()).not.toContain(DND_SAVE_FAILED_TEXT)
+    // …and the drag state is still fully cleared.
+    expect(isDndDragLive()).toBe(false)
+    expect(getDndDragSelection()).toBeNull()
+    expect(qc.getQueryData<GroupsState>(['groups'])!.available[2].windows).toHaveLength(2)
+  })
+
+  it('but a REAL write failure after that throw still rolls back and announces', async () => {
+    const d = deferred<void>()
+    d.promise.catch(() => {})
+    const { result } = throwAfterWrite(d.promise)
+    start(result, 'work::w0::t0')
+    await act(async () => {
+      const p = result.current.onDragEnd(endEvent('work::w0::t0', 'play', 'group'))
+      d.reject(new Error('quota'))
+      await p
+    })
+    // Now the write really failed: the undo entry goes, and the user is told.
+    expect(useUIStore.getState().undoStack).toHaveLength(0)
+    expect(liveRegionText()).toContain(DND_SAVE_FAILED_TEXT)
+  })
+
+  it('reset() runs BEFORE rollback, so the "no drag is live" restores are reachable', async () => {
+    // A throw BEFORE the write: everything must come back, which is only possible once
+    // the live-drag flag has already been cleared.
+    useUIStore.setState({
+      selectionMode: true,
+      selectedItems: [
+        { type: 'tab', id: 'tab-1-0-0' },
+        { type: 'tab', id: 'tab-1-1-0' }
+      ]
+    })
+    save.mockImplementationOnce(() => {
+      throw new Error('boom')
+    })
+    const { result } = setup()
+    start(result, 'work::w0::t0')
+    await end(result, 'work::w0::t0', 'play', 'group')
+    expect(isDndDragLive()).toBe(false)
+    expect(useUIStore.getState().selectedItems).toEqual([
+      { type: 'tab', id: 'tab-1-0-0' },
+      { type: 'tab', id: 'tab-1-1-0' }
+    ])
+    expect(useUIStore.getState().undoStack).toHaveLength(0)
+    // Nothing was written, so this IS a failure — announced through dnd-kit's own end
+    // announcement (the pointer path), not the app-owned keyboard live region.
+    const { takeDndDropOutcome } = await import('@/lib/dndAnnouncements')
+    expect(takeDndDropOutcome()).toBe(DND_SAVE_FAILED_TEXT)
+  })
+})
+
+describe('the unmount fallback is unconditional', () => {
+  it('clears the module-level drag state even after reset() has already nulled activeRef', async () => {
+    const { result, unmount } = setup()
+    start(result, 'work::w0::t0', { selectionIds: ['work::w0::t0', 'work::w1::t0'] })
+    // A normal end nulls `activeRef` — the old `if (!activeRef.current) return;` guard
+    // turned the unmount cleanup into a no-op from here on.
+    await end(result, 'work::w0::t0', 'play', 'group')
+    // Simulate state wedged by something outside the handler.
+    const { setDndDragLive, setDndDragSelection } = await import('@/lib/dndMultiDrag')
+    setDndDragLive('pointer')
+    setDndDragSelection('work::w0::t0', ['work::w0::t0', 'work::w1::t0'])
+    unmount()
+    expect(isDndDragLive()).toBe(false)
+    expect(getDndDragSelection()).toBeNull()
+  })
+})

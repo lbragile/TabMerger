@@ -9,7 +9,7 @@ test.describe('Accessibility (axe-core)', () => {
   test('popup with seeded groups has no serious/critical a11y violations', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
 
     // ponytail: nested-interactive is a known pre-existing issue — every sidebar/window/tab
     // row is role="button" wrapping a hidden zero-size DropdownMenuTrigger for the context
@@ -24,7 +24,7 @@ test.describe('Accessibility (axe-core)', () => {
   test('selection mode has no serious/critical a11y violations', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
-    await page.getByRole('button', { name: 'Work' }).click();
+    await page.getByRole('button', { name: 'Work', exact: true }).click();
     await page.getByRole('button', { name: 'Select items' }).click();
 
     const results = await new AxeBuilder({ page }).disableRules(['nested-interactive']).analyze();

@@ -47,11 +47,11 @@ function move(active: DndRef, over: DndRef, s = seed()) {
 describe('multi-TAB commit rules', () => {
   const SEL = ['work::w0::t0', 'work::w1::t0', 'work::w1::t1'] // a1, b1, b2
 
-  it('onto a TAB position: ONE contiguous block at the gap in original order; sources removed; the emptied saved window removed; ONE undoable op; landed positions reported', () => {
+  it('onto a TAB position: ONE contiguous block at the gap in original order; sources removed; the emptied saved window KEPT; ONE undoable op; landed positions reported', () => {
     const { res } = move(tabRef(SEL[1], SEL), tabRef('play::w0::t1')) // before p2
     const [, work, play] = res.next.available
     expect(titles(play)).toEqual([['p1', 'a1', 'b1', 'b2', 'p2']])
-    expect(titles(work)).toEqual([['a2', 'a3']]) // w1 emptied → removed
+    expect(titles(work)).toEqual([['a2', 'a3'], []]) // w1 emptied → KEPT (user rule)
     expect(res.undoable).toBe(true)
     expect(res.sideEffects).toEqual([])
     expect(res.landed).toEqual({
@@ -73,10 +73,11 @@ describe('multi-TAB commit rules', () => {
 
   it('onto the NEW-WINDOW zone: ONE new window holding all selected tabs', () => {
     const { res } = move(tabRef(SEL[0], SEL), { type: 'new-window', id: 'work::new-window', groupId: 'work', groupIndex: 1 })
-    expect(titles(res.next.available[1])).toEqual([['a2', 'a3'], ['a1', 'b1', 'b2']])
+    // w1 was emptied by the move and is KEPT, so the new window lands after it.
+    expect(titles(res.next.available[1])).toEqual([['a2', 'a3'], [], ['a1', 'b1', 'b2']])
   })
 
-  it('OUT of Now Open onto a saved group is a COPY: detached (id 0, savedAt), Now Open untouched, no side effects, not undoable', () => {
+  it('OUT of Now Open onto a saved group is a MOVE: detached (id 0, savedAt), Now Open model untouched, the real tabs closed, not undoable', () => {
     const sel = ['now::w0::t0', 'now::w1::t0']
     const { s, res } = move(tabRef(sel[0], sel), groupRef('work'))
     const copies = res.next.available[1].windows[2].tabs
@@ -86,7 +87,8 @@ describe('multi-TAB commit rules', () => {
       expect(typeof t.savedAt).toBe('number')
     }
     expect(res.next.available[0]).toBe(s.available[0])
-    expect(res.sideEffects).toEqual([])
+    // live1 (id 11) + live3 (id 13) — the two dragged live tabs, in selection order.
+    expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [11, 13] }])
     expect(res.undoable).toBe(false)
   })
 
@@ -95,7 +97,7 @@ describe('multi-TAB commit rules', () => {
     expect(res.sideEffects).toEqual([
       { type: 'windows.create', url: ['https://e.x/a1', 'https://e.x/b1', 'https://e.x/b2'], focused: false }
     ])
-    expect(titles(res.next.available[1])).toEqual([['a2', 'a3']])
+    expect(titles(res.next.available[1])).toEqual([['a2', 'a3'], []]) // emptied w1 kept
     expect(res.undoable).toBe(false)
     expect(res.landed).toBeUndefined()
   })
@@ -133,14 +135,14 @@ describe('multi-WINDOW commit rules', () => {
     expect(res.landed).toEqual({ type: 'window', positions: [1, 2].map((windowIndex) => ({ groupIndex: 2, windowIndex })) })
   })
 
-  it('live Now Open windows in a selection are COPIED detached (window + tab ids 0)', () => {
+  it('live Now Open windows in a selection are MOVED: detached copies land (window + tab ids 0) and every real tab is closed', () => {
     const sel = ['now::w0', 'now::w1']
     const { s, res } = move(winRef(sel[0], sel), groupRef('work'))
     const added = res.next.available[1].windows.slice(2)
     expect(added.map((w) => w.id)).toEqual([0, 0])
     expect(added.flatMap((w) => w.tabs.map((t) => t.id))).toEqual([0, 0, 0])
     expect(res.next.available[0]).toBe(s.available[0])
-    expect(res.sideEffects).toEqual([])
+    expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [11, 12, 13] }])
   })
 })
 
@@ -188,11 +190,17 @@ describe('REGRESSION sweeps over every single and multi move', () => {
     }
   })
 
-  it('every tabs.create is active:false and every windows.create is focused:false; nothing ever closes a real tab or window', () => {
+  it('every tabs.create is active:false, every windows.create is focused:false, and every tabs.remove names only REAL live ids', () => {
     let creates = 0
+    let removes = 0
     for (const { res } of allMoves(seed())) {
-      for (const fx of res.sideEffects as Array<{ type: string; active?: boolean; focused?: boolean }>) {
-        expect(['tabs.move', 'tabs.create', 'windows.create']).toContain(fx.type)
+      for (const fx of res.sideEffects as Array<{
+        type: string
+        active?: boolean
+        focused?: boolean
+        tabIds?: number[]
+      }>) {
+        expect(['tabs.move', 'tabs.create', 'windows.create', 'tabs.remove']).toContain(fx.type)
         if (fx.type === 'tabs.create') {
           creates++
           expect(fx.active).toBe(false)
@@ -201,9 +209,17 @@ describe('REGRESSION sweeps over every single and multi move', () => {
           creates++
           expect(fx.focused).toBe(false)
         }
+        if (fx.type === 'tabs.remove') {
+          removes++
+          // A saved tab is `id: 0`; closing "tab 0" would be a bug, and a drag out of
+          // Now Open must never try to close a tab it didn't move.
+          expect(fx.tabIds!.length).toBeGreaterThan(0)
+          expect(fx.tabIds!.every((id) => Number.isInteger(id) && id > 0)).toBe(true)
+        }
       }
     }
     expect(creates).toBeGreaterThan(0)
+    expect(removes).toBeGreaterThan(0)
   })
 
   it('anything touching Now Open is not undoable; saved-only moves are', () => {

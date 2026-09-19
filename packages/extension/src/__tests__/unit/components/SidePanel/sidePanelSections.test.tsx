@@ -38,6 +38,8 @@ const {
 vi.mock('@dnd-kit/core', () => ({
   DndContext: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   closestCenter: vi.fn(),
+  // The sidebar's always-mounted "new group" drop zone registers a droppable.
+  useDroppable: () => ({ setNodeRef: vi.fn(), isOver: false }),
 }))
 
 vi.mock('@dnd-kit/sortable', () => ({

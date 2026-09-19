@@ -539,6 +539,28 @@ describe('useDeleteGroup', () => {
     expect(deleteRulesForGroupIds).toHaveBeenCalledWith(['a'])
   })
 
+  /**
+   * #20 (third sync audit) — the groups key is special: `useGroupsMutation` /
+   * `getGroupsState` JOIN an in-flight groups fetch, and TanStack's default
+   * `cancelRefetch: true` CANCELS it, rejecting every joined promise. A concurrent user
+   * action (another mutation, a drop commit) would then be silently lost.
+   */
+  it('invalidates the groups key with cancelRefetch:false, so joined fetches are not rejected', async () => {
+    const nowOpen = createNowOpenGroup()
+    const group = createGroup('a', 'A')
+    const state = makeState([nowOpen, group], 1)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const spy = vi.spyOn(qc, 'invalidateQueries')
+    const { result } = renderHook(() => useDeleteGroup(), { wrapper })
+
+    await act(async () => { await result.current.mutateAsync(1) })
+
+    expect(spy).toHaveBeenCalledWith({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false })
+    spy.mockRestore()
+  })
+
   it('does not call chrome.tabs.remove when no tabs are live in Now Open', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = []
@@ -620,7 +642,7 @@ describe('useToggleGroupStar', () => {
 })
 
 describe('useMoveTab', () => {
-  it('moves a saved tab to Now Open: opens the URL, removes source, does not collapse when >1 window remains', async () => {
+  it('moves a saved tab to Now Open: opens the URL and removes it from the source window, which STAYS even when emptied', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = []
     const group = createGroup('a', 'A')
@@ -636,9 +658,11 @@ describe('useMoveTab', () => {
     })
 
     expect(chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://a.com', active: false })
-    // the emptied source window collapses since >1 window remained
-    expect(lastSaved().available[1].windows).toHaveLength(1)
-    expect(lastSaved().available[1].windows[0].tabs[0].url).toBe('https://b.com')
+    // User rule (2026-09-18): an emptied window is KEPT — it renders as an empty window
+    // card and stays a drop target. `dndMove` behaves the same way.
+    expect(lastSaved().available[1].windows).toHaveLength(2)
+    expect(lastSaved().available[1].windows[0].tabs).toEqual([])
+    expect(lastSaved().available[1].windows[1].tabs[0].url).toBe('https://b.com')
   })
 
   it('does not open a restricted URL when moving to Now Open', async () => {
@@ -675,7 +699,7 @@ describe('useMoveTab', () => {
     expect(saveGroupsState).not.toHaveBeenCalled()
   })
 
-  it('collapses the source window when it becomes empty and >1 window remains (Now Open destination)', async () => {
+  it('KEEPS the source window when it becomes empty and >1 window remains (Now Open destination)', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = []
     const group = createGroup('a', 'A')
@@ -690,7 +714,8 @@ describe('useMoveTab', () => {
       await result.current.mutateAsync({ fromGroupIndex: 1, fromWindowIndex: 0, fromTabIndex: 0, toGroupIndex: 0 })
     })
 
-    expect(lastSaved().available[1].windows).toHaveLength(1)
+    expect(lastSaved().available[1].windows).toHaveLength(2)
+    expect(lastSaved().available[1].windows[0].tabs).toEqual([])
   })
 
   it('fetches ogImage via sendMessage for a live (id>0) tab moved between saved groups', async () => {
@@ -808,7 +833,7 @@ describe('useMoveTab', () => {
     expect(trackEvent).not.toHaveBeenCalledWith('tabs_saved', expect.anything())
   })
 
-  it('collapses the source window between two saved groups when it becomes empty', async () => {
+  it('KEEPS the source window between two saved groups when it becomes empty', async () => {
     const from = createGroup('from', 'From')
     from.windows = [win([tab(1, 'https://only.com')]), win([tab(2, 'https://b.com')])]
     const to = createGroup('to', 'To')
@@ -824,8 +849,9 @@ describe('useMoveTab', () => {
     })
 
     const saved = lastSaved()
-    expect(saved.available[0].windows).toHaveLength(1)
-    expect(saved.available[0].windows[0].tabs[0].url).toBe('https://b.com')
+    expect(saved.available[0].windows).toHaveLength(2)
+    expect(saved.available[0].windows[0].tabs).toEqual([])
+    expect(saved.available[0].windows[1].tabs[0].url).toBe('https://b.com')
   })
 })
 
@@ -976,7 +1002,7 @@ describe('useDeleteTab', () => {
     expect(chrome.tabs.remove).not.toHaveBeenCalled()
   })
 
-  it('collapses the source window when it becomes empty and the group has >1 window', async () => {
+  it('KEEPS the emptied window even when the group has >1 window (deleting its last tab is not deleting the window)', async () => {
     const group = createGroup('a', 'A')
     group.windows = [win([tab(1, 'https://only.com')]), win([tab(2, 'https://b.com')])]
     const state = makeState([group])
@@ -989,8 +1015,9 @@ describe('useDeleteTab', () => {
       await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0, tabIndex: 0 })
     })
 
-    expect(lastSaved().available[0].windows).toHaveLength(1)
-    expect(lastSaved().available[0].windows[0].tabs[0].url).toBe('https://b.com')
+    expect(lastSaved().available[0].windows).toHaveLength(2)
+    expect(lastSaved().available[0].windows[0].tabs).toEqual([])
+    expect(lastSaved().available[0].windows[1].tabs[0].url).toBe('https://b.com')
   })
 
   it('keeps the emptied window when it is the only window in the group', async () => {

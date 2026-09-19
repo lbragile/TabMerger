@@ -13,11 +13,18 @@
  *   - `index`     — where the item will be inserted among the others
  *   - `shiftIds`  — the others at/after `index`; the UI translates them down by
  *                   the dragged item's height, opening the gap at the pointer
- *   - `commitOverId` — the target id that makes the existing `applyMove` land the
- *                   item EXACTLY in that gap (same container: the item at original
- *                   position `index`, i.e. arrayMove(a, index); foreign tab list:
- *                   the item the gap sits before, or the window itself to append)
+ *   - `commitOverId` (+ `commitAfter`) — the target id that makes the existing
+ *                   `applyMove` land the item EXACTLY in that gap. Groups and every
+ *                   multi-item block are anchored by IDENTITY ("before the sibling after
+ *                   the gap", or "after the last one"); a single same-container tab/window
+ *                   keeps dnd-kit's arrayMove target (the item at original position
+ *                   `index`); a foreign tab list appends via the window itself.
  * so the gap the user sees and the committed position can never disagree.
+ *
+ * Group and window lists are also ZONED — starred rows are pinned above unstarred ones —
+ * so `index` is clamped into the dragged item's own zone (`activeZone`). Without that the
+ * gap could be drawn somewhere the commit is not allowed to honour, which is exactly how
+ * a multi-group drop used to land one slot away from where it was shown (spec §6.1).
  *
  * Pure — no DOM, no dnd-kit imports (vitest mocks of `@dnd-kit/core` are partial).
  */
@@ -33,6 +40,12 @@ export interface InsertionCandidate {
   order: number;
   /** vertical center of its measured (transform-agnostic) rect */
   centerY: number;
+  /**
+   * Zone this item is pinned to — 0 starred, 1 unstarred (`zoneRank` in `@/lib/dndMove`).
+   * Groups and windows only; omitted (or omitted on the active) means "unzoned", which
+   * disables clamping entirely.
+   */
+  zone?: number;
 }
 
 export interface DndInsertion {
@@ -43,6 +56,14 @@ export interface DndInsertion {
   shiftIds: string[];
   /** `null` = no valid commit target for this insertion (caller falls back to `over`). */
   commitOverId: string | null;
+  /**
+   * Identity-anchored ordering (spec §6.1): the block lands immediately AFTER
+   * `commitOverId` rather than before it. Only ever set for GROUP drags, where the gap can
+   * sit past the last sibling and the sidebar list has no container droppable to append
+   * to (a window list appends via its group row instead). The handler copies it onto the
+   * over ref as `DndRef.after`, which is what stops `dndMove` from guessing a direction.
+   */
+  commitAfter?: boolean;
 }
 
 /**
@@ -132,6 +153,29 @@ export function targetContainerKey(
   return null;
 }
 
+/**
+ * Clamp a gap index into the dragged item's own zone.
+ *
+ * `others` is the post-removal list in render order, which is zone-ordered (starred
+ * first), so the positions the block may legally occupy are the contiguous run
+ * `[#others above the zone, … + #others in the zone]`. A pointer in the other zone
+ * therefore parks the gap on the zone BOUNDARY instead of drawing a gap the commit could
+ * never honour. Candidates with no `zone` count as same-zone, so an unzoned list (tabs) or
+ * a caller that doesn't plumb zones is unaffected.
+ */
+function clampToZone(others: InsertionCandidate[], index: number, activeZone: number | undefined): number {
+  if (activeZone == null) return index;
+  const zone: number = activeZone;
+  let above = 0;
+  let same = 0;
+  for (const c of others) {
+    const r: number = c.zone ?? zone;
+    if (r < zone) above++;
+    else if (r === zone) same++;
+  }
+  return Math.min(Math.max(index, above), above + same);
+}
+
 export function computeInsertion(args: {
   activeId: string;
   activeType: string;
@@ -152,10 +196,21 @@ export function computeInsertion(args: {
    * sat before that target, which lands the whole block exactly in the gap.
    */
   selectionIds?: ReadonlySet<string>;
+  /**
+   * Zone of the dragged item/block (`InsertionCandidate.zone`). When given, the gap is
+   * CLAMPED into that zone: starred groups/windows are pinned above unstarred ones, so a
+   * position outside the block's own zone is one the commit could never honour. Clamping
+   * here (rather than letting `dndMove` re-sort afterwards) is what keeps the drawn gap
+   * and the committed position identical — spec §6.1.
+   */
+  activeZone?: number;
 }): DndInsertion | null {
   const { activeId, activeType, activeContainerKey, activeOrder, targetKey, candidates, probeY, gapHeight } = args;
   if (activeType !== 'tab' && activeType !== 'window' && activeType !== 'group') return null;
-  const selection = activeType !== 'group' && args.selectionIds && args.selectionIds.size > 1 ? args.selectionIds : null;
+  // Every OTHER selected row is collapsed out of the layout, so `others` is the list as it
+  // will be AFTER the block is removed — which is what makes the gap index and the commit
+  // index the same number for a multi-item drag (spec §6.1).
+  const selection = args.selectionIds && args.selectionIds.size > 1 ? args.selectionIds : null;
   const others = candidates
     .filter(
       (c) =>
@@ -172,12 +227,23 @@ export function computeInsertion(args: {
   // dead zone around the pickup point: picking up and releasing in place is a
   // no-op, not a flicker between two slots.
   const half = Math.max(0, gapHeight) / 2;
-  const index = others.filter((c) => c.centerY + half < probeY).length;
+  const index = clampToZone(others, others.filter((c) => c.centerY + half < probeY).length, args.activeZone);
   const sameContainer = activeContainerKey === targetKey;
   const shiftIds = others.slice(index).map((c) => c.id);
 
   let commitOverId: string | null;
-  if (selection && (activeType === 'tab' || activeType === 'window')) {
+  // Left UNDEFINED for tab/window drags on purpose: their "past the end" case appends via
+  // the container id instead, and a single same-list drag still wants `dndMove`'s
+  // arrayMove direction. Forcing `after: false` on those would drop them one slot short.
+  let commitAfter: boolean | undefined;
+  if (activeType === 'group') {
+    // The sidebar has no container droppable to append to, so "past the last row" is
+    // expressed as "after the last row". Identical formula for a single group and a
+    // block: the others ARE the post-removal list, so the gap index is the landing index.
+    const last = others.length - 1;
+    commitOverId = others[index]?.id ?? (last >= 0 ? others[last].id : null);
+    commitAfter = index > last && last >= 0;
+  } else if (selection && (activeType === 'tab' || activeType === 'window')) {
     // Multi: always "before the item after the gap", else append via the container —
     // the selected items are removed first, so arrayMove semantics don't apply.
     commitOverId = others[index]?.id ?? targetKey;
@@ -187,14 +253,12 @@ export function computeInsertion(args: {
     // slot → a no-op drop).
     const original = [...others, { id: activeId, order: activeOrder }].sort((x, y) => x.order - y.order);
     commitOverId = original[index]?.id ?? null;
-  } else if (activeType === 'tab' || activeType === 'window') {
+  } else {
     // Foreign list: insert BEFORE the item after the gap, or append via the container
     // (the window for a tab list; the group id — i.e. its row, "add as a new window at
-    // the end" — for a window list reached after spring-open).
+    // the end of its zone" — for a window list reached after spring-open).
     commitOverId = others[index]?.id ?? targetKey;
-  } else {
-    commitOverId = null;
   }
 
-  return { type: activeType, containerKey: targetKey, index, sameContainer, shiftIds, commitOverId };
+  return { type: activeType, containerKey: targetKey, index, sameContainer, shiftIds, commitOverId, commitAfter };
 }

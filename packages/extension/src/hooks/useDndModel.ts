@@ -22,6 +22,12 @@ export interface DndModelGroup {
   windowIds: string[];
   /** render-order index into `groupsState.available` */
   index: number;
+  /**
+   * Starred groups are PINNED above unstarred ones in the sidebar, so `starred` is not
+   * decoration — it is the item's ZONE, and a reorder may only target positions inside
+   * its own zone (`@/lib/dndMove`'s `canDrop` rejects a selection that spans both).
+   */
+  starred: boolean;
 }
 
 export interface DndModelWindow {
@@ -30,6 +36,8 @@ export interface DndModelWindow {
   tabIds: string[];
   groupIndex: number;
   windowIndex: number;
+  /** Zone flag, exactly as for a group: starred windows are pinned above unstarred ones. */
+  starred: boolean;
 }
 
 export interface DndModelTab {
@@ -76,10 +84,10 @@ export function buildDndModel(groupsState: GroupsState): DndModel {
         tabs[tid] = { id: tid, windowId: wid, groupIndex, windowIndex, tabIndex };
       });
 
-      windows[wid] = { id: wid, groupId: gid, tabIds, groupIndex, windowIndex };
+      windows[wid] = { id: wid, groupId: gid, tabIds, groupIndex, windowIndex, starred: !!w.starred };
     });
 
-    groups[gid] = { id: gid, windowIds, index: groupIndex };
+    groups[gid] = { id: gid, windowIds, index: groupIndex, starred: !!group.starred };
   });
 
   const permanent = available.find((g) => g.permanent);

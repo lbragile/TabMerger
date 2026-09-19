@@ -35,13 +35,14 @@ afterEach(() => {
 })
 
 describe('selector builders', () => {
-  it('tab → its grip then the row; window → its grip, else its header\'s first real control (a lone window has no grip), then its first tab row; group → row grip then row', () => {
+  it('tab → its grip then the row; window → its grip, else its (focusable, roving) header, then that header\'s first real control, then its first tab row; group → row grip then row', () => {
     expect(focusSelectorsForItem('g::w1::t2')).toEqual([
       '[data-tm-dnd-id="g::w1::t2"] [aria-label^="Drag to reorder"]',
       '[data-tm-dnd-id="g::w1::t2"]'
     ])
     expect(focusSelectorsForItem('g::w1')).toEqual([
       '[data-tm-dnd-id="g::w1"] [aria-label^="Drag to reorder window"]',
+      '[data-tm-dnd-id="g::w1"] [data-window-header]',
       '[data-tm-dnd-id="g::w1"] [data-window-header] button:not([aria-hidden="true"])',
       '[data-tm-dnd-id="g::w1"] [role="listitem"]'
     ])
@@ -82,6 +83,23 @@ describe('focusFirst', () => {
     expect(focusFirst(['[[bad', ...focusSelectorsForItem('g::w0::t0')])).toBeNull()
     const r = row('g::w0::t1', 'B', false)
     expect(focusFirst(focusSelectorsForItem('g::w0::t1'))).toBe(r)
+  })
+
+  it('a grip-less window lands on its FOCUSABLE header (the roving toolbar), not on the star inside it', () => {
+    const card = document.createElement('div')
+    card.setAttribute('data-tm-dnd-id', 'g::w0')
+    const header = document.createElement('div')
+    header.setAttribute('data-window-header', '')
+    header.setAttribute('role', 'toolbar')
+    header.tabIndex = 0 // a11y M3: the header is one Tab stop
+    const star = document.createElement('button')
+    star.setAttribute('aria-label', 'Star window')
+    star.tabIndex = -1
+    header.appendChild(star)
+    card.appendChild(header)
+    document.body.appendChild(card)
+    expect(focusFirst(focusSelectorsForItem('g::w0'))).toBe(header)
+    expect(document.activeElement).toBe(header)
   })
 })
 

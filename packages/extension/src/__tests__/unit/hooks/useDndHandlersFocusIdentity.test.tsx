@@ -103,23 +103,27 @@ describe('A5 focus fallbacks are found by identity, not by the old slot', () => 
       available: [group('now', [], { permanent: true }), group('work', [win([tab('x')]), win([tab('y0'), tab('y1'), tab('y2')])]), group('play', [])]
     }
     const { result } = setup(s)
-    // after the move work = w0 [y0, y2]: the slot-based fallback would have hit w0's grip or y0
-    const grips = renderRows(['work::w0', 'work::w0::t0', 'work::w0::t1'])
+    // After the move work = w0 [] (emptied but KEPT), w1 [y0, y2]. The slot-based fallback
+    // would have hit y0; identity picks y2, which now sits in the slot y1 vacated.
+    const grips = renderRows(['work::w0', 'work::w1', 'work::w1::t0', 'work::w1::t1'])
     await keyboardDrop(result, 'work::w1::t1', 'play', 'group', ['work::w1::t1', 'work::w0::t0'])
-    expect(document.activeElement).toBe(grips['work::w0::t1'])
+    expect(document.activeElement).toBe(grips['work::w1::t1'])
   })
 
   it('a tab whose window emptied left the panel → the nearest remaining sibling WINDOW, not the tab that slid into its slot', async () => {
-    // work: w0 = [x], w1 = [y0, y1]; move x → play. After: work w0 = [y0, y1]
+    // work: w0 = [x], w1 = [y0, y1]; move x → play. After: w0 = [] (kept), w1 = [y0, y1].
     const s: GroupsState = {
       active: { id: 'now', index: 0 },
       available: [group('now', [], { permanent: true }), group('work', [win([tab('x')]), win([tab('y0'), tab('y1')])]), group('play', [])]
     }
     const { result } = setup(s)
-    const grips = renderRows(['work::w0', 'work::w0::t0', 'work::w0::t1'])
+    const grips = renderRows(['work::w0', 'work::w1', 'work::w1::t0', 'work::w1::t1'])
     await keyboardDrop(result, 'work::w0::t0', 'play', 'group')
-    expect(document.activeElement).toBe(grips['work::w0'])
-    expect(document.activeElement).not.toBe(grips['work::w0::t0'])
+    // The emptied w0 survives the move but can no longer be found by identity (it no
+    // longer matches its `before` self), and positional fallback is forbidden — so focus
+    // goes to the sibling window w1, never to the tab that took the vacated slot.
+    expect(document.activeElement).toBe(grips['work::w1'])
+    expect(document.activeElement).not.toBe(grips['work::w1::t0'])
   })
 
   it('nothing of the source group is rendered → the source group\'s sidebar row', async () => {
@@ -162,7 +166,7 @@ describe('A5 focus fallbacks are found by identity, not by the old slot', () => 
     expect(document.activeElement).toBe(star)
   })
 
-  it('a Now Open COPY keeps focus on the source grip (the source stays) and says so', async () => {
+  it('a Now Open MOVE keeps focus on the source grip (the row is still there until the close lands) and says so', async () => {
     const s: GroupsState = {
       active: { id: 'now', index: 0 },
       available: [group('now', [win([tab('live', { id: 11 }), tab('live2', { id: 12 })], { id: 700 })], { permanent: true }), group('work', [])]
@@ -173,7 +177,7 @@ describe('A5 focus fallbacks are found by identity, not by the old slot', () => 
     await keyboardDrop(result, 'now::w0::t0', 'work', 'group')
     expect(document.activeElement).toBe(grips['now::w0::t0'])
     await vi.waitFor(() =>
-      expect(document.getElementById('tm-dnd-live-region')?.textContent).toMatch(/^Copied tab live to .*The open tabs stay open\./)
+      expect(document.getElementById('tm-dnd-live-region')?.textContent).toMatch(/^Moved tab live to .*The open tabs are closed\./)
     )
   })
 })

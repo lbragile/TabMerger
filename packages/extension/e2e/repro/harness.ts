@@ -57,6 +57,12 @@ export async function startPopupSession(groups: SeedGroup[]): Promise<ReproSessi
   // 1. Seed IDB through popup.html-as-a-tab (Playwright can drive that fine).
   const seedTab = await context.newPage();
   await seedTab.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'load' });
+  // Let the popup's own boot finish FIRST. On a fresh profile the DB is empty, and
+  // `localDb`'s shared empty-DB init + the first `useCurrentTabs` sync both write
+  // `groupsState`; seeding into that race silently lost every seeded group and left the
+  // popup showing only "Now Open" (which then hangs every locator in this file).
+  // `popupRealDnd.repro.ts`'s own launcher has always waited here — this one did not.
+  await seedTab.waitForTimeout(1500);
   await seedIdb(seedTab, groups);
   if (settings.dndDebug) {
     await seedTab.evaluate(() => localStorage.setItem('tm_dnd_debug', '1'));

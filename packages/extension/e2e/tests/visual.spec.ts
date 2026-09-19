@@ -18,7 +18,7 @@ test.describe('Visual @visual — popup states', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN]);
 
-    await expect(page.getByRole('button', { name: 'Now Open' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Now Open', exact: true })).toBeVisible();
     await expect(page).toHaveScreenshot('popup-empty.png');
   });
 
@@ -26,7 +26,7 @@ test.describe('Visual @visual — popup states', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP, ANOTHER_GROUP]);
 
-    await expect(page.getByRole('button', { name: 'Work Stuff' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Work Stuff', exact: true })).toBeVisible();
     await expect(page).toHaveScreenshot('popup-populated.png');
   });
 

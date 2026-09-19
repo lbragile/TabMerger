@@ -463,10 +463,12 @@ describe('onDragOver does not reflow the tree mid-drag', () => {
     })
 
     expect(saveGroupsState).toHaveBeenCalledTimes(1)
-    // b1 landed in window 0; window 1 was emptied by the move → removed in the same commit
+    // b1 landed in window 0; window 1 was emptied by the move and is KEPT (user rule,
+    // 2026-09-18) as an empty window card.
     const w0Titles = committed!.available[1].windows[0].tabs.map((t) => t.title)
     expect(w0Titles).toContain('b1')
-    expect(committed!.available[1].windows).toHaveLength(1)
+    expect(committed!.available[1].windows).toHaveLength(2)
+    expect(committed!.available[1].windows[1].tabs).toEqual([])
   })
 
   it('onDragEnd is a no-op when the drop target is preview-only and there is no real fallback', async () => {
@@ -754,5 +756,78 @@ describe('DnD side effects: new real windows are always opened unfocused', () =>
     expect(c.windows.create).toHaveBeenCalledWith({ url: 'https://example.com/a1', focused: false })
     expect(c.tabs.create).not.toHaveBeenCalled()
     expect(useUIStore.getState().undoStack).toHaveLength(0) // touches Now Open → not undoable
+  })
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Spring-open cross-group WINDOW drop bug (user-reported): picking up a window,
+// dwelling on another group's sidebar row until spring-open swaps the windows
+// panel, then dropping on one of the sprung-open group's WINDOW rows. The raw
+// drop can resolve to a TAB nested inside that window rather than the window's
+// own container (dnd-kit's own `over` state can lag the collision layer by a
+// render right after the panel swap). `canDrop` correctly rejects window→tab,
+// so without a fix the whole drop was silently discarded ("nothing commits").
+// `onDragEnd` must redirect a window-active drag whose resolved target is a tab
+// up to that tab's OWN window, regardless of what `over.data.current` claims.
+// ─────────────────────────────────────────────────────────────────────────────
+describe('a WINDOW drag whose resolved `over` is a TAB redirects to that tab\'s own window', () => {
+  function twoGroupsTwoWindows() {
+    return makeState([
+      group('now-open', [], { permanent: true }),
+      group('saved-a', [win([tab('a1'), tab('a2'), tab('a3')]), win([tab('x1')])]),
+      group('saved-b', [win([tab('b1'), tab('b2')])])
+    ])
+  }
+
+  it('commits the window into the tab\'s window instead of bailing "rejected"', async () => {
+    const { qc, result } = setup(twoGroupsTwoWindows())
+    const { saveGroupsState } = await import('@/lib/localDb')
+
+    act(() => {
+      result.current.onDragStart({ active: { id: 'saved-a::w0', data: { current: { type: 'window' } } } } as unknown as DragStartEvent)
+    })
+
+    await act(async () => {
+      // The raw `over` names a TAB inside saved-b's only window (`t0`), and — per the
+      // bug's mechanism — its `data.current` is exactly what a real tab droppable
+      // carries: `{type:'tab', windowId:'saved-b::w0'}`.
+      await result.current.onDragEnd({
+        active: { id: 'saved-a::w0', data: { current: { type: 'window' } } },
+        over: { id: 'saved-b::w0::t0', data: { current: { type: 'tab', groupId: 'saved-b', windowId: 'saved-b::w0' } } }
+      } as unknown as import('@dnd-kit/core').DragEndEvent)
+    })
+
+    expect(saveGroupsState).toHaveBeenCalledTimes(1) // committed, not bailed
+    const next = qc.getQueryData<GroupsState>(['groups'])!
+    const savedA = next.available.find((g) => g.id === 'saved-a')!
+    const savedB = next.available.find((g) => g.id === 'saved-b')!
+    // the dragged window (a1,a2,a3) left saved-a; saved-a's other window is untouched
+    expect(savedA.windows).toHaveLength(1)
+    expect(savedA.windows[0].tabs.map((t) => t.title)).toEqual(['x1'])
+    // saved-b gained a second window holding the moved tabs, alongside its original one
+    expect(savedB.windows).toHaveLength(2)
+    const titles = savedB.windows.flatMap((w) => w.tabs.map((t) => t.title))
+    expect(titles.sort()).toEqual(['a1', 'a2', 'a3', 'b1', 'b2'])
+    expect(useUIStore.getState().undoStack).toHaveLength(1) // a real, undoable move
+  })
+
+  it('a raw `over` id that is not in the pre-drag model at all still bails cleanly (no crash)', async () => {
+    const { result } = setup(twoGroupsTwoWindows())
+    const { saveGroupsState } = await import('@/lib/localDb')
+
+    act(() => {
+      result.current.onDragStart({ active: { id: 'saved-a::w0', data: { current: { type: 'window' } } } } as unknown as DragStartEvent)
+    })
+
+    await act(async () => {
+      await result.current.onDragEnd({
+        active: { id: 'saved-a::w0', data: { current: { type: 'window' } } },
+        // a tab id that isn't in the pre-drag model at all (saved-b's w0 only has t0/t1),
+        // and there was no prior onDragOver to seed a fallback — nothing to redirect from.
+        over: { id: 'saved-b::w0::t9', data: { current: { type: 'tab', groupId: 'saved-b', windowId: 'saved-b::w0' } } }
+      } as unknown as import('@dnd-kit/core').DragEndEvent)
+    })
+
+    expect(saveGroupsState).not.toHaveBeenCalled()
   })
 })

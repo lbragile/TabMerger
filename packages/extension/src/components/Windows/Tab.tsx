@@ -22,6 +22,8 @@ import { useDndContext } from '@/components/dnd/DndProvider';
 import { gapTransformFor } from '@/lib/dndInsertion';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { selectionRange } from '@/lib/selectionRange';
+import { useRovingRow } from '@/hooks/useRovingRow';
+import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
 
@@ -116,6 +118,15 @@ const { mutate: deleteTab } = useDeleteTab();
   const titleInputRef = useRef<HTMLInputElement>(null);
   const noteContainerRef = useRef<HTMLDivElement>(null);
   const reminderContainerRef = useRef<HTMLDivElement>(null);
+
+  // Starting a multi-select closes this row's context menu and its inline note / reminder
+  // editors — they sit over the rows the user is about to tick. The title RENAME input is
+  // deliberately left alone: closing it would silently discard what was typed.
+  useCloseOnOverlayDismiss(() => {
+    setContextMenuOpen(false);
+    setNoteOpen(false);
+    setReminderOpen(false);
+  });
   useEffect(() => {
     if (!editingTitle) return;
     const id = setTimeout(() => {
@@ -184,6 +195,14 @@ const { mutate: deleteTab } = useDeleteTab();
   // click / selection); it composes any `onMouseDown` `listeners` might carry.
   // The grip stays live in selection mode: dragging a SELECTED row drags the whole
   // selection (multi-drag), so the checkbox sits next to the grip instead of replacing it.
+  // Roving tabindex (a11y M3): the ROW is the only Tab stop; Left/Right walk its controls.
+  // `roving.ref` composes with dnd-kit's sortable ref on the row element.
+  const roving = useRovingRow<HTMLDivElement>();
+  const setRowRef = (node: HTMLDivElement | null) => {
+    setNodeRef(node);
+    roving.ref(node);
+  };
+
   const dragHandleProps = { ...attributes, ...listeners };
   /**
    * Shift+Space on the grip = range select (the keyboard Shift+click). dnd-kit's keyboard
@@ -350,7 +369,7 @@ const { mutate: deleteTab } = useDeleteTab();
   return (
     <>
     <div
-      ref={setNodeRef}
+      ref={setRowRef}
       style={style}
       className={cn(
         'group relative flex items-center gap-1 min-w-0 px-1.5 py-0.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -384,6 +403,10 @@ const { mutate: deleteTab } = useDeleteTab();
         if (e.shiftKey) e.preventDefault();
       }}
       onKeyDown={(e) => {
+        // Roving tabindex FIRST: Left/Right/Home/End move between this row's controls.
+        // Inert mid-drag, so dnd-kit still gets those keys (spec C13).
+        roving.onKeyDown(e);
+        if (e.defaultPrevented) return;
         // Only the row ITSELF activates. Keys from nested controls bubble up here, and
         // dnd-kit's keyboard activator on the grip calls `preventDefault` but NOT
         // `stopPropagation` — without this, a Space/Enter pickup or drop on the grip (or
@@ -544,6 +567,11 @@ const { mutate: deleteTab } = useDeleteTab();
           className="opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-grab active:cursor-grabbing shrink-0 text-muted-foreground transition-opacity touch-none"
           draggable={!DND_POINTER_PROBE_ACTIVE}
           {...dragHandleProps}
+          // AFTER the spread. dnd-kit's `attributes` DECLARE `tabIndex: 0`, and React
+          // re-applies a declared prop on every render, so `useRovingRow`'s effect alone
+          // can't hold -1 here. Attribute-only, hence C4-safe, and the grip stays
+          // programmatically focusable (Right from the row; `dndFocus` after a keyboard drop).
+          tabIndex={-1}
           // `aria-pressed` is left to dnd-kit (it flips at pickup): an attribute-only change,
           // even synchronously inside `dragstart`, does NOT abort the native drag — measured
           // with `gripAriaPressed` in e2e/repro/popupAbortWindow.repro.ts (spec C4).

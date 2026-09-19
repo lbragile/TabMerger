@@ -1059,7 +1059,7 @@ test('real popup — REGRESSION HUNT: fast cross-group TAB drop does not crash/c
   }
 });
 
-test('real popup — REGRESSION HUNT: cross-group TAB drop that EMPTIES the source window does not crash/close the popup', async () => {
+test('real popup — REGRESSION HUNT: cross-group TAB drop that EMPTIES the source window keeps that window and does not crash/close the popup', async () => {
   test.setTimeout(120_000);
   const { context, cdp } = await launch();
   try {
@@ -1094,15 +1094,15 @@ test('real popup — REGRESSION HUNT: cross-group TAB drop that EMPTIES the sour
     expect(pageErrors).toEqual([]);
     const playAfter = await idbGroup(cdp, 'play');
     const workAfter = await idbGroup(cdp, 'work');
-    console.log('[repro] play windows after (should have an empty or removed window):', JSON.stringify(playAfter.windows));
+    console.log('[repro] play windows after (the emptied window is KEPT):', JSON.stringify(playAfter.windows));
     console.log('[repro] work tabs after:', JSON.stringify(workAfter.windows.flatMap((w) => w.tabs)));
     expect(workAfter.windows.flatMap((w) => w.tabs)).toContain('Foxtrot');
-    // The emptied saved source window is REMOVED in the same commit (it was Play's only
-    // window → Play has zero windows), and Foxtrot is Work's NEW last window.
-    expect(playAfter.windows).toEqual([]);
+    // The emptied saved source window is KEPT (user rule, 2026-09-18): Play still has its
+    // one window, now holding no tabs. Foxtrot is Work's NEW last window.
+    expect(playAfter.windows).toEqual([{ tabs: [] }]);
     expect(workAfter.windows.map((w) => w.tabs)).toEqual([['Alpha', 'Bravo', 'Charlie'], ['Delta', 'Echo'], ['Foxtrot']]);
-    // …in ONE paint in the source view: the window disappears, Foxtrot is never shown
-    // again, and both sidebar badges change on that same frame.
+    // …in ONE paint in the source view: Foxtrot is never shown again and both sidebar
+    // badges change on that same frame. The window card itself stays put, now empty.
     expect(stageNames(log)).toEqual(expect.arrayContaining(['html5:drop', 'onDragEnd', 'committed']));
     expect(ev.finalOrder).toEqual([]);
     expect(ev.framesToFinal).toBeGreaterThanOrEqual(0);
@@ -1110,9 +1110,9 @@ test('real popup — REGRESSION HUNT: cross-group TAB drop that EMPTIES the sour
     expect(ev.regressedAfterFinal).toBe(false);
     expect(ev.framesMovedItemAtWrongSlot).toBe(0);
     expect(es.winsBefore).toBe(1);
-    expect(es.winsFinal).toBe(0);
+    expect(es.winsFinal).toBe(1); // the emptied window card is still there
     expect(es.sideBefore).toEqual(expect.arrayContaining(['Work2◆5', 'Play1◆1']));
-    expect(es.sideFinal).toEqual(expect.arrayContaining(['Work3◆6', 'Play0◆0']));
+    expect(es.sideFinal).toEqual(expect.arrayContaining(['Work3◆6', 'Play1◆0']));
     expect(es.sideFramesToFinal).toBe(ev.framesToFinal);
     expect(es.sideRegressedAfterFinal).toBe(false);
   } finally {
@@ -1333,14 +1333,17 @@ test('real popup — REGRESSION HUNT: continuing a TAB drag INTO the just-sprung
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// NOW OPEN → saved group is a COPY — the popup must survive.
+// NOW OPEN → saved group is a MOVE (user request, 2026-09-17) — and the popup
+// must still survive.
 //
-// Prior tests only ever dragged FROM saved groups. Dragging a LIVE Now Open tab
-// or window used to emit `tabs.remove` side effects; closing the ACTIVE tab of
-// the window the toolbar popup is anchored to makes Chrome dismiss the popup
-// instantly (and a window drag closed the user's real browser window). These
-// drag the popup's OWN anchor tab — the worst case — and assert the popup is
-// still attached, the saved group gained the copy, and no real tab was closed.
+// The real tab is closed now, which is exactly the thing spec C7 says dismisses
+// the popup: closing the ACTIVE tab of the anchor window. The split is:
+//   - a NON-active tab closes immediately (`chrome.tabs.remove` in the popup);
+//   - an ACTIVE tab is handed to the background worker over a port and closed on
+//     the port's DISCONNECT, i.e. once the popup is gone.
+// These tests drag the popup's OWN anchor tab — the worst case — and assert the
+// popup is still attached, the saved group gained the detached copy, the anchor
+// tab is STILL open while the popup lives, and it is gone once the popup closes.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const liveUrl = (title: string) => `data:text/html,<title>${title}</title><p>${title}</p>`;
@@ -1377,7 +1380,7 @@ async function liveGripByTitle(cdp: RawCdp, title: string, kind: 'tab' | 'window
   );
 }
 
-async function nowOpenCopyDrag(kind: 'tab' | 'window') {
+async function nowOpenMoveOutDrag(kind: 'tab' | 'window') {
   // LiveHost is the popup's ANCHOR tab (focused window) — the worst case to drag.
   // A 2nd real window is needed so Now Open renders window grips at all.
   const { context, cdp } = await launch({
@@ -1453,11 +1456,30 @@ async function nowOpenCopyDrag(kind: 'tab' | 'window') {
       expect(workTitles).toContain('LiveOther');
     }
 
-    // 4. no real browser tab was closed
+    // 4. the ANCHOR tab is still open while the popup lives (its close is deferred);
+    //    for a WINDOW drag the non-anchor tab of that window closed immediately.
     const tabsAfter = await browserTabs(context);
-    console.log(`[now-open ${kind}] browser tabs after:`, JSON.stringify(tabsAfter));
-    expect(tabsAfter.length).toBe(tabsBefore.length);
-    expect(tabsAfter.map((t) => t.id).sort((a, b) => a - b)).toEqual(tabsBefore.map((t) => t.id).sort((a, b) => a - b));
+    const titlesAfter = tabsAfter.map((t) => t.title);
+    console.log(`[now-open ${kind}] browser tabs after the drop:`, JSON.stringify(tabsAfter));
+    expect(titlesAfter).toContain('LiveHost');
+    if (kind === 'window') {
+      // The dragged window holds the anchor tab AND every other tab of that window
+      // (here: about:blank + LiveOther). All the non-active ones go straight away.
+      expect(titlesAfter).not.toContain('LiveOther');
+      expect(tabsAfter.length).toBeLessThan(tabsBefore.length);
+    } else {
+      expect(tabsAfter.length).toBe(tabsBefore.length);
+    }
+
+    // 5. …and the deferred close lands when the popup goes away. `window.close()` ends
+    //    the popup document, which is what disconnects the port the ids were queued on.
+    //    Everything after this reads the browser through the SERVICE WORKER, because the
+    //    popup's CDP target is gone (RawCdp.send would hang on it).
+    await cdp.evaluate(`window.close()`).catch(() => {});
+    await sleep(1_500);
+    const tabsClosed = await browserTabs(context);
+    console.log(`[now-open ${kind}] browser tabs after the popup closed:`, JSON.stringify(tabsClosed));
+    expect(tabsClosed.map((t) => t.title)).not.toContain('LiveHost');
   } finally {
     cdp.close();
     await context.close().catch(() => {});
@@ -1994,14 +2016,14 @@ test('real popup — Escape during a native drag (diagnostic: CDP key events may
   }
 });
 
-test('real popup — NOW OPEN TAB (the popup\'s own active tab) dropped on a saved group is COPIED; popup survives, no real tab closed', async () => {
-  test.setTimeout(120_000);
-  await nowOpenCopyDrag('tab');
+test('real popup — NOW OPEN TAB (the ANCHOR tab of the window the popup hangs off) dropped on a saved group is MOVED; popup survives the drop, the tab closes only once the popup does', async () => {
+  test.setTimeout(150_000);
+  await nowOpenMoveOutDrag('tab');
 });
 
-test('real popup — NOW OPEN WINDOW dropped on a saved group is COPIED; popup survives, real window stays open', async () => {
-  test.setTimeout(120_000);
-  await nowOpenCopyDrag('window');
+test('real popup — NOW OPEN WINDOW (the window the popup hangs off) dropped on a saved group is MOVED; its non-anchor tab closes at once, the anchor tab on popup close', async () => {
+  test.setTimeout(150_000);
+  await nowOpenMoveOutDrag('window');
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2210,6 +2232,170 @@ test('real popup — INSTANT RELOAD: TAB dwelled on another group ROW (spring-op
   }
 });
 
+/**
+ * USER-REPORTED BUG REPRO: "dropping a window cross-group AFTER entering it (hover-to-
+ * spring-open) causes the drop to not register." The two existing spring-open tests above
+ * only release ON the sidebar row itself (the thing that triggers spring-open). This test
+ * follows the exact reported shape: dwell on group B's SIDEBAR ROW past SPRING_OPEN_MS so
+ * the windows panel swaps to B (unmounting the dragged row's ORIGINAL group A panel
+ * entirely — group A's tab/window rows, including the collapsed source row, leave the
+ * DOM), THEN move the pointer OFF the sidebar row and INTO the now-visible panel, and
+ * release on one of B's window rows (not the sidebar row).
+ */
+test('real popup — BUG REPRO: TAB dwelled on sidebar row (spring-open swaps panel) then moved INTO the panel and dropped on a WINDOW ROW there', async () => {
+  test.setTimeout(120_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${TAB_GRIP}').length`), { timeout: 5_000 }).toBeGreaterThan(2);
+    const from = center(await box(cdp, TAB_GRIP, 0)); // Alpha
+    const playRow = await rowBoxByText(cdp, 'Play');
+    expect(playRow).not.toBeNull();
+    const rowTarget = center(playRow!);
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+
+    await pressAndLift(cdp, from);
+    await glide(cdp, from, rowTarget, 10);
+    await dwell(cdp, rowTarget, 1_000); // > SPRING_OPEN_MS (600) — panel swaps to Play
+    const mid = await panelTabs(cdp);
+    console.log('[bug-repro] panel mid-drag after spring-open:', JSON.stringify(mid));
+    expect(mid).toEqual(['Foxtrot']); // confirms spring-open actually fired
+
+    // Now move OFF the sidebar row and INTO the panel, onto Play's (only) window card.
+    const winCard = await box(cdp, '[data-window-index="0"].bg-card', 0);
+    expect(winCard).toBeDefined();
+    const winTarget = center(winCard);
+    await glide(cdp, rowTarget, winTarget, 10);
+    await dwell(cdp, winTarget, 300);
+    await mouse(cdp, 'mouseReleased', winTarget);
+    await sleep(700);
+
+    const log = await readLog(cdp);
+    printLog('BUG REPRO — spring-open then drop on window row', log);
+    const endEntry = logEntry(log, 'onDragEnd');
+    console.log('[bug-repro] onDragEnd entry:', JSON.stringify(endEntry));
+    console.log('[bug-repro] committed entry:', JSON.stringify(logEntry(log, 'committed')));
+
+    const rootAfter = await probeAlive(cdp, 'bug-repro');
+    expect(rootAfter).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['html5:drop', 'onDragEnd', 'committed']));
+    expect((await idbGroup(cdp, 'play')).windows.map((w) => w.tabs)).toEqual([['Foxtrot', 'Alpha']]);
+    expect((await idbGroup(cdp, 'work')).windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie'], ['Delta', 'Echo']]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — BUG REPRO: WINDOW dwelled on sidebar row (spring-open swaps panel) then moved INTO the panel and dropped on a WINDOW ROW there', async () => {
+  test.setTimeout(120_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${WIN_GRIP}').length`), { timeout: 5_000 }).toBe(2);
+    const from = center(await box(cdp, WIN_GRIP, 0)); // window [Alpha, Bravo, Charlie]
+    const playRow = await rowBoxByText(cdp, 'Play');
+    expect(playRow).not.toBeNull();
+    const rowTarget = center(playRow!);
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+
+    await pressAndLift(cdp, from);
+    await glide(cdp, from, rowTarget, 10);
+    await dwell(cdp, rowTarget, 1_000); // > SPRING_OPEN_MS (600) — panel swaps to Play
+    const mid = await panelTabs(cdp);
+    console.log('[bug-repro window] panel mid-drag after spring-open:', JSON.stringify(mid));
+    expect(mid).toEqual(['Foxtrot']);
+
+    const winCard = await box(cdp, '[data-window-index="0"].bg-card', 0);
+    expect(winCard).toBeDefined();
+    const winTarget = center(winCard);
+    await glide(cdp, rowTarget, winTarget, 10);
+    await dwell(cdp, winTarget, 300);
+    await mouse(cdp, 'mouseReleased', winTarget);
+    await sleep(700);
+
+    const log = await readLog(cdp);
+    printLog('BUG REPRO (window) — spring-open then drop on window row', log);
+    console.log('[bug-repro window] onDragEnd entry:', JSON.stringify(logEntry(log, 'onDragEnd')));
+    console.log('[bug-repro window] committed entry:', JSON.stringify(logEntry(log, 'committed')));
+
+    const rootAfter = await probeAlive(cdp, 'bug-repro-window');
+    expect(rootAfter).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['html5:drop', 'onDragEnd', 'committed']));
+    expect((await idbGroup(cdp, 'play')).windows.map((w) => w.tabs)).toEqual([['Alpha', 'Bravo', 'Charlie'], ['Foxtrot']]);
+    expect((await idbGroup(cdp, 'work')).windows.map((w) => w.tabs)).toEqual([['Delta', 'Echo']]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+const PLAY_2WIN = [
+  NOW_OPEN,
+  WORK,
+  { id: 'play', name: 'Play', windows: [{ id: 3, incognito: false, focused: false, tabs: [tab('Foxtrot')] }, { id: 4, incognito: false, focused: false, tabs: [tab('Golf'), tab('Hotel')] }] }
+];
+
+test('real popup — BUG REPRO variant: spring-open then FAST minimal-dwell drop on the SECOND window row of a multi-window destination', async () => {
+  test.setTimeout(120_000);
+  const { context, cdp } = await launch({ groups: PLAY_2WIN });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${WIN_GRIP}').length`), { timeout: 5_000 }).toBe(2);
+    const from = center(await box(cdp, WIN_GRIP, 0)); // window [Alpha, Bravo, Charlie]
+    const playRow = await rowBoxByText(cdp, 'Play');
+    expect(playRow).not.toBeNull();
+    const rowTarget = center(playRow!);
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+
+    await pressAndLift(cdp, from);
+    await glide(cdp, from, rowTarget, 10);
+    await dwell(cdp, rowTarget, 1_000); // > SPRING_OPEN_MS — panel swaps to Play (2 windows)
+    const mid = await panelTabs(cdp);
+    console.log('[bug-repro variant] panel mid-drag after spring-open:', JSON.stringify(mid));
+    expect(mid).toEqual(['Foxtrot', 'Golf', 'Hotel']);
+
+    // Target the SECOND window card (Golf/Hotel) — further into the panel than the
+    // group row that triggered spring-open. FAST: 3 steps, short sleep, release
+    // immediately with NO settle dwell — closest to a real user's continuous motion.
+    const winCard = await box(cdp, '[data-window-index="1"].bg-card', 0);
+    expect(winCard).toBeDefined();
+    const winTarget = center(winCard);
+    for (let i = 1; i <= 3; i++) {
+      await mouse(cdp, 'mouseMoved', {
+        x: Math.round(rowTarget.x + ((winTarget.x - rowTarget.x) * i) / 3),
+        y: Math.round(rowTarget.y + ((winTarget.y - rowTarget.y) * i) / 3)
+      });
+      await sleep(15);
+    }
+    await mouse(cdp, 'mouseReleased', winTarget);
+    await sleep(700);
+
+    const log = await readLog(cdp);
+    printLog('BUG REPRO variant — fast drop on 2nd window row after spring-open', log);
+    console.log('[bug-repro variant] onDragEnd entry:', JSON.stringify(logEntry(log, 'onDragEnd')));
+    console.log('[bug-repro variant] committed entry:', JSON.stringify(logEntry(log, 'committed')));
+
+    const rootAfter = await probeAlive(cdp, 'bug-repro-variant');
+    expect(rootAfter).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+
+    console.log('[bug-repro variant] IDB play after:', JSON.stringify((await idbGroup(cdp, 'play')).windows.map((w) => w.tabs)));
+    console.log('[bug-repro variant] IDB work after:', JSON.stringify((await idbGroup(cdp, 'work')).windows.map((w) => w.tabs)));
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['html5:drop', 'onDragEnd', 'committed']));
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
 test('real popup — INSTANT RELOAD: WINDOW → another group ROW becomes its new last window; the source window leaves the panel + both badges update in ONE paint', async () => {
   test.setTimeout(150_000);
   const { context, cdp } = await launch();
@@ -2364,6 +2550,14 @@ const MULTI_WORK = {
 };
 const MULTI_SEED = [NOW_OPEN, MULTI_WORK, PLAY];
 
+/** A real right-click (Chrome turns the press into a `contextmenu` event). */
+async function rightClick(cdp: RawCdp, p: { x: number; y: number }) {
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: p.x, y: p.y, button: 'none', buttons: 0 });
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: p.x, y: p.y, button: 'right', buttons: 2, clickCount: 1 });
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: p.x, y: p.y, button: 'right', buttons: 0, clickCount: 1 });
+  await sleep(300);
+}
+
 async function modClick(cdp: RawCdp, p: { x: number; y: number }, modifiers: number) {
   await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: p.x, y: p.y, button: 'none', buttons: 0, modifiers });
   await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: p.x, y: p.y, button: 'left', buttons: 1, clickCount: 1, modifiers });
@@ -2430,7 +2624,7 @@ async function selectAlphaDeltaEcho(cdp: RawCdp) {
 }
 const logEntry = (log: [number, string, unknown][], stage: string) => log.find(([, s]) => s === stage)?.[2] as Record<string, unknown> | undefined;
 
-test('real popup — MULTI 1: 3 tabs across 2 windows (Ctrl, Ctrl, Shift) dropped on a THIRD window: one contiguous block in order, emptied window removed, selection kept at the new positions, single paint, +N ghost', async () => {
+test('real popup — MULTI 1: 3 tabs across 2 windows (Ctrl, Ctrl, Shift) dropped on a THIRD window: one contiguous block in order, emptied window KEPT, selection kept at the new positions, single paint, +N ghost', async () => {
   test.setTimeout(150_000);
   const { context, cdp } = await launch({ groups: MULTI_SEED });
   try {
@@ -2496,7 +2690,8 @@ test('real popup — MULTI 1: 3 tabs across 2 windows (Ctrl, Ctrl, Shift) droppe
 
     const work = await idbGroup(cdp, 'work');
     console.log('[multi-1] IDB work', JSON.stringify(work.windows.map((w) => w.tabs)));
-    expect(work.windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie'], ['Golf', 'Alpha', 'Delta', 'Echo', 'Hotel']]);
+    // w1 (Delta+Echo) was emptied by the move and is KEPT (user rule, 2026-09-18).
+    expect(work.windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie'], [], ['Golf', 'Alpha', 'Delta', 'Echo', 'Hotel']]);
     expect(v.finalOrder).toEqual(['Bravo', 'Charlie', 'Golf', 'Alpha', 'Delta', 'Echo', 'Hotel']);
     expect(v.framesToFinal).toBeGreaterThanOrEqual(0);
     expect(v.framesToFinal).toBeLessThanOrEqual(1);
@@ -2538,11 +2733,13 @@ test('real popup — MULTI 2: the same selection dropped on another group\'s SID
     const play = await idbGroup(cdp, 'play');
     console.log('[multi-2] IDB work', JSON.stringify(work.windows.map((w) => w.tabs)), 'play', JSON.stringify(play.windows.map((w) => w.tabs)));
     expect(play.windows.map((w) => w.tabs)).toEqual([['Foxtrot'], ['Alpha', 'Delta', 'Echo']]);
-    expect(work.windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie'], ['Golf', 'Hotel']]);
+    // w1 (Delta+Echo) was emptied by the move and is KEPT (user rule, 2026-09-18), so Work
+    // still shows 3 windows — with 4 tabs.
+    expect(work.windows.map((w) => w.tabs)).toEqual([['Bravo', 'Charlie'], [], ['Golf', 'Hotel']]);
     expect(v.finalOrder).toEqual(['Bravo', 'Charlie', 'Golf', 'Hotel']);
     expectSourceListInstant(v);
     expect(sv.sideBefore).toEqual(expect.arrayContaining(['Work3◆7', 'Play1◆1']));
-    expect(sv.sideFinal).toEqual(expect.arrayContaining(['Work2◆4', 'Play2◆4']));
+    expect(sv.sideFinal).toEqual(expect.arrayContaining(['Work3◆4', 'Play2◆4']));
     expect(sv.sideFramesToFinal).toBe(v.framesToFinal);
     expect(sv.sideRegressedAfterFinal).toBe(false);
     // remapped into Play (not the visible panel) — the selection bar still counts all 3
@@ -2555,7 +2752,7 @@ test('real popup — MULTI 2: the same selection dropped on another group\'s SID
   }
 });
 
-test('real popup — MULTI 3: a multi-selection OUT of Now Open (incl. the popup\'s own anchor tab) dropped on a saved group is COPIED: popup survives, no real tab closed, every saved copy has id 0', async () => {
+test('real popup — MULTI 3: a multi-selection OUT of Now Open (incl. the popup anchor tab) dropped on a saved group is MOVED: popup survives, every saved copy has id 0, the non-anchor tab closes at once', async () => {
   test.setTimeout(150_000);
   const { context, cdp } = await launch({ hostUrl: liveUrl('LiveHost'), extraTabUrls: [liveUrl('LiveOther')] });
   try {
@@ -2578,7 +2775,7 @@ test('real popup — MULTI 3: a multi-selection OUT of Now Open (incl. the popup
     expect(alive).not.toBeNull();
     expect(alive).toBeGreaterThan(0);
     const log = await readLog(cdp);
-    printLog('MULTI 3 (Now Open copy)', log);
+    printLog('MULTI 3 (Now Open move-out)', log);
     expect(logEntry(log, 'html5:ghost')).toMatchObject({ count: 2 });
     expect(logEntry(log, 'committed')).toMatchObject({ undoable: false });
 
@@ -2589,8 +2786,13 @@ test('real popup — MULTI 3: a multi-selection OUT of Now Open (incl. the popup
     for (const t of work.flat()) expect(t.id).toBe(0);
     for (const t of copied) expect(typeof t.savedAt).toBe('number');
 
+    // MOVE semantics: the non-anchor tab closes immediately, the anchor tab is deferred to
+    // popup teardown (spec C7) — so exactly one real tab is gone while the popup lives.
     const tabsAfter = await browserTabs(context);
-    expect(tabsAfter.map((t) => t.id).sort((a, b) => a - b)).toEqual(tabsBefore.map((t) => t.id).sort((a, b) => a - b));
+    console.log('[multi-3] browser tabs', JSON.stringify(tabsBefore.map((t) => t.title)), '→', JSON.stringify(tabsAfter.map((t) => t.title)));
+    expect(tabsAfter.map((t) => t.title)).not.toContain('LiveOther');
+    expect(tabsAfter.map((t) => t.title)).toContain('LiveHost');
+    expect(tabsBefore.length - tabsAfter.length).toBe(1);
     expect((await readErrors(cdp)).pageErrors).toEqual([]);
   } finally {
     cdp.close();
@@ -3126,6 +3328,30 @@ function pathEntry(log: [number, string, unknown][]) {
 }
 
 /**
+ * ONE drag per press, on either path. The dual path is the only place in the
+ * sensor's history where two drag sessions could plausibly open from a single
+ * press (the pointer path cancels a native `dragstart` that dnd-kit has already
+ * accepted; a second activation would leave a zombie session holding the
+ * live-drag flag and the ghost). Counting the lifecycle stages in `__tmDndLog`
+ * is the cheapest real-popup proof: each must appear exactly once.
+ */
+function activationCounts(log: [number, string, unknown][]) {
+  const n = (s: string) => log.filter(([, k]) => k === s).length;
+  return {
+    path: log.filter(([, s]) => s.startsWith('path:')).length,
+    dragStart: n('onDragStart'),
+    dragEnd: n('onDragEnd'),
+    dragCancel: n('onDragCancel'),
+    committed: n('committed')
+  };
+}
+function expectSingleActivation(log: [number, string, unknown][]) {
+  const counts = activationCounts(log);
+  console.log('[dual] activation counts:', JSON.stringify(counts));
+  expect(counts).toEqual({ path: 1, dragStart: 1, dragEnd: 1, dragCancel: 0, committed: 1 });
+}
+
+/**
  * The cursor as the PAGE resolves it (CDP screenshots can't see the real OS cursor —
  * spec C9). `under` is the element actually beneath the pointer. `grip` and `button`
  * are elements that set their OWN `cursor` (`cursor-grab` / `cursor-pointer`): an
@@ -3219,6 +3445,10 @@ test('real popup — DUAL PATH: a fine-grained drag takes the POINTER path, show
     expect(stageNames(log)).toEqual(
       expect.arrayContaining(['pointer:drop', 'onDragStart', 'onDragEnd', 'committed'])
     );
+    // 4b. exactly ONE drag ran for this press — the cancelled native `dragstart`
+    // never produced a second dnd-kit activation.
+    expectSingleActivation(log);
+    expect(stageNames(log)).not.toContain('pointer:native-drag-suppressed');
     const after = await idbGroup(cdp, 'work');
     console.log('[dual] work w0 before:', JSON.stringify(before.windows[0].tabs), '→ after:', JSON.stringify(after.windows[0].tabs));
     expect(after.windows[0].tabs).toEqual(['Bravo', 'Charlie', 'Alpha']);
@@ -3261,6 +3491,7 @@ test('real popup — DUAL PATH: a coarse drag falls back to the NATIVE path and 
       expect.arrayContaining(['html5:dragstart', 'onDragStart', 'html5:drop', 'onDragEnd', 'committed'])
     );
     expect(stageNames(log)).not.toContain('pointer:dragstart');
+    expectSingleActivation(log);
     // …and `grabbing` is correctly NOT claimed on this path: the attribute is absent,
     // so a grip still computes its own `cursor-grab`. (What the USER sees here is the
     // OS drag glyph regardless of any CSS value — spec C5, C9.)
@@ -3372,10 +3603,1198 @@ test('real popup — DUAL PATH: forcing the native path overrides a healthy poin
     expect(stageNames(log)).toEqual(
       expect.arrayContaining(['html5:dragstart', 'onDragStart', 'html5:drop', 'onDragEnd', 'committed'])
     );
+    expectSingleActivation(log);
     expect(await cdp.evaluate<boolean>(`document.documentElement.hasAttribute('data-tm-dnd-grabbing')`)).toBe(false);
     const after = await idbGroup(cdp, 'work');
     expect(after.windows[0].tabs).toEqual(['Bravo', 'Charlie', 'Alpha']);
     expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GROUP 2 — sidebar group multi-drag (2a), the "new group" drop zone (2b), and
+// the "Add Window" spacing (2c). All three are user-visible, so all three get a
+// real-popup case against a verified standalone build.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const FOUR_GROUPS = [
+  NOW_OPEN,
+  WORK,
+  PLAY,
+  { id: 'misc', name: 'Misc', windows: [{ id: 4, incognito: false, focused: false, tabs: [tab('Mike')] }] },
+  { id: 'zulu', name: 'Zulu', windows: [{ id: 5, incognito: false, focused: false, tabs: [tab('Zebra')] }] }
+];
+
+const SIDEBAR_ROW = (name: string) =>
+  `[...document.querySelectorAll('[data-sidebar-group-index]')].find((r) => r.getAttribute('aria-label') === ${JSON.stringify(name)})`;
+
+/** A neutral click point on a sidebar group row: its name span (the click bubbles to the row). */
+async function groupRowPoint(cdp: RawCdp, name: string) {
+  return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
+    const row = ${SIDEBAR_ROW(name)};
+    const span = row && [...row.querySelectorAll('span')].find((s) => s.textContent === ${JSON.stringify(name)});
+    if (!span) return null;
+    const r = span.getBoundingClientRect();
+    return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+  })()`);
+}
+async function groupGripPoint(cdp: RawCdp, name: string) {
+  return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
+    const row = ${SIDEBAR_ROW(name)};
+    const grip = row && row.querySelector('[aria-label^="Drag to reorder group"]');
+    if (!grip) return null;
+    const r = grip.getBoundingClientRect();
+    return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+  })()`);
+}
+/** Names of the sidebar rows whose selection outline is on, in DOM order. */
+const selectedGroupNames = (cdp: RawCdp) =>
+  cdp.evaluate<string[]>(
+    `[...document.querySelectorAll('[data-sidebar-group-index]')].filter((r) => r.style.outline && r.style.outline !== 'none').map((r) => r.getAttribute('aria-label'))`
+  );
+const sidebarNames = (cdp: RawCdp) =>
+  cdp.evaluate<string[]>(`[...document.querySelectorAll('[data-sidebar-group-index]')].map((r) => r.getAttribute('aria-label'))`);
+
+/**
+ * The gap the sidebar is CURRENTLY drawing, read straight off the DOM. Every non-dragged
+ * row at or after the gap is translated down by the source height (`gapTransformFor`), so
+ * the gap index is simply "how many of them are NOT shifted".
+ */
+async function sidebarGapIndex(cdp: RawCdp, dragged: string[]) {
+  return cdp.evaluate<{ gapIndex: number; others: string[]; shifted: string[] }>(`(() => {
+    const dragged = ${JSON.stringify(dragged)};
+    const rows = [...document.querySelectorAll('[data-sidebar-group-index]')]
+      .filter((r) => r.getAttribute('aria-label') !== 'Now Open')
+      .filter((r) => !dragged.includes(r.getAttribute('aria-label')));
+    const shifted = rows.filter((r) => {
+      const t = getComputedStyle(r).transform;
+      if (!t || t === 'none') return false;
+      return Math.abs(new DOMMatrixReadOnly(t).m42) > 1;
+    });
+    return {
+      gapIndex: rows.length - shifted.length,
+      others: rows.map((r) => r.getAttribute('aria-label')),
+      shifted: shifted.map((r) => r.getAttribute('aria-label'))
+    };
+  })()`);
+}
+
+/** `drive`, but with a probe run on the LAST move — i.e. the gap the user sees at release. */
+async function driveProbingEnd<T>(
+  cdp: RawCdp,
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+  probe: () => Promise<T>
+): Promise<T> {
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: from.x, y: from.y, button: 'none', buttons: 0 });
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: from.x, y: from.y, button: 'left', buttons: 1, clickCount: 1 });
+  for (let i = 1; i <= 3; i++) {
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: from.x, y: from.y + i * 4, button: 'left', buttons: 1 });
+    await sleep(40);
+  }
+  const steps = 8;
+  for (let i = 1; i <= steps; i++) {
+    await cdp.send('Input.dispatchMouseEvent', {
+      type: 'mouseMoved',
+      x: Math.round(from.x + ((to.x - from.x) * i) / steps),
+      y: Math.round(from.y + ((to.y - from.y) * i) / steps),
+      button: 'left',
+      buttons: 1
+    });
+    await sleep(60);
+  }
+  // The popup throttles `dragover` hard (spec C2) — let the last one land before probing.
+  await sleep(250);
+  const probed = await probe();
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: to.x, y: to.y, button: 'left', buttons: 0, clickCount: 1 });
+  await sleep(700);
+  return probed;
+}
+
+/**
+ * Spec §6.1 — the ordering bug the user reported ("multi group dnd doesn't appear to order
+ * things correctly on drop in some cases"). A NON-CONTIGUOUS selection dropped past the
+ * LAST row used to commit against a single-item arrayMove target, which landed the block
+ * one slot ABOVE the gap it had drawn (…play, WORK, MISC, zulu instead of …play, zulu,
+ * WORK, MISC). This asserts the persisted sidebar order against the gap read off the DOM
+ * at the moment of release, so the two can never silently disagree again.
+ */
+test('real popup — 2a-ii: a non-contiguous MULTI-GROUP selection dropped past the last row lands exactly where the gap was drawn', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({ groups: FOUR_GROUPS });
+  try {
+    await installErrorCapture(cdp);
+    await expect.poll(() => sidebarNames(cdp), { timeout: 6_000 }).toEqual(['Now Open', 'Work', 'Play', 'Misc', 'Zulu']);
+
+    // Ctrl-click Work, then Ctrl-click Misc — deliberately NON-contiguous, with a
+    // non-selected row (Play) between them and another (Zulu) below.
+    await modClick(cdp, (await groupRowPoint(cdp, 'Work'))!, MOD_CTRL);
+    await modClick(cdp, (await groupRowPoint(cdp, 'Misc'))!, MOD_CTRL);
+    await expect.poll(() => selectedGroupNames(cdp), { timeout: 4_000 }).toEqual(['Work', 'Misc']);
+
+    const from = (await groupGripPoint(cdp, 'Work'))!;
+    const zulu = (await rowBoxByText(cdp, 'Zulu'))!;
+    // Past Zulu's bottom edge: the gap belongs AFTER the last row, the one position the
+    // sidebar cannot express as "before some row".
+    const to = { x: Math.round(zulu.x + zulu.w / 2), y: Math.round(zulu.y + zulu.h + 8) };
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+
+    const gap = await driveProbingEnd(cdp, from, to, () => sidebarGapIndex(cdp, ['Work', 'Misc']));
+    console.log('[2a-ii] gap at release:', JSON.stringify(gap));
+
+    const log = await readLog(cdp);
+    printLog('2a-ii GROUP multi-drag past the last row', log);
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragStart', 'onDragEnd', 'committed']));
+
+    const order = await groupOrder(cdp);
+    console.log('[2a-ii] persisted sidebar order:', JSON.stringify(order));
+    // The gap was past both remaining rows…
+    expect(gap.others).toEqual(['Play', 'Zulu']);
+    expect(gap.gapIndex).toBe(2);
+    // …so the block must land after BOTH of them — gap == commit.
+    const expected = ['play', 'zulu'];
+    expected.splice(gap.gapIndex, 0, 'work', 'misc');
+    expect(order.slice(1)).toEqual(expected);
+    expect(order.slice(1)).toEqual(['play', 'zulu', 'work', 'misc']);
+    await expect.poll(() => sidebarNames(cdp), { timeout: 4_000 }).toEqual(['Now Open', 'Play', 'Zulu', 'Work', 'Misc']);
+    // The block stayed contiguous and in SIDEBAR order (Work above Misc), not click order.
+    await expect.poll(() => selectedGroupNames(cdp), { timeout: 4_000 }).toEqual(['Work', 'Misc']);
+    await saveShot(cdp, '2a-ii-group-multi-drag-past-last-row.png');
+
+    expect(await probeAlive(cdp, '2a-ii')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — 2a: a MULTI-GROUP selection shows a grip on every row, drags as ONE block, never lands above "Now Open", and stays selected', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({ groups: FOUR_GROUPS });
+  try {
+    await installErrorCapture(cdp);
+    await expect.poll(() => sidebarNames(cdp), { timeout: 6_000 }).toEqual(['Now Open', 'Work', 'Play', 'Misc', 'Zulu']);
+
+    // Ctrl-click Misc, then Shift-click Zulu → a 2-group selection down the sidebar.
+    await modClick(cdp, (await groupRowPoint(cdp, 'Misc'))!, MOD_CTRL);
+    await modClick(cdp, (await groupRowPoint(cdp, 'Zulu'))!, MOD_SHIFT);
+    await expect.poll(() => selectedGroupNames(cdp), { timeout: 4_000 }).toEqual(['Misc', 'Zulu']);
+
+    // THE BUG: in selection mode the grip used to be REPLACED by the checkbox, so a group
+    // selection had no drag affordance at all and could never be moved.
+    const affordances = await cdp.evaluate<{ grips: number; checkboxes: number; nowOpenGrip: boolean }>(
+      `(() => {
+         const rows = [...document.querySelectorAll('[data-sidebar-group-index]')];
+         const now = rows.find((r) => r.getAttribute('aria-label') === 'Now Open');
+         return {
+           grips: document.querySelectorAll('[aria-label^="Drag to reorder group"]').length,
+           checkboxes: document.querySelectorAll('[data-sidebar-group-index] [role="checkbox"]').length,
+           nowOpenGrip: !!now.querySelector('[aria-label^="Drag to reorder group"]')
+         };
+       })()`
+    );
+    console.log('[2a] affordances in selection mode:', JSON.stringify(affordances));
+    expect(affordances.grips).toBe(4); // every saved group, never Now Open
+    expect(affordances.checkboxes).toBe(4);
+    expect(affordances.nowOpenGrip).toBe(false);
+    await saveShot(cdp, '2a-group-selection-grip-and-checkbox.png');
+
+    // Drag Misc's grip onto the "Work" row — the block lands at Work's slot, i.e.
+    // immediately after Now Open, never above it.
+    const from = (await groupGripPoint(cdp, 'Misc'))!;
+    const workRow = (await rowBoxByText(cdp, 'Work'))!;
+    const to = { x: Math.round(workRow.x + workRow.w / 2), y: Math.round(workRow.y + 4) };
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, to);
+
+    const log = await readLog(cdp);
+    printLog('2a GROUP multi-drag', log);
+    const committed = logEntry(log, 'committed');
+    console.log('[2a] committed:', JSON.stringify(committed));
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragStart', 'onDragEnd', 'committed']));
+    expect(committed).toMatchObject({ type: 'group', undoable: true });
+
+    const order = await groupOrder(cdp);
+    console.log('[2a] persisted sidebar order:', JSON.stringify(order));
+    // Slot 0 is always the PERMANENT group. (Its id is a fresh nanoid, not the seeded
+    // 'now-open': `useCurrentTabs` replaces the seeded Now Open with a live one at boot.)
+    expect(order).toHaveLength(5);
+    expect(order.slice(1)).toEqual(['misc', 'zulu', 'work', 'play']); // one contiguous block
+    expect(['misc', 'zulu', 'work', 'play']).not.toContain(order[0]); // nothing landed above it
+    await expect.poll(() => sidebarNames(cdp), { timeout: 4_000 }).toEqual(['Now Open', 'Misc', 'Zulu', 'Work', 'Play']);
+    // Both groups stay selected, at their NEW indices.
+    await expect.poll(() => selectedGroupNames(cdp), { timeout: 4_000 }).toEqual(['Misc', 'Zulu']);
+    await saveShot(cdp, '2a-group-multi-drag-after.png');
+
+    expect(await probeAlive(cdp, '2a')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+/** Geometry + visibility of the sidebar "new group" zone. */
+async function newGroupZone(cdp: RawCdp) {
+  return cdp.evaluate<{
+    visible: boolean;
+    pointerEvents: string;
+    top: number;
+    left: number;
+    height: number;
+    width: number;
+    text: string;
+    clipped: boolean;
+  } | null>(
+    `(() => {
+       const z = document.querySelector('[data-testid="new-group-dropzone"]');
+       if (!z) return null;
+       const r = z.getBoundingClientRect();
+       const cs = getComputedStyle(z);
+       return {
+         visible: cs.visibility !== 'hidden',
+         pointerEvents: cs.pointerEvents,
+         top: Math.round(r.top),
+         left: Math.round(r.left),
+         height: Math.round(r.height),
+         width: Math.round(r.width),
+         text: (z.textContent || '').trim(),
+         clipped: z.scrollWidth > z.clientWidth + 1
+       };
+     })()`
+  );
+}
+
+test('real popup — 2b: the sidebar "new group" drop zone is always mounted, appears for a TAB drag, and the drop creates a NEW group holding it', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({ groups: FOUR_GROUPS });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+
+    // C4: mounted but inert before any drag (never unmounted — that aborts a native drag).
+    const idle = await newGroupZone(cdp);
+    console.log('[2b] idle zone:', JSON.stringify(idle));
+    expect(idle).not.toBeNull();
+    expect(idle!.visible).toBe(false);
+    expect(idle!.pointerEvents).toBe('none');
+
+    const beforeCount = (await groupOrder(cdp)).length;
+    const g0 = await box(cdp, TAB_GRIP, 0);
+    const from = { x: Math.round(g0.x + g0.w / 2), y: Math.round(g0.y + g0.h / 2) };
+
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await pressAndLift(cdp, from);
+    await sleep(350);
+    const zoneNow = (await newGroupZone(cdp))!;
+    const target = { x: zoneNow.left + Math.round(zoneNow.width / 2), y: zoneNow.top + Math.round(zoneNow.height / 2) };
+    await glide(cdp, from, target, 8);
+    await sleep(250);
+    const mid = await newGroupZone(cdp);
+    const shot = await saveShot(cdp, '2b-new-group-dropzone-during-tab-drag.png');
+    await mouse(cdp, 'mouseReleased', target);
+    await sleep(900);
+
+    console.log('[2b] mid-drag zone:', JSON.stringify(mid), 'screenshot:', shot);
+    expect(mid!.visible).toBe(true);
+    expect(mid!.pointerEvents).not.toBe('none');
+    expect(mid!.text).toMatch(/new group/i);
+    // Fits the 240px sidebar with no horizontal overflow.
+    expect(mid!.clipped).toBe(false);
+
+    const log = await readLog(cdp);
+    printLog('2b new-group drop', log);
+    const committed = logEntry(log, 'committed');
+    console.log('[2b] committed:', JSON.stringify(committed));
+    expect(committed).toBeTruthy();
+
+    const order = await groupOrder(cdp);
+    console.log('[2b] sidebar order after:', JSON.stringify(order));
+    expect(order).toHaveLength(beforeCount + 1);
+    const freshId = order[order.length - 1];
+    const fresh = await idbGroup(cdp, freshId);
+    console.log('[2b] new group contents:', JSON.stringify(fresh.windows));
+    expect(fresh.windows).toEqual([{ tabs: ['Alpha'] }]);
+    // The source group lost it.
+    const work = await idbGroup(cdp, 'work');
+    expect(work.windows[0].tabs).toEqual(['Bravo', 'Charlie']);
+    // …and the new group is SHOWN, so the tab didn't appear to vanish.
+    await expect
+      .poll(() => cdp.evaluate<number>(`document.querySelectorAll('main [role="listitem"]').length`), { timeout: 4_000 })
+      .toBe(1);
+    await saveShot(cdp, '2b-new-group-after-drop.png');
+
+    expect(await probeAlive(cdp, '2b')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — 2c: "Add Window" sits one 8px gap below the list — the new-window zone overlays it instead of padding the list', async () => {
+  test.setTimeout(120_000);
+  const { context, cdp } = await launch({ groups: FOUR_GROUPS });
+  try {
+    await selectGroup(cdp, 'Play'); // one window, one tab — the gap is unmistakable
+    const geo = await cdp.evaluate<{
+      lastWindowBottom: number;
+      addWindowTop: number;
+      addWindowHeight: number;
+      addGroupTop: number;
+      lastGroupBottom: number;
+      zoneTop: number;
+      zoneHeight: number;
+    }>(
+      `(() => {
+         // NOTE: data-window-index is NOT unique — Tab.tsx puts it on every tab row too,
+         // and a tab row is a DESCENDANT of its window card, so even a child combinator
+         // picks both up. The card is the one with the .bg-card surface.
+         const wins = [...document.querySelectorAll('main [data-window-index].bg-card')];
+         const last = wins[wins.length - 1].getBoundingClientRect();
+         const addWin = [...document.querySelectorAll('main button')].find((b) => /add window/i.test(b.textContent || ''));
+         const aw = addWin.getBoundingClientRect();
+         const addGrp = [...document.querySelectorAll('button')].find((b) => /add group/i.test(b.textContent || ''));
+         const ag = addGrp.getBoundingClientRect();
+         const rows = [...document.querySelectorAll('[data-sidebar-group-index]')];
+         const lastRow = rows[rows.length - 1].getBoundingClientRect();
+         const zone = document.querySelector('[data-testid="new-window-dropzone"]').getBoundingClientRect();
+         return {
+           lastWindowBottom: Math.round(last.bottom),
+           addWindowTop: Math.round(aw.top),
+           addWindowHeight: Math.round(aw.height),
+           addGroupTop: Math.round(ag.top),
+           lastGroupBottom: Math.round(lastRow.bottom),
+           zoneTop: Math.round(zone.top),
+           zoneHeight: Math.round(zone.height)
+         };
+       })()`
+    );
+    const windowsGap = geo.addWindowTop - geo.lastWindowBottom;
+    const sidebarGap = geo.addGroupTop - geo.lastGroupBottom;
+    console.log('[2c] gap above "Add Window":', windowsGap, 'px; gap above "Add Group":', sidebarGap, 'px');
+    // Standardised on 8px in BOTH panels (sidebar: the container's own `mt-2`;
+    // windows panel: the last window card's `mb-2`, with no extra container margin).
+    // Sub-pixel row positions can round a measured edge by 1px either way.
+    expect(Math.abs(windowsGap - sidebarGap)).toBeLessThanOrEqual(1);
+    expect(windowsGap).toBeGreaterThanOrEqual(7);
+    expect(windowsGap).toBeLessThanOrEqual(9);
+    // The drop zone now sits ON the button rather than above it, so it costs no layout.
+    expect(geo.zoneTop).toBe(geo.addWindowTop);
+    expect(geo.zoneHeight).toBe(geo.addWindowHeight);
+    await saveShot(cdp, '2c-add-window-spacing.png');
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GROUP 4 — roving tabindex (a11y M3). One Tab stop per row; Left/Right walk the
+// row's controls. Measured in the real popup because the count is the point.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Natural Tab stops (tabindex >= 0, enabled, not aria-hidden) inside `sel`. */
+async function tabStops(cdp: RawCdp, sel: string) {
+  return cdp.evaluate<{ total: number; perRow: number[]; labels: string[] }>(
+    `(() => {
+       const roots = [...document.querySelectorAll(${JSON.stringify(sel)})];
+       const stops = (root) =>
+         [...root.querySelectorAll('button, [role="button"], [role="checkbox"], a[href], input, select, textarea, [tabindex]')]
+           .filter((el) => el.tabIndex >= 0 && !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true');
+       const perRow = roots.map((r) => stops(r).length + (r.tabIndex >= 0 ? 1 : 0));
+       return {
+         total: perRow.reduce((a, b) => a + b, 0),
+         perRow,
+         labels: roots.map((r) => r.getAttribute('aria-label') || '')
+       };
+     })()`
+  );
+}
+
+test('real popup — 4c: roving tabindex — ONE Tab stop per tab row and per sidebar group row, controls reachable with Left/Right', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({ groups: MULTI_SEED });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${TAB_GRIP}').length`), { timeout: 5_000 }).toBe(7);
+
+    const tabs = await tabStops(cdp, 'main [role="listitem"]');
+    const groups = await tabStops(cdp, '[data-sidebar-group-index]');
+    console.log('[4c] tab-row stops:', JSON.stringify(tabs.perRow), 'total', tabs.total);
+    console.log('[4c] sidebar-row stops:', JSON.stringify(groups.perRow), 'total', groups.total);
+    // Exactly one stop per row — the row itself. (Before this change a tab row had 3–6.)
+    expect(tabs.perRow.every((n) => n === 1)).toBe(true);
+    expect(groups.perRow.every((n) => n === 1)).toBe(true);
+
+    // …and the same holds in SELECTION mode, where every row gains a checkbox.
+    await modClick(cdp, (await tabRowPoint(cdp, 'Alpha'))!, MOD_CTRL);
+    await expect.poll(() => selectedTabLabels(cdp), { timeout: 4_000 }).toEqual(['Alpha']);
+    const selecting = await tabStops(cdp, 'main [role="listitem"]');
+    console.log('[4c] tab-row stops in selection mode:', JSON.stringify(selecting.perRow));
+    expect(selecting.perRow.every((n) => n === 1)).toBe(true);
+    await cdp.evaluate(`document.activeElement && document.activeElement.blur()`);
+    await pressKey(cdp, 'Escape');
+    await sleep(300);
+
+    // Left/Right reach the controls the Tab key no longer stops on.
+    const walk = await cdp.evaluate<string[]>(
+      `(() => {
+         const row = ${ROW_BY_TITLE('Alpha')};
+         row.focus();
+         const out = [document.activeElement === row ? 'ROW' : 'other'];
+         const send = (key) => row.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+         for (let i = 0; i < 3; i++) {
+           document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+           const a = document.activeElement;
+           out.push(a === row ? 'ROW' : (a.getAttribute('aria-label') || a.tagName));
+         }
+         void send;
+         return out;
+       })()`
+    );
+    console.log('[4c] ArrowRight walk from the Alpha row:', JSON.stringify(walk));
+    expect(walk[0]).toBe('ROW');
+    expect(walk[1]).toMatch(/^Drag to reorder tab/); // the grip is the first control
+    expect(new Set(walk).size).toBeGreaterThan(2); // it really moved
+
+    // The grip is still programmatically focusable and keyboard DnD still commits.
+    const before = await idbGroup(cdp, 'work');
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    const focused = await focusGrip(cdp, ROW_BY_TITLE('Alpha'), TAB_GRIP);
+    console.log('[4c] focused grip:', focused);
+    expect(focused).toMatch(/^Drag to reorder tab/);
+    await pressKey(cdp, 'Space');
+    await pressKey(cdp, 'ArrowDown');
+    await pressKey(cdp, 'ArrowDown');
+    await pressKey(cdp, 'Space');
+    await sleep(700);
+    const log = await readLog(cdp);
+    printLog('4c keyboard DnD after roving', log);
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragStart', 'onDragEnd', 'committed']));
+    const after = await idbGroup(cdp, 'work');
+    console.log('[4c] work w0:', JSON.stringify(before.windows[0].tabs), '→', JSON.stringify(after.windows[0].tabs));
+    expect(after.windows[0].tabs).toEqual(['Bravo', 'Charlie', 'Alpha']);
+
+    expect(await probeAlive(cdp, '4c')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+/** The nth WINDOW CARD in the panel. `[data-window-index]` is NOT unique (Tab.tsx puts it
+ *  on every tab row, and a tab row is a descendant of its card) — `.bg-card` picks the card. */
+const WIN_CARD = (n: number) => `[...document.querySelectorAll('main [data-window-index].bg-card')][${n}]`;
+
+test('real popup — 4d: roving tabindex reaches the WINDOW HEADER — one Tab stop per header (was up to 4), Left/Right walk its controls, keyboard window DnD and focus restore still work', async () => {
+  test.setTimeout(180_000);
+  const { context, cdp } = await launch({ groups: MULTI_SEED });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+    await expect
+      .poll(() => cdp.evaluate<number>(`document.querySelectorAll('main [data-window-index].bg-card').length`), { timeout: 5_000 })
+      .toBe(3);
+
+    // ── one stop per header ────────────────────────────────────────────────
+    const headers = await tabStops(cdp, 'main [data-window-header]');
+    console.log('[4d] window-header stops:', JSON.stringify(headers.perRow), 'total', headers.total);
+    console.log('[4d] header labels:', JSON.stringify(headers.labels));
+    // Before this change: grip + note?/star + "More" (+ checkbox in selection mode) = 3–4.
+    expect(headers.perRow).toEqual([1, 1, 1]);
+    expect(headers.labels.every((l) => /controls$/.test(l))).toBe(true);
+    const roles = await cdp.evaluate<string[]>(
+      `[...document.querySelectorAll('main [data-window-header]')].map((h) => h.getAttribute('role'))`
+    );
+    expect(roles).toEqual(['toolbar', 'toolbar', 'toolbar']);
+
+    // …and in SELECTION mode, where every header gains a checkbox.
+    await modClick(cdp, (await tabRowPoint(cdp, 'Alpha'))!, MOD_CTRL);
+    await expect.poll(() => selectedTabLabels(cdp), { timeout: 4_000 }).toEqual(['Alpha']);
+    const selecting = await tabStops(cdp, 'main [data-window-header]');
+    console.log('[4d] window-header stops in selection mode:', JSON.stringify(selecting.perRow));
+    expect(selecting.perRow.every((n) => n === 1)).toBe(true);
+    await cdp.evaluate(`document.activeElement && document.activeElement.blur()`);
+    await pressKey(cdp, 'Escape');
+    await sleep(300);
+
+    // ── Left/Right walk grip → note/star → More ────────────────────────────
+    const walk = await cdp.evaluate<string[]>(
+      `(() => {
+         const h = ${WIN_CARD(0)}.querySelector('[data-window-header]');
+         h.focus();
+         const out = [document.activeElement === h ? 'HEADER' : 'other'];
+         for (let i = 0; i < 4; i++) {
+           document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+           const a = document.activeElement;
+           out.push(a === h ? 'HEADER' : (a.getAttribute('aria-label') || a.tagName));
+         }
+         document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true }));
+         out.push(document.activeElement === h ? 'HEADER' : 'other');
+         return out;
+       })()`
+    );
+    console.log('[4d] ArrowRight walk from window header 0:', JSON.stringify(walk));
+    expect(walk[0]).toBe('HEADER');
+    expect(walk[1]).toMatch(/^Drag to reorder window/); // the grip is the first control
+    expect(walk).toContain('More window options');
+    expect(walk[walk.length - 1]).toBe('HEADER'); // Home comes back to the single stop
+    await saveShot(cdp, '4d-window-header-roving.png');
+
+    // ── the header is what `dndFocus` now targets for a grip-less window ───
+    const headerFocusable = await cdp.evaluate<boolean>(
+      `(() => {
+         const card = ${WIN_CARD(0)};
+         const id = card.getAttribute('data-tm-dnd-id');
+         const el = document.querySelector('[data-tm-dnd-id="' + id + '"] [data-window-header]');
+         el.focus();
+         return document.activeElement === el;
+       })()`
+    );
+    console.log('[4d] dndFocus target "[data-window-header]" focusable:', headerFocusable);
+    expect(headerFocusable).toBe(true);
+
+    // ── keyboard WINDOW drag still commits, and focus follows the window ───
+    const before = await idbGroup(cdp, 'work');
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    const focused = await focusGrip(cdp, WIN_CARD(0), WIN_GRIP);
+    console.log('[4d] focused window grip:', focused);
+    expect(focused).toMatch(/^Drag to reorder window/);
+    await pressKey(cdp, 'Space');
+    await pressKey(cdp, 'ArrowDown');
+    const afterOne = await cdp.evaluate<string>(DNDKIT_REGION);
+    console.log('[4d] after one ArrowDown, dnd-kit says:', JSON.stringify(afterOne));
+    await pressKey(cdp, 'ArrowDown');
+    const afterTwo = await cdp.evaluate<string>(DNDKIT_REGION);
+    console.log('[4d] after two ArrowDowns, dnd-kit says:', JSON.stringify(afterTwo));
+    await pressKey(cdp, 'Space');
+    await sleep(900);
+    const log = await readLog(cdp);
+    printLog('4d keyboard window DnD after header roving', log);
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragStart', 'onDragEnd', 'committed']));
+    const after = await idbGroup(cdp, 'work');
+    console.log(
+      '[4d] work windows:',
+      JSON.stringify(before.windows.map((w: { tabs: string[] }) => w.tabs)),
+      '→',
+      JSON.stringify(after.windows.map((w: { tabs: string[] }) => w.tabs))
+    );
+    expect(after.windows[0].tabs).toEqual(['Delta', 'Echo']);
+    expect(after.windows[1].tabs).toEqual(['Alpha', 'Bravo', 'Charlie']);
+    // Focus landed back on something real (the moved window's grip), never <body>.
+    const landed = await cdp.evaluate<{ label: string | null; onBody: boolean }>(
+      `({ label: ${FOCUS_LABEL}, onBody: document.activeElement === document.body })`
+    );
+    console.log('[4d] focus after keyboard window drop:', JSON.stringify(landed));
+    expect(landed.onBody).toBe(false);
+    expect(landed.label).toMatch(/^Drag to reorder window/);
+
+    expect(await probeAlive(cdp, '4d')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2d — CLICK-AWAY out of selection mode (`useSelectionClickAway`). Unit tests cover
+// the rules; these prove them against the real popup's real Radix layers, where the
+// "menu dismissed on pointerdown" case actually happens.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Selection mode is on iff the action bar is mounted (it renders only then). */
+const inSelectionMode = (cdp: RawCdp) =>
+  cdp.evaluate<boolean>(`!!document.querySelector('[data-selection-action-bar]')`);
+
+/** Ctrl-click a tab row → selection mode on, that row selected. */
+async function enterSelection(cdp: RawCdp, title: string) {
+  await modClick(cdp, (await tabRowPoint(cdp, title))!, MOD_CTRL);
+  await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(true);
+  await expect.poll(() => selectedTabLabels(cdp), { timeout: 4_000 }).toEqual([title]);
+}
+
+/**
+ * The count label inside the action bar — inert text, so the click only tests the rule.
+ * The headless popup's viewport is SHORTER than the 600px the popup gets in Chrome, so the
+ * bar's own centre can sit below `innerHeight`; a click there hits no element at all and
+ * reads as a background click. Clamp into the viewport and report what is actually there.
+ */
+async function selectionBarPoint(cdp: RawCdp) {
+  return cdp.evaluate<{ x: number; y: number; hit: string | null; innerHeight: number } | null>(`(() => {
+    const span = document.querySelector('[data-selection-action-bar] > span');
+    if (!span) return null;
+    const r = span.getBoundingClientRect();
+    const x = Math.round(r.x + r.width / 2);
+    const y = Math.min(Math.round(r.y + r.height / 2), window.innerHeight - 3);
+    const el = document.elementFromPoint(x, y);
+    return { x, y, hit: el ? (el.closest('[data-selection-action-bar]') ? 'bar' : el.tagName) : null, innerHeight: window.innerHeight };
+  })()`);
+}
+
+/** A tab row's selection checkbox. */
+async function tabCheckboxPoint(cdp: RawCdp, title: string) {
+  return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
+    const row = ${ROW_BY_TITLE(title)};
+    const cb = row && row.querySelector('[role="checkbox"]');
+    if (!cb) return null;
+    const r = cb.getBoundingClientRect();
+    return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+  })()`);
+}
+
+/** Empty space in the windows panel: below "Add Window", above the bottom of <main>. */
+async function emptyPanelPoint(cdp: RawCdp) {
+  return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
+    const main = document.querySelector('main');
+    const addWin = [...document.querySelectorAll('main button')].find((b) => /add window/i.test(b.textContent || ''));
+    if (!main || !addWin) return null;
+    const m = main.getBoundingClientRect();
+    const a = addWin.getBoundingClientRect();
+    const y = Math.round((a.bottom + m.bottom) / 2);
+    if (y <= a.bottom + 4) return null; // no free space — caller must pick another target
+    return { x: Math.round(m.x + m.width / 2), y };
+  })()`);
+}
+
+const activeElement = (cdp: RawCdp) =>
+  cdp.evaluate<{ tag: string; label: string | null; onBody: boolean }>(
+    `(() => { const a = document.activeElement; return { tag: a ? a.tagName : 'NONE', label: a && a.getAttribute('aria-label'), onBody: a === document.body }; })()`
+  );
+
+test('real popup — 2d: a PLAIN click on a row, on the sidebar, or on empty space each exits selection mode', async () => {
+  test.setTimeout(180_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+
+    // (1) a plain click on another tab ROW
+    await enterSelection(cdp, 'Alpha');
+    await modClick(cdp, (await tabRowPoint(cdp, 'Charlie'))!, 0);
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(false);
+    console.log('[2d] plain click on a row exited selection mode');
+
+    // (2) a plain click on the SIDEBAR (the already-active row, so the panel doesn't move)
+    await enterSelection(cdp, 'Alpha');
+    await modClick(cdp, (await groupRowPoint(cdp, 'Work'))!, 0);
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(false);
+    console.log('[2d] plain click on the sidebar exited selection mode');
+
+    // (3) a plain click on EMPTY SPACE below "Add Window"
+    await enterSelection(cdp, 'Alpha');
+    const empty = await emptyPanelPoint(cdp);
+    console.log('[2d] empty-space point:', JSON.stringify(empty));
+    expect(empty).not.toBeNull();
+    await modClick(cdp, empty!, 0);
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(false);
+    console.log('[2d] plain click on empty space exited selection mode');
+    await saveShot(cdp, '2d-after-click-away.png');
+
+    expect(await probeAlive(cdp, '2d-exit')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — 2d: a checkbox, a Ctrl-click, a Shift-click, the action bar and the click that DISMISSES an open menu all keep selection mode; focus never lands on <body>', async () => {
+  test.setTimeout(180_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+    await enterSelection(cdp, 'Alpha');
+
+    // (1) a plain click on a CHECKBOX toggles that row, never exits
+    await modClick(cdp, (await tabCheckboxPoint(cdp, 'Bravo'))!, 0);
+    await expect.poll(() => selectedTabLabels(cdp), { timeout: 4_000 }).toEqual(['Alpha', 'Bravo']);
+    expect(await inSelectionMode(cdp)).toBe(true);
+    console.log('[2d] checkbox click kept selection mode');
+
+    // (2) Ctrl-click and (3) Shift-click modify the selection instead of exiting
+    await modClick(cdp, (await tabRowPoint(cdp, 'Delta'))!, MOD_CTRL);
+    expect(await inSelectionMode(cdp)).toBe(true);
+    await modClick(cdp, (await tabRowPoint(cdp, 'Echo'))!, MOD_SHIFT);
+    expect(await inSelectionMode(cdp)).toBe(true);
+    console.log('[2d] Ctrl/Shift clicks kept selection mode:', JSON.stringify(await selectedTabLabels(cdp)));
+
+    // (4) the SELECTION ACTION BAR itself (its buttons act ON the selection).
+    // HARNESS LIMIT: the headless action popup's viewport is ~670×510, not 800×600, so the
+    // bottom ~90px of the popup — which is exactly where the action bar sits — is off
+    // screen and `elementFromPoint` there returns null. A click at those coordinates would
+    // hit no element at all and read as a background click, testing nothing. The rule
+    // itself is covered by `useSelectionClickAway.test.tsx`; assert here only that the bar
+    // really is out of reach, so this sub-case starts running if the viewport ever grows.
+    const barPt = (await selectionBarPoint(cdp))!;
+    console.log('[2d] action-bar point:', JSON.stringify(barPt));
+    if (barPt.hit === 'bar') {
+      await modClick(cdp, { x: barPt.x, y: barPt.y }, 0);
+      expect(await inSelectionMode(cdp)).toBe(true);
+      console.log('[2d] action-bar click kept selection mode');
+    } else {
+      console.log('[2d] SKIPPED the action-bar click: the bar is below the harness viewport (unit-tested instead)');
+      expect(barPt.innerHeight).toBeLessThan(600);
+    }
+
+    // (5) the click that DISMISSES an open Radix menu. Radix closes on `pointerdown`, so
+    //     by `click` time the menu is gone and the event looks like a background click —
+    //     the hook's one-shot `pointerdown` probe must swallow exactly that one click.
+    //     The window header's right-click menu is used because the toolbar's "More group
+    //     options" button sits at x≈764, outside this harness's 670px-wide popup viewport.
+    const headerPt = await cdp.evaluate<{ x: number; y: number } | null>(
+      `(() => {
+         const h = document.querySelector('main [data-window-header]');
+         if (!h) return null;
+         const r = h.getBoundingClientRect();
+         return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+       })()`
+    );
+    expect(headerPt).not.toBeNull();
+    await rightClick(cdp, headerPt!);
+    await expect
+      .poll(() => cdp.evaluate<number>(`document.querySelectorAll('[role="menu"]').length`), { timeout: 4_000 })
+      .toBeGreaterThan(0);
+    expect(await inSelectionMode(cdp)).toBe(true);
+    console.log('[2d] opening the window context menu kept selection mode');
+
+    const empty = await emptyPanelPoint(cdp);
+    expect(empty).not.toBeNull();
+    await modClick(cdp, empty!, 0); // dismisses the menu
+    await expect
+      .poll(() => cdp.evaluate<number>(`document.querySelectorAll('[role="menu"]').length`), { timeout: 4_000 })
+      .toBe(0);
+    expect(await inSelectionMode(cdp)).toBe(true);
+    console.log('[2d] the menu-dismissing click did NOT exit selection mode');
+    await saveShot(cdp, '2d-menu-dismiss-kept-selection.png');
+
+    // …and the NEXT plain click on the same spot does exit (the probe is one-shot).
+    await modClick(cdp, empty!, 0);
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(false);
+    console.log('[2d] the following plain click exited — the pointerdown probe is one-shot');
+
+    // (6) focus never lands on <body> when the selection controls unmount. Park focus on a
+    //     checkbox and exit with Escape — the path where focus really is inside a control
+    //     that is about to disappear. (The action bar's "Cancel selection" button would be
+    //     the other one, but it is below this harness's viewport; and a click anywhere
+    //     moves focus itself before any handler runs, so it cannot exercise this.)
+    await enterSelection(cdp, 'Alpha');
+    const parked = await cdp.evaluate<string | null>(
+      `(() => {
+         const cb = document.querySelector('main [role="checkbox"]');
+         cb && cb.focus();
+         return document.activeElement ? document.activeElement.getAttribute('aria-label') : null;
+       })()`
+    );
+    console.log('[2d] focus parked on:', parked);
+    expect(parked).toMatch(/^Select /);
+    await pressKey(cdp, 'Escape');
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(false);
+    const after = await activeElement(cdp);
+    console.log('[2d] focus after the controls unmounted:', JSON.stringify(after));
+    expect(after.onBody).toBe(false);
+
+    expect(await probeAlive(cdp, '2d-keep')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4e — starting a multi-select cancels any open dropdown / picker
+// (`uiStore.overlayDismissNonce` → `useCloseOnOverlayDismiss`).
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Open COLOUR PICKERS specifically — counted by their swatch buttons (`title="rgba(...)"`),
+ * not by `[data-radix-popper-content-wrapper]`: that wrapper is shared with Radix TOOLTIPS,
+ * and hovering a sidebar row (which is how the swatch is revealed at all) leaves one open.
+ */
+const OPEN_PICKERS = (cdp: RawCdp) =>
+  cdp.evaluate<number>(
+    `document.querySelectorAll('[data-radix-popper-content-wrapper] button[title^="rgba("]').length`
+  );
+
+async function groupColorPoint(cdp: RawCdp, name: string) {
+  return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
+    const row = ${SIDEBAR_ROW(name)};
+    const b = row && row.querySelector('[aria-label="Change group color"]');
+    if (!b) return null;
+    const r = b.getBoundingClientRect();
+    return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+  })()`);
+}
+
+test('real popup — 4e: entering selection mode cancels an open picker / dropdown, and the gesture still selects', async () => {
+  test.setTimeout(180_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+
+    // ── a NON-MODAL overlay: the sidebar colour picker ──────────────────────
+    // Hovering the row is what reveals the swatch button.
+    const rowPt = (await groupRowPoint(cdp, 'Work'))!;
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: rowPt.x, y: rowPt.y, button: 'none', buttons: 0 });
+    await sleep(200);
+    const swatch = await groupColorPoint(cdp, 'Work');
+    console.log('[4e] colour swatch point:', JSON.stringify(swatch));
+    expect(swatch).not.toBeNull();
+    await modClick(cdp, swatch!, 0);
+    await expect.poll(() => OPEN_PICKERS(cdp), { timeout: 4_000 }).toBeGreaterThan(0);
+    await saveShot(cdp, '4e-picker-open.png');
+
+    // Ctrl-click a tab row: selection mode turns on AND the picker is gone.
+    await modClick(cdp, (await tabRowPoint(cdp, 'Alpha'))!, MOD_CTRL);
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(true);
+    await expect.poll(() => OPEN_PICKERS(cdp), { timeout: 4_000 }).toBe(0);
+    expect(await selectedTabLabels(cdp)).toEqual(['Alpha']);
+    console.log('[4e] colour picker closed and selection mode is on');
+    await saveShot(cdp, '4e-picker-closed-selection-on.png');
+    // Blur first: Escape is a document-level handler, and a focused row can swallow it
+    // (same dance as 4c).
+    await cdp.evaluate(`document.activeElement && document.activeElement.blur()`);
+    await pressKey(cdp, 'Escape');
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(false);
+
+    // ── a MODAL overlay: the window header's right-click CONTEXT MENU ───────
+    // NOTE the panel toolbar's "More group options" button sits at x≈764 and the action
+    // bar at y≈578, both OUTSIDE this harness's 670×510 popup viewport (the popup renders
+    // an 800×600 layout into a smaller window here) — a click there hits nothing at all.
+    // The header context menu is reachable and is the same kind of overlay.
+    //
+    // Radix dropdowns are MODAL, so the first Ctrl-click is consumed by the dismissable
+    // layer and never reaches the row: the menu closes but nothing is selected. The
+    // second Ctrl-click does both. Either way the user never ends up with a menu floating
+    // over a selection.
+    const headerPt = await cdp.evaluate<{ x: number; y: number } | null>(
+      `(() => {
+         const h = document.querySelector('main [data-window-header]');
+         if (!h) return null;
+         const r = h.getBoundingClientRect();
+         return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+       })()`
+    );
+    expect(headerPt).not.toBeNull();
+    await rightClick(cdp, headerPt!);
+    await expect
+      .poll(() => cdp.evaluate<number>(`document.querySelectorAll('[role="menu"]').length`), { timeout: 4_000 })
+      .toBeGreaterThan(0);
+    console.log('[4e] window header context menu open');
+
+    await modClick(cdp, (await tabRowPoint(cdp, 'Alpha'))!, MOD_CTRL);
+    const afterFirst = {
+      menus: await cdp.evaluate<number>(`document.querySelectorAll('[role="menu"]').length`),
+      selecting: await inSelectionMode(cdp)
+    };
+    console.log('[4e] after the first Ctrl-click under a MODAL menu:', JSON.stringify(afterFirst));
+    expect(afterFirst.menus).toBe(0);
+    await modClick(cdp, (await tabRowPoint(cdp, 'Alpha'))!, MOD_CTRL);
+    await expect.poll(() => inSelectionMode(cdp), { timeout: 4_000 }).toBe(true);
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('[role="menu"]').length`), { timeout: 4_000 }).toBe(0);
+    console.log('[4e] menu closed and selection mode on');
+    await saveShot(cdp, '4e-menu-closed-selection-on.png');
+
+    expect(await probeAlive(cdp, '4e')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5 — NOW OPEN drag-out is a MOVE: the non-anchor cases (which close IMMEDIATELY)
+// and a mixed multi-selection.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** A neutral Ctrl-click point on a LIVE tab row: just right of its grip, no control of its own. */
+async function liveRowModPoint(cdp: RawCdp, title: string) {
+  return cdp.evaluate<{ x: number; y: number } | null>(
+    `(() => {
+       const rows = [...document.querySelectorAll('[role="listitem"]')];
+       const row = rows.find(e => e.getAttribute('aria-label') === ${JSON.stringify(title)})
+         || rows.find(e => (e.getAttribute('aria-label') || '').includes('<title>' + ${JSON.stringify(title)} + '</title>'));
+       if (!row) return null;
+       const grip = row.querySelector('${TAB_GRIP}');
+       const r = (grip || row).getBoundingClientRect();
+       return { x: Math.round(grip ? r.right + 8 : r.x + 30), y: Math.round(r.y + r.height / 2) };
+     })()`
+  );
+}
+
+test('real popup — 5a: a NON-ANCHOR Now Open tab dragged to a saved group is MOVED — the real tab closes immediately and the popup survives', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({
+    hostUrl: liveUrl('LiveHost'),
+    extraTabUrls: [liveUrl('LiveOther')]
+  });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Now Open');
+    await expect.poll(() => liveGripByTitle(cdp, 'LiveOther', 'tab'), { timeout: 10_000 }).not.toBeNull();
+
+    const tabsBefore = await browserTabs(context);
+    console.log('[5a] browser tabs before:', JSON.stringify(tabsBefore.map((t) => t.title)));
+    const from = (await liveGripByTitle(cdp, 'LiveOther', 'tab'))!;
+    const workRow = (await rowBoxByText(cdp, 'Work'))!;
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, { x: Math.round(workRow.x + workRow.w / 2), y: Math.round(workRow.y + workRow.h / 2) });
+    await sleep(1_200);
+
+    // the popup is still attached and rendering
+    expect(await probeAlive(cdp, '5a')).toBeGreaterThan(0);
+    const log = await readLog(cdp);
+    printLog('5a non-anchor Now Open tab → saved group', log);
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragEnd', 'committed']));
+
+    // the destination gained the DETACHED copy
+    const work = await idbGroup(cdp, 'work');
+    console.log('[5a] work after:', JSON.stringify(work.windows));
+    expect(work.windows.flatMap((w) => w.tabs)).toContain('LiveOther');
+    const savedIds = await idbTabs(cdp, 'work');
+    expect(savedIds.flat().every((t) => t.id === 0)).toBe(true);
+
+    // …and the real tab is GONE, right now, with the popup still open
+    const tabsAfter = await browserTabs(context);
+    console.log('[5a] browser tabs after:', JSON.stringify(tabsAfter.map((t) => t.title)));
+    expect(tabsAfter.map((t) => t.title)).not.toContain('LiveOther');
+    expect(tabsAfter.map((t) => t.title)).toContain('LiveHost');
+    expect(tabsAfter.length).toBe(tabsBefore.length - 1);
+    await saveShot(cdp, '5a-non-anchor-moved-out.png');
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — 5b: a multi-selection MIXING the anchor tab and a non-anchor tab — both copies land, the non-anchor closes now, the anchor on popup close', async () => {
+  test.setTimeout(180_000);
+  const { context, cdp } = await launch({
+    hostUrl: liveUrl('LiveHost'),
+    extraTabUrls: [liveUrl('LiveOther')]
+  });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Now Open');
+    await expect.poll(() => liveGripByTitle(cdp, 'LiveHost', 'tab'), { timeout: 10_000 }).not.toBeNull();
+
+    // Ctrl-click both live rows (anchor + non-anchor).
+    await modClick(cdp, (await liveRowModPoint(cdp, 'LiveHost'))!, MOD_CTRL);
+    await modClick(cdp, (await liveRowModPoint(cdp, 'LiveOther'))!, MOD_CTRL);
+    const selected = await cdp.evaluate<number>(
+      `document.querySelectorAll('main [role="listitem"].bg-primary\\\\/10').length ||
+       [...document.querySelectorAll('main [role="listitem"]')].filter(r => r.className.split(' ').includes('bg-primary/10')).length`
+    );
+    console.log('[5b] selected live rows:', selected);
+    expect(selected).toBe(2);
+
+    const tabsBefore = await browserTabs(context);
+    const from = (await liveGripByTitle(cdp, 'LiveHost', 'tab'))!;
+    const workRow = (await rowBoxByText(cdp, 'Work'))!;
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, { x: Math.round(workRow.x + workRow.w / 2), y: Math.round(workRow.y + workRow.h / 2) });
+    await sleep(1_200);
+
+    expect(await probeAlive(cdp, '5b')).toBeGreaterThan(0);
+    const work = await idbGroup(cdp, 'work');
+    console.log('[5b] work after:', JSON.stringify(work.windows));
+    const landed = work.windows.flatMap((w) => w.tabs);
+    expect(landed).toContain('LiveHost');
+    expect(landed).toContain('LiveOther');
+
+    const tabsAfter = await browserTabs(context);
+    console.log('[5b] browser tabs after the drop:', JSON.stringify(tabsAfter.map((t) => t.title)));
+    expect(tabsAfter.map((t) => t.title)).not.toContain('LiveOther'); // non-anchor: closed now
+    expect(tabsAfter.map((t) => t.title)).toContain('LiveHost'); // anchor: deferred
+    expect(tabsBefore.length - tabsAfter.length).toBe(1);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+
+    await cdp.evaluate(`window.close()`).catch(() => {});
+    await sleep(1_500);
+    const tabsClosed = await browserTabs(context);
+    console.log('[5b] browser tabs after the popup closed:', JSON.stringify(tabsClosed.map((t) => t.title)));
+    expect(tabsClosed.map((t) => t.title)).not.toContain('LiveHost');
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 6 — a group's LAST window can be dragged out. The source group is left EMPTY
+// (never auto-deleted) and stays a usable drop target.
+// ─────────────────────────────────────────────────────────────────────────────
+
+test('real popup — 6a: the ONLY window of a group can be dragged into another group; the source is left empty but still usable and still a drop target', async () => {
+  test.setTimeout(180_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Play'); // Play seeds exactly one window (Foxtrot)
+
+    // The grip used to be hidden whenever a group had a single window.
+    const grips = await cdp.evaluate<number>(`document.querySelectorAll('${WIN_GRIP}').length`);
+    console.log('[6a] window grips in a ONE-window group:', grips);
+    expect(grips).toBe(1);
+
+    const from = (await box(cdp, WIN_GRIP, 0))!;
+    const workRow = (await rowBoxByText(cdp, 'Work'))!;
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(
+      cdp,
+      { x: Math.round(from.x + from.w / 2), y: Math.round(from.y + from.h / 2) },
+      { x: Math.round(workRow.x + workRow.w / 2), y: Math.round(workRow.y + workRow.h / 2) }
+    );
+    await sleep(1_000);
+
+    const log = await readLog(cdp);
+    printLog('6a last window out', log);
+    expect(stageNames(log)).toEqual(expect.arrayContaining(['onDragEnd', 'committed']));
+
+    const play = await idbGroup(cdp, 'play');
+    const work = await idbGroup(cdp, 'work');
+    console.log('[6a] play after:', JSON.stringify(play.windows), 'work after:', JSON.stringify(work.windows));
+    expect(play.windows).toEqual([]); // emptied…
+    expect(work.windows.flatMap((w) => w.tabs)).toContain('Foxtrot');
+
+    // …but NOT deleted: the row is still in the sidebar.
+    const names = await sidebarNames(cdp);
+    console.log('[6a] sidebar after:', JSON.stringify(names));
+    expect(names).toContain('Play');
+
+    // The empty group still renders sanely and keeps its "Add Window" affordance.
+    await selectGroup(cdp, 'Play');
+    const emptyPanel = await cdp.evaluate<{ message: boolean; addWindow: boolean; zone: boolean; counts: string }>(
+      `(() => ({
+         message: !!([...document.querySelectorAll('main p')].find((p) => /no windows in this group/i.test(p.textContent || ''))),
+         addWindow: !!([...document.querySelectorAll('main button')].find((b) => /add window/i.test(b.textContent || ''))),
+         zone: !!document.querySelector('[data-testid="new-window-dropzone"]'),
+         counts: (document.querySelector('main span') || {}).textContent || ''
+       }))()`
+    );
+    console.log('[6a] empty-group panel:', JSON.stringify(emptyPanel));
+    expect(emptyPanel.message).toBe(true);
+    expect(emptyPanel.addWindow).toBe(true);
+    expect(emptyPanel.zone).toBe(true);
+    expect(emptyPanel.counts).toMatch(/0/);
+    await saveShot(cdp, '6a-empty-source-group.png');
+
+    // …and it is still a valid DROP TARGET: drag a tab back into it.
+    await selectGroup(cdp, 'Work');
+    const tabFrom = (await tabGripPoint(cdp, 'Alpha'))!;
+    const playRow = (await rowBoxByText(cdp, 'Play'))!;
+    await drive(cdp, tabFrom, { x: Math.round(playRow.x + playRow.w / 2), y: Math.round(playRow.y + playRow.h / 2) });
+    await sleep(1_000);
+    const playBack = await idbGroup(cdp, 'play');
+    console.log('[6a] play after the drop back:', JSON.stringify(playBack.windows));
+    expect(playBack.windows).toEqual([{ tabs: ['Alpha'] }]);
+
+    expect(await probeAlive(cdp, '6a')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — 6b: a window emptied by a drag is KEPT, renders as an empty card, and still takes a tab dropped back into it', async () => {
+  test.setTimeout(180_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work'); // w0 = Alpha/Bravo/Charlie, w1 = Delta/Echo
+
+    // Empty w1 by dragging both of its tabs into w0.
+    for (const title of ['Delta', 'Echo']) {
+      const from = (await tabGripPoint(cdp, title))!;
+      const onto = (await tabRowPoint(cdp, 'Alpha'))!;
+      await drive(cdp, from, onto);
+      await sleep(700);
+    }
+    const emptied = await idbGroup(cdp, 'work');
+    console.log('[6b] work after emptying w1:', JSON.stringify(emptied.windows));
+    // The emptied window is KEPT (user rule, 2026-09-18) — the group still has 2 windows.
+    expect(emptied.windows).toHaveLength(2);
+    expect(emptied.windows[1].tabs).toEqual([]);
+
+    // It renders as a real, empty window card.
+    const panel = await cdp.evaluate<{ cards: number; emptyMsg: number; lastCardTabs: number }>(
+      `(() => {
+         const cards = [...document.querySelectorAll('main [data-window-index].bg-card')];
+         const last = cards[cards.length - 1];
+         return {
+           cards: cards.length,
+           emptyMsg: [...document.querySelectorAll('main p')].filter((p) => /empty window/i.test(p.textContent || '')).length,
+           lastCardTabs: last ? last.querySelectorAll('[role="listitem"]').length : -1
+         };
+       })()`
+    );
+    console.log('[6b] panel after emptying:', JSON.stringify(panel));
+    expect(panel.cards).toBe(2);
+    expect(panel.emptyMsg).toBe(1);
+    expect(panel.lastCardTabs).toBe(0);
+    await saveShot(cdp, '6b-empty-window-card.png');
+
+    // …and it is still a drop target: drag a tab back into it.
+    const back = (await tabGripPoint(cdp, 'Alpha'))!;
+    const emptyCard = await cdp.evaluate<{ x: number; y: number } | null>(
+      `(() => {
+         const cards = [...document.querySelectorAll('main [data-window-index].bg-card')];
+         const last = cards[cards.length - 1];
+         if (!last) return null;
+         const r = last.getBoundingClientRect();
+         return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height - 6) };
+       })()`
+    );
+    expect(emptyCard).not.toBeNull();
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, back, emptyCard!);
+    await sleep(900);
+    const log = await readLog(cdp);
+    printLog('6b drop back into the emptied window', log);
+    const after = await idbGroup(cdp, 'work');
+    console.log('[6b] work after dropping Alpha back:', JSON.stringify(after.windows));
+    expect(after.windows[1].tabs).toEqual(['Alpha']);
+
+    expect(await probeAlive(cdp, '6b')).toBeGreaterThan(0);
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('DIAGNOSTIC (no spring-open): dragging a WINDOW and releasing directly over ANOTHER window\'s tab row (not header) — does canDrop reject a tab-type collision hit even WITHOUT spring-open?', async () => {
+  test.setTimeout(120_000);
+  const { context, cdp } = await launch();
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Work');
+    await expect.poll(() => cdp.evaluate<number>(`document.querySelectorAll('${WIN_GRIP}').length`), { timeout: 5_000 }).toBe(2);
+    const from = center(await box(cdp, WIN_GRIP, 0)); // window [Alpha, Bravo, Charlie]
+    // target: a TAB row (e.g. "Delta") inside window 1, in the SAME already-visible group.
+    const deltaRow = await tabRowRect(cdp, 'Delta');
+    expect(deltaRow).not.toBeNull();
+    const target = { x: Math.round((deltaRow!.left + deltaRow!.right) / 2), y: Math.round((deltaRow!.top + deltaRow!.bottom) / 2) };
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, target);
+    const log = await readLog(cdp);
+    printLog('DIAGNOSTIC — window onto tab row, no spring-open', log);
+    console.log('[diagnostic] onDragEnd entry:', JSON.stringify(logEntry(log, 'onDragEnd')));
+    console.log('[diagnostic] committed entry:', JSON.stringify(logEntry(log, 'committed')));
+    console.log('[diagnostic] IDB work after:', JSON.stringify((await idbGroup(cdp, 'work')).windows.map((w) => w.tabs)));
   } finally {
     cdp.close();
     await context.close().catch(() => {});

@@ -18,6 +18,8 @@ import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types';
  */
 
 const NEW_WINDOW_SUFFIX = '::new-window';
+/** Kept in sync with `NEW_GROUP_ID` in `@/lib/dndMove`. */
+const NEW_GROUP_ID = '::new-group';
 
 /** "Command" on macOS, "Control" elsewhere — for spoken shortcut names. */
 export function modifierKeyName(): string {
@@ -99,6 +101,7 @@ function what(label: DndItemLabel, count: number): string {
 }
 
 function targetPhrase(state: GroupsState, model: DndModel, activeType: string, overId: string): string | null {
+  if (overId === NEW_GROUP_ID) return 'a new group';
   if (overId.endsWith(NEW_WINDOW_SUFFIX)) {
     const g = model.groups[overId.slice(0, -NEW_WINDOW_SUFFIX.length)];
     return g ? `a new window at the end of group ${state.available[g.index]?.name ?? ''}` : null;
@@ -113,6 +116,7 @@ function targetPhrase(state: GroupsState, model: DndModel, activeType: string, o
 }
 
 function refFor(model: DndModel, id: string, dataType?: string): DndRef | null {
+  if (id === NEW_GROUP_ID) return { type: 'new-group', id };
   if (id.endsWith(NEW_WINDOW_SUFFIX)) {
     const groupId = id.slice(0, -NEW_WINDOW_SUFFIX.length);
     const g = model.groups[groupId];
@@ -212,6 +216,8 @@ function describeDropCommittedCore(opts: Parameters<typeof describeDropCommitted
   if (!label) return 'Dropped.';
   if (label.type === 'group') {
     const gi = next.available.findIndex((g) => g.id === active.id);
+    // Multi-group drag: the anchor's new slot is where the whole block starts.
+    if (count > 1) return `Moved ${count} groups to ${groupPosition(next, gi)}, as one block.`;
     return `Moved group ${label.name} to ${groupPosition(next, gi)}.`;
   }
   const items =
@@ -230,9 +236,11 @@ function describeDropCommittedCore(opts: Parameters<typeof describeDropCommitted
             (p as { tabIndex: number }).tabIndex + 1
           } of ${tabsOf(g?.windows[p.windowIndex]).length}`
         : `group ${g?.name ?? ''}, ${starting}position ${p.windowIndex + 1} of ${g?.windows.length ?? 0}`;
-    const copied = !!label.group?.permanent;
+    // Out of Now Open is a MOVE now, not a copy: the real tabs close (an active one on
+    // popup close — spec C7), so say so rather than "the open tabs stay open".
+    const fromNowOpen = !!label.group?.permanent;
     const hidden = p.groupIndex !== activeGroupIndex ? ` Group ${g?.name ?? ''} is not shown.` : '';
-    return `${copied ? 'Copied' : 'Moved'} ${items} to ${where}.${copied ? ' The open tabs stay open.' : ''}${hidden}`;
+    return `Moved ${items} to ${where}.${fromNowOpen ? ' The open tabs are closed.' : ''}${hidden}`;
   }
   if (sideEffects.some((fx) => fx.type === 'windows.create')) return `Opened ${items} in a new browser window.`;
   if (sideEffects.some((fx) => fx.type === 'tabs.create')) return `Opened ${items} in Now Open.`;

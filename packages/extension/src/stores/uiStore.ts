@@ -72,6 +72,18 @@ interface UIState {
   selectedItems: SelectedItem[];
   /** Shift+click range anchor: the last item toggled ON (Ctrl/Cmd+click or checkbox). */
   selectionAnchor: SelectedItem | null;
+  /**
+   * Monotonic "close your transient overlay now" signal, bumped when selection mode is
+   * ENTERED or the first item is selected. Every dropdown, context menu, colour picker and
+   * inline note/reminder editor subscribes through `useCloseOnOverlayDismiss` — a
+   * multi-select gesture must not leave a menu floating over the rows it is about to
+   * check. Deliberately a counter, not a boolean: consumers react to a CHANGE, so two
+   * dismissals in a row both fire and nothing has to be reset.
+   *
+   * It is not a general "close everything" bus — modals (`modal`) are untouched, because
+   * the user opened those deliberately and they own the whole popup.
+   */
+  overlayDismissNonce: number;
 
   // Actions
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
@@ -101,6 +113,21 @@ interface UIState {
   /** Replace the selection wholesale (e.g. remapped to new positions after a drop). */
   setSelection: (items: SelectedItem[]) => void;
   clearSelection: () => void;
+  /** Bump {@link UIState.overlayDismissNonce}. Exposed for non-selection callers/tests. */
+  dismissOverlays: () => void;
+}
+
+/**
+ * Selection-mode state changes that must close any open transient overlay: entering
+ * selection mode, or picking the first item while already in it.
+ */
+function withOverlayDismiss(
+  prev: Pick<UIState, 'selectionMode' | 'selectedItems' | 'overlayDismissNonce'>,
+  next: { selectionMode?: boolean; selectedItems?: SelectedItem[] }
+): { overlayDismissNonce?: number } {
+  const enteringMode = next.selectionMode === true && !prev.selectionMode;
+  const firstItem = (next.selectedItems?.length ?? 0) > 0 && prev.selectedItems.length === 0;
+  return enteringMode || firstItem ? { overlayDismissNonce: prev.overlayDismissNonce + 1 } : {};
 }
 
 /**
@@ -121,6 +148,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   selectionMode: false,
   selectedItems: [],
   selectionAnchor: null,
+  overlayDismissNonce: 0,
 
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),
@@ -166,7 +194,8 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   clearHistory: () => set({ undoStack: [], redoStack: [] }),
 
-  enterSelectionMode: () => set({ selectionMode: true }),
+  enterSelectionMode: () =>
+    set((prev) => ({ selectionMode: true, ...withOverlayDismiss(prev, { selectionMode: true }) })),
 
   exitSelectionMode: () => set({ selectionMode: false, selectedItems: [], selectionAnchor: null }),
 
@@ -175,7 +204,8 @@ export const useUIStore = create<UIState>((set, get) => ({
       selectionMode: !prev.selectionMode,
       // Clear items when leaving selection mode
       selectedItems: prev.selectionMode ? [] : prev.selectedItems,
-      selectionAnchor: prev.selectionMode ? null : prev.selectionAnchor
+      selectionAnchor: prev.selectionMode ? null : prev.selectionAnchor,
+      ...withOverlayDismiss(prev, { selectionMode: !prev.selectionMode })
     })),
 
   toggleSelection: (item) =>
@@ -185,9 +215,11 @@ export const useUIStore = create<UIState>((set, get) => ({
       // Switching to a different type clears the previous selection
       const base = committedType && committedType !== item.type ? [] : selectedItems;
       const exists = base.some((s) => s.id === item.id);
+      const next = exists ? base.filter((s) => s.id !== item.id) : [...base, item];
       return {
-        selectedItems: exists ? base.filter((s) => s.id !== item.id) : [...base, item],
-        selectionAnchor: exists ? (prev.selectionAnchor?.id === item.id ? null : prev.selectionAnchor) : item
+        selectedItems: next,
+        selectionAnchor: exists ? (prev.selectionAnchor?.id === item.id ? null : prev.selectionAnchor) : item,
+        ...withOverlayDismiss(prev, { selectedItems: next })
       };
     }),
 
@@ -197,15 +229,24 @@ export const useUIStore = create<UIState>((set, get) => ({
       const base = committedType && committedType !== item.type ? [] : prev.selectedItems;
       const additions = range.length > 0 ? range : [item];
       const have = new Set(base.map((s) => s.id));
+      const next = [...base, ...additions.filter((s) => s.type === item.type && !have.has(s.id))];
       return {
         selectionMode: true,
-        selectedItems: [...base, ...additions.filter((s) => s.type === item.type && !have.has(s.id))],
+        selectedItems: next,
         // A range extends FROM the anchor, so it stays; with no usable anchor the clicked item becomes it.
-        selectionAnchor: range.length > 0 && prev.selectionAnchor ? prev.selectionAnchor : item
+        selectionAnchor: range.length > 0 && prev.selectionAnchor ? prev.selectionAnchor : item,
+        ...withOverlayDismiss(prev, { selectionMode: true, selectedItems: next })
       };
     }),
 
-  setSelection: (items) => set({ selectedItems: items, selectionAnchor: items[0] ?? null }),
+  setSelection: (items) =>
+    set((prev) => ({
+      selectedItems: items,
+      selectionAnchor: items[0] ?? null,
+      ...withOverlayDismiss(prev, { selectedItems: items })
+    })),
 
-  clearSelection: () => set({ selectedItems: [], selectionAnchor: null })
+  clearSelection: () => set({ selectedItems: [], selectionAnchor: null }),
+
+  dismissOverlays: () => set((prev) => ({ overlayDismissNonce: prev.overlayDismissNonce + 1 }))
 }));

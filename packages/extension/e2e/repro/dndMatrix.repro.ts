@@ -29,7 +29,7 @@ test('popup DnD — full drag matrix', async () => {
   };
 
   try {
-    await popup.getByRole('button', { name: PRIMARY_GROUP_NAME }).click();
+    await popup.getByRole('button', { name: PRIMARY_GROUP_NAME, exact: true }).click();
     await popup.waitForTimeout(300);
     await dump('seed');
 
@@ -62,7 +62,7 @@ test('popup DnD — full drag matrix', async () => {
       await dragBetween(
         popup,
         winHandles.nth(0),
-        popup.getByRole('button', { name: SECONDARY_GROUP_NAME })
+        popup.getByRole('button', { name: SECONDARY_GROUP_NAME, exact: true })
       );
       await dump(`4. window → "${SECONDARY_GROUP_NAME}"`);
     }
@@ -73,7 +73,7 @@ test('popup DnD — full drag matrix', async () => {
       await dragBetween(
         popup,
         tabHandles.nth(0),
-        popup.getByRole('button', { name: SECONDARY_GROUP_NAME })
+        popup.getByRole('button', { name: SECONDARY_GROUP_NAME, exact: true })
       );
       await dump(`5. tab → "${SECONDARY_GROUP_NAME}"`);
     }

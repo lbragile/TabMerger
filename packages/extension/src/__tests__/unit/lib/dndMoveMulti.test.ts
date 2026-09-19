@@ -168,7 +168,7 @@ describe('applyMove — multi-TAB move onto a sidebar group row (item 8: cross-g
     expect(res.undoable).toBe(true)
   })
 
-  it('removes a saved source window the multi-move EMPTIED (a window that still has tabs stays)', () => {
+  it('KEEPS a saved source window the multi-move emptied, alongside the windows that still have tabs', () => {
     const s = state([
       group('now-open', [], { permanent: true }),
       group('saved-a', [win([tab('t1'), tab('t2')]), win([tab('keep')]), win([tab('t3')])]),
@@ -179,7 +179,8 @@ describe('applyMove — multi-TAB move onto a sidebar group row (item 8: cross-g
     const sel = [tid(1, 0, 0), tid(1, 0, 1), tid(1, 2, 0)]
     const res = applyMove(m, s, { ...tabRef(1, 0, 0), selectionIds: sel }, groupRef(2))
 
-    expect(res.next.available[1].windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['keep']])
+    // Emptied windows are KEPT (user rule, 2026-09-18) — w0 and w2 stay, now empty.
+    expect(res.next.available[1].windows.map((w) => w.tabs.map((t) => t.title))).toEqual([[], ['keep'], []])
     expect(res.next.available[2].windows.map((w) => w.tabs.map((t) => t.title))).toEqual([
       ['x1'],
       ['t1', 't2', 't3']
@@ -268,14 +269,15 @@ describe('applyMove — LIVE window dragged out of Now Open (item 9)', () => {
     expect(res.next.available[1].pendingSync).toBe(true)
   })
 
-  it('is a COPY: emits NO chrome side effect, so the real browser window stays open', () => {
+  it('is a MOVE: emits one tabs.remove naming every real tab of the live window', () => {
     const s = nowOpenWithLiveWindow()
     const { m, winRef, groupRef } = refs(s)
 
     const res = applyMove(m, s, winRef(0, 0), groupRef(1))
 
-    // closing the live window would close the user's real window and dismiss the popup
-    expect(res.sideEffects).toEqual([])
+    // The real window goes with its last tab. `runSideEffects` defers the ACTIVE tab to
+    // popup teardown, so this never dismisses the popup mid-drop (spec C7).
+    expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10] }])
   })
 
   it('leaves available[permIndex] (Now Open) structurally untouched and detaches the copy', () => {
@@ -295,13 +297,16 @@ describe('applyMove — LIVE window dragged out of Now Open (item 9)', () => {
     expect(copy.tabs.every((t) => t.id === 0)).toBe(true)
   })
 
-  it('closes NO live tab (no tabs.remove for ids 9/10) and is not undoable', () => {
+  it('closes exactly the live tabs it moved (ids 9 + 10, never a saved id 0) and is not undoable', () => {
     const s = nowOpenWithLiveWindow() // live window 500 with tabs id 9 + id 10
     const { m, winRef, groupRef } = refs(s)
 
     const res = applyMove(m, s, winRef(0, 0), groupRef(1))
 
-    expect(res.sideEffects.map((e) => e.type as string)).not.toContain('tabs.remove')
+    const removals = res.sideEffects.filter((e) => e.type === 'tabs.remove')
+    expect(removals).toHaveLength(1)
+    expect((removals[0] as { tabIds: number[] }).tabIds).toEqual([9, 10])
+    // Undo cannot faithfully reopen a closed tab.
     expect(res.undoable).toBe(false)
   })
 })

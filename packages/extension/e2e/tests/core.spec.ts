@@ -7,19 +7,19 @@ test.describe('Core — sidebar and basic invariants', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP, ANOTHER_GROUP]);
 
-    await expect(page.getByRole('button', { name: 'Now Open' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Work Stuff' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Now Open', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Work Stuff', exact: true })).toBeVisible();
     // 'Reading List' (12 chars > 10) is truncated in span but aria-label is untruncated
-    await expect(page.getByRole('button', { name: 'Reading List' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Reading List', exact: true })).toBeVisible();
   });
 
   test('Now Open is first in sidebar and has no delete option', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP]);
 
-    await expect(page.getByRole('button', { name: 'Now Open' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Now Open', exact: true })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Now Open' }).click({ button: 'right' });
+    await page.getByRole('button', { name: 'Now Open', exact: true }).click({ button: 'right' });
     await page.waitForTimeout(300);
     await expect(page.getByText('Delete group')).not.toBeVisible();
     await page.keyboard.press('Escape');
@@ -72,10 +72,10 @@ test.describe('Core — sidebar and basic invariants', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP]);
 
-    await page.getByRole('button', { name: 'Work Stuff' }).click();
+    await page.getByRole('button', { name: 'Work Stuff', exact: true }).click();
 
     await page.getByRole('button', { name: /select/i }).click();
-    await page.getByRole('checkbox', { name: /^select /i }).first().click();
+    await page.getByRole('listitem').getByRole('checkbox', { name: /^select /i }).first().click();
     await page.getByRole('button', { name: /delete/i }).click();
 
     await expect(page.getByText('Jira Board')).not.toBeVisible();
@@ -88,7 +88,7 @@ test.describe('Core — sidebar and basic invariants', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, SAVED_GROUP]);
 
-    await page.getByRole('button', { name: 'Work Stuff' }).click();
+    await page.getByRole('button', { name: 'Work Stuff', exact: true }).click();
 
     // Double-click must NOT enter rename mode
     await page.getByText('Jira Board').dblclick();
@@ -142,7 +142,7 @@ test.describe('Core — sidebar and basic invariants', () => {
     await newTab.waitForTimeout(1500);
 
     await page.reload();
-    await page.getByRole('button', { name: 'GitHub' }).click();
+    await page.getByRole('button', { name: 'GitHub', exact: true }).click();
     await expect(page.getByText(/torvalds|linux/i).first()).toBeVisible();
 
     await newTab.close();

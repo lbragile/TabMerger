@@ -14,12 +14,14 @@ import {
 import {
   canDrop,
   applyMove,
+  NEW_GROUP_ID,
   type DndLanded,
   type DndRef,
   type DndRefType,
   type DndSideEffect
 } from '@/lib/dndMove';
 import { rebaseMove } from '@/lib/dndRebase';
+import { closeTabsWhenPopupCloses } from '@/lib/deferredTabClose';
 import {
   clearDndDragLive,
   clearDndDragSelection,
@@ -59,6 +61,12 @@ interface CommitProgress {
   pushedBase?: GroupsState;
   redoBefore?: GroupsState[] | null;
   cacheWritten?: boolean;
+  /**
+   * The in-flight `saveGroupsState` promise, recorded the moment it is issued so a
+   * synchronous throw LATER in the commit can still await it instead of leaving an
+   * unobserved write (and an unhandled rejection) behind.
+   */
+  persist?: Promise<void>;
 }
 
 type UiSnapshot = {
@@ -239,7 +247,11 @@ function landedFocusSelectors(
   for (const sid of siblingsOutward(beforeModel, active.id)) {
     if (!moved.has(sid)) push(locate(next, objectFor(before, beforeModel, sid)));
   }
-  // 4. a tab whose window emptied: the nearest remaining sibling window
+  // 4. a tab whose window emptied: the nearest remaining sibling window.
+  //    NOT the emptied window itself, even though it now survives the move (user rule,
+  //    2026-09-18): `locate` matches by STRUCTURAL identity, and a window that just lost
+  //    its last tab no longer matches its `before` self. Finding it would mean falling
+  //    back to its positional slot, which is exactly what this function exists to avoid.
   const bt = beforeModel.tabs[active.id];
   if (bt) {
     for (const wid of siblingsOutward(beforeModel, bt.windowId)) push(locate(next, objectFor(before, beforeModel, wid)));
@@ -355,6 +367,46 @@ interface DataCurrent {
  */
 export const NEW_WINDOW_SUFFIX = '::new-window';
 
+/**
+ * Re-exported so the sidebar zone and the tests share ONE literal with `dndMove` /
+ * `dndRebase`. See {@link NEW_GROUP_ID} there for the id's shape.
+ */
+export { NEW_GROUP_ID };
+
+/**
+ * Resolve the sidebar "drop here for a new group" droppable id to a typed ref. There is
+ * only one such zone, and it names no existing group, so this needs no model lookup —
+ * which also means a throttled `drop` with `e.over === null` can still resolve to it
+ * from `lastRealOverRef`.
+ */
+export function newGroupRef(): DndRef {
+  return { type: 'new-group', id: NEW_GROUP_ID };
+}
+
+/**
+ * Entitlement gate for the "new group" zone, published by the zone component itself.
+ *
+ * Creating a group is capped on the free tier, but `applyMove` is PURE and can't read the
+ * subscription, and the drop target is often resolved from `lastRealOverRef` (the popup
+ * throttles `dragover` — spec C2) where dnd-kit's `over.data` isn't available. So the
+ * zone mirrors its own state into module scope, exactly like `dndMultiDrag`'s registry,
+ * and `onDragEnd` reads it there.
+ *
+ * At the cap the zone HIDES (user decision, 2026-09-18) rather than showing and warning,
+ * so this is a last-resort guard for a drop that resolved to the zone's id anyway: it
+ * refuses SILENTLY. Warning here would be worse than useless — the user was never shown
+ * a target to aim at. The "Add Group" button still warns on its own.
+ */
+let newGroupGate: { atLimit: boolean } = { atLimit: false };
+
+export function setNewGroupZoneGate(atLimit: boolean): void {
+  newGroupGate = { atLimit };
+}
+
+export function getNewGroupZoneGate(): { atLimit: boolean } {
+  return newGroupGate;
+}
+
 /** Resolve a `${groupId}::new-window` droppable id to a typed ref. */
 export function newWindowRef(
   model: ReturnType<typeof buildDndModel>,
@@ -426,10 +478,46 @@ function resolveActive(base: GroupsState, id: string, dataCurrent?: unknown): Dn
 }
 
 /**
+ * Split the tabs a Now Open drag-out wants closed into "safe to close right now" and
+ * "must wait until the popup is gone".
+ *
+ * Closing the ACTIVE tab of the window the toolbar popup is anchored to dismisses the
+ * popup instantly (spec C7). Rather than trying to identify that one window — the popup
+ * has no reliable handle on its own anchor — every tab that is active in ANY window is
+ * deferred. Over-deferring costs nothing (the close still happens, just on popup close);
+ * under-deferring costs the user their popup mid-drop.
+ *
+ * Exported for tests; `chrome.tabs.query` failing degrades to "defer everything", which
+ * is the safe direction.
+ */
+export async function partitionClosableTabs(
+  tabIds: number[]
+): Promise<{ now: number[]; deferred: number[] }> {
+  const unique = [...new Set(tabIds)].filter((id) => typeof id === 'number' && id > 0);
+  if (unique.length === 0) return { now: [], deferred: [] };
+  let activeIds = new Set<number>();
+  try {
+    const active = await chrome.tabs.query({ active: true });
+    activeIds = new Set(active.map((t) => t.id).filter((id): id is number => typeof id === 'number'));
+  } catch {
+    return { now: [], deferred: unique };
+  }
+  return {
+    now: unique.filter((id) => !activeIds.has(id)),
+    deferred: unique.filter((id) => activeIds.has(id))
+  };
+}
+
+/**
  * Execute the chrome side effects `applyMove` described — the ONLY place popup DnD
  * touches chrome APIs. `windows.create` is always `focused: false` (hardcoded here as
  * well as carried on the effect): a new focused window steals focus from the window
  * the toolbar popup is anchored to, and Chrome dismisses the popup.
+ *
+ * `tabs.remove` (a drag OUT of Now Open, which now MOVES rather than copies) is the only
+ * destructive effect, and it is split by {@link partitionClosableTabs} so the popup never
+ * closes its own anchor tab. Side effects run AFTER `saveGroupsState` has been issued, so
+ * even a dismissed popup leaves the destination group persisted.
  */
 export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
   if (typeof chrome === 'undefined') return;
@@ -448,6 +536,14 @@ export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
       } else if (fx.type === 'windows.create') {
         // eslint-disable-next-line no-await-in-loop
         await chrome.windows.create({ url: fx.url, focused: false });
+      } else if (fx.type === 'tabs.remove') {
+        // eslint-disable-next-line no-await-in-loop
+        const { now, deferred } = await partitionClosableTabs(fx.tabIds);
+        // The deferred ids go first: if removing the others somehow dismisses the popup,
+        // the background worker already holds the rest.
+        if (deferred.length > 0) closeTabsWhenPopupCloses(deferred);
+        // eslint-disable-next-line no-await-in-loop
+        if (now.length > 0) await chrome.tabs.remove(now);
       }
     } catch {
       /* best effort — Now Open re-syncs from the browser regardless */
@@ -638,6 +734,14 @@ export function useDndHandlers() {
   }, []);
 
   const reset = useCallback(() => {
+    // FIRST, before anything that can throw. A stuck live-drag flag silences every global
+    // keyboard shortcut for the rest of the popup's life (`useKeyboardNav` bails on
+    // `isDndDragLive()`), and it also makes `rollback`'s "don't clobber newer user state"
+    // guards permanently false. This used to run LAST — after `setActive(null)` had
+    // already disarmed the unmount fallback — so a throw in between wedged the flag with
+    // nothing left to clear it.
+    clearDndDragSelection();
+    clearDndDragLive();
     setBodyDragCursor(false);
     clearSpring();
     applyPreview(null);
@@ -646,8 +750,6 @@ export function useDndHandlers() {
     lastRealOverRef.current = null;
     collapsedHeightRef.current = null;
     insertionRef.current = null;
-    clearDndDragSelection();
-    clearDndDragLive();
     applyGap(null);
   }, [clearSpring, setActive, applyPreview, applyGap]);
 
@@ -695,13 +797,18 @@ export function useDndHandlers() {
         );
       }
       const model = buildDndModel(base);
-      // An explicit payload `selectionIds` (a drag handle already computed the set)
-      // wins; otherwise promote a store-driven multi-selection. Groups stay single-drag.
-      if (resolved.type === 'group') {
-        resolved.selectionIds = undefined;
-      } else if (!resolved.selectionIds || resolved.selectionIds.length <= 1) {
+      // An explicit payload `selectionIds` (a drag handle already computed the set) wins;
+      // otherwise promote a store-driven multi-selection. This now includes sidebar GROUPS
+      // (they used to be forced single-drag): `moveGroupsMulti` moves the whole selection
+      // as one contiguous block, and `canDrop` still refuses a block containing Now Open.
+      if (!resolved.selectionIds || resolved.selectionIds.length <= 1) {
         const promoted = promoteStoreSelection(model, id, resolved.type, selectedItems);
         if (promoted) resolved.selectionIds = promoted;
+      }
+      if (resolved.type === 'group' && model.permanentGroupId) {
+        // Never carry Now Open, whatever the store says.
+        resolved.selectionIds = resolved.selectionIds?.filter((gid) => gid !== model.permanentGroupId);
+        if ((resolved.selectionIds?.length ?? 0) <= 1) resolved.selectionIds = undefined;
       }
       // Sensor-agnostic registry: the sensor reads it right after this returns (still in
       // `dragstart`) for the ghost's `+N` badge, and in the first rAF to collapse the
@@ -784,11 +891,15 @@ export function useDndHandlers() {
       if (a && !a.selectionIds && activeRef.current?.selectionIds) {
         a.selectionIds = activeRef.current.selectionIds;
       }
-      // The "new window" zone is a valid target but not a model node — record it
-      // so a throttled `drop` (e.over === null) still resolves to it in onDragEnd.
+      // The "new window" / "new group" zones are valid targets but not model nodes —
+      // record them so a throttled `drop` (e.over === null) still resolves in onDragEnd.
       if (overId.endsWith(NEW_WINDOW_SUFFIX)) {
         const nw = newWindowRef(model, overId);
         if (a?.type === 'tab' && nw && canDrop(model, a, nw)) lastRealOverRef.current = overId;
+        return;
+      }
+      if (overId === NEW_GROUP_ID) {
+        if (a && canDrop(model, a, newGroupRef())) lastRealOverRef.current = overId;
         return;
       }
       if (a && o && a.id === o.id) return;
@@ -873,11 +984,17 @@ export function useDndHandlers() {
    *  - the selection / active group are restored only if the store still holds the values
    *    this drop wrote AND no other drag is live (never clobber newer user state)
    *  - the undo entry is removed only if it is still on top, and the redo stack the push
-   *    wiped comes back if nothing has written it since
+   *    wiped comes back if nothing has written it since. `popUndo: false` suppresses that
+   *    entirely, for the one case where the write was already ISSUED and will probably
+   *    land: popping there would leave a real, persisted move with no way to undo it
    *  - the groups query re-reads IDB WITHOUT cancelling an in-flight fetch: `cancelRefetch`
    *    defaults to true and would reject every mutation that joined that fetch
+   *
+   * CALL ORDER: `reset()` must run BEFORE this. Two of the guards above test
+   * `isDndDragLive()`, which only `reset` clears — calling rollback first made them
+   * permanently false on the synchronous-throw path, so nothing was ever restored.
    */
-  const rollback = (p: CommitProgress) => {
+  const rollback = (p: CommitProgress, opts: { popUndo?: boolean } = {}) => {
     const store = uiState();
     const live = isDndDragLive();
     if (p.remapped && store && !live && sameSelection(store.selectedItems ?? [], p.remapped)) {
@@ -887,7 +1004,7 @@ export function useDndHandlers() {
     if (p.movedGroup && store && !live && store.activeGroupIndex === p.movedGroup.to) {
       setActiveGroupIndex(p.movedGroup.from);
     }
-    if (p.pushedBase && store && store.undoStack?.[0] === p.pushedBase) {
+    if (opts.popUndo !== false && p.pushedBase && store && store.undoStack?.[0] === p.pushedBase) {
       (useUIStore as { setState?: (s: Record<string, unknown>) => void }).setState?.({
         undoStack: store.undoStack.slice(1),
         redoStack: store.redoStack && store.redoStack.length > 0 ? store.redoStack : (p.redoBefore ?? [])
@@ -924,7 +1041,7 @@ export function useDndHandlers() {
       rawOverId,
       fallbackOverId,
       insertion: insertion
-        ? { container: insertion.containerKey, index: insertion.index, commitOverId: insertion.commitOverId }
+        ? { container: insertion.containerKey, index: insertion.index, commitOverId: insertion.commitOverId, after: insertion.commitAfter }
         : null
     });
 
@@ -947,19 +1064,51 @@ export function useDndHandlers() {
     // Released back into its own slot — nothing moves.
     if (insertion && insertion.commitOverId === draggedId) return bail('noop');
     const isNewWindow = (id: string | null) => !!id && id.endsWith(NEW_WINDOW_SUFFIX);
+    const isNewGroup = (id: string | null) => id === NEW_GROUP_ID;
     const insertionOverId =
       insertion?.commitOverId && idInModel(model, insertion.commitOverId) ? insertion.commitOverId : null;
-    // The drop target can be a preview-only row (see idInModel) OR the always-
-    // mounted "new window" zone (not in the model). Fall back to the last target
-    // that resolved against the pre-drag model so the move still commits.
+    // The drop target can be a preview-only row (see idInModel) OR one of the always-
+    // mounted "new window" / "new group" zones (not in the model). Fall back to the last
+    // target that resolved against the pre-drag model so the move still commits.
     const overId =
       insertionOverId ??
-      (rawOverId && (idInModel(model, rawOverId) || isNewWindow(rawOverId)) ? rawOverId : fallbackOverId);
+      (rawOverId && (idInModel(model, rawOverId) || isNewWindow(rawOverId) || isNewGroup(rawOverId))
+        ? rawOverId
+        : fallbackOverId);
     if (!overId) return bail('rejected');
     const a = resolveRef(model, draggedId, activeData);
-    const o = isNewWindow(overId)
-      ? newWindowRef(model, overId)
-      : resolveRef(model, overId, overId === rawOverId ? overData : undefined);
+    let o = isNewGroup(overId)
+      ? newGroupRef()
+      : isNewWindow(overId)
+        ? newWindowRef(model, overId)
+        : resolveRef(model, overId, overId === rawOverId ? overData : undefined);
+    // A WINDOW drag whose resolved target is a TAB is not a real "drop on a tab" —
+    // a window can never target a tab (spec: window → window | group only), so this
+    // can only mean the pointer landed on one of the target window's ROWS rather
+    // than empty space in its card. This is the spring-open cross-group bug: right
+    // after `setActiveGroupIndex` swaps the windows panel to the sprung-open group,
+    // dnd-kit's own `over` resolution can still be settling (a passive-effect-gated
+    // state update racing the sensor's `requestAnimationFrame`-deferred `onEnd`) and
+    // land on a child tab a beat before the window container itself. Redirect to the
+    // tab's OWN window — every legal window target IS a window or group row, so this
+    // can only turn a wrongly-rejected drop into the right one, never a wrong one.
+    if (a?.type === 'window' && o?.type === 'tab') {
+      const tabWindowId = model.tabs[o.id]?.windowId;
+      const redirected = tabWindowId ? resolveRef(model, tabWindowId) : null;
+      if (redirected) {
+        dndDebugLog('commit:window-onto-tab-redirect', { tabId: o.id, windowId: tabWindowId });
+        o = redirected;
+      }
+    }
+    // Identity-anchored ordering (spec §6.1): when the target came from the GAP, the gap
+    // also says which SIDE of it the block lands on. Without this the engine would have to
+    // guess a direction from the indices, which is exactly how a multi-item block ended up
+    // one slot away from the gap the user was shown. `rebaseMove` carries it through.
+    if (o && overId === insertionOverId && insertion?.commitAfter !== undefined) o.after = insertion.commitAfter;
+    // Creating a group is entitlement-gated — see `setNewGroupZoneGate`. At the cap the
+    // zone is hidden and disabled, so this only catches a target resolved from the
+    // throttled event stream; refuse it silently.
+    if (o?.type === 'new-group' && getNewGroupZoneGate().atLimit) return bail('rejected');
     if (a && !a.selectionIds && carriedSelectionIds) a.selectionIds = carriedSelectionIds;
     if (!a || !o || a.id === o.id || !canDrop(model, a, o)) {
       return bail(a && o && a.id === o.id ? 'noop' : 'rejected');
@@ -1010,11 +1159,22 @@ export function useDndHandlers() {
     // No `await` may sit between here and the cache write below. (There is deliberately
     // NO `cancelQueries`: it rejected every mutation that had joined the in-flight fetch.)
     const persist = saveGroupsState(next);
+    p.persist = persist;
     // Final order + cleared drag state in ONE commit. The sensor wraps this whole
     // handler in `flushSync`; `setGroupsNow` makes the query notification
     // synchronous so the new order is part of that commit too.
     p.cacheWritten = true;
     setGroupsNow(qc, next);
+    // A drop on the "new group" zone created a group the user can't see yet — show it,
+    // in the SAME commit, so the items don't appear to vanish. `moveToNewGroup` already
+    // set `next.active`; this mirrors it into the store (which drives the visible panel).
+    if (co.type === 'new-group' && next !== commitBase && next.active) {
+      const newIndex = next.available.findIndex((g) => g.id === next.active.id);
+      if (newIndex > 0) {
+        p.movedGroup = { from: currentActiveGroupIndex(activeGroupIndex), to: newIndex };
+        setActiveGroupIndex(newIndex);
+      }
+    }
     if (a.type === 'group' && next !== base) {
       // The dragged group was made active at pickup; the selection follows it to its
       // new index IN THE SAME COMMIT (a separate commit would paint one frame of
@@ -1090,8 +1250,35 @@ export function useDndHandlers() {
       } catch (err) {
         dndDebugLog('commit-threw', { message: err instanceof Error ? err.message : String(err) });
         console.error('[tm-dnd] drop failed', err);
-        rollback(p);
-        setDndDropOutcome(DND_SAVE_FAILED_TEXT);
+        // `reset()` FIRST: rollback's "no drag is live" guards are only true once the
+        // live-drag flag is cleared, and `finally` runs too late for them.
+        reset();
+        if (p.cacheWritten) {
+          // The throw landed AFTER `saveGroupsState` was issued, so the move is very
+          // likely already persisted. Don't pop the undo entry and don't announce a
+          // failure for a write that will succeed — just re-read IDB so the cache matches
+          // whatever actually landed, and keep awaiting the write so a REAL failure still
+          // rolls back and announces (the old code dropped `persist` on the floor here).
+          rollback(p, { popUndo: false });
+          const persist = p.persist;
+          if (persist) {
+            tail = async () => {
+              try {
+                await persist;
+              } catch (writeErr) {
+                dndDebugLog('commit-persist-failed', {
+                  message: writeErr instanceof Error ? writeErr.message : String(writeErr)
+                });
+                rollback(p);
+                announceDnd(DND_SAVE_FAILED_TEXT);
+              }
+            };
+          }
+        } else {
+          // Nothing was written: the drop is a clean no-op, so undo it fully and say so.
+          rollback(p);
+          setDndDropOutcome(DND_SAVE_FAILED_TEXT);
+        }
       } finally {
         // EVERY exit — commit, bail or throw — clears the drag state and the live-drag flag.
         // A flag left set would silence every global shortcut until the popup closes.
@@ -1108,7 +1295,10 @@ export function useDndHandlers() {
   // drag state would outlive it, and a stuck live flag silences every global shortcut.
   useEffect(
     () => () => {
-      if (!activeRef.current) return;
+      // Unconditional on purpose. Guarding on `activeRef.current` made this a no-op
+      // exactly when it was needed most: `reset()` nulls `activeRef` early, so a throw
+      // AFTER that point left the module-level drag state set with the only remaining
+      // cleanup path disarmed. Every call below is idempotent.
       if (springTimerRef.current) clearTimeout(springTimerRef.current);
       springTimerRef.current = null;
       clearDndDragSelection();
