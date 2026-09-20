@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { headers } from 'next/headers'
+import { notFound } from 'next/navigation'
 import { ShareBundleContent } from '@/components/ShareBundleContent'
 import { CopyShareUrl } from '@/components/CopyShareUrl'
 
@@ -37,16 +38,23 @@ export default async function SharePage({ params }: Props) {
     console.error('[share page] unexpected error fetching shared bundle', slug, error)
   }
 
-  const bundle = data
-    ? {
-        slug: data.slug,
-        expiresAt: data.expires_at ?? null,
-        // ponytail: may be a legacy plaintext Group[] (pre-encryption shares still
-        // live in the DB, no backfill) or a {v:1,iv,ct} ciphertext blob — ShareBundleContent
-        // tells them apart and decrypts the latter using the key from the URL fragment.
-        groups: data.groups_snapshot ?? [],
-      }
-    : null
+  // A genuinely nonexistent slug must 404 rather than render the page shell with a
+  // "Link not found" message at 200 — search engines/monitoring and the E2E suite both
+  // depend on the real status code here. Expired links are a different case (the row
+  // exists) and intentionally still render at 200 with ShareBundleContent's own
+  // "Link expired" message below.
+  if (!data) {
+    notFound()
+  }
+
+  const bundle = {
+    slug: data.slug,
+    expiresAt: data.expires_at ?? null,
+    // ponytail: may be a legacy plaintext Group[] (pre-encryption shares still
+    // live in the DB, no backfill) or a {v:1,iv,ct} ciphertext blob — ShareBundleContent
+    // tells them apart and decrypts the latter using the key from the URL fragment.
+    groups: data.groups_snapshot ?? [],
+  }
 
   // ponytail: derive origin from the incoming request instead of adding a new env var —
   // works in dev, preview, and prod without another value to keep in sync.
