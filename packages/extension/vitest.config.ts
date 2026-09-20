@@ -14,7 +14,10 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/__tests__/setup.ts'],
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    // ponytail: 'scripts/**' covers build-tooling tests (e.g. the semver->manifest-version
+    // mapping in scripts/manifestVersion.ts) that intentionally live outside src/ — it's
+    // release-pipeline logic, not app logic, so it's also excluded from coverage.include below.
+    include: ['src/**/*.{test,spec}.{ts,tsx}', 'scripts/**/*.{test,spec}.{ts,tsx}'],
     // ponytail: integration tests (real IndexedDB / real Supabase) run via vitest.integration.config.ts only
     exclude: ['**/node_modules/**', 'src/__tests__/integration/**'],
     coverage: {

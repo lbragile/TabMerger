@@ -19,10 +19,12 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - agentic-revamp
+      - beta
   pull_request:
     branches:
-      - master
+      - agentic-revamp
+      - beta
 
 jobs:
   scan-secrets:
@@ -127,10 +129,13 @@ jobs:
             packages/web/coverage/coverage-summary.json
           retention-days: 14
 
-      # Baseline for future PRs to diff against — only refreshed on master,
-      # so a bad PR can never poison the baseline other PRs compare to.
-      - name: Publish coverage baseline (master only)
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      # Baseline for future PRs to diff against — only refreshed on the default
+      # branch, so a bad PR can never poison the baseline other PRs compare to.
+      # Deliberately NOT refreshed from `beta`: beta carries unreleased work, and
+      # letting it move the baseline would let a coverage drop ride into stable
+      # unnoticed at promotion time.
+      - name: Publish coverage baseline (default branch only)
+        if: github.ref == 'refs/heads/agentic-revamp' && github.event_name == 'push'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-baseline
@@ -378,7 +383,19 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    # Stable releases come from the default branch; prereleases (X.Y.Z-beta.N)
+    # from `beta`. semantic-release decides which by matching the branch against
+    # `.releaserc.json`'s `branches`, so this condition only has to let both through.
+    # A push with no feat:/fix: commits is a no-op inside semantic-release itself.
+    if: >-
+      (github.ref == 'refs/heads/agentic-revamp' || github.ref == 'refs/heads/beta')
+      && github.event_name == 'push'
+    # Collapse a burst of merges into one release rather than one submission each.
+    # NOT cancel-in-progress: cancelling mid-release can leave a pushed tag with no
+    # GitHub Release, which strands the version and blocks the next run.
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
     needs:
       [
         scan-secrets,

@@ -3,6 +3,8 @@ import { loadEnv } from "vite";
 import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
+import { resolveManifestVersion } from "./scripts/manifestVersion";
+import pkg from "./package.json";
 
 function getExtensionName(mode: string): string {
     if (mode === "beta") return "TabMerger BETA";
@@ -40,6 +42,18 @@ export default defineConfig({
     manifest: ({ mode }) => {
         const env = loadEnv(mode, process.cwd(), "");
         const isBeta = mode === "beta";
+        // ponytail: manifest.version can't just be package.json's version — semantic-release
+        // never bumps it (no @semantic-release/npm plugin; per release-and-beta-channel-spec.md
+        // §8, git tags are the sole source of truth for the released version), and a beta
+        // version string like "2.2.0-beta.3" isn't valid MV3 syntax at all (1-4 dot-separated
+        // integers only). CI's publish.yml build job resolves the real version from the git tag
+        // (`GITHUB_REF_NAME`) and must export it as TABMERGER_MANIFEST_VERSION before running
+        // `wxt zip` for a store submission — see scripts/manifestVersion.ts for the mapping.
+        // Falls back to package.json's version for local/dev builds and any CI step that never
+        // zips for a store (nothing downstream reads manifest.version in that case).
+        const { version, version_name } = resolveManifestVersion(
+            process.env.TABMERGER_MANIFEST_VERSION ?? pkg.version,
+        );
         return {
             name: getExtensionName(mode),
             description: isBeta
@@ -136,7 +150,8 @@ export default defineConfig({
                     strict_min_version: "109.0",
                 },
             },
-            version: "3.0.0",
+            version,
+            ...(version_name ? { version_name } : {}),
         };
     },
     dev: {
