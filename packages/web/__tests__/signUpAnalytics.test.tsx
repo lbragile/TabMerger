@@ -31,7 +31,12 @@ describe('Sign-up analytics', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }))
 
     await waitFor(() =>
-      expect(window.gtag).toHaveBeenCalledWith('event', 'sign_up_completed', { method: 'password' })
+      // trackEvent() tags every GA event with `environment` (see lib/analytics.ts) so
+      // dev/prod share one GA4 property — added in c454269 alongside PostHog/Sentry tagging.
+      expect(window.gtag).toHaveBeenCalledWith('event', 'sign_up_completed', {
+        method: 'password',
+        environment: 'development',
+      })
     )
   })
 
@@ -57,7 +62,10 @@ describe('Sign-up analytics', () => {
     fireEvent.click(screen.getByRole('button', { name: /Continue with Google/i }))
 
     await waitFor(() =>
-      expect(window.gtag).toHaveBeenCalledWith('event', 'sign_up_completed', { method: 'google' })
+      expect(window.gtag).toHaveBeenCalledWith('event', 'sign_up_completed', {
+        method: 'google',
+        environment: 'development',
+      })
     )
   })
 

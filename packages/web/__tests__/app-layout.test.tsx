@@ -13,8 +13,14 @@ vi.mock('@/lib/supabase/server', () => ({
 
 // SyncIndicator is a client component that talks to Supabase directly —
 // stub it out here since AppLayout tests only care about the shell markup.
+// Includes `auth.onAuthStateChange` (with an unsubscribe handle) because
+// SyncIndicator also mounts useSyncExtensionAuth, which subscribes and
+// unsubscribes from auth state on mount/unmount.
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({
+    auth: {
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    },
     from: () => ({
       select: () => ({
         eq: () => ({ order: () => ({ limit: () => Promise.resolve({ data: [] }) }) }),

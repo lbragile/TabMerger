@@ -77,7 +77,13 @@ describe('SetPasswordForm', () => {
     render(<SetPasswordForm hasPassword={false} />)
     fireEvent.change(screen.getByLabelText(/set a password/i), { target: { value: 'NewPassw0rd' } })
     fireEvent.click(screen.getByRole('button', { name: /save/i }))
-    await waitFor(() => expect(window.gtag).toHaveBeenCalledWith('event', 'set_password_completed', undefined))
+    // trackEvent() tags every GA event with `environment` (see lib/analytics.ts) so
+    // dev/prod share one GA4 property — added in c454269 alongside PostHog/Sentry tagging.
+    await waitFor(() =>
+      expect(window.gtag).toHaveBeenCalledWith('event', 'set_password_completed', {
+        environment: 'development',
+      })
+    )
     delete (window as { gtag?: unknown }).gtag
   })
 
