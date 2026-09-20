@@ -246,7 +246,7 @@ function startPress(
     const full: DndPointerProbeSummary = { ...summary, ...stats, durationMs: rel(), endedBy };
     const line = `[tm-dnd-probe] ${JSON.stringify(full)}`;
     try {
-      // eslint-disable-next-line no-console
+       
       console.log(line);
     } catch {
       /* ignore */

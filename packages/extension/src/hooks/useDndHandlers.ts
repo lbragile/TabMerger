@@ -525,24 +525,24 @@ export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
     try {
       if (fx.type === 'tabs.move') {
         const props = { windowId: fx.windowId, index: fx.index };
-        // eslint-disable-next-line no-await-in-loop
+         
         if (Array.isArray(fx.tabId)) await chrome.tabs.move(fx.tabId, props);
-        // eslint-disable-next-line no-await-in-loop
+         
         else await chrome.tabs.move(fx.tabId, props);
       } else if (fx.type === 'tabs.create') {
         // `active: false` always: activating a tab in the popup's anchor window dismisses the popup.
-        // eslint-disable-next-line no-await-in-loop
+         
         await chrome.tabs.create({ windowId: fx.windowId, url: fx.url, index: fx.index, active: false });
       } else if (fx.type === 'windows.create') {
-        // eslint-disable-next-line no-await-in-loop
+         
         await chrome.windows.create({ url: fx.url, focused: false });
       } else if (fx.type === 'tabs.remove') {
-        // eslint-disable-next-line no-await-in-loop
+         
         const { now, deferred } = await partitionClosableTabs(fx.tabIds);
         // The deferred ids go first: if removing the others somehow dismisses the popup,
         // the background worker already holds the rest.
         if (deferred.length > 0) closeTabsWhenPopupCloses(deferred);
-        // eslint-disable-next-line no-await-in-loop
+         
         if (now.length > 0) await chrome.tabs.remove(now);
       }
     } catch {

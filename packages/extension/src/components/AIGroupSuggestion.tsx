@@ -105,7 +105,7 @@ export function AIGroupSuggestion() {
     if (storageReady && stored?.message && !stored.dismissed && stored.staleGroupIds.length > 0 && staleGroups.length === 0) {
       dismiss();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [storageReady, stored, staleGroups.length]);
 
   if (!storageReady || loading || !aiFeatures || stored?.dismissed) return null;

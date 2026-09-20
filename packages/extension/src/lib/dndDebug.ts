@@ -166,7 +166,7 @@ export function showDndDebugChip(text: string, opts: { selectable?: boolean } = 
 export function dndDebugLog(stage: string, detail?: unknown): void {
   if (!dndDebugEnabled()) return;
   try {
-    // eslint-disable-next-line no-console
+     
     console.log('[tm-dnd]', stage, detail ?? '');
   } catch {
     /* ignore */
