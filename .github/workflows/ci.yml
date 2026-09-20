@@ -383,13 +383,22 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    # Stable releases come from the default branch; prereleases (X.Y.Z-beta.N)
-    # from `beta`. semantic-release decides which by matching the branch against
-    # `.releaserc.json`'s `branches`, so this condition only has to let both through.
-    # A push with no feat:/fix: commits is a no-op inside semantic-release itself.
-    if: >-
-      (github.ref == 'refs/heads/agentic-revamp' || github.ref == 'refs/heads/beta')
-      && github.event_name == 'push'
+    # ── BETA ONLY (deliberate, temporary) ────────────────────────────────────
+    # Releases are currently cut from `beta` and nowhere else, so nothing can
+    # reach the PRODUCTION Chrome Web Store listing while the channel is being
+    # proven out. Pushes to the default branch still run every gate above; they
+    # just never release.
+    #
+    # `.releaserc.json` deliberately still lists BOTH branches: `beta` is a
+    # prerelease branch and computes its version from the last release on the
+    # default channel, so removing the default branch from that config would
+    # break the beta versioning rather than merely disabling stable.
+    #
+    # TO RE-ENABLE STABLE: restore the default branch to this condition —
+    #   (github.ref == 'refs/heads/agentic-revamp' || github.ref == 'refs/heads/beta')
+    # and nothing else needs to change; publish.yml already routes stable vs
+    # prerelease off github.event.release.prerelease.
+    if: github.ref == 'refs/heads/beta' && github.event_name == 'push'
     # Collapse a burst of merges into one release rather than one submission each.
     # NOT cancel-in-progress: cancelling mid-release can leave a pushed tag with no
     # GitHub Release, which strands the version and blocks the next run.
