@@ -9,6 +9,32 @@ const nextConfig: NextConfig = {
     // so it finds node_modules/next that we've hoisted there.
     root: path.resolve(process.cwd(), '../..'),
   },
+  // The /changelog route (app/(marketing)/changelog/page.tsx via lib/changelog.ts) reads
+  // the repo-root CHANGELOG.md with a *dynamically computed* fs path
+  // (path.resolve(process.cwd(), '../..', 'CHANGELOG.md')). Next's build-time file tracer
+  // (@vercel/nft) only bundles files it can find via static analysis of imports/requires,
+  // so a runtime-computed fs.readFileSync path is invisible to it — without this entry,
+  // the deployed Vercel function for this route would never actually have CHANGELOG.md in
+  // its bundle, and getGeneratedChangelog() would silently ENOENT-fallback to legacy-only
+  // forever, even after semantic-release starts generating the file. This route is also
+  // effectively dynamic (not statically generated) because the shared marketing layout's
+  // Navbar calls the async Supabase server client, so it re-reads this file per request —
+  // all the more reason it needs to be traced into the deployed bundle explicitly.
+  //
+  // outputFileTracingIncludes' `../../CHANGELOG.md` glob resolves relative to this project
+  // directory (packages/web) and points OUTSIDE it, into the monorepo root. Whether Next can
+  // honor an include that reaches outside the project directory depends on where it infers
+  // the file-tracing root to be. Without an explicit root, Next infers one (usually the pnpm
+  // workspace root, found via the lockfile) — confirmed this already resolves correctly with
+  // and without this setting (compared .next/server/app/(marketing)/changelog/page.js.nft.json
+  // before/after: both contain ../../../../../../../CHANGELOG.md). But relying on inference for
+  // a path that reaches outside the project directory is exactly the kind of thing that fails
+  // silently (ENOENT -> legacy-only fallback, no build error) if the heuristic ever picks a
+  // different root in some environment. Pin it explicitly, mirroring turbopack.root above.
+  outputFileTracingRoot: path.resolve(process.cwd(), '../..'),
+  outputFileTracingIncludes: {
+    '/changelog': ['../../CHANGELOG.md'],
+  },
   images: {
     remotePatterns: [
       {

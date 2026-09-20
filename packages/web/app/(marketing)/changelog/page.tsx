@@ -1,20 +1,19 @@
 import type { Metadata } from 'next'
 import { cn } from '@/lib/utils'
+import { getGeneratedChangelog, type ChangeEntry, type ChangeType } from '@/lib/changelog'
 
 export const metadata: Metadata = {
   title: 'Changelog — TabMerger',
   description: 'New features, improvements, and fixes in TabMerger.',
 }
 
-type ChangeType = 'New' | 'Improved' | 'Fixed'
-
-interface ChangeEntry {
-  version: string
-  date: string
-  changes: { type: ChangeType; text: string }[]
-}
-
-const CHANGELOG: ChangeEntry[] = [
+// Pre-automation history. These three entries describe real shipped work, but
+// none of it has a git tag or GitHub Release — semantic-release has never run
+// in this repo (see .claude/plans/release-and-beta-channel-spec.md §1/§6).
+// Frozen: never edited, and never presented as machine-generated. Everything
+// newer comes from the repo-root CHANGELOG.md via getGeneratedChangelog()
+// below, and is rendered ahead of this list.
+const LEGACY_CHANGELOG: ChangeEntry[] = [
   {
     version: 'v2.1.0',
     date: 'July 28, 2026',
@@ -71,6 +70,8 @@ function anchorId(version: string) {
 }
 
 export default function ChangelogPage() {
+  const entries = [...getGeneratedChangelog(), ...LEGACY_CHANGELOG]
+
   return (
     <div className="container py-16 max-w-3xl">
       <div className="mb-12 pb-8 border-b border-line">
@@ -79,7 +80,7 @@ export default function ChangelogPage() {
       </div>
 
       <div className="flex flex-col">
-        {CHANGELOG.map((entry, index) => {
+        {entries.map((entry, index) => {
           const major = isMajorVersion(entry.version)
           return (
             <div
