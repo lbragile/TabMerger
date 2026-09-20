@@ -47,7 +47,12 @@ jobs:
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: https://tabmerger.vercel.app
-          CHROME_EXTENSION_ID: ${{ secrets.CHROME_BETA_EXTENSION_ID }}
+          # NOTE the _BETA suffix: on the beta path wxt.config.ts reads
+          # `env.CHROME_EXTENSION_ID_BETA`, not CHROME_EXTENSION_ID. Exporting the
+          # wrong name fails SILENTLY — `filter(Boolean)` drops the undefined id and
+          # the beta build ships with only the dev id in externally_connectable, so
+          # the web app can never reach it.
+          CHROME_EXTENSION_ID_BETA: ${{ secrets.CHROME_BETA_EXTENSION_ID }}
         run: pnpm wxt zip -b chrome --mode beta
 
       - name: Upload Chrome BETA artifact
