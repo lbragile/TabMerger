@@ -53,8 +53,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -68,8 +66,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -85,8 +81,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -106,8 +100,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -163,12 +155,15 @@ jobs:
           name: coverage-summary-${{ github.sha }}
           path: current
 
-      - name: Download baseline coverage from master
+      - name: Download baseline coverage from the default branch
         uses: dawidd6/action-download-artifact@v6
         continue-on-error: true # ponytail: no baseline yet (e.g. very first run) → coverage-delta.mjs no-ops on missing file
         with:
           workflow: ci.yml
-          branch: master
+          # Must match the branch that PUBLISHES the baseline in unit-tests above.
+          # This said `master`, which does not exist — so the baseline was never
+          # found and the delta check silently no-opped on every run.
+          branch: agentic-revamp
           name: coverage-baseline
           path: baseline
 
@@ -193,8 +188,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -211,8 +204,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -234,8 +225,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -268,8 +257,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -335,8 +322,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -367,8 +352,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -427,8 +410,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - uses: pnpm/action-setup@v4
-        with:
-          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version: 20
