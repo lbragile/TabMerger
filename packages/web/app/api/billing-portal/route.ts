@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { createBillingPortalSession } from '@/lib/stripe'
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
 
 /**
@@ -28,10 +28,15 @@ export async function POST(_request: NextRequest) {
     return NextResponse.json({ error: 'No billing account found' }, { status: 400 })
   }
 
-  const session = await stripe.billingPortal.sessions.create({
-    customer: profile.stripe_customer_id,
-    return_url: (process.env.NEXT_PUBLIC_APP_URL ?? '') + '/dashboard',
-  })
+  try {
+    const url = await createBillingPortalSession({
+      customerId: profile.stripe_customer_id,
+      returnUrl: (process.env.NEXT_PUBLIC_APP_URL ?? '') + '/dashboard',
+    })
 
-  return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url })
+  } catch (err) {
+    console.error('Billing portal error:', err)
+    return NextResponse.json({ error: 'Failed to create portal session' }, { status: 500 })
+  }
 }

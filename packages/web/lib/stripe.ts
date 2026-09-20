@@ -1,6 +1,22 @@
 import Stripe from 'stripe'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+/**
+ * True when a real Stripe secret key was supplied. False in any environment missing
+ * `STRIPE_SECRET_KEY` (CI builds, a fresh checkout before `.env.local` is populated) — every
+ * exported operation below checks this and throws a clear config error before calling Stripe,
+ * instead of either crashing at import time or sending a real request with a placeholder key.
+ */
+export const isStripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY)
+
+// ponytail: `new Stripe(undefined)` throws "Neither apiKey nor config.authenticator provided" at
+// construction time -- same bug class as the extension's supabase.ts crash (commit d45989c).
+// `next build` evaluates every route module (including app/api/billing-portal, app/api/checkout,
+// app/api/checkout/credits, app/api/webhooks/stripe) during "Collecting page data" to statically
+// analyze it, even though the route handler itself never runs during build -- so a missing
+// STRIPE_SECRET_KEY killed the *entire* build, not just disabled billing. The placeholder string
+// keeps construction safe; it is never used for a real request because every operation below
+// refuses to run without isStripeConfigured, so a fake key can't silently no-op a real charge.
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_not_configured', {
   apiVersion: '2025-06-30.basil' as Stripe.LatestApiVersion,
   typescript: true,
 })
@@ -25,6 +41,8 @@ export async function createCheckoutSession({
   successUrl: string
   cancelUrl: string
 }): Promise<string> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     payment_method_types: ['card'],
@@ -74,6 +92,8 @@ export async function createCreditPackCheckoutSession({
   successUrl: string
   cancelUrl: string
 }): Promise<string> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+
   const priceId = process.env.STRIPE_AI_CREDIT_PACK_PRICE_ID
   if (!priceId) throw new Error('STRIPE_AI_CREDIT_PACK_PRICE_ID not configured')
 
@@ -112,6 +132,8 @@ export async function createBillingPortalSession({
   customerId: string
   returnUrl: string
 }): Promise<string> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+
   const session = await stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,

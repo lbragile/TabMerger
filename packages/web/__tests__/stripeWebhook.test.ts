@@ -25,6 +25,14 @@ vi.mock('@/lib/stripe', () => ({
     billingPortal: { sessions: { create: mockPortalSessionCreate } },
     checkout: { sessions: { listLineItems: mockListLineItems } },
   },
+  // app/api/billing-portal/route.ts and app/api/portal/route.ts both go through this helper
+  // (not the raw `stripe` object above) so the isStripeConfigured guard actually applies to them.
+  createBillingPortalSession: vi.fn(
+    async ({ customerId, returnUrl }: { customerId: string; returnUrl: string }) => {
+      const session = await mockPortalSessionCreate({ customer: customerId, return_url: returnUrl })
+      return session.url
+    }
+  ),
 }))
 
 // ── Supabase mock ─────────────────────────────────────────────────────────────
