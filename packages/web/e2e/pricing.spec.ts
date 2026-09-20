@@ -18,6 +18,12 @@ test.describe('Pricing page', () => {
 })
 
 test.describe('Auth redirect', () => {
+  // Force a signed-out context even when this spec runs under the `authenticated`
+  // Playwright project (storageState: e2e/.auth/user.json) — this test exists
+  // specifically to assert unauthenticated redirect behavior, which a real
+  // session would otherwise short-circuit.
+  test.use({ storageState: { cookies: [], origins: [] } })
+
   test('redirects /dashboard to sign-in when unauthenticated', async ({ page }) => {
     await page.goto('/dashboard')
     await expect(page).toHaveURL(/sign-in/)

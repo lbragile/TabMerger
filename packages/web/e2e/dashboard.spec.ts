@@ -6,6 +6,12 @@ import { test, expect } from '@playwright/test'
  */
 
 test.describe('Dashboard auth guard', () => {
+  // Force a signed-out context even when this spec runs under the `authenticated`
+  // Playwright project (storageState: e2e/.auth/user.json) — these tests exist
+  // specifically to assert unauthenticated redirect behavior, which a real
+  // session would otherwise short-circuit.
+  test.use({ storageState: { cookies: [], origins: [] } })
+
   test('unauthenticated /dashboard redirects to login', async ({ page }) => {
     await page.goto('/dashboard')
     // Middleware redirects unauthenticated users to the auth page
