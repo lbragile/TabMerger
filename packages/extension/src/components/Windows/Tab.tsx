@@ -93,7 +93,9 @@ interface TabItemProps {
 
 export function TabItem({ groupId, tab, groupIndex, windowIndex, tabIndex, siblingCount: _siblingCount, searchFilter, tagFilter, groupColor, isLocked = false, staleThresholdMs }: TabItemProps) {
   const sortableId = `${groupId}::w${windowIndex}::t${tabIndex}`;
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  // `transition` is intentionally discarded — see drag-and-drop spec §8 (no live dnd-kit
+  // transform/transition on a dragged row; an insertion gap is rendered instead).
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id: sortableId,
     data: { type: 'tab', groupId, windowId: `${groupId}::w${windowIndex}` }
   });

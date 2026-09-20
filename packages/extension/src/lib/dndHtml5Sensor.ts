@@ -17,8 +17,7 @@ import {
   installDndPressTracker,
   logDragPathDecision,
   readPressEvidence,
-  type DndDragPath,
-  type PressEvidence
+  type DndDragPath
 } from './dndPressTracker';
 
 /**

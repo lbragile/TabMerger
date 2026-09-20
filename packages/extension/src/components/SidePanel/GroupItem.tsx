@@ -38,7 +38,10 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   // pinned above unstarred ones, and the DnD collision layer clamps the insertion gap into
   // the dragged block's own zone (`@/lib/dndInsertion`, spec §6.1).
   const dndData = { type: 'group', groupId: group.id, index: groupIndex, starred: !!group.starred };
-  const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } =
+  // `transition` is intentionally discarded — this codebase renders an insertion gap
+  // instead of applying dnd-kit's live transform/transition during a drag (drag-and-drop
+  // spec §8: "no live dnd-kit `transform` on a pointer-dragged row").
+  const { attributes, listeners, setNodeRef: setSortableRef, transform, isDragging } =
     useSortable({ id: group.id, data: dndData });
 
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({ id: group.id, data: dndData });

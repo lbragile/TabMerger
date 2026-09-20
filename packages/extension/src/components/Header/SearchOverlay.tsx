@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Search, Folder, AppWindow } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { parseSearchQuery } from '@/lib/utils';
@@ -53,7 +53,7 @@ function getResults(query: string, groupsState: GroupsState | undefined): Result
             return;
         }
 
-        group.windows.forEach((win, windowIndex) => {
+        group.windows.forEach((win) => {
             if (windowFilter && !win.name?.toLowerCase().includes(windowFilter.toLowerCase())) return;
 
             win.tabs.forEach((tab) => {
@@ -152,19 +152,53 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
     const listRef = useRef<HTMLDivElement>(null);
 
     const pickerCtx = getPickerContext(query);
-    const groupPicks  = pickerCtx?.prefix === 'group:'  ? getGroupPicks(pickerCtx.typed, groupsState)  : [];
-    const windowPicks = pickerCtx?.prefix === 'window:' ? getWindowPicks(pickerCtx.typed, groupsState, parseSearchQuery(pickerCtx.before).groupFilter) : [];
-    const tagPicks    = pickerCtx?.prefix === 'tag:'    ? getTagPicks(pickerCtx.typed, groupsState)    : [];
-    const pickerItems: Array<{ name: string; color: string; index?: number; windowIndex?: number; groupIndex?: number }> =
-        pickerCtx?.prefix === 'group:'  ? groupPicks  :
-        pickerCtx?.prefix === 'window:' ? windowPicks :
-        pickerCtx?.prefix === 'tag:'    ? tagPicks    : [];
     const inPicker = pickerCtx !== null;
 
-    const results = (inPicker || isPicking) ? [] : getResults(query, groupsState);
+    // Memoized: both feed the keydown-handler effect's dependency array below. Left as plain
+    // per-render values, their array identity changes on every render regardless of whether
+    // the query actually changed, which forces that effect to tear down and re-subscribe its
+    // `window` keydown listener every render — wrapping in useMemo keys the recompute to the
+    // actual inputs instead.
+    const pickerItems: Array<{ name: string; color: string; index?: number; windowIndex?: number; groupIndex?: number }> = useMemo(() => {
+        if (!pickerCtx) return [];
+        if (pickerCtx.prefix === 'group:') return getGroupPicks(pickerCtx.typed, groupsState);
+        if (pickerCtx.prefix === 'window:') return getWindowPicks(pickerCtx.typed, groupsState, parseSearchQuery(pickerCtx.before).groupFilter);
+        return getTagPicks(pickerCtx.typed, groupsState);
+    }, [pickerCtx, groupsState]);
+
+    const results = useMemo(
+        () => (inPicker || isPicking) ? [] : getResults(query, groupsState),
+        [inPicker, isPicking, query, groupsState]
+    );
     const listLength = inPicker ? pickerItems.length : (query.trim() ? results.length : EXAMPLES.length);
 
     useEffect(() => { setCursor(-1); setIsPicking(false); }, [query]);
+
+    /**
+     * Completes a picker selection by replacing the bare `in:WORD` / `tag:WORD` at the
+     * end of the query with the quoted form `in:"Selected Name" `, then refocuses the
+     * input so the user can continue typing a tab keyword (e.g. `in:"Work" report`).
+     * Both the query update and refocus are deferred via setTimeout(0) so they run after
+     * the click event fully settles — prevents the stale-render that showed wrong results.
+     *
+     * Wrapped in useCallback (not a plain function) so the keydown-handler effect below
+     * can safely list it as a dependency: every value this closes over is either already
+     * in the effect's own dependency array (`pickerCtx`, `onQueryChange`, `inputRef`) or a
+     * setState setter, which React guarantees is referentially stable. So this reference
+     * only changes when the effect was already going to re-subscribe anyway — adding it
+     * satisfies exhaustive-deps without introducing any new re-run.
+     */
+    const completePick = useCallback((name: string, _groupIndex?: number) => {
+        const newQuery = `${pickerCtx?.before ?? ''}${pickerCtx?.prefix}"${name}" `;
+        setCursor(-1);
+        setIsPicking(true);
+        // Defer so the click event (and any blur/focus side-effects) fully settle before
+        // the query update triggers a results re-render.
+        setTimeout(() => {
+            onQueryChange(newQuery);
+            inputRef.current?.focus();
+        }, 0);
+    }, [pickerCtx, onQueryChange, inputRef]);
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
@@ -188,26 +222,7 @@ export function SearchOverlay({ query, onQueryChange, groupsState, onSelectGroup
         };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
-    }, [cursor, listLength, inPicker, pickerItems, pickerCtx, results, query, onSelectGroup, onSelectWindow, onQueryChange, inputRef]);
-
-    /**
-     * Completes a picker selection by replacing the bare `in:WORD` / `tag:WORD` at the
-     * end of the query with the quoted form `in:"Selected Name" `, then refocuses the
-     * input so the user can continue typing a tab keyword (e.g. `in:"Work" report`).
-     * Both the query update and refocus are deferred via setTimeout(0) so they run after
-     * the click event fully settles — prevents the stale-render that showed wrong results.
-     */
-    function completePick(name: string, _groupIndex?: number) {
-        const newQuery = `${pickerCtx?.before ?? ''}${pickerCtx?.prefix}"${name}" `;
-        setCursor(-1);
-        setIsPicking(true);
-        // Defer so the click event (and any blur/focus side-effects) fully settle before
-        // the query update triggers a results re-render.
-        setTimeout(() => {
-            onQueryChange(newQuery);
-            inputRef.current?.focus();
-        }, 0);
-    }
+    }, [cursor, listLength, inPicker, pickerItems, pickerCtx, results, query, onSelectGroup, onSelectWindow, onQueryChange, inputRef, completePick]);
 
     return (
         <>

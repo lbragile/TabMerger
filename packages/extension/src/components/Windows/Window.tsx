@@ -76,7 +76,9 @@ interface WindowProps {
 
 export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCount: _siblingCount, tabIds, groupColor, searchFilter, tagFilter, tabOffset = 0, maxTabs = Infinity, staleThresholdMs }: WindowProps) {
   const sortableId = `${groupId}::w${windowIndex}`;
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  // `transition` is intentionally discarded — see drag-and-drop spec §8 (no live dnd-kit
+  // transform/transition on a dragged row; an insertion gap is rendered instead).
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id: sortableId,
     // `starred` is the row's ZONE (starred windows are pinned to the top of the group), so
     // the collision layer can clamp the insertion gap into it — see `@/lib/dndInsertion`.

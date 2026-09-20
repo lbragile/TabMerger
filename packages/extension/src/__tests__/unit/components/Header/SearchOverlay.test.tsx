@@ -127,6 +127,19 @@ describe('SearchOverlay — group: picker', () => {
     expect(onQueryChange).toHaveBeenCalledWith('group:"Work" ')
     vi.useRealTimers()
   })
+
+  it('ArrowDown + Enter completes the highlighted picker item via completePick', () => {
+    // Regression guard for the keydown-effect's `completePick` dependency: this is the
+    // ONLY path (keyboard, not click) that exercises the effect closure directly, so a
+    // stale closure here would surface as `onQueryChange` never firing.
+    vi.useFakeTimers()
+    const { onQueryChange } = setup('group:wor')
+    fireEvent.keyDown(window, { key: 'ArrowDown' })
+    fireEvent.keyDown(window, { key: 'Enter' })
+    vi.runAllTimers()
+    expect(onQueryChange).toHaveBeenCalledWith('group:"Work" ')
+    vi.useRealTimers()
+  })
 })
 
 describe('SearchOverlay — window: picker', () => {
