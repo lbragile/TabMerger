@@ -4,16 +4,6 @@ on:
   release:
     types: [published]
 
-env:
-  # The BETA listing's Chrome Web Store item id. Deliberately NOT a secret: an
-  # extension id is public (it is the /detail/<name>/<id> segment of the store
-  # URL, and for this unlisted item it is the link testers are given). Keeping it
-  # here rather than in secrets removes a failure mode where the publish job dies
-  # for a missing secret AFTER semantic-release has already tagged and cut the
-  # GitHub Release, stranding a prerelease version.
-  # The actual credentials — CLIENT_ID / CLIENT_SECRET / REFRESH_TOKEN — stay secrets.
-  CHROME_BETA_ITEM_ID: nboljhidpjakiohfdkdjkcljdehcapcd
-
 jobs:
   build:
     name: Build Extension Packages
@@ -57,7 +47,7 @@ jobs:
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: https://tabmerger.vercel.app
-          CHROME_EXTENSION_ID: ${{ env.CHROME_BETA_ITEM_ID }}
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_BETA_EXTENSION_ID }}
         run: pnpm wxt zip -b chrome --mode beta
 
       - name: Upload Chrome BETA artifact
@@ -113,9 +103,9 @@ jobs:
           path: packages/extension/.output/tabmerger-${{ steps.version.outputs.version }}-edge.zip
           if-no-files-found: error
 
-  # Beta goes all the way to PUBLISHED with no human step: it is a separate,
-  # unlisted CWS item with its own opt-in audience, so a bad beta cannot reach
-  # stable users or block the stable item's review queue.
+  # Beta goes all the way to PUBLISHED with no human step: it is a SEPARATE CWS
+  # item, private to its trusted testers, so a bad beta cannot reach stable users
+  # or block the stable item's review queue.
   publish-chrome-beta:
     name: Publish to Chrome Web Store (BETA)
     needs: build
@@ -140,7 +130,7 @@ jobs:
         run: |
           pnpm dlx chrome-webstore-upload-cli \
             --source tabmerger-beta-*-chrome.zip \
-            --extension-id ${{ env.CHROME_BETA_ITEM_ID }}
+            --extension-id ${{ secrets.CHROME_BETA_EXTENSION_ID }}
 
   publish-chrome:
     name: Publish to Chrome Web Store

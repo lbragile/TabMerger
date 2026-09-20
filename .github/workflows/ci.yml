@@ -425,6 +425,38 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+
+      # Fail BEFORE semantic-release runs, not after. Once it has run it has
+      # already pushed a tag and cut a GitHub Release; a publish job that then
+      # dies on a missing secret strands that version — the tag exists, nothing
+      # was submitted, and the next run computes from a release that never
+      # shipped. Checking here turns that into a clean, retryable failure.
+      - name: Preflight — required publish secrets
+        env:
+          CHROME_BETA_EXTENSION_ID: ${{ secrets.CHROME_BETA_EXTENSION_ID }}
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+        run: |
+          missing=()
+          # Which store item this release targets depends on the branch: `beta`
+          # publishes a prerelease to the beta item, everything else to stable.
+          if [ "${GITHUB_REF}" = "refs/heads/beta" ]; then
+            [ -n "$CHROME_BETA_EXTENSION_ID" ] || missing+=("CHROME_BETA_EXTENSION_ID")
+          else
+            [ -n "$CHROME_EXTENSION_ID" ] || missing+=("CHROME_EXTENSION_ID")
+          fi
+          for v in CHROME_CLIENT_ID CHROME_CLIENT_SECRET CHROME_REFRESH_TOKEN; do
+            [ -n "${!v}" ] || missing+=("$v")
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Refusing to release — missing repo secret(s): ${missing[*]}"
+            echo "Add them under Settings → Secrets and variables → Actions, then re-run."
+            exit 1
+          fi
+          echo "All required publish secrets are present."
+
       - name: Release
         run: pnpm exec semantic-release
         env:
