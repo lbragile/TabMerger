@@ -3,9 +3,30 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
 
-if (!supabaseUrl || !supabaseAnonKey) {
+/**
+ * True when real Supabase credentials were supplied at build time. False in any build/test run
+ * missing `VITE_SUPABASE_URL`/`VITE_SUPABASE_PUBLISHABLE_KEY` — callers that talk to Supabase
+ * (syncEngine, deviceSessions, useEntitlements, useSync, etc.) can check this to skip network
+ * calls and report "sync unavailable" instead of letting a request fail against a placeholder
+ * host with a confusing error.
+ */
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
+if (!isSupabaseConfigured) {
   console.warn('[TabMerger] Supabase env vars missing — cloud sync disabled');
 }
+
+// ponytail: `createClient('')` THROWS at construction time (`supabaseUrl is required` —
+// validateSupabaseUrl in @supabase/supabase-js@2.x), it does not degrade gracefully. Every
+// caller of this module (syncEngine.ts, deviceSessions.ts, useEntitlements.ts, useSync.ts) is
+// imported transitively by the popup entrypoint, so a missing env var previously crashed the
+// whole popup at import time instead of just disabling cloud sync as the warning above implies.
+// `.invalid` is an RFC 2606-reserved TLD guaranteed to never resolve — safe placeholder host that
+// can't accidentally hit a real endpoint. Real requests against it fail fast via normal DNS/
+// network error paths that callers already handle (try/catch, `{ error } => return null`, etc.);
+// `isSupabaseConfigured` lets callers skip the attempt entirely instead of relying on that.
+const FALLBACK_URL = 'https://supabase-not-configured.invalid';
+const FALLBACK_KEY = 'not-configured';
 
 // ponytail: chrome.storage.local instead of localStorage so background, popup, and
 // content scripts all share the same session store — required for the web-app auth
@@ -30,7 +51,7 @@ export const chromeStorage = {
   },
 };
 
-export const supabase = createClient(supabaseUrl ?? '', supabaseAnonKey ?? '', {
+export const supabase = createClient(supabaseUrl || FALLBACK_URL, supabaseAnonKey || FALLBACK_KEY, {
   auth: {
     persistSession: true,
     storageKey: 'tabmerger-auth',

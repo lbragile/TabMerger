@@ -106,6 +106,13 @@ describe('TabPreview', () => {
   })
 
   it('only fetches the preview once across repeated opens (fetchedRef guard)', async () => {
+    // ponytail: getPageMetaForTab() short-circuits (no fetch at all) when VITE_WEB_APP_URL is
+    // unset — this test only exercises the fetchedRef guard, not that short-circuit, so it must
+    // pin the env explicitly rather than riding on whatever `.env.local` happens to supply.
+    // Without this, the test silently passed locally (dev's `.env.local` sets a real
+    // VITE_WEB_APP_URL, so `import.meta.env.VITE_WEB_APP_URL` is truthy as vitest's ambient
+    // default) but failed in CI (no `.env.local` → fetch is never called → 0 vs 1 assertion).
+    vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
     const user = userEvent.setup()
     wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     const trigger = screen.getByText('Example Page')
