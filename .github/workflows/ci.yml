@@ -444,6 +444,7 @@ jobs:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           missing=()
           # Which store item this release targets depends on the branch: `beta`
@@ -456,6 +457,10 @@ jobs:
           for v in CHROME_CLIENT_ID CHROME_CLIENT_SECRET CHROME_REFRESH_TOKEN; do
             [ -n "${!v}" ] || missing+=("$v")
           done
+          # Fine-grained PATs expire (a year at most). Without this check an
+          # expired token surfaces as an opaque auth failure inside
+          # semantic-release, long after anyone remembers it was time-limited.
+          [ -n "$RELEASE_TOKEN" ] || missing+=("RELEASE_TOKEN")
           if [ ${#missing[@]} -gt 0 ]; then
             echo "::error::Refusing to release — missing repo secret(s): ${missing[*]}"
             echo "Add them under Settings → Secrets and variables → Actions, then re-run."
@@ -465,6 +470,17 @@ jobs:
 
       - name: Release
         run: pnpm exec semantic-release
+        # RELEASE_TOKEN, deliberately NOT the built-in GITHUB_TOKEN. GitHub
+        # suppresses workflow triggers for events created by GITHUB_TOKEN — a
+        # recursion guard — so the GitHub Release semantic-release creates would
+        # fire `release: published` and publish.yml would never start. Nothing
+        # fails; the next workflow simply does not run, which is why this cost a
+        # release to diagnose. A PAT is not subject to that guard.
+        #
+        # The flip side: the chore(release) commit this pushes DOES now trigger
+        # ci.yml. semantic-release puts [skip ci] in that commit message, which is
+        # the only thing preventing an infinite release loop — do not "tidy" it
+        # out of the @semantic-release/git message template in .releaserc.json.
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
