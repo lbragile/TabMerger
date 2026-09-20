@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useSyncExternalStore } from 'react'
 import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, ExternalLink, AlertTriangle, ChevronDown, ChevronRight, Archive, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -44,15 +44,13 @@ interface GroupGridProps {
  * already plaintext (legacy rows, or before encryption setup completes) pass through. */
 function useDecryptedGroups(groups: RawDashboardGroup[]) {
   const { dataKey } = useEncryptionKey()
-  const [decrypted, setDecrypted] = useState<DashboardGroup[]>([])
   const hasEncrypted = useMemo(() => groups.some((g) => isEncryptedBlob(g.windows)), [groups])
+  // Only the genuinely async decrypt result needs React state — the "nothing encrypted"
+  // case is derived straight from props below, with no setState-in-effect needed for it.
+  const [asyncDecrypted, setAsyncDecrypted] = useState<DashboardGroup[] | null>(null)
 
   useEffect(() => {
-    if (!hasEncrypted) {
-      setDecrypted(groups as DashboardGroup[])
-      return
-    }
-    if (!dataKey) return
+    if (!hasEncrypted || !dataKey) return
     let cancelled = false
     ;(async () => {
       const results = await Promise.all(
@@ -67,12 +65,14 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
           }
         })
       )
-      if (!cancelled) setDecrypted(results)
+      if (!cancelled) setAsyncDecrypted(results)
     })()
     return () => {
       cancelled = true
     }
   }, [groups, hasEncrypted, dataKey])
+
+  const decrypted = hasEncrypted ? (asyncDecrypted ?? []) : (groups as DashboardGroup[])
 
   return { groups: decrypted, needsUnlock: hasEncrypted && !dataKey }
 }
@@ -360,24 +360,41 @@ function GroupRow({
 
 const STORAGE_KEY = 'tm-dashboard-view'
 
+// View preference is backed by an external store (localStorage) read via
+// useSyncExternalStore instead of useState+effect — reading localStorage directly during
+// render would crash SSR (no `window`), and syncing it into local state via a mount effect
+// is exactly the setState-in-effect cascading-render pattern the react-hooks lint rule flags.
+const viewListeners = new Set<() => void>()
+
+function subscribeView(callback: () => void) {
+  viewListeners.add(callback)
+  return () => viewListeners.delete(callback)
+}
+
+function getViewSnapshot(): 'grid' | 'list' {
+  return localStorage.getItem(STORAGE_KEY) === 'list' ? 'list' : 'grid'
+}
+
+function getViewServerSnapshot(): 'grid' | 'list' {
+  return 'grid'
+}
+
+function setStoredView(next: 'grid' | 'list') {
+  localStorage.setItem(STORAGE_KEY, next)
+  viewListeners.forEach((cb) => cb())
+}
+
 export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
   const { groups, needsUnlock } = useDecryptedGroups(rawGroups)
-  // SSR-safe: localStorage is not available on the server. Must start with a consistent
-  // default and sync after mount — calling localStorage in useState initializer crashes SSR.
-  const [view, setView] = useState<'grid' | 'list'>('grid')
+  const view = useSyncExternalStore(subscribeView, getViewSnapshot, getViewServerSnapshot)
   const [selecting, setSelecting] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [sharing, setSharing] = useState(false)
   const [sort, setSort] = useState<'recent' | 'name' | 'tabCount'>('recent')
   const [archivedOpen, setArchivedOpen] = useState(false)
 
-  useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY) === 'list') setView('list')
-  }, [])
-
   function toggle(next: 'grid' | 'list') {
-    setView(next)
-    localStorage.setItem(STORAGE_KEY, next)
+    setStoredView(next)
   }
 
   function toggleSelection(id: string) {

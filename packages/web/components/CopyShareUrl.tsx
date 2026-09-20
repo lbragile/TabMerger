@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
+import { useLocationHash } from '@/lib/hooks/useLocationHash'
 
 /**
  * Displays the canonical share URL as a copyable chip so a visitor landing on a
@@ -13,10 +14,8 @@ export function CopyShareUrl({ url }: { url: string }) {
   // The `url` prop is server-computed and can never include the `#key=` fragment — fragments
   // aren't sent over HTTP, so the server has no way to know it. Read it client-side instead,
   // otherwise this button silently strips the decryption key from an encrypted share link.
-  const [fullUrl, setFullUrl] = useState(url)
-  useEffect(() => {
-    setFullUrl(url + window.location.hash)
-  }, [url])
+  const hash = useLocationHash()
+  const fullUrl = url + hash
 
   async function handleCopy() {
     await navigator.clipboard.writeText(fullUrl)

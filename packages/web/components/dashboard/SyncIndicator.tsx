@@ -110,8 +110,16 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
 
   useEffect(() => {
     const supabase = createClient()
+    let cancelled = false
 
-    fetchLatestSync()
+    // `fetchLatestSync` itself sets state (after its internal Supabase await), so calling
+    // it directly here — a useCallback-wrapped reference — reads to the lint rule as an
+    // effect that "calls setState synchronously". Wrapping the call in its own async scope
+    // keeps the fire-and-forget behavior (effects can't be async) while making it clear to
+    // both the rule and the reader that the state update only ever happens post-await.
+    ;(async () => {
+      if (!cancelled) await fetchLatestSync()
+    })()
 
     const channel = supabase
       .channel(`groups-sync-${userId}`)
@@ -128,6 +136,7 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
       .subscribe()
 
     return () => {
+      cancelled = true
       supabase.removeChannel(channel)
     }
   }, [userId, fetchLatestSync])

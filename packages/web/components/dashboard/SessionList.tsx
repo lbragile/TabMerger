@@ -45,15 +45,13 @@ interface EncryptedSessionContent {
 /** Decrypts every encrypted-blob session with the session's data key — mirrors GroupGrid's useDecryptedGroups. */
 function useDecryptedSessions(sessions: RawSession[]) {
   const { dataKey } = useEncryptionKey()
-  const [decrypted, setDecrypted] = useState<Session[]>([])
   const hasEncrypted = useMemo(() => sessions.some((s) => isEncryptedBlob(s.groups)), [sessions])
+  // Only the genuinely async decrypt result needs React state — the "nothing encrypted"
+  // case is derived straight from props below, with no setState-in-effect needed for it.
+  const [asyncDecrypted, setAsyncDecrypted] = useState<Session[] | null>(null)
 
   useEffect(() => {
-    if (!hasEncrypted) {
-      setDecrypted(sessions as Session[])
-      return
-    }
-    if (!dataKey) return
+    if (!hasEncrypted || !dataKey) return
     let cancelled = false
     ;(async () => {
       const results = await Promise.all(
@@ -67,12 +65,14 @@ function useDecryptedSessions(sessions: RawSession[]) {
           }
         })
       )
-      if (!cancelled) setDecrypted(results)
+      if (!cancelled) setAsyncDecrypted(results)
     })()
     return () => {
       cancelled = true
     }
   }, [sessions, hasEncrypted, dataKey])
+
+  const decrypted = hasEncrypted ? (asyncDecrypted ?? []) : (sessions as Session[])
 
   return { sessions: decrypted, needsUnlock: hasEncrypted && !dataKey }
 }

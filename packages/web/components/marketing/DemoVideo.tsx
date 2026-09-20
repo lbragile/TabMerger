@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTheme } from '@/components/theme-provider'
 
 const CLASS_NAME =
@@ -15,16 +15,14 @@ interface DemoVideoProps {
 
 export function DemoVideo({ darkSrc, lightSrc, previewSrc }: DemoVideoProps) {
   const { theme } = useTheme()
-  const [mounted, setMounted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const lastSrcRef = useRef<string | null>(null)
 
-  useEffect(() => setMounted(true), [])
-
-  // ponytail: before hydration we don't know the resolved theme yet — default
-  // to ThemeProvider's initial 'light' state so the src doesn't flash/swap.
-  const resolvedTheme = mounted ? theme : 'light'
-  const src = resolvedTheme === 'dark' ? darkSrc : lightSrc
+  // ThemeProvider resolves `theme` via useSyncExternalStore, so it's already accurate
+  // (localStorage/matchMedia, not just the pre-hydration default) by the time this
+  // component's first client render commits — no separate "have we mounted yet" gate
+  // needed to avoid a flash/swap.
+  const src = theme === 'dark' ? darkSrc : lightSrc
 
   // Swap `src` imperatively instead of `key={src}` remounting the element —
   // a remount resets currentTime to 0 on every theme toggle. Capture the

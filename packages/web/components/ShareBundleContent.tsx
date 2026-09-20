@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
 import { importKeyFromBase64, decryptBlob } from '@tabmerger/shared'
+import { useLocationHash } from '@/lib/hooks/useLocationHash'
 
 interface Tab { id: number; title?: string; url?: string; favIconUrl?: string; ogImage?: string }
 
@@ -72,6 +73,10 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
         className="w-72 p-3 bg-popover text-popover-foreground border border-border shadow-md"
       >
         <div className="flex items-start gap-2">
+          {/* Arbitrary remote favicon from a shared tab's own site — the source domain is
+              unbounded (anyone's bookmarked URL), so next/image's required remotePatterns
+              allow-list can't cover it. Plain <img> is the correct call here. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={favicon || FALLBACK_FAVICON}
             alt=""
@@ -84,6 +89,9 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
             {loading ? (
               <Skeleton className="mt-2 h-24 w-full rounded" />
             ) : ogImage ? (
+              // Arbitrary remote OG image fetched live from the tab's own site by
+              // /api/og-preview — same unbounded-domain reasoning as the favicon above.
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={ogImage}
                 alt=""
@@ -123,37 +131,46 @@ function isEncrypted(groups: Group[] | EncryptedSnapshot): groups is EncryptedSn
  * key exists — read here, used here, never forwarded anywhere.
  */
 function useDecryptedGroups(groups: Group[] | EncryptedSnapshot) {
-  const [state, setState] = useState<
-    { status: 'plain'; groups: Group[] } | { status: 'loading' } | { status: 'error' } | { status: 'done'; groups: Group[] }
-  >(() => (isEncrypted(groups) ? { status: 'loading' } : { status: 'plain', groups }))
+  const encrypted = isEncrypted(groups)
+  // Reading location.hash safely across SSR/hydration — see useLocationHash.
+  const hash = useLocationHash()
 
-  useEffect(() => {
-    if (!isEncrypted(groups)) return
+  const keyB64 = useMemo(() => {
+    if (!encrypted) return null
     // ponytail: don't use URLSearchParams here — base64 can contain '+', which
     // URLSearchParams decodes as a space (form-encoding convention), silently
     // corrupting the key whenever the random key happens to contain one.
-    const match = window.location.hash.slice(1).match(/(?:^|&)key=([^&]*)/)
-    const keyB64 = match ? decodeURIComponent(match[1]) : null
-    if (!keyB64) {
-      setState({ status: 'error' })
-      return
-    }
+    const match = hash.slice(1).match(/(?:^|&)key=([^&]*)/)
+    return match ? decodeURIComponent(match[1]) : null
+  }, [encrypted, hash])
+
+  // Only the genuinely async decrypt result needs React state — the "not encrypted"
+  // and "no key in the fragment" cases are derived straight from props/hash below,
+  // with no setState-in-effect needed for them.
+  const [asyncResult, setAsyncResult] = useState<
+    { status: 'done'; groups: Group[] } | { status: 'error' } | null
+  >(null)
+
+  useEffect(() => {
+    if (!encrypted || !keyB64) return
     let cancelled = false
     ;(async () => {
       try {
         const key = await importKeyFromBase64(keyB64)
         const decrypted = await decryptBlob<Group[]>(key, groups)
-        if (!cancelled) setState({ status: 'done', groups: decrypted })
+        if (!cancelled) setAsyncResult({ status: 'done', groups: decrypted })
       } catch {
-        if (!cancelled) setState({ status: 'error' })
+        if (!cancelled) setAsyncResult({ status: 'error' })
       }
     })()
     return () => {
       cancelled = true
     }
-  }, [groups])
+  }, [encrypted, keyB64, groups])
 
-  return state
+  if (!encrypted) return { status: 'plain', groups } as const
+  if (!keyB64) return { status: 'error' } as const
+  return asyncResult ?? ({ status: 'loading' } as const)
 }
 
 export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
@@ -260,6 +277,8 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
                   <>
                     {favicon ? (
                       <span className="h-[18px] w-[18px] flex-shrink-0 overflow-hidden rounded-xs border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 flex items-center justify-center">
+                        {/* Arbitrary remote favicon — same unbounded-domain reasoning as above. */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={favicon} alt="" className="w-3 h-3" />
                       </span>
                     ) : (

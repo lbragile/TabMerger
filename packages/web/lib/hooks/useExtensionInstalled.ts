@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { EXTENSION_ID } from '@/lib/extensionId'
 
 // ponytail: no @types/chrome dep in this package — minimal ambient shape for the
@@ -23,6 +23,19 @@ declare global {
 
 const STORAGE_KEY = 'tm_extension_installed'
 
+function subscribeToStorage(callback: () => void) {
+  window.addEventListener('storage', callback)
+  return () => window.removeEventListener('storage', callback)
+}
+
+function getPersistedInstalled(): boolean {
+  return localStorage.getItem(STORAGE_KEY) === '1'
+}
+
+function getServerPersistedInstalled(): boolean {
+  return false
+}
+
 /**
  * Detects whether the TabMerger extension is installed via two redundant signals:
  *
@@ -41,12 +54,14 @@ const STORAGE_KEY = 'tm_extension_installed'
  * visits don't depend on catching either signal again.
  */
 export function useExtensionInstalled(): boolean {
-  const [installed, setInstalled] = useState(false)
-
-  // Read localStorage after mount — direct access in useState initializer crashes SSR
-  useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY) === '1') setInstalled(true)
-  }, [])
+  // Cross-tab/cross-visit persisted flag — read safely (SSR snapshot is `false`,
+  // localStorage doesn't exist on the server) via useSyncExternalStore instead of a
+  // useState + mount effect, which is exactly the setState-in-effect cascading-render
+  // pattern the react-hooks lint rule flags.
+  const persisted = useSyncExternalStore(subscribeToStorage, getPersistedInstalled, getServerPersistedInstalled)
+  // This tab's own probe/message confirmation — genuinely async signals arriving via a
+  // callback, not a synchronous setState-in-effect (see PING/PONG and postMessage below).
+  const [confirmed, setConfirmed] = useState(false)
 
   useEffect(() => {
     const runtime = typeof chrome === 'undefined' ? undefined : chrome.runtime
@@ -57,7 +72,7 @@ export function useExtensionInstalled(): boolean {
       if (runtime.lastError) return
       if (response?.type === 'PONG') {
         localStorage.setItem(STORAGE_KEY, '1')
-        setInstalled(true)
+        setConfirmed(true)
       }
     })
   }, [])
@@ -70,12 +85,12 @@ export function useExtensionInstalled(): boolean {
         e.data?.type === 'INSTALLED'
       ) {
         localStorage.setItem(STORAGE_KEY, '1')
-        setInstalled(true)
+        setConfirmed(true)
       }
     }
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
   }, [])
 
-  return installed
+  return persisted || confirmed
 }

@@ -20,7 +20,6 @@ describe('scrubEvent', () => {
       breadcrumbs: [{ data: { url: 'https://example.com/a', from: '/a', to: '/b' } }],
     } as unknown as ErrorEvent
     const result = scrubEvent(event)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const bc = (result?.breadcrumbs as any)[0]
     expect(bc.data).toEqual({ url: '[redacted]', from: '[redacted]', to: '[redacted]' })
   })
@@ -28,7 +27,6 @@ describe('scrubEvent', () => {
   it('leaves breadcrumbs without data untouched', () => {
     const event = { breadcrumbs: [{ message: 'clicked' }] } as unknown as ErrorEvent
     const result = scrubEvent(event)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((result?.breadcrumbs as any)[0].data).toBeUndefined()
   })
 
