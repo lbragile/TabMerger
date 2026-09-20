@@ -58,9 +58,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-chrome-beta
-          # Globbed, not interpolated: the beta artifactTemplate embeds the MAPPED
-          # manifest version (3.1.0.2), not the tag string (3.1.0-beta.2).
-          path: packages/extension/.output/tabmerger-beta-*-chrome.zip
+          # Leading wildcard is load-bearing. WXT derives {{name}} in its
+          # artifactTemplate from the PACKAGE name (@tabmerger/extension), stripped
+          # to "tabmergerextension" — not "tabmerger". Every path here was written
+          # against the wrong prefix and found nothing; `if-no-files-found: error`
+          # is what surfaced it.
+          # {{version}} also renders the RAW semver (3.1.0-beta.1), not the mapped
+          # MV3 manifest version (3.1.0.1), so the real filename is
+          # tabmergerextension-beta-3.1.0-beta.1-chrome.zip. Globbed rather than
+          # interpolated so a package rename cannot silently break this again.
+          path: packages/extension/.output/*-beta-*-chrome.zip
           if-no-files-found: error
 
       # ── stable → all three stores ──────────────────────────────────────────────
@@ -87,7 +94,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-chrome
-          path: packages/extension/.output/tabmerger-${{ steps.version.outputs.version }}-chrome.zip
+          path: packages/extension/.output/*-${{ steps.version.outputs.version }}-chrome.zip
           if-no-files-found: error
 
       - name: Upload Firefox artifact
@@ -95,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-firefox
-          path: packages/extension/.output/tabmerger-${{ steps.version.outputs.version }}-firefox.zip
+          path: packages/extension/.output/*-${{ steps.version.outputs.version }}-firefox.zip
           if-no-files-found: error
 
       - name: Upload Edge artifact
@@ -103,7 +110,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-edge
-          path: packages/extension/.output/tabmerger-${{ steps.version.outputs.version }}-edge.zip
+          path: packages/extension/.output/*-${{ steps.version.outputs.version }}-edge.zip
           if-no-files-found: error
 
   # Beta goes all the way to PUBLISHED with no human step: it is a SEPARATE CWS
@@ -132,7 +139,7 @@ jobs:
         # passing `upload` here would upload and never publish, silently.
         run: |
           pnpm dlx chrome-webstore-upload-cli \
-            --source tabmerger-beta-*-chrome.zip \
+            --source *-beta-*-chrome.zip \
             --extension-id ${{ secrets.CHROME_BETA_EXTENSION_ID }}
 
   publish-chrome:
@@ -156,7 +163,7 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
         run: |
           pnpm dlx chrome-webstore-upload-cli upload \
-            --source tabmerger-*-chrome.zip \
+            --source *-chrome.zip \
             --extension-id ${{ secrets.CHROME_EXTENSION_ID }}
 
   # Beta is CHROME-ONLY. Firefox self-distributes unlisted builds through a
@@ -175,7 +182,7 @@ jobs:
       - name: Extract Firefox zip
         run: |
           mkdir -p firefox-src
-          unzip tabmerger-*-firefox.zip -d firefox-src
+          unzip *-firefox.zip -d firefox-src
 
       - name: Sign and submit to Firefox Add-ons
         run: |
@@ -202,7 +209,7 @@ jobs:
             "https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}/submissions/draft/package" \
             -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}" \
             -H "Content-Type: application/zip" \
-            --data-binary @tabmerger-*-edge.zip)
+            --data-binary @$(ls *-edge.zip))
           echo "Upload response: $UPLOAD_RESPONSE"
 
       - name: Submit for review
@@ -252,7 +259,7 @@ jobs:
       - name: Attach zips to GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.ref_name }} tabmerger-*.zip
+        run: gh release upload ${{ github.ref_name }} *.zip
 
       - name: Attach demo/marketing assets to release (best-effort)
         env:
