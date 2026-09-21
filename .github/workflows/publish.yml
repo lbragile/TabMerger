@@ -87,6 +87,11 @@ jobs:
           # tabmergerextension-beta-3.1.0-beta.1-chrome.zip. Globbed rather than
           # interpolated so a package rename cannot silently break this again.
           path: packages/extension/.output/*-beta-*-chrome.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
       # ── stable → all three stores ──────────────────────────────────────────────
@@ -114,6 +119,11 @@ jobs:
         with:
           name: tabmerger-chrome
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-chrome.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
       - name: Upload Firefox artifact
@@ -122,6 +132,11 @@ jobs:
         with:
           name: tabmerger-firefox
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-firefox.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
       - name: Upload Edge artifact
@@ -130,6 +145,11 @@ jobs:
         with:
           name: tabmerger-edge
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-edge.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
   # Beta goes all the way to PUBLISHED with no human step: it is a SEPARATE CWS

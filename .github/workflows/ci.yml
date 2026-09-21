@@ -360,6 +360,11 @@ jobs:
         with:
           name: extension-bundle
           path: packages/extension/.output/chrome-mv3/
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           retention-days: 7
 
   build-web:
