@@ -1,3 +1,12 @@
+# [3.1.0-beta.2](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.1...v3.1.0-beta.2) (2026-09-21)
+
+
+### Bug Fixes
+
+* **ci:** give the release checkout the PAT instead of stripping credentials ([c439976](https://github.com/lbragile/TabMerger/commit/c43997604324f52ce0d8bef8f237160268897854))
+* **ci:** match the zip filenames WXT actually produces ([94c2b1a](https://github.com/lbragile/TabMerger/commit/94c2b1a9028bc7a75859087ef4da4de5a9aa6107))
+* **ci:** release with a PAT so publish.yml actually triggers ([d122ab8](https://github.com/lbragile/TabMerger/commit/d122ab8201154029c53c394069baa55fc306ab79))
+
 # [3.1.0-beta.1](https://github.com/lbragile/TabMerger/compare/v3.0.0...v3.1.0-beta.1) (2026-09-20)
 
 
