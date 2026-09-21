@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload } from '../helpers';
+import { openPopup, seedAndReload, startFixtureServer } from '../helpers';
 import { NOW_OPEN, SAVED_GROUP, ANOTHER_GROUP } from '../seed';
 
 test.describe('Core — sidebar and basic invariants', () => {
@@ -107,44 +107,88 @@ test.describe('Core — sidebar and basic invariants', () => {
   });
 
   test('URL rule auto-assigns a new tab to the matching group', async ({ context, extensionId }) => {
-    // Loads a real external page — give it more headroom than the default 30s.
-    test.setTimeout(60_000);
-    const page = await openPopup(context, extensionId);
+    // Two popup opens (seed, then verify) plus polling headroom for the background
+    // write push this past the default 30s test timeout even without any real network call.
+    test.setTimeout(45_000);
+    // A real loopback server, not `context.route()`/`page.route()` — request interception
+    // at the CDP level was tried here and made the background worker stop seeing the tab
+    // as a normal navigation (chrome.tabs.onUpdated with status:'complete' never fired
+    // reliably), which broke this test even locally. A genuine TCP navigation avoids that
+    // while still not depending on the public internet.
+    const fixture = await startFixtureServer('torvalds/linux — fixture repo page');
+    try {
+      const RULE_GROUP = {
+        id: 'githubgroup1',
+        name: 'Rule Match',
+        color: 'rgba(59,130,246,1)',
+        windows: [{ id: 10, incognito: false, focused: false, tabs: [] }],
+      };
 
-    const GITHUB_GROUP = {
-      id: 'githubgroup1',
-      name: 'GitHub',
-      color: 'rgba(59,130,246,1)',
-      windows: [{ id: 10, incognito: false, focused: false, tabs: [] }],
-    };
-    await seedAndReload(page, [NOW_OPEN, GITHUB_GROUP]);
+      // Seed via a short-lived popup page, then CLOSE it before triggering the real
+      // navigation. Keeping the popup open here would leave its useCurrentTabs hook
+      // listening to the SAME chrome.tabs.onUpdated events as the background worker's
+      // applyUrlRule and racing it — both do a read-modify-write of the FULL GroupsState,
+      // and the write-serialization in localDb.ts is per-JS-context, so it does NOT
+      // protect a popup write against a background write (this is a real, documented,
+      // pre-existing bug — not something this test should paper over by retrying).
+      // Closing the popup before the tab opens matches the equally-common real usage of
+      // this feature (a URL rule firing while the toolbar popup isn't open) and sidesteps
+      // the race entirely instead of masking it.
+      const seedPage = await openPopup(context, extensionId);
+      await seedAndReload(seedPage, [NOW_OPEN, RULE_GROUP]);
 
-    await page.evaluate(() => {
-      return new Promise<void>((resolve, reject) => {
-        const open = indexedDB.open('tabmerger', 1);
-        open.onsuccess = () => {
-          const db = open.result;
-          const tx = db.transaction('settings', 'readwrite');
-          // settings store uses an inline keyPath ('id') — value must carry its own
-          // id field, matching localDb.ts's setSetting shape { id, value }.
-          tx.objectStore('settings').put({
-            id: 'urlRules',
-            value: [{ id: 'rule-1', pattern: 'github.com/*', groupId: 'githubgroup1', createdAt: Date.now() }],
-          });
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => reject(tx.error);
-        };
-      });
-    });
+      const host = new URL(fixture.url).host;
+      await seedPage.evaluate((h) => {
+        return new Promise<void>((resolve, reject) => {
+          const open = indexedDB.open('tabmerger', 1);
+          open.onsuccess = () => {
+            const db = open.result;
+            const tx = db.transaction('settings', 'readwrite');
+            // settings store uses an inline keyPath ('id') — value must carry its own
+            // id field, matching localDb.ts's setSetting shape { id, value }.
+            // Pattern matcher only supports a single `*` glob, wildcarded past the fixed
+            // 127.0.0.1 prefix since the port changes every run.
+            tx.objectStore('settings').put({
+              id: 'urlRules',
+              value: [{ id: 'rule-1', pattern: `${h}/*`, groupId: 'githubgroup1', createdAt: Date.now() }],
+            });
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
+          };
+        });
+      }, host);
+      await seedPage.close();
 
-    const newTab = await context.newPage();
-    await newTab.goto('https://github.com/torvalds/linux', { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await newTab.waitForTimeout(1500);
+      const newTab = await context.newPage();
+      await newTab.goto(`${fixture.url}/torvalds/linux`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
 
-    await page.reload();
-    await page.getByRole('button', { name: 'GitHub', exact: true }).click();
-    await expect(page.getByText(/torvalds|linux/i).first()).toBeVisible();
+      // Wait on the real synchronization point — the background worker's applyUrlRule
+      // write landing in IndexedDB — instead of a fixed sleep guessing how long that
+      // takes. Read through the service worker (not a popup page) so this check itself
+      // doesn't mount another useCurrentTabs listener while we're waiting.
+      let [sw] = context.serviceWorkers();
+      if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
+      await expect.poll(async () => {
+        return sw.evaluate((groupId) => new Promise<number>((resolve) => {
+          const open = indexedDB.open('tabmerger', 1);
+          open.onsuccess = () => {
+            const db = open.result;
+            const tx = db.transaction('groups', 'readonly');
+            tx.objectStore('groups').get(groupId).onsuccess = (e) => {
+              const g = (e.target as IDBRequest).result;
+              resolve(g?.windows?.[0]?.tabs?.length ?? 0);
+            };
+          };
+        }), 'githubgroup1');
+      }, { timeout: 15_000, message: 'waiting for applyUrlRule to persist the matched tab to IndexedDB' }).toBeGreaterThan(0);
 
-    await newTab.close();
+      const page = await openPopup(context, extensionId);
+      await page.getByRole('button', { name: 'Rule Match', exact: true }).click();
+      await expect(page.getByText(/torvalds|linux/i).first()).toBeVisible();
+
+      await newTab.close();
+    } finally {
+      await fixture.close();
+    }
   });
 });
