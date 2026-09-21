@@ -103,16 +103,32 @@ export async function seedAndReload(
 export async function startFixtureServer(title: string): Promise<{ url: string; close: () => Promise<void> }> {
   return new Promise((resolve, reject) => {
     const server = http.createServer((_req, res) => {
-      res.writeHead(200, { 'Content-Type': 'text/html' });
+      // Without this, Chrome keeps the connection alive (HTTP keep-alive) well past the
+      // single request — `server.close()` then hangs indefinitely waiting for that socket
+      // to end on its own, which silently wedged this test's cleanup for the full test
+      // timeout with no error surfaced. Forcing `Connection: close` makes Chrome drop the
+      // socket right after this response.
+      res.writeHead(200, { 'Content-Type': 'text/html', Connection: 'close' });
       res.end(`<!doctype html><html><head><title>${title}</title></head><body>${title}</body></html>`);
     });
     server.once('error', reject);
+    // Belt-and-braces alongside `Connection: close` above: track every socket and destroy
+    // whatever's still open when `close()` is called, so a client that ignores the header
+    // (or a request still in flight) can never wedge teardown either.
+    const sockets = new Set<import('node:net').Socket>();
+    server.on('connection', (socket) => {
+      sockets.add(socket);
+      socket.on('close', () => sockets.delete(socket));
+    });
     server.listen(0, '127.0.0.1', () => {
       const address = server.address() as AddressInfo | null;
       if (!address) { reject(new Error('fixture server failed to bind')); return; }
       resolve({
         url: `http://127.0.0.1:${address.port}`,
-        close: () => new Promise<void>((res) => server.close(() => res())),
+        close: () => new Promise<void>((res) => {
+          server.close(() => res());
+          sockets.forEach((s) => s.destroy());
+        }),
       });
     });
   });

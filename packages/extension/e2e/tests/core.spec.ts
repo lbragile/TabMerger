@@ -165,21 +165,37 @@ test.describe('Core — sidebar and basic invariants', () => {
       // Wait on the real synchronization point — the background worker's applyUrlRule
       // write landing in IndexedDB — instead of a fixed sleep guessing how long that
       // takes. Read through the service worker (not a popup page) so this check itself
-      // doesn't mount another useCurrentTabs listener while we're waiting.
-      let [sw] = context.serviceWorkers();
-      if (!sw) sw = await context.waitForEvent('serviceworker', { timeout: 10_000 });
+      // doesn't mount another useCurrentTabs listener while we're waiting. Re-fetch the
+      // worker on every attempt (not once, up front): MV3 service workers get discarded
+      // and respawned on their own schedule, and `.evaluate()` on a since-terminated
+      // `Worker` handle from Playwright hangs forever instead of rejecting — the first
+      // poll attempt would wedge the whole `expect.poll` if the worker it grabbed died
+      // in the gap between the `newTab.goto` and the read.
+      const currentSw = async () => {
+        let [w] = context.serviceWorkers();
+        if (!w) w = await context.waitForEvent('serviceworker', { timeout: 5_000 });
+        return w;
+      };
       await expect.poll(async () => {
-        return sw.evaluate((groupId) => new Promise<number>((resolve) => {
-          const open = indexedDB.open('tabmerger', 1);
-          open.onsuccess = () => {
-            const db = open.result;
-            const tx = db.transaction('groups', 'readonly');
-            tx.objectStore('groups').get(groupId).onsuccess = (e) => {
-              const g = (e.target as IDBRequest).result;
-              resolve(g?.windows?.[0]?.tabs?.length ?? 0);
+        const sw = await currentSw();
+        // A short per-attempt race, not just the outer expect.poll timeout: if THIS
+        // particular worker handle dies mid-`.evaluate()`, the call hangs rather than
+        // rejecting, and without this race that would wedge the whole poll on one dead
+        // handle instead of retrying with a freshly-fetched worker next tick.
+        return Promise.race([
+          sw.evaluate((groupId) => new Promise<number>((resolve) => {
+            const open = indexedDB.open('tabmerger', 1);
+            open.onsuccess = () => {
+              const db = open.result;
+              const tx = db.transaction('groups', 'readonly');
+              tx.objectStore('groups').get(groupId).onsuccess = (e) => {
+                const g = (e.target as IDBRequest).result;
+                resolve(g?.windows?.[0]?.tabs?.length ?? 0);
+              };
             };
-          };
-        }), 'githubgroup1');
+          }), 'githubgroup1'),
+          new Promise<number>((resolve) => setTimeout(() => resolve(0), 2_000)),
+        ]);
       }, { timeout: 15_000, message: 'waiting for applyUrlRule to persist the matched tab to IndexedDB' }).toBeGreaterThan(0);
 
       const page = await openPopup(context, extensionId);
