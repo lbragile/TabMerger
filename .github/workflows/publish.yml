@@ -165,6 +165,90 @@ jobs:
         with:
           name: tabmerger-chrome-beta
 
+      # The store allows ONE in-flight submission per item. While one is pending
+      # review the package slot is locked — the dashboard greys out "Upload new
+      # package" — so an automated beta push lands on a locked item and fails.
+      #
+      # Newest-build-wins is the right policy for a beta channel, so withdraw the
+      # pending submission first. Neither the CLI nor chrome-webstore-upload
+      # exposes this, so it is a raw v2 call.
+      #
+      # COST, deliberately accepted: cancelling sends the next submission to the
+      # BACK of the review queue. Betas landing faster than review completes
+      # would mean nothing ever reaches testers. Fine at the current cadence;
+      # revisit if beta pushes get frequent.
+      - name: Cancel any in-flight beta submission
+        # Best-effort ONLY. A failure here means "nothing to cancel" or a
+        # response shape we did not predict — neither should stop the release.
+        # This tolerance must not be extended to the upload step below, which is
+        # the real gate and has to fail loudly.
+        continue-on-error: true
+        env:
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          EXTENSION_ID: ${{ secrets.CHROME_BETA_EXTENSION_ID }}
+        run: |
+          cat > cancel.mjs <<'EOF'
+          const { CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, PUBLISHER_ID, EXTENSION_ID } = process.env;
+          const base = `https://chromewebstore.googleapis.com/v2/publishers/${PUBLISHER_ID}/items/${EXTENSION_ID}`;
+
+          const res = await fetch('https://www.googleapis.com/oauth2/v4/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              client_id: CLIENT_ID,
+              client_secret: CLIENT_SECRET,
+              refresh_token: REFRESH_TOKEN,
+              grant_type: 'refresh_token',
+            }),
+          });
+          const { access_token: token } = await res.json();
+          if (!token) {
+            console.log('Could not fetch a token; leaving the upload step to report why.');
+            process.exit(0);
+          }
+          const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+          const status = async () => {
+            const r = await fetch(`${base}:fetchStatus`, { headers: auth });
+            return r.ok ? r.json() : null;
+          };
+
+          const before = await status();
+          // `submittedItemRevisionStatus` is present only while a revision is in
+          // flight. Guarding on it means a normal run (nothing pending) makes one
+          // read call and stops, instead of firing a cancel at every release.
+          if (!before?.submittedItemRevisionStatus) {
+            console.log('No in-flight submission — nothing to cancel.');
+            process.exit(0);
+          }
+          console.log(`In-flight submission state: ${before.submittedItemRevisionStatus.state ?? 'unknown'} — cancelling.`);
+
+          const cancelled = await fetch(`${base}:cancelSubmission`, { method: 'POST', headers: auth });
+          console.log(`cancelSubmission -> HTTP ${cancelled.status}`);
+          if (!cancelled.ok) {
+            console.log(await cancelled.text());
+            process.exit(0);
+          }
+
+          // Cancellation is not guaranteed to be visible the instant it returns,
+          // and uploading into a slot the store still considers locked would
+          // fail for a reason that looks nothing like the real cause. Poll until
+          // the submitted revision actually clears.
+          for (let i = 0; i < 10; i++) {
+            await new Promise((r) => setTimeout(r, 3000));
+            const now = await status();
+            if (!now?.submittedItemRevisionStatus) {
+              console.log('Submission cleared.');
+              process.exit(0);
+            }
+          }
+          console.log('Still showing a submitted revision after 30s; continuing anyway.');
+          EOF
+          node cancel.mjs
+
       - name: Upload and publish to the beta listing
         # chrome-webstore-upload-cli v4: credentials come from the environment.
         # The --client-id/--client-secret/--refresh-token FLAGS now throw a hard
