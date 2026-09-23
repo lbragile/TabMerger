@@ -1,4 +1,6 @@
 import { type BrowserContext, type Page } from '@playwright/test';
+import http from 'node:http';
+import type { AddressInfo } from 'node:net';
 
 /** Open the extension popup as a regular page (bypasses the 800×600 popup constraint). */
 export async function openPopup(context: BrowserContext, extensionId: string): Promise<Page> {
@@ -87,4 +89,47 @@ export async function seedAndReload(
 ): Promise<void> {
   await seedIdb(page, groups);
   await page.reload({ waitUntil: 'networkidle' });
+}
+
+/**
+ * Spins up a real loopback HTTP server serving a single HTML page with the given
+ * `<title>` for every path. Used instead of navigating to a real external site
+ * (e.g. github.com) so URL-rule / real-navigation tests don't depend on the public
+ * internet in CI — a genuine TCP navigation (not a Playwright `route.fulfill` stub)
+ * is required for the background service worker to see normal `chrome.tabs.onUpdated`
+ * lifecycle events; routing/intercepting the request at the CDP level was tried and
+ * broke that lifecycle (see core.spec.ts's URL-rule test comment).
+ */
+export async function startFixtureServer(title: string): Promise<{ url: string; close: () => Promise<void> }> {
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((_req, res) => {
+      // Without this, Chrome keeps the connection alive (HTTP keep-alive) well past the
+      // single request — `server.close()` then hangs indefinitely waiting for that socket
+      // to end on its own, which silently wedged this test's cleanup for the full test
+      // timeout with no error surfaced. Forcing `Connection: close` makes Chrome drop the
+      // socket right after this response.
+      res.writeHead(200, { 'Content-Type': 'text/html', Connection: 'close' });
+      res.end(`<!doctype html><html><head><title>${title}</title></head><body>${title}</body></html>`);
+    });
+    server.once('error', reject);
+    // Belt-and-braces alongside `Connection: close` above: track every socket and destroy
+    // whatever's still open when `close()` is called, so a client that ignores the header
+    // (or a request still in flight) can never wedge teardown either.
+    const sockets = new Set<import('node:net').Socket>();
+    server.on('connection', (socket) => {
+      sockets.add(socket);
+      socket.on('close', () => sockets.delete(socket));
+    });
+    server.listen(0, '127.0.0.1', () => {
+      const address = server.address() as AddressInfo | null;
+      if (!address) { reject(new Error('fixture server failed to bind')); return; }
+      resolve({
+        url: `http://127.0.0.1:${address.port}`,
+        close: () => new Promise<void>((res) => {
+          server.close(() => res());
+          sockets.forEach((s) => s.destroy());
+        }),
+      });
+    });
+  });
 }

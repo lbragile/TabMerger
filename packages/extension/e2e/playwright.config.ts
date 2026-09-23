@@ -8,8 +8,9 @@ export default defineConfig({
     ['html', { outputFolder: './playwright-report', open: 'never' }],
   ],
   timeout: 30_000,
-  // One retry — the URL-rule test navigates a real external page (github.com) inside the
-  // persistent context, which occasionally races with Now Open's live-tab sync.
+  // One retry — general safety margin for CI runner slowness/contention (the URL-rule
+  // test used to depend on a real external page; it now uses a local loopback fixture
+  // server instead, see core.spec.ts).
   retries: 1,
   use: {
     viewport: { width: 800, height: 600 },

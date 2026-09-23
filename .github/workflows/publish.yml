@@ -3,6 +3,19 @@ name: Publish to Stores
 on:
   release:
     types: [published]
+  # Manual escape hatch. A `release` event can fail to start this workflow for
+  # reasons that leave NO trace anywhere — GitHub suppresses triggers for events
+  # created by the built-in GITHUB_TOKEN, and nothing is logged when it does. This
+  # lets an already-tagged version be published without re-cutting a release.
+  #
+  # BETA ONLY, deliberately: the stable jobs below require a real `release` event,
+  # so a manual run can never reach the production listing by accident.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish to the BETA listing (e.g. v3.1.0-beta.2)"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -12,6 +25,10 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # On a release event GITHUB_REF is already the tag; on a manual run it is
+          # the default branch, so the tag has to be checked out explicitly.
+          ref: ${{ inputs.tag || github.ref }}
 
       - uses: pnpm/action-setup@v4
 
@@ -29,7 +46,9 @@ jobs:
       # and must not be trusted here.
       - name: Extract version from tag
         id: version
-        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
 
       # `wxt zip` reads this and maps it through scripts/manifestVersion.ts:
       #   3.1.0        -> version 3.1.0
@@ -41,7 +60,7 @@ jobs:
 
       # ── prerelease → the BETA listing only (separate CWS item, renamed build) ──
       - name: Build and zip Chrome BETA (MV3)
-        if: github.event.release.prerelease
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: https://tabmerger.vercel.app
@@ -54,7 +73,7 @@ jobs:
         run: pnpm wxt zip -b chrome --mode beta
 
       - name: Upload Chrome BETA artifact
-        if: github.event.release.prerelease
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-chrome-beta
@@ -68,11 +87,16 @@ jobs:
           # tabmergerextension-beta-3.1.0-beta.1-chrome.zip. Globbed rather than
           # interpolated so a package rename cannot silently break this again.
           path: packages/extension/.output/*-beta-*-chrome.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
       # ── stable → all three stores ──────────────────────────────────────────────
       - name: Build and zip Chrome (MV3)
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         working-directory: packages/extension
         env:
           VITE_WEB_APP_URL: https://tabmerger.vercel.app
@@ -80,37 +104,52 @@ jobs:
         run: pnpm wxt zip
 
       - name: Build and zip Firefox
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         working-directory: packages/extension
         run: pnpm wxt zip -b firefox
 
       - name: Build and zip Edge
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         working-directory: packages/extension
         run: pnpm wxt zip -b edge
 
       - name: Upload Chrome artifact
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-chrome
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-chrome.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
       - name: Upload Firefox artifact
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-firefox
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-firefox.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
       - name: Upload Edge artifact
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         uses: actions/upload-artifact@v4
         with:
           name: tabmerger-edge
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-edge.zip
+          # .output is a DOT directory, and upload-artifact v4.4+ excludes hidden
+          # files and anything inside dot-directories by default. Without this the
+          # glob matches and the file is then silently filtered out, reported as
+          # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
           if-no-files-found: error
 
   # Beta goes all the way to PUBLISHED with no human step: it is a SEPARATE CWS
@@ -119,12 +158,96 @@ jobs:
   publish-chrome-beta:
     name: Publish to Chrome Web Store (BETA)
     needs: build
-    if: github.event.release.prerelease
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: tabmerger-chrome-beta
+
+      # The store allows ONE in-flight submission per item. While one is pending
+      # review the package slot is locked — the dashboard greys out "Upload new
+      # package" — so an automated beta push lands on a locked item and fails.
+      #
+      # Newest-build-wins is the right policy for a beta channel, so withdraw the
+      # pending submission first. Neither the CLI nor chrome-webstore-upload
+      # exposes this, so it is a raw v2 call.
+      #
+      # COST, deliberately accepted: cancelling sends the next submission to the
+      # BACK of the review queue. Betas landing faster than review completes
+      # would mean nothing ever reaches testers. Fine at the current cadence;
+      # revisit if beta pushes get frequent.
+      - name: Cancel any in-flight beta submission
+        # Best-effort ONLY. A failure here means "nothing to cancel" or a
+        # response shape we did not predict — neither should stop the release.
+        # This tolerance must not be extended to the upload step below, which is
+        # the real gate and has to fail loudly.
+        continue-on-error: true
+        env:
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          EXTENSION_ID: ${{ secrets.CHROME_BETA_EXTENSION_ID }}
+        run: |
+          cat > cancel.mjs <<'EOF'
+          const { CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, PUBLISHER_ID, EXTENSION_ID } = process.env;
+          const base = `https://chromewebstore.googleapis.com/v2/publishers/${PUBLISHER_ID}/items/${EXTENSION_ID}`;
+
+          const res = await fetch('https://www.googleapis.com/oauth2/v4/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              client_id: CLIENT_ID,
+              client_secret: CLIENT_SECRET,
+              refresh_token: REFRESH_TOKEN,
+              grant_type: 'refresh_token',
+            }),
+          });
+          const { access_token: token } = await res.json();
+          if (!token) {
+            console.log('Could not fetch a token; leaving the upload step to report why.');
+            process.exit(0);
+          }
+          const auth = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+          const status = async () => {
+            const r = await fetch(`${base}:fetchStatus`, { headers: auth });
+            return r.ok ? r.json() : null;
+          };
+
+          const before = await status();
+          // `submittedItemRevisionStatus` is present only while a revision is in
+          // flight. Guarding on it means a normal run (nothing pending) makes one
+          // read call and stops, instead of firing a cancel at every release.
+          if (!before?.submittedItemRevisionStatus) {
+            console.log('No in-flight submission — nothing to cancel.');
+            process.exit(0);
+          }
+          console.log(`In-flight submission state: ${before.submittedItemRevisionStatus.state ?? 'unknown'} — cancelling.`);
+
+          const cancelled = await fetch(`${base}:cancelSubmission`, { method: 'POST', headers: auth });
+          console.log(`cancelSubmission -> HTTP ${cancelled.status}`);
+          if (!cancelled.ok) {
+            console.log(await cancelled.text());
+            process.exit(0);
+          }
+
+          // Cancellation is not guaranteed to be visible the instant it returns,
+          // and uploading into a slot the store still considers locked would
+          // fail for a reason that looks nothing like the real cause. Poll until
+          // the submitted revision actually clears.
+          for (let i = 0; i < 10; i++) {
+            await new Promise((r) => setTimeout(r, 3000));
+            const now = await status();
+            if (!now?.submittedItemRevisionStatus) {
+              console.log('Submission cleared.');
+              process.exit(0);
+            }
+          }
+          console.log('Still showing a submitted revision after 30s; continuing anyway.');
+          EOF
+          node cancel.mjs
 
       - name: Upload and publish to the beta listing
         # chrome-webstore-upload-cli v4: credentials come from the environment.
@@ -134,18 +257,34 @@ jobs:
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          # Required since chrome-webstore-upload v6 (what cli@4 depends on),
+          # which moved to Chrome Web Store API v2. Every v2 endpoint is
+          # publishers/{publisherId}/items/{extensionId}, so the publisher is
+          # part of the resource name and can no longer be inferred from the
+          # extension ID. It is the DEVELOPER ACCOUNT id — the segment after
+          # /devconsole/ in the dashboard URL — not an extension id, and it is
+          # the same value for the beta and stable items.
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
         # NO subcommand — that is what "auto publish" means in this CLI
         # (config.js: `autoPublish: !command`). There is no --auto-publish flag;
         # passing `upload` here would upload and never publish, silently.
         run: |
-          pnpm dlx chrome-webstore-upload-cli \
+          # npx, not `pnpm dlx`: this job has no checkout and no pnpm setup.
+          # Only the `build` job runs pnpm/action-setup, and every job gets its
+          # own runner, so nothing carries over — `pnpm dlx` here exits 127.
+          # npx comes with the runner's preinstalled Node, and adding
+          # setup-node with `cache: pnpm` is not an option: there is no
+          # lockfile on this runner to cache against.
+          # Pinned to @4 deliberately — the env-var credentials above and the
+          # no-subcommand auto-publish below are both v4 semantics.
+          npx --yes chrome-webstore-upload-cli@4 \
             --source *-beta-*-chrome.zip \
             --extension-id ${{ secrets.CHROME_BETA_EXTENSION_ID }}
 
   publish-chrome:
     name: Publish to Chrome Web Store
     needs: build
-    if: ${{ !github.event.release.prerelease }}
+    if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -161,8 +300,12 @@ jobs:
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          # Same developer account as the beta item — see the beta job for why
+          # this is required at all.
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
         run: |
-          pnpm dlx chrome-webstore-upload-cli upload \
+          # npx + the @4 pin — same reasons as the beta job above.
+          npx --yes chrome-webstore-upload-cli@4 upload \
             --source *-chrome.zip \
             --extension-id ${{ secrets.CHROME_EXTENSION_ID }}
 
@@ -172,7 +315,7 @@ jobs:
   publish-firefox:
     name: Publish to Firefox Add-ons
     needs: build
-    if: ${{ !github.event.release.prerelease }}
+    if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -186,7 +329,8 @@ jobs:
 
       - name: Sign and submit to Firefox Add-ons
         run: |
-          pnpm dlx web-ext sign \
+          # npx, not `pnpm dlx` — no pnpm on this runner either, see the beta job.
+          npx --yes web-ext sign \
             --source-dir firefox-src \
             --artifacts-dir artifacts \
             --api-key ${{ secrets.FIREFOX_API_KEY }} \
@@ -196,7 +340,7 @@ jobs:
   publish-edge:
     name: Publish to Edge Add-ons
     needs: build
-    if: ${{ !github.event.release.prerelease }}
+    if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -237,29 +381,29 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v4
-        if: github.event.release.prerelease
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
         with:
           name: tabmerger-chrome-beta
 
       - uses: actions/download-artifact@v4
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-chrome
 
       - uses: actions/download-artifact@v4
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-firefox
 
       - uses: actions/download-artifact@v4
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-edge
 
       - name: Attach zips to GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.ref_name }} *.zip
+        run: gh release upload ${{ inputs.tag || github.ref_name }} *.zip
 
       - name: Attach demo/marketing assets to release (best-effort)
         env:
@@ -278,5 +422,5 @@ jobs:
           if [ ${#ASSETS[@]} -eq 0 ]; then
             echo "No committed demo/marketing assets found — skipping."
           else
-            gh release upload ${{ github.ref_name }} "${ASSETS[@]}"
+            gh release upload ${{ inputs.tag || github.ref_name }} "${ASSETS[@]}"
           fi

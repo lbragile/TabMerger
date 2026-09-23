@@ -61,7 +61,14 @@ test.describe('Tab management', () => {
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Enter');
 
-    await expect(page.getByRole('listitem', { name: 'Jira Board' })).toBeVisible();
+    // Wait on the real synchronization point — commitTitle exiting edit mode — before
+    // checking the row's accessible name. The row's `aria-label` is bound to `tab` and
+    // is unconditional on edit mode, so on its own `getByRole('listitem', ...)` doesn't
+    // actually prove the commit landed; waiting for the input to unmount does, and gives
+    // the CI-slow case a real condition to retry on instead of racing a single 5s poll
+    // against however long React + the IndexedDB write take to settle under contention.
+    await expect(page.getByRole('textbox')).not.toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole('listitem', { name: 'Jira Board' })).toBeVisible({ timeout: 10_000 });
   });
 
   test('tab custom title persists after popup reload', async ({ context, extensionId }) => {
