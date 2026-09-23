@@ -177,7 +177,15 @@ jobs:
         # (config.js: `autoPublish: !command`). There is no --auto-publish flag;
         # passing `upload` here would upload and never publish, silently.
         run: |
-          pnpm dlx chrome-webstore-upload-cli \
+          # npx, not `pnpm dlx`: this job has no checkout and no pnpm setup.
+          # Only the `build` job runs pnpm/action-setup, and every job gets its
+          # own runner, so nothing carries over — `pnpm dlx` here exits 127.
+          # npx comes with the runner's preinstalled Node, and adding
+          # setup-node with `cache: pnpm` is not an option: there is no
+          # lockfile on this runner to cache against.
+          # Pinned to @4 deliberately — the env-var credentials above and the
+          # no-subcommand auto-publish below are both v4 semantics.
+          npx --yes chrome-webstore-upload-cli@4 \
             --source *-beta-*-chrome.zip \
             --extension-id ${{ secrets.CHROME_BETA_EXTENSION_ID }}
 
@@ -201,7 +209,8 @@ jobs:
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
         run: |
-          pnpm dlx chrome-webstore-upload-cli upload \
+          # npx + the @4 pin — same reasons as the beta job above.
+          npx --yes chrome-webstore-upload-cli@4 upload \
             --source *-chrome.zip \
             --extension-id ${{ secrets.CHROME_EXTENSION_ID }}
 
@@ -225,7 +234,8 @@ jobs:
 
       - name: Sign and submit to Firefox Add-ons
         run: |
-          pnpm dlx web-ext sign \
+          # npx, not `pnpm dlx` — no pnpm on this runner either, see the beta job.
+          npx --yes web-ext sign \
             --source-dir firefox-src \
             --artifacts-dir artifacts \
             --api-key ${{ secrets.FIREFOX_API_KEY }} \
