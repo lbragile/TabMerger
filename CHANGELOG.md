@@ -1,3 +1,19 @@
+# [3.1.0-beta.3](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.2...v3.1.0-beta.3) (2026-09-23)
+
+
+### Bug Fixes
+
+* **ci:** install nothing — use npx in the publish jobs ([a3caeb9](https://github.com/lbragile/TabMerger/commit/a3caeb9e38d03e064f1637a43d6c3abae9bdb184))
+* **ci:** pass PUBLISHER_ID to the Chrome Web Store publish jobs ([be23033](https://github.com/lbragile/TabMerger/commit/be23033ba6184de040cd83bdd23e8624b7f50277))
+* **ci:** upload artifacts from .output, a hidden directory ([c65b286](https://github.com/lbragile/TabMerger/commit/c65b28676651f57e2a5ea5915e4388825af4a6a8))
+* **e2e:** finish the URL-rule fixture server, completing aa6c361 ([d1e649c](https://github.com/lbragile/TabMerger/commit/d1e649cdb2d65a8a6028a32e6831f83769ce445b)), closes [#4](https://github.com/lbragile/TabMerger/issues/4)
+* **release:** stop @semantic-release/github commenting on issues ([aa6c361](https://github.com/lbragile/TabMerger/commit/aa6c361ecb828874361dc14c174ecb8f8a25dc67))
+
+
+### Features
+
+* **ci:** cancel an in-flight beta submission before uploading ([a659102](https://github.com/lbragile/TabMerger/commit/a65910264377698f1db061ddc142ac7205385dd6))
+
 # [3.1.0-beta.2](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.1...v3.1.0-beta.2) (2026-09-21)
 
 
