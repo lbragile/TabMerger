@@ -173,6 +173,14 @@ jobs:
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          # Required since chrome-webstore-upload v6 (what cli@4 depends on),
+          # which moved to Chrome Web Store API v2. Every v2 endpoint is
+          # publishers/{publisherId}/items/{extensionId}, so the publisher is
+          # part of the resource name and can no longer be inferred from the
+          # extension ID. It is the DEVELOPER ACCOUNT id — the segment after
+          # /devconsole/ in the dashboard URL — not an extension id, and it is
+          # the same value for the beta and stable items.
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
         # NO subcommand — that is what "auto publish" means in this CLI
         # (config.js: `autoPublish: !command`). There is no --auto-publish flag;
         # passing `upload` here would upload and never publish, silently.
@@ -208,6 +216,9 @@ jobs:
           CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          # Same developer account as the beta item — see the beta job for why
+          # this is required at all.
+          PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
         run: |
           # npx + the @4 pin — same reasons as the beta job above.
           npx --yes chrome-webstore-upload-cli@4 upload \

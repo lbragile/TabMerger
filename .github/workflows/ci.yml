@@ -462,6 +462,7 @@ jobs:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           missing=()
@@ -472,7 +473,12 @@ jobs:
           else
             [ -n "$CHROME_EXTENSION_ID" ] || missing+=("CHROME_EXTENSION_ID")
           fi
-          for v in CHROME_CLIENT_ID CHROME_CLIENT_SECRET CHROME_REFRESH_TOKEN; do
+          # CHROME_PUBLISHER_ID is account-scoped like the OAuth trio, so it is
+          # needed on both branches. It became mandatory when
+          # chrome-webstore-upload-cli@4 picked up chrome-webstore-upload v6,
+          # which moved to Chrome Web Store API v2 — every v2 endpoint is
+          # publishers/{publisherId}/items/{extensionId}.
+          for v in CHROME_CLIENT_ID CHROME_CLIENT_SECRET CHROME_REFRESH_TOKEN CHROME_PUBLISHER_ID; do
             [ -n "${!v}" ] || missing+=("$v")
           done
           # Fine-grained PATs expire (a year at most). Without this check an
