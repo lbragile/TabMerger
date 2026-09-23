@@ -216,15 +216,28 @@ jobs:
             return r.ok ? r.json() : null;
           };
 
+          // Google does not publish the shape of ItemRevisionStatus, so log the whole
+          // object instead of cherry-picking field names that could silently come back
+          // `undefined` after a schema change. It is small and carries no secrets —
+          // state and version identifiers only.
+          const describe = (r) => (r ? JSON.stringify(r) : 'none');
+
           const before = await status();
           // `submittedItemRevisionStatus` is present only while a revision is in
           // flight. Guarding on it means a normal run (nothing pending) makes one
           // read call and stops, instead of firing a cancel at every release.
           if (!before?.submittedItemRevisionStatus) {
-            console.log('No in-flight submission — nothing to cancel.');
+            console.log(`No in-flight submission — nothing to cancel. Published: ${describe(before?.publishedItemRevisionStatus)}`);
             process.exit(0);
           }
-          console.log(`In-flight submission state: ${before.submittedItemRevisionStatus.state ?? 'unknown'} — cancelling.`);
+          // Log WHICH revision is being withdrawn, not just that one was. Cancelling
+          // is destructive to a review already in the queue, so the log has to be
+          // enough to reconstruct afterwards what was thrown away.
+          console.log(`Cancelling in-flight submission: ${describe(before.submittedItemRevisionStatus)}`);
+          console.log(`Currently published (unaffected): ${describe(before.publishedItemRevisionStatus)}`);
+          if (before.lastAsyncUploadState) {
+            console.log(`Last async upload state: ${before.lastAsyncUploadState}`);
+          }
 
           const cancelled = await fetch(`${base}:cancelSubmission`, { method: 'POST', headers: auth });
           console.log(`cancelSubmission -> HTTP ${cancelled.status}`);
@@ -241,11 +254,11 @@ jobs:
             await new Promise((r) => setTimeout(r, 3000));
             const now = await status();
             if (!now?.submittedItemRevisionStatus) {
-              console.log('Submission cleared.');
+              console.log(`Submission cleared — withdrew ${describe(before.submittedItemRevisionStatus)}`);
               process.exit(0);
             }
           }
-          console.log('Still showing a submitted revision after 30s; continuing anyway.');
+          console.log(`Still showing a submitted revision after 30s; continuing anyway. Tried to withdraw ${describe(before.submittedItemRevisionStatus)}`);
           EOF
           node cancel.mjs
 
