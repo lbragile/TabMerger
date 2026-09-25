@@ -81,6 +81,7 @@ vi.mock('@/hooks/useSessions', () => ({
   useSessions: () => mockUseSessionsData(),
   useDeleteSession: () => ({ mutate: mockDeleteSession }),
   useRestoreSession: () => ({ mutate: mockRestoreSession, ...mockUseRestoreSessionState() }),
+  useSaveSession: () => ({ mutateAsync: vi.fn() }),
 }))
 
 vi.mock('sonner', () => ({ toast: { error: vi.fn(), success: vi.fn() } }))
@@ -92,6 +93,7 @@ const baseUIState = {
   activeGroupIndex: 0,
   setActiveGroupIndex: mockSetActiveGroupIndex,
   setRenameTarget: vi.fn(),
+  openModal: vi.fn(),
 }
 
 function makeGroup(overrides: Partial<Group> = {}): Group {
@@ -137,10 +139,13 @@ beforeEach(() => {
 })
 
 describe('SidePanel — archived groups section', () => {
-  it('renders nothing when there are no archived groups', () => {
+  it('always shows the header (0) and an empty state when expanded, even with no archived groups', async () => {
     const groupsState = makeGroupsState([makeGroup({ permanent: true })])
+    const user = userEvent.setup()
     wrap(React.createElement(SidePanel, { groupsState }))
-    expect(screen.queryByText(/ARCHIVED/)).toBeNull()
+    expect(screen.getByText(/ARCHIVED \(0\)/)).toBeTruthy()
+    await user.click(screen.getByText(/ARCHIVED \(0\)/))
+    expect(screen.getByText('No archived groups')).toBeTruthy()
   })
 
   it('toggles the archived list open/closed and restores/deletes an archived group', async () => {
@@ -167,9 +172,17 @@ describe('SidePanel — archived groups section', () => {
 })
 
 describe('SidePanel — sessions section', () => {
-  it('renders nothing when there are no sessions', () => {
+  it('always shows the header (0) and an empty state when expanded, even with no sessions', async () => {
+    const user = userEvent.setup()
     wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ permanent: true })]) }))
-    expect(screen.queryByText(/SESSIONS/)).toBeNull()
+    expect(screen.getByText(/SESSIONS \(0\)/)).toBeTruthy()
+    await user.click(screen.getByText(/SESSIONS \(0\)/))
+    expect(screen.getByText('No saved sessions')).toBeTruthy()
+  })
+
+  it('exposes a "Save current session" action beside the sessions header', () => {
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ permanent: true })]) }))
+    expect(screen.getByRole('button', { name: /save current session/i })).toBeTruthy()
   })
 
   it('toggles sessions open, restores on confirm accept, skips on confirm reject, and deletes', async () => {

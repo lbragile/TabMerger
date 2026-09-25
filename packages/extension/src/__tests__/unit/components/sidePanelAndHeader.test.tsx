@@ -695,22 +695,22 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
   })
 })
 
-// ─── Header — save session ────────────────────────────────────────────────────
+// ─── SidePanel — save session (moved from the Header per P4, popup-ui-consolidation-spec.md) ──
 
-describe('Header — save session', () => {
+describe('SidePanel — save session', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
     mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5, sessions: false })
-    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
     mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
   })
 
-  /** Header now opens the 'saveSession' modal instead of window.prompt(); grab the onSave callback it passed. */
+  const groupsState = makeGroupsState([makeGroup({ permanent: true })])
+
+  /** SidePanel opens the 'saveSession' modal instead of window.prompt(); grab the onSave callback it passed. */
   async function clickSaveSessionAndGetOnSave() {
     const user = userEvent.setup()
-    wrap(React.createElement(Header))
-    await user.click(screen.getByRole('button', { name: /save session/i }))
+    wrap(React.createElement(SidePanel, { groupsState }))
+    await user.click(screen.getByRole('button', { name: /save current session/i }))
     expect(baseUIState.openModal).toHaveBeenCalledWith('saveSession', { onSave: expect.any(Function) })
     const [, data] = (baseUIState.openModal as ReturnType<typeof vi.fn>).mock.calls[0]
     return data.onSave as (name: string) => Promise<void>
@@ -746,6 +746,23 @@ describe('Header — save session', () => {
     const onSave = await clickSaveSessionAndGetOnSave()
     await onSave('My Session')
     expect(mockToastError).toHaveBeenCalledWith('Failed to save session')
+  })
+})
+
+// ─── Header — no longer has a save-session control (moved to SidePanel, P4) ───
+
+describe('Header — save session removed', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseAuth.mockReturnValue({ user: null, signOut: vi.fn() })
+    mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: false, maxGroups: 5, sessions: false })
+    mockUseGroupsData.mockReturnValue({ data: makeGroupsState([makeGroup({ permanent: true })]) })
+    mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) => selector(baseUIState))
+  })
+
+  it('no longer renders a "Save session" header button', () => {
+    wrap(React.createElement(Header))
+    expect(screen.queryByRole('button', { name: /save session/i })).toBeNull()
   })
 })
 
