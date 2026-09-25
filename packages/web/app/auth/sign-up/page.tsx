@@ -102,15 +102,16 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-      {/* Left — auth form, conversion moment */}
-      <div className="flex flex-col p-6 sm:p-11 bg-background">
-        <Link href="/" className="flex items-center gap-2 mb-auto">
+    <div className="min-h-screen flex">
+      {/* Single full-width column: logo top, form centered, footer bottom — same layout
+          as sign-in. The form's my-auto centers it between the two. */}
+      <div className="flex flex-1 flex-col p-6 sm:p-11 bg-background">
+        <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.png" alt="TabMerger" width={26} height={26} className="rounded-md" />
           <span className="font-semibold tracking-tight">TabMerger</span>
         </Link>
 
-        <div className="w-full max-w-[380px] mx-auto py-10">
+        <div className="w-full max-w-[380px] mx-auto my-auto py-10">
           <h1 className="text-[30px] font-semibold tracking-tight mb-2">Create your account</h1>
           <p className="text-[14.5px] text-text2 mb-7">
             Free forever for 5 groups. No card required.
@@ -186,7 +187,7 @@ export default function SignUpPage() {
               {error && (
                 <p className="text-sm text-destructive">{error}</p>
               )}
-              <Button type="submit" className="w-full h-[46px] rounded-lg shadow-[0_10px_26px_-12px_rgba(0,180,204,0.9)]" disabled={loading} loading={loading}>
+              <Button type="submit" className="w-full h-[46px] rounded-lg" disabled={loading} loading={loading}>
                 Continue
               </Button>
             </form>
@@ -200,21 +201,9 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        <div className="text-xs text-text3">
+        <div className="text-xs text-text3 text-center">
           Protected by industry-standard encryption.{' '}
           <Link href="/privacy" className="text-primary hover:underline">Privacy</Link>
-        </div>
-      </div>
-
-      {/* Right — brand panel, hidden on mobile */}
-      <div className="hidden lg:flex flex-col justify-center gap-7 p-11 bg-surface2 border-l border-border">
-        <div className="max-w-[420px]">
-          <h2 className="text-[22px] font-semibold tracking-tight leading-tight mb-2.5">
-            1,308 tabs — one tidy panel.
-          </h2>
-          <p className="text-[14.5px] text-text2 leading-relaxed">
-            Signing up turns on cloud sync, sessions and shared links.
-          </p>
         </div>
       </div>
     </div>
