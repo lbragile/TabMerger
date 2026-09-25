@@ -49,7 +49,7 @@ export function Hero() {
               </Button>
               <Button size="sm" variant="outline" className="gap-1.5" asChild>
                 <a
-                  href="https://microsoftedge.microsoft.com/addons/detail/tabmerger"
+                  href="https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

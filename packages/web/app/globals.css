@@ -203,8 +203,26 @@ button:disabled,
 }
 
 @layer utilities {
-  .pause-on-hover:hover {
+  /* Targets the ANIMATED child, not the wrapper. `animation-play-state` isn't
+     inherited, and the animation lives on `.animate-marquee` — so the previous
+     `.pause-on-hover:hover { animation-play-state: paused }` paused an element
+     that wasn't animating and hovering did nothing.
+     :focus-within pauses it for keyboard users too, so tabbing to a card's
+     "Show more" doesn't chase a moving target. */
+  .pause-on-hover:hover .animate-marquee,
+  .pause-on-hover:focus-within .animate-marquee {
     animation-play-state: paused;
+  }
+
+  /* Reduced motion: no auto-scroll at all. The track becomes a normal horizontal
+     scroller so every review stays reachable. */
+  @media (prefers-reduced-motion: reduce) {
+    .pause-on-hover {
+      overflow-x: auto;
+    }
+    .pause-on-hover .animate-marquee {
+      animation: none;
+    }
   }
   .animate-marquee {
     animation: marquee 40s linear infinite;
