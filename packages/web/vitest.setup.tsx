@@ -8,6 +8,13 @@ import React from 'react'
 // so findBy* queries don't flake on those.
 configure({ asyncUtilTimeout: 5000 })
 
+// `absoluteUrl()` (lib/utils.ts) now throws if no base URL can be resolved, instead of
+// silently interpolating `undefined` — give every test a sane default so route tests that
+// don't care about URL resolution (checkout, portal, credits) don't have to stub it
+// individually. Tests that DO care (utils.test.ts) override it per-test with vi.stubEnv and
+// restore via vi.unstubAllEnvs(), which falls back to this default afterward.
+process.env.NEXT_PUBLIC_APP_URL ??= 'https://tabmerger.app'
+
 // jsdom's localStorage persists across tests within a file — components that read/write
 // it (e.g. GroupGrid's view-mode toggle) can leak state between unrelated tests otherwise.
 beforeEach(() => {
