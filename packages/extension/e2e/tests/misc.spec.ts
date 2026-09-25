@@ -7,7 +7,9 @@ test.describe('Notes', () => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
-    // Open note via context menu on the Work sidebar item
+    // Open note via context menu on the Work sidebar item. This selects the group (making
+    // it the active/visible one) and opens the inline note editor in the windows panel —
+    // there is no longer a separate note modal (P2, popup-ui-consolidation spec).
     await page.getByRole('button', { name: 'Work', exact: true }).click({ button: 'right' });
     await page.waitForTimeout(200);
     await page.getByText('Add note').click();

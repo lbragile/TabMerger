@@ -244,6 +244,7 @@ function describeDropCommittedCore(opts: Parameters<typeof describeDropCommitted
   }
   if (sideEffects.some((fx) => fx.type === 'windows.create')) return `Opened ${items} in a new browser window.`;
   if (sideEffects.some((fx) => fx.type === 'tabs.create')) return `Opened ${items} in Now Open.`;
+  if (sideEffects.some((fx) => fx.type === 'tabs.detachToNewWindow')) return `Moved ${items} to a new browser window.`;
   return `Moved ${items} within Now Open.`;
 }
 

@@ -31,6 +31,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useUniteWindows: () => ({ mutate: vi.fn() }),
   useSplitWindows: () => ({ mutate: vi.fn() }),
   useSortTabs: () => ({ mutate: vi.fn() }),
+  useDeleteAllWindows: () => ({ mutate: vi.fn() }),
   useArchiveGroup: () => ({ mutate: vi.fn() }),
   useRestoreGroup: () => ({ mutate: vi.fn() }),
   useUpdateGroupName: () => ({ mutate: vi.fn() }),
@@ -122,6 +123,8 @@ describe('GroupContextMenu — item descriptions', () => {
       ['Split windows', 'Move each tab into its own window'],
       ['Sort by title', 'Alphabetically sort all tabs by name'],
       ['Sort by URL', 'Alphabetically sort all tabs by address'],
+      ['Deduplicate tabs', 'Remove tabs with duplicate URLs'],
+      ['Remove all windows', 'Permanently remove all windows and their tabs'],
       ['Delete group', 'Permanently remove this group and its tabs'],
     ]
 
@@ -129,6 +132,49 @@ describe('GroupContextMenu — item descriptions', () => {
       expect(screen.getByText(label), `label "${label}" not found`).toBeTruthy()
       expect(screen.getByText(description), `description for "${label}" not found`).toBeTruthy()
     }
+  })
+
+  describe('grouping', () => {
+    /** Menu content in document order: item labels, with separators as '---'. */
+    function menuSequence(): string[] {
+      const menu = screen.getByRole('menu')
+      return Array.from(menu.querySelectorAll('[role="menuitem"], [role="separator"]')).map((el) =>
+        el.getAttribute('role') === 'separator'
+          ? '---'
+          : // Radix renders the item itself as a div, so a bare `div > div` would
+            // match the label+description wrapper. The label is the wrapper's
+            // first child.
+            (el.querySelector(':scope > div > div:first-child')?.textContent ?? el.textContent ?? '').trim(),
+      )
+    }
+
+    it('keeps Archive apart from the destructive actions, which sit together at the bottom', () => {
+      renderContextMenu(makeGroup())
+      // Before: Remove all windows | --- | Archive | Delete — red, neutral, red,
+      // which made Archive read as a third destructive option.
+      expect(menuSequence().slice(-5)).toEqual([
+        '---',
+        'Archive group',
+        '---',
+        'Remove all windows',
+        'Delete group',
+      ])
+    })
+
+    it('orders the danger zone least to most destructive', () => {
+      renderContextMenu(makeGroup())
+      const seq = menuSequence()
+      expect(seq.indexOf('Remove all windows')).toBeLessThan(seq.indexOf('Delete group'))
+    })
+
+    it('leaves Now Open with just its one destructive action — no stray or doubled separators', () => {
+      renderContextMenu(makeGroup({ permanent: true }))
+      const seq = menuSequence()
+      expect(seq.at(-1)).toBe('Close all windows')
+      expect(seq.at(-2)).toBe('---')
+      expect(seq.join('|')).not.toContain('---|---')
+      expect(seq[0]).not.toBe('---')
+    })
   })
 
   it('does not show Delete group for permanent groups', () => {

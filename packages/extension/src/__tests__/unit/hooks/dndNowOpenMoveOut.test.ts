@@ -114,6 +114,38 @@ describe('runSideEffects — tabs.remove', () => {
   })
 })
 
+describe('runSideEffects — tabs.detachToNewWindow (Now Open → Now Open\'s own new-window zone)', () => {
+  it('detaches the first tab via windows.create({tabId}), unfocused', async () => {
+    const { chromeStub } = stubChrome()
+    chromeStub.windows.create.mockResolvedValue({ id: 777 })
+    await runSideEffects([{ type: 'tabs.detachToNewWindow', tabIds: [9] }])
+    expect(chromeStub.windows.create).toHaveBeenCalledWith({ tabId: 9, focused: false })
+    expect(chromeStub.tabs.move).not.toHaveBeenCalled()
+  })
+
+  it('moves the REMAINING tabs into the newly created window, in order, appended at the end', async () => {
+    const { chromeStub } = stubChrome()
+    chromeStub.windows.create.mockResolvedValue({ id: 777 })
+    await runSideEffects([{ type: 'tabs.detachToNewWindow', tabIds: [9, 10, 11] }])
+    expect(chromeStub.windows.create).toHaveBeenCalledWith({ tabId: 9, focused: false })
+    expect(chromeStub.tabs.move).toHaveBeenCalledWith([10, 11], { windowId: 777, index: -1 })
+  })
+
+  it('a failed windows.create is best-effort and does not throw, and skips the follow-up move', async () => {
+    const { chromeStub } = stubChrome()
+    chromeStub.windows.create.mockRejectedValueOnce(new Error('nope'))
+    await expect(runSideEffects([{ type: 'tabs.detachToNewWindow', tabIds: [9, 10] }])).resolves.toBeUndefined()
+    expect(chromeStub.tabs.move).not.toHaveBeenCalled()
+  })
+
+  it('never mixes with tabs.remove — a Now Open → Now Open detach closes nothing', async () => {
+    const { chromeStub } = stubChrome()
+    chromeStub.windows.create.mockResolvedValue({ id: 5 })
+    await runSideEffects([{ type: 'tabs.detachToNewWindow', tabIds: [9] }])
+    expect(chromeStub.tabs.remove).not.toHaveBeenCalled()
+  })
+})
+
 describe('closeTabsWhenPopupCloses', () => {
   it('reuses ONE port across calls, so the worker accumulates ids for a single disconnect', () => {
     const { ports } = stubChrome()

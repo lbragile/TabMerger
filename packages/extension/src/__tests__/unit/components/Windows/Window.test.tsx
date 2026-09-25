@@ -303,15 +303,15 @@ describe('WindowItem', () => {
   it('"More options" menu: sorts tabs by title', async () => {
     renderWindow(makeWindow())
     const user = await openMoreMenu()
-    await user.click(screen.getByText('Sort by title'))
-    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 1, by: 'title' })
+    await user.click(screen.getByText('Sort this window by title'))
+    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 1, windowIndex: 0, by: 'title' })
   })
 
   it('"More options" menu: sorts tabs by URL', async () => {
     renderWindow(makeWindow())
     const user = await openMoreMenu()
-    await user.click(screen.getByText('Sort by URL'))
-    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 1, by: 'url' })
+    await user.click(screen.getByText('Sort this window by URL'))
+    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 1, windowIndex: 0, by: 'url' })
   })
 
   it('opens and commits the window note editor', async () => {

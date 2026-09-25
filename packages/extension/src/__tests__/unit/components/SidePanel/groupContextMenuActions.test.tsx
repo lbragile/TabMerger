@@ -20,12 +20,16 @@ const {
   mockUniteWindows,
   mockSplitWindows,
   mockSortTabs,
+  mockDeleteAllWindows,
   mockArchiveGroup,
   mockRestoreGroup,
   mockUpdateGroupName,
   mockOpenModal,
   mockSetRenameTarget,
+  mockSetActiveGroupIndex,
+  mockSetPendingNoteGroupIndex,
   mockToastError,
+  mockToastInfo,
   mockGetSetting,
   mockUseGroupsData,
   mockTrackEvent,
@@ -40,12 +44,16 @@ const {
   mockUniteWindows: vi.fn(),
   mockSplitWindows: vi.fn(),
   mockSortTabs: vi.fn(),
+  mockDeleteAllWindows: vi.fn(),
   mockArchiveGroup: vi.fn(),
   mockRestoreGroup: vi.fn(),
   mockUpdateGroupName: vi.fn(),
   mockOpenModal: vi.fn(),
   mockSetRenameTarget: vi.fn(),
+  mockSetActiveGroupIndex: vi.fn(),
+  mockSetPendingNoteGroupIndex: vi.fn(),
   mockToastError: vi.fn(),
+  mockToastInfo: vi.fn(),
   mockGetSetting: vi.fn().mockResolvedValue({ confirmOnDelete: false }),
   mockUseGroupsData: vi.fn(() => ({ available: [{}, {}, {}] })),
   mockTrackEvent: vi.fn(),
@@ -64,6 +72,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useUniteWindows: () => ({ mutate: mockUniteWindows }),
   useSplitWindows: () => ({ mutate: mockSplitWindows }),
   useSortTabs: () => ({ mutate: mockSortTabs }),
+  useDeleteAllWindows: () => ({ mutate: mockDeleteAllWindows }),
   useArchiveGroup: () => ({ mutate: mockArchiveGroup }),
   useRestoreGroup: () => ({ mutate: mockRestoreGroup }),
   useUpdateGroupName: () => ({ mutate: mockUpdateGroupName }),
@@ -86,10 +95,15 @@ vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))
 
 vi.mock('@/stores/uiStore', () => ({
   useUIStore: (selector: (s: object) => unknown) =>
-    selector({ openModal: mockOpenModal, setRenameTarget: mockSetRenameTarget }),
+    selector({
+      openModal: mockOpenModal,
+      setRenameTarget: mockSetRenameTarget,
+      setActiveGroupIndex: mockSetActiveGroupIndex,
+      setPendingNoteGroupIndex: mockSetPendingNoteGroupIndex,
+    }),
 }))
 
-vi.mock('sonner', () => ({ toast: { error: mockToastError, success: vi.fn() } }))
+vi.mock('sonner', () => ({ toast: { error: mockToastError, success: vi.fn(), info: mockToastInfo } }))
 
 globalThis.chrome = {
   tabs: { create: vi.fn() },
@@ -212,11 +226,13 @@ describe('GroupContextMenu — item actions', () => {
     expect(screen.queryByText('Rename')).toBeNull()
   })
 
-  it('opens the note modal, showing "Add note" when no note exists', async () => {
+  it('selects the group and stashes the pending note target, showing "Add note" when no note exists', async () => {
     const user = userEvent.setup()
     renderGroup(makeGroup())
     await user.click(screen.getByText('Add note'))
-    expect(mockOpenModal).toHaveBeenCalledWith('note', { groupIndex: 1, groupId: 'g1' })
+    expect(mockSetActiveGroupIndex).toHaveBeenCalledWith(1)
+    expect(mockSetPendingNoteGroupIndex).toHaveBeenCalledWith(1)
+    expect(mockOpenModal).not.toHaveBeenCalled()
   })
 
   it('shows "Edit note" when a note already exists', () => {
@@ -304,5 +320,49 @@ describe('GroupContextMenu — item actions', () => {
     renderGroup(makeGroup({ archived: true }))
     await user.click(screen.getByText('Restore group'))
     expect(mockRestoreGroup).toHaveBeenCalledWith(1)
+  })
+
+  it('opens the deduplicate-confirm modal when duplicates exist', async () => {
+    const user = userEvent.setup()
+    const withDupes = makeGroup({
+      windows: [{
+        id: 1,
+        starred: false,
+        incognito: false,
+        focused: false,
+        tabs: [
+          { id: 1, title: 'A', url: 'https://a.com' },
+          { id: 2, title: 'A dup', url: 'https://a.com' },
+        ],
+      }],
+    })
+    renderGroup(withDupes)
+    await user.click(screen.getByText('Deduplicate tabs'))
+    expect(mockOpenModal).toHaveBeenCalledWith('deduplicateGroup', expect.objectContaining({ groupIndex: 1 }))
+  })
+
+  it('shows an info toast instead of opening a modal when there are no duplicates', async () => {
+    const user = userEvent.setup()
+    renderGroup(makeGroup({
+      windows: [{ id: 1, starred: false, incognito: false, focused: false, tabs: [{ id: 1, title: 'A', url: 'https://a.com' }] }],
+    }))
+    await user.click(screen.getByText('Deduplicate tabs'))
+    expect(mockToastInfo).toHaveBeenCalledWith('No duplicates found')
+    expect(mockOpenModal).not.toHaveBeenCalled()
+  })
+
+  it('calls deleteAllWindows, labelled "Remove all windows" for a non-permanent group', async () => {
+    const user = userEvent.setup()
+    renderGroup(makeGroup())
+    await user.click(screen.getByText('Remove all windows'))
+    expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 1 })
+  })
+
+  it('labels the same action "Close all windows" for the permanent group', async () => {
+    const user = userEvent.setup()
+    renderGroup(makeGroup({ permanent: true }))
+    expect(screen.queryByText('Remove all windows')).toBeNull()
+    await user.click(screen.getByText('Close all windows'))
+    expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 1 })
   })
 })

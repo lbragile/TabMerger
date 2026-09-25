@@ -47,11 +47,15 @@ import {
   GROUPS_QUERY_KEY,
 } from '@/hooks/useGroups'
 import { createGroup, createNowOpenGroup } from '@/lib/utils'
+import { useUIStore } from '@/stores/uiStore'
 import type { GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
 vi.mock('@/lib/localDb', () => ({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: vi.fn(),
+  // uiStore's setActiveGroupIndex fire-and-forget-persists via this — needed since
+  // useArchiveGroup now calls setActiveGroupIndex directly on the real (unmocked) uiStore.
+  setSetting: vi.fn().mockResolvedValue(undefined),
 }))
 vi.mock('@/lib/syncEngine', () => ({ deleteRemoteGroups: vi.fn().mockResolvedValue(undefined) }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
@@ -353,6 +357,76 @@ describe('useSortTabs', () => {
     await act(async () => { await result.current.mutateAsync({ groupIndex: 0, by: 'title' }) })
     expect(lastSaved().available[0].windows[0].tabs.map((t) => t.title)).toEqual(['Apple', 'Banana'])
   })
+
+  // Regression guard for the two group-level call sites (windows-toolbar ⋯ and
+  // GroupContextMenu): omitting `windowIndex` must keep sorting EVERY window in the
+  // group, exactly as before `windowIndex` was added.
+  it('without windowIndex, sorts every window in the group (group-level call sites unchanged)', async () => {
+    const group = createGroup('a', 'A')
+    group.windows = [
+      win([tab(1, 'https://b.com', 'Banana'), tab(2, 'https://a.com', 'Apple')]),
+      win([tab(3, 'https://z.com', 'Zebra'), tab(4, 'https://m.com', 'Mango')]),
+    ]
+    const state = makeState([group])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useSortTabs(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, by: 'title' }) })
+    const windows = lastSaved().available[0].windows
+    expect(windows[0].tabs.map((t) => t.title)).toEqual(['Apple', 'Banana'])
+    expect(windows[1].tabs.map((t) => t.title)).toEqual(['Mango', 'Zebra'])
+  })
+
+  // The per-window ⋯ menu (Window.tsx) passes windowIndex — only that window may change.
+  it('with windowIndex, sorts only that window and leaves sibling windows byte-identical', async () => {
+    const group = createGroup('a', 'A')
+    const untouchedWindow = win([tab(3, 'https://z.com', 'Zebra'), tab(4, 'https://m.com', 'Mango')])
+    group.windows = [
+      win([tab(1, 'https://b.com', 'Banana'), tab(2, 'https://a.com', 'Apple')]),
+      untouchedWindow,
+    ]
+    const state = makeState([group])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useSortTabs(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0, by: 'title' }) })
+    const windows = lastSaved().available[0].windows
+    expect(windows[0].tabs.map((t) => t.title)).toEqual(['Apple', 'Banana'])
+    // Sibling window (index 1) is untouched — same reference, not just equal content.
+    expect(windows[1]).toBe(untouchedWindow)
+  })
+
+  it('with windowIndex, sorts by URL scoped to that window only', async () => {
+    const group = createGroup('a', 'A')
+    group.windows = [
+      win([tab(1, 'https://b.com', 'B'), tab(2, 'https://a.com', 'A')]),
+      win([tab(3, 'https://z.com', 'Z'), tab(4, 'https://m.com', 'M')]),
+    ]
+    const state = makeState([group])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useSortTabs(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, windowIndex: 1, by: 'url' }) })
+    const windows = lastSaved().available[0].windows
+    // Window 0 (not targeted) keeps its original order.
+    expect(windows[0].tabs.map((t) => t.title)).toEqual(['B', 'A'])
+    // Window 1 (targeted) is sorted by URL.
+    expect(windows[1].tabs.map((t) => t.url)).toEqual(['https://m.com', 'https://z.com'])
+  })
+
+  it('preserves updatedAt/pendingSync stamping identically regardless of windowIndex', async () => {
+    const group = createGroup('a', 'A')
+    group.windows = [win([tab(1, 'https://b.com', 'Banana'), tab(2, 'https://a.com', 'Apple')])]
+    const state = makeState([group])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useSortTabs(), { wrapper })
+    const before = Date.now()
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0, by: 'title' }) })
+    const saved = lastSaved().available[0]
+    expect(saved.pendingSync).toBe(true)
+    expect(saved.updatedAt).toBeGreaterThanOrEqual(before)
+  })
 })
 
 describe('useSetGroupsState', () => {
@@ -381,6 +455,10 @@ describe('useRemoveStaleTabs', () => {
 })
 
 describe('useArchiveGroup / useRestoreGroup', () => {
+  beforeEach(() => {
+    useUIStore.setState({ activeGroupIndex: 0 })
+  })
+
   it('archives a non-permanent group', async () => {
     const state = makeState([createGroup('a', 'A')])
     ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
@@ -408,6 +486,62 @@ describe('useArchiveGroup / useRestoreGroup', () => {
     const { result } = renderHook(() => useRestoreGroup(), { wrapper })
     await act(async () => { await result.current.mutateAsync(0) })
     expect(lastSaved().available[0].archived).toBe(false)
+  })
+
+  it('moves activeGroupIndex to the group above (sidebar order), when the archived group was active', async () => {
+    // available (raw array order): [Now Open, A (unstarred), B (starred)] — but the
+    // SIDEBAR's visible order is [Now Open, B (starred), A (unstarred)] since starred
+    // groups float above unstarred ones. So "above A" in the sidebar is B (realIndex 2),
+    // NOT Now Open — proving the rule uses display order, not raw array order.
+    const nowOpen = createNowOpenGroup()
+    const groupA = { ...createGroup('a', 'A'), starred: false }
+    const groupB = { ...createGroup('b', 'B'), starred: true }
+    const state = makeState([nowOpen, groupA, groupB])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper, qc } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    useUIStore.setState({ activeGroupIndex: 1 }) // viewing group A
+    const { result } = renderHook(() => useArchiveGroup(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(1) }) // archive A (realIndex 1)
+    expect(useUIStore.getState().activeGroupIndex).toBe(2) // B, not Now Open
+  })
+
+  it('falls back to Now Open when the archived group was the topmost saved group', async () => {
+    const nowOpen = createNowOpenGroup()
+    const groupA = createGroup('a', 'A')
+    const state = makeState([nowOpen, groupA])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper, qc } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    useUIStore.setState({ activeGroupIndex: 1 })
+    const { result } = renderHook(() => useArchiveGroup(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(1) })
+    expect(useUIStore.getState().activeGroupIndex).toBe(0)
+  })
+
+  it('leaves activeGroupIndex untouched when a DIFFERENT group is archived', async () => {
+    const nowOpen = createNowOpenGroup()
+    const groupA = createGroup('a', 'A')
+    const groupB = createGroup('b', 'B')
+    const state = makeState([nowOpen, groupA, groupB])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper, qc } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    useUIStore.setState({ activeGroupIndex: 2 }) // viewing group B
+    const { result } = renderHook(() => useArchiveGroup(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(1) }) // archive A, not B
+    expect(useUIStore.getState().activeGroupIndex).toBe(2) // unchanged
+  })
+
+  it('does not touch activeGroupIndex when refusing to archive the permanent group', async () => {
+    const state = makeState([createNowOpenGroup()])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper, qc } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    useUIStore.setState({ activeGroupIndex: 0 })
+    const { result } = renderHook(() => useArchiveGroup(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(0) })
+    expect(useUIStore.getState().activeGroupIndex).toBe(0)
   })
 })
 

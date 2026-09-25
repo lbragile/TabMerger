@@ -106,6 +106,8 @@ vi.mock('@/stores/uiStore', () => ({
       openModal: mockOpenModal,
       setSelection: mockSetSelection,
       enterSelectionMode: mockEnterSelectionMode,
+      pendingNoteGroupIndex: null,
+      setPendingNoteGroupIndex: vi.fn(),
     }),
 }))
 const mockSetSelection = vi.fn()
@@ -151,6 +153,10 @@ beforeEach(() => {
   selectionMode = false
   selectedItems = []
   mockGetSetting.mockResolvedValue({})
+  globalThis.chrome = {
+    ...globalThis.chrome,
+    windows: { create: vi.fn().mockResolvedValue(undefined) },
+  } as unknown as typeof chrome
 })
 
 async function openMenu() {
@@ -248,7 +254,7 @@ describe('WindowsPanel — toolbar dropdown mutations', () => {
     const group = makeGroup()
     wrap(<WindowsPanel group={group} groupIndex={2} />)
     const user = await openMenu()
-    await user.click(screen.getByText('Replace with current tabs'))
+    await user.click(screen.getByText('Replace with current'))
     expect(mockReplaceWithCurrent).toHaveBeenCalledWith(2)
   })
 
@@ -256,7 +262,7 @@ describe('WindowsPanel — toolbar dropdown mutations', () => {
     const group = makeGroup()
     wrap(<WindowsPanel group={group} groupIndex={1} />)
     const user = await openMenu()
-    await user.click(screen.getByText('Merge with current tabs'))
+    await user.click(screen.getByText('Merge with current'))
     expect(mockMergeWithCurrent).toHaveBeenCalledWith(1)
   })
 
@@ -264,11 +270,11 @@ describe('WindowsPanel — toolbar dropdown mutations', () => {
     const group = makeGroup()
     wrap(<WindowsPanel group={group} groupIndex={0} />)
     let user = await openMenu()
-    await user.click(screen.getByText('Unite all windows'))
+    await user.click(screen.getByText('Unite windows'))
     expect(mockUniteWindows).toHaveBeenCalledWith(0)
 
     user = await openMenu()
-    await user.click(screen.getByText('Split into windows'))
+    await user.click(screen.getByText('Split windows'))
     expect(mockSplitWindows).toHaveBeenCalledWith(0)
   })
 
@@ -276,11 +282,11 @@ describe('WindowsPanel — toolbar dropdown mutations', () => {
     const group = makeGroup()
     wrap(<WindowsPanel group={group} groupIndex={0} />)
     let user = await openMenu()
-    await user.click(screen.getByText('Sort tabs by title'))
+    await user.click(screen.getByText('Sort by title'))
     expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 0, by: 'title' })
 
     user = await openMenu()
-    await user.click(screen.getByText('Sort tabs by URL'))
+    await user.click(screen.getByText('Sort by URL'))
     expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 0, by: 'url' })
   })
 
@@ -421,10 +427,22 @@ describe('WindowsPanel — empty state and Add Window guard', () => {
     expect(screen.getByRole('button', { name: /add window/i })).toBeDisabled()
   })
 
-  it('does not render Add Window for a permanent (Now Open) group', () => {
+  it('renders Add Window for a permanent (Now Open) group, opening a REAL browser window instead of a stored one', async () => {
+    const group = makeGroup({ permanent: true })
+    const user = userEvent.setup()
+    wrap(<WindowsPanel group={group} groupIndex={0} />)
+    const btn = screen.getByRole('button', { name: /add window/i })
+    expect(btn).toBeInTheDocument()
+    await user.click(btn)
+    expect(chrome.windows.create).toHaveBeenCalledWith({})
+    // Must NOT insert an empty stored window — useCurrentTabs would overwrite/vanish it.
+    expect(mockAddWindow).not.toHaveBeenCalled()
+  })
+
+  it('DOES render the new-window drop zone for a permanent (Now Open) group — dropping a tab there is a real chrome.windows.create/tabs.move detach, not a stored mutation', () => {
     const group = makeGroup({ permanent: true })
     wrap(<WindowsPanel group={group} groupIndex={0} />)
-    expect(screen.queryByRole('button', { name: /add window/i })).not.toBeInTheDocument()
+    expect(screen.queryByTestId('new-window-dropzone')).toBeInTheDocument()
   })
 
   it('clicking Add Window dispatches addWindow with the group index', async () => {

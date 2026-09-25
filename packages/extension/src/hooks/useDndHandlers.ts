@@ -537,13 +537,27 @@ export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {
          
         await chrome.windows.create({ url: fx.url, focused: false });
       } else if (fx.type === 'tabs.remove') {
-         
+
         const { now, deferred } = await partitionClosableTabs(fx.tabIds);
         // The deferred ids go first: if removing the others somehow dismisses the popup,
         // the background worker already holds the rest.
         if (deferred.length > 0) closeTabsWhenPopupCloses(deferred);
-         
+
         if (now.length > 0) await chrome.tabs.remove(now);
+      } else if (fx.type === 'tabs.detachToNewWindow') {
+        // A real MOVE, not open+close: `windows.create({tabId})` detaches the existing
+        // tab (with its history, form state, pinned flag…) into a brand-new window
+        // instead of closing it and opening a fresh one. `focused: false` for the same
+        // reason as every other DnD-issued window: a focused new window steals focus
+        // from the popup's anchor window and Chrome dismisses the popup.
+        const [first, ...rest] = fx.tabIds;
+        if (typeof first !== 'number') continue;
+        const win = await chrome.windows.create({ tabId: first, focused: false });
+        if (rest.length > 0 && typeof win?.id === 'number') {
+          // Preserve selection order: append the rest, in order, to the end of the
+          // freshly created window (which holds only the first tab so far).
+          await chrome.tabs.move(rest, { windowId: win.id, index: -1 });
+        }
       }
     } catch {
       /* best effort — Now Open re-syncs from the browser regardless */

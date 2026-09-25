@@ -6,6 +6,7 @@ import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
+import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 
@@ -684,21 +685,34 @@ export function useSplitWindows() {
   });
 }
 
+/**
+ * Sorts tabs alphabetically by title or URL. Scope depends on whether `windowIndex` is
+ * given:
+ * - **omitted** (both group-level call sites: the windows-toolbar ⋯ and
+ *   `GroupContextMenu`) — sorts every window in the group. Unchanged from before
+ *   `windowIndex` existed.
+ * - **provided** (the per-window ⋯ menu in `Window.tsx`) — sorts only that one window's
+ *   tabs; sibling windows in the group are left byte-identical.
+ */
 export function useSortTabs() {
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({ groupIndex, by }: { groupIndex: number; by: 'title' | 'url' }) =>
+    mutationFn: ({ groupIndex, windowIndex, by }: { groupIndex: number; windowIndex?: number; by: 'title' | 'url' }) =>
       mutate((prev) => {
         const available = [...prev.available];
-        const windows = available[groupIndex].windows.map((w) => ({
+        const sortTabsOf = (w: (typeof available)[number]['windows'][number]) => ({
           ...w,
           tabs: [...w.tabs].sort((a, b) => {
             const aVal = by === 'title' ? (a.title ?? '') : (a.url ?? '');
             const bVal = by === 'title' ? (b.title ?? '') : (b.url ?? '');
             return aVal.localeCompare(bVal);
           })
-        }));
+        });
+        const windows =
+          windowIndex === undefined
+            ? available[groupIndex].windows.map(sortTabsOf)
+            : available[groupIndex].windows.map((w, i) => (i === windowIndex ? sortTabsOf(w) : w));
         available[groupIndex] = {
           ...available[groupIndex],
           windows,
@@ -968,18 +982,45 @@ export function useRemoveStaleTabs() {
   });
 }
 
+/**
+ * Archives a saved group. If the archived group was the active sidebar selection,
+ * moves `activeGroupIndex` to the group directly ABOVE it in the sidebar's visible order
+ * (see `getSidebarDisplayOrder` — starred-then-unstarred, Now Open always first), falling
+ * back to Now Open (index 0) when the archived group was the topmost saved one. Archiving
+ * never removes/reorders the group in `available` (only flips `archived`), so `realIndex`
+ * values are stable across the mutation and can be computed from the pre-archive state.
+ * If some OTHER group was active, `activeGroupIndex` is left untouched.
+ */
 export function useArchiveGroup() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: (groupIndex: number) =>
-      mutate((prev) => {
+    mutationFn: (groupIndex: number) => {
+      const prevState = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      let aboveRealIndex = 0;
+      if (prevState) {
+        const order = getSidebarDisplayOrder(prevState.available);
+        const pos = order.findIndex(({ realIndex }) => realIndex === groupIndex);
+        aboveRealIndex = pos > 0 ? order[pos - 1].realIndex : 0;
+      }
+
+      return mutate((prev) => {
         const available = [...prev.available];
         const group = available[groupIndex];
         if (!group || group.permanent) return prev;
         available[groupIndex] = { ...group, archived: true, updatedAt: Date.now(), pendingSync: true };
         return { ...prev, available };
-      })
+      }).then((next) => {
+        // Only reindex if archiving actually happened (guards the permanent-group no-op
+        // above) AND the archived group was the one the user was viewing.
+        const didArchive = next.available[groupIndex]?.archived === true;
+        if (didArchive && useUIStore.getState().activeGroupIndex === groupIndex) {
+          useUIStore.getState().setActiveGroupIndex(aboveRealIndex);
+        }
+        return next;
+      });
+    }
   });
 }
 

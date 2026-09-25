@@ -56,6 +56,7 @@ vi.mock('@/hooks/useGroups', () => ({
   useUniteWindows: () => ({ mutate: vi.fn() }),
   useSplitWindows: () => ({ mutate: vi.fn() }),
   useSortTabs: () => ({ mutate: vi.fn() }),
+  useDeleteAllWindows: () => ({ mutate: vi.fn() }),
   useArchiveGroup: () => ({ mutate: vi.fn() }),
   useRestoreGroup: () => ({ mutate: vi.fn() }),
   useUpdateGroupName: () => ({ mutate: vi.fn() }),
