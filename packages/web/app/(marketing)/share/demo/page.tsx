@@ -63,7 +63,7 @@ export default function ShareDemoPage() {
           href="https://chrome.google.com/webstore"
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium shadow-[0_10px_26px_-10px_rgba(0,180,204,0.9)] hover:bg-primary/90 hover:shadow-[0_14px_30px_-10px_rgba(0,180,204,1)] transition-all inline-flex items-center justify-center"
+          className="shrink-0 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors inline-flex items-center justify-center"
         >
           Install free
         </a>
