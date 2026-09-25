@@ -119,19 +119,26 @@ jobs:
           # explicitly, log it in full, and pull the URL out of it.
           out=$(vercel deploy --prebuilt --non-interactive --format json)
           echo "$out"
-          url=$(printf '%s' "$out" | node -e '
-            let s = ""
-            process.stdin.on("data", (d) => (s += d)).on("end", () => {
-              let j
-              try { j = JSON.parse(s) } catch {}
-              // The key for a successful deploy isn't documented, so try the
-              // likely ones, then fall back to the deployment host in the text.
-              let u = [j?.deployment?.url, j?.url, j?.deploymentUrl].find((x) => typeof x === "string")
-              if (!u) u = s.match(/https:\/\/[a-z0-9-]+\.vercel\.app/)?.[0]
-              if (u && !u.startsWith("http")) u = "https://" + u
-              process.stdout.write(u ?? "")
-            })
-          ')
+
+          # The parser is written to a file through a QUOTED heredoc ('JS'), which
+          # passes the script through byte for byte. It used to be inline as
+          # `node -e '...'`, where an apostrophe in a comment ended the shell string
+          # early and bash failed with "syntax error near unexpected token" — after
+          # a deploy that had succeeded.
+          cat > "$RUNNER_TEMP/deploy-url.js" <<'JS'
+          let s = ''
+          process.stdin.on('data', (d) => (s += d)).on('end', () => {
+            let j
+            try { j = JSON.parse(s) } catch {}
+            // Observed shape (CLI 60.0.1): { status: "ok", deployment: { url } }.
+            // The other keys and the host regex are fallbacks in case it changes.
+            let u = [j?.deployment?.url, j?.url, j?.deploymentUrl].find((x) => typeof x === 'string')
+            if (!u) u = s.match(/https:\/\/[a-z0-9-]+\.vercel\.app/)?.[0]
+            if (u && !u.startsWith('http')) u = 'https://' + u
+            process.stdout.write(u ?? '')
+          })
+          JS
+          url=$(printf '%s' "$out" | node "$RUNNER_TEMP/deploy-url.js")
           if [ -z "$url" ]; then
             echo "::error::The deploy command succeeded, but no URL was found in its output (logged above)."
             exit 1
