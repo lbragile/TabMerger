@@ -423,6 +423,12 @@ importers:
       '@tabmerger/shared':
         specifier: workspace:*
         version: link:../shared
+      '@vercel/analytics':
+        specifier: ^2.0.1
+        version: 2.0.1(next@16.3.5(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(@types/node@26.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
+      '@vercel/speed-insights':
+        specifier: ^2.0.0
+        version: 2.0.0(next@16.3.5(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(@types/node@26.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
       '@workflow/ai':
         specifier: ^4.2.0
         version: 4.2.0(@opentelemetry/api@1.9.1)(ai@6.0.219(zod@4.4.3))(workflow@4.6.0(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.1.27(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@opentelemetry/api@1.9.1)(@swc/cli@0.8.1(@swc/core@1.15.3(@swc/helpers@0.5.23))(chokidar@5.0.0)(supports-color@8.1.1))(@swc/core@1.15.3(@swc/helpers@0.5.23))(@swc/helpers@0.5.23)(magicast@0.5.3)(next@16.3.5(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(@types/node@26.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(supports-color@8.1.1)(typescript@5.9.3)(ws@8.21.0))
@@ -3844,6 +3850,35 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@vercel/analytics@2.0.1':
+    resolution: {integrity: sha512-MTQG6V9qQrt1tsDeF+2Uoo5aPjqbVPys1xvnIftXSJYG2SrwXRHnqEvVoYID7BTruDz4lCd2Z7rM1BdkUehk2g==}
+    peerDependencies:
+      '@remix-run/react': ^2
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      nuxt: '>= 3'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      nuxt:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+
   '@vercel/cli-auth@0.0.1':
     resolution: {integrity: sha512-CnqiuMlZ4pjs2LCPYiR6aLKPPd3Xb8SBI1Y7eotXKgpx6qgrGNY+E7EIyUt5ErGHJGIrCZyGG5WEo4bHtVmz2Q==}
 
@@ -3877,6 +3912,32 @@ packages:
   '@vercel/queue@0.3.1':
     resolution: {integrity: sha512-6pjdXyNfdCQnj1nyeB1rPtll/XUhmciyeZJD0rpIUUwmcIfR+utDl6+iFvlHvsBdqAVT8UC6ydObT0v+xldfUQ==}
     engines: {node: '>=20.0.0'}
+
+  '@vercel/speed-insights@2.0.0':
+    resolution: {integrity: sha512-jwkNcrTeafWxjmWq4AHBaptSqZiJkYU5adLC9QBSqeim0GcqDMgN5Ievh8OG1rJ6W3A4l1oiP7qr9CWxGuzu3w==}
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      nuxt: '>= 3'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      nuxt:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
 
   '@vitejs/plugin-react@5.2.0':
     resolution: {integrity: sha512-YmKkfhOAi3wsB1PhJq5Scj3GXMn3WvtQ/JC0xoopuHoXSdmtdStOpFrYaT1kie2YgFBcIe64ROzMYRjCrYOdYw==}
@@ -12261,6 +12322,11 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.12.2':
     optional: true
 
+  '@vercel/analytics@2.0.1(next@16.3.5(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(@types/node@26.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
+    optionalDependencies:
+      next: 16.3.5(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(@types/node@26.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react: 19.2.7
+
   '@vercel/cli-auth@0.0.1':
     dependencies:
       async-listen: 3.0.0
@@ -12298,6 +12364,11 @@ snapshots:
       minimatch: 10.2.6
       mixpart: 0.0.6
       picocolors: 1.1.1
+
+  '@vercel/speed-insights@2.0.0(next@16.3.5(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(@types/node@26.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)':
+    optionalDependencies:
+      next: 16.3.5(@babel/core@7.29.7(supports-color@8.1.1))(@opentelemetry/api@1.9.1)(@playwright/test@1.61.1)(@types/node@26.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react: 19.2.7
 
   '@vitejs/plugin-react@5.2.0(supports-color@10.2.2)(vite@6.4.3(@types/node@26.1.1)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.49.0)(tsx@4.23.1))':
     dependencies:

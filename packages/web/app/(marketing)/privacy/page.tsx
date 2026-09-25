@@ -59,7 +59,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Analytics</h3>
-              <p>We use Google Analytics 4 on the web app to collect aggregate usage patterns (page views, feature usage). GA4 assigns an anonymous client identifier and we do not link this data to your account identity. No personally identifiable information is sent to Google. We also use PostHog for product analytics and session replay on the web app, with all form inputs masked by default; this data is likewise not linked to your account beyond what's needed to improve the product.</p>
+              <p>We use Google Analytics 4 on the web app to collect aggregate usage patterns (page views, feature usage). GA4 assigns an anonymous client identifier and we do not link this data to your account identity. No personally identifiable information is sent to Google. We also use PostHog for product analytics and session replay on the web app, with all form inputs masked by default; this data is likewise not linked to your account beyond what's needed to improve the product. On the web app we also use Vercel Web Analytics, which counts page views without cookies, and Vercel Speed Insights, which measures how fast pages load; neither is linked to your account.</p>
             </div>
           </div>
         </section>
@@ -93,6 +93,7 @@ export default function PrivacyPage() {
               { name: 'Anthropic', purpose: 'Claude API for AI features (Pro AI tier only)', url: 'https://www.anthropic.com/privacy' },
               { name: 'Google Analytics', purpose: 'Anonymous aggregate analytics', url: 'https://policies.google.com/privacy' },
               { name: 'PostHog', purpose: 'Product analytics and session replay, with form inputs masked by default', url: 'https://posthog.com/privacy' },
+              { name: 'Vercel', purpose: 'Hosting for the web app, plus Web Analytics (cookieless, aggregate page views) and Speed Insights (page performance metrics such as load time)', url: 'https://vercel.com/legal/privacy-policy' },
             ].map(({ name, purpose, url }) => (
               <div key={name} className="flex gap-4 px-4 py-3">
                 <a href={url} target="_blank" rel="noopener noreferrer" className="font-medium w-40 shrink-0 hover:underline">{name}</a>
