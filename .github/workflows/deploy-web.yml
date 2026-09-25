@@ -46,6 +46,23 @@ jobs:
             exit 1
           fi
 
+          # Shape checks. Values are masked in logs, so a bad paste is otherwise
+          # invisible — and the CLI reports every one of these as the same vague
+          # "Could not retrieve Project Settings".
+          bad=()
+          for v in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            val="${!v}"
+            # Quotes are the usual culprit when copying from .vercel/project.json.
+            case "$val" in *'"'*|*"'"*) bad+=("$v contains quote characters — paste the bare value") ;; esac
+            [ "$val" != "$(printf '%s' "$val" | tr -d '[:space:]')" ] && bad+=("$v contains whitespace or a newline")
+          done
+          case "$VERCEL_PROJECT_ID" in prj_*) ;; *) bad+=("VERCEL_PROJECT_ID should start with prj_") ;; esac
+          case "$VERCEL_ORG_ID" in prj_*) bad+=("VERCEL_ORG_ID starts with prj_ — the two IDs look swapped") ;; esac
+          if [ ${#bad[@]} -gt 0 ]; then
+            for b in "${bad[@]}"; do echo "::error::$b"; done
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       # `vercel build` runs the project's install command — packages/web/vercel.json
@@ -71,7 +88,17 @@ jobs:
       # secrets, so anything the web app needs at build time must be set in
       # Vercel → Settings → Environment Variables with "Preview" ticked.
       - name: Pull preview environment and project settings
-        run: vercel pull --yes --environment=preview --non-interactive
+        run: |
+          # The CLI's own message suggests deleting a .vercel directory, which is
+          # irrelevant here — CI has none. With the IDs well-formed (checked above),
+          # this failure means the token can't reach the project they name.
+          vercel pull --yes --environment=preview --non-interactive || {
+            echo "::error::Vercel could not load the project. The IDs are well-formed, so check:"
+            echo "::error::1) Token SCOPE — this project belongs to a TEAM; a token scoped to a personal account cannot see it (vercel.com → Account Settings → Tokens → Scope column)."
+            echo "::error::2) VERCEL_ORG_ID is the TEAM ID (team_…), not a personal Vercel ID."
+            echo "::error::3) Both IDs match the project you mean (.vercel/project.json → orgId, projectId)."
+            exit 1
+          }
 
       - name: Build
         run: vercel build --non-interactive
