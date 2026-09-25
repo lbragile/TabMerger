@@ -4,7 +4,18 @@
     { "name": "beta", "prerelease": true }
   ],
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    ["@semantic-release/commit-analyzer", {
+      "releaseRules": [
+        { "breaking": true, "release": "major" },
+        { "scope": "ci", "release": false },
+        { "scope": "release", "release": false },
+        { "scope": "publish", "release": false },
+        { "scope": "e2e", "release": false },
+        { "scope": "demo", "release": false },
+        { "scope": "dev", "release": false },
+        { "scope": "web", "release": false }
+      ]
+    }],
     "@semantic-release/release-notes-generator",
     ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
     ["@semantic-release/git", {
