@@ -14,8 +14,13 @@ test.describe('Notes', () => {
     await page.waitForTimeout(200);
     await page.getByText('Add note').click();
 
-    await page.locator('textarea').fill('Remember to update docs');
-    await page.getByRole('button', { name: 'Save' }).click();
+    // Scope Save to the note editor itself. A page-wide { name: 'Save' } matches by
+    // substring, so it also hit the sidebar's always-visible "Save current session"
+    // button (strict-mode violation). `exact: true` alone isn't enough either: the
+    // inline rename controls on groups, windows and tabs are labelled exactly "Save".
+    const noteEditor = page.getByPlaceholder('Add a note for this group…').locator('..');
+    await noteEditor.locator('textarea').fill('Remember to update docs');
+    await noteEditor.getByRole('button', { name: 'Save', exact: true }).click();
 
     await page.reload({ waitUntil: 'networkidle' });
 
