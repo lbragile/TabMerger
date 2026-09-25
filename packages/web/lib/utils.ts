@@ -51,53 +51,30 @@ function validateBaseUrl(candidate: string | undefined): string | null {
 }
 
 /**
- * Resolves the base URL to use for Stripe redirect targets (checkout success/cancel, billing
- * portal return). Must run server-side, at request time (not build time), because Vercel Preview
- * deployments each get a unique hostname with no stable per-branch alias for CLI/--prebuilt
- * deploys from CI — a single build-time constant is either wrong for every preview or (worse)
- * sends preview checkouts back to production.
+ * Resolves the base URL for Stripe redirect targets (checkout success/cancel, billing portal
+ * return): NEXT_PUBLIC_APP_URL, validated, set per Vercel environment — the real domain in
+ * Production, the fixed alias https://tabmerger-preview.vercel.app in Preview (CI points it at
+ * each new preview deploy, see .github/workflows/deploy-web.yml), localhost in local dev.
  *
- * Deliberately does NOT read the incoming request's Host / x-forwarded-host / nextUrl.origin —
- * those are attacker-controllable on some proxies and would open a host-header/open-redirect
- * surface on a Stripe redirect target. Only Vercel-set environment variables are trusted.
+ * Deliberately does NOT read VERCEL_URL. It used to, back when previews had only a hashed
+ * per-deployment host; with a fixed preview alias it's no longer needed, and the hashed host
+ * was the wrong target anyway — it carries none of the alias's session cookies.
  *
- * Resolution order:
- * 1. VERCEL_ENV === 'preview' && VERCEL_URL set -> https://${VERCEL_URL} (this deployment's own
- *    host, so a preview checkout returns to the same preview it was started from).
- * 2. NEXT_PUBLIC_APP_URL, validated. Note this is inlined at BUILD time (NEXT_PUBLIC_* convention)
- *    so it's correct for local dev / production but can't vary per preview deploy — that's exactly
- *    why step 1 takes priority in preview.
- * 3. https://${VERCEL_URL} if set (production/other Vercel environments as a fallback if
- *    NEXT_PUBLIC_APP_URL is missing/invalid).
- * 4. Throws — never silently fall back to localhost in a deployed environment, and never hand
- *    Stripe an invalid success_url/cancel_url/return_url.
+ * Also deliberately does NOT read the incoming request's Host / x-forwarded-host /
+ * nextUrl.origin — those are attacker-controllable on some proxies and would open a
+ * host-header/open-redirect surface on a Stripe redirect target.
+ *
+ * Throws when the variable is missing or invalid: never silently fall back to localhost in a
+ * deployed environment, and never hand Stripe an invalid success_url/cancel_url/return_url.
  */
 function resolveBaseUrl(): string {
-  // VERCEL_ENV / VERCEL_URL are NOT NEXT_PUBLIC_* — they're only readable server-side, and read
-  // at runtime rather than inlined at build time, which is exactly what per-deployment resolution needs.
-  const vercelEnv = process.env.VERCEL_ENV
-  const vercelUrl = process.env.VERCEL_URL
-
-  if (vercelEnv === 'preview' && vercelUrl) {
-    return `https://${vercelUrl}`
-  }
-
   const validated = validateBaseUrl(process.env.NEXT_PUBLIC_APP_URL)
   if (validated) return validated
 
-  // NOT in production. There, a missing/invalid NEXT_PUBLIC_APP_URL must fail closed: falling
-  // back to the deployment's *.vercel.app host would silently send paying customers back to a
-  // URL that may sit behind deployment protection and doesn't carry their session cookies
-  // (those belong to the real domain). A hard error on a misconfigured production env is far
-  // better than quietly misdirecting billing traffic. (payments-security-reviewer, 2026-09-24)
-  if (vercelUrl && vercelEnv !== 'production') {
-    return `https://${vercelUrl}`
-  }
-
   throw new Error(
     'absoluteUrl: could not resolve a base URL. Set NEXT_PUBLIC_APP_URL to a valid absolute ' +
-      'http(s) URL (e.g. https://tabmerger.app or http://localhost:3000 for local dev), or rely ' +
-      'on VERCEL_URL when deployed on Vercel.'
+      'http(s) URL (e.g. https://tabmerger.app, https://tabmerger-preview.vercel.app for ' +
+      'previews, or http://localhost:3000 for local dev).'
   )
 }
 

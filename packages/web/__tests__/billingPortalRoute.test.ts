@@ -67,16 +67,14 @@ describe('POST /api/billing-portal', () => {
     )
   })
 
-  it('returns to the preview it was opened from, not the configured app URL', async () => {
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger.app')
+  it('returns to the fixed preview alias, not the deployment’s own hashed URL', async () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger-preview.vercel.app')
     vi.stubEnv('VERCEL_ENV', 'preview')
     vi.stubEnv('VERCEL_URL', 'tabmerger-abc123-lbragiles-projects.vercel.app')
     const { POST } = await import('@/app/api/billing-portal/route')
     await POST(request())
     expect(mockCreateBillingPortalSession).toHaveBeenCalledWith(
-      expect.objectContaining({
-        returnUrl: 'https://tabmerger-abc123-lbragiles-projects.vercel.app/dashboard',
-      }),
+      expect.objectContaining({ returnUrl: 'https://tabmerger-preview.vercel.app/dashboard' }),
     )
   })
 

@@ -59,31 +59,22 @@ describe('absoluteUrl', () => {
     expect(absoluteUrl('/pricing')).toBe('https://tabmerger.app/pricing')
   })
 
-  it('uses VERCEL_URL when VERCEL_ENV is preview, even if NEXT_PUBLIC_APP_URL is set', () => {
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger.app')
-    vi.stubEnv('VERCEL_ENV', 'preview')
-    vi.stubEnv('VERCEL_URL', 'tabmerger-abc123-lbragiles-projects.vercel.app')
-    expect(absoluteUrl('/dashboard')).toBe(
-      'https://tabmerger-abc123-lbragiles-projects.vercel.app/dashboard'
-    )
-  })
-
-  it('uses NEXT_PUBLIC_APP_URL when VERCEL_ENV is production, ignoring VERCEL_URL', () => {
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger.app')
-    vi.stubEnv('VERCEL_ENV', 'production')
-    vi.stubEnv('VERCEL_URL', 'tabmerger-prod-xyz.vercel.app')
-    expect(absoluteUrl('/pricing')).toBe('https://tabmerger.app/pricing')
-  })
+  // Previews live at a fixed alias, set as the Preview environment's NEXT_PUBLIC_APP_URL.
+  // The deployment's own hashed VERCEL_URL must NOT win: it carries none of the alias's
+  // session cookies, so a checkout returning there would look signed out.
+  it.each(['preview', 'production'])(
+    'uses NEXT_PUBLIC_APP_URL and ignores VERCEL_URL when VERCEL_ENV is %s',
+    (env) => {
+      vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger-preview.vercel.app')
+      vi.stubEnv('VERCEL_ENV', env)
+      vi.stubEnv('VERCEL_URL', 'tabmerger-abc123-lbragiles-projects.vercel.app')
+      expect(absoluteUrl('/dashboard')).toBe('https://tabmerger-preview.vercel.app/dashboard')
+    }
+  )
 
   it('strips a trailing slash from NEXT_PUBLIC_APP_URL', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger.app/')
     expect(absoluteUrl('/pricing')).toBe('https://tabmerger.app/pricing')
-  })
-
-  it('falls back to VERCEL_URL when NEXT_PUBLIC_APP_URL is missing', () => {
-    delete process.env.NEXT_PUBLIC_APP_URL
-    vi.stubEnv('VERCEL_URL', 'tabmerger-fallback.vercel.app')
-    expect(absoluteUrl('/pricing')).toBe('https://tabmerger-fallback.vercel.app/pricing')
   })
 
   it('works for local dev with only NEXT_PUBLIC_APP_URL=http://localhost:3000', () => {
@@ -116,34 +107,23 @@ describe('absoluteUrl', () => {
     expect(() => absoluteUrl('/pricing')).toThrow(/could not resolve a base URL/)
   })
 
-  it('falls through to VERCEL_URL when NEXT_PUBLIC_APP_URL is invalid', () => {
-    vi.stubEnv('NEXT_PUBLIC_APP_URL', '<APP_URL>')
-    vi.stubEnv('VERCEL_URL', 'tabmerger-fallback.vercel.app')
-    expect(absoluteUrl('/pricing')).toBe('https://tabmerger-fallback.vercel.app/pricing')
-  })
-
   it('throws a helpful error when nothing valid is configured', () => {
     delete process.env.NEXT_PUBLIC_APP_URL
     expect(() => absoluteUrl('/pricing')).toThrow(/NEXT_PUBLIC_APP_URL/)
   })
 
-  // Production fails CLOSED. Falling back to the deployment's *.vercel.app host would send
-  // paying customers to a URL that may be behind deployment protection and doesn't carry
-  // their session cookies — a loud error is better than silently misdirected checkouts.
-  describe('in production', () => {
-    it('does NOT fall back to VERCEL_URL when NEXT_PUBLIC_APP_URL is invalid', () => {
-      vi.stubEnv('VERCEL_ENV', 'production')
-      vi.stubEnv('VERCEL_URL', 'tabmerger-prod-xyz.vercel.app')
-      vi.stubEnv('NEXT_PUBLIC_APP_URL', '"https://tabmerger.app"')
-      expect(() => absoluteUrl('/dashboard?upgraded=1')).toThrow(/could not resolve a base URL/)
-    })
-
-    it('does NOT fall back to VERCEL_URL when NEXT_PUBLIC_APP_URL is missing', () => {
-      delete process.env.NEXT_PUBLIC_APP_URL
-      vi.stubEnv('VERCEL_ENV', 'production')
-      vi.stubEnv('VERCEL_URL', 'tabmerger-prod-xyz.vercel.app')
-      expect(() => absoluteUrl('/pricing')).toThrow(/could not resolve a base URL/)
-    })
+  // Fails CLOSED in every environment. Falling back to the deployment's own *.vercel.app
+  // host would send paying customers to a URL that may be behind deployment protection and
+  // doesn't carry their session cookies — a loud error beats silently misdirected checkouts.
+  it.each([
+    ['missing', undefined],
+    ['invalid', '"https://tabmerger.app"'],
+  ])('does NOT fall back to VERCEL_URL when NEXT_PUBLIC_APP_URL is %s', (_label, value) => {
+    if (value === undefined) delete process.env.NEXT_PUBLIC_APP_URL
+    else vi.stubEnv('NEXT_PUBLIC_APP_URL', value)
+    vi.stubEnv('VERCEL_ENV', 'preview')
+    vi.stubEnv('VERCEL_URL', 'tabmerger-abc123-lbragiles-projects.vercel.app')
+    expect(() => absoluteUrl('/dashboard?upgraded=1')).toThrow(/could not resolve a base URL/)
   })
 
   // A base URL must be a bare origin. Rejected rather than trimmed, since each of these is
