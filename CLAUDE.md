@@ -77,6 +77,15 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 - E2E encryption is mandatory (no opt-out) for every signed-in Pro user: `groups.windows/name/note/info`, `sessions.groups/name/description`, and `device_sessions.now_open_snapshot` are all `{v:1,iv,ct}` ciphertext in Supabase — the server never holds the key. Unwrapped data key lives in `chrome.storage.local` (persists across browser restarts; unlock is one-time-ever per device), never in `chrome.storage.session`/disk in any other recoverable form. See `packages/extension/src/lib/encryptionKey.ts` and the `encrypted-column-auditor` agent.
 - Fixed 800×600 popup + no outer scrollbars means any modal/panel overflow must be fixed via proper `min-w-0` propagation through the whole flex/grid ancestor chain, never via `overflow-x-auto` on an inner container (it won't actually contain the overflow) or by widening the modal.
 
+**Chrome Web Store listing — `CHROMEWEBSTORE.md` (mandatory):**
+
+Whenever you create or change the Chrome extension, create and maintain `packages/extension/CHROMEWEBSTORE.md` — the single source of truth for everything filled into the Chrome Developer Dashboard: store listing copy, permission justifications, privacy & data-use disclosures, distribution, version history, and review notes. It lives in the extension package root because that is this monorepo's extension project root.
+
+- **Format:** follow the `chrome-extensions` skill. It lives at `.agents/skills/chrome-extensions/`, **not** `.claude/skills/`, so it is not discoverable by name — read `.agents/skills/chrome-extensions/SKILL.md` ("Part 2 — Publishing to the Chrome Web Store") and start from `references/webstore/chromewebstore-template.md`. `references/webstore/review-checklist.md` covers pre-submission checks.
+- **Update it in the same change** as anything that affects store presence: user-facing features (description, feature list, "Last Updated", Version History), `wxt.config.ts` manifest changes (every permission needs a plain-English justification — this manifest deliberately has no `host_permissions`), data collection/storage/transmission (Privacy & Data Use), icons or UI (note which screenshots need refreshing), and any store rejection (fix + Rejection History).
+- **Two listings, one file:** the stable item and the separate private BETA item (see `.claude/plans/release-and-beta-channel-spec.md` §4) differ in name, ID, and distribution — record both.
+- The manifest `name` comes from `getExtensionName()` in `wxt.config.ts` and differs per build mode; the listing name must match the **production** value exactly.
+
 ## Web app (`packages/web/`)
 
 **Framework:** Next.js 15 App Router + TypeScript.
