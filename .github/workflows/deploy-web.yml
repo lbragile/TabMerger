@@ -1,37 +1,26 @@
 name: Deploy Web Preview
 
-# Every push to agentic-revamp that touches the web app produces a Vercel
-# PREVIEW deployment. Nothing here deploys to production.
+# Builds and deploys a Vercel PREVIEW of the web app. Nothing here deploys to
+# production.
 #
-# This replaced a workflow that could never run: it triggered on `master`, which
-# doesn't exist in this repo, and would have deployed `--prod` twice per push (once
-# on `push`, once on `workflow_run`), the first time before CI had even finished.
+# REUSABLE ONLY — this has no trigger of its own. It is called by the
+# `deploy-web-preview` job in ci.yml, which `needs:` every CI gate, so a preview is
+# only ever built from a commit that passed CI, and always the exact commit CI
+# tested. The "does this push touch the web app?" check also lives there.
 #
-# CHECK FIRST — possible double deploys: if the Vercel project is connected to
-# this repo through Vercel's own Git integration, Vercel already creates a preview
-# for every push to a non-production branch, with no Actions involved. Running
-# this as well would produce two previews per push. Vercel dashboard → Project →
-# Settings → Git shows whether that integration is on.
+# Why not a `workflow_run` trigger ("run after CI completes"): workflow_run ignores
+# path filters, so every extension-only commit would redeploy the web preview, and
+# it checks out the default branch's latest commit rather than the one CI tested
+# unless you pin head_sha by hand.
+#
+# CHECK FIRST — possible double deploys: if the Vercel project is connected to this
+# repo through Vercel's own Git integration, Vercel already creates a preview for
+# every push to a non-production branch, with no Actions involved — and without
+# waiting for CI. Vercel dashboard → Project → Settings → Git shows whether that
+# integration is on.
 
 on:
-  push:
-    branches: [agentic-revamp]
-    # Only when something that ships in the web app changes. Extension-only
-    # commits don't need a new preview.
-    paths:
-      - 'packages/web/**'
-      - 'packages/shared/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
-      - '.github/workflows/deploy-web.yml'
-  workflow_dispatch:
-
-# Only the newest preview for a branch matters, so a new push cancels an
-# in-flight one. (Safe for previews; never do this for a production deploy.)
-concurrency:
-  group: deploy-web-preview-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_call:
 
 jobs:
   preview:
