@@ -147,12 +147,12 @@ export function AuthModal({ onClose }: AuthModalProps) {
           <DialogTitle>Account</DialogTitle>
           <DialogDescription>{user.email}</DialogDescription>
         </DialogHeader>
-        <div className="mt-4 space-y-4">
+        <div className="mt-4 space-y-5">
           <p className="text-sm text-muted-foreground">
             You are signed in as <strong>{user.email}</strong>.
           </p>
 
-          <form onSubmit={handleSetPassword} className="space-y-1">
+          <form onSubmit={handleSetPassword} className="flex flex-col gap-2">
             <Label htmlFor="account-password" className="text-xs">
               {hasPasswordIdentity ? 'Change password' : 'Set a password'}
             </Label>
@@ -190,8 +190,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
           <DialogTitle>Reset Password</DialogTitle>
           <DialogDescription>Enter your email to receive a reset link.</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleResetPassword} className="mt-4 space-y-3">
-          <div className="space-y-1">
+        <form onSubmit={handleResetPassword} className="mt-4 space-y-5">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="reset-email">Email</Label>
             <Input
               id="reset-email"
@@ -251,7 +251,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
         <DialogDescription>Sync your groups across devices with a free account.</DialogDescription>
       </DialogHeader>
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-4 flex flex-col gap-3">
         <Button
           variant="outline"
           className="w-full"
@@ -289,8 +289,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
           </TabsList>
 
           <TabsContent value="signin">
-            <form onSubmit={handleSignIn} className="space-y-3 mt-3">
-              <div className="space-y-1">
+            <form onSubmit={handleSignIn} className="space-y-5 mt-3">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="signin-email">Email</Label>
                 <Input
                   id="signin-email"
@@ -301,7 +301,12 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   autoFocus
                 />
               </div>
-              <div className="space-y-1">
+              {/* "Forgot password?" is deliberately OUTSIDE the label+control
+                  wrapper. `space-y-2` encodes "this label belongs to this
+                  input"; a third child inherits that same tight spacing and the
+                  group stops reading as one field. As a form-level sibling the
+                  link picks up the form's own 16px rhythm instead. */}
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="signin-password">Password</Label>
                 <PasswordInput
                   id="signin-password"
@@ -309,6 +314,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+              </div>
+              <div className="flex justify-end -mt-1">
                 <button
                   type="button"
                   className="text-[11px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline"
@@ -324,8 +331,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
           </TabsContent>
 
           <TabsContent value="signup">
-            <form onSubmit={handleSignUp} className="space-y-3 mt-3">
-              <div className="space-y-1">
+            <form onSubmit={handleSignUp} className="space-y-5 mt-3">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="signup-email">Email</Label>
                 <Input
                   id="signup-email"
@@ -335,7 +342,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
                   required
                 />
               </div>
-              <div className="space-y-1">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="signup-password">Password</Label>
                 <PasswordInput
                   id="signup-password"
@@ -352,8 +359,8 @@ export function AuthModal({ onClose }: AuthModalProps) {
           </TabsContent>
 
           <TabsContent value="magiclink">
-            <form onSubmit={handleMagicLink} className="space-y-3 mt-3">
-              <div className="space-y-1">
+            <form onSubmit={handleMagicLink} className="space-y-5 mt-3">
+              <div className="flex flex-col gap-2">
                 <Label htmlFor="magiclink-email">Email</Label>
                 <Input
                   id="magiclink-email"
