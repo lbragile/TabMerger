@@ -144,3 +144,29 @@ jobs:
             echo ""
             echo "Commit: \`${GITHUB_SHA::7}\` on \`${GITHUB_REF_NAME}\`"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      # Puts the URL where people look: a "Web preview" check on the commit whose
+      # Details link opens the preview — in the commits list, on the commit page
+      # and in PR checks.
+      #
+      # A commit status rather than a GitHub Environment deployment: environments in
+      # a PRIVATE repo need GitHub Pro (personal) or Team (org), and the docs don't
+      # say whether a job referencing one fails on other plans. A status works on
+      # every plan. Needs `statuses: write`, granted by the calling job in ci.yml.
+      #
+      # Best-effort: the preview is already live by this point, so failing to post
+      # the link warns rather than turning a successful deploy red.
+      - name: Link the preview on the commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+              -f state=success \
+              -f context="Web preview" \
+              -f description="Deployed to Vercel — click Details to open" \
+              -f target_url="$URL" > /dev/null; then
+            echo "Linked $URL on ${GITHUB_SHA::7}"
+          else
+            echo "::warning::Deployed to $URL, but couldn't post the commit status."
+          fi
