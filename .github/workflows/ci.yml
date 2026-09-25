@@ -384,6 +384,39 @@ jobs:
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
+  # Validates .releaserc.json on EVERY push and PR, so a broken release config is a
+  # normal red check rather than a discovery made halfway through cutting a version.
+  # --dry-run computes the next version and writes nothing: no tag, no release, no
+  # commit. On a branch that isn't a release branch semantic-release reports that and
+  # exits 0, which still proves the config parses and every plugin resolves.
+  #
+  # Deliberately NOT a dependency of `release` — it would just re-run the same
+  # analysis a second time. It exists to fail early on pull requests, where `release`
+  # never runs at all.
+  release-config:
+    name: Validate release config (dry run)
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 — semantic-release reads the full tag history to work out the
+      # last release. A shallow clone makes it think every release is the first one.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: semantic-release --dry-run
+        env:
+          # The built-in token is enough for a dry run: nothing is created, and the
+          # GitHub plugin only needs read access to verify it can authenticate. The
+          # PAT is required for a REAL release (GITHUB_TOKEN-created events do not
+          # trigger publish.yml) but deliberately isn't exposed to PR runs.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm exec semantic-release --dry-run
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -409,6 +442,19 @@ jobs:
     concurrency:
       group: release-${{ github.ref }}
       cancel-in-progress: false
+    # Every gate that must be GREEN before a version number is burned. Once
+    # semantic-release runs it has already pushed a tag and cut a GitHub Release;
+    # anything that fails after that strands the version — the tag exists, nothing
+    # shipped, and the next run computes from a release that never happened.
+    #
+    # build-extension / build-web are load-bearing here, not belt-and-braces:
+    # publish.yml re-builds the extension from the tag, so a broken build means the
+    # release is cut and THEN fails to produce an artifact. Gating on them turns
+    # that stranded release into an ordinary red CI run.
+    #
+    # visual-regression is listed but carries `continue-on-error: true`, so it can
+    # never actually block this job. It stays for ordering only — do not read it as
+    # a gate. If visual checks should block a release, remove its continue-on-error.
     needs:
       [
         scan-secrets,
@@ -420,6 +466,8 @@ jobs:
         e2e-extension,
         e2e-web,
         visual-regression,
+        build-extension,
+        build-web,
       ]
     permissions:
       contents: write
@@ -464,6 +512,8 @@ jobs:
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
           CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: |
           missing=()
           # Which store item this release targets depends on the branch: `beta`
@@ -479,6 +529,15 @@ jobs:
           # which moved to Chrome Web Store API v2 — every v2 endpoint is
           # publishers/{publisherId}/items/{extensionId}.
           for v in CHROME_CLIENT_ID CHROME_CLIENT_SECRET CHROME_REFRESH_TOKEN CHROME_PUBLISHER_ID; do
+            [ -n "${!v}" ] || missing+=("$v")
+          done
+          # The runner has NO .env files (.env.local/.env.beta/.env.production are all
+          # gitignored), so these must come from secrets or wxt's loadEnv() finds
+          # nothing and lib/supabase.ts falls back to a .invalid host. That failure is
+          # SILENT: the build succeeds, the zip publishes, the extension installs and
+          # runs on local IndexedDB, and only sign-in, sync and AI are dead. Checking
+          # here is the difference between a red CI run and a broken store release.
+          for v in VITE_SUPABASE_URL VITE_SUPABASE_PUBLISHABLE_KEY; do
             [ -n "${!v}" ] || missing+=("$v")
           done
           # Fine-grained PATs expire (a year at most). Without this check an
