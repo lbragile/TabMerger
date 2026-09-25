@@ -100,8 +100,13 @@ jobs:
             exit 1
           }
 
+      # --standalone inlines each function's dependencies as real files. Without it,
+      # the function bundles carry pnpm's symlinked node_modules, and Vercel fails
+      # recreating them on upload with EEXIST — two paths resolve to the same
+      # package (seen with import-in-the-middle, pulled in by Sentry). The build
+      # itself succeeds either way; only the upload step breaks.
       - name: Build
-        run: vercel build --non-interactive
+        run: vercel build --standalone --non-interactive
 
       # --prebuilt deploys exactly the output built above. Without it, Vercel would
       # ignore that build and do its own.
