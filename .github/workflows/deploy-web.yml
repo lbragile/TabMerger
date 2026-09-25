@@ -113,7 +113,29 @@ jobs:
       - name: Deploy preview
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --non-interactive)
+          # Non-interactive, the CLI prints a multi-line JSON result rather than a
+          # bare URL — writing that straight to $GITHUB_OUTPUT failed with "Invalid
+          # format", after a deployment that had actually succeeded. Ask for JSON
+          # explicitly, log it in full, and pull the URL out of it.
+          out=$(vercel deploy --prebuilt --non-interactive --format json)
+          echo "$out"
+          url=$(printf '%s' "$out" | node -e '
+            let s = ""
+            process.stdin.on("data", (d) => (s += d)).on("end", () => {
+              let j
+              try { j = JSON.parse(s) } catch {}
+              // The key for a successful deploy isn't documented, so try the
+              // likely ones, then fall back to the deployment host in the text.
+              let u = [j?.deployment?.url, j?.url, j?.deploymentUrl].find((x) => typeof x === "string")
+              if (!u) u = s.match(/https:\/\/[a-z0-9-]+\.vercel\.app/)?.[0]
+              if (u && !u.startsWith("http")) u = "https://" + u
+              process.stdout.write(u ?? "")
+            })
+          ')
+          if [ -z "$url" ]; then
+            echo "::error::The deploy command succeeded, but no URL was found in its output (logged above)."
+            exit 1
+          fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
           {
             echo "### Web preview deployed"
