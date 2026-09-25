@@ -94,8 +94,8 @@ jobs:
           # this failure means the token can't reach the project they name.
           vercel pull --yes --environment=preview --non-interactive || {
             echo "::error::Vercel could not load the project. The IDs are well-formed, so check:"
-            echo "::error::1) Token SCOPE — this project belongs to a TEAM; a token scoped to a personal account cannot see it (vercel.com → Account Settings → Tokens → Scope column)."
-            echo "::error::2) VERCEL_ORG_ID is the TEAM ID (team_…), not a personal Vercel ID."
+            echo "::error::1) Token SCOPE must be the account that OWNS the project. This project is owned by 'lbragile's projects' (Hobby); a token scoped to any other team or account authenticates fine but cannot see it. vercel.com → Account Settings → Tokens → Scope column."
+            echo "::error::2) VERCEL_ORG_ID is that owner's ID (team_… — Hobby accounts have one too)."
             echo "::error::3) Both IDs match the project you mean (.vercel/project.json → orgId, projectId)."
             exit 1
           }
