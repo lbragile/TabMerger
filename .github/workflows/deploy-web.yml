@@ -144,36 +144,38 @@ jobs:
             exit 1
           fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      # Points the fixed preview URL at the deployment just made. CLI deploys get only
+      # the hashed per-deployment URL; Vercel's automatic branch URLs apply to its own
+      # Git integration, which this project doesn't use.
+      #
+      # REQUIRED, not best-effort: the Preview environment's NEXT_PUBLIC_APP_URL is this
+      # host, so auth and Stripe redirects from the new build land here. If the alias
+      # stayed on an older deployment, those redirects would silently return people to
+      # older code.
+      #
+      # A *.vercel.app name needs no DNS or domain setup; the first alias claims it for
+      # this account. It must be ONE label under vercel.app — a nested name like
+      # preview.tabmerger.vercel.app isn't allowed (and isn't covered by the certificate).
+      # The name also appears in the Supabase redirect allow-list and in the Preview
+      # environment's NEXT_PUBLIC_APP_URL, so change all three together.
+      - name: Point tabmerger-preview.vercel.app at this deployment
+        id: alias
+        env:
+          URL: ${{ steps.deploy.outputs.url }}
+          ALIAS: tabmerger-preview.vercel.app
+        run: |
+          vercel alias set "$URL" "$ALIAS" --non-interactive || {
+            echo "::error::Deployed to $URL, but couldn't point $ALIAS at it. The name may already belong to another Vercel account, or the token's scope may not own this project (see the pull step's hints)."
+            exit 1
+          }
+          echo "url=https://$ALIAS" >> "$GITHUB_OUTPUT"
           {
             echo "### Web preview deployed"
             echo ""
-            echo "$url"
+            echo "**https://$ALIAS**"
+            echo ""
+            echo "This commit's own deployment: $URL"
             echo ""
             echo "Commit: \`${GITHUB_SHA::7}\` on \`${GITHUB_REF_NAME}\`"
           } >> "$GITHUB_STEP_SUMMARY"
-
-      # Puts the URL where people look: a "Web preview" check on the commit whose
-      # Details link opens the preview — in the commits list, on the commit page
-      # and in PR checks.
-      #
-      # A commit status rather than a GitHub Environment deployment: environments in
-      # a PRIVATE repo need GitHub Pro (personal) or Team (org), and the docs don't
-      # say whether a job referencing one fails on other plans. A status works on
-      # every plan. Needs `statuses: write`, granted by the calling job in ci.yml.
-      #
-      # Best-effort: the preview is already live by this point, so failing to post
-      # the link warns rather than turning a successful deploy red.
-      - name: Link the preview on the commit
-        env:
-          GH_TOKEN: ${{ github.token }}
-          URL: ${{ steps.deploy.outputs.url }}
-        run: |
-          if gh api "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
-              -f state=success \
-              -f context="Web preview" \
-              -f description="Deployed to Vercel — click Details to open" \
-              -f target_url="$URL" > /dev/null; then
-            echo "Linked $URL on ${GITHUB_SHA::7}"
-          else
-            echo "::warning::Deployed to $URL, but couldn't post the commit status."
-          fi
