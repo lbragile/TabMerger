@@ -17,6 +17,11 @@ name: CI
 # ──────────────────────────────────────────────────────────────────────────────
 
 on:
+  # Manual run: every gate runs as usual and, on agentic-revamp, a passing run
+  # deploys a web preview even if nothing under packages/web changed. It's the way
+  # to get a preview without a web commit. Re-running an OLD run doesn't do the same
+  # job — a re-run uses that commit's code, including whatever made it fail.
+  workflow_dispatch:
   push:
     branches:
       - agentic-revamp
@@ -584,7 +589,9 @@ jobs:
   # multi-commit push is judged on all of its commits, not just the last one.
   web-changes:
     name: Detect web changes
-    if: github.event_name == 'push' && github.ref == 'refs/heads/agentic-revamp'
+    if: >-
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      && github.ref == 'refs/heads/agentic-revamp'
     runs-on: ubuntu-latest
     outputs:
       web: ${{ steps.diff.outputs.web }}
@@ -596,6 +603,12 @@ jobs:
         env:
           BEFORE: ${{ github.event.before }}
         run: |
+          # A manual run is an explicit request for a preview — nothing to diff.
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Manual run; deploying a preview."
+            echo "web=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           # A new branch or a force push has no usable `before` — deploy to be safe.
           if [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
              || ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
