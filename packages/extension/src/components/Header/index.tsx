@@ -8,7 +8,6 @@ import {
     CheckSquare,
     Square,
     Zap,
-    BookmarkPlus,
 } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,6 @@ import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAutoGroup, useOrganizeTabs, QuotaExceededError } from "@/hooks/useAI";
 import { useAppSettings } from "@/hooks/useAppSettings";
 import { useGroups, useSetGroupsState, useApplyAIGroups } from "@/hooks/useGroups";
-import { useSessions, useSaveSession } from "@/hooks/useSessions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
@@ -86,9 +84,7 @@ export function Header() {
         setSearchFilter(q);
     };
     const { user, signOut } = useAuth();
-    const { aiFeatures, tier, maxGroups, sessions: hasSessions } = useEntitlements();
-    const { data: sessionList = [] } = useSessions();
-    const { mutateAsync: saveSession } = useSaveSession();
+    const { aiFeatures, tier, maxGroups } = useEntitlements();
     const { data: groupsState } = useGroups();
     const setGroupsState = useSetGroupsState();
     const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
@@ -176,25 +172,6 @@ export function Header() {
         }
     };
 
-    const handleSaveSession = () => {
-        openModal('saveSession', {
-            onSave: async (name: string, description?: string) => {
-                try {
-                    await saveSession({ name, description, sessionCount: sessionList.length, hasSessions });
-                    toast.success('Session saved');
-                } catch (err) {
-                    if (err instanceof Error && err.message === 'SESSION_LIMIT') {
-                        toast.error('Free plan allows up to 3 sessions.', {
-                            action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
-                        });
-                    } else {
-                        toast.error('Failed to save session');
-                    }
-                }
-            }
-        });
-    };
-
     const searchRef = useRef<HTMLInputElement>(null);
     const [searchOpen, setSearchOpen] = useState(false);
 
@@ -263,21 +240,6 @@ export function Header() {
 
             {/* Actions — pinned to the right */}
             <div className="flex items-center gap-0.5 pr-3 py-2 shrink-0">
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={handleSaveSession}
-                            aria-label="Save session"
-                        >
-                            <BookmarkPlus className="h-3.5 w-3.5 text-muted-foreground" />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">Save session</TooltipContent>
-                </Tooltip>
-
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button

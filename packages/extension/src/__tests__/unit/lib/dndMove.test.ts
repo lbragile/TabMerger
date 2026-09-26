@@ -568,6 +568,76 @@ describe('applyMove — a drag out of Now Open closes exactly the real tabs it m
     expect(applyMove(m, s, tabRef(1, 0, 0), tabRef(0, 0, 0)).sideEffects.map((e) => e.type)).toEqual(['tabs.create'])
     expect(applyMove(m, s, winRef(1, 0), groupRef(0)).sideEffects.map((e) => e.type)).toEqual(['windows.create'])
   })
+
+  describe('Now Open tab(s) → Now Open\'s OWN new-window zone (real detach, not a stored move)', () => {
+    const nowOpenNewWindow = (gi: number) => ({
+      type: 'new-window' as const,
+      id: 'now-open::new-window',
+      groupId: 'now-open',
+      groupIndex: gi,
+    })
+
+    it('single live tab (not the only tab in its window) → tabs.detachToNewWindow with that one real id; stored state untouched', () => {
+      const s = liveState()
+      const { m, tabRef } = model(s)
+      const res = applyMove(m, s, tabRef(0, 0, 0), nowOpenNewWindow(0))
+      expect(res.sideEffects).toEqual([{ type: 'tabs.detachToNewWindow', tabIds: [9] }])
+      expect(res.undoable).toBe(false)
+      expect(res.next).toBe(s) // no stored-state mutation at all — a pure chrome side effect
+    })
+
+    it('the ONLY tab of its window dropped on the zone is a no-op — no side effect, no stored change', () => {
+      const s = liveState()
+      const { m, tabRef } = model(s)
+      // window 600 (index 1 of now-open) holds a single live tab (11)
+      const res = applyMove(m, s, tabRef(0, 1, 0), nowOpenNewWindow(0))
+      expect(res.sideEffects).toEqual([])
+      expect(res.next).toBe(s)
+    })
+
+    it('multi-select of live Now Open tabs preserves ORIGINAL order in tabIds, not click/selection order', () => {
+      const s = liveState()
+      const { m, tabRef, tabId } = model(s)
+      // select tab 10 first, then tab 9 (reverse of source order) — output must still be [9, 10]
+      const sel = [tabId(0, 0, 1), tabId(0, 0, 0)]
+      const active = { ...tabRef(0, 0, 1), selectionIds: sel }
+      const res = applyMove(m, s, active, nowOpenNewWindow(0))
+      expect(res.sideEffects).toEqual([{ type: 'tabs.detachToNewWindow', tabIds: [9, 10] }])
+      expect(res.undoable).toBe(false)
+      expect(res.next).toBe(s)
+    })
+
+    it('a selection mixing a live Now Open tab with a saved-group tab is refused (no single well-defined real action)', () => {
+      const s = liveState()
+      const { m, tabRef, tabId } = model(s)
+      const sel = [tabId(0, 0, 0), tabId(1, 0, 0)]
+      const active = { ...tabRef(0, 0, 0), selectionIds: sel }
+      const res = applyMove(m, s, active, nowOpenNewWindow(0))
+      expect(res.sideEffects).toEqual([])
+      expect(res.next).toBe(s)
+    })
+
+    it('a saved tab dropped on Now Open\'s new-window zone still opens ONE new real (unfocused) window — unchanged existing semantics', () => {
+      const s = liveState()
+      const { m, tabRef } = model(s)
+      const res = applyMove(m, s, tabRef(1, 0, 0), nowOpenNewWindow(0))
+      expect(res.sideEffects).toEqual([
+        { type: 'windows.create', url: 'https://example.com/a1', focused: false },
+      ])
+      expect(res.undoable).toBe(false)
+    })
+
+    it('multiple saved tabs dropped on Now Open\'s new-window zone open ONE new window with every url', () => {
+      const s = liveState()
+      const { m, tabRef, tabId } = model(s)
+      const sel = [tabId(1, 0, 0), tabId(1, 0, 1)]
+      const active = { ...tabRef(1, 0, 0), selectionIds: sel }
+      const res = applyMove(m, s, active, nowOpenNewWindow(0))
+      expect(res.sideEffects).toEqual([
+        { type: 'windows.create', url: ['https://example.com/a1', 'https://example.com/a2'], focused: false },
+      ])
+    })
+  })
 })
 
 // ─────────────────────────────────────────────────────────────────────────────

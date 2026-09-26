@@ -28,16 +28,26 @@ test.describe('Landing page', () => {
       page.locator('a[href="https://addons.mozilla.org/firefox/addon/tabmerger"]')
     ).toBeVisible()
     await expect(
-      page.locator('a[href="https://microsoftedge.microsoft.com/addons/detail/tabmerger"]')
+      // The product ID is required — the slug-only URL returns 404.
+      page.locator('a[href="https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn"]')
     ).toBeVisible()
   })
 
-  test('testimonials carousel is visible', async ({ page }) => {
+  test('landing page shows no invented testimonials', async ({ page }) => {
     await page.goto('/')
-    // ReviewsStrip's placeholder attributions were renamed (no more "Rachel D.") — the
-    // carousel itself is still present, so retarget to a current attribution rather than
-    // dropping the test.
-    await expect(page.getByText('ALEX T.').first()).toBeVisible()
+    // ReviewsStrip used to render four fabricated testimonials attributed to
+    // named people and to real platforms. They were removed; the section now
+    // renders only data sourced from the live Chrome Web Store listing, and
+    // renders nothing at all when there is none.
+    //
+    // This asserts their ABSENCE rather than retargeting to another attribution:
+    // the previous version of this test was itself retargeted from "Rachel D."
+    // to "ALEX T." when the fake names were rewritten, which quietly kept the
+    // fabrications covered by a passing test.
+    for (const fake of ['ALEX T.', 'PRIYA S.', 'MARCO L.', 'JORDAN K.']) {
+      await expect(page.getByText(fake)).toHaveCount(0)
+    }
+    await expect(page.getByText(/Loved by thousands/i)).toHaveCount(0)
   })
 
   test('renders without horizontal overflow at mobile viewport width', async ({ page }) => {

@@ -1,48 +1,181 @@
-name: Deploy Web to Vercel
+name: Deploy Web Preview
+
+# Builds and deploys a Vercel PREVIEW of the web app. Nothing here deploys to
+# production.
+#
+# REUSABLE ONLY — this has no trigger of its own. It is called by the
+# `deploy-web-preview` job in ci.yml, which `needs:` every CI gate, so a preview is
+# only ever built from a commit that passed CI, and always the exact commit CI
+# tested. The "does this push touch the web app?" check also lives there.
+#
+# Why not a `workflow_run` trigger ("run after CI completes"): workflow_run ignores
+# path filters, so every extension-only commit would redeploy the web preview, and
+# it checks out the default branch's latest commit rather than the one CI tested
+# unless you pin head_sha by hand.
+#
+# CHECK FIRST — possible double deploys: if the Vercel project is connected to this
+# repo through Vercel's own Git integration, Vercel already creates a preview for
+# every push to a non-production branch, with no Actions involved — and without
+# waiting for CI. Vercel dashboard → Project → Settings → Git shows whether that
+# integration is on.
 
 on:
-  push:
-    branches:
-      - master
-  workflow_run:
-    workflows:
-      - CI
-    branches:
-      - master
-    types:
-      - completed
+  workflow_call:
 
-# Only run if CI passed (when triggered by workflow_run)
 jobs:
-  deploy:
-    name: Deploy to Vercel
+  preview:
+    name: Deploy preview to Vercel
     runs-on: ubuntu-latest
-    if: >
-      github.event_name == 'push' ||
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    env:
+      # The CLI reads these directly: they select the project without an
+      # interactive `vercel link`, and keep the token out of command lines.
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
+      - name: Preflight — required Vercel secrets
+        run: |
+          missing=()
+          for v in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            [ -n "${!v}" ] || missing+=("$v")
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing repo secret(s): ${missing[*]}"
+            echo "VERCEL_TOKEN: vercel.com → Account Settings → Tokens."
+            echo "VERCEL_ORG_ID / VERCEL_PROJECT_ID: .vercel/project.json after a local 'vercel link'."
+            exit 1
+          fi
+
+          # Shape checks. Values are masked in logs, so a bad paste is otherwise
+          # invisible — and the CLI reports every one of these as the same vague
+          # "Could not retrieve Project Settings".
+          bad=()
+          for v in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            val="${!v}"
+            # Quotes are the usual culprit when copying from .vercel/project.json.
+            case "$val" in *'"'*|*"'"*) bad+=("$v contains quote characters — paste the bare value") ;; esac
+            [ "$val" != "$(printf '%s' "$val" | tr -d '[:space:]')" ] && bad+=("$v contains whitespace or a newline")
+          done
+          case "$VERCEL_PROJECT_ID" in prj_*) ;; *) bad+=("VERCEL_PROJECT_ID should start with prj_") ;; esac
+          case "$VERCEL_ORG_ID" in prj_*) bad+=("VERCEL_ORG_ID starts with prj_ — the two IDs look swapped") ;; esac
+          if [ ${#bad[@]} -gt 0 ]; then
+            for b in "${bad[@]}"; do echo "::error::$b"; done
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
+      # `vercel build` runs the project's install command — packages/web/vercel.json
+      # sets it to `cd ../.. && pnpm install --frozen-lockfile` — so pnpm and Node
+      # must be on this runner.
       - uses: pnpm/action-setup@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # Pinned: an unpinned CLI can change behaviour between runs without any
+      # change in this repo.
+      - name: Install Vercel CLI
+        run: npm install -g vercel@60.0.1
 
-      - name: Deploy to Vercel (Production)
-        uses: vercel/actions@v1
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          working-directory: packages/web
+      # All three commands run from the REPO ROOT. The Vercel project's Root
+      # Directory (packages/web — implied by vercel.json's `cd ../..`) comes down
+      # with `vercel pull` and is applied by `vercel build`. Running them from
+      # inside packages/web would resolve that root directory twice.
+      #
+      # Env vars come from Vercel's own PREVIEW environment, not from GitHub
+      # secrets, so anything the web app needs at build time must be set in
+      # Vercel → Settings → Environment Variables with "Preview" ticked.
+      - name: Pull preview environment and project settings
+        run: |
+          # The CLI's own message suggests deleting a .vercel directory, which is
+          # irrelevant here — CI has none. With the IDs well-formed (checked above),
+          # this failure means the token can't reach the project they name.
+          vercel pull --yes --environment=preview --non-interactive || {
+            echo "::error::Vercel could not load the project. The IDs are well-formed, so check:"
+            echo "::error::1) Token SCOPE must be the account that OWNS the project. This project is owned by 'lbragile's projects' (Hobby); a token scoped to any other team or account authenticates fine but cannot see it. vercel.com → Account Settings → Tokens → Scope column."
+            echo "::error::2) VERCEL_ORG_ID is that owner's ID (team_… — Hobby accounts have one too)."
+            echo "::error::3) Both IDs match the project you mean (.vercel/project.json → orgId, projectId)."
+            exit 1
+          }
+
+      # --standalone inlines each function's dependencies as real files. Without it,
+      # the function bundles carry pnpm's symlinked node_modules, and Vercel fails
+      # recreating them on upload with EEXIST — two paths resolve to the same
+      # package (seen with import-in-the-middle, pulled in by Sentry). The build
+      # itself succeeds either way; only the upload step breaks.
+      - name: Build
+        run: vercel build --standalone --non-interactive
+
+      # --prebuilt deploys exactly the output built above. Without it, Vercel would
+      # ignore that build and do its own.
+      - name: Deploy preview
+        id: deploy
+        run: |
+          # Non-interactive, the CLI prints a multi-line JSON result rather than a
+          # bare URL — writing that straight to $GITHUB_OUTPUT failed with "Invalid
+          # format", after a deployment that had actually succeeded. Ask for JSON
+          # explicitly, log it in full, and pull the URL out of it.
+          out=$(vercel deploy --prebuilt --non-interactive --format json)
+          echo "$out"
+
+          # The parser is written to a file through a QUOTED heredoc ('JS'), which
+          # passes the script through byte for byte. It used to be inline as
+          # `node -e '...'`, where an apostrophe in a comment ended the shell string
+          # early and bash failed with "syntax error near unexpected token" — after
+          # a deploy that had succeeded.
+          cat > "$RUNNER_TEMP/deploy-url.js" <<'JS'
+          let s = ''
+          process.stdin.on('data', (d) => (s += d)).on('end', () => {
+            let j
+            try { j = JSON.parse(s) } catch {}
+            // Observed shape (CLI 60.0.1): { status: "ok", deployment: { url } }.
+            // The other keys and the host regex are fallbacks in case it changes.
+            let u = [j?.deployment?.url, j?.url, j?.deploymentUrl].find((x) => typeof x === 'string')
+            if (!u) u = s.match(/https:\/\/[a-z0-9-]+\.vercel\.app/)?.[0]
+            if (u && !u.startsWith('http')) u = 'https://' + u
+            process.stdout.write(u ?? '')
+          })
+          JS
+          url=$(printf '%s' "$out" | node "$RUNNER_TEMP/deploy-url.js")
+          if [ -z "$url" ]; then
+            echo "::error::The deploy command succeeded, but no URL was found in its output (logged above)."
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      # Points the fixed preview URL at the deployment just made. CLI deploys get only
+      # the hashed per-deployment URL; Vercel's automatic branch URLs apply to its own
+      # Git integration, which this project doesn't use.
+      #
+      # REQUIRED, not best-effort: the Preview environment's NEXT_PUBLIC_APP_URL is this
+      # host, so auth and Stripe redirects from the new build land here. If the alias
+      # stayed on an older deployment, those redirects would silently return people to
+      # older code.
+      #
+      # A *.vercel.app name needs no DNS or domain setup; the first alias claims it for
+      # this account. It must be ONE label under vercel.app — a nested name like
+      # preview.tabmerger.vercel.app isn't allowed (and isn't covered by the certificate).
+      # The name also appears in the Supabase redirect allow-list and in the Preview
+      # environment's NEXT_PUBLIC_APP_URL, so change all three together.
+      - name: Point tabmerger-preview.vercel.app at this deployment
+        id: alias
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+          URL: ${{ steps.deploy.outputs.url }}
+          ALIAS: tabmerger-preview.vercel.app
+        run: |
+          vercel alias set "$URL" "$ALIAS" --non-interactive || {
+            echo "::error::Deployed to $URL, but couldn't point $ALIAS at it. The name may already belong to another Vercel account, or the token's scope may not own this project (see the pull step's hints)."
+            exit 1
+          }
+          echo "url=https://$ALIAS" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Web preview deployed"
+            echo ""
+            echo "**https://$ALIAS**"
+            echo ""
+            echo "This commit's own deployment: $URL"
+            echo ""
+            echo "Commit: \`${GITHUB_SHA::7}\` on \`${GITHUB_REF_NAME}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

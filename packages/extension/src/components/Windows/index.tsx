@@ -128,6 +128,8 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
     setScrollToWindowIndex(null);
   }, [scrollToWindowIndex, activeGroupIndex, groupIndex, setScrollToWindowIndex]);
 
+  const pendingNoteGroupIndex = useUIStore((s) => s.pendingNoteGroupIndex);
+  const setPendingNoteGroupIndex = useUIStore((s) => s.setPendingNoteGroupIndex);
   const selectionMode = useUIStore((s) => s.selectionMode);
   const hasSelection = useUIStore((s) => (s.selectedItems?.length ?? 0) > 0);
   const exitSelectionMode = useUIStore((s) => s.exitSelectionMode);
@@ -239,6 +241,16 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
     }
   }, [noteOpen, group.note]);
 
+  // Sidebar's "Add/Edit note" (GroupContextMenu) calls setActiveGroupIndex + stashes this
+  // group's index here, since the inline editor it wants to open lives in THIS panel, not
+  // the sidebar. Consume + clear once this panel is showing the intended group.
+  useEffect(() => {
+    if (pendingNoteGroupIndex === groupIndex) {
+      setNoteOpen(true);
+      setPendingNoteGroupIndex(null);
+    }
+  }, [pendingNoteGroupIndex, groupIndex, setPendingNoteGroupIndex]);
+
   const commitGroupNote = () => {
     updateGroupNote({ groupIndex, note: noteValue.trim() });
     setNoteOpen(false);
@@ -297,6 +309,11 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="text-xs">
+              {/* Subset rule (spec: popup-ui-consolidation P1): every item here MUST also
+                  exist in GroupContextMenu.tsx with the identical label and handler. Group
+                  *identity* operations (Rename, AI rename, Duplicate, Archive, Delete) are
+                  deliberately absent — they stay context-menu-only. Do not reintroduce an
+                  item here without adding its twin there, and vice versa for the shared set. */}
               <DropdownMenuItem onClick={() => setNoteOpen((o) => !o)}>
                 <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0" />
                 {group.note ? 'Edit note' : 'Add note'}
@@ -304,29 +321,29 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => replaceWithCurrent(groupIndex)}>
                 <RefreshCw className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Replace with current tabs</div><div className="text-[10px] text-muted-foreground font-normal">Swap all windows with your open browser session</div></div>
+                <div><div>Replace with current</div><div className="text-[10px] text-muted-foreground font-normal">Swap all windows with your open browser session</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => mergeWithCurrent(groupIndex)}>
                 <GitMerge className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Merge with current tabs</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
+                <div><div>Merge with current</div><div className="text-[10px] text-muted-foreground font-normal">Add your open browser windows to this group</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => uniteWindows(groupIndex)}>
                 <Layers className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Unite all windows</div><div className="text-[10px] text-muted-foreground font-normal">Combine all windows into one</div></div>
+                <div><div>Unite windows</div><div className="text-[10px] text-muted-foreground font-normal">Combine all windows into one</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => splitWindows(groupIndex)}>
                 <SplitSquareHorizontal className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Split into windows</div><div className="text-[10px] text-muted-foreground font-normal">Move each tab into its own window</div></div>
+                <div><div>Split windows</div><div className="text-[10px] text-muted-foreground font-normal">Move each tab into its own window</div></div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'title' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Sort tabs by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by name</div></div>
+                <div><div>Sort by title</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by name</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => sortTabs({ groupIndex, by: 'url' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Sort tabs by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by address</div></div>
+                <div><div>Sort by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by address</div></div>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleDeduplicate}>
                 <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
@@ -427,7 +444,39 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
             <p className="py-6 text-center text-sm text-muted-foreground">No windows in this group</p>
           )}
 
-          {!group.permanent && (
+          {group.permanent ? (
+            // Now Open mirrors the LIVE browser (`useCurrentTabs`), so "Add Window" must
+            // open a REAL Chrome window, not push an empty window into stored state — a
+            // stored-only window would be overwritten (and vanish) on the next
+            // `useCurrentTabs` sync, and would desync Now Open from reality in the
+            // meantime. The new window (New Tab page) is picked up by the next sync tick
+            // automatically — `syncNowOpen` only drops empty windows (0 tabs) and the
+            // extension's own pages, neither of which applies to a fresh `chrome://newtab`
+            // window. The "new window" drop zone IS enabled here (unlike the earlier
+            // decision to leave it out): dropping a live Now Open tab onto it is a real
+            // `chrome.windows.create({tabId})` detach, and dropping a saved tab onto it
+            // opens it as a real tab in one new unfocused window — see `dndMove.ts`'s
+            // Now Open delegation and `runSideEffects`'s `tabs.detachToNewWindow`. Both
+            // children stay MOUNTED for the whole drag (C4).
+            <div className="relative">
+              <NewWindowDropZone
+                groupId={group.id}
+                groupIndex={groupIndex}
+                activeForTab={dnd.active?.type === 'tab'}
+              />
+              <div className={cn(dnd.isDragging && 'invisible')}>
+                <Button
+                  variant="outline"
+                  className="h-7 rounded-none px-3 text-xs w-full"
+                  onClick={() => { void chrome.windows.create({}); }}
+                  disabled={selectionMode || dnd.isDragging}
+                >
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  Add Window
+                </Button>
+              </div>
+            </div>
+          ) : (
             // "Add Window" + the new-window drop zone share ONE box (the zone overlays
             // the button). NO margin of its own: every window card already carries
             // `mb-2`, so the gap above the button is exactly 8px — the SAME 8px the

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -82,6 +84,15 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
+        {/* Vercel Web Analytics + Speed Insights. The `/next` entry points hook
+            into the App Router, so client-side navigations are counted as page
+            views — the plain `/react` entry would only see the first load.
+            Both are cookieless and load same-origin scripts from /_vercel/*.
+            They only report once enabled in the Vercel dashboard (Analytics and
+            Speed Insights tabs); in local dev they run in debug mode and send
+            nothing. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

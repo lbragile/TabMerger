@@ -1,6 +1,18 @@
 {
   "version": 1,
   "skills": {
+    "chrome-extensions": {
+      "source": "GoogleChrome/modern-web-guidance",
+      "sourceType": "github",
+      "skillPath": "skills/chrome-extensions/SKILL.md",
+      "computedHash": "4b7e7beb7711c75ba267dcd5e3483d56aaa49d4670db88fd8619afea970cbccc"
+    },
+    "modern-web-guidance": {
+      "source": "GoogleChrome/modern-web-guidance",
+      "sourceType": "github",
+      "skillPath": "skills/modern-web-guidance/SKILL.md",
+      "computedHash": "cd6b0db01b54ac29fc5072679ea6ca03d843c9e3611a6809b888756df02bd4a7"
+    },
     "stripe-docs": {
       "source": "docs.stripe.com",
       "sourceUrl": "https://docs.stripe.com",

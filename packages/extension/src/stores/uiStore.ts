@@ -7,7 +7,6 @@ export type ModalType =
   | 'deleteGroup'
   | 'deleteWindow'
   | 'deleteTab'
-  | 'note'
   | 'importExport'
   | 'settings'
   | 'auth'
@@ -59,6 +58,15 @@ interface UIState {
   renameTarget: RenameTarget | null;
   /** Set by a global keyboard shortcut to open the note editor for a specific tab row (consumed + cleared by TabItem). */
   noteTarget: TabPositionTarget | null;
+  /**
+   * Set when the sidebar's group context menu invokes "Add/Edit note" for a group that
+   * isn't necessarily the active one. `Windows/index.tsx` owns the inline group-note
+   * editor, so the sidebar can't open it directly — it stashes the target group index
+   * here (after also calling `setActiveGroupIndex`) and `WindowsPanelInner` consumes +
+   * clears it on mount/update once its `groupIndex` matches. Mirrors `noteTarget`'s
+   * consumed-and-cleared pattern for tab notes.
+   */
+  pendingNoteGroupIndex: number | null;
 
   // Undo/redo stack (max 10)
   undoStack: GroupsState[];
@@ -93,6 +101,7 @@ interface UIState {
   setSearchFilter: (filter: string) => void;
   setRenameTarget: (target: RenameTarget | null) => void;
   setNoteTarget: (target: TabPositionTarget | null) => void;
+  setPendingNoteGroupIndex: (index: number | null) => void;
   pushUndo: (state: GroupsState) => void;
   undo: (currentState: GroupsState) => GroupsState | undefined;
   redo: (currentState: GroupsState) => GroupsState | undefined;
@@ -143,6 +152,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   searchFilter: '',
   renameTarget: null,
   noteTarget: null,
+  pendingNoteGroupIndex: null,
   undoStack: [],
   redoStack: [],
   selectionMode: false,
@@ -161,6 +171,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   setSearchFilter: (filter) => set({ searchFilter: filter }),
   setRenameTarget: (target) => set({ renameTarget: target }),
   setNoteTarget: (target) => set({ noteTarget: target }),
+  setPendingNoteGroupIndex: (index) => set({ pendingNoteGroupIndex: index }),
 
   pushUndo: (state) =>
     set((prev) => {

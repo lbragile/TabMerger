@@ -28,6 +28,46 @@ export interface TabMergerDB {
 
 let dbInstance: IDBPDatabase<TabMergerDB> | null = null;
 
+/**
+ * Notifies the background entrypoint that a group-changing write committed, so it can
+ * rebuild the "Save to TabMerger" context menu. Writers run in BOTH the popup/extension
+ * pages AND the background service worker itself (syncEngine, urlRuleEngine, background.ts
+ * command handlers) — `chrome.runtime.sendMessage` never delivers to the SENDER's own
+ * `onMessage` listeners, so a write issued from inside the SW would otherwise be silently
+ * dropped. The background entrypoint registers a direct callback via
+ * {@link registerGroupsChangeListener} for that in-SW case; everywhere else (the popup) we
+ * fall through to `sendMessage`, which also wakes a sleeping service worker as a side effect
+ * of delivery — that's what lets a popup-issued write rebuild the menu even after the SW
+ * was evicted for inactivity.
+ *
+ * Deliberately NOT called by `markGroupSynced`/`markAllGroupsPendingSync` — those only flip
+ * the `pendingSync` flag and never change anything the menu displays.
+ */
+type GroupsChangeListener = () => void;
+let backgroundGroupsChangeListener: GroupsChangeListener | null = null;
+
+export function registerGroupsChangeListener(listener: GroupsChangeListener): void {
+  backgroundGroupsChangeListener = listener;
+}
+
+function notifyGroupsChanged(): void {
+  if (backgroundGroupsChangeListener) {
+    backgroundGroupsChangeListener();
+    return;
+  }
+  if (typeof chrome === 'undefined' || !chrome.runtime?.sendMessage) return;
+  try {
+    chrome.runtime.sendMessage({ type: 'TM_GROUPS_CHANGED' }, () => {
+      // Swallow "Receiving end does not exist" — e.g. no background listener registered
+      // yet, or the extension context is mid-reload. Reading lastError marks it "handled"
+      // so it doesn't surface as an unhandled error.
+      void chrome.runtime.lastError;
+    });
+  } catch {
+    // Extension context invalidated (page navigating away, extension reloading) — nothing to do.
+  }
+}
+
 export async function getDb(): Promise<IDBPDatabase<TabMergerDB>> {
   if (dbInstance) return dbInstance;
 
@@ -206,16 +246,19 @@ async function writeGroupsState(state: GroupsState): Promise<void> {
     tx.objectStore('groupsState').put({ id: 'state', active: state.active, order: state.available.map((g) => g.id) }),
   ]);
   await tx.done;
+  notifyGroupsChanged();
 }
 
 export async function saveGroup(group: Group): Promise<void> {
   const db = await getDb();
   await db.put('groups', group);
+  notifyGroupsChanged();
 }
 
 export async function deleteGroup(id: string): Promise<void> {
   const db = await getDb();
   await db.delete('groups', id);
+  notifyGroupsChanged();
 }
 
 export async function getSessions(): Promise<Session[]> {
@@ -286,6 +329,7 @@ export async function clearLocalAccountData(): Promise<void> {
     tx.objectStore('sessions').clear(),
     tx.done
   ]);
+  notifyGroupsChanged();
 }
 
 export async function markAllGroupsPendingSync(): Promise<void> {

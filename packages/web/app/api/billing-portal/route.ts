@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createBillingPortalSession } from '@/lib/stripe'
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server'
+import { absoluteUrl } from '@/lib/utils'
 
 /**
  * Opens a Stripe Billing Portal session so the user can manage or cancel their subscription.
@@ -31,7 +32,11 @@ export async function POST(_request: NextRequest) {
   try {
     const url = await createBillingPortalSession({
       customerId: profile.stripe_customer_id,
-      returnUrl: (process.env.NEXT_PUBLIC_APP_URL ?? '') + '/dashboard',
+      // Through absoluteUrl like every other Stripe redirect target, not a hand-built
+      // `NEXT_PUBLIC_APP_URL + path`. That string was built at build time, so it could never be
+      // right for a preview, and when the variable was unset `?? ''` produced a bare
+      // "/dashboard", which Stripe rejects too.
+      returnUrl: absoluteUrl('/dashboard'),
     })
 
     return NextResponse.json({ url })

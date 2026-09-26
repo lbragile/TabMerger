@@ -17,9 +17,11 @@ const {
   mockHasEncryptionKey,
   mockGetDataKey,
   mockPerformSync,
+  mockRegisterGroupsChangeListener,
 } = vi.hoisted(() => ({
   mockGetGroupsState: vi.fn(),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
+  mockRegisterGroupsChangeListener: vi.fn(),
   mockGetAllUrlRules: vi.fn().mockResolvedValue([]),
   mockMatchUrlToRule: vi.fn().mockReturnValue(null),
   mockApplyUrlRule: vi.fn().mockResolvedValue(undefined),
@@ -35,6 +37,7 @@ vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuth
 vi.mock('@/lib/localDb', () => ({
   getGroupsState: mockGetGroupsState,
   saveGroupsState: mockSaveGroupsState,
+  registerGroupsChangeListener: mockRegisterGroupsChangeListener,
 }))
 
 vi.mock('@/lib/supabase', () => ({
@@ -137,6 +140,7 @@ beforeEach(async () => {
   mockHasEncryptionKey.mockReset().mockResolvedValue(true)
   mockGetDataKey.mockReset().mockResolvedValue('key')
   mockPerformSync.mockReset().mockResolvedValue([])
+  mockRegisterGroupsChangeListener.mockReset()
   capturedMain = undefined
   stub = makeChromeStub()
   globalThis.chrome = stub.chrome as unknown as typeof chrome
@@ -241,6 +245,64 @@ describe('background — context menu building', () => {
     const ids = stub.chrome.contextMenus.create.mock.calls.map((c) => c[0].id)
     expect(ids).toContain('tm-scope-current-g1')
     expect(ids).not.toContain('tm-scope-current-g2')
+  })
+})
+
+describe('background — context menu rebuild on groups change (TM_GROUPS_CHANGED)', () => {
+  it('registers a direct listener for in-SW writes (sendMessage cannot reach its own sender)', () => {
+    expect(mockRegisterGroupsChangeListener).toHaveBeenCalledWith(expect.any(Function))
+  })
+
+  it('rebuilds the menu when notified via TM_GROUPS_CHANGED (popup-issued write)', async () => {
+    stub.chrome.contextMenus.create.mockClear()
+    stub.listeners.onMessage[0]({ type: 'TM_GROUPS_CHANGED' })
+    await vi.waitFor(() => expect(stub.chrome.contextMenus.create).toHaveBeenCalled())
+  })
+
+  it('rebuilds the menu when the directly-registered listener fires (in-SW write)', async () => {
+    stub.chrome.contextMenus.create.mockClear()
+    const directListener = mockRegisterGroupsChangeListener.mock.calls[0][0] as () => void
+    directListener()
+    await vi.waitFor(() => expect(stub.chrome.contextMenus.create).toHaveBeenCalled())
+  })
+
+  it('coalesces a burst of notifications into a single rebuild', async () => {
+    stub.chrome.contextMenus.removeAll.mockClear()
+    stub.listeners.onMessage[0]({ type: 'TM_GROUPS_CHANGED' })
+    stub.listeners.onMessage[0]({ type: 'TM_GROUPS_CHANGED' })
+    stub.listeners.onMessage[0]({ type: 'TM_GROUPS_CHANGED' })
+    await new Promise((r) => setTimeout(r, 200))
+    expect(stub.chrome.contextMenus.removeAll).toHaveBeenCalledTimes(1)
+  })
+
+  it('runs a follow-up rebuild with fresh groups when one is requested mid-build', async () => {
+    // Make the in-flight build hang on getGroupsState so we can request another rebuild
+    // while it's still running, then resolve with updated groups.
+    let resolveFirst!: (v: Awaited<ReturnType<typeof mockGetGroupsState>>) => void
+    mockGetGroupsState.mockReset().mockImplementationOnce(
+      () => new Promise((resolve) => { resolveFirst = resolve })
+    )
+    stub.chrome.contextMenus.create.mockClear()
+
+    stub.listeners.onMessage[0]({ type: 'TM_GROUPS_CHANGED' })
+    await new Promise((r) => setTimeout(r, 200)) // let the debounce fire and the build start
+
+    // A second change arrives WHILE the first build is still awaiting getGroupsState
+    mockGetGroupsState.mockResolvedValue({
+      available: [
+        { id: 'now', permanent: true, windows: [] },
+        { id: 'g1', permanent: false, windows: [], name: 'New Group' },
+      ],
+      active: { id: 'now', index: 0 },
+    })
+    stub.listeners.onMessage[0]({ type: 'TM_GROUPS_CHANGED' })
+
+    resolveFirst({ available: [{ id: 'now', permanent: true, windows: [] }], active: { id: 'now', index: 0 } })
+
+    await vi.waitFor(() => {
+      const ids = stub.chrome.contextMenus.create.mock.calls.map((c) => c[0].id)
+      expect(ids).toContain('tm-scope-current-g1')
+    })
   })
 })
 

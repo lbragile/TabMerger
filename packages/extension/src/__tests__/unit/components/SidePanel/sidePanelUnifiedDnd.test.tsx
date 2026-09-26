@@ -130,7 +130,8 @@ vi.mock('@/hooks/useEntitlements', () => ({
 vi.mock('@/hooks/useSessions', () => ({
   useSessions: () => ({ data: [] }),
   useDeleteSession: () => ({ mutate: vi.fn() }),
-  useRestoreSession: () => ({ mutate: vi.fn(), isPending: false })
+  useRestoreSession: () => ({ mutate: vi.fn(), isPending: false }),
+  useSaveSession: () => ({ mutateAsync: vi.fn() })
 }))
 
 vi.mock('sonner', () => ({ toast: { error: vi.fn(), success: vi.fn(), info: vi.fn() } }))
@@ -170,6 +171,7 @@ const baseUIState = {
   activeGroupIndex: 0,
   setActiveGroupIndex: vi.fn(),
   setRenameTarget: vi.fn(),
+  openModal: vi.fn(),
   renameTarget: null as unknown,
   selectedItems: [] as { type: string; id: string }[],
   toggleSelection: vi.fn(),

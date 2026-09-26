@@ -114,7 +114,18 @@ export type DndSideEffect =
    * deferred to popup teardown so closing the popup's anchor tab can't dismiss it
    * mid-commit (spec C7). Always accompanied by detached copies in the destination.
    */
-  | { type: 'tabs.remove'; tabIds: number[] };
+  | { type: 'tabs.remove'; tabIds: number[] }
+  /**
+   * Now Open tab(s) dropped on Now Open's OWN "new window" zone: a real browser
+   * detach, never a stored-state change (`available[permIndex]` is untouched —
+   * `useCurrentTabs` re-syncs once the real windows/tabs move). `tabIds[0]` is
+   * detached first via `chrome.windows.create({ tabId })`; any further ids follow
+   * into the SAME new window via one contiguous `chrome.tabs.move(…, { index: -1 })`,
+   * preserving the original selection order. All ids come from the same live source
+   * window, which is always uniformly incognito-or-not, so no window ever needs to
+   * mix incognito and normal tabs.
+   */
+  | { type: 'tabs.detachToNewWindow'; tabIds: number[] };
 
 export interface TabPosition {
   groupIndex: number;
@@ -821,9 +832,22 @@ function moveTab(
 
   // ── Now Open delegation ──────────────────────────────────────────────────
   if (srcIsPerm && destIsPerm) {
-    // Reorder within Now Open → chrome.tabs.move on the real tab. A live tab on the
-    // Now Open ROW ("new window") is rejected by canDrop; guard the engine as well.
-    if (dest.createdWindow) return NOOP(s);
+    if (dest.createdWindow) {
+      // Now Open's OWN "new window" zone: a real detach, never a stored change.
+      const realTab = s.available[permIndex].windows[srcWi]?.tabs[srcTi];
+      const srcWin = s.available[permIndex].windows[srcWi];
+      if (!realTab || !srcWin || typeof realTab.id !== 'number' || realTab.id <= 0) return NOOP(s);
+      // The ONLY tab of its window: detaching it would just re-create the same
+      // window under a new id — no real change, so skip rather than leave a
+      // pointless empty window behind (user rule, spec §"Drop here for a new window").
+      if (srcWin.tabs.filter(Boolean).length <= 1) return NOOP(s);
+      return {
+        next: s,
+        sideEffects: [{ type: 'tabs.detachToNewWindow', tabIds: [realTab.id] }],
+        undoable: false
+      };
+    }
+    // Reorder within Now Open → chrome.tabs.move on the real tab.
     const realTab = s.available[permIndex].windows[srcWi]?.tabs[srcTi];
     const destWin = s.available[permIndex].windows[dest.windowIndex];
     if (!realTab || !destWin) return NOOP(s);
@@ -986,7 +1010,21 @@ function moveTabsMulti(
 
   // ── INTO Now Open ─────────────────────────────────────────────────────────
   if (isPerm(dest.groupIndex)) {
-    if (dest.createdWindow && liveSel.length > 0) return NOOP(s); // canDrop rejects this too
+    if (dest.createdWindow) {
+      // Now Open's OWN "new window" zone. A selection mixing live Now Open tabs
+      // with saved-group tabs has no single well-defined real-browser action
+      // (open the saved ones as new tabs in the SAME detached window? a second
+      // window?) — refused, same as before this feature existed.
+      if (savedSel.length > 0 && liveSel.length > 0) return NOOP(s);
+      if (liveSel.length > 0) {
+        // ALL live: a real detach, preserving original (sorted) selection order.
+        // `sel` is already sorted by group/window/tab index (spec §6.1).
+        const tabIds = liveSel.map((t) => orig(t)!.id).filter((id): id is number => typeof id === 'number' && id > 0);
+        if (tabIds.length === 0) return NOOP(s);
+        return { next: s, sideEffects: [{ type: 'tabs.detachToNewWindow', tabIds }], undoable: false };
+      }
+      // savedSel only falls through to the ordinary "open as a new window" logic below.
+    }
     const nowOpen = s.available[permIndex];
     const targetWin = dest.createdWindow
       ? undefined

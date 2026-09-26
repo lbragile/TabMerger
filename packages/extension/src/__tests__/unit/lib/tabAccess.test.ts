@@ -8,6 +8,9 @@ beforeEach(() => {
 
 describe('getPageMetaForTab', () => {
   it('returns null when VITE_WEB_APP_URL is unset', async () => {
+    // Unset explicitly. This used to rely on the variable being absent from the
+    // ambient environment, so it failed on any machine whose .env.local sets it.
+    vi.stubEnv('VITE_WEB_APP_URL', '')
     expect(await getPageMetaForTab('https://example.com')).toBeNull()
   })
 

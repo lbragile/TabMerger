@@ -8,9 +8,38 @@ export interface ChromeStoreStats {
 }
 
 /**
+ * The store serves a JavaScript shell with no product data to clients that don't
+ * look like a browser — including Node's default fetch. Without this header the
+ * response never contains a rating, so this function always returned null.
+ */
+const BROWSER_UA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36'
+
+/**
+ * The headline rating, e.g. `aria-label="4.5 out of 5 stars"`. Recommended items
+ * further down the page carry `aria-label="Average rating 4.1 out of 5 stars."`;
+ * requiring the digits immediately after the opening quote excludes those.
+ */
+const RATING_RE = /aria-label="([\d.]+) out of 5 stars"/
+
+/** The rating count, abbreviated by the store: `47 ratings`, `3.6K ratings`, `1.2M ratings`. */
+const COUNT_RE = />([\d.,]+)([KM]?) ratings?</
+
+function parseAbbreviated(value: string, suffix: string): number {
+  const n = Number.parseFloat(value.replace(/,/g, ''))
+  if (suffix === 'K') return Math.round(n * 1_000)
+  if (suffix === 'M') return Math.round(n * 1_000_000)
+  return n
+}
+
+/**
  * Fetches and parses rating stats from the public Chrome Web Store listing page.
- * Returns null if no extension ID is configured, or if the fetch/parse fails —
- * never fabricates numbers.
+ * Returns null if no extension ID is configured, if the listing is unavailable, or
+ * if the fetch/parse fails — never fabricates numbers.
+ *
+ * An unpublished or unavailable item still returns HTTP 200: the store rewrites its
+ * URL slug to `empty-title` and serves a shell with no rating in it. The patterns
+ * simply don't match and this returns null, which is the correct outcome.
  */
 export async function getChromeStoreStats(): Promise<ChromeStoreStats | null> {
   const extensionId = process.env.CHROME_WEBSTORE_EXTENSION_ID
@@ -18,19 +47,19 @@ export async function getChromeStoreStats(): Promise<ChromeStoreStats | null> {
 
   try {
     const res = await fetch(`https://chromewebstore.google.com/detail/${extensionId}`, {
+      headers: { 'User-Agent': BROWSER_UA },
       next: { revalidate: 21600 }, // 6 hours — store ratings don't change fast
     })
     if (!res.ok) return null
 
     const html = await res.text()
+    const ratingMatch = html.match(RATING_RE)
+    const countMatch = html.match(COUNT_RE)
+    if (!ratingMatch || !countMatch) return null
 
-    // Listing page embeds an aria-label like: aria-label="4.8 out of 5 stars. 2,400 ratings."
-    const match = html.match(/([\d.]+)\s+out of 5 stars\.\s*([\d,]+)\s+ratings?/i)
-    if (!match) return null
-
-    const rating = Number.parseFloat(match[1])
-    const ratingCount = Number.parseInt(match[2].replace(/,/g, ''), 10)
-    if (Number.isNaN(rating) || Number.isNaN(ratingCount)) return null
+    const rating = Number.parseFloat(ratingMatch[1])
+    const ratingCount = parseAbbreviated(countMatch[1], countMatch[2])
+    if (Number.isNaN(rating) || Number.isNaN(ratingCount) || ratingCount === 0) return null
 
     return { rating, ratingCount }
   } catch {

@@ -17,6 +17,11 @@ name: CI
 # ──────────────────────────────────────────────────────────────────────────────
 
 on:
+  # Manual run: every gate runs as usual and, on agentic-revamp, a passing run
+  # deploys a web preview even if nothing under packages/web changed. It's the way
+  # to get a preview without a web commit. Re-running an OLD run doesn't do the same
+  # job — a re-run uses that commit's code, including whatever made it fail.
+  workflow_dispatch:
   push:
     branches:
       - agentic-revamp
@@ -384,6 +389,50 @@ jobs:
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
+  # Validates .releaserc.json on every push to a release branch, so a broken release
+  # config is a red check rather than a discovery made halfway through cutting a
+  # version. --dry-run computes the next version and writes nothing: no tag, no
+  # release, no commit.
+  #
+  # PUSH ONLY. semantic-release (index.js) exits early and successfully on a pull
+  # request — BEFORE analyzeCommits — so a PR run only proves the JSON parses and the
+  # plugins resolve, and never checks releaseRules. It was a green check that
+  # validated almost nothing, and restricting to push also keeps a write token away
+  # from PR-triggered runs.
+  #
+  # Deliberately NOT a dependency of `release` — it would just re-run the same
+  # analysis a second time.
+  release-config:
+    name: Validate release config (dry run)
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    # Needed even though nothing is written. semantic-release's verifyAuth runs
+    # `git push --dry-run` before analyzing commits — in dry-run mode too — and this
+    # repo's default GITHUB_TOKEN is read-only, so without this it fails with 403
+    # "Write access to repository not granted". Scoped to this one job; the
+    # workflow-level default stays read-only.
+    permissions:
+      contents: write
+    steps:
+      # fetch-depth: 0 — semantic-release reads the full tag history to work out the
+      # last release. A shallow clone makes it think every release is the first one.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: semantic-release --dry-run
+        env:
+          # The built-in token, with the job's contents:write above. The PAT
+          # (RELEASE_TOKEN) is only needed for a REAL release — events created by
+          # GITHUB_TOKEN don't trigger publish.yml — and is kept out of this job.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm exec semantic-release --dry-run
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -409,6 +458,19 @@ jobs:
     concurrency:
       group: release-${{ github.ref }}
       cancel-in-progress: false
+    # Every gate that must be GREEN before a version number is burned. Once
+    # semantic-release runs it has already pushed a tag and cut a GitHub Release;
+    # anything that fails after that strands the version — the tag exists, nothing
+    # shipped, and the next run computes from a release that never happened.
+    #
+    # build-extension / build-web are load-bearing here, not belt-and-braces:
+    # publish.yml re-builds the extension from the tag, so a broken build means the
+    # release is cut and THEN fails to produce an artifact. Gating on them turns
+    # that stranded release into an ordinary red CI run.
+    #
+    # visual-regression is listed but carries `continue-on-error: true`, so it can
+    # never actually block this job. It stays for ordering only — do not read it as
+    # a gate. If visual checks should block a release, remove its continue-on-error.
     needs:
       [
         scan-secrets,
@@ -420,6 +482,8 @@ jobs:
         e2e-extension,
         e2e-web,
         visual-regression,
+        build-extension,
+        build-web,
       ]
     permissions:
       contents: write
@@ -464,6 +528,8 @@ jobs:
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
           CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: |
           missing=()
           # Which store item this release targets depends on the branch: `beta`
@@ -479,6 +545,15 @@ jobs:
           # which moved to Chrome Web Store API v2 — every v2 endpoint is
           # publishers/{publisherId}/items/{extensionId}.
           for v in CHROME_CLIENT_ID CHROME_CLIENT_SECRET CHROME_REFRESH_TOKEN CHROME_PUBLISHER_ID; do
+            [ -n "${!v}" ] || missing+=("$v")
+          done
+          # The runner has NO .env files (.env.local/.env.beta/.env.production are all
+          # gitignored), so these must come from secrets or wxt's loadEnv() finds
+          # nothing and lib/supabase.ts falls back to a .invalid host. That failure is
+          # SILENT: the build succeeds, the zip publishes, the extension installs and
+          # runs on local IndexedDB, and only sign-in, sync and AI are dead. Checking
+          # here is the difference between a red CI run and a broken store release.
+          for v in VITE_SUPABASE_URL VITE_SUPABASE_PUBLISHABLE_KEY; do
             [ -n "${!v}" ] || missing+=("$v")
           done
           # Fine-grained PATs expire (a year at most). Without this check an
@@ -508,3 +583,80 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
+  # Did this push change anything that ships in the web app? Extension-only commits
+  # don't need a new web preview. Diffs the push's own range (`before` → sha), so a
+  # multi-commit push is judged on all of its commits, not just the last one.
+  web-changes:
+    name: Detect web changes
+    if: >-
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      && github.ref == 'refs/heads/agentic-revamp'
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.diff.outputs.web }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          # A manual run is an explicit request for a preview — nothing to diff.
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Manual run; deploying a preview."
+            echo "web=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A new branch or a force push has no usable `before` — deploy to be safe.
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            echo "No comparable previous commit; treating as a web change."
+            echo "web=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          changed=$(git diff --name-only "$BEFORE" "$GITHUB_SHA")
+          echo "$changed"
+          if echo "$changed" | grep -qE '^(packages/web/|packages/shared/|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|\.github/workflows/deploy-web\.yml$)'; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No web-affecting changes; skipping the preview."
+            echo "web=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  # Web preview — only after EVERY CI gate has passed, and only for pushes that
+  # touch the web app. Same gate list as `release`, so "CI succeeded" means the
+  # same thing for both. Being a job in this run (not a separate workflow_run)
+  # means it deploys exactly the commit these gates tested.
+  deploy-web-preview:
+    name: Deploy web preview
+    needs:
+      [
+        web-changes,
+        scan-secrets,
+        type-check,
+        lint,
+        unit-tests,
+        coverage-delta,
+        integration-tests,
+        e2e-extension,
+        e2e-web,
+        visual-regression,
+        build-extension,
+        build-web,
+      ]
+    # success() is explicit on purpose: a custom `if` would otherwise read as
+    # replacing the gate check, and this job must never run after a failed gate.
+    if: success() && needs.web-changes.outputs.web == 'true'
+    # Only the newest preview matters, so a new push cancels an in-flight deploy.
+    # Safe for previews only — never do this for a production deploy.
+    concurrency:
+      group: deploy-web-preview-${{ github.ref }}
+      cancel-in-progress: true
+    # A reusable workflow can only use the permissions its caller grants.
+    # contents:read is for checkout; the deploy needs nothing else from GitHub.
+    permissions:
+      contents: read
+    uses: ./.github/workflows/deploy-web.yml
+    secrets: inherit

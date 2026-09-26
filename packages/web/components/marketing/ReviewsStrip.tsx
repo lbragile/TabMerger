@@ -1,86 +1,106 @@
 import { getChromeStoreStats } from '@/lib/chromeStoreStats'
+import { getFirefoxAddonStats, type StoreReview } from '@/lib/firefoxAddonStats'
+import { CARD_STRIDE_PX, ReviewCard } from './ReviewCard'
+import { ReviewsCarousel } from './ReviewsCarousel'
 
-const reviews = [
-  { quote: 'TabMerger saved my sanity. I had 200+ tabs across 8 windows. Now everything is organised.', attribution: 'ALEX T. · Chrome Web Store' },
-  { quote: 'The AI grouping is genuinely magic. Dumped a huge research session in and it sorted everything instantly.', attribution: 'PRIYA S. · Product Hunt' },
-  { quote: 'Session restore is the killer feature. I close everything at night and open it back up exactly as I left it.', attribution: 'MARCO L. · Verified user' },
-  { quote: 'Cloud sync just works. Same groups on my laptop and desktop without thinking about it.', attribution: 'JORDAN K. · Chrome Web Store' },
-]
+/**
+ * Everything shown here comes from a live store listing, verbatim — or it isn't
+ * shown. This section previously rendered four invented testimonials attributed
+ * to named people and to real platforms; don't reintroduce hardcoded quotes.
+ *
+ * Labels are store-neutral ("Average rating", "Ratings"). Leaving the store unnamed
+ * is fine — the numbers are this product's real rating. What must never happen is
+ * naming the WRONG store: Firefox figures must not be labelled as Chrome ones.
+ */
 
-// ponytail: these are placeholder testimonial names, not real people — initials avatar
-// instead of a fabricated headshot. Swap for real photo URLs once reviews are sourced live.
-function initials(attribution: string) {
-  const name = attribution.split(' · ')[0]
-  return name
-    .split(/\s+/)
-    .map((part) => part.charAt(0))
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
+interface Stats {
+  rating: number
+  ratingCount: number
+  reviews: StoreReview[]
 }
 
-function ReviewCard({ quote, attribution }: { quote: string; attribution: string }) {
-  return (
-    <div className="shrink-0 w-[320px] rounded-xl border border-border bg-surface px-5 py-4">
-      <div className="text-primary text-xs mb-2.5" aria-label="5 out of 5 stars">★★★★★</div>
-      <p className="text-[13.5px] leading-relaxed mb-3">&ldquo;{quote}&rdquo;</p>
-      <div className="flex items-center gap-2.5">
-        <span
-          className="h-6 w-6 rounded-full bg-primary/10 text-primary text-[9.5px] font-semibold shrink-0 flex items-center justify-center"
-          aria-hidden="true"
-        >
-          {initials(attribution)}
-        </span>
-        <p className="text-[12px] text-text3">{attribution}</p>
-      </div>
-    </div>
-  )
+/**
+ * Chrome is the primary listing. Firefox Add-ons is the fallback, used only when
+ * Chrome yields nothing — its listing is currently unavailable (the store serves
+ * an `empty-title` shell for it). The two are never merged into one figure:
+ * averaging ratings across stores with different audiences and sample sizes would
+ * produce a number neither store actually reports.
+ */
+async function loadStats(): Promise<Stats | null> {
+  const chrome = await getChromeStoreStats()
+  if (chrome) return { ...chrome, reviews: [] }
+
+  const firefox = await getFirefoxAddonStats()
+  if (firefox) return firefox
+
+  return null
 }
 
-// ponytail: async Server Component — the star-rating fetch happens server-side, cached via
-// `next.revalidate`; the marquee itself is static copy so it always renders even when no
-// CHROME_WEBSTORE_EXTENSION_ID is configured (the numeric stats below are still never
-// fabricated — that block simply doesn't render without real data).
+/**
+ * About six cards are visible at once on a typical desktop. Below this many
+ * UNIQUE reviews, the same quote reappears within a single screen, which reads as
+ * padding. The marquee still renders with fewer — it just can't avoid that.
+ * Repeats are never counted as unique; real reviews are the only source.
+ */
+export const MIN_UNIQUE_REVIEWS = 6
+
+/**
+ * The carousel wraps its offset at half the track's width, so the loop is seamless
+ * only when the two halves are identical and each is at least as wide as the
+ * viewport. A handful of real reviews makes a narrow half, which leaves a visible
+ * empty gap on a wide screen. So the reviews are repeated until one half clears
+ * MIN_HALF_PX, and that half is then duplicated.
+ */
+const MIN_HALF_PX = 2560 // covers a 2560px-wide viewport
+
+export function buildMarqueeTrack<T>(items: T[]): T[] {
+  if (items.length === 0) return []
+  const repeats = Math.max(1, Math.ceil(MIN_HALF_PX / (items.length * CARD_STRIDE_PX)))
+  const half = Array.from({ length: repeats }, () => items).flat()
+  return [...half, ...half]
+}
+
 export async function ReviewsStrip() {
-  const stats = await getChromeStoreStats()
+  const stats = await loadStats()
+  if (!stats) return null
+
+  const { reviews } = stats
+  const track = buildMarqueeTrack(reviews)
 
   return (
     <section className="py-16 sm:py-[72px] px-6 sm:px-11 border-b border-border overflow-hidden">
       <div className="container max-w-[960px]">
         <h2 className="font-semibold tracking-tight mb-8 sm:mb-11 text-[28px] sm:text-[34px] leading-tight text-center">
-          Loved by thousands of tab-drowning users
+          What people are saying
         </h2>
 
-        {stats && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 mb-8 sm:mb-11">
-            {[
-              { number: `${stats.rating} / 5`, label: 'Chrome Web Store rating' },
-              { number: stats.ratingCount.toLocaleString(), label: 'Chrome Web Store ratings' },
-            ].map((stat, i) => (
-              <div
-                key={stat.label}
-                className={`py-6 px-4 flex flex-col items-center text-center ${i === 1 ? 'border-l border-border' : ''}`}
-              >
-                <span className="font-extrabold" style={{ fontSize: '30px' }}>
-                  {stat.number}
-                </span>
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-1">
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Marquee carousel — duplicated once for a seamless loop */}
-      <div className="pause-on-hover">
-        <div className="flex gap-4 w-max animate-marquee">
-          {[...reviews, ...reviews].map((r, i) => (
-            <ReviewCard key={i} {...r} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 mb-8 sm:mb-11">
+          {[
+            { number: `${stats.rating} / 5`, label: 'Average rating' },
+            { number: stats.ratingCount.toLocaleString(), label: 'Ratings' },
+          ].map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`py-6 px-4 flex flex-col items-center text-center ${i === 1 ? 'sm:border-l border-border' : ''}`}
+            >
+              <span className="font-extrabold" style={{ fontSize: '30px' }}>
+                {stat.number}
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-1">
+                {stat.label}
+              </span>
+            </div>
           ))}
         </div>
       </div>
+
+      {track.length > 0 && (
+        <ReviewsCarousel>
+          {track.map((r, i) => (
+            <ReviewCard key={i} review={r} hidden={i >= reviews.length} />
+          ))}
+        </ReviewsCarousel>
+      )}
     </section>
   )
 }

@@ -222,32 +222,32 @@ describe('WindowItem — "Open in browser" in ⋯ dropdown', () => {
 // ─── Sort tabs ────────────────────────────────────────────────────────────────
 
 describe('WindowItem — sort tabs in ⋯ dropdown', () => {
-  it('shows "Sort by title" and calls sortTabs with by="title"', async () => {
+  it('shows "Sort this window by title" and calls sortTabs with by="title"', async () => {
     const user = userEvent.setup()
     renderWindow(makeWindow(), 3, 1)
     await openMoreMenu(user)
 
-    expect(screen.getByText('Sort by title')).toBeTruthy()
-    await user.click(screen.getByText('Sort by title'))
-    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 3, by: 'title' })
+    expect(screen.getByText('Sort this window by title')).toBeTruthy()
+    await user.click(screen.getByText('Sort this window by title'))
+    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 3, windowIndex: 1, by: 'title' })
   })
 
-  it('shows "Sort by URL" and calls sortTabs with by="url"', async () => {
+  it('shows "Sort this window by URL" and calls sortTabs with by="url"', async () => {
     const user = userEvent.setup()
     renderWindow(makeWindow(), 3, 1)
     await openMoreMenu(user)
 
-    expect(screen.getByText('Sort by URL')).toBeTruthy()
-    await user.click(screen.getByText('Sort by URL'))
-    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 3, by: 'url' })
+    expect(screen.getByText('Sort this window by URL')).toBeTruthy()
+    await user.click(screen.getByText('Sort this window by URL'))
+    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 3, windowIndex: 1, by: 'url' })
   })
 
-  it('passes the correct groupIndex to sortTabs', async () => {
+  it('passes the correct groupIndex and windowIndex to sortTabs', async () => {
     const user = userEvent.setup()
-    renderWindow(makeWindow(), 7, 0)
+    renderWindow(makeWindow(), 7, 2)
     await openMoreMenu(user)
-    await user.click(screen.getByText('Sort by title'))
-    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 7, by: 'title' })
+    await user.click(screen.getByText('Sort this window by title'))
+    expect(mockSortTabs).toHaveBeenCalledWith({ groupIndex: 7, windowIndex: 2, by: 'title' })
   })
 })
 

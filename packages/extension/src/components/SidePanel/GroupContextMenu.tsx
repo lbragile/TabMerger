@@ -29,6 +29,7 @@ import {
   useUniteWindows,
   useSplitWindows,
   useSortTabs,
+  useDeleteAllWindows,
   useGroups,
   useArchiveGroup,
   useRestoreGroup,
@@ -39,6 +40,7 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
 import { getSetting } from '@/lib/localDb';
+import { deduplicateTabs } from '@/lib/deduplication';
 import { toast } from 'sonner';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -96,12 +98,34 @@ export function GroupContextMenu({
   const { mutate: uniteWindows } = useUniteWindows();
   const { mutate: splitWindows } = useSplitWindows();
   const { mutate: sortTabs } = useSortTabs();
+  const { mutate: deleteAllWindows } = useDeleteAllWindows();
   const { mutate: updateGroupName } = useUpdateGroupName();
   const { aiFeatures } = useEntitlements();
   const { data: appSettings } = useAppSettings();
   const { mutateAsync: nameGroup } = useNameGroup();
   const openModal = useUIStore((s) => s.openModal);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
+  const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
+  const setPendingNoteGroupIndex = useUIStore((s) => s.setPendingNoteGroupIndex);
+
+  // Same handler the windows-toolbar ⋯ uses (Windows/index.tsx `handleDeduplicate`) —
+  // kept in sync per the P1 subset rule.
+  const handleDeduplicate = () => {
+    const allTabs = group.windows.flatMap((w) => w.tabs);
+    const { duplicates } = deduplicateTabs(allTabs);
+    if (duplicates.length === 0) {
+      toast.info('No duplicates found');
+      return;
+    }
+    openModal('deduplicateGroup', { groupIndex, duplicates });
+  };
+
+  // The inline group-note editor lives in Windows/index.tsx, not the sidebar. Select the
+  // group so it's actually visible, then stash the target index for that panel to consume.
+  const handleOpenNote = () => {
+    setActiveGroupIndex(groupIndex);
+    setPendingNoteGroupIndex(groupIndex);
+  };
 
   const handleAIRename = async () => {
     const tabs = group.windows.flatMap((w) => w.tabs);
@@ -172,7 +196,7 @@ export function GroupContextMenu({
             </DropdownMenuItem>
           )}
 
-          <DropdownMenuItem onClick={() => openModal('note', { groupIndex, groupId: group.id })}>
+          <DropdownMenuItem onClick={handleOpenNote}>
             <FileText className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>{group.note ? 'Edit note' : 'Add note'}</div><div className="text-[10px] text-muted-foreground font-normal">{group.note ? 'Update the note for this group' : 'Attach a note to this group'}</div></div>
           </DropdownMenuItem>
@@ -238,10 +262,17 @@ export function GroupContextMenu({
             <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div><div>Sort by URL</div><div className="text-[10px] text-muted-foreground font-normal">Alphabetically sort all tabs by address</div></div>
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDeduplicate}>
+            <Copy className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div><div>Deduplicate tabs</div><div className="text-[10px] text-muted-foreground font-normal">Remove tabs with duplicate URLs</div></div>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
 
+          {/* Reversible "put away" action — its own group, deliberately kept apart
+              from the destructive ones below. Mixing them (red, neutral, red) made
+              Archive read as a third destructive option. */}
           {!group.permanent && (
             <>
-              <DropdownMenuSeparator />
               {group.archived ? (
                 <DropdownMenuItem onClick={() => restoreGroup(groupIndex)}>
                   <Archive className="h-3.5 w-3.5 mr-2 shrink-0" />
@@ -253,24 +284,43 @@ export function GroupContextMenu({
                   <div><div>Archive group</div><div className="text-[10px] text-muted-foreground font-normal">Hide this group; restore it anytime</div></div>
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem
-                className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
-                onClick={async () => {
-                  const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
-                    'appSettings',
-                    { confirmOnDelete: false }
-                  );
-                  if (confirmOnDelete) {
-                    openModal('deleteGroup', { groupIndex, groupName: group.name });
-                  } else {
-                    _deleteGroup(groupIndex);
-                  }
-                }}
-              >
-                <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
-                <div><div>Delete group</div><div className="text-[10px] font-normal opacity-60">Permanently remove this group and its tabs</div></div>
-              </DropdownMenuItem>
+              <DropdownMenuSeparator />
             </>
+          )}
+
+          {/* Danger zone — every destructive action together, at the bottom, ordered
+              least to most destructive so the final item is the one that removes the
+              most. For "Now Open" only the first applies. */}
+          <DropdownMenuItem
+            className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+            onClick={() => deleteAllWindows({ groupIndex })}
+          >
+            <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
+            <div>
+              <div>{group.permanent ? 'Close all windows' : 'Remove all windows'}</div>
+              <div className="text-[10px] font-normal opacity-60">
+                {group.permanent ? 'Close all browser windows in this group' : 'Permanently remove all windows and their tabs'}
+              </div>
+            </div>
+          </DropdownMenuItem>
+          {!group.permanent && (
+            <DropdownMenuItem
+              className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
+              onClick={async () => {
+                const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
+                  'appSettings',
+                  { confirmOnDelete: false }
+                );
+                if (confirmOnDelete) {
+                  openModal('deleteGroup', { groupIndex, groupName: group.name });
+                } else {
+                  _deleteGroup(groupIndex);
+                }
+              }}
+            >
+              <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
+              <div><div>Delete group</div><div className="text-[10px] font-normal opacity-60">Permanently remove this group and its tabs</div></div>
+            </DropdownMenuItem>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

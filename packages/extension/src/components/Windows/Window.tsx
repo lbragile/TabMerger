@@ -497,13 +497,13 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
                 <ExternalLink className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
                 Open in browser
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, by: 'title' })}>
+              <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, windowIndex, by: 'title' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                Sort by title
+                Sort this window by title
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, by: 'url' })}>
+              <DropdownMenuItem className="text-xs" onClick={() => sortTabs({ groupIndex, windowIndex, by: 'url' })}>
                 <SortAsc className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />
-                Sort by URL
+                Sort this window by URL
               </DropdownMenuItem>
               <DropdownMenuItem className="text-xs" onClick={() => setNoteOpen(true)}>
                 <StickyNote className="h-3.5 w-3.5 mr-2 shrink-0 text-muted-foreground" />

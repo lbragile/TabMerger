@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/browser';
-import { getGroupsState, saveGroupsState } from '@/lib/localDb';
+import { getGroupsState, saveGroupsState, registerGroupsChangeListener } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
 import { performSync } from '@/lib/syncEngine';
@@ -88,10 +88,35 @@ export function tabsForScope(
 }
 
 let _building = false;
+// Set when a rebuild is requested WHILE one is already in flight — the in-flight build may
+// have already fetched groups before the change that triggered the new request landed in
+// IDB, so its result could be stale by the time it resolves. Rather than drop the request
+// (the old `_building` guard did exactly that), queue exactly one more rebuild to run right
+// after, which re-reads groups fresh and picks up whatever changed.
+let _rebuildPending = false;
 async function buildMenus() {
-  if (_building) return;
+  if (_building) {
+    _rebuildPending = true;
+    return;
+  }
   _building = true;
   try { await _buildMenus(); } finally { _building = false; }
+  if (_rebuildPending) {
+    _rebuildPending = false;
+    void buildMenus();
+  }
+}
+
+// Debounce window for coalescing bursts of groups-changed notifications (bulk actions, DnD
+// reorders, and sync all fire several writes in quick succession) into a single menu rebuild.
+const REBUILD_DEBOUNCE_MS = 150;
+let _rebuildTimer: ReturnType<typeof setTimeout> | null = null;
+function scheduleMenuRebuild() {
+  if (_rebuildTimer) return; // a rebuild is already scheduled for this burst
+  _rebuildTimer = setTimeout(() => {
+    _rebuildTimer = null;
+    void buildMenus();
+  }, REBUILD_DEBOUNCE_MS);
 }
 
 async function _buildMenus() {
@@ -161,6 +186,11 @@ export default defineBackground(() => {
     self.addEventListener('unhandledrejection', (event) => Sentry.captureException(event.reason));
   }
 
+  // In-SW writes (syncEngine, urlRuleEngine, command handlers below) can't reach this
+  // worker's own onMessage listener via sendMessage — see notifyGroupsChanged's doc
+  // comment in localDb.ts. This direct callback is the in-SW half of that mechanism.
+  registerGroupsChangeListener(scheduleMenuRebuild);
+
   chrome.runtime.onInstalled.addListener((details) => {
     void buildMenus();
     trackEvent(details.reason === 'install' ? 'extension_installed' : 'extension_updated', {
@@ -202,6 +232,12 @@ export default defineBackground(() => {
     }
     if (m?.type === 'CLEAR_ALARM' && m.name) {
       void chrome.alarms.clear(m.name);
+    }
+    // Popup-side (and other extension-page) half of the mechanism described in
+    // localDb.ts's notifyGroupsChanged — a groups-changing write in the popup wakes this
+    // SW via sendMessage delivery and lands here.
+    if (m?.type === 'TM_GROUPS_CHANGED') {
+      scheduleMenuRebuild();
     }
   });
 
