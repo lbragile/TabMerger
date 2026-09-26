@@ -1,3 +1,13 @@
+# [3.1.0-beta.5](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.4...v3.1.0-beta.5) (2026-09-26)
+
+
+### Features
+
+* **extension:** hide AI features until they launch ([6d8fe0d](https://github.com/lbragile/TabMerger/commit/6d8fe0d1a91abba01f3ff92bdafa2d6c8e173f65))
+* **shared:** add the AI feature flag helper ([945e4f1](https://github.com/lbragile/TabMerger/commit/945e4f14c28e0833ae2dcf31dfb9e4ca4cd2e1d1))
+* **web:** refuse AI requests and AI purchases while AI is off ([63cbf63](https://github.com/lbragile/TabMerger/commit/63cbf63cb37aa06e8fb37fc63bdcb41c1585cc31))
+* **web:** show AI as coming soon on the site ([7dff2d3](https://github.com/lbragile/TabMerger/commit/7dff2d3d8cbee0944cbab3490423fec225aaa347))
+
 # [3.1.0-beta.4](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.3...v3.1.0-beta.4) (2026-09-26)
 
 
