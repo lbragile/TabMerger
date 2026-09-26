@@ -38,7 +38,9 @@ describe('ChangelogPage', () => {
 
   it('shows the "Major release" badge only for vX.0.0 entries', () => {
     render(<ChangelogPage />)
-    expect(screen.getAllByText('Major release')).toHaveLength(1)
+    // v3.0.0 and v2.0.0.
+    expect(screen.getAllByText('Major release')).toHaveLength(2)
+    expect(document.getElementById('v3-0-0')?.className).toContain('bg-surface2')
     const majorEntry = document.getElementById('v2-0-0')
     expect(majorEntry).not.toBeNull()
     expect(majorEntry?.className).toContain('bg-surface2')
@@ -64,6 +66,31 @@ describe('ChangelogPage', () => {
     expect(document.getElementById('v2-0-0')).toBeInTheDocument()
     expect(document.getElementById('v2-0-1')).toBeInTheDocument()
     expect(document.getElementById('v2-1-0')).toBeInTheDocument()
+  })
+
+  // v3.0.0's git tag is only a semantic-release anchor, so CHANGELOG.md never gets a
+  // section for it — the page used to jump from generated entries straight to v2.1.0,
+  // leaving out the version that's actually live.
+  it('shows v3.0.0 — the live version — above the older history', () => {
+    render(<ChangelogPage />)
+    const ids = Array.from(document.querySelectorAll('[id]')).map((el) => el.id)
+    expect(ids).toContain('v3-0-0')
+    expect(ids.indexOf('v3-0-0')).toBeLessThan(ids.indexOf('v2-1-0'))
+  })
+
+  it('places generated releases above v3.0.0', () => {
+    getGeneratedChangelog.mockReturnValue([
+      { version: 'v3.1.0', date: 'October 1, 2026', changes: [{ type: 'New', text: 'extension: something new' }] },
+    ])
+    render(<ChangelogPage />)
+    const ids = Array.from(document.querySelectorAll('[id]')).map((el) => el.id)
+    expect(ids.indexOf('v3-1-0')).toBeLessThan(ids.indexOf('v3-0-0'))
+  })
+
+  it('does not advertise AI features in v3.0.0 while they are marked "coming soon"', () => {
+    render(<ChangelogPage />)
+    const v3 = document.getElementById('v3-0-0')
+    expect(v3?.textContent).not.toMatch(/\bAI\b/)
   })
 
   it('renders generated CHANGELOG.md entries ahead of the legacy history', () => {

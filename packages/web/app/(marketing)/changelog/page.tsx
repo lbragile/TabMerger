@@ -7,6 +7,30 @@ export const metadata: Metadata = {
   description: 'New features, improvements, and fixes in TabMerger.',
 }
 
+// v3.0.0 is the version live on the Chrome Web Store, but its `v3.0.0` git tag is only
+// an ANCHOR for semantic-release (created 2026-09-19 on the 2026-08-14 commit fcd85f9),
+// so CHANGELOG.md has no generated section for it and the page skipped straight to
+// v2.1.0. Written by hand from the git history up to that commit; every item was
+// checked against the code. AI features are left out on purpose while they're marked
+// "coming soon". Releases after this are generated — don't add more entries here.
+const V3_0_0: ChangeEntry = {
+  version: 'v3.0.0',
+  date: 'August 14, 2026',
+  changes: [
+    { type: 'New', text: 'Rebuilt from the ground up — a new extension for Chrome, Firefox and Edge, plus a web app with your account and dashboard' },
+    { type: 'New', text: 'Cloud sync across devices (Pro), end-to-end encrypted — your tabs are encrypted before they leave the browser, and only you hold the key' },
+    { type: 'New', text: 'Sessions — save your whole workspace and restore it later' },
+    { type: 'New', text: 'Share a group with a public link' },
+    { type: 'New', text: 'URL rules — send matching tabs to a group automatically' },
+    { type: 'New', text: 'Notes on groups and tabs, and reminders' },
+    { type: 'New', text: 'Selection mode for moving, copying or closing many tabs at once' },
+    { type: 'New', text: 'Keyboard shortcuts and a right-click menu to save the current tab, tabs to the left or right, or all other tabs' },
+    { type: 'Improved', text: 'Chrome tab groups are imported when you open TabMerger' },
+    { type: 'Improved', text: 'Tab previews with page images, search across groups, and undo/redo' },
+    { type: 'Improved', text: 'Fewer permissions: TabMerger no longer asks to read and change data on the websites you visit' },
+  ],
+}
+
 // Pre-automation history. These three entries describe real shipped work, but
 // none of it has a git tag or GitHub Release — semantic-release has never run
 // in this repo (see .claude/plans/release-and-beta-channel-spec.md §1/§6).
@@ -70,7 +94,7 @@ function anchorId(version: string) {
 }
 
 export default function ChangelogPage() {
-  const entries = [...getGeneratedChangelog(), ...LEGACY_CHANGELOG]
+  const entries = [...getGeneratedChangelog(), V3_0_0, ...LEGACY_CHANGELOG]
 
   return (
     <div className="container py-16 max-w-3xl">
