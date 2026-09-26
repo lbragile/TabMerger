@@ -79,12 +79,6 @@ describe('ChangelogPage', () => {
     expect(document.body.textContent).not.toMatch(/May 4, 2026|June 12, 2026|July 28, 2026/)
   })
 
-  it('notes that versions before v1.2.0 were never tagged', () => {
-    render(<ChangelogPage />)
-    const note = screen.getByTestId('changelog-origins')
-    expect(note).toHaveTextContent(/began in 2020/)
-    expect(note).toHaveTextContent(/v1\.2\.0/)
-  })
 
   it('places generated releases above v3.0.0', () => {
     getGeneratedChangelog.mockReturnValue([

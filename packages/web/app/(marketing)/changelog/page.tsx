@@ -225,11 +225,6 @@ export default function ChangelogPage() {
           )
         })}
       </div>
-
-      <p className="mt-10 pt-8 border-t border-line text-sm text-text3" data-testid="changelog-origins">
-        TabMerger began in 2020 — version 1.0 shipped in November 2020. Releases before
-        v1.2.0 weren&rsquo;t tagged, so they aren&rsquo;t listed. Version 3.0 is a complete rebuild.
-      </p>
     </div>
   )
 }
