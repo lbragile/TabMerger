@@ -21,19 +21,20 @@ jobs:
   build:
     name: Build Extension Packages
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # On a release event GITHUB_REF is already the tag; on a manual run it is
           # the default branch, so the tag has to be checked out explicitly.
           ref: ${{ inputs.tag || github.ref }}
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -83,7 +84,7 @@ jobs:
 
       - name: Upload Chrome BETA artifact
         if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tabmerger-chrome-beta
           # Leading wildcard is load-bearing. WXT derives {{name}} in its
@@ -139,7 +140,7 @@ jobs:
 
       - name: Upload Chrome artifact
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tabmerger-chrome
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-chrome.zip
@@ -152,7 +153,7 @@ jobs:
 
       - name: Upload Firefox artifact
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tabmerger-firefox
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-firefox.zip
@@ -165,7 +166,7 @@ jobs:
 
       - name: Upload Edge artifact
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tabmerger-edge
           path: packages/extension/.output/*-${{ steps.version.outputs.version }}-edge.zip
@@ -184,8 +185,9 @@ jobs:
     needs: build
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: tabmerger-chrome-beta
 
@@ -323,8 +325,9 @@ jobs:
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: tabmerger-chrome
 
@@ -354,8 +357,9 @@ jobs:
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: tabmerger-firefox
 
@@ -379,8 +383,9 @@ jobs:
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: tabmerger-edge
 
@@ -412,27 +417,28 @@ jobs:
       && needs.build.result == 'success'
       && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
         with:
           name: tabmerger-chrome-beta
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-chrome
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-firefox
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-edge

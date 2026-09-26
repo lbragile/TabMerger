@@ -3,17 +3,19 @@ name: CI
 # ──────────────────────────────────────────────────────────────────────────────
 # Required status checks — wire these up in GitHub repo Settings →
 # Branches → master → Branch protection rules → "Require status checks":
-#   • Secret Scan          (scan-secrets)
-#   • Type Check           (type-check)
-#   • Lint                 (lint)
-#   • Unit Tests           (unit-tests)
-#   • Coverage Delta       (coverage-delta)
+#   • Static Checks        (static-checks — secret scan + type-check + lint;
+#                            dep-audit runs inside it as a non-blocking step)
+#   • Unit Tests           (unit-tests — also runs the coverage-delta compare
+#                            as its last steps, same job)
 #   • Integration Tests    (integration-tests)
 #   • E2E Tests            (e2e-extension, e2e-web)
-#   • Visual Regression    (visual-regression)   ← non-blocking until snapshots are committed, see note below
+#   • Build                (build — extension + web, was build-extension/build-web)
+#   • Visual Regression    PAUSED — see the visual-regression job below, it no
+#                          longer runs and must not be added back as a required
+#                          check until it does.
 #
-# dep-audit is intentionally non-blocking (continue-on-error: true) so
-# Renovate/Dependabot PRs can still land even with transitive advisories.
+# dep-audit is intentionally non-blocking (continue-on-error on that step only)
+# so Renovate/Dependabot PRs can still land even with transitive advisories.
 # ──────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -21,22 +23,53 @@ on:
   # deploys a web preview even if nothing under packages/web changed. It's the way
   # to get a preview without a web commit. Re-running an OLD run doesn't do the same
   # job — a re-run uses that commit's code, including whatever made it fail.
+  #
+  # Deliberately NOT filtered by paths-ignore below — a manual run is an explicit
+  # request and must always execute every gate.
   workflow_dispatch:
   push:
     branches:
       - agentic-revamp
       - beta
+    # Skip the whole workflow when EVERY changed file is docs/agent-memory —
+    # this is what most of the ~15-job/~30-billed-minute runs used to burn on a
+    # memory-file or markdown-only commit. If a push touches anything else too,
+    # the workflow still runs — this only skips genuinely doc-only changes.
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".claude/**"
+      - ".agents/**"
   pull_request:
     branches:
       - agentic-revamp
       - beta
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - ".claude/**"
+      - ".agents/**"
+
+# Cancel a superseded run for the same ref — except on `beta`. Beta is the
+# release branch (see the `release` job below): cancelling a run mid-release
+# could kill a run after semantic-release has already pushed a tag but before
+# the required gates finish, stranding that version. Every other ref (PRs,
+# agentic-revamp) is safe to cancel-and-restart on a new push.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/beta' }}
 
 jobs:
-  scan-secrets:
-    name: Secret Scan
+  # ── Static checks: secret scan, dependency audit (non-blocking step),
+  # type-check, lint. Merged into one job so they share a single checkout +
+  # install instead of four. dep-audit's continue-on-error moved from the job
+  # level to the step level — it's the only thing in this job allowed to fail.
+  static-checks:
+    name: Static Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -51,61 +84,45 @@ jobs:
 
           echo "No secrets found."
 
-  dep-audit:
-    name: Dependency Audit (non-blocking)
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=high
 
-  type-check:
-    name: Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tabmerger/shared type-check
-      - run: pnpm --filter @tabmerger/extension type-check
-      - run: pnpm --filter @tabmerger/web type-check
+      - name: Dependency Audit (non-blocking)
+        continue-on-error: true
+        run: pnpm audit --audit-level=high
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tabmerger/extension lint
-      - run: pnpm --filter @tabmerger/web lint
+      - name: Type check (shared)
+        run: pnpm --filter @tabmerger/shared type-check
+      - name: Type check (extension)
+        run: pnpm --filter @tabmerger/extension type-check
+      - name: Type check (web)
+        run: pnpm --filter @tabmerger/web type-check
+
+      - name: Lint (extension)
+        run: pnpm --filter @tabmerger/extension lint
+      - name: Lint (web)
+        run: pnpm --filter @tabmerger/web lint
 
   # ── Gate 1: unit tests + coverage floor (each package's `test` script runs
   # `vitest run`; the ≥80% floor is enforced by vitest.config.ts `thresholds`,
-  # which now fails the job itself if any metric drops below 80%). This job
-  # additionally uploads coverage-summary.json for the delta check below, and
-  # — only on master push — publishes it as the new baseline artifact.
+  # which fails the job itself if any metric drops below 80%). The coverage
+  # delta comparison against the default-branch baseline now runs as the last
+  # steps of THIS job (folded in from the former separate `coverage-delta`
+  # job) — same checkout, same install, and it can read the just-produced
+  # coverage-summary.json files straight off disk instead of a same-run
+  # artifact upload/download round trip.
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -117,15 +134,6 @@ jobs:
       - name: Test web (with coverage)
         run: pnpm --filter @tabmerger/web test -- --coverage
 
-      - name: Upload coverage summaries (for delta comparison)
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-summary-${{ github.sha }}
-          path: |
-            packages/extension/coverage/coverage-summary.json
-            packages/web/coverage/coverage-summary.json
-          retention-days: 14
-
       # Baseline for future PRs to diff against — only refreshed on the default
       # branch, so a bad PR can never poison the baseline other PRs compare to.
       # Deliberately NOT refreshed from `beta`: beta carries unreleased work, and
@@ -133,7 +141,7 @@ jobs:
       # unnoticed at promotion time.
       - name: Publish coverage baseline (default branch only)
         if: github.ref == 'refs/heads/agentic-revamp' && github.event_name == 'push'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-baseline
           path: |
@@ -142,32 +150,19 @@ jobs:
           retention-days: 90
           overwrite: true
 
-  # ── Gate 1b: "no significant regression" check — diffs this run's coverage
-  # against the latest master baseline artifact. Uses dawidd6/action-download-artifact
-  # since actions/download-artifact can't pull artifacts from a different
-  # workflow run. Soft-skips (no baseline yet, e.g. first run ever) rather
-  # than failing, per scripts/ci/coverage-delta.mjs's own no-op-if-missing behavior.
-  coverage-delta:
-    name: Coverage Delta
-    runs-on: ubuntu-latest
-    needs: unit-tests
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download current coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-summary-${{ github.sha }}
-          path: current
-
+      # ── Coverage delta — "no significant regression" check. Diffs the
+      # coverage just produced above against the latest default-branch
+      # baseline artifact. Uses dawidd6/action-download-artifact since
+      # actions/download-artifact can't pull artifacts from a different
+      # workflow run. Soft-skips (no baseline yet, e.g. first run ever)
+      # rather than failing, per scripts/ci/coverage-delta.mjs's own
+      # no-op-if-missing behavior.
       - name: Download baseline coverage from the default branch
-        uses: dawidd6/action-download-artifact@v6
-        continue-on-error: true # ponytail: no baseline yet (e.g. very first run) → coverage-delta.mjs no-ops on missing file
+        uses: dawidd6/action-download-artifact@v25
+        continue-on-error: true # no baseline yet (e.g. very first run) → coverage-delta.mjs no-ops on missing file
         with:
           workflow: ci.yml
-          # Must match the branch that PUBLISHES the baseline in unit-tests above.
-          # This said `master`, which does not exist — so the baseline was never
-          # found and the delta check silently no-opped on every run.
+          # Must match the branch that PUBLISHES the baseline above.
           branch: agentic-revamp
           name: coverage-baseline
           path: baseline
@@ -176,24 +171,25 @@ jobs:
         run: |
           node scripts/ci/coverage-delta.mjs \
             baseline/packages/extension/coverage/coverage-summary.json \
-            current/packages/extension/coverage/coverage-summary.json \
+            packages/extension/coverage/coverage-summary.json \
             2
 
       - name: Compare web coverage
         run: |
           node scripts/ci/coverage-delta.mjs \
             baseline/packages/web/coverage/coverage-summary.json \
-            current/packages/web/coverage/coverage-summary.json \
+            packages/web/coverage/coverage-summary.json \
             2
 
   # ── Gate 2: integration tests (real IndexedDB round trips) ──
   integration-tests:
     name: Integration Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -201,23 +197,38 @@ jobs:
       - run: pnpm --filter @tabmerger/extension test:integration
 
   # ── Gate 3: E2E — both fixture sets, non-visual specs only (visual specs
-  # are split into their own job below so a snapshot mismatch doesn't block
-  # on functional E2E and vice versa) ──
+  # are handled by the paused visual-regression job below) ──
   e2e-extension:
     name: E2E Tests (Extension)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tabmerger/extension exec playwright install --with-deps chromium
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @tabmerger/extension exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (cache hit — browsers already present)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter @tabmerger/extension exec playwright install-deps chromium
+
       - run: pnpm --filter @tabmerger/extension build
       - run: pnpm --filter @tabmerger/extension test:e2e
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: extension-e2e-report
@@ -227,128 +238,93 @@ jobs:
   e2e-web:
     name: E2E Tests (Web)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tabmerger/web exec playwright install --with-deps chromium
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @tabmerger/web exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (cache hit — browsers already present)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter @tabmerger/web exec playwright install-deps chromium
+
       - run: pnpm --filter @tabmerger/web test:e2e
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-          # ponytail: required by e2e/auth.setup.ts's ephemeral-user admin API calls
+          # required by e2e/auth.setup.ts's ephemeral-user admin API calls
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: web-e2e-report
           path: packages/web/playwright-report/
           retention-days: 7
 
-  # ── Gate 4: visual regression — conditional/graceful. Checks whether each
-  # package actually has a `test:visual` script AND at least one *.spec.ts
-  # under its visual-test path before running, so this job is a silent no-op
-  # (not a failure) on branches where the suite hasn't landed yet. Once
-  # baseline screenshots (*-snapshots/ dirs) are committed, first real run
-  # will fail until baselines are generated with `--update-snapshots` —
-  # that's expected, not a bug in this job.
+  # ── Gate 4: visual regression — PAUSED. ──
+  #
+  # This job is deliberately disabled (`if: false`) rather than deleted, so the
+  # detection/build/run logic is ready to go the moment baselines exist. It has
+  # been failing every run since there are no *-snapshots/*-linux.png files —
+  # every run fails with "A snapshot doesn't exist ... writing actual" — which
+  # is wasted runner time even with continue-on-error, since it still checks out,
+  # installs, and builds before failing.
+  #
+  # It has also been removed from every `needs:` list below (release,
+  # deploy-web-preview) — it was never a real gate there either, since it always
+  # ran with continue-on-error: true, but a `needs:` entry on a job that never
+  # runs would leave those jobs waiting on something that's skipped, not merely
+  # non-blocking.
+  #
+  # TO RE-ENABLE: generate baseline screenshots on LINUX (they are
+  # platform-suffixed; Windows produces -win32.png and font rendering differs),
+  # e.g. via the mcr.microsoft.com/playwright container, commit them, then
+  # delete the `if: false` line below and add this job back to the `needs:`
+  # lists on `release` and `deploy-web-preview`.
   visual-regression:
-    name: Visual Regression
+    name: Visual Regression (paused)
+    if: false
     runs-on: ubuntu-latest
-    # Non-blocking until Linux baselines are committed — exactly what this file's
-    # own header has always said this job should be. There are currently no
-    # *-snapshots/*-linux.png files, so every run fails with "A snapshot doesn't
-    # exist ... writing actual", which would gate the release on a check that
-    # cannot pass.
-    #
-    # Baselines are deliberately NOT generated yet: committing them today would
-    # freeze whatever the popup currently looks like as the reference, before
-    # anyone has confirmed in a real browser that the drag-and-drop rework looks
-    # right. A wrong baseline is worse than no baseline — it turns a visual
-    # regression into the expected result.
-    #
-    # TO RE-ENABLE: generate the baselines on LINUX (they are platform-suffixed;
-    # Windows produces -win32.png and font rendering differs), e.g. via the
-    # mcr.microsoft.com/playwright container, commit them, then delete this line.
-    continue-on-error: true
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - run: echo "Paused until Linux baseline screenshots exist — see the comment on this job in ci.yml."
+
+  # ── Build: extension (Chrome MV3, with bundle-size budget check) + web.
+  # Merged from the former build-extension/build-web jobs to share one
+  # checkout + install. Artifact name (extension-bundle) is unchanged — the
+  # `release` job doesn't consume it directly, but publish.yml re-builds from
+  # the tag, so nothing downstream depends on this name; it's kept for
+  # debugging failed releases.
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
-      - name: Detect visual suite
-        id: detect
-        run: |
-          EXT_HAS_VISUAL=false
-          WEB_HAS_VISUAL=false
-          if grep -q '"test:visual"' packages/extension/package.json && \
-             compgen -G "packages/extension/e2e/tests/*.spec.ts" > /dev/null && \
-             grep -rl "@visual\|visual.spec" packages/extension/e2e/tests >/dev/null 2>&1; then
-            EXT_HAS_VISUAL=true
-          fi
-          if grep -q '"test:visual"' packages/web/package.json && \
-             compgen -G "packages/web/e2e/*.spec.ts" > /dev/null && \
-             grep -rl "@visual\|visual.spec" packages/web/e2e >/dev/null 2>&1; then
-            WEB_HAS_VISUAL=true
-          fi
-          echo "ext=$EXT_HAS_VISUAL" >> "$GITHUB_OUTPUT"
-          echo "web=$WEB_HAS_VISUAL" >> "$GITHUB_OUTPUT"
-
-      - name: Install Playwright browsers
-        if: steps.detect.outputs.ext == 'true' || steps.detect.outputs.web == 'true'
-        run: |
-          [ "${{ steps.detect.outputs.ext }}" = "true" ] && pnpm --filter @tabmerger/extension exec playwright install --with-deps chromium
-          [ "${{ steps.detect.outputs.web }}" = "true" ] && pnpm --filter @tabmerger/web exec playwright install --with-deps chromium
-          exit 0
-
-      - name: Build extension
-        if: steps.detect.outputs.ext == 'true'
+      - name: Build extension (Chrome MV3)
         run: pnpm --filter @tabmerger/extension build
-
-      - name: Visual tests (extension)
-        if: steps.detect.outputs.ext == 'true'
-        run: pnpm --filter @tabmerger/extension test:visual
-
-      - name: Visual tests (web)
-        if: steps.detect.outputs.web == 'true'
-        run: pnpm --filter @tabmerger/web test:visual
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-
-      - name: No visual suite found
-        if: steps.detect.outputs.ext != 'true' && steps.detect.outputs.web != 'true'
-        run: echo "No visual regression suite detected in either package — skipping (not a failure)."
-
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: visual-diff-report
-          path: |
-            packages/extension/e2e/playwright-report/
-            packages/web/playwright-report/
-          retention-days: 7
-
-  build-extension:
-    name: Build Extension (Chrome MV3)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tabmerger/extension build
 
       - name: Check bundle size budget
         run: |
@@ -361,7 +337,7 @@ jobs:
           fi
           echo "Bundle OK"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: extension-bundle
           path: packages/extension/.output/chrome-mv3/
@@ -372,18 +348,8 @@ jobs:
           include-hidden-files: true
           retention-days: 7
 
-  build-web:
-    name: Build Web
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tabmerger/web build
+      - name: Build web
+        run: pnpm --filter @tabmerger/web build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
@@ -402,10 +368,16 @@ jobs:
   #
   # Deliberately NOT a dependency of `release` — it would just re-run the same
   # analysis a second time.
+  #
+  # Kept as its OWN job (not folded into static-checks) on purpose: it's the only
+  # static-ish check that needs `contents: write`. Merging it into static-checks
+  # would hand that permission to the secret scan / audit / type-check / lint
+  # steps too — least privilege wins over saving one more job.
   release-config:
     name: Validate release config (dry run)
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     # Needed even though nothing is written. semantic-release's verifyAuth runs
     # `git push --dry-run` before analyzing commits — in dry-run mode too — and this
     # repo's default GITHUB_TOKEN is read-only, so without this it fails with 403
@@ -416,11 +388,11 @@ jobs:
     steps:
       # fetch-depth: 0 — semantic-release reads the full tag history to work out the
       # last release. A shallow clone makes it think every release is the first one.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -436,6 +408,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     # ── BETA ONLY (deliberate, temporary) ────────────────────────────────────
     # Releases are currently cut from `beta` and nowhere else, so nothing can
     # reach the PRODUCTION Chrome Web Store listing while the channel is being
@@ -454,7 +427,10 @@ jobs:
     if: github.ref == 'refs/heads/beta' && github.event_name == 'push'
     # Collapse a burst of merges into one release rather than one submission each.
     # NOT cancel-in-progress: cancelling mid-release can leave a pushed tag with no
-    # GitHub Release, which strands the version and blocks the next run.
+    # GitHub Release, which strands the version and blocks the next run. This is
+    # consistent with the workflow-level `concurrency` above, which also never
+    # cancels a run on `beta` — a workflow-level cancel can never reach in and kill
+    # this job mid-release either.
     concurrency:
       group: release-${{ github.ref }}
       cancel-in-progress: false
@@ -463,38 +439,37 @@ jobs:
     # anything that fails after that strands the version — the tag exists, nothing
     # shipped, and the next run computes from a release that never happened.
     #
-    # build-extension / build-web are load-bearing here, not belt-and-braces:
-    # publish.yml re-builds the extension from the tag, so a broken build means the
-    # release is cut and THEN fails to produce an artifact. Gating on them turns
-    # that stranded release into an ordinary red CI run.
+    # `build` is load-bearing here, not belt-and-braces: publish.yml re-builds the
+    # extension from the tag, so a broken build means the release is cut and THEN
+    # fails to produce an artifact. Gating on it turns that stranded release into an
+    # ordinary red CI run.
     #
-    # visual-regression is listed but carries `continue-on-error: true`, so it can
-    # never actually block this job. It stays for ordering only — do not read it as
-    # a gate. If visual checks should block a release, remove its continue-on-error.
+    # visual-regression is deliberately NOT listed — it is paused (`if: false`,
+    # see that job's comment) and was never a real gate anyway (continue-on-error:
+    # true). Listing a job that never runs would leave this job waiting forever.
     needs:
       [
-        scan-secrets,
-        type-check,
-        lint,
+        static-checks,
         unit-tests,
-        coverage-delta,
         integration-tests,
         e2e-extension,
         e2e-web,
-        visual-regression,
-        build-extension,
-        build-web,
+        build,
       ]
     permissions:
       contents: write
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          # Hand the PAT to checkout so it persists as an http.extraheader in
-          # .git/config, giving EVERY git command in this job working credentials.
+          # Hand the PAT to checkout so every git command in this job authenticates
+          # with it. actions/checkout v6+ stores the persisted credential under
+          # $RUNNER_TEMP rather than writing it directly into .git/config (it used
+          # to write an http.extraheader there) — that's transparent here: git
+          # still picks it up via includeIf, so every git command (including
+          # semantic-release's) authenticates exactly as before.
           #
           # This replaced `persist-credentials: false`, which is what semantic-release
           # documents — and which silently broke the release. Without ambient
@@ -507,8 +482,8 @@ jobs:
           # from a `git ls-remote` whose logged URL has no credentials in it at all, and
           # no trace anywhere of why the token was rejected.
           token: ${{ secrets.RELEASE_TOKEN }}
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -593,10 +568,11 @@ jobs:
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
       && github.ref == 'refs/heads/agentic-revamp'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       web: ${{ steps.diff.outputs.web }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - id: diff
@@ -634,21 +610,20 @@ jobs:
     needs:
       [
         web-changes,
-        scan-secrets,
-        type-check,
-        lint,
+        static-checks,
         unit-tests,
-        coverage-delta,
         integration-tests,
         e2e-extension,
         e2e-web,
-        visual-regression,
-        build-extension,
-        build-web,
+        build,
       ]
     # success() is explicit on purpose: a custom `if` would otherwise read as
     # replacing the gate check, and this job must never run after a failed gate.
     if: success() && needs.web-changes.outputs.web == 'true'
+    # timeout-minutes is not a valid key on a job that calls a reusable workflow
+    # via `uses:` (actionlint: only name/uses/with/secrets/needs/if/permissions
+    # are allowed here) — the reusable workflow's own job (deploy-web.yml →
+    # `preview`) carries the timeout instead.
     # Only the newest preview matters, so a new push cancels an in-flight deploy.
     # Safe for previews only — never do this for a production deploy.
     concurrency:
