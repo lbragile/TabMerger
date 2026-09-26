@@ -41,7 +41,7 @@ For every signed-in Pro account, content is written as an `EncryptedBlob` `{v:1,
 | `shared_bundles` | `groups_snapshot` (jsonb) | the shared `Group[]` | none |
 
 - `groups`, `sessions` and `device_sessions` use the account data key. That key is wrapped in `encryption_keys` and cached unwrapped in the extension's `chrome.storage.local` (see `packages/extension/src/lib/encryptionKey.ts`). The web dashboard caches it in `sessionStorage` after a passphrase prompt.
-- `shared_bundles` uses a **fresh per-share key**, returned once and carried only in the share URL's `#key=` fragment. The extension encrypts on the client (`src/lib/sharing.ts`). The web route `POST /api/share-bundle` receives client-decrypted groups and encrypts them on the server with a new key that it never stores.
+- `shared_bundles` uses a **fresh per-share key**, returned once and carried only in the share URL's `#key=` fragment. Both the extension (`src/lib/sharing.ts`) and the web dashboard (`packages/web/lib/sharing.ts`) generate the key and encrypt the snapshot entirely client-side, then insert directly into `shared_bundles` via their respective Supabase clients — there is no API route in the path, so the server never sees plaintext or the key.
 - Anything the server has to show without the key is kept in plaintext on purpose: `groups.color`, `starred`, `archived`, `updated_at`, `window_count`, `tab_count`.
 - Server code must never treat these columns as plaintext. Run the `encrypted-column-auditor` agent on any API route that touches them.
 

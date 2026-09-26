@@ -97,7 +97,6 @@ In CI there are no env files. `.github/workflows/publish.yml` injects `VITE_SUPA
 | `billing-portal` (cookie auth), `portal` (Bearer, extension) | Stripe Billing Portal. |
 | `webhooks/stripe` | Reads the raw body with `request.text()` for signature verification. Upserts `subscriptions` with `onConflict: 'user_id'` and records `ai_credit_purchases`. |
 | `ai/{group-tabs,name-group,suggest-sessions,tab-summary,organize,organize/approve}` | AI features (Bearer JWT, `pro_ai` tier, weighted credits). `organize` runs a Vercel Workflow (`lib/workflows/tabOrganizer.ts`). `ai/dev-usage` is development-only. |
-| `share-bundle` | Creates a `shared_bundles` row from **client-decrypted** groups. |
 | `groups/[id]/publish` | Sets/clears `groups.public_slug` (see the open item in TODO.md). |
 | `sessions/[id]` | Deletes a saved session. |
 | `og-preview` | Server-side OG metadata fetch for tab previews and share pages. |
@@ -105,7 +104,7 @@ In CI there are no env files. `.github/workflows/publish.yml` injects `VITE_SUPA
 | `contact` | Contact form via Resend. |
 
 - **CORS:** `proxy.ts` answers preflights and adds CORS headers on `/api/*` for `chrome-extension://` and `moz-extension://` origins only. It never sends `Allow-Credentials`, so authenticated routes rely on the Bearer token.
-- **Encrypted data:** the dashboard decrypts on the client after a passphrase prompt (`lib/encryption/context.tsx`, which caches the key in `sessionStorage`). Server code never decrypts. A route that needs plaintext content accepts it from the client in the request body, as `organize` and `share-bundle` do.
+- **Encrypted data:** the dashboard decrypts on the client after a passphrase prompt (`lib/encryption/context.tsx`, which caches the key in `sessionStorage`). Server code never decrypts. A route that needs plaintext content accepts it from the client in the request body, as `organize` does. Sharing goes further and never touches an API route at all — `lib/sharing.ts` encrypts and inserts into `shared_bundles` directly from the browser (see `docs/DATABASE.md`).
 - **Reviews strip** (`components/marketing/ReviewsStrip.tsx`): shows live store stats only. It tries the Chrome Web Store listing first (`lib/chromeStoreStats.ts`, scraped) and falls back to the Firefox AMO API (`lib/firefoxAddonStats.ts`), whose review text is censored with `obscenity`. No hardcoded testimonials.
 - **Analytics & monitoring:** GA4 (`@next/third-parties`), Vercel Analytics and Speed Insights (`app/layout.tsx`), Sentry (`@sentry/nextjs`).
 

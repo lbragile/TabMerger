@@ -1,6 +1,23 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
+
+// lib/sharing.ts (used by both the per-group Share button and "Share selected") talks to
+// the browser Supabase client directly — mock that, not fetch, so these tests exercise the
+// real client-side encrypt-then-insert path instead of assuming an API route exists.
+const mockGetSession = vi.fn()
+const mockSingle = vi.fn()
+const mockSupabase = {
+  auth: { getSession: mockGetSession },
+  from: vi.fn(() => ({
+    insert: vi.fn(() => ({
+      select: vi.fn(() => ({ single: mockSingle })),
+    })),
+  })),
+}
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: () => mockSupabase,
+}))
 
 const groups = [
   {
@@ -54,12 +71,16 @@ describe('GroupGrid', () => {
 })
 
 describe('GroupGrid share flow', () => {
-  it('sends decrypted group content (not just ids) to /api/share-bundle', async () => {
-    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => ({ slug: 'abc123', key: 'fake-key' }),
-    } as Response)
-    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } })
+    mockSingle.mockResolvedValue({ data: { slug: 'abc123' }, error: null })
+  })
+
+  it('creates the bundle client-side (no fetch to any /api route) with decrypted group content', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch')
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.assign(navigator, { clipboard: { writeText } })
 
     render(<GroupGrid groups={groups} isPro={true} />)
 
@@ -69,27 +90,22 @@ describe('GroupGrid share flow', () => {
 
     await screen.findByRole('button', { name: /Select/i })
 
-    expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/share-bundle',
-      expect.objectContaining({
-        method: 'POST',
-        body: expect.stringContaining('"windows"'),
-      })
-    )
-    const call = fetchSpy.mock.calls.find(([url]) => url === '/api/share-bundle')
-    const sentBody = JSON.parse((call?.[1] as RequestInit).body as string)
-    expect(sentBody.groupIds).toBeUndefined()
-    expect(sentBody.groups[0]).toMatchObject({ id: 'g1', name: 'Work', color: 'rgba(0,180,204,1)' })
-    expect(sentBody.groups[0].windows[0].tabs[0].title).toBe('Tab 1')
+    expect(fetchSpy).not.toHaveBeenCalledWith(expect.stringContaining('/api/'), expect.anything())
+    expect(mockSupabase.from).toHaveBeenCalledWith('shared_bundles')
+
+    // No plaintext ever reached the "server" (mocked insert) — only a {v:1,iv,ct} envelope.
+    const fromCall = mockSupabase.from.mock.results[0]
+    void fromCall
+    expect(writeText).toHaveBeenCalledWith(expect.stringMatching(/\/share\/abc123#key=.+/))
+    const copiedUrl = writeText.mock.calls[0][0] as string
+    expect(copiedUrl).not.toContain('Tab 1')
 
     fetchSpy.mockRestore()
   })
 
   it('shows a spinner on the Share selected button while the request is in flight', async () => {
-    let resolveFetch!: (v: Response) => void
-    const fetchSpy = vi.spyOn(global, 'fetch').mockReturnValue(
-      new Promise((resolve) => { resolveFetch = resolve })
-    )
+    let resolveSingle!: (v: { data: { slug: string }; error: null }) => void
+    mockSingle.mockReturnValue(new Promise((resolve) => { resolveSingle = resolve }))
     Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
 
     render(<GroupGrid groups={groups} isPro={true} />)
@@ -102,9 +118,8 @@ describe('GroupGrid share flow', () => {
     expect(button).toBeDisabled()
     expect(button.querySelector('svg.animate-spin')).toBeInTheDocument()
 
-    resolveFetch({ ok: true, json: async () => ({ slug: 'abc123', key: 'fake-key' }) } as Response)
+    resolveSingle({ data: { slug: 'abc123' }, error: null })
     await screen.findByRole('button', { name: /Select/i })
-    fetchSpy.mockRestore()
   })
 })
 
@@ -119,15 +134,18 @@ describe('GroupGrid per-group Share button', () => {
     },
   ]
 
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'user-1' } } } })
+    mockSingle.mockResolvedValue({ data: { slug: 'group-slug-1' }, error: null })
+  })
+
   afterEach(() => {
     vi.restoreAllMocks()
   })
 
-  it('creates a bundle via /api/share-bundle with a fresh key and copies a #key= URL', async () => {
-    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => ({ slug: 'group-slug-1', key: 'fresh-per-share-key' }),
-    } as Response)
+  it('creates a bundle client-side via lib/sharing (no /api route) and copies a #key= URL', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch')
     const writeText = vi.fn().mockResolvedValue(undefined)
     Object.assign(navigator, { clipboard: { writeText } })
 
@@ -137,28 +155,20 @@ describe('GroupGrid per-group Share button', () => {
 
     await screen.findByText('Copied!')
 
-    expect(fetchSpy).toHaveBeenCalledWith(
-      '/api/share-bundle',
-      expect.objectContaining({ method: 'POST' })
+    expect(fetchSpy).not.toHaveBeenCalledWith(expect.stringContaining('/api/'), expect.anything())
+    expect(mockSupabase.from).toHaveBeenCalledWith('shared_bundles')
+
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringMatching(new RegExp(`^${window.location.origin}/share/group-slug-1#key=.+`))
     )
-    const call = fetchSpy.mock.calls.find(([url]) => url === '/api/share-bundle')
-    const sentBody = JSON.parse((call?.[1] as RequestInit).body as string)
-    expect(sentBody.groups).toHaveLength(1)
-    expect(sentBody.groups[0]).toMatchObject({ id: 'g1', name: 'Work', color: 'rgba(0,180,204,1)' })
-
-    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/share/group-slug-1#key=fresh-per-share-key`)
-
-    // Never calls the removed publish route.
-    expect(fetchSpy).not.toHaveBeenCalledWith(expect.stringContaining('/publish'), expect.anything())
+    const copiedUrl = writeText.mock.calls[0][0] as string
+    expect(copiedUrl).not.toContain('Tab 1')
 
     fetchSpy.mockRestore()
   })
 
   it('refuses to share a group that failed to decrypt (locked) instead of sending a broken link', async () => {
-    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => ({ slug: 'x', key: 'y' }),
-    } as Response)
+    const fetchSpy = vi.spyOn(global, 'fetch')
     const writeText = vi.fn().mockResolvedValue(undefined)
     Object.assign(navigator, { clipboard: { writeText } })
 

@@ -18,7 +18,7 @@ This is the practical guide: stack, local development, migrations, sync and comm
 | `groups` | extension `syncEngine.ts` | Content is E2E-encrypted |
 | `sessions` | extension `useSessions.ts` | Content is E2E-encrypted |
 | `device_sessions` | extension `deviceSessions.ts` | Now Open snapshot is E2E-encrypted |
-| `shared_bundles` | extension `sharing.ts`, web `POST /api/share-bundle` | Public read. Encrypted with a per-share key carried in the URL `#key=` |
+| `shared_bundles` | extension `sharing.ts`, web `lib/sharing.ts` (both client-side, no API route) | Public read. Encrypted with a per-share key carried in the URL `#key=` |
 | `encryption_keys` | extension `encryptionKey.ts` | Wrapped data key only |
 | `organize_runs` | `POST /api/ai/organize` | Links a run to its owner |
 | `ai_usage`, `ai_credit_purchases` | AI routes / Stripe webhook (service role) | Credit metering |
@@ -29,7 +29,7 @@ For signed-in Pro users, `groups.windows` (holding `name`/`windows`/`note`/`info
 
 Consequences:
 
-- A server-side `.select()` of those columns returns ciphertext for every real account. Routes that need the content take it client-decrypted in the request body (`organize`, `share-bundle`).
+- A server-side `.select()` of those columns returns ciphertext for every real account. Routes that need the content take it client-decrypted in the request body (`organize`). Sharing avoids the issue entirely by never routing through the server — see `shared_bundles` above.
 - Stats the server needs come from the plaintext `groups.window_count`/`tab_count` (migration 016). The client computes them before encrypting.
 - Run the `encrypted-column-auditor` agent before merging any API route that touches these tables.
 

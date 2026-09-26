@@ -105,7 +105,7 @@ Whenever you create or change the Chrome extension, create and maintain `package
 - Supabase server client (`lib/supabase/server.ts`) must be async for the same reason
 - Stripe webhook handler **must** use `req.text()` — `req.json()` destroys the raw body needed for signature verification
 - Service role client bypasses RLS — only use in webhook handlers and AI routes, never client-side
-- Any server-side `.select()` on `groups`/`sessions`/`device_sessions`/`shared_bundles` that reads `windows`/`groups`/`now_open_snapshot`/`groups_snapshot` is reading ciphertext for every real account — routes needing that content must accept it client-decrypted in the request body instead (see the `organize` and `share-bundle` routes for the pattern). Run `encrypted-column-auditor` before merging any new route touching these tables.
+- Any server-side `.select()` on `groups`/`sessions`/`device_sessions`/`shared_bundles` that reads `windows`/`groups`/`now_open_snapshot`/`groups_snapshot` is reading ciphertext for every real account — routes needing that content must accept it client-decrypted in the request body instead (see the `organize` route for the pattern). Sharing (`lib/sharing.ts`) sidesteps this entirely — it's fully client-side with no API route, matching the extension. Run `encrypted-column-auditor` before merging any new route touching these tables.
 
 ## Shared package (`packages/shared/`)
 
@@ -132,7 +132,7 @@ Domain-specific agents are in `.claude/agents/`. Each agent carries accumulated 
 | `ai-features` | AI API routes (`/api/ai/*`), Anthropic SDK usage, prompt engineering, `useAI` hook, tab preview summaries |
 | `database` | Supabase schema changes, new migrations (`supabase/migrations/`), RLS policies, DB functions |
 | `migration-reviewer` | Before applying any new Supabase migration — checks for missing RLS, missing indexes on FK columns, destructive changes without a rollback path, policy gaps |
-| `encrypted-column-auditor` | Before merging any new or changed route under `packages/web/app/api/` — flags server-side reads of E2E-encrypted content columns (`groups.windows`, `sessions.groups`, `device_sessions.now_open_snapshot`, `shared_bundles.groups_snapshot`) that assume plaintext, the exact bug class behind two real production crashes (`organize`, `share-bundle`) |
+| `encrypted-column-auditor` | Before merging any new or changed route under `packages/web/app/api/` — flags server-side reads of E2E-encrypted content columns (`groups.windows`, `sessions.groups`, `device_sessions.now_open_snapshot`, `shared_bundles.groups_snapshot`) that assume plaintext, the exact bug class behind a real production crash (`organize`) |
 | `payments` | Stripe products/prices, webhook handler, subscription entitlements, checkout flow, billing portal |
 | `payments-security-reviewer` | Security audit before merging any change to: webhook handler, checkout, `useEntitlements`, RLS policies on `subscriptions`/`ai_usage` |
 | `entitlements-auditor` | Whenever `useEntitlements.ts` or `packages/shared/src/constants/index.ts` (`PRICING_TIERS`/`FREE_TIER_LIMITS`) change, or a pricing/tier-limit change is proposed — catches drift between what's sold and what's enforced |

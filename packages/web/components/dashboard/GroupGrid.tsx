@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/shared'
 import { useEncryptionKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
+import { createSharedBundle } from '@/lib/sharing'
 
 interface Tab { title?: string; url?: string; favIconUrl?: string }
 interface ExtWindow { tabs: Tab[] }
@@ -82,10 +83,11 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
 
 /**
  * Creates a one-off share bundle for a single group and copies the resulting
- * `#key=` link. Reuses the same `/api/share-bundle` endpoint (and its
- * client-decrypted-body pattern) as the multi-group "Share selected" flow in
- * {@link GroupGrid.shareBundle} — there is deliberately no second encryption
- * path here. The link is a snapshot: later edits to the group don't update it.
+ * `#key=` link. Uses {@link createSharedBundle} (lib/sharing.ts) — the same
+ * fully client-side encrypt-then-insert helper as the multi-group "Share
+ * selected" flow in {@link GroupGrid.shareBundle} — there is deliberately no
+ * second encryption path here. The link is a snapshot: later edits to the
+ * group don't update it.
  */
 function ShareButton({ group }: { group: DashboardGroup }) {
   const [busy, setBusy] = useState(false)
@@ -98,18 +100,9 @@ function ShareButton({ group }: { group: DashboardGroup }) {
     }
     setBusy(true)
     try {
-      const res = await fetch('/api/share-bundle', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          groups: [{ id: group.id, name: group.name, color: group.color, windows: group.windows }],
-        }),
-      })
-      if (!res.ok) throw new Error('Failed to create bundle')
-      const { slug, key } = await res.json()
-      // Key lives only in the URL fragment — never sent to any server (fragments
-      // aren't transmitted over HTTP).
-      const url = `${window.location.origin}/share/${slug}#key=${key}`
+      const url = await createSharedBundle([
+        { id: group.id, name: group.name, color: group.color, windows: group.windows },
+      ])
       await navigator.clipboard.writeText(url)
       setCopied(true)
       toast.success('Link copied — shares a snapshot of this group.')
@@ -407,21 +400,12 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
     if (selected.size === 0) return
     setSharing(true)
     try {
-      // Send already-decrypted content — the server can't read `windows` itself
-      // (it's ciphertext in the DB for every E2E-encrypted account).
+      // Already-decrypted content, encrypted and inserted entirely in-browser via
+      // createSharedBundle — no plaintext or key ever crosses the network.
       const shareGroups = groups
         .filter((g) => selected.has(g.id))
         .map((g) => ({ id: g.id, name: g.name, color: g.color, windows: g.windows }))
-      const res = await fetch('/api/share-bundle', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ groups: shareGroups }),
-      })
-      if (!res.ok) throw new Error('Failed to create bundle')
-      const { slug, key } = await res.json()
-      // Key lives only in the URL fragment — never sent to any server (fragments
-      // aren't transmitted over HTTP), so the share link itself is the only place it exists.
-      const url = `${window.location.origin}/share/${slug}#key=${key}`
+      const url = await createSharedBundle(shareGroups)
       await navigator.clipboard.writeText(url)
       toast.success('Link copied! Share page is live.')
       exitSelecting()
