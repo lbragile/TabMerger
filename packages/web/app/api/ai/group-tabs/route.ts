@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
+import { aiDisabledResponse } from '@/lib/ai-guard'
 import { groupTabs, type Tab } from '@/lib/ai'
 import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
 
@@ -10,6 +11,10 @@ import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
  * Enforces Pro AI entitlement via checkAndIncrementAIUsage before calling the model.
  */
 export async function POST(request: NextRequest) {
+  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
+  const aiDisabled = aiDisabledResponse()
+  if (aiDisabled) return aiDisabled
+
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')
 

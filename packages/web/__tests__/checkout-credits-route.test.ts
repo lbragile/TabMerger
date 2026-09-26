@@ -30,7 +30,10 @@ function makeRequest(body: unknown) {
 }
 
 describe('POST /api/checkout/credits', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+  })
 
   it('defaults to quantity 50 when body is empty', async () => {
     const { POST } = await import('@/app/api/checkout/credits/route')
@@ -58,5 +61,16 @@ describe('POST /api/checkout/credits', () => {
         expect.objectContaining({ quantity: 50 })
       )
     }
+  })
+
+  it('returns 503 ai_disabled when the AI flag is off, before any Stripe call', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    const { POST } = await import('@/app/api/checkout/credits/route')
+
+    const res = await POST(makeRequest({ quantity: 100 }))
+    expect(res.status).toBe(503)
+    const body = await res.json()
+    expect(body.error).toBe('ai_disabled')
+    expect(mockCreateCreditPackCheckoutSession).not.toHaveBeenCalled()
   })
 })

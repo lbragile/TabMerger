@@ -30,6 +30,7 @@ function makeRequest(body: unknown) {
 describe('POST /api/checkout', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockCreateClient.mockResolvedValue({
       auth: { getUser: mockGetUser },
       from: vi.fn().mockReturnValue({
@@ -104,5 +105,16 @@ describe('POST /api/checkout', () => {
 
     const res = await POST(makeRequest({ tier: 'pro', interval: 'monthly' }))
     expect(res.status).toBe(500)
+  })
+
+  it('returns 503 ai_disabled for proAi tier when the AI flag is off, before any Stripe call', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    const { POST } = await import('@/app/api/checkout/route')
+
+    const res = await POST(makeRequest({ tier: 'proAi', interval: 'monthly' }))
+    expect(res.status).toBe(503)
+    const body = await res.json()
+    expect(body.error).toBe('ai_disabled')
+    expect(mockCreateCheckoutSession).not.toHaveBeenCalled()
   })
 })

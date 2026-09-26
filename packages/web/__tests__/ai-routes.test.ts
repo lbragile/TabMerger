@@ -4,7 +4,7 @@
  * The Anthropic client is never constructed here — `@/lib/ai` is mocked wholesale,
  * so no real API key or network call is involved.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NextRequest } from 'next/server'
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
@@ -80,11 +80,14 @@ const TABS = [{ id: 1, title: 'Docs', url: 'https://example.com/docs' }]
 
 beforeEach(() => {
   vi.clearAllMocks()
+  vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
   vi.spyOn(console, 'error').mockImplementation(() => {})
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
   mockCheckUsage.mockResolvedValue({ allowed: true, remaining: 42 })
   mockFrom.mockReturnValue(builder({ data: null, error: null }))
 })
+
+afterEach(() => vi.unstubAllEnvs())
 
 // ─── Shared gating behaviour (the four simple routes) ─────────────────────────
 
@@ -386,5 +389,66 @@ describe('POST /api/ai/organize/approve', () => {
     const res = await approvePOST(req(url, { token: hookToken, approved: true }))
     expect(res.status).toBe(500)
     expect(await res.json()).toEqual({ error: 'Failed to resume workflow' })
+  })
+})
+
+// ─── AI feature flag (NEXT_PUBLIC_AI_ENABLED) kill switch ─────────────────────
+
+const allHandlers = [
+  { name: 'POST group-tabs', call: () => groupTabsPOST(req('http://localhost/api/ai/group-tabs', { tabs: TABS })) },
+  { name: 'POST name-group', call: () => nameGroupPOST(req('http://localhost/api/ai/name-group', { tabs: TABS })) },
+  { name: 'POST tab-summary', call: () => tabSummaryPOST(req('http://localhost/api/ai/tab-summary', { tab: TABS[0] })) },
+  {
+    name: 'POST suggest-sessions',
+    call: () =>
+      suggestSessionsPOST(
+        req('http://localhost/api/ai/suggest-sessions', { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] })
+      ),
+  },
+  {
+    name: 'POST organize',
+    call: () =>
+      organizePOST(req('http://localhost/api/ai/organize', { groups: [{ id: 'g1', name: 'Work', tabs: TABS }] })),
+  },
+  { name: 'GET organize', call: () => organizeGET(req('http://localhost/api/ai/organize?runId=run-1')) },
+  {
+    name: 'POST organize/approve',
+    call: () =>
+      approvePOST(req('http://localhost/api/ai/organize/approve', { token: `org-${USER_ID}-abc`, approved: true })),
+  },
+]
+
+describe.each([
+  ['unset', undefined],
+  ['empty', ''],
+  ['"false"', 'false'],
+  ['"TRUE" (case-sensitive)', 'TRUE'],
+  ['"1"', '1'],
+])('AI flag off (%s)', (_label, value) => {
+  beforeEach(() => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', value)
+    // Would succeed if reached — proves the guard, not a downstream failure, is what stops the call.
+    mockGroupTabs.mockResolvedValue([])
+    mockNameGroup.mockResolvedValue('x')
+    mockSummarizeTab.mockResolvedValue('x')
+    mockSuggestSessions.mockResolvedValue({ message: 'x', staleGroupIds: [] })
+    mockStart.mockResolvedValue({ runId: 'run-1' })
+  })
+
+  it.each(allHandlers)('$name returns 503 ai_disabled with no side effects', async ({ call }) => {
+    const res = await call()
+    expect(res.status).toBe(503)
+    expect(await res.json()).toEqual({ error: 'ai_disabled' })
+
+    // Nothing past the guard ran: no auth lookup, no DB (incl. ai_usage), no workflow, no Anthropic.
+    expect(mockGetUser).not.toHaveBeenCalled()
+    expect(mockFrom).not.toHaveBeenCalled()
+    expect(mockCheckUsage).not.toHaveBeenCalled()
+    expect(mockStart).not.toHaveBeenCalled()
+    expect(mockGetRun).not.toHaveBeenCalled()
+    expect(mockResumeHook).not.toHaveBeenCalled()
+    for (const ai of [mockGroupTabs, mockNameGroup, mockSummarizeTab, mockSuggestSessions]) {
+      expect(ai).not.toHaveBeenCalled()
+    }
   })
 })
