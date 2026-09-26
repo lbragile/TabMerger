@@ -5,6 +5,7 @@
   ],
   "plugins": [
     ["@semantic-release/commit-analyzer", {
+      "parserOpts": { "noteKeywords": ["BREAKING CHANGE:", "BREAKING-CHANGE:"] },
       "releaseRules": [
         { "breaking": true, "release": "major" },
         { "scope": "ci", "release": false },
@@ -16,7 +17,9 @@
         { "scope": "web", "release": false }
       ]
     }],
-    "@semantic-release/release-notes-generator",
+    ["@semantic-release/release-notes-generator", {
+      "parserOpts": { "noteKeywords": ["BREAKING CHANGE:", "BREAKING-CHANGE:"] }
+    }],
     ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
     ["@semantic-release/git", {
       "assets": ["CHANGELOG.md", "package.json"],
