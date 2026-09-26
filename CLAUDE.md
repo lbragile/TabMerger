@@ -25,7 +25,9 @@ pnpm test:visual        # Playwright visual regression (extension + web, @visual
 pnpm --filter @tabmerger/extension test:e2e         # Extension E2E tests
 pnpm --filter @tabmerger/extension test:e2e:ui      # Extension E2E — interactive Playwright UI dashboard
 pnpm --filter @tabmerger/extension test:integration # Extension integration tests (real IndexedDB round trips)
+pnpm --filter @tabmerger/extension exec vitest run --coverage # Extension coverage (the ≥80% gate)
 pnpm scan-secrets       # Check staged files for API keys / PII
+bash scripts/vercel-env-push.sh packages/web/.env.preview preview [--apply]  # Push a local env file to Vercel (dry run without --apply)
 ```
 
 ## Architecture
@@ -70,7 +72,11 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 **Invariants:**
 - "Now Open" group is always index 0, `permanent: true`, never deleted, never pushed to undo stack
 - AI calls are server-side only — extension POSTs to Next.js API routes with Bearer token
+- AI features are "coming soon" behind `VITE_AI_ENABLED` (extension) / `NEXT_PUBLIC_AI_ENABLED` (web), off unless exactly `"true"` (`isAiEnabled()` in `@tabmerger/shared`). Off: AI UI hidden in the extension, no AI requests, `/api/ai/*` and Pro AI / credit checkout return 503 `ai_disabled`, pricing keeps the Pro AI price with a disabled "Coming soon" button. New AI surfaces must respect the flag.
 - Env vars use WXT Vite convention: `import.meta.env.VITE_*`
+- Only `--mode development` (and the `wxt` dev server) is a development build. `beta`, `demo` and production are production builds — `wxt.config.ts` forces `NODE_ENV` because WXT otherwise sets it to the mode name, which shipped React's dev bundle and every `import.meta.env.DEV` path to beta testers
+- Beta store manifest versions add 1 to the major (`BETA_STORE_MAJOR_OFFSET` in `scripts/manifestVersion.ts`): an accidental 4.0.0.1 went live on the BETA item and store versions can only increase. Never remove the offset.
+- Commit messages: only write "BREAKING CHANGE:" for a real, approved major — `.releaserc.json` counts that keyword (with its colon) as a major release
 - Saved tabs always have `id: 0` — use positional `{groupIndex, windowIndex, tabIndex}` for all mutations, never `tab.id`
 - `Window.tsx` has a `window: WindowType` prop that shadows the global `window` — use `globalThis` for any browser APIs in that file
 - `SidePanel/index.tsx`'s sidebar width and `Header/index.tsx`'s logo-column width must stay numerically identical (currently 240px) so the sidebar/main-content boundary lines up with the header above it — a mismatch here isn't just cosmetic, it silently breaks the sidebar/header seam. Also watch for outer padding/gap on the header container itself competing with this value (a flex/grid box model that adds its own `px`/`gap` on top of the shared width will misalign the two even when the width numbers match).
@@ -199,7 +205,7 @@ Any time a feature is added, changed, or removed — in the extension or the web
 1. **Unit tests** updated or added for the changed logic (Vitest — jsdom for extension, RTL for web). Extension unit tests live under `packages/extension/src/__tests__/unit/`, mirroring the directory structure of `src/` (e.g. a test for `src/hooks/useGroups.ts` lives at `src/__tests__/unit/hooks/useGroups.test.ts`) — not co-located next to the source file.
 2. **Integration tests** updated or added when the change touches cross-boundary behavior — real IndexedDB round trips (`packages/extension/src/__tests__/integration/`, run via `pnpm --filter @tabmerger/extension test:integration`) or real Supabase sync/network behavior.
 3. **E2E tests** updated or added when the change touches user-visible flow (`packages/extension/e2e/tests/`, run via `pnpm --filter @tabmerger/extension test:e2e`).
-4. **Combined coverage from unit + integration tests must stay ≥80%** on all four metrics (statements, branches, functions, lines) — enforced via `vitest.config.ts` thresholds, checked with `pnpm --filter @tabmerger/extension test -- --coverage`. A change that drops any metric below 80% is not done until coverage is brought back up.
+4. **Combined coverage from unit + integration tests must stay ≥80%** on all four metrics (statements, branches, functions, lines) — enforced via `vitest.config.ts` thresholds, checked with `pnpm --filter @tabmerger/extension exec vitest run --coverage` (not `test -- --coverage`: pnpm passes the `--` through, so Vitest reads `--coverage` as a file filter, prints only a test count, and leaves any old `coverage/` summary on disk). A change that drops any metric below 80% is not done until coverage is brought back up.
 
 This applies regardless of how small the change looks. Skipping any of the three test layers, or letting coverage regress below the threshold, is a defect in the work — not a follow-up item.
 
