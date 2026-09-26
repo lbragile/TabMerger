@@ -23,59 +23,67 @@ describe('ChangelogPage', () => {
     getGeneratedChangelog.mockReturnValue([])
   })
 
-  it('renders anchor ids derived from the legacy version numbers when CHANGELOG.md has no generated entries', () => {
-    render(<ChangelogPage />)
-    expect(document.getElementById('v2-1-0')).toBeInTheDocument()
-    expect(document.getElementById('v2-0-1')).toBeInTheDocument()
-    expect(document.getElementById('v2-0-0')).toBeInTheDocument()
+  // v3.0.0's git tag is only a semantic-release anchor, so CHANGELOG.md never gets a
+  // section for it — without the hand-written entry the live version wouldn't be listed.
+  it('lists v3.0.0, the live version, even when CHANGELOG.md has no stable entries', () => {
+    expect(() => render(<ChangelogPage />)).not.toThrow()
+    expect(document.getElementById('v3-0-0')).toBeInTheDocument()
   })
 
   it('renders heading links pointing to the matching anchor id', () => {
     render(<ChangelogPage />)
-    const link = screen.getByRole('link', { name: 'v2.1.0' })
-    expect(link).toHaveAttribute('href', '#v2-1-0')
+    expect(screen.getByRole('link', { name: 'v3.0.0' })).toHaveAttribute('href', '#v3-0-0')
   })
 
   it('shows the "Major release" badge only for vX.0.0 entries', () => {
+    getGeneratedChangelog.mockReturnValue([
+      { version: 'v3.1.0', date: 'October 1, 2026', changes: [{ type: 'Fixed', text: 'extension: a fix' }] },
+    ])
     render(<ChangelogPage />)
-    // v3.0.0 and v2.0.0.
+    // v3.0.0 and the original extension's v2.0.0.
     expect(screen.getAllByText('Major release')).toHaveLength(2)
     expect(document.getElementById('v3-0-0')?.className).toContain('bg-surface2')
-    const majorEntry = document.getElementById('v2-0-0')
-    expect(majorEntry).not.toBeNull()
-    expect(majorEntry?.className).toContain('bg-surface2')
-
-    const minorEntry = document.getElementById('v2-1-0')
-    expect(minorEntry?.className).not.toContain('bg-surface2')
-    const patchEntry = document.getElementById('v2-0-1')
-    expect(patchEntry?.className).not.toContain('bg-surface2')
+    expect(document.getElementById('v2-0-0')?.className).toContain('bg-surface2')
+    expect(document.getElementById('v1-6-2')?.className).not.toContain('bg-surface2')
+    expect(document.getElementById('v3-1-0')?.className).not.toContain('bg-surface2')
   })
 
   it('renders change-type badges with correct text content', () => {
+    getGeneratedChangelog.mockReturnValue([
+      { version: 'v3.0.1', date: 'October 1, 2026', changes: [{ type: 'Fixed', text: 'extension: a fix' }] },
+    ])
     render(<ChangelogPage />)
     expect(screen.getAllByText('New').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Improved').length).toBeGreaterThan(0)
     expect(screen.getAllByText('Fixed').length).toBeGreaterThan(0)
   })
 
-  it('renders correctly and falls back to legacy-only history when CHANGELOG.md is absent', () => {
-    // getGeneratedChangelog() returns [] when CHANGELOG.md doesn't exist yet — the page
-    // must not error out and must still show the pre-automation legacy entries.
-    getGeneratedChangelog.mockReturnValue([])
-    expect(() => render(<ChangelogPage />)).not.toThrow()
-    expect(document.getElementById('v2-0-0')).toBeInTheDocument()
-    expect(document.getElementById('v2-0-1')).toBeInTheDocument()
-    expect(document.getElementById('v2-1-0')).toBeInTheDocument()
-  })
-
-  // v3.0.0's git tag is only a semantic-release anchor, so CHANGELOG.md never gets a
-  // section for it — the page used to jump from generated entries straight to v2.1.0,
-  // leaving out the version that's actually live.
-  it('shows v3.0.0 — the live version — above the older history', () => {
+  // The original extension's releases: exactly the tags on github.com/lbragile/TabMerger,
+  // newest first, below v3.0.0.
+  it('lists every tagged release of the original extension, newest first', () => {
     render(<ChangelogPage />)
     const ids = Array.from(document.querySelectorAll('[id]')).map((el) => el.id)
-    expect(ids).toContain('v3-0-0')
-    expect(ids.indexOf('v3-0-0')).toBeLessThan(ids.indexOf('v2-1-0'))
+    const tagged = ['v3-0-0', 'v2-0-0', 'v1-6-2', 'v1-6-1', 'v1-6-0', 'v1-5-0', 'v1-4-3', 'v1-4-0', 'v1-3-0', 'v1-2-1', 'v1-2-0']
+    const positions = tagged.map((id) => ids.indexOf(id))
+    expect(positions).not.toContain(-1)
+    expect([...positions].sort((a, b) => a - b)).toEqual(positions)
+  })
+
+  // The page used to list v2.0.1 and v2.1.0 (and a v2.0.0 dated May 2026) that never
+  // existed. The real v2.0.0 shipped March 6, 2021.
+  it('does not bring back the invented v2.x releases', () => {
+    render(<ChangelogPage />)
+    expect(document.getElementById('v2-1-0')).not.toBeInTheDocument()
+    expect(document.getElementById('v2-0-1')).not.toBeInTheDocument()
+    expect(document.getElementById('v2-0-0')).toHaveTextContent('March 6, 2021')
+    expect(document.body.textContent).not.toMatch(/May 4, 2026|June 12, 2026|July 28, 2026/)
+  })
+
+  it('notes that versions before v1.2.0 were never tagged', () => {
+    render(<ChangelogPage />)
+    const note = screen.getByTestId('changelog-origins')
+    expect(note).toHaveTextContent(/began in 2020/)
+    expect(note).toHaveTextContent(/v1\.2\.0/)
   })
 
   it('places generated releases above v3.0.0', () => {
@@ -93,23 +101,17 @@ describe('ChangelogPage', () => {
     expect(v3?.textContent).not.toMatch(/\bAI\b/)
   })
 
-  it('renders generated CHANGELOG.md entries ahead of the legacy history', () => {
+  it('renders generated CHANGELOG.md entries in order, newest first', () => {
     const generated: ChangeEntry[] = [
-      {
-        version: 'v2.2.0',
-        date: 'October 1, 2026',
-        changes: [{ type: 'New', text: 'popup: add drag and drop reordering' }],
-      },
+      { version: 'v3.2.0', date: 'November 1, 2026', changes: [{ type: 'New', text: 'popup: newer thing' }] },
+      { version: 'v3.1.0', date: 'October 1, 2026', changes: [{ type: 'New', text: 'popup: add drag and drop reordering' }] },
     ]
     getGeneratedChangelog.mockReturnValue(generated)
     render(<ChangelogPage />)
 
-    expect(document.getElementById('v2-2-0')).toBeInTheDocument()
-    // Legacy history is still present, rendered after the generated entry.
-    expect(document.getElementById('v2-1-0')).toBeInTheDocument()
-
     const ids = Array.from(document.querySelectorAll('[id]')).map((el) => el.id)
-    expect(ids.indexOf('v2-2-0')).toBeLessThan(ids.indexOf('v2-1-0'))
+    expect(ids.indexOf('v3-2-0')).toBeLessThan(ids.indexOf('v3-1-0'))
+    expect(ids.indexOf('v3-1-0')).toBeLessThan(ids.indexOf('v3-0-0'))
   })
 
   it('filters out prerelease entries end-to-end so only stable versions from CHANGELOG.md reach the page', async () => {
