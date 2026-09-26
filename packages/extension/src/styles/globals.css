@@ -154,7 +154,7 @@ body {
   background: hsl(193 100% 40%) !important;
   color: #fff !important;
   border: none !important;
-  border-radius: 0.375rem !important;
+  border-radius: 0 !important;
   font-size: 0.75rem !important;
   font-weight: 500 !important;
 }

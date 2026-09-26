@@ -160,6 +160,10 @@ export function App() {
         position="bottom-right"
         richColors
         closeButton
+        // Square corners to match the popup's other surfaces. Sonner rounds toasts with
+        // its own --border-radius variable (8px); inline so it wins over the stylesheet
+        // sonner injects at runtime, whatever the load order.
+        style={{ '--border-radius': '0px' } as React.CSSProperties}
         toastOptions={{
           classNames: {
             actionButton: 'toast-action-btn'
