@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
+import { aiDisabledResponse } from '@/lib/ai-guard'
 
 /**
  * Dev-only: sets the authenticated user's `ai_usage.credits_used` for the
@@ -11,6 +12,10 @@ import { createServiceRoleClient } from '@/lib/supabase/server'
  * discoverable in production.
  */
 export async function POST(request: NextRequest) {
+  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
+  const aiDisabled = aiDisabledResponse()
+  if (aiDisabled) return aiDisabled
+
   if (process.env.NODE_ENV !== 'development') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }

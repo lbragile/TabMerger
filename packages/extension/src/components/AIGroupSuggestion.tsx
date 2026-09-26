@@ -6,6 +6,7 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
 import { useUIStore } from '@/stores/uiStore';
 import { getSetting } from '@/lib/localDb';
+import { AI_ENABLED } from '@/lib/aiFlag';
 
 const STORAGE_KEY = 'tm_ai_suggestion';
 
@@ -108,7 +109,8 @@ export function AIGroupSuggestion() {
    
   }, [storageReady, stored, staleGroups.length]);
 
-  if (!storageReady || loading || !aiFeatures || stored?.dismissed) return null;
+  // AI features: coming soon — fully hidden while the global flag is off.
+  if (!AI_ENABLED || !storageReady || loading || !aiFeatures || stored?.dismissed) return null;
 
   if (quotaExceeded) {
     return (

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({ auth: { updateUser: vi.fn() } }),
@@ -37,8 +37,13 @@ function mockSupabase(tier: string, usedCount = 53, purchases: { credits: number
 }
 
 describe('AccountPage — usage summary cards (visual restyle)', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   it('shows 0 AI calls left and no accent styling for a free-tier user', async () => {
     vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockSupabase('free')
     const { default: AccountPage } = await import('@/app/(app)/account/page')
     const jsx = await AccountPage()
@@ -52,6 +57,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
 
   it('shows 47 AI calls left with accent styling for a pro_ai-tier user', async () => {
     vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockSupabase('pro_ai')
     const { default: AccountPage } = await import('@/app/(app)/account/page')
     const jsx = await AccountPage()
@@ -65,6 +71,7 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
 
   it('adds purchased credit packs to the cap when computing AI calls left', async () => {
     vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     mockSupabase('pro_ai', 100, [{ credits: 50 }, { credits: 50 }])
     const { default: AccountPage } = await import('@/app/(app)/account/page')
     render((await AccountPage()) as React.ReactElement)
@@ -72,11 +79,26 @@ describe('AccountPage — usage summary cards (visual restyle)', () => {
     // 300 base + 100 purchased - 100 used
     expect(screen.getByText('AI credits left').closest('div')?.textContent).toContain('300')
   })
+
+  it('splices the "AI credits left" stat card out entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {
+    vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    mockSupabase('pro_ai')
+    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    render((await AccountPage()) as React.ReactElement)
+
+    expect(screen.queryByText('AI credits left')).not.toBeInTheDocument()
+  })
 })
 
 describe('AccountPage — buy more AI calls', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   it('shows a "Get more" CTA for a pro_ai user who has exhausted their monthly cap', async () => {
     vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
     vi.doMock('@/lib/supabase/server', () => ({
       createClient: async () => ({
         auth: {

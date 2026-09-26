@@ -6,6 +6,7 @@ import type { Breadcrumb, ErrorEvent } from '@sentry/browser';
 import { queryClient } from '@/lib/queryClient';
 import { App } from './App';
 import { installDndPointerProbe } from '@/lib/dndPointerProbe';
+import { AI_ENABLED } from '@/lib/aiFlag';
 import '@/styles/globals.css';
 
 
@@ -45,7 +46,10 @@ async function bootstrap() {
   // session. Never bundled into production — import.meta.env.DEV is
   // statically replaced and dead-code-eliminated by Vite/WXT at build time.
   // See src/mocks/devFetchMock.ts for why this isn't MSW's setupWorker.
-  if (import.meta.env.DEV) {
+  // AI features: coming soon — every AI mutation now throws before it ever calls
+  // fetch when the global flag is off, so this mock would never see a matching
+  // request anyway; skip installing it to avoid patching window.fetch for nothing.
+  if (import.meta.env.DEV && AI_ENABLED) {
     const { installDevFetchMock } = await import('@/mocks/devFetchMock');
     installDevFetchMock();
   }

@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Check, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
+import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
 
 // ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
 // and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
@@ -45,6 +47,7 @@ export function PricingCard({
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
+  const isComingSoon = tier === 'proAi' && !AI_ENABLED
   const rawPrice = interval === 'monthly' ? monthlyPrice : yearlyPrice
   const isCurrentPlan = !!currentTier && normalizeTier(currentTier) === normalizeTier(tier)
   const isFree = tier === 'free'
@@ -61,6 +64,7 @@ export function PricingCard({
       : (displayYearly ?? (rawPrice === 0 ? '$0' : `$${rawPrice}`))
 
   async function handleClick() {
+    if (isComingSoon) return
     if (isFree) {
       window.open('https://chrome.google.com/webstore', '_blank', 'noopener')
       return
@@ -112,7 +116,12 @@ export function PricingCard({
             Recommended
           </span>
         )}
-        {tier === 'proAi' && <span className="text-primary text-xs">✦</span>}
+        {tier === 'proAi' && !isComingSoon && <span className="text-primary text-xs">✦</span>}
+        {isComingSoon && (
+          <span className="inline-flex items-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-muted text-muted-foreground self-center">
+            Coming soon
+          </span>
+        )}
       </div>
 
       {/* Price */}
@@ -148,7 +157,7 @@ export function PricingCard({
             <span>{feature}</span>
           </li>
         ))}
-        {tier === 'proAi' && (
+        {tier === 'proAi' && !isComingSoon && (
           <li className="flex items-center gap-2 text-text2">
             <Plus className="h-3.5 w-3.5 shrink-0 text-primary" />
             <span>{AI_MONTHLY_CAP} AI credits / month</span>
@@ -159,7 +168,16 @@ export function PricingCard({
       {/* CTA button — omitted for the current plan (badge already says so), except Free,
           which always offers the install link since "installed" isn't a Stripe state. */}
       <div className="mt-auto">
-        {isFree ? (
+        {isComingSoon ? (
+          <Button
+            variant="outline"
+            className="w-full rounded-lg cursor-not-allowed opacity-60"
+            disabled
+            aria-disabled="true"
+          >
+            {AI_COMING_SOON_LABEL}
+          </Button>
+        ) : isFree ? (
           <Button
             variant="outline"
             className="w-full rounded-lg"

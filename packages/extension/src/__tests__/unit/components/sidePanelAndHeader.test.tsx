@@ -54,6 +54,9 @@ const {
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
+// This suite exercises Header's AI dropdown behavior directly, not the coming-soon
+// flag, so force it on regardless of the real VITE_AI_ENABLED default.
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
 
 // ─── DnD stubs (shared) ───────────────────────────────────────────────────────
 

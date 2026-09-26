@@ -25,6 +25,7 @@ import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 import { hasEncryptionKey, resetEncryption } from '@/lib/encryptionKey';
+import { AI_ENABLED } from '@/lib/aiFlag';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -595,7 +596,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </Button>
             </div>
 
-            {import.meta.env.DEV && (
+            {import.meta.env.DEV && AI_ENABLED && (
               <>
                 <Separator />
                 <div className="flex items-center justify-between gap-2">

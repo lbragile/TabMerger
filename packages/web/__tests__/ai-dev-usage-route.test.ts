@@ -32,6 +32,7 @@ function req(body?: unknown, auth: string | null = 'Bearer jwt-token') {
 beforeEach(() => {
   vi.clearAllMocks()
   vi.stubEnv('NODE_ENV', 'development')
+  vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
   mockGetUser.mockResolvedValue({ data: { user: { id: USER_ID } }, error: null })
   mockUpsert.mockResolvedValue({ error: null })
   // .delete().eq('user_id', ...).eq('month', ...) — the final .eq resolves.
@@ -93,6 +94,17 @@ describe('POST /api/ai/dev-usage', () => {
   it('ignores a spoofed user_id in the body and uses the token identity', async () => {
     await POST(req({ count: 5, user_id: 'attacker-uuid' }))
     expect(mockUpsert.mock.calls[0][0].user_id).toBe(USER_ID)
+  })
+
+  it('returns 503 ai_disabled when the AI flag is off, before any auth or DB work', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    const res = await POST(req({ count: 0 }))
+    expect(res.status).toBe(503)
+    expect(await res.json()).toEqual({ error: 'ai_disabled' })
+    expect(mockGetUser).not.toHaveBeenCalled()
+    expect(mockFrom).not.toHaveBeenCalled()
+    expect(mockUpsert).not.toHaveBeenCalled()
+    expect(mockDelete).not.toHaveBeenCalled()
   })
 
   it('returns 404 in production without touching auth', async () => {

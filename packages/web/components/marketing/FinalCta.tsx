@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ChromeIcon } from './BrowserIcons'
+import { AI_ENABLED } from '@/lib/aiFlag'
 
 export function FinalCta() {
   return (
@@ -10,7 +11,9 @@ export function FinalCta() {
           Stop drowning in browser tabs.
         </h2>
         <p className="text-text2 mb-7 text-[15.5px]">
-          Free to start, no account needed. Upgrade any time for cloud sync and AI.
+          {AI_ENABLED
+            ? 'Free to start, no account needed. Upgrade any time for cloud sync and AI.'
+            : 'Free to start, no account needed. Upgrade any time for cloud sync — AI features coming soon.'}
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button size="lg" className="gap-2" asChild>

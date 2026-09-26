@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { getDevAiUsage } from '@/mocks/devAiUsage';
+import { AI_ENABLED } from '@/lib/aiFlag';
 import { useAuth } from './useAuth';
 import { useEntitlements } from './useEntitlements';
 
@@ -61,7 +62,7 @@ export function useAiUsage() {
       ]);
       return { used, cap };
     },
-    enabled: import.meta.env.DEV ? aiFeatures : !!user && aiFeatures
+    enabled: AI_ENABLED && (import.meta.env.DEV ? aiFeatures : !!user && aiFeatures)
   });
 
   const used = data?.used ?? 0;

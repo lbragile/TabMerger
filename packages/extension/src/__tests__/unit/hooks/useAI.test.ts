@@ -13,6 +13,10 @@ const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings, mo
   mockHasEncryptionKey: vi.fn(),
 }))
 
+// This suite exercises the AI-enabled behavior of these mutations directly (they're
+// unit tests for the mutation logic itself, not for the coming-soon flag), so force
+// the global kill switch on here regardless of the real VITE_AI_ENABLED default.
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))

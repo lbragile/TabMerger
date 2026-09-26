@@ -17,6 +17,9 @@ const MockQuotaExceededError = vi.hoisted(() => class extends Error {
   isQuotaExceeded = true as const
 })
 
+// This suite tests the suggestion banner's own behavior (dismiss/storage/quota), not
+// the coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
 vi.mock('@/hooks/useAI', () => ({
   useSuggestSessions: () => ({ mutateAsync: mockSuggest }),
   QuotaExceededError: MockQuotaExceededError,

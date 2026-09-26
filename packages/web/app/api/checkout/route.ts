@@ -1,7 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { isAiEnabled } from '@tabmerger/shared'
 import { createClient } from '@/lib/supabase/server'
 import { createCheckoutSession, getStripePriceId } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
+import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
 
 /**
  * Creates a Stripe Checkout session for upgrading to Pro or Pro AI.
@@ -27,6 +29,12 @@ export async function POST(request: NextRequest) {
 
   if (!['monthly', 'yearly'].includes(interval)) {
     return NextResponse.json({ error: 'Invalid interval' }, { status: 400 })
+  }
+
+  // AI features are behind a "coming soon" flag — reject pro_ai at every interval
+  // before touching Stripe at all, regardless of what the client sends.
+  if (tier === 'proAi' && !isAiEnabled(process.env.NEXT_PUBLIC_AI_ENABLED)) {
+    return NextResponse.json({ error: AI_DISABLED_ERROR }, { status: 503 })
   }
 
   const priceId = getStripePriceId(tier as 'pro' | 'proAi', interval)

@@ -31,6 +31,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useAuth } from "@/hooks/useAuth";
 import { useEntitlements } from "@/hooks/useEntitlements";
 import { useAutoGroup, useOrganizeTabs, QuotaExceededError } from "@/hooks/useAI";
+import { AI_ENABLED } from "@/lib/aiFlag";
 import { useAppSettings } from "@/hooks/useAppSettings";
 import { useGroups, useSetGroupsState, useApplyAIGroups } from "@/hooks/useGroups";
 import { toast } from "sonner";
@@ -303,6 +304,9 @@ export function Header() {
                     </TooltipContent>
                 </Tooltip>
 
+                {/* AI features: coming soon — this entry point is fully hidden (not just
+                    disabled) while the global flag is off, per product decision. */}
+                {AI_ENABLED && (
                 <DropdownMenu>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -353,6 +357,7 @@ export function Header() {
                         </DropdownMenuContent>
                     )}
                 </DropdownMenu>
+                )}
 
                 {/* Profile dropdown — consolidated sign-in / account widget */}
                 <Tooltip>
@@ -412,7 +417,7 @@ export function Header() {
                                             Upgrade to Pro
                                         </DropdownMenuItem>
                                     )}
-                                    {tier === "pro" && (
+                                    {tier === "pro" && AI_ENABLED && (
                                         <DropdownMenuItem
                                             className="text-xs text-primary focus:text-primary font-medium cursor-pointer"
                                             onClick={() =>

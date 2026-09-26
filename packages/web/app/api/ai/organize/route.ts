@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto'
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
+import { aiDisabledResponse } from '@/lib/ai-guard'
 import { start, getRun } from 'workflow/api'
 import { tabOrganizerWorkflow, type ClientGroup } from '@/lib/workflows/tabOrganizer'
 import { checkAndIncrementAIUsage, CREDIT_COSTS } from '@/lib/ai-usage'
@@ -73,6 +74,10 @@ async function getAuthenticatedUser(request: NextRequest) {
  * can verify ownership before streaming results back.
  */
 export async function POST(request: NextRequest) {
+  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
+  const aiDisabled = aiDisabledResponse()
+  if (aiDisabled) return aiDisabled
+
   const { token, user, supabase } = await getAuthenticatedUser(request)
 
   if (!token) {
@@ -117,6 +122,10 @@ export async function POST(request: NextRequest) {
  * Verifies the runId belongs to the authenticated user before streaming to prevent IDOR.
  */
 export async function GET(request: NextRequest) {
+  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
+  const aiDisabled = aiDisabledResponse()
+  if (aiDisabled) return aiDisabled
+
   const { token, user, supabase } = await getAuthenticatedUser(request)
 
   if (!token) {

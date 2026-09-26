@@ -1,7 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { isAiEnabled } from '@tabmerger/shared'
 import { createClient } from '@/lib/supabase/server'
 import { createCreditPackCheckoutSession } from '@/lib/stripe'
 import { absoluteUrl } from '@/lib/utils'
+import { AI_DISABLED_ERROR } from '@/lib/ai-guard'
 
 /**
  * Creates a one-time Stripe Checkout session for an AI credit top-up
@@ -17,6 +19,12 @@ export async function POST(request: NextRequest) {
 
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // AI credit packs are only spendable by pro_ai, which is itself behind the "coming soon"
+  // flag — reject before any Stripe call while the flag is off.
+  if (!isAiEnabled(process.env.NEXT_PUBLIC_AI_ENABLED)) {
+    return NextResponse.json({ error: AI_DISABLED_ERROR }, { status: 503 })
   }
 
   const { data: profile } = await supabase

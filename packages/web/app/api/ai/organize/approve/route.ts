@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceRoleClient } from '@/lib/supabase/server'
+import { aiDisabledResponse } from '@/lib/ai-guard'
 import { resumeHook } from 'workflow/api'
 import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
 
@@ -10,6 +11,10 @@ import type { ReorganizeAction } from '@/lib/workflows/tabOrganizer'
  * for another user's workflow would be rejected before reaching the workflow engine.
  */
 export async function POST(request: NextRequest) {
+  // AI feature flag kill switch — must stay first, before any auth/DB/Anthropic work.
+  const aiDisabled = aiDisabledResponse()
+  if (aiDisabled) return aiDisabled
+
   const authHeader = request.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')
 

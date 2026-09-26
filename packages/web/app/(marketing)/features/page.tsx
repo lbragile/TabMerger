@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
 import {
   Layers,
   Search,
@@ -203,6 +205,11 @@ export default function FeaturesPage() {
                   <span className={cn('inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3', badgeStyle[section.badge])}>
                     {section.badge}
                   </span>
+                  {isAi && !AI_ENABLED && (
+                    <span className="ml-2 inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold mb-3 bg-muted text-muted-foreground">
+                      {AI_COMING_SOON_LABEL}
+                    </span>
+                  )}
                   <h2 className="text-3xl font-bold tracking-tight">
                     {section.title}
                   </h2>
