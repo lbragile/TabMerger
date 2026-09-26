@@ -159,6 +159,32 @@ export const promoOnlySteps: DemoStep[] = [
         durationMs: 4480,
         action: "starGroupWindow",
     },
+    // ponytail: added 2026-09-26 per direct coordinator ask — the promo/
+    // walkthrough must SHOWCASE multi-select drag and cross-group drag
+    // explicitly, not just cross-window drag within one group
+    // (crossWindowTabDrag) or a same-window reorder (dragTabBetweenGroups —
+    // see that handler's own comment on its misleading name). See
+    // actions.ts's multiSelectTabDrag/dragTabToSidebarGroup for the real UI
+    // paths (Ctrl-click multi-select, drop onto a sidebar group row).
+    // durationMs values are measurement placeholders (LEADING_TRIM_MS +
+    // observed action time + buffer, same convention as every other step in
+    // this file) — re-measure via ffprobe on the real recorded clips once
+    // record.ts has run against these two new actions, per this file's
+    // top-of-file durationMs convention comment.
+    {
+        id: "multi-select-drag",
+        caption: "Drag many tabs at once.",
+        durationMs: 7200,
+        action: "multiSelectTabDrag",
+        zoom: 1.3,
+    },
+    {
+        id: "cross-group-drag",
+        caption: "Move tabs between groups.",
+        durationMs: 6800,
+        action: "dragTabToSidebarGroup",
+        zoom: 1.3,
+    },
 ];
 
 // Pulls a step verbatim (id/caption/durationMs/action/zoom, all of it) out
@@ -240,6 +266,8 @@ export const demoScript: DemoStep[] = [
         zoom: 1.3,
     },
     fromPromo("rename-group-tab"),
+    fromPromo("multi-select-drag"),
+    fromPromo("cross-group-drag"),
     {
         id: "outro",
         caption: "TabMerger — tab chaos, tamed. Free to start.",

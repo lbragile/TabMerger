@@ -20,6 +20,19 @@ const EXTENSION_PATH = path.resolve(
 );
 const USER_DATA_DIR = path.resolve(__dirname, "../.pw-user-data");
 
+// ponytail: 2026-09-26 — headless by default per direct coordinator ask.
+// Playwright's own `headless: true` predates MV3 extension support (it
+// can't `--load-extension` at all), but Chrome's newer `--headless=new`
+// CLI mode CAN — so the fix is the same trick the extension's own e2e
+// suite already uses successfully for the real MV3 popup+DnD
+// (`e2e/tests/popup-dnd.spec.ts`, `e2e/fixtures.ts`): pass Playwright
+// `headless: false` (so it doesn't inject its OWN legacy `--headless`
+// flag, which conflicts) and add `--headless=new` as a raw CLI arg
+// instead. `TM_DEMO_HEADED=1` opts back into a real visible window for
+// local debugging (e.g. watching a drag live) without touching this file.
+const HEADLESS = process.env.TM_DEMO_HEADED !== "1";
+const HEADLESS_ARGS = HEADLESS ? ["--headless=new"] : [];
+
 // ponytail: generic, PII-free real sites for the "Now Open" group — no
 // personal accounts, no "New Tab" placeholders.
 const NOW_OPEN_SEED_URLS = [
@@ -58,6 +71,7 @@ export async function launchDemoContext(
         {
             headless: false,
             args: [
+                ...HEADLESS_ARGS,
                 `--disable-extensions-except=${EXTENSION_PATH}`,
                 `--load-extension=${EXTENSION_PATH}`,
             ],
@@ -81,6 +95,7 @@ export async function launchDemoContext(
         viewport: { width: 800, height: 600 },
         deviceScaleFactor,
         args: [
+            ...HEADLESS_ARGS,
             `--disable-extensions-except=${EXTENSION_PATH}`,
             `--load-extension=${EXTENSION_PATH}`,
             `--app=chrome-extension://${extensionId}/popup.html`,

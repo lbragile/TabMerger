@@ -1,3 +1,51 @@
+## Status update (2026-09-26)
+
+Everything below this point is the ORIGINAL planning doc and is stale in
+several places — kept for history, not as current instructions. The actual
+source of truth for what's in the promo/walkthrough today is
+`demo-script.ts`'s `promoScript`/`demoScript` exports. Corrections as of this
+pass:
+
+- The extension's DnD stack was fully rebuilt on a dual pointer/native-HTML5
+  sensor since this doc was written (`.claude/plans/drag-and-drop-spec.md`).
+  `drag-reorder` (the old id referenced throughout this doc) no longer exists
+  as a step; the real drag beats today are `dragTabBetweenGroups` (a
+  same-window reorder, despite the name), `crossWindowTabDrag` (within one
+  group, across its windows), `moveTabToNewWindow` (split into a new
+  window), and — added this pass, per direct coordinator ask that the video
+  explicitly SHOWCASE the newer multi-select and cross-group capabilities,
+  not just keep working with them — two new dedicated beats:
+  - **`multi-select-drag`** ("Drag many tabs at once.") — Ctrl-click two real
+    seeded Shopping tabs (visible `bg-primary/10` selection highlight, held
+    on screen before the drag starts), then drag by one selected row's grip;
+    `dndMultiDrag.ts` carries every selected row along.
+  - **`cross-group-drag`** ("Move tabs between groups.") — drags a tab out of
+    "Reading List" straight onto the "Shopping" sidebar row
+    (`[data-sidebar-group-index]`), landing as a new last window in that
+    group per the DnD spec's §6 Outcomes table — a real cross-group move,
+    not a same-group reorder.
+  Both are folded into `demoScript` (via `fromPromo`) and `promoScript`, with
+  the same zoom/caption treatment as every other beat.
+- **AI features are hidden** (`VITE_AI_ENABLED` unset) — nothing in this doc
+  ever mentioned AI, and nothing added this pass does either. No change
+  needed here, confirmed by grep.
+- **Headless recording**: `lib/launchDemoContext.ts` now defaults to
+  `--headless=new`. Every DRAG step (all 6 named above) does not work
+  headless — the native `dragstart` the popup's sensor needs never fires for
+  Playwright's synthetic mouse input under Chromium's new headless mode (see
+  `README.md`'s "Known headless gap" section for the full root-cause writeup
+  and the extension e2e suite's raw-CDP workaround). `TM_DEMO_HEADED=1` is
+  required to actually record/screenshot this storyboard until `actions.ts`
+  is ported to that same raw-CDP drag pattern. Every non-drag step already
+  works headless.
+- This doc's own "Structure"/"Second-by-second shot list" sections below
+  reference stale step ids (`drag-reorder`, `view-groups`, `star-window`,
+  etc.) from an earlier storyboard rewrite (2026-08-01) that are no longer
+  in `demo-script.ts` at all — treat the CURRENT `promoScript` array as
+  authoritative for exact ids/order/captions, not the tables below.
+
+---
+
 # TabMerger Promo Video Spec (Chrome Web Store)
 
 Planning document only — no code changes here. Grounded in what `demo-script.ts`,

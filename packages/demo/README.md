@@ -29,9 +29,11 @@ pnpm --filter @tabmerger/demo store-assets           # 1280×800 screenshots →
 pnpm --filter @tabmerger/demo studio
 ```
 
-The root `package.json` aliases `demo:screenshots` and `demo:store-assets` work. `demo:record` and `demo:render` do **not**: they call `record` and `render` scripts that don't exist in this package. Use the `record:<theme>` / `render:<theme>` scripts above.
+The root `package.json`'s `demo:record`/`demo:render` aliases now run both themes back to back (`record:dark && record:light` / `render:dark && render:light`) — they used to call `record`/`render` scripts that never existed in this package; fixed 2026-09-26.
 
-The recorder launches Chromium **headed** (`headless: false` in `lib/launchDemoContext.ts`) with the unpacked demo build from `packages/extension/.output/chrome-mv3-demo`. It deletes and recreates its profile (`.pw-user-data`) on every run.
+The recorder launches Chromium **headless by default** (`--headless=new`, `lib/launchDemoContext.ts`) with the unpacked demo build from `packages/extension/.output/chrome-mv3-demo`. It deletes and recreates its profile (`.pw-user-data`) on every run.
+
+**Known headless gap — drag-and-drop steps:** every step whose `action` performs a real drag (`moveTabToNewWindow`, `crossWindowTabDrag`, `multiSelectTabDrag`, `dragTabToSidebarGroup`, `dragTabBetweenGroups`) reliably fails headless — the native `dragstart` the popup's dual pointer/native-HTML5 sensor (`dndHtml5Sensor.ts`) activates on never fires for Playwright's synthetic mouse input under `--headless=new`, so the drag never begins at all (confirmed by instrumenting `moveTabToNewWindow`: `getByText("Drop to create new window")` never appears, in any of 8 relaunch-and-retry attempts). This is a genuine Chromium headless limitation, not a selector or timing bug — the extension's own real-popup e2e DnD spec (`packages/extension/e2e/tests/popup-dnd.spec.ts`) works around the identical constraint by driving the drag over **raw CDP** (`RawCdp.drag`, dispatching `Input.dispatchMouseEvent` directly) instead of Playwright's `page.mouse` API. `actions.ts` has not been ported to that pattern yet. Until it is, set `TM_DEMO_HEADED=1` to record/screenshot with a real visible window — every other (non-drag) step already runs fine headless.
 
 ## Outputs
 
