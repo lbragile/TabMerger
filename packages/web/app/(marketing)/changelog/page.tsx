@@ -133,6 +133,50 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
       { type: 'Improved', text: 'Merging no longer makes the page jump around' },
     ],
   },
+  // v1.0.0–v1.1.3 were never tagged and have no GitHub release notes. Dated by the
+  // commit that bumped the manifest version, and described from the commit messages
+  // between bumps (4c1d31d, 8408b82, a2be5df, bd7f947). 0.x was pre-release development.
+  {
+    version: 'v1.1.3',
+    date: 'December 1, 2020',
+    changes: [
+      { type: 'Fixed', text: 'Merging on Firefox' },
+      { type: 'Fixed', text: 'Shareable links between Firefox and Chrome' },
+      { type: 'Fixed', text: 'Group titles not being saved' },
+    ],
+  },
+  {
+    version: 'v1.1.0',
+    date: 'November 30, 2020',
+    changes: [
+      { type: 'New', text: 'Available for Firefox' },
+      { type: 'New', text: 'Dark mode' },
+      { type: 'Improved', text: 'Right-click menu and settings translated' },
+    ],
+  },
+  {
+    version: 'v1.0.1',
+    date: 'November 20, 2020',
+    changes: [
+      { type: 'New', text: 'Shareable links, with one-click copy' },
+      { type: 'New', text: 'Available in more languages' },
+      { type: 'New', text: 'Help button and a new logo' },
+      { type: 'Improved', text: 'Fewer permissions' },
+      { type: 'Fixed', text: 'Merging tabs to the right' },
+    ],
+  },
+  {
+    version: 'v1.0.0',
+    date: 'November 11, 2020',
+    changes: [
+      { type: 'New', text: 'First release — merge your open tabs into TabMerger and organize them into groups' },
+      { type: 'New', text: 'Drag and drop tabs between groups, and sort tabs within a group' },
+      { type: 'New', text: 'Open or delete a whole group at once' },
+      { type: 'New', text: "Each group shows when it was created and its share of your tabs" },
+      { type: 'New', text: 'Right-click menu and a settings page' },
+      { type: 'Improved', text: 'Duplicate tabs are skipped when merging' },
+    ],
+  },
 ]
 const V3_0_0: ChangeEntry = {
   version: 'v3.0.0',
