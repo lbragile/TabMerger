@@ -408,17 +408,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </Button>
           )}
 
-          {canResetEncryption && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleResetEncryption}
-              className="w-full text-xs rounded-none hover:bg-destructive/10 hover:text-destructive hover:border-destructive"
-            >
-              Reset encryption passphrase
-            </Button>
-          )}
-
           {user && (
             <Button
               variant="outline"
@@ -428,6 +417,19 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             >
               Sign out
             </Button>
+          )}
+
+          {canResetEncryption && (
+            <div className="pt-2 border-t border-border text-center">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={handleResetEncryption}
+                className="h-auto p-0 text-xs text-destructive"
+              >
+                Forgot your passphrase? Reset encryption
+              </Button>
+            </div>
           )}
         </TabsContent>
 
