@@ -4,6 +4,7 @@ import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolveManifestVersion } from "./scripts/manifestVersion";
+import { resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
 import pkg from "./package.json";
 
 function getExtensionName(mode: string): string {
@@ -11,6 +12,27 @@ function getExtensionName(mode: string): string {
     if (mode === "development") return "TabMerger DEV";
     return "TabMerger";
 }
+
+// ponytail: wxt@0.20.27's dist/core/wxt.mjs does
+// `process.env.NODE_ENV ??= inlineConfig.mode ?? (command === "serve" ? "development" : "production")`
+// BEFORE this file is loaded — so for any non-"production" mode (beta, demo),
+// NODE_ENV becomes that literal mode string. Vite's own resolveConfig computes
+// `isProduction = process.env.NODE_ENV === "production"` and derives
+// `import.meta.env.DEV`/`PROD` AND esbuild's `jsxDev` flag from THAT boolean,
+// not from Vite's `mode` field — confirmed by reading vite@6's bundled
+// dist/node/chunks/dep-*.js (`resolveConfig`, ~line 49070). Left alone, every
+// non-production wxt mode ships React's development bundle (jsxDEV calls),
+// which is how `wxt zip -b chrome --mode beta` (publish.yml's store beta job)
+// was shipping a dev build of React to the Chrome Web Store beta channel.
+// Fix: derive the mode the same way wxt's CLI does (from argv, since this
+// file's top-level code runs before wxt's own config resolution touches
+// process.env.NODE_ENV) and force NODE_ENV to a real "development"/"production"
+// value ourselves, before any vite.build()/createServer() call can read it.
+// This does NOT touch wxt's own `mode` (import.meta.env.MODE stays
+// "beta"/"demo" — see the `manifest`/`zip` config below, both of which key off
+// `mode`/argv directly and are unaffected).
+const cliWxtMode = resolveWxtModeFromArgv(process.argv);
+process.env.NODE_ENV = resolveNodeEnv(cliWxtMode);
 
 export default defineConfig({
     srcDir: "src",
@@ -174,5 +196,28 @@ export default defineConfig({
     webExt: {
         chromiumArgs: ["--user-data-dir=.wxt/chrome-data", "--no-first-run"],
         startUrls: ["about:blank"],
+    },
+    hooks: {
+        // ponytail: background/content scripts build in Vite "lib mode"
+        // (wxt's getLibModeConfig), which sets its own
+        // `define: { "process.env.NODE_ENV": JSON.stringify(wxtConfig.mode) }`
+        // — and since wxt merges as `mergeConfig(baseConfig, entryConfig)`
+        // (entryConfig second/winning — confirmed by reading
+        // dist/core/builders/vite/index.mjs's `build()` method), that
+        // literal-mode-string define wins over whatever this file's `vite()`
+        // config sets, REGARDLESS of the process.env.NODE_ENV fix above. Not
+        // independently confirmable by grepping built output: esbuild
+        // constant-folds `"<literal>" !== "production"` comparisons at
+        // minify time either way, so the source string disappears into
+        // `!0`/`!1` whether the define says "beta" or "production" — this is
+        // a source-reading proof, not a build-grep one. `vite:build:extendConfig`
+        // runs after that merge for every entrypoint group (popup's
+        // multi-page config included, though it has no competing define), so
+        // re-asserting it here last is what actually wins for every
+        // entrypoint, not just the popup.
+        "vite:build:extendConfig": (_entrypoints, viteConfig) => {
+            viteConfig.define ??= {};
+            viteConfig.define["process.env.NODE_ENV"] = JSON.stringify(resolveNodeEnv(cliWxtMode));
+        },
     },
 });

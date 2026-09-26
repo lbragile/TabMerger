@@ -7,51 +7,228 @@ export const metadata: Metadata = {
   description: 'New features, improvements, and fixes in TabMerger.',
 }
 
-// Pre-automation history. These three entries describe real shipped work, but
-// none of it has a git tag or GitHub Release — semantic-release has never run
-// in this repo (see .claude/plans/release-and-beta-channel-spec.md §1/§6).
-// Frozen: never edited, and never presented as machine-generated. Everything
-// newer comes from the repo-root CHANGELOG.md via getGeneratedChangelog()
-// below, and is rendered ahead of this list.
-const LEGACY_CHANGELOG: ChangeEntry[] = [
-  {
-    version: 'v2.1.0',
-    date: 'July 28, 2026',
-    changes: [
-      { type: 'New', text: 'Tab notes — add a private note to any tab, visible in the preview panel' },
-      { type: 'New', text: 'Onboarding checklist shown to new users on first open' },
-      { type: 'New', text: 'AI Organize — automatically group open tabs by topic with one click (Pro AI)' },
-      { type: 'New', text: 'Selection mode — multi-select tabs for bulk move, close, or send-to-group' },
-      { type: 'Improved', text: 'Chrome-native tab groups are now imported automatically when you open the extension' },
-      { type: 'Improved', text: 'Drag-and-drop polish: ghost preview, drop-zone highlight, and smoother reordering across windows' },
-      { type: 'Fixed', text: 'Now Open group could briefly disappear during rapid tab open/close events' },
-    ],
-  },
-  {
-    version: 'v2.0.1',
-    date: 'June 12, 2026',
-    changes: [
-      { type: 'New', text: 'Context-menu integration — right-click any tab in Chrome to send it to a TabMerger group' },
-      { type: 'New', text: 'Session save & restore — snapshot your entire workspace and reload it later (Pro)' },
-      { type: 'Improved', text: 'Cloud sync reliability: conflict resolution now uses last-write-wins on a per-tab basis instead of per-group' },
-      { type: 'Improved', text: 'Subscription lifecycle emails — confirmation on upgrade, reminder before renewal, receipt on charge' },
-      { type: 'Fixed', text: 'Demo sync could overwrite real user data when the demo seed ran in a logged-in session' },
-      { type: 'Fixed', text: 'Error boundary in the popup no longer swallows the underlying stack trace' },
-    ],
-  },
+// v3.0.0 is the version live on the Chrome Web Store, but its `v3.0.0` git tag is only
+// an ANCHOR for semantic-release (created 2026-09-19 on the 2026-08-14 commit fcd85f9),
+// so CHANGELOG.md has no generated section for it. Written by hand from the git history
+// up to that commit; every item was checked against the code. AI features are left out
+// on purpose while they're marked "coming soon". Releases after this are generated —
+// don't add more entries here.
+//
+// The page used to show v2.0.0, v2.0.1 and v2.1.0 entries dated May–July 2026 that
+// didn't match the history: no such releases existed, the rebuild they described
+// started 2026-07-03, and several items weren't in the code. They're gone; the real
+// v1.x–v2.x history follows below.
+
+// The ORIGINAL extension (2020–2021), from its public repo: every tag on
+// github.com/lbragile/TabMerger/tags (v1.2.0 … v2.0.0), described by the author's own
+// GitHub release notes for that version, lightly reworded. Dates are the tagged commits'
+// dates (all present in this repo's history); two releases were published on GitHub
+// months later, so their publish dates aren't used. v1.4.1–v1.4.3 and v1.6.0–v1.6.2
+// come from the combined notes on the v1.4.3 and v1.6.2 releases. Versions before
+// v1.2.0 were never tagged. A "v3.0 refactor" started in 2021 was never released —
+// v3.0.0 above is the 2026 rebuild. Historical record: don't edit.
+const ORIGINAL_EXTENSION: ChangeEntry[] = [
   {
     version: 'v2.0.0',
-    date: 'May 4, 2026',
+    date: 'March 6, 2021',
     changes: [
-      { type: 'New', text: 'Full rewrite as a pnpm monorepo: WXT-powered extension (MV3) + Next.js 15 marketing site + Supabase backend' },
-      { type: 'New', text: 'Pro and Pro AI subscription tiers via Stripe — unlimited groups, cloud sync, and AI features' },
-      { type: 'New', text: 'Tab preview cards with OG images, titles, and AI-generated summaries on hover (Pro AI)' },
-      { type: 'New', text: 'Privacy Policy, Terms of Service, and Contact pages' },
-      { type: 'Improved', text: 'Popup UI rebuilt in React with TanStack Query + Zustand; undo/redo stack with 10 snapshots' },
-      { type: 'Improved', text: 'Free tier enforced in-extension: 5 groups, 50 tabs, local storage only' },
+      { type: 'New', text: 'Subscriptions' },
+      { type: 'New', text: 'Automatic backups to a JSON file and to sync' },
+      { type: 'New', text: 'Group color randomizer' },
+      { type: 'New', text: 'Choose where to save a JSON export (can be turned off in settings)' },
+      { type: 'Improved', text: 'Text style settings now apply to all text in TabMerger' },
+      { type: 'Improved', text: 'Tooltips can be shown or hidden in settings' },
+      { type: 'Improved', text: 'Many confirmation boxes replaced with notifications' },
+      { type: 'Improved', text: 'Redesigned settings page, and more details relevant to you on the main page' },
+      { type: 'Fixed', text: 'Keyboard shortcut and right-click merging on Firefox' },
+    ],
+  },
+  {
+    version: 'v1.6.2',
+    date: 'February 16, 2021',
+    changes: [
+      { type: 'New', text: 'Adjustable tab title weight and font' },
+      { type: 'New', text: 'Hover a tab title to see its URL' },
+      { type: 'New', text: 'Search for groups with "@"' },
+      { type: 'Improved', text: 'Right-click menu and keyboard shortcut merging' },
+      { type: 'Improved', text: 'Clearer merge button icons, and tooltips that no longer cover other buttons' },
+    ],
+  },
+  {
+    version: 'v1.6.1',
+    date: 'February 6, 2021',
+    changes: [
+      { type: 'Improved', text: 'Hidden and empty groups are left out of the printable PDF' },
+      { type: 'Fixed', text: 'Bugs in the walkthrough' },
+    ],
+  },
+  {
+    version: 'v1.6.0',
+    date: 'February 4, 2021',
+    changes: [
+      { type: 'New', text: 'Undo destructive actions' },
+      { type: 'New', text: 'Drag and drop groups, and drag a site straight from the address bar into TabMerger' },
+      { type: 'New', text: 'Lock, star, and persistently hide or show groups' },
+      { type: 'New', text: 'Edit tab titles, and pin or unpin tabs from inside TabMerger' },
+      { type: 'New', text: 'Walkthrough tour, and configurable badge icon information' },
+      { type: 'New', text: 'Setting to keep tabs open or close them when merging' },
+      { type: 'Improved', text: 'Confirmation before Delete All and Open All' },
+      { type: 'Improved', text: 'Much longer group titles, preset colors in the color picker, and automatic text contrast' },
+      { type: 'Improved', text: 'More forgiving JSON import, including files from similar apps' },
+    ],
+  },
+  {
+    version: 'v1.5.0',
+    date: 'January 8, 2021',
+    changes: [
+      { type: 'New', text: 'Printable PDF via a print button' },
+      { type: 'New', text: 'A faster new homepage' },
+      { type: 'Improved', text: 'Cleaner interface, responsive on smaller screens in every browser' },
+      { type: 'Improved', text: 'Scrolls to the bottom when you add a group' },
+    ],
+  },
+  {
+    // v1.4.1–v1.4.3: the release notes group them as "sync & incognito fixes, stable as
+    // of v1.4.3"; split per version from the commit at each tag.
+    version: 'v1.4.3',
+    date: 'December 22, 2020',
+    changes: [
+      { type: 'New', text: 'Sync buttons' },
+      { type: 'Fixed', text: 'Sync and incognito now work reliably' },
+    ],
+  },
+  {
+    version: 'v1.4.2',
+    date: 'December 22, 2020',
+    changes: [{ type: 'Improved', text: 'Sync runs every minute' }],
+  },
+  {
+    version: 'v1.4.1',
+    date: 'December 21, 2020',
+    changes: [{ type: 'Fixed', text: 'Sync not picking up changes' }],
+  },
+  {
+    version: 'v1.4.0',
+    date: 'December 19, 2020',
+    changes: [
+      { type: 'Improved', text: 'More compact interface' },
+      { type: 'Improved', text: 'One search filter, with regular expression support' },
+      { type: 'Improved', text: 'Merging when opening tabs' },
+      { type: 'Improved', text: 'PDF export removed for now, until its formatting is improved' },
+    ],
+  },
+  {
+    // Untagged, but on Firefox Add-ons. The `v1.3.0` tag actually points at this bump
+    // (3190946), released the same day as 1.3.0.
+    version: 'v1.3.1',
+    date: 'December 15, 2020',
+    changes: [{ type: 'Fixed', text: 'Missing tab icons on Firefox' }],
+  },
+  {
+    version: 'v1.3.0',
+    date: 'December 15, 2020',
+    changes: [
+      { type: 'New', text: 'Sync your TabMerger configuration across devices' },
+      { type: 'New', text: 'Works in incognito (private) windows' },
+      { type: 'New', text: 'Restore settings to their defaults' },
+      { type: 'Improved', text: 'Merging and restoring avoid duplicates' },
+      { type: 'Improved', text: 'The page scrolls while you drag' },
+      { type: 'Improved', text: 'Cleaner, more readable JSON export' },
+    ],
+  },
+  {
+    version: 'v1.2.1',
+    date: 'December 7, 2020',
+    changes: [
+      { type: 'New', text: 'Import and export JSON, and export a PDF of your TabMerger page' },
+      { type: 'New', text: 'Keyboard shortcuts' },
+      { type: 'New', text: 'Available for Microsoft Edge, and more languages' },
+      { type: 'Improved', text: 'Fewer unnecessary page reloads, and a better interface on Firefox and Chrome' },
+    ],
+  },
+  {
+    version: 'v1.2.0',
+    date: 'December 3, 2020',
+    changes: [
+      { type: 'New', text: 'Merge tabs within each group directly' },
+      { type: 'New', text: 'Filters to find tabs within a group' },
+      { type: 'Improved', text: 'Merging no longer makes the page jump around' },
+    ],
+  },
+  // v1.0.0–v1.1.3 were never tagged and have no GitHub release notes. Dated by the
+  // commit that bumped the manifest version, and described from the commit messages
+  // between bumps (4c1d31d, 8408b82, a2be5df, bd7f947). 0.x was pre-release development.
+  {
+    version: 'v1.1.3',
+    date: 'December 1, 2020',
+    changes: [
+      { type: 'Fixed', text: 'More Firefox issues' },
+      { type: 'Fixed', text: 'Group titles not being saved' },
+    ],
+  },
+  {
+    version: 'v1.1.2',
+    date: 'November 30, 2020',
+    changes: [{ type: 'Fixed', text: 'Shareable links between Firefox and Chrome' }],
+  },
+  {
+    // On Firefox Add-ons (released 2020-12-01 UTC, alongside 1.1.2 and 1.1.3), but its
+    // manifest bump was never committed — git goes 1.1.0 → 1.1.2. Its fix is the first of
+    // that evening's three commits (db11d07), made before the 1.1.2 bump.
+    version: 'v1.1.1',
+    date: 'November 30, 2020',
+    changes: [{ type: 'Fixed', text: 'Merging on Firefox' }],
+  },
+  {
+    version: 'v1.1.0',
+    date: 'November 30, 2020',
+    changes: [
+      { type: 'New', text: 'Available for Firefox' },
+      { type: 'New', text: 'Dark mode' },
+      { type: 'Improved', text: 'Right-click menu and settings translated' },
+    ],
+  },
+  {
+    version: 'v1.0.1',
+    date: 'November 20, 2020',
+    changes: [
+      { type: 'New', text: 'Shareable links, with one-click copy' },
+      { type: 'New', text: 'Available in more languages' },
+      { type: 'New', text: 'Help button and a new logo' },
+      { type: 'Improved', text: 'Fewer permissions' },
+      { type: 'Fixed', text: 'Merging tabs to the right' },
+    ],
+  },
+  {
+    version: 'v1.0.0',
+    date: 'November 11, 2020',
+    changes: [
+      { type: 'New', text: 'First release — merge your open tabs into TabMerger and organize them into groups' },
+      { type: 'New', text: 'Drag and drop tabs between groups, and sort tabs within a group' },
+      { type: 'New', text: 'Open or delete a whole group at once' },
+      { type: 'New', text: "Each group shows when it was created and its share of your tabs" },
+      { type: 'New', text: 'Right-click menu and a settings page' },
+      { type: 'Improved', text: 'Duplicate tabs are skipped when merging' },
     ],
   },
 ]
+const V3_0_0: ChangeEntry = {
+  version: 'v3.0.0',
+  date: 'August 14, 2026',
+  changes: [
+    { type: 'New', text: 'Rebuilt from the ground up — a new extension for Chrome, Firefox and Edge, plus a web app with your account and dashboard' },
+    { type: 'New', text: 'Cloud sync across devices (Pro), end-to-end encrypted — your tabs are encrypted before they leave the browser, and only you hold the key' },
+    { type: 'New', text: 'Sessions — save your whole workspace and restore it later' },
+    { type: 'New', text: 'Share a group with a public link' },
+    { type: 'New', text: 'URL rules — send matching tabs to a group automatically' },
+    { type: 'New', text: 'Notes on groups and tabs, and reminders' },
+    { type: 'New', text: 'Selection mode for moving, copying or closing many tabs at once' },
+    { type: 'New', text: 'Keyboard shortcuts and a right-click menu to save the current tab, tabs to the left or right, or all other tabs' },
+    { type: 'Improved', text: 'Chrome tab groups are imported when you open TabMerger' },
+    { type: 'Improved', text: 'Tab previews with page images, search across groups, and undo/redo' },
+    { type: 'Improved', text: 'Fewer permissions: TabMerger no longer asks to read and change data on the websites you visit' },
+  ],
+}
 
 const badgeClass: Record<ChangeType, string> = {
   New: 'bg-ok-soft text-ok',
@@ -70,7 +247,7 @@ function anchorId(version: string) {
 }
 
 export default function ChangelogPage() {
-  const entries = [...getGeneratedChangelog(), ...LEGACY_CHANGELOG]
+  const entries = [...getGeneratedChangelog(), V3_0_0, ...ORIGINAL_EXTENSION]
 
   return (
     <div className="container py-16 max-w-3xl">

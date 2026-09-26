@@ -578,7 +578,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
-    expect(screen.queryByRole('button', { name: /reset encryption passphrase/i })).toBeNull()
+    expect(screen.queryByRole('button', { name: /forgot your passphrase/i })).toBeNull()
   })
 
   it('hides the reset button when signed out', async () => {
@@ -586,7 +586,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
-    expect(screen.queryByRole('button', { name: /reset encryption passphrase/i })).toBeNull()
+    expect(screen.queryByRole('button', { name: /forgot your passphrase/i })).toBeNull()
   })
 
   it('shows the reset button when set up, opens a confirm modal (not a bare click) on click', async () => {
@@ -595,10 +595,28 @@ describe('SettingsModal — Reset encryption passphrase', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
-    const btn = await screen.findByRole('button', { name: /reset encryption passphrase/i })
+    const btn = await screen.findByRole('button', { name: /forgot your passphrase/i })
     fireEvent.click(btn)
     expect(mockResetEncryption).not.toHaveBeenCalled()
     expect(mockOpenModal).toHaveBeenCalledWith('resetEncryption', { onConfirm: expect.any(Function) })
+  })
+
+  it('renders de-emphasized (link-style, destructive text) and after Sign out, not alongside Manage billing', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
+    mockHasEncryptionKey.mockResolvedValue(true)
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    const resetBtn = await screen.findByRole('button', { name: /forgot your passphrase/i })
+    const signOutBtn = screen.getByRole('button', { name: 'Sign out' })
+
+    // De-emphasized: not the same full-width outline treatment as the primary account actions.
+    expect(resetBtn.className).toContain('text-destructive')
+    expect(resetBtn.className).not.toContain('w-full')
+
+    // Positioned after Sign out in the DOM (destructive recovery action, separated from primary actions).
+    expect(signOutBtn.compareDocumentPosition(resetBtn) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
   it('confirming calls resetEncryption then opens the encryptionSetup modal', async () => {
@@ -608,7 +626,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
-    const btn = await screen.findByRole('button', { name: /reset encryption passphrase/i })
+    const btn = await screen.findByRole('button', { name: /forgot your passphrase/i })
     fireEvent.click(btn)
     const onConfirm = mockOpenModal.mock.calls.find((c) => c[0] === 'resetEncryption')?.[1].onConfirm as () => void
     onConfirm()
@@ -625,7 +643,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
-    const btn = await screen.findByRole('button', { name: /reset encryption passphrase/i })
+    const btn = await screen.findByRole('button', { name: /forgot your passphrase/i })
     fireEvent.click(btn)
     const onConfirm = mockOpenModal.mock.calls.find((c) => c[0] === 'resetEncryption')?.[1].onConfirm as () => void
     onConfirm()
