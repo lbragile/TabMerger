@@ -7,6 +7,8 @@ export const DEFAULT_WINDOW_TITLE = 'Window';
 
 export const FREE_TIER_LIMITS = { groups: 5, tabs: 50 } as const;
 
+export const AI_COMING_SOON_LABEL = 'Coming soon';
+
 export const PRESET_COLORS = [
   'rgba(239, 68, 68, 1)',   // red
   'rgba(249, 115, 22, 1)',  // orange
