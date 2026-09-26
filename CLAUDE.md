@@ -37,7 +37,7 @@ TabMerger 2.0 is a **pnpm monorepo** with three packages:
 ```
 packages/
   extension/   WXT browser extension — Chrome (MV3), Firefox, Edge
-  web/         Next.js 15 marketing site + user dashboard + AI API routes
+  web/         Next.js 16 marketing site + user dashboard + AI API routes
   shared/      TypeScript types and constants shared between both packages
   demo/        Remotion + Playwright walkthrough-video pipeline (dev tooling, not shipped)
 supabase/      Postgres migrations, RLS policies, seed data
@@ -53,8 +53,7 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 
 **Entry points:**
 - `src/entrypoints/popup/` — 800×600px popup UI (fixed size, no outer scrollbars — Chrome's popup cap)
-- `src/entrypoints/background.ts` — alarms, context menus, tab badge, periodic sync
-- `src/entrypoints/content.ts` — tab metadata collection for preview feature
+- `src/entrypoints/background.ts` — reminder alarms, right-click menu (rebuilt when groups change), tab badge, and the web-app bridge (`externally_connectable`: `PING`, `SYNC_AUTH`, `SYNC_NOW`). Regular sync runs in the popup (`useSync`), not on a background timer
 
 **State layers:**
 - **IndexedDB** (`src/lib/localDb.ts` via `idb`) — primary data store, offline-first
@@ -94,7 +93,7 @@ Whenever you create or change the Chrome extension, create and maintain `package
 
 ## Web app (`packages/web/`)
 
-**Framework:** Next.js 15 App Router + TypeScript.
+**Framework:** Next.js 16 App Router + React 19 + TypeScript (`proxy.ts` replaces `middleware.ts`).
 
 **Route groups:**
 - `app/(marketing)/` — landing, features, pricing (public)
@@ -102,7 +101,7 @@ Whenever you create or change the Chrome extension, create and maintain `package
 - `app/api/` — webhooks/stripe, auth/callback, checkout, ai/* routes
 
 **Critical patterns:**
-- `cookies()` and `headers()` are async in Next.js 15 — always `await` them
+- `cookies()` and `headers()` are async (Next.js 15+) — always `await` them
 - Supabase server client (`lib/supabase/server.ts`) must be async for the same reason
 - Stripe webhook handler **must** use `req.text()` — `req.json()` destroys the raw body needed for signature verification
 - Service role client bypasses RLS — only use in webhook handlers and AI routes, never client-side
