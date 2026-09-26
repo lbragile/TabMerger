@@ -7,13 +7,25 @@ import { gunzipSync, brotliDecompressSync, inflateSync } from 'node:zlib'
 import type { LookupAddress } from 'node:dns'
 
 /**
- * GET /api/og-preview?url=<encoded url>
+ * POST /api/og-preview  { "url": "<url>" }
+ *
+ * The URL travels in the JSON body, never in a query string, so it never
+ * lands in server access logs or proxy/browser history. There is no GET
+ * variant — no installed client predates this API, so there's nothing to
+ * stay backward compatible with.
  *
  * Fetches a third-party page server-side and extracts its og:image (or
  * twitter:image) and description meta tags, so the public share page can
  * show a live preview even when the extension never captured one at save
  * time, and so the extension's tab preview tooltip can get title/description
  * /image without needing an `<all_urls>` host permission.
+ *
+ * Privacy: this endpoint intentionally has NO cache — every call fetches
+ * upstream fresh, and the requested URL is never persisted, logged, or
+ * attached to any Sentry event (see `scrubEvent` in lib/sentry-scrubber.ts,
+ * wired globally via `beforeSend`, which redacts `event.request.url` and
+ * breadcrumb URLs for this route too). No cookies/auth are read or sent
+ * upstream. Response is always `Cache-Control: no-store`.
  *
  * This is a real SSRF surface — it's unauthenticated and fetches
  * user-supplied URLs — so every private/loopback/link-local destination is
@@ -37,15 +49,12 @@ import type { LookupAddress } from 'node:dns'
 
 const MAX_BYTES = 2 * 1024 * 1024 // 2MB
 const FETCH_TIMEOUT_MS = 4000
-const CACHE_TTL_MS = 60 * 60 * 1000 // 1h
 const MAX_REDIRECTS = 3
 
-// ponytail: module-level Map cache with lazy expiry check on read — no LRU
-// eviction infra, add if this route ever sees enough unique URLs to matter.
-const cache = new Map<
-  string,
-  { ogImage: string | null; description: string | null; expires: number }
->()
+// Deliberately no cache here (URL-keyed or otherwise) — the privacy policy
+// promises the requested address isn't stored, even transiently in memory.
+// If load ever becomes a concern, revisit with a short-TTL cache keyed by a
+// hash rather than the raw URL, not a plain re-add of this Map.
 
 const MAX_DESCRIPTION_LENGTH = 500
 
@@ -276,40 +285,39 @@ async function fetchCapped(startUrl: string): Promise<string> {
 // The extension calls this cross-origin (chrome-extension://...) with no
 // host_permissions to bypass CORS, so without this header every fetch()
 // fails silently client-side and Tab Preview just shows nothing.
+// `Cache-Control: no-store` on every response: nothing about this request
+// (including which URL was asked about) should be cached anywhere.
 function jsonResponse(body: unknown, init?: { status?: number }): NextResponse {
   return NextResponse.json(body, {
     ...init,
-    headers: { 'Access-Control-Allow-Origin': '*' },
+    headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' },
   })
 }
 
-export async function GET(req: NextRequest) {
-  const raw = req.nextUrl.searchParams.get('url')
-  if (!raw) return jsonResponse({ ogImage: null, description: null }, { status: 400 })
+/**
+ * Validates and fetches a single URL, returning the extracted preview fields.
+ * No caching: every call hits upstream.
+ */
+async function fetchPreview(raw: string | null): Promise<
+  | { ok: true; ogImage: string | null; description: string | null }
+  | { ok: false }
+> {
+  if (!raw) return { ok: false }
 
   let parsed: URL
   try {
     parsed = new URL(raw)
   } catch {
-    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
+    return { ok: false }
   }
-  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
-  }
-  if (!(await resolveAndValidate(parsed.hostname))) {
-    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
-  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return { ok: false }
+  if (!(await resolveAndValidate(parsed.hostname))) return { ok: false }
 
-  const cacheKey = parsed.toString()
-  const cached = cache.get(cacheKey)
-  if (cached && cached.expires > Date.now()) {
-    return jsonResponse({ ogImage: cached.ogImage, description: cached.description })
-  }
-
+  const target = parsed.toString()
   let ogImage: string | null = null
   let description: string | null = null
   try {
-    const html = await fetchCapped(cacheKey)
+    const html = await fetchCapped(target)
     const rawImage = extractOgImage(html)
     ogImage = rawImage ? decodeHtmlEntities(rawImage) : null
     const rawDescription = extractDescription(html)
@@ -318,7 +326,7 @@ export async function GET(req: NextRequest) {
     // or javascript: schemes back to the client.
     if (ogImage) {
       try {
-        const imgUrl = new URL(ogImage, cacheKey)
+        const imgUrl = new URL(ogImage, target)
         ogImage = imgUrl.protocol === 'http:' || imgUrl.protocol === 'https:' ? imgUrl.toString() : null
       } catch {
         ogImage = null
@@ -329,6 +337,22 @@ export async function GET(req: NextRequest) {
     description = null
   }
 
-  cache.set(cacheKey, { ogImage, description, expires: Date.now() + CACHE_TTL_MS })
-  return jsonResponse({ ogImage, description })
+  return { ok: true, ogImage, description }
+}
+
+export async function POST(req: NextRequest) {
+  let raw: unknown
+  try {
+    const body = await req.json()
+    raw = (body as { url?: unknown } | null)?.url
+  } catch {
+    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
+  }
+  if (typeof raw !== 'string') {
+    return jsonResponse({ ogImage: null, description: null }, { status: 400 })
+  }
+
+  const result = await fetchPreview(raw)
+  if (!result.ok) return jsonResponse({ ogImage: null, description: null }, { status: 400 })
+  return jsonResponse({ ogImage: result.ogImage, description: result.description })
 }

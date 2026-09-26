@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const TOC = [
   { id: 'what-we-collect', label: 'What we collect' },
+  { id: 'page-previews', label: 'Page previews' },
   { id: 'how-stored', label: 'How data is stored' },
   { id: 'third-party', label: 'Third-party processors' },
   { id: 'retention', label: 'Data retention' },
@@ -30,7 +31,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: August 11, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: September 26, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -47,7 +48,11 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Tab and group data</h3>
-              <p>Tab URLs, titles, and favicon URLs so you can organize and restore them. On the free tier this data lives exclusively in your browser's IndexedDB — it never leaves your device. Pro subscribers who enable cloud sync have this data end-to-end encrypted on your device before it is ever sent to our servers. We store only ciphertext in Supabase: the encryption key is derived from a passphrase that only you know, is never transmitted to us, and is never recoverable by TabMerger. This means we cannot read your group or tab data, and neither could anyone who gained unauthorized access to our database.</p>
+              <p>Tab URLs, titles, and favicon URLs so you can organize and restore them. On the free tier this data lives in your browser's IndexedDB and is not transmitted to our servers, except as described under "Page previews" below if you turn that feature on. Pro subscribers who enable cloud sync have this data end-to-end encrypted on your device before it is ever sent to our servers. We store only ciphertext in Supabase: the encryption key is derived from a passphrase that only you know, is never transmitted to us, and is never recoverable by TabMerger. This means we cannot read your stored or synced group or tab data, and neither could anyone who gained unauthorized access to our database.</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Page previews <span className="normal-case font-normal">(off by default)</span></h3>
+              <p>Off by default. When you turn on preview images — in the extension's Settings, or on a shared link's page — hovering a tab sends that tab's web address to TabMerger's preview service, which fetches the page's preview image and description and returns them to you. The address isn't linked to your account, isn't logged, and isn't stored. You can turn this off at any time. See <a href="#page-previews" className="underline underline-offset-4 hover:text-foreground transition-colors">Page previews</a> below for details.</p>
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Subscription and billing</h3>
@@ -64,12 +69,26 @@ export default function PrivacyPage() {
           </div>
         </section>
 
+        <section id="page-previews" className="scroll-mt-24">
+          <h2 className="text-xl font-semibold mb-4">2. Page Previews</h2>
+          <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
+            <p>Page previews let you see a small image and description of a tab's page when you hover over it — in the extension's tab preview tooltip, or on a shared link's page. This feature is <strong>off by default</strong> and must be explicitly turned on, either in the extension's Settings or via the "Show page previews" switch on a shared link's page.</p>
+            <p>When turned on, hovering a tab sends that tab's web address to TabMerger's preview service (a serverless function we run on Vercel). That service fetches the page's <code className="text-xs bg-muted px-1.5 py-0.5 rounded">og:image</code> and description on your behalf and returns them to you. The address you send:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>is sent without your account or any other identifier attached. Like any web request it reaches our host, Vercel, from your IP address, but we don&apos;t record or associate the two. The page itself is fetched by our server, so the site you&apos;re previewing sees our server, not you,</li>
+              <li>is not logged anywhere by us,</li>
+              <li>is not cached or stored, even temporarily — every preview request fetches the page fresh.</li>
+            </ul>
+            <p>You can turn page previews off at any time; when off, hovering a tab shows only information already available locally (title, URL, favicon, and any preview image already saved with that tab) and never contacts the preview service.</p>
+          </div>
+        </section>
+
         <section id="how-stored" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">2. How Data Is Stored</h2>
+          <h2 className="text-xl font-semibold mb-4">3. How Data Is Stored</h2>
           <div className="divide-y divide-border rounded-none border overflow-hidden text-sm">
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Local (all tiers)</span>
-              <span className="text-muted-foreground">Tab and group data in browser IndexedDB. Under your control — not transmitted anywhere unless you enable sync.</span>
+              <span className="text-muted-foreground">Tab and group data in browser IndexedDB, under your control. Not transmitted anywhere unless you enable sync, or send a specific tab's address to the preview service by turning on page previews (see "Page previews" above).</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Supabase (Pro)</span>
@@ -83,7 +102,7 @@ export default function PrivacyPage() {
         </section>
 
         <section id="third-party" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">3. Third-Party Processors</h2>
+          <h2 className="text-xl font-semibold mb-4">4. Third-Party Processors</h2>
           <p className="text-muted-foreground text-sm mb-4">We share data with the following processors only to the extent necessary to operate the service.</p>
           <div className="divide-y divide-border rounded-none border overflow-hidden text-sm">
             {[
@@ -105,7 +124,7 @@ export default function PrivacyPage() {
         </section>
 
         <section id="retention" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">4. Data Retention</h2>
+          <h2 className="text-xl font-semibold mb-4">5. Data Retention</h2>
           <div className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <p>We retain your account data for as long as your account is active. If you delete your account, all associated data stored in Supabase — including your profile, groups, and sessions — is permanently deleted.</p>
             <p>Local IndexedDB data remains in your browser until you clear it via browser settings or the TabMerger extension.</p>
@@ -114,7 +133,7 @@ export default function PrivacyPage() {
         </section>
 
         <section id="your-rights" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">5. Your Rights</h2>
+          <h2 className="text-xl font-semibold mb-4">6. Your Rights</h2>
           <p className="text-muted-foreground text-sm mb-4">Depending on where you reside, you may have rights under laws such as the GDPR (EU/UK) or CCPA (California):</p>
           <ul className="space-y-2 text-sm">
             {[
@@ -134,22 +153,22 @@ export default function PrivacyPage() {
         </section>
 
         <section id="cookies" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">6. Cookies and Local Storage</h2>
+          <h2 className="text-xl font-semibold mb-4">7. Cookies and Local Storage</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">TabMerger uses cookies solely for session management (Supabase Auth) when you are signed in to the web app. We do not use tracking or advertising cookies. The extension stores data in IndexedDB and <code className="text-xs bg-muted px-1.5 py-0.5 rounded">chrome.storage.local</code>, not in browser cookies.</p>
         </section>
 
         <section id="children" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">7. Children's Privacy</h2>
+          <h2 className="text-xl font-semibold mb-4">8. Children's Privacy</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">TabMerger is not directed at children under 13. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">contact us</Link> and we will delete it promptly.</p>
         </section>
 
         <section id="changes" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">8. Changes to This Policy</h2>
+          <h2 className="text-xl font-semibold mb-4">9. Changes to This Policy</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">We may update this policy as the product evolves. Material changes will be communicated via email or a notice in the app. The "last updated" date at the top of this page will always reflect the most recent revision. Continued use of TabMerger after changes constitutes acceptance of the revised policy.</p>
         </section>
 
         <section id="contact" className="scroll-mt-24">
-          <h2 className="text-xl font-semibold mb-4">9. Contact</h2>
+          <h2 className="text-xl font-semibold mb-4">10. Contact</h2>
           <p className="text-muted-foreground text-sm">For privacy-related questions or requests, use our <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">contact page</Link>.</p>
         </section>
 
