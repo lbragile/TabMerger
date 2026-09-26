@@ -14,6 +14,7 @@ interface ImportMetaEnv {
   readonly VITE_WEB_APP_URL: string;
   readonly VITE_STRIPE_PUBLISHABLE_KEY: string;
   readonly VITE_DEMO_BUILD?: string;
+  readonly VITE_AI_ENABLED?: string;
   readonly VITE_POSTHOG_API_KEY?: string;
   readonly VITE_POSTHOG_HOST?: string;
 }

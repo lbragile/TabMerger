@@ -78,6 +78,25 @@ describe('UpgradePromptModal — actions', () => {
   })
 })
 
+describe('UpgradePromptModal — Pro AI coming-soon CTA', () => {
+  it('always renders the real Pro AI price, never swaps it out, when AI is disabled', () => {
+    renderModal(<UpgradePromptModal reason="aiFeatures" onClose={vi.fn()} />)
+    expect(screen.getByText(/\$7\.99\/mo/).textContent).toContain('Pro AI')
+  })
+
+  it('disables the CTA with aria-disabled and "Coming soon" label when AI is disabled and reason is aiFeatures', () => {
+    renderModal(<UpgradePromptModal reason="aiFeatures" onClose={vi.fn()} />)
+    const cta = screen.getByRole('button', { name: /coming soon/i })
+    expect(cta).toBeDisabled()
+    expect(cta.getAttribute('aria-disabled')).toBe('true')
+  })
+
+  it('does not disable the CTA for a non-aiFeatures reason even when AI is disabled', () => {
+    renderModal(<UpgradePromptModal reason="maxGroups" onClose={vi.fn()} />)
+    expect(screen.getByRole('button', { name: /upgrade now/i })).not.toBeDisabled()
+  })
+})
+
 describe('UpgradePromptModal — signed-out sign-in offer', () => {
   it('shows a "Sign in" option and restore hint when signed out', () => {
     mockUseAuth.mockReturnValue({ user: null })

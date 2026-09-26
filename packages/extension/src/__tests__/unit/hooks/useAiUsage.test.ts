@@ -11,6 +11,9 @@ const { mockGetDevAiUsage, mockFrom } = vi.hoisted(() => ({
   mockFrom: vi.fn()
 }))
 
+// This suite tests the AI-enabled Supabase/dev-counter usage path itself, not the
+// coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
 vi.mock('@/mocks/devAiUsage', () => ({ getDevAiUsage: mockGetDevAiUsage }))
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => ({ user: { id: 'user-1' }, loading: false, session: null }) }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => ({ aiFeatures: true }) }))

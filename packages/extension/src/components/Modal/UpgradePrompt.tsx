@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
+import { AI_ENABLED } from '@/lib/aiFlag';
+import { AI_COMING_SOON_LABEL } from '@tabmerger/shared';
 
 interface UpgradePromptModalProps {
   reason?: string;
@@ -48,7 +50,16 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
       description: 'Unlock unlimited groups, cloud sync, and AI features with TabMerger Pro.'
     };
 
+  // AI features: coming soon — this modal is the one place the Pro AI tier row is
+  // never fully hidden (per product decision), it just shows a coming-soon price
+  // and a disabled CTA. Only disable the primary CTA when the prompt was shown
+  // specifically because the user wanted AI features — a maxGroups/maxTabs/cloudSync
+  // upgrade must still work normally.
+  const proAiComingSoon = !AI_ENABLED;
+  const ctaDisabled = proAiComingSoon && reason === 'aiFeatures';
+
   const handleUpgrade = () => {
+    if (ctaDisabled) return;
     trackEvent('upgrade_clicked', { source: reason ?? 'upgrade_prompt' });
     chrome.tabs.create({
       url: `${import.meta.env.VITE_WEB_APP_URL}/pricing`,
@@ -85,7 +96,14 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
             <li>Cloud sync</li>
             <li>Session save & restore</li>
           </ul>
-          <div className="font-semibold mt-2">Pro AI — $7.99/mo</div>
+          <div className="font-semibold mt-2">
+            Pro AI — $7.99/mo
+            {proAiComingSoon && (
+              <span className="ml-1 text-muted-foreground font-normal">
+                ({AI_COMING_SOON_LABEL})
+              </span>
+            )}
+          </div>
           <ul className="text-muted-foreground space-y-0.5 ml-2">
             <li>Everything in Pro</li>
             <li>AI auto-grouping</li>
@@ -104,7 +122,9 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
             Sign in
           </Button>
         )}
-        <Button onClick={handleUpgrade}>Upgrade now</Button>
+        <Button onClick={handleUpgrade} disabled={ctaDisabled} aria-disabled={ctaDisabled}>
+          {ctaDisabled ? AI_COMING_SOON_LABEL : 'Upgrade now'}
+        </Button>
       </DialogFooter>
     </>
   );

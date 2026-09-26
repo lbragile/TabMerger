@@ -8,6 +8,7 @@ import { useAiUsage } from './useAiUsage';
 import { useGroups } from './useGroups';
 import { wasCalledToday, markCalledToday } from '@/lib/aiThrottle';
 import { hasEncryptionKey } from '@/lib/encryptionKey';
+import { AI_ENABLED } from '@/lib/aiFlag';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
 
@@ -84,6 +85,7 @@ export function useAutoGroup() {
     // ponytail: no daily throttle — this is a manual button click, always run it
     // (subject to the existing server-side monthly quota only).
     mutationFn: async (tabs: Tab[]) => {
+      if (!AI_ENABLED) throw new Error('AI features are coming soon');
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiAutoGroupEnabled === false) throw new Error('Auto-group is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -108,6 +110,7 @@ export function useNameGroup() {
     onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'name' }); },
     // ponytail: no daily throttle — manual, always run it.
     mutationFn: async (tabs: Tab[]) => {
+      if (!AI_ENABLED) throw new Error('AI features are coming soon');
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiNameGroupEnabled === false) throw new Error('Name group is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -130,6 +133,7 @@ export function useSuggestSessions() {
     // background effect (not a manual button), so it's the case the daily throttle
     // exists to protect.
     mutationFn: async (recentGroups: Group[]) => {
+      if (!AI_ENABLED) throw new Error('AI features are coming soon');
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiSuggestSessionsEnabled === false) throw new Error('Suggest sessions is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -158,6 +162,7 @@ export function useOrganizeTabs() {
     onSuccess: () => { trackEvent('ai_feature_used', { feature_name: 'organize' }); },
     // ponytail: no daily throttle — manual, always run it.
     mutationFn: async () => {
+      if (!AI_ENABLED) throw new Error('AI features are coming soon');
       if (!aiFeatures) throw new Error('Pro AI plan required');
       if (settings?.aiOrganizeEnabled === false) throw new Error('Organize is turned off in Settings');
       if (!session?.access_token) throw new Error('Not authenticated');
@@ -201,7 +206,7 @@ export function useTabSummary() {
   return withQuotaFlag(useMutation({
     onSuccess: (data) => { if (data.summary) trackEvent('ai_summary_used'); },
     mutationFn: async ({ url, title }: { url: string; title: string }) => {
-      if (!aiFeatures || !session?.access_token || settings?.aiTabSummaryEnabled === false) {
+      if (!AI_ENABLED || !aiFeatures || !session?.access_token || settings?.aiTabSummaryEnabled === false) {
         return { summary: null };
       }
       assertQuotaRemaining(remaining);

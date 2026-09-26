@@ -55,6 +55,9 @@ vi.mock('@/lib/encryptionKey', () => ({
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
+// This suite tests the Dev tab's mocked-AI-usage debug tool itself, not the
+// coming-soon flag, so force it on regardless of the real VITE_AI_ENABLED default.
+vi.mock('@/lib/aiFlag', () => ({ AI_ENABLED: true }))
 
 vi.mock('@/lib/demo', () => ({ enterDemoMode: mockEnterDemoMode }))
 

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import type { Entitlements, Tier } from '@/lib/types';
 import { TIER_LIMITS } from '@/lib/types';
+import { AI_ENABLED } from '@/lib/aiFlag';
 import { useAuth } from './useAuth';
 
 type SubRow = {
@@ -73,13 +74,21 @@ export function useEntitlements(): Entitlements & { loading: boolean } {
   });
 
   if (DEMO_MODE) {
-    return { ...TIER_LIMITS.pro_ai, loading: false };
+    // ponytail: AI features: coming soon — the global kill switch overrides even the
+    // marketing-demo tier override below, so demo recordings never show AI UI while
+    // the flag is off. Flip VITE_AI_ENABLED for a demo build that needs to show it.
+    return { ...TIER_LIMITS.pro_ai, aiFeatures: AI_ENABLED, loading: false };
   }
 
   const effectiveTier: Tier = user ? resolveTier(sub ?? null) : 'free';
 
   return {
     ...TIER_LIMITS[effectiveTier],
+    // ponytail: AI features: coming soon — global kill switch. This is intentionally
+    // ANDed in regardless of the resolved tier: a real pro_ai subscriber must not see
+    // AI UI while the flag is off, since this gates unreleased product surface, not
+    // per-user entitlement.
+    aiFeatures: TIER_LIMITS[effectiveTier].aiFeatures && AI_ENABLED,
     cancelAtPeriodEnd: sub?.cancel_at_period_end ?? false,
     currentPeriodEnd: sub?.current_period_end ?? null,
     subscriptionStatus: sub?.status ?? null,
