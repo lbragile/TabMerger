@@ -56,7 +56,7 @@ export default async function DashboardPage({
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     /** Free tier cap enforced at the query level so the UI never accidentally renders groups the user shouldn't see */
-    supabase.from('groups').select('id, name, color, windows, updated_at, public_slug, window_count, tab_count, archived').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
+    supabase.from('groups').select('id, name, color, windows, updated_at, window_count, tab_count, archived').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
     supabase
       .from('sessions')
       .select('*')

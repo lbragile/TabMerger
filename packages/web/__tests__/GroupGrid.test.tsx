@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { GroupGrid } from '@/components/dashboard/GroupGrid'
 
 const groups = [
@@ -104,6 +104,75 @@ describe('GroupGrid share flow', () => {
 
     resolveFetch({ ok: true, json: async () => ({ slug: 'abc123', key: 'fake-key' }) } as Response)
     await screen.findByRole('button', { name: /Select/i })
+    fetchSpy.mockRestore()
+  })
+})
+
+describe('GroupGrid per-group Share button', () => {
+  const proGroups = [
+    {
+      id: 'g1',
+      name: 'Work',
+      color: 'rgba(0,180,204,1)',
+      windows: [{ tabs: [{ title: 'Tab 1', url: 'https://example.com' }] }],
+      updated_at: new Date().toISOString(),
+    },
+  ]
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('creates a bundle via /api/share-bundle with a fresh key and copies a #key= URL', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({ slug: 'group-slug-1', key: 'fresh-per-share-key' }),
+    } as Response)
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.assign(navigator, { clipboard: { writeText } })
+
+    render(<GroupGrid groups={proGroups} isPro={true} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Share group' }))
+
+    await screen.findByText('Copied!')
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/api/share-bundle',
+      expect.objectContaining({ method: 'POST' })
+    )
+    const call = fetchSpy.mock.calls.find(([url]) => url === '/api/share-bundle')
+    const sentBody = JSON.parse((call?.[1] as RequestInit).body as string)
+    expect(sentBody.groups).toHaveLength(1)
+    expect(sentBody.groups[0]).toMatchObject({ id: 'g1', name: 'Work', color: 'rgba(0,180,204,1)' })
+
+    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/share/group-slug-1#key=fresh-per-share-key`)
+
+    // Never calls the removed publish route.
+    expect(fetchSpy).not.toHaveBeenCalledWith(expect.stringContaining('/publish'), expect.anything())
+
+    fetchSpy.mockRestore()
+  })
+
+  it('refuses to share a group that failed to decrypt (locked) instead of sending a broken link', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => ({ slug: 'x', key: 'y' }),
+    } as Response)
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.assign(navigator, { clipboard: { writeText } })
+
+    const lockedGroups = [{ ...proGroups[0], name: '(locked)', windows: [], locked: true }]
+    render(<GroupGrid groups={lockedGroups} isPro={true} />)
+
+    const shareBtn = screen.getByRole('button', { name: 'Share group' })
+    expect(shareBtn).toBeDisabled()
+
+    fireEvent.click(shareBtn)
+
+    expect(fetchSpy).not.toHaveBeenCalled()
+    expect(writeText).not.toHaveBeenCalled()
+
     fetchSpy.mockRestore()
   })
 })
