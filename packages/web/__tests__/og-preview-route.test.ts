@@ -137,6 +137,19 @@ describe('GET /api/og-preview', () => {
     expect(await res.json()).toEqual({ ogImage: 'https://example.com/img.png', description: null })
   })
 
+  // Meta content is HTML-attribute text: Wikipedia's og:image arrives with `&amp;`, which
+  // used to be passed through and turned into a different (often broken) image URL.
+  it('decodes HTML entities in the image URL and description', async () => {
+    const html = `<head><meta property="og:image" content="https://example.com/img.png?a=1&amp;b=2&#38;c=3" /><meta property="og:description" content="Tabs &amp; windows, &quot;tamed&quot; &#x2014; fast" /></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { GET } = await import('@/app/api/og-preview/route')
+    const res = await GET(req('https://example.com/entities'))
+    expect(await res.json()).toEqual({
+      ogImage: 'https://example.com/img.png?a=1&b=2&c=3',
+      description: 'Tabs & windows, "tamed" — fast',
+    })
+  })
+
   it('falls back to twitter:image when og:image is absent', async () => {
     const html = `<head><meta name="twitter:image" content="https://example.com/tw.png"></head>`
     mockRequestModules({ statusCode: 200, headers: {}, body: html })

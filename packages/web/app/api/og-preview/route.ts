@@ -90,6 +90,23 @@ async function resolveAndValidate(hostname: string): Promise<LookupAddress[] | n
   return addresses
 }
 
+/**
+ * Meta `content` values are HTML-attribute text, so `&` in an image URL arrives as `&amp;`
+ * (Wikipedia's og:image does this) and descriptions carry `&quot;`, `&#39;` and friends.
+ * Decode the common named entities and numeric references before using the value — an
+ * undecoded `&amp;` turns `?a=1&amp;b=2` into a different, often broken, image URL.
+ */
+function decodeHtmlEntities(value: string): string {
+  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
+  return value.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, entity: string) => {
+    if (entity[0] === '#') {
+      const code = entity[1].toLowerCase() === 'x' ? parseInt(entity.slice(2), 16) : parseInt(entity.slice(1), 10)
+      return Number.isFinite(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match
+    }
+    return named[entity.toLowerCase()] ?? match
+  })
+}
+
 function extractOgImage(html: string): string | null {
   const headMatch = html.match(/<head[\s\S]*?<\/head>/i)
   const head = headMatch ? headMatch[0] : html.slice(0, 50_000)
@@ -293,8 +310,10 @@ export async function GET(req: NextRequest) {
   let description: string | null = null
   try {
     const html = await fetchCapped(cacheKey)
-    ogImage = extractOgImage(html)
-    description = extractDescription(html)
+    const rawImage = extractOgImage(html)
+    ogImage = rawImage ? decodeHtmlEntities(rawImage) : null
+    const rawDescription = extractDescription(html)
+    description = rawDescription ? decodeHtmlEntities(rawDescription) : null
     // Only accept absolute http(s) image URLs — never echo relative paths
     // or javascript: schemes back to the client.
     if (ogImage) {

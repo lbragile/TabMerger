@@ -160,14 +160,19 @@ describe('ShareBundleContent — open all tabs / favicon contrast', () => {
     expect(screen.getByRole('button', { name: /^open all tabs$/i })).toBeDisabled()
   })
 
-  it('wraps each favicon in a contrast-safe circular container with light/dark background classes', () => {
+  // The favicon used to sit in a bordered, filled tile, which looked like a stray box around
+  // every icon. It now renders on its own.
+  it('shows each favicon on its own, with no bordered or filled box around it', () => {
     render(<ShareBundleContent bundle={bundle} />)
 
-    const favicon = screen.getByAltText('') // favicon <img alt="">
-    const wrapper = favicon.parentElement
-
-    expect(wrapper).not.toBeNull()
-    expect(wrapper?.className).toMatch(/bg-white/)
-    expect(wrapper?.className).toMatch(/dark:bg-/)
+    // Every tab row has one — a real favicon, or the fallback icon when the tab has none.
+    const favicons = screen.getAllByAltText('')
+    expect(favicons.length).toBeGreaterThan(0)
+    for (const favicon of favicons) {
+      expect(favicon.className).toMatch(/\bh-4\b/)
+      expect(favicon.className).toMatch(/\bw-4\b/)
+      const parentClass = favicon.parentElement?.className ?? ''
+      expect(parentClass).not.toMatch(/\bborder\b|bg-white|dark:bg-/)
+    }
   })
 })

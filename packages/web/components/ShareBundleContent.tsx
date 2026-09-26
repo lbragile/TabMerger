@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
 import { importKeyFromBase64, decryptBlob } from '@tabmerger/shared'
@@ -67,6 +68,9 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
       <TooltipTrigger asChild>
         <span className="min-w-0 w-full overflow-hidden block">{row}</span>
       </TooltipTrigger>
+      {/* Portal: the tooltip renders at the document root, not inside the group card
+          (which is overflow-hidden), so the card can't clip or hide the preview. */}
+      <TooltipPrimitive.Portal>
       <TooltipContent
         side="top"
         align="start"
@@ -96,6 +100,9 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
                 src={ogImage}
                 alt=""
                 className="mt-2 w-full rounded object-cover max-h-32"
+                // Sites that block hotlinking return an error here: show "No preview"
+                // instead of a broken-image icon.
+                onError={() => setOgImage(null)}
               />
             ) : (
               <div className="mt-2 h-24 w-full rounded bg-muted flex flex-col items-center justify-center gap-1 text-muted-foreground">
@@ -108,6 +115,7 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
           </div>
         </div>
       </TooltipContent>
+      </TooltipPrimitive.Portal>
     </Tooltip>
   )
 }
@@ -275,15 +283,15 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
                 const shortUrl = href ? truncateUrl(href) : ''
                 const inner = (
                   <>
-                    {favicon ? (
-                      <span className="h-[18px] w-[18px] flex-shrink-0 overflow-hidden rounded-xs border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 flex items-center justify-center">
-                        {/* Arbitrary remote favicon — same unbounded-domain reasoning as above. */}
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={favicon} alt="" className="w-3 h-3" />
-                      </span>
-                    ) : (
-                      <span className="h-[18px] w-[18px] flex-shrink-0 rounded-xs bg-surface3" />
-                    )}
+                    {/* The icon on its own — no bordered/filled tile around it. Arbitrary remote
+                        favicon: same unbounded-domain reasoning as above. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={favicon || FALLBACK_FAVICON}
+                      alt=""
+                      className="h-4 w-4 flex-shrink-0"
+                      onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON }}
+                    />
                     <span className="flex-1 min-w-0 truncate">{tab.title ?? tab.url}</span>
                     {shortUrl && (
                       <span className="flex items-center gap-1.5 shrink-0 min-w-0">
