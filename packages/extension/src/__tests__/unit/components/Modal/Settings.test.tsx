@@ -101,6 +101,7 @@ const DEFAULT_SETTINGS = {
   aiSuggestSessionsEnabled: true,
   aiOrganizeEnabled: true,
   aiTabSummaryEnabled: true,
+  showPreviewImages: false,
 }
 
 function renderModal(onClose = vi.fn()) {
@@ -245,9 +246,9 @@ describe('SettingsModal — dirty state and save', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     // Switch order: confirmOnDelete(0), openTabOnClick(1), autoDedupOnMerge(2),
-    // cloud sync(3) — cloud sync only renders when cloudSync is true.
-    await waitFor(() => expect(screen.getAllByRole('switch')[3]).not.toBeChecked())
-    const syncSwitch = screen.getAllByRole('switch')[3]
+    // showPreviewImages(3), cloud sync(4) — cloud sync only renders when cloudSync is true.
+    await waitFor(() => expect(screen.getAllByRole('switch')[4]).not.toBeChecked())
+    const syncSwitch = screen.getAllByRole('switch')[4]
     fireEvent.click(syncSwitch)
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
     await waitFor(() => expect(mockSetSetting).toHaveBeenCalled())
@@ -300,6 +301,71 @@ describe('SettingsModal — General tab URL rules entry point', () => {
     expect(screen.getByText('URL rules')).toBeTruthy()
     await user.click(screen.getByRole('button', { name: 'Manage' }))
     expect(mockOpenModal).toHaveBeenCalledWith('urlRules')
+  })
+})
+
+describe('SettingsModal — Show page images in previews', () => {
+  it('defaults to off and shows the always-visible helper text', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('Show page images in previews')).toBeTruthy()
+    expect(
+      screen.getByText(/isn't linked to your account, logged, or stored/i)
+    ).toBeTruthy()
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+    expect(toggle).not.toBeChecked()
+  })
+
+  it('opens a confirmation instead of enabling immediately when turned on', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+
+    await user.click(toggle)
+
+    expect(mockOpenModal).toHaveBeenCalledWith('confirmPreviewImages', { onConfirm: expect.any(Function) })
+    // Not enabled yet — the toggle only flips after the confirmation's onConfirm runs.
+    expect(toggle).not.toBeChecked()
+  })
+
+  it('enables the setting once the confirmation calls onConfirm', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+
+    await user.click(toggle)
+    const onConfirm = mockOpenModal.mock.calls.find((c) => c[0] === 'confirmPreviewImages')?.[1]?.onConfirm as () => void
+    onConfirm()
+
+    await waitFor(() => expect(toggle).toBeChecked())
+  })
+
+  it('does not enable the setting if the confirmation is cancelled (onConfirm never called)', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+
+    await user.click(toggle)
+    // Simulate Cancel: nothing else happens, onConfirm is never invoked
+    expect(toggle).not.toBeChecked()
+  })
+
+  it('disables the setting immediately with no confirmation', async () => {
+    mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, showPreviewImages: true })
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = await screen.findByRole('switch', { name: /show page images in previews/i })
+    // Settings load asynchronously; the switch shows the default (off) until they arrive.
+    await waitFor(() => expect(toggle).toBeChecked())
+
+    await user.click(toggle)
+
+    expect(toggle).not.toBeChecked()
+    expect(mockOpenModal).not.toHaveBeenCalledWith('confirmPreviewImages', expect.anything())
   })
 })
 

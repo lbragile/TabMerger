@@ -294,6 +294,28 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             />
           </div>
 
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm">Show page images in previews</Label>
+              <p className="text-xs text-muted-foreground">
+                When on, hovering a tab sends that tab&apos;s web address to TabMerger&apos;s
+                preview service to fetch its image. It isn&apos;t linked to your account,
+                logged, or stored.
+              </p>
+            </div>
+            <Switch
+              aria-label="Show page images in previews"
+              checked={draft.showPreviewImages}
+              onCheckedChange={(v) => {
+                if (v) {
+                  openModal('confirmPreviewImages', { onConfirm: () => patch('showPreviewImages', true) });
+                } else {
+                  patch('showPreviewImages', false);
+                }
+              }}
+            />
+          </div>
+
           {cloudSync && (
             <div className="flex items-center justify-between">
               <div>

@@ -17,7 +17,11 @@ export async function getPageMetaForTab(url: string): Promise<PageMeta | null> {
   const webAppUrl = import.meta.env.VITE_WEB_APP_URL as string | undefined;
   if (!webAppUrl || !url) return null;
   try {
-    const res = await fetch(`${webAppUrl}/api/og-preview?url=${encodeURIComponent(url)}`);
+    const res = await fetch(`${webAppUrl}/api/og-preview`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url })
+    });
     if (!res.ok) return null;
     const data = (await res.json()) as { ogImage?: string | null; description?: string | null };
     return { ogImage: data.ogImage ?? null, description: data.description ?? null };

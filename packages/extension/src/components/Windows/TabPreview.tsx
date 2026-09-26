@@ -6,6 +6,7 @@ import { useTabSummary, QuotaExceededError } from '@/hooks/useAI';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
 import { getPageMetaForTab } from '@/lib/tabAccess';
+import { useAppSettings, DEFAULT_APP_SETTINGS } from '@/hooks/useAppSettings';
 import type { Tab } from '@/lib/types';
 
 // ponytail: module-level cache — lives for the popup session, cleared on close
@@ -20,6 +21,7 @@ interface TabPreviewProps {
 
 export function TabPreview({ tab, children }: TabPreviewProps) {
   const { aiFeatures } = useEntitlements();
+  const { data: appSettings = DEFAULT_APP_SETTINGS } = useAppSettings();
   const { mutateAsync: fetchSummary } = useTabSummary();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,13 +41,21 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
     }
     if (fetchedRef.current) return;
     fetchedRef.current = true;
+    // Never fetch when the setting is off — the tooltip falls back to any ogImage
+    // already stored on the tab (no network call, no tab URL leaves the device).
+    if (!appSettings.showPreviewImages) {
+      setOgImage(tab.ogImage ?? null);
+      return;
+    }
     setLoading(true);
     try {
+      // The fetched image is shown in this tooltip's local state only — it is never
+      // persisted back to `tab.ogImage` (or anywhere else). See useTabPreview.ts.
       const meta = tab.ogImage ? null : await getPageMetaForTab(tab.url);
       setOgImage(tab.ogImage ?? meta?.ogImage ?? null);
     } catch { /* ignore */ }
     setLoading(false);
-  }, [tab]);
+  }, [tab, appSettings.showPreviewImages]);
 
   const generateSummary = useCallback(async () => {
     const cached = summaryCache.get(tab.url);

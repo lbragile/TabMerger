@@ -45,17 +45,6 @@ function chromeWindowToWindow(
   };
 }
 
-/** Fetch ogImage for a single live tab via content script. Returns null if unavailable. */
-async function fetchOgImageForTab(tabId: number): Promise<string | null> {
-  if (!tabId) return null;
-  try {
-    const meta = await chrome.tabs.sendMessage(tabId, { type: 'GET_PAGE_META' });
-    return (meta as { ogImage?: string | null })?.ogImage ?? null;
-  } catch {
-    return null;
-  }
-}
-
 /**
  * Rebuilds the Now Open group from live Chrome windows/tabs and persists it to IndexedDB.
  * Carries previously-fetched `ogImage` and `note` values forward so they survive re-syncs.
@@ -117,8 +106,7 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
       .sort((a, b) => (prevOrderById.get(a.id) ?? Infinity) - (prevOrderById.get(b.id) ?? Infinity));
     nowOpenWindows = sortWindowsByStarred(nowOpenWindows);
 
-    // Carry over previously-fetched ogImages so they survive re-syncs.
-    // Also schedule a background fetch for tabs that don't have one yet.
+    // Carry over previously-fetched ogImages (and notes) so they survive re-syncs.
     const prevOgImages = new Map<string, string>();
     const prevNotes = new Map<string, string>();
     prevNowOpen?.windows.forEach((w) => w.tabs.forEach((t) => {
@@ -126,10 +114,8 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
       if (t.note) prevNotes.set(t.url, t.note);
     }));
 
-    const tabsMissingOgImage: Tab[] = [];
     nowOpenWindows.forEach((w) => w.tabs.forEach((t) => {
       if (prevOgImages.has(t.url)) t.ogImage = prevOgImages.get(t.url);
-      else tabsMissingOgImage.push(t);
       if (prevNotes.has(t.url)) t.note = prevNotes.get(t.url);
     }));
 
@@ -161,34 +147,6 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
   }
 }
 
-/** Background pass: fetch ogImages for live Now Open tabs and persist them. */
-async function backfillOgImages(
-  tabs: Tab[],
-  setQueryData: (updater: (prev: GroupsState) => GroupsState) => void
-) {
-  if (tabs.length === 0) return;
-  const results = await Promise.all(
-    tabs.map(async (t) => ({ url: t.url, ogImage: await fetchOgImageForTab(t.id ?? 0) }))
-  );
-  const fetched = new Map(results.filter((r) => r.ogImage).map((r) => [r.url, r.ogImage!]));
-  if (fetched.size === 0) return;
-
-  setQueryData((prev) => {
-    const available = prev.available.map((g) => {
-      if (!g.permanent) return g;
-      return {
-        ...g,
-        windows: g.windows.map((w) => ({
-          ...w,
-          tabs: w.tabs.map((t) => fetched.has(t.url) ? { ...t, ogImage: fetched.get(t.url) } : t)
-        }))
-      };
-    });
-    void saveGroupsState({ ...prev, available });
-    return { ...prev, available };
-  });
-}
-
 /**
  * Keeps the Now Open group (index 0) in sync with live Chrome tabs.
  * Runs an initial sync on mount (with ogImage backfill), then re-syncs on every
@@ -213,26 +171,16 @@ export function useCurrentTabs() {
   useEffect(() => {
     let mounted = true;
 
-    const doSync = async (fetchOg = false) => {
+    const doSync = async () => {
       const next = await syncNowOpen();
       if (!mounted || !next) return;
       qc.setQueryData(GROUPS_QUERY_KEY, next);
       // ponytail: pushDeviceSession no-ops for free tier internally (and debounce-schedules
       // cheaply either way), so no extra guard needed here — see deviceSessions.ts doPush().
       pushDeviceSession(next, tierRef.current);
-      if (fetchOg) {
-        const nowOpen = next.available.find((g) => g.permanent);
-        const missing = (nowOpen?.windows ?? []).flatMap((w) =>
-          w.tabs.filter((t) => !t.ogImage)
-        );
-        void backfillOgImages(missing, (updater) =>
-          qc.setQueryData(GROUPS_QUERY_KEY, updater)
-        );
-      }
     };
 
-    // Initial sync fetches ogImages; subsequent event-driven syncs carry them over via prevOgImages.
-    void doSync(true);
+    void doSync();
 
     const handleChange = () => void doSync();
 

@@ -12,14 +12,6 @@ vi.mock('@/hooks/useAI', () => ({
   useTabSummary: () => ({ mutateAsync: mockFetchSummary }),
 }))
 
-// ─── Chrome API mock ──────────────────────────────────────────────────────────
-
-const sendMessageMock = vi.fn()
-const queryMock = vi.fn()
-globalThis.chrome = {
-  tabs: { sendMessage: sendMessageMock, query: queryMock },
-} as unknown as typeof chrome
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function makeWrapper() {
@@ -45,8 +37,6 @@ async function triggerHover(handleMouseEnter: () => void) {
 beforeEach(() => {
   vi.useFakeTimers()
   vi.clearAllMocks()
-  sendMessageMock.mockResolvedValue({})
-  queryMock.mockResolvedValue([])
 })
 
 afterEach(() => {
@@ -54,9 +44,11 @@ afterEach(() => {
 })
 
 // ─── useTabPreview ────────────────────────────────────────────────────────────
+// There is no content script in this extension — useTabPreview never fetches a
+// live OG image. It only ever shows a `storedOgImage` already persisted on the tab.
 
 describe('useTabPreview', () => {
-  it('uses storedOgImage directly and skips sendMessage (free user)', async () => {
+  it('shows storedOgImage when provided (free user)', async () => {
     const { wrapper } = makeWrapper()
     const { result } = renderHook(
       () => useTabPreview('https://example.com', 'Example', false, 0, 'https://example.com/og.png'),
@@ -66,10 +58,9 @@ describe('useTabPreview', () => {
     await triggerHover(result.current.handleMouseEnter)
 
     expect(result.current.ogImage).toBe('https://example.com/og.png')
-    expect(sendMessageMock).not.toHaveBeenCalled()
   })
 
-  it('uses storedOgImage and skips sendMessage for Pro AI users (no extra OG fetch)', async () => {
+  it('shows storedOgImage for Pro AI users without auto-fetching a summary', async () => {
     const { wrapper } = makeWrapper()
     const { result } = renderHook(
       () => useTabPreview('https://example.com', 'Example', true, 0, 'https://example.com/og.png'),
@@ -79,7 +70,6 @@ describe('useTabPreview', () => {
     await triggerHover(result.current.handleMouseEnter)
 
     expect(result.current.ogImage).toBe('https://example.com/og.png')
-    expect(sendMessageMock).not.toHaveBeenCalled()
     // AI summary is NOT auto-fetched on hover — only via generateSummary()
     expect(mockFetchSummary).not.toHaveBeenCalled()
     expect(result.current.summary).toBeNull()
@@ -103,8 +93,7 @@ describe('useTabPreview', () => {
     expect(result.current.summary).toBe('A summary')
   })
 
-  it('falls back to sendMessage when storedOgImage is absent (free user, tabId=0)', async () => {
-    // tabId=0 means saved tab with no stored ogImage — fetchOgImage returns null (tabId falsy)
+  it('shows no image when no storedOgImage is provided', async () => {
     const { wrapper } = makeWrapper()
     const { result } = renderHook(
       () => useTabPreview('https://example.com', 'Example', false, 0, undefined),
@@ -113,14 +102,10 @@ describe('useTabPreview', () => {
 
     await triggerHover(result.current.handleMouseEnter)
 
-    // sendMessage is not called because tabId is 0 (falsy guard inside fetchOgImage)
-    expect(sendMessageMock).not.toHaveBeenCalled()
     expect(result.current.ogImage).toBeNull()
   })
 
-  it('calls sendMessage for live tab when no storedOgImage (free user, tabId>0)', async () => {
-    sendMessageMock.mockResolvedValue({ ogImage: 'https://live.com/og.png' })
-
+  it('shows no image for a live tab (tabId>0) with no storedOgImage', async () => {
     const { wrapper } = makeWrapper()
     const { result } = renderHook(
       () => useTabPreview('https://live.com', 'Live', false, 42, undefined),
@@ -129,40 +114,7 @@ describe('useTabPreview', () => {
 
     await triggerHover(result.current.handleMouseEnter)
 
-    expect(sendMessageMock).toHaveBeenCalledWith(42, { type: 'GET_PAGE_META' })
-    expect(result.current.ogImage).toBe('https://live.com/og.png')
-  })
-
-  it('looks up live tab by URL for saved tabs (tabId=0, no storedOgImage)', async () => {
-    queryMock.mockResolvedValue([{ id: 99 }])
-    sendMessageMock.mockResolvedValue({ ogImage: 'https://saved.com/og.png' })
-
-    const { wrapper } = makeWrapper()
-    const { result } = renderHook(
-      () => useTabPreview('https://saved.com/page', 'Saved', false, 0, undefined),
-      { wrapper }
-    )
-
-    await triggerHover(result.current.handleMouseEnter)
-
-    expect(queryMock).toHaveBeenCalledWith({ url: 'https://saved.com/page' })
-    expect(sendMessageMock).toHaveBeenCalledWith(99, { type: 'GET_PAGE_META' })
-    expect(result.current.ogImage).toBe('https://saved.com/og.png')
-  })
-
-  it('shows no image when saved tab URL is not open in Chrome', async () => {
-    queryMock.mockResolvedValue([]) // no live tab found
-
-    const { wrapper } = makeWrapper()
-    const { result } = renderHook(
-      () => useTabPreview('https://closed.com/page', 'Closed', false, 0, undefined),
-      { wrapper }
-    )
-
-    await triggerHover(result.current.handleMouseEnter)
-
     expect(result.current.ogImage).toBeNull()
-    expect(sendMessageMock).not.toHaveBeenCalled()
   })
 
   it('resets state on mouse leave', async () => {

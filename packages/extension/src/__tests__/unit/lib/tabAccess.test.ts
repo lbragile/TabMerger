@@ -30,9 +30,11 @@ describe('getPageMetaForTab', () => {
       ogImage: 'https://x.com/og.png',
       description: 'A page',
     })
-    expect(fetchMock).toHaveBeenCalledWith(
-      'https://tabmerger.app/api/og-preview?url=https%3A%2F%2Fexample.com'
-    )
+    expect(fetchMock).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url: 'https://example.com' }),
+    })
   })
 
   it('returns null when the response is not ok', async () => {

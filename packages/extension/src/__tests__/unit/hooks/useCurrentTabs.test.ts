@@ -1,8 +1,9 @@
 /**
- * Branch-coverage batch for useCurrentTabs.ts's internal syncNowOpen/backfillOgImages logic,
- * exercised through the public useCurrentTabs() hook: error catch path, tabGroups.query
- * unavailable fallback, extra-permanent-group stripping, no-permanent-group early return,
- * own-extension-page filtering, ogImage carryover vs backfill, and note carryover.
+ * Branch-coverage batch for useCurrentTabs.ts's internal syncNowOpen logic, exercised
+ * through the public useCurrentTabs() hook: error catch path, tabGroups.query unavailable
+ * fallback, extra-permanent-group stripping, no-permanent-group early return, own-extension-page
+ * filtering, ogImage/note carryover. There is no content script, so ogImage is only ever
+ * carried forward from a prior value — never backfilled via chrome.tabs.sendMessage.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
@@ -274,42 +275,21 @@ describe('syncNowOpen — ogImage/note carryover', () => {
     unmount()
   })
 
-  it('backfills ogImage via chrome.tabs.sendMessage for a tab with no prior ogImage', async () => {
+  it('leaves ogImage undefined for a tab with no prior ogImage (no content script to backfill from)', async () => {
     const state = makeState([createNowOpenGroup()])
     ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
     chromeMock.windows.getAll.mockResolvedValue([chromeWindow(1)])
     chromeMock.tabs.query.mockResolvedValue([chromeTab({ id: 10, windowId: 1, url: 'https://new.com' })])
-    chromeMock.tabs.sendMessage.mockResolvedValue({ ogImage: 'https://og.com/fresh.png' })
 
     const { qc, wrapper } = makeWrapper()
     const { unmount } = renderHook(() => useCurrentTabs(), { wrapper })
 
     await act(async () => {})
-    // backfill runs as a fire-and-forget follow-up; flush microtasks again
-    await act(async () => {})
 
-    expect(chromeMock.tabs.sendMessage).toHaveBeenCalledWith(10, { type: 'GET_PAGE_META' })
+    // Dead content-script backfill path was removed — sendMessage is never called by this hook.
+    expect(chromeMock.tabs.sendMessage).not.toHaveBeenCalled()
     const cached = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)
-    expect(cached?.available[0].windows[0].tabs[0].ogImage).toBe('https://og.com/fresh.png')
-    unmount()
-  })
-
-  it('does not persist when the backfill fetch returns no ogImages', async () => {
-    const state = makeState([createNowOpenGroup()])
-    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
-    chromeMock.windows.getAll.mockResolvedValue([chromeWindow(1)])
-    chromeMock.tabs.query.mockResolvedValue([chromeTab({ id: 10, windowId: 1, url: 'https://new.com' })])
-    chromeMock.tabs.sendMessage.mockRejectedValue(new Error('no receiver'))
-
-    const { wrapper } = makeWrapper()
-    const { unmount } = renderHook(() => useCurrentTabs(), { wrapper })
-
-    await act(async () => {})
-    await act(async () => {})
-
-    // First saveGroupsState call is the initial sync; ensure no *additional* backfill save happened
-    const callCountAfterSync = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls.length
-    expect(callCountAfterSync).toBe(1)
+    expect(cached?.available[0].windows[0].tabs[0].ogImage).toBeUndefined()
     unmount()
   })
 })

@@ -5,6 +5,11 @@ export interface Tab {
   title: string;
   url: string;
   favIconUrl?: string;
+  // Legacy field — was written by a content script that no longer exists. Nothing in the
+  // current codebase sets a *new* value here; existing values are only ever carried forward
+  // (e.g. useCurrentTabs.ts on Now Open rebuild, useGroups.ts on tab move/duplicate), so it's
+  // empty for almost every tab. The opt-in preview-image fetch (og-preview) shows its result
+  // in the TabPreview tooltip only — it is never persisted here. See useTabPreview.ts.
   ogImage?: string;
   pinned?: boolean;
   chromeGroup?: { id: number; name: string; color: string };

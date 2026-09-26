@@ -126,7 +126,8 @@ All permissions below come directly from `wxt.config.ts`'s `manifest.permissions
 are **no `host_permissions`** of any kind (required or optional) — deliberately, per that
 file's own comment, to keep the extension out of the store's elevated review tier for reading
 page content. Tab preview's OG-image fetch is done server-side by the web app
-(`packages/web/app/api/og-preview`), not by the extension.
+(`packages/web/app/api/og-preview`), not by the extension, and is **off by default** — see
+"Show page images in previews" under Data Collection below.
 
 | Permission | Type | Justification |
 |------------|------|----------------|
@@ -164,7 +165,7 @@ mapping of the same facts, verified against that page and the extension's own co
 | Location | No | — | — | — |
 | Web history | No — TabMerger only stores tabs you explicitly save, not general browsing history | — | — | — |
 | User activity | Anonymous usage events (feature usage, page views) via GA4 and PostHog, proxied server-side | Yes, via `${VITE_WEB_APP_URL}/api/track` and PostHog's Capture API | Product analytics | Google Analytics, PostHog (processors only) |
-| Website content | Saved tab URLs, titles | Only if you sign in and enable cloud sync — then end-to-end encrypted client-side before upload | Restoring your saved tabs/groups across devices | None — content is encrypted client-side; TabMerger cannot read it, so it cannot be shared even internally |
+| Website content | Saved tab URLs, titles | (a) Only if you sign in and enable cloud sync — then end-to-end encrypted client-side before upload; (b) only if you turn on the opt-in "Show page images in previews" setting (Settings → General, **off by default**) — while on, hovering a tab sends that tab's URL to TabMerger's preview service (`/api/og-preview`) to fetch an image, not linked to your account, not logged, not stored | (a) Restoring your saved tabs/groups across devices; (b) showing a page-image thumbnail in the hover preview tooltip | None — (a) is encrypted client-side, TabMerger cannot read it; (b) is a stateless fetch-and-return, not persisted or associated with any account |
 
 ### Data Use Certification
 

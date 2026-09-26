@@ -23,6 +23,7 @@ export type ModalType =
   | 'archiveStaleGroups'
   | 'encryptionSetup'
   | 'resetEncryption'
+  | 'confirmPreviewImages'
   | null;
 
 interface ModalState {
