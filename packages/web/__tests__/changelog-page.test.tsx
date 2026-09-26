@@ -64,8 +64,13 @@ describe('ChangelogPage', () => {
   it('lists every tagged release of the original extension, newest first', () => {
     render(<ChangelogPage />)
     const ids = Array.from(document.querySelectorAll('[id]')).map((el) => el.id)
-    // v1.2.0 and up are tagged; v1.0.0–v1.1.3 were released from untagged commits.
-    const tagged = ['v3-0-0', 'v2-0-0', 'v1-6-2', 'v1-6-1', 'v1-6-0', 'v1-5-0', 'v1-4-3', 'v1-4-0', 'v1-3-0', 'v1-2-1', 'v1-2-0', 'v1-1-3', 'v1-1-0', 'v1-0-1', 'v1-0-0']
+    // Every version Firefox Add-ons lists for TabMerger (its full public version history),
+    // plus v1.0.0, which predates the Firefox listing.
+    const tagged = [
+      'v3-0-0', 'v2-0-0', 'v1-6-2', 'v1-6-1', 'v1-6-0', 'v1-5-0',
+      'v1-4-3', 'v1-4-2', 'v1-4-1', 'v1-4-0', 'v1-3-1', 'v1-3-0', 'v1-2-1', 'v1-2-0',
+      'v1-1-3', 'v1-1-2', 'v1-1-1', 'v1-1-0', 'v1-0-1', 'v1-0-0',
+    ]
     const positions = tagged.map((id) => ids.indexOf(id))
     expect(positions).not.toContain(-1)
     expect([...positions].sort((a, b) => a - b)).toEqual(positions)

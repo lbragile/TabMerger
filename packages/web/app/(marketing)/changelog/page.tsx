@@ -88,9 +88,24 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
     ],
   },
   {
+    // v1.4.1–v1.4.3: the release notes group them as "sync & incognito fixes, stable as
+    // of v1.4.3"; split per version from the commit at each tag.
     version: 'v1.4.3',
     date: 'December 22, 2020',
-    changes: [{ type: 'Fixed', text: 'Sync and incognito bugs (v1.4.1–v1.4.3)' }],
+    changes: [
+      { type: 'New', text: 'Sync buttons' },
+      { type: 'Fixed', text: 'Sync and incognito now work reliably' },
+    ],
+  },
+  {
+    version: 'v1.4.2',
+    date: 'December 22, 2020',
+    changes: [{ type: 'Improved', text: 'Sync runs every minute' }],
+  },
+  {
+    version: 'v1.4.1',
+    date: 'December 21, 2020',
+    changes: [{ type: 'Fixed', text: 'Sync not picking up changes' }],
   },
   {
     version: 'v1.4.0',
@@ -101,6 +116,13 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
       { type: 'Improved', text: 'Merging when opening tabs' },
       { type: 'Improved', text: 'PDF export removed for now, until its formatting is improved' },
     ],
+  },
+  {
+    // Untagged, but on Firefox Add-ons. The `v1.3.0` tag actually points at this bump
+    // (3190946), released the same day as 1.3.0.
+    version: 'v1.3.1',
+    date: 'December 15, 2020',
+    changes: [{ type: 'Fixed', text: 'Missing tab icons on Firefox' }],
   },
   {
     version: 'v1.3.0',
@@ -140,10 +162,22 @@ const ORIGINAL_EXTENSION: ChangeEntry[] = [
     version: 'v1.1.3',
     date: 'December 1, 2020',
     changes: [
-      { type: 'Fixed', text: 'Merging on Firefox' },
-      { type: 'Fixed', text: 'Shareable links between Firefox and Chrome' },
+      { type: 'Fixed', text: 'More Firefox issues' },
       { type: 'Fixed', text: 'Group titles not being saved' },
     ],
+  },
+  {
+    version: 'v1.1.2',
+    date: 'November 30, 2020',
+    changes: [{ type: 'Fixed', text: 'Shareable links between Firefox and Chrome' }],
+  },
+  {
+    // On Firefox Add-ons (released 2020-12-01 UTC, alongside 1.1.2 and 1.1.3), but its
+    // manifest bump was never committed — git goes 1.1.0 → 1.1.2. Its fix is the first of
+    // that evening's three commits (db11d07), made before the 1.1.2 bump.
+    version: 'v1.1.1',
+    date: 'November 30, 2020',
+    changes: [{ type: 'Fixed', text: 'Merging on Firefox' }],
   },
   {
     version: 'v1.1.0',
