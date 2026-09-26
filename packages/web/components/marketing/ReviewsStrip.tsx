@@ -84,7 +84,7 @@ export async function ReviewsStrip() {
           ].map((stat, i) => (
             <div
               key={stat.label}
-              className={`py-6 px-4 flex flex-col items-center text-center ${i === 1 ? 'border-l border-border' : ''}`}
+              className={`py-6 px-4 flex flex-col items-center text-center ${i === 1 ? 'sm:border-l border-border' : ''}`}
             >
               <span className="font-extrabold" style={{ fontSize: '30px' }}>
                 {stat.number}
