@@ -1,9 +1,12 @@
 import Link from 'next/link'
+import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
 
 const leadFeatures = [
   {
     number: '01',
     title: 'AI files the mess for you',
+    isAi: true,
     description:
       'One click clusters your open tabs by topic and names each group. Accept, rename, or ignore.',
     illustration: (
@@ -66,7 +69,14 @@ export function Features() {
             >
               <div className="font-mono text-[13px] font-medium text-primary">{f.number}</div>
               <div>
-                <h3 className="font-semibold text-[19px] tracking-tight mb-1.5">{f.title}</h3>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <h3 className="font-semibold text-[19px] tracking-tight">{f.title}</h3>
+                  {f.isAi && !AI_ENABLED && (
+                    <span className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-muted text-muted-foreground">
+                      {AI_COMING_SOON_LABEL}
+                    </span>
+                  )}
+                </div>
                 <p className="text-[14.5px] leading-relaxed text-text2">{f.description}</p>
               </div>
               {f.illustration}

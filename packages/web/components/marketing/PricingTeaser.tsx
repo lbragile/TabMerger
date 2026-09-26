@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { TIERS } from '@/lib/tiers'
 import { cn } from '@/lib/utils'
+import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
 
 const tiers = [
   { key: 'free', highlighted: false, blurb: 'For casual users trying it out' },
@@ -43,6 +45,7 @@ export function PricingTeaser() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {tiers.map((t) => {
             const tier = TIERS[t.key]
+            const isComingSoon = t.key === 'proAi' && !AI_ENABLED
             const rawPrice = interval === 'monthly' ? tier.monthlyPrice : tier.yearlyPrice
             const price = rawPrice === 0 ? '$0' : `$${rawPrice}`
             const period = rawPrice === 0 ? 'forever' : interval === 'monthly' ? '/mo' : '/yr'
@@ -60,6 +63,10 @@ export function PricingTeaser() {
                   {t.highlighted ? (
                     <span className="inline-flex items-center justify-self-end self-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-primary/15 text-primary">
                       Recommended
+                    </span>
+                  ) : isComingSoon ? (
+                    <span className="inline-flex items-center justify-self-end self-center text-[9.5px] font-semibold uppercase tracking-wider leading-none px-1.5 pt-[0.2656rem] pb-[0.2344rem] rounded-md bg-muted text-muted-foreground">
+                      {AI_COMING_SOON_LABEL}
                     </span>
                   ) : (
                     <span />

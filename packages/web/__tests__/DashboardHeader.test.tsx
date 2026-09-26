@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Dashboard page is an async server component — mock its data dependencies and heavy
 // child components so we can `await` it and render just the header markup under test.
@@ -34,6 +34,15 @@ vi.mock('@/components/dashboard/OrganizeProposal', () => ({ OrganizeProposal: ()
 vi.mock('@/components/dashboard/OnboardingChecklist', () => ({ OnboardingChecklist: () => <div>onboarding</div> }))
 
 describe('DashboardPage header restyle', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   it('greets the user with "Good morning, {FirstName}" derived from the email local-part', async () => {
     const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
@@ -70,5 +79,17 @@ describe('DashboardPage header restyle', () => {
       /^(synced|syncing|sync status)/i.test(el.textContent ?? '')
     )
     expect(syncTextNodes).toHaveLength(0)
+  })
+
+  it('hides the "AI organise" button entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {
+    vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
+    render(jsx as React.ReactElement)
+
+    expect(screen.queryByRole('button', { name: /AI organise/i })).not.toBeInTheDocument()
+    // Unrelated UI stays intact when the flag is off.
+    expect(screen.getByRole('button', { name: /New group/i })).toBeInTheDocument()
   })
 })

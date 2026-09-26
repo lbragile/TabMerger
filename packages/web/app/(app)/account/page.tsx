@@ -17,6 +17,7 @@ import { SetPasswordForm } from '@/components/account/SetPasswordForm'
 import { DevicesSection } from '@/components/account/DevicesSection'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { BuyCreditsButton } from '@/components/account/BuyCreditsButton'
+import { AI_ENABLED } from '@/lib/aiFlag'
 import { SignOutForm } from '@/components/auth/SignOutForm'
 
 export const metadata: Metadata = {
@@ -69,7 +70,7 @@ export default async function AccountPage() {
   const isPaid = currentTier !== 'free' && subscription?.status === 'active'
 
   let aiCreditsLeft = 0
-  if (currentTier === 'pro_ai') {
+  if (AI_ENABLED && currentTier === 'pro_ai') {
     const month = new Date().toISOString().slice(0, 7)
     const { data: usage } = await supabase
       .from('ai_usage')
@@ -102,13 +103,15 @@ export default async function AccountPage() {
         </p>
       </div>
 
-      {/* Usage summary */}
+      {/* Usage summary — AI credits card is hidden entirely while AI features are coming soon */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-1">
         {[
           { label: 'Groups synced', value: '24' },
           { label: 'Tabs saved', value: '847' },
           { label: 'Sessions', value: '12' },
-          { label: 'AI credits left', value: currentTier === 'pro_ai' ? String(aiCreditsLeft) : '0', accent: currentTier === 'pro_ai' },
+          ...(AI_ENABLED
+            ? [{ label: 'AI credits left', value: currentTier === 'pro_ai' ? String(aiCreditsLeft) : '0', accent: currentTier === 'pro_ai' }]
+            : []),
         ].map((stat, i) => (
           <div
             key={i}

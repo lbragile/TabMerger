@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { AI_ENABLED } from '@/lib/aiFlag'
+import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
 
 const faqs = [
   {
@@ -17,8 +19,9 @@ const faqs = [
   },
   {
     question: 'What does the AI do exactly?',
-    answer:
-      'The Pro AI tier unlocks three AI features: auto-grouping (analyzes your open tabs and groups them logically), smart naming (suggests names for your groups), and session suggestions (recommends how to organize your workflow).',
+    answer: AI_ENABLED
+      ? 'The Pro AI tier unlocks three AI features: auto-grouping (analyzes your open tabs and groups them logically), smart naming (suggests names for your groups), and session suggestions (recommends how to organize your workflow).'
+      : `${AI_COMING_SOON_LABEL} — the Pro AI tier will unlock three AI features: auto-grouping (analyzes your open tabs and groups them logically), smart naming (suggests names for your groups), and session suggestions (recommends how to organize your workflow).`,
   },
   {
     question: 'Can I cancel my subscription?',

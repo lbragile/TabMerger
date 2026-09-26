@@ -12,6 +12,7 @@ import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
 import { Sparkles, Plus } from 'lucide-react'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { isEncryptedBlob } from '@tabmerger/shared'
+import { AI_ENABLED } from '@/lib/aiFlag'
 
 // ponytail: capitalize the whole email local-part as a first name proxy — no profile
 // display-name column exists yet, and splitting on '.' would mangle names like "mary.jane"
@@ -74,7 +75,7 @@ export default async function DashboardPage({
   )
 
   let aiUsage: { used: number; limit: number } | undefined
-  if (currentTier === 'pro_ai') {
+  if (AI_ENABLED && currentTier === 'pro_ai') {
     const month = new Date().toISOString().slice(0, 7)
     const { data: usage } = await supabase
       .from('ai_usage')
@@ -90,7 +91,7 @@ export default async function DashboardPage({
 
   const { organizeRunId, organizeToken } = params
   let organizeSession: string | null = null
-  if (organizeRunId && organizeToken) {
+  if (AI_ENABLED && organizeRunId && organizeToken) {
     /** OrganizeProposal is a client component and can't read server cookies, so we pass the JWT down as a prop */
     const { data: { session } } = await supabase.auth.getSession()
     organizeSession = session?.access_token ?? null
@@ -121,26 +122,29 @@ export default async function DashboardPage({
           {/* ponytail: no web-initiated organize trigger exists yet — the extension starts the
               workflow and deep-links back here with organizeRunId/organizeToken. Point users there.
               Disabled buttons don't fire hover events, so the tooltip trigger wraps the button in
-              a span rather than relying on a native title attribute (which silently never fires). */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span tabIndex={currentTier !== 'pro_ai' ? 0 : undefined}>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={currentTier !== 'pro_ai'}
-                  >
-                    <Sparkles className="h-4 w-4 mr-1.5" />
-                    AI organise
-                  </Button>
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                {currentTier !== 'pro_ai' ? 'Upgrade to Pro AI to use AI organise' : 'Start this from the TabMerger extension popup'}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+              a span rather than relying on a native title attribute (which silently never fires).
+              Hidden entirely while AI features are behind the coming-soon flag. */}
+          {AI_ENABLED && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span tabIndex={currentTier !== 'pro_ai' ? 0 : undefined}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={currentTier !== 'pro_ai'}
+                    >
+                      <Sparkles className="h-4 w-4 mr-1.5" />
+                      AI organise
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {currentTier !== 'pro_ai' ? 'Upgrade to Pro AI to use AI organise' : 'Start this from the TabMerger extension popup'}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
           {/* ponytail: no web group-creation API — groups are authored in the extension only */}
           <Button size="sm" title="Create groups from the extension">
             <Plus className="h-4 w-4 mr-1.5" />
@@ -166,7 +170,7 @@ export default async function DashboardPage({
         priceId={subscription?.stripe_price_id}
       />
 
-      {organizeRunId && organizeToken && organizeSession && (
+      {AI_ENABLED && organizeRunId && organizeToken && organizeSession && (
         <OrganizeProposal
           runId={organizeRunId}
           token={organizeToken}

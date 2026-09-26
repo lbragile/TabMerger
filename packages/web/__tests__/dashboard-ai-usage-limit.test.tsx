@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 /**
  * Dashboard's AI usage card must show the *effective* cap (base 100 + purchased
@@ -36,7 +36,11 @@ function mockDashboard(purchases: { credits: number }[]) {
   vi.doMock('@/components/dashboard/OnboardingChecklist', () => ({ OnboardingChecklist: () => <div /> }))
 }
 
-beforeEach(() => vi.resetModules())
+beforeEach(() => {
+  vi.resetModules()
+  vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+})
+afterEach(() => vi.unstubAllEnvs())
 
 describe('DashboardPage — AI usage limit', () => {
   it('uses the base cap when the user has bought no credits', async () => {
@@ -53,5 +57,14 @@ describe('DashboardPage — AI usage limit', () => {
     render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
 
     expect(screen.getByText('100/400')).toBeInTheDocument()
+  })
+
+  it('hides the AI usage card entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'false')
+    mockDashboard([])
+    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    render((await DashboardPage({ searchParams: Promise.resolve({}) })) as React.ReactElement)
+
+    expect(screen.queryByText(/^100\//)).not.toBeInTheDocument()
   })
 })
