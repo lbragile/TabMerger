@@ -2,6 +2,15 @@
 // Unlike the Chrome Web Store, AMO has a documented public JSON API, so nothing
 // here is scraped: https://addons-server.readthedocs.io/en/latest/topics/api/
 
+import {
+  RegExpMatcher,
+  TextCensor,
+  asteriskCensorStrategy,
+  englishDataset,
+  englishRecommendedTransformers,
+  keepStartCensorStrategy,
+} from 'obscenity'
+
 export interface StoreReview {
   quote: string
   author: string
@@ -46,10 +55,29 @@ const MAX_REVIEWS = 12
 const ANONYMOUS = 'Anonymous reviewer'
 const AMO_PLACEHOLDER_NAME = /^Firefox user\s*\d*$/i
 
+/**
+ * Store reviews and display names are written by anyone, so profanity is censored
+ * before they reach the marketing page: "f***", keeping the first letter so the
+ * sentence still reads naturally. The review stays; only the word is masked.
+ * obscenity also catches disguised spellings ("fvck", "sh1t", "fuuuck") — though not
+ * letters spaced apart ("f u c k") — and skips innocent words that merely contain a
+ * match ("Scunthorpe"). Built once at module load.
+ */
+const profanityMatcher = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+})
+const profanityCensor = new TextCensor().setStrategy(keepStartCensorStrategy(asteriskCensorStrategy()))
+
+export function censorProfanity(text: string): string {
+  const matches = profanityMatcher.getAllMatches(text, true)
+  return matches.length ? profanityCensor.applyTo(text, matches) : text
+}
+
 function displayAuthor(name: string | undefined): string {
   const trimmed = name?.trim()
   if (!trimmed || AMO_PLACEHOLDER_NAME.test(trimmed)) return ANONYMOUS
-  return trimmed
+  return censorProfanity(trimmed)
 }
 
 interface AmoAddon {
@@ -76,7 +104,7 @@ export function selectReviews(results: AmoRating[], slug = DEFAULT_SLUG): StoreR
     .sort((a, b) => b.score - a.score || b.created.localeCompare(a.created))
     .slice(0, MAX_REVIEWS)
     .map((r) => ({
-      quote: (r.body ?? '').trim(),
+      quote: censorProfanity((r.body ?? '').trim()),
       author: displayAuthor(r.user?.name),
       date: r.created,
       score: r.score,

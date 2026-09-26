@@ -49,8 +49,28 @@ describe('selectReviews', () => {
     expect(selectReviews([review({ body: 'good' }), review({ body: null }), review({ body: '   ' })])).toEqual([])
   })
 
-  it('keeps reviews containing profanity, verbatim and uncensored', () => {
-    const body = 'Your plugin is fucking AWESOME, thanks a lot'
+  // A review with a swear word is still a real, positive review — it's kept, and only
+  // the word is masked, keeping its first letter so the sentence still reads.
+  it('keeps reviews containing profanity, censoring only the word', () => {
+    const [r] = selectReviews([review({ body: 'Your plugin is fucking AWESOME, thanks a lot' })])
+    // Only the root word is masked; the suffix stays.
+    expect(r.quote).toBe('Your plugin is f***ing AWESOME, thanks a lot')
+  })
+
+  // Letter swaps and repeats are caught; letters spaced apart ("f u c k") are not.
+  it('censors disguised spellings too', () => {
+    const [r] = selectReviews([review({ body: 'fvck yes, no more sh1t tab chaos, fuuuuck' })])
+    expect(r.quote).toBe('f*** yes, no more s*** tab chaos, f***')
+  })
+
+  it('censors profanity in the author name', () => {
+    const [r] = selectReviews([review({ name: 'shithead99' })])
+    expect(r.author).not.toMatch(/shit/i)
+    expect(r.author).toMatch(/^s\*+/)
+  })
+
+  it('leaves innocent words that merely contain a swear word alone', () => {
+    const body = 'Saved my tabs from Scunthorpe to Essex, a classic assessment tool'
     expect(selectReviews([review({ body })])[0].quote).toBe(body)
   })
 
