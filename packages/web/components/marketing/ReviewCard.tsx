@@ -1,6 +1,14 @@
 import type { StoreReview } from '@/lib/firefoxAddonStats'
 
 /**
+ * Card width (`w-[320px]` below) plus the track's `gap-4`. The carousel steps by it
+ * and buildMarqueeTrack sizes the loop with it — change all three together. Lives
+ * here, not in the 'use client' carousel: a server component importing a value
+ * from a client module gets a client reference, not the number.
+ */
+export const CARD_STRIDE_PX = 320 + 16
+
+/**
  * Formatted in UTC. `toLocaleDateString` otherwise uses the timezone of whatever
  * machine renders it, so a review posted at 2020-12-01T00:00Z reads "Dec 2020" on
  * a UTC server and "Nov 2020" anywhere west of Greenwich.

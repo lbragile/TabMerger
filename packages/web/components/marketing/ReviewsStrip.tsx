@@ -1,6 +1,7 @@
 import { getChromeStoreStats } from '@/lib/chromeStoreStats'
 import { getFirefoxAddonStats, type StoreReview } from '@/lib/firefoxAddonStats'
-import { ReviewCard } from './ReviewCard'
+import { CARD_STRIDE_PX, ReviewCard } from './ReviewCard'
+import { ReviewsCarousel } from './ReviewsCarousel'
 
 /**
  * Everything shown here comes from a live store listing, verbatim — or it isn't
@@ -44,16 +45,12 @@ async function loadStats(): Promise<Stats | null> {
 export const MIN_UNIQUE_REVIEWS = 6
 
 /**
- * The marquee keyframe slides the track by exactly -50%, so the loop is seamless
- * only when each half is at least as wide as the viewport. A handful of real
- * reviews makes a narrow half, which leaves a visible empty gap before the loop
- * restarts on a wide screen. So the reviews are repeated until one half clears
+ * The carousel wraps its offset at half the track's width, so the loop is seamless
+ * only when the two halves are identical and each is at least as wide as the
+ * viewport. A handful of real reviews makes a narrow half, which leaves a visible
+ * empty gap on a wide screen. So the reviews are repeated until one half clears
  * MIN_HALF_PX, and that half is then duplicated.
- *
- * Tracks ReviewCard's `w-[320px]` plus the track's `gap-4` (16px) — change these
- * together.
  */
-const CARD_STRIDE_PX = 320 + 16
 const MIN_HALF_PX = 2560 // covers a 2560px-wide viewport
 
 export function buildMarqueeTrack<T>(items: T[]): T[] {
@@ -98,13 +95,11 @@ export async function ReviewsStrip() {
       </div>
 
       {track.length > 0 && (
-        <div className="pause-on-hover">
-          <div className="flex gap-4 w-max animate-marquee">
-            {track.map((r, i) => (
-              <ReviewCard key={i} review={r} hidden={i >= reviews.length} />
-            ))}
-          </div>
-        </div>
+        <ReviewsCarousel>
+          {track.map((r, i) => (
+            <ReviewCard key={i} review={r} hidden={i >= reviews.length} />
+          ))}
+        </ReviewsCarousel>
       )}
     </section>
   )

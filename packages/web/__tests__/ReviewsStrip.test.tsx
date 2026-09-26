@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { readFileSync } from 'node:fs'
-import path from 'node:path'
 import { ReviewsStrip, buildMarqueeTrack } from '@/components/marketing/ReviewsStrip'
 import { getChromeStoreStats } from '@/lib/chromeStoreStats'
 import { getFirefoxAddonStats } from '@/lib/firefoxAddonStats'
@@ -81,11 +79,13 @@ describe('ReviewsStrip', () => {
   })
 
   describe('rotation', () => {
-    it('always renders the rotating marquee when there are reviews, even only a few', async () => {
+    it('always renders the review carousel when there are reviews, even only a few', async () => {
       vi.mocked(getChromeStoreStats).mockResolvedValue(null)
       vi.mocked(getFirefoxAddonStats).mockResolvedValue(firefox)
-      const { container } = await renderStrip()
-      expect(container.querySelector('.pause-on-hover .animate-marquee')).not.toBeNull()
+      await renderStrip()
+      expect(screen.getByRole('region', { name: 'Reviews' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Previous review' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Next review' })).toBeInTheDocument()
     })
 
     it('exposes each review to assistive tech exactly once despite the repeats', async () => {
@@ -96,11 +96,11 @@ describe('ReviewsStrip', () => {
       expect(screen.getAllByRole('img', { name: '5 out of 5 stars' })).toHaveLength(firefox.reviews.length)
     })
 
-    it('shows stats without a marquee when the source has no reviews', async () => {
+    it('shows stats without a carousel when the source has no reviews', async () => {
       vi.mocked(getChromeStoreStats).mockResolvedValue(chrome)
-      const { container } = await renderStrip()
+      await renderStrip()
       expect(screen.getByText('Average rating')).toBeInTheDocument()
-      expect(container.querySelector('.animate-marquee')).toBeNull()
+      expect(screen.queryByRole('region', { name: 'Reviews' })).not.toBeInTheDocument()
     })
   })
 
@@ -121,7 +121,7 @@ describe('buildMarqueeTrack', () => {
     expect(buildMarqueeTrack([])).toEqual([])
   })
 
-  it('is two identical halves — required by the -50% keyframe for a seamless loop', () => {
+  it('is two identical halves — required by the carousel wrapping at half its width', () => {
     const track = buildMarqueeTrack(['a', 'b', 'c'])
     const half = track.length / 2
     expect(track.slice(0, half)).toEqual(track.slice(half))
@@ -134,23 +134,5 @@ describe('buildMarqueeTrack', () => {
 
   it('preserves order within each repeat', () => {
     expect(buildMarqueeTrack(['a', 'b']).slice(0, 4)).toEqual(['a', 'b', 'a', 'b'])
-  })
-})
-
-describe('pause-on-hover CSS', () => {
-  const css = readFileSync(path.join(__dirname, '../app/globals.css'), 'utf8')
-
-  it('pauses the ANIMATED child, not the wrapper', () => {
-    // animation-play-state is not inherited; the old rule paused the wrapper,
-    // which isn't animating, so hovering did nothing.
-    expect(css).toMatch(/\.pause-on-hover:hover \.animate-marquee/)
-  })
-
-  it('also pauses for keyboard focus', () => {
-    expect(css).toMatch(/\.pause-on-hover:focus-within \.animate-marquee/)
-  })
-
-  it('stops auto-scroll under prefers-reduced-motion', () => {
-    expect(css).toMatch(/prefers-reduced-motion: reduce[\s\S]*?\.animate-marquee\s*\{\s*animation: none/)
   })
 })
