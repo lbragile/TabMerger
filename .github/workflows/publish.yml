@@ -447,23 +447,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ inputs.tag || github.ref_name }} *.zip
-
-      - name: Attach demo/marketing assets to release (best-effort)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # ponytail: glob non-fatal on no-match (nullglob) — these assets
-          # aren't guaranteed to exist/be committed at every tag, unlike the
-          # store zips built earlier in this workflow.
-          shopt -s nullglob
-          ASSETS=(
-            packages/web/public/videos/tabmerger-demo-*.mp4
-            packages/web/public/videos/demo-preview.jpg
-            packages/demo/screenshots/store/*.jpg
-            packages/demo/promo/*.jpg
-          )
-          if [ ${#ASSETS[@]} -eq 0 ]; then
-            echo "No committed demo/marketing assets found — skipping."
-          else
-            gh release upload ${{ inputs.tag || github.ref_name }} "${ASSETS[@]}"
-          fi
