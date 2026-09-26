@@ -1,39 +1,55 @@
 # Database Schema Reference
 
-Source of truth: `supabase/migrations/001` through `014`. Read the actual SQL before trusting
-this doc for anything security-relevant — it's a snapshot, not a replacement for the migrations.
+This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
+
+The migrations in `supabase/migrations/` (`001`–`018`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
 | # | File | What it did |
 |---|------|-------------|
-| 001 | `001_initial_schema.sql` | Creates `profiles`, `subscriptions`, `groups`, `sessions`; `handle_new_user()` trigger; `update_updated_at()` trigger |
-| 002 | `002_rls_policies.sql` | Enables RLS + owner-only policies on the 4 initial tables |
-| 003 | `003_indexes.sql` | Performance indexes on `groups`, `sessions`, `subscriptions` |
-| 004 | `004_create_organize_runs.sql` | Adds `organize_runs` table + RLS |
-| 005 | `005_subscription_lifecycle_columns.sql` | Adds `cancel_at_period_end`, `current_period_end` (redundant add, already existed), `stripe_price_id` to `subscriptions` |
-| 006 | `006_ai_usage.sql` | Adds `ai_usage` table (AI request quota tracking) + RLS |
-| 007 | `007_public_group_sharing.sql` | Adds `public_slug`, `view_count` to `groups`; adds `increment_group_view_count()` RPC |
-| 008 | `008_groups_missing_columns.sql` | Adds `permanent`, `starred`, `archived`, `note` to `groups` (columns existed on the TS `Group` type but were missing from the DB — caused live sync failures) |
-| 009 | `009_create_shared_bundles.sql` | Adds `shared_bundles` table (immutable public share snapshots) + RLS |
-| 010 | `010_grant_table_privileges.sql` | Grants-only migration, no schema change — see callout below |
-| 011 | `011_enable_realtime_groups.sql` | Adds `public.groups` to the `supabase_realtime` publication so clients (e.g. the web dashboard's `SyncIndicator`) can subscribe to live `postgres_changes` events. No RLS change — existing `groups` policies (owner-only, `auth.uid() = user_id`) already gate Realtime subscriptions. |
-| 012 | `012_dedupe_and_unique_subscriptions.sql` | Dedupes/uniques `subscriptions` rows — no `device_sessions`-relevant schema impact. |
-| 013 | `013_create_device_sessions.sql` | Adds `device_sessions` table (per-device "Now Open" snapshots for the "Continue on other device" feature) + RLS |
-| 014 | `014_ai_credit_purchases.sql` | Adds `ai_credit_purchases` table (one-time purchased AI credit packs, month-scoped, idempotent via `stripe_checkout_session_id`) + RLS |
+| 001 | `001_initial_schema.sql` | `profiles`, `subscriptions`, `groups`, `sessions`. `handle_new_user()` trigger. `update_updated_at()` triggers on `groups` and `subscriptions`. |
+| 002 | `002_rls_policies.sql` | RLS and owner-only policies on the four initial tables. |
+| 003 | `003_indexes.sql` | Indexes on `groups`, `sessions`, `subscriptions`. |
+| 004 | `004_create_organize_runs.sql` | `organize_runs` table and RLS. |
+| 005 | `005_subscription_lifecycle_columns.sql` | `subscriptions.cancel_at_period_end` and `stripe_price_id`. `current_period_end` was already there, so its `add column if not exists` is a no-op. |
+| 006 | `006_ai_usage.sql` | `ai_usage` table (monthly AI quota) and RLS. |
+| 007 | `007_public_group_sharing.sql` | `groups.public_slug` and `view_count`. `increment_group_view_count()` function. |
+| 008 | `008_groups_missing_columns.sql` | `groups.permanent`, `starred`, `archived`, `note`. |
+| 009 | `009_create_shared_bundles.sql` | `shared_bundles` table (public multi-group share snapshots) and RLS. |
+| 010 | `010_grant_table_privileges.sql` | Grants only, no schema change (see [Grants](#grants-migration-010)). |
+| 011 | `011_enable_realtime_groups.sql` | Adds `public.groups` to the `supabase_realtime` publication. |
+| 012 | `012_dedupe_and_unique_subscriptions.sql` | Deletes duplicate `subscriptions` rows, keeping the newest per user. Adds `subscriptions_user_id_key UNIQUE(user_id)`. Drops the now-redundant `subscriptions_user_id_idx`. |
+| 013 | `013_create_device_sessions.sql` | `device_sessions` table (per-device Now Open snapshots) and RLS. |
+| 014 | `014_ai_credit_purchases.sql` | `ai_credit_purchases` table (one-time AI credit packs) and RLS. |
+| 015 | `015_encryption_keys.sql` | `encryption_keys` table (wrapped E2E data key per user). Select/insert/update policies. |
+| 016 | `016_group_counts.sql` | `groups.window_count` and `tab_count`, plaintext denormalized counts, backfilled from existing plaintext `windows`. |
+| 017 | `017_rename_ai_usage_credits.sql` | Renames `ai_usage.request_count` to `credits_used` (weighted credits). |
+| 018 | `018_encryption_keys_delete_policy.sql` | Adds the missing `encryption_keys` delete policy. Without it, `resetEncryption()` silently deleted 0 rows. |
 
-> **Keeping hosted Cloud in sync:** migrations 009 and 010 existed in this repo and were applied
-> to the local Supabase CLI stack, but were never pushed to the hosted Supabase Cloud project.
-> They sat un-applied on Cloud until `supabase db push` was run manually this session. Local
-> `supabase db reset` gives false confidence that "the schema is applied" — it only proves the
-> migration is valid SQL, not that Cloud has it. Always confirm with `supabase migration list
-> --linked` (or check the Cloud dashboard's migration history) before assuming parity, especially
-> after a migration was written but not immediately deployed.
+> **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
+
+## E2E-encrypted columns
+
+For every signed-in Pro account, content is written as an `EncryptedBlob` `{v:1, iv, ct}`: AES-256-GCM, base64, from `packages/shared/src/crypto`. The server never holds the key. Readers call `isEncryptedBlob()` and still accept legacy plaintext rows, because older rows were never backfilled.
+
+| Table | Ciphertext column | What's inside the blob | Plaintext columns blanked on write |
+|---|---|---|---|
+| `groups` | `windows` (jsonb) | `{name, windows, note, info}` | `name = ''`, `note = null`, `info = ''` |
+| `sessions` | `groups` (jsonb) | `{name, groups, description}` | `name = ''`, `description = null` |
+| `device_sessions` | `now_open_snapshot` (jsonb) | `{windows}` of the device's Now Open group | none (`device_name` stays plaintext) |
+| `shared_bundles` | `groups_snapshot` (jsonb) | the shared `Group[]` | none |
+
+- `groups`, `sessions` and `device_sessions` use the account data key. That key is wrapped in `encryption_keys` and cached unwrapped in the extension's `chrome.storage.local` (see `packages/extension/src/lib/encryptionKey.ts`). The web dashboard caches it in `sessionStorage` after a passphrase prompt.
+- `shared_bundles` uses a **fresh per-share key**, returned once and carried only in the share URL's `#key=` fragment. The extension encrypts on the client (`src/lib/sharing.ts`). The web route `POST /api/share-bundle` receives client-decrypted groups and encrypts them on the server with a new key that it never stores.
+- Anything the server has to show without the key is kept in plaintext on purpose: `groups.color`, `starred`, `archived`, `updated_at`, `window_count`, `tab_count`.
+- Server code must never treat these columns as plaintext. Run the `encrypted-column-auditor` agent on any API route that touches them.
 
 ## Tables
 
 ### `profiles`
-Extends `auth.users`. One row per user, auto-created by the `handle_new_user()` trigger.
+
+This table extends `auth.users` with one row per user, created by `handle_new_user()`.
 
 | Column | Type | Constraints |
 |---|---|---|
@@ -42,98 +58,127 @@ Extends `auth.users`. One row per user, auto-created by the `handle_new_user()` 
 | `stripe_customer_id` | `text` | unique, nullable |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
-**RLS:** `profiles_select_own` (select where `auth.uid() = id`), `profiles_update_own` (update where
-`auth.uid() = id`). No insert/delete policy for regular users — rows are only ever created by the
-trigger (`security definer`) or the service role.
-
-TS counterpart: `Profile` in `packages/shared/src/types/index.ts` (camelCase — `stripeCustomerId`).
+**RLS:** `profiles_select_own` and `profiles_update_own` (`auth.uid() = id`). There is no insert or delete policy. Rows come only from the trigger (`security definer`) or the service role.
 
 ### `subscriptions`
-One row per user, auto-created as `'free'` by `handle_new_user()`. Stripe is the source of truth;
-webhooks keep this table in sync (see `payments` agent domain).
+
+There is **one row per user**, enforced by `subscriptions_user_id_key UNIQUE(user_id)` since migration 012. `handle_new_user()` creates the `'free_' || user_id` row. The Stripe webhook updates it with `upsert(..., { onConflict: 'user_id' })`.
 
 | Column | Type | Constraints |
 |---|---|---|
-| `id` | `text` | PK — Stripe subscription id (or `'free_' \|\| user_id` for the trigger-created free tier) |
-| `user_id` | `uuid` | not null, `references profiles(id) on delete cascade` |
-| `tier` | `text` | not null, default `'free'`, check in (`free`, `pro`, `pro_ai`) |
-| `status` | `text` | not null, default `'active'`, check in (`active`, `canceled`, `past_due`, `trialing`, `incomplete`) |
+| `id` | `text` | PK. Stripe subscription id, or `'free_' \|\| user_id` for the trigger row |
+| `user_id` | `uuid` | not null, unique, `references profiles(id) on delete cascade` |
+| `tier` | `text` | not null, default `'free'`, one of `free`, `pro`, `pro_ai` |
+| `status` | `text` | not null, default `'active'`, one of `active`, `canceled`, `past_due`, `trialing`, `incomplete` |
 | `current_period_end` | `timestamptz` | nullable |
+| `cancel_at_period_end` | `boolean` | default `false` (005) |
+| `stripe_price_id` | `text` | nullable (005) |
 | `created_at` | `timestamptz` | not null, default `now()` |
-| `updated_at` | `timestamptz` | not null, default `now()`, auto-bumped by `update_updated_at()` trigger |
-| `cancel_at_period_end` | `boolean` | added in 005, default `false` |
-| `stripe_price_id` | `text` | added in 005, nullable |
+| `updated_at` | `timestamptz` | not null, default `now()`, bumped by trigger |
 
-**RLS:** `subscriptions_select_own` only (select where `auth.uid() = user_id`). No client-side
-insert/update/delete policy — writes only happen via the service role in the Stripe webhook
-handler and the `handle_new_user()` trigger.
+**RLS:** `subscriptions_select_own` only. Writes go through the service role (webhook) and the trigger.
 
-TS counterpart: `Subscription` (camelCase). Note the TS type doesn't yet model
-`cancel_at_period_end`/`stripe_price_id` — check before relying on those fields client-side.
+**Indexes:** `subscriptions_status_idx` and the unique index behind `subscriptions_user_id_key`.
+
+> Anything that INSERTs a second row for a user fails with `23505` on `subscriptions_user_id_key`, because the trigger has already created one. `supabase/seed.sql` still does this (open, see [TODO.md](../TODO.md)).
 
 ### `groups`
-Local-first synced tab groups. Extension writes to IndexedDB first, then upserts here via
-`syncEngine.ts`. Columns accumulated across migrations 001, 007, 008, 016.
 
-| Column | Type | Constraints |
+Groups are synced from the extension. Local IndexedDB is written first, then `syncEngine.ts` upserts here.
+
+| Column | Type | Constraints / notes |
 |---|---|---|
-| `id` | `text` | PK — nanoid from extension |
+| `id` | `text` | PK, generated by the extension |
 | `user_id` | `uuid` | not null, `references profiles(id) on delete cascade` |
-| `name` | `text` | not null |
+| `name` | `text` | not null. `''` when encrypted |
 | `color` | `text` | not null, default `'rgba(128,128,128,1)'` |
-| `position` | `integer` | not null, default `0` |
-| `windows` | `jsonb` | not null, default `'[]'` — array of `ExtWindow` |
-| `info` | `text` | nullable |
-| `updated_at` | `timestamptz` | not null, default `now()`, auto-bumped by trigger — this is the last-write-wins conflict key |
+| `position` | `integer` | not null, default `0`. The extension's sync push does not write it |
+| `windows` | `jsonb` | not null, default `'[]'`. `ExtWindow[]`, or an `EncryptedBlob` |
+| `info` | `text` | nullable. `''` when encrypted |
+| `note` | `text` | nullable (008). `null` when encrypted |
+| `permanent` | `boolean` | not null, default `false` (008). The Now Open group is never pushed |
+| `starred` | `boolean` | not null, default `false` (008) |
+| `archived` | `boolean` | not null, default `false` (008) |
+| `public_slug` | `text` | unique, nullable (007). Set by `POST /api/groups/[id]/publish` |
+| `view_count` | `integer` | not null, default `0` (007) |
+| `window_count` | `integer` | not null, default `0` (016). Plaintext; the client computes it before encrypting |
+| `tab_count` | `integer` | not null, default `0` (016). Same as `window_count` |
+| `updated_at` | `timestamptz` | not null, default `now()`, bumped by trigger. The last-write-wins key |
 | `created_at` | `timestamptz` | not null, default `now()` |
-| `public_slug` | `text` | added in 007, unique, nullable — set when a group is shared |
-| `view_count` | `integer` | added in 007, not null, default `0` |
-| `permanent` | `boolean` | added in 008, not null, default `false` — true only for the "Now Open" group |
-| `starred` | `boolean` | added in 008, not null, default `false` |
-| `archived` | `boolean` | added in 008, not null, default `false` |
-| `window_count` | `integer` | added in 016, not null, default `0` — denormalized plaintext count, maintained by the client on every write so SSR stat tiles work even once `windows` is E2EE ciphertext |
-| `tab_count` | `integer` | added in 016, not null, default `0` — denormalized plaintext count, maintained by the client on every write, same reason as `window_count` |
-| `note` | `text` | added in 008, nullable |
 
-**RLS:** full owner CRUD — `groups_select_own`, `groups_insert_own`, `groups_update_own`,
-`groups_delete_own`, all gated on `auth.uid() = user_id`. There is **no public select policy** for
-rows with a `public_slug` set — the public share page reads via the service role client, not
-anon/RLS.
+**RLS:** full owner CRUD (`groups_select_own`, `_insert_own`, `_update_own`, `_delete_own`). No public select policy exists.
 
-**RPC:** `increment_group_view_count(slug_param text)` — `security definer`, updates
-`view_count` by slug. Called from the share page with the service role (best-effort, no auth
-check inside the function itself).
+**Realtime:** in the `supabase_realtime` publication (011). RLS applies to subscriptions.
+
+**Function:** `increment_group_view_count(slug_param text)` is `security definer` and has no auth check inside. Nothing in the app calls it today.
 
 **Indexes:** `groups_user_id_idx`, `groups_updated_at_idx (desc)`.
 
-TS counterpart: `Group` (app-facing, camelCase, no `user_id`/`position`) and `SupabaseGroup`
-(DB-shaped, snake_case) in `packages/shared/src/types/index.ts`. Note `SupabaseGroup` in the
-shared types file has **not** been updated to include `public_slug`, `view_count`, `permanent`,
-`starred`, `archived`, or `note` — those columns exist in the DB (migrations 007/008) but aren't
-reflected in that type yet. Cross-check before assuming the TS type is exhaustive.
-
 ### `sessions`
-Saved point-in-time snapshots of a user's groups (not a live reference — see relationships below).
+
+Point-in-time snapshots of a user's groups. They are copies, not references to `groups.id`.
 
 | Column | Type | Constraints |
 |---|---|---|
 | `id` | `text` | PK |
 | `user_id` | `uuid` | not null, `references profiles(id) on delete cascade` |
-| `name` | `text` | not null |
-| `description` | `text` | nullable |
-| `groups` | `jsonb` | not null, default `'[]'` — array of `Group` snapshots, not FKs to `groups.id` |
+| `name` | `text` | not null. `''` when encrypted |
+| `description` | `text` | nullable. `null` when encrypted |
+| `groups` | `jsonb` | not null, default `'[]'`. `Group[]`, or an `EncryptedBlob` |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
-**RLS:** full owner CRUD (`sessions_select_own/insert_own/update_own/delete_own`, all on
-`auth.uid() = user_id`).
+**RLS:** full owner CRUD. **Index:** `sessions_user_id_idx`.
 
-**Index:** `sessions_user_id_idx`.
+### `device_sessions`
 
-TS counterpart: `Session` (camelCase) and `SupabaseSession` (snake_case).
+One row per (user, device) for "Continue on other device". Other devices of the **same** user read it. It does not share across users.
+
+| Column | Type | Constraints |
+|---|---|---|
+| `id` | `uuid` | PK, default `gen_random_uuid()` |
+| `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
+| `device_id` | `text` | not null. Generated by the client, unique per user |
+| `device_name` | `text` | not null, plaintext |
+| `now_open_snapshot` | `jsonb` | not null, default `'[]'`. An `EncryptedBlob` for encrypted accounts |
+| `last_active` | `timestamptz` | not null, default `now()` |
+| `created_at` | `timestamptz` | not null, default `now()` |
+| — | — | `unique(user_id, device_id)`. The extension upserts with `onConflict: 'user_id,device_id'` |
+
+**RLS:** full owner CRUD (`device_sessions_*_owner`). **Index:** `device_sessions_user_id_last_active_idx (user_id, last_active)`.
+
+### `shared_bundles`
+
+Immutable public share snapshots of one or more groups. `/share/[slug]` reads them.
+
+| Column | Type | Constraints |
+|---|---|---|
+| `id` | `uuid` | PK, default `gen_random_uuid()` |
+| `slug` | `text` | unique, not null |
+| `user_id` | `uuid` | nullable, `references auth.users(id) on delete cascade` |
+| `groups_snapshot` | `jsonb` | not null. An `EncryptedBlob` (per-share key), or legacy plaintext |
+| `created_at` | `timestamptz` | default `now()` |
+| `expires_at` | `timestamptz` | nullable |
+
+**RLS:** `shared_bundles_select_public` uses `using (true)`, so **anyone can read**. `shared_bundles_insert_owner` is limited to `authenticated` with `user_id = auth.uid()`. `shared_bundles_delete_owner` requires `user_id = auth.uid()`. There is **no update policy** because snapshots are immutable. **Index:** on `slug`.
+
+### `encryption_keys`
+
+One row per user: the E2E data key wrapped with a key derived from the user's passphrase. The server never sees the passphrase or the unwrapped key.
+
+| Column | Type | Constraints |
+|---|---|---|
+| `user_id` | `uuid` | PK, `references auth.users(id) on delete cascade` |
+| `wrapped_key` | `text` | not null. The AES-256 data key, AES-GCM-wrapped |
+| `salt` | `text` | not null. PBKDF2 salt |
+| `kdf_iterations` | `integer` | not null. PBKDF2 iterations (`KDF_ITERATIONS` = 600,000 for new keys) |
+| `wrap_iv` | `text` | not null |
+| `created_at` | `timestamptz` | not null, default `now()` |
+
+**RLS:** owner select, insert, update (015) and delete (018).
 
 ### `organize_runs`
-Tracks AI "organize my tabs" runs (added migration 004). Minimal — no result data stored here,
-just an existence record per run.
+
+Maps an AI "organize" workflow run to its owner, so `GET /api/ai/organize` can check ownership before streaming. No result data is stored.
 
 | Column | Type | Constraints |
 |---|---|---|
@@ -141,188 +186,67 @@ just an existence record per run.
 | `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
 | `created_at` | `timestamptz` | default `now()` |
 
-**RLS:** single `for all` policy `"users see own runs"` using `auth.uid() = user_id` — covers
-select/insert/update/delete in one policy (unlike other tables which split by operation).
-
-Note: FK targets `auth.users` directly, not `public.profiles`, unlike every other table in this
-schema.
+**RLS:** one `for all` policy, `"users see own runs"` (`auth.uid() = user_id`).
 
 ### `ai_usage`
-Per-user, per-month AI credit counter — enforces the pro_ai tier's monthly credit quota. As of
-migration 017, `credits_used` accumulates a *weighted* cost per call (e.g. `group-tabs` costs ~8x
-`name-group`) rather than a flat call count — renamed from `request_count` to reflect this.
+
+Per-user, per-month AI credit counter. `credits_used` adds up a **weighted** cost per call (`CREDIT_COSTS` in `packages/web/lib/ai-usage.ts`).
 
 | Column | Type | Constraints |
 |---|---|---|
 | `id` | `uuid` | PK, default `gen_random_uuid()` |
 | `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
-| `month` | `text` | not null — format `'YYYY-MM'` |
-| `credits_used` | `integer` | not null, default `0` |
-| — | — | `unique(user_id, month)` — one row per user per month |
+| `month` | `text` | not null, `'YYYY-MM'` |
+| `credits_used` | `integer` | not null, default `0` (was `request_count` before 017) |
+| — | — | `unique(user_id, month)` |
 
-**RLS:** `"Users can read own usage"` — select only, `auth.uid() = user_id`. No insert/update
-policy for regular users — increments happen via the service role in the AI API routes (see
-`ai-features` agent domain).
-
-Note: also FKs to `auth.users` directly, not `public.profiles`.
+**RLS:** `"Users can read own usage"`, select only. The AI routes increment it through the service role. The effective cap is `AI_MONTHLY_CAP` (300) plus the sum of `ai_credit_purchases.credits` for that month (`getEffectiveCap`).
 
 ### `ai_credit_purchases`
-One-time purchased AI credit packs (e.g. "+50 calls for $2.99") that top up a user's `ai_usage`
-allowance for that calendar month. Credits expire at month-end, same cadence as the free monthly
-cap — no rollover, no running balance across months. Kept as a separate table (not a column on
-`ai_usage`) so each Stripe checkout session is recorded individually, giving idempotency against
-webhook redelivery.
+
+One-time AI credit packs. They are month-scoped and don't roll over. There is one row per Stripe Checkout session, so webhook redelivery is idempotent.
 
 | Column | Type | Constraints |
 |---|---|---|
 | `id` | `uuid` | PK, default `gen_random_uuid()` |
 | `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
-| `month` | `text` | not null — format `'YYYY-MM'`, matches `ai_usage.month` |
+| `month` | `text` | not null, `'YYYY-MM'` |
 | `credits` | `integer` | not null |
-| `stripe_checkout_session_id` | `text` | not null, unique — enforces idempotency on webhook redelivery |
+| `stripe_checkout_session_id` | `text` | not null, unique |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
-Index: `ai_credit_purchases_user_month_idx` on `(user_id, month)`.
-
-**RLS:** `"Users can read own credit purchases"` — select only, `auth.uid() = user_id`. No
-insert/update policy for regular users — only the Stripe webhook, using the service-role client,
-writes purchase rows.
-
-Note: also FKs to `auth.users` directly, not `public.profiles`.
-
-**For the `ai-features` agent:** `checkAndIncrementAIUsage()`'s cap check currently compares
-`credits_used` (renamed from `request_count` in migration 017) against the flat `AI_MONTHLY_CAP`.
-It needs to become `credits_used + weighted_cost <= AI_MONTHLY_CAP + purchased_credits`, where
-`purchased_credits` is the sum of `credits` from `ai_credit_purchases` for that `user_id`+`month`
-(not implemented in this migration — application-code changes are tracked separately by the
-payments/ai-features agents).
-
-### `shared_bundles`
-Immutable public share snapshots (added migration 009) — distinct from `groups.public_slug`
-single-group sharing; this is for sharing a *bundle* of multiple groups at once.
-
-| Column | Type | Constraints |
-|---|---|---|
-| `id` | `uuid` | PK, default `gen_random_uuid()` |
-| `slug` | `text` | unique, not null |
-| `user_id` | `uuid` | `references auth.users(id) on delete cascade`, nullable |
-| `groups_snapshot` | `jsonb` | not null — frozen copy of groups at share time |
-| `created_at` | `timestamptz` | default `now()` |
-| `expires_at` | `timestamptz` | nullable |
-
-**RLS:**
-- `shared_bundles_select_public` — `using (true)`, **anyone can read any row by slug**, no auth
-  required (this is the point of the table — public share pages).
-- `shared_bundles_insert_owner` — insert restricted to `authenticated` role, `user_id = auth.uid()`.
-- `shared_bundles_delete_owner` — delete where `user_id = auth.uid()`.
-- **No update policy at all** — snapshots are immutable by design; once shared, a bundle can only
-  be re-created or deleted, never edited in place.
-
-**Index:** `on public.shared_bundles (slug)`.
-
-Not yet reflected in `packages/shared/src/types/index.ts` — no `SharedBundle` TS type exists as of
-this migration; add one if/when the sharing feature lands app-side.
-
-### `device_sessions`
-Per-device "Now Open" snapshots, added migration 013 for the "Continue on other device" feature.
-Each device the extension has synced from registers/updates one row here; other devices of the
-**same** user can read it to pull that device's tabs. No cross-user sharing.
-
-| Column | Type | Constraints |
-|---|---|---|
-| `id` | `uuid` | PK, default `gen_random_uuid()` |
-| `user_id` | `uuid` | not null, `references auth.users(id) on delete cascade` |
-| `device_id` | `text` | not null — client-generated `crypto.randomUUID()`, unique **per user** only (composite unique with `user_id`, not globally unique) |
-| `device_name` | `text` | not null — user-editable, defaults to a UA-derived string set by the client |
-| `now_open_snapshot` | `jsonb` | not null, default `'[]'` — snapshot of the "Now Open" group's tabs at last push |
-| `last_active` | `timestamptz` | not null, default `now()` |
-| `created_at` | `timestamptz` | not null, default `now()` |
-| — | — | `unique(user_id, device_id)` |
-
-**RLS:** full owner CRUD — `device_sessions_select_owner`, `_insert_owner`, `_update_owner`,
-`_delete_owner`, all gated on `auth.uid() = user_id`. No public/cross-user access; "other devices"
-means other devices of the same authenticated user, not a sharing mechanism.
-
-**Index:** `device_sessions_user_id_last_active_idx` on `(user_id, last_active)` — supports a
-30-day staleness query (e.g. `where last_active > now() - interval '30 days'`) filtered by user.
-
-Not yet reflected in `packages/shared/src/types/index.ts` — no `DeviceSession` TS type exists yet;
-add one when the extension/web client code for this feature lands.
+**RLS:** `"Users can read own credit purchases"`, select only. Only the Stripe webhook (service role) writes. **Index:** `ai_credit_purchases_user_month_idx (user_id, month)`.
 
 ## Grants (migration 010)
 
-Local `supabase` CLI stacks don't provision the schema-level `anon`/`authenticated` grants that
-Supabase Cloud sets up implicitly. Without the base grant, RLS policies never even get evaluated —
-Postgres rejects the query before RLS is consulted. Migration 010 is purely
-`grant select, insert, update, delete on all tables in schema public to anon, authenticated` (plus
-`alter default privileges` for future tables). It changes no schema — RLS policies remain the
-actual access control layer; this migration only restores the baseline grant that Cloud gives you
-for free.
+Local CLI stacks don't get the schema-level grants to `anon`/`authenticated` that Supabase Cloud provisions implicitly. Without them, Postgres rejects a query before RLS is even evaluated. Migration 010 grants `select, insert, update, delete` on all public tables, and on future ones via `alter default privileges`. RLS remains the access control.
 
 ## How tables relate
 
 ```mermaid
 erDiagram
     auth_users ||--|| profiles : "id (1:1, cascade)"
-    profiles ||--o{ subscriptions : "user_id"
+    profiles ||--|| subscriptions : "user_id (unique)"
     profiles ||--o{ groups : "user_id"
     profiles ||--o{ sessions : "user_id"
+    auth_users ||--o| encryption_keys : "user_id (PK)"
+    auth_users ||--o{ device_sessions : "user_id"
+    auth_users ||--o{ shared_bundles : "user_id (nullable)"
     auth_users ||--o{ organize_runs : "user_id"
     auth_users ||--o{ ai_usage : "user_id"
-    auth_users ||--o{ shared_bundles : "user_id (nullable)"
-    auth_users ||--o{ device_sessions : "user_id"
-
-    groups {
-        text id PK
-        uuid user_id FK
-        text public_slug
-    }
-    sessions {
-        text id PK
-        uuid user_id FK
-        jsonb groups "snapshot, not FK"
-    }
-    shared_bundles {
-        uuid id PK
-        text slug
-        uuid user_id FK
-        jsonb groups_snapshot "snapshot, not FK"
-    }
+    auth_users ||--o{ ai_credit_purchases : "user_id"
 ```
 
-- **Ownership model:** every table has (or, for `organize_runs`/`ai_usage`/`shared_bundles`, was
-  given directly) a `user_id`/`id` column pointing back to a user. `profiles.id`,
-  `subscriptions.user_id`, `groups.user_id`, `sessions.user_id` all FK through `public.profiles`.
-  `organize_runs.user_id`, `ai_usage.user_id`, `shared_bundles.user_id` FK straight to
-  `auth.users` instead — functionally equivalent (since `profiles.id` cascades 1:1 from
-  `auth.users.id`) but inconsistent, worth knowing if you're writing a query that joins through
-  `profiles`.
-- **`profiles` and `subscriptions` are trigger-managed, not app-managed.** `handle_new_user()`
-  creates both rows the moment a user signs up. Never insert into either table directly from
-  app code — you'd create duplicates or violate the unique free-subscription-per-user assumption.
-- **`sessions.groups` and `shared_bundles.groups_snapshot` are snapshots, not live references.**
-  Both store a `jsonb` copy of group data at the time of save/share. There is no FK from either
-  column back to `groups.id` — editing or deleting a live group afterward does not affect an
-  already-saved session or an already-shared bundle. If a user wants the current group state,
-  they must re-save/re-share.
-- **Two independent sharing mechanisms exist:** `groups.public_slug` shares a single group (read
-  via service role, no RLS public-select policy on `groups` itself), while `shared_bundles` shares
-  a snapshot of potentially multiple groups (read via `using (true)` public RLS policy directly on
-  the table). Don't conflate the two when working on the sharing feature.
-- **Cascade behavior:** every FK in this schema is `on delete cascade` — deleting a user deletes
-  every row across all seven tables. There is no soft-delete/archival table; `groups.archived` is
-  a boolean flag on the row itself, not a separate lifecycle table.
+- `profiles`, `subscriptions`, `groups` and `sessions` reference `public.profiles`. Every later table references `auth.users` directly. The two are equivalent in practice, because `profiles.id` cascades 1:1 from `auth.users.id`.
+- `profiles` and `subscriptions` are managed by the trigger. Never INSERT into them from app code.
+- `sessions.groups` and `shared_bundles.groups_snapshot` are **copies**. Editing or deleting a group later does not change them.
+- Every FK is `on delete cascade`, so deleting an auth user removes their rows from all ten tables. `groups.archived` is a flag, not a soft-delete table.
 
-## Type-mirroring gaps (as of this session)
+## TypeScript mirrors (`packages/shared/src/types/index.ts`)
 
-`packages/shared/src/types/index.ts` mirrors the DB tables for app-facing type safety, but is not
-fully in sync with the migrations:
+These types only partly mirror the schema:
 
-- `SupabaseGroup` is missing `public_slug`, `view_count`, `permanent`, `starred`, `archived`,
-  `note` (added by migrations 007/008).
-- No TS type exists yet for `organize_runs`, `ai_usage`, `shared_bundles`, or `device_sessions`.
-- `Subscription` doesn't model `cancel_at_period_end` or `stripe_price_id` (added by migration 005).
-
-None of this blocks anything today (the app reads/writes the fields it needs via loosely-typed
-Supabase client calls), but it's worth tightening if `SupabaseGroup`/`Subscription` are used for
-compile-time validation elsewhere.
+- `SupabaseGroup` is missing `public_slug`, `view_count`, `permanent`, `starred`, `archived` and `note`. It types `windows` as `ExtWindow[]` even though the value can be an `EncryptedBlob`.
+- `Subscription` doesn't model `cancel_at_period_end` or `stripe_price_id`. `useEntitlements` selects them with its own local row type.
+- `DeviceSession` covers `device_id`, `device_name`, `now_open_snapshot` and `last_active`.
+- There are no shared types for `shared_bundles`, `encryption_keys`, `organize_runs`, `ai_usage` or `ai_credit_purchases`.
