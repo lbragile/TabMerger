@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 // Fresh IDB per test file run; re-import module fresh each test via resetModules
 // so getDb()'s module-level cache doesn't leak a stale connection across tests.
@@ -311,6 +311,8 @@ describe('localDb — deleteGroup', () => {
   })
 })
 
+const grpForNotifyTests = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
 describe('localDb — clearLocalAccountData', () => {
   it('wipes groups, groupsState, and sessions so a different account starts clean', async () => {
     const { getGroupsState, saveGroup, saveSession, clearLocalAccountData } = await freshLocalDb()
@@ -327,5 +329,97 @@ describe('localDb — clearLocalAccountData', () => {
     expect(state.available).toHaveLength(1)
     expect(state.available[0].permanent).toBe(true)
     expect(state.available.find((g) => g.id === 'g1')).toBeUndefined()
+  })
+})
+
+// Context-menu rebuild notification — see notifyGroupsChanged's doc comment in localDb.ts.
+// Covers the two delivery paths (direct in-SW callback vs. chrome.runtime.sendMessage) and
+// confirms sync-flag-only writes (markGroupSynced/markAllGroupsPendingSync) never trigger it.
+describe('localDb — groups-change notification (context menu rebuild trigger)', () => {
+  function stubChromeRuntime() {
+    const sendMessage = vi.fn((_msg: unknown, cb?: (r?: unknown) => void) => cb?.())
+    ;(globalThis as unknown as { chrome: unknown }).chrome = {
+      runtime: { sendMessage, lastError: undefined },
+    }
+    return sendMessage
+  }
+
+  afterEach(() => {
+    delete (globalThis as { chrome?: unknown }).chrome
+  })
+
+  it('a group-changing write (saveGroupsState) notifies via sendMessage when no direct listener is registered', async () => {
+    const sendMessage = stubChromeRuntime()
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    sendMessage.mockClear()
+
+    await saveGroupsState({ active: initial.active, available: [initial.available[0], grpForNotifyTests('a')] })
+
+    expect(sendMessage).toHaveBeenCalledWith({ type: 'TM_GROUPS_CHANGED' }, expect.any(Function))
+  })
+
+  it('saveGroup and deleteGroup also notify', async () => {
+    const sendMessage = stubChromeRuntime()
+    const { saveGroup, deleteGroup } = await freshLocalDb()
+    sendMessage.mockClear()
+    await saveGroup({ id: 'g1', name: 'Work', color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+    expect(sendMessage).toHaveBeenCalledWith({ type: 'TM_GROUPS_CHANGED' }, expect.any(Function))
+
+    sendMessage.mockClear()
+    await deleteGroup('g1')
+    expect(sendMessage).toHaveBeenCalledWith({ type: 'TM_GROUPS_CHANGED' }, expect.any(Function))
+  })
+
+  it('clearLocalAccountData notifies', async () => {
+    const sendMessage = stubChromeRuntime()
+    const { clearLocalAccountData } = await freshLocalDb()
+    sendMessage.mockClear()
+    await clearLocalAccountData()
+    expect(sendMessage).toHaveBeenCalledWith({ type: 'TM_GROUPS_CHANGED' }, expect.any(Function))
+  })
+
+  it('prefers a directly-registered listener over sendMessage — the in-SW path', async () => {
+    const sendMessage = stubChromeRuntime()
+    const { getGroupsState, saveGroupsState, registerGroupsChangeListener } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const directListener = vi.fn()
+    registerGroupsChangeListener(directListener)
+    sendMessage.mockClear()
+
+    await saveGroupsState({ active: initial.active, available: [initial.available[0], grpForNotifyTests('b')] })
+
+    expect(directListener).toHaveBeenCalledTimes(1)
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  it('does NOT notify for sync-flag-only writes (markGroupSynced, markAllGroupsPendingSync)', async () => {
+    const sendMessage = stubChromeRuntime()
+    const { getGroupsState, saveGroup, markGroupSynced, markAllGroupsPendingSync } = await freshLocalDb()
+    await getGroupsState()
+    await saveGroup({ id: 'g1', name: 'Work', color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+    sendMessage.mockClear()
+
+    await markGroupSynced('g1')
+    await markAllGroupsPendingSync()
+
+    expect(sendMessage).not.toHaveBeenCalled()
+  })
+
+  it('swallows the "Receiving end does not exist" rejection surfaced via chrome.runtime.lastError', async () => {
+    const sendMessage = vi.fn((_msg: unknown, cb?: (r?: unknown) => void) => {
+      ;(globalThis as unknown as { chrome: { runtime: { lastError?: unknown } } }).chrome.runtime.lastError =
+        { message: 'Could not establish connection. Receiving end does not exist.' }
+      cb?.()
+      ;(globalThis as unknown as { chrome: { runtime: { lastError?: unknown } } }).chrome.runtime.lastError = undefined
+    })
+    ;(globalThis as unknown as { chrome: unknown }).chrome = { runtime: { sendMessage, lastError: undefined } }
+
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+
+    await expect(
+      saveGroupsState({ active: initial.active, available: [initial.available[0], grpForNotifyTests('c')] })
+    ).resolves.toBeUndefined()
   })
 })
