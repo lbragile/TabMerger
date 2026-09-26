@@ -1,3 +1,48 @@
+# [4.0.0-beta.1](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.3...v4.0.0-beta.1) (2026-09-26)
+
+
+### Bug Fixes
+
+* **ci:** allow a manual CI run that deploys a web preview ([e345f2c](https://github.com/lbragile/TabMerger/commit/e345f2caa686de7b828109cf892baff6e3fba2e1))
+* **ci:** build the web preview standalone so pnpm symlinks upload cleanly ([ab11416](https://github.com/lbragile/TabMerger/commit/ab11416c8a47345b6d7a1707f58fc6209246885b))
+* **ci:** correct the Vercel token-scope hint in the preview deploy ([15bba0c](https://github.com/lbragile/TabMerger/commit/15bba0c786be00120c8036cccac2cfe07967c456))
+* **ci:** deploy a web preview on every agentic-revamp push ([e0f72d4](https://github.com/lbragile/TabMerger/commit/e0f72d4619bad647d24954e7211d1fcdd6015267))
+* **ci:** deploy the web preview only after CI passes, and fix release-config ([ddfca1b](https://github.com/lbragile/TabMerger/commit/ddfca1b3c8331c94222cfe38c5286abdb86bf6ea))
+* **ci:** diagnose Vercel project-access failures in the preview deploy ([e521c45](https://github.com/lbragile/TabMerger/commit/e521c4567fdfd7385b0b0887fb47f8bd34f21576))
+* **ci:** gate releases on builds and ship store builds with Supabase config ([ffdcfdc](https://github.com/lbragile/TabMerger/commit/ffdcfdc5b8171b89d6b2784c21bfaaec492ff37c))
+* **ci:** log which revision the beta cancel withdrew ([71dd7c8](https://github.com/lbragile/TabMerger/commit/71dd7c8c4afeb1a477db0a0f7e6c3a84e6796def))
+* **ci:** read the preview URL from the deploy CLI's JSON output ([548eee9](https://github.com/lbragile/TabMerger/commit/548eee9a8fb3964caf0999ef4038dfa3199ff17f))
+* **ci:** stop an apostrophe from breaking the preview URL step ([af46657](https://github.com/lbragile/TabMerger/commit/af466575ace47b4d888adeb7aec9da1be1549083))
+* **extension:** make the auth modal's label-to-input gaps actually render ([15b780a](https://github.com/lbragile/TabMerger/commit/15b780a210eebcc88c336c5bafeeb2cb20cac65b))
+* **extension:** show current groups in the right-click menu ([ff41f32](https://github.com/lbragile/TabMerger/commit/ff41f3270f1fb19caaa6a7f47dd4251e06986dbe))
+* **web:** answer CORS preflights for the extension's /api calls ([dd6eb45](https://github.com/lbragile/TabMerger/commit/dd6eb4517db599dcde666aca183a43c07f32e93f))
+* **web:** hide the review stats divider when the stats stack on mobile ([5139c02](https://github.com/lbragile/TabMerger/commit/5139c02890197a5ad98920bafd24aae5bbe63119))
+* **web:** resolve Stripe redirect URLs at runtime, per deployment ([934554d](https://github.com/lbragile/TabMerger/commit/934554d0306ebda3b1cd14724eff03f0bae61a01))
+* **web:** route the pricing page's billing portal through absoluteUrl ([4d6222b](https://github.com/lbragile/TabMerger/commit/4d6222be9dab454ae0bb9507335f3d93ff706cf5))
+
+
+### Features
+
+* **ci:** link the web preview on its commit ([8505730](https://github.com/lbragile/TabMerger/commit/850573062a3f7a9dd23712b0b0467579b58740c1))
+* **ci:** serve the web preview at a fixed URL ([06624c7](https://github.com/lbragile/TabMerger/commit/06624c79f7edb06bad2e6b78715e70511bca1aa0))
+* **extension:** always show Archived and Sessions, and save sessions there ([5d3d065](https://github.com/lbragile/TabMerger/commit/5d3d065e2a60f682afcb628ac2f670b2d2cf6834))
+* **extension:** consolidate group actions and add Now Open window controls ([96b604b](https://github.com/lbragile/TabMerger/commit/96b604bc118d4315b368239bbeb6b1f27a9be601))
+* **release:** don't cut a version for scopes that can't change the extension ([6731758](https://github.com/lbragile/TabMerger/commit/6731758e50988944cfdfea5b487dd6aefbc33bfa))
+* **web:** add Vercel Web Analytics and Speed Insights ([78d56b3](https://github.com/lbragile/TabMerger/commit/78d56b33020cb7f26db6fce731656497792f738c))
+* **web:** censor profanity in store reviews shown on the site ([72d1048](https://github.com/lbragile/TabMerger/commit/72d1048a5ec2bc15f697a68bc7efd68e79cb6170))
+* **web:** center the sign-in and sign-up forms and drop the button glow ([f6c6277](https://github.com/lbragile/TabMerger/commit/f6c62779e88cf2b8621b37e040d62381b84c80bd))
+* **web:** let visitors step and swipe through the reviews ([6f8a99d](https://github.com/lbragile/TabMerger/commit/6f8a99da070cfbef2a754f8916cfd98a8469fb20))
+* **web:** show real store reviews in place of invented testimonials ([4ad07ef](https://github.com/lbragile/TabMerger/commit/4ad07efe1909be5b4845dd42b64f33d8d1c935be))
+
+
+### BREAKING CHANGES
+
+* **release:** in a suppressed scope would silently release nothing.
+24/24 synthetic commits behaved as intended. Rationale recorded in the
+release spec, since JSON can't hold comments.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
 # [3.1.0-beta.3](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.2...v3.1.0-beta.3) (2026-09-23)
 
 
