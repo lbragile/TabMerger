@@ -8,8 +8,9 @@ against an external system (the Chrome Web Store) that CI cannot assert on.
 - `.claude/skills/release-checklist` — the *automated* gates (lint, type-check, tests, zips).
   Run that first. This document assumes it passed.
 - `.claude/plans/release-and-beta-channel-spec.md` — *why* the pipeline is shaped as it is.
-- `docs/PUBLISHING.md` — **stale.** It describes a manual `master` + hand-bumped
-  `package.json` flow that no longer exists. Trust this file and the spec above instead.
+- `docs/PUBLISHING.md` — one-time secret/store-account setup and the current pipeline shape.
+  This document is the step-by-step checklist; PUBLISHING.md is the reference for what each
+  secret is and how to obtain it.
 
 Timebox: ~20 minutes for a beta, ~45 for a stable. If a step fails, **stop** — do not
 proceed to the next section. Most of these checks are cheap precisely because the thing

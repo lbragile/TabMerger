@@ -1,21 +1,94 @@
-# ✨TabMerger's Contribution Policy
+# Contributing to TabMerger
 
-## 🧨 Reporting Issues
+TabMerger is a pnpm monorepo (extension + web app + shared package). Developers of all
+experience levels are welcome to contribute.
 
-See the provided [bug](https://github.com/lbragile/TabMerger/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) or [feature](https://github.com/lbragile/TabMerger/blob/master/.github/ISSUE_TEMPLATE/feature_request.md) templates.
+## Setup
 
-## 🔃 Pull Requests
+```bash
+git clone https://github.com/lbragile/TabMerger.git
+cd TabMerger
+pnpm install
+```
 
-A list of existing pull requests can be found [here](https://github.com/lbragile/TabMerger/pulls).
+See the root [`README.md`](../README.md) for environment file setup and dev-server commands.
 
-Developers of ALL experience levels are encouraged and welcome to contribute.
+## Before opening a PR
 
-### 🆕 First Time?
+Run the same checks CI runs:
 
-If this is your first time contributing to a project, please see the following step by step [guide](https://akrabat.com/the-beginners-guide-to-contributing-to-a-github-project/).
+```bash
+pnpm lint         # ESLint across extension + web
+pnpm type-check   # TypeScript check across all packages
+pnpm test         # Vitest unit tests (extension, web, shared)
+pnpm test:e2e     # Playwright E2E (web app)
+pnpm scan-secrets # Check staged files for API keys / PII
+```
 
-### 📋 Process
+For extension-specific changes, also run:
 
-1. Continuous Integration (CI) is added to automate the PR review process.
-2. Once your PR passes the CI check and is reviewed, the reviewer will either accept it as is (and merge it in) or ask you to make corrections.
-3. Steps 1 & 2 repeat until your PR is merged 🎉
+```bash
+pnpm --filter @tabmerger/extension test:integration  # real IndexedDB round trips
+pnpm --filter @tabmerger/extension test:e2e           # extension E2E (Playwright)
+```
+
+A pre-commit hook (Husky) runs the secret scan automatically — don't bypass it with
+`git commit --no-verify`.
+
+## Commit messages
+
+This repo uses [Conventional Commits](https://www.conventionalcommits.org/), enforced by
+commitlint (`@commitlint/config-conventional`) on every commit via a Husky hook, and consumed
+by `semantic-release` to decide version bumps and release notes.
+
+```
+<type>(<scope>): <short summary>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`,
+`revert` (the full conventional-commit set — see `@commitlint/config-conventional`).
+
+**Scopes** are not restricted to a fixed list, but by convention match the part of the repo
+touched — e.g. `extension`, `web`, `shared`, `demo`, `ci`, `release`, `publish`, `e2e`, `dev`.
+A few scopes have special meaning to the release pipeline (see `.releaserc.json`): commits
+scoped `ci`, `release`, `publish`, `e2e`, `demo`, `dev`, or `web` never trigger a version bump
+or release, regardless of type. Use them for anything that can't change what a user installs.
+
+**Major versions are avoided.** Only make a change that needs one when it is truly
+unavoidable, and agree it with the maintainer first. Then, and only then, add a commit
+body/footer line that starts with `BREAKING CHANGE:` (with the colon) — the only thing that forces
+a major release, and it does so even in an otherwise-suppressed scope. Don't use that phrase
+anywhere else in a commit message: in September 2026 a sentence *about* the rule was read as the
+rule and published an unintended 4.0.0 beta.
+
+Examples:
+
+```
+feat(extension): add keyboard shortcut to save all other tabs
+fix(web): correct Stripe webhook signature verification
+docs: rewrite CONTRIBUTING for the monorepo layout
+chore(deps): bump wxt to 0.20.28
+```
+
+## Pull requests
+
+1. Fork or branch, make your change, and confirm the checks above pass locally.
+2. Open a PR using the provided template — describe what changed and how you tested it.
+3. CI (`.github/workflows/ci.yml`) runs type-check, lint, unit/integration/E2E tests, and a
+   secret scan on every PR. All required checks must pass before merge.
+4. A reviewer will either merge or ask for changes. Repeat until merged.
+
+See [`docs/`](../docs/) for architecture notes, the release process, and integration guides.
+
+## Reporting issues
+
+Use the [bug report](ISSUE_TEMPLATE/bug_report.md) or
+[feature request](ISSUE_TEMPLATE/feature_request.md) templates when opening a new issue.
+
+## Security issues
+
+Do not open a public issue for a security vulnerability — see [`SECURITY.md`](SECURITY.md).
