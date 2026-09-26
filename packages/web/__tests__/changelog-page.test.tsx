@@ -40,8 +40,9 @@ describe('ChangelogPage', () => {
       { version: 'v3.1.0', date: 'October 1, 2026', changes: [{ type: 'Fixed', text: 'extension: a fix' }] },
     ])
     render(<ChangelogPage />)
-    // v3.0.0 and the original extension's v2.0.0.
-    expect(screen.getAllByText('Major release')).toHaveLength(2)
+    // v3.0.0, and the original extension's v2.0.0 and v1.0.0.
+    expect(screen.getAllByText('Major release')).toHaveLength(3)
+    expect(document.getElementById('v1-0-0')?.className).toContain('bg-surface2')
     expect(document.getElementById('v3-0-0')?.className).toContain('bg-surface2')
     expect(document.getElementById('v2-0-0')?.className).toContain('bg-surface2')
     expect(document.getElementById('v1-6-2')?.className).not.toContain('bg-surface2')
