@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -205,10 +206,29 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     pro_ai: 'Pro AI ($7.99/mo)'
   };
 
+  // The beta build's manifest `version` carries a +1 major offset for the store
+  // (see scripts/manifestVersion.ts), so `version_name` — when present — holds the
+  // real semver testers are told to report (e.g. "3.1.0-beta.5"). Guard for
+  // test/dev environments where chrome.runtime.getManifest may not exist.
+  const extensionVersion =
+    typeof chrome !== 'undefined' && chrome.runtime?.getManifest
+      ? (() => {
+          const manifest = chrome.runtime.getManifest();
+          return manifest.version_name ?? manifest.version;
+        })()
+      : undefined;
+
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Settings</DialogTitle>
+        <DialogTitle className="flex items-center gap-2 min-w-0">
+          <span className="shrink-0">Settings</span>
+          {extensionVersion && (
+            <Badge className="shrink-0 select-text whitespace-nowrap text-[10px] font-normal">
+              v{extensionVersion}
+            </Badge>
+          )}
+        </DialogTitle>
       </DialogHeader>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4 min-w-0">
@@ -241,8 +261,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
         <div className="mt-4 max-h-[320px] min-w-0 overflow-y-auto overflow-x-hidden pr-1">
         <TabsContent value="general" className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Theme</Label>
               <p className="text-xs text-muted-foreground">Choose your preferred theme</p>
             </div>
@@ -250,7 +270,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               value={draft.theme}
               onValueChange={(v) => patch('theme', v as AppSettings['theme'])}
             >
-              <SelectTrigger className="w-28 h-7 text-xs">
+              <SelectTrigger className="w-28 h-7 text-xs shrink-0">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -261,41 +281,44 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </Select>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Confirm before deleting</Label>
               <p className="text-xs text-muted-foreground">Ask before deleting groups or saved windows</p>
             </div>
             <Switch
+              className="shrink-0"
               checked={draft.confirmOnDelete}
               onCheckedChange={(v) => patch('confirmOnDelete', v)}
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Open tab on click</Label>
               <p className="text-xs text-muted-foreground">Single click opens tab in browser</p>
             </div>
             <Switch
+              className="shrink-0"
               checked={draft.openTabOnClick}
               onCheckedChange={(v) => patch('openTabOnClick', v)}
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Auto-deduplicate on merge</Label>
               <p className="text-xs text-muted-foreground">Remove duplicate tabs when merging windows</p>
             </div>
             <Switch
+              className="shrink-0"
               checked={draft.autoDedupOnMerge}
               onCheckedChange={(v) => patch('autoDedupOnMerge', v)}
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Show page images in previews</Label>
               <p className="text-xs text-muted-foreground">
                 Hovering a tab sends its address to fetch a page image. Not stored or linked to you.{' '}
@@ -315,6 +338,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               </p>
             </div>
             <Switch
+              className="shrink-0"
               aria-label="Show page images in previews"
               checked={draft.showPreviewImages}
               onCheckedChange={(v) => patch('showPreviewImages', v)}
@@ -322,20 +346,21 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           </div>
 
           {cloudSync && (
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Cloud sync</Label>
                 <p className="text-xs text-muted-foreground">Sync groups across your devices</p>
               </div>
               <Switch
+                className="shrink-0"
                 checked={draft.syncEnabled}
                 onCheckedChange={(v) => patch('syncEnabled', v)}
               />
             </div>
           )}
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Stale tab threshold</Label>
               <p className="text-xs text-muted-foreground">Show amber dot on tabs older than this</p>
             </div>
@@ -343,7 +368,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               value={String(draft.staleThresholdDays ?? 30)}
               onValueChange={(v) => patch('staleThresholdDays', Number(v) as AppSettings['staleThresholdDays'])}
             >
-              <SelectTrigger className="w-24 h-7 text-xs">
+              <SelectTrigger className="w-24 h-7 text-xs shrink-0">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -355,8 +380,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </Select>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">URL rules</Label>
               <p className="text-xs text-muted-foreground">
                 Auto-assign newly-opened tabs to a group by URL pattern
@@ -468,8 +493,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
           <Separator />
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Export data</Label>
               <p className="text-xs text-muted-foreground">Download all groups as a JSON file</p>
             </div>
@@ -484,8 +509,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             </Button>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
               <Label className="text-sm">Import data</Label>
               <p className="text-xs text-muted-foreground">Restore groups from a JSON export</p>
             </div>
@@ -530,56 +555,61 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               Turn off features you don&apos;t use to save quota for the ones you do.
             </p>
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Auto-group</Label>
                 <p className="text-xs text-muted-foreground">Group open tabs with AI</p>
               </div>
               <Switch
+                className="shrink-0"
                 checked={draft.aiAutoGroupEnabled}
                 onCheckedChange={(v) => patch('aiAutoGroupEnabled', v)}
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Name group</Label>
                 <p className="text-xs text-muted-foreground">Suggest a name for a group with AI</p>
               </div>
               <Switch
+                className="shrink-0"
                 checked={draft.aiNameGroupEnabled}
                 onCheckedChange={(v) => patch('aiNameGroupEnabled', v)}
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Suggest sessions</Label>
                 <p className="text-xs text-muted-foreground">Background banner suggesting when to save a session</p>
               </div>
               <Switch
+                className="shrink-0"
                 checked={draft.aiSuggestSessionsEnabled}
                 onCheckedChange={(v) => patch('aiSuggestSessionsEnabled', v)}
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Organize</Label>
                 <p className="text-xs text-muted-foreground">Reorganize all groups with AI</p>
               </div>
               <Switch
+                className="shrink-0"
                 checked={draft.aiOrganizeEnabled}
                 onCheckedChange={(v) => patch('aiOrganizeEnabled', v)}
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Tab preview summaries</Label>
                 <p className="text-xs text-muted-foreground">AI summary on tab hover preview</p>
               </div>
               <Switch
+                className="shrink-0"
                 checked={draft.aiTabSummaryEnabled}
                 onCheckedChange={(v) => patch('aiTabSummaryEnabled', v)}
               />
@@ -587,8 +617,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             <Separator />
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Limit automatic AI suggestions to once a day</Label>
                 <p className="text-xs text-muted-foreground">
                   The background suggest-sessions banner fires at most once per day to protect
@@ -597,6 +627,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 </p>
               </div>
               <Switch
+                className="shrink-0"
                 checked={draft.aiDailyThrottle}
                 onCheckedChange={(v) => patch('aiDailyThrottle', v)}
               />
@@ -608,8 +639,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <TabsContent value="dev" className="space-y-4">
             {/* ponytail: hook for the Playwright/Remotion marketing demo pipeline — kept
                 visible in demo builds too (not just DEV) since recording runs against one */}
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <Label className="text-sm">Demo Mode</Label>
                 <p className="text-xs text-muted-foreground">Seed sample data for the marketing demo pipeline</p>
               </div>
@@ -626,8 +657,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             {import.meta.env.DEV && AI_ENABLED && (
               <>
                 <Separator />
-                <div className="flex items-center justify-between gap-2">
-                  <div>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <Label className="text-sm">Mocked AI usage count</Label>
                     <p className="text-xs text-muted-foreground">
                       Sets the AI credit counter (out of {aiUsageCap}) locally and syncs it to your
@@ -661,8 +692,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                   </div>
                 </div>
                 <Separator />
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <Label className="text-sm">Sentry</Label>
                     <p className="text-xs text-muted-foreground">Throw a test error to verify reporting</p>
                   </div>
@@ -686,22 +717,22 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
       {/* Footer — only shown for the General tab, which now owns the cloud sync toggle too */}
       {activeTab === 'general' && (
-        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-2">
+        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-2 min-w-0">
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs text-muted-foreground"
+            className="text-xs text-muted-foreground shrink-0"
             onClick={handleRestoreDefaults}
           >
             Restore defaults
           </Button>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             {isDirty && (
-              <span className="text-xs text-muted-foreground">Unsaved changes</span>
+              <span className="text-xs text-muted-foreground shrink-0">Unsaved changes</span>
             )}
             <Button
               size="sm"
-              className="text-xs"
+              className="text-xs shrink-0"
               disabled={!isDirty}
               onClick={() => void handleSave()}
             >

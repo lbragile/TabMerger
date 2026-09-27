@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -126,6 +126,42 @@ beforeEach(() => {
   globalThis.URL.revokeObjectURL = vi.fn()
   mockHasEncryptionKey.mockResolvedValue(false)
   mockGetDataKey.mockReturnValue(null)
+})
+
+describe('SettingsModal — version badge in title', () => {
+  const originalChrome = globalThis.chrome
+
+  afterEach(() => {
+    globalThis.chrome = originalChrome
+  })
+
+  it('shows version_name when present, preferred over version', async () => {
+    globalThis.chrome = {
+      tabs: { create: vi.fn() },
+      runtime: { getManifest: () => ({ version: '4.1.0.5', version_name: '3.1.0-beta.5' }) },
+    } as unknown as typeof chrome
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('Settings').closest('h2, [role="heading"], div')).toBeTruthy()
+    expect(screen.getByText('v3.1.0-beta.5')).toBeInTheDocument()
+  })
+
+  it('falls back to version when version_name is absent', async () => {
+    globalThis.chrome = {
+      tabs: { create: vi.fn() },
+      runtime: { getManifest: () => ({ version: '3.1.0' }) },
+    } as unknown as typeof chrome
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('v3.1.0')).toBeInTheDocument()
+  })
+
+  it('renders nothing when chrome.runtime.getManifest is unavailable', async () => {
+    globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.queryByText(/^v\d/)).not.toBeInTheDocument()
+  })
 })
 
 describe('SettingsModal — Devices tab', () => {
