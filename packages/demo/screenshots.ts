@@ -91,6 +91,10 @@ async function captureClutteredChrome() {
         JSON.stringify({ bookmark_bar: { show_on_all_tabs: true } }),
     );
 
+    // ponytail: 2026-09-26 — deliberately headed, and ONLY reachable when the
+    // caller (main(), below) has already gated this behind `TM_DEMO_HEADED=1`.
+    // Not portable to headless: PrintWindow needs a real HWND to grab native
+    // Chrome tab-strip/bookmarks-bar pixels, and headless Chrome has none.
     const context = await chromium.launchPersistentContext(userDataDir, {
         headless: false,
         viewport: null,
@@ -193,6 +197,23 @@ public class Win32Capture {
 }
 
 async function main() {
+    // ponytail: 2026-09-26 — captureClutteredChrome() is the one capture in
+    // this whole pipeline that MUST open a real, visible OS window
+    // (PrintWindow needs an actual HWND to grab native Chrome tab-strip/
+    // bookmarks-bar pixels — headless Chrome has no real window at all, so
+    // there is nothing to point PrintWindow at). The user's hard rule is no
+    // visible browser under ANY circumstances for a normal run, so this is
+    // now opt-in only (`TM_DEMO_HEADED=1`, the same escape hatch
+    // launchDemoContext.ts uses) — a default run REUSES whatever
+    // cluttered-chrome.png already exists on disk instead of recapturing it.
+    // Back it up before the unconditional RAW_DIR wipe below (which exists
+    // to clear stale PNGs from removed/renamed steps) so a plain headless
+    // run doesn't destroy the one asset it can't regenerate itself.
+    const clutteredChromePath = path.join(RAW_DIR, "cluttered-chrome.png");
+    const existingClutteredChrome = fs.existsSync(clutteredChromePath)
+        ? fs.readFileSync(clutteredChromePath)
+        : null;
+
     // ponytail: without this, removed/renamed steps leave stale *.png behind
     // (render-store-assets.ts picks up whatever's in RAW_DIR, not just current steps).
     fs.rmSync(RAW_DIR, { recursive: true, force: true });
@@ -279,7 +300,21 @@ async function main() {
     }
 
     // Promo-only, theme-independent — real Chrome UI, not extension state.
-    await captureClutteredChrome();
+    // See the top-of-function comment: this is the one capture that needs a
+    // real visible window, so it's opt-in only.
+    if (process.env.TM_DEMO_HEADED === "1") {
+        await captureClutteredChrome();
+    } else if (existingClutteredChrome) {
+        fs.writeFileSync(clutteredChromePath, existingClutteredChrome);
+        console.log(
+            `[screenshots] reused existing ${clutteredChromePath} (headless run — set TM_DEMO_HEADED=1 to recapture a fresh one)`,
+        );
+    } else {
+        console.warn(
+            `[screenshots] WARNING: no cluttered-chrome.png on disk and TM_DEMO_HEADED is not set — ` +
+                `the promo marquee's "chaos" panel has no source image. Run once with TM_DEMO_HEADED=1 to generate it.`,
+        );
+    }
 }
 
 main().catch((err) => {

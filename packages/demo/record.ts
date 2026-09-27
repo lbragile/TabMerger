@@ -91,37 +91,33 @@ async function main() {
         }
 
         const { context, page: setupPage } = await launchDemoContext(
-            // ponytail: ROOT CAUSE of every clip rendering with a
-            // cropped-looking popup plus solid gray padding on the
-            // right/bottom (2026-08-01 — found by directly measuring pixel
-            // boundaries in extracted frames, not assumed from CSS).
-            // `deviceScaleFactor: 2` below is honored correctly by
-            // `page.screenshot()` (verified via a standalone diagnostic —
-            // returns a true 1600x1200 buffer for an 800x600 viewport) but
-            // NOT by Playwright's non-headless `recordVideo` screencast
-            // backend on this Windows machine — it actually captures at an
-            // effective ~1.25x scale (1000x750 for an 800x600 viewport)
-            // regardless of the requested deviceScaleFactor, a known
-            // real-window (non-headless) recordVideo quirk distinct from
-            // screenshot capture. Requesting a LARGER `size` than that (the
-            // old 1200x900) doesn't upscale the real 1000x750 capture to
-            // fill it — Playwright's recordVideo only ever scales DOWN an
-            // oversized capture to fit `size`, never scales UP an undersized
-            // one, so the real 1000x750 frame just sat top-left-anchored
-            // inside a bigger gray canvas. Setting `size` to exactly what
-            // this backend actually produces removes the mismatch (and the
-            // padding) entirely — verified by re-measuring the content
-            // boundary in a fresh recording after this fix (see
-            // demo-learnings.md).
-            { dir: RECORDINGS_DIR, size: { width: 1000, height: 750 } },
-            // ponytail: was 1 — native 1x capture of the 800x600 popup is what
-            // Playwright's VP8 recorder was encoding soft/blurry, especially
-            // small UI text. screenshots.ts already uses 2 for the exact same
-            // reason (see launchDemoContext.ts's comment on this param) — apply
-            // it here too. `recordVideo.size` now pins final output to
-            // 1200x900 (see above), so this still gives the encoder a sharper,
-            // supersampled source to downsample from, not a bigger output file
-            // than the resolution actually displayed on screen.
+            // ponytail: 2026-09-26 — UPDATED root-cause note (the previous
+            // 1000x750 value below was tuned for the OLD non-headless
+            // recordVideo backend's ~1.25x-regardless-of-DSF quirk, which no
+            // longer applies now that this pipeline runs headless by
+            // default). Re-measured directly (extracted a raw frame via
+            // ffmpeg, inspected the actual content boundary in pixels, not
+            // assumed from CSS): under `--headless=new`, Playwright's
+            // `recordVideo` screencast backend captures the RAW CSS viewport
+            // size (800x600) regardless of `deviceScaleFactor` — unlike
+            // `page.screenshot()`, which still honors DSF correctly for a
+            // true 1600x1200 buffer. Requesting `size` larger than the
+            // backend's real per-frame output (1000x750, or the previous
+            // 1200x900) doesn't upscale anything — `recordVideo` only ever
+            // scales DOWN an oversized capture, never up — so the actual
+            // 800x600 content just sat top-left-anchored inside gray
+            // padding, exactly the "popup only fills part of the frame"
+            // regression a coordinator review caught. Fixed by matching
+            // `size` to what headless `recordVideo` actually produces
+            // (800x600) — verified by re-measuring the content boundary in
+            // a fresh recording after this fix, content now fills the whole
+            // frame edge-to-edge with zero padding.
+            { dir: RECORDINGS_DIR, size: { width: 800, height: 600 } },
+            // ponytail: kept at 2 even though `recordVideo` itself ignores
+            // it (see above) — `page.screenshot()` calls elsewhere in this
+            // context (mid-gesture screenshots.ts captures) still benefit
+            // from a sharper backing surface, and it's otherwise a no-op
+            // for video, not a regression to leave in place.
             2,
             theme,
         );

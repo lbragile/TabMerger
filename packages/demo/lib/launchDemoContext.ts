@@ -343,5 +343,25 @@ export async function launchDemoContext(
     await freshPage.goto(`chrome-extension://${extensionId}/popup.html`);
     freshPage.on("dialog", (dialog) => void dialog.accept());
 
+    // ponytail: 2026-09-26 — dismiss CleanupSuggestionBanner.tsx's "N tabs
+    // were saved over 30 days ago" banner once, here, rather than per-step —
+    // demoData.ts deliberately seeds Reading List's tabs as 40-days-stale
+    // (originally for the now-dropped `stale-tabs` demoScript beat, see
+    // git history), but the banner has no relevance to the CURRENT
+    // storyboard and was showing up in literally every recorded frame/
+    // screenshot as visual noise a coordinator review flagged. Its dismissal
+    // is a real localStorage flag (`cleanup_banner_dismissed_until`,
+    // CleanupSuggestionBanner.tsx), not ephemeral React state, so doing this
+    // ONCE here — before record.ts/screenshots.ts's per-step
+    // `context.newPage()` calls — persists for the rest of this profile's
+    // pages, same origin. `.catch(() => null)`: the banner only renders once
+    // useCleanupSuggestions resolves staleTabs.length >= 5, so on a fresh
+    // profile it may not have mounted yet — soft-fail rather than block
+    // every recording on a banner that's cosmetic to begin with.
+    await freshPage
+        .getByRole("button", { name: "Dismiss" })
+        .click({ timeout: 3000 })
+        .catch(() => null);
+
     return { context, page: freshPage };
 }
