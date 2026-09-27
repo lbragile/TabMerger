@@ -7,7 +7,7 @@ describe('BetaPage', () => {
     render(<BetaPage />)
     expect(screen.getByRole('heading', { name: /help us test tabmerger/i })).toBeInTheDocument()
     const joinLink = screen.getByRole('link', { name: /join the beta/i })
-    expect(joinLink).toHaveAttribute('href', 'https://groups.google.com/g/tabmerger')
+    expect(joinLink).toHaveAttribute('href', 'https://groups.google.com/g/tabmerger-beta-testers')
     expect(joinLink).toHaveAttribute('target', '_blank')
     expect(joinLink).toHaveAttribute('rel', 'noreferrer')
   })

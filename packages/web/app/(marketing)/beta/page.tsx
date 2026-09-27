@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 // The Google Group is also the Chrome Web Store trusted-tester list for the private
 // BETA item. Joining it is what makes the private listing visible to that Google
 // account (access can take a little while to appear after joining).
-const BETA_GOOGLE_GROUP_URL = 'https://groups.google.com/g/tabmerger'
+const BETA_GOOGLE_GROUP_URL = 'https://groups.google.com/g/tabmerger-beta-testers'
 
 // TODO (owner): the private BETA Chrome Web Store listing URL depends on the beta
 // item's extension ID, which is held only as the `CHROME_BETA_EXTENSION_ID` repo
@@ -254,7 +254,7 @@ export default function BetaPage() {
                   rel="noreferrer"
                   className="underline underline-offset-4 hover:text-foreground transition-colors"
                 >
-                  groups.google.com/g/tabmerger
+                  groups.google.com/g/tabmerger-beta-testers
                 </a>{' '}
                 and join. Joining is instant, but make sure you join with the{' '}
                 <strong className="text-foreground">same Google account you're signed in to in Chrome</strong> —
