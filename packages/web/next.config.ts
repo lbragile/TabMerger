@@ -46,6 +46,11 @@ const nextConfig: NextConfig = {
         hostname: 'lh3.googleusercontent.com',
       },
     ],
+    // Next only allows `quality` values present in this list (default: [75]).
+    // The beta page's screenshots pass quality={90} to avoid re-encoding UI
+    // text/screenshots down to the point of visible blur — 90 must be
+    // explicitly allow-listed here or that prop throws at request time.
+    qualities: [75, 90],
   },
 }
 

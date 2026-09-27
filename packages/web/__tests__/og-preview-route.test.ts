@@ -287,4 +287,103 @@ describe('POST /api/og-preview', () => {
     const body = await res.json()
     expect(body.description).toHaveLength(500)
   })
+
+  // MDN serves og:image with `name=` instead of `property=`.
+  it('accepts og:image declared with name= (the MDN case)', async () => {
+    const html = `<head><meta name="og:image" content="https://developer.mozilla.org/mdn-social-image.46ac2375.png" /></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://developer.mozilla.org/en-US/'))
+    expect(await res.json()).toEqual({
+      ogImage: 'https://developer.mozilla.org/mdn-social-image.46ac2375.png',
+      description: null,
+    })
+  })
+
+  it('accepts twitter:image declared with property= instead of name=', async () => {
+    const html = `<head><meta property="twitter:image" content="https://example.com/tw2.png"></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/tw-property'))
+    expect(await res.json()).toEqual({ ogImage: 'https://example.com/tw2.png', description: null })
+  })
+
+  it('accepts og:image with content before the property attribute (reversed order)', async () => {
+    const html = `<head><meta content="https://example.com/reversed.png" property="og:image"></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/reversed'))
+    expect(await res.json()).toEqual({ ogImage: 'https://example.com/reversed.png', description: null })
+  })
+
+  it('falls back to <link rel="image_src"> when no og/twitter image tag exists', async () => {
+    const html = `<head><link rel="image_src" href="https://example.com/legacy.png"></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/legacy'))
+    expect(await res.json()).toEqual({ ogImage: 'https://example.com/legacy.png', description: null })
+  })
+
+  it('resolves a relative og:image URL against the final (post-redirect) URL', async () => {
+    let call = 0
+    const requestFn = vi.fn((_options: unknown, callback: (res: unknown) => void) => {
+      const reqEmitter = new EventEmitter() as EventEmitter & { end: () => void; destroy: () => void }
+      reqEmitter.end = () => {
+        queueMicrotask(() => {
+          call++
+          if (call === 1) {
+            const im = fakeIncomingMessage({ statusCode: 302, headers: { location: 'https://final.example/page' }, body: '' })
+            callback(im)
+          } else {
+            const html = `<head><meta property="og:image" content="/images/relative.png"></head>`
+            const im = fakeIncomingMessage({ statusCode: 200, headers: {}, body: html })
+            callback(im)
+            queueMicrotask(() => {
+              im.emit('data', Buffer.from(html))
+              im.emit('end')
+            })
+          }
+        })
+      }
+      reqEmitter.destroy = () => {}
+      return reqEmitter
+    })
+    vi.doMock('node:http', () => ({ request: requestFn, default: { request: requestFn } }))
+    vi.doMock('node:https', () => ({ request: requestFn, default: { request: requestFn } }))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/redirect-relative'))
+    expect(await res.json()).toEqual({ ogImage: 'https://final.example/images/relative.png', description: null })
+  })
+
+  it('returns null preview for a non-HTML content-type instead of regex-ing it', async () => {
+    mockRequestModules({ statusCode: 200, headers: { 'content-type': 'text/markdown' }, body: '# no meta tags here' })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://vercel.com/docs'))
+    expect(res.status).toBe(200)
+    expect(await res.json()).toEqual({ ogImage: null, description: null })
+  })
+
+  it('handles a pathological ~2MB unclosed head region quickly instead of catastrophically backtracking', async () => {
+    // A single unclosed `<meta` tag followed by tens of thousands of
+    // `property="og:image"` occurrences — the shape that made the old
+    // per-attribute-name backtracking regexes take ~O(n × occurrences).
+    const html = `<head><meta ${'property="og:image" '.repeat(100_000)}`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const start = Date.now()
+    const res = await POST(req('https://example.com/pathological'))
+    const elapsed = Date.now() - start
+    expect(elapsed).toBeLessThan(500)
+    expect(await res.json()).toEqual({ ogImage: null, description: null })
+  })
+
+  it('sends an Accept header requesting HTML', async () => {
+    const html = `<head><meta property="og:image" content="https://example.com/img.png"></head>`
+    const { httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    await POST(req('https://example.com/accept-check'))
+    const options = httpsRequest.mock.calls[0][0] as { headers: Record<string, string> }
+    expect(options.headers.Accept).toBe('text/html,application/xhtml+xml;q=0.9,*/*;q=0.8')
+    expect(options.headers['Accept-Language']).toBe('en-US,en;q=0.9')
+  })
 })

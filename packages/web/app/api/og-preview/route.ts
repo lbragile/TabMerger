@@ -116,41 +116,92 @@ function decodeHtmlEntities(value: string): string {
   })
 }
 
-function extractOgImage(html: string): string | null {
+/**
+ * Extracts the head region to scan for meta tags. Prefers the real
+ * `<head>...</head>` slice; falls back to up to `MAX_BYTES` of the raw HTML
+ * when there's no closing tag (a page's head can be truncated by our own
+ * MAX_BYTES cap, or split oddly) — scanning only 50k in that case could miss
+ * meta tags that a real browser would still see.
+ */
+function extractHead(html: string): string {
   const headMatch = html.match(/<head[\s\S]*?<\/head>/i)
-  const head = headMatch ? headMatch[0] : html.slice(0, 50_000)
+  return headMatch ? headMatch[0] : html.slice(0, MAX_BYTES)
+}
 
-  const ogMatch =
-    head.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ??
-    head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)
-  if (ogMatch) return ogMatch[1]
+// Caps how much of a single tag's raw attribute text the attribute-value
+// regex is allowed to see. Without this, a hostile head can pack tens of
+// thousands of `property="og:image"` occurrences into one giant, unclosed
+// `<meta ...` run — every occurrence would then make an unbounded `[^>]+`
+// backtrack across the rest of the document, roughly O(n × occurrences)
+// (~10^11 steps at MAX_BYTES). Bounding the tag body to a fixed length makes
+// a malformed/absurd tag simply get skipped, never backtracked over.
+const MAX_TAG_LENGTH = 2048
 
-  const twitterMatch =
-    head.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i) ??
-    head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i)
-  return twitterMatch ? twitterMatch[1] : null
+// Matches one `<meta ...>` or `<link ...>` tag at a time, linearly over the
+// head region — `[^>]{0,MAX_TAG_LENGTH}` never backtracks past its own cap,
+// so total cost is O(head length) regardless of how many tags (malformed or
+// not) are present.
+const TAG_RE = new RegExp(`<(meta|link)\\b([^>]{0,${MAX_TAG_LENGTH}})>`, 'gi')
+
+// Matches one `name="value"` (or `name='value'`) attribute at a time within
+// an already-bounded tag body (at most MAX_TAG_LENGTH chars), so this can't
+// contribute to the unbounded-backtracking problem either.
+const ATTR_RE = /([a-zA-Z:-]+)\s*=\s*(["'])([\s\S]*?)\2/g
+
+/** Parses a single already-bounded tag body into a lowercase-keyed attribute map. */
+function parseAttrs(tagBody: string): Record<string, string> {
+  const attrs: Record<string, string> = {}
+  let match: RegExpExecArray | null
+  ATTR_RE.lastIndex = 0
+  while ((match = ATTR_RE.exec(tagBody))) {
+    attrs[match[1].toLowerCase()] = match[3]
+  }
+  return attrs
 }
 
 /**
- * Extracts the page description: prefer `og:description`, fall back to the
- * standard `name="description"` meta tag. Result is plain text (not echoed
- * as a URL like ogImage), so the only hardening needed is a length cap —
- * a malicious page can't set a 1MB meta tag and bloat the cache/response.
+ * Walks every `<meta>`/`<link>` tag in the head region exactly once (see
+ * `TAG_RE`/`ATTR_RE` for why this is linear-time, unlike the previous
+ * backtracking-regex-per-attribute-name approach), and picks out the values
+ * needed for the image and description. `property=` and `name=` are treated
+ * interchangeably — real-world pages mix these (MDN serves `og:image` via
+ * `name=`; some sites serve `twitter:image` via `property=`).
  */
-function extractDescription(html: string): string | null {
-  const headMatch = html.match(/<head[\s\S]*?<\/head>/i)
-  const head = headMatch ? headMatch[0] : html.slice(0, 50_000)
+function scanHeadTags(head: string): { ogImage: string | null; description: string | null } {
+  const metaByKey: Record<string, string> = {}
+  let imageSrcLink: string | null = null
 
-  const ogMatch =
-    head.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i) ??
-    head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:description["']/i)
-  const value =
-    ogMatch?.[1] ??
-    (head.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i) ??
-      head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i))?.[1] ??
+  TAG_RE.lastIndex = 0
+  let tagMatch: RegExpExecArray | null
+  while ((tagMatch = TAG_RE.exec(head))) {
+    const [, tagName, body] = tagMatch
+    const attrs = parseAttrs(body)
+
+    if (tagName.toLowerCase() === 'meta') {
+      const key = (attrs.property ?? attrs.name)?.toLowerCase()
+      if (key && attrs.content !== undefined && !(key in metaByKey)) {
+        metaByKey[key] = attrs.content
+      }
+    } else if (tagName.toLowerCase() === 'link') {
+      if (attrs.rel?.toLowerCase() === 'image_src' && attrs.href !== undefined && imageSrcLink === null) {
+        imageSrcLink = attrs.href
+      }
+    }
+  }
+
+  const ogImage =
+    metaByKey['og:image'] ??
+    metaByKey['og:image:secure_url'] ??
+    metaByKey['og:image:url'] ??
+    metaByKey['twitter:image'] ??
+    metaByKey['twitter:image:src'] ??
+    imageSrcLink ??
     null
 
-  return value ? value.slice(0, MAX_DESCRIPTION_LENGTH) : null
+  const rawDescription = metaByKey['og:description'] ?? metaByKey['description'] ?? null
+  const description = rawDescription ? rawDescription.slice(0, MAX_DESCRIPTION_LENGTH) : null
+
+  return { ogImage, description }
 }
 
 /**
@@ -163,7 +214,7 @@ function extractDescription(html: string): string | null {
 function fetchPinnedHop(
   parsed: URL,
   addresses: LookupAddress[]
-): Promise<{ body: string } | { redirectTo: string }> {
+): Promise<{ body: string; contentType: string } | { redirectTo: string }> {
   const requestFn = parsed.protocol === 'https:' ? httpsRequest : httpRequest
 
   // @types/node's RequestOptions doesn't declare `autoSelectFamily`, but Node
@@ -182,6 +233,13 @@ function fetchPinnedHop(
       headers: {
         'User-Agent': 'TabMergerBot/1.0 (+https://tabmerger.com)',
         'Accept-Encoding': 'gzip, deflate, br',
+        // Some sites (e.g. vercel.com/docs) content-negotiate on Accept and
+        // serve `text/markdown` — with no meta tags at all — to a request
+        // that doesn't look like it wants HTML. This doesn't impersonate a
+        // browser (the honest bot User-Agent above stays as-is); it just
+        // asks for the format we can actually parse.
+        Accept: 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
         Host: parsed.host,
       },
       timeout: FETCH_TIMEOUT_MS,
@@ -217,6 +275,16 @@ function fetchPinnedHop(
           return
         }
 
+        // A missing content-type header is treated as "unknown, try anyway"
+        // rather than rejected — some servers omit it and still return real
+        // HTML. Only an explicitly non-HTML type short-circuits.
+        const contentType = res.headers['content-type'] ?? ''
+        if (contentType && !/text\/html|application\/xhtml\+xml/i.test(contentType)) {
+          res.resume()
+          resolve({ body: '', contentType })
+          return
+        }
+
         const encoding = res.headers['content-encoding']
         const chunks: Buffer[] = []
         let total = 0
@@ -233,9 +301,9 @@ function fetchPinnedHop(
               : encoding === 'br' ? brotliDecompressSync(raw)
               : encoding === 'deflate' ? inflateSync(raw)
               : raw
-            resolve({ body: decoded.toString('utf-8') })
+            resolve({ body: decoded.toString('utf-8'), contentType })
           } catch {
-            resolve({ body: raw.toString('utf-8') })
+            resolve({ body: raw.toString('utf-8'), contentType })
           }
         }
         res.on('data', (chunk: Buffer) => {
@@ -262,7 +330,7 @@ function fetchPinnedHop(
  * MAX_REDIRECTS) with full protocol + DNS-pinning validation re-run on every
  * hop — a redirect target is just as untrusted as the original input.
  */
-async function fetchCapped(startUrl: string): Promise<string> {
+async function fetchCapped(startUrl: string): Promise<{ body: string; finalUrl: string; contentType: string }> {
   let current = new URL(startUrl)
 
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
@@ -273,7 +341,7 @@ async function fetchCapped(startUrl: string): Promise<string> {
     if (!addresses) throw new Error('blocked host')
 
     const result = await fetchPinnedHop(current, addresses)
-    if ('body' in result) return result.body
+    if ('body' in result) return { body: result.body, finalUrl: current.toString(), contentType: result.contentType }
 
     current = new URL(result.redirectTo, current)
   }
@@ -317,16 +385,24 @@ async function fetchPreview(raw: string | null): Promise<
   let ogImage: string | null = null
   let description: string | null = null
   try {
-    const html = await fetchCapped(target)
-    const rawImage = extractOgImage(html)
-    ogImage = rawImage ? decodeHtmlEntities(rawImage) : null
-    const rawDescription = extractDescription(html)
-    description = rawDescription ? decodeHtmlEntities(rawDescription) : null
+    const { body: html, finalUrl, contentType } = await fetchCapped(target)
+    // Non-HTML responses (e.g. vercel.com/docs serving text/markdown to a
+    // bot-flavored Accept header) have no meta tags — bail out before
+    // regex-ing content that was never going to match.
+    if (contentType && !/text\/html|application\/xhtml\+xml/i.test(contentType)) {
+      return { ok: true, ogImage: null, description: null }
+    }
+    const head = extractHead(html)
+    const scanned = scanHeadTags(head)
+    ogImage = scanned.ogImage ? decodeHtmlEntities(scanned.ogImage) : null
+    description = scanned.description ? decodeHtmlEntities(scanned.description) : null
     // Only accept absolute http(s) image URLs — never echo relative paths
-    // or javascript: schemes back to the client.
+    // or javascript: schemes back to the client. Resolved against the final
+    // URL (post-redirects), since a relative image path is relative to
+    // wherever the page actually ended up, not the originally requested URL.
     if (ogImage) {
       try {
-        const imgUrl = new URL(ogImage, target)
+        const imgUrl = new URL(ogImage, finalUrl)
         ogImage = imgUrl.protocol === 'http:' || imgUrl.protocol === 'https:' ? imgUrl.toString() : null
       } catch {
         ogImage = null
