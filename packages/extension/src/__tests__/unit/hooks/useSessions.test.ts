@@ -29,7 +29,10 @@ vi.mock('@/lib/encryptionKey', () => ({
 }))
 
 const mockEncryptBlob = vi.fn().mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' })
-vi.mock('@tabmerger/shared', () => ({ encryptBlob: (...args: unknown[]) => mockEncryptBlob(...args) }))
+vi.mock('@tabmerger/shared', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@tabmerger/shared')>()),
+  encryptBlob: (...args: unknown[]) => mockEncryptBlob(...args),
+}))
 
 // ─── Supabase thenable builder mock — see agent-memory feedback_supabase_mock ──
 const builder: Record<string, unknown> = {}

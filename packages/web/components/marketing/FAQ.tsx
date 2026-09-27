@@ -4,13 +4,13 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
+import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS } from '@tabmerger/shared'
 
 const faqs = [
   {
     question: 'Is TabMerger really free?',
     answer:
-      'Yes! The free tier includes all the core features — up to 5 groups, 50 tabs, drag-and-drop, and import/export. You only pay if you want cloud sync, unlimited tabs, or AI features.',
+      `Yes! The free tier includes all the core features — up to ${FREE_TIER_LIMITS.groups} groups, ${FREE_TIER_LIMITS.tabs} tabs, ${FREE_TIER_LIMITS.urlRules} URL rules, drag-and-drop, and import/export. You only pay if you want cloud sync, unlimited groups, tabs and URL rules, or AI features.`,
   },
   {
     question: 'How does cloud sync work?',

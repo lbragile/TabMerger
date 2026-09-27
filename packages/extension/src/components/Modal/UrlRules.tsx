@@ -11,7 +11,6 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import type { UrlRule } from '@/lib/types';
 import { toast } from '@/lib/toast';
 
-const FREE_RULE_LIMIT = 3;
 
 interface UrlRulesModalProps {
   onClose: () => void;
@@ -30,14 +29,13 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
   const { data: groupsState } = useGroups();
   const { data: persistedRules = [] } = useUrlRules();
   const { mutate: saveRules } = useSaveUrlRules();
-  const { tier } = useEntitlements();
+  const { tier, maxUrlRules } = useEntitlements();
 
   const [draft, setDraft] = useState<UrlRule[]>(persistedRules);
   const [addOpen, setAddOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<UrlRule | null>(null);
 
-  const maxRules = tier === 'free' ? FREE_RULE_LIMIT : Infinity;
-  const atLimit = draft.length >= maxRules;
+  const atLimit = draft.length >= maxUrlRules;
 
   // Saved groups only (exclude Now Open at index 0)
   const savedGroups = groupsState?.available.slice(1).filter((g) => !g.archived) ?? [];
@@ -60,7 +58,7 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
 
   const handleAdd = (pattern: string, groupId: string) => {
     if (atLimit) {
-      toast.error(`Free plan allows up to ${FREE_RULE_LIMIT} URL rules.`, {
+      toast.error(`Free plan allows up to ${maxUrlRules} URL rules.`, {
         action: {
           label: 'Upgrade',
           onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` })
@@ -152,7 +150,7 @@ export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
 
       <div className="mt-4 flex items-center justify-between">
         <p className="text-xs font-medium">
-          {tier === 'free' && <span className="text-muted-foreground">{draft.length}/{FREE_RULE_LIMIT} used</span>}
+          {tier === 'free' && <span className="text-muted-foreground">{draft.length}/{maxUrlRules} used</span>}
         </p>
         <Button size="sm" variant="outline" onClick={() => setAddOpen(true)} disabled={atLimit}>
           <Plus className="h-3 w-3 mr-1" />Add rule

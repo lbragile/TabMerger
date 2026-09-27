@@ -1,49 +1,24 @@
+import { getPricingTier, type PricingTier } from '@tabmerger/shared'
+
+/** Name, prices, features and limits come from the shared PRICING_TIERS, the single source. */
+function display(tier: PricingTier) {
+  const { name, monthlyPrice, yearlyPrice, features, limits } = tier
+  return { name, monthlyPrice, yearlyPrice, features, limits }
+}
+
 export const TIERS = {
-  free: {
-    name: 'Free',
-    monthlyPrice: 0,
-    yearlyPrice: 0,
-    features: [
-      'Up to 5 groups',
-      'Up to 50 tabs',
-      'Local storage only',
-      'Import & export',
-      'Drag & drop',
-    ],
-    limits: { groups: 5, tabs: 50 },
-  },
+  free: display(getPricingTier('free')),
   pro: {
-    name: 'Pro',
-    monthlyPrice: 3.99,
-    yearlyPrice: 42.99,
+    ...display(getPricingTier('pro')),
     stripeMonthlyPriceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
     stripeYearlyPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
-    features: [
-      'Everything in Free',
-      'Unlimited groups & tabs',
-      'Cloud sync across devices',
-      'Session save & restore',
-      'Keyboard shortcuts',
-      'Priority support',
-    ],
-    limits: { groups: Infinity, tabs: Infinity },
   },
   proAi: {
-    name: 'Pro AI',
-    monthlyPrice: 7.99,
-    yearlyPrice: 85.99,
+    ...display(getPricingTier('pro_ai')),
     stripeMonthlyPriceId: process.env.STRIPE_PRO_AI_MONTHLY_PRICE_ID,
     stripeYearlyPriceId: process.env.STRIPE_PRO_AI_YEARLY_PRICE_ID,
-    features: [
-      'Everything in Pro',
-      'AI auto-grouping of tabs',
-      'AI group name suggestions',
-      'Smart session suggestions',
-      'Tab preview with AI summary',
-    ],
-    limits: { groups: Infinity, tabs: Infinity },
   },
-} as const
+}
 
 export type TierKey = keyof typeof TIERS
 export type BillingInterval = 'monthly' | 'yearly'

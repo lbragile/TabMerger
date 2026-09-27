@@ -1,3 +1,4 @@
+import { FREE_TIER_LIMITS, UNLIMITED_TIER_LIMITS } from '@tabmerger/shared';
 export interface Tab {
   id: number;
   title: string;
@@ -63,6 +64,7 @@ export interface Entitlements {
   tier: Tier;
   maxGroups: number;
   maxTabs: number;
+  maxUrlRules: number;
   cloudSync: boolean;
   sessions: boolean;
   aiFeatures: boolean;
@@ -74,8 +76,9 @@ export interface Entitlements {
 export const TIER_LIMITS: Record<Tier, Entitlements> = {
   free: {
     tier: 'free',
-    maxGroups: 5,
-    maxTabs: 50,
+    maxGroups: FREE_TIER_LIMITS.groups,
+    maxTabs: FREE_TIER_LIMITS.tabs,
+    maxUrlRules: FREE_TIER_LIMITS.urlRules,
     cloudSync: false,
     sessions: false,
     aiFeatures: false,
@@ -85,8 +88,9 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
   },
   pro: {
     tier: 'pro',
-    maxGroups: Infinity,
-    maxTabs: Infinity,
+    maxGroups: UNLIMITED_TIER_LIMITS.groups,
+    maxTabs: UNLIMITED_TIER_LIMITS.tabs,
+    maxUrlRules: UNLIMITED_TIER_LIMITS.urlRules,
     cloudSync: true,
     sessions: true,
     aiFeatures: false,
@@ -96,8 +100,9 @@ export const TIER_LIMITS: Record<Tier, Entitlements> = {
   },
   pro_ai: {
     tier: 'pro_ai',
-    maxGroups: Infinity,
-    maxTabs: Infinity,
+    maxGroups: UNLIMITED_TIER_LIMITS.groups,
+    maxTabs: UNLIMITED_TIER_LIMITS.tabs,
+    maxUrlRules: UNLIMITED_TIER_LIMITS.urlRules,
     cloudSync: true,
     sessions: true,
     aiFeatures: true,

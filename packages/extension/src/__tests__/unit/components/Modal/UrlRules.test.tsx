@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { UrlRulesModal } from '@/components/Modal/UrlRules'
+import { TIER_LIMITS } from '@/lib/types'
 
 const {
   mockUseGroups,
@@ -45,7 +46,7 @@ beforeEach(() => {
   vi.clearAllMocks()
   mockUseGroups.mockReturnValue({ data: groups })
   mockUseUrlRules.mockReturnValue({ data: [] })
-  mockUseEntitlements.mockReturnValue({ tier: 'free' })
+  mockUseEntitlements.mockReturnValue(TIER_LIMITS.free)
   globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
 })
 
@@ -182,18 +183,17 @@ describe('UrlRulesModal — adding rules via nested modal', () => {
   })
 
   it('free tier at the draft rule limit toasts an upgrade prompt and disables the Add rule button', () => {
-    mockUseUrlRules.mockReturnValue({ data: [
-      { id: 'r1', pattern: 'a.com/*', groupId: 'g1' },
-      { id: 'r2', pattern: 'b.com/*', groupId: 'g1' },
-      { id: 'r3', pattern: 'c.com/*', groupId: 'g1' },
-    ] })
+    const limit = TIER_LIMITS.free.maxUrlRules
+    mockUseUrlRules.mockReturnValue({
+      data: Array.from({ length: limit }, (_, i) => ({ id: `r${i}`, pattern: `site${i}.com/*`, groupId: 'g1' })),
+    })
     renderModal()
-    expect(screen.getByText('3/3 used')).toBeTruthy()
+    expect(screen.getByText(`${limit}/${limit} used`)).toBeTruthy()
     expect(screen.getByRole('button', { name: /^add rule$/i })).toBeDisabled()
   })
 
   it('pro tier has no rule cap shown', () => {
-    mockUseEntitlements.mockReturnValue({ tier: 'pro' })
+    mockUseEntitlements.mockReturnValue(TIER_LIMITS.pro)
     mockUseUrlRules.mockReturnValue({ data: [
       { id: 'r1', pattern: 'a.com/*', groupId: 'g1' },
       { id: 'r2', pattern: 'b.com/*', groupId: 'g1' },

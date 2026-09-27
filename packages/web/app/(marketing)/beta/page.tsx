@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { LegalToc } from '@/components/legal-toc'
+import { FREE_TIER_LIMITS } from '@tabmerger/shared'
 
 export const metadata: Metadata = {
   title: 'Beta Program',
@@ -577,7 +578,7 @@ Device A                        Device B (after sync)
           'Complete checkout with the test card above (or a decline/3D-Secure card, if you\'re testing that path), then return to the app.',
         ],
         good: 'Checkout completes and you land back in the web app with Pro shown. The extension\'s popup polls for your plan roughly every 30 seconds, so it should pick up Pro on its own shortly — reopening the popup also forces a fresh check if you don\'t want to wait.',
-        report: 'The extension still shows free-tier limits (5 groups / 50 tabs) more than a couple of minutes after a successful checkout and a popup reopen.',
+        report: `The extension still shows free-tier limits (${FREE_TIER_LIMITS.groups} groups / ${FREE_TIER_LIMITS.tabs} tabs / ${FREE_TIER_LIMITS.urlRules} URL rules) more than a couple of minutes after a successful checkout and a popup reopen.`,
       },
       {
         heading: 'Upgrading from the web account page',
