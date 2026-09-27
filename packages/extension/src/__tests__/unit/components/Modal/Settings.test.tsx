@@ -305,18 +305,18 @@ describe('SettingsModal — General tab URL rules entry point', () => {
 })
 
 describe('SettingsModal — Show page images in previews', () => {
-  it('defaults to off and shows the always-visible helper text', async () => {
+  it('defaults to off and shows the shortened always-visible helper text', async () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     expect(screen.getByText('Show page images in previews')).toBeTruthy()
     expect(
-      screen.getByText(/isn't linked to your account, logged, or stored/i)
+      screen.getByText('Hovering a tab sends its address to fetch a page image. Not stored or linked to you.')
     ).toBeTruthy()
     const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
     expect(toggle).not.toBeChecked()
   })
 
-  it('opens a confirmation instead of enabling immediately when turned on', async () => {
+  it('REGRESSION: turning the toggle on enables it directly (no separate confirmation modal) and Save persists it', async () => {
     const user = userEvent.setup()
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
@@ -324,36 +324,17 @@ describe('SettingsModal — Show page images in previews', () => {
 
     await user.click(toggle)
 
-    expect(mockOpenModal).toHaveBeenCalledWith('confirmPreviewImages', { onConfirm: expect.any(Function) })
-    // Not enabled yet — the toggle only flips after the confirmation's onConfirm runs.
-    expect(toggle).not.toBeChecked()
+    expect(toggle).toBeChecked()
+    expect(mockOpenModal).not.toHaveBeenCalledWith('confirmPreviewImages', expect.anything())
+    const saveBtn = screen.getByRole('button', { name: /save changes/i })
+    expect(saveBtn).not.toBeDisabled()
+    await user.click(saveBtn)
+    await waitFor(() =>
+      expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ showPreviewImages: true }))
+    )
   })
 
-  it('enables the setting once the confirmation calls onConfirm', async () => {
-    const user = userEvent.setup()
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
-
-    await user.click(toggle)
-    const onConfirm = mockOpenModal.mock.calls.find((c) => c[0] === 'confirmPreviewImages')?.[1]?.onConfirm as () => void
-    onConfirm()
-
-    await waitFor(() => expect(toggle).toBeChecked())
-  })
-
-  it('does not enable the setting if the confirmation is cancelled (onConfirm never called)', async () => {
-    const user = userEvent.setup()
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
-
-    await user.click(toggle)
-    // Simulate Cancel: nothing else happens, onConfirm is never invoked
-    expect(toggle).not.toBeChecked()
-  })
-
-  it('disables the setting immediately with no confirmation', async () => {
+  it('disables the setting immediately when turned off', async () => {
     mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, showPreviewImages: true })
     const user = userEvent.setup()
     renderModal()
@@ -365,7 +346,16 @@ describe('SettingsModal — Show page images in previews', () => {
     await user.click(toggle)
 
     expect(toggle).not.toBeChecked()
-    expect(mockOpenModal).not.toHaveBeenCalledWith('confirmPreviewImages', expect.anything())
+  })
+
+  it('opens the privacy policy in a new tab via chrome.tabs.create', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await user.click(screen.getByRole('link', { name: /privacy policy/i }))
+    expect(chrome.tabs.create).toHaveBeenCalledWith(
+      expect.objectContaining({ url: expect.stringContaining('/privacy#page-previews'), active: true })
+    )
   })
 })
 

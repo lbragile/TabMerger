@@ -111,16 +111,20 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
                 }}
               />
             ) : null}
-            {!loading && (
-              <div
-                className="mt-2 h-24 w-full rounded bg-muted flex-col items-center justify-center gap-1 text-muted-foreground"
-                style={{ display: ogImage ? 'none' : 'flex' }}
-              >
+            {!loading && !ogImage && (
+              <div className="mt-2 h-24 w-full rounded bg-muted flex flex-col items-center justify-center gap-1 text-muted-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span className="text-xs opacity-40">No preview</span>
+                <span className="text-xs opacity-40">
+                  {appSettings.showPreviewImages ? 'No preview' : 'Not enabled'}
+                </span>
               </div>
+            )}
+            {!loading && !ogImage && !appSettings.showPreviewImages && (
+              <p className="mt-1 text-[11px] text-muted-foreground text-center leading-tight">
+                Page images are off. Turn on in Settings.
+              </p>
             )}
             {aiFeatures && (
               summaryLoading ? (

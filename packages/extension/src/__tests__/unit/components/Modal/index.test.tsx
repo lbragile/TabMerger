@@ -19,7 +19,6 @@ vi.mock('@/components/Modal/DeduplicateConfirm', () => ({ DeduplicateConfirmModa
 vi.mock('@/components/Modal/UrlRules', () => ({ UrlRulesModal: () => <div data-testid="urlRules" /> }))
 vi.mock('@/components/Modal/ReviewStaleTabs', () => ({ ReviewStaleTabsModal: () => <div data-testid="reviewStaleTabs" /> }))
 vi.mock('@/components/Modal/SaveSession', () => ({ SaveSessionModal: () => <div data-testid="saveSession" /> }))
-vi.mock('@/components/Modal/ConfirmPreviewImages', () => ({ ConfirmPreviewImagesModal: () => <div data-testid="confirmPreviewImages" /> }))
 
 function mockState(modal: { type: string | null; data?: Record<string, unknown> }) {
   const closeModal = vi.fn()
@@ -46,7 +45,6 @@ describe('ModalRoot — routing', () => {
     ['urlRules', 'urlRules'],
     ['reviewStaleTabs', 'reviewStaleTabs'],
     ['saveSession', 'saveSession'],
-    ['confirmPreviewImages', 'confirmPreviewImages'],
   ])('routes modal.type=%s to the correct component', (type, testId) => {
     mockState({ type })
     render(<ModalRoot />)

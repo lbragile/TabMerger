@@ -298,21 +298,26 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
             <div>
               <Label className="text-sm">Show page images in previews</Label>
               <p className="text-xs text-muted-foreground">
-                When on, hovering a tab sends that tab&apos;s web address to TabMerger&apos;s
-                preview service to fetch its image. It isn&apos;t linked to your account,
-                logged, or stored.
+                Hovering a tab sends its address to fetch a page image. Not stored or linked to you.{' '}
+                <a
+                  href={`${import.meta.env.VITE_WEB_APP_URL ?? ''}/privacy#page-previews`}
+                  className="underline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    chrome.tabs.create({
+                      url: `${import.meta.env.VITE_WEB_APP_URL ?? ''}/privacy#page-previews`,
+                      active: true
+                    });
+                  }}
+                >
+                  Privacy policy
+                </a>
               </p>
             </div>
             <Switch
               aria-label="Show page images in previews"
               checked={draft.showPreviewImages}
-              onCheckedChange={(v) => {
-                if (v) {
-                  openModal('confirmPreviewImages', { onConfirm: () => patch('showPreviewImages', true) });
-                } else {
-                  patch('showPreviewImages', false);
-                }
-              }}
+              onCheckedChange={(v) => patch('showPreviewImages', v)}
             />
           </div>
 

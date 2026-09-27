@@ -54,12 +54,13 @@ describe('TabPreview', () => {
     expect(screen.queryByText('https://example.com')).toBeNull()
   })
 
-  it('shows tab title/url and falls back to no-preview state on hover (non-AI tier)', async () => {
+  it('shows tab title/url and a "Not enabled" placeholder on hover when the setting is off (non-AI tier)', async () => {
     const user = userEvent.setup()
     wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     await waitFor(() => expect(screen.getAllByText('https://example.com').length).toBeGreaterThan(0))
-    await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
+    await waitFor(() => expect(screen.getAllByText('Not enabled').length).toBeGreaterThan(0))
+    expect(screen.getAllByText(/Page images are off\. Turn on in Settings\./).length).toBeGreaterThan(0)
   })
 
   it('uses the pre-supplied ogImage without hitting the network when tab.ogImage is set', async () => {
@@ -170,7 +171,7 @@ describe('TabPreview', () => {
     const user = userEvent.setup()
     wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
-    await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
+    await waitFor(() => expect(screen.getAllByText('Not enabled').length).toBeGreaterThan(0))
     expect(fetch).not.toHaveBeenCalled()
   })
 
