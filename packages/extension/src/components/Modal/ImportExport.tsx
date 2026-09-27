@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useGroups, useSetGroupsState, useImportGroups } from '@/hooks/useGroups';
 import type { GroupsState } from '@/lib/types';
 import { parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 interface ImportExportModalProps {
   mode: string;

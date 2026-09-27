@@ -84,7 +84,7 @@ vi.mock('@/lib/importExport', () => ({
   parseOneTabs: vi.fn().mockReturnValue([]),
   exportGroups: mockExportGroups,
 }))
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 vi.mock('@/components/Settings/OtherDevices', () => ({ OtherDevices: () => <div>Other devices panel</div> }))
 vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
 
@@ -566,7 +566,7 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
   it('syncs the dev usage count to the real backend when signed in', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ count: 95 }) })
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^dev$/i)
@@ -590,7 +590,7 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
   it('shows an error toast when the real-backend sync fails', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500, text: async () => 'boom' })
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^dev$/i)
@@ -601,7 +601,7 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
   it('shows an error toast when not signed in, without calling fetch', async () => {
     mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
     globalThis.fetch = vi.fn()
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^dev$/i)
@@ -633,7 +633,7 @@ describe('SettingsModal — billing portal', () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
     mockUseAuth.mockReturnValue({ user: { email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ json: async () => ({ error: 'nope' }) })
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
@@ -717,7 +717,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
   it('confirming calls resetEncryption then opens the encryptionSetup modal', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
     mockHasEncryptionKey.mockResolvedValue(true)
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
@@ -734,7 +734,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
     mockHasEncryptionKey.mockResolvedValue(true)
     mockResetEncryption.mockRejectedValueOnce(new Error('boom'))
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)

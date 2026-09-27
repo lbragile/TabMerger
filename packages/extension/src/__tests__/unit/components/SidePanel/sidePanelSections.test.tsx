@@ -84,7 +84,7 @@ vi.mock('@/hooks/useSessions', () => ({
   useSaveSession: () => ({ mutateAsync: vi.fn() }),
 }))
 
-vi.mock('sonner', () => ({ toast: { error: vi.fn(), success: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { error: vi.fn(), success: vi.fn() } }))
 
 globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
 

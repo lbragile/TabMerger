@@ -9,7 +9,7 @@ import { useGroups } from '@/hooks/useGroups';
 import { useUrlRules, useSaveUrlRules } from '@/hooks/useUrlRules';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import type { UrlRule } from '@/lib/types';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 const FREE_RULE_LIMIT = 3;
 

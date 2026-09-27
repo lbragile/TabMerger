@@ -21,7 +21,7 @@ import { importGroups, parseBookmarksHtml, parseOneTabs } from '@/lib/importExpo
 import { exportGroups } from '@/lib/importExport';
 import { enterDemoMode } from '@/lib/demo';
 import { OtherDevices } from '@/components/Settings/OtherDevices';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';

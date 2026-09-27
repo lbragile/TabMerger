@@ -168,7 +168,7 @@ vi.mock('@/hooks/useSessions', () => ({
   useRestoreSession: () => ({ mutate: vi.fn(), isPending: false }),
 }))
 
-vi.mock('sonner', () => ({
+vi.mock('@/lib/toast', () => ({
   toast: { error: mockToastError, success: mockToastSuccess, info: mockToastInfo },
 }))
 

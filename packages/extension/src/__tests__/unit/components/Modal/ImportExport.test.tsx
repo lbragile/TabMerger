@@ -32,7 +32,7 @@ vi.mock('@/lib/importExport', () => ({
   parseOneTabs: mockParseOneTabs,
 }))
 
-vi.mock('sonner', () => ({ toast: { success: mockToastSuccess, error: mockToastError } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: mockToastSuccess, error: mockToastError } }))
 
 function renderModal(mode = 'export', onClose = vi.fn()) {
   render(<Dialog open><DialogContent><ImportExportModal mode={mode} data={{}} onClose={onClose} /></DialogContent></Dialog>)

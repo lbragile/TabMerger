@@ -101,7 +101,7 @@ vi.mock('@/stores/uiStore', () => ({
 // ─── stubs ────────────────────────────────────────────────────────────────────
 
 vi.mock('@/components/Windows/Tab', () => ({ TabItem: () => React.createElement('div', { 'data-testid': 'tab-item' }) }))
-vi.mock('sonner', () => ({ toast: { error: vi.fn(), success: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { error: vi.fn(), success: vi.fn() } }))
 
 globalThis.chrome = { tabs: { create: vi.fn() }, windows: { create: vi.fn() } } as unknown as typeof chrome
 

@@ -25,7 +25,7 @@ const {
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 
 function renderModal(onClose = vi.fn()) {
   render(<Dialog open><DialogContent><AuthModal onClose={onClose} /></DialogContent></Dialog>)

@@ -41,7 +41,7 @@ import { useAppSettings } from '@/hooks/useAppSettings';
 import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
 import { getSetting } from '@/lib/localDb';
 import { deduplicateTabs } from '@/lib/deduplication';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';

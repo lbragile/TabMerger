@@ -26,7 +26,7 @@ vi.mock('@/lib/encryptionKey', () => ({
   unlockEncryption: mockUnlockEncryption,
 }))
 
-vi.mock('sonner', () => ({ toast: { success: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn() } }))
 
 describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
   beforeEach(() => {

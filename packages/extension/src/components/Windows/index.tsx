@@ -37,7 +37,7 @@ import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { deduplicateTabs } from '@/lib/deduplication';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 
 interface WindowsPanelProps {

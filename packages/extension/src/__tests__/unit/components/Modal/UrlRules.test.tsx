@@ -23,7 +23,7 @@ vi.mock('@/hooks/useUrlRules', () => ({
   useSaveUrlRules: () => ({ mutate: mockSaveRules }),
 }))
 vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
-vi.mock('sonner', () => ({ toast: { error: mockToastError, success: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { error: mockToastError, success: vi.fn() } }))
 
 function renderModal(onClose = vi.fn()) {
   return { onClose, ...render(<Dialog open><DialogContent><UrlRulesModal onClose={onClose} /></DialogContent></Dialog>) }
