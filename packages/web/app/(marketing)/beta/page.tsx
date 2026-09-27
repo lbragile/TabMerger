@@ -916,6 +916,18 @@ export default function BetaPage() {
                 directly) to see synced groups and sessions.
               </li>
               <li>
+                <span className="text-foreground font-medium">Which browsers can I test on?</span>{' '}
+                Chrome, Edge, Brave, Vivaldi, Arc, and Opera all use this same TabMerger BETA
+                listing and the same Google Group — there's no separate Edge beta, so don't go
+                looking for one. Edge: accept "Allow extensions from other stores" when prompted.
+                Opera: install Opera's "Install Chrome Extensions" add-on first, then use the link
+                above. If you also have the stable TabMerger installed from the Edge Add-ons
+                store, turn it off while testing the beta — it's a separate extension from this
+                one. A Firefox beta is coming; until then, Firefox users can join the beta with
+                any of the supported Chromium browsers listed above (Chrome, Edge, Brave,
+                Vivaldi, Arc, Opera). Safari isn't supported.
+              </li>
+              <li>
                 <span className="text-foreground font-medium">Note your version.</span> Open
                 TabMerger's Settings and copy the version badge next to the "Settings" title (e.g.{' '}
                 <code className="text-xs bg-muted px-1.5 py-0.5 rounded">v3.1.0-beta.5</code>), or check{' '}

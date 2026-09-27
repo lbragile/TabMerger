@@ -88,6 +88,24 @@ describe('BetaPage', () => {
   })
 
 
+  it('explains which browsers can test the beta and the Edge/Opera install notes', () => {
+    render(<BetaPage />)
+    expect(document.body.textContent).toMatch(
+      /Chrome, Edge, Brave, Vivaldi, Arc, and Opera all use this same TabMerger BETA listing/
+    )
+    expect(document.body.textContent).toMatch(/Allow extensions from other stores/)
+    expect(document.body.textContent).toMatch(/Install Chrome Extensions/)
+    expect(document.body.textContent).toMatch(/A Firefox beta is coming/)
+    expect(document.body.textContent).toMatch(
+      /Firefox users can join the beta with any of the supported Chromium browsers/
+    )
+    expect(
+      screen.queryByRole('link', { name: /Firefox Add-ons/ })
+    ).not.toBeInTheDocument()
+    expect(document.body.textContent).not.toMatch(/addons\.mozilla\.org/)
+    expect(document.body.textContent).toMatch(/Safari isn't supported/)
+  })
+
   it('answers the "Item not found" FAQ', () => {
     render(<BetaPage />)
     expect(screen.getByRole('heading', { name: /item not found/i })).toBeInTheDocument()
