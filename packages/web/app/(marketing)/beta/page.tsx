@@ -792,7 +792,7 @@ Device A                        Device B (after sync)
           alt: 'The Settings modal Data tab, showing Export data and Import data controls',
           caption: 'The Data tab of Settings.',
         },
-        good: 'Export downloads a file named like "tabmerger-backup-2026-01-15.json" with an "exported successfully" toast. Import asks you to confirm the group count before importing, then shows "imported successfully". All three file types (TabMerger JSON, Bookmarks HTML, OneTab .txt) are accepted, detected by file extension. "Clear all data" wipes groups, sessions, and settings after you confirm — treat it as destructive and only try it on a throwaway profile.',
+        good: 'Export downloads a file named like "tabmerger-backup-2026-01-15.json" with an "exported successfully" toast. Import asks you to confirm the group count before importing, then shows "imported successfully". Re-importing your own export brings back every group with the same windows, tabs, order and colours. All three file types (TabMerger JSON, Bookmarks HTML, OneTab .txt) are accepted, detected by file extension. "Clear all data" wipes groups, sessions, and settings after you confirm — treat it as destructive and only try it on a throwaway profile.',
         report: 'A bad or empty file silently does nothing instead of showing an error toast like "Invalid file format" or "No groups found".',
       },
       {
@@ -810,23 +810,6 @@ Device A                        Device B (after sync)
         heading: 'The version badge',
         steps: ['Look at the Settings dialog title bar.'],
         good: 'A small badge next to the word "Settings" shows the real semver you should report in bug reports (e.g. "v3.1.0-beta.5") — this is covered in more detail in the "Join and install" section above.',
-      },
-    ],
-  },
-  {
-    id: 'import-export',
-    title: 'Import and export',
-    items: [
-      {
-        steps: [
-          'Export your groups to a JSON file.',
-          'Re-import that same file (ideally after clearing data or in a fresh profile).',
-        ],
-        good: 'All groups, tabs, and structure come back intact.',
-      },
-      {
-        steps: ['If you have one handy, try importing a bookmarks HTML export or a OneTab export.'],
-        good: 'Groups and tabs are created from the imported file with reasonable names.',
       },
     ],
   },
