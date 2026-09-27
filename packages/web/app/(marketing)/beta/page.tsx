@@ -15,12 +15,9 @@ export const metadata: Metadata = {
 // account (access can take a little while to appear after joining).
 const BETA_GOOGLE_GROUP_URL = 'https://groups.google.com/g/tabmerger-beta-testers'
 
-// TODO (owner): the private BETA Chrome Web Store listing URL depends on the beta
-// item's extension ID, which is held only as the `CHROME_BETA_EXTENSION_ID` repo
-// secret (see packages/extension/CHROMEWEBSTORE.md) and isn't checked into the repo.
-// Fill this in once you have it, e.g.
-// 'https://chromewebstore.google.com/detail/<BETA_EXTENSION_ID>'.
-const BETA_STORE_LISTING_URL = ''
+// The private BETA item's store listing. It only opens for members of the tester group
+// (the Chrome Web Store shows "Item not found" to everyone else).
+const BETA_STORE_LISTING_URL = 'https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd'
 
 const GITHUB_REPO = 'lbragile/TabMerger'
 const GITHUB_DISCUSSIONS_URL = `https://github.com/${GITHUB_REPO}/discussions`

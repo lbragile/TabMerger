@@ -11,8 +11,9 @@
 | | Stable (public) | BETA (private) |
 |---|---|---|
 | Manifest `name` | `TabMerger` | `TabMerger BETA` |
-| Extension ID | `inmiajapbpafmhjleiebcamfhkfnlgoc` | TODO (owner): fill in from `CHROME_BETA_EXTENSION_ID` — not written here, it's a secret value |
-| Visibility | Public | Private / trusted testers |
+| Extension ID | `inmiajapbpafmhjleiebcamfhkfnlgoc` | `nboljhidpjakiohfdkdjkcljdehcapcd` (also the `CHROME_BETA_EXTENSION_ID` repo secret; an item ID is public, it's in the listing URL) |
+| Listing URL | <https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc> | <https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd> |
+| Visibility | Public | Private / trusted testers: members of the Google Group `tabmerger-beta-testers@googlegroups.com` (<https://groups.google.com/g/tabmerger-beta-testers>) |
 | Built from | `wxt zip` (default mode) on a non-prerelease `release` event | `wxt zip -b chrome --mode beta` on any prerelease `release` event, or manual `workflow_dispatch` |
 | Published by CI | Uploaded only (`chrome-webstore-upload-cli@4 upload`) — a human presses Publish | Auto-published (`chrome-webstore-upload-cli@4`, no subcommand) |
 | `manifest.version` | Real semver, e.g. `3.1.0` | Offset mapping — see `scripts/manifestVersion.ts` (major +1, prerelease `N` becomes a 4th integer) |
