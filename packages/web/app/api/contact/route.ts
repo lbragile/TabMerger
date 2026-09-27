@@ -47,6 +47,71 @@ function isRateLimited(ip: string): boolean {
   return false
 }
 
+/**
+ * Coarse browser and OS from a User-Agent, e.g. "Chrome 140 on Windows". The
+ * raw User-Agent string is a fingerprinting signal, so it never leaves here.
+ */
+function describeBrowser(userAgent: string | null): string {
+  if (!userAgent) return 'unknown'
+  const browsers: [string, RegExp][] = [
+    ['Edge', /Edg\/(\d+)/],
+    ['Opera', /OPR\/(\d+)/],
+    ['Firefox', /Firefox\/(\d+)/],
+    ['Chrome', /Chrome\/(\d+)/],
+    ['Safari', /Version\/(\d+).*Safari/],
+  ]
+  const oses: [string, RegExp][] = [
+    ['Windows', /Windows/],
+    ['ChromeOS', /CrOS/],
+    ['Android', /Android/],
+    ['iOS', /iPhone|iPad/],
+    ['macOS', /Mac OS X/],
+    ['Linux', /Linux/],
+  ]
+  const browser = browsers.find(([, re]) => re.test(userAgent))
+  const os = oses.find(([, re]) => re.test(userAgent))?.[0] ?? 'unknown OS'
+  const version = browser ? userAgent.match(browser[1])?.[1] : undefined
+  return `${browser ? `${browser[0]} ${version}` : 'unknown browser'} on ${os}`
+}
+
+/**
+ * Non-personal diagnostics appended to every contact email, so a report can
+ * be matched to the build and page it came from. Nothing here identifies the
+ * sender: no IP, no raw User-Agent, no query string beyond the form's own
+ * `topic`, and no location.
+ */
+function buildDiagnostics(req: NextRequest): { env: string; text: string } {
+  const env = process.env.VERCEL_ENV || process.env.NODE_ENV || 'unknown'
+  const sha = process.env.VERCEL_GIT_COMMIT_SHA
+  const branch = process.env.VERCEL_GIT_COMMIT_REF
+  const deployment = process.env.VERCEL_DEPLOYMENT_ID
+  const site = process.env.NEXT_PUBLIC_APP_URL || req.nextUrl.origin
+  let page = 'unknown'
+  let topic: string | null = null
+  try {
+    const referer = req.headers.get('referer')
+    if (referer) {
+      const url = new URL(referer)
+      page = url.pathname
+      topic = url.searchParams.get('topic')
+    }
+  } catch {
+    // Malformed Referer: leave the page as unknown.
+  }
+  const language = req.headers.get('accept-language')?.split(',')[0]?.split(';')[0]?.trim() || 'unknown'
+  const lines = [
+    `Environment: ${env}`,
+    `Site: ${site}`,
+    `Commit: ${sha ? sha.slice(0, 7) : 'unknown'}${branch ? ` (${branch})` : ''}`,
+    ...(deployment ? [`Deployment: ${deployment}`] : []),
+    `Sent from page: ${page}${topic ? ` (topic: ${topic.slice(0, 32)})` : ''}`,
+    `Browser: ${describeBrowser(req.headers.get('user-agent'))}`,
+    `Language: ${language.slice(0, 16)}`,
+    `Received: ${new Date().toISOString()}`,
+  ]
+  return { env, text: lines.join('\n') }
+}
+
 function getIp(req: NextRequest): string {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
 }
@@ -81,13 +146,15 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const diagnostics = buildDiagnostics(req)
+    const envTag = diagnostics.env === 'production' ? '' : `[${diagnostics.env}]`
     const resend = new Resend(process.env.RESEND_API_KEY)
     const { error } = await resend.emails.send({
       from: process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM,
       to: process.env.CONTACT_TO_EMAIL || DEFAULT_TO,
       replyTo: email,
-      subject: `[Contact] ${subject}`,
-      text: `From: ${email}\n\n${message}`,
+      subject: `[Contact]${envTag} ${subject}`,
+      text: `From: ${email}\n\n${message}\n\n---\n${diagnostics.text}`,
     })
     if (error) {
       // Log only the error shape (name/statusCode), never `error.message` —
