@@ -87,10 +87,6 @@ describe('BetaPage', () => {
     expect(document.body.textContent).toMatch(/hidden \("coming soon"\)/i)
   })
 
-  it('tells testers not to try billing/upgrading from the beta', () => {
-    render(<BetaPage />)
-    expect(document.body.textContent).toMatch(/billing isn't part of this beta/i)
-  })
 
   it('answers the "Item not found" FAQ', () => {
     render(<BetaPage />)
@@ -124,5 +120,159 @@ describe('BetaPage', () => {
   it('shows the "Save to TabMerger" right-click menu example', () => {
     render(<BetaPage />)
     expect(document.body.textContent).toMatch(/Save to TabMerger/)
+  })
+
+  it('covers the drag-and-drop sub-sections: sorting, cross-window, cross-group, multi-item, drop zones, Now Open, cancel, keyboard, persistence', () => {
+    render(<BetaPage />)
+    const dndSection = document.getElementById('drag-and-drop')
+    expect(dndSection).toBeInTheDocument()
+    const text = dndSection?.textContent ?? ''
+    expect(text).toMatch(/Sorting: tabs within a window/i)
+    expect(text).toMatch(/Sorting: windows within a group/i)
+    expect(text).toMatch(/Sorting: groups in the sidebar/i)
+    expect(text).toMatch(/Cross-window: moving a tab between window cards/i)
+    expect(text).toMatch(/Cross-group: dropping a tab onto a sidebar group/i)
+    expect(text).toMatch(/Cross-group: dragging a whole window into another group/i)
+    expect(text).toMatch(/Multi-item: selecting and dragging several tabs/i)
+    expect(text).toMatch(/Multi-item: dragging a selection across windows and groups/i)
+    expect(text).toMatch(/Multi-item: select all and multi-group drag/i)
+    expect(text).toMatch(/Drop zones: "Drop here for a new window" and "Drop for a new group"/i)
+    expect(text).toMatch(/From "Now Open": dragging a live tab into a saved group/i)
+    expect(text).toMatch(/Cancel and edge cases/i)
+    expect(text).toMatch(/Keyboard drag/i)
+    expect(text).toMatch(/Persistence/i)
+  })
+
+  it('says Now Open stays pinned first and cannot be dragged above', () => {
+    render(<BetaPage />)
+    const dndSection = document.getElementById('drag-and-drop')
+    expect(dndSection?.textContent).toMatch(/"Now Open" always stays pinned as the first row/i)
+  })
+
+  it('says dragging a live "Now Open" tab into a saved group moves (not copies) it', () => {
+    render(<BetaPage />)
+    const dndSection = document.getElementById('drag-and-drop')
+    expect(dndSection?.textContent).toMatch(/This MOVES the tab, not copies it/i)
+  })
+
+  it('renders the "Upgrading to Pro (test payments)" section with the Stripe test card', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('upgrading-to-pro')
+    expect(section).toBeInTheDocument()
+    expect(section?.textContent).toMatch(/4242 4242 4242 4242/)
+  })
+
+  it('warns testers never to enter a real card in the upgrade section', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('upgrading-to-pro')
+    expect(section?.textContent).toMatch(/never enter a real card/i)
+    expect(section?.textContent).toMatch(/no real money\s+is charged/i)
+  })
+
+  it('no longer tells testers billing is out of scope', () => {
+    render(<BetaPage />)
+    expect(document.body.textContent).not.toMatch(/billing isn't part of this beta/i)
+    expect(document.body.textContent).not.toMatch(/don't try to upgrade from the/i)
+  })
+
+  it('says Pro AI stays coming-soon and is not part of the upgrade test', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('upgrading-to-pro')
+    expect(section?.textContent).toMatch(/coming soon/i)
+    expect(section?.textContent).toMatch(/not purchasable/i)
+  })
+
+  it('answers the "Will I be charged" FAQ with test-mode-only', () => {
+    render(<BetaPage />)
+    expect(screen.getByRole('heading', { name: /will i be charged/i })).toBeInTheDocument()
+    expect(document.body.textContent).toMatch(/uses stripe's test mode/i)
+  })
+
+  it('describes search as a substring match with prefixes and jump-to-result, not letters-in-order', () => {
+    render(<BetaPage />)
+    const text = document.body.textContent ?? ''
+    expect(text).toMatch(/plain substring, like "hub"/i)
+    expect(text).toMatch(/group:/)
+    expect(text).toMatch(/not letters-in-order/i)
+    expect(text).toMatch(/jumps you straight to that result/i)
+  })
+
+  it('covers the encryption sub-sections: setup, unlock, locked/restart, reset, web dashboard, and the visible signal', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('encryption')
+    expect(section).toBeInTheDocument()
+    const text = section?.textContent ?? ''
+    expect(text).toMatch(/First-time passphrase setup/i)
+    expect(text).toMatch(/Unlocking on a second device/i)
+    expect(text).toMatch(/What "locked" looks like, and staying unlocked after a restart/i)
+    expect(text).toMatch(/Forgot your passphrase — resetting encryption/i)
+    expect(text).toMatch(/Verifying on the web dashboard/i)
+    expect(text).toMatch(/How to tell your data really is encrypted/i)
+    // Exact UI copy from EncryptionSetup.tsx / PassphrasePrompt.tsx
+    expect(text).toMatch(/Wrong passphrase/)
+    expect(text).toMatch(/Incorrect passphrase\./)
+    expect(text).toMatch(/\(locked\)/)
+  })
+
+  it('covers sharing: creating, opening, previews, many windows, dashboard parity, and no revoke/expiry', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('sharing')
+    expect(section).toBeInTheDocument()
+    const text = section?.textContent ?? ''
+    expect(text).toMatch(/Sharing one or more groups from the extension/i)
+    expect(text).toMatch(/Opening a shared link/i)
+    expect(text).toMatch(/Page previews on the shared page/i)
+    expect(text).toMatch(/Sharing a group with many windows/i)
+    expect(text).toMatch(/Sharing from the web dashboard instead of the extension/i)
+    expect(text).toMatch(/Editing, re-sharing, revoking, and expiry — what's NOT possible/i)
+    expect(text).toMatch(/#key=/)
+    expect(text).toMatch(/no UI anywhere to edit, revoke, delete, or expire/i)
+  })
+
+  it('covers Settings tab by tab: General, Account, Data, Save/Reset, and the version badge', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('settings')
+    expect(section).toBeInTheDocument()
+    const text = section?.textContent ?? ''
+    expect(text).toMatch(/General tab — Theme, Confirm before deleting/i)
+    expect(text).toMatch(/General tab — Show page images in previews/i)
+    expect(text).toMatch(/General tab — Cloud sync, Stale tab threshold, URL rules/i)
+    expect(text).toMatch(/Account tab — Plan, Renews, Email/i)
+    expect(text).toMatch(/Account tab — Forgot your passphrase\? Reset encryption/i)
+    expect(text).toMatch(/Data tab — Export, Import, Clear all data/i)
+    expect(text).toMatch(/Save vs Reset, and the "Unsaved changes" indicator/i)
+    expect(text).toMatch(/The version badge/i)
+  })
+
+  it('says AI and Dev Settings tabs are out of scope for this beta build', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('settings')
+    expect(section?.textContent).toMatch(/AI and Dev tabs are not part of this beta build/i)
+  })
+
+  it('adds a "Web app and dashboard" area after sign-in-and-sync covering auth, read-only groups, and the account page', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('web-app-and-dashboard')
+    expect(section).toBeInTheDocument()
+    const text = section?.textContent ?? ''
+    expect(text).toMatch(/Signing up and signing in/i)
+    expect(text).toMatch(/Forgot password and changing your password/i)
+    expect(text).toMatch(/Dashboard matches the extension after sync/i)
+    expect(text).toMatch(/The dashboard is read-only for groups/i)
+    expect(text).toMatch(/Sessions and stats on the dashboard/i)
+    expect(text).toMatch(/Sharing from the dashboard/i)
+    expect(text).toMatch(/Account page/i)
+    expect(text).toMatch(/Continue with Google/i)
+    expect(text).toMatch(/Send magic link/i)
+  })
+
+  it('places "Web app and dashboard" after "Sign-in and sync" in TEST_AREAS order', () => {
+    render(<BetaPage />)
+    const details = Array.from(document.querySelectorAll('#what-to-test details'))
+    const ids = details.map((d) => d.id)
+    const signInIdx = ids.indexOf('sign-in-and-sync')
+    const webAppIdx = ids.indexOf('web-app-and-dashboard')
+    expect(signInIdx).toBeGreaterThanOrEqual(0)
+    expect(webAppIdx).toBe(signInIdx + 1)
   })
 })
