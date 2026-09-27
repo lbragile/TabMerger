@@ -75,6 +75,24 @@ describe('POST /api/contact', () => {
     )
   })
 
+  it('sends from and to the configured addresses when CONTACT_FROM_EMAIL / CONTACT_TO_EMAIL are set', async () => {
+    vi.stubEnv('CONTACT_FROM_EMAIL', 'TabMerger Support <support@example.com>')
+    vi.stubEnv('CONTACT_TO_EMAIL', 'inbox@example.com')
+    try {
+      const { POST } = await import('@/app/api/contact/route')
+      const res = await POST(req(validBody, '8.8.4.4'))
+      expect(res.status).toBe(200)
+      expect(sendMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          from: 'TabMerger Support <support@example.com>',
+          to: 'inbox@example.com',
+        })
+      )
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
   it('returns 500 without leaking details when Resend errors', async () => {
     sendMock.mockResolvedValue({
       data: null,

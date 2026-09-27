@@ -15,6 +15,14 @@ import { Resend } from 'resend'
  * Resend errors are never echoed to the client — generic success/failure only.
  */
 
+// Resend's shared test sender (onboarding@resend.dev) only delivers to the
+// Resend account owner's own address; anything else is refused with a
+// "testing domain restriction" error. To reach a real support inbox, verify a
+// domain in Resend and set CONTACT_FROM_EMAIL to an address on it (e.g.
+// "TabMerger Support <support@your-domain>"). CONTACT_TO_EMAIL picks the inbox.
+const DEFAULT_FROM = 'TabMerger Support <onboarding@resend.dev>'
+const DEFAULT_TO = 'tabmerger.support@gmail.com'
+
 const SUBJECT_MAX = 200
 const MESSAGE_MAX = 5000
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -75,8 +83,8 @@ export async function POST(req: NextRequest) {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY)
     const { error } = await resend.emails.send({
-      from: 'TabMerger Support <onboarding@resend.dev>',
-      to: 'tabmerger.support@gmail.com',
+      from: process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM,
+      to: process.env.CONTACT_TO_EMAIL || DEFAULT_TO,
       replyTo: email,
       subject: `[Contact] ${subject}`,
       text: `From: ${email}\n\n${message}`,
