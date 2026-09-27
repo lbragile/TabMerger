@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -101,6 +101,7 @@ const DEFAULT_SETTINGS = {
   aiSuggestSessionsEnabled: true,
   aiOrganizeEnabled: true,
   aiTabSummaryEnabled: true,
+  showPreviewImages: false,
 }
 
 function renderModal(onClose = vi.fn()) {
@@ -125,6 +126,42 @@ beforeEach(() => {
   globalThis.URL.revokeObjectURL = vi.fn()
   mockHasEncryptionKey.mockResolvedValue(false)
   mockGetDataKey.mockReturnValue(null)
+})
+
+describe('SettingsModal — version badge in title', () => {
+  const originalChrome = globalThis.chrome
+
+  afterEach(() => {
+    globalThis.chrome = originalChrome
+  })
+
+  it('shows version_name when present, preferred over version', async () => {
+    globalThis.chrome = {
+      tabs: { create: vi.fn() },
+      runtime: { getManifest: () => ({ version: '4.1.0.5', version_name: '3.1.0-beta.5' }) },
+    } as unknown as typeof chrome
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('Settings').closest('h2, [role="heading"], div')).toBeTruthy()
+    expect(screen.getByText('v3.1.0-beta.5')).toBeInTheDocument()
+  })
+
+  it('falls back to version when version_name is absent', async () => {
+    globalThis.chrome = {
+      tabs: { create: vi.fn() },
+      runtime: { getManifest: () => ({ version: '3.1.0' }) },
+    } as unknown as typeof chrome
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('v3.1.0')).toBeInTheDocument()
+  })
+
+  it('renders nothing when chrome.runtime.getManifest is unavailable', async () => {
+    globalThis.chrome = { tabs: { create: vi.fn() } } as unknown as typeof chrome
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.queryByText(/^v\d/)).not.toBeInTheDocument()
+  })
 })
 
 describe('SettingsModal — Devices tab', () => {
@@ -245,9 +282,9 @@ describe('SettingsModal — dirty state and save', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     // Switch order: confirmOnDelete(0), openTabOnClick(1), autoDedupOnMerge(2),
-    // cloud sync(3) — cloud sync only renders when cloudSync is true.
-    await waitFor(() => expect(screen.getAllByRole('switch')[3]).not.toBeChecked())
-    const syncSwitch = screen.getAllByRole('switch')[3]
+    // showPreviewImages(3), cloud sync(4) — cloud sync only renders when cloudSync is true.
+    await waitFor(() => expect(screen.getAllByRole('switch')[4]).not.toBeChecked())
+    const syncSwitch = screen.getAllByRole('switch')[4]
     fireEvent.click(syncSwitch)
     fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
     await waitFor(() => expect(mockSetSetting).toHaveBeenCalled())
@@ -300,6 +337,61 @@ describe('SettingsModal — General tab URL rules entry point', () => {
     expect(screen.getByText('URL rules')).toBeTruthy()
     await user.click(screen.getByRole('button', { name: 'Manage' }))
     expect(mockOpenModal).toHaveBeenCalledWith('urlRules')
+  })
+})
+
+describe('SettingsModal — Show page images in previews', () => {
+  it('defaults to off and shows the shortened always-visible helper text', async () => {
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    expect(screen.getByText('Show page images in previews')).toBeTruthy()
+    expect(
+      screen.getByText('Hovering a tab sends its address to fetch a page image. Not stored or linked to you.')
+    ).toBeTruthy()
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+    expect(toggle).not.toBeChecked()
+  })
+
+  it('REGRESSION: turning the toggle on enables it directly (no separate confirmation modal) and Save persists it', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+
+    await user.click(toggle)
+
+    expect(toggle).toBeChecked()
+    expect(mockOpenModal).not.toHaveBeenCalledWith('confirmPreviewImages', expect.anything())
+    const saveBtn = screen.getByRole('button', { name: /save changes/i })
+    expect(saveBtn).not.toBeDisabled()
+    await user.click(saveBtn)
+    await waitFor(() =>
+      expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ showPreviewImages: true }))
+    )
+  })
+
+  it('disables the setting immediately when turned off', async () => {
+    mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, showPreviewImages: true })
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = await screen.findByRole('switch', { name: /show page images in previews/i })
+    // Settings load asynchronously; the switch shows the default (off) until they arrive.
+    await waitFor(() => expect(toggle).toBeChecked())
+
+    await user.click(toggle)
+
+    expect(toggle).not.toBeChecked()
+  })
+
+  it('opens the privacy policy in a new tab via chrome.tabs.create', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await user.click(screen.getByRole('link', { name: /privacy policy/i }))
+    expect(chrome.tabs.create).toHaveBeenCalledWith(
+      expect.objectContaining({ url: expect.stringContaining('/privacy#page-previews'), active: true })
+    )
   })
 })
 

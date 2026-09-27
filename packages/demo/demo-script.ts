@@ -159,6 +159,32 @@ export const promoOnlySteps: DemoStep[] = [
         durationMs: 4480,
         action: "starGroupWindow",
     },
+    // ponytail: added 2026-09-26 per direct coordinator ask — the promo/
+    // walkthrough must SHOWCASE multi-select drag and cross-group drag
+    // explicitly, not just cross-window drag within one group
+    // (crossWindowTabDrag) or a same-window reorder (dragTabBetweenGroups —
+    // see that handler's own comment on its misleading name). See
+    // actions.ts's multiSelectTabDrag/dragTabToSidebarGroup for the real UI
+    // paths (Ctrl-click multi-select, drop onto a sidebar group row).
+    // durationMs values are measurement placeholders (LEADING_TRIM_MS +
+    // observed action time + buffer, same convention as every other step in
+    // this file) — re-measure via ffprobe on the real recorded clips once
+    // record.ts has run against these two new actions, per this file's
+    // top-of-file durationMs convention comment.
+    {
+        id: "multi-select-drag",
+        caption: "Drag many tabs at once.",
+        durationMs: 7200,
+        action: "multiSelectTabDrag",
+        zoom: 1.3,
+    },
+    {
+        id: "cross-group-drag",
+        caption: "Move tabs between groups.",
+        durationMs: 6800,
+        action: "dragTabToSidebarGroup",
+        zoom: 1.3,
+    },
 ];
 
 // Pulls a step verbatim (id/caption/durationMs/action/zoom, all of it) out
@@ -240,6 +266,8 @@ export const demoScript: DemoStep[] = [
         zoom: 1.3,
     },
     fromPromo("rename-group-tab"),
+    fromPromo("multi-select-drag"),
+    fromPromo("cross-group-drag"),
     {
         id: "outro",
         caption: "TabMerger — tab chaos, tamed. Free to start.",
@@ -266,9 +294,30 @@ export const demoScript: DemoStep[] = [
 // included, not truncating the ones that remain. `closeNowOpenWindow` and
 // `starGroupWindow` stay promo-exclusive (see the big comment above
 // demoScript for why they're not in the full walkthrough too).
+//
+// ponytail: 2026-09-26 — REPLANNED per direct user ask: "make the pace
+// faster so it's less than 30s" (this cut was 82.9s). Cut from 11 beats down
+// to the 4 strongest + the outro, per the user's own priority list ("keep
+// chaos -> organized, multi-select drag, cross-group/cross-window drag, and
+// the closing brand card") — dropped create-group/color-new-group/
+// copy-window-to-group/close-now-open-window/view-new-group/
+// move-tab-new-window/rename-group-tab/star-group-window entirely rather
+// than trim their durationMs (would freeze mid-action, see the ponytail
+// above this used to say). `open-popup` (pulled from `demoScript`, same
+// `fromPromo`-style verbatim reuse as `chaos-hook`) stands in for the
+// "chaos -> organized" payoff — it's the beat that shows the settled,
+// already-grouped sidebar. Combined with `WalkthroughDemo`'s new `speed`
+// prop (applied in Root.tsx, not here — this array still holds each step's
+// real, untruncated durationMs) to land under 30s: at speed 1.3, this cut's
+// real content is ~28.8s (verified: 1.5s intro + 6320+9720+7200+6800=30040ms
+// of action /1.3 + 4200ms outro = 28808ms — see Root.tsx's own comment for
+// the arithmetic and re-verify there if any of these durationMs values ever
+// change).
 export const promoScript: DemoStep[] = [
     { ...demoScript.find((s) => s.id === "chaos-hook")! },
-    ...promoOnlySteps,
+    { ...demoScript.find((s) => s.id === "open-popup")! },
+    fromPromo("multi-select-drag"),
+    fromPromo("cross-group-drag"),
     {
         id: "promo-outro",
         caption: "TabMerger — install free",

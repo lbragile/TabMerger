@@ -3,7 +3,79 @@
 // packages/extension/src/components/{Header,SidePanel,Windows}/*.tsx.
 //
 // Shared by record.ts and screenshots.ts so both drive identical UI state.
-import type { ElementHandle, Locator, Page } from "@playwright/test";
+import type { CDPSession, ElementHandle, Locator, Page } from "@playwright/test";
+
+// ponytail: 2026-09-26 — ROOT CAUSE of every drag beat failing 100% of the
+// time under `--headless=new` (confirmed via a standalone repro before
+// writing this): Playwright's own `page.mouse.move/down/up` never activates
+// the popup's native `dragstart` in that Chrome mode, even though it's a
+// synthetic-but-real `Input.dispatchMouseEvent` under the hood, same as
+// everything else Playwright does. Dispatching the IDENTICAL CDP method
+// directly via a raw `CDPSession` (bypassing Playwright's own mouse-state
+// bookkeeping/event batching) DOES activate it — verified: `cursor:grabbing`
+// appears after a press+nudge via `cdp.send("Input.dispatchMouseEvent", ...)`
+// in a headless repro where the equivalent `page.mouse` calls produced
+// nothing. This is exactly the workaround the extension's own e2e DnD spec
+// (`packages/extension/e2e/rawCdp.ts`'s `RawCdp.drag`) already uses for a
+// different reason (Playwright can't attach a `Page` to the real toolbar
+// popup at all) — same fix, different root cause. `CdpMouse` below mirrors
+// `page.mouse`'s move/down/up shape (tracking the last position itself,
+// since `Input.dispatchMouseEvent` requires explicit coordinates on every
+// call, unlike `page.mouse` which remembers them) so `naturalMouseMove` and
+// every drag action only needed their `page.mouse.*` calls swapped for
+// `mouse.*` ones, not rewritten.
+class CdpMouse {
+    private x = 0;
+    private y = 0;
+    private pressed = false;
+    constructor(private readonly cdp: CDPSession) {}
+    async move(x: number, y: number): Promise<void> {
+        this.x = x;
+        this.y = y;
+        await this.cdp.send("Input.dispatchMouseEvent", {
+            type: "mouseMoved",
+            x,
+            y,
+            button: this.pressed ? "left" : "none",
+            buttons: this.pressed ? 1 : 0,
+        });
+    }
+    async down(): Promise<void> {
+        this.pressed = true;
+        await this.cdp.send("Input.dispatchMouseEvent", {
+            type: "mousePressed",
+            x: this.x,
+            y: this.y,
+            button: "left",
+            buttons: 1,
+            clickCount: 1,
+        });
+    }
+    async up(): Promise<void> {
+        await this.cdp.send("Input.dispatchMouseEvent", {
+            type: "mouseReleased",
+            x: this.x,
+            y: this.y,
+            button: "left",
+            buttons: 0,
+            clickCount: 1,
+        });
+        this.pressed = false;
+    }
+}
+
+// One CDP session (and CdpMouse) per page, reused across an action's several
+// drag calls rather than opening a fresh session every time — `newCDPSession`
+// is not free, and every drag action operates on the same `page` throughout.
+const cdpMiceByPage = new WeakMap<Page, CdpMouse>();
+async function getCdpMouse(page: Page): Promise<CdpMouse> {
+    const existing = cdpMiceByPage.get(page);
+    if (existing) return existing;
+    const session = await page.context().newCDPSession(page);
+    const mouse = new CdpMouse(session);
+    cdpMiceByPage.set(page, mouse);
+    return mouse;
+}
 
 // ponytail: shared click-indicator helpers — every simulated click/dblick
 // pulses window.__tmRipple(x, y) (injected once per page via
@@ -98,6 +170,7 @@ function easeInOutCubic(t: number) {
 
 async function naturalMouseMove(
     page: Page,
+    mouse: CdpMouse,
     from: { x: number; y: number },
     to: { x: number; y: number },
     options?: { overshoot?: boolean },
@@ -116,7 +189,7 @@ async function naturalMouseMove(
         const wobble = Math.sin(t * Math.PI) * 2.5 * (Math.random() - 0.5);
         const nx = from.x + dx * overshootFactor * t + wobble;
         const ny = from.y + dy * overshootFactor * t + wobble;
-        await page.mouse.move(nx, ny, { steps: 2 });
+        await mouse.move(nx, ny);
         // Variable per-step delay (not a uniform pause) — slower near the
         // ends, faster mid-travel, plus jitter so it never reads as a fixed
         // interval.
@@ -127,7 +200,7 @@ async function naturalMouseMove(
         const SETTLE_STEPS = 6;
         for (let i = 1; i <= SETTLE_STEPS; i++) {
             const t = easeInOutCubic(i / SETTLE_STEPS);
-            await page.mouse.move(peak.x + (to.x - peak.x) * t, peak.y + (to.y - peak.y) * t, { steps: 2 });
+            await mouse.move(peak.x + (to.x - peak.x) * t, peak.y + (to.y - peak.y) * t);
             await page.waitForTimeout(14 + Math.random() * 12);
         }
     }
@@ -160,11 +233,27 @@ async function pressWithIndicator(page: Page, keys: string, label: string) {
 // updating too.
 const CHAOS_WINDOW_SETS = [
     [
-        "https://mail.google.com/mail/u/0/#inbox",
+        // ponytail: 2026-09-26 — swapped out "https://mail.google.com/..."
+        // and "https://www.notion.so" here: this array navigates to the
+        // REAL live site (by design — see chaosHook's comment, real chaos
+        // not mocked), and Chrome's tab title reflects that site's actual
+        // <title> at whatever moment record.ts runs. Both of those sites'
+        // real current page titles read "Gmail: Secure, AI-Powered Email
+        // for…" and "The AI workspace that works for you…" respectively —
+        // fine on their own merits, but this product's AI features aren't
+        // launched yet (VITE_AI_ENABLED unset) and no demo frame should show
+        // the text "AI" for an unrelated reason. Swapped to Yahoo Mail and
+        // Dropbox — verified their real live <title>s directly before
+        // picking them (curl -sL | grep title): "Yahoo Mail | Email with
+        // smart features and top-notch security" / "Dropbox: Secure cloud
+        // storage, file sharing, and more" — neither mentions AI. Re-verify
+        // the same way before ever reusing a live external URL here again;
+        // real sites' marketing copy drifts without warning.
+        "https://mail.yahoo.com",
         "https://calendar.google.com/calendar/u/0/r/week",
         "https://app.slack.com/client",
         "https://github.com",
-        "https://www.notion.so",
+        "https://www.dropbox.com",
     ],
     [
         "https://arxiv.org",
@@ -174,8 +263,21 @@ const CHAOS_WINDOW_SETS = [
         "https://news.ycombinator.com",
     ],
     [
-        "https://stackoverflow.com",
-        "https://www.figma.com",
+        // ponytail: 2026-09-26 — swapped stackoverflow.com out: it serves a
+        // Cloudflare interstitial to this recorder's request pattern, so its
+        // real tab title comes back as "Just a moment..." (a coordinator
+        // review caught this literal string showing up in "Now Open" window
+        // 3 and the marquee tile). superuser.com (same Stack Exchange
+        // family, same "developer Q&A" flavor) responds directly with a real
+        // title — verified via curl: "Super User".
+        "https://superuser.com",
+        // ponytail: 2026-09-26 — swapped Figma's real URL out (its live
+        // <title> is "Figma: The collaborative canvas for design, code, and
+        // AI" — verified via curl before swapping, same reasoning as the
+        // Yahoo Mail/Dropbox swap above). Sketch.com's live title
+        // ("Sketch · Design, prototype, collaborate and handoff") is the
+        // same "design tool" category with no AI mention.
+        "https://www.sketch.com",
         "https://trello.com",
         "https://www.linkedin.com",
         "https://twitter.com",
@@ -306,15 +408,24 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
         // visible drag motion at all, which viewer feedback correctly
         // flagged as unintelligible for a "drag and drop" feature (nothing
         // on screen ever moves under the cursor). Tab.tsx's grip handle
-        // (aria-label "Drag to reorder tab") IS a real @dnd-kit useSortable
-        // drag source, and useDndSensors' PointerSensor only needs 5px of
-        // movement to activate (useDnd.ts) — real page.mouse events clear
-        // that easily, no need for the click-based menu workaround at all.
+        // (aria-label "Drag to reorder tab: <title>") IS a real drag source.
+        // ponytail: 2026-09-26 — DnD was rebuilt on a dual pointer/native-HTML5
+        // sensor (Html5DragSensor, `dndHtml5Sensor.ts`, spec:
+        // drag-and-drop-spec.md). The grip's aria-label grew a ": <tab title>"
+        // suffix (Tab.tsx) so every exact-match locator here silently matched
+        // ZERO elements — switched to the `^=` prefix selector, same pattern
+        // the extension's own e2e DnD spec (`e2e/tests/popup-dnd.spec.ts`) uses.
+        // The mouse-based down/move/up sequence below still works unchanged:
+        // record.ts's --app= window streams real pointermove events, which is
+        // exactly the evidence `dndPressTracker` needs to choose the "pointer"
+        // path (cursor: grabbing, no native drag session) over the native-HTML5
+        // fallback — confirmed by reading dndHtml5Sensor.ts's dual-path doc
+        // comment, not assumed.
         // Each step gets a fresh page (activeGroupIndex resets to "Now
         // Open"), so activate "Work" first.
         await clickWithRipple(page.getByText("Work", { exact: true }).first());
         await page.waitForTimeout(300);
-        const handles = page.locator('[aria-label="Drag to reorder tab"]');
+        const handles = page.locator('[aria-label^="Drag to reorder tab"]');
         const source = handles.first();
         const target = handles.nth(2);
         await source.scrollIntoViewIfNeeded();
@@ -330,20 +441,21 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
             ({ x, y }) => (window as unknown as { __tmRipple?: (x: number, y: number) => void }).__tmRipple?.(x, y),
             { x: sx, y: sy },
         );
-        await page.mouse.move(sx, sy);
-        await page.mouse.down();
+        const mouse = await getCdpMouse(page);
+        await mouse.move(sx, sy);
+        await mouse.down();
         // Clear PointerSensor's 5px activation distance with a small nudge
         // before the real move — otherwise the first big jump can register
         // as the activating move itself and skip the "picked up" state.
-        await page.mouse.move(sx, sy - 10, { steps: 5 });
+        await mouse.move(sx, sy - 10);
         await page.waitForTimeout(120 + Math.random() * 80);
         // Eased, wobbling travel with a slight overshoot-then-settle at the
         // drop target — see naturalMouseMove.
-        await naturalMouseMove(page, { x: sx, y: sy }, { x: tx, y: ty }, { overshoot: true });
+        await naturalMouseMove(page, mouse, { x: sx, y: sy }, { x: tx, y: ty }, { overshoot: true });
         // Brief hold over the drop position so the reordered preview is
         // visible before release.
         await page.waitForTimeout(200 + Math.random() * 150);
-        await page.mouse.up();
+        await mouse.up();
         await page.waitForTimeout(300);
     },
 
@@ -785,7 +897,7 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
     async moveTabToNewWindow(page) {
         await clickWithRipple(page.getByText("Q4 Launch", { exact: true }).first());
         await page.waitForTimeout(300);
-        const handle = page.locator('[aria-label="Drag to reorder tab"]').first();
+        const handle = page.locator('[aria-label^="Drag to reorder tab"]').first();
         await handle.scrollIntoViewIfNeeded();
         const box = await handle.boundingBox();
         if (!box) throw new Error("moveTabToNewWindow: could not resolve drag handle box");
@@ -795,14 +907,20 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
             ({ x, y }) => (window as unknown as { __tmRipple?: (x: number, y: number) => void }).__tmRipple?.(x, y),
             { x: sx, y: sy },
         );
-        await page.mouse.move(sx, sy);
-        await page.mouse.down();
-        await page.mouse.move(sx, sy - 10, { steps: 5 });
+        const mouse = await getCdpMouse(page);
+        await mouse.move(sx, sy);
+        await mouse.down();
+        await mouse.move(sx, sy - 10);
         await page.waitForTimeout(120 + Math.random() * 80);
         // The drop-zone text only renders (and expands from h-0) once
         // isDraggingTab flips true on drag start — re-resolve its box AFTER
         // the drag has actually begun, not before.
-        const dropZone = page.getByText("Drop to create new window");
+        // ponytail: 2026-09-26 — Windows/index.tsx's copy changed to "Drop
+        // here for a new window" (was "Drop to create new window" when this
+        // action was written) and it now carries a stable
+        // `data-testid="new-window-dropzone"` — use that instead of matching
+        // copy that can (and did) drift.
+        const dropZone = page.getByTestId("new-window-dropzone");
         await dropZone.waitFor({ state: "visible", timeout: 3000 }).catch(() => null);
         const zoneBox = await dropZone.boundingBox();
         if (zoneBox) {
@@ -811,12 +929,12 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
             // Partial approach first (no overshoot — the dropzone box was
             // only just resolved and shouldn't be blown past), then the
             // real eased/overshoot travel into the zone.
-            await naturalMouseMove(page, { x: sx, y: sy }, { x: sx, y: (sy + ty) / 2 });
+            await naturalMouseMove(page, mouse, { x: sx, y: sy }, { x: sx, y: (sy + ty) / 2 });
             await page.waitForTimeout(100 + Math.random() * 80);
-            await naturalMouseMove(page, { x: sx, y: (sy + ty) / 2 }, { x: tx, y: ty }, { overshoot: true });
+            await naturalMouseMove(page, mouse, { x: sx, y: (sy + ty) / 2 }, { x: tx, y: ty }, { overshoot: true });
             await page.waitForTimeout(200 + Math.random() * 150);
         }
-        await page.mouse.up();
+        await mouse.up();
         await page.waitForTimeout(400);
     },
 
@@ -831,7 +949,7 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
     async crossWindowTabDrag(page, midGesture) {
         await clickWithRipple(page.getByText("Q4 Launch", { exact: true }).first());
         await page.waitForTimeout(300);
-        const handles = page.locator('[aria-label="Drag to reorder tab"]');
+        const handles = page.locator('[aria-label^="Drag to reorder tab"]');
         const source = handles.first();
         const target = handles.last();
         await source.scrollIntoViewIfNeeded();
@@ -847,18 +965,137 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
             ({ x, y }) => (window as unknown as { __tmRipple?: (x: number, y: number) => void }).__tmRipple?.(x, y),
             { x: sx, y: sy },
         );
-        await page.mouse.move(sx, sy);
-        await page.mouse.down();
-        await page.mouse.move(sx, sy - 10, { steps: 5 });
+        const mouse = await getCdpMouse(page);
+        await mouse.move(sx, sy);
+        await mouse.down();
+        await mouse.move(sx, sy - 10);
         await page.waitForTimeout(120 + Math.random() * 80);
-        await naturalMouseMove(page, { x: sx, y: sy }, { x: tx, y: ty }, { overshoot: true });
+        await naturalMouseMove(page, mouse, { x: sx, y: sy }, { x: tx, y: ty }, { overshoot: true });
         // Mouse is still down over the drop target — @dnd-kit's DragOverlay
         // + drop-indicator are on screen, nothing committed. Capture here,
         // before mouse.up, not after.
         await midGesture?.();
         await page.waitForTimeout(200 + Math.random() * 150);
-        await page.mouse.up();
+        await mouse.up();
         await page.waitForTimeout(300);
+    },
+
+    // ponytail: added 2026-09-26 per direct coordinator ask — the promo/
+    // walkthrough must SHOWCASE multi-select drag, not just single-tab drag
+    // (already covered by dragTabBetweenGroups/crossWindowTabDrag). Tab.tsx's
+    // real multi-select is Ctrl/Cmd-click (`toggleSelection({type:'tab',
+    // id})`, ~line 363-367 — NOT selectionMode's checkboxes, which is a
+    // different, exclusive selection UI, see toggleSelectionMode above).
+    // Selected rows get a real visible highlight (`bg-primary/10
+    // shadow-[inset_3px_0_0_0_var(--color-foreground)]`, Tab.tsx ~line 386)
+    // — held on screen before the drag starts so the viewer actually
+    // registers "these are picked," not just a jump-cut into a drag.
+    // `dndMultiDrag.ts`'s live-drag selection registry then drags every
+    // selected row together as long as the grip that starts the drag itself
+    // belongs to one of the selected rows (verified against
+    // `findSelectionRows`/`getDndDragCount` before writing this, not
+    // assumed). Uses "Shopping" (demoData.ts, 3 untouched seeded tabs) — no
+    // earlier step in this storyboard touches it, so its tab order/count is
+    // guaranteed fresh regardless of script position.
+    async multiSelectTabDrag(page) {
+        await clickWithRipple(page.getByText("Shopping", { exact: true }).first());
+        await page.waitForTimeout(300);
+        const handles = page.locator('[aria-label^="Drag to reorder tab"]');
+        // Ctrl-click two rows (not the grips — the grip itself has no click
+        // handler, the row/title text does) to select them before dragging.
+        // "Standing Desk" / "4K Monitor" are real seeded Shopping titles
+        // (demoData.ts) — bind by visible text so this survives any reorder.
+        const first = page.getByText("Standing Desk", { exact: false }).first();
+        const second = page.getByText("4K Monitor", { exact: false }).first();
+        await first.click({ modifiers: ["Control"] });
+        await page.waitForTimeout(POST_CLICK_PAUSE_MS);
+        await second.click({ modifiers: ["Control"] });
+        // Hold on the two highlighted rows — the actual multi-select state —
+        // before any drag motion starts, so it reads as a deliberate pick,
+        // not an incidental blur mid-drag.
+        await page.waitForTimeout(700);
+        // Drag by the FIRST selected row's own grip — dndMultiDrag treats any
+        // grip belonging to a selected row as the drag's anchor and carries
+        // every other selected row along with it.
+        const source = handles.first();
+        const target = handles.last();
+        await source.scrollIntoViewIfNeeded();
+        await target.scrollIntoViewIfNeeded();
+        const sourceBox = await source.boundingBox();
+        const targetBox = await target.boundingBox();
+        if (!sourceBox || !targetBox) throw new Error("multiSelectTabDrag: could not resolve drag handle boxes");
+        const sx = sourceBox.x + sourceBox.width / 2;
+        const sy = sourceBox.y + sourceBox.height / 2;
+        const tx = targetBox.x + targetBox.width / 2;
+        const ty = targetBox.y + targetBox.height / 2;
+        await page.evaluate(
+            ({ x, y }) => (window as unknown as { __tmRipple?: (x: number, y: number) => void }).__tmRipple?.(x, y),
+            { x: sx, y: sy },
+        );
+        const mouse = await getCdpMouse(page);
+        await mouse.move(sx, sy);
+        await mouse.down();
+        await mouse.move(sx, sy - 10);
+        await page.waitForTimeout(120 + Math.random() * 80);
+        await naturalMouseMove(page, mouse, { x: sx, y: sy }, { x: tx, y: ty }, { overshoot: true });
+        // Hold with the "+2" stacked-ghost card visibly over the drop
+        // position before releasing — see dndDragVisuals.ts's stacked-card
+        // treatment for a multi-drag (count > 1).
+        await page.waitForTimeout(250 + Math.random() * 150);
+        await mouse.up();
+        await page.waitForTimeout(400);
+    },
+
+    // ponytail: added 2026-09-26 per direct coordinator ask — a dedicated
+    // cross-GROUP beat (dragging tab(s) straight onto another group's
+    // SIDEBAR row), distinct from crossWindowTabDrag (which stays WITHIN one
+    // group, across its own windows) and dragTabBetweenGroups (a same-window
+    // reorder despite its name — see that handler's own comment). Per the
+    // spec's §6 Allowed/Outcomes table: "Saved tab(s) → sidebar group row"
+    // lands as a new LAST WINDOW in the target group — a real, visible
+    // cross-group move, not a reorder. Drags out of "Reading List" (demoData.ts,
+    // 5 untouched seeded tabs, stale-dot styling aside — no earlier step
+    // touches it) onto the "Shopping" sidebar row.
+    async dragTabToSidebarGroup(page) {
+        await clickWithRipple(page.getByText(/^Reading Li/).first());
+        await page.waitForTimeout(300);
+        const handle = page.locator('[aria-label^="Drag to reorder tab"]').first();
+        await handle.scrollIntoViewIfNeeded();
+        const sourceBox = await handle.boundingBox();
+        if (!sourceBox) throw new Error("dragTabToSidebarGroup: could not resolve drag handle box");
+        // "Shopping" is a real seeded sidebar group (demoData.ts) — locate its
+        // droppable row (the `data-sidebar-group-index` container
+        // GroupContextMenu.tsx renders around each GroupItem), not just the
+        // name text, since that attribute is what canDrop/collision actually
+        // targets.
+        const shoppingRow = page
+            .locator("[data-sidebar-group-index]")
+            .filter({ has: page.getByText("Shopping", { exact: true }) });
+        await shoppingRow.scrollIntoViewIfNeeded();
+        const targetBox = await shoppingRow.boundingBox();
+        if (!targetBox) throw new Error("dragTabToSidebarGroup: could not resolve Shopping sidebar row box");
+        const sx = sourceBox.x + sourceBox.width / 2;
+        const sy = sourceBox.y + sourceBox.height / 2;
+        const tx = targetBox.x + targetBox.width / 2;
+        const ty = targetBox.y + targetBox.height / 2;
+        await page.evaluate(
+            ({ x, y }) => (window as unknown as { __tmRipple?: (x: number, y: number) => void }).__tmRipple?.(x, y),
+            { x: sx, y: sy },
+        );
+        const mouse = await getCdpMouse(page);
+        await mouse.move(sx, sy);
+        await mouse.down();
+        await mouse.move(sx, sy - 10);
+        await page.waitForTimeout(120 + Math.random() * 80);
+        await naturalMouseMove(page, mouse, { x: sx, y: sy }, { x: tx, y: ty }, { overshoot: true });
+        // Hold over the target sidebar row — its own drop-target highlight is
+        // the "landing in the destination" beat the recording exists to show.
+        await page.waitForTimeout(300 + Math.random() * 150);
+        await mouse.up();
+        await page.waitForTimeout(500);
+        // Confirm + let the viewer see the destination now holding the moved
+        // tab's new window: switch to "Shopping" itself for the hold.
+        await clickWithRipple(page.getByText("Shopping", { exact: true }).first());
     },
 
     // Reuses renameTab's proven focus/caret-reset fix (see that handler's

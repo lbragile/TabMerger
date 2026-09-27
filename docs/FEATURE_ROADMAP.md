@@ -1,92 +1,70 @@
 # Feature Roadmap
 
-## Current State — v2.0 (Scaffold Complete)
+This is the forward-looking list. Known bugs and in-flight engineering work are tracked in [TODO.md](../TODO.md). Per-feature specs live in `.claude/plans/` and [roadmap-next.md](roadmap-next.md). Link to them rather than copying them here.
 
-The full monorepo scaffold is in place. Core work remaining before v2.0 ships:
+## Current state
 
-- [ ] `pnpm install` + verify all packages resolve
-- [ ] Configure Supabase project (URL + keys in `.env.local`)
-- [ ] Configure Stripe products/prices and populate price IDs
-- [ ] Load Chrome/Firefox/Edge store credentials into GitHub Secrets
-- [ ] Connect Vercel project for web deployment
-- [ ] End-to-end test: install extension → sign up → upgrade → sync → AI group tabs
+- **Releases:** the latest stable tag is `v3.0.0`. The beta channel is at `v3.1.0-beta.4`. Releases come from semantic-release on the `beta` branch ([PUBLISHING.md](PUBLISHING.md)).
+- **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption. Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Stripe subscriptions and AI credit packs. Web dashboard and account pages. Public `/changelog`.
+- **Built but off:** AI features (auto-group, name group, tab summary, session suggestions, organize) are behind the "coming soon" flag (`NEXT_PUBLIC_AI_ENABLED` / `VITE_AI_ENABLED`, off unless `"true"`).
+- TODO (owner): whether the stable `v3.0.0` build is live on the Chrome, Firefox and Edge stores, and which store listings are public.
 
 ---
 
-## v2.1 — Polish & Conversion (Next milestone)
-
-**Goal:** Drive free → paid conversion.
+## Polish and conversion
 
 ### Extension
-- [ ] Onboarding tooltip flow for new installs (highlight key features)
-- [ ] "You've reached the free limit" upgrade prompt (non-blocking, shows value prop)
-- [ ] Keyboard shortcuts (Cmd/Ctrl+Z undo, Cmd/Ctrl+Shift+Z redo, Cmd/Ctrl+F search)
-- [ ] Group collapse/expand in sidebar (persist to IndexedDB)
-- [ ] Tab favicon fallback (letter avatar when favicon missing)
+
+- [x] Non-blocking upgrade prompt at the free limit (`UpgradePrompt`, `UpgradeCTA`, locked items past `FREE_TIER_LIMITS`)
+- [x] Search shortcuts: Ctrl/Cmd+F focuses search, Ctrl/Cmd+K opens the search overlay. Ctrl/Cmd+G adds a group.
+- [ ] Undo/redo keyboard shortcuts (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z). Undo and redo exist only as header buttons today.
+- [ ] Onboarding tooltip flow for new installs. The web dashboard has an onboarding checklist; the extension has nothing.
+- [ ] Group collapse/expand in the sidebar, persisted to IndexedDB
+- [ ] Letter-avatar favicon fallback. Today a generic fallback icon is shown.
 
 ### Web
-- [ ] Email capture on landing page (Resend waitlist/newsletter)
-- [ ] Chrome Web Store featured screenshot optimization
-- [ ] `/changelog` page (auto-generated from git tags)
-- [ ] Testimonials from real users (replace placeholders)
-- [ ] SEO: meta descriptions, OpenGraph images, sitemap.xml
 
-**Agents:** extension-dev, web-dev, design-system
+- [x] `/changelog` page (reads the semantic-release `CHANGELOG.md`; prereleases filtered out)
+- [x] Invented testimonials replaced by live store ratings and reviews (Chrome Web Store, with Firefox AMO as fallback)
+- [x] SEO basics: metadata, `sitemap.ts`, `robots.ts`
+- [ ] OpenGraph/Twitter share image. `metadata.openGraph` has no image today.
+- [ ] Email capture on the landing page (newsletter/waitlist). Resend is used only for the contact form so far.
+- [ ] Chrome Web Store screenshot refresh. The pipeline exists in `packages/demo` (`screenshots`, `store-assets`).
 
----
+## AI quality (Pro AI), gated on the AI launch
 
-## v2.2 — AI Quality (Pro AI value prop)
+- [x] Stale-tab / cleanup suggestions (`useCleanupSuggestions`, a client-side heuristic)
+- [x] Exact duplicate-URL detection (`lib/deduplication.ts`)
+- [ ] Near-duplicate clustering (similar URLs and titles)
+- [ ] Few-shot examples in the auto-grouping prompt
+- [ ] Persist tab summaries in IndexedDB with a TTL. Today the cache is in memory and lasts only until the popup closes.
+- [ ] Streaming responses for session suggestions. Only `organize` streams, via Vercel Workflow.
+- [ ] "AI grouped X tabs into Y groups" confirmation with undo
+- [ ] Quality evaluation harness (log outputs for review)
 
-**Goal:** Make AI features good enough that Pro AI tier sells itself.
+## Power-user features (Pro retention)
 
-- [ ] Improve auto-grouping prompt with few-shot examples
-- [ ] Cache tab summaries in IndexedDB by URL (24h TTL) — reduces API calls 80%+
-- [ ] Streaming AI responses for session suggestions (show text as it generates)
-- [ ] "AI grouped X tabs into Y groups" success feedback with undo option
-- [ ] Deduplicate tab detection (cluster near-identical URLs + titles)
-- [ ] Smart close suggestion: "8 tabs haven't been active in 3 days — archive?"
-- [ ] Quality evaluation harness: log AI outputs for manual review
+- [x] Tab notes, and reminders with notifications
+- [x] Bulk tab actions (selection mode → move, star, share, delete)
+- [ ] Session scheduler ("restore this session every Monday at 9am")
+- [ ] Group templates (group structure without URLs)
+- [ ] Global quick-open hotkey outside the popup. Search inside the popup exists (Ctrl/Cmd+K).
+- [ ] Export to Notion or Obsidian (markdown links). Export is JSON only today.
+- [ ] Recently closed tabs list
 
-**Agents:** ai-features, extension-dev
+## Growth
 
----
+- [x] Public sharing: encrypted multi-group bundles. Single-group publish via `public_slug` is currently broken; see TODO.md.
+- [ ] Referral program
+- [ ] Team plan with shared group collections. Only `free`, `pro` and `pro_ai` exist.
+- [ ] Embeddable badge widget
+- [ ] Product Hunt launch assets. The promo cuts exist in `packages/demo` (see `PROMO_VIDEO_SPEC.md`).
+- [ ] Affiliate program
 
-## v2.3 — Power User Features (Pro retention)
+## Platform (long-term)
 
-**Goal:** Give Pro users features they can't get anywhere else.
-
-- [ ] Session scheduler: "Restore this session every Monday at 9am"
-- [ ] Tab notes: per-tab text notes stored with the group snapshot
-- [ ] Group templates: save a group structure (without URLs) as a reusable template
-- [ ] Bulk tab actions: select multiple tabs → move to group / close / open
-- [ ] Quick-open: `Cmd+Shift+Space` fuzzy search across all saved groups (Raycast-style)
-- [ ] Export to Notion / Obsidian (markdown links)
-- [ ] Browser history integration: show recently closed tabs in a recoverable list
-
-**Agents:** extension-dev, design-system
-
----
-
-## v2.4 — Growth
-
-**Goal:** Expand reach beyond organic store installs.
-
-- [ ] Referral program: "Give 1 month Pro, get 1 month Pro free"
-- [ ] Team plan ($14.99/mo): shared group collections across a team via Supabase
-- [ ] Public group sharing: shareable link to a group snapshot (no auth required to view)
-- [ ] Embed widget: `<tabmerger-badge>` web component showing your saved session count
-- [ ] ProductHunt launch assets (GIF demo, tagline variants)
-- [ ] Affiliate program for productivity bloggers/YouTubers
-
-**Agents:** web-dev, payments, extension-dev
-
----
-
-## v3.0 — Platform (Long-term)
-
-- [ ] Mobile app (React Native) — view and restore saved sessions on phone
-- [ ] Safari extension (requires macOS + Xcode build pipeline)
-- [ ] API access tier (Enterprise): programmatic tab group management
-- [ ] Browser history analytics dashboard
-- [ ] Zapier/Make integration: trigger tab group creation from external events
-
+- [ ] Mobile companion app (view and restore saved sessions)
+- [ ] Safari extension
+- [ ] API access tier
+- [ ] Browsing-history analytics dashboard
+- [ ] Zapier/Make integration

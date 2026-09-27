@@ -119,6 +119,14 @@ export function Footer() {
                                     Shared group demo
                                 </Link>
                             </li>
+                            <li>
+                                <Link
+                                    href="/beta"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    Beta
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

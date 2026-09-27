@@ -561,7 +561,7 @@ Pain point: bar overlaps the last tab row — needs bottom padding when active.
 │  [Manage billing]  [Cancel subscription]                         │
 │                                                                  │
 │  Account                                                         │
-│  user@example.com                                          │
+│  you@example.com                                                 │
 │  Connected via Google                                            │
 │  [Sign out]                                                      │
 └──────────────────────────────────────────────────────────────────┘

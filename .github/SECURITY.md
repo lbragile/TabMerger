@@ -1,22 +1,45 @@
-# 🔒 TabMerger's Security Policies & Procedures
+# Security Policy
 
 This document outlines security procedures and general policies for TabMerger.
 
-## 🐛 Bug Reporting
+## Supported versions
 
-I take all security bugs extremely seriously. Thank you for improving (or wanting to improve) TabMerger's security. I appreciate your efforts/responsible disclosure and will make every effort to acknowledge your contributions.
+Only the latest published stable release (Chrome/Firefox/Edge stores, and the deployed web
+app) is supported with security fixes. There is no long-term maintenance branch.
 
-Report security bugs by emailing me (repository owner/maintainer) at lbragile@gmail.com.
+## Reporting a vulnerability
 
-I will acknowledge your email within 24 hours, and will send a more detailed response within 48 hours indicating the next steps in handling your report. After the initial reply to your report, I will keep you informed of the progress towards a fix and full announcement, and may ask for additional information and/or guidance.
+Please do not open a public GitHub issue for a security vulnerability.
 
-**Note:** You should report security bugs in third-party modules to the person or team maintaining that module.
+Report security bugs privately through GitHub's built-in reporting flow: go to this
+repository's **Security** tab → **Report a vulnerability**. Include as much detail as you can:
+affected package (`extension`, `web`, or `shared`), reproduction steps, and impact.
 
-## 👐 Disclosure Policy
+<!-- TODO (owner): enable private vulnerability reporting in Settings → Code security if it
+     isn't already turned on — the link above only works once that setting is enabled. -->
 
-When I receive a security bug report, I will assign it to a primary handler (either myself or a trustworthy contributor). This person will coordinate the fix and release process, involving the following steps:
+I take all security bugs extremely seriously and appreciate responsible disclosure. I will
+acknowledge a new report within 24 hours, and send a more detailed response within 48 hours
+indicating next steps.
 
-- Confirm the problem and determine the affected versions.
-- Audit code to find any potential similar problems.
-- Prepare fixes for all releases still under maintenance.
-- Release above-mentioned fixes as soon as possible to both production and public environments.
+**Note:** report security bugs in third-party dependencies to the person or team maintaining
+that dependency, not here.
+
+## Scope notes specific to this repo
+
+- The extension's cloud sync is end-to-end encrypted for signed-in Pro users — the unwrapped
+  data key never leaves the device and the server never holds it. If you find a path where
+  plaintext content reaches Supabase or a server-side route for an encrypted column, that is a
+  high-priority report.
+- The extension requests no `host_permissions` — if you find a code path that reads or scripts
+  arbitrary page content without the user's explicit interaction, that is a high-priority report.
+
+## Disclosure policy
+
+When a security bug report is received, it will be assigned to a primary handler who will
+coordinate the fix and release:
+
+- Confirm the problem and determine affected versions.
+- Audit the code for similar issues.
+- Prepare and test a fix.
+- Release the fix as soon as possible, then publish an advisory describing the issue.

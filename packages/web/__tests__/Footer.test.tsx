@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { Footer } from '@/components/layout/Footer'
 
@@ -15,5 +15,12 @@ describe('Footer', () => {
     expect(screen.getByRole('heading', { name: 'Product' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Account' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Legal' })).toBeInTheDocument()
+  })
+
+  it('links to the beta page under Public', () => {
+    render(<Footer />)
+    const publicColumn = screen.getByRole('heading', { name: 'Public' }).parentElement as HTMLElement
+    const link = within(publicColumn).getByRole('link', { name: 'Beta' })
+    expect(link).toHaveAttribute('href', '/beta')
   })
 })

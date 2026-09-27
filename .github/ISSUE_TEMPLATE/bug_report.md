@@ -10,12 +10,16 @@ assignees: lbragile
 
 <!-- Before Proceeding
 
-Make sure there are no existing issues (https://github.com/lbragile/TabMerger/labels/bug) that are similar in nature to what you plan to propose.
-Additionally ensure that your request is not already in the todo (https://github.com/lbragile/TabMerger/projects/1) list. -->
+Make sure there are no existing issues (https://github.com/lbragile/TabMerger/labels/bug) that
+are similar in nature to what you plan to propose. -->
 
 ## Description
 
 <!-- A clear and concise description of what the bug is. -->
+
+## Affected package
+
+<!-- extension / web / shared / demo -->
 
 ## Steps to Reproduce
 
@@ -34,7 +38,8 @@ Additionally ensure that your request is not already in the todo (https://github
 
 - OS: <!-- e.g. Windows -->
 - Browser: <!-- Chrome, Firefox, or Edge -->
-- Version: <!-- e.g. v3.0.0 -->
+- Extension version / web app URL: <!-- e.g. v3.1.0, or the page URL on the web app -->
+- Signed in as: <!-- free / Pro / Pro AI, if relevant -->
 
 <!-- Add any other context about the problem here. -->
 <!-- If applicable, add screenshots to help explain your problem. -->

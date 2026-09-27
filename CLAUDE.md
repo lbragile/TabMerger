@@ -25,7 +25,9 @@ pnpm test:visual        # Playwright visual regression (extension + web, @visual
 pnpm --filter @tabmerger/extension test:e2e         # Extension E2E tests
 pnpm --filter @tabmerger/extension test:e2e:ui      # Extension E2E — interactive Playwright UI dashboard
 pnpm --filter @tabmerger/extension test:integration # Extension integration tests (real IndexedDB round trips)
+pnpm --filter @tabmerger/extension exec vitest run --coverage # Extension coverage (the ≥80% gate)
 pnpm scan-secrets       # Check staged files for API keys / PII
+bash scripts/vercel-env-push.sh packages/web/.env.preview preview [--apply]  # Push a local env file to Vercel (dry run without --apply)
 ```
 
 ## Architecture
@@ -35,7 +37,7 @@ TabMerger 2.0 is a **pnpm monorepo** with three packages:
 ```
 packages/
   extension/   WXT browser extension — Chrome (MV3), Firefox, Edge
-  web/         Next.js 15 marketing site + user dashboard + AI API routes
+  web/         Next.js 16 marketing site + user dashboard + AI API routes
   shared/      TypeScript types and constants shared between both packages
   demo/        Remotion + Playwright walkthrough-video pipeline (dev tooling, not shipped)
 supabase/      Postgres migrations, RLS policies, seed data
@@ -51,8 +53,7 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 
 **Entry points:**
 - `src/entrypoints/popup/` — 800×600px popup UI (fixed size, no outer scrollbars — Chrome's popup cap)
-- `src/entrypoints/background.ts` — alarms, context menus, tab badge, periodic sync
-- `src/entrypoints/content.ts` — tab metadata collection for preview feature
+- `src/entrypoints/background.ts` — reminder alarms, right-click menu (rebuilt when groups change), tab badge, and the web-app bridge (`externally_connectable`: `PING`, `SYNC_AUTH`, `SYNC_NOW`). Regular sync runs in the popup (`useSync`), not on a background timer
 
 **State layers:**
 - **IndexedDB** (`src/lib/localDb.ts` via `idb`) — primary data store, offline-first
@@ -70,7 +71,11 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 **Invariants:**
 - "Now Open" group is always index 0, `permanent: true`, never deleted, never pushed to undo stack
 - AI calls are server-side only — extension POSTs to Next.js API routes with Bearer token
+- AI features are "coming soon" behind `VITE_AI_ENABLED` (extension) / `NEXT_PUBLIC_AI_ENABLED` (web), off unless exactly `"true"` (`isAiEnabled()` in `@tabmerger/shared`). Off: AI UI hidden in the extension, no AI requests, `/api/ai/*` and Pro AI / credit checkout return 503 `ai_disabled`, pricing keeps the Pro AI price with a disabled "Coming soon" button. New AI surfaces must respect the flag.
 - Env vars use WXT Vite convention: `import.meta.env.VITE_*`
+- Only `--mode development` (and the `wxt` dev server) is a development build. `beta`, `demo` and production are production builds — `wxt.config.ts` forces `NODE_ENV` because WXT otherwise sets it to the mode name, which shipped React's dev bundle and every `import.meta.env.DEV` path to beta testers
+- Beta store manifest versions add 1 to the major (`BETA_STORE_MAJOR_OFFSET` in `scripts/manifestVersion.ts`): an accidental 4.0.0.1 went live on the BETA item and store versions can only increase. Never remove the offset.
+- Commit messages: only write "BREAKING CHANGE:" for a real, approved major — `.releaserc.json` counts that keyword (with its colon) as a major release
 - Saved tabs always have `id: 0` — use positional `{groupIndex, windowIndex, tabIndex}` for all mutations, never `tab.id`
 - `Window.tsx` has a `window: WindowType` prop that shadows the global `window` — use `globalThis` for any browser APIs in that file
 - `SidePanel/index.tsx`'s sidebar width and `Header/index.tsx`'s logo-column width must stay numerically identical (currently 240px) so the sidebar/main-content boundary lines up with the header above it — a mismatch here isn't just cosmetic, it silently breaks the sidebar/header seam. Also watch for outer padding/gap on the header container itself competing with this value (a flex/grid box model that adds its own `px`/`gap` on top of the shared width will misalign the two even when the width numbers match).
@@ -88,7 +93,7 @@ Whenever you create or change the Chrome extension, create and maintain `package
 
 ## Web app (`packages/web/`)
 
-**Framework:** Next.js 15 App Router + TypeScript.
+**Framework:** Next.js 16 App Router + React 19 + TypeScript (`proxy.ts` replaces `middleware.ts`).
 
 **Route groups:**
 - `app/(marketing)/` — landing, features, pricing (public)
@@ -96,11 +101,11 @@ Whenever you create or change the Chrome extension, create and maintain `package
 - `app/api/` — webhooks/stripe, auth/callback, checkout, ai/* routes
 
 **Critical patterns:**
-- `cookies()` and `headers()` are async in Next.js 15 — always `await` them
+- `cookies()` and `headers()` are async (Next.js 15+) — always `await` them
 - Supabase server client (`lib/supabase/server.ts`) must be async for the same reason
 - Stripe webhook handler **must** use `req.text()` — `req.json()` destroys the raw body needed for signature verification
 - Service role client bypasses RLS — only use in webhook handlers and AI routes, never client-side
-- Any server-side `.select()` on `groups`/`sessions`/`device_sessions`/`shared_bundles` that reads `windows`/`groups`/`now_open_snapshot`/`groups_snapshot` is reading ciphertext for every real account — routes needing that content must accept it client-decrypted in the request body instead (see the `organize` and `share-bundle` routes for the pattern). Run `encrypted-column-auditor` before merging any new route touching these tables.
+- Any server-side `.select()` on `groups`/`sessions`/`device_sessions`/`shared_bundles` that reads `windows`/`groups`/`now_open_snapshot`/`groups_snapshot` is reading ciphertext for every real account — routes needing that content must accept it client-decrypted in the request body instead (see the `organize` route for the pattern). Sharing (`lib/sharing.ts`) sidesteps this entirely — it's fully client-side with no API route, matching the extension. Run `encrypted-column-auditor` before merging any new route touching these tables.
 
 ## Shared package (`packages/shared/`)
 
@@ -127,7 +132,7 @@ Domain-specific agents are in `.claude/agents/`. Each agent carries accumulated 
 | `ai-features` | AI API routes (`/api/ai/*`), Anthropic SDK usage, prompt engineering, `useAI` hook, tab preview summaries |
 | `database` | Supabase schema changes, new migrations (`supabase/migrations/`), RLS policies, DB functions |
 | `migration-reviewer` | Before applying any new Supabase migration — checks for missing RLS, missing indexes on FK columns, destructive changes without a rollback path, policy gaps |
-| `encrypted-column-auditor` | Before merging any new or changed route under `packages/web/app/api/` — flags server-side reads of E2E-encrypted content columns (`groups.windows`, `sessions.groups`, `device_sessions.now_open_snapshot`, `shared_bundles.groups_snapshot`) that assume plaintext, the exact bug class behind two real production crashes (`organize`, `share-bundle`) |
+| `encrypted-column-auditor` | Before merging any new or changed route under `packages/web/app/api/` — flags server-side reads of E2E-encrypted content columns (`groups.windows`, `sessions.groups`, `device_sessions.now_open_snapshot`, `shared_bundles.groups_snapshot`) that assume plaintext, the exact bug class behind a real production crash (`organize`) |
 | `payments` | Stripe products/prices, webhook handler, subscription entitlements, checkout flow, billing portal |
 | `payments-security-reviewer` | Security audit before merging any change to: webhook handler, checkout, `useEntitlements`, RLS policies on `subscriptions`/`ai_usage` |
 | `entitlements-auditor` | Whenever `useEntitlements.ts` or `packages/shared/src/constants/index.ts` (`PRICING_TIERS`/`FREE_TIER_LIMITS`) change, or a pricing/tier-limit change is proposed — catches drift between what's sold and what's enforced |
@@ -199,7 +204,7 @@ Any time a feature is added, changed, or removed — in the extension or the web
 1. **Unit tests** updated or added for the changed logic (Vitest — jsdom for extension, RTL for web). Extension unit tests live under `packages/extension/src/__tests__/unit/`, mirroring the directory structure of `src/` (e.g. a test for `src/hooks/useGroups.ts` lives at `src/__tests__/unit/hooks/useGroups.test.ts`) — not co-located next to the source file.
 2. **Integration tests** updated or added when the change touches cross-boundary behavior — real IndexedDB round trips (`packages/extension/src/__tests__/integration/`, run via `pnpm --filter @tabmerger/extension test:integration`) or real Supabase sync/network behavior.
 3. **E2E tests** updated or added when the change touches user-visible flow (`packages/extension/e2e/tests/`, run via `pnpm --filter @tabmerger/extension test:e2e`).
-4. **Combined coverage from unit + integration tests must stay ≥80%** on all four metrics (statements, branches, functions, lines) — enforced via `vitest.config.ts` thresholds, checked with `pnpm --filter @tabmerger/extension test -- --coverage`. A change that drops any metric below 80% is not done until coverage is brought back up.
+4. **Combined coverage from unit + integration tests must stay ≥80%** on all four metrics (statements, branches, functions, lines) — enforced via `vitest.config.ts` thresholds, checked with `pnpm --filter @tabmerger/extension exec vitest run --coverage` (not `test -- --coverage`: pnpm passes the `--` through, so Vitest reads `--coverage` as a file filter, prints only a test count, and leaves any old `coverage/` summary on disk). A change that drops any metric below 80% is not done until coverage is brought back up.
 
 This applies regardless of how small the change looks. Skipping any of the three test layers, or letting coverage regress below the threshold, is a defect in the work — not a follow-up item.
 

@@ -1,12 +1,52 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import { importKeyFromBase64, decryptBlob } from '@tabmerger/shared'
 import { useLocationHash } from '@/lib/hooks/useLocationHash'
 
 interface Tab { id: number; title?: string; url?: string; favIconUrl?: string; ogImage?: string }
+
+const PREVIEWS_ENABLED_STORAGE_KEY = 'tabmerger-share-previews-enabled'
+
+/**
+ * Whether the viewer has opted in to page previews (og-image fetches) on
+ * this share page. OFF by default and remembered per-browser in
+ * localStorage — reading/writing is wrapped in try/catch since some
+ * browsers (private mode, disabled storage) throw on access.
+ */
+function readPreviewsEnabled(): boolean {
+  try {
+    return window.localStorage.getItem(PREVIEWS_ENABLED_STORAGE_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
+function writePreviewsEnabled(enabled: boolean): void {
+  try {
+    window.localStorage.setItem(PREVIEWS_ENABLED_STORAGE_KEY, String(enabled))
+  } catch {
+    // Storage unavailable — the toggle still works for this page load, it
+    // just won't persist across reloads. Not worth surfacing to the viewer.
+  }
+}
+
+// Shares the opt-in flag down to every TabPreviewTooltip without threading
+// it through props at every level of the group/window/tab render tree.
+const PreviewsEnabledContext = createContext(false)
 
 // ponytail: module-level cache — lives for the page session, cleared on reload
 const ogImageCache = new Map<string, string | null>()
@@ -14,7 +54,11 @@ const ogImageCache = new Map<string, string | null>()
 async function fetchOgImage(url: string): Promise<string | null> {
   if (ogImageCache.has(url)) return ogImageCache.get(url)!
   try {
-    const res = await fetch(`/api/og-preview?url=${encodeURIComponent(url)}`)
+    const res = await fetch('/api/og-preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    })
     const data = (await res.json()) as { ogImage: string | null }
     ogImageCache.set(url, data.ogImage)
     return data.ogImage
@@ -49,24 +93,32 @@ function groupUrls(group: Group): string[] {
 }
 
 function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; row: React.ReactNode }) {
+  const previewsEnabled = useContext(PreviewsEnabledContext)
   const [ogImage, setOgImage] = useState<string | null>(tab.ogImage ?? null)
   const [loading, setLoading] = useState(false)
   const fetchedRef = useRef(false)
 
   const handleOpenChange = useCallback(async (isOpen: boolean) => {
-    if (!isOpen || fetchedRef.current || tab.ogImage || !tab.url) return
+    // Never call the preview service unless the viewer has opted in — the
+    // switch is OFF by default, and this is the only place that would ever
+    // reach out to /api/og-preview. A tab.ogImage already baked into the
+    // snapshot is shown regardless (no network call either way).
+    if (!isOpen || fetchedRef.current || tab.ogImage || !tab.url || !previewsEnabled) return
     fetchedRef.current = true
     setLoading(true)
     const img = await fetchOgImage(tab.url)
     setOgImage(img)
     setLoading(false)
-  }, [tab.ogImage, tab.url])
+  }, [tab.ogImage, tab.url, previewsEnabled])
 
   return (
     <Tooltip delayDuration={400} onOpenChange={handleOpenChange}>
       <TooltipTrigger asChild>
         <span className="min-w-0 w-full overflow-hidden block">{row}</span>
       </TooltipTrigger>
+      {/* Portal: the tooltip renders at the document root, not inside the group card
+          (which is overflow-hidden), so the card can't clip or hide the preview. */}
+      <TooltipPrimitive.Portal>
       <TooltipContent
         side="top"
         align="start"
@@ -96,6 +148,9 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
                 src={ogImage}
                 alt=""
                 className="mt-2 w-full rounded object-cover max-h-32"
+                // Sites that block hotlinking return an error here: show "No preview"
+                // instead of a broken-image icon.
+                onError={() => setOgImage(null)}
               />
             ) : (
               <div className="mt-2 h-24 w-full rounded bg-muted flex flex-col items-center justify-center gap-1 text-muted-foreground">
@@ -108,7 +163,80 @@ function TabPreviewTooltip({ tab, favicon, row }: { tab: Tab; favicon?: string; 
           </div>
         </div>
       </TooltipContent>
+      </TooltipPrimitive.Portal>
     </Tooltip>
+  )
+}
+
+/**
+ * The "Show page previews" switch shown above the group list. OFF by
+ * default; turning it ON requires confirming a dialog first (the switch
+ * itself flips back if the dialog is cancelled), since it changes what data
+ * leaves the viewer's browser. Turning it OFF is immediate — no confirmation
+ * needed, since it only stops network calls.
+ */
+function PreviewsToggle({ enabled, onChange }: { enabled: boolean; onChange: (next: boolean) => void }) {
+  const [confirmOpen, setConfirmOpen] = useState(false)
+
+  const handleSwitchChange = useCallback((next: boolean) => {
+    if (!next) {
+      onChange(false)
+      return
+    }
+    setConfirmOpen(true)
+  }, [onChange])
+
+  const handleConfirm = useCallback(() => {
+    onChange(true)
+    setConfirmOpen(false)
+  }, [onChange])
+
+  // Radix Dialog's onOpenChange fires for both the "Cancel" button and
+  // Escape/overlay-click — all of those should leave the switch off, so a
+  // single handler covers every dismissal path.
+  const handleOpenChange = useCallback((open: boolean) => {
+    setConfirmOpen(open)
+  }, [])
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-2.5">
+        <Switch id="show-page-previews" checked={enabled} onCheckedChange={handleSwitchChange} />
+        <label htmlFor="show-page-previews" className="text-sm font-medium cursor-pointer">
+          Show page previews
+        </label>
+      </div>
+      <p className="text-xs text-muted-foreground max-w-md">
+        When on, hovering a tab sends that tab&apos;s web address to TabMerger&apos;s preview
+        service to fetch its image. It isn&apos;t linked to any account, logged, or stored.
+      </p>
+
+      <Dialog open={confirmOpen} onOpenChange={handleOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Turn on page previews?</DialogTitle>
+            <DialogDescription>
+              Hovering a tab will send that tab&apos;s web address to TabMerger&apos;s preview
+              service, which fetches the page&apos;s preview image and description. The address
+              isn&apos;t linked to your account, isn&apos;t logged, and isn&apos;t stored. Read more in our{' '}
+              <a
+                href="/privacy#page-previews"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                privacy policy&apos;s Page previews section
+              </a>
+              .
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>Cancel</Button>
+            <Button onClick={handleConfirm}>Turn on</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
 
@@ -177,6 +305,19 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
   // Hooks must run unconditionally — pass a harmless placeholder when there's no bundle.
   const decryptState = useDecryptedGroups(bundle?.groups ?? [])
 
+  // Lazy initializer (not an effect): runs once on the client during the
+  // first render, never during SSR (`readPreviewsEnabled` itself guards on
+  // `window` via its try/catch), so there's nothing to synchronize after
+  // mount and no cascading-setState-in-effect concern.
+  const [previewsEnabled, setPreviewsEnabled] = useState(() =>
+    typeof window === 'undefined' ? false : readPreviewsEnabled()
+  )
+
+  const handlePreviewsChange = useCallback((next: boolean) => {
+    setPreviewsEnabled(next)
+    writePreviewsEnabled(next)
+  }, [])
+
   if (!bundle) {
     return (
       <div className="flex items-center justify-center min-h-[200px] text-muted-foreground">
@@ -223,10 +364,12 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
 
   return (
     <TooltipProvider>
+    <PreviewsEnabledContext.Provider value={previewsEnabled}>
     <div className="space-y-4">
       <p className="text-sm text-text2">
         {totalTabs} tabs across {totalWindows} windows in {groups.length} groups
       </p>
+      <PreviewsToggle enabled={previewsEnabled} onChange={handlePreviewsChange} />
       {groups.map((group) => {
         const groupTabs = group.windows.reduce((sum, w) => sum + w.tabs.length, 0)
         return (
@@ -275,15 +418,15 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
                 const shortUrl = href ? truncateUrl(href) : ''
                 const inner = (
                   <>
-                    {favicon ? (
-                      <span className="h-[18px] w-[18px] flex-shrink-0 overflow-hidden rounded-xs border border-black/10 dark:border-white/15 bg-white dark:bg-zinc-700 flex items-center justify-center">
-                        {/* Arbitrary remote favicon — same unbounded-domain reasoning as above. */}
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={favicon} alt="" className="w-3 h-3" />
-                      </span>
-                    ) : (
-                      <span className="h-[18px] w-[18px] flex-shrink-0 rounded-xs bg-surface3" />
-                    )}
+                    {/* The icon on its own — no bordered/filled tile around it. Arbitrary remote
+                        favicon: same unbounded-domain reasoning as above. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={favicon || FALLBACK_FAVICON}
+                      alt=""
+                      className="h-4 w-4 flex-shrink-0"
+                      onError={(e) => { e.currentTarget.src = FALLBACK_FAVICON }}
+                    />
                     <span className="flex-1 min-w-0 truncate">{tab.title ?? tab.url}</span>
                     {shortUrl && (
                       <span className="flex items-center gap-1.5 shrink-0 min-w-0">
@@ -314,6 +457,7 @@ export function ShareBundleContent({ bundle }: { bundle: Bundle | null }) {
         )
       })}
     </div>
+    </PreviewsEnabledContext.Provider>
     </TooltipProvider>
   )
 }

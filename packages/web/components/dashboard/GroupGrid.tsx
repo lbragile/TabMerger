@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/shared'
 import { useEncryptionKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
+import { createSharedBundle } from '@/lib/sharing'
 
 interface Tab { title?: string; url?: string; favIconUrl?: string }
 interface ExtWindow { tabs: Tab[] }
@@ -18,9 +19,11 @@ interface DashboardGroup {
   color: string
   windows: ExtWindow[]
   updated_at: string
-  public_slug?: string | null
   starred?: boolean
   archived?: boolean
+  /** Set when this group's encrypted blob couldn't be decrypted with the current data key
+   * (wrong/rotated key) — Share must refuse rather than send an empty/garbage snapshot. */
+  locked?: boolean
 }
 
 /** Raw row shape from Supabase — `windows` (and `name`, when encrypted) is ciphertext until decrypted client-side. */
@@ -61,7 +64,7 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
             return { ...g, name: content.name, windows: content.windows }
           } catch {
             // wrong/rotated key — fall back to a visibly-locked placeholder rather than crashing
-            return { ...g, name: '(locked)', windows: [] }
+            return { ...g, name: '(locked)', windows: [], locked: true }
           }
         })
       )
@@ -78,58 +81,37 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
 }
 
 
-function ShareButton({ groupId, initialSlug }: { groupId: string; initialSlug?: string | null }) {
-  const [slug, setSlug] = useState(initialSlug ?? null)
+/**
+ * Creates a one-off share bundle for a single group and copies the resulting
+ * `#key=` link. Uses {@link createSharedBundle} (lib/sharing.ts) — the same
+ * fully client-side encrypt-then-insert helper as the multi-group "Share
+ * selected" flow in {@link GroupGrid.shareBundle} — there is deliberately no
+ * second encryption path here. The link is a snapshot: later edits to the
+ * group don't update it.
+ */
+function ShareButton({ group }: { group: DashboardGroup }) {
   const [busy, setBusy] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  async function publish() {
-    setBusy(true)
-    const res = await fetch(`/api/groups/${groupId}/publish`, { method: 'POST' })
-    if (res.ok) {
-      const { slug: s } = await res.json()
-      setSlug(s)
+  async function share() {
+    if (group.locked) {
+      toast.error("This group is still locked — enter your passphrase to share it.")
+      return
     }
-    setBusy(false)
-  }
-
-  async function unpublish() {
     setBusy(true)
-    await fetch(`/api/groups/${groupId}/publish`, { method: 'DELETE' })
-    setSlug(null)
-    setBusy(false)
-  }
-
-  async function copyLink() {
-    const url = `${window.location.origin}/share/${slug}`
-    await navigator.clipboard.writeText(url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  if (slug) {
-    return (
-      <div className="flex items-center gap-1">
-        <button onClick={copyLink} className="text-xs text-primary hover:underline">
-          {copied ? 'Copied!' : 'Copy link'}
-        </button>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={unpublish}
-                disabled={busy}
-                aria-label="Unpublish"
-                className="text-muted-foreground hover:text-destructive rounded-md p-0.5"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top">Unpublish — make this group private again</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </div>
-    )
+    try {
+      const url = await createSharedBundle([
+        { id: group.id, name: group.name, color: group.color, windows: group.windows },
+      ])
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      toast.success('Link copied — shares a snapshot of this group.')
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      toast.error('Could not create share link. Please try again.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   return (
@@ -137,16 +119,20 @@ function ShareButton({ groupId, initialSlug }: { groupId: string; initialSlug?: 
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={publish}
-            disabled={busy}
+            onClick={share}
+            disabled={busy || group.locked}
             aria-label="Share group"
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors"
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors disabled:opacity-50"
           >
             {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Share2 className="w-3 h-3" />}
-            Share
+            {copied ? 'Copied!' : 'Share'}
           </button>
         </TooltipTrigger>
-        <TooltipContent side="top">Make this group public and get a shareable link</TooltipContent>
+        <TooltipContent side="top">
+          {group.locked
+            ? 'Unlock your passphrase to share this group'
+            : 'Copies a link to a snapshot of this group — later edits won’t update it'}
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )
@@ -261,7 +247,7 @@ function GroupCard({
         {/* Action row */}
         {!selecting && (
           <div className="flex items-center gap-1">
-            {isPro && !readOnly && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
+            {isPro && !readOnly && <ShareButton group={group} />}
             {tabs.length > 0 && (
               <button
                 onClick={() => openAllTabs(group)}
@@ -323,7 +309,7 @@ function GroupRow({
           <span>{group.windows.length}w · {tabs.length}t</span>
           {readOnly && <Archive className="w-3 h-3" />}
           {isPro && !readOnly && <Cloud className="w-3 h-3" />}
-          {isPro && !selecting && !readOnly && <ShareButton groupId={group.id} initialSlug={group.public_slug} />}
+          {isPro && !selecting && !readOnly && <ShareButton group={group} />}
           {!selecting && tabs.length > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); openAllTabs(group) }}
@@ -414,21 +400,12 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
     if (selected.size === 0) return
     setSharing(true)
     try {
-      // Send already-decrypted content — the server can't read `windows` itself
-      // (it's ciphertext in the DB for every E2E-encrypted account).
+      // Already-decrypted content, encrypted and inserted entirely in-browser via
+      // createSharedBundle — no plaintext or key ever crosses the network.
       const shareGroups = groups
         .filter((g) => selected.has(g.id))
         .map((g) => ({ id: g.id, name: g.name, color: g.color, windows: g.windows }))
-      const res = await fetch('/api/share-bundle', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ groups: shareGroups }),
-      })
-      if (!res.ok) throw new Error('Failed to create bundle')
-      const { slug, key } = await res.json()
-      // Key lives only in the URL fragment — never sent to any server (fragments
-      // aren't transmitted over HTTP), so the share link itself is the only place it exists.
-      const url = `${window.location.origin}/share/${slug}#key=${key}`
+      const url = await createSharedBundle(shareGroups)
       await navigator.clipboard.writeText(url)
       toast.success('Link copied! Share page is live.')
       exitSelecting()

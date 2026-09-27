@@ -11,14 +11,11 @@ import {
     useCurrentFrame,
 } from "remotion";
 import { demoScript, LEADING_TRIM_MS, type DemoStep } from "../demo-script";
-// ponytail: per-step zoom transform-origin (fraction of the 800x600 viewport,
-// centered on whatever element the step's action actually targets), measured
-// by actions.ts/record.ts at recording time and committed like every other
-// measured constant in this pipeline (durationMs, LEADING_TRIM_MS). A step id
-// with no entry (never zoomed, or origin couldn't be resolved) just falls
-// back to a centered zoom — same behavior as before this existed.
-import zoomOriginsData from "../zoom-origins.json";
-const zoomOrigins: Record<string, { x: number; y: number }> = zoomOriginsData;
+// ponytail: 2026-09-26 — zoom-origins.json / the per-step zoom transform it
+// fed are no longer read anywhere (see the removed `ZoomVideo` above) — left
+// the JSON file itself in place (harmless, still measured/committed by
+// record.ts) rather than touching that pipeline, but this module no longer
+// imports it.
 
 // ponytail: shared theme colors for every non-recorded/bookend element
 // (title cards, the intro logo card, the outer fallback background) — the
@@ -68,6 +65,14 @@ function TextCard({ text, theme }: { text: string; theme: "light" | "dark" }) {
 const FPS = 30;
 const msToFrames = (ms: number) => Math.round((ms / 1000) * FPS);
 
+// ponytail: 2026-09-26 — floor on a non-textCard step's ON-SCREEN duration
+// (45 frames = 1.5s at 30fps), per direct user ask ("captions must stay on
+// screen long enough to read, ~1.5s minimum for a short line"). Shared by
+// `WalkthroughDemo`'s per-step render loop AND `getTotalDurationInFrames`
+// below — those two MUST apply the exact same math (see that function's own
+// comment on why a mismatch there is a real bug, not cosmetic).
+const MINIMUM_CAPTION_FRAMES = 45;
+
 // ponytail: a static title card instead of a real thumbnail-generation step
 // — playback used to open on a blank canvas while the first recording's
 // video element buffered. This gives it something branded to show
@@ -104,54 +109,19 @@ const hasAudioTrack = getStaticFiles().some((f) => f.name === AUDIO_FILE);
 // video paths below.
 const FILL_FRAME_STYLE: React.CSSProperties = { objectFit: "cover" };
 
-// ponytail: `step.zoom` used to be a STATIC scale held
-// for a beat's entire duration (`transform: scale(step.zoom)` applied once,
-// unconditionally). Direct feedback: this reads as "awful"/"can't see
-// anything" — a whole clip pinned at 1.3-1.5x zoom loses all surrounding
-// context, not just an emphasis effect. The actual intent was always
-// TEMPORARY emphasis: normal view -> zoom in on the specific action as it
-// happens -> brief hold on the result -> zoom back OUT to normal before the
-// beat ends. `ZoomVideo` below animates `scale` across 5 keyframes (normal /
-// ramp-in / held-zoomed / ramp-out / normal) as fractions of the sequence's
-// own padded duration, so it's self-contained per step regardless of that
-// step's actual durationMs. Kept as a plain 5-point `interpolate()` (no
-// easing curve, no new dependency) — a linear ramp reads as a smooth zoom at
-// 30fps over ~15% of a multi-second beat, no need for anything fancier.
-function ZoomVideo({
-    src,
-    startFrom,
-    zoom,
-    durationInFrames,
-    origin,
-}: {
-    src: string;
-    startFrom: number;
-    zoom: number;
-    durationInFrames: number;
-    // Fraction (0-1) of the 800x600 frame to zoom in on — undefined falls
-    // back to a centered zoom (the old, only-ever-available behavior).
-    origin?: { x: number; y: number };
-}) {
-    const frame = useCurrentFrame();
-    const inStart = Math.round(durationInFrames * 0.15);
-    const inEnd = Math.round(durationInFrames * 0.3);
-    const outStart = Math.round(durationInFrames * 0.7);
-    const outEnd = Math.round(durationInFrames * 0.88);
-    const scale = interpolate(
-        frame,
-        [0, inStart, inEnd, outStart, outEnd, durationInFrames],
-        [1, 1, zoom, zoom, 1, 1],
-        { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-    );
-    const transformOrigin = origin ? `${origin.x * 100}% ${origin.y * 100}%` : "center";
-    return (
-        <OffthreadVideo
-            src={src}
-            startFrom={startFrom}
-            style={{ ...FILL_FRAME_STYLE, transform: `scale(${scale})`, transformOrigin }}
-        />
-    );
-}
+// ponytail: 2026-09-26 — REMOVED per direct user feedback ("I don't like the
+// zooming, since it misses things... if in doubt, remove it"). `ZoomVideo`
+// (the old per-step scale-in/scale-out emphasis effect driven by
+// `step.zoom`/`zoom-origins.json`) used to render here; every step now
+// always renders the plain, unzoomed `OffthreadVideo` below regardless of
+// its `zoom` field (that field is now inert — left in `demo-script.ts`/
+// `zoom-origins.json` as harmless unused data rather than ripped out
+// everywhere, so this is easy to re-enable for a specific beat later if a
+// zoom is ever re-introduced where the FULL action — source, cursor path,
+// AND drop target — verifiably stays inside the zoomed frame for its whole
+// duration). Cropping the frame was hiding exactly the drag beats it was
+// most often applied to (source/target regions moving outside the zoomed
+// crop mid-drag), which is the concrete failure the feedback was about.
 
 // ponytail: manual crossfade via overlapping Sequences + opacity
 // interpolate, instead of pulling in @remotion/transitions — that package
@@ -207,9 +177,22 @@ function Fade({
 export function WalkthroughDemo({
     theme = "dark",
     script = demoScript,
+    // ponytail: 2026-09-26 — added per direct user ask ("make the pace
+    // faster") to hit hard duration caps (promo ≤30s, walkthrough ≤60s)
+    // without truncating any action mid-motion. Applies as an
+    // `OffthreadVideo` `playbackRate` to every non-textCard step, with the
+    // Sequence's own on-screen duration shrunk by the same factor — the
+    // clip plays back faster (real motion, not a freeze-and-cut), but
+    // consumes the exact same amount of REAL recorded source content either
+    // way (durationInFrames/speed on screen * speed playback rate = the
+    // original durationInFrames of source), so nothing gets cut off. `1`
+    // (the default) is a no-op — every textCard step and the intro/outro
+    // cards are unaffected regardless of this prop.
+    speed = 1,
 }: {
     theme?: "light" | "dark";
     script?: DemoStep[];
+    speed?: number;
 }) {
     const introDurationInFrames = msToFrames(INTRO_DURATION_MS);
     const colors = THEME_COLORS[theme];
@@ -239,7 +222,16 @@ export function WalkthroughDemo({
                 </Fade>
             </Sequence>
             {script.map((step, i) => {
-                const durationInFrames = msToFrames(step.durationMs);
+                // Only textCard-free steps get sped up at all (see
+                // `effectiveSpeed` below); every current beat's sped-up
+                // duration already clears MINIMUM_CAPTION_FRAMES (module
+                // scope, above) with real margin — verified per-step before
+                // picking the speed constants in Root.tsx.
+                const nominalDurationInFrames = msToFrames(step.durationMs);
+                const effectiveSpeed = step.textCard ? 1 : speed;
+                const durationInFrames = step.textCard
+                    ? nominalDurationInFrames
+                    : Math.max(MINIMUM_CAPTION_FRAMES, Math.round(nominalDurationInFrames / effectiveSpeed));
                 const isFirst = i === 0;
                 const isLast = i === script.length - 1;
                 const from = cutFrame - TRANSITION_FRAMES;
@@ -253,21 +245,12 @@ export function WalkthroughDemo({
                             ) : (
                                 <>
                                     <AbsoluteFill style={{ overflow: "hidden" }}>
-                                        {step.zoom ? (
-                                            <ZoomVideo
-                                                src={staticFile(`recordings/${theme}/${step.id}.webm`)}
-                                                startFrom={leadingTrimFrames}
-                                                zoom={step.zoom}
-                                                durationInFrames={paddedDuration}
-                                                origin={zoomOrigins[step.id]}
-                                            />
-                                        ) : (
-                                            <OffthreadVideo
-                                                src={staticFile(`recordings/${theme}/${step.id}.webm`)}
-                                                startFrom={leadingTrimFrames}
-                                                style={FILL_FRAME_STYLE}
-                                            />
-                                        )}
+                                        <OffthreadVideo
+                                            src={staticFile(`recordings/${theme}/${step.id}.webm`)}
+                                            startFrom={leadingTrimFrames}
+                                            playbackRate={effectiveSpeed}
+                                            style={FILL_FRAME_STYLE}
+                                        />
                                     </AbsoluteFill>
                                     <div
                                         style={{
@@ -316,7 +299,7 @@ export function WalkthroughDemo({
 // existing 800x600 landscape export as-is (not redundant — different
 // consumers: Chrome Web Store / desktop-viewed embeds vs. mobile-shared
 // social).
-export function MobileWalkthroughDemo(props: { theme?: "light" | "dark"; script?: DemoStep[] }) {
+export function MobileWalkthroughDemo(props: { theme?: "light" | "dark"; script?: DemoStep[]; speed?: number }) {
     const theme = props.theme ?? "dark";
     const colors = THEME_COLORS[theme];
     const scale = 1080 / 800;
@@ -339,10 +322,22 @@ export function MobileWalkthroughDemo(props: { theme?: "light" | "dark"; script?
     );
 }
 
-export function getTotalDurationInFrames(script: DemoStep[]) {
+// ponytail: 2026-09-26 — MUST mirror WalkthroughDemo's own per-step duration
+// math exactly (same `speed`/`textCard`/`MINIMUM_CAPTION_FRAMES` floor, the
+// module-scope constant near the top of this file) or Root.tsx's
+// `<Composition durationInFrames=...>` (computed from this, BEFORE any
+// component render) drifts from what the component actually lays out
+// frame-by-frame — Remotion renders exactly `durationInFrames` frames
+// regardless, so a mismatch either truncates the real last beat or renders
+// extra blank frames past the end.
+export function getTotalDurationInFrames(script: DemoStep[], speed = 1) {
     return (
         msToFrames(INTRO_DURATION_MS) +
-        script.reduce((sum, step) => sum + msToFrames(step.durationMs), 0)
+        script.reduce((sum, step) => {
+            const nominal = msToFrames(step.durationMs);
+            const effective = step.textCard ? nominal : Math.max(MINIMUM_CAPTION_FRAMES, Math.round(nominal / speed));
+            return sum + effective;
+        }, 0)
     );
 }
 

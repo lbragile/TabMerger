@@ -6,6 +6,7 @@ import { useTabSummary, QuotaExceededError } from '@/hooks/useAI';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
 import { getPageMetaForTab } from '@/lib/tabAccess';
+import { useAppSettings, DEFAULT_APP_SETTINGS } from '@/hooks/useAppSettings';
 import type { Tab } from '@/lib/types';
 
 // ponytail: module-level cache — lives for the popup session, cleared on close
@@ -20,6 +21,7 @@ interface TabPreviewProps {
 
 export function TabPreview({ tab, children }: TabPreviewProps) {
   const { aiFeatures } = useEntitlements();
+  const { data: appSettings = DEFAULT_APP_SETTINGS } = useAppSettings();
   const { mutateAsync: fetchSummary } = useTabSummary();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,13 +41,21 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
     }
     if (fetchedRef.current) return;
     fetchedRef.current = true;
+    // Never fetch when the setting is off — the tooltip falls back to any ogImage
+    // already stored on the tab (no network call, no tab URL leaves the device).
+    if (!appSettings.showPreviewImages) {
+      setOgImage(tab.ogImage ?? null);
+      return;
+    }
     setLoading(true);
     try {
+      // The fetched image is shown in this tooltip's local state only — it is never
+      // persisted back to `tab.ogImage` (or anywhere else). See useTabPreview.ts.
       const meta = tab.ogImage ? null : await getPageMetaForTab(tab.url);
       setOgImage(tab.ogImage ?? meta?.ogImage ?? null);
     } catch { /* ignore */ }
     setLoading(false);
-  }, [tab]);
+  }, [tab, appSettings.showPreviewImages]);
 
   const generateSummary = useCallback(async () => {
     const cached = summaryCache.get(tab.url);
@@ -101,16 +111,20 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
                 }}
               />
             ) : null}
-            {!loading && (
-              <div
-                className="mt-2 h-24 w-full rounded bg-muted flex-col items-center justify-center gap-1 text-muted-foreground"
-                style={{ display: ogImage ? 'none' : 'flex' }}
-              >
+            {!loading && !ogImage && (
+              <div className="mt-2 h-24 w-full rounded bg-muted flex flex-col items-center justify-center gap-1 text-muted-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span className="text-xs opacity-40">No preview</span>
+                <span className="text-xs opacity-40">
+                  {appSettings.showPreviewImages ? 'No preview' : 'Not enabled'}
+                </span>
               </div>
+            )}
+            {!loading && !ogImage && !appSettings.showPreviewImages && (
+              <p className="mt-1 text-[11px] text-muted-foreground text-center leading-tight">
+                Page images are off. Turn on in Settings.
+              </p>
             )}
             {aiFeatures && (
               summaryLoading ? (

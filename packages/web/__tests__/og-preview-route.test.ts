@@ -1,5 +1,5 @@
 /**
- * Unit tests for GET /api/og-preview — SSRF guards + og:image extraction.
+ * Unit tests for POST /api/og-preview — SSRF guards + og:image extraction.
  *
  * `node:dns/promises` is mocked so hostname resolution is deterministic and
  * offline. `node:https`/`node:http` `request` are mocked (not `fetch` — the
@@ -58,8 +58,12 @@ function mockRequestModules(res: MockResponse) {
   return { httpRequest, httpsRequest }
 }
 
-function req(url: string) {
-  return new NextRequest(`http://localhost/api/og-preview?url=${encodeURIComponent(url)}`)
+function req(url: string | undefined, { badJson = false }: { badJson?: boolean } = {}) {
+  return new NextRequest('http://localhost/api/og-preview', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: badJson ? '{not valid json' : JSON.stringify({ url }),
+  })
 }
 
 beforeEach(() => {
@@ -68,26 +72,41 @@ beforeEach(() => {
   mockLookup.mockResolvedValue([{ address: '93.184.216.34', family: 4 }]) // public IP by default
 })
 
-describe('GET /api/og-preview', () => {
+describe('POST /api/og-preview', () => {
+  it('rejects a missing url field', async () => {
+    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req(undefined))
+    expect(res.status).toBe(400)
+    expect(await res.json()).toEqual({ ogImage: null, description: null })
+  })
+
+  it('rejects an invalid JSON body', async () => {
+    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req(undefined, { badJson: true }))
+    expect(res.status).toBe(400)
+  })
+
   it('rejects non-http(s) protocols', async () => {
     mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('javascript:alert(1)'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('javascript:alert(1)'))
     expect(res.status).toBe(400)
     expect(await res.json()).toEqual({ ogImage: null, description: null })
   })
 
   it('rejects an unparseable url', async () => {
     mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('not a url'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('not a url'))
     expect(res.status).toBe(400)
   })
 
   it('rejects a private-IP literal URL', async () => {
     const { httpRequest, httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('http://192.168.1.5/page'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('http://192.168.1.5/page'))
     expect(res.status).toBe(400)
     expect(httpRequest).not.toHaveBeenCalled()
     expect(httpsRequest).not.toHaveBeenCalled()
@@ -95,16 +114,16 @@ describe('GET /api/og-preview', () => {
 
   it('rejects loopback', async () => {
     mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('http://127.0.0.1/page'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('http://127.0.0.1/page'))
     expect(res.status).toBe(400)
   })
 
   it('rejects a hostname that resolves to the cloud metadata endpoint', async () => {
     mockLookup.mockResolvedValue([{ address: '169.254.169.254', family: 4 }])
     const { httpRequest, httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('http://metadata.internal-service.example/page'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('http://metadata.internal-service.example/page'))
     expect(res.status).toBe(400)
     expect(httpRequest).not.toHaveBeenCalled()
     expect(httpsRequest).not.toHaveBeenCalled()
@@ -116,39 +135,69 @@ describe('GET /api/og-preview', () => {
       { address: '10.0.0.5', family: 4 },
     ])
     mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('http://multi-answer.example/page'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('http://multi-answer.example/page'))
     expect(res.status).toBe(400)
   })
 
   it('rejects localhost', async () => {
     mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('http://localhost:3000/page'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('http://localhost:3000/page'))
     expect(res.status).toBe(400)
   })
 
   it('extracts og:image from sample HTML on the happy path', async () => {
     const html = `<html><head><meta property="og:image" content="https://example.com/img.png" /></head><body></body></html>`
     mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/article'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/article'))
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ ogImage: 'https://example.com/img.png', description: null })
+  })
+
+  it('sets Cache-Control: no-store on every response', async () => {
+    const html = `<head><meta property="og:image" content="https://example.com/img.png" /></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/cache-check'))
+    expect(res.headers.get('Cache-Control')).toBe('no-store')
+  })
+
+  it('never caches — two identical requests both fetch upstream', async () => {
+    const html = `<head><meta property="og:image" content="https://example.com/img.png" /></head>`
+    const { httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    await POST(req('https://example.com/repeat'))
+    await POST(req('https://example.com/repeat'))
+    expect(httpsRequest).toHaveBeenCalledTimes(2)
+  })
+
+  // Meta content is HTML-attribute text: Wikipedia's og:image arrives with `&amp;`, which
+  // used to be passed through and turned into a different (often broken) image URL.
+  it('decodes HTML entities in the image URL and description', async () => {
+    const html = `<head><meta property="og:image" content="https://example.com/img.png?a=1&amp;b=2&#38;c=3" /><meta property="og:description" content="Tabs &amp; windows, &quot;tamed&quot; &#x2014; fast" /></head>`
+    mockRequestModules({ statusCode: 200, headers: {}, body: html })
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/entities'))
+    expect(await res.json()).toEqual({
+      ogImage: 'https://example.com/img.png?a=1&b=2&c=3',
+      description: 'Tabs & windows, "tamed" — fast',
+    })
   })
 
   it('falls back to twitter:image when og:image is absent', async () => {
     const html = `<head><meta name="twitter:image" content="https://example.com/tw.png"></head>`
     mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/article2'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/article2'))
     expect(await res.json()).toEqual({ ogImage: 'https://example.com/tw.png', description: null })
   })
 
   it('returns null ogImage without leaking error details when the upstream fetch fails', async () => {
     mockRequestModules({ statusCode: 500, headers: {}, body: '' })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/broken'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/broken'))
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body).toEqual({ ogImage: null, description: null })
@@ -180,8 +229,8 @@ describe('GET /api/og-preview', () => {
     })
     vi.doMock('node:http', () => ({ request: requestFn, default: { request: requestFn } }))
     vi.doMock('node:https', () => ({ request: requestFn, default: { request: requestFn } }))
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/redirector'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/redirector'))
     expect(await res.json()).toEqual({ ogImage: 'https://example.com/final.png', description: null })
     expect(requestFn).toHaveBeenCalledTimes(2)
   })
@@ -206,8 +255,8 @@ describe('GET /api/og-preview', () => {
     })
     vi.doMock('node:http', () => ({ request: requestFn, default: { request: requestFn } }))
     vi.doMock('node:https', () => ({ request: requestFn, default: { request: requestFn } }))
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/evil-redirector'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/evil-redirector'))
     const body = await res.json()
     expect(body).toEqual({ ogImage: null, description: null })
     expect(call).toBe(1) // never followed the redirect to the private host
@@ -216,16 +265,16 @@ describe('GET /api/og-preview', () => {
   it('extracts description, preferring og:description over the plain description tag', async () => {
     const html = `<head><meta name="description" content="plain"><meta property="og:description" content="og desc"></head>`
     mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/desc'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/desc'))
     expect(await res.json()).toEqual({ ogImage: null, description: 'og desc' })
   })
 
   it('falls back to the plain description tag when og:description is absent', async () => {
     const html = `<head><meta name="description" content="plain desc"></head>`
     mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/desc2'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/desc2'))
     expect(await res.json()).toEqual({ ogImage: null, description: 'plain desc' })
   })
 
@@ -233,8 +282,8 @@ describe('GET /api/og-preview', () => {
     const longDesc = 'a'.repeat(1000)
     const html = `<head><meta name="description" content="${longDesc}"></head>`
     mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { GET } = await import('@/app/api/og-preview/route')
-    const res = await GET(req('https://example.com/desc3'))
+    const { POST } = await import('@/app/api/og-preview/route')
+    const res = await POST(req('https://example.com/desc3'))
     const body = await res.json()
     expect(body.description).toHaveLength(500)
   })

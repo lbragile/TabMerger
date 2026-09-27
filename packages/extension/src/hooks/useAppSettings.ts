@@ -8,6 +8,7 @@ export interface AppSettings {
   openTabOnClick: boolean;
   autoDedupOnMerge: boolean;
   staleThresholdDays: 7 | 14 | 30 | 60;
+  showPreviewImages: boolean;
   aiDailyThrottle: boolean;
   aiAutoGroupEnabled: boolean;
   aiNameGroupEnabled: boolean;
@@ -23,6 +24,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   openTabOnClick: true,
   autoDedupOnMerge: false,
   staleThresholdDays: 30,
+  showPreviewImages: false,
   aiDailyThrottle: true,
   aiAutoGroupEnabled: true,
   aiNameGroupEnabled: true,

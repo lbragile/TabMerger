@@ -2,17 +2,24 @@
 
 ## Description
 
-<!-- Please include a summary of the change(s), which issue is fixed (`#<issue_number>`), and any relevant motivation/context. -->
+<!-- Summarize the change(s), which issue is fixed (`#<issue_number>`), and any relevant
+     motivation/context. Note which package(s) this touches: extension / web / shared / demo. -->
 
 ## Type of change
 
-<!-- Please select all that apply, delete options that are not relevant, or add more that you deem suitable. -->
+<!-- Select all that apply. -->
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature/enhancement (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+- [ ] Change that requires a major version — avoid unless it is truly unavoidable, and agree it with the maintainer first. Only then does the commit body get a `BREAKING CHANGE:` line (see CONTRIBUTING.md)
+- [ ] Documentation update
+- [ ] CI/build/tooling change
 
-## How Has This Been Tested?
+## How has this been tested?
 
-<!-- Please describe the tests that you ran to verify your changes and provide **re-producible** instructions. -->
+<!-- Describe the tests you ran and provide reproducible instructions. -->
+
+- [ ] `pnpm lint` and `pnpm type-check` pass
+- [ ] `pnpm test` passes (unit tests updated/added for the change)
+- [ ] Integration/E2E tests updated if this touches cross-boundary or user-visible flow
+- [ ] `pnpm scan-secrets` is clean

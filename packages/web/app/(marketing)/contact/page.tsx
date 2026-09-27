@@ -1,7 +1,8 @@
 'use client'
 
 import type { Metadata } from 'next'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -21,15 +22,37 @@ type Status = 'idle' | 'sending' | 'sent' | 'error'
 
 const SUBJECT_OPTIONS = [
   'Bug report',
+  'Beta bug report',
+  'Feedback and ideas',
   'Billing question',
   'Feature request',
   'Account help',
   'Other',
 ] as const
 
+// `?topic=` query param used by the /beta page to preselect a subject —
+// keeps the beta guide's "Report a bug" / "Feedback and ideas" links from
+// having to know the exact SUBJECT_OPTIONS string values.
+const TOPIC_TO_SUBJECT: Record<string, (typeof SUBJECT_OPTIONS)[number]> = {
+  beta: 'Beta bug report',
+  feedback: 'Feedback and ideas',
+}
+
 export default function ContactPage() {
+  return (
+    <Suspense fallback={null}>
+      <ContactForm />
+    </Suspense>
+  )
+}
+
+function ContactForm() {
+  const searchParams = useSearchParams()
+  const topic = searchParams.get('topic')
+  const preselectedSubject = topic ? TOPIC_TO_SUBJECT[topic] : undefined
+
   const [status, setStatus] = useState<Status>('idle')
-  const [subjectOption, setSubjectOption] = useState<string>('')
+  const [subjectOption, setSubjectOption] = useState<string>(preselectedSubject ?? '')
   const [otherSubject, setOtherSubject] = useState('')
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null)

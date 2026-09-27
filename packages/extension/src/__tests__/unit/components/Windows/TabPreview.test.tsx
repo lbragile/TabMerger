@@ -6,9 +6,10 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { TabPreview } from '@/components/Windows/TabPreview'
 import type { Tab } from '@/lib/types'
 
-const { mockUseEntitlements, mockFetchSummary } = vi.hoisted(() => ({
+const { mockUseEntitlements, mockFetchSummary, mockUseAppSettings } = vi.hoisted(() => ({
   mockUseEntitlements: vi.fn(),
   mockFetchSummary: vi.fn(),
+  mockUseAppSettings: vi.fn(),
 }))
 
 const MockQuotaExceededError = vi.hoisted(() => class extends Error {
@@ -22,6 +23,11 @@ vi.mock('@/hooks/useAI', () => ({
 }))
 vi.mock('@/components/AIQuotaExceededPrompt', () => ({
   AIQuotaExceededPrompt: () => React.createElement('div', null, 'Buy more AI calls'),
+}))
+// showPreviewImages defaults OFF — tests that need the network fetch path opt in explicitly.
+vi.mock('@/hooks/useAppSettings', () => ({
+  useAppSettings: () => mockUseAppSettings(),
+  DEFAULT_APP_SETTINGS: { showPreviewImages: false },
 }))
 
 function makeTab(overrides: Partial<Tab> = {}): Tab {
@@ -38,6 +44,7 @@ describe('TabPreview', () => {
     vi.unstubAllEnvs()
     vi.unstubAllGlobals()
     mockUseEntitlements.mockReturnValue({ aiFeatures: false })
+    mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: false } })
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: null, description: null }) }))
   })
 
@@ -47,12 +54,13 @@ describe('TabPreview', () => {
     expect(screen.queryByText('https://example.com')).toBeNull()
   })
 
-  it('shows tab title/url and falls back to no-preview state on hover (non-AI tier)', async () => {
+  it('shows tab title/url and a "Not enabled" placeholder on hover when the setting is off (non-AI tier)', async () => {
     const user = userEvent.setup()
     wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     await waitFor(() => expect(screen.getAllByText('https://example.com').length).toBeGreaterThan(0))
-    await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
+    await waitFor(() => expect(screen.getAllByText('Not enabled').length).toBeGreaterThan(0))
+    expect(screen.getAllByText(/Page images are off\. Turn on in Settings\./).length).toBeGreaterThan(0)
   })
 
   it('uses the pre-supplied ogImage without hitting the network when tab.ogImage is set', async () => {
@@ -113,6 +121,7 @@ describe('TabPreview', () => {
     // VITE_WEB_APP_URL, so `import.meta.env.VITE_WEB_APP_URL` is truthy as vitest's ambient
     // default) but failed in CI (no `.env.local` → fetch is never called → 0 vs 1 assertion).
     vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+    mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: true } })
     const user = userEvent.setup()
     wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     const trigger = screen.getByText('Example Page')
@@ -121,18 +130,24 @@ describe('TabPreview', () => {
     expect(fetch).toHaveBeenCalledTimes(1)
   })
 
-  it('fetches the og:image via the server-side og-preview API', async () => {
+  it('fetches the og:image via a POST to the server-side og-preview API when the setting is on', async () => {
     vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+    mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: true } })
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: 'https://img.example.com/og.png', description: null }) }))
     const user = userEvent.setup()
     wrap(<TabPreview tab={makeTab({ id: 42 })}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     await waitFor(() => expect(document.querySelector('img[src="https://img.example.com/og.png"]')).not.toBeNull())
-    expect(fetch).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview?url=https%3A%2F%2Fexample.com')
+    expect(fetch).toHaveBeenCalledWith('https://tabmerger.app/api/og-preview', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url: 'https://example.com' }),
+    })
   })
 
-  it('shows "No preview" without crashing when the server route returns null', async () => {
+  it('shows "No preview" without crashing when the server route returns null (setting on)', async () => {
     vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+    mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: true } })
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ogImage: null }) }))
     const user = userEvent.setup()
     wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
@@ -140,12 +155,33 @@ describe('TabPreview', () => {
     await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
   })
 
-  it('shows "No preview" without crashing when the fetch itself rejects', async () => {
+  it('shows "No preview" without crashing when the fetch itself rejects (setting on)', async () => {
     vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+    mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: true } })
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network error')))
     const user = userEvent.setup()
     wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
     await user.hover(screen.getByText('Example Page'))
     await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
+  })
+
+  it('never calls fetch when the setting is off, even with a valid VITE_WEB_APP_URL', async () => {
+    vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+    mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: false } })
+    const user = userEvent.setup()
+    wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
+    await user.hover(screen.getByText('Example Page'))
+    await waitFor(() => expect(screen.getAllByText('Not enabled').length).toBeGreaterThan(0))
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('shows a stored ogImage instead of "No preview" when the setting is off', async () => {
+    vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+    mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: false } })
+    const user = userEvent.setup()
+    wrap(<TabPreview tab={makeTab({ ogImage: 'https://img.example.com/stored.png' })}><span>Example Page</span></TabPreview>)
+    await user.hover(screen.getByText('Example Page'))
+    await waitFor(() => expect(document.querySelector('img[src="https://img.example.com/stored.png"]')).not.toBeNull())
+    expect(fetch).not.toHaveBeenCalled()
   })
 })

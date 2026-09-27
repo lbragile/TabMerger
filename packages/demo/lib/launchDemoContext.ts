@@ -20,6 +20,19 @@ const EXTENSION_PATH = path.resolve(
 );
 const USER_DATA_DIR = path.resolve(__dirname, "../.pw-user-data");
 
+// ponytail: 2026-09-26 — headless by default per direct coordinator ask.
+// Playwright's own `headless: true` predates MV3 extension support (it
+// can't `--load-extension` at all), but Chrome's newer `--headless=new`
+// CLI mode CAN — so the fix is the same trick the extension's own e2e
+// suite already uses successfully for the real MV3 popup+DnD
+// (`e2e/tests/popup-dnd.spec.ts`, `e2e/fixtures.ts`): pass Playwright
+// `headless: false` (so it doesn't inject its OWN legacy `--headless`
+// flag, which conflicts) and add `--headless=new` as a raw CLI arg
+// instead. `TM_DEMO_HEADED=1` opts back into a real visible window for
+// local debugging (e.g. watching a drag live) without touching this file.
+const HEADLESS = process.env.TM_DEMO_HEADED !== "1";
+const HEADLESS_ARGS = HEADLESS ? ["--headless=new"] : [];
+
 // ponytail: generic, PII-free real sites for the "Now Open" group — no
 // personal accounts, no "New Tab" placeholders.
 const NOW_OPEN_SEED_URLS = [
@@ -58,6 +71,7 @@ export async function launchDemoContext(
         {
             headless: false,
             args: [
+                ...HEADLESS_ARGS,
                 `--disable-extensions-except=${EXTENSION_PATH}`,
                 `--load-extension=${EXTENSION_PATH}`,
             ],
@@ -81,6 +95,7 @@ export async function launchDemoContext(
         viewport: { width: 800, height: 600 },
         deviceScaleFactor,
         args: [
+            ...HEADLESS_ARGS,
             `--disable-extensions-except=${EXTENSION_PATH}`,
             `--load-extension=${EXTENSION_PATH}`,
             `--app=chrome-extension://${extensionId}/popup.html`,
@@ -327,6 +342,26 @@ export async function launchDemoContext(
     await freshPage.setViewportSize({ width: 800, height: 600 });
     await freshPage.goto(`chrome-extension://${extensionId}/popup.html`);
     freshPage.on("dialog", (dialog) => void dialog.accept());
+
+    // ponytail: 2026-09-26 — dismiss CleanupSuggestionBanner.tsx's "N tabs
+    // were saved over 30 days ago" banner once, here, rather than per-step —
+    // demoData.ts deliberately seeds Reading List's tabs as 40-days-stale
+    // (originally for the now-dropped `stale-tabs` demoScript beat, see
+    // git history), but the banner has no relevance to the CURRENT
+    // storyboard and was showing up in literally every recorded frame/
+    // screenshot as visual noise a coordinator review flagged. Its dismissal
+    // is a real localStorage flag (`cleanup_banner_dismissed_until`,
+    // CleanupSuggestionBanner.tsx), not ephemeral React state, so doing this
+    // ONCE here — before record.ts/screenshots.ts's per-step
+    // `context.newPage()` calls — persists for the rest of this profile's
+    // pages, same origin. `.catch(() => null)`: the banner only renders once
+    // useCleanupSuggestions resolves staleTabs.length >= 5, so on a fresh
+    // profile it may not have mounted yet — soft-fail rather than block
+    // every recording on a banner that's cosmetic to begin with.
+    await freshPage
+        .getByRole("button", { name: "Dismiss" })
+        .click({ timeout: 3000 })
+        .catch(() => null);
 
     return { context, page: freshPage };
 }
