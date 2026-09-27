@@ -1,3 +1,26 @@
+# [3.1.0-beta.6](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.5...v3.1.0-beta.6) (2026-09-27)
+
+
+### Bug Fixes
+
+* **extension:** let the page-images setting turn on, and say when it's off ([219e2c3](https://github.com/lbragile/TabMerger/commit/219e2c300136e776b53e7dc60b880f51b948a347))
+* **web:** encrypt dashboard shares entirely in the browser ([b9ebeb9](https://github.com/lbragile/TabMerger/commit/b9ebeb9bc74f6e7e4b78e77d59d78679233dffc6))
+* **web:** list the beta page under Public in the footer ([9b209b3](https://github.com/lbragile/TabMerger/commit/9b209b34df86d3b632d0aba694a08be2c7ed3378))
+* **web:** make the dashboard's per-group Share link work ([d89d4e9](https://github.com/lbragile/TabMerger/commit/d89d4e93b41cb883ff74fcf91a47d3343336edc5))
+* **web:** point the beta page at the tabmerger-beta-testers group ([240c6c3](https://github.com/lbragile/TabMerger/commit/240c6c3071886f5239c057d76c0bb1834a6c75f9))
+* **web:** show plain favicons and working previews on shared groups ([d6ce186](https://github.com/lbragile/TabMerger/commit/d6ce186ed630f34ed83b931b782f6766e9ed617a))
+
+
+### Features
+
+* **demo:** record headless at full frame and cut the videos to 30s and 60s ([4908e99](https://github.com/lbragile/TabMerger/commit/4908e995f46536353e57b58a34c4113aed7f6cca))
+* **demo:** showcase multi-tab and cross-group drag in the promo ([3dbcc34](https://github.com/lbragile/TabMerger/commit/3dbcc34b1d1d715e60050fcff99739cf1d6ec4f3))
+* **extension:** make page images in previews an opt-in setting ([fa11997](https://github.com/lbragile/TabMerger/commit/fa11997defde17930aaa703746f7e02f43b360ec))
+* **extension:** show the version next to the Settings title ([c2e77c4](https://github.com/lbragile/TabMerger/commit/c2e77c40bb58b4aa362eece468ba1bd9422c5cc0))
+* **web:** add a /beta page for testers ([1569d27](https://github.com/lbragile/TabMerger/commit/1569d271bab6b5a789d460da01370163f2f01a77))
+* **web:** give each beta test steps and an example, and take reports on GitHub ([7e5422a](https://github.com/lbragile/TabMerger/commit/7e5422a7701e696f1d7a7765ac8ef4a172ff999f))
+* **web:** make page previews opt-in and disclose them in the policy ([ecc2349](https://github.com/lbragile/TabMerger/commit/ecc2349be62ddb4441267c03fe3ba57e31510c37))
+
 # [3.1.0-beta.5](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.4...v3.1.0-beta.5) (2026-09-26)
 
 
