@@ -16,4 +16,10 @@ describe('Footer', () => {
     expect(screen.getByRole('heading', { name: 'Account' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Legal' })).toBeInTheDocument()
   })
+
+  it('links to the beta page under Product', () => {
+    render(<Footer />)
+    const link = screen.getByRole('link', { name: 'Beta' })
+    expect(link).toHaveAttribute('href', '/beta')
+  })
 })

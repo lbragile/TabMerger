@@ -56,6 +56,14 @@ export function Footer() {
                                     FAQ
                                 </Link>
                             </li>
+                            <li>
+                                <Link
+                                    href="/beta"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    Beta
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                     <div className="flex flex-col gap-2">
