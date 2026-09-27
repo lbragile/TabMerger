@@ -76,11 +76,46 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 500 without leaking details when Resend errors', async () => {
-    sendMock.mockResolvedValue({ data: null, error: { message: 'boom' } })
+    sendMock.mockResolvedValue({
+      data: null,
+      error: { name: 'validation_error', message: 'boom user@example.com', statusCode: 422 },
+    })
     const { POST } = await import('@/app/api/contact/route')
     const res = await POST(req(validBody, '9.9.9.8'))
     expect(res.status).toBe(500)
     expect(await res.json()).toEqual({ ok: false })
+  })
+
+  it('logs the Resend error name/statusCode, never the email or message text', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    sendMock.mockResolvedValue({
+      data: null,
+      error: { name: 'validation_error', message: 'boom user@example.com', statusCode: 422 },
+    })
+    const { POST } = await import('@/app/api/contact/route')
+    await POST(req(validBody, '9.9.9.7'))
+
+    expect(errorSpy).toHaveBeenCalledWith('[contact] send failed', { name: 'validation_error', statusCode: 422 })
+    const loggedArgs = errorSpy.mock.calls.flat().map((a) => JSON.stringify(a))
+    expect(loggedArgs.join(' ')).not.toContain('user@example.com')
+    expect(loggedArgs.join(' ')).not.toContain('boom')
+    expect(loggedArgs.join(' ')).not.toContain(validBody.message)
+
+    errorSpy.mockRestore()
+  })
+
+  it('logs a non-Resend thrown exception without leaking submitted content', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    sendMock.mockRejectedValue(new TypeError('network down'))
+    const { POST } = await import('@/app/api/contact/route')
+    await POST(req(validBody, '9.9.9.6'))
+
+    expect(errorSpy).toHaveBeenCalledWith('[contact] send failed', { name: 'TypeError', statusCode: undefined })
+    const loggedArgs = errorSpy.mock.calls.flat().map((a) => JSON.stringify(a))
+    expect(loggedArgs.join(' ')).not.toContain('user@example.com')
+    expect(loggedArgs.join(' ')).not.toContain(validBody.message)
+
+    errorSpy.mockRestore()
   })
 
   it('rate limits after N requests from the same IP', async () => {

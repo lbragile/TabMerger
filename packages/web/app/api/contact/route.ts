@@ -81,8 +81,21 @@ export async function POST(req: NextRequest) {
       subject: `[Contact] ${subject}`,
       text: `From: ${email}\n\n${message}`,
     })
-    if (error) throw new Error('resend send failed')
-  } catch {
+    if (error) {
+      // Log only the error shape (name/statusCode), never `error.message` —
+      // Resend error messages can embed the recipient/sender address — and
+      // never the submitter's email, subject, or message body. This is the
+      // only signal Vercel logs get for a Resend refusal, so without it a
+      // failure is completely silent.
+      console.error('[contact] send failed', { name: error.name, statusCode: error.statusCode })
+      return NextResponse.json({ ok: false }, { status: 500 })
+    }
+  } catch (err) {
+    // Non-Resend failures (network, thrown exceptions) — same PII-free shape.
+    console.error('[contact] send failed', {
+      name: err instanceof Error ? err.name : 'UnknownError',
+      statusCode: undefined,
+    })
     // Never leak Resend internals to the client.
     return NextResponse.json({ ok: false }, { status: 500 })
   }

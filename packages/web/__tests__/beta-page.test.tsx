@@ -37,13 +37,19 @@ describe('BetaPage', () => {
     expect(discussionsLink).toHaveAttribute('href', 'https://github.com/lbragile/TabMerger/discussions')
   })
 
-  it('offers the contact form as a fallback for testers without a GitHub account', () => {
+  it('offers a single contact form fallback for testers without a GitHub account', () => {
     render(<BetaPage />)
     const fallbackLinks = screen.getAllByRole('link', { name: /no github account\? use the contact form/i })
-    expect(fallbackLinks.length).toBeGreaterThanOrEqual(2)
-    const hrefs = fallbackLinks.map((l) => l.getAttribute('href'))
-    expect(hrefs).toContain('/contact?topic=beta')
-    expect(hrefs).toContain('/contact?topic=feedback')
+    expect(fallbackLinks).toHaveLength(1)
+    expect(fallbackLinks[0]).toHaveAttribute('href', '/contact?topic=beta')
+  })
+
+  it('shows the bug report and idea buttons side by side in one row', () => {
+    render(<BetaPage />)
+    const bugLink = screen.getByRole('link', { name: /report a bug on github/i })
+    const ideaLink = screen.getByRole('link', { name: /share an idea on github/i })
+    // Both buttons' anchor elements share the same immediate row container.
+    expect(bugLink.parentElement).toBe(ideaLink.parentElement)
   })
 
   it('warns that GitHub Discussions are public', () => {

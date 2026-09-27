@@ -637,22 +637,16 @@ export default function BetaPage() {
                   Report a bug on GitHub
                 </a>
               </Button>
-              <Link
-                href="/contact?topic=beta"
-                className="text-sm underline underline-offset-4 hover:text-foreground transition-colors text-muted-foreground"
-              >
-                No GitHub account? Use the contact form.
-              </Link>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 mb-5">
               <Button asChild variant="outline">
                 <a href={IDEA_DISCUSSION_URL} target="_blank" rel="noreferrer">
                   <GitHubMark className="h-4 w-4" />
                   Share an idea on GitHub
                 </a>
               </Button>
+            </div>
+            <div className="mb-5">
               <Link
-                href="/contact?topic=feedback"
+                href="/contact?topic=beta"
                 className="text-sm underline underline-offset-4 hover:text-foreground transition-colors text-muted-foreground"
               >
                 No GitHub account? Use the contact form.
