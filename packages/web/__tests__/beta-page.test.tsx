@@ -12,16 +12,43 @@ describe('BetaPage', () => {
     expect(joinLink).toHaveAttribute('rel', 'noreferrer')
   })
 
-  it('links bug reports to the contact form with the beta topic preselected', () => {
+  it('links the bug report button to a prefilled GitHub Discussions Q&A post', () => {
     render(<BetaPage />)
-    const bugLink = screen.getByRole('link', { name: /open a beta bug report/i })
-    expect(bugLink).toHaveAttribute('href', '/contact?topic=beta')
+    const bugLink = screen.getByRole('link', { name: /report a bug on github/i })
+    const href = bugLink.getAttribute('href') ?? ''
+    expect(href).toMatch(/^https:\/\/github\.com\/lbragile\/TabMerger\/discussions\/new\?/)
+    expect(href).toMatch(/category=q-a/)
+    expect(decodeURIComponent(href.replace(/\+/g, '%20'))).toMatch(/Steps to reproduce/)
+    expect(bugLink).toHaveAttribute('target', '_blank')
+    expect(bugLink).toHaveAttribute('rel', 'noreferrer')
   })
 
-  it('links feedback to the contact form with the feedback topic preselected', () => {
+  it('links the idea button to a prefilled GitHub Discussions Ideas post', () => {
     render(<BetaPage />)
-    const feedbackLink = screen.getByRole('link', { name: /share feedback and ideas/i })
-    expect(feedbackLink).toHaveAttribute('href', '/contact?topic=feedback')
+    const ideaLink = screen.getByRole('link', { name: /share an idea on github/i })
+    const href = ideaLink.getAttribute('href') ?? ''
+    expect(href).toMatch(/^https:\/\/github\.com\/lbragile\/TabMerger\/discussions\/new\?/)
+    expect(href).toMatch(/category=ideas/)
+  })
+
+  it('shows the plain GitHub Discussions link so testers can browse existing reports', () => {
+    render(<BetaPage />)
+    const discussionsLink = screen.getByRole('link', { name: /github\.com\/lbragile\/TabMerger\/discussions/i })
+    expect(discussionsLink).toHaveAttribute('href', 'https://github.com/lbragile/TabMerger/discussions')
+  })
+
+  it('offers the contact form as a fallback for testers without a GitHub account', () => {
+    render(<BetaPage />)
+    const fallbackLinks = screen.getAllByRole('link', { name: /no github account\? use the contact form/i })
+    expect(fallbackLinks.length).toBeGreaterThanOrEqual(2)
+    const hrefs = fallbackLinks.map((l) => l.getAttribute('href'))
+    expect(hrefs).toContain('/contact?topic=beta')
+    expect(hrefs).toContain('/contact?topic=feedback')
+  })
+
+  it('warns that GitHub Discussions are public', () => {
+    render(<BetaPage />)
+    expect(document.body.textContent).toMatch(/discussions are public/i)
   })
 
   it('renders the join/install, what-to-test, report-bugs, and FAQ sections', () => {
@@ -34,7 +61,9 @@ describe('BetaPage', () => {
 
   it('renders a copyable bug report template with all required fields', () => {
     render(<BetaPage />)
-    const pre = document.querySelector('pre')
+    const pre = Array.from(document.querySelectorAll('pre')).find((el) =>
+      (el.textContent ?? '').includes('Steps to reproduce:')
+    )
     expect(pre).toBeInTheDocument()
     expect(pre?.textContent).toMatch(/Summary:/)
     expect(pre?.textContent).toMatch(/Steps to reproduce:/)
@@ -60,5 +89,34 @@ describe('BetaPage', () => {
   it('answers the "Item not found" FAQ', () => {
     render(<BetaPage />)
     expect(screen.getByRole('heading', { name: /item not found/i })).toBeInTheDocument()
+  })
+
+  it('renders test steps as ordered lists', () => {
+    render(<BetaPage />)
+    const orderedLists = document.querySelectorAll('#what-to-test ol')
+    expect(orderedLists.length).toBeGreaterThan(0)
+    // Every test-item steps list should have at least one <li>
+    const firstList = orderedLists[0]
+    expect(firstList.querySelectorAll('li').length).toBeGreaterThan(0)
+  })
+
+  it('renders at least one screenshot with meaningful alt text', () => {
+    render(<BetaPage />)
+    const images = Array.from(document.querySelectorAll('#what-to-test img'))
+    expect(images.length).toBeGreaterThan(0)
+    const withAlt = images.filter((img) => (img.getAttribute('alt') ?? '').trim().length > 0)
+    expect(withAlt.length).toBeGreaterThan(0)
+  })
+
+  it('shows the "Not enabled" hover-preview example matching the real component copy', () => {
+    render(<BetaPage />)
+    expect(document.body.textContent).toMatch(/Not enabled/)
+    expect(document.body.textContent).toMatch(/Page images are off\./)
+    expect(document.body.textContent).toMatch(/Turn on in Settings\./)
+  })
+
+  it('shows the "Save to TabMerger" right-click menu example', () => {
+    render(<BetaPage />)
+    expect(document.body.textContent).toMatch(/Save to TabMerger/)
   })
 })
