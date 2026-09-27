@@ -8,6 +8,7 @@ import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
+import { EXTENSION_MESSAGE, WEBSITE_TO_EXTENSION_TYPES, type ExtensionMessageType } from '@tabmerger/shared';
 
 type SyncNowResult = { ok: true } | { ok: false; reason: 'no-session' | 'locked' | 'error'; message?: string };
 
@@ -255,17 +256,20 @@ export default defineBackground(() => {
     }
   });
 
-  // externally_connectable (see wxt.config.ts) — the web app talks to this listener via
-  // chrome.runtime.sendMessage(extensionId, ...), which requires no host permission at all
-  // (unlike the content script this used to be routed through).
-  chrome.runtime.onMessageExternal.addListener((msg: unknown, _sender, sendResponse) => {
-    const m = msg as { type?: string; accessToken?: string; refreshToken?: string };
+  // Shared by externally_connectable (Chrome/Edge) and the Firefox web-bridge content script
+  // (see web-bridge.content.ts) below — same three message types, same handling, so neither
+  // path can drift from the other.
+  type BridgeMessage = { type?: ExtensionMessageType; accessToken?: string; refreshToken?: string };
+  function handleBridgeMessage(
+    m: BridgeMessage,
+    sendResponse: (response?: unknown) => void
+  ): boolean | void {
     // On-demand install probe: web app checks the response vs. chrome.runtime.lastError.
-    if (m.type === 'PING') {
-      sendResponse({ type: 'PONG', version: chrome.runtime.getManifest().version });
+    if (m.type === EXTENSION_MESSAGE.PING) {
+      sendResponse({ type: EXTENSION_MESSAGE.PONG, version: chrome.runtime.getManifest().version });
       return;
     }
-    if (m.type === 'SYNC_NOW') {
+    if (m.type === EXTENSION_MESSAGE.SYNC_NOW) {
       void handleSyncNow().then(sendResponse);
       return true; // keep the message channel open for the async sendResponse above
     }
@@ -273,10 +277,47 @@ export default defineBackground(() => {
     // we can call setSession(), which writes to chrome.storage.local — the popup's supabase
     // client picks it up via chrome.storage.onChanged. Replaces the old content-script scrape
     // of the web app's localStorage.
-    if (m.type === 'SYNC_AUTH' && m.accessToken && m.refreshToken) {
+    if (m.type === EXTENSION_MESSAGE.SYNC_AUTH && m.accessToken && m.refreshToken) {
       void supabase.auth.setSession({ access_token: m.accessToken, refresh_token: m.refreshToken });
       return;
     }
+  }
+
+  // externally_connectable (see wxt.config.ts) — the web app talks to this listener via
+  // chrome.runtime.sendMessage(extensionId, ...), which requires no host permission at all
+  // (unlike the content script this used to be routed through). Chrome/Edge only — Firefox
+  // doesn't support externally_connectable for web pages, see the onMessage listener below.
+  chrome.runtime.onMessageExternal.addListener((msg: unknown, _sender, sendResponse) => {
+    return handleBridgeMessage(msg as BridgeMessage, sendResponse);
+  });
+
+  // Firefox-only counterpart of the listener above (relayed by web-bridge.content.ts, which
+  // is excluded from Chrome/Edge builds — see that file's `include: ['firefox']`). A content
+  // script's sendMessage always looks internal to onMessage, so this must independently prove
+  // the message actually came from that content script and not some other extension code path:
+  // `sender.id === runtime.id` (true for any of our own extension pages/scripts) AND
+  // `sender.url`'s origin equals this build's web app origin (only the bridge script runs
+  // there — nothing else in this extension has a content script on that page).
+  const WEB_APP_ORIGIN = (() => {
+    try {
+      return import.meta.env.VITE_WEB_APP_URL ? new URL(import.meta.env.VITE_WEB_APP_URL).origin : undefined;
+    } catch {
+      return undefined;
+    }
+  })();
+  chrome.runtime.onMessage.addListener((msg: unknown, sender, sendResponse) => {
+    const m = msg as BridgeMessage;
+    if (!m?.type || !(WEBSITE_TO_EXTENSION_TYPES as readonly string[]).includes(m.type)) return;
+    if (sender.id !== chrome.runtime.id) return;
+    if (!WEB_APP_ORIGIN || !sender.url) return;
+    let senderOrigin: string;
+    try {
+      senderOrigin = new URL(sender.url).origin;
+    } catch {
+      return;
+    }
+    if (senderOrigin !== WEB_APP_ORIGIN) return;
+    return handleBridgeMessage(m, sendResponse);
   });
 
   // Appends tabs as a new window to an existing (non-permanent) group. If groupId is

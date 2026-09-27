@@ -5,6 +5,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolveManifestVersion } from "./scripts/manifestVersion";
 import { resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
+import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "./scripts/firefoxAddonIds";
 import pkg from "./package.json";
 
 function getExtensionName(mode: string): string {
@@ -168,7 +169,13 @@ export default defineConfig({
             },
             browser_specific_settings: {
                 gecko: {
-                    id: "tabmerger@lbragile.com",
+                    // AMO identifies an add-on only by this ID. Stable MUST stay the live listing's
+                    // GUID (addons.mozilla.org/firefox/addon/tabmerger, verified via AMO's public
+                    // API): any other value is a different add-on, so existing Firefox users would
+                    // never receive the update. The 2.0 rewrite had changed it by mistake.
+                    // Beta gets its own ID so the unlisted beta add-on can sit beside stable
+                    // (.claude/plans/firefox-edge-beta-spec.md §5.1).
+                    id: isBeta ? FIREFOX_BETA_ADDON_ID : FIREFOX_STABLE_ADDON_ID,
                     strict_min_version: "109.0",
                 },
             },

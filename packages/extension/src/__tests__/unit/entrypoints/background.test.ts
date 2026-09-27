@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { EXTENSION_MESSAGE } from '@tabmerger/shared'
 
 type BgConfig = { main: () => void } | (() => void)
 let capturedMain: (() => void) | undefined
@@ -80,6 +81,7 @@ function makeChromeStub() {
         onConnect: on('onConnect'),
         getURL: vi.fn().mockReturnValue('icon.png'),
         getManifest: vi.fn().mockReturnValue({ version: '2.9.0' }),
+        id: 'this-extension-id',
       },
       contextMenus: {
         removeAll: vi.fn().mockResolvedValue(undefined),
@@ -737,5 +739,85 @@ describe('background — reminder notifications', () => {
     await stub.listeners.notifOnClicked[0]('reminder-1')
     expect(stub.chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://a.com', active: true })
     expect(stub.chrome.notifications.clear).toHaveBeenCalledWith('reminder-1')
+  })
+})
+
+// Firefox-only web-bridge (web-bridge.content.ts) — its relayed messages land on this
+// listener, the 3rd onMessage.addListener call registered by background.ts (after the
+// alarms/TM_GROUPS_CHANGED listener and the SIGN_IN_WITH_GOOGLE listener). Ambient
+// VITE_WEB_APP_URL for vitest is 'http://localhost:3000' (.env.local, loaded by Vite's
+// default env resolution — same fact TabPreview.test.tsx's ponytail comment relies on).
+describe('background — Firefox web-bridge internal onMessage listener', () => {
+  const WEB_APP_SENDER = { id: 'this-extension-id', url: 'http://localhost:3000/dashboard' }
+
+  it('responds to PING from the content script sender', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+    expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+  })
+
+  it('runs SYNC_NOW and keeps the channel open, same as the external listener', async () => {
+    const sendResponse = vi.fn()
+    const keepOpen = stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.SYNC_NOW }, WEB_APP_SENDER, sendResponse)
+    expect(keepOpen).toBe(true)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+  })
+
+  it('forwards SYNC_AUTH tokens to supabase.auth.setSession', async () => {
+    const { supabase } = await import('@/lib/supabase')
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.SYNC_AUTH, accessToken: 'a', refreshToken: 'b' },
+      WEB_APP_SENDER,
+      sendResponse
+    )
+    expect(supabase.auth.setSession).toHaveBeenCalledWith({ access_token: 'a', refresh_token: 'b' })
+  })
+
+  it('rejects a sender whose id is not this extension (a foreign sender)', () => {
+    const sendResponse = vi.fn()
+    const result = stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.PING },
+      { id: 'some-other-extension', url: 'http://localhost:3000/dashboard' },
+      sendResponse
+    )
+    expect(result).toBeUndefined()
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects a sender whose url origin is not the web app origin', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.PING },
+      { id: 'this-extension-id', url: 'https://evil.example.com/' },
+      sendResponse
+    )
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects a sender with a missing url', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, { id: 'this-extension-id' }, sendResponse)
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects an unrelated message type even from a valid sender', () => {
+    // Deliberately a literal, not a constant — asserting an unrelated internal message type
+    // (not one of the three bridge messages) is correctly ignored by this listener.
+    const sendResponse = vi.fn()
+    const result = stub.listeners.onMessage[2]({ type: 'TM_GROUPS_CHANGED' }, WEB_APP_SENDER, sendResponse)
+    expect(result).toBeUndefined()
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects a malformed sender.url that fails URL parsing', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.PING },
+      { id: 'this-extension-id', url: 'not a url' },
+      sendResponse
+    )
+    expect(sendResponse).not.toHaveBeenCalled()
   })
 })
