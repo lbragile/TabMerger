@@ -35,6 +35,53 @@ are documented inline there and are easy to get stale in a separate doc.
 
 ---
 
+## Browsers and stores
+
+Where each browser gets TabMerger, under which ID, and whether the website can talk to it. An
+extension installed from the Chrome Web Store keeps the **same ID in every Chromium browser**, so
+Chrome, Edge, Brave, Vivaldi, Arc and Opera installs from that store all behave identically.
+Design notes and open work: `.claude/plans/firefox-edge-beta-spec.md`.
+
+### Stable
+
+| Browser | Where users install | Extension ID | Updates from |
+| --- | --- | --- | --- |
+| Chrome | [Chrome Web Store](https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc) | `inmiajapbpafmhjleiebcamfhkfnlgoc` | Chrome Web Store |
+| Edge | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn) (default), or the Chrome Web Store after "Allow extensions from other stores" | `eogjdfjemlgmbblgkjlcgdehbeoodbfn` (Edge store) / the Chrome ID (Chrome Web Store) | The store it was installed from. Edge Add-ons certification takes up to 7 business days per release, so Edge-store users lag Chrome |
+| Brave, Vivaldi, Arc | Chrome Web Store | Chrome ID | Chrome Web Store |
+| Opera | Chrome Web Store, via Opera's "Install Chrome Extensions" add-on | Chrome ID | Chrome Web Store |
+| Firefox | [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/tabmerger/) | Add-on GUID `{19feb84f-3a0b-4ca3-bbae-211b52eb158b}` (set in `wxt.config.ts`; **never change it**, or existing users stop receiving updates) | AMO |
+| Safari | Not supported | | |
+
+An Edge user can end up with both the Edge Add-ons copy and the Chrome Web Store copy: they have
+different IDs, so Edge treats them as two extensions.
+
+### Beta
+
+| Browser | Where testers install | Extension ID | Access |
+| --- | --- | --- | --- |
+| Chrome, Edge, Brave, Vivaldi, Arc, Opera | [TabMerger BETA on the Chrome Web Store](https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd) (Edge: after "Allow extensions from other stores"; Opera: via its add-on) | `nboljhidpjakiohfdkdjkcljdehcapcd` in every one of them | Private: members of the Google Group [tabmerger-beta-testers](https://groups.google.com/g/tabmerger-beta-testers), signed in to the store with that Google account |
+| Firefox | **Planned:** unlisted, self-distributed add-on, signed in CI, files on Vercel Blob, auto-updating via `update_url` | Planned add-on ID `tabmerger-beta@lbragile.com` | Anyone with the link (Firefox has no private listings) |
+| Safari | Not supported | | |
+
+There is deliberately no separate Edge beta item: Edge Add-ons has no tester list (only Public or
+Hidden), certifies each submission in up to 7 business days, and would issue a new ID.
+
+### Website ↔ extension messaging
+
+The website sends `PING` (install detection), `SYNC_AUTH` (hand its sign-in to the extension) and
+`SYNC_NOW` to the extension (`packages/web/lib/extensionMessaging.ts`):
+
+| Browser | Transport | Needs |
+| --- | --- | --- |
+| Chromium browsers | `chrome.runtime.sendMessage` via `externally_connectable` | The ID in the website's env: `NEXT_PUBLIC_CHROME_EXTENSION_ID` (production = stable ID, preview = BETA ID) and, production only, `NEXT_PUBLIC_EDGE_EXTENSION_ID` = `eogjdfjemlgmbblgkjlcgdehbeoodbfn`. The website tries each and uses the first that answers |
+| Firefox | `window.postMessage`, relayed by a content script on the website's own origin that ships **in Firefox builds only** | No ID (Firefox gives each install a random internal address). Firefox users see one site permission for the TabMerger website; Chromium builds gain no permission |
+
+Everything else (sign-in inside the extension, sync, sharing) works in every browser regardless
+of messaging; only the website-driven shortcuts depend on it.
+
+---
+
 ## Prerequisites: one-time setup
 
 ### Step 1 — Chrome Web Store
@@ -112,7 +159,8 @@ Load unpacked in Chrome: `chrome://extensions` → Developer mode → Load unpac
 
 - Chrome: 1–3 business days
 - Firefox: 1–2 weeks (AMO review is manual)
-- Edge: 3–7 business days
+- Edge: up to 7 business days (Microsoft's stated certification window)
+- Firefox unlisted (the planned beta): automated signing, typically minutes
 
 Plan releases accordingly.
 
