@@ -8,6 +8,7 @@ import { SidePanel } from '@/components/SidePanel'
 import { Header } from '@/components/Header'
 import { WindowsPanel } from '@/components/Windows'
 import type { Group, GroupsState } from '@/lib/types'
+import { FreeLimitExceededError } from '@/lib/tierLimits'
 
 // ─── vi.hoisted — variables needed inside vi.mock factories ──────────────────
 
@@ -655,6 +656,24 @@ describe('Header — AI dropdown (Auto-group / Organize)', () => {
     await clickAIMenuItem(/^auto-group$/i)
 
     expect(consoleSpy).toHaveBeenCalled()
+    consoleSpy.mockRestore()
+  })
+
+  it('shows no generic error when the Free-limit backstop blocks applying AI groups (upgrade toast already shown)', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', aiFeatures: true, maxGroups: 5, maxTabs: 50 })
+    const tab = { id: 1, title: 'T', url: 'https://a.com' }
+    const groupsState = makeGroupsState([makeGroup({ permanent: true, windows: [{ id: 1, name: 'W1', tabs: [tab], starred: false, incognito: false, focused: false }] })])
+    mockUseGroupsData.mockReturnValue({ data: groupsState })
+    mockAutoGroupMutateAsync.mockResolvedValue({ groups: [{ name: 'Work', color: 'rgba(0,0,0,1)', tabIds: [1] }] })
+    mockApplyAIGroupsMutateAsync.mockRejectedValue(new FreeLimitExceededError('maxTabs'))
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    wrap(React.createElement(Header))
+    await clickAIMenuItem(/^auto-group$/i)
+
+    expect(mockApplyAIGroupsMutateAsync).toHaveBeenCalled()
+    expect(mockToastError).not.toHaveBeenCalledWith('AI grouping failed')
+    expect(consoleSpy).not.toHaveBeenCalled()
     consoleSpy.mockRestore()
   })
 

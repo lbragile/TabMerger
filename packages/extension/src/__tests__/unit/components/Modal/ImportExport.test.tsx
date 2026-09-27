@@ -11,6 +11,7 @@ const {
   mockParseOneTabs,
   mockToastSuccess,
   mockToastError,
+  mockUseEntitlements,
 } = vi.hoisted(() => ({
   mockUseGroups: vi.fn(),
   mockSetGroupsState: vi.fn().mockResolvedValue(undefined),
@@ -19,6 +20,7 @@ const {
   mockParseOneTabs: vi.fn(),
   mockToastSuccess: vi.fn(),
   mockToastError: vi.fn(),
+  mockUseEntitlements: vi.fn(),
 }))
 
 vi.mock('@/hooks/useGroups', () => ({
@@ -26,6 +28,8 @@ vi.mock('@/hooks/useGroups', () => ({
   useSetGroupsState: () => mockSetGroupsState,
   useImportGroups: () => ({ mutateAsync: mockImportGroupsMutateAsync }),
 }))
+
+vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitlements() }))
 
 vi.mock('@/lib/importExport', () => ({
   parseBookmarksHtml: mockParseBookmarksHtml,
@@ -46,6 +50,7 @@ function makeFile(content: string, name: string, type = 'application/json') {
 beforeEach(() => {
   vi.clearAllMocks()
   mockUseGroups.mockReturnValue({ data: { available: [{ name: 'g' }] } })
+  mockUseEntitlements.mockReturnValue({ tier: 'pro', maxGroups: Infinity, maxTabs: Infinity })
   globalThis.URL.createObjectURL = vi.fn().mockReturnValue('blob:x')
   globalThis.URL.revokeObjectURL = vi.fn()
 })
@@ -135,5 +140,81 @@ describe('ImportExportModal — import OneTab', () => {
     const input = document.querySelector('input[type="file"][accept=".txt"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [file] } })
     await waitFor(() => expect(mockToastError).toHaveBeenCalledWith('No tabs found'))
+  })
+})
+
+describe('ImportExportModal — Free-tier limit gating', () => {
+  it('blocks a bookmarks import that would exceed maxGroups and writes nothing', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', maxGroups: 5, maxTabs: 50 })
+    mockUseGroups.mockReturnValue({
+      data: { available: [{ name: 'Now Open', permanent: true }, ...Array.from({ length: 5 }, (_, i) => ({ name: `g${i}`, windows: [] }))] }
+    })
+    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: [{}] }] }])
+    renderModal('import')
+    const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
+    const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [file] } })
+    await waitFor(() => expect(mockToastError).toHaveBeenCalled())
+    expect(mockToastError).toHaveBeenCalledWith(
+      'Free plan allows up to 5 groups.',
+      expect.objectContaining({ description: expect.stringContaining('This file contains') })
+    )
+    expect(mockImportGroupsMutateAsync).not.toHaveBeenCalled()
+  })
+
+  it('blocks an import that would exceed maxTabs even when under maxGroups', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', maxGroups: 5, maxTabs: 50 })
+    mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true }] } })
+    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: Array.from({ length: 51 }, () => ({})) }] }])
+    renderModal('import')
+    const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
+    const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [file] } })
+    await waitFor(() => expect(mockToastError).toHaveBeenCalled())
+    expect(mockToastError).toHaveBeenCalledWith('Free plan allows up to 50 tabs.', expect.anything())
+    expect(mockImportGroupsMutateAsync).not.toHaveBeenCalled()
+  })
+
+  it('allows a bookmarks import under the free limit', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', maxGroups: 5, maxTabs: 50 })
+    mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true }] } })
+    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: [{}, {}] }] }])
+    renderModal('import')
+    const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
+    const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [file] } })
+    await waitFor(() => expect(mockImportGroupsMutateAsync).toHaveBeenCalled())
+    expect(mockToastError).not.toHaveBeenCalled()
+  })
+
+  it('is unaffected for Pro even far past what would be the free limit', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'pro', maxGroups: Infinity, maxTabs: Infinity })
+    mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true }] } })
+    mockParseBookmarksHtml.mockReturnValue([{ windows: [{ tabs: Array.from({ length: 200 }, () => ({})) }] }])
+    renderModal('import')
+    const file = makeFile('<html></html>', 'bookmarks.html', 'text/html')
+    const input = document.querySelector('input[type="file"][accept=".html"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [file] } })
+    await waitFor(() => expect(mockImportGroupsMutateAsync).toHaveBeenCalled())
+    expect(mockToastError).not.toHaveBeenCalled()
+  })
+
+  it('blocks a full-state JSON import (ImportExport\'s own-export path) that exceeds the free group limit', async () => {
+    mockUseEntitlements.mockReturnValue({ tier: 'free', maxGroups: 2, maxTabs: 50 })
+    renderModal('import')
+    const parsed = {
+      available: [
+        { name: 'Now Open', permanent: true, windows: [] },
+        { name: 'g1', windows: [] },
+        { name: 'g2', windows: [] },
+        { name: 'g3', windows: [] },
+      ]
+    }
+    const file = makeFile(JSON.stringify(parsed), 'export.json')
+    const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
+    fireEvent.change(input, { target: { files: [file] } })
+    await waitFor(() => expect(mockToastError).toHaveBeenCalled())
+    expect(mockToastError).toHaveBeenCalledWith('Free plan allows up to 2 groups.', expect.anything())
+    expect(mockSetGroupsState).not.toHaveBeenCalled()
   })
 })

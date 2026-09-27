@@ -3,9 +3,11 @@ import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/di
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useGroups, useSetGroupsState, useImportGroups } from '@/hooks/useGroups';
+import { useEntitlements } from '@/hooks/useEntitlements';
 import type { GroupsState } from '@/lib/types';
 import { parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
 import { toast } from '@/lib/toast';
+import { blockImportOverFreeLimit, countSavedGroupsAndTabs } from '@/lib/tierLimits';
 
 interface ImportExportModalProps {
   mode: string;
@@ -18,6 +20,7 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
   const { data: groupsState } = useGroups();
   const setGroupsState = useSetGroupsState();
   const importGroups = useImportGroups();
+  const { maxGroups, maxTabs } = useEntitlements();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bookmarksInputRef = useRef<HTMLInputElement>(null);
   const onetabInputRef = useRef<HTMLInputElement>(null);
@@ -43,6 +46,7 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
       if (!parsed.available || !Array.isArray(parsed.available)) {
         throw new Error('Invalid format');
       }
+      if (blockImportOverFreeLimit({ maxGroups, maxTabs }, [], parsed.available, 'replace')) return;
       await setGroupsState(parsed);
       toast.success('Groups imported successfully');
       onClose();
@@ -55,9 +59,10 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
     const html = await file.text();
     const groups = parseBookmarksHtml(html);
     if (groups.length === 0) { toast.error('No bookmarks found'); return; }
-    const tabCount = groups.reduce((n, g) => n + (g.windows[0]?.tabs.length ?? 0), 0);
+    if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
+    const imported = countSavedGroupsAndTabs(groups);
     await importGroups.mutateAsync(groups);
-    toast.success(`Imported ${groups.length} group${groups.length !== 1 ? 's' : ''}, ${tabCount} tab${tabCount !== 1 ? 's' : ''}`);
+    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}`);
     onClose();
   };
 
@@ -65,9 +70,10 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
     const text = await file.text();
     const groups = parseOneTabs(text);
     if (groups.length === 0) { toast.error('No tabs found'); return; }
-    const tabCount = groups.reduce((n, g) => n + (g.windows[0]?.tabs.length ?? 0), 0);
+    if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
+    const imported = countSavedGroupsAndTabs(groups);
     await importGroups.mutateAsync(groups);
-    toast.success(`Imported ${groups.length} group${groups.length !== 1 ? 's' : ''}, ${tabCount} tab${tabCount !== 1 ? 's' : ''}`);
+    toast.success(`Imported ${imported.groups} group${imported.groups !== 1 ? 's' : ''}, ${imported.tabs} tab${imported.tabs !== 1 ? 's' : ''}`);
     onClose();
   };
 

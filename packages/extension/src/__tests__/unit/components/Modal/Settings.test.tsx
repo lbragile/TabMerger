@@ -522,6 +522,22 @@ describe('SettingsModal — Data tab', () => {
     await waitFor(() => expect(globalThis.confirm).toHaveBeenCalled())
     expect(mockImportGroupsMutate).not.toHaveBeenCalled()
   })
+
+  it('blocks the import (before the confirm dialog) when it would exceed the free group limit', async () => {
+    globalThis.confirm = vi.fn().mockReturnValue(true)
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, maxGroups: 1, maxTabs: 50 })
+    mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true, windows: [] }, { name: 'existing', windows: [] }] } })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^data$/i)
+    // importGroups() is mocked (module-level) to return a single group — pushes total saved groups to 2, over maxGroups:1
+    const { toast } = await import('@/lib/toast')
+    const file = new File(['{}'], 'backup.json', { type: 'application/json' })
+    fireEvent.change(fileInput(), { target: { files: [file] } })
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Free plan allows up to 1 groups.', expect.anything()))
+    expect(globalThis.confirm).not.toHaveBeenCalled()
+    expect(mockImportGroupsMutate).not.toHaveBeenCalled()
+  })
 })
 
 describe('SettingsModal — Dev tab (dev-only)', () => {

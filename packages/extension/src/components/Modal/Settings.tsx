@@ -27,6 +27,7 @@ import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 import { hasEncryptionKey, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
+import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -45,7 +46,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { data: saved = DEFAULT_APP_SETTINGS } = useAppSettings();
   const { mutateAsync: saveAppSettings } = useSaveAppSettings();
   const [draft, setDraft] = useState<AppSettings>(saved);
-  const { tier, cloudSync, currentPeriodEnd, aiFeatures } = useEntitlements();
+  const { tier, cloudSync, currentPeriodEnd, aiFeatures, maxGroups, maxTabs } = useEntitlements();
   const { remaining: aiUsageRemaining, cap: aiUsageCap, loading: aiUsageLoading } = useAiUsage();
   const { user, session, signOut } = useAuth();
   const [portalLoading, setPortalLoading] = useState(false);
@@ -170,6 +171,11 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         groups = importGroups(text);
       }
       if (groups.length === 0) throw new Error('No groups found');
+
+      // Free-tier backstop: this import path is additive (appends to existing groups),
+      // so gate on current + imported, same as ImportExport.tsx's Bookmarks/OneTab paths.
+      if (blockImportOverFreeLimit({ maxGroups, maxTabs }, groupsState?.available ?? [], groups, 'append')) return;
+
       if (!confirm(`Import ${groups.length} group${groups.length === 1 ? '' : 's'}?`)) return;
       importGroupsMutation(groups, {
         onSuccess: () => {

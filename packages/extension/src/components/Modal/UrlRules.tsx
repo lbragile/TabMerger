@@ -28,8 +28,8 @@ function GroupDot({ color }: { color: string }) {
 export function UrlRulesModal({ onClose }: UrlRulesModalProps) {
   const { data: groupsState } = useGroups();
   const { data: persistedRules = [] } = useUrlRules();
-  const { mutate: saveRules } = useSaveUrlRules();
   const { tier, maxUrlRules } = useEntitlements();
+  const { mutate: saveRules } = useSaveUrlRules(maxUrlRules);
 
   const [draft, setDraft] = useState<UrlRule[]>(persistedRules);
   const [addOpen, setAddOpen] = useState(false);

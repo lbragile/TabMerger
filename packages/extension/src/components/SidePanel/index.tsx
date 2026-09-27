@@ -14,6 +14,7 @@ import { NEW_GROUP_ID, setNewGroupZoneGate } from '@/hooks/useDndHandlers';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
+import { FreeLimitExceededError } from '@/lib/tierLimits';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession, useSaveSession } from '@/hooks/useSessions';
 import { pluralize } from '@/lib/utils';
@@ -136,8 +137,8 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const selectionMode = useUIStore((s) => s.selectionMode);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const openModal = useUIStore((s) => s.openModal);
-  const { maxGroups, sessions: hasSessions } = useEntitlements();
-  const { mutateAsync: addGroup } = useAddGroup();
+  const { maxGroups, maxTabs, sessions: hasSessions } = useEntitlements();
+  const { mutateAsync: addGroup } = useAddGroup({ maxGroups, maxTabs });
   const { mutate: restoreGroup } = useRestoreGroup();
   const { mutate: deleteGroup } = useDeleteGroup();
   const [archivedOpen, setArchivedOpen] = useState(false);
@@ -226,7 +227,13 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       return;
     }
     const newIndex = raw.length;
-    await addGroup({});
+    try {
+      await addGroup({});
+    } catch (err) {
+      // The backstop already showed the upgrade toast
+      if (err instanceof FreeLimitExceededError) return;
+      throw err;
+    }
     setActiveGroupIndex(newIndex);
     setRenameTarget({ kind: 'group', groupIndex: newIndex });
   };

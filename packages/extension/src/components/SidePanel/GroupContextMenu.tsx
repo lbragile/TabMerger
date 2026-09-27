@@ -90,9 +90,9 @@ export function GroupContextMenu({
   const { mutate: _deleteGroup } = useDeleteGroup();
   const { mutate: archiveGroup } = useArchiveGroup();
   const { mutate: restoreGroup } = useRestoreGroup();
-  const { mutate: duplicateGroup } = useDuplicateGroup();
+  const { maxGroups, maxTabs } = useEntitlements();
+  const { mutate: duplicateGroup } = useDuplicateGroup({ maxGroups, maxTabs });
   const { data: groupsState } = useGroups();
-  const { maxGroups } = useEntitlements();
   const { mutate: replaceWithCurrent } = useReplaceWithCurrent();
   const { mutate: mergeWithCurrent } = useMergeWithCurrent();
   const { mutate: uniteWindows } = useUniteWindows();
