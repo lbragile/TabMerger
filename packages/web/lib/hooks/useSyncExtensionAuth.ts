@@ -3,10 +3,11 @@
 import { useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { sendToExtension, sendToKnownExtension } from '@/lib/extensionMessaging'
+import { EXTENSION_MESSAGE } from '@tabmerger/shared'
 
 /**
  * Forwards the current Supabase session to the extension via
- * `sendToKnownExtension({ type: 'SYNC_AUTH', ... })` — the externally_connectable
+ * `sendToKnownExtension({ type: EXTENSION_MESSAGE.SYNC_AUTH, ... })` — the externally_connectable
  * channel the extension's background script listens on
  * (`chrome.runtime.onMessageExternal`). Fires on every `onAuthStateChange` event
  * that carries a session (sign-in, token refresh, initial load if already signed
@@ -35,7 +36,7 @@ export function useSyncExtensionAuth(): void {
 
       void (async () => {
         const known = await sendToKnownExtension({
-          type: 'SYNC_AUTH',
+          type: EXTENSION_MESSAGE.SYNC_AUTH,
           accessToken: session.access_token,
           refreshToken: session.refresh_token,
         })
@@ -43,11 +44,11 @@ export function useSyncExtensionAuth(): void {
 
         // No confirmed responder yet — probe with PING first so SYNC_AUTH only ever
         // reaches an ID we've verified is a real, reachable TabMerger extension.
-        const pinged = await sendToExtension<{ type?: string }>({ type: 'PING' })
-        if (pinged?.response?.type !== 'PONG') return
+        const pinged = await sendToExtension<{ type?: string }>({ type: EXTENSION_MESSAGE.PING })
+        if (pinged?.response?.type !== EXTENSION_MESSAGE.PONG) return
 
         await sendToKnownExtension({
-          type: 'SYNC_AUTH',
+          type: EXTENSION_MESSAGE.SYNC_AUTH,
           accessToken: session.access_token,
           refreshToken: session.refresh_token,
         })

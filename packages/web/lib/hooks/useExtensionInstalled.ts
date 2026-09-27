@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { sendToExtension, onExtensionReady } from '@/lib/extensionMessaging'
+import { EXTENSION_MESSAGE, WEB_BRIDGE } from '@tabmerger/shared'
 
 const STORAGE_KEY = 'tm_extension_installed'
 
@@ -52,9 +53,9 @@ export function useExtensionInstalled(): boolean {
 
   useEffect(() => {
     let cancelled = false
-    sendToExtension<{ type?: string }>({ type: 'PING' }).then((result) => {
+    sendToExtension<{ type?: string }>({ type: EXTENSION_MESSAGE.PING }).then((result) => {
       if (cancelled) return
-      if (result?.response?.type === 'PONG') {
+      if (result?.response?.type === EXTENSION_MESSAGE.PONG) {
         localStorage.setItem(STORAGE_KEY, '1')
         setConfirmed(true)
       }
@@ -68,7 +69,7 @@ export function useExtensionInstalled(): boolean {
     function handleMessage(e: MessageEvent) {
       if (
         e.origin === window.location.origin &&
-        e.data?.source === 'tabmerger-extension' &&
+        e.data?.source === WEB_BRIDGE.EXTENSION_SOURCE &&
         e.data?.type === 'INSTALLED'
       ) {
         localStorage.setItem(STORAGE_KEY, '1')

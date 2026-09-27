@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { sendToExtension } from '@/lib/extensionMessaging'
 import { useSyncExtensionAuth } from '@/lib/hooks/useSyncExtensionAuth'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { EXTENSION_MESSAGE } from '@tabmerger/shared'
 
 type SyncNowResponse = { ok: boolean; reason?: string; message?: string }
 
@@ -24,7 +25,7 @@ const SYNC_NOW_REASON_MESSAGES: Record<string, string> = {
 // installed/reachable in this browser, so callers can fall back to a plain Supabase re-read
 // instead of hard-failing.
 async function requestExtensionSyncNow(): Promise<SyncNowResponse | null> {
-  const result = await sendToExtension<SyncNowResponse>({ type: 'SYNC_NOW' })
+  const result = await sendToExtension<SyncNowResponse>({ type: EXTENSION_MESSAGE.SYNC_NOW })
   return result?.response ?? null
 }
 

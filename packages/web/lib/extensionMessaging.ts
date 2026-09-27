@@ -1,4 +1,5 @@
 import { EXTENSION_IDS } from '@/lib/extensionId'
+import { WEB_BRIDGE } from '@tabmerger/shared'
 
 // ponytail: no @types/chrome dep in this package — minimal ambient shape for the
 // one API surface we touch (externally_connectable sendMessage probe).
@@ -119,9 +120,9 @@ function handleIncomingPostMessage(event: MessageEvent) {
   if (event.source !== window) return
   if (event.origin !== window.location.origin) return
   const data = event.data as PostMessageReplyData | undefined
-  if (!data || data.source !== 'tabmerger-extension') return
+  if (!data || data.source !== WEB_BRIDGE.EXTENSION_SOURCE) return
 
-  if (data.type === 'READY') {
+  if (data.type === WEB_BRIDGE.READY) {
     // The relay content script ships in Firefox builds only. A browser with page-to-extension
     // runtime messaging (Chrome, Edge, Brave…) never needs this transport, so a READY there is
     // ignored: otherwise any script on the page could post one and divert later messages,
@@ -181,7 +182,7 @@ function attemptPostMessage<T>(message: unknown): Promise<Attempt<T>> {
 
     // targetOrigin is always this page's own origin — never '*' — since the relay is only
     // ever the content script this same origin's extension injected.
-    window.postMessage({ source: 'tabmerger-web', requestId, type, payload }, window.location.origin)
+    window.postMessage({ source: WEB_BRIDGE.WEBSITE_SOURCE, requestId, type, payload }, window.location.origin)
   })
 }
 

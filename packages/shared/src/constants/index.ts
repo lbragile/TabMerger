@@ -69,3 +69,5 @@ export const PRICING_TIERS: PricingTier[] = [
     limits: { groups: Infinity, tabs: Infinity },
   },
 ];
+
+export * from './extensionMessages';
