@@ -102,6 +102,14 @@ interface UIState {
    */
   overlayDismissNonce: number;
 
+  /**
+   * Non-null when sync uploads are paused on Firefox because the browsingActivity data-collection
+   * permission isn't granted (see `src/lib/syncEngine.ts`'s `canUploadOnFirefox`). Always null on
+   * Chrome/Edge. Set/cleared by `useSync`'s `doSync` every cycle — surfaced in Settings' Cloud
+   * sync row rather than failing silently.
+   */
+  syncPausedReason: string | null;
+
   // Actions
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
   closeModal: () => void;
@@ -134,6 +142,7 @@ interface UIState {
   clearSelection: () => void;
   /** Bump {@link UIState.overlayDismissNonce}. Exposed for non-selection callers/tests. */
   dismissOverlays: () => void;
+  setSyncPausedReason: (reason: string | null) => void;
 }
 
 /**
@@ -170,6 +179,8 @@ export const useUIStore = create<UIState>((set, get) => ({
   selectedItems: [],
   selectionAnchor: null,
   overlayDismissNonce: 0,
+  syncPausedReason: null,
+  setSyncPausedReason: (reason) => set({ syncPausedReason: reason }),
 
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),

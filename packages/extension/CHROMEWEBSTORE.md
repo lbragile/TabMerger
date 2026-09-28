@@ -213,7 +213,10 @@ https://tabmerger.vercel.app/privacy
 
 **Firefox is unaffected by the two Chrome Web Store listings above** — it's a separate item on
 a separate store (see `.claude/plans/firefox-edge-beta-spec.md` §5). Chrome and Edge builds carry
-no content script, no host permission, and no site-access prompt from the change below.
+no content script, no host permission, and no site-access prompt from the change below. Firefox's
+own two add-ons (stable AMO listing + the unlisted self-distributed BETA), their data-collection
+declaration, and their update mechanism are tracked separately in
+[`FIREFOXADDONS.md`](FIREFOXADDONS.md), not here.
 
 ### Firefox permission note (`web-bridge.content.ts`)
 

@@ -9,6 +9,16 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/lib/toast';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SIGN_IN_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
+import { requestDataConsent } from '@/lib/dataConsent';
+
+/** Shown inline (not just as a toast, per the coordinator's request for a clear explanation
+ *  the user can still see after the toast auto-dismisses) when Firefox's data-collection
+ *  permission prompt is denied for a sign-in attempt. Every sign-in entry point below requests
+ *  the same categories — see SIGN_IN_DATA_CONSENT_CATEGORIES — since signing in also enables
+ *  cloud sync. No-op (never shown) on Chrome/Edge, where requestDataConsent always resolves true. */
+const SIGN_IN_CONSENT_DENIED_MESSAGE =
+  "Firefox needs permission to sign in and sync. Allow it in the browser's prompt to continue.";
 
 interface AuthModalProps {
   onClose: () => void;
@@ -45,9 +55,20 @@ export function AuthModal({ onClose }: AuthModalProps) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [passwordSaving, setPasswordSaving] = useState(false);
+  const [consentDenied, setConsentDenied] = useState(false);
   const { signIn, signUp, resetPassword, signInWithMagicLink, signInWithGoogle, updatePassword, signOut, user } = useAuth();
 
   const hasPasswordIdentity = user?.identities?.some((i) => i.provider === 'email') ?? false
+
+  // Must be called synchronously as the FIRST thing every sign-in handler below does (no prior
+  // `await`) — Firefox only honors `permissions.request()` when it's still inside the same
+  // user-activated call stack as the click/submit event. No-ops to `true` on Chrome/Edge.
+  const ensureSignInConsent = async () => {
+    const granted = await requestDataConsent(SIGN_IN_DATA_CONSENT_CATEGORIES);
+    setConsentDenied(!granted);
+    if (!granted) toast.error(SIGN_IN_CONSENT_DENIED_MESSAGE);
+    return granted;
+  };
 
   const handleSetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +88,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!(await ensureSignInConsent())) return;
     setLoading(true);
     try {
       await signIn(email, password);
@@ -82,6 +104,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!passwordValid) return;
+    if (!(await ensureSignInConsent())) return;
     setLoading(true);
     try {
       await signUp(email, password);
@@ -110,6 +133,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!(await ensureSignInConsent())) return;
     setLoading(true);
     try {
       await signInWithMagicLink(magicLinkEmail);
@@ -122,6 +146,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
   };
 
   const handleGoogle = async () => {
+    if (!(await ensureSignInConsent())) return;
     setGoogleLoading(true);
     try {
       await signInWithGoogle();
@@ -250,6 +275,12 @@ export function AuthModal({ onClose }: AuthModalProps) {
         <DialogTitle>Sign In to TabMerger</DialogTitle>
         <DialogDescription>Sync your groups across devices with a free account.</DialogDescription>
       </DialogHeader>
+
+      {consentDenied && (
+        <p role="alert" className="mt-3 text-xs text-destructive text-center">
+          {SIGN_IN_CONSENT_DENIED_MESSAGE}
+        </p>
+      )}
 
       <div className="mt-4 flex flex-col gap-3">
         <Button

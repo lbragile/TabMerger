@@ -10,6 +10,11 @@ export default defineConfig({
       '@tabmerger/shared': path.resolve(__dirname, '../shared/src/index.ts'),
     },
   },
+  // Mirrors wxt.config.ts's `vite().define` — see src/env.d.ts. Fixed test value so specs can
+  // assert against it without threading version resolution through the test harness.
+  define: {
+    __TABMERGER_VERSION__: JSON.stringify('0.0.0-test'),
+  },
   test: {
     environment: 'jsdom',
     globals: true,

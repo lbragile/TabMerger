@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { pushPendingChanges, deleteRemoteGroups, pullRemoteChanges, subscribeToRemoteChanges } from '@/lib/syncEngine'
+import { pushPendingChanges, deleteRemoteGroups, pullRemoteChanges, subscribeToRemoteChanges, canUploadOnFirefox } from '@/lib/syncEngine'
 import type { Group } from '@/lib/types'
 import type { Session } from '@supabase/supabase-js'
 
@@ -15,6 +15,7 @@ const {
   mockDecryptBlob,
   mockGetSetting,
   mockSetSetting,
+  mockHasDataConsent,
 } = vi.hoisted(() => ({
   mockGetPendingSyncGroups: vi.fn(),
   mockMarkGroupSynced: vi.fn(),
@@ -27,6 +28,7 @@ const {
   mockDecryptBlob: vi.fn(),
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn(),
+  mockHasDataConsent: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('@/lib/localDb', () => ({
@@ -48,7 +50,10 @@ vi.mock('@tabmerger/shared', () => ({
   decryptBlob: mockDecryptBlob,
   isEncryptedBlob: (v: unknown) =>
     !!v && typeof v === 'object' && 'v' in v && 'iv' in v && 'ct' in v,
+  SYNC_DATA_CONSENT_CATEGORIES: ['browsingActivity'],
 }))
+
+vi.mock('@/lib/dataConsent', () => ({ hasDataConsent: mockHasDataConsent }))
 
 // ─── Supabase mock — client/builder separation (client must NOT be thenable) ──
 
@@ -110,6 +115,7 @@ beforeEach(() => {
   mockChannel.mockReturnValue({ on: mockChannelOn.mockReturnThis(), subscribe: mockChannelSubscribe.mockReturnThis() })
   mockHasEncryptionKey.mockResolvedValue(false)
   mockGetDataKey.mockReturnValue(null)
+  mockHasDataConsent.mockResolvedValue(true)
 
   settingsStore = {}
   mockGetSetting.mockImplementation(async (key: string, defaultValue: unknown) =>
@@ -117,6 +123,14 @@ beforeEach(() => {
   )
   mockSetSetting.mockImplementation(async (key: string, value: unknown) => {
     settingsStore[key] = value
+  })
+})
+
+describe('canUploadOnFirefox', () => {
+  it('delegates straight to hasDataConsent with the shared browsingActivity category', async () => {
+    mockHasDataConsent.mockResolvedValue(false)
+    await expect(canUploadOnFirefox()).resolves.toBe(false)
+    expect(mockHasDataConsent).toHaveBeenCalledWith(['browsingActivity'])
   })
 })
 
@@ -148,6 +162,15 @@ describe('pushPendingChanges', () => {
   it('is a no-op when there are no pending groups', async () => {
     mockGetPendingSyncGroups.mockResolvedValue([])
     await pushPendingChanges(makeSession())
+    expect(currentBuilder.upsert).not.toHaveBeenCalled()
+  })
+
+  it('(Firefox) skips the push entirely when browsingActivity consent is not granted', async () => {
+    mockHasDataConsent.mockResolvedValue(false)
+    mockGetPendingSyncGroups.mockResolvedValue([makeGroup({ id: 'g1' })])
+    await pushPendingChanges(makeSession('u1'))
+    expect(mockHasDataConsent).toHaveBeenCalledWith(['browsingActivity'])
+    expect(mockGetPendingSyncGroups).not.toHaveBeenCalled()
     expect(currentBuilder.upsert).not.toHaveBeenCalled()
   })
 })

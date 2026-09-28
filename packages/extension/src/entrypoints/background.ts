@@ -8,7 +8,14 @@ import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
-import { EXTENSION_MESSAGE, WEBSITE_TO_EXTENSION_TYPES, type ExtensionMessageType } from '@tabmerger/shared';
+import {
+  EXTENSION_MESSAGE,
+  WEBSITE_TO_EXTENSION_TYPES,
+  SIGN_IN_DATA_CONSENT_CATEGORIES,
+  SYNC_AUTH_CONSENT_REQUIRED_REASON,
+  type ExtensionMessageType,
+} from '@tabmerger/shared';
+import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 
 type SyncNowResult = { ok: true } | { ok: false; reason: 'no-session' | 'locked' | 'error'; message?: string };
 
@@ -278,7 +285,27 @@ export default defineBackground(() => {
     // client picks it up via chrome.storage.onChanged. Replaces the old content-script scrape
     // of the web app's localStorage.
     if (m.type === EXTENSION_MESSAGE.SYNC_AUTH && m.accessToken && m.refreshToken) {
-      void supabase.auth.setSession({ access_token: m.accessToken, refresh_token: m.refreshToken });
+      const accessToken = m.accessToken;
+      const refreshToken = m.refreshToken;
+      // Firefox-only: this message has no user gesture behind it in THIS context (it arrives
+      // from a background message listener, not a click), so there's nowhere here to hang a
+      // permissions.request() prompt — Firefox requires that call be synchronous inside a
+      // user-activated event. Accept the session only if sign-in's consent categories were
+      // already granted (e.g. via the Auth modal's own sign-in flow on this device); otherwise
+      // tell the web app plainly instead of silently handing over a session with no permission
+      // to actually use it for sync. No-op check on Chrome/Edge (always true there).
+      if (isFirefoxBuild()) {
+        void hasDataConsent(SIGN_IN_DATA_CONSENT_CATEGORIES).then((granted) => {
+          if (!granted) {
+            sendResponse({ ok: false, reason: SYNC_AUTH_CONSENT_REQUIRED_REASON });
+            return;
+          }
+          void supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+          sendResponse({ ok: true });
+        });
+        return true; // keep the message channel open for the async sendResponse above
+      }
+      void supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
       return;
     }
   }

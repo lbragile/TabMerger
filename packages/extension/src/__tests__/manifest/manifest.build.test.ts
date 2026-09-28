@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "../../../scripts/firefoxAddonIds";
+import { FIREFOX_BETA, FIREFOX_DATA_CONSENT_CATEGORIES } from "@tabmerger/shared";
 
 /**
  * Build-output checks on the emitted manifest.json, run with `pnpm test:manifest` (not part of
@@ -23,7 +24,13 @@ const extensionRoot = path.resolve(testDir, "../../../");
 type Manifest = {
   content_scripts?: { matches: string[]; js: string[] }[];
   host_permissions?: string[];
-  browser_specific_settings?: { gecko?: { id?: string } };
+  browser_specific_settings?: {
+    gecko?: {
+      id?: string;
+      update_url?: string;
+      data_collection_permissions?: { required?: string[]; optional?: string[] };
+    };
+  };
 };
 
 function build(args: string[], outDirName: string): Manifest {
@@ -60,5 +67,45 @@ describe("manifest build output", () => {
     const manifest = build(["-b", "firefox", "--mode", "beta"], "firefox-mv3-beta");
     expect(manifest.browser_specific_settings?.gecko?.id).toBe(FIREFOX_BETA_ADDON_ID);
     expect(FIREFOX_BETA_ADDON_ID).not.toBe(FIREFOX_STABLE_ADDON_ID);
+  });
+
+  it("Firefox beta's update_url is the resolved VITE_WEB_APP_URL + the shared FIREFOX_BETA path", () => {
+    // ponytail: don't hardcode .env.beta's VITE_WEB_APP_URL here — a local .env.local (highest
+    // Vite loadEnv precedence, same rule this repo's other env-dependent tests rely on) legitimately
+    // overrides it for local dev builds. Read whichever value actually won instead.
+    const manifest = build(["-b", "firefox", "--mode", "beta"], "firefox-mv3-beta");
+    const updateUrl = manifest.browser_specific_settings?.gecko?.update_url;
+    expect(updateUrl).toMatch(new RegExp(`^https?://.+${FIREFOX_BETA.PATH}/${FIREFOX_BETA.UPDATES_FILE}$`));
+  });
+
+  it("Firefox stable has no update_url (AMO-listed add-ons update from AMO itself)", () => {
+    const manifest = build(["-b", "firefox"], "firefox-mv3");
+    expect(manifest.browser_specific_settings?.gecko?.update_url).toBeUndefined();
+  });
+
+  it("Chrome and Edge builds have no gecko.update_url", () => {
+    const chromeManifest = build([], "chrome-mv3");
+    const edgeManifest = build(["-b", "edge"], "edge-mv3");
+    expect(chromeManifest.browser_specific_settings?.gecko?.update_url).toBeUndefined();
+    expect(edgeManifest.browser_specific_settings?.gecko?.update_url).toBeUndefined();
+  });
+
+  it("Firefox builds (stable and beta) declare the exact data_collection_permissions", () => {
+    const stableManifest = build(["-b", "firefox"], "firefox-mv3");
+    const betaManifest = build(["-b", "firefox", "--mode", "beta"], "firefox-mv3-beta");
+    for (const manifest of [stableManifest, betaManifest]) {
+      const permissions = manifest.browser_specific_settings?.gecko?.data_collection_permissions;
+      expect(permissions?.required).toEqual(["none"]);
+      expect(permissions?.optional).toEqual([...FIREFOX_DATA_CONSENT_CATEGORIES]);
+      // websiteContent is deliberately NOT declared — nothing transmits page content off-device.
+      expect(permissions?.optional).not.toContain("websiteContent");
+    }
+  });
+
+  it("Chrome and Edge manifests have no data_collection_permissions (a Firefox-only manifest key)", () => {
+    const chromeManifest = build([], "chrome-mv3");
+    const edgeManifest = build(["-b", "edge"], "edge-mv3");
+    expect(chromeManifest.browser_specific_settings?.gecko?.data_collection_permissions).toBeUndefined();
+    expect(edgeManifest.browser_specific_settings?.gecko?.data_collection_permissions).toBeUndefined();
   });
 });

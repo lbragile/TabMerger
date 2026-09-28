@@ -6,6 +6,7 @@ import type { Session } from '@/lib/types';
 import { getSessions, saveSession, deleteSession } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { hasEncryptionKey, getDataKey } from '@/lib/encryptionKey';
+import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { useGroups } from './useGroups';
 
 export const SESSIONS_QUERY_KEY = ['sessions'] as const;
@@ -29,6 +30,7 @@ export function useSessions() {
 export async function pushSessionToSupabase(session: Session): Promise<void> {
   const { data: { session: authSession } } = await supabase.auth.getSession();
   if (!authSession) return;
+  if (!(await canUploadOnFirefox())) return; // see syncEngine.ts's canUploadOnFirefox doc comment
 
   let name: string = session.name;
   let description: string | null = session.description ?? null;

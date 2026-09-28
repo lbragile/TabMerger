@@ -1,3 +1,6 @@
+import { ANALYTICS_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
+import { hasDataConsent } from './dataConsent';
+
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string | undefined;
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_API_KEY as string | undefined;
 const POSTHOG_HOST = (import.meta.env.VITE_POSTHOG_HOST as string | undefined) || 'https://us.i.posthog.com';
@@ -26,15 +29,21 @@ export async function hashUserId(userId: string): Promise<string> {
  * Fire-and-forget — errors are swallowed.
  */
 export function trackEvent(name: string, params?: Record<string, string | number>): void {
-  trackPostHogEvent(name, params); // mirror every GA4 event to PostHog (no-ops if unconfigured)
-  if (!WEB_APP_URL) return; // ponytail: no-op if not configured
-  getClientId().then((clientId) => {
-    fetch(`${WEB_APP_URL}/api/track`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event: name, params, client_id: clientId }),
-    }).catch(() => {}); // fire-and-forget
-  }).catch(() => {});
+  void (async () => {
+    // On Firefox, technicalAndInteraction is an install-time opt-in checkbox, not granted by
+    // default — see dataConsent.ts and firefoxDataConsent.ts. On Chrome/Edge this resolves true
+    // immediately with no permissions check at all.
+    if (!(await hasDataConsent(ANALYTICS_DATA_CONSENT_CATEGORIES))) return;
+    trackPostHogEvent(name, params); // mirror every GA4 event to PostHog (no-ops if unconfigured)
+    if (!WEB_APP_URL) return; // ponytail: no-op if not configured
+    getClientId().then((clientId) => {
+      fetch(`${WEB_APP_URL}/api/track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: name, params, client_id: clientId }),
+      }).catch(() => {}); // fire-and-forget
+    }).catch(() => {});
+  })();
 }
 
 /**
@@ -48,16 +57,21 @@ export function trackEvent(name: string, params?: Record<string, string | number
  */
 export function trackPostHogEvent(name: string, properties?: Record<string, string | number>): void {
   if (!POSTHOG_KEY) return; // ponytail: no-op if not configured
-  getClientId().then((clientId) => {
-    fetch(`${POSTHOG_HOST}/capture/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        api_key: POSTHOG_KEY,
-        event: name,
-        distinct_id: clientId,
-        properties,
-      }),
-    }).catch(() => {}); // fire-and-forget
-  }).catch(() => {});
+  void (async () => {
+    // Only re-checked here (in addition to trackEvent's gate) because this is itself exported
+    // and callable directly — see the module doc comment above.
+    if (!(await hasDataConsent(ANALYTICS_DATA_CONSENT_CATEGORIES))) return;
+    getClientId().then((clientId) => {
+      fetch(`${POSTHOG_HOST}/capture/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          api_key: POSTHOG_KEY,
+          event: name,
+          distinct_id: clientId,
+          properties,
+        }),
+      }).catch(() => {}); // fire-and-forget
+    }).catch(() => {});
+  })();
 }

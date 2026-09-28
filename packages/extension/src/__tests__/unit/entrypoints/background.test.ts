@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { EXTENSION_MESSAGE } from '@tabmerger/shared'
 
 type BgConfig = { main: () => void } | (() => void)
@@ -19,6 +19,7 @@ const {
   mockGetDataKey,
   mockPerformSync,
   mockRegisterGroupsChangeListener,
+  mockHasDataConsent,
 } = vi.hoisted(() => ({
   mockGetGroupsState: vi.fn(),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
@@ -31,6 +32,7 @@ const {
   mockHasEncryptionKey: vi.fn(),
   mockGetDataKey: vi.fn(),
   mockPerformSync: vi.fn(),
+  mockHasDataConsent: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuthFlow }))
@@ -52,6 +54,11 @@ vi.mock('@/lib/encryptionKey', () => ({
 
 vi.mock('@/lib/syncEngine', () => ({
   performSync: mockPerformSync,
+}))
+
+vi.mock('@/lib/dataConsent', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/dataConsent')>()),
+  hasDataConsent: mockHasDataConsent,
 }))
 
 vi.mock('@/lib/urlRuleEngine', () => ({
@@ -143,6 +150,7 @@ beforeEach(async () => {
   mockGetDataKey.mockReset().mockResolvedValue('key')
   mockPerformSync.mockReset().mockResolvedValue([])
   mockRegisterGroupsChangeListener.mockReset()
+  mockHasDataConsent.mockReset().mockResolvedValue(true)
   capturedMain = undefined
   stub = makeChromeStub()
   globalThis.chrome = stub.chrome as unknown as typeof chrome
@@ -773,6 +781,59 @@ describe('background — Firefox web-bridge internal onMessage listener', () => 
       sendResponse
     )
     expect(supabase.auth.setSession).toHaveBeenCalledWith({ access_token: 'a', refresh_token: 'b' })
+  })
+
+  describe('Firefox: SYNC_AUTH is gated on sign-in consent already being granted', () => {
+    beforeEach(() => {
+      vi.stubEnv('FIREFOX', 'true')
+    })
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
+    it('accepts the session and responds ok:true when consent is already granted', async () => {
+      const { EXTENSION_MESSAGE: EM, SIGN_IN_DATA_CONSENT_CATEGORIES } = await import('@tabmerger/shared')
+      mockHasDataConsent.mockResolvedValue(true)
+      const { supabase } = await import('@/lib/supabase')
+      const sendResponse = vi.fn()
+      const keepOpen = stub.listeners.onMessage[2](
+        { type: EM.SYNC_AUTH, accessToken: 'a', refreshToken: 'b' },
+        WEB_APP_SENDER,
+        sendResponse
+      )
+      expect(keepOpen).toBe(true)
+      await new Promise((r) => setTimeout(r, 0))
+      expect(mockHasDataConsent).toHaveBeenCalledWith(SIGN_IN_DATA_CONSENT_CATEGORIES)
+      expect(supabase.auth.setSession).toHaveBeenCalledWith({ access_token: 'a', refresh_token: 'b' })
+      expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+    })
+
+    it('rejects with consent_required and never calls setSession when consent is not granted', async () => {
+      const { EXTENSION_MESSAGE: EM, SYNC_AUTH_CONSENT_REQUIRED_REASON } = await import('@tabmerger/shared')
+      mockHasDataConsent.mockResolvedValue(false)
+      const { supabase } = await import('@/lib/supabase')
+      // ponytail: this mock's `setSession` is created once by the `vi.mock('@/lib/supabase', ...)`
+      // factory and — unlike the hoisted named mocks above — is NOT cleared by the outer
+      // beforeEach's `vi.resetModules()`, so calls from earlier tests in this file (which use the
+      // same literal 'a'/'b' tokens) accumulate on it. Clear immediately before acting.
+      vi.mocked(supabase.auth.setSession).mockClear()
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2](
+        { type: EM.SYNC_AUTH, accessToken: 'a', refreshToken: 'b' },
+        WEB_APP_SENDER,
+        sendResponse
+      )
+      await new Promise((r) => setTimeout(r, 0))
+      expect(supabase.auth.setSession).not.toHaveBeenCalled()
+      expect(sendResponse).toHaveBeenCalledWith({ ok: false, reason: SYNC_AUTH_CONSENT_REQUIRED_REASON })
+    })
+
+    it('PING still works without any consent check on Firefox', () => {
+      mockHasDataConsent.mockResolvedValue(false)
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+      expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+    })
   })
 
   it('rejects a sender whose id is not this extension (a foreign sender)', () => {

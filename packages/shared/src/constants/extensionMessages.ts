@@ -23,6 +23,18 @@ export const WEBSITE_TO_EXTENSION_TYPES: readonly ExtensionMessageType[] = [
 ];
 
 /**
+ * Reply reason when the Firefox relay's `SYNC_AUTH` is rejected because the required Firefox
+ * data-collection permissions (`authenticationInfo`, `personallyIdentifyingInfo`,
+ * `browsingActivity` — see `firefoxDataConsent.ts`) haven't been granted yet. Unlike every other
+ * consent-gated action in this extension, `SYNC_AUTH` arrives from the web app with no user
+ * gesture inside the extension itself to hang a `permissions.request()` prompt off of (Firefox
+ * requires that call be synchronous inside a user-activated event, which a background message
+ * listener never is) — so on Firefox this reason tells the web app sign-in didn't take, instead
+ * of silently accepting a session with no permission to actually use it for sync.
+ */
+export const SYNC_AUTH_CONSENT_REQUIRED_REASON = 'consent_required' as const;
+
+/**
  * The Firefox-only `window.postMessage` relay (Firefox has no `externally_connectable` for web
  * pages). Every message carries a `source` tag so each side ignores everything else on the page.
  */

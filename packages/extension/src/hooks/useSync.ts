@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { performSync, subscribeToRemoteChanges } from '@/lib/syncEngine';
+import { performSync, subscribeToRemoteChanges, canUploadOnFirefox } from '@/lib/syncEngine';
 import {
   getGroupsState,
   saveGroupsState,
@@ -36,6 +36,7 @@ export function useSync() {
   const modal = useUIStore((s) => s.modal);
   const openModal = useUIStore((s) => s.openModal);
   const closeModal = useUIStore((s) => s.closeModal);
+  const setSyncPausedReason = useUIStore((s) => s.setSyncPausedReason);
 
   const doSync = useCallback(async () => {
     if (!session || !cloudSync) return;
@@ -60,6 +61,12 @@ export function useSync() {
       return;
     }
     if (modal.type === 'encryptionSetup') closeModal();
+
+    // Firefox-only: don't even attempt the self-heal/push paths below while browsingActivity
+    // consent isn't granted — pulling still runs further down via performSync (reading remote
+    // changes isn't gated, see canUploadOnFirefox's doc comment), but nothing local should be
+    // uploaded. Surfaced in Settings' Cloud sync row rather than failing silently.
+    setSyncPausedReason((await canUploadOnFirefox()) ? null : 'Sync paused: allow in Firefox');
 
     // Self-heal accounts that completed encryption setup before markAllGroupsPendingSync
     // was added to setupEncryption() — those groups have a data key but were never
@@ -92,7 +99,7 @@ export function useSync() {
     } catch (err) {
       console.error('[useSync] sync error', err);
     }
-  }, [session, cloudSync, qc, modal.type, openModal, closeModal]);
+  }, [session, cloudSync, qc, modal.type, openModal, closeModal, setSyncPausedReason]);
 
   // Sync on mount + when online
   useEffect(() => {

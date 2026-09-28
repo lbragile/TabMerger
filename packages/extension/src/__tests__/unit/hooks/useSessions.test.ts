@@ -6,13 +6,16 @@ import { useSessions, useSaveSession, useDeleteSession, useRestoreSession } from
 import { createGroup, createWindow, createTab } from '@/lib/utils'
 import type { GroupsState, Session } from '@/lib/types'
 
-const { mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting } = vi.hoisted(() => ({
+const { mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting, mockCanUploadOnFirefox } = vi.hoisted(() => ({
   mockGetSessions: vi.fn().mockResolvedValue([]),
   mockSaveSession: vi.fn().mockResolvedValue(undefined),
   mockDeleteSession: vi.fn().mockResolvedValue(undefined),
   mockTrackEvent: vi.fn(),
   mockGetSetting: vi.fn().mockResolvedValue(false),
+  mockCanUploadOnFirefox: vi.fn().mockResolvedValue(true),
 }))
+
+vi.mock('@/lib/syncEngine', () => ({ canUploadOnFirefox: mockCanUploadOnFirefox }))
 
 vi.mock('@/lib/localDb', () => ({
   getSessions: mockGetSessions,
@@ -80,6 +83,7 @@ describe('useSaveSession', () => {
     mockGetSession.mockResolvedValue({ data: { session: null } })
     mockGetSetting.mockResolvedValue(false)
     mockGetDataKey.mockReturnValue(null)
+    mockCanUploadOnFirefox.mockResolvedValue(true)
     const g = createGroup(undefined, 'Saved')
     g.windows = [createWindow([createTab('T1', 'https://a.com')])]
     const nowOpen = createGroup(undefined, 'Now Open')
@@ -125,6 +129,18 @@ describe('useSaveSession', () => {
     })
     expect(mockFrom).toHaveBeenCalledWith('sessions')
     expect((builder.upsert as ReturnType<typeof vi.fn>)).toHaveBeenCalled()
+  })
+
+  it('(Firefox) skips the Supabase upload when browsingActivity consent is not granted', async () => {
+    mockCanUploadOnFirefox.mockResolvedValue(false)
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+    })
+    // Local save (offline-first) still happens — only the Supabase upload is gated.
+    expect(mockSaveSession).toHaveBeenCalled()
+    expect(mockFrom).not.toHaveBeenCalledWith('sessions')
   })
 
   it('encrypts name/groups/description before upsert when encryption is enabled and unlocked', async () => {

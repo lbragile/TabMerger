@@ -9,6 +9,7 @@ const {
   mockGetDataKey,
   mockEncryptBlob,
   mockDecryptBlob,
+  mockCanUploadOnFirefox,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn(),
@@ -17,7 +18,10 @@ const {
   mockGetDataKey: vi.fn().mockReturnValue(null),
   mockEncryptBlob: vi.fn().mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' }),
   mockDecryptBlob: vi.fn(),
+  mockCanUploadOnFirefox: vi.fn().mockResolvedValue(true),
 }))
+
+vi.mock('@/lib/syncEngine', () => ({ canUploadOnFirefox: mockCanUploadOnFirefox }))
 
 vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
@@ -116,6 +120,7 @@ beforeEach(() => {
   mockGetDataKey.mockReturnValue(null)
   mockEncryptBlob.mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' })
   mockDecryptBlob.mockReset()
+  mockCanUploadOnFirefox.mockResolvedValue(true)
   vi.useFakeTimers()
 })
 
@@ -228,6 +233,16 @@ describe('pushDeviceSession (debounced push)', () => {
 
     const payload = (currentBuilder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
     expect(payload.now_open_snapshot).toBeDefined()
+  })
+
+  it('(Firefox) skips the push when browsingActivity consent is not granted', async () => {
+    mockCanUploadOnFirefox.mockResolvedValue(false)
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+
+    pushDeviceSession(makeGroupsState(2))
+    await vi.advanceTimersByTimeAsync(DEVICE_SESSION_DEBOUNCE_MS)
+
+    expect(currentBuilder.from).not.toHaveBeenCalled()
   })
 })
 

@@ -28,6 +28,8 @@ const {
   mockHasEncryptionKey,
   mockGetDataKey,
   mockResetEncryption,
+  mockRequestDataConsent,
+  mockToastError,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -46,6 +48,8 @@ const {
   mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
   mockGetDataKey: vi.fn().mockResolvedValue(null),
   mockResetEncryption: vi.fn().mockResolvedValue(undefined),
+  mockRequestDataConsent: vi.fn().mockResolvedValue(true),
+  mockToastError: vi.fn(),
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
@@ -84,7 +88,8 @@ vi.mock('@/lib/importExport', () => ({
   parseOneTabs: vi.fn().mockReturnValue([]),
   exportGroups: mockExportGroups,
 }))
-vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: mockToastError } }))
+vi.mock('@/lib/dataConsent', () => ({ requestDataConsent: mockRequestDataConsent }))
 vi.mock('@/components/Settings/OtherDevices', () => ({ OtherDevices: () => <div>Other devices panel</div> }))
 vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
 
@@ -126,6 +131,7 @@ beforeEach(() => {
   globalThis.URL.revokeObjectURL = vi.fn()
   mockHasEncryptionKey.mockResolvedValue(false)
   mockGetDataKey.mockReturnValue(null)
+  mockRequestDataConsent.mockResolvedValue(true)
 })
 
 describe('SettingsModal — version badge in title', () => {
@@ -135,7 +141,11 @@ describe('SettingsModal — version badge in title', () => {
     globalThis.chrome = originalChrome
   })
 
-  it('shows version_name when present, preferred over version', async () => {
+  it('shows __TABMERGER_VERSION__ (the injected build semver), not the manifest version, on every browser', async () => {
+    // __TABMERGER_VERSION__ is defined as '0.0.0-test' in vitest.config.ts — same value
+    // regardless of what getManifest() returns, since the badge no longer reads the manifest
+    // for this at all (Chrome's version_name and Firefox's offset store version would both be
+    // wrong to show here — see the component's own comment).
     globalThis.chrome = {
       tabs: { create: vi.fn() },
       runtime: { getManifest: () => ({ version: '4.1.0.5', version_name: '3.1.0-beta.5' }) },
@@ -143,17 +153,7 @@ describe('SettingsModal — version badge in title', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     expect(screen.getByText('Settings').closest('h2, [role="heading"], div')).toBeTruthy()
-    expect(screen.getByText('v3.1.0-beta.5')).toBeInTheDocument()
-  })
-
-  it('falls back to version when version_name is absent', async () => {
-    globalThis.chrome = {
-      tabs: { create: vi.fn() },
-      runtime: { getManifest: () => ({ version: '3.1.0' }) },
-    } as unknown as typeof chrome
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    expect(screen.getByText('v3.1.0')).toBeInTheDocument()
+    expect(screen.getByText('v0.0.0-test')).toBeInTheDocument()
   })
 
   it('renders nothing when chrome.runtime.getManifest is unavailable', async () => {
@@ -367,6 +367,22 @@ describe('SettingsModal — Show page images in previews', () => {
     await user.click(saveBtn)
     await waitFor(() =>
       expect(mockSetSetting).toHaveBeenCalledWith('appSettings', expect.objectContaining({ showPreviewImages: true }))
+    )
+  })
+
+  it('requests browsingActivity consent before turning on, and leaves it off + shows a message when denied', async () => {
+    mockRequestDataConsent.mockResolvedValue(false)
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+
+    await user.click(toggle)
+
+    expect(mockRequestDataConsent).toHaveBeenCalledWith(['browsingActivity'])
+    expect(toggle).not.toBeChecked()
+    expect(mockToastError).toHaveBeenCalledWith(
+      "Firefox needs permission to fetch page images. Allow it in the browser's prompt to turn this on."
     )
   })
 

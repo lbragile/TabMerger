@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { hashUserId, trackEvent } from '@/lib/analytics'
 
 describe('hashUserId', () => {
@@ -74,5 +74,52 @@ describe('trackEvent — configured', () => {
     const mod = await import('@/lib/analytics')
     expect(() => mod.trackEvent('page_view')).not.toThrow()
     await new Promise((r) => setTimeout(r, 0))
+  })
+})
+
+describe('trackEvent / trackPostHogEvent — Firefox data-collection consent gating', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    vi.stubEnv('VITE_WEB_APP_URL', 'http://localhost:3000')
+    vi.stubEnv('VITE_POSTHOG_API_KEY', 'phc_test')
+    vi.stubEnv('FIREFOX', 'true')
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({}))
+  })
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('does not fetch (GA4 or PostHog) when technicalAndInteraction is not granted', async () => {
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = {
+      storage: { local: { get: vi.fn().mockResolvedValue({ ga_client_id: 'x' }), set: vi.fn() } },
+      permissions: { contains: vi.fn().mockResolvedValue(false), request: vi.fn() },
+    }
+    const mod = await import('@/lib/analytics')
+    mod.trackEvent('page_view')
+    await new Promise((r) => setTimeout(r, 0))
+    expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it('fetches (GA4 and PostHog) once technicalAndInteraction is granted', async () => {
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = {
+      storage: { local: { get: vi.fn().mockResolvedValue({ ga_client_id: 'x' }), set: vi.fn() } },
+      permissions: { contains: vi.fn().mockResolvedValue(true), request: vi.fn() },
+    }
+    const mod = await import('@/lib/analytics')
+    mod.trackEvent('page_view')
+    await new Promise((r) => setTimeout(r, 0))
+    expect(fetch).toHaveBeenCalledWith('http://localhost:3000/api/track', expect.anything())
+    expect(fetch).toHaveBeenCalledWith('https://us.i.posthog.com/capture/', expect.anything())
+  })
+
+  it('trackPostHogEvent (called directly) also re-checks consent and no-ops when denied', async () => {
+    ;(globalThis as { chrome: Record<string, unknown> }).chrome = {
+      storage: { local: { get: vi.fn().mockResolvedValue({ ga_client_id: 'x' }), set: vi.fn() } },
+      permissions: { contains: vi.fn().mockResolvedValue(false), request: vi.fn() },
+    }
+    const mod = await import('@/lib/analytics')
+    mod.trackPostHogEvent('direct_call')
+    await new Promise((r) => setTimeout(r, 0))
+    expect(fetch).not.toHaveBeenCalled()
   })
 })

@@ -28,6 +28,8 @@ import { trackEvent } from '@/lib/analytics';
 import { hasEncryptionKey, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
+import { requestDataConsent } from '@/lib/dataConsent';
+import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -54,6 +56,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   const { mutate: importGroupsMutation } = useImportGroups();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const openModal = useUIStore((s) => s.openModal);
+  const syncPausedReason = useUIStore((s) => s.syncPausedReason);
   const [canResetEncryption, setCanResetEncryption] = useState(false);
 
   useEffect(() => {
@@ -118,6 +121,20 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
   const patch = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // Turning the toggle ON must request Firefox's browsingActivity permission FIRST — as the
+  // very first statement, no prior `await` — before flipping the setting on. Turning it off
+  // never needs consent. No-op on Chrome/Edge (requestDataConsent always resolves true there).
+  const handlePreviewImagesToggle = async (checked: boolean) => {
+    if (checked) {
+      const granted = await requestDataConsent(PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES);
+      if (!granted) {
+        toast.error("Firefox needs permission to fetch page images. Allow it in the browser's prompt to turn this on.");
+        return;
+      }
+    }
+    patch('showPreviewImages', checked);
   };
 
   const handleSave = async () => {
@@ -212,17 +229,15 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     pro_ai: 'Pro AI ($7.99/mo)'
   };
 
-  // The beta build's manifest `version` carries a +1 major offset for the store
-  // (see scripts/manifestVersion.ts), so `version_name` — when present — holds the
-  // real semver testers are told to report (e.g. "3.1.0-beta.5"). Guard for
-  // test/dev environments where chrome.runtime.getManifest may not exist.
-  const extensionVersion =
-    typeof chrome !== 'undefined' && chrome.runtime?.getManifest
-      ? (() => {
-          const manifest = chrome.runtime.getManifest();
-          return manifest.version_name ?? manifest.version;
-        })()
-      : undefined;
+  // __TABMERGER_VERSION__ is a Vite `define` (src/env.d.ts) carrying the same raw semver string
+  // fed into scripts/manifestVersion.ts's beta offset mapping — the real version testers should
+  // report (e.g. "3.1.0-beta.5"), independent of the manifest's version/version_name split. Using
+  // it directly (rather than reading chrome.runtime.getManifest().version_name) works identically
+  // on every browser: Chrome/Edge get version_name for free, but Firefox drops that Chrome-only
+  // manifest field entirely, so reading it there would show the offset store version instead
+  // (e.g. "4.1.0.6"). Guard for test/dev environments where chrome.runtime may not exist.
+  const hasExtensionManifest = typeof chrome !== 'undefined' && typeof chrome.runtime?.getManifest === 'function';
+  const extensionVersion = hasExtensionManifest ? __TABMERGER_VERSION__ : undefined;
 
   return (
     <>
@@ -347,7 +362,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               className="shrink-0"
               aria-label="Show page images in previews"
               checked={draft.showPreviewImages}
-              onCheckedChange={(v) => patch('showPreviewImages', v)}
+              onCheckedChange={(v) => void handlePreviewImagesToggle(v)}
             />
           </div>
 
@@ -356,6 +371,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
               <div className="min-w-0 flex-1">
                 <Label className="text-sm">Cloud sync</Label>
                 <p className="text-xs text-muted-foreground">Sync groups across your devices</p>
+                {syncPausedReason && (
+                  <p className="text-xs text-amber-500 mt-0.5">{syncPausedReason}</p>
+                )}
               </div>
               <Switch
                 className="shrink-0"

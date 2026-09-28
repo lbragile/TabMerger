@@ -13,6 +13,8 @@ const {
   mockSignInWithMagicLink,
   mockSignInWithGoogle,
   mockUpdatePassword,
+  mockRequestDataConsent,
+  mockToastError,
 } = vi.hoisted(() => ({
   mockSignIn: vi.fn(),
   mockSignUp: vi.fn(),
@@ -22,10 +24,13 @@ const {
   mockSignInWithMagicLink: vi.fn(),
   mockSignInWithGoogle: vi.fn(),
   mockUpdatePassword: vi.fn(),
+  mockRequestDataConsent: vi.fn().mockResolvedValue(true),
+  mockToastError: vi.fn(),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
-vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: mockToastError } }))
+vi.mock('@/lib/dataConsent', () => ({ requestDataConsent: mockRequestDataConsent }))
 
 function renderModal(onClose = vi.fn()) {
   render(<Dialog open><DialogContent><AuthModal onClose={onClose} /></DialogContent></Dialog>)
@@ -34,6 +39,7 @@ function renderModal(onClose = vi.fn()) {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mockRequestDataConsent.mockResolvedValue(true)
   mockUseAuth.mockReturnValue({
     user: null,
     signIn: mockSignIn,
@@ -138,6 +144,56 @@ describe('AuthModal — signed out', () => {
     fireEvent.click(screen.getByRole('button', { name: /continue with google/i }))
     await waitFor(() => expect(mockSignInWithGoogle).toHaveBeenCalled())
     expect(onClose).not.toHaveBeenCalled()
+  })
+})
+
+describe('AuthModal — Firefox data-collection consent denied', () => {
+  beforeEach(() => {
+    mockRequestDataConsent.mockResolvedValue(false)
+  })
+
+  it('blocks email/password sign-in, shows the inline + toast message, and never calls signIn', async () => {
+    const { onClose } = renderModal()
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'user@example.com' } })
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } })
+    fireEvent.click(screen.getByRole('button', { name: /^sign in$/i }))
+    await waitFor(() => expect(mockRequestDataConsent).toHaveBeenCalled())
+    expect(mockSignIn).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+    expect(mockToastError).toHaveBeenCalledWith(
+      "Firefox needs permission to sign in and sync. Allow it in the browser's prompt to continue."
+    )
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      "Firefox needs permission to sign in and sync. Allow it in the browser's prompt to continue."
+    )
+  })
+
+  it('blocks sign-up and never calls signUp', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await user.click(screen.getByRole('tab', { name: /sign up/i }))
+    await user.type(screen.getByLabelText('Email'), 'new@example.com')
+    await user.type(screen.getByLabelText('Password'), 'StrongPass1')
+    await user.click(screen.getByRole('button', { name: /create account/i }))
+    await waitFor(() => expect(mockRequestDataConsent).toHaveBeenCalled())
+    expect(mockSignUp).not.toHaveBeenCalled()
+  })
+
+  it('blocks the magic link flow and never calls signInWithMagicLink', async () => {
+    const user = userEvent.setup()
+    renderModal()
+    await user.click(screen.getByRole('tab', { name: /magic link/i }))
+    await user.type(screen.getByLabelText('Email'), 'magic@example.com')
+    await user.click(screen.getByRole('button', { name: /send magic link/i }))
+    await waitFor(() => expect(mockRequestDataConsent).toHaveBeenCalled())
+    expect(mockSignInWithMagicLink).not.toHaveBeenCalled()
+  })
+
+  it('blocks Google sign-in and never calls signInWithGoogle', async () => {
+    renderModal()
+    fireEvent.click(screen.getByRole('button', { name: /continue with google/i }))
+    await waitFor(() => expect(mockRequestDataConsent).toHaveBeenCalled())
+    expect(mockSignInWithGoogle).not.toHaveBeenCalled()
   })
 })
 
