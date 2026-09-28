@@ -19,6 +19,12 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/__tests__/setup.ts'],
+    // Pinned so specs never depend on a developer's .env.local: CI has no .env files, so the
+    // Firefox web-bridge `matches` and the background's relay-sender check came out empty there
+    // while passing locally. Individual specs can still vi.stubEnv() a different value.
+    env: {
+      VITE_WEB_APP_URL: 'http://localhost:3000',
+    },
     // ponytail: 'scripts/**' covers build-tooling tests (e.g. the semver->manifest-version
     // mapping in scripts/manifestVersion.ts) that intentionally live outside src/ — it's
     // release-pipeline logic, not app logic, so it's also excluded from coverage.include below.
