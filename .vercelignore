@@ -1,0 +1,22 @@
+# Files `vercel deploy` must never upload from a local checkout (CI uses deploy --prebuilt from a
+# clean runner, so this only matters for a deploy started from someone's machine).
+
+# Local env files hold real secrets, and Next.js would load them into the build and the server
+# over the Vercel environment's own values (a standalone build even copies them into every
+# function). Every environment variable comes from Vercel → Settings → Environment Variables.
+.env
+.env.*
+!.env.example
+.envrc
+.direnv
+
+# Local build output and tool caches: rebuilt on Vercel, and large.
+node_modules
+.next
+.vercel
+.turbo
+coverage
+test-results
+playwright-report
+packages/extension/.output
+packages/extension/.wxt
