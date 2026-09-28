@@ -16,6 +16,7 @@
     "zip:firefox": "wxt zip -b firefox",
     "zip:edge": "wxt zip -b edge",
     "zip:beta": "wxt zip -b chrome --mode beta",
+    "publish:firefox-beta": "tsx scripts/publishFirefoxBeta.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --max-warnings=0",
     "test": "vitest run",
@@ -81,6 +82,7 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.64.0",
     "@typescript-eslint/parser": "^8.64.0",
+    "@vercel/blob": "^2.8.0",
     "@vitejs/plugin-react": "^5.2.0",
     "@vitest/coverage-v8": "4.1.10",
     "@wxt-dev/module-react": "^1.2.2",
@@ -91,6 +93,7 @@
     "jsdom": "^29.1.1",
     "rollup-plugin-visualizer": "^7.0.1",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vitest": "^4.1.10",
     "wxt": "^0.20.27"

@@ -121,6 +121,36 @@ of messaging; only the website-driven shortcuts depend on it.
 3. Add to GitHub Secrets: `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`.
    (`VERCEL_PROJECT_ID` starts with `prj_`; don't swap the two IDs.)
 
+### Step 4b — Firefox beta hosting (Vercel Blob)
+
+The self-distributed (unlisted) Firefox beta build is served from the BETA web app's own domain
+(`tabmerger-preview.vercel.app/firefox-beta/...`), not a separate host — `next.config.ts` rewrites
+`/firefox-beta/*` to a public Vercel Blob store. Path/file names come from the single shared
+source of truth, `packages/shared/src/constants/firefoxBeta.ts` (`FIREFOX_BETA`), used by both the
+web app's rewrite and CI's publish step.
+
+1. Create (or reuse) a public Vercel Blob store for the project.
+2. Set `FIREFOX_BETA_BLOB_BASE_URL` (its public base, e.g.
+   `https://<id>.public.blob.vercel-storage.com`) as a Vercel environment variable on the
+   **Preview** environment only — the beta channel only exists on the preview deployment, and
+   this is not a secret (it's just environment-specific, so it isn't hardcoded). Leave it unset on
+   Production; the `/beta` page falls back to a short "coming soon" line when it's unset.
+3. CI's publish step (`packages/extension/scripts/publishFirefoxBeta.ts`, run from the
+   `publish-firefox-beta` job — see `.claude/plans/publish-firefox-beta.patch`, not yet applied
+   to `publish.yml`) uploads the signed `.xpi` and `updates.json` to that store under the
+   `FIREFOX_BETA.PATH` prefix, using `FIREFOX_BETA.XPI_CONTENT_TYPE` for the `.xpi`'s
+   `Content-Type` so Firefox offers to install it directly from the link.
+4. Add `FIREFOX_BETA_BLOB_TOKEN` to GitHub Secrets — a Vercel Blob **read-write** token for that
+   store (Vercel dashboard → Storage → the Blob store → `.env.local` tab, or
+   `vercel env pull` after `vercel link`). This is distinct from `FIREFOX_BETA_BLOB_BASE_URL`
+   above: the base URL is a public, non-secret Vercel env var the *web app* reads to build its
+   rewrite; this token is the *write* credential CI uses to actually upload files, and must
+   never be exposed to the web app or any client.
+
+Firefox's beta build also needs `FIREFOX_API_KEY`/`FIREFOX_API_SECRET` (Step 2 above) a second
+time, this time with `--channel unlisted` rather than `--channel listed` — same AMO credentials,
+different `web-ext sign` invocation, no additional secret to create.
+
 ### Step 5 — Supabase / web app build secrets
 
 Both beta and stable extension builds need `VITE_SUPABASE_URL` and
