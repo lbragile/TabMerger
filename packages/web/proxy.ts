@@ -131,6 +131,10 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // /firefox-beta/* is rewritten straight to the Vercel Blob store (next.config.ts) serving
+    // the self-distributed Firefox beta .xpi/updates.json — it's public, unauthenticated, and
+    // not one of the app's routes, so it should skip the Supabase session refresh entirely
+    // rather than pay that cost (and risk of ever redirecting it) on every install/update check.
+    '/((?!_next/static|_next/image|favicon.ico|firefox-beta/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

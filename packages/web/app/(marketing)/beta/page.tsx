@@ -3,7 +3,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { LegalToc } from '@/components/legal-toc'
-import { FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { FREE_TIER_LIMITS, FIREFOX_BETA } from '@tabmerger/shared'
+
+// Same gate next.config.ts uses to decide whether to rewrite /firefox-beta/* to the Blob store —
+// only set on the Preview deployment (see docs/PUBLISHING.md). Reading it directly here (rather
+// than threading a prop) keeps this a plain server component with no client/server split needed
+// just for one conditional section.
+const FIREFOX_BETA_CONFIGURED = Boolean(process.env.FIREFOX_BETA_BLOB_BASE_URL)
+const FIREFOX_BETA_XPI_URL = `${FIREFOX_BETA.PATH}/${FIREFOX_BETA.LATEST_XPI_FILE}`
 
 export const metadata: Metadata = {
   title: 'Beta Program',
@@ -924,10 +931,37 @@ export default function BetaPage() {
                 Opera: install Opera's "Install Chrome Extensions" add-on first, then use the link
                 above. If you also have the stable TabMerger installed from the Edge Add-ons
                 store, turn it off while testing the beta — it's a separate extension from this
-                one. A Firefox beta is coming; until then, Firefox users can join the beta with
-                any of the supported Chromium browsers listed above (Chrome, Edge, Brave,
-                Vivaldi, Arc, Opera). Safari isn't supported.
+                one. Safari isn't supported.
               </li>
+              {FIREFOX_BETA_CONFIGURED ? (
+                <li id="firefox">
+                  <span className="text-foreground font-medium">Firefox.</span> Firefox has its
+                  own beta build, installed from a direct link rather than the Chrome Web Store
+                  listing above.{' '}
+                  <a
+                    href={FIREFOX_BETA_XPI_URL}
+                    className="underline underline-offset-4 hover:text-foreground transition-colors"
+                  >
+                    Install the Firefox beta
+                  </a>
+                  . Firefox asks whether to add "TabMerger BETA": choose Add. It checks for
+                  updates on its own roughly once a day; to check right now, open{' '}
+                  <code className="text-xs bg-muted px-1.5 py-0.5 rounded">about:addons</code>,
+                  click the gear icon, and choose "Check for Updates." Signing in on this website
+                  also signs the extension in on Firefox — no separate sign-in step needed there.{' '}
+                  <strong className="text-foreground">
+                    Anyone with the install link above can install it
+                  </strong>{' '}
+                  — please don't share it outside the tester group.
+                </li>
+              ) : (
+                <li>
+                  <span className="text-foreground font-medium">Firefox.</span> A Firefox beta is
+                  coming soon; until then, Firefox users can join the beta with any of the
+                  supported Chromium browsers listed above (Chrome, Edge, Brave, Vivaldi, Arc,
+                  Opera).
+                </li>
+              )}
               <li>
                 <span className="text-foreground font-medium">Note your version.</span> Open
                 TabMerger's Settings and copy the version badge next to the "Settings" title (e.g.{' '}

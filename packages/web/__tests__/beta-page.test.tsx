@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import BetaPage from '@/app/(marketing)/beta/page'
 
@@ -292,5 +292,45 @@ describe('BetaPage', () => {
     const webAppIdx = ids.indexOf('web-app-and-dashboard')
     expect(signInIdx).toBeGreaterThanOrEqual(0)
     expect(webAppIdx).toBe(signInIdx + 1)
+  })
+
+  describe('Firefox beta install section', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs()
+      vi.resetModules()
+    })
+
+    it('shows only a short "coming soon" line when FIREFOX_BETA_BLOB_BASE_URL is unset', () => {
+      render(<BetaPage />)
+      expect(document.body.textContent).toMatch(/A Firefox beta is coming/)
+      expect(document.body.textContent).toMatch(
+        /Firefox users can join the beta with any of the supported Chromium browsers/
+      )
+      expect(screen.queryByRole('link', { name: /install the firefox beta/i })).not.toBeInTheDocument()
+    })
+
+    it('shows a real Firefox install section when FIREFOX_BETA_BLOB_BASE_URL is set', async () => {
+      vi.stubEnv('FIREFOX_BETA_BLOB_BASE_URL', 'https://abc123.public.blob.vercel-storage.com')
+      vi.resetModules()
+      const { default: ConfiguredBetaPage } = await import('@/app/(marketing)/beta/page')
+      render(<ConfiguredBetaPage />)
+
+      expect(document.body.textContent).not.toMatch(/A Firefox beta is coming/)
+
+      const installLink = screen.getByRole('link', { name: /install the firefox beta/i })
+      expect(installLink).toHaveAttribute('href', '/firefox-beta/tabmerger-beta.xpi')
+
+      const text = document.body.textContent ?? ''
+      expect(text).toMatch(/TabMerger BETA/)
+      expect(text).toMatch(/about:addons/)
+      expect(text).toMatch(/Check for Updates/i)
+      expect(text).toMatch(/signing in on (this|the) website also signs the extension in on firefox/i)
+      expect(text).toMatch(/anyone with the install link.*can install it/i)
+      expect(text).toMatch(/don't share it outside the tester group/i)
+      // Must never link or mention the stable Firefox add-on (its store version is outdated).
+      expect(text).not.toMatch(/addons\.mozilla\.org/)
+      expect(text).not.toMatch(/stable Firefox|outdated/i)
+      expect(screen.queryByRole('link', { name: /Firefox Add-ons/ })).not.toBeInTheDocument()
+    })
   })
 })

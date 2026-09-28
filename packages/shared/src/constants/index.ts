@@ -84,3 +84,4 @@ export function getPricingTier(id: PricingTier['id']): PricingTier {
 }
 
 export * from './extensionMessages';
+export * from './firefoxBeta';
