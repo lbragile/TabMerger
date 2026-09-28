@@ -134,6 +134,10 @@ jobs:
       - name: Test web (with coverage)
         run: pnpm --filter @tabmerger/web test -- --coverage
 
+      # Repo-level release tooling (scripts/set-release-version.mjs, run by semantic-release)
+      - name: Test release scripts
+        run: pnpm test:scripts
+
       # Baseline for future PRs to diff against — only refreshed on the default
       # branch, so a bad PR can never poison the baseline other PRs compare to.
       # Deliberately NOT refreshed from `beta`: beta carries unreleased work, and

@@ -138,8 +138,7 @@ web app's rewrite and CI's publish step.
    this is not a secret (it's just environment-specific, so it isn't hardcoded). Leave it unset on
    Production; the `/beta` page falls back to a short "coming soon" line when it's unset.
 3. CI's publish step (`packages/extension/scripts/publishFirefoxBeta.ts`, run from the
-   `publish-firefox-beta` job — see `.claude/plans/publish-firefox-beta.patch`, not yet applied
-   to `publish.yml`) uploads the signed `.xpi` and `updates.json` to that store under the
+   `publish-firefox-beta` job in `publish.yml`) uploads the signed `.xpi` and `updates.json` to that store under the
    `FIREFOX_BETA.PATH` prefix, using `FIREFOX_BETA.XPI_CONTENT_TYPE` for the `.xpi`'s
    `Content-Type` so Firefox offers to install it directly from the link.
 4. Add `FIREFOX_BETA_BLOB_TOKEN` to GitHub Secrets — a Vercel Blob **read-write** token for that
