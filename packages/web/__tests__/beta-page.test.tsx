@@ -324,7 +324,9 @@ describe('BetaPage', () => {
       expect(text).toMatch(/TabMerger BETA/)
       expect(text).toMatch(/about:addons/)
       expect(text).toMatch(/Check for Updates/i)
-      expect(text).toMatch(/signing in on (this|the) website also signs the extension in on firefox/i)
+      // Website sign-in only reaches Firefox after the extension's own consent prompt was allowed
+      expect(text).toMatch(/sign in once inside the extension and allow Firefox's data permission prompt/i)
+      expect(text).toMatch(/after that, signing in on this website also signs the extension in/i)
       expect(text).toMatch(/anyone with the install link.*can install it/i)
       expect(text).toMatch(/don't share it outside the tester group/i)
       // Must never link or mention the stable Firefox add-on (its store version is outdated).

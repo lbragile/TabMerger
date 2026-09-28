@@ -947,8 +947,9 @@ export default function BetaPage() {
                   . Firefox asks whether to add "TabMerger BETA": choose Add. It checks for
                   updates on its own roughly once a day; to check right now, open{' '}
                   <code className="text-xs bg-muted px-1.5 py-0.5 rounded">about:addons</code>,
-                  click the gear icon, and choose "Check for Updates." Signing in on this website
-                  also signs the extension in on Firefox — no separate sign-in step needed there.{' '}
+                  click the gear icon, and choose "Check for Updates." Sign in once inside the
+                  extension and allow Firefox's data permission prompt (it covers sign-in and sync);
+                  after that, signing in on this website also signs the extension in.{' '}
                   <strong className="text-foreground">
                     Anyone with the install link above can install it
                   </strong>{' '}
