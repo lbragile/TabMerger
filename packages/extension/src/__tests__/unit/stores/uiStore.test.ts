@@ -180,3 +180,25 @@ describe('activeGroupIndex persistence', () => {
     expect(setSetting).toHaveBeenCalledWith('activeGroupIndex', 3)
   })
 })
+
+describe('uiStore — setPreviewGroupColor', () => {
+  beforeEach(() => useUIStore.setState({ previewGroupColor: null }))
+
+  it('sets and clears the live colour preview', () => {
+    useUIStore.getState().setPreviewGroupColor({ groupId: 'g1', color: 'rgba(1, 2, 3, 1)' })
+    expect(useUIStore.getState().previewGroupColor).toEqual({ groupId: 'g1', color: 'rgba(1, 2, 3, 1)' })
+    useUIStore.getState().setPreviewGroupColor(null)
+    expect(useUIStore.getState().previewGroupColor).toBeNull()
+  })
+
+  it('skips no-op updates so subscribers are not notified for an unchanged preview', () => {
+    useUIStore.getState().setPreviewGroupColor({ groupId: 'g1', color: 'rgba(1, 2, 3, 1)' })
+    const listener = vi.fn()
+    const unsubscribe = useUIStore.subscribe(listener)
+    useUIStore.getState().setPreviewGroupColor({ groupId: 'g1', color: 'rgba(1, 2, 3, 1)' })
+    expect(listener).not.toHaveBeenCalled()
+    useUIStore.getState().setPreviewGroupColor({ groupId: 'g1', color: 'rgba(4, 5, 6, 1)' })
+    expect(listener).toHaveBeenCalledTimes(1)
+    unsubscribe()
+  })
+})

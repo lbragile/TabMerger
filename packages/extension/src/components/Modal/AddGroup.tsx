@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ColorPicker } from '@/components/ColorPicker';
 import { useAddGroup, useGroups } from '@/hooks/useGroups';
+import { useEntitlements } from '@/hooks/useEntitlements';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 
 interface AddGroupModalProps {
@@ -16,7 +17,12 @@ interface AddGroupModalProps {
 export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
   const [name, setName] = useState(DEFAULT_GROUP_TITLE);
   const [color, setColor] = useState(DEFAULT_GROUP_COLOR);
-  const { mutate: addGroup, isPending } = useAddGroup();
+  // Live Custom-picker preview, separate from the committed draft `color` — a drag/typing
+  // tick must not itself become the new draft (Cancel needs something to revert to).
+  const [previewColor, setPreviewColor] = useState<string | null>(null);
+  const displayColor = previewColor ?? color;
+  const { maxGroups, maxTabs } = useEntitlements();
+  const { mutate: addGroup, isPending } = useAddGroup({ maxGroups, maxTabs });
   const { data: groupsState } = useGroups();
   const onCreated = data?.onCreated as ((groupIndex: number) => void) | undefined;
 
@@ -59,7 +65,22 @@ export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
 
         <div className="space-y-1.5">
           <Label>Color</Label>
-          <ColorPicker value={color} onChange={setColor} />
+          <div className="flex items-center gap-2">
+            <span
+              data-testid="add-group-color-preview"
+              className="h-4 w-4 shrink-0 rounded-full border border-foreground/15"
+              style={{ backgroundColor: displayColor }}
+              aria-hidden="true"
+            />
+            <ColorPicker
+              value={color}
+              onChange={(c) => {
+                setColor(c);
+                setPreviewColor(null);
+              }}
+              onPreview={setPreviewColor}
+            />
+          </div>
         </div>
       </div>
 
