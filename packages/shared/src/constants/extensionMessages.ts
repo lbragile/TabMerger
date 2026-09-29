@@ -46,3 +46,11 @@ export const WEB_BRIDGE = {
   /** Posted once by the relay when it loads, so the website can detect it without a request. */
   READY: 'READY',
 } as const;
+
+/**
+ * ID of the unpacked development build (`packages/extension/.output/chrome-mv3-dev`). Chrome
+ * derives an unpacked extension's ID from its folder path, so this is only right for the
+ * maintainer's checkout path — used for `externally_connectable` in development builds, the
+ * website's dev-only extension lookup, and the local Supabase redirect allow-list.
+ */
+export const DEV_EXTENSION_ID = 'ogfmehaahkdfdfggcaabepknidpdgnbb';

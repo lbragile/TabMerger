@@ -1,6 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
-
-const DEV_ID = 'ogadhgghhdbaohdcajfakeogcamicdkm'
+import { DEV_EXTENSION_ID as DEV_ID } from '@tabmerger/shared'
 
 async function loadWith(env: Record<string, string | undefined>) {
   vi.resetModules()

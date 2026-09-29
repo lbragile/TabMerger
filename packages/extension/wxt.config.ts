@@ -7,6 +7,7 @@ import { resolveManifestVersion } from "./scripts/manifestVersion";
 import { resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
 import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "./scripts/firefoxAddonIds";
 import { resolveFirefoxBetaUpdateUrl } from "./scripts/firefoxBetaUpdateUrl";
+import { DEV_EXTENSION_ID } from "@tabmerger/shared";
 import { FIREFOX_DATA_CONSENT_CATEGORIES } from "@tabmerger/shared";
 import pkg from "./package.json";
 
@@ -179,7 +180,7 @@ export default defineConfig({
                     isBeta
                         ? env.CHROME_EXTENSION_ID_BETA
                         : env.CHROME_EXTENSION_ID,
-                    "ogadhgghhdbaohdcajfakeogcamicdkm",
+                    DEV_EXTENSION_ID,
                 ].filter((id): id is string => Boolean(id)),
             },
             browser_specific_settings: {

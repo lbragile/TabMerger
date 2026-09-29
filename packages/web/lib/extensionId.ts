@@ -1,5 +1,4 @@
-// Dev unpacked build ID, used when no published Chrome Web Store ID is configured.
-const DEV_EXTENSION_ID = 'ogadhgghhdbaohdcajfakeogcamicdkm'
+import { DEV_EXTENSION_ID } from '@tabmerger/shared'
 
 /**
  * Ordered, de-duplicated list of TabMerger extension IDs to target with

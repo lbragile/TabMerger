@@ -304,9 +304,9 @@ Never remove that offset.
   a feature flag as of this writing — do not describe it as available in store copy while that
   flag is off. See `CLAUDE.md`'s AI feature flag notes and the recent commits enabling it
   (`945e4f1`, `63cbf63`, `7dff2d3`, `6d8fe0d`).
-- `externally_connectable` is scoped to the web app origin plus one hard-coded extra ID
-  (`ogadhgghhdbaohdcajfakeogcamicdkm`) — TODO (owner): document what that second ID is if a
-  reviewer asks (not derivable from this repo alone).
+- `externally_connectable` is scoped to the web app origin plus one extra ID,
+  `DEV_EXTENSION_ID` (`@tabmerger/shared`): the maintainer's unpacked development build, so the
+  local web app can reach it. It grants nothing to other extensions or sites.
 
 ### Rejection History
 
