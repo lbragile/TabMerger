@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PricingTable } from '@/components/pricing/PricingTable'
+import { getPriceInfo, type BillingInterval } from '@/lib/tiers'
+import { hasCloudSync } from '@/lib/cloudSync'
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -16,16 +18,21 @@ export default async function PricingPage() {
   } = await supabase.auth.getUser()
 
   let currentTier = 'free'
+  let currentInterval: BillingInterval | undefined
   if (user) {
     const { data: subscription } = await supabase
       .from('subscriptions')
-      .select('tier')
+      .select('tier, status, stripe_price_id')
       .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single()
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
-    if (subscription?.tier) {
+    // Same paid-plan rule as the rest of the product (active/trialing/past_due), not just 'active'.
+    if (subscription && hasCloudSync(subscription)) {
       currentTier = subscription.tier
+      // Resolved here: the Stripe price IDs are server-only env vars, undefined in the browser.
+      currentInterval = getPriceInfo(subscription.stripe_price_id)?.interval
     }
   }
 
@@ -40,7 +47,7 @@ export default async function PricingPage() {
             Start free. Upgrade when you&apos;re ready for more.
           </p>
         </div>
-        <PricingTable currentTier={currentTier} />
+        <PricingTable currentTier={currentTier} currentInterval={currentInterval} />
       </div>
       <p className="text-center text-sm text-text2 mt-14">
         Have more questions? See the <Link href="/faq" className="text-primary hover:underline">FAQ</Link>.

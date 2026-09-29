@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
 
 interface PricingTableProps {
   currentTier?: string
+  /** How the current paid plan is billed; unknown (or free) leaves it undefined. */
+  currentInterval?: 'monthly' | 'yearly'
 }
 
 const PRO_SAVINGS = yearlySavings(TIERS.pro.monthlyPrice, TIERS.pro.yearlyPrice)
@@ -19,8 +21,9 @@ function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>):
   return `${formatUsd(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
 }
 
-export function PricingTable({ currentTier }: PricingTableProps) {
-  const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
+export function PricingTable({ currentTier, currentInterval }: PricingTableProps) {
+  // Open on what the user already pays, so the current plan's card shows their real price.
+  const [interval, setInterval] = useState<'monthly' | 'yearly'>(currentInterval ?? 'monthly')
 
   return (
     <div className="flex flex-col items-center gap-10">
@@ -57,6 +60,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
           features={TIERS.free.features}
           interval={interval}
           currentTier={currentTier}
+          currentInterval={currentInterval}
           displayMonthly="$0"
           displayYearly="$0"
         />
@@ -72,6 +76,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
             interval={interval}
             highlighted
             currentTier={currentTier}
+            currentInterval={currentInterval}
             displayMonthly={`$${TIERS.pro.monthlyPrice}`}
             displayYearly={`$${TIERS.pro.yearlyPrice}`}
             yearlySubtext={yearlySubtext(PRO_SAVINGS)}
@@ -86,6 +91,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
           features={TIERS.proAi.features}
           interval={interval}
           currentTier={currentTier}
+          currentInterval={currentInterval}
           displayMonthly={`$${TIERS.proAi.monthlyPrice}`}
           displayYearly={`$${TIERS.proAi.yearlyPrice}`}
           yearlySubtext={yearlySubtext(PRO_AI_SAVINGS)}

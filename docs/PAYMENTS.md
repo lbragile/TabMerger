@@ -181,6 +181,49 @@ Test card `4242 4242 4242 4242`, any future expiry, any CVC. Useful triggers:
 
 TODO (owner): record which Stripe account/mode and endpoint IDs back production and preview.
 
+### Switching between monthly and yearly
+
+The current plan's card on `/pricing` offers "Switch to yearly/monthly billing". It calls
+`POST /api/billing/switch-interval`, which opens the Billing Portal directly on Stripe's "confirm
+plan change" page for the same plan at the other interval. The `customer.subscription.updated`
+webhook records the new price when it takes effect; the route never writes the subscription row.
+
+Timing (a product decision, 2026-09-28):
+
+- **Monthly → yearly** applies immediately. Stripe charges the yearly price minus credit for the
+  unused part of the month (`always_invoice`), and the new term starts that day.
+- **Yearly → monthly** waits for the end of the paid year (`schedule_at_period_end` condition
+  `shortening_interval`). Stripe attaches a subscription schedule; while it's pending, another
+  switch returns 409 "A billing change is already scheduled…", shown on the card.
+
+**Each mode's portal configuration must list the plan's prices**, or Stripe rejects the session
+("configuration … does not include the price in its `features[subscription_update][products]`")
+and the button shows "Couldn't start the switch". Listing them also gives **Manage billing** its
+own "Update subscription" option with both intervals. In Dashboard → Settings → Billing →
+Customer portal → Subscriptions, turn on "Customers can switch plans", add **TabMerger Pro** with
+its monthly and yearly prices, set quantity changes off and prorations to invoice immediately,
+and under "when to apply changes" choose end of billing period for changes that shorten the
+billing interval.
+Or, with the CLI:
+
+```bash
+stripe billing_portal configurations update <bpc_…> [--live] \
+  -d "features[subscription_update][enabled]=true" \
+  -d "features[subscription_update][default_allowed_updates][0]=price" \
+  -d "features[subscription_update][default_allowed_updates][1]=promotion_code" \
+  -d "features[subscription_update][proration_behavior]=always_invoice" \
+  -d "features[subscription_update][schedule_at_period_end][conditions][0][type]=shortening_interval" \
+  -d "features[subscription_update][products][0][product]=<Pro product>" \
+  -d "features[subscription_update][products][0][prices][0]=<Pro monthly price>" \
+  -d "features[subscription_update][products][0][prices][1]=<Pro yearly price>" \
+  -d "features[subscription_update][products][0][adjustable_quantity][enabled]=false"
+```
+
+List only products that are on sale: while AI is "coming soon", leave **Pro AI** out, or the portal
+would let a Pro customer upgrade to it. Add it (both prices) when AI launches. Test mode's default
+configuration was set up this way on 2026-09-28. `STRIPE_PORTAL_CONFIGURATION_ID` (optional) makes
+the switch use a different configuration than the account default.
+
 ---
 
 ## AI flag and payments

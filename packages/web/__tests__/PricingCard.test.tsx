@@ -271,4 +271,81 @@ describe('PricingCard', () => {
       expect(cta).not.toBeDisabled()
     })
   })
+
+  describe('switching billing interval on the current plan', () => {
+    it('offers "Switch to yearly billing" on a monthly current plan, in the primary style', async () => {
+      const PricingCard = await loadPricingCard(true)
+      render(<PricingCard {...baseProps} currentTier="pro" currentInterval="monthly" />)
+      expect(screen.getByText('Billed monthly')).toBeInTheDocument()
+      const button = screen.getByRole('button', { name: 'Switch to yearly billing' })
+      expect(button.className).toContain('bg-primary')
+      expect(screen.queryByRole('button', { name: /Upgrade to/ })).not.toBeInTheDocument()
+    })
+
+    it('offers "Switch to monthly billing" on a yearly current plan, whichever interval the toggle shows', async () => {
+      const PricingCard = await loadPricingCard(true)
+      render(<PricingCard {...baseProps} interval="monthly" currentTier="pro" currentInterval="yearly" />)
+      expect(screen.getByRole('button', { name: 'Switch to monthly billing' })).toBeInTheDocument()
+    })
+
+    it('shows no switch without a known interval, or on a card that is not the current plan', async () => {
+      const PricingCard = await loadPricingCard(true)
+      const { unmount } = render(<PricingCard {...baseProps} currentTier="pro" />)
+      expect(screen.queryByRole('button', { name: /Switch to/ })).not.toBeInTheDocument()
+      unmount()
+      render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" currentTier="pro" currentInterval="monthly" />)
+      expect(screen.queryByRole('button', { name: /Switch to/ })).not.toBeInTheDocument()
+    })
+
+    it('posts the target interval and sends the user to the Stripe confirmation page', async () => {
+      const PricingCard = await loadPricingCard(true)
+      const user = userEvent.setup()
+      const assign = vi.fn()
+      const original = window.location
+      Object.defineProperty(window, 'location', { configurable: true, value: { ...original, set href(v: string) { assign(v) } } })
+      vi.mocked(global.fetch).mockResolvedValue(
+        new Response(JSON.stringify({ url: 'https://billing.stripe.com/p/session/x' }), { status: 200 })
+      )
+      try {
+        render(<PricingCard {...baseProps} currentTier="pro" currentInterval="monthly" />)
+        await user.click(screen.getByRole('button', { name: 'Switch to yearly billing' }))
+        expect(global.fetch).toHaveBeenCalledWith('/api/billing/switch-interval', expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({ interval: 'yearly' }),
+        }))
+        expect(assign).toHaveBeenCalledWith('https://billing.stripe.com/p/session/x')
+      } finally {
+        Object.defineProperty(window, 'location', { configurable: true, value: original })
+      }
+    })
+
+    it('shows an error when the switch cannot start', async () => {
+      const PricingCard = await loadPricingCard(true)
+      const user = userEvent.setup()
+      vi.mocked(global.fetch).mockResolvedValue(new Response(JSON.stringify({ error: 'x' }), { status: 500 }))
+      render(<PricingCard {...baseProps} currentTier="pro" currentInterval="monthly" />)
+      await user.click(screen.getByRole('button', { name: 'Switch to yearly billing' }))
+      expect(await screen.findByRole('alert')).toHaveTextContent("Couldn't start the switch")
+    })
+
+    it("shows the server's own message for a 409 (e.g. a switch already scheduled)", async () => {
+      const PricingCard = await loadPricingCard(true)
+      const user = userEvent.setup()
+      vi.mocked(global.fetch).mockResolvedValue(
+        new Response(JSON.stringify({ error: 'A billing change is already scheduled for the end of this term.' }), { status: 409 })
+      )
+      render(<PricingCard {...baseProps} currentTier="pro" currentInterval="yearly" />)
+      await user.click(screen.getByRole('button', { name: 'Switch to monthly billing' }))
+      expect(await screen.findByRole('alert')).toHaveTextContent('already scheduled for the end of this term')
+    })
+
+    it('sends a signed-out session to sign-in', async () => {
+      const PricingCard = await loadPricingCard(true)
+      const user = userEvent.setup()
+      vi.mocked(global.fetch).mockResolvedValue(new Response('{}', { status: 401 }))
+      render(<PricingCard {...baseProps} currentTier="pro" currentInterval="monthly" />)
+      await user.click(screen.getByRole('button', { name: 'Switch to yearly billing' }))
+      expect(push).toHaveBeenCalledWith('/auth/sign-in?redirectTo=/pricing')
+    })
+  })
 })
