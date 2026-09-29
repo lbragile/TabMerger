@@ -36,7 +36,7 @@
     "husky": "^9.1.7",
     "next": "^16.3.3",
     "semantic-release": "^25.0.8",
-    "supabase": "^2.116.0"
+    "supabase": "^2.118.0"
   },
   "commitlint": {
     "extends": [
