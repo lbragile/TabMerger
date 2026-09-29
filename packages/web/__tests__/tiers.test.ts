@@ -69,7 +69,15 @@ describe('yearlySavings', () => {
 describe('formatUsd', () => {
   it('always shows cents', async () => {
     const { formatUsd } = await import('@/lib/tiers')
-    expect(formatUsd(3.5825)).toBe('$3.58')
-    expect(formatUsd(7)).toBe('$7.00')
+    // Always marked as US dollars: a bare "$" reads as local dollars in Canada and elsewhere.
+    expect(formatUsd(3.5825)).toBe('US$3.58')
+    expect(formatUsd(7)).toBe('US$7.00')
+  })
+
+  it('formatListPrice leaves the currency to the listing footnote', async () => {
+    const { formatListPrice, PRICES_IN_USD_NOTE } = await import('@/lib/tiers')
+    expect(formatListPrice(3.5825)).toBe('$3.58')
+    expect(formatListPrice(7)).toBe('$7.00')
+    expect(PRICES_IN_USD_NOTE).toMatch(/US dollars \(USD\)/)
   })
 })

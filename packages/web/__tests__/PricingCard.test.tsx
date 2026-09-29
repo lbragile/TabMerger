@@ -237,7 +237,7 @@ describe('PricingCard', () => {
     it('still renders the real price on the Pro AI card, not a placeholder', async () => {
       const PricingCard = await loadPricingCard(false)
       render(<PricingCard {...baseProps} tier="proAi" name="Pro AI" monthlyPrice={7} />)
-      expect(screen.getByText('$7')).toBeInTheDocument()
+      expect(screen.getByText('$7.00')).toBeInTheDocument()
     })
 
     it('shows a "Coming soon" badge and disables the CTA with aria-disabled', async () => {

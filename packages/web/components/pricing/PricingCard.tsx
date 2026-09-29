@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
+import { formatListPrice } from '@/lib/tiers'
 
 // ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
 // and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
@@ -100,8 +101,8 @@ export function PricingCard({
   // Display price: use override strings if provided, otherwise format from number
   const displayPrice =
     interval === 'monthly'
-      ? (displayMonthly ?? (rawPrice === 0 ? '$0' : `$${rawPrice}`))
-      : (displayYearly ?? (rawPrice === 0 ? '$0' : `$${rawPrice}`))
+      ? (displayMonthly ?? (rawPrice === 0 ? '$0' : formatListPrice(rawPrice)))
+      : (displayYearly ?? (rawPrice === 0 ? '$0' : formatListPrice(rawPrice)))
 
   async function handleClick() {
     if (isComingSoon) return

@@ -30,6 +30,18 @@ describe('PricingTable', () => {
     expect(screen.getByText('$7.17/mo billed yearly · save 10%')).toBeInTheDocument()
   })
 
+  it('says once, in a footnote, that the listed prices are US dollars', () => {
+    render(<PricingTable />)
+    expect(screen.getByText('All prices are in US dollars (USD).')).toBeInTheDocument()
+    // The footnote covers the currency, so the listed prices themselves stay a plain "$".
+    expect(screen.queryByText(/US\$/)).not.toBeInTheDocument()
+  })
+
+  it('opens the toggle on the interval the current plan is billed at', () => {
+    render(<PricingTable currentTier="pro" currentInterval="yearly" />)
+    expect(screen.getByText('$42.99')).toBeInTheDocument()
+  })
+
   it('computes the toggle badge from the prices instead of a fixed number', () => {
     render(<PricingTable />)
     expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−10%')

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { PricingCard } from './PricingCard'
-import { TIERS, formatUsd, yearlySavings } from '@/lib/tiers'
+import { TIERS, PRICES_IN_USD_NOTE, formatListPrice, yearlySavings } from '@/lib/tiers'
 import { cn } from '@/lib/utils'
 
 interface PricingTableProps {
@@ -18,7 +18,7 @@ const YEARLY_DISCOUNT_PERCENT = Math.min(PRO_SAVINGS.percent, PRO_AI_SAVINGS.per
 
 /** "$3.58/mo billed yearly · save 10%": the yearly plan's monthly equivalent, under its price. */
 function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>): string {
-  return `${formatUsd(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
+  return `${formatListPrice(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
 }
 
 export function PricingTable({ currentTier, currentInterval }: PricingTableProps) {
@@ -77,8 +77,8 @@ export function PricingTable({ currentTier, currentInterval }: PricingTableProps
             highlighted
             currentTier={currentTier}
             currentInterval={currentInterval}
-            displayMonthly={`$${TIERS.pro.monthlyPrice}`}
-            displayYearly={`$${TIERS.pro.yearlyPrice}`}
+            displayMonthly={formatListPrice(TIERS.pro.monthlyPrice)}
+            displayYearly={formatListPrice(TIERS.pro.yearlyPrice)}
             yearlySubtext={yearlySubtext(PRO_SAVINGS)}
           />
         </div>
@@ -92,8 +92,8 @@ export function PricingTable({ currentTier, currentInterval }: PricingTableProps
           interval={interval}
           currentTier={currentTier}
           currentInterval={currentInterval}
-          displayMonthly={`$${TIERS.proAi.monthlyPrice}`}
-          displayYearly={`$${TIERS.proAi.yearlyPrice}`}
+          displayMonthly={formatListPrice(TIERS.proAi.monthlyPrice)}
+          displayYearly={formatListPrice(TIERS.proAi.yearlyPrice)}
           yearlySubtext={yearlySubtext(PRO_AI_SAVINGS)}
         />
       </div>
@@ -103,6 +103,7 @@ export function PricingTable({ currentTier, currentInterval }: PricingTableProps
         <br />
         You keep access until the end of your billing period.
       </p>
+      <p className="-mt-6 text-xs text-text3 text-center">{PRICES_IN_USD_NOTE}</p>
     </div>
   )
 }

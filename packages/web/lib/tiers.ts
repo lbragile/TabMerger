@@ -23,10 +23,25 @@ export const TIERS = {
 export type TierKey = keyof typeof TIERS
 export type BillingInterval = 'monthly' | 'yearly'
 
-/** A price as shown on the site, always with cents (e.g. $3.58). */
+/**
+ * A price marked as US dollars, always with cents (e.g. US$3.58): a bare "$" reads as local
+ * dollars in Canada, Australia and elsewhere. For prices shown on their own (account page,
+ * dashboard); matches how the Billing Portal shows them (see PORTAL_LOCALE in lib/stripe.ts).
+ */
 export function formatUsd(amount: number): string {
+  return `US$${amount.toFixed(2)}`
+}
+
+/**
+ * A price in a plan listing, always with cents (e.g. $3.58). Only for listings that also show
+ * {@link PRICES_IN_USD_NOTE}, which says the currency once instead of on every price.
+ */
+export function formatListPrice(amount: number): string {
   return `$${amount.toFixed(2)}`
 }
+
+/** Footnote under every plan listing (pricing page and the landing page's teaser). */
+export const PRICES_IN_USD_NOTE = 'All prices are in US dollars (USD).'
 
 /**
  * What a yearly plan works out to per month, and how much it saves against paying the monthly

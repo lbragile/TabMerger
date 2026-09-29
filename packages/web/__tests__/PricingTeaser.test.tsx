@@ -71,6 +71,11 @@ describe('PricingTeaser', () => {
     ).toBeInTheDocument()
   })
 
+  it('notes once that the listed prices are US dollars', () => {
+    render(<PricingTeaser />)
+    expect(screen.getByText('All prices are in US dollars (USD).')).toBeInTheDocument()
+  })
+
   it('renders a "See full pricing" link pointing to /pricing', () => {
     render(<PricingTeaser />)
     const link = screen.getByRole('link', { name: /see full pricing/i })
