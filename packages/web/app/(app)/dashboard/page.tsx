@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
-import { Sparkles, Plus } from 'lucide-react'
+import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
+import { Sparkles } from 'lucide-react'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { isEncryptedBlob } from '@tabmerger/shared'
 import { AI_ENABLED } from '@/lib/aiFlag'
@@ -108,10 +109,7 @@ export default async function DashboardPage({
   return (
     <div className="flex flex-col gap-8">
       {params.upgraded === '1' && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
-          Welcome to {subscription?.tier === 'pro_ai' ? 'Pro AI' : 'Pro'}!
-          Your subscription is now active. Enjoy your new features.
-        </div>
+        <UpgradedBanner planName={subscription?.tier === 'pro_ai' ? 'Pro AI' : 'Pro'} />
       )}
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -152,15 +150,6 @@ export default async function DashboardPage({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          )}
-          {/* ponytail: no web group-creation API — groups are authored in the extension only.
-              Also has no click handler at all, so it's removed entirely for free/non-synced
-              accounts rather than shown disabled — there's nothing for it to create groups into. */}
-          {syncEnabled && (
-            <Button size="sm" title="Create groups from the extension">
-              <Plus className="h-4 w-4 mr-1.5" />
-              New group
-            </Button>
           )}
         </div>
       </div>

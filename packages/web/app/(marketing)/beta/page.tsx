@@ -531,9 +531,8 @@ Device A                        Device B (after sync)
         heading: 'The dashboard is read-only for groups',
         steps: [
           'On the dashboard, look for any way to rename, delete, or create a group, or star/unstar one.',
-          'Notice the "New group" button near the top of the dashboard.',
         ],
-        good: 'There is no way to rename, delete, create, or (un)star a group from the dashboard — group edits are extension-only by design. "New group" is inert with a "Create groups from the extension" tooltip, not a working create flow. The only real actions on a group card are Share and opening its tabs/windows.',
+        good: 'There is no way to rename, delete, create, or (un)star a group from the dashboard — group edits are extension-only by design. The only real actions on a group card are Share and opening its tabs/windows.',
         report: 'Any control on the dashboard that appears to edit, delete, or create a group actually does something.',
       },
       {

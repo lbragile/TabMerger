@@ -63,12 +63,14 @@ describe('DashboardPage header restyle', () => {
     expect(screen.getByRole('button', { name: /AI organise/i })).toBeInTheDocument()
   })
 
-  it('renders a "New group" button with an accessible name', async () => {
+  it('has no "New group" button: groups are created in the extension only', async () => {
     const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
-    expect(screen.getByRole('button', { name: /New group/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /New group/i })).not.toBeInTheDocument()
+    // Still a synced Pro account, so the groups section itself stays.
+    expect(screen.getByRole('heading', { name: 'Tab Groups' })).toBeInTheDocument()
   })
 
   it('does not duplicate sync status text outside of the SyncIndicator pill', async () => {
@@ -92,7 +94,7 @@ describe('DashboardPage header restyle', () => {
 
     expect(screen.queryByRole('button', { name: /AI organise/i })).not.toBeInTheDocument()
     // Unrelated UI stays intact when the flag is off.
-    expect(screen.getByRole('button', { name: /New group/i })).toBeInTheDocument()
+    expect(screen.getByText('Good morning, Jane.doe')).toBeInTheDocument()
   })
 })
 
