@@ -557,7 +557,7 @@ describe('GroupItem', () => {
       expect(screen.getByLabelText('Change group color')).toHaveStyle({ backgroundColor: 'rgba(1, 2, 3, 1)' })
     })
 
-    it('typing a hex in the Custom picker sets the preview for this group id, and Apply persists once and clears it', () => {
+    it('typing a hex in the picker sets the preview for this group id, and Apply persists once and clears it', () => {
       vi.useFakeTimers()
       try {
         const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
@@ -566,8 +566,8 @@ describe('GroupItem', () => {
         })
         const group = makeGroup({ color: 'rgba(1, 2, 3, 1)' })
         wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+        // Opens straight into the picker — no separate "Custom colour" step.
         fireEvent.click(screen.getByLabelText('Change group color'))
-        fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
         fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#ff0000' } })
         expect(baseUIState.setPreviewGroupColor).toHaveBeenCalledWith({ groupId: group.id, color: 'rgba(255, 0, 0, 1)' })
 
@@ -580,7 +580,7 @@ describe('GroupItem', () => {
       }
     })
 
-    it('Cancel in the Custom picker clears the preview without persisting', () => {
+    it('Cancel in the picker closes it and clears the preview without persisting', () => {
       const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
         cb(0)
         return 0
@@ -588,9 +588,9 @@ describe('GroupItem', () => {
       const group = makeGroup({ color: 'rgba(1, 2, 3, 1)' })
       wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
       fireEvent.click(screen.getByLabelText('Change group color'))
-      fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
       fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#ff0000' } })
       fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+      expect(screen.queryByPlaceholderText('#rrggbb')).not.toBeInTheDocument()
       expect(mockUpdateGroupColor).not.toHaveBeenCalled()
       expect(baseUIState.setPreviewGroupColor).toHaveBeenLastCalledWith(null)
       rafSpy.mockRestore()

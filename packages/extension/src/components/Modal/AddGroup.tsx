@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ColorPicker } from '@/components/ColorPicker';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { rgbaToHex } from '@/lib/color';
 import { useAddGroup, useGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
@@ -21,6 +23,7 @@ export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
   // tick must not itself become the new draft (Cancel needs something to revert to).
   const [previewColor, setPreviewColor] = useState<string | null>(null);
   const displayColor = previewColor ?? color;
+  const [pickerOpen, setPickerOpen] = useState(false);
   const { maxGroups, maxTabs } = useEntitlements();
   const { mutate: addGroup, isPending } = useAddGroup({ maxGroups, maxTabs });
   const { data: groupsState } = useGroups();
@@ -64,23 +67,39 @@ export function AddGroupModal({ onClose, data }: AddGroupModalProps) {
         </div>
 
         <div className="space-y-1.5">
-          <Label>Color</Label>
-          <div className="flex items-center gap-2">
-            <span
-              data-testid="add-group-color-preview"
-              className="h-4 w-4 shrink-0 rounded-full border border-foreground/15"
-              style={{ backgroundColor: displayColor }}
-              aria-hidden="true"
-            />
-            <ColorPicker
-              value={color}
-              onChange={(c) => {
-                setColor(c);
-                setPreviewColor(null);
-              }}
-              onPreview={setPreviewColor}
-            />
-          </div>
+          <Label id="group-color-label">Color</Label>
+          {/* Same popover picker as the sidebar's group swatch, so both edit colours the same way. */}
+          <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                aria-labelledby="group-color-label"
+                className="gap-2 font-mono text-xs"
+              >
+                <span
+                  data-testid="add-group-color-preview"
+                  className="h-4 w-4 shrink-0 rounded-full border border-foreground/15"
+                  style={{ backgroundColor: displayColor }}
+                  aria-hidden="true"
+                />
+                {rgbaToHex(displayColor)}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" side="bottom" align="start" sideOffset={4}>
+              <ColorPicker
+                value={color}
+                onChange={(c) => {
+                  setColor(c);
+                  setPreviewColor(null);
+                  setPickerOpen(false);
+                }}
+                onCancel={() => setPickerOpen(false)}
+                onPreview={setPreviewColor}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 

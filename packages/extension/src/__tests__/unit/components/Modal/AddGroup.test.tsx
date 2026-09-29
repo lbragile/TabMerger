@@ -95,13 +95,13 @@ describe('AddGroupModal', () => {
     expect(() => options.onSuccess()).not.toThrow()
   })
 
-  it('the draft preview swatch updates live while the Custom picker is open, without persisting', () => {
+  it('the draft preview swatch updates live while the colour picker is open, without persisting', () => {
     const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
       cb(0)
       return 0
     })
     renderModal(<AddGroupModal onClose={vi.fn()} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Color' }))
     const hexInput = screen.getByPlaceholderText('#rrggbb')
     fireEvent.change(hexInput, { target: { value: '#123456' } })
     expect(screen.getByTestId('add-group-color-preview')).toHaveStyle({ backgroundColor: '#123456' })
@@ -109,9 +109,16 @@ describe('AddGroupModal', () => {
     rafSpy.mockRestore()
   })
 
-  it('Cancel in the Custom picker reverts the draft preview swatch and submits the original color', () => {
+  it('the colour picker is a popover, not rendered inline in the dialog until opened', () => {
     renderModal(<AddGroupModal onClose={vi.fn()} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
+    expect(screen.queryByPlaceholderText('#rrggbb')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Color' }))
+    expect(screen.getByPlaceholderText('#rrggbb')).toBeInTheDocument()
+  })
+
+  it('Cancel in the colour picker reverts the draft preview swatch and submits the original color', () => {
+    renderModal(<AddGroupModal onClose={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Color' }))
     fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#123456' } })
     const cancelButtons = screen.getAllByRole('button', { name: 'Cancel' })
     fireEvent.click(cancelButtons[cancelButtons.length - 1])
@@ -123,12 +130,14 @@ describe('AddGroupModal', () => {
     )
   })
 
-  it('Apply in the Custom picker commits the draft color used on submit', () => {
+  it('Apply in the colour picker commits the draft color used on submit and closes the picker', () => {
     renderModal(<AddGroupModal onClose={vi.fn()} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Color' }))
     fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#123456' } })
     fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
+    expect(screen.queryByPlaceholderText('#rrggbb')).not.toBeInTheDocument()
     expect(screen.getByTestId('add-group-color-preview')).toHaveStyle({ backgroundColor: '#123456' })
+    expect(screen.getByRole('button', { name: 'Color' })).toHaveTextContent('#123456')
     fireEvent.click(screen.getByRole('button', { name: /create/i }))
     expect(mockAddGroup).toHaveBeenCalledWith(
       { name: DEFAULT_GROUP_TITLE, color: 'rgba(18, 52, 86, 1)' },

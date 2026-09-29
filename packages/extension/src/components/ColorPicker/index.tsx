@@ -3,34 +3,24 @@ import { HexColorPicker, HexColorInput } from 'react-colorful';
 import { PRESET_COLORS } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { rgbaToHex, hexToRgba } from '@/lib/color';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 
 interface ColorPickerProps {
   value: string;
+  /** Commits the chosen colour (Apply, or Enter in the hex field). */
   onChange: (color: string) => void;
+  /** Cancel pressed: the host should close whatever contains the picker. Nothing is committed. */
+  onCancel?: () => void;
   /**
-   * Fired on every in-progress Custom-colour change (drag or valid hex typed) with the
+   * Fired on every in-progress change (swatch picked, drag, or valid hex typed) with the
    * live rgba string, rAF-throttled so a drag doesn't fire dozens of times per frame.
-   * Fired with `null` when the preview should be cleared (Apply committed, Cancel,
-   * Escape, outside-click close, or unmount while still open). NOT the persisting
+   * Fired with `null` when the preview should be cleared (Apply, Cancel, or unmount — which
+   * covers Escape and outside-click closes of the host popover). NOT the persisting
    * callback — callers should use this purely to render a live preview, never to write
    * to storage.
    */
   onPreview?: (color: string | null) => void;
 }
-
-/**
- * Rainbow conic-gradient always shown on the Custom colour control — it is a GENERIC
- * "open the custom picker" affordance, never the group's actual current or last-picked
- * custom colour (only the border/ring "selected" state reflects whether a custom colour
- * is active).
- */
-const CUSTOM_SWATCH_GRADIENT =
-  'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)';
-
-/** Single source of truth for the custom-colour control's visible label (also its accessible name). */
-const CUSTOM_COLOR_LABEL = 'Custom colour';
 
 /**
  * Faint, real edge border so every swatch reads against the surface behind it in BOTH
@@ -79,25 +69,23 @@ function useKeyboardFocusRing() {
 
 interface SwatchButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   selected: boolean;
-  /** Skip the hairline and selected ring on the button itself (the Custom colour row draws them on its inner swatch). */
-  bare?: boolean;
 }
 
 /**
- * Shared button chrome for every focusable swatch-like control (preset swatches, the Custom
- * colour trigger): hairline border, selected ring, and the synthetic keyboard-focus ring —
- * one place so all three stay visually consistent (DRY).
+ * Preset swatch button chrome: hairline border, selected ring, and the synthetic
+ * keyboard-focus ring — one place so every swatch stays visually consistent.
  */
 const SwatchButton = forwardRef<HTMLButtonElement, SwatchButtonProps>(
-  ({ selected, bare = false, className, onFocus, onBlur, ...props }, ref) => {
+  ({ selected, className, onFocus, onBlur, ...props }, ref) => {
     const kb = useKeyboardFocusRing();
     return (
       <button
         ref={ref}
         type="button"
+        aria-pressed={selected}
         className={cn(
-          !bare && SWATCH_HAIRLINE,
-          !bare && selected && SWATCH_SELECTED,
+          SWATCH_HAIRLINE,
+          selected && SWATCH_SELECTED,
           kb.visible ? SWATCH_KEYBOARD_FOCUS : 'focus:outline-none',
           className
         )}
@@ -116,11 +104,16 @@ const SwatchButton = forwardRef<HTMLButtonElement, SwatchButtonProps>(
 );
 SwatchButton.displayName = 'SwatchButton';
 
-export function ColorPicker({ value, onChange, onPreview }: ColorPickerProps) {
-  const isPreset = PRESET_COLORS.includes(value);
-  const [customOpen, setCustomOpen] = useState(false);
+/**
+ * One panel, always in "custom" mode: the saturation/hue picker, the preset swatches, and a
+ * hex field all edit the same draft, previewed live via `onPreview`. Picking a swatch loads it
+ * into the draft (so it can be fine-tuned) rather than committing — Apply (or Enter in the hex
+ * field) commits, Cancel discards. Mounted fresh each time the host popover opens, so the draft
+ * is seeded from `value` once per open.
+ */
+export function ColorPicker({ value, onChange, onCancel, onPreview }: ColorPickerProps) {
   // Single source of truth for the in-progress edit, in the project's rgba() format —
-  // both the saturation/hue picker and the hex field read/write this (always opaque).
+  // the picker, swatches and hex field all read/write this (always opaque).
   const [draftRgba, setDraftRgba] = useState(value);
   // The hex string we last FED to react-colorful/HexColorInput as their `color` prop, kept
   // and fed back verbatim on every render rather than re-derived from `draftRgba` on every
@@ -129,15 +122,6 @@ export function ColorPicker({ value, onChange, onPreview }: ColorPickerProps) {
   // loop the "Maximum update depth exceeded" bug came from. Keeping their own last-known
   // string stable means their internal `equal()` check short-circuits instead of re-diffing.
   const draftHexRef = useRef(rgbaToHex(value));
-
-  // Deliberately NOT a useEffect keyed on `value` — seeding on every `value` change while
-  // open is exactly how a preview-fed-back-as-value loop happens. Seed once, at the moment
-  // the popup opens; never re-seed while it stays open.
-  const openCustomPicker = () => {
-    draftHexRef.current = rgbaToHex(value);
-    setDraftRgba(value);
-    setCustomOpen(true);
-  };
 
   // Latest-ref for onPreview so `schedulePreview` never needs onPreview in its own deps —
   // an inline arrow prop (as GroupItem/AddGroup pass) gets a new identity every parent
@@ -161,15 +145,17 @@ export function ColorPicker({ value, onChange, onPreview }: ColorPickerProps) {
     });
   }, []);
 
-  // Clear any live preview when the popup unmounts while still open (e.g. the PARENT
-  // popover/dialog closes out from under it) so no stale preview lingers in the store.
-  useEffect(
-    () => () => {
-      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
-      onPreviewRef.current?.(null);
-    },
-    []
-  );
+  // Clearing the preview must also drop any rAF still queued, or it would fire after the
+  // clear and re-apply a stale colour.
+  const clearPreview = useCallback(() => {
+    if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+    onPreviewRef.current?.(null);
+  }, []);
+
+  // Clear any live preview when the picker unmounts (the host popover closing via Escape or
+  // an outside click) so no stale preview lingers in the store.
+  useEffect(() => clearPreview, [clearPreview]);
 
   // Fires from react-colorful/HexColorInput with a freshly-emitted hex string — recorded
   // verbatim as the new "last known" hex (see draftHexRef above) instead of re-derived, and
@@ -183,132 +169,83 @@ export function ColorPicker({ value, onChange, onPreview }: ColorPickerProps) {
     schedulePreview(rgba);
   };
 
+  // A swatch keeps its exact preset string (not a hex round-trip), so it still matches
+  // PRESET_COLORS after Apply and shows as selected next time.
+  const pickSwatch = (color: string) => {
+    draftHexRef.current = rgbaToHex(color);
+    setDraftRgba(color);
+    schedulePreview(color);
+  };
+
   const handleApply = () => {
+    clearPreview();
     onChange(draftRgba);
-    onPreviewRef.current?.(null);
-    setCustomOpen(false);
   };
 
   const handleCancel = () => {
-    onPreviewRef.current?.(null);
-    setCustomOpen(false);
+    clearPreview();
+    onCancel?.();
   };
 
-  // Radix's default popover autofocus lands on the first focusable descendant (the FIRST
-  // preset swatch) regardless of which colour is actually selected. Correct that on mount —
-  // this component only exists while the parent popover is open, so mount-time is exactly
-  // open-time — by focusing whichever control represents the CURRENT colour instead. Whether
-  // that shows a ring is handled by useKeyboardFocusRing()/lastInputWasKeyboard above, not
-  // by this effect.
+  // Radix's popover autofocus lands on the first focusable descendant (the saturation area).
+  // Focus the swatch for the CURRENT colour instead when there is one, so arrow/Tab navigation
+  // starts from what's selected. Whether that shows a ring is handled by useKeyboardFocusRing().
   const selectedSwatchRef = useRef<HTMLButtonElement | null>(null);
-  const customTriggerRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
-    const target = isPreset ? selectedSwatchRef.current : customTriggerRef.current;
-    target?.focus({ preventScroll: true });
-    // Run once, on mount, matching the parent popover's own open — not on every `value`/
-    // `isPreset` change (which would fight the user's own focus while it stays open).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    selectedSwatchRef.current?.focus({ preventScroll: true });
   }, []);
 
   return (
-    <div>
-      {/* Preset swatches */}
-      <div className="grid grid-cols-6 gap-1.5 p-1">
+    <div className="w-50 space-y-2 p-2">
+      <HexColorPicker
+        color={draftHexRef.current}
+        onChange={handleHexChange}
+        style={{ width: '100%', height: 140 }}
+      />
+
+      <div className="grid grid-cols-6 justify-items-center gap-y-1.5">
         {PRESET_COLORS.map((color) => (
           <SwatchButton
             key={color}
             ref={value === color ? selectedSwatchRef : undefined}
-            selected={value === color}
-            onClick={() => onChange(color)}
-            className={cn(
-              'h-6 w-6 rounded-full transition-transform hover:scale-110',
-              value === color && 'scale-110'
-            )}
+            selected={draftRgba === color}
+            onClick={() => pickSwatch(color)}
+            className="h-6 w-6 rounded-full transition-transform hover:scale-110"
             style={{ backgroundColor: color }}
             title={color}
           />
         ))}
       </div>
 
-      {/* Custom colour — its own labelled row, separate from the preset grid */}
-      <div className="px-1 pb-1 pt-0.5">
-        <Popover
-          open={customOpen}
-          onOpenChange={(open) => {
-            if (open) {
-              openCustomPicker();
-              return;
-            }
-            setCustomOpen(false);
-            // Covers every non-Apply close path: Escape (also handled below, harmless to
-            // repeat), outside click, and Radix's own dismissal — Apply already cleared it.
-            onPreviewRef.current?.(null);
+      <div className="flex items-center gap-2">
+        <span
+          data-testid="color-draft-swatch"
+          className={cn('h-4 w-4 shrink-0 rounded-full', SWATCH_HAIRLINE)}
+          style={{ backgroundColor: draftRgba }}
+          aria-hidden="true"
+        />
+        <HexColorInput
+          prefixed
+          color={draftHexRef.current}
+          onChange={handleHexChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleApply();
           }}
-        >
-          <PopoverTrigger asChild>
-            <SwatchButton
-              ref={customTriggerRef}
-              bare
-              selected={!isPreset}
-              onClick={(e) => e.stopPropagation()}
-              className="flex w-full items-center gap-2 rounded-none px-1.5 py-1 text-[11px] transition-colors hover:bg-accent"
-            >
-              {/* Always the generic rainbow affordance — never the current/last custom colour.
-                  Selection shows as the same ring presets use, on this swatch, not the whole row. */}
-              <span
-                data-testid="custom-colour-swatch"
-                className={cn('h-4 w-4 shrink-0 rounded-full', SWATCH_HAIRLINE, !isPreset && SWATCH_SELECTED)}
-                style={{ background: CUSTOM_SWATCH_GRADIENT }}
-                aria-hidden="true"
-              />
-              <span>{CUSTOM_COLOR_LABEL}</span>
-            </SwatchButton>
-          </PopoverTrigger>
-          <PopoverContent
-            className="w-auto space-y-2 p-2"
-            side="bottom"
-            align="start"
-            sideOffset={4}
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                e.stopPropagation();
-                handleCancel();
-              }
-            }}
-          >
-            <p className="text-[11px] font-medium text-foreground">{CUSTOM_COLOR_LABEL}</p>
-            <HexColorPicker color={draftHexRef.current} onChange={handleHexChange} />
+          spellCheck={false}
+          aria-label="Hex colour"
+          className="h-6 flex-1 min-w-0 border border-border bg-transparent px-1.5 text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-ring"
+          title="Enter hex colour (#rrggbb)"
+          placeholder="#rrggbb"
+        />
+      </div>
 
-            <div className="flex items-center gap-2">
-              <span
-                className={cn('h-4 w-4 shrink-0 rounded-full', SWATCH_HAIRLINE)}
-                style={{ backgroundColor: draftRgba }}
-              />
-              <HexColorInput
-                prefixed
-                color={draftHexRef.current}
-                onChange={handleHexChange}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleApply();
-                }}
-                spellCheck={false}
-                className="h-6 flex-1 min-w-0 border border-border bg-transparent px-1.5 text-[11px] font-mono focus:outline-none focus:ring-1 focus:ring-ring"
-                title="Enter hex colour (#rrggbb)"
-                placeholder="#rrggbb"
-              />
-            </div>
-
-            <div className="flex justify-end gap-1.5">
-              <Button type="button" size="sm" variant="outline" onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button type="button" size="sm" onClick={handleApply}>
-                Apply
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+      <div className="flex justify-end gap-1.5">
+        <Button type="button" size="sm" variant="outline" onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button type="button" size="sm" onClick={handleApply}>
+          Apply
+        </Button>
       </div>
     </div>
   );

@@ -349,6 +349,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                     setPreviewGroupColor(null);
                     setColorPickerOpen(false);
                   }}
+                  onCancel={() => setColorPickerOpen(false)}
                   onPreview={(color) =>
                     setPreviewGroupColor(color ? { groupId: group.id, color } : null)
                   }

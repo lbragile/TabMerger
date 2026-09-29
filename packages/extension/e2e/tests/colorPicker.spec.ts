@@ -2,16 +2,15 @@ import { test, expect } from '../fixtures';
 import { openPopup, seedAndReload } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
 
-test.describe('Group colour picker — Custom colour popup', () => {
+test.describe('Group colour picker', () => {
   test('typing a hex live-previews the sidebar dot before Apply, and Apply persists it', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
     const workRow = page.locator('[data-sidebar-group-index="1"]');
     const swatch = workRow.getByRole('button', { name: 'Change group color' });
+    // Opens straight into the picker: no separate "Custom colour" step.
     await swatch.click();
-
-    await page.getByRole('button', { name: 'Custom colour' }).click();
 
     const hexInput = page.getByPlaceholder('#rrggbb');
     await hexInput.fill('#112233');
@@ -30,6 +29,31 @@ test.describe('Group colour picker — Custom colour popup', () => {
     await expect(swatchAfterReload).toHaveCSS('background-color', 'rgb(17, 34, 51)');
   });
 
+  test('the preset swatches live in the picker: clicking one previews it, Apply persists it', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
+
+    const swatch = page.locator('[data-sidebar-group-index="1"]').getByRole('button', { name: 'Change group color' });
+    await swatch.click();
+
+    // Same panel as the saturation/hue picker, no mode switch.
+    await expect(page.locator('.react-colorful__saturation')).toHaveCount(1);
+    const preset = page.locator('button[title^="rgba("]').nth(3);
+    const presetColor = await preset.evaluate((el) => getComputedStyle(el).backgroundColor);
+    await preset.click();
+
+    // Loaded into the draft, previewed on the sidebar dot, picker still open for fine-tuning.
+    await expect(preset).toHaveAttribute('aria-pressed', 'true');
+    await expect(swatch).toHaveCSS('background-color', presetColor);
+    await expect(page.getByPlaceholder('#rrggbb')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await page.reload({ waitUntil: 'networkidle' });
+    await expect(
+      page.locator('[data-sidebar-group-index="1"]').getByRole('button', { name: 'Change group color' })
+    ).toHaveCSS('background-color', presetColor);
+  });
+
   test('has no alpha slider — only saturation + hue — and the hex field is 6-digit only', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
@@ -37,7 +61,6 @@ test.describe('Group colour picker — Custom colour popup', () => {
     const workRow = page.locator('[data-sidebar-group-index="1"]');
     const swatch = workRow.getByRole('button', { name: 'Change group color' });
     await swatch.click();
-    await page.getByRole('button', { name: 'Custom colour' }).click();
 
     // No alpha slider — only the saturation area + hue slider (react-colorful's own
     // `.react-colorful__alpha` class is only rendered by the *Alpha/Rgba/Hsla/Hsva pickers,
@@ -64,7 +87,6 @@ test.describe('Group colour picker — Custom colour popup', () => {
     const originalColor = await swatch.evaluate((el) => getComputedStyle(el).backgroundColor);
 
     await swatch.click();
-    await page.getByRole('button', { name: 'Custom colour' }).click();
     await page.getByPlaceholder('#rrggbb').fill('#ff00ff');
     await expect(swatch).toHaveCSS('background-color', 'rgb(255, 0, 255)');
 
@@ -79,7 +101,7 @@ test.describe('Group colour picker — Custom colour popup', () => {
     await expect(swatchAfterReload).toHaveCSS('background-color', originalColor);
   });
 
-  test('the Custom colour popup does not close the Add Group dialog (opened via "Create new group…")', async ({ context, extensionId }) => {
+  test('the colour picker popover does not close the Add Group dialog (opened via "Create new group…")', async ({ context, extensionId }) => {
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
@@ -94,9 +116,11 @@ test.describe('Group colour picker — Custom colour popup', () => {
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
 
-    await dialog.getByRole('button', { name: 'Custom colour' }).click();
-    await dialog.getByPlaceholder('#rrggbb').fill('#654321');
-    await dialog.getByRole('button', { name: 'Apply' }).click();
+    await dialog.getByRole('button', { name: 'Color' }).click();
+    // The picker renders in a portal, outside the dialog's DOM subtree.
+    await page.getByPlaceholder('#rrggbb').fill('#654321');
+    await page.getByRole('button', { name: 'Apply' }).click();
+    await expect(dialog.getByRole('button', { name: 'Color' })).toContainText('#654321');
 
     // Dialog is still open and usable after the nested popup interaction.
     await expect(dialog).toBeVisible();
@@ -116,7 +140,6 @@ test.describe('Group colour picker — Custom colour popup', () => {
     const swatch = page.locator('[data-sidebar-group-index="1"]').getByRole('button', { name: 'Change group color' });
     const before = await swatch.evaluate((el) => getComputedStyle(el).backgroundColor);
     await swatch.click();
-    await page.getByRole('button', { name: 'Custom colour' }).click();
 
     // Drag across each react-colorful surface in several steps, like a real pointer drag.
     for (const selector of ['.react-colorful__saturation', '.react-colorful__hue']) {

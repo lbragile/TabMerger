@@ -117,7 +117,7 @@ const TEST_AREAS: {
       {
         steps: [
           'Click "Add Group" in the sidebar and give it a name.',
-          'Click the colored dot next to the group to open the color picker, and pick a color.',
+          'Click the colored dot next to the group to open the color picker, pick a preset or drag to any color, then click Apply.',
           'Save a few tabs into the group (drag them in, or use the right-click menu).',
           'Delete one tab, then click the Undo button (header, top right) and then Redo.',
         ],
@@ -126,7 +126,7 @@ const TEST_AREAS: {
           src: '/beta/color-new-group.webp',
           width: 1600,
           height: 1200,
-          alt: 'TabMerger popup with a new group selected and its color picker open, showing 12 preset colors',
+          alt: 'TabMerger popup with a new group selected and its color picker open: a saturation and hue picker, 12 preset colors, a hex field, and Cancel and Apply buttons',
           caption: 'Clicking a group\'s color dot opens this picker.',
         },
         good: 'The group updates instantly; undo restores the deleted tab exactly where it was; redo removes it again.',

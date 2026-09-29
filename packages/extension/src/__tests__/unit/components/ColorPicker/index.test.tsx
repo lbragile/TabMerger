@@ -17,154 +17,159 @@ function withSyncRaf<T>(fn: () => T): T {
   }
 }
 
+const hexInput = () => screen.getByRole('textbox', { name: 'Hex colour' }) as HTMLInputElement
+
 describe('ColorPicker', () => {
-  it('renders a swatch button for every preset color', () => {
+  it('opens straight into the custom picker, with the preset swatches in the same panel', () => {
     render(<ColorPicker value={PRESET_COLORS[0]} onChange={vi.fn()} />)
-    const swatches = screen.getAllByTitle(/rgba?\(/i)
-    expect(swatches.length).toBeGreaterThanOrEqual(PRESET_COLORS.length)
+    expect(hexInput()).toBeInTheDocument()
+    expect(document.querySelector('.react-colorful')).toBeInTheDocument()
+    for (const color of PRESET_COLORS) expect(screen.getByTitle(color)).toBeInTheDocument()
+    // No separate "Custom colour" mode to switch into any more.
+    expect(screen.queryByRole('button', { name: 'Custom colour' })).not.toBeInTheDocument()
   })
 
-  it('calls onChange with the preset color when a swatch is clicked', () => {
+  it('seeds the hex field from the current value', () => {
+    render(<ColorPicker value="rgba(10, 20, 30, 1)" onChange={vi.fn()} />)
+    expect(hexInput().value).toBe('#0a141e')
+  })
+
+  it('clicking a swatch loads it into the draft without committing', () => {
     const onChange = vi.fn()
     render(<ColorPicker value={PRESET_COLORS[0]} onChange={onChange} />)
     fireEvent.click(screen.getByTitle(PRESET_COLORS[1]))
-    expect(onChange).toHaveBeenCalledWith(PRESET_COLORS[1])
+
+    expect(onChange).not.toHaveBeenCalled()
+    expect(screen.getByTitle(PRESET_COLORS[1])).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByTitle(PRESET_COLORS[0])).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByTestId('color-draft-swatch').style.backgroundColor).not.toBe('')
   })
 
-  it('renders a labelled Custom colour control that opens the picker popup', () => {
-    render(<ColorPicker value={PRESET_COLORS[0]} onChange={vi.fn()} />)
-    expect(screen.queryByPlaceholderText('#rrggbb')).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    expect(screen.getByPlaceholderText('#rrggbb')).toBeInTheDocument()
-    // Visible label appears both on the trigger and as the popup title.
-    expect(screen.getAllByText('Custom colour').length).toBeGreaterThanOrEqual(2)
+  it('Apply after a swatch commits the exact preset string (so it stays recognised as a preset)', () => {
+    const onChange = vi.fn()
+    render(<ColorPicker value={PRESET_COLORS[0]} onChange={onChange} />)
+    fireEvent.click(screen.getByTitle(PRESET_COLORS[3]))
+    fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
+    expect(onChange).toHaveBeenCalledWith(PRESET_COLORS[3])
   })
 
-  it('the Custom control always shows the generic rainbow swatch, never the current or a prior custom colour', () => {
-    const { rerender } = render(<ColorPicker value="rgba(1, 2, 3, 1)" onChange={vi.fn()} />)
-    let dot = screen.getByRole('button', { name: 'Custom colour' }).querySelector('span[aria-hidden]') as HTMLElement
-    expect(dot.style.background).toContain('conic-gradient')
+  it('marks the swatch matching the current value as selected, and none for a custom value', () => {
+    const { unmount } = render(<ColorPicker value={PRESET_COLORS[2]} onChange={vi.fn()} />)
+    expect(screen.getByTitle(PRESET_COLORS[2]).className).toContain('ring-foreground')
+    unmount()
 
-    rerender(<ColorPicker value="rgba(200, 150, 100, 1)" onChange={vi.fn()} />)
-    dot = screen.getByRole('button', { name: 'Custom colour' }).querySelector('span[aria-hidden]') as HTMLElement
-    expect(dot.style.background).toContain('conic-gradient')
-  })
-
-  it('marks the Custom colour control as selected when the current value is not a preset', () => {
     render(<ColorPicker value="rgba(1, 2, 3, 1)" onChange={vi.fn()} />)
-    // The ring sits on the rainbow swatch, like a preset — never a box around the whole row
-    expect(screen.getByTestId('custom-colour-swatch').className).toContain('ring-foreground')
-    const customControl = screen.getByRole('button', { name: 'Custom colour' })
-    expect(customControl.className).not.toContain('ring-foreground')
-    expect(customControl.className).not.toContain('border-foreground/15')
+    expect(screen.queryAllByRole('button', { pressed: true })).toHaveLength(0)
   })
 
-  it('does not mark the Custom colour control as selected for a preset value', () => {
+  it('typing a hex that matches no preset clears the swatch selection', () => {
     render(<ColorPicker value={PRESET_COLORS[0]} onChange={vi.fn()} />)
-    expect(screen.getByTestId('custom-colour-swatch').className).not.toContain('ring-foreground')
+    fireEvent.change(hexInput(), { target: { value: '#123456' } })
+    expect(screen.queryAllByRole('button', { pressed: true })).toHaveLength(0)
   })
 
-  it('typing a valid hex updates the preview swatch and draft', () => {
-    render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={vi.fn()} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    const input = screen.getByPlaceholderText('#rrggbb')
-    fireEvent.change(input, { target: { value: '#ff0000' } })
-    expect((input as HTMLInputElement).value).toBe('#ff0000')
-  })
-
-  it('Apply commits the hex value as rgba and closes the popup', () => {
+  it('Apply commits the typed hex as rgba', () => {
     const onChange = vi.fn()
     render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={onChange} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    const input = screen.getByPlaceholderText('#rrggbb')
-    fireEvent.change(input, { target: { value: '#ff0000' } })
+    fireEvent.change(hexInput(), { target: { value: '#ff0000' } })
     fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
     expect(onChange).toHaveBeenCalledWith('rgba(255, 0, 0, 1)')
-    expect(screen.queryByPlaceholderText('#rrggbb')).not.toBeInTheDocument()
   })
 
-  it('Enter in the hex field also commits and closes the popup', () => {
+  it('Enter in the hex field also commits', () => {
     const onChange = vi.fn()
     render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={onChange} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    const input = screen.getByPlaceholderText('#rrggbb')
-    fireEvent.change(input, { target: { value: '#00ff00' } })
-    fireEvent.keyDown(input, { key: 'Enter' })
+    fireEvent.change(hexInput(), { target: { value: '#00ff00' } })
+    fireEvent.keyDown(hexInput(), { key: 'Enter' })
     expect(onChange).toHaveBeenCalledWith('rgba(0, 255, 0, 1)')
   })
 
-  it('Cancel does not call onChange and closes the popup', () => {
+  it('Cancel calls onCancel and never onChange', () => {
     const onChange = vi.fn()
-    render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={onChange} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    const input = screen.getByPlaceholderText('#rrggbb')
-    fireEvent.change(input, { target: { value: '#ff0000' } })
+    const onCancel = vi.fn()
+    render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={onChange} onCancel={onCancel} />)
+    fireEvent.change(hexInput(), { target: { value: '#ff0000' } })
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(onCancel).toHaveBeenCalledOnce()
     expect(onChange).not.toHaveBeenCalled()
-    expect(screen.queryByPlaceholderText('#rrggbb')).not.toBeInTheDocument()
   })
 
-  it('ignores garbage typed into the hex field (no onChange, draft stays valid)', () => {
+  it('ignores garbage typed into the hex field (Apply commits the last valid draft)', () => {
     const onChange = vi.fn()
     render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={onChange} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    const input = screen.getByPlaceholderText('#rrggbb') as HTMLInputElement
-    fireEvent.change(input, { target: { value: 'not-a-color' } })
+    fireEvent.change(hexInput(), { target: { value: 'not-a-color' } })
     fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
-    // HexColorInput never propagates an invalid value upward, so Apply still commits
-    // the last valid draft (the seeded current value).
+    // HexColorInput never propagates an invalid value upward.
     expect(onChange).toHaveBeenCalledWith('rgba(0, 0, 0, 1)')
   })
 
-  it('re-seeds the hex field from the current value each time it is reopened', () => {
-    const onChange = vi.fn()
-    const { rerender } = render(<ColorPicker value="rgba(10, 20, 30, 1)" onChange={onChange} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    const input = screen.getByPlaceholderText('#rrggbb') as HTMLInputElement
-    expect(input.value).toBe('#0a141e')
-    fireEvent.change(input, { target: { value: 'garbage' } })
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
-    rerender(<ColorPicker value="rgba(10, 20, 30, 1)" onChange={onChange} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-    expect((screen.getByPlaceholderText('#rrggbb') as HTMLInputElement).value).toBe('#0a141e')
+  it('re-seeds from the current value on each open (each mount)', () => {
+    const { unmount } = render(<ColorPicker value="rgba(10, 20, 30, 1)" onChange={vi.fn()} />)
+    fireEvent.change(hexInput(), { target: { value: '#ffffff' } })
+    unmount()
+    render(<ColorPicker value="rgba(10, 20, 30, 1)" onChange={vi.fn()} />)
+    expect(hexInput().value).toBe('#0a141e')
   })
 
-  it('calls onPreview with the live rgba value while dragging/typing, and null on Apply', () => {
-    withSyncRaf(() => {
-      const onPreview = vi.fn()
-      render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={vi.fn()} onPreview={onPreview} />)
-      fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-      fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#ff0000' } })
-      expect(onPreview).toHaveBeenCalledWith('rgba(255, 0, 0, 1)')
-      fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
-      expect(onPreview).toHaveBeenLastCalledWith(null)
+  describe('live preview', () => {
+    it('previews typed hex values and clears on Apply', () => {
+      withSyncRaf(() => {
+        const onPreview = vi.fn()
+        render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={vi.fn()} onPreview={onPreview} />)
+        fireEvent.change(hexInput(), { target: { value: '#ff0000' } })
+        expect(onPreview).toHaveBeenCalledWith('rgba(255, 0, 0, 1)')
+        fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
+        expect(onPreview).toHaveBeenLastCalledWith(null)
+      })
     })
-  })
 
-  it('calls onPreview(null) on Cancel without ever calling onChange', () => {
-    withSyncRaf(() => {
-      const onPreview = vi.fn()
-      const onChange = vi.fn()
-      render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={onChange} onPreview={onPreview} />)
-      fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-      fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#ff0000' } })
-      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
-      expect(onPreview).toHaveBeenLastCalledWith(null)
-      expect(onChange).not.toHaveBeenCalled()
+    it('previews a picked swatch', () => {
+      withSyncRaf(() => {
+        const onPreview = vi.fn()
+        render(<ColorPicker value={PRESET_COLORS[0]} onChange={vi.fn()} onPreview={onPreview} />)
+        fireEvent.click(screen.getByTitle(PRESET_COLORS[4]))
+        expect(onPreview).toHaveBeenLastCalledWith(PRESET_COLORS[4])
+      })
     })
-  })
 
-  it('calls onPreview(null) on Escape without calling onChange', () => {
-    withSyncRaf(() => {
-      const onPreview = vi.fn()
-      const onChange = vi.fn()
-      render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={onChange} onPreview={onPreview} />)
-      fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-      const input = screen.getByPlaceholderText('#rrggbb')
-      fireEvent.change(input, { target: { value: '#ff0000' } })
-      fireEvent.keyDown(screen.getByText('Custom colour', { selector: 'p' }).closest('[role="dialog"]') ?? input, { key: 'Escape' })
-      expect(onChange).not.toHaveBeenCalled()
-      expect(onPreview).toHaveBeenLastCalledWith(null)
+    it('clears on Cancel', () => {
+      withSyncRaf(() => {
+        const onPreview = vi.fn()
+        render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={vi.fn()} onPreview={onPreview} />)
+        fireEvent.change(hexInput(), { target: { value: '#ff0000' } })
+        fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+        expect(onPreview).toHaveBeenLastCalledWith(null)
+      })
+    })
+
+    it('clears on unmount (the host popover closing via Escape or an outside click)', () => {
+      withSyncRaf(() => {
+        const onPreview = vi.fn()
+        const { unmount } = render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={vi.fn()} onPreview={onPreview} />)
+        fireEvent.change(hexInput(), { target: { value: '#ff0000' } })
+        unmount()
+        expect(onPreview).toHaveBeenLastCalledWith(null)
+      })
+    })
+
+    it('a preview still queued when Apply is pressed never fires after the clear', () => {
+      const callbacks: FrameRequestCallback[] = []
+      const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+        callbacks.push(cb)
+        return callbacks.length
+      })
+      const cafSpy = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {})
+      try {
+        const onPreview = vi.fn()
+        render(<ColorPicker value="rgba(0, 0, 0, 1)" onChange={vi.fn()} onPreview={onPreview} />)
+        fireEvent.change(hexInput(), { target: { value: '#ff0000' } })
+        fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
+        expect(onPreview).toHaveBeenLastCalledWith(null)
+        expect(cafSpy).toHaveBeenCalled()
+      } finally {
+        rafSpy.mockRestore()
+        cafSpy.mockRestore()
+      }
     })
   })
 
@@ -188,11 +193,10 @@ describe('ColorPicker', () => {
           }
           expect(() => {
             render(<Harness />)
-            fireEvent.click(screen.getByRole('button', { name: 'Custom colour' }))
-            const input = screen.getByPlaceholderText('#rrggbb')
             for (const hex of ['#111111', '#222222', '#333333', '#abcdef', '#000000', '#ffffff']) {
-              fireEvent.change(input, { target: { value: hex } })
+              fireEvent.change(hexInput(), { target: { value: hex } })
             }
+            fireEvent.click(screen.getByTitle(PRESET_COLORS[5]))
           }).not.toThrow()
           expect(errorSpy).not.toHaveBeenCalled()
         } finally {
@@ -208,9 +212,9 @@ describe('ColorPicker', () => {
       expect(document.activeElement).toBe(screen.getByTitle(PRESET_COLORS[2]))
     })
 
-    it('focuses the Custom colour control on open when the current value is not a preset', () => {
+    it('focuses no swatch when the current value is a custom colour', () => {
       render(<ColorPicker value="rgba(1, 2, 3, 1)" onChange={vi.fn()} />)
-      expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Custom colour' }))
+      expect(PRESET_COLORS.map((c) => screen.getByTitle(c))).not.toContain(document.activeElement)
     })
 
     it('a mouse-driven open does not show a keyboard-focus ring on the autofocused swatch', () => {
