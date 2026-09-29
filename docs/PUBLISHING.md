@@ -63,7 +63,7 @@ different IDs, so Edge treats them as two extensions.
 | Browser | Where testers install | Extension ID | Access |
 | --- | --- | --- | --- |
 | Chrome, Edge, Brave, Vivaldi, Arc, Opera | [TabMerger BETA on the Chrome Web Store](https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd) (Edge: after "Allow extensions from other stores"; Opera: via its add-on) | `nboljhidpjakiohfdkdjkcljdehcapcd` in every one of them | Private: members of the Google Group [tabmerger-beta-testers](https://groups.google.com/g/tabmerger-beta-testers), signed in to the store with that Google account |
-| Firefox | **Planned:** unlisted, self-distributed add-on, signed in CI, files on Vercel Blob, auto-updating via `update_url` | Planned add-on ID `tabmerger-beta@lbragile.com` | Anyone with the link (Firefox has no private listings) |
+| Firefox | Unlisted, self-distributed add-on, signed in CI, files on Vercel Blob, auto-updating via `update_url`: install from `<beta site>/beta#firefox` (see `packages/extension/FIREFOXADDONS.md`) | Add-on ID `tabmerger-beta@lbragile.com` | Anyone with the link (Firefox has no private listings) |
 | Safari | Not supported | | |
 
 There is deliberately no separate Edge beta item: Edge Add-ons has no tester list (only Public or
@@ -81,6 +81,42 @@ The website sends `PING` (install detection), `SYNC_AUTH` (hand its sign-in to t
 
 Everything else (sign-in inside the extension, sync, sharing) works in every browser regardless
 of messaging; only the website-driven shortcuts depend on it.
+
+### Google sign-in: Supabase redirect URLs
+
+Each Supabase project's **Authentication → URL Configuration → Redirect URLs** must list every
+extension build that signs in to it, plus the websites. The extension's Google sign-in returns to
+`identity.getRedirectURL()`; when that URL isn't listed, Supabase silently falls back to the
+project's **Site URL**, so the sign-in window opens the website (or `localhost`, if the Site URL
+was left at the local default) instead of finishing. Set the Site URL to the real site, never
+`localhost`, so a missing entry fails visibly.
+
+Add each extension URL exactly, ending in `/`. Never use a wildcard like `*.extensions.allizom.org`
+or `*.chromiumapp.org`: any other extension could then receive TabMerger sign-ins.
+
+| Build | Redirect URL |
+| --- | --- |
+| Chrome stable (also Brave, Vivaldi, Arc, Opera, and Edge via the Chrome Web Store) | `https://inmiajapbpafmhjleiebcamfhkfnlgoc.chromiumapp.org/` |
+| Chrome BETA (every Chromium browser) | `https://nboljhidpjakiohfdkdjkcljdehcapcd.chromiumapp.org/` |
+| Edge Add-ons stable | `https://eogjdfjemlgmbblgkjlcgdehbeoodbfn.chromiumapp.org/` |
+| Firefox stable | `https://541d995cc738c669c050dc1dcfbb4b46a2dcbff1.extensions.allizom.org/` |
+| Firefox BETA | `https://b00b8167da1d804b7108f9915bfd2eb660504ff8.extensions.allizom.org/` (confirmed working 2026-09-29) |
+| Websites | `https://tabmerger.vercel.app/**`, `https://tabmerger-preview.vercel.app/**` |
+
+Chromium's host is the extension ID. Firefox's is the SHA-1 (hex) of the add-on ID, e.g.
+`node -e "console.log(require('crypto').createHash('sha1').update('tabmerger-beta@lbragile.com').digest('hex'))"`;
+confirm with `browser.identity.getRedirectURL()` in the add-on's console (`about:debugging` →
+Inspect). A new store item or add-on ID needs a new entry. The local stack's list is in
+`supabase/config.toml`.
+
+**A copy loaded unpacked has a different ID.** Chrome derives an unpacked extension's ID from its
+folder path (the manifest has no `key`), so a release zip unzipped and loaded by hand is neither
+the store ID nor the dev ID, and its sign-in falls back to the Site URL. To find out what a copy
+uses, run `chrome.identity.getRedirectURL()` in its service worker console (`chrome://extensions`
+→ Inspect views). Either install the store build, or add that URL temporarily and remove it
+afterwards; the website's extension messaging still only reaches the store ID. The preview
+project gained such an entry, `https://hjdgjhiidldknnhdcboiaceofladfgbh.chromiumapp.org/`, on
+2026-09-29 for testing beta.7 before the store approved it.
 
 ---
 

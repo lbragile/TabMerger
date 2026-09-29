@@ -96,6 +96,10 @@ additional_redirect_urls = [
   # The ID is DEV_EXTENSION_ID (packages/shared/src/constants/extensionMessages.ts), the unpacked
   # dev build's path-derived ID; keep the two in sync. The hosted project lists the store IDs.
   "https://ogfmehaahkdfdfggcaabepknidpdgnbb.chromiumapp.org/**",
+  # Firefox returns to https://<sha1 of the add-on ID>.extensions.allizom.org/ instead. Dev
+  # builds use the stable add-on ID {19feb84f-3a0b-4ca3-bbae-211b52eb158b}. See
+  # docs/PUBLISHING.md "Google sign-in: Supabase redirect URLs" for every build's URL.
+  "https://541d995cc738c669c050dc1dcfbb4b46a2dcbff1.extensions.allizom.org/",
 ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
