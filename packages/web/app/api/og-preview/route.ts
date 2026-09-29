@@ -5,6 +5,16 @@ import { request as httpRequest } from 'node:http'
 import { request as httpsRequest, type RequestOptions as HttpsRequestOptions } from 'node:https'
 import { gunzipSync, brotliDecompressSync, inflateSync } from 'node:zlib'
 import type { LookupAddress } from 'node:dns'
+import {
+  MAX_BYTES,
+  decodeHtmlEntities,
+  extractHead,
+  extractJsonLdImage,
+  pickIcon,
+  resolveCandidate,
+  scanHeadTags,
+  type ImageKind,
+} from '@/lib/ogPreviewParse'
 
 /**
  * POST /api/og-preview  { "url": "<url>" }
@@ -47,7 +57,6 @@ import type { LookupAddress } from 'node:dns'
  *     protocol + DNS-pinning validation re-run on every hop.
  */
 
-const MAX_BYTES = 2 * 1024 * 1024 // 2MB
 const FETCH_TIMEOUT_MS = 4000
 const MAX_REDIRECTS = 3
 
@@ -55,8 +64,6 @@ const MAX_REDIRECTS = 3
 // promises the requested address isn't stored, even transiently in memory.
 // If load ever becomes a concern, revisit with a short-TTL cache keyed by a
 // hash rather than the raw URL, not a plain re-add of this Map.
-
-const MAX_DESCRIPTION_LENGTH = 500
 
 function isPrivateHost(hostname: string): boolean {
   const h = hostname.toLowerCase()
@@ -99,110 +106,6 @@ async function resolveAndValidate(hostname: string): Promise<LookupAddress[] | n
   return addresses
 }
 
-/**
- * Meta `content` values are HTML-attribute text, so `&` in an image URL arrives as `&amp;`
- * (Wikipedia's og:image does this) and descriptions carry `&quot;`, `&#39;` and friends.
- * Decode the common named entities and numeric references before using the value — an
- * undecoded `&amp;` turns `?a=1&amp;b=2` into a different, often broken, image URL.
- */
-function decodeHtmlEntities(value: string): string {
-  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
-  return value.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, entity: string) => {
-    if (entity[0] === '#') {
-      const code = entity[1].toLowerCase() === 'x' ? parseInt(entity.slice(2), 16) : parseInt(entity.slice(1), 10)
-      return Number.isFinite(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match
-    }
-    return named[entity.toLowerCase()] ?? match
-  })
-}
-
-/**
- * Extracts the head region to scan for meta tags. Prefers the real
- * `<head>...</head>` slice; falls back to up to `MAX_BYTES` of the raw HTML
- * when there's no closing tag (a page's head can be truncated by our own
- * MAX_BYTES cap, or split oddly) — scanning only 50k in that case could miss
- * meta tags that a real browser would still see.
- */
-function extractHead(html: string): string {
-  const headMatch = html.match(/<head[\s\S]*?<\/head>/i)
-  return headMatch ? headMatch[0] : html.slice(0, MAX_BYTES)
-}
-
-// Caps how much of a single tag's raw attribute text the attribute-value
-// regex is allowed to see. Without this, a hostile head can pack tens of
-// thousands of `property="og:image"` occurrences into one giant, unclosed
-// `<meta ...` run — every occurrence would then make an unbounded `[^>]+`
-// backtrack across the rest of the document, roughly O(n × occurrences)
-// (~10^11 steps at MAX_BYTES). Bounding the tag body to a fixed length makes
-// a malformed/absurd tag simply get skipped, never backtracked over.
-const MAX_TAG_LENGTH = 2048
-
-// Matches one `<meta ...>` or `<link ...>` tag at a time, linearly over the
-// head region — `[^>]{0,MAX_TAG_LENGTH}` never backtracks past its own cap,
-// so total cost is O(head length) regardless of how many tags (malformed or
-// not) are present.
-const TAG_RE = new RegExp(`<(meta|link)\\b([^>]{0,${MAX_TAG_LENGTH}})>`, 'gi')
-
-// Matches one `name="value"` (or `name='value'`) attribute at a time within
-// an already-bounded tag body (at most MAX_TAG_LENGTH chars), so this can't
-// contribute to the unbounded-backtracking problem either.
-const ATTR_RE = /([a-zA-Z:-]+)\s*=\s*(["'])([\s\S]*?)\2/g
-
-/** Parses a single already-bounded tag body into a lowercase-keyed attribute map. */
-function parseAttrs(tagBody: string): Record<string, string> {
-  const attrs: Record<string, string> = {}
-  let match: RegExpExecArray | null
-  ATTR_RE.lastIndex = 0
-  while ((match = ATTR_RE.exec(tagBody))) {
-    attrs[match[1].toLowerCase()] = match[3]
-  }
-  return attrs
-}
-
-/**
- * Walks every `<meta>`/`<link>` tag in the head region exactly once (see
- * `TAG_RE`/`ATTR_RE` for why this is linear-time, unlike the previous
- * backtracking-regex-per-attribute-name approach), and picks out the values
- * needed for the image and description. `property=` and `name=` are treated
- * interchangeably — real-world pages mix these (MDN serves `og:image` via
- * `name=`; some sites serve `twitter:image` via `property=`).
- */
-function scanHeadTags(head: string): { ogImage: string | null; description: string | null } {
-  const metaByKey: Record<string, string> = {}
-  let imageSrcLink: string | null = null
-
-  TAG_RE.lastIndex = 0
-  let tagMatch: RegExpExecArray | null
-  while ((tagMatch = TAG_RE.exec(head))) {
-    const [, tagName, body] = tagMatch
-    const attrs = parseAttrs(body)
-
-    if (tagName.toLowerCase() === 'meta') {
-      const key = (attrs.property ?? attrs.name)?.toLowerCase()
-      if (key && attrs.content !== undefined && !(key in metaByKey)) {
-        metaByKey[key] = attrs.content
-      }
-    } else if (tagName.toLowerCase() === 'link') {
-      if (attrs.rel?.toLowerCase() === 'image_src' && attrs.href !== undefined && imageSrcLink === null) {
-        imageSrcLink = attrs.href
-      }
-    }
-  }
-
-  const ogImage =
-    metaByKey['og:image'] ??
-    metaByKey['og:image:secure_url'] ??
-    metaByKey['og:image:url'] ??
-    metaByKey['twitter:image'] ??
-    metaByKey['twitter:image:src'] ??
-    imageSrcLink ??
-    null
-
-  const rawDescription = metaByKey['og:description'] ?? metaByKey['description'] ?? null
-  const description = rawDescription ? rawDescription.slice(0, MAX_DESCRIPTION_LENGTH) : null
-
-  return { ogImage, description }
-}
 
 /**
  * Fetches a single hop with the TCP connection pinned to `addresses` (already
@@ -362,12 +265,26 @@ function jsonResponse(body: unknown, init?: { status?: number }): NextResponse {
   })
 }
 
+
 /**
  * Validates and fetches a single URL, returning the extracted preview fields.
  * No caching: every call hits upstream.
+ *
+ * Candidates are tried in priority order and resolved independently — the
+ * whole point of `resolveCandidate` returning `null` instead of throwing is
+ * that a broken/unusable candidate (relative-but-unparseable, `data:`, etc.)
+ * falls through to the next source instead of aborting the whole chain:
+ *   1. og:image / og:image:secure_url / og:image:url / twitter:image /
+ *      twitter:image:src / link[rel=image_src] / vendor name= fallbacks
+ *      (all folded into `scanned.ogImage` by `scanHeadTags`)
+ *   2. schema.org itemprop="image" (meta content= or link href=)
+ *   3. JSON-LD `image`/`thumbnailUrl` (string, array, ImageObject, @graph)
+ *   4. LAST RESORT: the largest apple-touch-icon/icon `<link>` >= 128px —
+ *      returned with `imageKind: 'icon'` so the caller can render it
+ *      contained/centered instead of cropped as a banner.
  */
 async function fetchPreview(raw: string | null): Promise<
-  | { ok: true; ogImage: string | null; description: string | null }
+  | { ok: true; ogImage: string | null; description: string | null; imageKind: ImageKind }
   | { ok: false }
 > {
   if (!raw) return { ok: false }
@@ -383,6 +300,7 @@ async function fetchPreview(raw: string | null): Promise<
 
   const target = parsed.toString()
   let ogImage: string | null = null
+  let imageKind: ImageKind = 'preview'
   let description: string | null = null
   try {
     const { body: html, finalUrl, contentType } = await fetchCapped(target)
@@ -390,22 +308,20 @@ async function fetchPreview(raw: string | null): Promise<
     // bot-flavored Accept header) have no meta tags — bail out before
     // regex-ing content that was never going to match.
     if (contentType && !/text\/html|application\/xhtml\+xml/i.test(contentType)) {
-      return { ok: true, ogImage: null, description: null }
+      return { ok: true, ogImage: null, description: null, imageKind: 'preview' }
     }
     const head = extractHead(html)
     const scanned = scanHeadTags(head)
-    ogImage = scanned.ogImage ? decodeHtmlEntities(scanned.ogImage) : null
     description = scanned.description ? decodeHtmlEntities(scanned.description) : null
-    // Only accept absolute http(s) image URLs — never echo relative paths
-    // or javascript: schemes back to the client. Resolved against the final
-    // URL (post-redirects), since a relative image path is relative to
-    // wherever the page actually ended up, not the originally requested URL.
-    if (ogImage) {
-      try {
-        const imgUrl = new URL(ogImage, finalUrl)
-        ogImage = imgUrl.protocol === 'http:' || imgUrl.protocol === 'https:' ? imgUrl.toString() : null
-      } catch {
-        ogImage = null
+
+    ogImage = resolveCandidate(scanned.ogImage, finalUrl)
+    if (!ogImage) ogImage = resolveCandidate(scanned.itempropImage, finalUrl)
+    if (!ogImage) ogImage = resolveCandidate(extractJsonLdImage(head), finalUrl)
+    if (!ogImage) {
+      const icon = resolveCandidate(pickIcon(scanned.iconCandidates), finalUrl)
+      if (icon) {
+        ogImage = icon
+        imageKind = 'icon'
       }
     }
   } catch {
@@ -413,7 +329,7 @@ async function fetchPreview(raw: string | null): Promise<
     description = null
   }
 
-  return { ok: true, ogImage, description }
+  return { ok: true, ogImage, description, imageKind }
 }
 
 export async function POST(req: NextRequest) {
@@ -430,5 +346,7 @@ export async function POST(req: NextRequest) {
 
   const result = await fetchPreview(raw)
   if (!result.ok) return jsonResponse({ ogImage: null, description: null }, { status: 400 })
-  return jsonResponse({ ogImage: result.ogImage, description: result.description })
+  // `imageKind` is additive and defaults to 'preview' — existing extension
+  // builds that only read `ogImage`/`description` keep working unchanged.
+  return jsonResponse({ ogImage: result.ogImage, description: result.description, imageKind: result.imageKind })
 }

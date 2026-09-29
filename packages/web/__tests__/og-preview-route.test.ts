@@ -1,389 +1,271 @@
 /**
- * Unit tests for POST /api/og-preview — SSRF guards + og:image extraction.
- *
- * `node:dns/promises` is mocked so hostname resolution is deterministic and
- * offline. `node:https`/`node:http` `request` are mocked (not `fetch` — the
- * route uses the raw request APIs directly so it can pin the TCP connection
- * to a pre-validated address and avoid DNS-rebinding/redirect SSRF).
+ * Tests for the pure extraction logic behind POST /api/og-preview
+ * (app/api/og-preview/route.ts). The network/SSRF-guarded fetch path is
+ * intentionally not exercised here — these tests target the exported,
+ * side-effect-free tag/JSON-LD/icon parsing functions directly.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { NextRequest } from 'next/server'
-import { EventEmitter } from 'node:events'
+import { describe, it, expect } from 'vitest'
+import {
+  decodeHtmlEntities,
+  extractHead,
+  scanHeadTags,
+  extractJsonLdImage,
+  pickIcon,
+  resolveCandidate,
+  type IconCandidate,
+} from '@/lib/ogPreviewParse'
 
-const mockLookup = vi.fn()
-vi.mock('node:dns/promises', () => ({
-  lookup: (...a: unknown[]) => mockLookup(...a),
-  default: { lookup: (...a: unknown[]) => mockLookup(...a) },
-}))
-
-interface MockResponse {
-  statusCode: number
-  headers: Record<string, string>
-  body: string
+function head(inner: string): string {
+  return `<head>${inner}</head>`
 }
 
-function fakeIncomingMessage(res: MockResponse) {
-  const emitter = new EventEmitter() as EventEmitter & { statusCode: number; headers: Record<string, string>; resume: () => void; destroy: () => void }
-  emitter.statusCode = res.statusCode
-  emitter.headers = res.headers
-  emitter.resume = () => {}
-  emitter.destroy = () => {}
-  return emitter
-}
-
-/** Mocks both node:http and node:https `request` to return `res`, invoking the callback asynchronously like the real API. */
-function mockRequestModules(res: MockResponse) {
-  const makeRequestFn = () =>
-    vi.fn((_options: unknown, callback: (res: unknown) => void) => {
-      const reqEmitter = new EventEmitter() as EventEmitter & { end: () => void; destroy: () => void }
-      reqEmitter.end = () => {
-        queueMicrotask(() => {
-          const im = fakeIncomingMessage(res)
-          callback(im)
-          if (res.statusCode >= 200 && res.statusCode < 300) {
-            queueMicrotask(() => {
-              im.emit('data', Buffer.from(res.body))
-              im.emit('end')
-            })
-          }
-        })
-      }
-      reqEmitter.destroy = () => {}
-      return reqEmitter
-    })
-  const httpRequest = makeRequestFn()
-  const httpsRequest = makeRequestFn()
-  vi.doMock('node:http', () => ({ request: httpRequest, default: { request: httpRequest } }))
-  vi.doMock('node:https', () => ({ request: httpsRequest, default: { request: httpsRequest } }))
-  return { httpRequest, httpsRequest }
-}
-
-function req(url: string | undefined, { badJson = false }: { badJson?: boolean } = {}) {
-  return new NextRequest('http://localhost/api/og-preview', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: badJson ? '{not valid json' : JSON.stringify({ url }),
+describe('decodeHtmlEntities', () => {
+  it('decodes named and numeric entities', () => {
+    expect(decodeHtmlEntities('a&amp;b&#39;c&quot;')).toBe(`a&b'c"`)
   })
-}
-
-beforeEach(() => {
-  vi.resetModules()
-  vi.clearAllMocks()
-  mockLookup.mockResolvedValue([{ address: '93.184.216.34', family: 4 }]) // public IP by default
 })
 
-describe('POST /api/og-preview', () => {
-  it('rejects a missing url field', async () => {
-    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req(undefined))
-    expect(res.status).toBe(400)
-    expect(await res.json()).toEqual({ ogImage: null, description: null })
+describe('scanHeadTags — og:image chain priority', () => {
+  it('prefers og:image over every other source', () => {
+    const h = head(`
+      <meta property="og:image" content="https://a.test/og.png">
+      <meta name="twitter:image" content="https://a.test/tw.png">
+      <meta itemprop="image" content="https://a.test/itemprop.png">
+    `)
+    expect(scanHeadTags(h).ogImage).toBe('https://a.test/og.png')
   })
 
-  it('rejects an invalid JSON body', async () => {
-    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req(undefined, { badJson: true }))
-    expect(res.status).toBe(400)
+  it('falls back through og:image:secure_url, og:image:url, twitter:image, twitter:image:src, link[image_src]', () => {
+    expect(scanHeadTags(head(`<meta property="og:image:secure_url" content="https://a.test/x.png">`)).ogImage).toBe(
+      'https://a.test/x.png'
+    )
+    expect(scanHeadTags(head(`<link rel="image_src" href="https://a.test/y.png">`)).ogImage).toBe(
+      'https://a.test/y.png'
+    )
   })
 
-  it('rejects non-http(s) protocols', async () => {
-    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('javascript:alert(1)'))
-    expect(res.status).toBe(400)
-    expect(await res.json()).toEqual({ ogImage: null, description: null })
+  it('treats property= and name= interchangeably', () => {
+    expect(scanHeadTags(head(`<meta name="og:image" content="https://a.test/n.png">`)).ogImage).toBe(
+      'https://a.test/n.png'
+    )
   })
 
-  it('rejects an unparseable url', async () => {
-    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('not a url'))
-    expect(res.status).toBe(400)
+  it('is case-insensitive and tolerates uppercase tags/attrs', () => {
+    const h = head(`<META PROPERTY="OG:IMAGE" CONTENT="https://a.test/upper.png">`)
+    expect(scanHeadTags(h).ogImage).toBe('https://a.test/upper.png')
   })
 
-  it('rejects a private-IP literal URL', async () => {
-    const { httpRequest, httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('http://192.168.1.5/page'))
-    expect(res.status).toBe(400)
-    expect(httpRequest).not.toHaveBeenCalled()
-    expect(httpsRequest).not.toHaveBeenCalled()
+  it('parses unquoted attribute values', () => {
+    const h = head(`<meta property=og:image content=https://a.test/unquoted.png>`)
+    expect(scanHeadTags(h).ogImage).toBe('https://a.test/unquoted.png')
   })
 
-  it('rejects loopback', async () => {
-    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('http://127.0.0.1/page'))
-    expect(res.status).toBe(400)
+  it('does not care about content before property attribute order', () => {
+    const h = head(`<meta content="https://a.test/order.png" property="og:image">`)
+    expect(scanHeadTags(h).ogImage).toBe('https://a.test/order.png')
   })
 
-  it('rejects a hostname that resolves to the cloud metadata endpoint', async () => {
-    mockLookup.mockResolvedValue([{ address: '169.254.169.254', family: 4 }])
-    const { httpRequest, httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('http://metadata.internal-service.example/page'))
-    expect(res.status).toBe(400)
-    expect(httpRequest).not.toHaveBeenCalled()
-    expect(httpsRequest).not.toHaveBeenCalled()
+  it('trims whitespace around content', () => {
+    const h = head(`<meta property="og:image" content="  https://a.test/ws.png  ">`)
+    expect(scanHeadTags(h).ogImage).toBe('https://a.test/ws.png')
+  })
+})
+
+describe('scanHeadTags — itemprop image (Part 2.1)', () => {
+  it('is returned separately from ogImage when og chain has nothing', () => {
+    const h = head(`<meta itemprop="image" content="https://a.test/itemprop.png">`)
+    const scanned = scanHeadTags(h)
+    expect(scanned.ogImage).toBeNull()
+    expect(scanned.itempropImage).toBe('https://a.test/itemprop.png')
   })
 
-  it('rejects a hostname where only one of several resolved addresses is private (rebinding-style answer)', async () => {
-    mockLookup.mockResolvedValue([
-      { address: '93.184.216.34', family: 4 },
-      { address: '10.0.0.5', family: 4 },
-    ])
-    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('http://multi-answer.example/page'))
-    expect(res.status).toBe(400)
+  it('also reads itemprop from a link href', () => {
+    const h = head(`<link itemprop="image" href="https://a.test/link-itemprop.png">`)
+    expect(scanHeadTags(h).itempropImage).toBe('https://a.test/link-itemprop.png')
   })
 
-  it('rejects localhost', async () => {
-    mockRequestModules({ statusCode: 200, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('http://localhost:3000/page'))
-    expect(res.status).toBe(400)
+  it('does not let itemprop override a present og:image', () => {
+    const h = head(`
+      <meta property="og:image" content="https://a.test/og.png">
+      <meta itemprop="image" content="https://a.test/itemprop.png">
+    `)
+    expect(scanHeadTags(h).ogImage).toBe('https://a.test/og.png')
+  })
+})
+
+describe('scanHeadTags — vendor name= fallbacks (Part 2.2)', () => {
+  it.each(['thumbnail', 'parsely-image-url', 'sailthru.image.full', 'msapplication-TileImage'])(
+    'falls back to meta name="%s" when nothing else matches',
+    (name) => {
+      const h = head(`<meta name="${name}" content="https://a.test/vendor.png">`)
+      expect(scanHeadTags(h).ogImage).toBe('https://a.test/vendor.png')
+    }
+  )
+
+  it('is lower priority than og:image', () => {
+    const h = head(`
+      <meta name="thumbnail" content="https://a.test/vendor.png">
+      <meta property="og:image" content="https://a.test/og.png">
+    `)
+    expect(scanHeadTags(h).ogImage).toBe('https://a.test/og.png')
+  })
+})
+
+describe('extractJsonLdImage (Part 2.3)', () => {
+  it('reads a plain string image', () => {
+    const h = head(`<script type="application/ld+json">{"image":"https://a.test/jsonld.png"}</script>`)
+    expect(extractJsonLdImage(h)).toBe('https://a.test/jsonld.png')
   })
 
-  it('extracts og:image from sample HTML on the happy path', async () => {
-    const html = `<html><head><meta property="og:image" content="https://example.com/img.png" /></head><body></body></html>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/article'))
-    expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/img.png', description: null })
+  it('reads the first entry of an array image', () => {
+    const h = head(
+      `<script type="application/ld+json">{"image":["https://a.test/first.png","https://a.test/second.png"]}</script>`
+    )
+    expect(extractJsonLdImage(h)).toBe('https://a.test/first.png')
   })
 
-  it('sets Cache-Control: no-store on every response', async () => {
-    const html = `<head><meta property="og:image" content="https://example.com/img.png" /></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/cache-check'))
-    expect(res.headers.get('Cache-Control')).toBe('no-store')
+  it('reads an ImageObject { url }', () => {
+    const h = head(
+      `<script type="application/ld+json">{"image":{"@type":"ImageObject","url":"https://a.test/obj.png"}}</script>`
+    )
+    expect(extractJsonLdImage(h)).toBe('https://a.test/obj.png')
   })
 
-  it('never caches — two identical requests both fetch upstream', async () => {
-    const html = `<head><meta property="og:image" content="https://example.com/img.png" /></head>`
-    const { httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    await POST(req('https://example.com/repeat'))
-    await POST(req('https://example.com/repeat'))
-    expect(httpsRequest).toHaveBeenCalledTimes(2)
+  it('descends into @graph', () => {
+    const h = head(
+      `<script type="application/ld+json">{"@graph":[{"@type":"Thing"},{"image":"https://a.test/graph.png"}]}</script>`
+    )
+    expect(extractJsonLdImage(h)).toBe('https://a.test/graph.png')
   })
 
-  // Meta content is HTML-attribute text: Wikipedia's og:image arrives with `&amp;`, which
-  // used to be passed through and turned into a different (often broken) image URL.
-  it('decodes HTML entities in the image URL and description', async () => {
-    const html = `<head><meta property="og:image" content="https://example.com/img.png?a=1&amp;b=2&#38;c=3" /><meta property="og:description" content="Tabs &amp; windows, &quot;tamed&quot; &#x2014; fast" /></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/entities'))
-    expect(await res.json()).toEqual({
-      ogImage: 'https://example.com/img.png?a=1&b=2&c=3',
-      description: 'Tabs & windows, "tamed" — fast',
-    })
+  it('falls back to thumbnailUrl when image is absent', () => {
+    const h = head(`<script type="application/ld+json">{"thumbnailUrl":"https://a.test/thumb.png"}</script>`)
+    expect(extractJsonLdImage(h)).toBe('https://a.test/thumb.png')
   })
 
-  it('falls back to twitter:image when og:image is absent', async () => {
-    const html = `<head><meta name="twitter:image" content="https://example.com/tw.png"></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/article2'))
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/tw.png', description: null })
+  it('handles a top-level JSON-LD array', () => {
+    const h = head(
+      `<script type="application/ld+json">[{"@type":"Thing"},{"image":"https://a.test/arr.png"}]</script>`
+    )
+    expect(extractJsonLdImage(h)).toBe('https://a.test/arr.png')
   })
 
-  it('returns null ogImage without leaking error details when the upstream fetch fails', async () => {
-    mockRequestModules({ statusCode: 500, headers: {}, body: '' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/broken'))
-    expect(res.status).toBe(200)
-    const body = await res.json()
-    expect(body).toEqual({ ogImage: null, description: null })
+  it('never throws on malformed JSON and returns null', () => {
+    const h = head(`<script type="application/ld+json">{ not: valid json </script>`)
+    expect(extractJsonLdImage(h)).toBeNull()
   })
 
-  it('follows a redirect to a public host and re-validates it', async () => {
-    let call = 0
-    const requestFn = vi.fn((options: { hostname: string }, callback: (res: unknown) => void) => {
-      const reqEmitter = new EventEmitter() as EventEmitter & { end: () => void; destroy: () => void }
-      reqEmitter.end = () => {
-        queueMicrotask(() => {
-          call++
-          if (call === 1) {
-            const im = fakeIncomingMessage({ statusCode: 302, headers: { location: 'https://example.com/final' }, body: '' })
-            callback(im)
-          } else {
-            const html = `<head><meta property="og:image" content="https://example.com/final.png"></head>`
-            const im = fakeIncomingMessage({ statusCode: 200, headers: {}, body: html })
-            callback(im)
-            queueMicrotask(() => {
-              im.emit('data', Buffer.from(html))
-              im.emit('end')
-            })
-          }
-        })
-      }
-      reqEmitter.destroy = () => {}
-      return reqEmitter
-    })
-    vi.doMock('node:http', () => ({ request: requestFn, default: { request: requestFn } }))
-    vi.doMock('node:https', () => ({ request: requestFn, default: { request: requestFn } }))
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/redirector'))
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/final.png', description: null })
-    expect(requestFn).toHaveBeenCalledTimes(2)
+  it('skips a script whose body exceeds the size cap and does not throw', () => {
+    const huge = `{"image":"https://a.test/x.png","pad":"${'a'.repeat(60_000)}"}`
+    const h = head(`<script type="application/ld+json">${huge}</script>`)
+    expect(extractJsonLdImage(h)).toBeNull()
   })
 
-  it('blocks a redirect to a private address instead of following it', async () => {
-    let call = 0
-    mockLookup.mockImplementation(async (hostname: string) => {
-      if (hostname === 'internal.example') return [{ address: '10.0.0.9', family: 4 }]
-      return [{ address: '93.184.216.34', family: 4 }]
-    })
-    const requestFn = vi.fn((_options: unknown, callback: (res: unknown) => void) => {
-      const reqEmitter = new EventEmitter() as EventEmitter & { end: () => void; destroy: () => void }
-      reqEmitter.end = () => {
-        queueMicrotask(() => {
-          call++
-          const im = fakeIncomingMessage({ statusCode: 302, headers: { location: 'http://internal.example/secret' }, body: '' })
-          callback(im)
-        })
-      }
-      reqEmitter.destroy = () => {}
-      return reqEmitter
-    })
-    vi.doMock('node:http', () => ({ request: requestFn, default: { request: requestFn } }))
-    vi.doMock('node:https', () => ({ request: requestFn, default: { request: requestFn } }))
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/evil-redirector'))
-    const body = await res.json()
-    expect(body).toEqual({ ogImage: null, description: null })
-    expect(call).toBe(1) // never followed the redirect to the private host
+  it('returns null when there is no JSON-LD at all', () => {
+    expect(extractJsonLdImage(head(''))).toBeNull()
   })
 
-  it('extracts description, preferring og:description over the plain description tag', async () => {
-    const html = `<head><meta name="description" content="plain"><meta property="og:description" content="og desc"></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/desc'))
-    expect(await res.json()).toEqual({ ogImage: null, description: 'og desc' })
-  })
-
-  it('falls back to the plain description tag when og:description is absent', async () => {
-    const html = `<head><meta name="description" content="plain desc"></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/desc2'))
-    expect(await res.json()).toEqual({ ogImage: null, description: 'plain desc' })
-  })
-
-  it('truncates an absurdly long description to 500 chars', async () => {
-    const longDesc = 'a'.repeat(1000)
-    const html = `<head><meta name="description" content="${longDesc}"></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/desc3'))
-    const body = await res.json()
-    expect(body.description).toHaveLength(500)
-  })
-
-  // MDN serves og:image with `name=` instead of `property=`.
-  it('accepts og:image declared with name= (the MDN case)', async () => {
-    const html = `<head><meta name="og:image" content="https://developer.mozilla.org/mdn-social-image.46ac2375.png" /></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://developer.mozilla.org/en-US/'))
-    expect(await res.json()).toEqual({
-      ogImage: 'https://developer.mozilla.org/mdn-social-image.46ac2375.png',
-      description: null,
-    })
-  })
-
-  it('accepts twitter:image declared with property= instead of name=', async () => {
-    const html = `<head><meta property="twitter:image" content="https://example.com/tw2.png"></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/tw-property'))
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/tw2.png', description: null })
-  })
-
-  it('accepts og:image with content before the property attribute (reversed order)', async () => {
-    const html = `<head><meta content="https://example.com/reversed.png" property="og:image"></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/reversed'))
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/reversed.png', description: null })
-  })
-
-  it('falls back to <link rel="image_src"> when no og/twitter image tag exists', async () => {
-    const html = `<head><link rel="image_src" href="https://example.com/legacy.png"></head>`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/legacy'))
-    expect(await res.json()).toEqual({ ogImage: 'https://example.com/legacy.png', description: null })
-  })
-
-  it('resolves a relative og:image URL against the final (post-redirect) URL', async () => {
-    let call = 0
-    const requestFn = vi.fn((_options: unknown, callback: (res: unknown) => void) => {
-      const reqEmitter = new EventEmitter() as EventEmitter & { end: () => void; destroy: () => void }
-      reqEmitter.end = () => {
-        queueMicrotask(() => {
-          call++
-          if (call === 1) {
-            const im = fakeIncomingMessage({ statusCode: 302, headers: { location: 'https://final.example/page' }, body: '' })
-            callback(im)
-          } else {
-            const html = `<head><meta property="og:image" content="/images/relative.png"></head>`
-            const im = fakeIncomingMessage({ statusCode: 200, headers: {}, body: html })
-            callback(im)
-            queueMicrotask(() => {
-              im.emit('data', Buffer.from(html))
-              im.emit('end')
-            })
-          }
-        })
-      }
-      reqEmitter.destroy = () => {}
-      return reqEmitter
-    })
-    vi.doMock('node:http', () => ({ request: requestFn, default: { request: requestFn } }))
-    vi.doMock('node:https', () => ({ request: requestFn, default: { request: requestFn } }))
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://example.com/redirect-relative'))
-    expect(await res.json()).toEqual({ ogImage: 'https://final.example/images/relative.png', description: null })
-  })
-
-  it('returns null preview for a non-HTML content-type instead of regex-ing it', async () => {
-    mockRequestModules({ statusCode: 200, headers: { 'content-type': 'text/markdown' }, body: '# no meta tags here' })
-    const { POST } = await import('@/app/api/og-preview/route')
-    const res = await POST(req('https://vercel.com/docs'))
-    expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ogImage: null, description: null })
-  })
-
-  it('handles a pathological ~2MB unclosed head region quickly instead of catastrophically backtracking', async () => {
-    // A single unclosed `<meta` tag followed by tens of thousands of
-    // `property="og:image"` occurrences — the shape that made the old
-    // per-attribute-name backtracking regexes take ~O(n × occurrences).
-    const html = `<head><meta ${'property="og:image" '.repeat(100_000)}`
-    mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
+  it('is bounded in time even with many unterminated script tags (ReDoS-style input)', () => {
+    const hostile = 'x'.repeat(50_000) + '<script type="application/ld+json">'.repeat(3000)
     const start = Date.now()
-    const res = await POST(req('https://example.com/pathological'))
-    const elapsed = Date.now() - start
-    expect(elapsed).toBeLessThan(500)
-    expect(await res.json()).toEqual({ ogImage: null, description: null })
+    extractJsonLdImage(head(hostile))
+    expect(Date.now() - start).toBeLessThan(1000)
+  })
+})
+
+describe('pickIcon (Part 2.4)', () => {
+  it('returns null when there are no candidates', () => {
+    expect(pickIcon([])).toBeNull()
   })
 
-  it('sends an Accept header requesting HTML', async () => {
-    const html = `<head><meta property="og:image" content="https://example.com/img.png"></head>`
-    const { httpsRequest } = mockRequestModules({ statusCode: 200, headers: {}, body: html })
-    const { POST } = await import('@/app/api/og-preview/route')
-    await POST(req('https://example.com/accept-check'))
-    const options = httpsRequest.mock.calls[0][0] as { headers: Record<string, string> }
-    expect(options.headers.Accept).toBe('text/html,application/xhtml+xml;q=0.9,*/*;q=0.8')
-    expect(options.headers['Accept-Language']).toBe('en-US,en;q=0.9')
+  it('ignores icons smaller than 128px', () => {
+    const candidates: IconCandidate[] = [{ href: '/favicon-32.png', size: 32, isAppleTouch: false }]
+    expect(pickIcon(candidates)).toBeNull()
+  })
+
+  it('picks the largest sized icon at or above 128px', () => {
+    const candidates: IconCandidate[] = [
+      { href: '/icon-128.png', size: 128, isAppleTouch: false },
+      { href: '/icon-512.png', size: 512, isAppleTouch: false },
+      { href: '/icon-32.png', size: 32, isAppleTouch: false },
+    ]
+    expect(pickIcon(candidates)).toBe('/icon-512.png')
+  })
+
+  it('falls back to an unsized apple-touch-icon when nothing sized qualifies', () => {
+    const candidates: IconCandidate[] = [
+      { href: '/favicon.ico', size: 16, isAppleTouch: false },
+      { href: '/apple-touch-icon.png', size: 0, isAppleTouch: true },
+    ]
+    expect(pickIcon(candidates)).toBe('/apple-touch-icon.png')
+  })
+
+  it('does not use an unsized plain icon (only unsized apple-touch-icon qualifies)', () => {
+    const candidates: IconCandidate[] = [{ href: '/icon.png', size: 0, isAppleTouch: false }]
+    expect(pickIcon(candidates)).toBeNull()
+  })
+})
+
+describe('scanHeadTags — icon candidate collection', () => {
+  it('collects icon and apple-touch-icon links with sizes', () => {
+    const h = head(`
+      <link rel="icon" href="/favicon-32.png" sizes="32x32">
+      <link rel="apple-touch-icon" href="/apple-touch-180.png" sizes="180x180">
+    `)
+    const { iconCandidates } = scanHeadTags(h)
+    expect(iconCandidates).toContainEqual({ href: '/favicon-32.png', size: 32, isAppleTouch: false })
+    expect(iconCandidates).toContainEqual({ href: '/apple-touch-180.png', size: 180, isAppleTouch: true })
+  })
+
+  it('takes the larger dimension for non-square sizes', () => {
+    const h = head(`<link rel="icon" href="/wide.png" sizes="64x256">`)
+    expect(scanHeadTags(h).iconCandidates[0].size).toBe(256)
+  })
+})
+
+describe('resolveCandidate', () => {
+  const finalUrl = 'https://final.test/page'
+
+  it('resolves a relative path against finalUrl', () => {
+    expect(resolveCandidate('/img.png', finalUrl)).toBe('https://final.test/img.png')
+  })
+
+  it('resolves a protocol-relative URL using the final URL protocol', () => {
+    expect(resolveCandidate('//cdn.test/img.png', finalUrl)).toBe('https://cdn.test/img.png')
+  })
+
+  it('rejects data: URLs', () => {
+    expect(resolveCandidate('data:image/png;base64,abcd', finalUrl)).toBeNull()
+  })
+
+  it('rejects javascript: URLs', () => {
+    expect(resolveCandidate('javascript:alert(1)', finalUrl)).toBeNull()
+  })
+
+  it('rejects empty/null candidates', () => {
+    expect(resolveCandidate('', finalUrl)).toBeNull()
+    expect(resolveCandidate(null, finalUrl)).toBeNull()
+  })
+
+  it('decodes HTML entities before resolving', () => {
+    expect(resolveCandidate('https://a.test/img.png?a=1&amp;b=2', finalUrl)).toBe(
+      'https://a.test/img.png?a=1&b=2'
+    )
+  })
+
+  it('rejects a non-http(s) absolute URL', () => {
+    expect(resolveCandidate('ftp://a.test/img.png', finalUrl)).toBeNull()
+  })
+})
+
+describe('extractHead', () => {
+  it('extracts the real head region when present', () => {
+    const html = `<html><head><title>t</title></head><body>x</body></html>`
+    expect(extractHead(html)).toBe('<head><title>t</title></head>')
+  })
+
+  it('falls back to the raw HTML (bounded) when there is no closing head tag', () => {
+    const html = `<html><head><title>t</title>`
+    expect(extractHead(html)).toBe(html)
   })
 })
