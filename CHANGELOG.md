@@ -1,3 +1,42 @@
+# [3.1.0-beta.7](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.6...v3.1.0-beta.7) (2026-09-29)
+
+
+### Bug Fixes
+
+* **db:** require an active paid subscription to write synced data ([8dca9c8](https://github.com/lbragile/TabMerger/commit/8dca9c8d14bde865156c1a41e2a106d1d90f97de))
+* **dev:** use the dev extension's real ID for website messaging and local Google sign-in ([f92dee1](https://github.com/lbragile/TabMerger/commit/f92dee1339d29ff62129e804347fbcc26f0e328a))
+* **extension:** enforce Free plan limits on import and in the data layer ([6f7bc59](https://github.com/lbragile/TabMerger/commit/6f7bc59a5452aa98bbf8db4d3c88f82acbf4e8a4))
+* **extension:** let the website reach Firefox, and restore the live Firefox add-on ID ([85099c1](https://github.com/lbragile/TabMerger/commit/85099c181a8ecb8347a1b550656d891591156cdd))
+* **extension:** make toasts clickable over dialogs, and show their countdown ([dbd562d](https://github.com/lbragile/TabMerger/commit/dbd562d6c33707034941e3475eb409c3c7b56db1))
+* **extension:** only paid subscriptions get Pro, and free sessions stay local ([766606c](https://github.com/lbragile/TabMerger/commit/766606c99cd38f2436eaf8801c281a1a2b188c9c))
+* **scripts:** push build-time server variables to Vercel as plain config ([e60488b](https://github.com/lbragile/TabMerger/commit/e60488bf71aad736636d6cba453cf8efff48f802))
+* **supabase:** make the seed work with the sign-up trigger ([02120d1](https://github.com/lbragile/TabMerger/commit/02120d1318876f1c8593afd0ecba49833dcd78b8))
+* **web:** find page preview images on more sites ([0b43a2e](https://github.com/lbragile/TabMerger/commit/0b43a2efca15423a1db67be5c6b231029116a322))
+* **web:** find preview images on more pages ([6b57cb6](https://github.com/lbragile/TabMerger/commit/6b57cb67b7bfd5b0ed8d5121409b143694186fd5))
+* **web:** fold import and export into the beta Settings section ([cad43bd](https://github.com/lbragile/TabMerger/commit/cad43bd88ea6d0bb7c0d6fe27f77250e1d1ccbf5))
+* **web:** log why contact emails fail, and tidy the beta report buttons ([87874d4](https://github.com/lbragile/TabMerger/commit/87874d47decabc3eaa0db3580e6d1775aaeb9ab3))
+* **web:** make the contact form's sender and inbox configurable ([6cf603e](https://github.com/lbragile/TabMerger/commit/6cf603e37961d33483ccd70c265202e646c15f55))
+* **web:** show the currency on Billing Portal prices ([1e97ffb](https://github.com/lbragile/TabMerger/commit/1e97ffbfaa682a98385fef7cc0332eb97f0619ff))
+
+
+### Features
+
+* **extension:** add a custom colour picker with live preview ([6224d88](https://github.com/lbragile/TabMerger/commit/6224d88111954426760aff5461f18b73bc772494))
+* **extension:** Firefox beta self-updates, and asks before sending data on Firefox ([00e51a2](https://github.com/lbragile/TabMerger/commit/00e51a23c2d4c67f7ee2956188bf4fe84e2406ce))
+* **extension:** open the colour picker straight into the custom picker, swatches included ([c864a05](https://github.com/lbragile/TabMerger/commit/c864a0591e383a192a2e10e9734e0c7b38f11da3))
+* show URL rule limits on every plan, from one shared definition ([2b9c89a](https://github.com/lbragile/TabMerger/commit/2b9c89af70ad9ddc7d1b94f42a91b16167cc19b9))
+* **web:** add a countdown to toasts and make them easier to read ([30c725a](https://github.com/lbragile/TabMerger/commit/30c725ac0ad9f2aafd68a89ead010ea601e4c8fe))
+* **web:** add non-personal diagnostics to contact emails ([3358abc](https://github.com/lbragile/TabMerger/commit/3358abc1606fdf54350b16a10937265703a14896))
+* **web:** draw toasts with the app's theme and tokens ([855bc14](https://github.com/lbragile/TabMerger/commit/855bc140d5c17de5dbbcb1fc45b29038d3e9b942))
+* **web:** drop the dashboard's New group button and let the upgrade banner be dismissed ([16df641](https://github.com/lbragile/TabMerger/commit/16df6410b6f32035e3c70daba1991435490b7ac7))
+* **web:** full beta test plan with sharp screenshots of every step ([6950e54](https://github.com/lbragile/TabMerger/commit/6950e5449e67a706cb9b36fc0f6e340bbf743cbe)), closes [hi#density](https://github.com/hi/issues/density)
+* **web:** hide sync-only parts of the dashboard and account page for free accounts ([d34a7a0](https://github.com/lbragile/TabMerger/commit/d34a7a06f7d4c338e1b6d8a5961ad3958992554e))
+* **web:** reach the extension from any store, with a Firefox fallback ([0174896](https://github.com/lbragile/TabMerger/commit/017489623c61d0fe2874411512872ac1b7f110bc))
+* **web:** say that prices are in US dollars ([0eb8f34](https://github.com/lbragile/TabMerger/commit/0eb8f340aab82dab38307b92e7e96c918de0adc8))
+* **web:** serve the Firefox beta add-on from the beta site ([d249cfd](https://github.com/lbragile/TabMerger/commit/d249cfda8bceba1a3e94337b7d2c595010dbfae0))
+* **web:** show the monthly equivalent and saving under yearly prices ([842154f](https://github.com/lbragile/TabMerger/commit/842154ff3a9b1d2199b501303528a6c4efd6b801))
+* **web:** switch a paid plan between monthly and yearly billing ([4d70ba6](https://github.com/lbragile/TabMerger/commit/4d70ba6323a8a24592e0ca01bee69502e6eb175a))
+
 # [3.1.0-beta.6](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.5...v3.1.0-beta.6) (2026-09-27)
 
 
