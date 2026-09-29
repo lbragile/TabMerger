@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`018`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`019`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -26,6 +26,7 @@ The migrations in `supabase/migrations/` (`001`–`018`) are the source of truth
 | 016 | `016_group_counts.sql` | `groups.window_count` and `tab_count`, plaintext denormalized counts, backfilled from existing plaintext `windows`. |
 | 017 | `017_rename_ai_usage_credits.sql` | Renames `ai_usage.request_count` to `credits_used` (weighted credits). |
 | 018 | `018_encryption_keys_delete_policy.sql` | Adds the missing `encryption_keys` delete policy. Without it, `resetEncryption()` silently deleted 0 rows. |
+| 019 | `019_gate_cloud_sync_rls.sql` | Adds `public.has_cloud_sync(uid)` — tier in `pro`/`pro_ai` and status in `active`/`trialing`/`past_due` (kept in sync with the shared `ENTITLED_SUBSCRIPTION_STATUSES` constant used by `useEntitlements.ts`'s `resolveTier()`). Replaces the insert/update policies on `groups`, `sessions`, `device_sessions`, `shared_bundles` (insert only) and `encryption_keys` to also require it, closing a gap where any signed-in free user could write sync rows directly (RLS previously only checked `auth.uid() = user_id`). `sessions` is gated too (owner decision: free users sync 0 sessions, keeping up to 3 locally only — the extension's free-tier upload path was removed in the same change). select/delete are untouched everywhere so downgraded users keep read/export/delete access. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -106,7 +107,7 @@ Groups are synced from the extension. Local IndexedDB is written first, then `sy
 | `updated_at` | `timestamptz` | not null, default `now()`, bumped by trigger. The last-write-wins key |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
-**RLS:** full owner CRUD (`groups_select_own`, `_insert_own`, `_update_own`, `_delete_own`). No public select policy exists.
+**RLS:** full owner CRUD (`groups_select_own`, `_insert_own`, `_update_own`, `_delete_own`). No public select policy exists. Since 019, `_insert_own`/`_update_own` also require `public.has_cloud_sync(auth.uid())` (tier `pro`/`pro_ai` and status `active`/`trialing`/`past_due`) — cloud sync is a Pro/Pro AI feature; select/delete stay owner-only so a downgraded user keeps read/export/delete access.
 
 **Realtime:** in the `supabase_realtime` publication (011). RLS applies to subscriptions.
 
@@ -127,7 +128,7 @@ Point-in-time snapshots of a user's groups. They are copies, not references to `
 | `groups` | `jsonb` | not null, default `'[]'`. `Group[]`, or an `EncryptedBlob` |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
-**RLS:** full owner CRUD. **Index:** `sessions_user_id_idx`.
+**RLS:** full owner CRUD. **Index:** `sessions_user_id_idx`. Since 019, insert/update also require `public.has_cloud_sync(auth.uid())` — owner decision: free users keep up to `FREE_SESSION_LIMIT` (3) sessions locally only and never sync them; the extension's `useSaveSession()`/`pushSessionToSupabase()` free-tier upload path was removed in the same change so the client and the DB gate agree.
 
 ### `device_sessions`
 
@@ -144,7 +145,7 @@ One row per (user, device) for "Continue on other device". Other devices of the 
 | `created_at` | `timestamptz` | not null, default `now()` |
 | — | — | `unique(user_id, device_id)`. The extension upserts with `onConflict: 'user_id,device_id'` |
 
-**RLS:** full owner CRUD (`device_sessions_*_owner`). **Index:** `device_sessions_user_id_last_active_idx (user_id, last_active)`.
+**RLS:** full owner CRUD (`device_sessions_*_owner`). **Index:** `device_sessions_user_id_last_active_idx (user_id, last_active)`. Since 019, insert/update also require `public.has_cloud_sync(auth.uid())` — "Continue on other device" is Pro/Pro AI only (the extension already no-ops these writes for free tier).
 
 ### `shared_bundles`
 
@@ -159,7 +160,7 @@ Immutable public share snapshots of one or more groups. `/share/[slug]` reads th
 | `created_at` | `timestamptz` | default `now()` |
 | `expires_at` | `timestamptz` | nullable |
 
-**RLS:** `shared_bundles_select_public` uses `using (true)`, so **anyone can read**. `shared_bundles_insert_owner` is limited to `authenticated` with `user_id = auth.uid()`. `shared_bundles_delete_owner` requires `user_id = auth.uid()`. There is **no update policy** because snapshots are immutable. **Index:** on `slug`.
+**RLS:** `shared_bundles_select_public` uses `using (true)`, so **anyone can read**. `shared_bundles_insert_owner` is limited to `authenticated` with `user_id = auth.uid()`, and since 019 also `public.has_cloud_sync(auth.uid())` — sharing is a Pro/Pro AI feature (the extension throws client-side if `entitlements.sharing` is false). `shared_bundles_delete_owner` requires `user_id = auth.uid()`. There is **no update policy** because snapshots are immutable. **Index:** on `slug`.
 
 ### `encryption_keys`
 
@@ -174,7 +175,7 @@ One row per user: the E2E data key wrapped with a key derived from the user's pa
 | `wrap_iv` | `text` | not null |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
-**RLS:** owner select, insert, update (015) and delete (018).
+**RLS:** owner select, insert, update (015) and delete (018). Since 019, insert/update also require `public.has_cloud_sync(auth.uid())` — E2E encryption setup is only reachable from the Pro-gated sync flow (`EncryptionSetupModal` is triggered from `useSync`'s doSync gate).
 
 ### `organize_runs`
 
