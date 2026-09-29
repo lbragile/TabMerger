@@ -52,6 +52,7 @@ describe('createIntervalSwitchSession', () => {
     expect(mockPortalCreate).toHaveBeenCalledWith({
       customer: 'cus_1',
       return_url: 'https://tabmerger.app/account',
+      locale: 'en-CA',
       flow_data: {
         type: 'subscription_update_confirm',
         subscription_update_confirm: {
