@@ -34,12 +34,17 @@ The memory files live in the Claude project memory directory shown in your syste
 
 Append learnings to `agents/payments-learnings.md` after tasks.
 
-## Pricing tiers (canonical — never change without updating Stripe products too)
+## Pricing tiers (never change without updating Stripe products too)
+The source of truth is `PRICING_TIERS` in `packages/shared/src/constants/index.ts`; this table is
+a copy for quick reference. Every Stripe Price must charge exactly these amounts, in USD: in
+2026-09 the test-mode yearly Prices were found at $34.99/$69.99 against the site's $42.99/$85.99,
+and had to be replaced (a Price's amount can't be edited).
+
 | Tier | Monthly | Yearly | Supabase tier value |
 |---|---|---|---|
 | Free | $0 | $0 | `'free'` |
-| Pro | $3.99 | $34.99 | `'pro'` |
-| Pro AI | $7.99 | $69.99 | `'pro_ai'` |
+| Pro | $3.99 | $42.99 | `'pro'` |
+| Pro AI | $7.99 | $85.99 | `'pro_ai'` |
 
 ## Stripe configuration
 - **Server SDK**: `stripe` package in `packages/web/lib/stripe.ts`

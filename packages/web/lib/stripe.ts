@@ -128,8 +128,8 @@ export async function createCreditPackCheckoutSession({
 
 /**
  * Language/format for every Billing Portal session. With Stripe's default ("auto") the portal
- * shows our USD prices as a bare "$34.99", which a Canadian reads as CAD. en-CA makes Stripe
- * write "US$34.99" for everyone, so the currency is never ambiguous. The site is English-only.
+ * shows our USD prices as a bare "$42.99", which a Canadian reads as CAD. en-CA makes Stripe
+ * write "US$42.99" for everyone, so the currency is never ambiguous. The site is English-only.
  */
 const PORTAL_LOCALE = 'en-CA' satisfies Stripe.BillingPortal.SessionCreateParams.Locale
 

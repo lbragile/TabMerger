@@ -95,12 +95,14 @@ app/
 Runs on EVERY request to refresh the Supabase session cookie. Protects `/dashboard` and `/account`.
 Never add business logic here — keep it only for auth session refresh and route protection.
 
-## Pricing tiers (canonical reference)
+## Pricing tiers (quick reference; the source of truth is `PRICING_TIERS` in `packages/shared/src/constants/index.ts`)
 ```
 Free:   $0         — 5 groups, 50 tabs, local only
-Pro:    $3.99/mo or $34.99/yr — unlimited, cloud sync, sessions
-Pro AI: $7.99/mo or $69.99/yr — Pro + all AI features
+Pro:    $3.99/mo or $42.99/yr — unlimited, cloud sync, sessions
+Pro AI: $7.99/mo or $85.99/yr — Pro + all AI features
 ```
+All prices are USD. Plan listings show a plain "$" plus the `PRICES_IN_USD_NOTE` footnote
+(`formatListPrice`); a price shown on its own uses `formatUsd` ("US$3.99").
 
 ## Supabase schema (read-only — managed by database agent)
 ```
