@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
-import { encryptBlob } from '@tabmerger/shared';
+import { encryptBlob, FREE_TIER_LIMITS } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
 import { getSessions, saveSession, deleteSession } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
@@ -10,7 +10,7 @@ import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { useGroups } from './useGroups';
 
 export const SESSIONS_QUERY_KEY = ['sessions'] as const;
-const FREE_SESSION_LIMIT = 3;
+const FREE_SESSION_LIMIT = FREE_TIER_LIMITS.sessions;
 
 export function useSessions() {
   return useQuery({
@@ -63,13 +63,16 @@ export async function pushSessionToSupabase(session: Session): Promise<void> {
  * Local-first: writes to IndexedDB first, then best-effort syncs to Supabase.
  * Enforces `FREE_SESSION_LIMIT` for users without the `hasSessions` entitlement.
  * Throws `'SESSION_LIMIT'` (checked by the caller to show an upgrade prompt).
+ * Free users (no `cloudSync` entitlement) keep sessions local-only — the Supabase
+ * upload is skipped entirely rather than attempted, since RLS rejects it anyway
+ * (`sessions` writes require `has_cloud_sync()`, supabase/migrations/019_gate_cloud_sync_rls.sql).
  */
 export function useSaveSession() {
   const qc = useQueryClient();
   const { data: groupsState } = useGroups();
 
   return useMutation({
-    mutationFn: async ({ name, description, sessionCount, hasSessions }: { name: string; description?: string; sessionCount: number; hasSessions: boolean }) => {
+    mutationFn: async ({ name, description, sessionCount, hasSessions, cloudSync }: { name: string; description?: string; sessionCount: number; hasSessions: boolean; cloudSync: boolean }) => {
       // ponytail: free tier gets 3 sessions; pro+ unlimited (hasSessions = entitlement)
       if (!hasSessions && sessionCount >= FREE_SESSION_LIMIT) {
         throw new Error('SESSION_LIMIT');
@@ -84,11 +87,14 @@ export function useSaveSession() {
         createdAt: Date.now(),
       };
       await saveSession(session);
-      // ponytail: best-effort Supabase sync — local save already succeeded
-      try {
-        await pushSessionToSupabase(session);
-      } catch (e) {
-        console.warn('[TabMerger] Session sync to Supabase failed', e);
+      // ponytail: best-effort Supabase sync — local save already succeeded. Only for
+      // users with the cloud-sync entitlement; free users stay local-only.
+      if (cloudSync) {
+        try {
+          await pushSessionToSupabase(session);
+        } catch (e) {
+          console.warn('[TabMerger] Session sync to Supabase failed', e);
+        }
       }
       return session;
     },

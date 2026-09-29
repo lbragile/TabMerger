@@ -21,6 +21,7 @@ import { pluralize } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
+import { FREE_TIER_LIMITS } from '@tabmerger/shared';
 
 /**
  * Shared shell for the Archived / Sessions sidebar sections: a disclosure header row
@@ -137,7 +138,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const selectionMode = useUIStore((s) => s.selectionMode);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const openModal = useUIStore((s) => s.openModal);
-  const { maxGroups, maxTabs, sessions: hasSessions } = useEntitlements();
+  const { maxGroups, maxTabs, sessions: hasSessions, cloudSync } = useEntitlements();
   const { mutateAsync: addGroup } = useAddGroup({ maxGroups, maxTabs });
   const { mutate: restoreGroup } = useRestoreGroup();
   const { mutate: deleteGroup } = useDeleteGroup();
@@ -154,11 +155,11 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     openModal('saveSession', {
       onSave: async (name: string, description?: string) => {
         try {
-          await saveSession({ name, description, sessionCount: sessions.length, hasSessions });
+          await saveSession({ name, description, sessionCount: sessions.length, hasSessions, cloudSync });
           toast.success('Session saved');
         } catch (err) {
           if (err instanceof Error && err.message === 'SESSION_LIMIT') {
-            toast.error('Free plan allows up to 3 sessions.', {
+            toast.error(`Free plan allows up to ${FREE_TIER_LIMITS.sessions} sessions.`, {
               action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
             });
           } else {

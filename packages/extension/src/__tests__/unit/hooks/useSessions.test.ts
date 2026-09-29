@@ -95,7 +95,7 @@ describe('useSaveSession', () => {
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
       await expect(
-        result.current.mutateAsync({ name: 'My Session', sessionCount: 3, hasSessions: false })
+        result.current.mutateAsync({ name: 'My Session', sessionCount: 3, hasSessions: false, cloudSync: false })
       ).rejects.toThrow('SESSION_LIMIT')
     })
     expect(mockSaveSession).not.toHaveBeenCalled()
@@ -104,7 +104,7 @@ describe('useSaveSession', () => {
   it('saves only non-permanent groups locally, excluding Now Open', async () => {
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: false })
     })
     expect(mockSaveSession).toHaveBeenCalledTimes(1)
     const saved = mockSaveSession.mock.calls[0][0] as Session
@@ -115,20 +115,31 @@ describe('useSaveSession', () => {
   it('unlimited sessions allowed when hasSessions entitlement is true, even over the free cap', async () => {
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', sessionCount: 99, hasSessions: true })
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 99, hasSessions: true, cloudSync: true })
     })
     expect(mockSaveSession).toHaveBeenCalled()
   })
 
-  it('best-effort syncs to Supabase when a session exists', async () => {
+  it('best-effort syncs to Supabase when a session exists and cloudSync entitlement is true', async () => {
     mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
     responses = [{ data: null, error: null }]
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
     })
     expect(mockFrom).toHaveBeenCalledWith('sessions')
     expect((builder.upsert as ReturnType<typeof vi.fn>)).toHaveBeenCalled()
+  })
+
+  it('free users (cloudSync entitlement false) save locally only — no Supabase call at all', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: false })
+    })
+    expect(mockSaveSession).toHaveBeenCalled()
+    expect(mockFrom).not.toHaveBeenCalledWith('sessions')
+    expect(mockGetSession).not.toHaveBeenCalled()
   })
 
   it('(Firefox) skips the Supabase upload when browsingActivity consent is not granted', async () => {
@@ -136,7 +147,7 @@ describe('useSaveSession', () => {
     mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
     })
     // Local save (offline-first) still happens — only the Supabase upload is gated.
     expect(mockSaveSession).toHaveBeenCalled()
@@ -150,7 +161,7 @@ describe('useSaveSession', () => {
     responses = [{ data: null, error: null }]
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', description: 'Weekend reading', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', description: 'Weekend reading', sessionCount: 0, hasSessions: false, cloudSync: true })
     })
     const upserted = (builder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
     expect(upserted.name).toBe('')
@@ -167,7 +178,7 @@ describe('useSaveSession', () => {
     responses = [{ data: null, error: null }]
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', description: 'Weekend reading', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', description: 'Weekend reading', sessionCount: 0, hasSessions: false, cloudSync: true })
     })
     const upserted = (builder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
     expect(upserted.description).toBe('Weekend reading')
@@ -179,7 +190,7 @@ describe('useSaveSession', () => {
     mockGetDataKey.mockReturnValue(null)
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
     })
     expect((builder.upsert as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
     expect(mockSaveSession).toHaveBeenCalled() // local save still happens
@@ -188,7 +199,7 @@ describe('useSaveSession', () => {
   it('does not call Supabase upsert when there is no auth session', async () => {
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
-      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
     })
     expect((builder.upsert as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
   })
@@ -198,7 +209,7 @@ describe('useSaveSession', () => {
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
       await expect(
-        result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false })
+        result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
       ).resolves.toBeDefined()
     })
     expect(mockSaveSession).toHaveBeenCalled()

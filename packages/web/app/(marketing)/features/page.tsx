@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
+import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import {
   Layers,
   Search,
@@ -88,7 +88,7 @@ const featureSections = [
         icon: RefreshCw,
         title: 'Session save & restore',
         description:
-          'Snapshot your current groups as a named session. Restore them instantly after a restart or when you need to context-switch.',
+          `Snapshot your current groups as a named session and restore them instantly. Free plans save up to ${FREE_TIER_LIMITS.sessions} sessions in this browser; Pro syncs unlimited sessions across every device.`,
       },
       {
         icon: Keyboard,

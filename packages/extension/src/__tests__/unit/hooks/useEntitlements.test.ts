@@ -152,6 +152,42 @@ describe('useEntitlements — PAY-001 new fields', () => {
   })
 })
 
+// ─── Entitled subscription statuses (owner decision: only active/trialing/past_due) ──
+
+describe('useEntitlements — entitled status allowlist', () => {
+  it.each(['incomplete', 'incomplete_expired', 'unpaid', 'paused'])(
+    'resolves tier free for status=%s even when tier column says pro',
+    async (status) => {
+      mockMaybeSingle.mockResolvedValue({
+        data: { tier: 'pro', status, cancel_at_period_end: false, current_period_end: null },
+        error: null,
+      })
+
+      const { useEntitlements } = await import('@/hooks/useEntitlements')
+      const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.tier).toBe('free')
+    }
+  )
+
+  it.each(['active', 'trialing', 'past_due'])(
+    'resolves tier pro for status=%s',
+    async (status) => {
+      mockMaybeSingle.mockResolvedValue({
+        data: { tier: 'pro', status, cancel_at_period_end: false, current_period_end: null },
+        error: null,
+      })
+
+      const { useEntitlements } = await import('@/hooks/useEntitlements')
+      const { result } = renderHook(() => useEntitlements(), { wrapper: makeWrapper() })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.tier).toBe('pro')
+    }
+  )
+})
+
 // ─── isApproachingLimit ───────────────────────────────────────────────────────
 // Real signature: isApproachingLimit(groupCount, tabCount, maxGroups, maxTabs)
 

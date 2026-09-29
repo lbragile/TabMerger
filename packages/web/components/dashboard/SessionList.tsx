@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/shared'
+import { isEncryptedBlob, decryptBlob, type EncryptedBlob, FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { useEncryptionKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
 import { SessionCard } from './SessionCard'
@@ -141,7 +141,7 @@ export function SessionList({ sessions: rawSessions, isPro }: SessionListProps) 
       </div>
       {!isPro && (
         <p className="mt-3 text-xs text-muted-foreground">
-          Free plan: up to 3 sessions.{' '}
+          Free plan: up to {FREE_TIER_LIMITS.sessions} sessions.{' '}
           <Link href="/pricing" className="underline underline-offset-2 hover:no-underline">
             Upgrade to Pro
           </Link>{' '}

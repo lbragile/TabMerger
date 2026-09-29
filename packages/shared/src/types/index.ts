@@ -166,6 +166,6 @@ export interface PricingTier {
   monthlyPrice: number;
   yearlyPrice: number;
   features: string[];
-  limits: { groups: number; tabs: number; urlRules: number };
+  limits: { groups: number; tabs: number; urlRules: number; sessions: number };
   highlighted?: boolean;
 }
