@@ -201,6 +201,15 @@ https://tabmerger.vercel.app/privacy
 
 ---
 
+## License
+
+The Chrome Web Store has no license field. The code is licensed under `LICENSE.md`
+(PolyForm Strict 1.0.0 plus an all-rights-reserved preface), and using the extension is governed by
+the Terms of Service (<https://tabmerger.vercel.app/terms>), linked from the listing through the
+website. Code must stay readable:
+minifying is allowed, but the store's code-readability policy forbids obfuscation, so a license
+(not obfuscation) is the protection.
+
 ## Distribution
 
 **Stable listing**

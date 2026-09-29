@@ -1,6 +1,7 @@
 {
   "name": "@tabmerger/shared",
   "version": "2.0.0",
+  "license": "SEE LICENSE IN LICENSE.md",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",

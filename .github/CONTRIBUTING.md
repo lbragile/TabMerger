@@ -3,6 +3,18 @@
 TabMerger is a pnpm monorepo (extension + web app + shared package). Developers of all
 experience levels are welcome to contribute.
 
+## Contributions and the license
+
+Contributions are welcome, and [`LICENSE.md`](../LICENSE.md) gives you everything you need to make
+one: you may fork the repository, clone it, and change and run your copy to develop, test, and
+propose a pull request.
+
+By opening a pull request you confirm that you have the right to submit your changes, and you
+grant the copyright holder a perpetual, irrevocable license to use, change, and distribute them as
+part of TabMerger. Contributing doesn't give you any other rights to the project: your fork and
+your changes may be used only to prepare contributions, not published, redistributed, or built
+into anything else. The pull request template asks you to confirm this.
+
 ## Setup
 
 ```bash

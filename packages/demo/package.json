@@ -1,6 +1,7 @@
 {
   "name": "@tabmerger/demo",
   "version": "1.0.0",
+  "license": "SEE LICENSE IN LICENSE.md",
   "private": true,
   "description": "Playwright recording + Remotion rendering pipeline for the TabMerger walkthrough video",
   "scripts": {

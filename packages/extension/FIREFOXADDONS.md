@@ -180,6 +180,19 @@ allowlist. The Google Group (`tabmerger-beta-testers@googlegroups.com`) is still
 *shared*, but it is not enforcement. Acceptable for a beta channel; documented here so it isn't
 mistaken for real access control later.
 
+## License
+
+The code is licensed under `LICENSE.md` (PolyForm Strict 1.0.0 plus an all-rights-reserved
+preface); using the add-on is governed by the Terms of Service
+(<https://tabmerger.vercel.app/terms>).
+
+- **Stable (listed) — AMO asks for a license.** Choose **"All Rights Reserved"**; the old GPL-3.0
+  choice no longer applies to TabMerger 3.x.
+- **Beta (unlisted)** — no license field; the same terms apply.
+- **Source code submission** — AMO reviewers may need the unminified source for a listed version.
+  Handing it to Mozilla for review is the copyright holder's own disclosure, not a distribution
+  under the license, so it's fine under these terms.
+
 ## Version History
 
 _(empty — fill in as Firefox beta releases ship; mirror `CHROMEWEBSTORE.md`'s Version History
