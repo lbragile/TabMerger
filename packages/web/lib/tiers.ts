@@ -23,6 +23,24 @@ export const TIERS = {
 export type TierKey = keyof typeof TIERS
 export type BillingInterval = 'monthly' | 'yearly'
 
+/** A price as shown on the site, always with cents (e.g. $3.58). */
+export function formatUsd(amount: number): string {
+  return `$${amount.toFixed(2)}`
+}
+
+/**
+ * What a yearly plan works out to per month, and how much it saves against paying the monthly
+ * price for twelve months. The percentage is rounded down so the site never overstates the
+ * discount (10.2% shows as 10%).
+ */
+export function yearlySavings(monthlyPrice: number, yearlyPrice: number) {
+  const twelveMonths = monthlyPrice * 12
+  return {
+    perMonth: yearlyPrice / 12,
+    percent: twelveMonths > 0 ? Math.floor(((twelveMonths - yearlyPrice) / twelveMonths) * 100) : 0,
+  }
+}
+
 export function getStripePriceId(
   tier: 'pro' | 'proAi',
   interval: BillingInterval

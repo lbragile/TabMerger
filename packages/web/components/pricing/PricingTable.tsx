@@ -2,11 +2,21 @@
 
 import { useState } from 'react'
 import { PricingCard } from './PricingCard'
-import { TIERS } from '@/lib/tiers'
+import { TIERS, formatUsd, yearlySavings } from '@/lib/tiers'
 import { cn } from '@/lib/utils'
 
 interface PricingTableProps {
   currentTier?: string
+}
+
+const PRO_SAVINGS = yearlySavings(TIERS.pro.monthlyPrice, TIERS.pro.yearlyPrice)
+const PRO_AI_SAVINGS = yearlySavings(TIERS.proAi.monthlyPrice, TIERS.proAi.yearlyPrice)
+// The toggle badge claims the smaller of the two discounts, so it's true for every plan.
+const YEARLY_DISCOUNT_PERCENT = Math.min(PRO_SAVINGS.percent, PRO_AI_SAVINGS.percent)
+
+/** "$3.58/mo billed yearly · save 10%": the yearly plan's monthly equivalent, under its price. */
+function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>): string {
+  return `${formatUsd(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
 }
 
 export function PricingTable({ currentTier }: PricingTableProps) {
@@ -28,8 +38,8 @@ export function PricingTable({ currentTier }: PricingTableProps) {
             )}
           >
             {opt === 'monthly' ? 'Monthly' : 'Yearly'}
-            {opt === 'yearly' && (
-              <span className="text-[11px] font-semibold text-primary">−10%</span>
+            {opt === 'yearly' && YEARLY_DISCOUNT_PERCENT > 0 && (
+              <span className="text-[11px] font-semibold text-primary">−{YEARLY_DISCOUNT_PERCENT}%</span>
             )}
           </button>
         ))}
@@ -64,7 +74,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
             currentTier={currentTier}
             displayMonthly={`$${TIERS.pro.monthlyPrice}`}
             displayYearly={`$${TIERS.pro.yearlyPrice}`}
-            yearlySubtext={`$${TIERS.pro.yearlyPrice}/yr billed yearly`}
+            yearlySubtext={yearlySubtext(PRO_SAVINGS)}
           />
         </div>
 
@@ -78,7 +88,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
           currentTier={currentTier}
           displayMonthly={`$${TIERS.proAi.monthlyPrice}`}
           displayYearly={`$${TIERS.proAi.yearlyPrice}`}
-          yearlySubtext={`$${TIERS.proAi.yearlyPrice}/yr billed yearly`}
+          yearlySubtext={yearlySubtext(PRO_AI_SAVINGS)}
         />
       </div>
 

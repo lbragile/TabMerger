@@ -20,6 +20,21 @@ describe('PricingTable', () => {
     expect(screen.queryByText('$3.99')).not.toBeInTheDocument()
   })
 
+  it('shows the monthly equivalent and saving under each yearly price', async () => {
+    const user = userEvent.setup()
+    render(<PricingTable />)
+    await user.click(screen.getByRole('button', { name: /Yearly/ }))
+
+    // $42.99 / 12 and $85.99 / 12, against 12 x $3.99 and 12 x $7.99
+    expect(screen.getByText('$3.58/mo billed yearly · save 10%')).toBeInTheDocument()
+    expect(screen.getByText('$7.17/mo billed yearly · save 10%')).toBeInTheDocument()
+  })
+
+  it('computes the toggle badge from the prices instead of a fixed number', () => {
+    render(<PricingTable />)
+    expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−10%')
+  })
+
   it('applies active pill styling (bg-background) to the selected toggle option', async () => {
     const user = userEvent.setup()
     render(<PricingTable />)
