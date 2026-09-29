@@ -10,9 +10,10 @@ export const metadata: Metadata = {
 // v3.0.0 is the version live on the Chrome Web Store, but its `v3.0.0` git tag is only
 // an ANCHOR for semantic-release (created 2026-09-19 on the 2026-08-14 commit fcd85f9),
 // so CHANGELOG.md has no generated section for it. Written by hand from the git history
-// up to that commit; every item was checked against the code. AI features are left out
-// on purpose while they're marked "coming soon". Releases after this are generated —
-// don't add more entries here.
+// up to that commit; every item was checked against the code (items from "Drag and drop"
+// on, and the license line, were added 2026-09-29 after checking each against the code at
+// the v3.0.0 tag). AI features are left out on purpose while they're marked "coming
+// soon". Releases after this are generated — don't add more entries here.
 //
 // The page used to show v2.0.0, v2.0.1 and v2.1.0 entries dated May–July 2026 that
 // didn't match the history: no such releases existed, the rebuild they described
@@ -224,9 +225,17 @@ const V3_0_0: ChangeEntry = {
     { type: 'New', text: 'Notes on groups and tabs, and reminders' },
     { type: 'New', text: 'Selection mode for moving, copying or closing many tabs at once' },
     { type: 'New', text: 'Keyboard shortcuts and a right-click menu to save the current tab, tabs to the left or right, or all other tabs' },
+    { type: 'New', text: 'Drag and drop tabs, windows and groups to reorder or move them' },
+    { type: 'New', text: 'Rename groups and windows, and give each group a color' },
+    { type: 'New', text: 'Archive groups you aren’t using, and star the windows that matter' },
+    { type: 'New', text: 'Find and remove duplicate tabs, and stale tabs you haven’t opened in a while' },
+    { type: 'New', text: 'Split a group’s tabs into separate windows, or create a new group straight from the move and copy menus' },
+    { type: 'New', text: 'Import and export your groups, and choose a light, dark or system theme' },
+    { type: 'New', text: 'See the devices syncing your account from the web app (Pro)' },
     { type: 'Improved', text: 'Chrome tab groups are imported when you open TabMerger' },
     { type: 'Improved', text: 'Tab previews with page images, search across groups, and undo/redo' },
     { type: 'Improved', text: 'Fewer permissions: TabMerger no longer asks to read and change data on the websites you visit' },
+    { type: 'Improved', text: 'New license: TabMerger 3.0.0 and later are released under the terms in LICENSE.md, which lets anyone read the code and contribute' },
   ],
 }
 
