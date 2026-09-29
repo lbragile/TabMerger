@@ -29,6 +29,7 @@ Always read together:
 - Every caller of `useEntitlements` (grep the repo) — verify each respects the limits it reads
 - `packages/web/app/(marketing)/**` pricing page copy — verify displayed numbers match `PRICING_TIERS`
 - Server-side enforcement in AI routes (`packages/web/app/api/ai/*`) for `aiFeatures`/`pro_ai` gating
+- Server-side enforcement in Supabase RLS (`supabase/migrations/`): the latest effective INSERT/UPDATE policies on sync tables (`groups`, `sessions`, `device_sessions`, and any new table a paid feature writes) and the `has_cloud_sync()` function they call
 
 ## Checklist
 
@@ -37,6 +38,9 @@ Always read together:
 - [ ] Marketing/pricing page numbers match `PRICING_TIERS` — no stale copy from a past pricing change
 - [ ] AI feature gating is enforced server-side (in the API route), not only client-side in the popup — client-side-only gating is bypassable
 - [ ] `pro` vs `pro_ai` distinction (sync-only vs sync+AI) is consistent between constants, the hook, and server routes
+- [ ] Every paid feature that writes to our servers is rejected server-side for a free account (RLS or API route), not only hidden in the UI — the client is public and modifiable (CLAUDE.md "Trust model"). Flag any paid write path with no server check as BYPASS
+- [ ] `has_cloud_sync()` (and any other RLS entitlement function) uses the same tier names and subscription statuses as `useEntitlements` — a mismatch either locks out paying users or lets free ones through
+- [ ] A test proves the server rejection for each paid write path (RLS/integration or API route test)
 
 ## Output format
 
