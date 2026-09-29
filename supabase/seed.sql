@@ -18,21 +18,28 @@ begin
     (test_user2_id, 'pro@tabmerger.test', now(), now(), '', now(), 'authenticated', 'authenticated')
   on conflict (id) do nothing;
 
-  -- Profiles (handle_new_user trigger fires, but we insert manually in case seeding runs standalone)
+  -- Profiles. The auth.users insert above fires handle_new_user(), which already created a
+  -- profile (no Stripe customer) and a free subscription for each user, so these upsert over
+  -- the trigger's rows instead of skipping them.
   insert into public.profiles (id, email, stripe_customer_id)
   values
     (test_user_id, 'dev@tabmerger.test', null),
     (test_user2_id, 'pro@tabmerger.test', 'cus_test_prouser_0002')
-  on conflict (id) do nothing;
+  on conflict (id) do update set stripe_customer_id = excluded.stripe_customer_id;
 
-  -- Subscriptions
+  -- Subscriptions: one row per user (unique user_id, migration 012), so upsert on user_id —
+  -- `on conflict (id)` missed the trigger's row and failed with 23505.
   insert into public.subscriptions (id, user_id, tier, status, current_period_end)
   values
     -- Free user: seeded subscription
     ('free_' || test_user_id, test_user_id, 'free', 'active', null),
     -- Pro user: active paid subscription
     ('sub_test_pro_0002', test_user2_id, 'pro', 'active', now() + interval '30 days')
-  on conflict (id) do nothing;
+  on conflict (user_id) do update set
+    id = excluded.id,
+    tier = excluded.tier,
+    status = excluded.status,
+    current_period_end = excluded.current_period_end;
 
   -- Sample groups for the free dev user
   insert into public.groups (id, user_id, name, color, position, windows, info)
