@@ -680,6 +680,19 @@ describe('SettingsModal — billing portal', () => {
     await goToTab(/account/i)
     expect(screen.queryByRole('button', { name: /manage billing/i })).toBeNull()
   })
+
+  it.each([
+    ['pro', 'Pro (US$3.99/mo)'],
+    ['pro_ai', 'Pro AI (US$7.99/mo)'],
+    ['free', 'Free'],
+  ])('labels the %s plan with its price marked as US dollars', async (tier, label) => {
+    mockUseEntitlements.mockReturnValue({ tier, cloudSync: tier !== 'free' })
+    mockUseAuth.mockReturnValue({ user: { email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(screen.getByText(label)).toBeInTheDocument()
+  })
 })
 
 describe('SettingsModal — Account tab encryption', () => {

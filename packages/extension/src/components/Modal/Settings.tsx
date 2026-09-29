@@ -29,7 +29,7 @@ import { hasEncryptionKey, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
-import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
+import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES, PRICING_TIERS, formatUsd } from '@tabmerger/shared';
 
 function settingsEqual(a: AppSettings, b: AppSettings) {
   return (Object.keys(a) as (keyof AppSettings)[]).every((k) => a[k] === b[k]);
@@ -223,11 +223,11 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     }
   };
 
-  const tierLabels: Record<string, string> = {
-    free: 'Free',
-    pro: 'Pro ($3.99/mo)',
-    pro_ai: 'Pro AI ($7.99/mo)'
-  };
+  // Built from PRICING_TIERS, so a price change can't leave this label stale: "Pro (US$3.99/mo)".
+  // US$ because nothing here says the price is in US dollars (see formatUsd).
+  const tierLabels: Record<string, string> = Object.fromEntries(
+    PRICING_TIERS.map((t) => [t.id, t.monthlyPrice > 0 ? `${t.name} (${formatUsd(t.monthlyPrice)}/mo)` : t.name])
+  );
 
   // __TABMERGER_VERSION__ is a Vite `define` (src/env.d.ts) carrying the same raw semver string
   // fed into scripts/manifestVersion.ts's beta offset mapping — the real version testers should
