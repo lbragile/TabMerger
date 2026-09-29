@@ -55,6 +55,57 @@ describe('useSaveUrlRules', () => {
     })
     expect(mockSetSetting).toHaveBeenCalledWith('urlRules', [])
   })
+
+  it('rejects growth past maxUrlRules and writes nothing', async () => {
+    mockGetSetting.mockResolvedValue([{ id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 }])
+    const { qc, wrapper } = makeWrapper()
+    // seed the query cache the same way the real app does — useUrlRules() populates it before Save runs
+    qc.setQueryData(['urlRules'], [{ id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 }])
+    const { result } = renderHook(() => useSaveUrlRules(1), { wrapper })
+    const grown: UrlRule[] = [
+      { id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 },
+      { id: 'r2', pattern: 'b.com', groupId: 'g2', createdAt: 2 },
+    ]
+    await act(async () => {
+      await expect(result.current.mutateAsync(grown)).rejects.toThrow()
+    })
+    expect(mockSetSetting).not.toHaveBeenCalled()
+  })
+
+  it('allows reordering or deleting rules even while already over the limit (post-downgrade)', async () => {
+    const existing: UrlRule[] = [
+      { id: 'r1', pattern: 'a.com', groupId: 'g1', createdAt: 1 },
+      { id: 'r2', pattern: 'b.com', groupId: 'g2', createdAt: 2 },
+      { id: 'r3', pattern: 'c.com', groupId: 'g3', createdAt: 3 },
+    ]
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(['urlRules'], existing)
+    const { result } = renderHook(() => useSaveUrlRules(1), { wrapper }) // maxUrlRules=1, already over with 3 saved
+    const reordered = [existing[1], existing[0], existing[2]] // same length — reorder
+    await act(async () => {
+      await result.current.mutateAsync(reordered)
+    })
+    expect(mockSetSetting).toHaveBeenCalledWith('urlRules', reordered)
+
+    vi.clearAllMocks()
+    qc.setQueryData(['urlRules'], reordered)
+    const fewer = reordered.slice(0, 1) // delete — fewer than before
+    await act(async () => {
+      await result.current.mutateAsync(fewer)
+    })
+    expect(mockSetSetting).toHaveBeenCalledWith('urlRules', fewer)
+  })
+
+  it('does not gate when maxUrlRules is omitted (defaults to unlimited)', async () => {
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(['urlRules'], [])
+    const { result } = renderHook(() => useSaveUrlRules(), { wrapper })
+    const many: UrlRule[] = Array.from({ length: 10 }, (_, i) => ({ id: `r${i}`, pattern: `${i}.com`, groupId: 'g', createdAt: i }))
+    await act(async () => {
+      await result.current.mutateAsync(many)
+    })
+    expect(mockSetSetting).toHaveBeenCalledWith('urlRules', many)
+  })
 })
 
 describe('matchUrlToRule', () => {

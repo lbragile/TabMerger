@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics'
+import { FREE_TIER_LIMITS } from '@tabmerger/shared'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
@@ -114,7 +115,7 @@ export default function SignUpPage() {
         <div className="w-full max-w-[380px] mx-auto my-auto py-10">
           <h1 className="text-[30px] font-semibold tracking-tight mb-2">Create your account</h1>
           <p className="text-[14.5px] text-text2 mb-7">
-            Free forever for 5 groups. No card required.
+            Free forever for {FREE_TIER_LIMITS.groups} groups. No card required.
           </p>
 
           <div className="flex flex-col gap-4">

@@ -12,7 +12,7 @@ import { useBulkDelete, useBulkMoveToGroup, useBulkStar, parseGroupId } from '@/
 import { cn, pluralize } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 import { CreateGroupMenuItem } from '@/components/Windows/CreateGroupMenuItem';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { supabase } from '@/lib/supabase';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { createSharedBundle } from '@/lib/sharing';

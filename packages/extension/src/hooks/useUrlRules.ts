@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSetting, setSetting } from '@/lib/localDb';
 import type { UrlRule } from '@/lib/types';
+import { FreeLimitExceededError, exceedsFreeLimits, showFreeLimitToast } from '@/lib/tierLimits';
 
 const URL_RULES_KEY = ['urlRules'] as const;
 
@@ -16,11 +17,30 @@ export function useUrlRules() {
   return useQuery({ queryKey: URL_RULES_KEY, queryFn: loadRules, staleTime: Infinity });
 }
 
-/** Persists the full draft array in one write — used by UrlRulesModal's top-level Save. */
-export function useSaveUrlRules() {
+/**
+ * Persists the full draft array in one write — used by UrlRulesModal's top-level Save.
+ *
+ * `maxUrlRules` is the Free-tier backstop (defaults to `Infinity`, i.e. no gating, so
+ * existing callers that don't pass it are unaffected). It only blocks GROWTH past the
+ * limit — comparing against the last-persisted rule count, not the draft's own history —
+ * so a downgraded-to-Free user who is already over the limit can still reorder or delete
+ * rules (both leave the count the same or lower) even though they can't add more. The
+ * UrlRulesModal UI already blocks "Add" at the limit for immediate feedback; this is the
+ * data-layer backstop for any other path that calls this mutation directly.
+ */
+export function useSaveUrlRules(maxUrlRules = Infinity) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (rules: UrlRule[]) => {
+      const prevRules = qc.getQueryData<UrlRule[]>(URL_RULES_KEY) ?? (await loadRules());
+      const isGrowth = rules.length > prevRules.length;
+      if (isGrowth) {
+        const check = exceedsFreeLimits({ maxUrlRules }, { urlRules: rules.length });
+        if (check.exceeded) {
+          showFreeLimitToast(check.limit, check.maxAllowed);
+          throw new FreeLimitExceededError(check.limit);
+        }
+      }
       await persistRules(rules);
       return rules;
     },

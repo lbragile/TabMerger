@@ -4,6 +4,7 @@ import type { GroupsState, Tier } from './types';
 import { getSetting, setSetting } from './localDb';
 import { supabase } from './supabase';
 import { hasEncryptionKey, getDataKey } from './encryptionKey';
+import { canUploadOnFirefox } from './syncEngine';
 
 /** Rapid Now Open changes (tab open/close bursts) coalesce into a single push after this window. */
 export const DEVICE_SESSION_DEBOUNCE_MS = 2000;
@@ -78,6 +79,7 @@ async function doPush(): Promise<void> {
     data: { session }
   } = await supabase.auth.getSession();
   if (!session) return;
+  if (!(await canUploadOnFirefox())) return; // see syncEngine.ts's canUploadOnFirefox doc comment
 
   const deviceId = await getOrCreateDeviceId();
   const deviceName = getDeviceName(navigator.userAgent);

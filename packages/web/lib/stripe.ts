@@ -1,4 +1,5 @@
 import Stripe from 'stripe'
+import { isEntitledSubscriptionStatus } from '@tabmerger/shared'
 
 /**
  * True when a real Stripe secret key was supplied. False in any environment missing
@@ -125,6 +126,13 @@ export async function createCreditPackCheckoutSession({
   return session.url
 }
 
+/**
+ * Language/format for every Billing Portal session. With Stripe's default ("auto") the portal
+ * shows our USD prices as a bare "$42.99", which a Canadian reads as CAD. en-CA makes Stripe
+ * write "US$42.99" for everyone, so the currency is never ambiguous. The site is English-only.
+ */
+const PORTAL_LOCALE = 'en-CA' satisfies Stripe.BillingPortal.SessionCreateParams.Locale
+
 export async function createBillingPortalSession({
   customerId,
   returnUrl,
@@ -137,6 +145,74 @@ export async function createBillingPortalSession({
   const session = await stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
+    locale: PORTAL_LOCALE,
+  })
+
+  return session.url
+}
+
+/** Why an interval switch couldn't start; the route maps each to a status code. */
+export class IntervalSwitchError extends Error {
+  constructor(readonly reason: 'no_subscription' | 'already_on_price' | 'already_scheduled') {
+    super(reason)
+  }
+}
+
+/**
+ * Opens the Billing Portal straight on its "confirm plan change" page, moving the customer's
+ * paid subscription (one whose price is in `planPriceIds`) to `targetPriceId`. The portal
+ * configuration decides the timing: monthly→yearly applies now with a prorated charge, and
+ * yearly→monthly (a shorter interval) waits for the end of the term. Either way Stripe fires
+ * `customer.subscription.updated` when the price changes, which the webhook turns into the new
+ * tier/interval, so nothing is written here.
+ *
+ * The portal configuration must list `targetPriceId` under subscription updates, or Stripe
+ * rejects the session. `STRIPE_PORTAL_CONFIGURATION_ID` picks that configuration; without it,
+ * the account's default configuration is used.
+ */
+export async function createIntervalSwitchSession({
+  customerId,
+  targetPriceId,
+  planPriceIds,
+  returnUrl,
+}: {
+  customerId: string
+  targetPriceId: string
+  planPriceIds: readonly string[]
+  returnUrl: string
+}): Promise<string> {
+  if (!isStripeConfigured) throw new Error('Stripe is not configured (STRIPE_SECRET_KEY missing)')
+
+  const { data: subscriptions } = await stripe.subscriptions.list({ customer: customerId, limit: 10 })
+  const subscription = subscriptions.find(
+    (s) =>
+      isEntitledSubscriptionStatus(s.status) &&
+      s.items.data.length === 1 &&
+      planPriceIds.includes(s.items.data[0].price.id)
+  )
+  if (!subscription) throw new IntervalSwitchError('no_subscription')
+
+  const item = subscription.items.data[0]
+  if (item.price.id === targetPriceId) throw new IntervalSwitchError('already_on_price')
+  // The portal defers yearly→monthly to the end of the term by attaching a subscription schedule.
+  // While that's pending, Stripe won't take another update, so say so instead of failing.
+  if (subscription.schedule) throw new IntervalSwitchError('already_scheduled')
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customerId,
+    return_url: returnUrl,
+    locale: PORTAL_LOCALE,
+    ...(process.env.STRIPE_PORTAL_CONFIGURATION_ID
+      ? { configuration: process.env.STRIPE_PORTAL_CONFIGURATION_ID }
+      : {}),
+    flow_data: {
+      type: 'subscription_update_confirm',
+      subscription_update_confirm: {
+        subscription: subscription.id,
+        items: [{ id: item.id, price: targetPriceId, quantity: 1 }],
+      },
+      after_completion: { type: 'redirect', redirect: { return_url: returnUrl } },
+    },
   })
 
   return session.url

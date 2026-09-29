@@ -3,7 +3,7 @@ import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { PasswordInput } from '@/components/ui/password-input';
 import { setupEncryption, unlockEncryption, hasEncryptionKey } from '@/lib/encryptionKey';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 
 interface EncryptionSetupModalProps {
   onClose: () => void;

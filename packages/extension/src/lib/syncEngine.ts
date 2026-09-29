@@ -1,9 +1,22 @@
 import type { Session } from '@supabase/supabase-js';
-import { encryptBlob, decryptBlob, isEncryptedBlob, type EncryptedBlob } from '@tabmerger/shared';
+import { encryptBlob, decryptBlob, isEncryptedBlob, SYNC_DATA_CONSENT_CATEGORIES, type EncryptedBlob } from '@tabmerger/shared';
 import type { Group } from './types';
 import { supabase } from './supabase';
 import { getGroupsState, saveGroupsState, getPendingSyncGroups, markGroupSynced, saveGroup, deleteGroup, getSetting, setSetting } from './localDb';
 import { hasEncryptionKey, getDataKey } from './encryptionKey';
+import { hasDataConsent } from './dataConsent';
+
+/**
+ * Firefox-only gate: uploading groups is `browsingActivity` data collection (tab URLs/titles
+ * leave the browser even though the payload is end-to-end encrypted — Firefox's consent model
+ * is about what leaves the device, not whether the destination can read it). No-op (always
+ * true) on Chrome/Edge. Pulling/merging remote changes is NOT gated — reading data already in
+ * Supabase back down isn't new collection, and gating it too would strand a Firefox user's other
+ * devices' changes for no consent-model reason.
+ */
+export async function canUploadOnFirefox(): Promise<boolean> {
+  return hasDataConsent(SYNC_DATA_CONSENT_CATEGORIES);
+}
 
 interface EncryptedContent {
   name: string;
@@ -114,6 +127,7 @@ async function rowToGroup(row: Record<string, unknown>): Promise<Group | null> {
  * Runs sequentially per group so a single failure doesn't block the rest.
  */
 export async function pushPendingChanges(session: Session): Promise<void> {
+  if (!(await canUploadOnFirefox())) return; // consent not granted — see canUploadOnFirefox's doc comment
   // ponytail: explicit permanent guard — Now Open should already have pendingSync:false, but belt-and-suspenders
   const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent);
   if (pending.length === 0) return;

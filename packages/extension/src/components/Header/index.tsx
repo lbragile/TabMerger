@@ -34,7 +34,8 @@ import { useAutoGroup, useOrganizeTabs, QuotaExceededError } from "@/hooks/useAI
 import { AI_ENABLED } from "@/lib/aiFlag";
 import { useAppSettings } from "@/hooks/useAppSettings";
 import { useGroups, useSetGroupsState, useApplyAIGroups } from "@/hooks/useGroups";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
+import { FreeLimitExceededError } from "@/lib/tierLimits";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { AIQuotaExceededPrompt } from "@/components/AIQuotaExceededPrompt";
@@ -85,11 +86,11 @@ export function Header() {
         setSearchFilter(q);
     };
     const { user, signOut } = useAuth();
-    const { aiFeatures, tier, maxGroups } = useEntitlements();
+    const { aiFeatures, tier, maxGroups, maxTabs } = useEntitlements();
     const { data: groupsState } = useGroups();
     const setGroupsState = useSetGroupsState();
     const { mutateAsync: autoGroup, isPending: aiLoading } = useAutoGroup();
-    const { mutateAsync: applyAIGroups } = useApplyAIGroups();
+    const { mutateAsync: applyAIGroups } = useApplyAIGroups({ maxGroups, maxTabs });
     const { mutateAsync: organizeTabs, isPending: organizeLoading } = useOrganizeTabs();
     const { data: appSettings } = useAppSettings();
     const [aiQuotaExceeded, setAiQuotaExceeded] = useState(false);
@@ -149,6 +150,8 @@ export function Header() {
                 setAiQuotaExceeded(true);
                 return;
             }
+            // The backstop already showed the upgrade toast
+            if (err instanceof FreeLimitExceededError) return;
             console.error("[TabMerger] AI grouping failed:", err);
             toast.error("AI grouping failed");
         }

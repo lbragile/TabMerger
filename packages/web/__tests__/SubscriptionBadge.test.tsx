@@ -1,11 +1,26 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge'
 
 // Regression coverage for the "no renewal date visible" bug: prior tests only ever
 // rendered SubscriptionBadge behind a vi.mock(), so a real prop-shape regression
 // (wrong field name, gated-out status, etc.) would never fail CI. These hit the
 // real component with data shaped exactly like a `subscriptions` row.
+describe('SubscriptionBadge — price currency', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('marks the price as US dollars (no footnote on the account page or dashboard to say so)', async () => {
+    vi.resetModules()
+    vi.stubEnv('STRIPE_PRO_MONTHLY_PRICE_ID', 'price_pro_monthly_test')
+    const { SubscriptionBadge: Badge } = await import('@/components/dashboard/SubscriptionBadge')
+    render(<Badge tier="pro" status="active" priceId="price_pro_monthly_test" />)
+
+    expect(screen.getByText(/US\$3\.99\/mo/)).toBeInTheDocument()
+  })
+})
+
 describe('SubscriptionBadge — billing date visibility', () => {
   it('renders the renewal date and price for an active paid subscription', () => {
     render(

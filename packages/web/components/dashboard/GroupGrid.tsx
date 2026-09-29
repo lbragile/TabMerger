@@ -533,8 +533,8 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
       )}
 
       {/* Archived groups — collapsed by default, read-only (no web API to unarchive/mutate
-          groups yet; the extension owns group mutation, matching "New group" being disabled
-          on web too). Show/open-all remain available since they're non-mutating. */}
+          groups yet; the extension owns group mutation, which is also why the web has no
+          way to create a group). Show/open-all remain available since they're non-mutating. */}
       {archivedGroups.length > 0 && (
         <div className="mt-6">
           <button

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { TIERS } from '@/lib/tiers'
+import { TIERS, PRICES_IN_USD_NOTE, formatListPrice } from '@/lib/tiers'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
@@ -47,7 +47,7 @@ export function PricingTeaser() {
             const tier = TIERS[t.key]
             const isComingSoon = t.key === 'proAi' && !AI_ENABLED
             const rawPrice = interval === 'monthly' ? tier.monthlyPrice : tier.yearlyPrice
-            const price = rawPrice === 0 ? '$0' : `$${rawPrice}`
+            const price = rawPrice === 0 ? '$0' : formatListPrice(rawPrice)
             const period = rawPrice === 0 ? 'forever' : interval === 'monthly' ? '/mo' : '/yr'
             return (
               <div
@@ -96,6 +96,7 @@ export function PricingTeaser() {
         <p className="text-[12.5px] text-text3">
           Cancel anytime from your account — no lock-in, no questions asked.
         </p>
+        <p className="text-xs text-text3 mt-1">{PRICES_IN_USD_NOTE}</p>
       </div>
     </section>
   )

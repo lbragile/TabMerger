@@ -132,6 +132,8 @@ const baseUIState = {
   enterSelectionMode: vi.fn(),
   selectRange: vi.fn(),
   selectionAnchor: null as { type: string; id: string } | null,
+  previewGroupColor: null as { groupId: string; color: string } | null,
+  setPreviewGroupColor: vi.fn(),
 }
 
 function wrap(ui: React.ReactElement) {
@@ -533,6 +535,65 @@ describe('GroupItem', () => {
       wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
       fireEvent.keyDown(screen.getByLabelText('Drag to reorder group: Work'), { key: ' ', shiftKey: true })
       expect(selectRange).toHaveBeenCalledWith({ type: 'group', id: 'group-1' }, expect.any(Array))
+    })
+  })
+
+  describe('colour picker live preview', () => {
+    it('renders the live preview colour on the swatch dot when previewGroupColor matches this group', () => {
+      const group = makeGroup({ color: 'rgba(1, 2, 3, 1)' })
+      mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+        selector({ ...baseUIState, previewGroupColor: { groupId: group.id, color: 'rgba(9, 9, 9, 1)' } })
+      )
+      wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+      expect(screen.getByLabelText('Change group color')).toHaveStyle({ backgroundColor: 'rgba(9, 9, 9, 1)' })
+    })
+
+    it('ignores a previewGroupColor that belongs to a different group', () => {
+      const group = makeGroup({ color: 'rgba(1, 2, 3, 1)' })
+      mockUseUIStore.mockImplementation((selector: (s: typeof baseUIState) => unknown) =>
+        selector({ ...baseUIState, previewGroupColor: { groupId: 'some-other-group', color: 'rgba(9, 9, 9, 1)' } })
+      )
+      wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+      expect(screen.getByLabelText('Change group color')).toHaveStyle({ backgroundColor: 'rgba(1, 2, 3, 1)' })
+    })
+
+    it('typing a hex in the picker sets the preview for this group id, and Apply persists once and clears it', () => {
+      vi.useFakeTimers()
+      try {
+        const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+          cb(0)
+          return 0
+        })
+        const group = makeGroup({ color: 'rgba(1, 2, 3, 1)' })
+        wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+        // Opens straight into the picker — no separate "Custom colour" step.
+        fireEvent.click(screen.getByLabelText('Change group color'))
+        fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#ff0000' } })
+        expect(baseUIState.setPreviewGroupColor).toHaveBeenCalledWith({ groupId: group.id, color: 'rgba(255, 0, 0, 1)' })
+
+        fireEvent.click(screen.getByRole('button', { name: 'Apply' }))
+        expect(mockUpdateGroupColor).toHaveBeenCalledWith({ groupIndex: 0, color: 'rgba(255, 0, 0, 1)' })
+        expect(baseUIState.setPreviewGroupColor).toHaveBeenLastCalledWith(null)
+        rafSpy.mockRestore()
+      } finally {
+        vi.useRealTimers()
+      }
+    })
+
+    it('Cancel in the picker closes it and clears the preview without persisting', () => {
+      const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+        cb(0)
+        return 0
+      })
+      const group = makeGroup({ color: 'rgba(1, 2, 3, 1)' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 0, isActive: false, onClick: vi.fn() }))
+      fireEvent.click(screen.getByLabelText('Change group color'))
+      fireEvent.change(screen.getByPlaceholderText('#rrggbb'), { target: { value: '#ff0000' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+      expect(screen.queryByPlaceholderText('#rrggbb')).not.toBeInTheDocument()
+      expect(mockUpdateGroupColor).not.toHaveBeenCalled()
+      expect(baseUIState.setPreviewGroupColor).toHaveBeenLastCalledWith(null)
+      rafSpy.mockRestore()
     })
   })
 })

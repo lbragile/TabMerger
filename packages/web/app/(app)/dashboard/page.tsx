@@ -9,10 +9,12 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { OrganizeProposal } from '@/components/dashboard/OrganizeProposal'
 import { OnboardingChecklist } from '@/components/dashboard/OnboardingChecklist'
-import { Sparkles, Plus } from 'lucide-react'
+import { UpgradedBanner } from '@/components/dashboard/UpgradedBanner'
+import { Sparkles } from 'lucide-react'
 import { getEffectiveCap } from '@/lib/ai-usage'
 import { isEncryptedBlob } from '@tabmerger/shared'
 import { AI_ENABLED } from '@/lib/aiFlag'
+import { hasCloudSync } from '@/lib/cloudSync'
 
 // ponytail: capitalize the whole email local-part as a first name proxy — no profile
 // display-name column exists yet, and splitting on '.' would mangle names like "mary.jane"
@@ -48,20 +50,27 @@ export default async function DashboardPage({
 
   const currentTier = (subscription?.tier as 'free' | 'pro' | 'pro_ai') ?? 'free'
   const isPro = currentTier === 'pro' || currentTier === 'pro_ai'
+  const syncEnabled = hasCloudSync(subscription)
 
-  const [
-    { data: profile },
-    { data: groups },
-    { data: sessions },
-  ] = await Promise.all([
+  const [{ data: profile }, { data: groups }, { data: sessions }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
-    /** Free tier cap enforced at the query level so the UI never accidentally renders groups the user shouldn't see */
-    supabase.from('groups').select('id, name, color, windows, updated_at, window_count, tab_count, archived').eq('user_id', user.id).order('position').limit(isPro ? 1000 : 5),
-    supabase
-      .from('sessions')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false }),
+    // Free (and non-entitled paid-tier) accounts never sync — RLS rejects their writes
+    // (supabase/migrations/019_gate_cloud_sync_rls.sql), so there's nothing of theirs to read.
+    syncEnabled
+      ? supabase
+          .from('groups')
+          .select('id, name, color, windows, updated_at, window_count, tab_count, archived')
+          .eq('user_id', user.id)
+          .order('position')
+          .limit(isPro ? 1000 : 5)
+      : Promise.resolve({ data: null }),
+    syncEnabled
+      ? supabase
+          .from('sessions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+      : Promise.resolve({ data: null }),
   ])
 
   // ponytail: uses the denormalized tab_count column (maintained client-side on every push),
@@ -100,10 +109,7 @@ export default async function DashboardPage({
   return (
     <div className="flex flex-col gap-8">
       {params.upgraded === '1' && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
-          Welcome to {subscription?.tier === 'pro_ai' ? 'Pro AI' : 'Pro'}!
-          Your subscription is now active. Enjoy your new features.
-        </div>
+        <UpgradedBanner planName={subscription?.tier === 'pro_ai' ? 'Pro AI' : 'Pro'} />
       )}
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -145,11 +151,6 @@ export default async function DashboardPage({
               </Tooltip>
             </TooltipProvider>
           )}
-          {/* ponytail: no web group-creation API — groups are authored in the extension only */}
-          <Button size="sm" title="Create groups from the extension">
-            <Plus className="h-4 w-4 mr-1.5" />
-            New group
-          </Button>
         </div>
       </div>
 
@@ -161,6 +162,7 @@ export default async function DashboardPage({
         sessionCount={sessions?.length ?? 0}
         memberSince={profile?.created_at ?? user.created_at}
         aiUsage={aiUsage}
+        showSyncStats={syncEnabled}
       />
 
       <SubscriptionBadge
@@ -179,17 +181,21 @@ export default async function DashboardPage({
         />
       )}
 
-      <div>
-        <h2 className="text-lg font-semibold mb-4">Tab Groups</h2>
-        {/* ponytail: cast because Supabase infers windows as Json, not ExtWindow[] */}
-        <GroupGrid groups={(groups ?? []) as never} isPro={isPro} />
-      </div>
+      {syncEnabled && (
+        <>
+          <div>
+            <h2 className="text-lg font-semibold mb-4">Tab Groups</h2>
+            {/* ponytail: cast because Supabase infers windows as Json, not ExtWindow[] */}
+            <GroupGrid groups={(groups ?? []) as never} isPro={isPro} />
+          </div>
 
-      <div>
-        <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>
-        {/* ponytail: cast because Supabase infers groups as Json, not SessionGroup[] */}
-        <SessionList sessions={(sessions ?? []) as never} isPro={isPro} />
-      </div>
+          <div>
+            <h2 className="text-lg font-semibold mb-4">Saved Sessions</h2>
+            {/* ponytail: cast because Supabase infers groups as Json, not SessionGroup[] */}
+            <SessionList sessions={(sessions ?? []) as never} isPro={isPro} />
+          </div>
+        </>
+      )}
     </div>
   )
 }

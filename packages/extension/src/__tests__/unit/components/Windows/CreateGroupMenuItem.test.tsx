@@ -25,7 +25,7 @@ vi.mock('@/stores/uiStore', () => ({
     selector({ openModal: mockOpenModal }),
 }))
 
-vi.mock('sonner', () => ({
+vi.mock('@/lib/toast', () => ({
   toast: { error: mockToastError },
 }))
 

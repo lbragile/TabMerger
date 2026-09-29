@@ -45,3 +45,39 @@ describe('getStripePriceId / getPriceInfo', () => {
     expect(getPriceInfo(undefined)).toBeNull()
   })
 })
+
+describe('yearlySavings', () => {
+  it('gives the per-month equivalent and the saving against twelve monthly payments', async () => {
+    const { yearlySavings } = await import('@/lib/tiers')
+    const { perMonth, percent } = yearlySavings(3.99, 42.99)
+    expect(perMonth).toBeCloseTo(3.5825)
+    expect(percent).toBe(10) // 10.21%, rounded down
+  })
+
+  it('rounds the percentage down so it never overstates the discount', async () => {
+    const { yearlySavings } = await import('@/lib/tiers')
+    expect(yearlySavings(10, 101).percent).toBe(15) // 15.83%
+  })
+
+  it('is 0% when there is no discount or no monthly price', async () => {
+    const { yearlySavings } = await import('@/lib/tiers')
+    expect(yearlySavings(5, 60).percent).toBe(0)
+    expect(yearlySavings(0, 0).percent).toBe(0)
+  })
+})
+
+describe('formatUsd', () => {
+  it('always shows cents', async () => {
+    const { formatUsd } = await import('@/lib/tiers')
+    // Always marked as US dollars: a bare "$" reads as local dollars in Canada and elsewhere.
+    expect(formatUsd(3.5825)).toBe('US$3.58')
+    expect(formatUsd(7)).toBe('US$7.00')
+  })
+
+  it('formatListPrice leaves the currency to the listing footnote', async () => {
+    const { formatListPrice, PRICES_IN_USD_NOTE } = await import('@/lib/tiers')
+    expect(formatListPrice(3.5825)).toBe('$3.58')
+    expect(formatListPrice(7)).toBe('$7.00')
+    expect(PRICES_IN_USD_NOTE).toMatch(/US dollars \(USD\)/)
+  })
+})

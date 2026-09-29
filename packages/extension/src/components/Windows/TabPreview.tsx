@@ -7,6 +7,8 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { AIQuotaExceededPrompt } from '@/components/AIQuotaExceededPrompt';
 import { getPageMetaForTab } from '@/lib/tabAccess';
 import { useAppSettings, DEFAULT_APP_SETTINGS } from '@/hooks/useAppSettings';
+import { hasDataConsent } from '@/lib/dataConsent';
+import { PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES } from '@tabmerger/shared';
 import type { Tab } from '@/lib/types';
 
 // ponytail: module-level cache — lives for the popup session, cleared on close
@@ -29,6 +31,11 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
   const [summary, setSummary] = useState<string | null>(summaryCache.get(tab.url) ?? null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [quotaExceeded, setQuotaExceeded] = useState(false);
+  // Set when Firefox's browsingActivity permission was revoked (about:addons) after the
+  // setting was turned on — the setting itself stays "on" in Settings, but this tooltip must
+  // still behave as if it were off (no fetch), and show the same "Not enabled" copy rather than
+  // a misleading "No preview" (which implies a fetch was attempted and came back empty).
+  const [blockedByConsent, setBlockedByConsent] = useState(false);
   const fetchedRef = useRef(false);
 
   const handleOpenChange = useCallback(async (isOpen: boolean) => {
@@ -44,9 +51,19 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
     // Never fetch when the setting is off — the tooltip falls back to any ogImage
     // already stored on the tab (no network call, no tab URL leaves the device).
     if (!appSettings.showPreviewImages) {
+      setBlockedByConsent(false);
       setOgImage(tab.ogImage ?? null);
       return;
     }
+    // Firefox-only revocation guard: the setting can be "on" while the browsingActivity
+    // permission was separately revoked from about:addons — re-check on every hover rather
+    // than trusting a value cached at toggle-on time. No-op (always granted) on Chrome/Edge.
+    if (!(await hasDataConsent(PREVIEW_IMAGES_DATA_CONSENT_CATEGORIES))) {
+      setBlockedByConsent(true);
+      setOgImage(tab.ogImage ?? null);
+      return;
+    }
+    setBlockedByConsent(false);
     setLoading(true);
     try {
       // The fetched image is shown in this tooltip's local state only — it is never
@@ -117,13 +134,18 @@ export function TabPreview({ tab, children }: TabPreviewProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="text-xs opacity-40">
-                  {appSettings.showPreviewImages ? 'No preview' : 'Not enabled'}
+                  {appSettings.showPreviewImages && !blockedByConsent ? 'No preview' : 'Not enabled'}
                 </span>
               </div>
             )}
             {!loading && !ogImage && !appSettings.showPreviewImages && (
               <p className="mt-1 text-[11px] text-muted-foreground text-center leading-tight">
                 Page images are off. Turn on in Settings.
+              </p>
+            )}
+            {!loading && !ogImage && appSettings.showPreviewImages && blockedByConsent && (
+              <p className="mt-1 text-[11px] text-muted-foreground text-center leading-tight">
+                Firefox permission for page images was turned off. Re-enable in Settings.
               </p>
             )}
             {aiFeatures && (

@@ -750,6 +750,8 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
         // group or pick a color none of Work/Research/Shopping/Reading
         // List/Now Open already use (index 8, pink, was the prior choice).
         await clickWithRipple(page.locator('button[title^="rgba"]').nth(5));
+        // A swatch only loads the colour into the picker (live preview); Apply saves it.
+        await clickWithRipple(page.getByRole("button", { name: "Apply" }));
     },
 
     async addGroupNote(page) {
@@ -848,6 +850,8 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
         // group's color (see changeGroupColor's ponytail comment on index 5
         // already being taken by "Research").
         await clickWithRipple(page.locator('button[title^="rgba"]').nth(8));
+        // A swatch only loads the colour into the picker (live preview); Apply saves it.
+        await clickWithRipple(page.getByRole("button", { name: "Apply" }));
         // Hold on the swatch's new color — the resulting UI update.
         await page.waitForTimeout(800);
         return originFraction(groupRow);

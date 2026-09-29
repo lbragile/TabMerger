@@ -11,8 +11,9 @@
 | | Stable (public) | BETA (private) |
 |---|---|---|
 | Manifest `name` | `TabMerger` | `TabMerger BETA` |
-| Extension ID | `inmiajapbpafmhjleiebcamfhkfnlgoc` | TODO (owner): fill in from `CHROME_BETA_EXTENSION_ID` — not written here, it's a secret value |
-| Visibility | Public | Private / trusted testers |
+| Extension ID | `inmiajapbpafmhjleiebcamfhkfnlgoc` | `nboljhidpjakiohfdkdjkcljdehcapcd` (also the `CHROME_BETA_EXTENSION_ID` repo secret; an item ID is public, it's in the listing URL) |
+| Listing URL | <https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc> | <https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd> |
+| Visibility | Public | Private / trusted testers: members of the Google Group `tabmerger-beta-testers@googlegroups.com` (<https://groups.google.com/g/tabmerger-beta-testers>) |
 | Built from | `wxt zip` (default mode) on a non-prerelease `release` event | `wxt zip -b chrome --mode beta` on any prerelease `release` event, or manual `workflow_dispatch` |
 | Published by CI | Uploaded only (`chrome-webstore-upload-cli@4 upload`) — a human presses Publish | Auto-published (`chrome-webstore-upload-cli@4`, no subcommand) |
 | `manifest.version` | Real semver, e.g. `3.1.0` | Offset mapping — see `scripts/manifestVersion.ts` (major +1, prerelease `N` becomes a 4th integer) |
@@ -200,6 +201,15 @@ https://tabmerger.vercel.app/privacy
 
 ---
 
+## License
+
+The Chrome Web Store has no license field. The code is licensed under `LICENSE.md`
+(PolyForm Strict 1.0.0 plus an all-rights-reserved preface), and using the extension is governed by
+the Terms of Service (<https://tabmerger.vercel.app/terms>), linked from the listing through the
+website. Code must stay readable:
+minifying is allowed, but the store's code-readability policy forbids obfuscation, so a license
+(not obfuscation) is the protection.
+
 ## Distribution
 
 **Stable listing**
@@ -209,6 +219,36 @@ https://tabmerger.vercel.app/privacy
 **BETA listing**
 **Visibility**: Private / restricted to invited testers
 **Regions**: TODO (owner)
+
+**Firefox is unaffected by the two Chrome Web Store listings above** — it's a separate item on
+a separate store (see `.claude/plans/firefox-edge-beta-spec.md` §5). Chrome and Edge builds carry
+no content script, no host permission, and no site-access prompt from the change below. Firefox's
+own two add-ons (stable AMO listing + the unlisted self-distributed BETA), their data-collection
+declaration, and their update mechanism are tracked separately in
+[`FIREFOXADDONS.md`](FIREFOXADDONS.md), not here.
+
+### Firefox permission note (`web-bridge.content.ts`)
+
+Firefox doesn't support `externally_connectable` for web pages (MDN;
+[bug 1319168](https://bugzil.la/1319168)), so the website→extension messages that Chrome/Edge
+get for free via `externally_connectable` (`PING`, `SYNC_AUTH`, `SYNC_NOW` — install detection,
+auth handoff after web sign-in, and the dashboard's "sync now" button) need a different transport
+on Firefox: a content script on the web app's origin (`VITE_WEB_APP_URL`, per build mode) that
+relays `window.postMessage` to `chrome.runtime.sendMessage` and back.
+
+- **Permission it adds, Firefox only:** a single content-script match on the web app's own
+  origin (e.g. `https://tabmerger.vercel.app/*` for production, the beta preview URL for the
+  beta build). No `host_permissions` entry — Firefox MV3 content scripts don't need one alongside
+  a `content_scripts` match. This is new site access Firefox users will be asked to approve on
+  install/update; Chrome and Edge users see no change (`include: ['firefox']` in
+  `wxt.config.ts`/the entrypoint excludes this content script from their manifests entirely).
+- **What it can read/do:** relays exactly three message types between the page and the
+  background script; reads nothing else from the page's DOM, network requests, or storage.
+  `SYNC_AUTH`'s token payload is forwarded to the background script but never logged, echoed
+  back to the page, or read for any purpose beyond that one relay.
+- **Justification for the Firefox listing form's permission field:** "Relays three specific
+  messages (install check, sign-in handoff, manual sync trigger) between the TabMerger website
+  and the extension; reads nothing else on the page."
 
 ## Developer Info
 
@@ -273,9 +313,9 @@ Never remove that offset.
   a feature flag as of this writing — do not describe it as available in store copy while that
   flag is off. See `CLAUDE.md`'s AI feature flag notes and the recent commits enabling it
   (`945e4f1`, `63cbf63`, `7dff2d3`, `6d8fe0d`).
-- `externally_connectable` is scoped to the web app origin plus one hard-coded extra ID
-  (`ogadhgghhdbaohdcajfakeogcamicdkm`) — TODO (owner): document what that second ID is if a
-  reviewer asks (not derivable from this repo alone).
+- `externally_connectable` is scoped to the web app origin plus one extra ID,
+  `DEV_EXTENSION_ID` (`@tabmerger/shared`): the maintainer's unpacked development build, so the
+  local web app can reach it. It grants nothing to other extensions or sites.
 
 ### Rejection History
 

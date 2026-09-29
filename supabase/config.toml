@@ -57,7 +57,7 @@ openai_api_key = "env(OPENAI_API_KEY)"
 
 # Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
 # are monitored, and you can view the emails that would have been sent from the web interface.
-[inbucket]
+[local_smtp]
 enabled = true
 # Port to use for the email testing server web interface.
 port = 54324
@@ -90,6 +90,12 @@ additional_redirect_urls = [
   "http://localhost:3000/api/auth/callback",
   "http://127.0.0.1:3000",
   "http://127.0.0.1:3000/api/auth/callback",
+  # The extension's Google sign-in (chrome.identity.launchWebAuthFlow) returns to
+  # chrome.identity.getRedirectURL() = https://<extension-id>.chromiumapp.org/. Without it here,
+  # Supabase falls back to site_url and the sign-in window opens the website instead of closing.
+  # The ID is DEV_EXTENSION_ID (packages/shared/src/constants/extensionMessages.ts), the unpacked
+  # dev build's path-derived ID; keep the two in sync. The hosted project lists the store IDs.
+  "https://ogfmehaahkdfdfggcaabepknidpdgnbb.chromiumapp.org/**",
 ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600

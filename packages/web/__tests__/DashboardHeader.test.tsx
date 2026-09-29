@@ -19,7 +19,9 @@ vi.mock('@/lib/supabase/server', () => ({
       builder.eq = chain
       builder.order = chain
       builder.limit = chain
-      builder.single = async () => ({ data: { tier: 'free', created_at: '2024-01-01' } })
+      builder.single = async () => ({
+        data: { tier: 'pro', status: 'active', created_at: '2024-01-01' },
+      })
       builder.then = (resolve: (v: unknown) => void) => resolve({ data: [] })
       return builder
     },
@@ -61,12 +63,14 @@ describe('DashboardPage header restyle', () => {
     expect(screen.getByRole('button', { name: /AI organise/i })).toBeInTheDocument()
   })
 
-  it('renders a "New group" button with an accessible name', async () => {
+  it('has no "New group" button: groups are created in the extension only', async () => {
     const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
     const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
     render(jsx as React.ReactElement)
 
-    expect(screen.getByRole('button', { name: /New group/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /New group/i })).not.toBeInTheDocument()
+    // Still a synced Pro account, so the groups section itself stays.
+    expect(screen.getByRole('heading', { name: 'Tab Groups' })).toBeInTheDocument()
   })
 
   it('does not duplicate sync status text outside of the SyncIndicator pill', async () => {
@@ -90,6 +94,97 @@ describe('DashboardPage header restyle', () => {
 
     expect(screen.queryByRole('button', { name: /AI organise/i })).not.toBeInTheDocument()
     // Unrelated UI stays intact when the flag is off.
-    expect(screen.getByRole('button', { name: /New group/i })).toBeInTheDocument()
+    expect(screen.getByText('Good morning, Jane.doe')).toBeInTheDocument()
+  })
+})
+
+describe('DashboardPage — free account (no cloud sync)', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    vi.stubEnv('NEXT_PUBLIC_AI_ENABLED', 'true')
+    vi.doMock('@/lib/supabase/server', () => ({
+      createClient: async () => ({
+        auth: {
+          getUser: async () => ({
+            data: { user: { id: 'u1', email: 'jane.doe@example.com', created_at: '2024-01-01' } },
+          }),
+          getSession: async () => ({ data: { session: null } }),
+        },
+        from: () => {
+          const builder: Record<string, unknown> = {}
+          const chain = () => builder
+          builder.select = chain
+          builder.eq = chain
+          builder.order = chain
+          builder.limit = chain
+          builder.single = async () => ({
+            data: { tier: 'free', status: null, created_at: '2024-01-01' },
+          })
+          builder.then = (resolve: (v: unknown) => void) => resolve({ data: [] })
+          return builder
+        },
+      }),
+    }))
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('does not render "New group", "Tab Groups", or "Saved Sessions"', async () => {
+    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
+    render(jsx as React.ReactElement)
+
+    expect(screen.queryByRole('button', { name: /New group/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Tab Groups' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Saved Sessions' })).not.toBeInTheDocument()
+    expect(screen.queryByText('groups')).not.toBeInTheDocument()
+    expect(screen.queryByText('sessions')).not.toBeInTheDocument()
+  })
+
+  it('passes showSyncStats=false to StatsOverview by not rendering sync-dependent stats', async () => {
+    vi.doMock('@/components/dashboard/StatsOverview', () => ({
+      StatsOverview: ({ showSyncStats }: { showSyncStats?: boolean }) => (
+        <div>stats:{String(showSyncStats)}</div>
+      ),
+    }))
+    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
+    render(jsx as React.ReactElement)
+
+    expect(screen.getByText('stats:false')).toBeInTheDocument()
+  })
+
+  it('an incomplete/unpaid Pro subscription is treated the same as free', async () => {
+    vi.doMock('@/lib/supabase/server', () => ({
+      createClient: async () => ({
+        auth: {
+          getUser: async () => ({
+            data: { user: { id: 'u1', email: 'jane.doe@example.com', created_at: '2024-01-01' } },
+          }),
+          getSession: async () => ({ data: { session: null } }),
+        },
+        from: () => {
+          const builder: Record<string, unknown> = {}
+          const chain = () => builder
+          builder.select = chain
+          builder.eq = chain
+          builder.order = chain
+          builder.limit = chain
+          builder.single = async () => ({
+            data: { tier: 'pro', status: 'incomplete', created_at: '2024-01-01' },
+          })
+          builder.then = (resolve: (v: unknown) => void) => resolve({ data: [] })
+          return builder
+        },
+      }),
+    }))
+    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
+    render(jsx as React.ReactElement)
+
+    expect(screen.queryByRole('button', { name: /New group/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Tab Groups' })).not.toBeInTheDocument()
   })
 })

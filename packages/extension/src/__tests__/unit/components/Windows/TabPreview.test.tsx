@@ -184,4 +184,35 @@ describe('TabPreview', () => {
     await waitFor(() => expect(document.querySelector('img[src="https://img.example.com/stored.png"]')).not.toBeNull())
     expect(fetch).not.toHaveBeenCalled()
   })
+
+  describe('Firefox browsingActivity consent revocation', () => {
+    it('setting is on but Firefox permission was revoked: no fetch, "Not enabled" copy, distinct hint', async () => {
+      vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+      vi.stubEnv('FIREFOX', 'true')
+      mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: true } })
+      globalThis.chrome = {
+        permissions: { contains: vi.fn().mockResolvedValue(false), request: vi.fn() },
+      } as unknown as typeof chrome
+      const user = userEvent.setup()
+      wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
+      await user.hover(screen.getByText('Example Page'))
+      await waitFor(() => expect(screen.getAllByText('Not enabled').length).toBeGreaterThan(0))
+      expect(screen.getAllByText(/Firefox permission for page images was turned off/).length).toBeGreaterThan(0)
+      expect(fetch).not.toHaveBeenCalled()
+    })
+
+    it('setting is on and Firefox permission is granted: fetches normally', async () => {
+      vi.stubEnv('VITE_WEB_APP_URL', 'https://tabmerger.app')
+      vi.stubEnv('FIREFOX', 'true')
+      mockUseAppSettings.mockReturnValue({ data: { showPreviewImages: true } })
+      globalThis.chrome = {
+        permissions: { contains: vi.fn().mockResolvedValue(true), request: vi.fn() },
+      } as unknown as typeof chrome
+      const user = userEvent.setup()
+      wrap(<TabPreview {...{ tab: makeTab() }}><span>Example Page</span></TabPreview>)
+      await user.hover(screen.getByText('Example Page'))
+      await waitFor(() => expect(screen.getAllByText('No preview').length).toBeGreaterThan(0))
+      expect(fetch).toHaveBeenCalled()
+    })
+  })
 })

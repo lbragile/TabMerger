@@ -55,7 +55,7 @@ There is no content script. Tab-preview metadata (OG image/description) comes fr
 
 ### Web ↔ extension bridge
 
-`externally_connectable.matches` is `${VITE_WEB_APP_URL}/*` for the build mode. `ids` holds the published store ID (`CHROME_EXTENSION_ID`, or `CHROME_EXTENSION_ID_BETA` in beta mode) plus the fixed dev ID. The web app calls `chrome.runtime.sendMessage(EXTENSION_ID, …)`. It gets `EXTENSION_ID` from `packages/web/lib/extensionId.ts`, which uses `NEXT_PUBLIC_CHROME_EXTENSION_ID` and falls back to the dev ID. The extension handles these messages in `onMessageExternal`:
+`externally_connectable.matches` is `${VITE_WEB_APP_URL}/*` for the build mode. `ids` holds the published store ID (`CHROME_EXTENSION_ID`, or `CHROME_EXTENSION_ID_BETA` in beta mode) plus the fixed dev ID. The web app calls `sendToExtension(message)` / `sendToKnownExtension(message)` from `packages/web/lib/extensionMessaging.ts`, which try each ID in `EXTENSION_IDS` (`packages/web/lib/extensionId.ts` — built from `NEXT_PUBLIC_CHROME_EXTENSION_ID`, `NEXT_PUBLIC_EDGE_EXTENSION_ID`, and the dev ID in development) in order until one answers, since an Edge Add-ons store install has a different extension ID from the Chrome Web Store build of the same code. The responding ID is cached for the session so later calls (e.g. `SYNC_NOW` after `PING` already succeeded) skip straight to it. `SYNC_AUTH` carries live session tokens, so it is only ever sent via `sendToKnownExtension` (the cached, already-confirmed ID) — never sprayed across every candidate ID. The extension handles these messages in `onMessageExternal`:
 
 | Message | Effect |
 |---|---|

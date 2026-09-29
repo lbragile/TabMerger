@@ -12,8 +12,12 @@
 # Also skipped: variables Vercel sets itself (VERCEL*, TURBO_*, NX_DAEMON), which the
 # pull writes into the file but which must never be uploaded.
 #
-# NEXT_PUBLIC_* values are stored as plain config (they ship to the browser anyway);
-# everything else as a Secret. Values go to the CLI on stdin, never as arguments, so
+# NEXT_PUBLIC_* values are stored as plain config (they ship to the browser anyway), and so
+# are the non-secret server values in BUILD_TIME_CONFIG below; everything else as a Secret.
+# Why the list exists: the web app is built on the CI runner (vercel pull → vercel build →
+# deploy --prebuilt), and `vercel pull` only ever returns "[SENSITIVE]" for a secret. A secret
+# that a server function reads while running is fine, but one read during the build (e.g. in
+# next.config.ts) would build with the literal text "[SENSITIVE]". Values go to the CLI on stdin, never as arguments, so
 # they don't appear in the process list. Values are never printed.
 #
 # Run from the repo root (the directory linked with `vercel link`).
@@ -30,6 +34,14 @@ if ! git check-ignore -q "$file"; then
   echo "refusing: $file is not gitignored — a file of real secrets must never be committable" >&2
   exit 1
 fi
+
+# Non-secret server variables read at BUILD time — must stay plain config (see above).
+BUILD_TIME_CONFIG=(FIREFOX_BETA_BLOB_BASE_URL)
+is_build_time_config() {
+  local k
+  for k in "${BUILD_TIME_CONFIG[@]}"; do [ "$k" = "$1" ] && return 0; done
+  return 1
+}
 
 pushed=0; skipped=0
 while IFS= read -r line || [ -n "$line" ]; do
@@ -52,7 +64,11 @@ while IFS= read -r line || [ -n "$line" ]; do
     skipped=$((skipped + 1)); continue
   fi
 
-  case "$key" in NEXT_PUBLIC_*) kind="--no-sensitive"; label=config ;; *) kind="--sensitive"; label=secret ;; esac
+  if [[ "$key" == NEXT_PUBLIC_* ]] || is_build_time_config "$key"; then
+    kind="--no-sensitive"; label=config
+  else
+    kind="--sensitive"; label=secret
+  fi
 
   if [ "$apply" = "--apply" ]; then
     # printf, not echo: no trailing newline gets stored as part of the value.

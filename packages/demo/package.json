@@ -1,6 +1,7 @@
 {
   "name": "@tabmerger/demo",
   "version": "1.0.0",
+  "license": "SEE LICENSE IN LICENSE.md",
   "private": true,
   "description": "Playwright recording + Remotion rendering pipeline for the TabMerger walkthrough video",
   "scripts": {
@@ -14,6 +15,7 @@
     "render:promo-dark-vertical": "remotion render remotion/Root.tsx PromoDarkVertical out/tabmerger-promo-dark-vertical.mp4 --crf=16",
     "render:promo-light-vertical": "remotion render remotion/Root.tsx PromoLightVertical out/tabmerger-promo-light-vertical.mp4 --crf=16",
     "screenshots": "tsx screenshots.ts",
+    "beta-shots": "tsx beta-screenshots.ts",
     "store-assets": "tsx render-store-assets.ts"
   },
   "devDependencies": {

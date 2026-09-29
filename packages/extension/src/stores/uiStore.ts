@@ -68,6 +68,15 @@ interface UIState {
    */
   pendingNoteGroupIndex: number | null;
 
+  /**
+   * Live colour-picker preview for a saved group: while the Custom colour popup is open and
+   * being dragged/typed in, this holds the in-progress colour so render sites can show it
+   * immediately WITHOUT calling the persisting `updateGroupColor` mutation on every tick (that
+   * would write IndexedDB, queue a sync push, and stack an undo snapshot per drag frame). Set
+   * on every picker change, cleared on Apply/Cancel/Escape/close. Null when no preview is live.
+   */
+  previewGroupColor: { groupId: string; color: string } | null;
+
   // Undo/redo stack (max 10)
   undoStack: GroupsState[];
   redoStack: GroupsState[];
@@ -93,6 +102,14 @@ interface UIState {
    */
   overlayDismissNonce: number;
 
+  /**
+   * Non-null when sync uploads are paused on Firefox because the browsingActivity data-collection
+   * permission isn't granted (see `src/lib/syncEngine.ts`'s `canUploadOnFirefox`). Always null on
+   * Chrome/Edge. Set/cleared by `useSync`'s `doSync` every cycle — surfaced in Settings' Cloud
+   * sync row rather than failing silently.
+   */
+  syncPausedReason: string | null;
+
   // Actions
   openModal: (type: ModalType, data?: Record<string, unknown>) => void;
   closeModal: () => void;
@@ -102,6 +119,7 @@ interface UIState {
   setRenameTarget: (target: RenameTarget | null) => void;
   setNoteTarget: (target: TabPositionTarget | null) => void;
   setPendingNoteGroupIndex: (index: number | null) => void;
+  setPreviewGroupColor: (preview: { groupId: string; color: string } | null) => void;
   pushUndo: (state: GroupsState) => void;
   undo: (currentState: GroupsState) => GroupsState | undefined;
   redo: (currentState: GroupsState) => GroupsState | undefined;
@@ -124,6 +142,7 @@ interface UIState {
   clearSelection: () => void;
   /** Bump {@link UIState.overlayDismissNonce}. Exposed for non-selection callers/tests. */
   dismissOverlays: () => void;
+  setSyncPausedReason: (reason: string | null) => void;
 }
 
 /**
@@ -153,12 +172,15 @@ export const useUIStore = create<UIState>((set, get) => ({
   renameTarget: null,
   noteTarget: null,
   pendingNoteGroupIndex: null,
+  previewGroupColor: null,
   undoStack: [],
   redoStack: [],
   selectionMode: false,
   selectedItems: [],
   selectionAnchor: null,
   overlayDismissNonce: 0,
+  syncPausedReason: null,
+  setSyncPausedReason: (reason) => set({ syncPausedReason: reason }),
 
   openModal: (type, data) => set({ modal: { type, data } }),
   closeModal: () => set({ modal: { type: null } }),
@@ -172,6 +194,12 @@ export const useUIStore = create<UIState>((set, get) => ({
   setRenameTarget: (target) => set({ renameTarget: target }),
   setNoteTarget: (target) => set({ noteTarget: target }),
   setPendingNoteGroupIndex: (index) => set({ pendingNoteGroupIndex: index }),
+  setPreviewGroupColor: (preview) => {
+    // Skip no-op updates so a repeated picker emit doesn't re-render every colour consumer
+    const current = get().previewGroupColor;
+    if (current?.groupId === preview?.groupId && current?.color === preview?.color) return;
+    set({ previewGroupColor: preview });
+  },
 
   pushUndo: (state) =>
     set((prev) => {

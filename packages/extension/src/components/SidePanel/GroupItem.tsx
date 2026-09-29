@@ -9,6 +9,7 @@ import { GroupContextMenu } from './GroupContextMenu';
 import { ColorPicker } from '@/components/ColorPicker';
 import type { Group } from '@/lib/types';
 import { useUpdateGroupName, useUpdateGroupColor, useToggleGroupStar, useGroups, useDeleteGroup } from '@/hooks/useGroups';
+import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
 import { useDndContext } from '@/components/dnd/DndProvider';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
@@ -82,6 +83,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
   const enterSelectionMode = useUIStore((s) => s.enterSelectionMode);
   const selectRange = useUIStore((s) => s.selectRange);
   const selectionAnchor = useUIStore((s) => s.selectionAnchor);
+  const setPreviewGroupColor = useUIStore((s) => s.setPreviewGroupColor);
+  const displayColor = useGroupDisplayColor(group);
   const { mutate: updateGroupName } = useUpdateGroupName();
   const { mutate: updateGroupColor } = useUpdateGroupColor();
   const { mutate: toggleGroupStar } = useToggleGroupStar();
@@ -237,7 +240,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
             : isActive || contextMenuOpen
             ? 'rgba(255,255,255,0.12)'
             : undefined,
-        borderLeft: isActive ? `3px solid ${group.color}` : '3px solid transparent',
+        borderLeft: isActive ? `3px solid ${displayColor}` : '3px solid transparent',
         // --sidebar-text-active: ≈14.5:1 (light) / 14:1 (dark) against the selected tint.
         // The old full-opacity rgba(0,180,204) outline was only ≈2.0:1 in the light theme.
         outline: isSelected ? '2px solid var(--sidebar-text-active)' : undefined,
@@ -326,7 +329,7 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                   <button
                     type="button"
                     className="h-2.5 w-2.5 shrink-0 rounded-full transition-all hover:scale-125 motion-reduce:transition-none motion-reduce:hover:scale-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
-                    style={{ backgroundColor: group.color }}
+                    style={{ backgroundColor: displayColor }}
                     onClick={(e) => e.stopPropagation()}
                     aria-label="Change group color"
                   />
@@ -343,8 +346,13 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                   value={group.color}
                   onChange={(color) => {
                     updateGroupColor({ groupIndex, color });
+                    setPreviewGroupColor(null);
                     setColorPickerOpen(false);
                   }}
+                  onCancel={() => setColorPickerOpen(false)}
+                  onPreview={(color) =>
+                    setPreviewGroupColor(color ? { groupId: group.id, color } : null)
+                  }
                 />
               </PopoverContent>
             </Popover>
@@ -433,8 +441,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
                 <Star
                   className="h-3 w-3 transition-colors"
                   style={{
-                    fill: group.starred ? (group.color ?? 'var(--star-active)') : 'none',
-                    color: group.starred ? (group.color ?? 'var(--star-active)') : 'var(--sidebar-text-subtle)'
+                    fill: group.starred ? (displayColor ?? 'var(--star-active)') : 'none',
+                    color: group.starred ? (displayColor ?? 'var(--star-active)') : 'var(--sidebar-text-subtle)'
                   }}
                 />
               </button>

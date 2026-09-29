@@ -103,7 +103,7 @@ vi.mock('@/stores/uiStore', () => ({
     }),
 }))
 
-vi.mock('sonner', () => ({ toast: { error: mockToastError, success: vi.fn(), info: mockToastInfo } }))
+vi.mock('@/lib/toast', () => ({ toast: { error: mockToastError, success: vi.fn(), info: mockToastInfo } }))
 
 globalThis.chrome = {
   tabs: { create: vi.fn() },

@@ -37,8 +37,9 @@ import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { moveFocusOutOfSelectionControls } from '@/lib/selectionFocus';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { deduplicateTabs } from '@/lib/deduplication';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
+import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
 
 interface WindowsPanelProps {
   group: Group;
@@ -256,6 +257,8 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
     setNoteOpen(false);
   };
 
+  const displayColor = useGroupDisplayColor(group);
+
   const { tabQuery: searchFilter, tagFilter } = parseSearchQuery(rawSearchFilter);
 
   const windowIds = group.windows.map((_, i) => `${group.id}::w${i}`);
@@ -275,7 +278,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
                   variant="ghost"
                   size="icon"
                   className="h-6 w-6 hover:opacity-80"
-                  style={{ color: group.color || DEFAULT_GROUP_COLOR }}
+                  style={{ color: displayColor || DEFAULT_GROUP_COLOR }}
                   onClick={() => void handleRemoveStaleTabs()}
                   aria-label={`Remove ${staleCount} stale tab${staleCount !== 1 ? 's' : ''}`}
                 >
@@ -420,7 +423,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
                     windowIndex={windowIndex}
                     siblingCount={group.windows.length}
                     tabIds={window.tabs.filter(Boolean).map((_t, ti) => `${group.id}::w${windowIndex}::t${ti}`)}
-                    groupColor={group.color}
+                    groupColor={displayColor}
                     isBeingDragged={
                       dnd.active?.type === 'window' &&
                       dnd.active.groupIndex === groupIndex &&

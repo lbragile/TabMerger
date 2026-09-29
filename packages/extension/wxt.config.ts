@@ -5,7 +5,20 @@ import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolveManifestVersion } from "./scripts/manifestVersion";
 import { resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
+import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "./scripts/firefoxAddonIds";
+import { resolveFirefoxBetaUpdateUrl } from "./scripts/firefoxBetaUpdateUrl";
+import { DEV_EXTENSION_ID } from "@tabmerger/shared";
+import { FIREFOX_DATA_CONSENT_CATEGORIES } from "@tabmerger/shared";
 import pkg from "./package.json";
+
+// ponytail: the raw semver string this build resolves to, BEFORE resolveManifestVersion()
+// maps it onto MV3's numeric version/version_name split. Also fed to the popup as a Vite
+// `define` (see vite() below / src/env.d.ts's __TABMERGER_VERSION__) because Firefox doesn't
+// honor `version_name` (Chrome-only manifest field — dropped by Firefox's manifest schema
+// validation), so `chrome.runtime.getManifest().version_name` reads as undefined there and the
+// Settings badge would otherwise fall back to the offset store version (e.g. "4.1.0.6") instead
+// of the real "3.1.0-beta.6" testers should report.
+const rawVersionString = process.env.TABMERGER_MANIFEST_VERSION ?? pkg.version;
 
 function getExtensionName(mode: string): string {
     if (mode === "beta") return "TabMerger BETA";
@@ -51,6 +64,11 @@ export default defineConfig({
                 ? [visualizer({ open: true, filename: "bundle-stats.html" })]
                 : []),
         ],
+        // Real semver string, independent of the manifest's version/version_name split — see
+        // rawVersionString's comment above. Declared in src/env.d.ts.
+        define: {
+            __TABMERGER_VERSION__: JSON.stringify(rawVersionString),
+        },
     }),
     manifestVersion: 3,
     // ponytail: manifest as a fn instead of an object so we can call Vite's own
@@ -61,9 +79,10 @@ export default defineConfig({
     // bare process.env.CHROME_EXTENSION_ID/VITE_WEB_APP_URL here silently no-ops unless
     // those are real shell-exported vars, which they never were in either local dev or CI
     // — this is why externally_connectable was empty in every build, not just prod.
-    manifest: ({ mode }) => {
+    manifest: ({ mode, browser }) => {
         const env = loadEnv(mode, process.cwd(), "");
         const isBeta = mode === "beta";
+        const isFirefox = browser === "firefox";
         // ponytail: manifest.version can't just be package.json's version — semantic-release
         // never bumps it (no @semantic-release/npm plugin; per release-and-beta-channel-spec.md
         // §8, git tags are the sole source of truth for the released version), and a beta
@@ -73,9 +92,7 @@ export default defineConfig({
         // `wxt zip` for a store submission — see scripts/manifestVersion.ts for the mapping.
         // Falls back to package.json's version for local/dev builds and any CI step that never
         // zips for a store (nothing downstream reads manifest.version in that case).
-        const { version, version_name } = resolveManifestVersion(
-            process.env.TABMERGER_MANIFEST_VERSION ?? pkg.version,
-        );
+        const { version, version_name } = resolveManifestVersion(rawVersionString);
         return {
             name: getExtensionName(mode),
             description: isBeta
@@ -163,13 +180,47 @@ export default defineConfig({
                     isBeta
                         ? env.CHROME_EXTENSION_ID_BETA
                         : env.CHROME_EXTENSION_ID,
-                    "ogadhgghhdbaohdcajfakeogcamicdkm",
+                    DEV_EXTENSION_ID,
                 ].filter((id): id is string => Boolean(id)),
             },
             browser_specific_settings: {
                 gecko: {
-                    id: "tabmerger@lbragile.com",
+                    // AMO identifies an add-on only by this ID. Stable MUST stay the live listing's
+                    // GUID (addons.mozilla.org/firefox/addon/tabmerger, verified via AMO's public
+                    // API): any other value is a different add-on, so existing Firefox users would
+                    // never receive the update. The 2.0 rewrite had changed it by mistake.
+                    // Beta gets its own ID so the unlisted beta add-on can sit beside stable
+                    // (.claude/plans/firefox-edge-beta-spec.md §5.1).
+                    id: isBeta ? FIREFOX_BETA_ADDON_ID : FIREFOX_STABLE_ADDON_ID,
                     strict_min_version: "109.0",
+                    // Only the unlisted, self-distributed BETA add-on needs this — AMO-listed
+                    // stable updates from AMO itself, and setting update_url there would make
+                    // Firefox treat it as (and validate it as) a self-distributed add-on, which
+                    // AMO's listed-add-on review rejects. Firefox checks this URL ~every 24h
+                    // (.claude/plans/firefox-edge-beta-spec.md §5.3); CI regenerates the
+                    // updates.json it points at on every beta release.
+                    ...(isFirefox && isBeta
+                        ? { update_url: resolveFirefoxBetaUpdateUrl(env.VITE_WEB_APP_URL) }
+                        : {}),
+                    // AMO requires new submissions to declare what user data categories the
+                    // add-on collects (extensionworkshop.com, "Firefox Built-in Data Collection
+                    // Consent" — mandatory for add-ons created after 2025-11-03; see
+                    // FIREFOXADDONS.md for the full reasoning). `required` must be present;
+                    // `none` is only valid there, alone. None of TabMerger's data collection is
+                    // required for the extension's core (offline, free-tier) functionality, so
+                    // `required` is `["none"]` and everything actually opt-in goes under
+                    // `optional` — the SAME list `FIREFOX_DATA_CONSENT_CATEGORIES` feeds to
+                    // `src/lib/dataConsent.ts`'s runtime `permissions.request()` calls, so the
+                    // manifest declaration and the runtime requests can never drift apart.
+                    // No `websiteContent` — nothing here transmits page text/images off-device.
+                    ...(isFirefox
+                        ? {
+                              data_collection_permissions: {
+                                  required: ["none"],
+                                  optional: [...FIREFOX_DATA_CONSENT_CATEGORIES],
+                              },
+                          }
+                        : {}),
                 },
             },
             version,

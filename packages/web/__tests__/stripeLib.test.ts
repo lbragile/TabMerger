@@ -119,6 +119,8 @@ describe('lib/stripe', () => {
     expect(mockPortalCreate).toHaveBeenCalledWith({
       customer: 'cus_1',
       return_url: 'https://app/account',
+      // "US$" on every price, never a bare "$" a Canadian would read as CAD.
+      locale: 'en-CA',
     })
   })
 })

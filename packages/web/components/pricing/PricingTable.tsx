@@ -2,15 +2,28 @@
 
 import { useState } from 'react'
 import { PricingCard } from './PricingCard'
-import { TIERS } from '@/lib/tiers'
+import { TIERS, PRICES_IN_USD_NOTE, formatListPrice, yearlySavings } from '@/lib/tiers'
 import { cn } from '@/lib/utils'
 
 interface PricingTableProps {
   currentTier?: string
+  /** How the current paid plan is billed; unknown (or free) leaves it undefined. */
+  currentInterval?: 'monthly' | 'yearly'
 }
 
-export function PricingTable({ currentTier }: PricingTableProps) {
-  const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
+const PRO_SAVINGS = yearlySavings(TIERS.pro.monthlyPrice, TIERS.pro.yearlyPrice)
+const PRO_AI_SAVINGS = yearlySavings(TIERS.proAi.monthlyPrice, TIERS.proAi.yearlyPrice)
+// The toggle badge claims the smaller of the two discounts, so it's true for every plan.
+const YEARLY_DISCOUNT_PERCENT = Math.min(PRO_SAVINGS.percent, PRO_AI_SAVINGS.percent)
+
+/** "$3.58/mo billed yearly · save 10%": the yearly plan's monthly equivalent, under its price. */
+function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>): string {
+  return `${formatListPrice(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
+}
+
+export function PricingTable({ currentTier, currentInterval }: PricingTableProps) {
+  // Open on what the user already pays, so the current plan's card shows their real price.
+  const [interval, setInterval] = useState<'monthly' | 'yearly'>(currentInterval ?? 'monthly')
 
   return (
     <div className="flex flex-col items-center gap-10">
@@ -28,8 +41,8 @@ export function PricingTable({ currentTier }: PricingTableProps) {
             )}
           >
             {opt === 'monthly' ? 'Monthly' : 'Yearly'}
-            {opt === 'yearly' && (
-              <span className="text-[11px] font-semibold text-primary">−10%</span>
+            {opt === 'yearly' && YEARLY_DISCOUNT_PERCENT > 0 && (
+              <span className="text-[11px] font-semibold text-primary">−{YEARLY_DISCOUNT_PERCENT}%</span>
             )}
           </button>
         ))}
@@ -47,6 +60,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
           features={TIERS.free.features}
           interval={interval}
           currentTier={currentTier}
+          currentInterval={currentInterval}
           displayMonthly="$0"
           displayYearly="$0"
         />
@@ -62,9 +76,10 @@ export function PricingTable({ currentTier }: PricingTableProps) {
             interval={interval}
             highlighted
             currentTier={currentTier}
-            displayMonthly={`$${TIERS.pro.monthlyPrice}`}
-            displayYearly={`$${TIERS.pro.yearlyPrice}`}
-            yearlySubtext={`$${TIERS.pro.yearlyPrice}/yr billed yearly`}
+            currentInterval={currentInterval}
+            displayMonthly={formatListPrice(TIERS.pro.monthlyPrice)}
+            displayYearly={formatListPrice(TIERS.pro.yearlyPrice)}
+            yearlySubtext={yearlySubtext(PRO_SAVINGS)}
           />
         </div>
 
@@ -76,9 +91,10 @@ export function PricingTable({ currentTier }: PricingTableProps) {
           features={TIERS.proAi.features}
           interval={interval}
           currentTier={currentTier}
-          displayMonthly={`$${TIERS.proAi.monthlyPrice}`}
-          displayYearly={`$${TIERS.proAi.yearlyPrice}`}
-          yearlySubtext={`$${TIERS.proAi.yearlyPrice}/yr billed yearly`}
+          currentInterval={currentInterval}
+          displayMonthly={formatListPrice(TIERS.proAi.monthlyPrice)}
+          displayYearly={formatListPrice(TIERS.proAi.yearlyPrice)}
+          yearlySubtext={yearlySubtext(PRO_AI_SAVINGS)}
         />
       </div>
 
@@ -87,6 +103,7 @@ export function PricingTable({ currentTier }: PricingTableProps) {
         <br />
         You keep access until the end of your billing period.
       </p>
+      <p className="-mt-6 text-xs text-text3 text-center">{PRICES_IN_USD_NOTE}</p>
     </div>
   )
 }

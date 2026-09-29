@@ -134,7 +134,7 @@ vi.mock('@/hooks/useSessions', () => ({
   useSaveSession: () => ({ mutateAsync: vi.fn() })
 }))
 
-vi.mock('sonner', () => ({ toast: { error: vi.fn(), success: vi.fn(), info: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { error: vi.fn(), success: vi.fn(), info: vi.fn() } }))
 
 class MockResizeObserver {
   cb: ResizeObserverCallback
@@ -371,7 +371,7 @@ describe('SidePanel — "new group" drop zone (2b)', () => {
     const droppable = cap.droppableCalls.find((c) => c.id === NEW_GROUP_ID)
     expect((droppable as { disabled?: boolean }).disabled).toBe(true)
     // No toast: nothing was offered, so there is nothing to explain.
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     expect(toast.error).not.toHaveBeenCalled()
     // The cap is still published, so a drop resolved from the throttled stream is refused.
     expect(getNewGroupZoneGate().atLimit).toBe(true)

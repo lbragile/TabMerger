@@ -28,6 +28,8 @@ const {
   mockHasEncryptionKey,
   mockGetDataKey,
   mockResetEncryption,
+  mockRequestDataConsent,
+  mockToastError,
 } = vi.hoisted(() => ({
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
@@ -46,6 +48,8 @@ const {
   mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
   mockGetDataKey: vi.fn().mockResolvedValue(null),
   mockResetEncryption: vi.fn().mockResolvedValue(undefined),
+  mockRequestDataConsent: vi.fn().mockResolvedValue(true),
+  mockToastError: vi.fn(),
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
@@ -84,7 +88,8 @@ vi.mock('@/lib/importExport', () => ({
   parseOneTabs: vi.fn().mockReturnValue([]),
   exportGroups: mockExportGroups,
 }))
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: mockToastError } }))
+vi.mock('@/lib/dataConsent', () => ({ requestDataConsent: mockRequestDataConsent }))
 vi.mock('@/components/Settings/OtherDevices', () => ({ OtherDevices: () => <div>Other devices panel</div> }))
 vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
 
@@ -126,6 +131,7 @@ beforeEach(() => {
   globalThis.URL.revokeObjectURL = vi.fn()
   mockHasEncryptionKey.mockResolvedValue(false)
   mockGetDataKey.mockReturnValue(null)
+  mockRequestDataConsent.mockResolvedValue(true)
 })
 
 describe('SettingsModal — version badge in title', () => {
@@ -135,7 +141,11 @@ describe('SettingsModal — version badge in title', () => {
     globalThis.chrome = originalChrome
   })
 
-  it('shows version_name when present, preferred over version', async () => {
+  it('shows __TABMERGER_VERSION__ (the injected build semver), not the manifest version, on every browser', async () => {
+    // __TABMERGER_VERSION__ is defined as '0.0.0-test' in vitest.config.ts — same value
+    // regardless of what getManifest() returns, since the badge no longer reads the manifest
+    // for this at all (Chrome's version_name and Firefox's offset store version would both be
+    // wrong to show here — see the component's own comment).
     globalThis.chrome = {
       tabs: { create: vi.fn() },
       runtime: { getManifest: () => ({ version: '4.1.0.5', version_name: '3.1.0-beta.5' }) },
@@ -143,17 +153,7 @@ describe('SettingsModal — version badge in title', () => {
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     expect(screen.getByText('Settings').closest('h2, [role="heading"], div')).toBeTruthy()
-    expect(screen.getByText('v3.1.0-beta.5')).toBeInTheDocument()
-  })
-
-  it('falls back to version when version_name is absent', async () => {
-    globalThis.chrome = {
-      tabs: { create: vi.fn() },
-      runtime: { getManifest: () => ({ version: '3.1.0' }) },
-    } as unknown as typeof chrome
-    renderModal()
-    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
-    expect(screen.getByText('v3.1.0')).toBeInTheDocument()
+    expect(screen.getByText('v0.0.0-test')).toBeInTheDocument()
   })
 
   it('renders nothing when chrome.runtime.getManifest is unavailable', async () => {
@@ -370,6 +370,22 @@ describe('SettingsModal — Show page images in previews', () => {
     )
   })
 
+  it('requests browsingActivity consent before turning on, and leaves it off + shows a message when denied', async () => {
+    mockRequestDataConsent.mockResolvedValue(false)
+    const user = userEvent.setup()
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    const toggle = screen.getByRole('switch', { name: /show page images in previews/i })
+
+    await user.click(toggle)
+
+    expect(mockRequestDataConsent).toHaveBeenCalledWith(['browsingActivity'])
+    expect(toggle).not.toBeChecked()
+    expect(mockToastError).toHaveBeenCalledWith(
+      "Firefox needs permission to fetch page images. Allow it in the browser's prompt to turn this on."
+    )
+  })
+
   it('disables the setting immediately when turned off', async () => {
     mockGetSetting.mockResolvedValue({ ...DEFAULT_SETTINGS, showPreviewImages: true })
     const user = userEvent.setup()
@@ -522,6 +538,22 @@ describe('SettingsModal — Data tab', () => {
     await waitFor(() => expect(globalThis.confirm).toHaveBeenCalled())
     expect(mockImportGroupsMutate).not.toHaveBeenCalled()
   })
+
+  it('blocks the import (before the confirm dialog) when it would exceed the free group limit', async () => {
+    globalThis.confirm = vi.fn().mockReturnValue(true)
+    mockUseEntitlements.mockReturnValue({ tier: 'free', cloudSync: false, maxGroups: 1, maxTabs: 50 })
+    mockUseGroups.mockReturnValue({ data: { available: [{ name: 'Now Open', permanent: true, windows: [] }, { name: 'existing', windows: [] }] } })
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/^data$/i)
+    // importGroups() is mocked (module-level) to return a single group — pushes total saved groups to 2, over maxGroups:1
+    const { toast } = await import('@/lib/toast')
+    const file = new File(['{}'], 'backup.json', { type: 'application/json' })
+    fireEvent.change(fileInput(), { target: { files: [file] } })
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith('Free plan allows up to 1 groups.', expect.anything()))
+    expect(globalThis.confirm).not.toHaveBeenCalled()
+    expect(mockImportGroupsMutate).not.toHaveBeenCalled()
+  })
 })
 
 describe('SettingsModal — Dev tab (dev-only)', () => {
@@ -566,7 +598,7 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
   it('syncs the dev usage count to the real backend when signed in', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ count: 95 }) })
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^dev$/i)
@@ -590,7 +622,7 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
   it('shows an error toast when the real-backend sync fails', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
     globalThis.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500, text: async () => 'boom' })
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^dev$/i)
@@ -601,7 +633,7 @@ describe('SettingsModal — Dev tab (dev-only)', () => {
   it('shows an error toast when not signed in, without calling fetch', async () => {
     mockUseAuth.mockReturnValue({ user: null, session: null, signOut: vi.fn() })
     globalThis.fetch = vi.fn()
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/^dev$/i)
@@ -633,7 +665,7 @@ describe('SettingsModal — billing portal', () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
     mockUseAuth.mockReturnValue({ user: { email: 'user@example.com' }, session: { access_token: 'tok' }, signOut: vi.fn() })
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ json: async () => ({ error: 'nope' }) })
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
@@ -717,7 +749,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
   it('confirming calls resetEncryption then opens the encryptionSetup modal', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
     mockHasEncryptionKey.mockResolvedValue(true)
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
@@ -734,7 +766,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
     mockHasEncryptionKey.mockResolvedValue(true)
     mockResetEncryption.mockRejectedValueOnce(new Error('boom'))
-    const { toast } = await import('sonner')
+    const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)

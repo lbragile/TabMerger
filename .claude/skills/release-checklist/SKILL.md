@@ -13,7 +13,7 @@ Run in order. Stop and report if any step fails — do not skip ahead.
 3. **Secrets scan**: `pnpm scan-secrets`
 4. **Extension E2E**: `pnpm --filter @tabmerger/extension test:e2e`
 5. **Web E2E**: `pnpm test:e2e`
-6. **Version bump**: confirm the new version with the user (semver — ask which bump: patch/minor/major), then let `semantic-release` (already configured via commitlint/changelog) handle changelog + tag, OR bump manually if the user prefers — ask which.
+6. **Version bump**: confirm the new version with the user (semver — ask which bump: patch/minor/major), then let `semantic-release` (already configured via commitlint/changelog) handle changelog + tag. On a stable release branch, `semantic-release` also writes that version into the root `package.json` and `packages/extension/package.json` itself (via `scripts/set-release-version.mjs`, an `@semantic-release/exec` `prepareCmd`) — do not hand-bump either file; the git tag is still what `publish.yml` actually reads.
 7. **Build store zips**: `pnpm zip` — verify `packages/extension/.output/` has Chrome/Firefox/Edge zips.
 8. **Web deploy**: confirm with the user before triggering — this is a shared/production action. Point to the `devops` agent or `.github/workflows/deploy-web.yml` / `vercel:deploy` skill.
 9. **Store publish**: confirm with the user before running `.github/workflows/publish.yml` or manual store upload — irreversible, visible to end users.

@@ -1,6 +1,41 @@
 import type { NextConfig } from 'next'
 import path from 'path'
 import { withSentryConfig } from '@sentry/nextjs'
+import { FIREFOX_BETA } from '@tabmerger/shared'
+
+/**
+ * Public base of the Vercel Blob store CI uploads the self-distributed Firefox beta build to
+ * (e.g. `https://<id>.public.blob.vercel-storage.com`) — not a secret, just not worth hardcoding
+ * since it's environment-specific (only ever set on the Preview deployment; see
+ * docs/PUBLISHING.md). Resolved once at build/boot time, same lifecycle as the rest of this file.
+ */
+const FIREFOX_BETA_BLOB_BASE_URL = process.env.FIREFOX_BETA_BLOB_BASE_URL
+
+/**
+ * Builds the `/firefox-beta/*` → Blob store rewrite, or `null` when unconfigured so the app runs
+ * fine on deployments that never got the beta channel set up (local dev, production). Exported
+ * for a focused unit test rather than only exercised indirectly through next.config.ts.
+ */
+export function firefoxBetaRewrite(baseUrl: string | undefined) {
+  if (!baseUrl) return null
+  let parsed: URL
+  try {
+    parsed = new URL(baseUrl)
+  } catch {
+    console.warn('[TabMerger] FIREFOX_BETA_BLOB_BASE_URL is not a valid URL — Firefox beta rewrite disabled')
+    return null
+  }
+  if (parsed.protocol !== 'https:') {
+    console.warn('[TabMerger] FIREFOX_BETA_BLOB_BASE_URL must be https — Firefox beta rewrite disabled')
+    return null
+  }
+  // Strip any trailing slash so the destination doesn't end up with `//` before the path segment.
+  const normalizedBase = baseUrl.replace(/\/+$/, '')
+  return {
+    source: `${FIREFOX_BETA.PATH}/:file`,
+    destination: `${normalizedBase}${FIREFOX_BETA.PATH}/:file`,
+  }
+}
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -46,6 +81,29 @@ const nextConfig: NextConfig = {
         hostname: 'lh3.googleusercontent.com',
       },
     ],
+    // Next only allows `quality` values present in this list (default: [75]).
+    // The beta page's screenshots pass quality={90} to avoid re-encoding UI
+    // text/screenshots down to the point of visible blur — 90 must be
+    // explicitly allow-listed here or that prop throws at request time.
+    qualities: [75, 90],
+  },
+  async rewrites() {
+    const rewrite = firefoxBetaRewrite(FIREFOX_BETA_BLOB_BASE_URL)
+    return rewrite ? [rewrite] : []
+  },
+  async headers() {
+    // updates.json is what Firefox polls to learn a new beta build exists — if a CDN/browser
+    // caches a stale copy, testers silently stop getting updates. Force revalidation regardless
+    // of whatever Cache-Control the Blob object itself was uploaded with. The .xpi's own
+    // Content-Type (application/x-xpinstall, set by CI on upload per FIREFOX_BETA.XPI_CONTENT_TYPE)
+    // passes through the rewrite unmodified, so it's left alone here.
+    if (!FIREFOX_BETA_BLOB_BASE_URL) return []
+    return [
+      {
+        source: `${FIREFOX_BETA.PATH}/${FIREFOX_BETA.UPDATES_FILE}`,
+        headers: [{ key: 'Cache-Control', value: 'no-store' }],
+      },
+    ]
   },
 }
 

@@ -5,6 +5,16 @@ import { request as httpRequest } from 'node:http'
 import { request as httpsRequest, type RequestOptions as HttpsRequestOptions } from 'node:https'
 import { gunzipSync, brotliDecompressSync, inflateSync } from 'node:zlib'
 import type { LookupAddress } from 'node:dns'
+import {
+  MAX_BYTES,
+  decodeHtmlEntities,
+  extractHead,
+  extractJsonLdImage,
+  pickIcon,
+  resolveCandidate,
+  scanHeadTags,
+  type ImageKind,
+} from '@/lib/ogPreviewParse'
 
 /**
  * POST /api/og-preview  { "url": "<url>" }
@@ -47,7 +57,6 @@ import type { LookupAddress } from 'node:dns'
  *     protocol + DNS-pinning validation re-run on every hop.
  */
 
-const MAX_BYTES = 2 * 1024 * 1024 // 2MB
 const FETCH_TIMEOUT_MS = 4000
 const MAX_REDIRECTS = 3
 
@@ -55,8 +64,6 @@ const MAX_REDIRECTS = 3
 // promises the requested address isn't stored, even transiently in memory.
 // If load ever becomes a concern, revisit with a short-TTL cache keyed by a
 // hash rather than the raw URL, not a plain re-add of this Map.
-
-const MAX_DESCRIPTION_LENGTH = 500
 
 function isPrivateHost(hostname: string): boolean {
   const h = hostname.toLowerCase()
@@ -99,59 +106,6 @@ async function resolveAndValidate(hostname: string): Promise<LookupAddress[] | n
   return addresses
 }
 
-/**
- * Meta `content` values are HTML-attribute text, so `&` in an image URL arrives as `&amp;`
- * (Wikipedia's og:image does this) and descriptions carry `&quot;`, `&#39;` and friends.
- * Decode the common named entities and numeric references before using the value — an
- * undecoded `&amp;` turns `?a=1&amp;b=2` into a different, often broken, image URL.
- */
-function decodeHtmlEntities(value: string): string {
-  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
-  return value.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, entity: string) => {
-    if (entity[0] === '#') {
-      const code = entity[1].toLowerCase() === 'x' ? parseInt(entity.slice(2), 16) : parseInt(entity.slice(1), 10)
-      return Number.isFinite(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match
-    }
-    return named[entity.toLowerCase()] ?? match
-  })
-}
-
-function extractOgImage(html: string): string | null {
-  const headMatch = html.match(/<head[\s\S]*?<\/head>/i)
-  const head = headMatch ? headMatch[0] : html.slice(0, 50_000)
-
-  const ogMatch =
-    head.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ??
-    head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)
-  if (ogMatch) return ogMatch[1]
-
-  const twitterMatch =
-    head.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i) ??
-    head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i)
-  return twitterMatch ? twitterMatch[1] : null
-}
-
-/**
- * Extracts the page description: prefer `og:description`, fall back to the
- * standard `name="description"` meta tag. Result is plain text (not echoed
- * as a URL like ogImage), so the only hardening needed is a length cap —
- * a malicious page can't set a 1MB meta tag and bloat the cache/response.
- */
-function extractDescription(html: string): string | null {
-  const headMatch = html.match(/<head[\s\S]*?<\/head>/i)
-  const head = headMatch ? headMatch[0] : html.slice(0, 50_000)
-
-  const ogMatch =
-    head.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i) ??
-    head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:description["']/i)
-  const value =
-    ogMatch?.[1] ??
-    (head.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i) ??
-      head.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i))?.[1] ??
-    null
-
-  return value ? value.slice(0, MAX_DESCRIPTION_LENGTH) : null
-}
 
 /**
  * Fetches a single hop with the TCP connection pinned to `addresses` (already
@@ -163,7 +117,7 @@ function extractDescription(html: string): string | null {
 function fetchPinnedHop(
   parsed: URL,
   addresses: LookupAddress[]
-): Promise<{ body: string } | { redirectTo: string }> {
+): Promise<{ body: string; contentType: string } | { redirectTo: string }> {
   const requestFn = parsed.protocol === 'https:' ? httpsRequest : httpRequest
 
   // @types/node's RequestOptions doesn't declare `autoSelectFamily`, but Node
@@ -182,6 +136,13 @@ function fetchPinnedHop(
       headers: {
         'User-Agent': 'TabMergerBot/1.0 (+https://tabmerger.com)',
         'Accept-Encoding': 'gzip, deflate, br',
+        // Some sites (e.g. vercel.com/docs) content-negotiate on Accept and
+        // serve `text/markdown` — with no meta tags at all — to a request
+        // that doesn't look like it wants HTML. This doesn't impersonate a
+        // browser (the honest bot User-Agent above stays as-is); it just
+        // asks for the format we can actually parse.
+        Accept: 'text/html,application/xhtml+xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
         Host: parsed.host,
       },
       timeout: FETCH_TIMEOUT_MS,
@@ -217,6 +178,16 @@ function fetchPinnedHop(
           return
         }
 
+        // A missing content-type header is treated as "unknown, try anyway"
+        // rather than rejected — some servers omit it and still return real
+        // HTML. Only an explicitly non-HTML type short-circuits.
+        const contentType = res.headers['content-type'] ?? ''
+        if (contentType && !/text\/html|application\/xhtml\+xml/i.test(contentType)) {
+          res.resume()
+          resolve({ body: '', contentType })
+          return
+        }
+
         const encoding = res.headers['content-encoding']
         const chunks: Buffer[] = []
         let total = 0
@@ -233,9 +204,9 @@ function fetchPinnedHop(
               : encoding === 'br' ? brotliDecompressSync(raw)
               : encoding === 'deflate' ? inflateSync(raw)
               : raw
-            resolve({ body: decoded.toString('utf-8') })
+            resolve({ body: decoded.toString('utf-8'), contentType })
           } catch {
-            resolve({ body: raw.toString('utf-8') })
+            resolve({ body: raw.toString('utf-8'), contentType })
           }
         }
         res.on('data', (chunk: Buffer) => {
@@ -262,7 +233,7 @@ function fetchPinnedHop(
  * MAX_REDIRECTS) with full protocol + DNS-pinning validation re-run on every
  * hop — a redirect target is just as untrusted as the original input.
  */
-async function fetchCapped(startUrl: string): Promise<string> {
+async function fetchCapped(startUrl: string): Promise<{ body: string; finalUrl: string; contentType: string }> {
   let current = new URL(startUrl)
 
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
@@ -273,7 +244,7 @@ async function fetchCapped(startUrl: string): Promise<string> {
     if (!addresses) throw new Error('blocked host')
 
     const result = await fetchPinnedHop(current, addresses)
-    if ('body' in result) return result.body
+    if ('body' in result) return { body: result.body, finalUrl: current.toString(), contentType: result.contentType }
 
     current = new URL(result.redirectTo, current)
   }
@@ -294,12 +265,26 @@ function jsonResponse(body: unknown, init?: { status?: number }): NextResponse {
   })
 }
 
+
 /**
  * Validates and fetches a single URL, returning the extracted preview fields.
  * No caching: every call hits upstream.
+ *
+ * Candidates are tried in priority order and resolved independently — the
+ * whole point of `resolveCandidate` returning `null` instead of throwing is
+ * that a broken/unusable candidate (relative-but-unparseable, `data:`, etc.)
+ * falls through to the next source instead of aborting the whole chain:
+ *   1. og:image / og:image:secure_url / og:image:url / twitter:image /
+ *      twitter:image:src / link[rel=image_src] / vendor name= fallbacks
+ *      (all folded into `scanned.ogImage` by `scanHeadTags`)
+ *   2. schema.org itemprop="image" (meta content= or link href=)
+ *   3. JSON-LD `image`/`thumbnailUrl` (string, array, ImageObject, @graph)
+ *   4. LAST RESORT: the largest apple-touch-icon/icon `<link>` >= 128px —
+ *      returned with `imageKind: 'icon'` so the caller can render it
+ *      contained/centered instead of cropped as a banner.
  */
 async function fetchPreview(raw: string | null): Promise<
-  | { ok: true; ogImage: string | null; description: string | null }
+  | { ok: true; ogImage: string | null; description: string | null; imageKind: ImageKind }
   | { ok: false }
 > {
   if (!raw) return { ok: false }
@@ -315,21 +300,28 @@ async function fetchPreview(raw: string | null): Promise<
 
   const target = parsed.toString()
   let ogImage: string | null = null
+  let imageKind: ImageKind = 'preview'
   let description: string | null = null
   try {
-    const html = await fetchCapped(target)
-    const rawImage = extractOgImage(html)
-    ogImage = rawImage ? decodeHtmlEntities(rawImage) : null
-    const rawDescription = extractDescription(html)
-    description = rawDescription ? decodeHtmlEntities(rawDescription) : null
-    // Only accept absolute http(s) image URLs — never echo relative paths
-    // or javascript: schemes back to the client.
-    if (ogImage) {
-      try {
-        const imgUrl = new URL(ogImage, target)
-        ogImage = imgUrl.protocol === 'http:' || imgUrl.protocol === 'https:' ? imgUrl.toString() : null
-      } catch {
-        ogImage = null
+    const { body: html, finalUrl, contentType } = await fetchCapped(target)
+    // Non-HTML responses (e.g. vercel.com/docs serving text/markdown to a
+    // bot-flavored Accept header) have no meta tags — bail out before
+    // regex-ing content that was never going to match.
+    if (contentType && !/text\/html|application\/xhtml\+xml/i.test(contentType)) {
+      return { ok: true, ogImage: null, description: null, imageKind: 'preview' }
+    }
+    const head = extractHead(html)
+    const scanned = scanHeadTags(head)
+    description = scanned.description ? decodeHtmlEntities(scanned.description) : null
+
+    ogImage = resolveCandidate(scanned.ogImage, finalUrl)
+    if (!ogImage) ogImage = resolveCandidate(scanned.itempropImage, finalUrl)
+    if (!ogImage) ogImage = resolveCandidate(extractJsonLdImage(head), finalUrl)
+    if (!ogImage) {
+      const icon = resolveCandidate(pickIcon(scanned.iconCandidates), finalUrl)
+      if (icon) {
+        ogImage = icon
+        imageKind = 'icon'
       }
     }
   } catch {
@@ -337,7 +329,7 @@ async function fetchPreview(raw: string | null): Promise<
     description = null
   }
 
-  return { ok: true, ogImage, description }
+  return { ok: true, ogImage, description, imageKind }
 }
 
 export async function POST(req: NextRequest) {
@@ -354,5 +346,7 @@ export async function POST(req: NextRequest) {
 
   const result = await fetchPreview(raw)
   if (!result.ok) return jsonResponse({ ogImage: null, description: null }, { status: 400 })
-  return jsonResponse({ ogImage: result.ogImage, description: result.description })
+  // `imageKind` is additive and defaults to 'preview' — existing extension
+  // builds that only read `ogImage`/`description` keep working unchanged.
+  return jsonResponse({ ogImage: result.ogImage, description: result.description, imageKind: result.imageKind })
 }

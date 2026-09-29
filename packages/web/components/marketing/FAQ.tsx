@@ -4,18 +4,18 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
-import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
+import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS } from '@tabmerger/shared'
 
 const faqs = [
   {
     question: 'Is TabMerger really free?',
     answer:
-      'Yes! The free tier includes all the core features — up to 5 groups, 50 tabs, drag-and-drop, and import/export. You only pay if you want cloud sync, unlimited tabs, or AI features.',
+      `Yes! The free tier includes all the core features — up to ${FREE_TIER_LIMITS.groups} groups, ${FREE_TIER_LIMITS.tabs} tabs, ${FREE_TIER_LIMITS.urlRules} URL rules, drag-and-drop, and import/export. You only pay if you want cloud sync, unlimited groups, tabs and URL rules, or AI features.`,
   },
   {
     question: 'How does cloud sync work?',
     answer:
-      'When you sign up for a Pro or Pro AI plan, your groups are automatically saved to our servers. Any browser where you\'re signed into TabMerger will stay in sync in real time.',
+      'When you sign up for a Pro or Pro AI plan, your groups are automatically saved to our servers. Your groups sync across every browser where you\'re signed in — sync runs whenever the popup is open, so changes show up the next time you open it there.',
   },
   {
     question: 'What does the AI do exactly?',
@@ -29,9 +29,9 @@ const faqs = [
       'Absolutely. You can cancel anytime from your account page. You\'ll keep access until the end of your current billing period, then drop back to the free tier.',
   },
   {
-    question: 'Does TabMerger work with Firefox or Edge?',
+    question: 'Which browsers does TabMerger support?',
     answer:
-      'The extension currently supports Chrome and Chromium-based browsers (Edge, Brave, Arc, etc.). Firefox support is on our roadmap.',
+      'Chrome (Chrome Web Store), Edge (Edge Add-ons, or the Chrome Web Store), Brave, Vivaldi, and Arc (Chrome Web Store), Opera (Chrome Web Store, via Opera\'s "Install Chrome Extensions" add-on), and Firefox (Firefox Add-ons). Safari isn\'t supported.',
   },
   {
     question: 'Is my data private?',

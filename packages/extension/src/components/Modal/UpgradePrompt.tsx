@@ -5,7 +5,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 import { AI_ENABLED } from '@/lib/aiFlag';
-import { AI_COMING_SOON_LABEL } from '@tabmerger/shared';
+import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS, PRICING_TIERS } from '@tabmerger/shared';
+
+/** How many of each plan's features the compact comparison shows (the popup is 800×600). */
+const PROMPT_FEATURE_COUNT = 3;
 
 interface UpgradePromptModalProps {
   reason?: string;
@@ -16,12 +19,12 @@ const REASON_MESSAGES: Record<string, { title: string; description: string }> = 
   maxGroups: {
     title: 'Group Limit Reached',
     description:
-      'You have reached the free plan limit of 5 groups. Upgrade to Pro for unlimited groups.'
+      `You have reached the free plan limit of ${FREE_TIER_LIMITS.groups} groups. Upgrade to Pro for unlimited groups.`
   },
   maxTabs: {
     title: 'Tab Limit Reached',
     description:
-      'You have reached the free plan limit of 50 tabs. Upgrade to Pro for unlimited tabs.'
+      `You have reached the free plan limit of ${FREE_TIER_LIMITS.tabs} tabs. Upgrade to Pro for unlimited tabs.`
   },
   cloudSync: {
     title: 'Cloud Sync is Pro',
@@ -85,31 +88,24 @@ export function UpgradePromptModal({ reason, onClose }: UpgradePromptModalProps)
 
       <div className="mt-4 space-y-2">
         <div className="border border-border p-3 space-y-1 text-xs">
-          <div className="font-semibold">Free</div>
-          <ul className="text-muted-foreground space-y-0.5 ml-2">
-            <li>5 groups, 50 tabs</li>
-            <li>Local storage only</li>
-          </ul>
-          <div className="font-semibold mt-2">Pro — $3.99/mo</div>
-          <ul className="text-muted-foreground space-y-0.5 ml-2">
-            <li>Unlimited groups & tabs</li>
-            <li>Cloud sync</li>
-            <li>Session save & restore</li>
-          </ul>
-          <div className="font-semibold mt-2">
-            Pro AI — $7.99/mo
-            {proAiComingSoon && (
-              <span className="ml-1 text-muted-foreground font-normal">
-                ({AI_COMING_SOON_LABEL})
-              </span>
-            )}
-          </div>
-          <ul className="text-muted-foreground space-y-0.5 ml-2">
-            <li>Everything in Pro</li>
-            <li>AI auto-grouping</li>
-            <li>AI group naming</li>
-            <li>Tab AI summaries</li>
-          </ul>
+          {PRICING_TIERS.map((plan, i) => (
+            <div key={plan.id}>
+              <div className={i > 0 ? 'font-semibold mt-2' : 'font-semibold'}>
+                {plan.name}
+                {plan.monthlyPrice > 0 && ` — $${plan.monthlyPrice}/mo`}
+                {plan.id === 'pro_ai' && proAiComingSoon && (
+                  <span className="ml-1 text-muted-foreground font-normal">
+                    ({AI_COMING_SOON_LABEL})
+                  </span>
+                )}
+              </div>
+              <ul className="text-muted-foreground space-y-0.5 ml-2">
+                {plan.features.slice(0, PROMPT_FEATURE_COUNT).map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
 

@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { AI_MONTHLY_CAP } from '@/lib/ai-usage'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
+import { formatListPrice } from '@/lib/tiers'
 
 // ponytail: tier keys differ between the DB (subscriptions.tier: 'free'|'pro'|'pro_ai')
 // and the checkout API / TIERS config ('free'|'pro'|'proAi'). Normalize to DB shape here
@@ -26,6 +27,8 @@ interface PricingCardProps {
   tier: string
   highlighted?: boolean
   currentTier?: string
+  /** How the current paid plan is billed. On that plan's card it enables "Switch to …". */
+  currentInterval?: 'monthly' | 'yearly'
   displayMonthly?: string
   displayYearly?: string
   yearlySubtext?: string
@@ -40,12 +43,14 @@ export function PricingCard({
   tier,
   highlighted = false,
   currentTier,
+  currentInterval,
   displayMonthly,
   displayYearly,
   yearlySubtext,
 }: PricingCardProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [switchError, setSwitchError] = useState<string | null>(null)
 
   const isComingSoon = tier === 'proAi' && !AI_ENABLED
   const rawPrice = interval === 'monthly' ? monthlyPrice : yearlyPrice
@@ -56,12 +61,48 @@ export function PricingCard({
     !!currentTier && TIER_RANK[normalizeTier(tier)] < TIER_RANK[normalizeTier(currentTier)]
   // Never recommend a tier the user already has or has surpassed.
   const showRecommended = highlighted && !isCurrentPlan && !isBelowCurrentTier
+  // A paid current plan can move to the other billing interval (same plan, new price).
+  const switchTarget =
+    isCurrentPlan && !isFree && currentInterval
+      ? currentInterval === 'monthly' ? 'yearly' : 'monthly'
+      : null
+
+  /** Opens Stripe's "confirm plan change" page for the same plan on the other interval. */
+  async function handleSwitchInterval() {
+    if (!switchTarget) return
+    setLoading(true)
+    setSwitchError(null)
+    try {
+      const res = await fetch('/api/billing/switch-interval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interval: switchTarget }),
+      })
+      if (res.status === 401) {
+        router.push('/auth/sign-in?redirectTo=/pricing')
+        return
+      }
+      const data = await res.json().catch(() => ({}))
+      if (data.url) {
+        window.location.href = data.url
+        return
+      }
+      // 409s explain themselves ("already scheduled…"); anything else gets the generic fallback.
+      setSwitchError(
+        res.status === 409 && typeof data.error === 'string'
+          ? data.error
+          : "Couldn't start the switch. Try Manage billing on your account page."
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // Display price: use override strings if provided, otherwise format from number
   const displayPrice =
     interval === 'monthly'
-      ? (displayMonthly ?? (rawPrice === 0 ? '$0' : `$${rawPrice}`))
-      : (displayYearly ?? (rawPrice === 0 ? '$0' : `$${rawPrice}`))
+      ? (displayMonthly ?? (rawPrice === 0 ? '$0' : formatListPrice(rawPrice)))
+      : (displayYearly ?? (rawPrice === 0 ? '$0' : formatListPrice(rawPrice)))
 
   async function handleClick() {
     if (isComingSoon) return
@@ -185,6 +226,24 @@ export function PricingCard({
           >
             Install free
           </Button>
+        ) : switchTarget ? (
+          <>
+            <p className="mb-2 text-center text-[11.5px] text-text3">Billed {currentInterval}</p>
+            <Button
+              variant="default"
+              className="w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={handleSwitchInterval}
+              disabled={loading}
+              loading={loading}
+            >
+              {switchTarget === 'yearly' ? 'Switch to yearly billing' : 'Switch to monthly billing'}
+            </Button>
+            {switchError && (
+              <p role="alert" className="mt-2 text-center text-[11.5px] text-destructive">
+                {switchError}
+              </p>
+            )}
+          </>
         ) : isCurrentPlan ? null : isBelowCurrentTier ? (
           // Downgrading an active Stripe subscription is a price change on the *existing*
           // subscription, not a new one — route through the billing portal (handleClick

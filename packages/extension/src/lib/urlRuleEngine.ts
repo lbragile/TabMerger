@@ -4,6 +4,13 @@ import type { UrlRule } from '@/lib/types';
 import type { Tab } from '@/lib/types';
 
 /**
+ * ponytail: no Free-tier gating here, deliberately. `useSaveUrlRules` only blocks CREATING
+ * new rules past `maxUrlRules`; rules already saved while on a paid plan keep matching and
+ * applying here after a downgrade to Free. Only adding new ones is blocked (UrlRulesModal's
+ * "Add" button + the `useSaveUrlRules` backstop), not what's already saved.
+ */
+
+/**
  * Appends a newly-opened tab to the matched group in IndexedDB.
  * Does NOT close the tab in Chrome — rule matching is purely additive (the tab stays open).
  * Called by the background script after `matchUrlToRule` returns a non-null groupId.

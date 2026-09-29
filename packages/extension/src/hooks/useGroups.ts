@@ -9,6 +9,34 @@ import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
+import { type TierCaps, FreeLimitExceededError, countSavedGroupsAndTabs, exceedsFreeLimits, showFreeLimitToast } from '@/lib/tierLimits';
+
+/**
+ * Free-tier backstop shared by every group-creating mutation below (`useAddGroup`,
+ * `useDuplicateGroup`, `useApplyAIGroups`). Same pattern as `useSaveUrlRules(maxUrlRules)`:
+ * `caps` is a HOOK-level param (default `{}`, i.e. ungated) rather than part of the mutation
+ * payload, so existing callers/tests that don't pass it are completely unaffected, and the
+ * mutation's payload shape never has to change. Reads the QueryClient cache (not a fresh
+ * fetch) — same tradeoff `useDeleteGroup`/`useDeleteWindow` already make for their
+ * live-tab-closing precheck — so an empty/stale cache just skips the check rather than
+ * blocking (there's nothing reliable to gate against yet).
+ * Throws (rather than returning a sentinel) so the mutation's promise rejects and the
+ * write never happens — callers that don't await/catch simply see the mutation fail.
+ */
+function assertWithinFreeLimits(
+  cached: GroupsState | undefined,
+  caps: TierCaps,
+  addedGroups: number,
+  addedTabs: number
+): void {
+  if (!cached) return;
+  const current = countSavedGroupsAndTabs(cached.available);
+  const check = exceedsFreeLimits(caps, { groups: current.groups + addedGroups, tabs: current.tabs + addedTabs });
+  if (check.exceeded) {
+    showFreeLimitToast(check.limit, check.maxAllowed);
+    throw new FreeLimitExceededError(check.limit);
+  }
+}
 
 export const GROUPS_QUERY_KEY = ['groups'] as const;
 
@@ -59,15 +87,19 @@ function useGroupsMutation() {
     });
 }
 
-export function useAddGroup() {
+/** `caps` (default `{}` = ungated) is the Free-tier backstop — see `assertWithinFreeLimits`. */
+export function useAddGroup(caps: TierCaps = {}) {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: ({ name, color }: { name?: string; color?: string }) =>
-      mutate((prev) => {
+    mutationFn: ({ name, color }: { name?: string; color?: string }) => {
+      assertWithinFreeLimits(qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY), caps, 1, 0);
+      return mutate((prev) => {
         const newGroup = createGroup(nanoid(10), name, color ?? DEFAULT_GROUP_COLOR);
         return { ...prev, available: [...prev.available, newGroup] };
-      }),
+      });
+    },
     onSuccess: () => { trackEvent('group_created'); }
   });
 }
@@ -134,12 +166,18 @@ export function useDeleteGroup() {
   });
 }
 
-export function useDuplicateGroup() {
+/** `caps` (default `{}` = ungated) is the Free-tier backstop — see `assertWithinFreeLimits`. */
+export function useDuplicateGroup(caps: TierCaps = {}) {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: (groupIndex: number) =>
-      mutate((prev) => {
+    mutationFn: (groupIndex: number) => {
+      const cached = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+      const source = cached?.available[groupIndex];
+      const sourceTabs = source ? source.windows.reduce((sum, w) => sum + w.tabs.length, 0) : 0;
+      assertWithinFreeLimits(cached, caps, 1, sourceTabs);
+      return mutate((prev) => {
         const { available } = prev;
         const source = available[groupIndex];
         if (!source) return prev;
@@ -156,7 +194,8 @@ export function useDuplicateGroup() {
         const newAvailable = [...available];
         newAvailable.splice(groupIndex + 1, 0, clone);
         return { ...prev, available: newAvailable };
-      })
+      });
+    }
   });
 }
 
@@ -1124,14 +1163,62 @@ export function useClearTabReminder() {
 }
 
 /**
+ * Pure transform shared by `useApplyAIGroups`'s free-limit precheck (run against the cached
+ * state, no side effects) and its actual `mutate()` transform (run against fresh IDB state)
+ * — kept as one function so the two never drift apart.
+ */
+function applyAiSuggestionsToState(
+  prev: GroupsState,
+  suggestions: { name: string; color: string; tabIds: number[] }[]
+): { nextAvailable: Group[]; appliedGroups: number; appliedTabs: number } {
+  const available = [...prev.available];
+  const nowOpen = { ...available[0] };
+  let windows = nowOpen.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
+  const now = Date.now();
+  const newGroups: Group[] = [];
+  let appliedGroups = 0;
+  let appliedTabs = 0;
+
+  for (const suggestion of suggestions) {
+    const idSet = new Set(suggestion.tabIds);
+    const movedTabs: Tab[] = [];
+    windows = windows.map((w) => {
+      const [keep, taken] = [w.tabs.filter((t) => !idSet.has(t.id)), w.tabs.filter((t) => idSet.has(t.id))];
+      movedTabs.push(...taken.map((t) => ({ ...t, id: 0, savedAt: now })));
+      return { ...w, tabs: keep };
+    });
+    if (movedTabs.length === 0) continue;
+
+    const group = createGroup(nanoid(10), suggestion.name, suggestion.color);
+    group.windows = [createWindow(movedTabs)];
+    group.info = getGroupInfo(group);
+    newGroups.push(group);
+    appliedGroups++;
+    appliedTabs += movedTabs.length;
+  }
+
+  // Drop emptied windows, but never let Now Open end up with zero windows
+  const finalWindows = windows.filter((w) => w.tabs.length > 0);
+  nowOpen.windows = finalWindows.length > 0 ? finalWindows : windows.slice(0, 1);
+  available[0] = nowOpen;
+
+  return { nextAvailable: [...available, ...newGroups], appliedGroups, appliedTabs };
+}
+
+/**
  * Applies AI auto-group suggestions: for each `{ name, color, tabIds }`, creates a new
  * saved group containing the matching live tabs (matched by real Chrome tab id, since
  * Now Open's tabs — unlike saved-tab copies — carry real ids, not the `id:0` sentinel)
  * and removes them from the Now Open snapshot. The browser tabs themselves are left open —
  * `useCurrentTabs` will re-sync them into Now Open on the next tick, same as any other
  * Now Open → saved move (see `useMoveTab`).
+ *
+ * `caps` (default `{}` = ungated) is the Free-tier backstop — see `assertWithinFreeLimits`.
+ * `Header.tsx`'s AI-group flow already pre-clamps suggestions to the remaining group slots
+ * before calling this, so the backstop here mainly guards the tab count (which isn't
+ * pre-clamped) and any other future caller.
  */
-export function useApplyAIGroups() {
+export function useApplyAIGroups(caps: TierCaps = {}) {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
@@ -1140,50 +1227,29 @@ export function useApplyAIGroups() {
     // don't match any live Now Open tab (e.g. a stale AI response) is silently skipped
     // by the loop below, so the caller can't infer success from suggestions.length alone.
     mutationFn: async (suggestions: { name: string; color: string; tabIds: number[] }[]) => {
+      const cached = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+
       // Bail before touching mutate() (no undo snapshot, no IDB write) if nothing will match
       const nowOpenIds = new Set(
-        (qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available[0]?.windows ?? []).flatMap((w) =>
-          w.tabs.map((t) => t.id)
-        )
+        (cached?.available[0]?.windows ?? []).flatMap((w) => w.tabs.map((t) => t.id))
       );
       if (!suggestions.some((s) => s.tabIds.some((id) => nowOpenIds.has(id)))) {
         return { appliedGroups: 0, appliedTabs: 0 };
+      }
+
+      if (cached) {
+        const preview = applyAiSuggestionsToState(cached, suggestions);
+        assertWithinFreeLimits(cached, caps, preview.appliedGroups, preview.appliedTabs);
       }
 
       let appliedGroups = 0;
       let appliedTabs = 0;
 
       await mutate((prev) => {
-        const available = [...prev.available];
-        const nowOpen = { ...available[0] };
-        let windows = nowOpen.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
-        const now = Date.now();
-        const newGroups: Group[] = [];
-
-        for (const suggestion of suggestions) {
-          const idSet = new Set(suggestion.tabIds);
-          const movedTabs: Tab[] = [];
-          windows = windows.map((w) => {
-            const [keep, taken] = [w.tabs.filter((t) => !idSet.has(t.id)), w.tabs.filter((t) => idSet.has(t.id))];
-            movedTabs.push(...taken.map((t) => ({ ...t, id: 0, savedAt: now })));
-            return { ...w, tabs: keep };
-          });
-          if (movedTabs.length === 0) continue;
-
-          const group = createGroup(nanoid(10), suggestion.name, suggestion.color);
-          group.windows = [createWindow(movedTabs)];
-          group.info = getGroupInfo(group);
-          newGroups.push(group);
-          appliedGroups++;
-          appliedTabs += movedTabs.length;
-        }
-
-        // Drop emptied windows, but never let Now Open end up with zero windows
-        const finalWindows = windows.filter((w) => w.tabs.length > 0);
-        nowOpen.windows = finalWindows.length > 0 ? finalWindows : windows.slice(0, 1);
-        available[0] = nowOpen;
-
-        return { ...prev, available: [...available, ...newGroups] };
+        const result = applyAiSuggestionsToState(prev, suggestions);
+        appliedGroups = result.appliedGroups;
+        appliedTabs = result.appliedTabs;
+        return { ...prev, available: result.nextAvailable };
       });
 
       return { appliedGroups, appliedTabs };

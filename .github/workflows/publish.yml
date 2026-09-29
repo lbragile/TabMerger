@@ -17,6 +17,12 @@ on:
         required: true
         type: string
 
+# The BETA web app. Beta builds (Chrome and Firefox) talk to it for sign-in handoff, page
+# previews, upgrade links and, on Firefox, updates; stable builds use the production site.
+# Pointing a beta build at production sends testers to a site that doesn't run the beta's code.
+env:
+  BETA_WEB_APP_URL: https://tabmerger-preview.vercel.app
+
 jobs:
   build:
     name: Build Extension Packages
@@ -64,7 +70,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
         working-directory: packages/extension
         env:
-          VITE_WEB_APP_URL: https://tabmerger.vercel.app
+          VITE_WEB_APP_URL: ${{ env.BETA_WEB_APP_URL }}
           # NOTE the _BETA suffix: on the beta path wxt.config.ts reads
           # `env.CHROME_EXTENSION_ID_BETA`, not CHROME_EXTENSION_ID. Exporting the
           # wrong name fails SILENTLY — `filter(Boolean)` drops the undefined id and
@@ -101,6 +107,32 @@ jobs:
           # files and anything inside dot-directories by default. Without this the
           # glob matches and the file is then silently filtered out, reported as
           # the identical "No files were found" as a genuinely wrong path.
+          include-hidden-files: true
+          if-no-files-found: error
+
+      # Firefox BETA: unlisted, self-distributed (Vercel Blob), not the Chrome beta
+      # listing above. Same Supabase wiring as Chrome beta (see that step). Its
+      # `gecko.update_url` is built from VITE_WEB_APP_URL, so this must be the site
+      # that serves /firefox-beta/updates.json, or installed betas never update.
+      # Published by its own job (publish-firefox-beta) so a Firefox failure can't
+      # block the Chrome BETA publish.
+      - name: Build and zip Firefox BETA
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
+        working-directory: packages/extension
+        env:
+          VITE_WEB_APP_URL: ${{ env.BETA_WEB_APP_URL }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: pnpm wxt zip -b firefox --mode beta
+
+      - name: Upload Firefox BETA artifact
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: tabmerger-firefox-beta
+          # Same {{name}}/{{version}} caveats as the Chrome BETA artifact above —
+          # globbed rather than interpolated for the same reason.
+          path: packages/extension/.output/*-beta-*-firefox.zip
           include-hidden-files: true
           if-no-files-found: error
 
@@ -320,6 +352,91 @@ jobs:
             --source *-beta-*-chrome.zip \
             --extension-id ${{ secrets.CHROME_BETA_EXTENSION_ID }}
 
+  # Firefox BETA — unlisted, self-distributed (not AMO listed), served from our
+  # beta site, at $BETA_WEB_APP_URL/firefox-beta/...
+  # via Vercel Blob.
+  # See packages/shared/src/constants/firefoxBeta.ts for the shared path/file-name
+  # contract and packages/extension/scripts/publishFirefoxBeta.ts for the upload.
+  #
+  # Deliberately INDEPENDENT of every other publish-* job: only `needs: build`,
+  # nothing needs *it*, and it is never added to `notify`'s `needs` list below —
+  # a Firefox beta signing/upload failure must never fail or block the Chrome
+  # BETA publish, the stable release, or the GitHub Release artifact attachment.
+  # `continue-on-error: true` on the job as a second layer of the same guarantee.
+  publish-firefox-beta:
+    name: Publish Firefox BETA (unlisted, self-distributed)
+    needs: build
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Same tag the build job used, so the publish script matches the build
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: tabmerger-firefox-beta
+
+      - name: Extract Firefox BETA zip
+        run: |
+          mkdir -p firefox-beta-src
+          unzip *-beta-*-firefox.zip -d firefox-beta-src
+
+      - name: Sign for self-distribution (unlisted)
+        run: |
+          # npx here (not pnpm dlx) mirrors the stable publish-firefox job below —
+          # web-ext needs the EXTRACTED source directory, not the zip, and
+          # --channel unlisted is what makes AMO sign without a public listing.
+          npx --yes web-ext sign \
+            --source-dir firefox-beta-src \
+            --artifacts-dir firefox-beta-artifacts \
+            --api-key ${{ secrets.FIREFOX_API_KEY }} \
+            --api-secret ${{ secrets.FIREFOX_API_SECRET }} \
+            --channel unlisted
+
+      # web-ext writes the signed file as <name>-<version>.xpi into
+      # --artifacts-dir; there is exactly one file there since this job only
+      # ever signs a single build.
+      - name: Compute Firefox BETA manifest version
+        id: ff-version
+        working-directory: packages/extension
+        env:
+          TABMERGER_MANIFEST_VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          # Reuses the SAME semver -> manifest-version mapping wxt.config.ts
+          # applies at build time (scripts/manifestVersion.ts) — Firefox's
+          # manifest.json version field carries the same offset-major
+          # "4.1.0.N" form as Chrome's (see BETA_STORE_MAJOR_OFFSET), so the
+          # uploaded .xpi filename / updates.json entry must match exactly what
+          # the built manifest.json reports, or Firefox's update check will
+          # never consider the new version newer.
+          VERSION=$(pnpm exec tsx -e "
+            import('./scripts/manifestVersion.ts').then(({ resolveManifestVersion }) => {
+              console.log(resolveManifestVersion(process.env.TABMERGER_MANIFEST_VERSION).version);
+            });
+          ")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish signed .xpi to Vercel Blob + update updates.json
+        working-directory: packages/extension
+        env:
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.FIREFOX_BETA_BLOB_TOKEN }}
+        run: |
+          XPI=$(ls ../../firefox-beta-artifacts/*.xpi)
+          pnpm exec tsx scripts/publishFirefoxBeta.ts \
+            "$XPI" \
+            "${{ steps.ff-version.outputs.version }}" \
+            "$BETA_WEB_APP_URL"
+
   publish-chrome:
     name: Publish to Chrome Web Store
     needs: build
@@ -349,9 +466,12 @@ jobs:
             --source *-chrome.zip \
             --extension-id ${{ secrets.CHROME_EXTENSION_ID }}
 
-  # Beta is CHROME-ONLY. Firefox self-distributes unlisted builds through a
-  # different model and Edge has no beta concept worth wiring, so neither runs
-  # for a prerelease.
+  # STABLE Firefox only — listed AMO submission. The Firefox BETA channel
+  # (unlisted, self-distributed via Vercel Blob) is the independent
+  # `publish-firefox-beta` job above/below; it is NOT this job with a flag
+  # flipped, because "listed" vs "unlisted" is a different `web-ext sign`
+  # channel and a completely different distribution path. Edge has no beta
+  # concept worth wiring, so it still only runs for a stable release.
   publish-firefox:
     name: Publish to Firefox Add-ons
     needs: build

@@ -83,6 +83,55 @@ button:disabled,
   cursor: not-allowed;
 }
 
+/* Toasts (sonner, see components/AppToaster.tsx). Sonner injects its stylesheet after this one,
+   so every rule here out-ranks its selector on specificity instead of relying on order.
+
+   Countdown: a bar along the bottom that empties over the toast's lifetime. It's a background
+   layer on the toast itself because sonner already uses ::before/::after (swipe and hover hit
+   areas). Sonner pauses its dismiss timer while the stack is hovered and marks every toast
+   data-expanded="true" then, so pausing the animation on the same attribute keeps the bar in
+   step with the real timer. --toast-duration is set on the toaster to sonner's `duration`. */
+[data-sonner-toaster] [data-sonner-toast][data-styled='true']:not([data-type='loading']) {
+  --toast-accent: hsl(var(--primary));
+  font-size: 14px;
+  background-image: linear-gradient(var(--toast-accent), var(--toast-accent));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 3px;
+  animation: toast-countdown var(--toast-duration, 6000ms) linear forwards;
+}
+[data-sonner-toaster] [data-sonner-toast][data-styled='true'][data-type='success'] {
+  --toast-accent: hsl(var(--ok));
+}
+[data-sonner-toaster] [data-sonner-toast][data-styled='true'][data-type='error'] {
+  --toast-accent: hsl(var(--destructive));
+}
+[data-sonner-toaster] [data-sonner-toast][data-styled='true'][data-expanded='true'] {
+  animation-play-state: paused;
+}
+
+@keyframes toast-countdown {
+  from { background-size: 100% 3px; }
+  to { background-size: 0% 3px; }
+}
+
+/* Text is the plain foreground colour (AppToaster's --*-text), so the icon keeps the type's
+   colour on its own. */
+[data-sonner-toaster] [data-sonner-toast][data-styled='true'] [data-icon] {
+  color: var(--toast-accent);
+}
+
+/* Readability: sonner's 13px / weight-500 title is small and light against the tinted
+   success/error backgrounds. */
+[data-sonner-toaster] [data-sonner-toast][data-styled='true'] [data-title] {
+  font-weight: 600;
+  line-height: 1.4;
+}
+[data-sonner-toaster] [data-sonner-toast][data-styled='true'] [data-description] {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 @layer base {
   :root {
     /* Design-import tokens (TabMerger.dc.html) — warm off-white ground */

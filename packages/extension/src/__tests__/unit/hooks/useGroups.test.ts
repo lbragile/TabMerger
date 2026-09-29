@@ -141,6 +141,106 @@ describe('useDuplicateGroup', () => {
   })
 })
 
+describe('useAddGroup / useDuplicateGroup — Free-tier caps backstop', () => {
+  it('useAddGroup: ungated by default (no caps passed) — matches pre-existing behavior', async () => {
+    const nowOpen = createNowOpenGroup()
+    const many = Array.from({ length: 20 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...many])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useAddGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'One more' })
+    })
+    expect(lastSaved().available).toHaveLength(22)
+  })
+
+  it('useAddGroup: blocks growth past maxGroups and writes nothing', async () => {
+    const nowOpen = createNowOpenGroup()
+    const existing = Array.from({ length: 5 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useAddGroup({ maxGroups: 5, maxTabs: 50 }), { wrapper })
+
+    await expect(result.current.mutateAsync({ name: 'Over the cap' })).rejects.toThrow()
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('useAddGroup: Pro caps (Infinity) always pass', async () => {
+    const nowOpen = createNowOpenGroup()
+    const existing = Array.from({ length: 50 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useAddGroup({ maxGroups: Infinity, maxTabs: Infinity }), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'Still fine' })
+    })
+    expect(lastSaved().available).toHaveLength(52)
+  })
+
+  it('useDuplicateGroup: ungated by default (no caps passed)', async () => {
+    const nowOpen = createNowOpenGroup()
+    const a = createGroup('a', 'A')
+    const state = makeState([nowOpen, a])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useDuplicateGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync(1)
+    })
+    expect(lastSaved().available).toHaveLength(3)
+  })
+
+  it('useDuplicateGroup: blocks growth past maxGroups (counting the duplicated group) and writes nothing', async () => {
+    const nowOpen = createNowOpenGroup()
+    const existing = Array.from({ length: 5 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useDuplicateGroup({ maxGroups: 5, maxTabs: 50 }), { wrapper })
+
+    await expect(result.current.mutateAsync(1)).rejects.toThrow()
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('useDuplicateGroup: blocks past maxTabs even when under maxGroups (duplicated tabs count too)', async () => {
+    const nowOpen = createNowOpenGroup()
+    const bigGroup = createGroup('big', 'Big')
+    bigGroup.windows = [win([tab(1, 'https://a.com'), tab(2, 'https://b.com')])]
+    const state = makeState([nowOpen, bigGroup])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useDuplicateGroup({ maxGroups: 10, maxTabs: 3 }), { wrapper })
+
+    // current tabs = 2, duplicating adds 2 more = 4 > maxTabs:3
+    await expect(result.current.mutateAsync(1)).rejects.toThrow()
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('useDuplicateGroup: Pro caps (Infinity) always pass', async () => {
+    const nowOpen = createNowOpenGroup()
+    const existing = Array.from({ length: 50 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useDuplicateGroup({ maxGroups: Infinity, maxTabs: Infinity }), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync(1)
+    })
+    expect(lastSaved().available).toHaveLength(52)
+  })
+})
+
 describe('useUpdateGroupColor / useUpdateGroupName / useUpdateGroupInfo / useUpdateGroupNote', () => {
   it('updates color', async () => {
     const state = makeState([createGroup('a', 'A')])
@@ -1329,5 +1429,76 @@ describe('useApplyAIGroups', () => {
     const saved = lastSaved()
     expect(saved.available[0].windows).toHaveLength(1)
     expect(saved.available[0].windows[0].tabs).toHaveLength(0)
+  })
+})
+
+describe('useApplyAIGroups — Free-tier caps backstop', () => {
+  it('ungated by default (no caps passed) — matches pre-existing behavior', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://work.com', 'Work')])]
+    const existing = Array.from({ length: 20 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups(), { wrapper })
+
+    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    await act(async () => {
+      outcome = await result.current.mutateAsync([{ name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] }])
+    })
+    expect(outcome).toEqual({ appliedGroups: 1, appliedTabs: 1 })
+  })
+
+  it('blocks growth past maxGroups and writes nothing', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://work.com', 'Work')])]
+    const existing = Array.from({ length: 5 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups({ maxGroups: 5, maxTabs: 50 }), { wrapper })
+
+    await expect(
+      result.current.mutateAsync([{ name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] }])
+    ).rejects.toThrow()
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('blocks past maxTabs even when under maxGroups', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://work.com', 'Work'), tab(12, 'https://fun.com', 'Fun')])]
+    const existing = createGroup('a', 'A')
+    existing.windows = [win(Array.from({ length: 48 }, (_, i) => tab(100 + i, `https://x${i}.com`)))]
+    const state = makeState([nowOpen, existing])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups({ maxGroups: 10, maxTabs: 49 }), { wrapper })
+
+    // current saved tabs = 48, applying both suggestions adds 2 more = 50 > maxTabs:49
+    await expect(
+      result.current.mutateAsync([
+        { name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] },
+        { name: 'Fun', color: 'rgba(2,2,2,1)', tabIds: [12] },
+      ])
+    ).rejects.toThrow()
+    expect(saveGroupsState).not.toHaveBeenCalled()
+  })
+
+  it('Pro caps (Infinity) always pass', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://work.com', 'Work')])]
+    const existing = Array.from({ length: 50 }, (_, i) => createGroup(`g${i}`, `G${i}`))
+    const state = makeState([nowOpen, ...existing])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useApplyAIGroups({ maxGroups: Infinity, maxTabs: Infinity }), { wrapper })
+
+    let outcome: { appliedGroups: number; appliedTabs: number } | undefined
+    await act(async () => {
+      outcome = await result.current.mutateAsync([{ name: 'Work', color: 'rgba(1,1,1,1)', tabIds: [11] }])
+    })
+    expect(outcome).toEqual({ appliedGroups: 1, appliedTabs: 1 })
   })
 })

@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { useGroups } from '@/hooks/useGroups';
 import { useEntitlements } from '@/hooks/useEntitlements';

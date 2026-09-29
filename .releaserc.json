@@ -21,8 +21,11 @@
       "parserOpts": { "noteKeywords": ["BREAKING CHANGE:", "BREAKING-CHANGE:"] }
     }],
     ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "node scripts/set-release-version.mjs ${nextRelease.version} ${branch.name}"
+    }],
     ["@semantic-release/git", {
-      "assets": ["CHANGELOG.md", "package.json"],
+      "assets": ["CHANGELOG.md", "package.json", "packages/extension/package.json"],
       "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
     }],
     ["@semantic-release/github", {

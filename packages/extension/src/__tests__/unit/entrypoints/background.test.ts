@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { EXTENSION_MESSAGE } from '@tabmerger/shared'
 
 type BgConfig = { main: () => void } | (() => void)
 let capturedMain: (() => void) | undefined
@@ -18,6 +19,7 @@ const {
   mockGetDataKey,
   mockPerformSync,
   mockRegisterGroupsChangeListener,
+  mockHasDataConsent,
 } = vi.hoisted(() => ({
   mockGetGroupsState: vi.fn(),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
@@ -30,6 +32,7 @@ const {
   mockHasEncryptionKey: vi.fn(),
   mockGetDataKey: vi.fn(),
   mockPerformSync: vi.fn(),
+  mockHasDataConsent: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuthFlow }))
@@ -51,6 +54,11 @@ vi.mock('@/lib/encryptionKey', () => ({
 
 vi.mock('@/lib/syncEngine', () => ({
   performSync: mockPerformSync,
+}))
+
+vi.mock('@/lib/dataConsent', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/dataConsent')>()),
+  hasDataConsent: mockHasDataConsent,
 }))
 
 vi.mock('@/lib/urlRuleEngine', () => ({
@@ -80,6 +88,7 @@ function makeChromeStub() {
         onConnect: on('onConnect'),
         getURL: vi.fn().mockReturnValue('icon.png'),
         getManifest: vi.fn().mockReturnValue({ version: '2.9.0' }),
+        id: 'this-extension-id',
       },
       contextMenus: {
         removeAll: vi.fn().mockResolvedValue(undefined),
@@ -141,6 +150,7 @@ beforeEach(async () => {
   mockGetDataKey.mockReset().mockResolvedValue('key')
   mockPerformSync.mockReset().mockResolvedValue([])
   mockRegisterGroupsChangeListener.mockReset()
+  mockHasDataConsent.mockReset().mockResolvedValue(true)
   capturedMain = undefined
   stub = makeChromeStub()
   globalThis.chrome = stub.chrome as unknown as typeof chrome
@@ -737,5 +747,138 @@ describe('background — reminder notifications', () => {
     await stub.listeners.notifOnClicked[0]('reminder-1')
     expect(stub.chrome.tabs.create).toHaveBeenCalledWith({ url: 'https://a.com', active: true })
     expect(stub.chrome.notifications.clear).toHaveBeenCalledWith('reminder-1')
+  })
+})
+
+// Firefox-only web-bridge (web-bridge.content.ts) — its relayed messages land on this
+// listener, the 3rd onMessage.addListener call registered by background.ts (after the
+// alarms/TM_GROUPS_CHANGED listener and the SIGN_IN_WITH_GOOGLE listener). Ambient
+// VITE_WEB_APP_URL for vitest is 'http://localhost:3000' (.env.local, loaded by Vite's
+// default env resolution — same fact TabPreview.test.tsx's ponytail comment relies on).
+describe('background — Firefox web-bridge internal onMessage listener', () => {
+  const WEB_APP_SENDER = { id: 'this-extension-id', url: 'http://localhost:3000/dashboard' }
+
+  it('responds to PING from the content script sender', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+    expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+  })
+
+  it('runs SYNC_NOW and keeps the channel open, same as the external listener', async () => {
+    const sendResponse = vi.fn()
+    const keepOpen = stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.SYNC_NOW }, WEB_APP_SENDER, sendResponse)
+    expect(keepOpen).toBe(true)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+  })
+
+  it('forwards SYNC_AUTH tokens to supabase.auth.setSession', async () => {
+    const { supabase } = await import('@/lib/supabase')
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.SYNC_AUTH, accessToken: 'a', refreshToken: 'b' },
+      WEB_APP_SENDER,
+      sendResponse
+    )
+    expect(supabase.auth.setSession).toHaveBeenCalledWith({ access_token: 'a', refresh_token: 'b' })
+  })
+
+  describe('Firefox: SYNC_AUTH is gated on sign-in consent already being granted', () => {
+    beforeEach(() => {
+      vi.stubEnv('FIREFOX', 'true')
+    })
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
+    it('accepts the session and responds ok:true when consent is already granted', async () => {
+      const { EXTENSION_MESSAGE: EM, SIGN_IN_DATA_CONSENT_CATEGORIES } = await import('@tabmerger/shared')
+      mockHasDataConsent.mockResolvedValue(true)
+      const { supabase } = await import('@/lib/supabase')
+      const sendResponse = vi.fn()
+      const keepOpen = stub.listeners.onMessage[2](
+        { type: EM.SYNC_AUTH, accessToken: 'a', refreshToken: 'b' },
+        WEB_APP_SENDER,
+        sendResponse
+      )
+      expect(keepOpen).toBe(true)
+      await new Promise((r) => setTimeout(r, 0))
+      expect(mockHasDataConsent).toHaveBeenCalledWith(SIGN_IN_DATA_CONSENT_CATEGORIES)
+      expect(supabase.auth.setSession).toHaveBeenCalledWith({ access_token: 'a', refresh_token: 'b' })
+      expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+    })
+
+    it('rejects with consent_required and never calls setSession when consent is not granted', async () => {
+      const { EXTENSION_MESSAGE: EM, SYNC_AUTH_CONSENT_REQUIRED_REASON } = await import('@tabmerger/shared')
+      mockHasDataConsent.mockResolvedValue(false)
+      const { supabase } = await import('@/lib/supabase')
+      // ponytail: this mock's `setSession` is created once by the `vi.mock('@/lib/supabase', ...)`
+      // factory and — unlike the hoisted named mocks above — is NOT cleared by the outer
+      // beforeEach's `vi.resetModules()`, so calls from earlier tests in this file (which use the
+      // same literal 'a'/'b' tokens) accumulate on it. Clear immediately before acting.
+      vi.mocked(supabase.auth.setSession).mockClear()
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2](
+        { type: EM.SYNC_AUTH, accessToken: 'a', refreshToken: 'b' },
+        WEB_APP_SENDER,
+        sendResponse
+      )
+      await new Promise((r) => setTimeout(r, 0))
+      expect(supabase.auth.setSession).not.toHaveBeenCalled()
+      expect(sendResponse).toHaveBeenCalledWith({ ok: false, reason: SYNC_AUTH_CONSENT_REQUIRED_REASON })
+    })
+
+    it('PING still works without any consent check on Firefox', () => {
+      mockHasDataConsent.mockResolvedValue(false)
+      const sendResponse = vi.fn()
+      stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, WEB_APP_SENDER, sendResponse)
+      expect(sendResponse).toHaveBeenCalledWith({ type: EXTENSION_MESSAGE.PONG, version: '2.9.0' })
+    })
+  })
+
+  it('rejects a sender whose id is not this extension (a foreign sender)', () => {
+    const sendResponse = vi.fn()
+    const result = stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.PING },
+      { id: 'some-other-extension', url: 'http://localhost:3000/dashboard' },
+      sendResponse
+    )
+    expect(result).toBeUndefined()
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects a sender whose url origin is not the web app origin', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.PING },
+      { id: 'this-extension-id', url: 'https://evil.example.com/' },
+      sendResponse
+    )
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects a sender with a missing url', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.PING }, { id: 'this-extension-id' }, sendResponse)
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects an unrelated message type even from a valid sender', () => {
+    // Deliberately a literal, not a constant — asserting an unrelated internal message type
+    // (not one of the three bridge messages) is correctly ignored by this listener.
+    const sendResponse = vi.fn()
+    const result = stub.listeners.onMessage[2]({ type: 'TM_GROUPS_CHANGED' }, WEB_APP_SENDER, sendResponse)
+    expect(result).toBeUndefined()
+    expect(sendResponse).not.toHaveBeenCalled()
+  })
+
+  it('rejects a malformed sender.url that fails URL parsing', () => {
+    const sendResponse = vi.fn()
+    stub.listeners.onMessage[2](
+      { type: EXTENSION_MESSAGE.PING },
+      { id: 'this-extension-id', url: 'not a url' },
+      sendResponse
+    )
+    expect(sendResponse).not.toHaveBeenCalled()
   })
 })

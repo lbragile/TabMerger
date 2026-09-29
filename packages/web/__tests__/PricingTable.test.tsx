@@ -20,6 +20,33 @@ describe('PricingTable', () => {
     expect(screen.queryByText('$3.99')).not.toBeInTheDocument()
   })
 
+  it('shows the monthly equivalent and saving under each yearly price', async () => {
+    const user = userEvent.setup()
+    render(<PricingTable />)
+    await user.click(screen.getByRole('button', { name: /Yearly/ }))
+
+    // $42.99 / 12 and $85.99 / 12, against 12 x $3.99 and 12 x $7.99
+    expect(screen.getByText('$3.58/mo billed yearly · save 10%')).toBeInTheDocument()
+    expect(screen.getByText('$7.17/mo billed yearly · save 10%')).toBeInTheDocument()
+  })
+
+  it('says once, in a footnote, that the listed prices are US dollars', () => {
+    render(<PricingTable />)
+    expect(screen.getByText('All prices are in US dollars (USD).')).toBeInTheDocument()
+    // The footnote covers the currency, so the listed prices themselves stay a plain "$".
+    expect(screen.queryByText(/US\$/)).not.toBeInTheDocument()
+  })
+
+  it('opens the toggle on the interval the current plan is billed at', () => {
+    render(<PricingTable currentTier="pro" currentInterval="yearly" />)
+    expect(screen.getByText('$42.99')).toBeInTheDocument()
+  })
+
+  it('computes the toggle badge from the prices instead of a fixed number', () => {
+    render(<PricingTable />)
+    expect(screen.getByRole('button', { name: /Yearly/ })).toHaveTextContent('−10%')
+  })
+
   it('applies active pill styling (bg-background) to the selected toggle option', async () => {
     const user = userEvent.setup()
     render(<PricingTable />)

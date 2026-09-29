@@ -19,7 +19,7 @@ vi.mock('@/stores/uiStore', () => ({
   useUIStore: (sel: (s: object) => unknown) => sel({ setActiveGroupIndex: mockSetActiveGroupIndex, openModal: mockOpenModal }),
 }))
 vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))
-vi.mock('sonner', () => ({ toast: { success: mockToastSuccess, error: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { success: mockToastSuccess, error: vi.fn() } }))
 
 function makeTabs(n: number): Tab[] {
   return Array.from({ length: n }, (_, i) => ({ id: i, title: `T${i}`, url: `https://a${i}.com` }))

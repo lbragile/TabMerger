@@ -2,6 +2,7 @@ import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
+import { _resetExtensionIdCache } from '@/lib/extensionMessaging'
 
 let changeHandler: ((payload: unknown) => void) | undefined
 const removeChannel = vi.fn()
@@ -43,10 +44,12 @@ describe('SyncIndicator', () => {
     select.mockReset()
     toastError.mockClear()
     delete window.chrome
+    _resetExtensionIdCache()
   })
 
   afterEach(() => {
     delete window.chrome
+    _resetExtensionIdCache()
   })
 
   it('shows "No sync yet" when there is no prior group data', async () => {
@@ -112,7 +115,6 @@ describe('SyncIndicator', () => {
     await waitFor(() => expect(screen.getByText('No sync yet')).toBeInTheDocument())
 
     const sendMessage = vi.fn((_id: string, _msg: unknown, cb: (r: unknown) => void) => cb({ ok: true }))
-    // @ts-expect-error - test-only global stub
     window.chrome = { runtime: { sendMessage } }
 
     select.mockResolvedValueOnce({ data: [{ updated_at: new Date().toISOString() }] })
@@ -146,7 +148,6 @@ describe('SyncIndicator', () => {
     const sendMessage = vi.fn((_id: string, _msg: unknown, cb: (r: unknown) => void) =>
       cb({ ok: false, reason: 'locked' })
     )
-    // @ts-expect-error - test-only global stub
     window.chrome = { runtime: { sendMessage } }
 
     select.mockResolvedValueOnce({ data: [] })

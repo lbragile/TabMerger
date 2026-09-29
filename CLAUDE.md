@@ -47,6 +47,16 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 .claude/       Agent definitions for domain-specific development tasks
 ```
 
+## Trust model: every client is public
+
+Assume anyone can read, modify, or skip the extension and the web app's browser code: store bundles are readable (minified, never obfuscated — the Chrome Web Store forbids obfuscation), the source is published (`LICENSE.md`), and the Supabase URL and anon key ship in every build, so anyone can call Supabase directly. Doing that to get around a limit or a paid feature is prohibited by the license and the Terms of Service, but prohibiting it doesn't prevent it. So every rule that matters is enforced by the server, the one part users can't change: the client may show a rule, but it must never be the only thing enforcing it.
+
+- **Client checks are UX, never enforcement.** `useEntitlements`, `lib/tierLimits.ts`, disabled buttons and upgrade prompts only explain limits. Anything that is paid, costs us money, or protects another user's data must also be rejected server-side: RLS (the sync tables require an active paid subscription via `has_cloud_sync()`), a check in the API route (AI routes check tier and credits), or a database constraint.
+- **A paid feature isn't done until a free account is rejected by the server**, proven by a test (RLS/integration or API route test), not only by a hidden button.
+- **Server rules must match what's sold.** Tier names and statuses in RLS functions and API checks mirror `PRICING_TIERS` and `useEntitlements`; change them together, and run `entitlements-auditor` and `payments-security-reviewer`.
+- **Local-only data needs no server enforcement.** Free-tier limits on IndexedDB data that never reaches our servers stay client-side: bypassing them costs us nothing.
+- **No secrets in client code.** Only public values ship (`VITE_*`, `NEXT_PUBLIC_*`, the Supabase anon key). Service-role keys, Stripe secrets, AI keys and any credential stay in server routes and env vars.
+
 ## Extension (`packages/extension/`)
 
 **Framework:** [WXT](https://wxt.dev) — Vite-based, MV3/MV2 cross-browser, built-in HMR.

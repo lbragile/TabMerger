@@ -75,12 +75,118 @@ describe('POST /api/contact', () => {
     )
   })
 
+  it('sends from and to the configured addresses when CONTACT_FROM_EMAIL / CONTACT_TO_EMAIL are set', async () => {
+    vi.stubEnv('CONTACT_FROM_EMAIL', 'TabMerger Support <support@example.com>')
+    vi.stubEnv('CONTACT_TO_EMAIL', 'inbox@example.com')
+    try {
+      const { POST } = await import('@/app/api/contact/route')
+      const res = await POST(req(validBody, '8.8.4.4'))
+      expect(res.status).toBe(200)
+      expect(sendMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          from: 'TabMerger Support <support@example.com>',
+          to: 'inbox@example.com',
+        })
+      )
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('appends non-personal diagnostics and tags non-production subjects', async () => {
+    vi.stubEnv('VERCEL_ENV', 'preview')
+    vi.stubEnv('VERCEL_GIT_COMMIT_SHA', 'abcdef1234567890')
+    vi.stubEnv('VERCEL_GIT_COMMIT_REF', 'agentic-revamp')
+    vi.stubEnv('VERCEL_DEPLOYMENT_ID', 'dpl_test123')
+    const ua =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.7339.80 Safari/537.36'
+    try {
+      const { POST } = await import('@/app/api/contact/route')
+      const res = await POST(
+        new NextRequest('http://localhost/api/contact', {
+          method: 'POST',
+          headers: {
+            'x-forwarded-for': '203.0.113.7',
+            'user-agent': ua,
+            'accept-language': 'en-CA,en;q=0.9',
+            referer: 'https://tabmerger-preview.vercel.app/contact?topic=beta&email=someone%40example.com',
+          },
+          body: JSON.stringify(validBody),
+        })
+      )
+      expect(res.status).toBe(200)
+      const sent = sendMock.mock.calls[0][0] as { subject: string; text: string }
+      expect(sent.subject).toBe('[Contact][preview] Hello')
+      expect(sent.text).toContain('Environment: preview')
+      expect(sent.text).toContain('Commit: abcdef1 (agentic-revamp)')
+      expect(sent.text).toContain('Deployment: dpl_test123')
+      expect(sent.text).toContain('Sent from page: /contact (topic: beta)')
+      expect(sent.text).toContain('Browser: Chrome 140 on Windows')
+      expect(sent.text).toContain('Language: en-CA')
+
+      // Nothing identifying beyond the reply-to address the sender typed.
+      const diagnostics = sent.text.split('\n---\n')[1]
+      expect(diagnostics).not.toContain('203.0.113.7')
+      expect(diagnostics).not.toContain(ua)
+      expect(diagnostics).not.toContain('someone')
+      expect(diagnostics).not.toContain('user@example.com')
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('leaves production subjects untagged', async () => {
+    vi.stubEnv('VERCEL_ENV', 'production')
+    try {
+      const { POST } = await import('@/app/api/contact/route')
+      await POST(req(validBody, '198.51.100.9'))
+      expect((sendMock.mock.calls[0][0] as { subject: string }).subject).toBe('[Contact] Hello')
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
+
   it('returns 500 without leaking details when Resend errors', async () => {
-    sendMock.mockResolvedValue({ data: null, error: { message: 'boom' } })
+    sendMock.mockResolvedValue({
+      data: null,
+      error: { name: 'validation_error', message: 'boom user@example.com', statusCode: 422 },
+    })
     const { POST } = await import('@/app/api/contact/route')
     const res = await POST(req(validBody, '9.9.9.8'))
     expect(res.status).toBe(500)
     expect(await res.json()).toEqual({ ok: false })
+  })
+
+  it('logs the Resend error name/statusCode, never the email or message text', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    sendMock.mockResolvedValue({
+      data: null,
+      error: { name: 'validation_error', message: 'boom user@example.com', statusCode: 422 },
+    })
+    const { POST } = await import('@/app/api/contact/route')
+    await POST(req(validBody, '9.9.9.7'))
+
+    expect(errorSpy).toHaveBeenCalledWith('[contact] send failed', { name: 'validation_error', statusCode: 422 })
+    const loggedArgs = errorSpy.mock.calls.flat().map((a) => JSON.stringify(a))
+    expect(loggedArgs.join(' ')).not.toContain('user@example.com')
+    expect(loggedArgs.join(' ')).not.toContain('boom')
+    expect(loggedArgs.join(' ')).not.toContain(validBody.message)
+
+    errorSpy.mockRestore()
+  })
+
+  it('logs a non-Resend thrown exception without leaking submitted content', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    sendMock.mockRejectedValue(new TypeError('network down'))
+    const { POST } = await import('@/app/api/contact/route')
+    await POST(req(validBody, '9.9.9.6'))
+
+    expect(errorSpy).toHaveBeenCalledWith('[contact] send failed', { name: 'TypeError', statusCode: undefined })
+    const loggedArgs = errorSpy.mock.calls.flat().map((a) => JSON.stringify(a))
+    expect(loggedArgs.join(' ')).not.toContain('user@example.com')
+    expect(loggedArgs.join(' ')).not.toContain(validBody.message)
+
+    errorSpy.mockRestore()
   })
 
   it('rate limits after N requests from the same IP', async () => {

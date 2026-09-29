@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import { Plus, ChevronDown, ChevronRight, RotateCcw, Trash2, BookmarkPlus } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/lib/toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -14,12 +14,14 @@ import { NEW_GROUP_ID, setNewGroupZoneGate } from '@/hooks/useDndHandlers';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
+import { FreeLimitExceededError } from '@/lib/tierLimits';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
 import { useSessions, useDeleteSession, useRestoreSession, useSaveSession } from '@/hooks/useSessions';
 import { pluralize } from '@/lib/utils';
 import { getGroupTabCount } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
+import { FREE_TIER_LIMITS } from '@tabmerger/shared';
 
 /**
  * Shared shell for the Archived / Sessions sidebar sections: a disclosure header row
@@ -136,8 +138,8 @@ export function SidePanel({ groupsState }: SidePanelProps) {
   const selectionMode = useUIStore((s) => s.selectionMode);
   const setRenameTarget = useUIStore((s) => s.setRenameTarget);
   const openModal = useUIStore((s) => s.openModal);
-  const { maxGroups, sessions: hasSessions } = useEntitlements();
-  const { mutateAsync: addGroup } = useAddGroup();
+  const { maxGroups, maxTabs, sessions: hasSessions, cloudSync } = useEntitlements();
+  const { mutateAsync: addGroup } = useAddGroup({ maxGroups, maxTabs });
   const { mutate: restoreGroup } = useRestoreGroup();
   const { mutate: deleteGroup } = useDeleteGroup();
   const [archivedOpen, setArchivedOpen] = useState(false);
@@ -153,11 +155,11 @@ export function SidePanel({ groupsState }: SidePanelProps) {
     openModal('saveSession', {
       onSave: async (name: string, description?: string) => {
         try {
-          await saveSession({ name, description, sessionCount: sessions.length, hasSessions });
+          await saveSession({ name, description, sessionCount: sessions.length, hasSessions, cloudSync });
           toast.success('Session saved');
         } catch (err) {
           if (err instanceof Error && err.message === 'SESSION_LIMIT') {
-            toast.error('Free plan allows up to 3 sessions.', {
+            toast.error(`Free plan allows up to ${FREE_TIER_LIMITS.sessions} sessions.`, {
               action: { label: 'Upgrade', onClick: () => chrome.tabs.create({ url: `${import.meta.env.VITE_WEB_APP_URL}/pricing` }) }
             });
           } else {
@@ -226,7 +228,13 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       return;
     }
     const newIndex = raw.length;
-    await addGroup({});
+    try {
+      await addGroup({});
+    } catch (err) {
+      // The backstop already showed the upgrade toast
+      if (err instanceof FreeLimitExceededError) return;
+      throw err;
+    }
     setActiveGroupIndex(newIndex);
     setRenameTarget({ kind: 'group', groupIndex: newIndex });
   };

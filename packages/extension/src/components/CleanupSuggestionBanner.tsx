@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { X } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { useCleanupSuggestions } from "@/hooks/useCleanupSuggestions";
 import { useRemoveStaleTabs } from "@/hooks/useGroups";
 import { useUIStore } from "@/stores/uiStore";

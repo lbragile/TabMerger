@@ -120,7 +120,7 @@ vi.mock('@/lib/localDb', () => ({
   setSetting: vi.fn(),
 }))
 
-vi.mock('sonner', () => ({ toast: { info: mockToastInfo, error: vi.fn(), success: vi.fn() } }))
+vi.mock('@/lib/toast', () => ({ toast: { info: mockToastInfo, error: vi.fn(), success: vi.fn() } }))
 
 function makeTab(overrides: Partial<Tab> = {}): Tab {
   return { id: 1, title: 'Tab', url: 'https://example.com', favIconUrl: '', pinned: false, ...overrides }

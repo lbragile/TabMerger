@@ -133,6 +133,127 @@ describe('AccountPage — buy more AI calls', () => {
   })
 })
 
+describe('AccountPage — free vs Pro sync UI', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('hides Devices card, device list, and sync-stat cards for a free account', async () => {
+    vi.resetModules()
+    mockSupabase('free')
+    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const jsx = await AccountPage()
+    render(jsx as React.ReactElement)
+
+    expect(screen.queryByText('Devices')).not.toBeInTheDocument()
+    expect(screen.queryByText('Groups synced')).not.toBeInTheDocument()
+    expect(screen.queryByText('Tabs saved')).not.toBeInTheDocument()
+    expect(screen.queryByText('Sessions')).not.toBeInTheDocument()
+    // No hard-coded placeholder numbers anywhere on the page.
+    expect(screen.queryByText('24')).not.toBeInTheDocument()
+    expect(screen.queryByText('847')).not.toBeInTheDocument()
+    expect(screen.queryByText('12')).not.toBeInTheDocument()
+  })
+
+  it('still offers "Sign out of all devices" for a free account (moved into Profile)', async () => {
+    vi.resetModules()
+    mockSupabase('free')
+    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const jsx = await AccountPage()
+    render(jsx as React.ReactElement)
+
+    expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument()
+  })
+
+  it('shows the Devices card and real (non-placeholder) sync-stat cards for an active Pro account', async () => {
+    vi.resetModules()
+    mockSupabase('pro')
+    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const jsx = await AccountPage()
+    render(jsx as React.ReactElement)
+
+    expect(screen.getByText('Devices')).toBeInTheDocument()
+    expect(screen.getByText('Groups synced')).toBeInTheDocument()
+    expect(screen.getByText('Tabs saved')).toBeInTheDocument()
+    expect(screen.getByText('Sessions')).toBeInTheDocument()
+    expect(screen.queryByText('24')).not.toBeInTheDocument()
+    expect(screen.queryByText('847')).not.toBeInTheDocument()
+    expect(screen.queryByText('12')).not.toBeInTheDocument()
+    // Only one "Sign out" control — not duplicated between Profile and Devices cards.
+    expect(screen.getAllByRole('button', { name: 'Sign out' })).toHaveLength(1)
+  })
+
+  it('treats an incomplete Pro subscription the same as free (no sync UI, no Manage billing)', async () => {
+    vi.resetModules()
+    vi.doMock('@/lib/supabase/server', () => ({
+      createClient: async () => ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: 'u1', email: 'user@example.com', created_at: '2024-01-01' } } }),
+        },
+        from: (table: string) => {
+          const builder: Record<string, unknown> = {}
+          const chain = () => builder
+          builder.select = chain
+          builder.eq = chain
+          builder.order = chain
+          builder.limit = chain
+          builder.single = async () =>
+            table === 'subscriptions'
+              ? { data: { tier: 'pro', status: 'incomplete', current_period_end: null } }
+              : { data: { created_at: '2024-01-01' } }
+          builder.maybeSingle = async () => ({ data: { credits_used: 0 } })
+          builder.then = (resolve: (v: { data: unknown }) => void) => resolve({ data: [] })
+          return builder
+        },
+      }),
+    }))
+    vi.doMock('@/lib/stripe', () => ({
+      createBillingPortalSession: async () => 'https://billing.example.com',
+    }))
+    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const jsx = await AccountPage()
+    render(jsx as React.ReactElement)
+
+    expect(screen.queryByText('Devices')).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Manage billing/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Upgrade/i })).toBeInTheDocument()
+  })
+
+  it('a trialing Pro subscription gets the same sync UI as active (entitled status)', async () => {
+    vi.resetModules()
+    vi.doMock('@/lib/supabase/server', () => ({
+      createClient: async () => ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: 'u1', email: 'user@example.com', created_at: '2024-01-01' } } }),
+        },
+        from: (table: string) => {
+          const builder: Record<string, unknown> = {}
+          const chain = () => builder
+          builder.select = chain
+          builder.eq = chain
+          builder.order = chain
+          builder.limit = chain
+          builder.single = async () =>
+            table === 'subscriptions'
+              ? { data: { tier: 'pro', status: 'trialing', current_period_end: null } }
+              : { data: { created_at: '2024-01-01' } }
+          builder.maybeSingle = async () => ({ data: { credits_used: 0 } })
+          builder.then = (resolve: (v: { data: unknown }) => void) => resolve({ data: [] })
+          return builder
+        },
+      }),
+    }))
+    vi.doMock('@/lib/stripe', () => ({
+      createBillingPortalSession: async () => 'https://billing.example.com',
+    }))
+    const { default: AccountPage } = await import('@/app/(app)/account/page')
+    const jsx = await AccountPage()
+    render(jsx as React.ReactElement)
+
+    expect(screen.getByText('Devices')).toBeInTheDocument()
+  })
+})
+
 describe('AccountPage — dev-only device mock fallback', () => {
   it('does not show mock devices when NODE_ENV is not development (production behavior)', async () => {
     vi.resetModules()

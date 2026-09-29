@@ -162,6 +162,72 @@ body {
   background: hsl(193 100% 32%) !important;
 }
 
+/* Radix Dialog sets `pointer-events: none` directly on <body> while a modal is open (its
+   own close-on-outside-interaction mechanism). The Toaster portals to <body> too, as a
+   sibling of the dialog, and sonner never sets `pointer-events: auto` anywhere in its own
+   stylesheet — so with no override here, every toast fired from inside a modal (Settings
+   Save, Auth sign-in, Import/Export, encryption setup, all the "Upgrade" action toasts…)
+   becomes visually present but fully unclickable: neither the × close button nor the action
+   button dismiss it. This re-asserts `auto` directly on the toaster container, which wins
+   over the inherited `none` regardless of dialog state. */
+[data-sonner-toaster] {
+  pointer-events: auto !important;
+}
+
+/* Countdown progress bar along each toast's bottom edge (react-toastify-style), built on a
+   pseudo-element so it needs no extra DOM from call sites. `--toast-duration` is set per-toast
+   by src/lib/toast.ts (falls back to sonner's own 4s default) and drives a linear scaleX 1→0
+   animation. Toasts that never auto-dismiss (duration: Infinity, or sonner's `loading` type)
+   don't get `--toast-duration` at all, so `var(--toast-duration)` is invalid and the animation
+   simply never starts — no bar renders. */
+[data-sonner-toast][style*='--toast-duration']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.35;
+  transform-origin: left;
+  animation: toast-countdown var(--toast-duration) linear forwards;
+}
+/* richColors tints toast text to the semantic color, so `currentColor` above already picks
+   it up for success/error/warning/info toasts. Plain (no data-type) toasts have no semantic
+   color to inherit, so they fall back to the brand primary instead of the neutral text color. */
+[data-sonner-toast]:not([data-type])[style*='--toast-duration']::after {
+  background: hsl(193 100% 40%);
+  opacity: 1;
+}
+
+/* Sonner pauses its dismiss timer (a JS setTimeout, not a CSS/DOM toggle) whenever the
+   toaster is hovered ("expanded") or a toast is mid-swipe ("interacting") — see sonner's
+   `Toast` component effect gated on `expanded || interacting`. Hover sets `data-expanded`
+   on every toast in the stack (visible in sonner's own injected CSS), which is the only one
+   of those two states exposed as a DOM attribute, so it's what this mirrors. CSS animations
+   resume in place from their paused offset, they don't restart, matching sonner's own
+   `remainingTime` bookkeeping for the real timer. */
+[data-sonner-toast][data-expanded='true']::after,
+[data-sonner-toast][data-removed='true']::after {
+  animation-play-state: paused;
+}
+
+@keyframes toast-countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sonner-toast]::after {
+    animation: none !important;
+    transform: scaleX(1);
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 4px;

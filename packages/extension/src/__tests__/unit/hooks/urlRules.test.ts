@@ -134,6 +134,21 @@ describe('applyUrlRule — Feature 65 background listener behavior', () => {
     await applyUrlRule({ id: 1, title: 'Foo', url: 'https://foo.com' } as chrome.tabs.Tab, null)
     expect(saveGroupsState).not.toHaveBeenCalled()
   })
+
+  // Entitlements gate 2026-09-27: useSaveUrlRules blocks CREATING new rules past
+  // maxUrlRules, but applyUrlRule (the engine that matches+applies already-saved rules)
+  // takes no entitlements/tier input at all — a rule saved while on a paid plan keeps
+  // matching and applying here after a downgrade to Free. This test doesn't need a
+  // "downgraded" fixture because there's nothing in this function's signature to gate on.
+  it('applies an already-saved rule regardless of tier (rules persist across a downgrade)', async () => {
+    const tab = { id: 7, title: 'Repo', url: 'https://github.com/lbragile/repo' }
+    await applyUrlRule(tab as chrome.tabs.Tab, 'g2')
+    expect(saveGroupsState).toHaveBeenCalledOnce()
+    const savedState = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    const workGroup = savedState.available.find((g: { id: string }) => g.id === 'g2')
+    const allTabs = workGroup.windows.flatMap((w: { tabs: unknown[] }) => w.tabs)
+    expect(allTabs).toContainEqual(expect.objectContaining({ url: 'https://github.com/lbragile/repo' }))
+  })
 })
 
 describe('matchUrlToRule — query string edge cases', () => {

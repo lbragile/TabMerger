@@ -23,6 +23,7 @@ const {
   mockGetSessions,
   mockPushSessionToSupabase,
   mockClearLocalAccountData,
+  mockCanUploadOnFirefox,
 } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
@@ -44,6 +45,7 @@ const {
   mockGetSessions: vi.fn().mockResolvedValue([]),
   mockPushSessionToSupabase: vi.fn().mockResolvedValue(undefined),
   mockClearLocalAccountData: vi.fn().mockResolvedValue(undefined),
+  mockCanUploadOnFirefox: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => mockUseAuth() }))
@@ -52,6 +54,7 @@ vi.mock('@/lib/syncEngine', () => ({
   pushPendingChanges: mockPushPendingChanges,
   pullRemoteChanges: mockPullRemoteChanges,
   subscribeToRemoteChanges: mockSubscribeToRemoteChanges,
+  canUploadOnFirefox: mockCanUploadOnFirefox,
   // performSync is the extracted push+pull+save core (see syncEngine.ts) — reimplemented here
   // against the same push/pull/save mocks so existing call-count/argument assertions on those
   // mocks still hold after useSync.ts started routing through performSync instead of calling
@@ -104,6 +107,7 @@ beforeEach(() => {
   mockPullRemoteChanges.mockResolvedValue([nowOpen])
   mockHasEncryptionKey.mockResolvedValue(true)
   mockGetDataKey.mockReturnValue({})
+  mockCanUploadOnFirefox.mockResolvedValue(true)
   // Key-aware: everything defaults to "already done" (true) except the last-signed-in-user
   // tracker, which must default to its real default (null via the caller's defaultValue arg)
   // so existing tests don't unexpectedly trip the account-switch clear below.
@@ -281,6 +285,28 @@ describe('useSync — locked data key (one-time-per-device unlock; key persists 
 
     await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
     expect(useUIStore.getState().modal.type).toBeNull()
+  })
+})
+
+describe('useSync — Firefox sync-paused status (syncPausedReason)', () => {
+  it('clears syncPausedReason once consent is confirmed granted', async () => {
+    useUIStore.setState({ syncPausedReason: 'Sync paused: allow in Firefox' })
+    mockCanUploadOnFirefox.mockResolvedValue(true)
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+    await waitFor(() => expect(useUIStore.getState().syncPausedReason).toBeNull())
+  })
+
+  it('sets syncPausedReason when browsingActivity consent is not granted (Firefox)', async () => {
+    useUIStore.setState({ syncPausedReason: null })
+    mockCanUploadOnFirefox.mockResolvedValue(false)
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+    await waitFor(() => expect(useUIStore.getState().syncPausedReason).toBe('Sync paused: allow in Firefox'))
   })
 })
 

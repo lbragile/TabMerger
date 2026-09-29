@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Zap, Calendar } from 'lucide-react'
-import { getPriceInfo } from '@/lib/tiers'
+import { formatUsd, getPriceInfo } from '@/lib/tiers'
 
 interface SubscriptionBadgeProps {
   tier: 'free' | 'pro' | 'pro_ai'
@@ -62,7 +62,7 @@ export function SubscriptionBadge({
             )}
             {priceInfo && (
               <span className="text-muted-foreground font-normal">
-                {currentPeriodEnd && ' · '}${priceInfo.amount.toFixed(2)}/
+                {currentPeriodEnd && ' · '}{formatUsd(priceInfo.amount)}/
                 {priceInfo.interval === 'monthly' ? 'mo' : 'yr'}
               </span>
             )}

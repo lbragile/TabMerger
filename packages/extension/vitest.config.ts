@@ -10,20 +10,32 @@ export default defineConfig({
       '@tabmerger/shared': path.resolve(__dirname, '../shared/src/index.ts'),
     },
   },
+  // Mirrors wxt.config.ts's `vite().define` — see src/env.d.ts. Fixed test value so specs can
+  // assert against it without threading version resolution through the test harness.
+  define: {
+    __TABMERGER_VERSION__: JSON.stringify('0.0.0-test'),
+  },
   test: {
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/__tests__/setup.ts'],
+    // Pinned so specs never depend on a developer's .env.local: CI has no .env files, so the
+    // Firefox web-bridge `matches` and the background's relay-sender check came out empty there
+    // while passing locally. Individual specs can still vi.stubEnv() a different value.
+    env: {
+      VITE_WEB_APP_URL: 'http://localhost:3000',
+    },
     // ponytail: 'scripts/**' covers build-tooling tests (e.g. the semver->manifest-version
     // mapping in scripts/manifestVersion.ts) that intentionally live outside src/ — it's
     // release-pipeline logic, not app logic, so it's also excluded from coverage.include below.
     include: ['src/**/*.{test,spec}.{ts,tsx}', 'scripts/**/*.{test,spec}.{ts,tsx}'],
-    // ponytail: integration tests (real IndexedDB / real Supabase) run via vitest.integration.config.ts only
-    exclude: ['**/node_modules/**', 'src/__tests__/integration/**'],
+    // ponytail: integration tests (real IndexedDB / real Supabase) run via vitest.integration.config.ts only;
+    // build tests (real `wxt build` runs, minutes each) via vitest.build.config.ts (`pnpm test:manifest`)
+    exclude: ['**/node_modules/**', 'src/__tests__/integration/**', 'src/__tests__/manifest/**'],
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.d.ts', 'src/components/ui/**', 'src/__tests__/integration/**'],
+      exclude: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.d.ts', 'src/components/ui/**', 'src/__tests__/integration/**', 'src/__tests__/manifest/**'],
       thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
       reporter: ['text', 'json-summary', 'json'], // json-summary → coverage/coverage-summary.json, consumed by scripts/ci/coverage-delta.mjs
     },

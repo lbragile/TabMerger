@@ -132,4 +132,8 @@ pnpm scan-secrets
 
 ## License
 
-Copyright (c) 2020-2026 Lior Bragilevsky. All rights reserved. See [LICENSE.md](LICENSE.md).
+Copyright (c) 2020-2026 Lior Bragilevsky. All rights reserved. You may read and review this code,
+and contributions are welcome (see [CONTRIBUTING](.github/CONTRIBUTING.md)); copying, reusing, or
+redistributing it requires written permission. See [LICENSE.md](LICENSE.md) (PolyForm Strict
+1.0.0 plus the terms above it). Using the TabMerger extension itself is covered by the
+[Terms of Service](https://tabmerger.vercel.app/terms).

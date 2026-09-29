@@ -6,9 +6,10 @@ import { Check, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
-import { EXTENSION_ID } from '@/lib/extensionId'
+import { sendToExtension } from '@/lib/extensionMessaging'
 import { useSyncExtensionAuth } from '@/lib/hooks/useSyncExtensionAuth'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { EXTENSION_MESSAGE } from '@tabmerger/shared'
 
 type SyncNowResponse = { ok: boolean; reason?: string; message?: string }
 
@@ -19,26 +20,13 @@ const SYNC_NOW_REASON_MESSAGES: Record<string, string> = {
 }
 
 // Sends { type: 'SYNC_NOW' } to the extension's background worker via externally_connectable
-// (same channel useExtensionInstalled's PING probe uses) and waits for its real push+pull
-// result. Resolves `null` — not a rejection — when the extension isn't installed/reachable in
-// this browser, so callers can fall back to a plain Supabase re-read instead of hard-failing.
-function requestExtensionSyncNow(): Promise<SyncNowResponse | null> {
-  return new Promise((resolve) => {
-    const runtime = typeof chrome === 'undefined' ? undefined : chrome.runtime
-    if (!runtime?.sendMessage) {
-      resolve(null)
-      return
-    }
-    const timeout = setTimeout(() => resolve(null), 5000)
-    runtime.sendMessage(EXTENSION_ID, { type: 'SYNC_NOW' }, (response) => {
-      clearTimeout(timeout)
-      if (runtime.lastError || !response) {
-        resolve(null)
-        return
-      }
-      resolve(response as SyncNowResponse)
-    })
-  })
+// (tries every known store ID — same helper useExtensionInstalled's PING probe uses) and waits
+// for its real push+pull result. Resolves `null` — not a rejection — when the extension isn't
+// installed/reachable in this browser, so callers can fall back to a plain Supabase re-read
+// instead of hard-failing.
+async function requestExtensionSyncNow(): Promise<SyncNowResponse | null> {
+  const result = await sendToExtension<SyncNowResponse>({ type: EXTENSION_MESSAGE.SYNC_NOW })
+  return result?.response ?? null
 }
 
 interface SyncIndicatorProps {

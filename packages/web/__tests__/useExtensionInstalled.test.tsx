@@ -1,12 +1,14 @@
 import { renderHook, waitFor } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { useExtensionInstalled } from '@/lib/hooks/useExtensionInstalled'
+import { _resetExtensionIdCache } from '@/lib/extensionMessaging'
 
 const STORAGE_KEY = 'tm_extension_installed'
 
 afterEach(() => {
   localStorage.clear()
   delete window.chrome
+  _resetExtensionIdCache()
   vi.restoreAllMocks()
 })
 
@@ -52,6 +54,21 @@ describe('useExtensionInstalled', () => {
 
   it('does not throw when chrome is undefined (regular browser page)', () => {
     expect(() => renderHook(() => useExtensionInstalled())).not.toThrow()
+  })
+
+  it('detects installation via the Firefox content-script READY announcement', async () => {
+    const { result } = renderHook(() => useExtensionInstalled())
+
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        source: window,
+        origin: window.location.origin,
+        data: { source: 'tabmerger-extension', type: 'READY', version: '1.0.0' },
+      })
+    )
+
+    await waitFor(() => expect(result.current).toBe(true))
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('1')
   })
 
   it('still detects installation via the postMessage fallback', async () => {
