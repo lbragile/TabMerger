@@ -8,6 +8,17 @@ vi.mock('@/lib/supabase/server', () => ({
     auth: {
       getUser: async () => ({ data: { user: { id: 'u1', email: 'user@example.com' } } }),
     },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          order: () => ({
+            limit: () => ({
+              single: async () => ({ data: { tier: 'pro', status: 'active' } }),
+            }),
+          }),
+        }),
+      }),
+    }),
   }),
 }))
 
@@ -43,5 +54,37 @@ describe('AppLayout', () => {
     render(await AppLayout({ children: <div>content</div> }))
     expect(screen.getByText('content')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Dashboard/ })).toBeInTheDocument()
+  })
+
+  it('renders the SyncIndicator for an entitled Pro account', async () => {
+    render(await AppLayout({ children: <div>content</div> }))
+    expect(screen.getByRole('button', { name: 'Refresh sync status' })).toBeInTheDocument()
+  })
+})
+
+describe('AppLayout — free account', () => {
+  it('hides the SyncIndicator for a free account', async () => {
+    vi.doMock('@/lib/supabase/server', () => ({
+      createClient: async () => ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: 'u1', email: 'user@example.com' } } }),
+        },
+        from: () => ({
+          select: () => ({
+            eq: () => ({
+              order: () => ({
+                limit: () => ({
+                  single: async () => ({ data: { tier: 'free', status: null } }),
+                }),
+              }),
+            }),
+          }),
+        }),
+      }),
+    }))
+    vi.resetModules()
+    const { default: FreshAppLayout } = await import('@/app/(app)/layout')
+    render(await FreshAppLayout({ children: <div>content</div> }))
+    expect(screen.queryByRole('button', { name: 'Refresh sync status' })).not.toBeInTheDocument()
   })
 })

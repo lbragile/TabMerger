@@ -8,6 +8,14 @@ interface StatsOverviewProps {
   sessionCount: number
   memberSince: string
   aiUsage?: { used: number; limit: number }
+  /**
+   * Whether to show the stats that depend on synced data (tabs/groups/sessions/memory).
+   * Free (and non-entitled paid-tier) accounts never sync, so groupCount/sessionCount/tabCount
+   * are always 0 for them — showing those cards would look like a bug, not an empty state.
+   * Derive with `hasCloudSync` from `@/lib/cloudSync`. Defaults to true to preserve existing
+   * (Pro) behavior for any caller that hasn't been updated.
+   */
+  showSyncStats?: boolean
 }
 
 // ponytail: heuristic MB-per-tab figure, not a measurement — Chrome doesn't expose real
@@ -26,32 +34,37 @@ export function StatsOverview({
   sessionCount,
   memberSince,
   aiUsage,
+  showSyncStats = true,
 }: StatsOverviewProps) {
   const stats = [
-    {
-      label: 'Tabs saved',
-      value: tabCount,
-      icon: FileStack,
-      description: 'Tabs across all synced groups',
-    },
-    {
-      label: 'Groups synced',
-      value: groupCount,
-      icon: Layers,
-      description: 'Groups synced in cloud',
-    },
-    {
-      label: 'Sessions stored',
-      value: sessionCount,
-      icon: Clock,
-      description: 'Browsing sessions stored',
-    },
-    {
-      label: 'Memory reclaimed',
-      value: formatMemory(tabCount),
-      icon: Globe,
-      description: 'Estimated, not measured',
-    },
+    ...(showSyncStats
+      ? [
+          {
+            label: 'Tabs saved',
+            value: tabCount,
+            icon: FileStack,
+            description: 'Tabs across all synced groups',
+          },
+          {
+            label: 'Groups synced',
+            value: groupCount,
+            icon: Layers,
+            description: 'Groups synced in cloud',
+          },
+          {
+            label: 'Sessions stored',
+            value: sessionCount,
+            icon: Clock,
+            description: 'Browsing sessions stored',
+          },
+          {
+            label: 'Memory reclaimed',
+            value: formatMemory(tabCount),
+            icon: Globe,
+            description: 'Estimated, not measured',
+          },
+        ]
+      : []),
     {
       label: 'Member Since',
       value: new Date(memberSince).toLocaleDateString('en-US', {
@@ -73,8 +86,15 @@ export function StatsOverview({
       : []),
   ]
 
+  // Free accounts only ever have 1-2 cards (Member Since, optionally AI usage — though AI
+  // usage is pro_ai-only in practice). The full 3-column grid leaves a visibly broken
+  // half-empty row for that few cards, so cap the grid width and let it size to content.
+  const gridClassName = showSyncStats
+    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'
+    : 'grid grid-cols-1 sm:grid-cols-2 gap-4 sm:max-w-md'
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className={gridClassName}>
       {stats.map((stat) => {
         const Icon = stat.icon
         return (

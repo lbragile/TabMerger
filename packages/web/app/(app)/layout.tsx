@@ -15,6 +15,7 @@ import { LayoutDashboard, Settings } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { SyncIndicator } from '@/components/dashboard/SyncIndicator'
 import { EncryptionKeyProvider } from '@/lib/encryption/context'
+import { hasCloudSync } from '@/lib/cloudSync'
 
 export default async function AppLayout({
   children,
@@ -31,6 +32,16 @@ export default async function AppLayout({
   }
 
   const initials = user.email?.slice(0, 2).toUpperCase() ?? '??'
+
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('tier, status')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+
+  const syncEnabled = hasCloudSync(subscription)
 
   return (
     <EncryptionKeyProvider>
@@ -59,7 +70,7 @@ export default async function AppLayout({
           </div>
 
           <div className="flex items-center gap-2.5">
-          <SyncIndicator userId={user.id} />
+          {syncEnabled && <SyncIndicator userId={user.id} />}
           <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
