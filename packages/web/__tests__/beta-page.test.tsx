@@ -31,6 +31,80 @@ describe('BetaPage', () => {
     expect(href).toMatch(/category=ideas/)
   })
 
+  it('lists every known issue, before the bug-report section, so testers check it first', async () => {
+    const { KNOWN_ISSUES } = await import('@/lib/knownIssues')
+    render(<BetaPage />)
+    const section = document.getElementById('known-issues')!
+    expect(section).toBeInTheDocument()
+    for (const issue of KNOWN_ISSUES) {
+      expect(document.getElementById(`known-issue-${issue.id}`)).toHaveTextContent(issue.title)
+    }
+    const ids = Array.from(document.querySelectorAll('section[id]')).map((el) => el.id)
+    expect(ids.indexOf('known-issues')).toBeLessThan(ids.indexOf('report-bugs'))
+    expect(screen.getByRole('link', { name: 'Known issues' })).toHaveAttribute('href', '#known-issues')
+  })
+
+  it('has test steps for the newer flows: plan switching, local currency, phones and notifications', () => {
+    render(<BetaPage />)
+    for (const heading of [
+      'Switching between monthly and yearly',
+      'Paying in your local currency',
+      'On a phone',
+      'Notifications (toasts)',
+      'Creating an account with email and password',
+    ]) {
+      expect(screen.getByText(heading)).toBeInTheDocument()
+    }
+  })
+
+  it('gives every test item a title and a "What this checks" line above its steps', () => {
+    render(<BetaPage />)
+    const section = document.getElementById('what-to-test')!
+    const titles = section.querySelectorAll('h3')
+    const explanations = Array.from(section.querySelectorAll('p')).filter((p) =>
+      p.textContent?.startsWith('What this checks: ')
+    )
+    expect(titles.length).toBeGreaterThan(40)
+    expect(explanations).toHaveLength(titles.length)
+    explanations.forEach((p) => expect(p.textContent!.length).toBeGreaterThan('What this checks: '.length + 10))
+  })
+
+  it('gives every test item a "Good looks like" list with a checkbox per outcome', () => {
+    render(<BetaPage />)
+    const items = document.getElementById('what-to-test')!.querySelectorAll('li:has(h3)')
+    expect(items.length).toBeGreaterThan(40)
+    let outcomes = 0
+    items.forEach((item) => {
+      const heading = Array.from(item.querySelectorAll('p')).find((p) => p.textContent === 'Good looks like')
+      expect(heading, item.querySelector('h3')!.textContent!).toBeDefined()
+      const boxes = heading!.nextElementSibling!.querySelectorAll('input[type="checkbox"]')
+      expect(boxes.length).toBeGreaterThan(0)
+      outcomes += boxes.length
+    })
+    // Split into separate outcomes, not one checkbox per item.
+    expect(outcomes).toBeGreaterThan(items.length * 1.5)
+  })
+
+  it('marks what needs a Pro account: whole areas, single items, and items where only part does', () => {
+    render(<BetaPage />)
+    const badgeOf = (el: Element) => el.querySelector('[title]')?.getAttribute('title') ?? null
+    const summary = (areaId: string) => document.getElementById(areaId)!.querySelector('summary')!
+    const item = (heading: string) => screen.getByRole('heading', { name: heading, level: 3 }).closest('li')!
+
+    // Sync and encryption only exist on Pro; sharing is Pro to create, but anyone can open a link.
+    expect(badgeOf(summary('sign-in-and-sync'))).toBe('Every item here needs a Pro account')
+    expect(badgeOf(summary('encryption'))).toBe('Every item here needs a Pro account')
+    expect(badgeOf(summary('sharing'))).toBe('Some items here need a Pro account')
+    expect(badgeOf(summary('groups-and-tabs'))).toBeNull()
+
+    expect(badgeOf(item('Setting up two devices'))).toBe('Needs a Pro account')
+    expect(badgeOf(item('Search'))).toBeNull()
+    const account = item('Account page')
+    expect(badgeOf(account)).toBe('Part of this item needs a Pro account')
+    expect(account).toHaveTextContent('Pro: Only the Devices card needs Pro')
+    expect(item('Opening a shared link')).toHaveTextContent('opening it needs no account at all')
+  })
+
   it('shows the plain GitHub Discussions link so testers can browse existing reports', () => {
     render(<BetaPage />)
     const discussionsLink = screen.getByRole('link', { name: /github\.com\/lbragile\/TabMerger\/discussions/i })
@@ -284,14 +358,31 @@ describe('BetaPage', () => {
     expect(text).toMatch(/Send magic link/i)
   })
 
-  it('places "Web app and dashboard" after "Sign-in and sync" in TEST_AREAS order', () => {
+  it('lists areas from Free to Pro, under a label for each group', () => {
     render(<BetaPage />)
-    const details = Array.from(document.querySelectorAll('#what-to-test details'))
-    const ids = details.map((d) => d.id)
-    const signInIdx = ids.indexOf('sign-in-and-sync')
-    const webAppIdx = ids.indexOf('web-app-and-dashboard')
-    expect(signInIdx).toBeGreaterThanOrEqual(0)
-    expect(webAppIdx).toBe(signInIdx + 1)
+    const container = document.querySelector('#what-to-test details')!.parentElement!
+    // Walk the list in order: each group label, then the area ids under it.
+    const groups: { label: string; ids: string[] }[] = []
+    for (const el of Array.from(container.children)) {
+      if (el.tagName === 'P') groups.push({ label: el.textContent!, ids: [] })
+      else if (el.tagName === 'DETAILS') groups[groups.length - 1].ids.push(el.id)
+    }
+    expect(groups).toEqual([
+      { label: 'Free: no account needed', ids: ['groups-and-tabs', 'right-click-menu'] },
+      { label: 'Getting Pro: test payments, no real money', ids: ['upgrading-to-pro'] },
+      {
+        label: 'Free and Pro: each Pro part is marked',
+        ids: ['drag-and-drop', 'web-app-and-dashboard', 'sharing', 'settings'],
+      },
+      { label: 'Pro only', ids: ['sign-in-and-sync', 'encryption'] },
+    ])
+  })
+
+  it('explains the Pro badges in plain words, without hidden text doubling them', () => {
+    render(<BetaPage />)
+    const legend = screen.getByText('Do I need Pro?').parentElement!
+    expect(legend.textContent).toContain('Partly Pro: most of the item works on Free')
+    expect(legend.textContent).not.toMatch(/\(Part of this item needs a Pro account\)/)
   })
 
   describe('Firefox beta install section', () => {
@@ -334,5 +425,17 @@ describe('BetaPage', () => {
       expect(text).not.toMatch(/stable Firefox|outdated/i)
       expect(screen.queryByRole('link', { name: /Firefox Add-ons/ })).not.toBeInTheDocument()
     })
+  })
+})
+
+describe('BetaPage screenshots', () => {
+  it('only references screenshots that exist in public/beta', async () => {
+    const { readFileSync, existsSync } = await import('node:fs')
+    const { join } = await import('node:path')
+    const source = readFileSync(join(__dirname, '../app/(marketing)/beta/page.tsx'), 'utf8')
+    const srcs = [...source.matchAll(/src: '(\/beta\/[^']+)'/g)].map((m) => m[1])
+    expect(srcs.length).toBeGreaterThan(20)
+    const missing = srcs.filter((src) => !existsSync(join(__dirname, '../public', src)))
+    expect(missing).toEqual([])
   })
 })
