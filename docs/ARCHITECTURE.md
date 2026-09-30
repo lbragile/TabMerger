@@ -76,7 +76,7 @@ These failures are currently silent. A diagnostics screen is proposed in [`.clau
 | `demo` | `pnpm build:extension:demo` | TabMerger | `.env.demo` (committed; only `VITE_DEMO_BUILD=true`) | — (demo data, no backend) |
 | `production` | `pnpm build`, `pnpm zip` | TabMerger | `.env.production` (gitignored) | `https://tabmerger.vercel.app` / project `jzgz…` |
 
-In CI there are no env files. `.github/workflows/publish.yml` injects `VITE_SUPABASE_*` and the extension IDs from GitHub secrets. Note that the **store BETA** build from CI is not the same as a locally built beta. It sets `VITE_WEB_APP_URL=https://tabmerger.vercel.app` and uses the same Supabase secrets as stable, so it points at production, not preview.
+In CI there are no env files. `.github/workflows/publish.yml` sets each build's `VITE_WEB_APP_URL`, `VITE_SUPABASE_*` and extension IDs from its top-level `env:` (public values, not secrets): store BETA builds use the preview site and preview Supabase project (`BETA_*`), stable builds use production (`PROD_*`). See `docs/PUBLISHING.md` Step 5.
 
 ---
 

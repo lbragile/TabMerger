@@ -59,6 +59,14 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/beta' }}
 
+# CI's web build and web E2E run against the PREVIEW Supabase project, never production:
+# the E2E setup creates and deletes throwaway users through the admin API. Public values
+# (compiled into every build), so they live here rather than in secrets; they must match
+# publish.yml's BETA_SUPABASE_* values.
+env:
+  PREVIEW_SUPABASE_URL: https://xmofzeqcuyenmxgxjtrv.supabase.co
+  PREVIEW_SUPABASE_PUBLISHABLE_KEY: sb_publishable_jLK5NyMIvyHkBjilsKo44w_hbTpX9TX
+
 jobs:
   # ── Static checks: secret scan, dependency audit (non-blocking step),
   # type-check, lint. Merged into one job so they share a single checkout +
@@ -267,12 +275,20 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm --filter @tabmerger/web exec playwright install-deps chromium
 
-      - run: pnpm --filter @tabmerger/web test:e2e
+      - name: Web E2E (preview Supabase project)
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
-          # required by e2e/auth.setup.ts's ephemeral-user admin API calls
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ env.PREVIEW_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ env.PREVIEW_SUPABASE_PUBLISHABLE_KEY }}
+          # Required by e2e/auth.setup.ts's throwaway-user admin API calls. It MUST be the
+          # preview project's service-role key: a key from another project fails auth, and
+          # production's would let CI create users in production.
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PREVIEW_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "::error::Add the PREVIEW_SUPABASE_SERVICE_ROLE_KEY secret (preview project → Settings → API Keys → service_role)."
+            exit 1
+          fi
+          pnpm --filter @tabmerger/web test:e2e
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
@@ -355,8 +371,8 @@ jobs:
       - name: Build web
         run: pnpm --filter @tabmerger/web build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ env.PREVIEW_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ env.PREVIEW_SUPABASE_PUBLISHABLE_KEY }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   # Validates .releaserc.json on every push to a release branch, so a broken release
@@ -499,40 +515,23 @@ jobs:
       # was submitted, and the next run computes from a release that never
       # shipped. Checking here turns that into a clean, retryable failure.
       - name: Preflight — required publish secrets
+        # Only real secrets are checked here. The store item IDs and each build's
+        # Supabase URL/publishable key are public and fixed in publish.yml's top-level
+        # `env:` (BETA_* vs PROD_*), so they can't go missing from secrets.
         env:
-          CHROME_BETA_EXTENSION_ID: ${{ secrets.CHROME_BETA_EXTENSION_ID }}
-          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
           CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: |
           missing=()
-          # Which store item this release targets depends on the branch: `beta`
-          # publishes a prerelease to the beta item, everything else to stable.
-          if [ "${GITHUB_REF}" = "refs/heads/beta" ]; then
-            [ -n "$CHROME_BETA_EXTENSION_ID" ] || missing+=("CHROME_BETA_EXTENSION_ID")
-          else
-            [ -n "$CHROME_EXTENSION_ID" ] || missing+=("CHROME_EXTENSION_ID")
-          fi
           # CHROME_PUBLISHER_ID is account-scoped like the OAuth trio, so it is
           # needed on both branches. It became mandatory when
           # chrome-webstore-upload-cli@4 picked up chrome-webstore-upload v6,
           # which moved to Chrome Web Store API v2 — every v2 endpoint is
           # publishers/{publisherId}/items/{extensionId}.
           for v in CHROME_CLIENT_ID CHROME_CLIENT_SECRET CHROME_REFRESH_TOKEN CHROME_PUBLISHER_ID; do
-            [ -n "${!v}" ] || missing+=("$v")
-          done
-          # The runner has NO .env files (.env.local/.env.beta/.env.production are all
-          # gitignored), so these must come from secrets or wxt's loadEnv() finds
-          # nothing and lib/supabase.ts falls back to a .invalid host. That failure is
-          # SILENT: the build succeeds, the zip publishes, the extension installs and
-          # runs on local IndexedDB, and only sign-in, sync and AI are dead. Checking
-          # here is the difference between a red CI run and a broken store release.
-          for v in VITE_SUPABASE_URL VITE_SUPABASE_PUBLISHABLE_KEY; do
             [ -n "${!v}" ] || missing+=("$v")
           done
           # Fine-grained PATs expire (a year at most). Without this check an

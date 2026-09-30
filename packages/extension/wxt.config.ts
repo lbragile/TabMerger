@@ -192,7 +192,12 @@ export default defineConfig({
                     // Beta gets its own ID so the unlisted beta add-on can sit beside stable
                     // (.claude/plans/firefox-edge-beta-spec.md §5.1).
                     id: isBeta ? FIREFOX_BETA_ADDON_ID : FIREFOX_STABLE_ADDON_ID,
-                    strict_min_version: "109.0",
+                    // The oldest Firefox that has every API/key this manifest uses:
+                    // data_collection_permissions (140), the tabGroups permission and
+                    // tabs.group/tabGroups.* (139), storage.session (115). 140 is also an ESR.
+                    // AMO's validator warns on each API newer than this, so raise it whenever a
+                    // newer API is adopted rather than feature-detecting around an old minimum.
+                    strict_min_version: "140.0",
                     // Only the unlisted, self-distributed BETA add-on needs this — AMO-listed
                     // stable updates from AMO itself, and setting update_url there would make
                     // Firefox treat it as (and validate it as) a self-distributed add-on, which
@@ -221,6 +226,11 @@ export default defineConfig({
                               },
                           }
                         : {}),
+                },
+                // Firefox for Android got data_collection_permissions later (142) than desktop.
+                // Without its own entry AMO checks Android against gecko's 140 and warns.
+                gecko_android: {
+                    strict_min_version: "142.0",
                 },
             },
             version,

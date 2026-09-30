@@ -22,6 +22,7 @@ Firefox equivalent of the Chrome BETA item's private-listing tester gating.
 | Who can install | Anyone, via the AMO listing page | Anyone with the link (unlisted add-ons cannot be gated — see Access control below) |
 | Review | Full AMO review per release | Automated signing for unlisted submissions (`web-ext sign --channel unlisted`), typically minutes; may be flagged for manual review |
 | Updates | From AMO itself — **no `gecko.update_url`** (setting one would make AMO's validator treat it as self-distributed) | `gecko.update_url` → a hosted `updates.json`, checked by Firefox roughly every 24h |
+| Minimum Firefox (`strict_min_version`) | 140 desktop, 142 Android (`gecko_android`) | Same |
 | Where it's built | `wxt build -b firefox` / `wxt zip -b firefox` (default mode) | `wxt zip -b firefox --mode beta` |
 | Hosting for CI-published files | AMO itself | Vercel Blob, fronted by the web app at `<beta web app>/firefox-beta/` (see Distribution below) |
 
@@ -193,14 +194,30 @@ preface); using the add-on is governed by the Terms of Service
   Handing it to Mozilla for review is the copyright holder's own disclosure, not a distribution
   under the license, so it's fine under these terms.
 
+## Minimum Firefox version and AMO validator warnings
+
+`strict_min_version` is the oldest Firefox that has every API and manifest key the extension uses:
+`data_collection_permissions` (desktop 140, Android 142), the `tabGroups` permission with
+`tabs.group`/`tabGroups.*` (139), `storage.session` (115). It was `109.0` until 2026-09-29, and
+signing `4.1.0.7` produced a validator warning for each of those APIs; raising it to 140/142
+clears them. Raise it again whenever a newer API is adopted.
+
+Two warnings remain and are expected; mention them if a reviewer asks:
+
+- **"Unsafe assignment to innerHTML"** in the popup chunk: React DOM's own markup handling. No
+  TabMerger code sets `innerHTML` or uses `dangerouslySetInnerHTML`.
+- **"Unsafe call to import for argument 0"** in the background and popup: Vite's generated
+  loader for code-split chunks, which only ever imports the extension's own bundled files. No
+  TabMerger code calls `import()` with a computed path.
+
 ## Version History
 
-_(empty — fill in as Firefox beta releases ship; mirror `CHROMEWEBSTORE.md`'s Version History
-table shape: listing, manifest version, `version_name`, tag, date, status.)_
+Firefox shows only `version`: it drops `version_name`, so testers should quote the version in
+TabMerger's Settings (the true semver).
 
 | Listing | `version` (manifest) | `version_name` | Semver / tag | Date | Status |
 |---|---|---|---|---|---|
-| | | | | | |
+| BETA (unlisted) | `4.1.0.7` | (ignored by Firefox) | `v3.1.0-beta.7` | 2026-09-29 | Signed; published to `/firefox-beta/`. Validator warnings above (min version 109 at the time) |
 
 ## Notes for a future review / support request
 

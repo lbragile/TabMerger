@@ -102,6 +102,13 @@ describe('ChangelogPage', () => {
     expect(v3?.textContent).not.toMatch(/\bAI\b/)
   })
 
+  it('notes the new license in v3.0.0, the first version under it, without calling it "not open source"', () => {
+    render(<ChangelogPage />)
+    const v3 = document.getElementById('v3-0-0')
+    expect(v3?.textContent).toMatch(/3\.0\.0 and later are released under the terms in LICENSE\.md/)
+    expect(v3?.textContent).not.toMatch(/open.source/i)
+  })
+
   it('renders generated CHANGELOG.md entries in order, newest first', () => {
     const generated: ChangeEntry[] = [
       { version: 'v3.2.0', date: 'November 1, 2026', changes: [{ type: 'New', text: 'popup: newer thing' }] },
