@@ -4,3 +4,4 @@ node_modules/
 screenshots/
 promo/
 .pw-user-*/
+.pw-ext-*/
