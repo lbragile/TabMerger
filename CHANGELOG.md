@@ -1,3 +1,15 @@
+# [3.1.0-beta.8](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.7...v3.1.0-beta.8) (2026-09-30)
+
+
+### Bug Fixes
+
+* **extension:** require Firefox 140 (Android 142) ([6caa0a7](https://github.com/lbragile/TabMerger/commit/6caa0a714c4d73ede7ed0641dd8e6cfa9b022cad))
+
+
+### Features
+
+* **extension:** mark plan prices as US dollars in Settings ([c0e6ddb](https://github.com/lbragile/TabMerger/commit/c0e6ddb2614db41f63b2471c9762b1e91a8638f3))
+
 # [3.1.0-beta.7](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.6...v3.1.0-beta.7) (2026-09-29)
 
 
