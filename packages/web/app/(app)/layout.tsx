@@ -46,30 +46,33 @@ export default async function AppLayout({
   return (
     <EncryptionKeyProvider>
     <div className="flex min-h-screen flex-col">
+      {/* On phones the row must fit ~340px: the wordmark and the nav labels hide below `sm`
+          (the icons stay, named by aria-label), and the sync pill hides itself. Without
+          this the header was 442px wide on a 390px screen and pushed the account menu off it. */}
       <header className="sticky top-0 z-50 flex h-16 w-full items-center border-b border-border bg-background">
-        <div className="container flex items-center justify-between px-6 sm:px-8 lg:px-10">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image src="/logo.png" alt="TabMerger" width={24} height={24} className="rounded-md" />
-              <span className="font-bold">TabMerger</span>
+        <div className="container flex items-center justify-between gap-3 px-4 sm:px-8 lg:px-10">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-6">
+            <Link href="/" className="flex shrink-0 items-center space-x-2" aria-label="TabMerger home">
+              <Image src="/logo.png" alt="" width={24} height={24} className="rounded-md" />
+              <span className="hidden font-bold sm:inline">TabMerger</span>
             </Link>
             <nav className="flex items-center gap-1">
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/dashboard" className="gap-2">
+                <Link href="/dashboard" className="gap-2" aria-label="Dashboard">
                   <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
+                  <span className="hidden sm:inline">Dashboard</span>
                 </Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/account" className="gap-2">
+                <Link href="/account" className="gap-2" aria-label="Account">
                   <Settings className="h-4 w-4" />
-                  Account
+                  <span className="hidden sm:inline">Account</span>
                 </Link>
               </Button>
             </nav>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex shrink-0 items-center gap-2.5">
           {syncEnabled && <SyncIndicator userId={user.id} />}
           <ThemeToggle />
           <DropdownMenu>
@@ -107,7 +110,7 @@ export default async function AppLayout({
           </div>
         </div>
       </header>
-      <main className="flex-1 container px-6 sm:px-8 lg:px-10 py-8">{children}</main>
+      <main className="flex-1 container px-4 sm:px-8 lg:px-10 py-8">{children}</main>
     </div>
     </EncryptionKeyProvider>
   )
