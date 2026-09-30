@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics'
 import { FREE_TIER_LIMITS } from '@tabmerger/shared'
@@ -28,6 +29,7 @@ export default function SignUpPage() {
   const [verificationSent, setVerificationSent] = useState(false)
 
   const supabase = createClient()
+  const router = useRouter()
 
   async function handleGoogle() {
     trackEvent('sign_up_completed', { method: 'google' })
@@ -75,6 +77,16 @@ export default function SignUpPage() {
     }
 
     trackEvent('sign_up_completed', { method: 'password' })
+
+    // With email confirmation off (the local stack's config.toml, or a project with
+    // "Confirm email" disabled), Supabase signs the user in right away and returns a
+    // session: go straight in instead of asking them to verify an email that isn't needed.
+    if (data.session) {
+      router.push('/dashboard')
+      router.refresh()
+      return
+    }
+
     setVerificationSent(true)
     setLoading(false)
   }
