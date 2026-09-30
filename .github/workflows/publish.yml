@@ -227,7 +227,7 @@ jobs:
   # item, private to its trusted testers, so a bad beta cannot reach stable users
   # or block the stable item's review queue.
   publish-chrome-beta:
-    name: Publish to Chrome Web Store (BETA)
+    name: Beta · Chrome Web Store
     needs: build
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
     runs-on: ubuntu-latest
@@ -373,12 +373,14 @@ jobs:
   # contract and packages/extension/scripts/publishFirefoxBeta.ts for the upload.
   #
   # Deliberately INDEPENDENT of every other publish-* job: only `needs: build`,
-  # nothing needs *it*, and it is never added to `notify`'s `needs` list below —
-  # a Firefox beta signing/upload failure must never fail or block the Chrome
-  # BETA publish, the stable release, or the GitHub Release artifact attachment.
-  # `continue-on-error: true` on the job as a second layer of the same guarantee.
+  # and a Firefox beta signing/upload failure must never fail or block the Chrome
+  # BETA publish, the stable release, or the GitHub Release attachment.
+  # attach-beta lists it in `needs` only so it waits for the signed .xpi (and so
+  # the Actions graph groups the two beta uploads); its `if` requires only the
+  # Chrome BETA upload to have succeeded. `continue-on-error: true` on the job is
+  # a second layer of the same guarantee.
   publish-firefox-beta:
-    name: Publish Firefox BETA (unlisted, self-distributed)
+    name: Beta · Firefox (unlisted, self-hosted)
     needs: build
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
     continue-on-error: true
@@ -417,6 +419,15 @@ jobs:
             --api-secret ${{ secrets.FIREFOX_API_SECRET }} \
             --channel unlisted
 
+      # The signed .xpi is the installable Firefox beta; attach-beta adds it to the
+      # GitHub Release next to the Chrome BETA zip.
+      - name: Upload signed Firefox BETA .xpi
+        uses: actions/upload-artifact@v7
+        with:
+          name: tabmerger-firefox-beta-signed
+          path: firefox-beta-artifacts/*.xpi
+          if-no-files-found: error
+
       # web-ext writes the signed file as <name>-<version>.xpi into
       # --artifacts-dir; there is exactly one file there since this job only
       # ever signs a single build.
@@ -452,7 +463,7 @@ jobs:
             "$BETA_WEB_APP_URL"
 
   publish-chrome:
-    name: Publish to Chrome Web Store
+    name: Stable · Chrome Web Store
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
@@ -487,7 +498,7 @@ jobs:
   # channel and a completely different distribution path. Edge has no beta
   # concept worth wiring, so it still only runs for a stable release.
   publish-firefox:
-    name: Publish to Firefox Add-ons
+    name: Stable · Firefox Add-ons
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
@@ -513,7 +524,7 @@ jobs:
             --channel listed
 
   publish-edge:
-    name: Publish to Edge Add-ons
+    name: Stable · Edge Add-ons
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
@@ -538,18 +549,23 @@ jobs:
             "https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}/submissions" \
             -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}"
 
-  notify:
-    name: Attach Artifacts to Release
-    needs: [build, publish-chrome-beta, publish-chrome, publish-firefox, publish-edge]
-    # Half of `needs` is SKIPPED on any given run (beta vs stable), and a skipped
-    # dependency would skip this job too. `always()` overrides that, so the guard
-    # has to re-assert what we actually require: the build succeeded, and no
-    # dependency outright failed. Without the failure check, `always()` would
-    # happily attach artifacts to a release whose store upload had just failed.
+  # ── Attach each channel's packages to the GitHub Release, one job per lane ──
+  # One job per lane (not one job needing every publish job) is what makes the
+  # Actions graph draw two groups: jobs are grouped by the jobs they need AND the
+  # jobs that need them, so beta = {Chrome BETA, Firefox BETA} → attach-beta and
+  # stable = {Chrome, Firefox, Edge} → attach-stable. `--clobber` so a re-run
+  # replaces the assets instead of failing on "already exists".
+  attach-beta:
+    name: Beta · Attach packages to release
+    needs: [build, publish-chrome-beta, publish-firefox-beta]
+    # `always()` so a Firefox BETA failure (its job is continue-on-error and must
+    # never block anything) doesn't skip this job. What's REQUIRED is the build and
+    # the Chrome BETA upload; the signed .xpi is attached only if Firefox produced one.
     if: >-
       always()
+      && (github.event_name == 'workflow_dispatch' || github.event.release.prerelease)
       && needs.build.result == 'success'
-      && !contains(needs.*.result, 'failure')
+      && needs.publish-chrome-beta.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -558,26 +574,55 @@ jobs:
       - uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v8
-        if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
         with:
           name: tabmerger-chrome-beta
 
+      - name: Download signed Firefox BETA .xpi (if Firefox signing succeeded)
+        id: firefox-xpi
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: tabmerger-firefox-beta-signed
+
+      - name: Attach beta packages to GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          shopt -s nullglob
+          files=(*.zip *.xpi)
+          if [ "${{ steps.firefox-xpi.outcome }}" != "success" ]; then
+            echo "::warning::No signed Firefox BETA .xpi (its job failed or was skipped); attaching the Chrome BETA zip only."
+          fi
+          gh release upload "${{ inputs.tag || github.ref_name }}" "${files[@]}" --clobber
+
+  attach-stable:
+    name: Stable · Attach packages to release
+    needs: [build, publish-chrome, publish-firefox, publish-edge]
+    # Every stable store upload must have succeeded: attaching packages to a release
+    # whose store upload just failed would advertise a version that didn't ship.
+    if: >-
+      github.event_name == 'release'
+      && !github.event.release.prerelease
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
       - uses: actions/download-artifact@v8
-        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-chrome
 
       - uses: actions/download-artifact@v8
-        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-firefox
 
       - uses: actions/download-artifact@v8
-        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         with:
           name: tabmerger-edge
 
-      - name: Attach zips to GitHub release
+      - name: Attach stable packages to GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ inputs.tag || github.ref_name }} *.zip
+        run: gh release upload "${{ inputs.tag || github.ref_name }}" *.zip --clobber
