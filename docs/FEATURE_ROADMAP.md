@@ -4,10 +4,15 @@ This is the forward-looking list. Known bugs and in-flight engineering work are 
 
 ## Current state
 
-- **Releases:** the latest stable tag is `v3.0.0`. The beta channel is at `v3.1.0-beta.4`. Releases come from semantic-release on the `beta` branch ([PUBLISHING.md](PUBLISHING.md)).
-- **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption. Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Stripe subscriptions and AI credit packs. Web dashboard and account pages. Public `/changelog`.
+_Last updated 2026-09-30. Keep this current in the same change as the work (a CLAUDE.md rule)._
+
+- **Releases:** the latest stable tag is `v3.0.0`. The beta channel is at `v3.1.0-beta.8`
+  (Chrome BETA listing, and the self-hosted Firefox beta). Releases come from semantic-release on
+  the `beta` branch ([PUBLISHING.md](PUBLISHING.md)).
+- **Stores:** Chrome Web Store stable is `3.0.0`. The Firefox AMO listing is still `2.0.0`. The
+  Edge Add-ons listing isn't published from CI yet (its secrets aren't set).
+- **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption, enforced server-side (RLS requires an active paid plan). Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Stripe subscriptions and AI credit packs. Monthly ↔ yearly plan switching. Local-currency checkout (Stripe Adaptive Pricing). Web dashboard and account pages, usable on phones. Public `/changelog`. Beta tester guide at `/beta` with a known-issues list (`packages/web/lib/knownIssues.ts`).
 - **Built but off:** AI features (auto-group, name group, tab summary, session suggestions, organize) are behind the "coming soon" flag (`NEXT_PUBLIC_AI_ENABLED` / `VITE_AI_ENABLED`, off unless `"true"`).
-- TODO (owner): whether the stable `v3.0.0` build is live on the Chrome, Firefox and Edge stores, and which store listings are public.
 
 ---
 
@@ -30,6 +35,15 @@ This is the forward-looking list. Known bugs and in-flight engineering work are 
 - [ ] OpenGraph/Twitter share image. `metadata.openGraph` has no image today.
 - [ ] Email capture on the landing page (newsletter/waitlist). Resend is used only for the contact form so far.
 - [ ] Chrome Web Store screenshot refresh. The pipeline exists in `packages/demo` (`screenshots`, `store-assets`).
+- [x] Toasts with a countdown bar, readable contrast, and a proper dismiss button
+- [x] Signed-in pages (dashboard, account) fit phone screens
+
+### Billing
+
+- [x] Switch a paid plan between monthly and yearly (pricing page button + Billing Portal). Monthly → yearly applies now with proration; yearly → monthly waits for the end of the term.
+- [x] Local-currency checkout via Stripe Adaptive Pricing: customers pay in their currency (2–4% conversion fee on them), we're credited USD. Needs USD as a settlement currency in **live** mode before it applies there.
+- [ ] Stripe Tax (EU/UK VAT, Canadian GST/HST, AU GST) before selling to those regions at volume. Decide registration with an accountant.
+- [ ] Optional fixed CAD prices (`currency_options`) so Canadians pay a round price with no conversion fee.
 
 ## AI quality (Pro AI), gated on the AI launch
 
@@ -60,6 +74,13 @@ This is the forward-looking list. Known bugs and in-flight engineering work are 
 - [ ] Embeddable badge widget
 - [ ] Product Hunt launch assets. The promo cuts exist in `packages/demo` (see `PROMO_VIDEO_SPEC.md`).
 - [ ] Affiliate program
+
+## Distribution
+
+- [x] Firefox beta channel: unlisted, signed by AMO, self-hosted with auto-updates
+- [ ] Firefox stable 3.x on the AMO listing (replaces 2.0.0)
+- [ ] Edge Add-ons publishing from CI (needs `EDGE_ACCESS_TOKEN`, `EDGE_PRODUCT_ID`)
+- [ ] Publish the source to the public `lbragile/TabMerger` repo at each stable release (plan: fast-forward its `master`; secret-scan the history first)
 
 ## Platform (long-term)
 
