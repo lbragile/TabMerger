@@ -87,6 +87,13 @@ Colors are stored as `rgba(R,G,B,1)` strings. Use them for:
 - Use `data-*` attributes for test selectors, not `id`
 - Accessibility: all interactive elements need `aria-label` or visible label; use Radix primitives which handle keyboard nav
 - Animation: prefer Tailwind's built-in `transition-*` utilities; avoid heavy animation libraries
+- **Units: `rem`, not `px`**, for positioning and sizing: `top`/`right`/`left`/`bottom`,
+  `width`/`height`, padding and margins, gaps, and font sizes, in hand-written CSS
+  (`globals.css`, inline `style`) and in Tailwind arbitrary values (`top-[0.5rem]`, not
+  `top-[8px]`). 16px = 1rem (8px = 0.5rem, 24px = 1.5rem). rem follows the user's browser text
+  size, so layouts scale with it. Tailwind's own spacing and text classes are already rem.
+  Exceptions: 1px hairlines and borders, existing shadow tokens, and the extension popup's fixed
+  frame size (Chrome caps the popup in CSS px, so its 800×600 stays px).
 
 ## Extension-specific UI patterns
 - **Context menus**: implemented via shadcn `DropdownMenu` triggered by right-click on group items
