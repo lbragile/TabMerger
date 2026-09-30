@@ -131,8 +131,6 @@ project gained such an entry, `https://hjdgjhiidldknnhdcboiaceofladfgbh.chromium
    credentials, then run the auth flow to get a refresh token (`chrome-webstore-upload-cli`'s
    auth helper: `npx chrome-webstore-upload-cli@4 --help`).
 4. Add to GitHub Secrets:
-   - `CHROME_EXTENSION_ID` (stable listing)
-   - `CHROME_BETA_EXTENSION_ID` (beta listing)
    - `CHROME_CLIENT_ID`
    - `CHROME_CLIENT_SECRET`
    - `CHROME_REFRESH_TOKEN`
@@ -188,12 +186,33 @@ Firefox's beta build also needs `FIREFOX_API_KEY`/`FIREFOX_API_SECRET` (Step 2 a
 time, this time with `--channel unlisted` rather than `--channel listed` — same AMO credentials,
 different `web-ext sign` invocation, no additional secret to create.
 
-### Step 5 — Supabase / web app build secrets
+### Step 5 — Which site and Supabase project each build uses (not secrets)
 
-Both beta and stable extension builds need `VITE_SUPABASE_URL` and
-`VITE_SUPABASE_PUBLISHABLE_KEY` as GitHub Secrets — without them the shipped build falls back to
-a placeholder Supabase URL and sign-in/sync silently fail. `VITE_WEB_APP_URL` is hard-coded in
-`publish.yml` rather than a secret.
+Each extension build's web app URL, Supabase URL and publishable key are **public** (compiled
+into every build anyone can install), so they are plain values in `publish.yml`'s top-level
+`env:`, not GitHub Secrets. The same goes for the Chrome Web Store item IDs:
+
+| `publish.yml` env | Used by |
+| --- | --- |
+| `BETA_WEB_APP_URL`, `BETA_SUPABASE_URL`, `BETA_SUPABASE_PUBLISHABLE_KEY` | Chrome and Firefox BETA builds: the preview site and preview Supabase project (`xmofzeqcuyenmxgxjtrv`) |
+| `PROD_WEB_APP_URL`, `PROD_SUPABASE_URL`, `PROD_SUPABASE_PUBLISHABLE_KEY` | Stable Chrome, Firefox and Edge builds: the production site and project (`jzgzdaileqxtsudbaouj`) |
+| `CHROME_EXTENSION_ID`, `CHROME_BETA_EXTENSION_ID` | The store uploads, and each build's `externally_connectable` |
+
+Beta and stable must use different projects: while both read one shared secret, the stable path
+silently pointed at the preview project. Change these values only in `publish.yml` (and
+`ci.yml`'s `PREVIEW_SUPABASE_*`, which must match the `BETA_*` pair). Without them a build falls
+back to a placeholder Supabase URL and sign-in/sync silently fail.
+
+CI's web build and web E2E run against the preview project (`ci.yml`'s top-level `env:`). The E2E
+setup creates and deletes throwaway users through the admin API, so it needs the secret
+`PREVIEW_SUPABASE_SERVICE_ROLE_KEY`: the **preview** project's service-role key, never
+production's.
+
+The real secrets are only the credentials: `CHROME_CLIENT_ID`, `CHROME_CLIENT_SECRET`,
+`CHROME_REFRESH_TOKEN`, `CHROME_PUBLISHER_ID`, `FIREFOX_API_KEY`, `FIREFOX_API_SECRET`,
+`FIREFOX_BETA_BLOB_TOKEN`, `RELEASE_TOKEN`, `VERCEL_TOKEN` (+ `VERCEL_ORG_ID`,
+`VERCEL_PROJECT_ID`), `PREVIEW_SUPABASE_SERVICE_ROLE_KEY`, and the not-yet-set
+`EDGE_ACCESS_TOKEN`, `EDGE_PRODUCT_ID`, `SENTRY_AUTH_TOKEN`.
 
 ---
 

@@ -11,7 +11,7 @@
 | | Stable (public) | BETA (private) |
 |---|---|---|
 | Manifest `name` | `TabMerger` | `TabMerger BETA` |
-| Extension ID | `inmiajapbpafmhjleiebcamfhkfnlgoc` | `nboljhidpjakiohfdkdjkcljdehcapcd` (also the `CHROME_BETA_EXTENSION_ID` repo secret; an item ID is public, it's in the listing URL) |
+| Extension ID | `inmiajapbpafmhjleiebcamfhkfnlgoc` | `nboljhidpjakiohfdkdjkcljdehcapcd` (also `CHROME_BETA_EXTENSION_ID` in `publish.yml`'s `env:`; an item ID is public, it's in the listing URL, so it isn't a secret) |
 | Listing URL | <https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc> | <https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd> |
 | Visibility | Public | Private / trusted testers: members of the Google Group `tabmerger-beta-testers@googlegroups.com` (<https://groups.google.com/g/tabmerger-beta-testers>) |
 | Built from | `wxt zip` (default mode) on a non-prerelease `release` event | `wxt zip -b chrome --mode beta` on any prerelease `release` event, or manual `workflow_dispatch` |
