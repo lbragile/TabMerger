@@ -93,11 +93,11 @@ button:disabled,
    step with the real timer. --toast-duration is set on the toaster to sonner's `duration`. */
 [data-sonner-toaster] [data-sonner-toast][data-styled='true']:not([data-type='loading']) {
   --toast-accent: hsl(var(--primary));
-  font-size: 14px;
+  font-size: 0.875rem;
   background-image: linear-gradient(var(--toast-accent), var(--toast-accent));
   background-repeat: no-repeat;
   background-position: left bottom;
-  background-size: 100% 3px;
+  background-size: 100% 0.1875rem;
   animation: toast-countdown var(--toast-duration, 6000ms) linear forwards;
 }
 [data-sonner-toaster] [data-sonner-toast][data-styled='true'][data-type='success'] {
@@ -111,8 +111,33 @@ button:disabled,
 }
 
 @keyframes toast-countdown {
-  from { background-size: 100% 3px; }
-  to { background-size: 0% 3px; }
+  from { background-size: 100% 0.1875rem; }
+  to { background-size: 0% 0.1875rem; }
+}
+
+/* Dismiss button: sonner draws a bordered circle hanging off the toast's corner, filled and
+   outlined with the toast's own colours, so with our strong borders it read as a stray box.
+   Here it sits inside the top-right corner as a plain ✕, like the in-page banners' dismiss
+   button, with a faint square hover. `[data-sonner-theme]` out-ranks sonner's rich-colors and
+   dark-theme rules for this button. The toast gets room on the right so text can't run under it. */
+[data-sonner-toaster][data-sonner-theme] [data-sonner-toast][data-styled='true']:has([data-close-button]) {
+  padding-right: 2.5rem;
+}
+[data-sonner-toaster][data-sonner-theme] [data-sonner-toast][data-styled='true'] [data-close-button] {
+  left: auto;
+  right: 0.5rem;
+  top: 0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  transform: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  color: hsl(var(--muted-foreground));
+}
+[data-sonner-toaster][data-sonner-theme] [data-sonner-toast][data-styled='true'] [data-close-button]:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  color: hsl(var(--foreground));
 }
 
 /* Text is the plain foreground colour (AppToaster's --*-text), so the icon keeps the type's
@@ -128,7 +153,7 @@ button:disabled,
   line-height: 1.4;
 }
 [data-sonner-toaster] [data-sonner-toast][data-styled='true'] [data-description] {
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.45;
 }
 
