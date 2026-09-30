@@ -33,7 +33,7 @@ describe('lib/stripe', () => {
     })
 
     expect(url).toBe('https://checkout.stripe.com/s1')
-    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+    expect(mockCheckoutCreate.mock.lastCall![0]).toEqual(
       expect.objectContaining({ customer: 'cus_1', metadata: { user_id: 'user-1' } })
     )
   })
@@ -50,7 +50,7 @@ describe('lib/stripe', () => {
       cancelUrl: 'https://app/cancel',
     })
 
-    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+    expect(mockCheckoutCreate.mock.lastCall![0]).toEqual(
       expect.objectContaining({ customer_email: 'a@example.com' })
     )
   })
@@ -80,7 +80,7 @@ describe('lib/stripe', () => {
       cancelUrl: 'https://app/cancel',
     })
 
-    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+    expect(mockCheckoutCreate.mock.lastCall![0]).toEqual(
       expect.objectContaining({
         line_items: [{ price: 'price_credit_pack', quantity: 50, adjustable_quantity: { enabled: true, minimum: 50, maximum: 500 } }]
       })
@@ -99,10 +99,34 @@ describe('lib/stripe', () => {
       cancelUrl: 'https://app/cancel',
     })
 
-    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+    expect(mockCheckoutCreate.mock.lastCall![0]).toEqual(
       expect.objectContaining({
         line_items: [{ price: 'price_credit_pack', quantity: 150, adjustable_quantity: { enabled: true, minimum: 50, maximum: 500 } }]
       })
+    )
+  })
+
+  // Customers see and pay local currency; we're credited USD. Subscriptions only get
+  // Adaptive Pricing on API 2026-03-25.dahlia+, so both Checkout calls pin it per request.
+  it.each([
+    [
+      'createCheckoutSession',
+      async (m: typeof import('@/lib/stripe')) =>
+        m.createCheckoutSession({ userId: 'u', priceId: 'price_123', successUrl: 'https://app/s', cancelUrl: 'https://app/c' }),
+    ],
+    [
+      'createCreditPackCheckoutSession',
+      async (m: typeof import('@/lib/stripe')) =>
+        m.createCreditPackCheckoutSession({ userId: 'u', successUrl: 'https://app/s', cancelUrl: 'https://app/c' }),
+    ],
+  ])('%s turns on Adaptive Pricing with an API version that supports it', async (_name, create) => {
+    mockCheckoutCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/x' })
+    vi.stubEnv('STRIPE_AI_CREDIT_PACK_PRICE_ID', 'price_credit_pack')
+    await create(await import('@/lib/stripe'))
+
+    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ adaptive_pricing: { enabled: true } }),
+      { apiVersion: '2026-03-25.dahlia' }
     )
   })
 
