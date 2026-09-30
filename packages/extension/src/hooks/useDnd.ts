@@ -1,5 +1,6 @@
-import { KeyboardSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { KeyboardSensor, TouchSensor, useSensor, useSensors, type KeyboardCode } from '@dnd-kit/core';
+import { createKeyboardCoordinateGetter } from '@/lib/dndKeyboardTargets';
+import { useUIStore } from '@/stores/uiStore';
 import { Html5DragSensor } from '@/lib/dndHtml5Sensor';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { motionScrollBehavior } from '@/lib/reducedMotion';
@@ -54,12 +55,29 @@ export * from './useDndHandlers';
  * HTML5 drag from touch, so the stock sensor is correct there. `KeyboardSensor`
  * keeps the layer accessible.
  */
+/**
+ * ONLY Space picks up and drops; Escape cancels. dnd-kit's defaults also use Enter as a
+ * start AND end key (and Tab as an end key): Enter on a focused grip started a drag, and
+ * Enter mid-drag DROPPED it — for a Now Open tab dropped on a group that is a MOVE, which
+ * closes the real browser tab. Enter stays "open" on a row and is inert on the grip / mid-drag.
+ * Plain strings cast to the enum: unit-test mocks of '@dnd-kit/core' omit the runtime enum.
+ */
+export const DND_KEYBOARD_CODES = {
+  start: ['Space'],
+  cancel: ['Escape'],
+  end: ['Space']
+} as unknown as { start: KeyboardCode[]; cancel: KeyboardCode[]; end: KeyboardCode[] };
+
+const keyboardCoordinateGetter = createKeyboardCoordinateGetter(() => useUIStore.getState().activeGroupIndex);
+
 export function useDndSensors() {
   const html5 = useSensor(Html5DragSensor);
   const touch = useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } });
   // Reduced motion: the sensor scrolls the moved item into view instantly, not smoothly.
   const keyboard = useSensor(KeyboardSensor, {
-    coordinateGetter: sortableKeyboardCoordinates,
+    // Two-pane target model (main panel <-> sidebar, drop zones): see `@/lib/dndKeyboardTargets`.
+    keyboardCodes: DND_KEYBOARD_CODES,
+    coordinateGetter: keyboardCoordinateGetter,
     scrollBehavior: motionScrollBehavior()
   });
   // Diagnostic pointer-stream probe (`@/lib/dndPointerProbe`, localStorage flag,

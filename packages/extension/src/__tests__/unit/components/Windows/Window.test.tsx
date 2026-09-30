@@ -246,6 +246,18 @@ describe('WindowItem', () => {
     expect(baseUIState.selectRange).not.toHaveBeenCalled()
   })
 
+  it('plain Space on the focused window HEADER moves focus to the grip and forwards the keydown to it', () => {
+    wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] }))
+    const grip = document.querySelector('[aria-label="Drag to reorder window: Test Window"]') as HTMLElement
+    const header = document.querySelector('[data-window-header]') as HTMLElement
+    const seen = vi.fn()
+    grip.addEventListener('keydown', seen)
+    header.focus()
+    fireEvent.keyDown(header, { key: ' ', code: 'Space' })
+    expect(seen).toHaveBeenCalledTimes(1)
+    expect(document.activeElement).toBe(grip)
+  })
+
   it('shift+click on the header selects the window RANGE from the anchor (same group) and blocks text selection', () => {
     mockUseGroups.mockReturnValue({
       data: {

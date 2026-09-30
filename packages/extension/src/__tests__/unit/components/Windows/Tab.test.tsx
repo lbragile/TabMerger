@@ -294,6 +294,18 @@ describe('TabItem — keyboard: keys from nested controls never open the tab', (
     expect(globalThis.chrome.tabs.create).toHaveBeenCalledTimes(1)
   })
 
+  it('plain Space on the focused ROW hands the pickup to the grip (dnd-kit) and does NOT open the tab', () => {
+    sortableListeners.onKeyDown.mockClear()
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const row = screen.getByRole('listitem')
+    const grip = document.querySelector('[aria-label^="Drag to reorder"]') as HTMLElement
+    row.focus()
+    fireEvent.keyDown(row, { key: ' ', code: 'Space' })
+    expect(sortableListeners.onKeyDown).toHaveBeenCalledTimes(1)
+    expect(document.activeElement).toBe(grip)
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
   it('Shift+Space on the focused row selects the RANGE and does not open the tab', () => {
     render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
     fireEvent.keyDown(screen.getByRole('listitem'), { key: ' ', code: 'Space', shiftKey: true })

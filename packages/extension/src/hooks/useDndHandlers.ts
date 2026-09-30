@@ -1,3 +1,4 @@
+import { clearForcedKeyboardTarget } from '@/lib/dndKeyboardTargets';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Collision, DragStartEvent, DragOverEvent, DragMoveEvent, DragEndEvent } from '@dnd-kit/core';
 import { useQueryClient, notifyManager, defaultScheduler, type QueryClient } from '@tanstack/react-query';
@@ -756,6 +757,7 @@ export function useDndHandlers() {
     // nothing left to clear it.
     clearDndDragSelection();
     clearDndDragLive();
+    clearForcedKeyboardTarget();
     setBodyDragCursor(false);
     clearSpring();
     applyPreview(null);
@@ -771,6 +773,7 @@ export function useDndHandlers() {
     (e: DragStartEvent) => {
       const keyboard = typeof KeyboardEvent !== 'undefined' && e.activatorEvent instanceof KeyboardEvent;
       cancelDndAnnouncement();
+      clearForcedKeyboardTarget();
       begin(e, keyboard);
       // LAST, and still synchronous (before any keydown can reach `useKeyboardNav`, see
       // `isDndDragLive`): if anything above threw, the flag must not be left set — a stuck

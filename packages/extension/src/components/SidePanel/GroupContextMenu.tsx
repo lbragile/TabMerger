@@ -1,4 +1,5 @@
 import React from 'react';
+import { pickUpFromRow } from '@/lib/dndKeyboardPickup';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -166,6 +167,9 @@ export function GroupContextMenu({
         // Don't intercept keystrokes from nested inputs (e.g. rename field) — only
         // the row itself should activate on Enter/Space.
         if (e.target !== e.currentTarget) return;
+        // Space picks a draggable group up (keyboard drag); Enter stays "activate". Rows with
+        // no grip (Now Open) fall through to activation.
+        if (pickUpFromRow(e)) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onWrapperClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);

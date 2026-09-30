@@ -28,6 +28,7 @@ import {
   type DndInsertion,
   type InsertionCandidate
 } from '@/lib/dndInsertion';
+import { getForcedKeyboardTarget } from '@/lib/dndKeyboardTargets';
 import { getDndDragSelection } from '@/lib/dndMultiDrag';
 import { dndDebugLog } from '@/lib/dndDebug';
 import { DND_SCREEN_READER_INSTRUCTIONS } from '@/lib/dndAnnouncements';
@@ -385,7 +386,13 @@ export function virtualDroppableRects(
 export const unifiedCollisionWithInsertion: CollisionDetection = (args) => {
   const rects = virtualDroppableRects(args, getDndDragSession());
   const vargs = rects === args.droppableRects ? args : { ...args, droppableRects: rects };
-  const hits = attachInsertion(vargs, unifiedCollision(vargs));
+  // Keyboard drag with the cursor in the sidebar pane: the target is chosen by the
+  // target-list model (`@/lib/dndKeyboardTargets`), not inferred from rect overlap.
+  const forcedId = args.pointerCoordinates ? null : getForcedKeyboardTarget(args.active ? String(args.active.id) : undefined);
+  const forcedContainer = forcedId ? args.droppableContainers.find((c) => String(c.id) === forcedId) : undefined;
+  const hits = forcedContainer
+    ? attachInsertion(vargs, [{ id: forcedContainer.id, data: { droppableContainer: forcedContainer, value: 0 } }])
+    : attachInsertion(vargs, unifiedCollision(vargs));
   if (hits.length > 0) {
     noteGapContainer((hits[0].data as { tmInsertion?: DndInsertion } | undefined)?.tmInsertion?.containerKey ?? null);
   }

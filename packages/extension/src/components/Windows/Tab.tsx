@@ -12,6 +12,7 @@ import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { pickUpFromRow } from '@/lib/dndKeyboardPickup';
 import { saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { getDisplayTitle } from '@/lib/tabTitle';
@@ -420,6 +421,8 @@ const { mutate: deleteTab } = useDeleteTab();
           extendRange();
           return;
         }
+        // Plain Space picks the tab up (keyboard drag); Enter stays "open".
+        if (!editingTitle && pickUpFromRow(e)) return;
         if ((e.key === 'Enter' || e.key === ' ') && !isLocked && !editingTitle) {
           e.preventDefault();
           void handleOpen();

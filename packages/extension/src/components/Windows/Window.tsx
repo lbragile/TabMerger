@@ -55,6 +55,7 @@ import { dndListStyle, gapGrowthFor, gapTransformFor } from '@/lib/dndInsertion'
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { selectionRange } from '@/lib/selectionRange';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { pickUpFromRow } from '@/lib/dndKeyboardPickup';
 
 interface WindowProps {
   /** parent group's model id — window sortable id is `${groupId}::w${windowIndex}` */
@@ -264,6 +265,9 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         onKeyDown={(e) => {
           // Inert mid-drag, so dnd-kit still receives the arrows (spec C13).
           headerRoving.onKeyDown(e);
+          if (e.defaultPrevented) return;
+          // Space on the focused header picks the window up (the grip is not a Tab stop).
+          pickUpFromRow(e);
         }}
         onClick={handleHeaderClick}
         // Shift+click must not extend the browser's TEXT selection.

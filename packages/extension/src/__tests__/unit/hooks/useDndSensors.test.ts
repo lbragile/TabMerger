@@ -85,6 +85,18 @@ describe('useDndSensors — MV3 action-popup sensor set', () => {
     expect(names()).toContain('KeyboardSensor');
   });
 
+  it('KeyboardSensor uses Space ONLY to start/end and Escape to cancel — never Enter (Enter opens a row) or Tab', () => {
+    renderHook(() => useDndSensors());
+    const opts = captured.filter((c) => c.name === 'KeyboardSensor').pop()?.options as {
+      keyboardCodes: { start: string[]; cancel: string[]; end: string[] };
+    };
+    expect(opts.keyboardCodes).toEqual({ start: ['Space'], cancel: ['Escape'], end: ['Space'] });
+    for (const list of Object.values(opts.keyboardCodes)) {
+      expect(list).not.toContain('Enter');
+      expect(list).not.toContain('Tab');
+    }
+  });
+
   it('KeyboardSensor scrolls smoothly by default and INSTANTLY under prefers-reduced-motion', () => {
     const kb = () => captured.filter((c) => c.name === 'KeyboardSensor').pop()?.options as { scrollBehavior?: string };
     vi.stubGlobal('matchMedia', () => ({ matches: false }));
