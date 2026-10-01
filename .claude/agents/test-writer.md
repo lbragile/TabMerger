@@ -14,6 +14,7 @@ tools:
   - Glob
   - Grep
   - Bash
+  - SendMessage
 color: blue
 ---
 
@@ -132,3 +133,13 @@ For Zustand stores, always reset state in `beforeEach` via `useUIStore.setState(
 
 ## Secret scanning
 Before writing any test file, ensure it contains no API keys, real emails, or PII. Use placeholder data like `user@example.com`, `sk_test_...`.
+
+## Progress updates (mandatory when running in the background)
+
+Nobody can see your work while you run in the background, so report progress yourself with `SendMessage` (`to: "main"`):
+
+1. **At the start**, send your plan as numbered steps with a time estimate for each and a total, e.g. "Plan (~25 min): 1. reproduce (~5) 2. implement (~10) 3. tests (~7) 4. coverage and report (~3)".
+2. **After each step**, send one line: `Step k/N done (took ~X min): <what>. Next: <what> (~Y min). Left: <remaining steps> (~Z min).` Base estimates on how long earlier steps actually took, and say so when an estimate changes a lot.
+3. **When blocked** (a failure you can't explain, a denied permission, an unclear requirement), say so straight away instead of retrying silently.
+
+Keep updates to a line or two; the details belong in your final report. If you're running in the foreground, skip this.
