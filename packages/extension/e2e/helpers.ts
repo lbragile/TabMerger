@@ -10,6 +10,26 @@ export async function openPopup(context: BrowserContext, extensionId: string): P
 }
 
 /**
+ * Wait until an inline rename input (tab / group / window title) is truly ready for typing.
+ *
+ * Entering edit mode mounts the input, then a 50ms timer focuses it and collapses the
+ * selection to the end of the value. A test that clicks / presses Ctrl+A inside that window
+ * has its selection collapsed by the timer, so a following Backspace deletes one character.
+ * The input is never autoFocus, so "focused with the caret at the end" can only be true
+ * after the timer ran. Call this BEFORE any click or keypress in the input.
+ */
+export async function waitForRenameInputReady(page: Page): Promise<void> {
+  await page.waitForFunction(() => {
+    const el = document.activeElement;
+    return (
+      el instanceof HTMLInputElement &&
+      el.selectionStart === el.value.length &&
+      el.selectionEnd === el.value.length
+    );
+  });
+}
+
+/**
  * Seed IndexedDB with a minimal state so tests don't depend on live browser tabs.
  * Writes directly via the idb-style API that the extension already has open.
  */

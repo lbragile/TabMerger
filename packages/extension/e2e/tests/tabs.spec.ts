@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload } from '../helpers';
+import { openPopup, seedAndReload, waitForRenameInputReady } from '../helpers';
 import { NOW_OPEN, WORK_GROUP, seedConfirmOnDelete } from '../seed';
 
 // Tab rename is triggered via the tab's right-click context menu ("Rename tab"),
@@ -7,8 +7,10 @@ import { NOW_OPEN, WORK_GROUP, seedConfirmOnDelete } from '../seed';
 async function openRenameTab(page: import('@playwright/test').Page, tabName: string) {
   const tabRow = page.getByRole('listitem', { name: tabName });
   await tabRow.click({ button: 'right' });
-  await page.waitForTimeout(200);
   await page.getByRole('menuitem', { name: 'Rename tab' }).click();
+  // The title input is focused + caret-collapsed by a 50ms timer in Tab.tsx; typing before
+  // that races it (Ctrl+A is undone, Backspace deletes one char).
+  await waitForRenameInputReady(page);
 }
 
 test.describe('Tab management', () => {
