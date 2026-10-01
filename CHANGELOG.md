@@ -1,3 +1,21 @@
+# [3.1.0-beta.9](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.8...v3.1.0-beta.9) (2026-10-01)
+
+
+### Bug Fixes
+
+* **extension:** show the drop gap after spring-open switches the group mid-drag ([e664c0a](https://github.com/lbragile/TabMerger/commit/e664c0a8958efad9c4c25553c0b43869ba3114e5))
+* **extension:** start keyboard drags from the focused row and step through real targets ([906aa39](https://github.com/lbragile/TabMerger/commit/906aa392ca8b959abdb4189192fb536f4402bce6))
+* **web:** draw the toast dismiss button as a plain icon inside the toast ([b25151e](https://github.com/lbragile/TabMerger/commit/b25151ed843d13205aa5e8f8b944f938b6c8e6d4))
+* **web:** fit the signed-in header on phones ([6ddc9b9](https://github.com/lbragile/TabMerger/commit/6ddc9b9c980ac93dd734f17cbad424bcc9e5c466))
+* **web:** go straight in after sign-up when no email confirmation is needed ([6b276d7](https://github.com/lbragile/TabMerger/commit/6b276d7f0f365a69e4b69bedf9ffb43f561fa0c2))
+
+
+### Features
+
+* **extension:** move tabs, windows and groups with a keyboard move mode ([e88a06c](https://github.com/lbragile/TabMerger/commit/e88a06c799073223e5f5bd84717320e59b48133c))
+* **web:** let customers pay in their local currency at checkout ([599bc31](https://github.com/lbragile/TabMerger/commit/599bc31c113b2896c919a4caa1a377744ec192ab))
+* **web:** turn the beta guide into a checklist with screenshots, Pro markers and known issues ([fabb67f](https://github.com/lbragile/TabMerger/commit/fabb67f545880b375169bc57b425a2897bf876d1))
+
 # [3.1.0-beta.8](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.7...v3.1.0-beta.8) (2026-09-30)
 
 
