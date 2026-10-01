@@ -189,8 +189,7 @@ export default defineConfig({
                     // GUID (addons.mozilla.org/firefox/addon/tabmerger, verified via AMO's public
                     // API): any other value is a different add-on, so existing Firefox users would
                     // never receive the update. The 2.0 rewrite had changed it by mistake.
-                    // Beta gets its own ID so the unlisted beta add-on can sit beside stable
-                    // (.claude/plans/firefox-edge-beta-spec.md §5.1).
+                    // Beta gets its own ID so the unlisted beta add-on can sit beside stable.
                     id: isBeta ? FIREFOX_BETA_ADDON_ID : FIREFOX_STABLE_ADDON_ID,
                     // The oldest Firefox that has every API/key this manifest uses:
                     // data_collection_permissions (140), the tabGroups permission and
@@ -201,8 +200,8 @@ export default defineConfig({
                     // Only the unlisted, self-distributed BETA add-on needs this — AMO-listed
                     // stable updates from AMO itself, and setting update_url there would make
                     // Firefox treat it as (and validate it as) a self-distributed add-on, which
-                    // AMO's listed-add-on review rejects. Firefox checks this URL ~every 24h
-                    // (.claude/plans/firefox-edge-beta-spec.md §5.3); CI regenerates the
+                    // AMO's listed-add-on review rejects. Firefox checks this URL ~every 24h;
+                    // CI regenerates the
                     // updates.json it points at on every beta release.
                     ...(isFirefox && isBeta
                         ? { update_url: resolveFirefoxBetaUpdateUrl(env.VITE_WEB_APP_URL) }

@@ -411,7 +411,7 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
         // (aria-label "Drag to reorder tab: <title>") IS a real drag source.
         // ponytail: 2026-09-26 — DnD was rebuilt on a dual pointer/native-HTML5
         // sensor (Html5DragSensor, `dndHtml5Sensor.ts`, spec:
-        // drag-and-drop-spec.md). The grip's aria-label grew a ": <tab title>"
+        // docs/drag-and-drop-spec.md). The grip's aria-label grew a ": <tab title>"
         // suffix (Tab.tsx) so every exact-match locator here silently matched
         // ZERO elements — switched to the `^=` prefix selector, same pattern
         // the extension's own e2e DnD spec (`e2e/tests/popup-dnd.spec.ts`) uses.

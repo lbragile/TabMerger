@@ -21,8 +21,7 @@
 
 Both listings ship the identical codebase; only the manifest `name`/description/version differ
 per `wxt.config.ts`'s `getExtensionName()` and the beta/stable branches of the `manifest()` fn.
-See `docs/PUBLISHING.md` and `.claude/plans/release-and-beta-channel-spec.md` for how builds and
-publishing are wired.
+See `docs/PUBLISHING.md` for how builds and publishing are wired.
 
 ---
 
@@ -221,7 +220,7 @@ minifying is allowed, but the store's code-readability policy forbids obfuscatio
 **Regions**: TODO (owner)
 
 **Firefox is unaffected by the two Chrome Web Store listings above** — it's a separate item on
-a separate store (see `.claude/plans/firefox-edge-beta-spec.md` §5). Chrome and Edge builds carry
+a separate store (see `FIREFOXADDONS.md`). Chrome and Edge builds carry
 no content script, no host permission, and no site-access prompt from the change below. Firefox's
 own two add-ons (stable AMO listing + the unlisted self-distributed BETA), their data-collection
 declaration, and their update mechanism are tracked separately in

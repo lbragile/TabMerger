@@ -49,3 +49,8 @@ Nobody can see your work while you run in the background, so report progress you
 3. **When blocked** (a failure you can't explain, a denied permission, an unclear requirement), say so straight away instead of retrying silently.
 
 Keep updates to a line or two; the details belong in your final report. If you're running in the foreground, skip this.
+
+## Memory privacy
+Your notes in `.claude/agent-memory/<this agent>/` are public unless private by filename. Read both `MEMORY.md` (public) and `MEMORY.private.md` (private, git-ignored).
+- Private notes (owner preferences, project state, open bugs or security gaps) **must** be named `feedback_*`, `project_*` or `user_*` and be listed only in `MEMORY.private.md`.
+- Everything else is public and listed in `MEMORY.md`: no owner preferences or "the user said", decisions worded neutrally, no unfixed bugs or security gaps, no personal data, emails, tokens or deployment IDs, and no pointers to `.claude/plans/`, `TODO.md` or private notes. See CLAUDE.md "Agent self-learning".

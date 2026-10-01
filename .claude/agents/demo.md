@@ -27,12 +27,16 @@ Playwright driver that records the live extension and a Remotion project that co
 recordings into a captioned, branded `.mp4`.
 
 ## Project memory
-On startup, the Claude project `MEMORY.md` index is auto-loaded into your context. Use it to locate
-and read:
-- `project_revamp_v2.md` — full v2.0 revamp context, tech stack, and decisions
-- `agents/demo-learnings.md` — non-obvious learnings specific to this domain (create if missing)
+Your memory lives in `.claude/agent-memory/demo/`. On startup, read its `MEMORY.md` (public
+learnings) and, if present, `MEMORY.private.md` (private notes), then open the notes relevant to
+the task. Read other agents' `MEMORY.md` files too when you touch their domain.
+After a significant task, save each non-obvious learning as its own note in that folder and list it
+in the matching index (see "Memory privacy" below).
 
-Append learnings to `agents/demo-learnings.md` after tasks.
+## Memory privacy
+Your notes in `.claude/agent-memory/<this agent>/` are public unless private by filename. Read both `MEMORY.md` (public) and `MEMORY.private.md` (private, git-ignored).
+- Private notes (owner preferences, project state, open bugs or security gaps) **must** be named `feedback_*`, `project_*` or `user_*` and be listed only in `MEMORY.private.md`.
+- Everything else is public and listed in `MEMORY.md`: no owner preferences or "the user said", decisions worded neutrally, no unfixed bugs or security gaps, no personal data, emails, tokens or deployment IDs, and no pointers to `.claude/plans/`, `TODO.md` or private notes. See CLAUDE.md "Agent self-learning".
 
 ## Boundary — do not edit `packages/extension/`
 Demo mode (closing real windows/tabs, seeding canned data, the Settings entry point) lives in
@@ -76,8 +80,8 @@ packages/demo/
 
 ## Self-learning
 After each task, if you discover something non-obvious about Remotion, Playwright extension
-automation, or timing/sync between the recording and captions, write it to
-`agents/demo-learnings.md`.
+automation, or timing/sync between the recording and captions, save it as a note in
+`.claude/agent-memory/demo/` (see Project memory).
 
 ## Progress updates (mandatory when running in the background)
 

@@ -1,6 +1,6 @@
 # Feature Roadmap
 
-This is the forward-looking list. Known bugs and in-flight engineering work are tracked in [TODO.md](../TODO.md). Per-feature specs live in `.claude/plans/` and [roadmap-next.md](roadmap-next.md). Link to them rather than copying them here.
+This is the forward-looking list. Known bugs and engineering tasks are tracked separately, not here. [roadmap-next.md](roadmap-next.md) has more detail on upcoming items; link to it rather than copying it here.
 
 ## Current state
 
@@ -68,7 +68,7 @@ _Last updated 2026-09-30. Keep this current in the same change as the work (a CL
 
 ## Growth
 
-- [x] Public sharing: encrypted multi-group bundles. Single-group publish via `public_slug` is currently broken; see TODO.md.
+- [x] Public sharing: encrypted multi-group bundles. Single-group publish via `public_slug` is currently broken.
 - [ ] Referral program
 - [ ] Team plan with shared group collections. Only `free`, `pro` and `pro_ai` exist.
 - [ ] Embeddable badge widget

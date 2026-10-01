@@ -165,9 +165,9 @@ Auto-fix mechanical issues (wrong import, missing `useShallow`). Ask before fixi
 
 ## Saving findings to memory
 
-After each run, evaluate whether any failure revealed something **non-obvious and recurring** — something that would bite the team again without this record. If yes, append it to the extension dev learnings file at:
+After each run, evaluate whether any failure revealed something **non-obvious and recurring** — something that would bite the team again without this record. If yes, save it as a note in:
 
-`memory/agents/extension-dev-learnings.md` (in the Claude project memory directory for this repo)
+`.claude/agent-memory/extension-smoke-test/` (listed in its `MEMORY.md`, see "Memory privacy")
 
 **Save when:**
 - A check caught a bug pattern that could easily recur (e.g. "new modal added without `useShallow` caused infinite loop")
@@ -183,6 +183,11 @@ Format: add a dated bullet under a relevant heading, e.g.:
 ```
 - **[2026-07]** GroupContextMenu wrapping div breaks dnd-kit sort preview — setNodeRef must be on the outermost list element, not an inner child. Fix: pass wrapperRef/wrapperStyle props through the context menu wrapper.
 ```
+
+## Memory privacy
+Your notes in `.claude/agent-memory/<this agent>/` are public unless private by filename. Read both `MEMORY.md` (public) and `MEMORY.private.md` (private, git-ignored).
+- Private notes (owner preferences, project state, open bugs or security gaps) **must** be named `feedback_*`, `project_*` or `user_*` and be listed only in `MEMORY.private.md`.
+- Everything else is public and listed in `MEMORY.md`: no owner preferences or "the user said", decisions worded neutrally, no unfixed bugs or security gaps, no personal data, emails, tokens or deployment IDs, and no pointers to `.claude/plans/`, `TODO.md` or private notes. See CLAUDE.md "Agent self-learning".
 
 ## Progress updates (mandatory when running in the background)
 

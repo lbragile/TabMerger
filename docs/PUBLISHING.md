@@ -40,7 +40,7 @@ are documented inline there and are easy to get stale in a separate doc.
 Where each browser gets TabMerger, under which ID, and whether the website can talk to it. An
 extension installed from the Chrome Web Store keeps the **same ID in every Chromium browser**, so
 Chrome, Edge, Brave, Vivaldi, Arc and Opera installs from that store all behave identically.
-Design notes and open work: `.claude/plans/firefox-edge-beta-spec.md`. Store-listing details:
+Store-listing details:
 `packages/extension/CHROMEWEBSTORE.md` (Chrome/Edge) and `packages/extension/FIREFOXADDONS.md`
 (both Firefox add-ons).
 

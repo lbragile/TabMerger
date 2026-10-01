@@ -11,7 +11,7 @@ packages/
 supabase/      Postgres migrations, RLS, seed data, local stack config
 docs/          This directory
 .github/       CI, store publish, Vercel preview deploy
-.claude/       Agent definitions, skills, specs (.claude/plans/)
+.claude/       Agent definitions, skills, agent memory
 ```
 
 Related docs: [DATABASE.md](DATABASE.md) (workflow) · [database-schema.md](database-schema.md) (per-table reference) · [PUBLISHING.md](PUBLISHING.md) · [RELEASE_SANITY_CHECK.md](RELEASE_SANITY_CHECK.md) · [AI_FEATURES.md](AI_FEATURES.md) · [PAYMENTS.md](PAYMENTS.md).
@@ -38,7 +38,7 @@ There is no content script. Tab-preview metadata (OG image/description) comes fr
 | Zustand | `src/stores/uiStore.ts` | Ephemeral UI: modals, active group, search, rename target, selection, undo/redo (10 snapshots). |
 | Supabase | `src/lib/syncEngine.ts` | Cloud sync of groups (Pro). Last-write-wins on `updatedAt`. |
 
-**Sync** (`src/hooks/useSync.ts` → `syncEngine.performSync`): push `pendingSync` groups, pull all remote groups, merge last-write-wins, re-apply local order. The popup runs it on mount, on the `online` event, every 30 s, and applies Supabase Realtime `groups` changes. The service worker runs the same `performSync` when the web dashboard sends `SYNC_NOW`. The permanent "Now Open" group is device-local and never pushed; each device instead upserts an encrypted Now Open snapshot to `device_sessions` for "Continue on other device" (`src/lib/deviceSessions.ts`). Known sync/IDB race bugs are open — see [TODO.md](../TODO.md).
+**Sync** (`src/hooks/useSync.ts` → `syncEngine.performSync`): push `pendingSync` groups, pull all remote groups, merge last-write-wins, re-apply local order. The popup runs it on mount, on the `online` event, every 30 s, and applies Supabase Realtime `groups` changes. The service worker runs the same `performSync` when the web dashboard sends `SYNC_NOW`. The permanent "Now Open" group is device-local and never pushed; each device instead upserts an encrypted Now Open snapshot to `device_sessions` for "Continue on other device" (`src/lib/deviceSessions.ts`).
 
 **E2E encryption** is mandatory for signed-in Pro users. `src/lib/encryptionKey.ts` wraps a random AES-256-GCM data key with a PBKDF2 passphrase key and stores only the wrapped form in `encryption_keys`. The unwrapped data key is cached in `chrome.storage.local` per user, so unlocking is once per device. Primitives live in `packages/shared/src/crypto`. The encrypted columns are listed in [database-schema.md](database-schema.md#e2e-encrypted-columns).
 
@@ -63,7 +63,7 @@ There is no content script. Tab-preview metadata (OG image/description) comes fr
 | `SYNC_AUTH` | `supabase.auth.setSession(access, refresh)` — hands the web session to the extension. Fire-and-forget. |
 | `SYNC_NOW` | Runs `performSync`; replies `{ok:true}` or `{ok:false, reason}` with `reason` one of `no-session`, `locked`, `error`. |
 
-These failures are currently silent. A diagnostics screen is proposed in [`.claude/plans/sync-diagnostics-spec.md`](../.claude/plans/sync-diagnostics-spec.md) but has not been built.
+These failures are currently silent. A diagnostics screen is planned but has not been built.
 
 ### Build modes
 
@@ -97,7 +97,7 @@ In CI there are no env files. `.github/workflows/publish.yml` sets each build's 
 | `billing-portal` (cookie auth), `portal` (Bearer, extension) | Stripe Billing Portal. |
 | `webhooks/stripe` | Reads the raw body with `request.text()` for signature verification. Upserts `subscriptions` with `onConflict: 'user_id'` and records `ai_credit_purchases`. |
 | `ai/{group-tabs,name-group,suggest-sessions,tab-summary,organize,organize/approve}` | AI features (Bearer JWT, `pro_ai` tier, weighted credits). `organize` runs a Vercel Workflow (`lib/workflows/tabOrganizer.ts`). `ai/dev-usage` is development-only. |
-| `groups/[id]/publish` | Sets/clears `groups.public_slug` (see the open item in TODO.md). |
+| `groups/[id]/publish` | Sets/clears `groups.public_slug`. |
 | `sessions/[id]` | Deletes a saved session. |
 | `og-preview` | Server-side OG metadata fetch for tab previews and share pages. |
 | `track` | GA4 Measurement Protocol proxy for extension events. |
@@ -155,4 +155,4 @@ The web app and the extension talking to it must use the **same** Supabase proje
 
 ## Release pipeline
 
-semantic-release runs on the `beta` branch. A tag triggers `publish.yml`: prereleases go to the private Chrome BETA listing, and non-prerelease `release` events go to Chrome stable, Firefox AMO and Edge. See [PUBLISHING.md](PUBLISHING.md), [RELEASE_SANITY_CHECK.md](RELEASE_SANITY_CHECK.md) and [`.claude/plans/release-and-beta-channel-spec.md`](../.claude/plans/release-and-beta-channel-spec.md).
+semantic-release runs on the `beta` branch. A tag triggers `publish.yml`: prereleases go to the private Chrome BETA listing, and non-prerelease `release` events go to Chrome stable, Firefox AMO and Edge. See [PUBLISHING.md](PUBLISHING.md) and [RELEASE_SANITY_CHECK.md](RELEASE_SANITY_CHECK.md).

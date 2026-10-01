@@ -92,9 +92,8 @@ reviewing tests for a hook file:
 2. **When a feature has both a single-item and a bulk/multi-select variant of the same action**
    (delete, move, star, etc.), write a test asserting BOTH variants apply the same guard/gate
    (e.g. a settings check, an entitlement check, a permanent-group guard). Divergent paths are the
-   single most common source of "works for one item, breaks for many" bugs in this codebase — see
-   `agents/extension-dev-learnings.md` → "Selection-mode bulk actions must route through the SAME
-   confirm gate as single-item delete".
+   single most common source of "works for one item, breaks for many" bugs in this codebase: e.g.
+   selection-mode bulk actions must route through the SAME confirm gate as single-item delete.
 3. **Any mutation that touches both local IndexedDB and a remote system (Supabase sync)** needs a
    test asserting the remote call happens too, not just the local write — a correct local delete/update
    that silently skips telling Supabase will "revert on reload" once `useSync` pulls remote state back
@@ -143,3 +142,8 @@ Nobody can see your work while you run in the background, so report progress you
 3. **When blocked** (a failure you can't explain, a denied permission, an unclear requirement), say so straight away instead of retrying silently.
 
 Keep updates to a line or two; the details belong in your final report. If you're running in the foreground, skip this.
+
+## Memory privacy
+Your notes in `.claude/agent-memory/<this agent>/` are public unless private by filename. Read both `MEMORY.md` (public) and `MEMORY.private.md` (private, git-ignored).
+- Private notes (owner preferences, project state, open bugs or security gaps) **must** be named `feedback_*`, `project_*` or `user_*` and be listed only in `MEMORY.private.md`.
+- Everything else is public and listed in `MEMORY.md`: no owner preferences or "the user said", decisions worded neutrally, no unfixed bugs or security gaps, no personal data, emails, tokens or deployment IDs, and no pointers to `.claude/plans/`, `TODO.md` or private notes. See CLAUDE.md "Agent self-learning".

@@ -12,7 +12,7 @@ export interface ChangeEntry {
 /**
  * Filters out prerelease versions (`-beta.N` / `-alpha.N` / `-rc.N`). The public
  * changelog lists stable releases only — semantic-release's beta channel
- * (see `.claude/plans/release-and-beta-channel-spec.md` §3) is not a
+ * (prereleases cut from the `beta` branch) is not a
  * user-facing event and must never appear here.
  */
 const PRERELEASE_RE = /-(?:beta|alpha|rc)\.\d+$/i

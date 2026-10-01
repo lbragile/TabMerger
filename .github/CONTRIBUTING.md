@@ -96,6 +96,16 @@ chore(deps): bump wxt to 0.20.28
 
 See [`docs/`](../docs/) for architecture notes, the release process, and integration guides.
 
+## Working with Claude Code agents
+
+The repo ships domain agents (`.claude/agents/`) and their accumulated learnings
+(`.claude/agent-memory/<agent>/`, indexed by each folder's `MEMORY.md`), so your agents start from
+the same project knowledge. If your work turns up a non-obvious gotcha, add it as a new note in
+the matching folder and list it in that folder's `MEMORY.md`. It's reviewed like any other docs
+change. Keep notes technical and neutral, with no personal data, tokens or unreleased plans.
+Notes named `feedback_*`, `project_*` or `user_*` are maintainer-private and git-ignored, so
+don't add those.
+
 ## Reporting issues
 
 Use the [bug report](ISSUE_TEMPLATE/bug_report.md) or

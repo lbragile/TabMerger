@@ -75,7 +75,7 @@ The preview and production projects are separate. Push to each one and check `mi
 
 `windows` stores the whole `ExtWindow[]` tree as JSONB, or as one encrypted blob. Tabs have no table of their own.
 
-Known open race bugs (sync reverting edits, delete resurrection, popup vs. background write race) are listed in [TODO.md](../TODO.md). Have the `sync-conflict-auditor` agent review any change to `syncEngine.ts` or `localDb.ts`.
+Last-write-wins sync is prone to subtle races (an in-flight sync overwriting a newer local edit, delete resurrection, popup vs. background writes). Have the `sync-conflict-auditor` agent review any change to `syncEngine.ts` or `localDb.ts`.
 
 ## Common queries
 
@@ -125,4 +125,4 @@ supabase db reset       # apply migrations + seed.sql
 
 The extension's `.env.local` already points at `http://127.0.0.1:54321`. For the web app, set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `packages/web/.env.local`. `supabase start` prints the local keys.
 
-> **Known issue:** `supabase db reset` applies every migration, but then `seed.sql` fails with `23505` on `subscriptions_user_id_key`. Its subscriptions insert uses `on conflict (id)`, while the trigger has already created each user's row. The seeded test users therefore don't get their subscriptions. Until that's fixed, sign up through the app and confirm the email in the local mail catcher. It is tracked in [TODO.md](../TODO.md).
+> **Known issue:** `supabase db reset` applies every migration, but then `seed.sql` fails with `23505` on `subscriptions_user_id_key`. Its subscriptions insert uses `on conflict (id)`, while the trigger has already created each user's row. The seeded test users therefore don't get their subscriptions. Until that's fixed, sign up through the app and confirm the email in the local mail catcher.

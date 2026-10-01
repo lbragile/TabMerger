@@ -5,8 +5,7 @@
 > The Firefox counterpart of `CHROMEWEBSTORE.md` — everything filled into Mozilla's Add-on
 > Developer Hub (addons.mozilla.org, "AMO") and the unlisted self-distribution pipeline. Manifest
 > facts here are pulled from `wxt.config.ts`; keep this file in sync with that file, not the
-> other way around. Design notes and the decisions behind this setup:
-> `.claude/plans/firefox-edge-beta-spec.md` §5.
+> other way around.
 
 ## Two add-ons, two very different distribution models
 

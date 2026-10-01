@@ -7,7 +7,6 @@ against an external system (the Chrome Web Store) that CI cannot assert on.
 **Related, and different:**
 - `.claude/skills/release-checklist` — the *automated* gates (lint, type-check, tests, zips).
   Run that first. This document assumes it passed.
-- `.claude/plans/release-and-beta-channel-spec.md` — *why* the pipeline is shaped as it is.
 - `docs/PUBLISHING.md` — one-time secret/store-account setup and the current pipeline shape.
   This document is the step-by-step checklist; PUBLISHING.md is the reference for what each
   secret is and how to obtain it.
