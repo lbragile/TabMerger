@@ -43,15 +43,6 @@ export const KNOWN_ISSUES: KnownIssue[] = [
     workaround: 'Nothing is lost: every group and tab is there, only the order differs.',
   },
   {
-    id: 'keyboard-drag-unreliable',
-    area: 'Extension',
-    title: 'Moving items with the keyboard doesn’t work well in every case',
-    details:
-      'Picking up a tab, window or group with Space and moving it with the arrow keys works for simple moves, but some combinations (moving between windows or groups, several selected items, the drop zones) can land in the wrong place or not move at all.',
-    workaround:
-      'Use the mouse, or right-click the item and choose “Move to group”. Tell us which keyboard move went wrong: it helps us fix it.',
-  },
-  {
     id: 'background-save-overwrites-popup',
     area: 'Extension',
     title: 'Saving tabs from outside the popup can overwrite a change made in it at the same moment',
