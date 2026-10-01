@@ -137,6 +137,8 @@ const rectOf = (cdp: RawCdp, sel: string) =>
   );
 
 test.describe('spring-open: the insertion gap shows in the destination group (pointer DnD)', () => {
+  // Independent tests (own browser, own debugging port): lets CI shards (--shard=i/N) split them.
+  test.describe.configure({ mode: 'parallel' });
   test.setTimeout(90_000);
 
   test('control: a same-group tab drag shows the gap', async () => {

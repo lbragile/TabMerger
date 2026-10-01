@@ -4,7 +4,7 @@ import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { seedIdb } from './helpers';
-import { RawCdp } from './rawCdp';
+import { CDP_TARGET_CLOSED, RawCdp } from './rawCdp';
 
 /**
  * Harness for driving the keyboard-move feature in the REAL MV3 toolbar popup the way a
@@ -61,10 +61,13 @@ export interface PopupSession {
   /** groupId -> windows -> titles (from IndexedDB) plus the group order. */
   snapshot(): Promise<{ order: string[]; groups: Record<string, string[][]> }>;
   eval<T>(expr: string): Promise<T>;
+  /** URLs (committed or pending) of every real browser tab, read in the service worker. No page load needed. */
+  tabUrls(): Promise<string[]>;
   close(): Promise<void>;
 }
 
-let portCounter = 9460;
+// Offset by Playwright's worker index so parallel workers never share a debugging port.
+let portCounter = 9460 + Number(process.env.TEST_PARALLEL_INDEX ?? 0) * 100;
 
 /** Open the real popup on `groups` with `liveTabs` open as real browser tabs (Now Open). */
 export async function openRealPopup(
@@ -151,12 +154,22 @@ export async function openRealPopup(
       const ctrlMod = o.ctrl ? 2 : 0;
       const k = KEYS[key] as { key: string; vk: number; text?: string };
       const modifiers = (o.shift ? 8 : 0) | ctrlMod;
-      await cdp.send('Input.dispatchKeyEvent', {
+      // A key can legitimately dismiss the popup (Enter on a tab opens it, which closes the
+      // toolbar popup and its CDP socket). That is not a failure: swallow only the
+      // "target closed" rejection, and only for the key events; anything else still throws.
+      const dispatch = async (params: Record<string, unknown>) => {
+        try {
+          await cdp.send('Input.dispatchKeyEvent', params);
+        } catch (e) {
+          if (!(e instanceof Error) || e.message !== CDP_TARGET_CLOSED) throw e;
+        }
+      };
+      await dispatch({
         type: 'keyDown', code: key === 'Space' ? 'Space' : key, key: k.key,
         windowsVirtualKeyCode: k.vk, nativeVirtualKeyCode: k.vk, modifiers,
         ...(k.text ? { text: k.text, unmodifiedText: k.text } : {}),
       });
-      await cdp.send('Input.dispatchKeyEvent', {
+      await dispatch({
         type: 'keyUp', code: key, key: k.key, windowsVirtualKeyCode: k.vk, nativeVirtualKeyCode: k.vk, modifiers,
       });
       await sleep(o.ms ?? 180);
@@ -182,6 +195,8 @@ export async function openRealPopup(
       evalX(
         `new Promise(resolve => { const req = indexedDB.open('tabmerger', 1); req.onsuccess = () => { const db = req.result; const tx = db.transaction(['groups','groupsState'], 'readonly'); const out = { order: [], groups: {} }; tx.objectStore('groups').getAll().onsuccess = (e) => { for (const g of e.target.result) out.groups[g.id] = (g.windows || []).map(w => (w.tabs || []).map(t => t.title)); }; tx.objectStore('groupsState').get('state').onsuccess = (e) => { out.order = (e.target.result && e.target.result.order) || []; }; tx.oncomplete = () => resolve(out); }; })`
       ),
+    tabUrls: () =>
+      sw.evaluate(async () => (await chrome.tabs.query({})).map((t) => t.url || t.pendingUrl || '')),
     async close() {
       cdp.close();
       await context.close().catch(() => {});

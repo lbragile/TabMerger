@@ -4,6 +4,9 @@ import {
   type PopupSession, type SeedGroup, type Within,
 } from '../kbdPopup';
 
+// Cells are independent (each opens its own browser + popup), so let CI shards (--shard=i/N) split them.
+test.describe.configure({ mode: 'parallel' });
+
 /**
  * Keyboard MOVE MODE in the REAL toolbar popup (chrome.action.openPopup + raw CDP key
  * events): a matrix of the approved behaviour. Focus is always reached with the Tab key like
@@ -22,6 +25,22 @@ import {
 const W = (n: number) => `Window ${n} controls`;
 const WORK_DATA = [['Alpha', 'Bravo', 'Charlie'], ['Delta', 'Echo']];
 
+/**
+ * Did Enter open the saved "Bravo" tab? Checked through `chrome.tabs.query` in the service worker
+ * (URL or pendingUrl) so it never waits on a real page load: the CI runner's access to example.com
+ * is not something this test is about. Polls briefly because the tab is created asynchronously.
+ */
+async function tabOpened(s: PopupSession, log: (x: string) => void): Promise<boolean> {
+  let urls: string[] = [];
+  for (let i = 0; i < 20; i++) {
+    urls = await s.tabUrls();
+    if (urls.some((u) => u.includes('example.com/bravo'))) break;
+    await sleep(250);
+  }
+  log('tabs=' + urls.join(','));
+  return urls.some((u) => u.includes('example.com/bravo'));
+}
+
 async function cell(
   name: string,
   groups: SeedGroup[],
@@ -36,7 +55,7 @@ async function cell(
     try {
       ok = await fn(s, (x) => notes.push(x));
       // (the popup may have closed itself: opening a tab dismisses it)
-      const snap = await Promise.race([s.snapshot(), sleep(3000).then(() => null)]);
+      const snap = await Promise.race([s.snapshot().catch(() => null), sleep(3000).then(() => null)]);
       notes.push('final=' + (snap ? JSON.stringify(snap.groups) : 'popup closed'));
     } catch (e) {
       notes.push('ERROR ' + (e as Error).message.split('\n')[0]);
@@ -114,9 +133,8 @@ cell('P4 Ctrl+Space on a window title and on a group row toggles them too', STAN
   return w === 'Selected. 1 window selected.' && g === 'Selected. 1 group selected.' && !moving;
 });
 cell('P5 Enter on a tab still opens it (no move starts)', STANDARD_GROUPS(), {}, async (s, log) => {
-  await saved(s); await s.press('Enter'); await sleep(500);
-  const pages = s.context.pages().map((p) => p.url()); log('pages=' + pages.join(','));
-  return pages.some((u) => u.includes('example.com/bravo'));
+  await saved(s); await s.press('Enter');
+  return tabOpened(s, log);
 });
 
 // ───────────────────────── saved tab (Bravo) ─────────────────────────
@@ -376,8 +394,8 @@ cell('E1 Enter and Tab are inert while moving (no drop, no open, focus stays on 
   const unchanged = eq((await s.snapshot()).groups.work, WORK_DATA) && s.context.pages().length === pagesBefore;
   await s.press('Escape');
   const idle = (await sourcesMarked(s)) === 0 && (await ghostCount(s)) === 0;
-  await s.press('Enter'); await sleep(500);
-  const opened = s.context.pages().map((p) => p.url()).some((u) => u.includes('example.com/bravo'));
+  await s.press('Enter');
+  const opened = await tabOpened(s, log);
   return still && unchanged && idle && opened;
 });
 cell('E2 Enter and Tab are inert in the group list too', STANDARD_GROUPS(), {}, async (s, log) => {
