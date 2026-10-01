@@ -279,6 +279,7 @@ export function noteGapContainer(key: string | null): void {
 /** Test hook — forget the cached drag-start snapshot. */
 export function resetDndGeometry(): void {
   geometry = null;
+  stableActive = null;
 }
 
 const overlapsX = (a: { left: number; right: number }, b: { left: number; right: number }) =>
@@ -400,7 +401,43 @@ export function virtualDroppableRects(
   return out;
 }
 
-export const unifiedCollisionWithInsertion: CollisionDetection = (args) => {
+/**
+ * The active draggable's `data` as captured while its row was still mounted.
+ *
+ * dnd-kit builds `args.active.data` from the dragged row's own `useSortable` registration, so
+ * once spring-open swaps the windows panel the source row unmounts and `active.data.current`
+ * degrades to `{}` for the rest of the drag. Everything here that branches on the active TYPE
+ * (the same-type filter, `attachInsertion`, the virtual-geometry growth line) then silently
+ * does nothing — which is exactly "re-ordering inside the spring-opened group shows no gap".
+ * The id is unchanged and the data is a pure function of it, so we replay the last non-empty
+ * snapshot for that id.
+ */
+let stableActive: { id: UniqueIdentifier; data: Record<string, unknown> } | null = null;
+
+/** Test hook — forget the remembered active data. */
+export function resetStableActive(): void {
+  stableActive = null;
+}
+
+export function withStableActive(args: Parameters<CollisionDetection>[0]): Parameters<CollisionDetection>[0] {
+  const active = args.active;
+  if (!active) {
+    stableActive = null;
+    return args;
+  }
+  const current = active.data?.current as Record<string, unknown> | undefined;
+  if (current && typeof current.type === 'string') {
+    stableActive = { id: active.id, data: current };
+    return args;
+  }
+  if (stableActive && stableActive.id === active.id) {
+    return { ...args, active: { ...active, data: { current: stableActive.data } } };
+  }
+  return args;
+}
+
+export const unifiedCollisionWithInsertion: CollisionDetection = (rawArgs) => {
+  const args = withStableActive(rawArgs);
   const rects = virtualDroppableRects(args, getDndDragSession());
   const vargs = rects === args.droppableRects ? args : { ...args, droppableRects: rects };
   const hits = attachInsertion(vargs, unifiedCollision(vargs));
