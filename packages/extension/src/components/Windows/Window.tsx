@@ -55,7 +55,7 @@ import { dndListStyle, gapGrowthFor, gapTransformFor } from '@/lib/dndInsertion'
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
 import { selectionRange } from '@/lib/selectionRange';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
-import { pickUpFromRow } from '@/lib/dndKeyboardPickup';
+import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 
 interface WindowProps {
   /** parent group's model id — window sortable id is `${groupId}::w${windowIndex}` */
@@ -265,9 +265,10 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
         onKeyDown={(e) => {
           // Inert mid-drag, so dnd-kit still receives the arrows (spec C13).
           headerRoving.onKeyDown(e);
-          if (e.defaultPrevented) return;
-          // Space on the focused header picks the window up (the grip is not a Tab stop).
-          pickUpFromRow(e);
+          if (e.defaultPrevented || e.target !== e.currentTarget) return;
+          // Ctrl+Space toggles the window in the selection; Space starts keyboard move mode.
+          if (toggleSelectionOnCtrlSpace(e, { type: 'window', id: selectionId })) return;
+          startMoveOnSpace(e, 'window', sortableId);
         }}
         onClick={handleHeaderClick}
         // Shift+click must not extend the browser's TEXT selection.
@@ -376,7 +377,8 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
               selectRange(item, selectionRange(groupsState, selectionAnchor, item));
               return;
             }
-            (listeners as { onKeyDown?: (e: React.KeyboardEvent) => void } | undefined)?.onKeyDown?.(e);
+            if (toggleSelectionOnCtrlSpace(e, { type: 'window', id: selectionId })) return;
+            startMoveOnSpace(e, 'window', sortableId);
           }}
           // `aria-pressed` is left to dnd-kit: attribute-only changes survive a native
           // drag even synchronously in `dragstart` (popupAbortWindow `gripAriaPressed`, C4).
@@ -571,7 +573,7 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
       {/* Tabs list */}
       <div
         role="list"
-        data-tm-dnd-list=""
+        data-tm-dnd-list={sortableId}
         className="py-0.5 px-3 overflow-y-auto max-h-52"
         style={dndListStyle(gapGrowthFor(gap, sortableId), '0.125rem')}
       >

@@ -28,6 +28,7 @@ vi.mock('@/components/dnd/DndProvider', () => ({
   useDndContext: () => ({ overrideState: null, active: null, isDragging: false })
 }))
 
+vi.mock('@/components/KeyboardMove/KeyboardMoveHost', () => ({ KeyboardMoveHost: () => null }))
 vi.mock('@/hooks/useGroups', () => ({ useGroups: () => mockUseGroups() }))
 vi.mock('@/hooks/useCurrentTabs', () => ({ useCurrentTabs: vi.fn() }))
 vi.mock('@/hooks/useSync', () => ({ useSync: vi.fn() }))

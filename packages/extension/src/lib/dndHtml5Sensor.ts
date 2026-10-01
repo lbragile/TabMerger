@@ -168,7 +168,7 @@ export function getDndDragSourceHeight(): number {
 }
 
 let instantToken = 0;
-function holdInstantFrames(): void {
+export function holdInstantFrames(): void {
   if (typeof document === 'undefined') return;
   const tok = ++instantToken;
   document.documentElement.setAttribute(DND_INSTANT_ATTR, '');

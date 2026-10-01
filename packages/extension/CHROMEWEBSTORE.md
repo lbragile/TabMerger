@@ -46,7 +46,7 @@ Stop drowning in tabs. TabMerger lets you save open tabs into named, color-coded
 restore any group — or just the window you need — later.
 
 Key features: save the current tab, all tabs, or tabs to the left/right/other with one click or
-a keyboard shortcut; drag and drop to reorganize tabs, windows, and groups; a "Now Open" view
+a keyboard shortcut; drag and drop (or a keyboard-only move mode) to reorganize tabs, windows, and groups; a "Now Open" view
 that always reflects your live browser tabs; light and dark themes; right-click context menu
 actions. Pro subscribers get end-to-end encrypted cloud sync across devices and saved sessions,
 so your groups are backed up and available everywhere you sign in.

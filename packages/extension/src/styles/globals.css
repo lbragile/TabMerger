@@ -288,3 +288,12 @@ html[data-tm-dnd-grabbing] * {
     transition: none !important;
   }
 }
+
+
+/* Keyboard move mode: the sidebar group row the group-list cursor is on. The attribute is
+   set by `useKeyboardMove` (attribute-only, outside React) and removed when the move ends.
+   An inset outline, so the row's box (and the sidebar's width) never changes. */
+[data-tm-move-cursor] {
+  outline: 0.125rem solid hsl(var(--primary));
+  outline-offset: -0.125rem;
+}

@@ -1,9 +1,6 @@
-import { KeyboardSensor, TouchSensor, useSensor, useSensors, type KeyboardCode } from '@dnd-kit/core';
-import { createKeyboardCoordinateGetter } from '@/lib/dndKeyboardTargets';
-import { useUIStore } from '@/stores/uiStore';
+import { TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Html5DragSensor } from '@/lib/dndHtml5Sensor';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
-import { motionScrollBehavior } from '@/lib/reducedMotion';
 
 // The unified DnD layer lives in `useDndHandlers` + `@/components/dnd/DndProvider`,
 // keyed off the normalised model from `@/hooks/useDndModel` (no string-id parsing).
@@ -52,36 +49,15 @@ export * from './useDndHandlers';
  *
  * `TouchSensor` covers touchscreen laptops / Chromebooks — touch gets implicit
  * capture and delivers `touchmove` fine in the popup, and Chrome doesn't start an
- * HTML5 drag from touch, so the stock sensor is correct there. `KeyboardSensor`
- * keeps the layer accessible.
+ * HTML5 drag from touch, so the stock sensor is correct there. There is deliberately NO
+ * `KeyboardSensor`: keyboard moves are a separate "move mode" (`@/hooks/useKeyboardMove`,
+ * `@/lib/keyboardMove`) that commits through the same tail as a pointer drop.
  */
-/**
- * ONLY Space picks up and drops; Escape cancels. dnd-kit's defaults also use Enter as a
- * start AND end key (and Tab as an end key): Enter on a focused grip started a drag, and
- * Enter mid-drag DROPPED it — for a Now Open tab dropped on a group that is a MOVE, which
- * closes the real browser tab. Enter stays "open" on a row and is inert on the grip / mid-drag.
- * Plain strings cast to the enum: unit-test mocks of '@dnd-kit/core' omit the runtime enum.
- */
-export const DND_KEYBOARD_CODES = {
-  start: ['Space'],
-  cancel: ['Escape'],
-  end: ['Space']
-} as unknown as { start: KeyboardCode[]; cancel: KeyboardCode[]; end: KeyboardCode[] };
-
-const keyboardCoordinateGetter = createKeyboardCoordinateGetter(() => useUIStore.getState().activeGroupIndex);
-
 export function useDndSensors() {
   const html5 = useSensor(Html5DragSensor);
   const touch = useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } });
-  // Reduced motion: the sensor scrolls the moved item into view instantly, not smoothly.
-  const keyboard = useSensor(KeyboardSensor, {
-    // Two-pane target model (main panel <-> sidebar, drop zones): see `@/lib/dndKeyboardTargets`.
-    keyboardCodes: DND_KEYBOARD_CODES,
-    coordinateGetter: keyboardCoordinateGetter,
-    scrollBehavior: motionScrollBehavior()
-  });
   // Diagnostic pointer-stream probe (`@/lib/dndPointerProbe`, localStorage flag,
   // off for every real user): leave the HTML5 sensor out so no drag can start and
   // the probe measures the raw pointer stream of a grip press.
-  return useSensors(...(DND_POINTER_PROBE_ACTIVE ? [] : [html5]), touch, keyboard);
+  return useSensors(...(DND_POINTER_PROBE_ACTIVE ? [] : [html5]), touch);
 }

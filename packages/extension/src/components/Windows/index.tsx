@@ -29,6 +29,7 @@ import { DndProvider, useDndContext } from '@/components/dnd/DndProvider';
 import { dndListStyle, gapGrowthFor } from '@/lib/dndInsertion';
 import { motionScrollBehavior } from '@/lib/reducedMotion';
 import { useUIStore } from '@/stores/uiStore';
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { getSetting } from '@/lib/localDb';
 import { useAppSettings } from '@/hooks/useAppSettings';
@@ -40,6 +41,7 @@ import { deduplicateTabs } from '@/lib/deduplication';
 import { toast } from '@/lib/toast';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
 import { useGroupDisplayColor } from '@/hooks/useGroupDisplayColor';
+import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
 
 interface WindowsPanelProps {
   group: Group;
@@ -71,11 +73,14 @@ function NewWindowDropZone({
   groupIndex: number;
   activeForTab: boolean;
 }) {
-  const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef, isOver: pointerOver } = useDroppable({
     id: `${groupId}${NEW_WINDOW_SUFFIX}`,
     data: { type: 'new-window', groupId, groupIndex },
     disabled: !activeForTab
   });
+  // Keyboard move mode highlights the zone it targets exactly as a pointer hover does.
+  const keyboardOver = useKeyboardMoveStore((s) => s.marker?.type === 'zone' && s.marker.zone === 'new-window');
+  const isOver = pointerOver || keyboardOver;
   return (
     <div
       ref={setNodeRef}
@@ -87,7 +92,9 @@ function NewWindowDropZone({
         activeForTab
           ? 'border-primary text-foreground bg-background'
           : 'invisible pointer-events-none border-transparent',
-        isOver && activeForTab && 'bg-primary/10 border-primary text-foreground'
+        isOver && activeForTab && 'bg-primary/10 border-primary text-foreground',
+        // Keyboard target: the label drops to the bottom so the docked copy fits above it.
+        keyboardOver && 'items-end pb-1'
       )}
     >
       <Plus className="h-3.5 w-3.5 mr-1" />
@@ -112,6 +119,10 @@ export function WindowsPanel({ group, groupIndex }: WindowsPanelProps) {
 
 function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) {
   const dnd = useDndContext();
+  const moveKind = useKeyboardMoveStore((s) => s.kind);
+  // Keyboard move on the "new group" stop: the shown group is NOT where the item will land, so dim it.
+  const atNewWindowStop = useKeyboardMoveStore((s) => s.marker?.type === 'zone' && s.marker.zone === 'new-window');
+  const atNewGroupStop = useKeyboardMoveStore((s) => s.marker?.type === 'zone' && s.marker.zone === 'new-group');
   // While a drag is live, render from the `onDragOver` working copy (real placeholder reflow).
   const group = dnd.overrideState?.available[groupIndex] ?? groupProp;
 
@@ -401,7 +412,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden"
+        className={cn('flex-1 min-w-0 overflow-y-auto overflow-x-hidden transition-opacity', atNewGroupStop && 'opacity-40')}
         data-testid="windows-panel-scroll"
         onClick={handlePanelClick}
         onKeyDown={handlePanelKeyDown}
@@ -409,7 +420,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
         <div className="p-2">
           {/* List wrapper: grows by the gap height while a window drag's gap is here
               (see `gapGrowthFor`). Always mounted — never toggled mid-drag. */}
-          <div data-tm-dnd-list="" style={dndListStyle(gapGrowthFor(dnd.gap, group.id), '0px')}>
+          <div data-tm-dnd-list={group.id} style={dndListStyle(gapGrowthFor(dnd.gap, group.id), '0px')}>
           <SortableContext items={windowIds} strategy={verticalListSortingStrategy}>
             {group.windows.reduce<{ els: React.ReactNode[]; offset: number }>(
               ({ els, offset }, window, windowIndex) => ({
@@ -461,13 +472,13 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
             // opens it as a real tab in one new unfocused window — see `dndMove.ts`'s
             // Now Open delegation and `runSideEffects`'s `tabs.detachToNewWindow`. Both
             // children stay MOUNTED for the whole drag (C4).
-            <div className="relative">
+            <div className={cn('relative', atNewWindowStop && KEYBOARD_ZONE_MIN_HEIGHT)}>
               <NewWindowDropZone
                 groupId={group.id}
                 groupIndex={groupIndex}
-                activeForTab={dnd.active?.type === 'tab'}
+                activeForTab={dnd.active?.type === 'tab' || moveKind === 'tab'}
               />
-              <div className={cn(dnd.isDragging && 'invisible')}>
+              <div className={cn((dnd.isDragging || moveKind !== null) && 'invisible')}>
                 <Button
                   variant="outline"
                   className="h-7 rounded-none px-3 text-xs w-full"
@@ -487,13 +498,13 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
             // Both children stay MOUNTED for the whole drag: unmounting either removes a
             // child from an ANCESTOR of the dragged row, which aborts the native HTML5
             // drag in the MV3 popup (C4).
-            <div className="relative">
+            <div className={cn('relative', atNewWindowStop && KEYBOARD_ZONE_MIN_HEIGHT)}>
               <NewWindowDropZone
                 groupId={group.id}
                 groupIndex={groupIndex}
-                activeForTab={dnd.active?.type === 'tab'}
+                activeForTab={dnd.active?.type === 'tab' || moveKind === 'tab'}
               />
-              <div className={cn(dnd.isDragging && 'invisible')}>
+              <div className={cn((dnd.isDragging || moveKind !== null) && 'invisible')}>
                 <Button
                   variant="outline"
                   className="h-7 rounded-none px-3 text-xs w-full"

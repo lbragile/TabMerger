@@ -10,6 +10,7 @@ import {
   describeDropCommitted,
   describeItem,
   modifierKeyName,
+  plural,
   setDndDropOutcome,
   takeDndDropOutcome,
   DND_SCREEN_READER_INSTRUCTIONS
@@ -223,5 +224,14 @@ describe('describeDropCommitted', () => {
       'Moved tab GitHub within Now Open.'
     )
     expect(describeDropCommitted({ ...base, active: { type: 'tab', id: 'gone' }, sideEffects: [] })).toBe('Dropped.')
+  })
+})
+
+describe('plural (shared by the pointer announcements and keyboard move mode)', () => {
+  it('counts tabs, windows and groups with the right noun', () => {
+    expect(plural(1, 'tab')).toBe('1 tab')
+    expect(plural(3, 'tab')).toBe('3 tabs')
+    expect(plural(2, 'window')).toBe('2 windows')
+    expect(plural(2, 'group')).toBe('2 groups')
   })
 })

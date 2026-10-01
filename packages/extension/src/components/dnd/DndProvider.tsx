@@ -28,11 +28,11 @@ import {
   type DndInsertion,
   type InsertionCandidate
 } from '@/lib/dndInsertion';
-import { getForcedKeyboardTarget } from '@/lib/dndKeyboardTargets';
 import { getDndDragSelection } from '@/lib/dndMultiDrag';
 import { dndDebugLog } from '@/lib/dndDebug';
 import { DND_SCREEN_READER_INSTRUCTIONS } from '@/lib/dndAnnouncements';
 import type { GroupsState } from '@/lib/types';
+import type { DndRef } from '@/lib/dndMove';
 
 /**
  * ONE drag-and-drop layer for the popup: exactly one `<DndContext>`, with the live
@@ -54,9 +54,26 @@ interface DndProviderValue {
    * `@/lib/dndInsertion`.
    */
   gap: DndGap | null;
+  /**
+   * Commit a keyboard MOVE MODE move (`useKeyboardMove`) through the exact commit tail a
+   * pointer drop ends in. No-op outside a provider.
+   */
+  commitKeyboardMove: (active: DndRef, over: DndRef) => Promise<void>;
+  /**
+   * Set (or clear with `null`) the insertion gap rendered by the rows — the SAME state the
+   * pointer drives from `onDragMove`. Keyboard move mode feeds it the gap of each target.
+   */
+  applyGap: (gap: DndGap | null) => void;
 }
 
-const EMPTY: DndProviderValue = { overrideState: null, active: null, isDragging: false, gap: null };
+const EMPTY: DndProviderValue = {
+  overrideState: null,
+  active: null,
+  isDragging: false,
+  gap: null,
+  commitKeyboardMove: async () => {},
+  applyGap: () => {}
+};
 const DndProviderCtx = createContext<DndProviderValue | null>(null);
 
 export function useDndContext(): DndProviderValue {
@@ -386,13 +403,7 @@ export function virtualDroppableRects(
 export const unifiedCollisionWithInsertion: CollisionDetection = (args) => {
   const rects = virtualDroppableRects(args, getDndDragSession());
   const vargs = rects === args.droppableRects ? args : { ...args, droppableRects: rects };
-  // Keyboard drag with the cursor in the sidebar pane: the target is chosen by the
-  // target-list model (`@/lib/dndKeyboardTargets`), not inferred from rect overlap.
-  const forcedId = args.pointerCoordinates ? null : getForcedKeyboardTarget(args.active ? String(args.active.id) : undefined);
-  const forcedContainer = forcedId ? args.droppableContainers.find((c) => String(c.id) === forcedId) : undefined;
-  const hits = forcedContainer
-    ? attachInsertion(vargs, [{ id: forcedContainer.id, data: { droppableContainer: forcedContainer, value: 0 } }])
-    : attachInsertion(vargs, unifiedCollision(vargs));
+  const hits = attachInsertion(vargs, unifiedCollision(vargs));
   if (hits.length > 0) {
     noteGapContainer((hits[0].data as { tmInsertion?: DndInsertion } | undefined)?.tmInsertion?.containerKey ?? null);
   }
@@ -432,6 +443,8 @@ function DndProviderRoot({ children }: { children: React.ReactNode }) {
     onDragMove,
     onDragCancel,
     onDragEnd,
+    commitKeyboardMove,
+    applyGap,
     onSourceCollapse,
     overrideState,
     active,
@@ -450,8 +463,8 @@ function DndProviderRoot({ children }: { children: React.ReactNode }) {
   }, [onSourceCollapse]);
 
   const value = useMemo<DndProviderValue>(
-    () => ({ overrideState, active, isDragging: active != null, gap }),
-    [overrideState, active, gap]
+    () => ({ overrideState, active, isDragging: active != null, gap, commitKeyboardMove, applyGap }),
+    [overrideState, active, gap, commitKeyboardMove, applyGap]
   );
 
   return (

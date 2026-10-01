@@ -18,6 +18,7 @@ import { DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { gapTransformFor } from '@/lib/dndInsertion';
 import { selectionRange } from '@/lib/selectionRange';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
@@ -198,7 +199,8 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       extendRange();
       return;
     }
-    (dragHandleProps as { onKeyDown?: (e: React.KeyboardEvent) => void }).onKeyDown?.(e);
+    if (!group.permanent && toggleSelectionOnCtrlSpace(e, { type: 'group', id: selectionId })) return;
+    startMoveOnSpace(e, 'group', group.id);
   };
 
   const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -230,6 +232,10 @@ export function GroupItem({ group, groupIndex, isActive, isLocked = false, onCli
       wrapperRef={setNodeRef}
       // Static row id for the multi-drag registry (collapse + `+N`) and focus-by-identity.
       wrapperDndId={group.id}
+      // Space on the focused row starts keyboard move mode — only for a row that has a grip.
+      moveGroupId={group.permanent || savedGroupCount <= 1 ? undefined : group.id}
+      // Ctrl+Space on the focused row toggles it in the selection (never Now Open).
+      selectGroupItem={group.permanent ? undefined : { type: 'group', id: selectionId }}
       onWrapperKeyDown={roving.onKeyDown}
       wrapperStyle={{
         ...style,

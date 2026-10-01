@@ -53,9 +53,9 @@ beforeEach(() => {
 });
 
 describe('useDndSensors — MV3 action-popup sensor set', () => {
-  it('composes exactly three sensors', () => {
+  it('composes exactly two sensors (drag + touch; keyboard moves are a separate move mode)', () => {
     renderHook(() => useDndSensors());
-    expect(captured).toHaveLength(3);
+    expect(captured).toHaveLength(2);
   });
 
   it('uses the native-HTML5-drag sensor, never a move-delta MouseSensor / PointerSensor', () => {
@@ -80,32 +80,9 @@ describe('useDndSensors — MV3 action-popup sensor set', () => {
     expect(touch?.options).toEqual({ activationConstraint: { delay: 200, tolerance: 6 } });
   });
 
-  it('still registers KeyboardSensor for accessible drag', () => {
+  it('has NO dnd-kit KeyboardSensor: keyboard moves go through move mode (Enter/Tab can never drop a drag)', () => {
     renderHook(() => useDndSensors());
-    expect(names()).toContain('KeyboardSensor');
-  });
-
-  it('KeyboardSensor uses Space ONLY to start/end and Escape to cancel — never Enter (Enter opens a row) or Tab', () => {
-    renderHook(() => useDndSensors());
-    const opts = captured.filter((c) => c.name === 'KeyboardSensor').pop()?.options as {
-      keyboardCodes: { start: string[]; cancel: string[]; end: string[] };
-    };
-    expect(opts.keyboardCodes).toEqual({ start: ['Space'], cancel: ['Escape'], end: ['Space'] });
-    for (const list of Object.values(opts.keyboardCodes)) {
-      expect(list).not.toContain('Enter');
-      expect(list).not.toContain('Tab');
-    }
-  });
-
-  it('KeyboardSensor scrolls smoothly by default and INSTANTLY under prefers-reduced-motion', () => {
-    const kb = () => captured.filter((c) => c.name === 'KeyboardSensor').pop()?.options as { scrollBehavior?: string };
-    vi.stubGlobal('matchMedia', () => ({ matches: false }));
-    renderHook(() => useDndSensors());
-    expect(kb().scrollBehavior).toBe('smooth');
-    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q === '(prefers-reduced-motion: reduce)' }));
-    renderHook(() => useDndSensors());
-    expect(kb().scrollBehavior).toBe('auto');
-    vi.unstubAllGlobals();
+    expect(names()).not.toContain('KeyboardSensor');
   });
 });
 
@@ -116,12 +93,11 @@ describe('useDndSensors — diagnostic pointer-probe flag', () => {
     localStorage.clear();
   });
 
-  it('with the flag UNSET the composed set is Html5DragSensor, TouchSensor, KeyboardSensor', () => {
+  it('with the flag UNSET the composed set is Html5DragSensor, TouchSensor', () => {
     const { result } = renderHook(() => useDndSensors());
     expect((result.current as unknown as Composed).map((s) => s.sensor.name)).toEqual([
       'Html5DragSensor',
-      'TouchSensor',
-      'KeyboardSensor'
+      'TouchSensor'
     ]);
   });
 
@@ -130,6 +106,6 @@ describe('useDndSensors — diagnostic pointer-probe flag', () => {
     vi.resetModules();
     const mod = await import('@/hooks/useDnd');
     const { result } = renderHook(() => mod.useDndSensors());
-    expect((result.current as unknown as Composed).map((s) => s.sensor.name)).toEqual(['TouchSensor', 'KeyboardSensor']);
+    expect((result.current as unknown as Composed).map((s) => s.sensor.name)).toEqual(['TouchSensor']);
   });
 });

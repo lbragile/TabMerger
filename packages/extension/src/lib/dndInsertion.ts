@@ -83,6 +83,15 @@ export interface DndGap {
   containerKey: string | null;
 }
 
+/**
+ * Build the live {@link DndGap} from its parts. The ONE place a gap object is made: the
+ * pointer path (`useDndHandlers`' `onSourceCollapse` / `onDragMove`) and keyboard move mode
+ * both go through it, so the two previews cannot drift.
+ */
+export function makeGap(height: number, containerKey: string | null, shiftIds: Iterable<string>): DndGap {
+  return { height, shiftIds: new Set(shiftIds), containerKey };
+}
+
 /** Extra bottom padding (px) for the list keyed `key` under `gap`. */
 export function gapGrowthFor(gap: DndGap | null | undefined, key: string): number {
   return gap && gap.containerKey === key ? Math.round(gap.height) : 0;

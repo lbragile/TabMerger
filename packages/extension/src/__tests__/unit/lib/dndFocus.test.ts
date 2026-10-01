@@ -1,5 +1,5 @@
 /**
- * dndFocus.test.ts — focus after a keyboard drop goes to where the item LANDED (its grip),
+ * dndFocus.test.ts — focus after a keyboard move goes to where the item LANDED (its row, the roving Tab stop),
  * or the nearest remaining item when it left the panel — never to whatever now occupies
  * the old positional slot by accident, and never to <body>.
  */
@@ -35,21 +35,21 @@ afterEach(() => {
 })
 
 describe('selector builders', () => {
-  it('tab → its grip then the row; window → its grip, else its (focusable, roving) header, then that header\'s first real control, then its first tab row; group → row grip then row', () => {
+  it('tab → its row then the grip; window → its (focusable, roving) header, then its grip, then that header first real control, then its first tab row; group → the row then its grip', () => {
     expect(focusSelectorsForItem('g::w1::t2')).toEqual([
-      '[data-tm-dnd-id="g::w1::t2"] [aria-label^="Drag to reorder"]',
-      '[data-tm-dnd-id="g::w1::t2"]'
+      '[data-tm-dnd-id="g::w1::t2"]',
+      '[data-tm-dnd-id="g::w1::t2"] [aria-label^="Drag to reorder"]'
     ])
     expect(focusSelectorsForItem('g::w1')).toEqual([
-      '[data-tm-dnd-id="g::w1"] [aria-label^="Drag to reorder window"]',
       '[data-tm-dnd-id="g::w1"] [data-window-header]',
+      '[data-tm-dnd-id="g::w1"] [aria-label^="Drag to reorder window"]',
       '[data-tm-dnd-id="g::w1"] [data-window-header] button:not([aria-hidden="true"])',
       '[data-tm-dnd-id="g::w1"] [role="listitem"]'
     ])
     expect(focusSelectorsForItem('groupId')).toEqual([])
     expect(focusSelectorsForGroupIndex(3)).toEqual([
-      '[data-sidebar-group-index="3"] [aria-label^="Drag to reorder"]',
-      '[data-sidebar-group-index="3"]'
+      '[data-sidebar-group-index="3"]',
+      '[data-sidebar-group-index="3"] [aria-label^="Drag to reorder"]'
     ])
   })
 
@@ -59,7 +59,7 @@ describe('selector builders', () => {
     expect(sels[2]).toContain('g::w1::t1')
     expect(sels.some((s) => s.includes('"g::w1"'))).toBe(true)
     expect(sels.some((s) => s.includes('"g::w0"'))).toBe(true)
-    expect(sels[sels.length - 1]).toBe('[data-sidebar-group-index="4"]')
+    expect(sels[sels.length - 1]).toBe('[data-sidebar-group-index="4"] [aria-label^="Drag to reorder"]')
     // first tab of the first window: no negative indices
     expect(focusSelectorsNear('g::w0::t0', 1).join(' ')).not.toMatch(/-1/)
     expect(focusSelectorsNear('g::w0', 1)[0]).toContain('"g::w0"')
@@ -67,12 +67,12 @@ describe('selector builders', () => {
 })
 
 describe('focusFirst', () => {
-  it('focuses the first match that exists — the grip in preference to the row', () => {
+  it('focuses the first match that exists — the row (the Tab stop) in preference to the grip', () => {
     row('g::w0::t0', 'A')
     const b = row('g::w0::t1', 'B')
     const el = focusFirst([...focusSelectorsForItem('g::w9::t9'), ...focusSelectorsForItem('g::w0::t1')])
-    expect(el).toBe(b.firstElementChild)
-    expect(document.activeElement).toBe(b.firstElementChild)
+    expect(el).toBe(b)
+    expect(document.activeElement).toBe(b)
   })
 
   it('falls back to the row when the grip is absent, skips the ghost host, and ignores bad selectors', () => {
@@ -116,7 +116,7 @@ describe('focusAfterDrop', () => {
     expect(frames).toHaveLength(1)
     const r = row('g::w0::t3', 'Late')
     frames.shift()!()
-    expect(document.activeElement).toBe(r.firstElementChild)
+    expect(document.activeElement).toBe(r)
   })
 
   it('no selectors → nothing scheduled', () => {
