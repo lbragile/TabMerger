@@ -17,6 +17,12 @@ on:
         required: true
         type: string
 
+# Least-privilege default. Only the attach-* jobs widen it (contents: write, for
+# `gh release upload`). Store credentials live in the store-beta / store-stable
+# environments, referenced by the publish-* jobs below.
+permissions:
+  contents: read
+
 # Which backend each build talks to. These are PUBLIC values, not secrets: the web app URL,
 # the Supabase URL and publishable key are compiled into every build anyone can install, and
 # extension IDs are in the store listing URLs. Keeping them here (not in secrets) makes each
@@ -230,6 +236,7 @@ jobs:
     name: Beta · Chrome Web Store
     needs: build
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
+    environment: store-beta
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -383,6 +390,7 @@ jobs:
     name: Beta · Firefox (unlisted, self-hosted)
     needs: build
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.release.prerelease }}
+    environment: store-beta
     continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -466,6 +474,7 @@ jobs:
     name: Stable · Chrome Web Store
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
+    environment: store-stable
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -501,6 +510,7 @@ jobs:
     name: Stable · Firefox Add-ons
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
+    environment: store-stable
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -527,6 +537,7 @@ jobs:
     name: Stable · Edge Add-ons
     needs: build
     if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
+    environment: store-stable
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

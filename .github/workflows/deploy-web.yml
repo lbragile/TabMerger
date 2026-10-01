@@ -22,9 +22,17 @@ name: Deploy Web Preview
 on:
   workflow_call:
 
+# Least privilege. A called workflow can only narrow what its caller grants; the
+# caller (ci.yml deploy-web-preview) grants contents: read, which is all this needs.
+permissions:
+  contents: read
+
 jobs:
   preview:
     name: Deploy preview to Vercel
+    # Holds VERCEL_TOKEN / VERCEL_ORG_ID / VERCEL_PROJECT_ID. `environment` goes on this
+    # called job, not on the caller (a `uses:` job cannot declare one).
+    environment: vercel-preview
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:

@@ -17,6 +17,17 @@ name: CI
 #
 # dep-audit is intentionally non-blocking (continue-on-error on that step only)
 # so Renovate/Dependabot PRs can still land even with transitive advisories.
+#
+# ── PUBLIC-REPO SAFETY RULES (this file is the real pipeline of a public repo) ──
+#   • NEVER use the `pull_request_target` trigger (or `workflow_run` to chain off a
+#     fork PR). It runs with the base repo's secrets and a write token, so any step that
+#     checks out or executes a fork's code would hand those to the fork. Only
+#     `pull_request` is allowed: fork PRs get a read-only token and NO secrets.
+#   • The default token is read-only (top-level `permissions` below). Widen it per job,
+#     never workflow-wide.
+#   • A job that reads a secret must skip, not fail, on a fork PR (see e2e-web).
+#   • Secrets live in GitHub Environments (release, ci-preview-db, ...) referenced by
+#     the job that needs them, not at repo level.
 # ──────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -50,6 +61,11 @@ on:
       - "docs/**"
       - ".claude/**"
       - ".agents/**"
+
+# Least-privilege default for every job. Jobs that need more declare it themselves
+# (unit-tests: actions read; release-config / release: contents write; ...).
+permissions:
+  contents: read
 
 # Cancel a superseded run for the same ref — except on `beta`. Beta is the
 # release branch (see the `release` job below): cancelling a run mid-release
@@ -128,6 +144,13 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # actions: read lets dawidd6/action-download-artifact list this repo's runs and
+    # artifacts for the coverage baseline. Without it the default (contents: read only)
+    # makes that step fail, and since it is continue-on-error the coverage-delta
+    # check would silently stop comparing. Read-only, so it is also granted to fork PRs.
+    permissions:
+      contents: read
+      actions: read
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -314,6 +337,17 @@ jobs:
 
   e2e-web:
     name: E2E Tests (Web)
+    # Needs PREVIEW_SUPABASE_SERVICE_ROLE_KEY, which fork PRs (and Dependabot runs)
+    # never receive: skip instead of failing the check. A skipped required check counts
+    # as passing. On push / workflow_dispatch this is always true, so `release` and
+    # `deploy-web-preview` (which `needs` this job) are unaffected.
+    if: >-
+      (github.event_name != 'pull_request'
+      || github.event.pull_request.head.repo.full_name == github.repository)
+      && github.actor != 'dependabot[bot]'
+    # Holds PREVIEW_SUPABASE_SERVICE_ROLE_KEY. Same-repo PRs run in it too, so do NOT
+    # restrict this environment to main/beta branches (the PR merge ref would be refused).
+    environment: ci-preview-db
     runs-on: ubuntu-latest
     # The official image already contains the browsers and their system libraries, so
     # there is no browser cache or `playwright install --with-deps` (apt took 479s).
@@ -515,6 +549,9 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Holds RELEASE_TOKEN. NOTE: the preflight step below also reads the CHROME_*
+    # secrets, so those must be readable from this environment too (repo-level today).
+    environment: release
     # ── BETA ONLY (deliberate, temporary) ────────────────────────────────────
     # Releases are currently cut from `beta` and nowhere else, so nothing can
     # reach the PRODUCTION Chrome Web Store listing while the channel is being
