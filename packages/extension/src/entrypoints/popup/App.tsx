@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { SidePanel } from '@/components/SidePanel';
 import { WindowsPanel } from '@/components/Windows';
 import { DndProvider } from '@/components/dnd/DndProvider';
+import { KeyboardMoveHost } from '@/components/KeyboardMove/KeyboardMoveHost';
 import { ModalRoot } from '@/components/Modal';
 import { AIGroupSuggestion } from '@/components/AIGroupSuggestion';
 import { SelectionActionBar } from '@/components/SelectionActionBar';
@@ -130,6 +131,7 @@ function AppContent() {
       {/* ONE unified DnD context spanning the sidebar + the windows panel. The
           nested <DndProvider> inside <WindowsPanel> degrades to a passthrough. */}
       <DndProvider>
+        <KeyboardMoveHost />
         <div className="flex flex-1 min-h-0">
           <SidePanel groupsState={groupsState} />
           <main className="flex-1 min-w-0 overflow-hidden">

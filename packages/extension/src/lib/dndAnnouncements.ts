@@ -36,16 +36,16 @@ export function modifierKeyName(): string {
  */
 export const DND_SCREEN_READER_INSTRUCTIONS: ScreenReaderInstructions = {
   draggable:
-    'Press Space to pick up, arrow keys to move, Space to drop, Escape to cancel. ' +
+    'Press Space to pick up, arrow keys to choose a place (Left and Right switch between windows and groups), Space to drop, Escape to cancel. ' +
     `Shift+Space selects a range and ${modifierKeyName()}+A selects all, to move several at once.`
 };
 
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+export const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const tabsOf = (w: ExtWindow | undefined): Tab[] => (w?.tabs ?? []).filter(Boolean);
 const tabName = (t: Tab | undefined) => t?.customTitle || t?.title || t?.url || 'Untitled tab';
-const windowName = (w: ExtWindow | undefined, wi: number) => w?.name || `Window ${wi + 1}`;
+export const windowName = (w: ExtWindow | undefined, wi: number) => w?.name || `Window ${wi + 1}`;
 const savedGroupCount = (state: GroupsState) => state.available.filter((g) => !g.permanent).length;
 /** 1-based sidebar position among saved groups (Now Open, when present, isn't counted). */
 const groupPosition = (state: GroupsState, gi: number) =>
@@ -96,11 +96,11 @@ export function describeItem(state: GroupsState | null | undefined, id: string, 
 }
 
 /** "tab GitHub" for one item, "3 tabs, starting with GitHub" for a multi-drag. */
-function what(label: DndItemLabel, count: number): string {
+export function what(label: DndItemLabel, count: number): string {
   return count > 1 ? `${plural(count, label.type)}, starting with ${label.name},` : `${label.type} ${label.name}`;
 }
 
-function targetPhrase(state: GroupsState, model: DndModel, activeType: string, overId: string): string | null {
+export function targetPhrase(state: GroupsState, model: DndModel, activeType: string, overId: string): string | null {
   if (overId === NEW_GROUP_ID) return 'a new group';
   if (overId.endsWith(NEW_WINDOW_SUFFIX)) {
     const g = model.groups[overId.slice(0, -NEW_WINDOW_SUFFIX.length)];

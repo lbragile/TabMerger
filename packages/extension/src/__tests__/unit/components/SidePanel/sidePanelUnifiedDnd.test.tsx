@@ -17,13 +17,14 @@
  * Both components exist — failures here are ASSERTIONS about the wrong id scheme /
  * a stray `DndContext` / a missing dim style, not missing imports.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { SidePanel } from '@/components/SidePanel'
 import { GroupItem } from '@/components/SidePanel/GroupItem'
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
 import type { Group, GroupsState } from '@/lib/types'
 
 const { cap, mockUseGroupDndHandlers, mockUseUIStore, mockUseGroups, mockUseDndContext, mockUseEntitlements } = vi.hoisted(() => ({
@@ -384,5 +385,60 @@ describe('SidePanel — "new group" drop zone (2b)', () => {
     wrap(React.createElement(SidePanel, { groupsState: state }))
     expect(screen.getByTestId('new-group-dropzone').className).not.toMatch(/invisible/)
     expect(getNewGroupZoneGate().atLimit).toBe(false)
+  })
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Keyboard move mode: the same zone, driven by the keyboard store
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('SidePanel — keyboard move mode', () => {
+  const state = makeGroupsState([
+    makeGroup({ id: 'now', permanent: true, name: 'Now Open' }),
+    makeGroup({ id: 'alpha', name: 'Alpha' })
+  ])
+  const zone = () => screen.getByTestId('new-group-dropzone')
+  beforeEach(() => useKeyboardMoveStore.setState({ request: null, kind: null, marker: null }))
+  afterEach(() => useKeyboardMoveStore.setState({ request: null, kind: null, marker: null }))
+
+  it('the group list wrapper is keyed "groups" (the container key of the gap the keyboard preview opens)', () => {
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(document.querySelector('[data-tm-dnd-list="groups"]')).not.toBeNull()
+  })
+
+  it('a live tab or window move shows the zone (no pointer drag needed) and hides the Add Group button under it', () => {
+    useKeyboardMoveStore.setState({ kind: 'tab', marker: null })
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(zone().className).not.toMatch(/invisible/)
+    expect(screen.getByRole('button', { name: /add group/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /add group/i }).parentElement!.className).toMatch(/invisible/)
+  })
+
+  it('a live GROUP move does not show the new-group zone', () => {
+    useKeyboardMoveStore.setState({ kind: 'group', marker: null })
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(zone().className).toMatch(/invisible/)
+  })
+
+  it('at the "New group" stop the zone is highlighted, grows to hold the docked copy, and the label drops to its bottom', () => {
+    useKeyboardMoveStore.setState({ kind: 'tab', marker: { type: 'zone', zone: 'new-group' } })
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(zone().className).toMatch(/bg-primary\/10/)
+    expect(zone().className).toMatch(/items-end/)
+    expect(zone().parentElement!.className).toMatch(/min-h-\[4\.5rem\]/)
+  })
+
+  it('on any other stop the zone keeps its resting size and label position', () => {
+    useKeyboardMoveStore.setState({ kind: 'tab', marker: { type: 'zone', zone: 'new-window' } })
+    wrap(React.createElement(SidePanel, { groupsState: state }))
+    expect(zone().className).not.toMatch(/items-end/)
+    expect(zone().parentElement!.className).not.toMatch(/min-h-/)
+  })
+
+  it('at the free-group cap a live move still does not offer the zone', async () => {
+    mockUseEntitlements.mockReturnValue({ maxGroups: 1, tier: 'free' })
+    useKeyboardMoveStore.setState({ kind: 'tab', marker: null })
+    wrap(React.createElement(SidePanel, { groupsState: makeGroupsState([makeGroup({ id: 'now', permanent: true, name: 'Now Open' }), makeGroup({ id: 'alpha', name: 'Alpha' })]) }))
+    expect(zone().className).toMatch(/invisible/)
   })
 })

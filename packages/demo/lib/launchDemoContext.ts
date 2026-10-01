@@ -14,11 +14,19 @@ import { chromium, type BrowserContext, type Page } from "@playwright/test";
 // have ever been run — silently loading the wrong one gives no error, it
 // just hangs later waiting for a "Dev" tab/"Enter" button that was never
 // shipped in that build).
-const EXTENSION_PATH = path.resolve(
-    __dirname,
-    "../../extension/.output/chrome-mv3-demo",
-);
-const USER_DATA_DIR = path.resolve(__dirname, "../.pw-user-data");
+// TM_DEMO_EXT_DIR overrides it (beta-screenshots-sharing.ts uses a separate
+// `wxt build --mode development` copy in .pw-ext-dev: the demo build forces
+// pro_ai entitlements for EVERY session, so it can never show a real "Pro"
+// plan / renewal date in Settings > Account).
+function extensionPath(): string {
+    return process.env.TM_DEMO_EXT_DIR
+        ? path.resolve(process.env.TM_DEMO_EXT_DIR)
+        : path.resolve(__dirname, "../../extension/.output/chrome-mv3-demo");
+}
+// TM_DEMO_USER_DATA_DIR lets a script run its own profile next to other agents/scripts.
+const USER_DATA_DIR = process.env.TM_DEMO_USER_DATA_DIR
+    ? path.resolve(process.env.TM_DEMO_USER_DATA_DIR)
+    : path.resolve(__dirname, "../.pw-user-data");
 
 // ponytail: 2026-09-26 — headless by default per direct coordinator ask.
 // Playwright's own `headless: true` predates MV3 extension support (it
@@ -65,6 +73,7 @@ export async function launchDemoContext(
     // whole table — reusing a stale profile silently accumulates duplicate
     // groups across runs instead of overwriting them. Always start clean.
     fs.rmSync(USER_DATA_DIR, { recursive: true, force: true });
+    const EXTENSION_PATH = extensionPath();
 
     const probeContext = await chromium.launchPersistentContext(
         USER_DATA_DIR,

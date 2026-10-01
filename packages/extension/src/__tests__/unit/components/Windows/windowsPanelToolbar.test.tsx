@@ -11,6 +11,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { WindowsPanel } from '@/components/Windows'
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
 import type { Group, Window as ExtWindow, Tab } from '@/lib/types'
 
 const {
@@ -512,5 +513,55 @@ describe('WindowsPanel — clicking empty panel space clears the selection', () 
     wrap(<WindowsPanel group={makeGroup({ id: 'g2' })} groupIndex={2} />)
     fireEvent.click(screen.getAllByTestId('windows-panel-scroll')[1])
     expect(mockExitSelectionMode).not.toHaveBeenCalled()
+  })
+})
+
+describe('WindowsPanel — keyboard move mode', () => {
+  const reset = () => useKeyboardMoveStore.setState({ request: null, kind: null, marker: null })
+  beforeEach(reset)
+  afterEach(reset)
+  const scroll = () => screen.getByTestId('windows-panel-scroll')
+
+  it('the window list wrapper is keyed by the group id (the container key of the gap)', () => {
+    const group = makeGroup()
+    wrap(<WindowsPanel group={group} groupIndex={0} />)
+    expect(document.querySelector(`[data-tm-dnd-list="${group.id}"]`)).not.toBeNull()
+  })
+
+  it('a live tab move shows the new-window zone and hides the Add Window button under it', () => {
+    useKeyboardMoveStore.setState({ kind: 'tab', marker: null })
+    wrap(<WindowsPanel group={makeGroup()} groupIndex={0} />)
+    const zone = screen.getByTestId('new-window-dropzone')
+    expect(zone.className).not.toMatch(/invisible/)
+    expect(screen.getByRole('button', { name: /add window/i }).parentElement!.className).toMatch(/invisible/)
+  })
+
+  it('a live window or group move does not show the new-window zone', () => {
+    useKeyboardMoveStore.setState({ kind: 'window', marker: null })
+    wrap(<WindowsPanel group={makeGroup()} groupIndex={0} />)
+    expect(screen.getByTestId('new-window-dropzone').className).toMatch(/invisible/)
+  })
+
+  it('at the new-window stop the zone is highlighted and grows (min height, label at the bottom) to hold the docked copy', () => {
+    useKeyboardMoveStore.setState({ kind: 'tab', marker: { type: 'zone', zone: 'new-window' } })
+    wrap(<WindowsPanel group={makeGroup()} groupIndex={0} />)
+    const zone = screen.getByTestId('new-window-dropzone')
+    expect(zone.className).toMatch(/bg-primary\/10/)
+    expect(zone.className).toMatch(/items-end/)
+    expect(zone.parentElement!.className).toMatch(/min-h-\[4\.5rem\]/)
+    expect(scroll().className).not.toMatch(/opacity-40/)
+  })
+
+  it('at the "New group" stop the shown group is dimmed (the item will not land here), and nothing in it grows', () => {
+    useKeyboardMoveStore.setState({ kind: 'tab', marker: { type: 'zone', zone: 'new-group' } })
+    wrap(<WindowsPanel group={makeGroup()} groupIndex={0} />)
+    expect(scroll().className).toMatch(/opacity-40/)
+    expect(screen.getByTestId('new-window-dropzone').parentElement!.className).not.toMatch(/min-h-/)
+  })
+
+  it('at rest nothing is dimmed or grown', () => {
+    wrap(<WindowsPanel group={makeGroup()} groupIndex={0} />)
+    expect(scroll().className).not.toMatch(/opacity-40/)
+    expect(screen.getByTestId('new-window-dropzone').className).toMatch(/invisible/)
   })
 })

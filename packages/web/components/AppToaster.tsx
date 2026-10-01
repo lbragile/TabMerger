@@ -38,10 +38,7 @@ const TOKENS = {
   '--error-bg': tint('--destructive', 14),
   '--error-border': 'hsl(var(--destructive))',
   '--error-text': 'hsl(var(--foreground))',
-  // Dismiss button on the right, like the banners' (sonner defaults to top-left).
-  '--toast-close-button-start': 'unset',
-  '--toast-close-button-end': '0',
-  '--toast-close-button-transform': 'translate(35%, -35%)',
+  // The dismiss button's position and look are in globals.css (inside the top-right corner).
 } as CSSProperties
 
 export function AppToaster() {

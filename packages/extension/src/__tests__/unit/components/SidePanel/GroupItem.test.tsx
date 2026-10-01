@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, cleanup } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { GroupItem } from '@/components/SidePanel/GroupItem'
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
 import type { Group } from '@/lib/types'
 import { DEFAULT_GROUP_TITLE } from '@/lib/types'
 
@@ -53,12 +54,16 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
     onWrapperContextMenu,
     onWrapperMouseEnter,
     onWrapperMouseLeave,
+    moveGroupId,
+    selectGroupItem,
   }: {
     children: React.ReactNode
     wrapperRef?: (node: HTMLElement | null) => void
     wrapperClassName?: string
     wrapperStyle?: React.CSSProperties
     wrapperDndId?: string
+    moveGroupId?: string
+    selectGroupItem?: unknown
     onWrapperClick?: React.MouseEventHandler<HTMLDivElement>
     onWrapperContextMenu?: React.MouseEventHandler<HTMLDivElement>
     onWrapperMouseEnter?: React.MouseEventHandler<HTMLDivElement>
@@ -69,6 +74,8 @@ vi.mock('@/components/SidePanel/GroupContextMenu', () => ({
       {
         'data-testid': 'group-wrapper',
         'data-tm-dnd-id': wrapperDndId,
+        'data-move-group-id': moveGroupId,
+        'data-select-item': selectGroupItem ? JSON.stringify(selectGroupItem) : undefined,
         ref: wrapperRef,
         className: wrapperClassName,
         style: wrapperStyle,
@@ -90,7 +97,10 @@ vi.mock('@/hooks/useGroups', () => ({
 }))
 
 vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector),
+  // `getState` is what `toggleSelectionOnCtrlSpace` (keyboard Ctrl+Space) reads.
+  useUIStore: Object.assign((selector: (s: object) => unknown) => mockUseUIStore(selector), {
+    getState: () => baseUIState,
+  }),
 }))
 
 // ponytail: jsdom has no ResizeObserver; stub fires the callback once synchronously on observe(),
@@ -526,6 +536,49 @@ describe('GroupItem', () => {
       fireEvent.click(screen.getByRole('checkbox', { name: 'Select Work' }), { shiftKey: true })
       expect(selectRange).toHaveBeenCalledWith({ type: 'group', id: 'group-1' }, expect.any(Array))
       expect(baseUIState.toggleSelection).not.toHaveBeenCalled()
+    })
+
+    it('Ctrl+Space on the GRIP toggles the group in the selection and starts no move', () => {
+      useKeyboardMoveStore.setState({ request: null })
+      selecting()
+      const group = makeGroup({ name: 'Work' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+      const ev = fireEvent.keyDown(screen.getByLabelText('Drag to reorder group: Work'), { key: ' ', code: 'Space', ctrlKey: true })
+      expect(ev).toBe(false)
+      expect(baseUIState.toggleSelection).toHaveBeenCalledWith({ type: 'group', id: 'group-1' })
+      expect(useKeyboardMoveStore.getState().request).toBeNull()
+    })
+
+    it('plain Space on the GRIP requests a group move', () => {
+      useKeyboardMoveStore.setState({ request: null })
+      selecting()
+      const group = makeGroup({ name: 'Work' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+      fireEvent.keyDown(screen.getByLabelText('Drag to reorder group: Work'), { key: ' ', code: 'Space' })
+      expect(useKeyboardMoveStore.getState().request).toEqual({ kind: 'group', id: group.id })
+    })
+
+    it('hands the row its keyboard move id and Ctrl+Space selection item; Now Open gets neither', () => {
+      selecting()
+      const group = makeGroup({ name: 'Work' })
+      wrap(React.createElement(GroupItem, { group, groupIndex: 1, isActive: false, onClick: vi.fn() }))
+      let w = screen.getByTestId('group-wrapper')
+      expect(w.getAttribute('data-move-group-id')).toBe(group.id)
+      expect(JSON.parse(w.getAttribute('data-select-item')!)).toEqual({ type: 'group', id: 'group-1' })
+      cleanup()
+      wrap(React.createElement(GroupItem, { group: makeGroup({ permanent: true, name: 'Now Open' }), groupIndex: 0, isActive: false, onClick: vi.fn() }))
+      w = screen.getByTestId('group-wrapper')
+      expect(w.getAttribute('data-move-group-id')).toBeNull()
+      expect(w.getAttribute('data-select-item')).toBeNull()
+    })
+
+    it('a lone saved group has no move id (nothing to reorder among), but can still be selected', () => {
+      selecting()
+      mockUseGroups.mockReturnValue({ data: { available: [makeGroup({ permanent: true }), makeGroup()], active: { id: '', index: 0 } } })
+      wrap(React.createElement(GroupItem, { group: makeGroup({ name: 'Solo' }), groupIndex: 1, isActive: false, onClick: vi.fn() }))
+      const w = screen.getByTestId('group-wrapper')
+      expect(w.getAttribute('data-move-group-id')).toBeNull()
+      expect(w.getAttribute('data-select-item')).not.toBeNull()
     })
 
     it('Shift+Space on the grip extends the range instead of picking the group up', () => {

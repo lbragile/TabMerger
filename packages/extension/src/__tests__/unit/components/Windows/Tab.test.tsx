@@ -5,6 +5,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { TabItem } from '@/components/Windows/Tab'
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
 import type { Tab, Group, GroupsState, UrlRule } from '@/lib/types'
 
 const {
@@ -101,16 +102,26 @@ let selectionState: {
 }
 
 vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) =>
-    selector({
-      openModal: mockOpenModal,
-      selectionMode: selectionState.selectionMode,
-      selectedItems: selectionState.selectedItems,
-      toggleSelection: mockToggleSelection,
-      enterSelectionMode: mockEnterSelectionMode,
-      selectRange: mockSelectRange,
-      selectionAnchor: selectionState.selectionAnchor ?? null,
-    }),
+  useUIStore: Object.assign(
+    (selector: (s: object) => unknown) =>
+      selector({
+        openModal: mockOpenModal,
+        selectionMode: selectionState.selectionMode,
+        selectedItems: selectionState.selectedItems,
+        toggleSelection: mockToggleSelection,
+        enterSelectionMode: mockEnterSelectionMode,
+        selectRange: mockSelectRange,
+        selectionAnchor: selectionState.selectionAnchor ?? null,
+      }),
+    {
+      // `getState` is what `toggleSelectionOnCtrlSpace` (keyboard Ctrl+Space) reads.
+      getState: () => ({
+        selectedItems: selectionState.selectedItems,
+        toggleSelection: mockToggleSelection,
+        enterSelectionMode: mockEnterSelectionMode,
+      }),
+    }
+  ),
 }))
 
 globalThis.chrome = {
@@ -294,6 +305,41 @@ describe('TabItem — keyboard: keys from nested controls never open the tab', (
     expect(globalThis.chrome.tabs.create).toHaveBeenCalledTimes(1)
   })
 
+  it('plain Space on the focused ROW requests keyboard move mode and does NOT open the tab; Enter never does', () => {
+    useKeyboardMoveStore.setState({ request: null })
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const row = screen.getByRole('listitem')
+    fireEvent.keyDown(row, { key: 'Enter', code: 'Enter' })
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+    fireEvent.keyDown(row, { key: ' ', code: 'Space' })
+    expect(useKeyboardMoveStore.getState().request).toEqual({ kind: 'tab', id: expect.stringMatching(/::w0::t0$/) })
+    expect(globalThis.chrome.tabs.create).toHaveBeenCalledTimes(1) // the Enter above only
+  })
+
+  it('Ctrl+Space (and Cmd+Space) on the focused ROW toggles the tab in the selection: no move, no open', () => {
+    useKeyboardMoveStore.setState({ request: null })
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const row = screen.getByRole('listitem')
+    const ev = fireEvent.keyDown(row, { key: ' ', code: 'Space', ctrlKey: true })
+    expect(ev).toBe(false) // consumed
+    expect(mockEnterSelectionMode).toHaveBeenCalledTimes(1)
+    expect(mockToggleSelection).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' })
+    fireEvent.keyDown(row, { key: ' ', code: 'Space', metaKey: true })
+    expect(mockToggleSelection).toHaveBeenCalledTimes(2)
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('Ctrl+Space on the GRIP also toggles the selection and does not start a move', () => {
+    useKeyboardMoveStore.setState({ request: null })
+    render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
+    const grip = document.querySelector('[aria-label^="Drag to reorder"]') as HTMLElement
+    fireEvent.keyDown(grip, { key: ' ', code: 'Space', ctrlKey: true })
+    expect(mockToggleSelection).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' })
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
   it('Shift+Space on the focused row selects the RANGE and does not open the tab', () => {
     render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
     fireEvent.keyDown(screen.getByRole('listitem'), { key: ' ', code: 'Space', shiftKey: true })
@@ -301,20 +347,19 @@ describe('TabItem — keyboard: keys from nested controls never open the tab', (
     expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
   })
 
-  it('Shift+Space on the GRIP range-selects and never reaches dnd-kit (its activator ignores modifiers); plain Space still does', () => {
-    sortableListeners.onKeyDown.mockClear()
+  it('Shift+Space on the GRIP range-selects and does not start a move; plain Space on the grip does', () => {
+    useKeyboardMoveStore.setState({ request: null })
     mockSelectRange.mockClear()
     render(<TabItem tab={makeTab()} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
     const grip = document.querySelector('[aria-label^="Drag to reorder"]') as HTMLElement
     const shifted = fireEvent.keyDown(grip, { key: ' ', code: 'Space', shiftKey: true })
     expect(shifted).toBe(false)
     expect(mockSelectRange).toHaveBeenCalledWith({ type: 'tab', id: 'tab-0-0-0' }, expect.any(Array))
-    expect(sortableListeners.onKeyDown).not.toHaveBeenCalled()
-    expect(globalThis.chrome.tabs.create).not.toHaveBeenCalled()
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
 
     mockSelectRange.mockClear()
     fireEvent.keyDown(grip, { key: ' ', code: 'Space' })
-    expect(sortableListeners.onKeyDown).toHaveBeenCalledTimes(1)
+    expect(useKeyboardMoveStore.getState().request).toEqual({ kind: 'tab', id: expect.stringMatching(/::w0::t0$/) })
     expect(mockSelectRange).not.toHaveBeenCalled()
   })
 

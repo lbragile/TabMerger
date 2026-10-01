@@ -17,6 +17,9 @@ interface CdpPageTarget {
   webSocketDebuggerUrl?: string;
 }
 
+/** Message of the rejection raised for calls on a closed/closing CDP target. */
+export const CDP_TARGET_CLOSED = 'CDP target closed';
+
 type Pending = { resolve: (v: Record<string, unknown>) => void; reject: (e: Error) => void };
 
 export class RawCdp {
@@ -27,6 +30,21 @@ export class RawCdp {
   private constructor(ws: WebSocket) {
     this.ws = ws;
     this.ws.onmessage = (ev: MessageEvent) => this.onMessage(String(ev.data));
+    // The target going away (e.g. a toolbar popup dismissed because the page opened a tab)
+    // must fail every in-flight call instead of leaving it pending until the test timeout.
+    this.ws.onclose = () => this.failPending();
+    this.ws.addEventListener('error', () => this.failPending());
+  }
+
+  /** True once the socket is closing/closed (target gone or `close()` called). */
+  get closed(): boolean {
+    return this.ws.readyState !== WebSocket.OPEN;
+  }
+
+  private failPending(): void {
+    const all = [...this.pending.values()];
+    this.pending.clear();
+    for (const p of all) p.reject(new Error(CDP_TARGET_CLOSED));
   }
 
   /**
@@ -90,11 +108,39 @@ export class RawCdp {
     else p.resolve(msg.result ?? {});
   }
 
-  send(method: string, params: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
+  /**
+   * Send one CDP command. Rejects with "CDP target closed" if the socket is not OPEN (now or
+   * while waiting), and with a timeout error after `timeoutMs` (default 30s) so a hung call can
+   * never outlive the test.
+   */
+  send(
+    method: string,
+    params: Record<string, unknown> = {},
+    timeoutMs = 30_000,
+  ): Promise<Record<string, unknown>> {
+    if (this.closed) return Promise.reject(new Error(CDP_TARGET_CLOSED));
     const id = ++this.nextId;
     return new Promise((resolve, reject) => {
-      this.pending.set(id, { resolve, reject });
-      this.ws.send(JSON.stringify({ id, method, params }));
+      const timer = setTimeout(() => {
+        if (this.pending.delete(id)) reject(new Error(`CDP ${method} timed out after ${timeoutMs}ms`));
+      }, timeoutMs);
+      this.pending.set(id, {
+        resolve: (v) => {
+          clearTimeout(timer);
+          resolve(v);
+        },
+        reject: (e) => {
+          clearTimeout(timer);
+          reject(e);
+        },
+      });
+      try {
+        this.ws.send(JSON.stringify({ id, method, params }));
+      } catch {
+        this.pending.delete(id);
+        clearTimeout(timer);
+        reject(new Error(CDP_TARGET_CLOSED));
+      }
     });
   }
 
@@ -158,7 +204,13 @@ export class RawCdp {
     await this.mouse('mouseReleased', to.x, to.y);
   }
 
+  /** Idempotent: harmless on an already-closed socket. */
   close(): void {
-    this.ws.close();
+    try {
+      this.ws.close();
+    } catch {
+      /* already closed */
+    }
+    this.failPending();
   }
 }

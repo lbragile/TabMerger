@@ -31,7 +31,8 @@ import {
   Html5DragSensor,
   DND_INSTANT_ATTR,
   DND_SOURCE_COLLAPSE_EVENT,
-  getDndDragSourceHeight
+  getDndDragSourceHeight,
+  holdInstantFrames
 } from '@/lib/dndHtml5Sensor';
 import { resetDndDebugCache } from '@/lib/dndDebug';
 
@@ -650,5 +651,22 @@ describe('Html5DragSensor — source row collapse ("dragged item fully out of th
     await frames();
     expect(cb.onEnd).toHaveBeenCalledTimes(1);
     expect(cb.onMove.mock.calls.filter(([c]) => c.x === 5 && c.y === 7)).toHaveLength(1);
+  });
+});
+
+describe('holdInstantFrames (exported: keyboard move mode uses it when it remounts rows)', () => {
+  const attr = () => document.documentElement.hasAttribute(DND_INSTANT_ATTR);
+  it('turns row transitions off now and releases them two frames later', async () => {
+    holdInstantFrames();
+    expect(attr()).toBe(true);
+    await vi.waitFor(() => expect(attr()).toBe(false));
+  });
+
+  it('a second hold while one is pending keeps transitions off until its OWN frames are over', async () => {
+    holdInstantFrames();
+    await flushMacrotask();
+    holdInstantFrames();
+    expect(attr()).toBe(true);
+    await vi.waitFor(() => expect(attr()).toBe(false));
   });
 });

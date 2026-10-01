@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Collision, DragStartEvent, DragOverEvent, DragMoveEvent, DragEndEvent } from '@dnd-kit/core';
 import { useQueryClient, notifyManager, defaultScheduler, type QueryClient } from '@tanstack/react-query';
-import { containerKeyOf, type DndGap, type DndInsertion } from '@/lib/dndInsertion';
+import { containerKeyOf, makeGap, type DndGap, type DndInsertion } from '@/lib/dndInsertion';
 import { saveGroupsState } from '@/lib/localDb';
 import { trackEvent } from '@/lib/analytics';
 import { dndDebugEnabled, dndDebugLog } from '@/lib/dndDebug';
@@ -94,12 +94,14 @@ const KEYBOARD_OUTCOME_DELAY_MS = 150;
  *    NVDA/JAWS. dnd-kit gets a short token; the full text goes to the app-owned live
  *    region ~150ms after focus has landed
  */
-function announceOutcome(text: string, keyboard: boolean, focusSelectors: string[] | null, token: string): void {
+function announceOutcome(text: string, keyboard: boolean | 'move', focusSelectors: string[] | null, token: string): void {
   if (!keyboard) {
     setDndDropOutcome(text);
     return;
   }
-  setDndDropOutcome(token);
+  // 'move' = keyboard MOVE MODE: no dnd-kit drag is ending, so there is no end announcement
+  // for a token to stand in for; only the focus move + the app-owned live region.
+  if (keyboard !== 'move') setDndDropOutcome(token);
   focusAfterDrop(focusSelectors ?? [], () => announceDnd(text, KEYBOARD_OUTCOME_DELAY_MS));
 }
 
@@ -142,7 +144,7 @@ function currentActiveGroupIndex(fallback: number): number {
 }
 
 /** Focus candidates for an item that did NOT move (cancel / rejected / no-op drop). */
-function ownFocusSelectors(state: GroupsState | null, id: string): string[] {
+export function ownFocusSelectors(state: GroupsState | null, id: string): string[] {
   const g = state ? buildDndModel(state).groups[id] : undefined;
   return g ? focusSelectorsForGroupIndex(g.index) : focusSelectorsForItem(id);
 }
@@ -642,7 +644,7 @@ const EMPTY_SELECTION: readonly { type: string; id: string }[] = [];
  * (LEGACY ids), return the full ordered set of MODEL ids for that selection.
  * Returns `null` when the drag is a single-item drag.
  */
-function promoteStoreSelection(
+export function promoteStoreSelection(
   model: ReturnType<typeof buildDndModel>,
   activeModelId: string,
   activeType: DndRefType,
@@ -950,7 +952,7 @@ export function useDndHandlers() {
         const selection = getDndDragSelection();
         shift = act.sortableItems.slice(act.sortableIndex + 1).filter((sid) => !selection?.has(sid));
       }
-      applyGap({ height, shiftIds: new Set(shift), containerKey: act.containerKey ?? null });
+      applyGap(makeGap(height, act.containerKey ?? null, shift));
     },
     [applyGap]
   );
@@ -964,11 +966,7 @@ export function useDndHandlers() {
       insertionRef.current = insertion;
       // No insertion (e.g. over a group row / the new-window zone): every list
       // closes up — the home list included.
-      applyGap({
-        height,
-        shiftIds: new Set(insertion ? insertion.shiftIds : []),
-        containerKey: insertion?.containerKey ?? null
-      });
+      applyGap(makeGap(height, insertion?.containerKey ?? null, insertion ? insertion.shiftIds : []));
     },
     [applyGap]
   );
@@ -1122,8 +1120,28 @@ export function useDndHandlers() {
     // Creating a group is entitlement-gated — see `setNewGroupZoneGate`. At the cap the
     // zone is hidden and disabled, so this only catches a target resolved from the
     // throttled event stream; refuse it silently.
-    if (o?.type === 'new-group' && getNewGroupZoneGate().atLimit) return bail('rejected');
     if (a && !a.selectionIds && carriedSelectionIds) a.selectionIds = carriedSelectionIds;
+    return commitResolved(base, model, a, o, keyboard, bail, p);
+  };
+
+  /**
+   * The shared tail of every commit, pointer or keyboard: gate + `canDrop`, rebase onto the
+   * CURRENT cache, `applyMove`, undo, persist, cache write, selection remap, outcome
+   * announcement/focus, side effects. `keyboard` is `false` for a pointer drop, `true` for a
+   * dnd-kit keyboard drag and `'move'` for keyboard move mode. Returns the async tail (await
+   * the write, then side effects) or `null` when nothing was committed.
+   */
+  const commitResolved = (
+    base: GroupsState,
+    model: Model,
+    a: DndRef | null,
+    o: DndRef | null,
+    keyboard: boolean | 'move',
+    bail: (reason: DndBailReason) => null,
+    p: CommitProgress
+  ): (() => Promise<void>) | null => {
+    const current = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY) ?? null;
+    if (o?.type === 'new-group' && getNewGroupZoneGate().atLimit) return bail('rejected');
     if (!a || !o || a.id === o.id || !canDrop(model, a, o)) {
       return bail(a && o && a.id === o.id ? 'noop' : 'rejected');
     }
@@ -1255,52 +1273,80 @@ export function useDndHandlers() {
     };
   };
 
-  const onDragEnd = useCallback(
-    async (e: DragEndEvent) => {
-      const p: CommitProgress = { selectionBefore: [] };
-      let tail: (() => Promise<void>) | null = null;
-      try {
-        tail = commitDrop(e, p);
-      } catch (err) {
-        dndDebugLog('commit-threw', { message: err instanceof Error ? err.message : String(err) });
-        console.error('[tm-dnd] drop failed', err);
-        // `reset()` FIRST: rollback's "no drag is live" guards are only true once the
-        // live-drag flag is cleared, and `finally` runs too late for them.
-        reset();
-        if (p.cacheWritten) {
-          // The throw landed AFTER `saveGroupsState` was issued, so the move is very
-          // likely already persisted. Don't pop the undo entry and don't announce a
-          // failure for a write that will succeed — just re-read IDB so the cache matches
-          // whatever actually landed, and keep awaiting the write so a REAL failure still
-          // rolls back and announces (the old code dropped `persist` on the floor here).
-          rollback(p, { popUndo: false });
-          const persist = p.persist;
-          if (persist) {
-            tail = async () => {
-              try {
-                await persist;
-              } catch (writeErr) {
-                dndDebugLog('commit-persist-failed', {
-                  message: writeErr instanceof Error ? writeErr.message : String(writeErr)
-                });
-                rollback(p);
-                announceDnd(DND_SAVE_FAILED_TEXT);
-              }
-            };
-          }
-        } else {
-          // Nothing was written: the drop is a clean no-op, so undo it fully and say so.
-          rollback(p);
-          setDndDropOutcome(DND_SAVE_FAILED_TEXT);
+  /**
+   * Run one commit with the pointer path's full safety net: a throw rolls back (before the
+   * write was issued) or re-reads IDB (after), and EVERY exit clears the drag state and the
+   * live-drag flag. `onDragEnd` and keyboard move mode both commit through this.
+   */
+  const runGuarded = async (run: (p: CommitProgress) => (() => Promise<void>) | null): Promise<void> => {
+    const p: CommitProgress = { selectionBefore: [] };
+    let tail: (() => Promise<void>) | null = null;
+    try {
+      tail = run(p);
+    } catch (err) {
+      dndDebugLog('commit-threw', { message: err instanceof Error ? err.message : String(err) });
+      console.error('[tm-dnd] drop failed', err);
+      // `reset()` FIRST: rollback's "no drag is live" guards are only true once the
+      // live-drag flag is cleared, and `finally` runs too late for them.
+      reset();
+      if (p.cacheWritten) {
+        // The throw landed AFTER `saveGroupsState` was issued, so the move is very
+        // likely already persisted. Don't pop the undo entry and don't announce a
+        // failure for a write that will succeed — just re-read IDB so the cache matches
+        // whatever actually landed, and keep awaiting the write so a REAL failure still
+        // rolls back and announces (the old code dropped `persist` on the floor here).
+        rollback(p, { popUndo: false });
+        const persist = p.persist;
+        if (persist) {
+          tail = async () => {
+            try {
+              await persist;
+            } catch (writeErr) {
+              dndDebugLog('commit-persist-failed', {
+                message: writeErr instanceof Error ? writeErr.message : String(writeErr)
+              });
+              rollback(p);
+              announceDnd(DND_SAVE_FAILED_TEXT);
+            }
+          };
         }
-      } finally {
-        // EVERY exit — commit, bail or throw — clears the drag state and the live-drag flag.
-        // A flag left set would silence every global shortcut until the popup closes.
-        reset();
+      } else {
+        // Nothing was written: the drop is a clean no-op, so undo it fully and say so.
+        rollback(p);
+        setDndDropOutcome(DND_SAVE_FAILED_TEXT);
       }
-      if (tail) await tail();
-    },
+    } finally {
+      // EVERY exit — commit, bail or throw — clears the drag state and the live-drag flag.
+      // A flag left set would silence every global shortcut until the popup closes.
+      reset();
+    }
+    if (tail) await tail();
+  };
+
+  const onDragEnd = useCallback(
+    (e: DragEndEvent) => runGuarded((p) => commitDrop(e, p)),
     // `commitDrop` / `rollback` are recreated each render from exactly these values.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [qc, pushUndo, reset, setActiveGroupIndex, selectedItems, setSelection, activeGroupIndex]
+  );
+
+  /**
+   * Keyboard MOVE MODE commit (`useKeyboardMove`): the same `commitResolved` tail a pointer
+   * drop ends in, so the result of a keyboard move can never drift from a mouse drop's.
+   * `active` carries the whole selection in `selectionIds`.
+   */
+  const commitKeyboardMove = useCallback(
+    (active: DndRef, over: DndRef) =>
+      runGuarded((p) => {
+        const base = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY) ?? null;
+        const count = active.selectionIds?.length ?? 1;
+        const bail = (reason: DndBailReason): null => {
+          announceOutcome(describeDropBail(base, active.id, reason, count), 'move', ownFocusSelectors(base, active.id), DND_KEYBOARD_DROP_TOKEN);
+          return null;
+        };
+        if (!base) return bail('rejected');
+        return commitResolved(base, buildDndModel(base), { ...active }, { ...over }, 'move', bail, p);
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [qc, pushUndo, reset, setActiveGroupIndex, selectedItems, setSelection, activeGroupIndex]
   );
@@ -1340,6 +1386,8 @@ export function useDndHandlers() {
     onDragMove,
     onDragCancel,
     onDragEnd,
+    commitKeyboardMove,
+    applyGap,
     onSourceCollapse,
     overrideState,
     active,

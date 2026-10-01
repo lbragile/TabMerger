@@ -202,7 +202,7 @@ User-invocable via `/skill-name`. Notable ones: `verify-sync`/`encrypt-status` (
 - **supabase** MCP is installed for schema introspection (`list_tables`, `get_advisors`, `get_logs`) — prefer it over guessing schema shape when working on migrations or RLS. Requires `SUPABASE_PROJECT_REF` (project slug, from the Supabase dashboard URL) and `SUPABASE_ACCESS_TOKEN` (dashboard → Account → Access Tokens). Export both as shell env vars — these are MCP-process credentials, not app config, so they do **not** go in `.env`/`.env.local`.
 - **github** MCP is installed for PR/issue/check-run access — prefer it over parsing `gh` CLI text output. Requires `GITHUB_PERSONAL_ACCESS_TOKEN` (fine-grained PAT, `repo` scope on this repo) exported as a shell env var, same reason as above.
 - **sentry** MCP is enabled — requires `SENTRY_AUTH_TOKEN`/`SENTRY_ORG` exported as shell env vars, same handling as above.
-- **playwright** / **chrome-devtools** MCPs are installed for browser automation (E2E debugging, live DOM/console/network inspection) — no auth required, work out of the box.
+- **playwright** / **chrome-devtools** MCPs are installed for browser automation (E2E debugging, live DOM/console/network inspection) — no auth required, work out of the box. `chrome-devtools` runs `--headless --viewport=1280x900` with a persistent profile, so use it to look at the web app (`localhost:3000`) yourself (`navigate_page`, `take_screenshot`, `list_console_messages`) instead of asking for screenshots.
 - If an MCP tool call fails with an auth/connection error, check the relevant env var is exported in the shell Claude Code was launched from (`echo $VAR_NAME`) — a missing var is the most common cause, not a broken server config.
 
 ## Test coverage policy (mandatory, non-skippable)
@@ -219,6 +219,11 @@ Any time a feature is added, changed, or removed — in the extension or the web
 This applies regardless of how small the change looks. Skipping any of the three test layers, or letting coverage regress below the threshold, is a defect in the work — not a follow-up item.
 
 **Enforcement:** the `test-writer` agent is the one that executes this policy and must be invoked after any implementation batch (already mandatory per the agent-routing table above). The `pm` agent must always trigger `test-writer` after delegating implementation work — never treat a feature as complete without that pass having run and confirmed all four checks above.
+
+## Keep these current (in the same change, not later)
+
+- **Known issues** — `packages/web/lib/knownIssues.ts`, shown to testers on `/beta#known-issues`. When a user-visible bug is confirmed and not fixed in the same change, add it; when a change fixes one, delete its entry in that change; when scope or workaround changes, reword it. Describe what the user sees and what to do meanwhile, not the code. Check the list before every beta release (it's part of what testers are told).
+- **Roadmap** — `docs/FEATURE_ROADMAP.md`. Whenever a feature ships, starts, is dropped or changes scope, tick, add, remove or reword its item, and keep "Current state" (release versions, store versions, shipped list) and its "Last updated" date accurate. Bugs and engineering tasks go in `TODO.md`, not the roadmap; per-feature specs go in `.claude/plans/`.
 
 ## Before committing
 

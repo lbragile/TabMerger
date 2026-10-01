@@ -4,12 +4,13 @@
  * open all in new window, unite/split windows, sort by title/url, archive/restore).
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { GroupContextMenu } from '@/components/SidePanel/GroupContextMenu'
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
 import type { Group } from '@/lib/types'
 
 const {
@@ -36,6 +37,8 @@ const {
   mockUseEntitlements,
   mockUseAppSettings,
   mockNameGroup,
+  mockToggleSelection,
+  mockEnterSelectionMode,
 } = vi.hoisted(() => ({
   mockDeleteGroup: vi.fn(),
   mockDuplicateGroup: vi.fn(),
@@ -60,6 +63,8 @@ const {
   mockUseEntitlements: vi.fn(() => ({ maxGroups: 2, aiFeatures: false })),
   mockUseAppSettings: vi.fn(() => ({ data: { aiNameGroupEnabled: true } })),
   mockNameGroup: vi.fn(),
+  mockToggleSelection: vi.fn(),
+  mockEnterSelectionMode: vi.fn(),
 }))
 
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
@@ -94,13 +99,17 @@ vi.mock('@/hooks/useAI', () => ({
 vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))
 
 vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) =>
-    selector({
-      openModal: mockOpenModal,
-      setRenameTarget: mockSetRenameTarget,
-      setActiveGroupIndex: mockSetActiveGroupIndex,
-      setPendingNoteGroupIndex: mockSetPendingNoteGroupIndex,
-    }),
+  useUIStore: Object.assign(
+    (selector: (s: object) => unknown) =>
+      selector({
+        openModal: mockOpenModal,
+        setRenameTarget: mockSetRenameTarget,
+        setActiveGroupIndex: mockSetActiveGroupIndex,
+        setPendingNoteGroupIndex: mockSetPendingNoteGroupIndex,
+      }),
+    // `getState` is what `toggleSelectionOnCtrlSpace` (keyboard Ctrl+Space) reads.
+    { getState: () => ({ selectedItems: [], toggleSelection: mockToggleSelection, enterSelectionMode: mockEnterSelectionMode }) }
+  ),
 }))
 
 vi.mock('@/lib/toast', () => ({ toast: { error: mockToastError, success: vi.fn(), info: mockToastInfo } }))
@@ -364,5 +373,60 @@ describe('GroupContextMenu — item actions', () => {
     expect(screen.queryByText('Remove all windows')).toBeNull()
     await user.click(screen.getByText('Close all windows'))
     expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 1 })
+  })
+})
+
+describe('GroupContextMenu — row keyboard: Space moves, Ctrl+Space selects, Enter activates', () => {
+  function renderRow(props: Record<string, unknown>) {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
+    const onWrapperClick = vi.fn()
+    render(
+      React.createElement(QueryClientProvider, { client: qc },
+        React.createElement(TooltipProvider, null,
+          React.createElement(GroupContextMenu, {
+            group: makeGroup({ name: 'Work' }),
+            groupIndex: 1,
+            open: false,
+            onOpenChange: vi.fn(),
+            onWrapperClick,
+            children: React.createElement('div', null, 'trigger'),
+            ...props,
+          })
+        )
+      )
+    )
+    return { row: screen.getByRole('button', { name: 'Work' }), onWrapperClick }
+  }
+  beforeEach(() => useKeyboardMoveStore.setState({ request: null }))
+
+  it('plain Space on a draggable row requests a group move and does not activate it', () => {
+    const { row, onWrapperClick } = renderRow({ moveGroupId: 'g1' })
+    const ev = fireEvent.keyDown(row, { key: ' ', code: 'Space' })
+    expect(ev).toBe(false)
+    expect(useKeyboardMoveStore.getState().request).toEqual({ kind: 'group', id: 'g1' })
+    expect(onWrapperClick).not.toHaveBeenCalled()
+  })
+
+  it('Ctrl+Space toggles the row in the selection, without moving or activating it', () => {
+    const { row, onWrapperClick } = renderRow({ moveGroupId: 'g1', selectGroupItem: { type: 'group', id: 'group-1' } })
+    fireEvent.keyDown(row, { key: ' ', code: 'Space', ctrlKey: true })
+    expect(mockEnterSelectionMode).toHaveBeenCalled()
+    expect(mockToggleSelection).toHaveBeenCalledWith({ type: 'group', id: 'group-1' })
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+    expect(onWrapperClick).not.toHaveBeenCalled()
+  })
+
+  it('Enter activates the row and never starts a move', () => {
+    const { row, onWrapperClick } = renderRow({ moveGroupId: 'g1' })
+    fireEvent.keyDown(row, { key: 'Enter', code: 'Enter' })
+    expect(onWrapperClick).toHaveBeenCalledTimes(1)
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+  })
+
+  it('a row with no move id (Now Open) activates on Space', () => {
+    const { row, onWrapperClick } = renderRow({})
+    fireEvent.keyDown(row, { key: ' ', code: 'Space' })
+    expect(onWrapperClick).toHaveBeenCalledTimes(1)
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
   })
 })

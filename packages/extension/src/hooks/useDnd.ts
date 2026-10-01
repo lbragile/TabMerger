@@ -1,8 +1,6 @@
-import { KeyboardSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { Html5DragSensor } from '@/lib/dndHtml5Sensor';
 import { DND_POINTER_PROBE_ACTIVE } from '@/lib/dndPointerProbe';
-import { motionScrollBehavior } from '@/lib/reducedMotion';
 
 // The unified DnD layer lives in `useDndHandlers` + `@/components/dnd/DndProvider`,
 // keyed off the normalised model from `@/hooks/useDndModel` (no string-id parsing).
@@ -51,19 +49,15 @@ export * from './useDndHandlers';
  *
  * `TouchSensor` covers touchscreen laptops / Chromebooks — touch gets implicit
  * capture and delivers `touchmove` fine in the popup, and Chrome doesn't start an
- * HTML5 drag from touch, so the stock sensor is correct there. `KeyboardSensor`
- * keeps the layer accessible.
+ * HTML5 drag from touch, so the stock sensor is correct there. There is deliberately NO
+ * `KeyboardSensor`: keyboard moves are a separate "move mode" (`@/hooks/useKeyboardMove`,
+ * `@/lib/keyboardMove`) that commits through the same tail as a pointer drop.
  */
 export function useDndSensors() {
   const html5 = useSensor(Html5DragSensor);
   const touch = useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } });
-  // Reduced motion: the sensor scrolls the moved item into view instantly, not smoothly.
-  const keyboard = useSensor(KeyboardSensor, {
-    coordinateGetter: sortableKeyboardCoordinates,
-    scrollBehavior: motionScrollBehavior()
-  });
   // Diagnostic pointer-stream probe (`@/lib/dndPointerProbe`, localStorage flag,
   // off for every real user): leave the HTML5 sensor out so no drag can start and
   // the probe measures the raw pointer stream of a grip press.
-  return useSensors(...(DND_POINTER_PROBE_ACTIVE ? [] : [html5]), touch, keyboard);
+  return useSensors(...(DND_POINTER_PROBE_ACTIVE ? [] : [html5]), touch);
 }

@@ -13,6 +13,7 @@ import { dndListStyle, gapGrowthFor } from '@/lib/dndInsertion';
 import { NEW_GROUP_ID, setNewGroupZoneGate } from '@/hooks/useDndHandlers';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/uiStore';
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore';
 import { useAddGroup, useRestoreGroup, useDeleteGroup } from '@/hooks/useGroups';
 import { FreeLimitExceededError } from '@/lib/tierLimits';
 import { useEntitlements, isOverFreeLimit } from '@/hooks/useEntitlements';
@@ -22,6 +23,7 @@ import { getGroupTabCount } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { FREE_TIER_LIMITS } from '@tabmerger/shared';
+import { KEYBOARD_ZONE_MIN_HEIGHT } from '@/lib/keyboardMoveDom';
 
 /**
  * Shared shell for the Archived / Sessions sidebar sections: a disclosure header row
@@ -109,11 +111,14 @@ interface SidePanelProps {
  * own at-cap behaviour (warn + upgrade toast) is unchanged.
  */
 function NewGroupDropZone({ active }: { active: boolean }) {
-  const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef, isOver: pointerOver } = useDroppable({
     id: NEW_GROUP_ID,
     data: { type: 'new-group' },
     disabled: !active
   });
+  // Keyboard move mode highlights the zone it targets exactly as a pointer hover does.
+  const keyboardOver = useKeyboardMoveStore((s) => s.marker?.type === 'zone' && s.marker.zone === 'new-group');
+  const isOver = pointerOver || keyboardOver;
   return (
     <div
       ref={setNodeRef}
@@ -122,7 +127,9 @@ function NewGroupDropZone({ active }: { active: boolean }) {
       className={cn(
         'absolute inset-y-0 left-1.5 right-1.5 z-10 flex items-center justify-center border border-dashed text-[11px] font-medium transition-colors',
         active ? 'border-primary text-foreground bg-zone-sidebar' : 'invisible pointer-events-none border-transparent',
-        isOver && active && 'bg-primary/10 border-primary text-foreground'
+        isOver && active && 'bg-primary/10 border-primary text-foreground',
+        // Keyboard target: the label drops to the bottom so the docked copy fits above it.
+        keyboardOver && 'items-end pb-1'
       )}
     >
       <Plus className="h-3.5 w-3.5 mr-1 shrink-0" />
@@ -133,6 +140,8 @@ function NewGroupDropZone({ active }: { active: boolean }) {
 
 export function SidePanel({ groupsState }: SidePanelProps) {
   const { isDragging, gap, active } = useDndContext();
+  const moveKind = useKeyboardMoveStore((s) => s.kind);
+  const atNewGroupStop = useKeyboardMoveStore((s) => s.marker?.type === 'zone' && s.marker.zone === 'new-group');
   const setActiveGroupIndex = useUIStore((s) => s.setActiveGroupIndex);
   const activeGroupIndex = useUIStore((s) => s.activeGroupIndex);
   const selectionMode = useUIStore((s) => s.selectionMode);
@@ -212,7 +221,8 @@ export function SidePanel({ groupsState }: SidePanelProps) {
 
   // The "new group" drop zone takes tab AND window drags (a group is already a group),
   // and is hidden outright at the free-group cap (user decision, 2026-09-18).
-  const dropZoneActive = (active?.type === 'tab' || active?.type === 'window') && !atGroupLimit;
+  const dropZoneActive =
+    (active?.type === 'tab' || active?.type === 'window' || moveKind === 'tab' || moveKind === 'window') && !atGroupLimit;
 
   // Publish the entitlement gate for the drop zone: `applyMove` is pure and `onDragEnd`
   // often resolves the target without dnd-kit's `over.data` (throttled `dragover`, C2),
@@ -248,7 +258,7 @@ export function SidePanel({ groupsState }: SidePanelProps) {
       <ScrollArea className="flex-1">
         <div className="py-1.5">
           {/* List wrapper: grows by the gap height while a group drag's gap is here. */}
-          <div data-tm-dnd-list="" style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
+          <div data-tm-dnd-list="groups" style={dndListStyle(gapGrowthFor(gap, 'groups'), '0px')}>
           <SortableContext items={groupModelIds} strategy={verticalListSortingStrategy}>
             {available.map(({ group, realIndex, isLocked }) => (
               <GroupItem
@@ -269,14 +279,14 @@ export function SidePanel({ groupsState }: SidePanelProps) {
               whether or not a drag is running — no ancestor of a group grip ever changes
               height, which is what aborts a native HTML5 drag in the MV3 popup (C4).
               Both children stay MOUNTED for the same reason; only visibility flips. */}
-          <div className="relative px-1.5 mt-2">
+          <div className={cn('relative px-1.5 mt-2', atNewGroupStop && KEYBOARD_ZONE_MIN_HEIGHT)}>
             <NewGroupDropZone active={dropZoneActive} />
-            <div className={isDragging ? 'invisible' : undefined}>
+            <div className={(isDragging || moveKind !== null) ? 'invisible' : undefined}>
               <Button
                 variant="outline"
                 className="h-8 rounded-none px-3 text-xs w-full"
                 onClick={handleNewGroup}
-                disabled={selectionMode || isDragging}
+                disabled={selectionMode || isDragging || moveKind !== null}
               >
                 <Plus className="h-3.5 w-3.5 mr-1" />
                 Add Group

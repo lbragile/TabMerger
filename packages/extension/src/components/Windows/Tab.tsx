@@ -12,6 +12,7 @@ import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
+import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import { saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
 import { getDisplayTitle } from '@/lib/tabTitle';
@@ -207,9 +208,8 @@ const { mutate: deleteTab } = useDeleteTab();
 
   const dragHandleProps = { ...attributes, ...listeners };
   /**
-   * Shift+Space on the grip = range select (the keyboard Shift+click). dnd-kit's keyboard
-   * activator ignores modifiers and would PICK THE TAB UP instead, so it is handled here
-   * first; every other key goes to dnd-kit (plain Space/Enter still pick up).
+   * Shift+Space on the grip = range select (the keyboard Shift+click); plain Space starts
+   * keyboard move mode (Enter never does).
    */
   const onDragHandleKeyDown = (e: React.KeyboardEvent) => {
     if ((e.key === ' ' || e.code === 'Space') && e.shiftKey && !isDndDragLive()) {
@@ -218,7 +218,9 @@ const { mutate: deleteTab } = useDeleteTab();
       extendRange();
       return;
     }
-    (dragHandleProps as { onKeyDown?: (e: React.KeyboardEvent) => void }).onKeyDown?.(e);
+    // Ctrl+Space toggles the tab in the selection; plain Space starts keyboard move mode.
+    if (toggleSelectionOnCtrlSpace(e, { type: 'tab', id: `tab-${groupIndex}-${windowIndex}-${tabIndex}` })) return;
+    startMoveOnSpace(e, 'tab', sortableId);
   };
   const onDragHandleMouseDown = (e: React.MouseEvent) => {
     (dragHandleProps as { onMouseDown?: (e: React.MouseEvent) => void }).onMouseDown?.(e);
@@ -420,6 +422,10 @@ const { mutate: deleteTab } = useDeleteTab();
           extendRange();
           return;
         }
+        // Ctrl+Space toggles the selection without opening or moving; plain Space picks the
+        // tab up (keyboard move); Enter stays "open".
+        if (!editingTitle && toggleSelectionOnCtrlSpace(e, { type: 'tab', id: selectionId })) return;
+        if (!editingTitle && startMoveOnSpace(e, 'tab', sortableId)) return;
         if ((e.key === 'Enter' || e.key === ' ') && !isLocked && !editingTitle) {
           e.preventDefault();
           void handleOpen();

@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { useKeyboardMoveStore } from '@/stores/keyboardMoveStore'
 import { WindowItem } from '@/components/Windows/Window'
 import type { Window as WindowType, GroupsState } from '@/lib/types'
 
@@ -69,7 +70,10 @@ const baseUIState = {
 }
 
 vi.mock('@/stores/uiStore', () => ({
-  useUIStore: (selector: (s: object) => unknown) => mockUseUIStore(selector),
+  // `getState` is what `toggleSelectionOnCtrlSpace` (keyboard Ctrl+Space) reads.
+  useUIStore: Object.assign((selector: (s: object) => unknown) => mockUseUIStore(selector), {
+    getState: () => baseUIState,
+  }),
 }))
 
 function makeWindow(overrides: Partial<WindowType> = {}): WindowType {
@@ -244,6 +248,41 @@ describe('WindowItem', () => {
     vi.mocked(baseUIState.selectRange).mockClear()
     fireEvent.keyDown(grip, { key: ' ', code: 'Space' })
     expect(baseUIState.selectRange).not.toHaveBeenCalled()
+  })
+
+  it('plain Space on the focused window HEADER (and on its grip) requests keyboard move mode', () => {
+    useKeyboardMoveStore.setState({ request: null })
+    wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] }))
+    const header = document.querySelector('[data-window-header]') as HTMLElement
+    fireEvent.keyDown(header, { key: 'Enter', code: 'Enter' })
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
+    fireEvent.keyDown(header, { key: ' ', code: 'Space' })
+    expect(useKeyboardMoveStore.getState().request).toEqual({ kind: 'window', id: 'g1::w0' })
+    useKeyboardMoveStore.setState({ request: null })
+    const grip = document.querySelector('[aria-label="Drag to reorder window: Test Window"]') as HTMLElement
+    fireEvent.keyDown(grip, { key: ' ', code: 'Space' })
+    expect(useKeyboardMoveStore.getState().request).toEqual({ kind: 'window', id: 'g1::w0' })
+  })
+
+  it('the tab list is keyed by the window\'s model id (the container key of the gap the keyboard preview opens)', () => {
+    wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] }))
+    const list = document.querySelector('[role="list"][data-tm-dnd-list]')
+    expect(list?.getAttribute('data-tm-dnd-list')).toBe('g1::w0')
+  })
+
+  it('Ctrl+Space on the focused window HEADER or its grip toggles the window in the selection and starts no move', () => {
+    useKeyboardMoveStore.setState({ request: null })
+    wrap(React.createElement(WindowItem, { groupId: 'g1', window: makeWindow(), groupIndex: 1, windowIndex: 0, siblingCount: 2, tabIds: [] }))
+    const header = document.querySelector('[data-window-header]') as HTMLElement
+    const ev = fireEvent.keyDown(header, { key: ' ', code: 'Space', ctrlKey: true })
+    expect(ev).toBe(false)
+    expect(baseUIState.enterSelectionMode).toHaveBeenCalled()
+    expect(baseUIState.toggleSelection).toHaveBeenCalledWith({ type: 'window', id: 'window-1-0' })
+    vi.mocked(baseUIState.toggleSelection).mockClear()
+    const grip = document.querySelector('[aria-label="Drag to reorder window: Test Window"]') as HTMLElement
+    fireEvent.keyDown(grip, { key: ' ', code: 'Space', ctrlKey: true })
+    expect(baseUIState.toggleSelection).toHaveBeenCalledWith({ type: 'window', id: 'window-1-0' })
+    expect(useKeyboardMoveStore.getState().request).toBeNull()
   })
 
   it('shift+click on the header selects the window RANGE from the anchor (same group) and blocks text selection', () => {

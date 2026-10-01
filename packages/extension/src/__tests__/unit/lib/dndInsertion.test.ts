@@ -14,6 +14,7 @@ import {
   dndListStyle,
   gapGrowthFor,
   gapTransformFor,
+  makeGap,
   orderOf,
   targetContainerKey,
   type InsertionCandidate
@@ -202,5 +203,29 @@ describe('gapTransformFor', () => {
   it('translates shifted rows down by the rounded gap height, leaves others untransformed', () => {
     expect(gapTransformFor(gap, 'x')).toBe('translate3d(0, 24px, 0)');
     expect(gapTransformFor(gap, 'y')).toBeUndefined();
+  });
+});
+
+describe('makeGap', () => {
+  it('builds the gap the pointer preview and the keyboard preview share', () => {
+    const gap = makeGap(30, 'work::w0', ['work::w0::t1', 'work::w0::t2']);
+    expect(gap.height).toBe(30);
+    expect(gap.containerKey).toBe('work::w0');
+    expect(gap.shiftIds).toBeInstanceOf(Set);
+    expect([...gap.shiftIds]).toEqual(['work::w0::t1', 'work::w0::t2']);
+  });
+
+  it('a gap over a zone has no container and shifts nothing; any iterable of ids is accepted', () => {
+    const gap = makeGap(24, null, new Set<string>());
+    expect(gap.containerKey).toBeNull();
+    expect(gap.shiftIds.size).toBe(0);
+    expect(makeGap(1, 'k', new Set(['a', 'a', 'b'])).shiftIds.size).toBe(2);
+  });
+
+  it('feeds gapGrowthFor / gapTransformFor exactly like a pointer-made gap', () => {
+    const gap = makeGap(24.4, 'work::w1', ['work::w1::t0']);
+    expect(gapGrowthFor(gap, 'work::w1')).toBe(24);
+    expect(gapGrowthFor(gap, 'work::w0')).toBe(0);
+    expect(gapTransformFor(gap, 'work::w1::t0')).not.toBeNull();
   });
 });

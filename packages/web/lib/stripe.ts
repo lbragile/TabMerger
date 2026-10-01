@@ -22,6 +22,19 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_not_c
   typescript: true,
 })
 
+/**
+ * Checkout Sessions are created with Adaptive Pricing on: the customer sees and pays the
+ * price in their local currency, with Stripe's conversion fee built into that amount (the
+ * customer pays it), while we're credited the USD price. Our Prices stay USD-only.
+ *
+ * Adaptive Pricing for SUBSCRIPTIONS needs API version 2026-03-25.dahlia or later, so the
+ * Checkout calls alone use it (per-request `apiVersion`); the client above stays on basil so
+ * nothing else (portal, subscriptions, webhooks) changes shape. Stripe decides per session
+ * whether to convert (location, currency support), so a session can still show USD.
+ */
+const CHECKOUT_API_VERSION = '2026-03-25.dahlia'
+const LOCAL_CURRENCY_CHECKOUT = { adaptive_pricing: { enabled: true } } as const
+
 // Re-export client-safe tier constants from their own module so that
 // client components can import TIERS without pulling in the Stripe SDK.
 export { TIERS, getStripePriceId } from './tiers'
@@ -67,7 +80,8 @@ export async function createCheckoutSession({
     subscription_data: {
       metadata: { user_id: userId },
     },
-  })
+    ...LOCAL_CURRENCY_CHECKOUT,
+  }, { apiVersion: CHECKOUT_API_VERSION })
 
   if (!session.url) throw new Error('Failed to create checkout session')
   return session.url
@@ -120,7 +134,8 @@ export async function createCreditPackCheckoutSession({
     success_url: successUrl,
     cancel_url: cancelUrl,
     metadata: { user_id: userId, type: 'ai_credit_pack' },
-  })
+    ...LOCAL_CURRENCY_CHECKOUT,
+  }, { apiVersion: CHECKOUT_API_VERSION })
 
   if (!session.url) throw new Error('Failed to create checkout session')
   return session.url

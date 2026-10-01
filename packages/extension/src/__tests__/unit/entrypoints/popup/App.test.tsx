@@ -25,6 +25,7 @@ vi.mock('@/components/dnd/DndProvider', () => ({
   useDndContext: () => ({ overrideState: null, active: null, isDragging: false }),
 }))
 
+vi.mock('@/components/KeyboardMove/KeyboardMoveHost', () => ({ KeyboardMoveHost: () => null }))
 vi.mock('@/components/Header', () => ({ Header: () => <div data-testid="header" /> }))
 vi.mock('@/components/SidePanel', () => ({ SidePanel: () => <div data-testid="sidepanel" /> }))
 vi.mock('@/components/Windows', () => ({ WindowsPanel: ({ groupIndex }: { groupIndex: number }) => <div data-testid="windowspanel">{groupIndex}</div> }))

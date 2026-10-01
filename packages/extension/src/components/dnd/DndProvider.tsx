@@ -32,6 +32,7 @@ import { getDndDragSelection } from '@/lib/dndMultiDrag';
 import { dndDebugLog } from '@/lib/dndDebug';
 import { DND_SCREEN_READER_INSTRUCTIONS } from '@/lib/dndAnnouncements';
 import type { GroupsState } from '@/lib/types';
+import type { DndRef } from '@/lib/dndMove';
 
 /**
  * ONE drag-and-drop layer for the popup: exactly one `<DndContext>`, with the live
@@ -53,9 +54,26 @@ interface DndProviderValue {
    * `@/lib/dndInsertion`.
    */
   gap: DndGap | null;
+  /**
+   * Commit a keyboard MOVE MODE move (`useKeyboardMove`) through the exact commit tail a
+   * pointer drop ends in. No-op outside a provider.
+   */
+  commitKeyboardMove: (active: DndRef, over: DndRef) => Promise<void>;
+  /**
+   * Set (or clear with `null`) the insertion gap rendered by the rows — the SAME state the
+   * pointer drives from `onDragMove`. Keyboard move mode feeds it the gap of each target.
+   */
+  applyGap: (gap: DndGap | null) => void;
 }
 
-const EMPTY: DndProviderValue = { overrideState: null, active: null, isDragging: false, gap: null };
+const EMPTY: DndProviderValue = {
+  overrideState: null,
+  active: null,
+  isDragging: false,
+  gap: null,
+  commitKeyboardMove: async () => {},
+  applyGap: () => {}
+};
 const DndProviderCtx = createContext<DndProviderValue | null>(null);
 
 export function useDndContext(): DndProviderValue {
@@ -261,6 +279,7 @@ export function noteGapContainer(key: string | null): void {
 /** Test hook — forget the cached drag-start snapshot. */
 export function resetDndGeometry(): void {
   geometry = null;
+  stableActive = null;
 }
 
 const overlapsX = (a: { left: number; right: number }, b: { left: number; right: number }) =>
@@ -382,7 +401,43 @@ export function virtualDroppableRects(
   return out;
 }
 
-export const unifiedCollisionWithInsertion: CollisionDetection = (args) => {
+/**
+ * The active draggable's `data` as captured while its row was still mounted.
+ *
+ * dnd-kit builds `args.active.data` from the dragged row's own `useSortable` registration, so
+ * once spring-open swaps the windows panel the source row unmounts and `active.data.current`
+ * degrades to `{}` for the rest of the drag. Everything here that branches on the active TYPE
+ * (the same-type filter, `attachInsertion`, the virtual-geometry growth line) then silently
+ * does nothing — which is exactly "re-ordering inside the spring-opened group shows no gap".
+ * The id is unchanged and the data is a pure function of it, so we replay the last non-empty
+ * snapshot for that id.
+ */
+let stableActive: { id: UniqueIdentifier; data: Record<string, unknown> } | null = null;
+
+/** Test hook — forget the remembered active data. */
+export function resetStableActive(): void {
+  stableActive = null;
+}
+
+export function withStableActive(args: Parameters<CollisionDetection>[0]): Parameters<CollisionDetection>[0] {
+  const active = args.active;
+  if (!active) {
+    stableActive = null;
+    return args;
+  }
+  const current = active.data?.current as Record<string, unknown> | undefined;
+  if (current && typeof current.type === 'string') {
+    stableActive = { id: active.id, data: current };
+    return args;
+  }
+  if (stableActive && stableActive.id === active.id) {
+    return { ...args, active: { ...active, data: { current: stableActive.data } } };
+  }
+  return args;
+}
+
+export const unifiedCollisionWithInsertion: CollisionDetection = (rawArgs) => {
+  const args = withStableActive(rawArgs);
   const rects = virtualDroppableRects(args, getDndDragSession());
   const vargs = rects === args.droppableRects ? args : { ...args, droppableRects: rects };
   const hits = attachInsertion(vargs, unifiedCollision(vargs));
@@ -425,6 +480,8 @@ function DndProviderRoot({ children }: { children: React.ReactNode }) {
     onDragMove,
     onDragCancel,
     onDragEnd,
+    commitKeyboardMove,
+    applyGap,
     onSourceCollapse,
     overrideState,
     active,
@@ -443,8 +500,8 @@ function DndProviderRoot({ children }: { children: React.ReactNode }) {
   }, [onSourceCollapse]);
 
   const value = useMemo<DndProviderValue>(
-    () => ({ overrideState, active, isDragging: active != null, gap }),
-    [overrideState, active, gap]
+    () => ({ overrideState, active, isDragging: active != null, gap, commitKeyboardMove, applyGap }),
+    [overrideState, active, gap, commitKeyboardMove, applyGap]
   );
 
   return (

@@ -20,7 +20,7 @@
     },
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
+      "args": ["-y", "chrome-devtools-mcp@latest", "--headless", "--viewport=1280x900"]
     },
     "context7": {
       "command": "npx",

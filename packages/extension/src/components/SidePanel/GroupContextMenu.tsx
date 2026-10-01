@@ -1,4 +1,5 @@
 import React from 'react';
+import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +36,7 @@ import {
   useRestoreGroup,
   useUpdateGroupName
 } from '@/hooks/useGroups';
-import { useUIStore } from '@/stores/uiStore';
+import { useUIStore, type SelectedItem } from '@/stores/uiStore';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
@@ -63,6 +64,10 @@ interface GroupContextMenuProps {
    * ghost's `+N` badge.
    */
   wrapperDndId?: string;
+  /** set for a draggable group row: plain Space on the focused row starts keyboard move mode for it */
+  moveGroupId?: string;
+  /** Selection item toggled by Ctrl+Space on the focused row; omit for a row that cannot be selected. */
+  selectGroupItem?: SelectedItem;
   /** Roving-tabindex key handler for the row (see `useRovingRow`); runs before the row's own. */
   onWrapperKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onWrapperClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -81,6 +86,8 @@ export function GroupContextMenu({
   wrapperStyle,
   wrapperClassName,
   wrapperDndId,
+  moveGroupId,
+  selectGroupItem,
   onWrapperKeyDown,
   onWrapperClick,
   onWrapperContextMenu,
@@ -166,6 +173,10 @@ export function GroupContextMenu({
         // Don't intercept keystrokes from nested inputs (e.g. rename field) — only
         // the row itself should activate on Enter/Space.
         if (e.target !== e.currentTarget) return;
+        // Space picks a draggable group up (keyboard drag); Enter stays "activate". Rows with
+        // no grip (Now Open) fall through to activation.
+        if (selectGroupItem && toggleSelectionOnCtrlSpace(e, selectGroupItem)) return;
+        if (moveGroupId && startMoveOnSpace(e, 'group', moveGroupId)) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onWrapperClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);

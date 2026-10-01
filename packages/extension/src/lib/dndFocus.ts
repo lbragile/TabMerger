@@ -14,9 +14,12 @@ const GRIP = '[aria-label^="Drag to reorder"]';
 
 const rowSel = (id: string) => `[data-tm-dnd-id="${id.replace(/["\\]/g, '\\$&')}"]`;
 
-/** Candidates (best first) that put focus ON a tab/window model id: its grip, else the row. */
+/**
+ * Candidates (best first) that put focus ON a tab/window model id: the ROW (it is the roving
+ * Tab stop — the grip is `tabIndex=-1`), else the grip.
+ */
 export function focusSelectorsForItem(id: string): string[] {
-  if (/::w\d+::t\d+$/.test(id)) return [`${rowSel(id)} ${GRIP}`, rowSel(id)];
+  if (/::w\d+::t\d+$/.test(id)) return [rowSel(id), `${rowSel(id)} ${GRIP}`];
   if (/::w\d+$/.test(id)) {
     // Fallbacks for a window whose grip isn't in the DOM yet (it is rendered for every
     // window now, including a group's only one, but the commit may still be painting):
@@ -24,8 +27,8 @@ export function focusSelectorsForItem(id: string): string[] {
     // tabindex — from there Left/Right reach note/star/"More"), then the header's first
     // real control for any header that is not focusable, then its first tab row.
     return [
-      `${rowSel(id)} [aria-label^="Drag to reorder window"]`,
       `${rowSel(id)} [data-window-header]`,
+      `${rowSel(id)} [aria-label^="Drag to reorder window"]`,
       `${rowSel(id)} [data-window-header] button:not([aria-hidden="true"])`,
       `${rowSel(id)} [role="listitem"]`
     ];
@@ -33,9 +36,9 @@ export function focusSelectorsForItem(id: string): string[] {
   return [];
 }
 
-/** Candidates for a sidebar group row at `index`: its grip, else the row itself. */
+/** Candidates for a sidebar group row at `index`: the row itself (the Tab stop), else its grip. */
 export function focusSelectorsForGroupIndex(index: number): string[] {
-  return [`[data-sidebar-group-index="${index}"] ${GRIP}`, `[data-sidebar-group-index="${index}"]`];
+  return [`[data-sidebar-group-index="${index}"]`, `[data-sidebar-group-index="${index}"] ${GRIP}`];
 }
 
 /**
