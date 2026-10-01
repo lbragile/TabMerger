@@ -8,7 +8,8 @@ name: CI
 #   • Unit Tests           (unit-tests — also runs the coverage-delta compare
 #                            as its last steps, same job)
 #   • Integration Tests    (integration-tests)
-#   • E2E Tests            (e2e-extension, e2e-web)
+#   • E2E Tests            (e2e-extension — 3 shards, "E2E Tests (Extension) 1/3".."3/3";
+#                            e2e-web)
 #   • Build                (build — extension + web, was build-extension/build-web)
 #   • Visual Regression    PAUSED — see the visual-regression job below, it no
 #                          longer runs and must not be added back as a required
@@ -210,20 +211,71 @@ jobs:
 
   # ── Gate 3: E2E — both fixture sets, non-visual specs only (visual specs
   # are handled by the paused visual-regression job below) ──
+  # Sharded 3 ways (the suite runs one worker per runner, so shards are the only
+  # parallelism). The job id stays `e2e-extension` so `release.needs` and
+  # `deploy-web-preview.needs` wait on every shard. Check names are now
+  # "E2E Tests (Extension) 1/3".."3/3" — update any branch-protection rule that
+  # required the old "E2E Tests (Extension)" name.
+  #
+  # Skipping uses a gate step, NOT a job-level `if:`: a skipped `needs` dependency
+  # would silently skip `release` and `deploy-web-preview`. A gated job still
+  # finishes green within seconds.
   e2e-extension:
-    name: E2E Tests (Extension)
+    name: E2E Tests (Extension) ${{ matrix.shard }}/3
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # the gate step diffs the push/PR range
+
+      # Run unless EVERY changed file is on the skippable allowlist; any unknown path
+      # (packages/shared, root configs, lockfile, .github, ...) means run. Pushes to
+      # `beta` always run: beta is the release gate.
+      - name: Decide whether extension e2e is needed
+        id: gate
+        env:
+          BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          decide() { echo "run=$1" >> "$GITHUB_OUTPUT"; echo "$2"; exit 0; }
+          [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && decide true "Manual run; running."
+          [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$GITHUB_REF" = "refs/heads/beta" ] && decide true "Push to beta (release gate); running."
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git cat-file -e "${PR_BASE}^{commit}" 2>/dev/null && git cat-file -e "${PR_HEAD}^{commit}" 2>/dev/null \
+              || decide true "PR range not available; running."
+            range="$PR_BASE...$PR_HEAD"
+          else
+            { [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] \
+              && git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; } \
+              || decide true "No comparable previous commit; running."
+            range="$BEFORE..$GITHUB_SHA"
+          fi
+          changed=$(git diff --name-only "$range") || decide true "Diff failed; running."
+          echo "$changed"
+          [ -n "$changed" ] || decide true "Empty diff; running."
+          if echo "$changed" | grep -qvE '^(packages/web/|packages/demo/|supabase/|docs/|\.claude/|\.agents/)|\.md$'; then
+            decide true "Extension-affecting changes; running."
+          fi
+          decide false "Only web/demo/supabase/docs/agent/markdown files changed; skipping extension e2e."
+
       - uses: pnpm/action-setup@v6
+        if: steps.gate.outputs.run == 'true'
       - uses: actions/setup-node@v7
+        if: steps.gate.outputs.run == 'true'
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+        if: steps.gate.outputs.run == 'true'
 
       - name: Cache Playwright browsers
+        if: steps.gate.outputs.run == 'true'
         id: playwright-cache
         uses: actions/cache@v6
         with:
@@ -231,19 +283,23 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install Playwright browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        if: steps.gate.outputs.run == 'true' && steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm --filter @tabmerger/extension exec playwright install --with-deps chromium
 
       - name: Install Playwright system deps (cache hit — browsers already present)
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        if: steps.gate.outputs.run == 'true' && steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm --filter @tabmerger/extension exec playwright install-deps chromium
 
       - run: pnpm --filter @tabmerger/extension build
-      - run: pnpm --filter @tabmerger/extension test:e2e
+        if: steps.gate.outputs.run == 'true'
+      # No `--` before --shard: pnpm appends args after the script name as-is, and a
+      # literal `--` would make Playwright read --shard as a file filter.
+      - run: pnpm --filter @tabmerger/extension test:e2e --shard=${{ matrix.shard }}/3
+        if: steps.gate.outputs.run == 'true'
       - uses: actions/upload-artifact@v7
-        if: failure()
+        if: failure() && steps.gate.outputs.run == 'true'
         with:
-          name: extension-e2e-report
+          name: extension-e2e-report-${{ matrix.shard }}
           path: packages/extension/e2e/playwright-report/
           retention-days: 7
 
@@ -336,6 +392,19 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+
+      # Next.js's recommended CI cache (nextjs.org/docs/app/guides/ci-build-caching).
+      # Next validates entries by content itself, so a restore-key partial hit can only
+      # skip work, never serve stale output. Placed BEFORE install so the source hash
+      # never walks node_modules/.next.
+      - name: Cache Next.js build cache
+        uses: actions/cache@v6
+        with:
+          path: packages/web/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/web/**/*.ts', 'packages/web/**/*.tsx', 'packages/web/**/*.js', 'packages/web/**/*.mjs', 'packages/web/**/*.css', 'packages/web/**/*.json', 'packages/shared/src/**', '!**/node_modules/**', '!packages/web/.next/**') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
