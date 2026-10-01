@@ -223,6 +223,15 @@ jobs:
   e2e-extension:
     name: E2E Tests (Extension) ${{ matrix.shard }}/3
     runs-on: ubuntu-latest
+    # The official image already contains the browsers and their system libraries, so
+    # there is no browser cache or `playwright install --with-deps` (apt took 479s).
+    # The tag MUST equal the Playwright version in pnpm-lock.yaml: bump this line,
+    # the same line in the other e2e job, and @playwright/test together (the first
+    # step fails the job with a clear message if they drift).
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      # Chromium recommends sharing the host IPC namespace (small /dev/shm otherwise).
+      options: --ipc=host
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -232,6 +241,20 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # the gate step diffs the push/PR range
+
+      # Fails fast when the lockfile's Playwright and the image tag drift apart (the
+      # browsers baked into the image only match one Playwright version).
+      - name: Check Playwright version matches the container image
+        run: |
+          locked=$(grep -m1 -oE "^  '@playwright/test@[0-9]+\.[0-9]+\.[0-9]+'" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          core=$(grep -m1 -oE "^  playwright-core@[0-9]+\.[0-9]+\.[0-9]+:" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          # The `job` context does not expose the image, so read it from this file.
+          image=$(grep -m1 -E '^ +image: mcr\.microsoft\.com/playwright:v' .github/workflows/ci.yml | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | tr -d v)
+          echo "lockfile @playwright/test=$locked playwright-core=$core image=$image"
+          if [ -z "$locked" ] || [ "$locked" != "$image" ] || [ "$core" != "$image" ]; then
+            echo "::error::Playwright in pnpm-lock.yaml ($locked / core $core) does not match the container image tag ($image). Bump the image in ci.yml (e2e-extension AND e2e-web) together with @playwright/test."
+            exit 1
+          fi
 
       # Run unless EVERY changed file is on the skippable allowlist; any unknown path
       # (packages/shared, root configs, lockfile, .github, ...) means run. Pushes to
@@ -243,6 +266,8 @@ jobs:
           PR_BASE: ${{ github.event.pull_request.base.sha }}
           PR_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
+          # The container runs as root over a workspace owned by the runner user.
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           decide() { echo "run=$1" >> "$GITHUB_OUTPUT"; echo "$2"; exit 0; }
           [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && decide true "Manual run; running."
           [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$GITHUB_REF" = "refs/heads/beta" ] && decide true "Push to beta (release gate); running."
@@ -274,22 +299,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
         if: steps.gate.outputs.run == 'true'
 
-      - name: Cache Playwright browsers
-        if: steps.gate.outputs.run == 'true'
-        id: playwright-cache
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Install Playwright browsers
-        if: steps.gate.outputs.run == 'true' && steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter @tabmerger/extension exec playwright install --with-deps chromium
-
-      - name: Install Playwright system deps (cache hit — browsers already present)
-        if: steps.gate.outputs.run == 'true' && steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter @tabmerger/extension exec playwright install-deps chromium
-
       - run: pnpm --filter @tabmerger/extension build
         if: steps.gate.outputs.run == 'true'
       # No `--` before --shard: pnpm appends args after the script name as-is, and a
@@ -306,30 +315,38 @@ jobs:
   e2e-web:
     name: E2E Tests (Web)
     runs-on: ubuntu-latest
+    # The official image already contains the browsers and their system libraries, so
+    # there is no browser cache or `playwright install --with-deps` (apt took 479s).
+    # The tag MUST equal the Playwright version in pnpm-lock.yaml: bump this line,
+    # the same line in the other e2e job, and @playwright/test together (the first
+    # step fails the job with a clear message if they drift).
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      # Chromium recommends sharing the host IPC namespace (small /dev/shm otherwise).
+      options: --ipc=host
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+
+      # Fails fast when the lockfile's Playwright and the image tag drift apart (the
+      # browsers baked into the image only match one Playwright version).
+      - name: Check Playwright version matches the container image
+        run: |
+          locked=$(grep -m1 -oE "^  '@playwright/test@[0-9]+\.[0-9]+\.[0-9]+'" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          core=$(grep -m1 -oE "^  playwright-core@[0-9]+\.[0-9]+\.[0-9]+:" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          # The `job` context does not expose the image, so read it from this file.
+          image=$(grep -m1 -E '^ +image: mcr\.microsoft\.com/playwright:v' .github/workflows/ci.yml | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | tr -d v)
+          echo "lockfile @playwright/test=$locked playwright-core=$core image=$image"
+          if [ -z "$locked" ] || [ "$locked" != "$image" ] || [ "$core" != "$image" ]; then
+            echo "::error::Playwright in pnpm-lock.yaml ($locked / core $core) does not match the container image tag ($image). Bump the image in ci.yml (e2e-extension AND e2e-web) together with @playwright/test."
+            exit 1
+          fi
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-
-      - name: Cache Playwright browsers
-        id: playwright-cache
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Install Playwright browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter @tabmerger/web exec playwright install --with-deps chromium
-
-      - name: Install Playwright system deps (cache hit — browsers already present)
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter @tabmerger/web exec playwright install-deps chromium
 
       - name: Web E2E (preview Supabase project)
         env:
@@ -631,9 +648,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
-  # Did this push change anything that ships in the web app? Extension-only commits
-  # don't need a new web preview. Diffs the push's own range (`before` → sha), so a
-  # multi-commit push is judged on all of its commits, not just the last one.
+  # Did anything that ships in the web app change since the LAST SUCCESSFUL PREVIEW
+  # DEPLOY? Diffing only this push's own range (`before` -> sha) loses web changes
+  # whenever an earlier push's run failed before deploying: the next green push has
+  # no web files in its range and skips, so those changes never ship. Diffing from the
+  # newest run on this branch whose deploy job succeeded makes the skip safe.
   web-changes:
     name: Detect web changes
     if: >-
@@ -641,6 +660,10 @@ jobs:
       && github.ref == 'refs/heads/agentic-revamp'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # actions: read lists this repo's runs and jobs; contents: read is for checkout.
+    permissions:
+      contents: read
+      actions: read
     outputs:
       web: ${{ steps.diff.outputs.web }}
     steps:
@@ -649,27 +672,51 @@ jobs:
           fetch-depth: 0
       - id: diff
         env:
-          BEFORE: ${{ github.event.before }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         run: |
+          deploy() { echo "web=true" >> "$GITHUB_OUTPUT"; echo "$1"; exit 0; }
+
           # A manual run is an explicit request for a preview — nothing to diff.
-          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
-            echo "Manual run; deploying a preview."
-            echo "web=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # A new branch or a force push has no usable `before` — deploy to be safe.
-          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
-             || ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
-            echo "No comparable previous commit; treating as a web change."
-            echo "web=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          changed=$(git diff --name-only "$BEFORE" "$GITHUB_SHA")
+          [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && deploy "Manual run; deploying a preview."
+
+          # Newest successful ci.yml run on this branch whose deploy job succeeded.
+          # The deploy is a reusable-workflow call, so its jobs are named
+          # "Deploy web preview / Deploy preview to Vercel"; the caller job
+          # "Deploy web preview" itself is also listed (success or skipped), so match
+          # on the prefix and require conclusion == success. Any run in the list
+          # (push or manual) counts, because all of them deploy this branch's HEAD.
+          # `status=success` already excludes the in-progress current run; the
+          # explicit id check is belt and braces.
+          runs=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=agentic-revamp&status=success&per_page=30" \
+            --jq ".workflow_runs[] | select(.id != $RUN_ID) | .id" 2>/dev/null) \
+            || deploy "Could not list previous runs; deploying a preview to be safe."
+
+          last=""
+          for id in $runs; do
+            jobs=$(gh api "repos/$REPO/actions/runs/$id/jobs?per_page=100" \
+              --jq '[.jobs[] | select((.name == "Deploy web preview" or (.name | startswith("Deploy web preview /"))) and .conclusion == "success")] | length' 2>/dev/null) \
+              || deploy "Could not list jobs of run $id; deploying a preview to be safe."
+            if [ "${jobs:-0}" -gt 0 ]; then
+              last=$(gh api "repos/$REPO/actions/runs/$id" --jq .head_sha 2>/dev/null) \
+                || deploy "Could not read run $id; deploying a preview to be safe."
+              break
+            fi
+          done
+
+          [ -n "$last" ] || deploy "No earlier successful preview deploy found; deploying a preview."
+          git cat-file -e "${last}^{commit}" 2>/dev/null \
+            || deploy "Last deployed commit $last is not in this checkout; deploying a preview."
+          echo "Last deployed preview: $last"
+
+          changed=$(git diff --name-only "$last" "$GITHUB_SHA") \
+            || deploy "Diff against $last failed; deploying a preview to be safe."
           echo "$changed"
           if echo "$changed" | grep -qE '^(packages/web/|packages/shared/|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|\.github/workflows/deploy-web\.yml$)'; then
             echo "web=true" >> "$GITHUB_OUTPUT"
           else
-            echo "No web-affecting changes; skipping the preview."
+            echo "No web-affecting changes since the last deployed preview; skipping."
             echo "web=false" >> "$GITHUB_OUTPUT"
           fi
 
