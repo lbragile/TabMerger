@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-09-26
+> Last Updated: 2026-10-02
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -280,13 +280,19 @@ with the real semver string carried in `version_name`.
 
 | Listing | `version` (manifest) | `version_name` | Semver / tag | Date | Status |
 |---|---|---|---|---|---|
-| Stable | `3.0.0` | — | `v3.0.0` | TODO (owner) — confirm actual publish date from the dashboard | Published (assumed — verify in dashboard) |
+| Stable | `2.0.0` | — | `v2.0.0` | 2021-03-06 (GitHub release) | Live — still the public build. TODO (owner): confirm the live version in the dashboard |
+| Stable | `3.0.0` | — | `v3.0.0` | 2026-09-19 (tag) | Not published — held back until the 3.1 beta finishes. The stable release will be cut from `main` once beta testing ends |
 | BETA | `3.1.0.1` | `3.1.0-beta.1` | `v3.1.0-beta.1` | 2026-09-20 | Superseded |
 | BETA | `3.1.0.2` | `3.1.0-beta.2` | `v3.1.0-beta.2` | 2026-09-21 | Superseded |
 | BETA | `3.1.0.3` | `3.1.0-beta.3` | `v3.1.0-beta.3` | 2026-09-23 | Superseded |
 | BETA | `4.0.0.1` | `4.0.0-beta.1` | none (tag deleted) | 2026-09-26 | Published by mistake — live until beta.5 is approved; see note |
 | BETA | `4.1.0.4` | `3.1.0-beta.4` | `v3.1.0-beta.4` | 2026-09-26 | Superseded by beta.5 (withdrawn from review if still pending) |
-| BETA | `4.1.0.5` | `3.1.0-beta.5` | `v3.1.0-beta.5` | 2026-09-26 | Submitted — TODO (owner): update when the review completes |
+| BETA | `4.1.0.5` | `3.1.0-beta.5` | `v3.1.0-beta.5` | 2026-09-26 | Superseded |
+| BETA | `4.1.0.6` | `3.1.0-beta.6` | `v3.1.0-beta.6` | 2026-09-27 | Superseded |
+| BETA | `4.1.0.7` | `3.1.0-beta.7` | `v3.1.0-beta.7` | 2026-09-29 | Superseded |
+| BETA | `4.1.0.8` | `3.1.0-beta.8` | `v3.1.0-beta.8` | 2026-09-30 | Superseded |
+| BETA | `4.1.0.9` | `3.1.0-beta.9` | `v3.1.0-beta.9` | 2026-10-01 | Superseded |
+| BETA | `4.1.0.10` | `3.1.0-beta.10` | `v3.1.0-beta.10` | 2026-10-02 | Submitted (first release from the public repo) — TODO (owner): update when the review completes |
 
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 

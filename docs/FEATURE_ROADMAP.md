@@ -6,10 +6,12 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 _Last updated 2026-10-02. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
-- **Releases:** the latest stable tag is `v3.0.0`. The beta channel is at `v3.1.0-beta.8`
+- **Releases:** the latest stable tag is `v3.0.0`, but it hasn't been published to the stores: v3
+  goes to stable after the 3.1 beta. The beta channel is at `v3.1.0-beta.10`
   (Chrome BETA listing, and the self-hosted Firefox beta). Releases come from semantic-release on
   the `beta` branch ([PUBLISHING.md](PUBLISHING.md)).
-- **Stores:** Chrome Web Store stable is `3.0.0`. The Firefox AMO listing is still `2.0.0`. The
+- **Stores:** the Chrome Web Store stable listing and the Firefox AMO listing are both still on v2
+  (`2.0.0`); v3 is only on the beta channels. The
   Edge Add-ons listing isn't published from CI yet (its secrets aren't set).
 - **Shipped and in the code:** local-first groups, windows and tabs in IndexedDB. Supabase sync (Pro) with mandatory E2E encryption, enforced server-side (RLS requires an active paid plan). Saved sessions. "Continue on other device" (`device_sessions`). Encrypted multi-group share links (`shared_bundles`, `/share/[slug]`). URL auto-assignment rules. Tab notes, reminders and custom titles. Bulk selection actions. Duplicate-tab cleanup. Stale-tab cleanup suggestions. Import from JSON, bookmarks HTML and OneTab. Right-click menu and keyboard commands. Stripe subscriptions and AI credit packs. Monthly ↔ yearly plan switching. Local-currency checkout (Stripe Adaptive Pricing). Web dashboard and account pages, usable on phones. Public `/changelog`. Beta tester guide at `/beta` with a known-issues list (`packages/web/lib/knownIssues.ts`).
 - **Built but off:** AI features (auto-group, name group, tab summary, session suggestions, organize) are behind the "coming soon" flag (`NEXT_PUBLIC_AI_ENABLED` / `VITE_AI_ENABLED`, off unless `"true"`).
@@ -78,6 +80,7 @@ _Last updated 2026-10-02. Keep this current in the same change as the work (a CL
 ## Distribution
 
 - [x] Firefox beta channel: unlisted, signed by AMO, self-hosted with auto-updates
+- [ ] Chrome Web Store stable 3.x (replaces 2.0.0), after the 3.1 beta
 - [ ] Firefox stable 3.x on the AMO listing (replaces 2.0.0)
 - [ ] Edge Add-ons publishing from CI (needs `EDGE_ACCESS_TOKEN`, `EDGE_PRODUCT_ID`)
 - [x] Development is public at `lbragile/TabMerger` (moved 2026-10-02): one repo for code, CI, releases and store publishing, with secrets in GitHub environments
