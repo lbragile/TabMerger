@@ -20,6 +20,9 @@
   publishes to the **private BETA Chrome Web Store item only** — a separate listing from the
   public stable one. Firefox and Edge stable publishing, and the public Chrome listing, are
   wired into the same workflow but only run for a non-prerelease `release` event.
+- Only **stable** releases get their packages attached as GitHub Release assets. Beta builds get
+  none, because the repo is public and the beta Chrome listing is invite-only: testers install the
+  Chrome beta from its store item and the Firefox beta from the self-hosted link below.
 - `packages/extension/scripts/manifestVersion.ts` maps the semver tag onto MV3's numeric
   `manifest.version` + free-form `version_name` — MV3 rejects a prerelease suffix in `version`
   outright. The beta channel's mapped major is intentionally offset by

@@ -17,7 +17,7 @@ on:
         required: true
         type: string
 
-# Least-privilege default. Only the attach-* jobs widen it (contents: write, for
+# Least-privilege default. Only attach-stable widens it (contents: write, for
 # `gh release upload`). Store credentials live in the store-beta / store-stable
 # environments, referenced by the publish-* jobs below.
 permissions:
@@ -381,10 +381,7 @@ jobs:
   #
   # Deliberately INDEPENDENT of every other publish-* job: only `needs: build`,
   # and a Firefox beta signing/upload failure must never fail or block the Chrome
-  # BETA publish, the stable release, or the GitHub Release attachment.
-  # attach-beta lists it in `needs` only so it waits for the signed .xpi (and so
-  # the Actions graph groups the two beta uploads); its `if` requires only the
-  # Chrome BETA upload to have succeeded. `continue-on-error: true` on the job is
+  # BETA publish or the stable release. `continue-on-error: true` on the job is
   # a second layer of the same guarantee.
   publish-firefox-beta:
     name: Beta · Firefox (unlisted, self-hosted)
@@ -426,15 +423,6 @@ jobs:
             --api-key ${{ secrets.FIREFOX_API_KEY }} \
             --api-secret ${{ secrets.FIREFOX_API_SECRET }} \
             --channel unlisted
-
-      # The signed .xpi is the installable Firefox beta; attach-beta adds it to the
-      # GitHub Release next to the Chrome BETA zip.
-      - name: Upload signed Firefox BETA .xpi
-        uses: actions/upload-artifact@v7
-        with:
-          name: tabmerger-firefox-beta-signed
-          path: firefox-beta-artifacts/*.xpi
-          if-no-files-found: error
 
       # web-ext writes the signed file as <name>-<version>.xpi into
       # --artifacts-dir; there is exactly one file there since this job only
@@ -560,52 +548,12 @@ jobs:
             "https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}/submissions" \
             -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}"
 
-  # ── Attach each channel's packages to the GitHub Release, one job per lane ──
-  # One job per lane (not one job needing every publish job) is what makes the
-  # Actions graph draw two groups: jobs are grouped by the jobs they need AND the
-  # jobs that need them, so beta = {Chrome BETA, Firefox BETA} → attach-beta and
-  # stable = {Chrome, Firefox, Edge} → attach-stable. `--clobber` so a re-run
-  # replaces the assets instead of failing on "already exists".
-  attach-beta:
-    name: Beta · Attach packages to release
-    needs: [build, publish-chrome-beta, publish-firefox-beta]
-    # `always()` so a Firefox BETA failure (its job is continue-on-error and must
-    # never block anything) doesn't skip this job. What's REQUIRED is the build and
-    # the Chrome BETA upload; the signed .xpi is attached only if Firefox produced one.
-    if: >-
-      always()
-      && (github.event_name == 'workflow_dispatch' || github.event.release.prerelease)
-      && needs.build.result == 'success'
-      && needs.publish-chrome-beta.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: tabmerger-chrome-beta
-
-      - name: Download signed Firefox BETA .xpi (if Firefox signing succeeded)
-        id: firefox-xpi
-        continue-on-error: true
-        uses: actions/download-artifact@v8
-        with:
-          name: tabmerger-firefox-beta-signed
-
-      - name: Attach beta packages to GitHub release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          shopt -s nullglob
-          files=(*.zip *.xpi)
-          if [ "${{ steps.firefox-xpi.outcome }}" != "success" ]; then
-            echo "::warning::No signed Firefox BETA .xpi (its job failed or was skipped); attaching the Chrome BETA zip only."
-          fi
-          gh release upload "${{ inputs.tag || github.ref_name }}" "${files[@]}" --clobber
-
+  # ── Attach the stable packages to the GitHub Release ──
+  # `--clobber` so a re-run replaces the assets instead of failing on "already exists".
+  # There is deliberately NO attach-beta job. The repo is public, and the Chrome beta
+  # listing is invite-only, so beta builds must not be downloadable from the GitHub
+  # Release. Testers get the Chrome beta from its store item and the Firefox beta from
+  # the self-hosted Vercel Blob link (publish-firefox-beta), never from release assets.
   attach-stable:
     name: Stable · Attach packages to release
     needs: [build, publish-chrome, publish-firefox, publish-edge]
