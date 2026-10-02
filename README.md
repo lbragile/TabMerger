@@ -6,6 +6,9 @@
 A cross-browser tab manager for Chrome, Firefox, and Edge. Save, organize, and restore your tab
 sessions, with optional cloud sync (end-to-end encrypted) and AI-powered grouping (coming soon).
 
+**Install:** [Chrome Web Store](https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc)
+(Edge, Brave, Vivaldi and Arc install it from there too).
+
 ---
 
 ## Getting started
