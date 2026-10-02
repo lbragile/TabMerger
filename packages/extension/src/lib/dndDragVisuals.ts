@@ -159,7 +159,9 @@ const IDENTITY_ATTRS = [
   'data-tab-index',
   'data-group-index',
   'data-sidebar-group-index',
-  DND_ROW_ID_ATTR
+  DND_ROW_ID_ATTR,
+  // Keyboard move marks the source row before cloning it; the docked copy is not the source.
+  'data-tm-move-source'
 ];
 
 /**
