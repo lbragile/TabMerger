@@ -1,5 +1,6 @@
 import type { Window as ExtWindow } from '@/lib/types';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
+import { resolveIncognito } from '@/lib/incognito';
 
 export function useOpenWindow() {
   const openWindow = async (window: ExtWindow) => {
@@ -26,7 +27,8 @@ export function useOpenWindow() {
       await chrome.windows.update(matchedWindowId, { focused: true });
     } else {
       // Nothing open yet — create a new window, populate it, then remove the initial blank tab
-      const newWin = await chrome.windows.create({ focused: true });
+      const incognito = await resolveIncognito(window.incognito);
+      const newWin = await chrome.windows.create(incognito ? { focused: true, incognito: true } : { focused: true });
       if (!newWin) return;
       const targetWindowId = newWin.id!;
       const blankTabId = newWin.tabs?.[0]?.id;

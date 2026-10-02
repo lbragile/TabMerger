@@ -5,6 +5,7 @@ import { encryptBlob, FREE_TIER_LIMITS } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
 import { getSessions, saveSession, deleteSession } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
+import { resolveIncognito } from '@/lib/incognito';
 import { hasEncryptionKey, getDataKey } from '@/lib/encryptionKey';
 import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { useGroups } from './useGroups';
@@ -140,7 +141,8 @@ export function useRestoreSession() {
         for (const win of group.windows) {
           if (win.tabs.length === 0) continue;
           const [first, ...rest] = win.tabs;
-          const newWin = await chrome.windows.create({ url: first.url });
+          const incognito = await resolveIncognito(win.incognito);
+          const newWin = await chrome.windows.create(incognito ? { url: first.url, incognito: true } : { url: first.url });
           if (newWin && rest.length > 0 && newWin.id) {
             await Promise.all(rest.map((t) => chrome.tabs.create({ windowId: newWin.id!, url: t.url })));
           }
