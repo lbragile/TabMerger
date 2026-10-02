@@ -6,7 +6,7 @@ import type { SelectedItem } from '@/stores/uiStore';
 import { pluralize } from '@/lib/utils';
 
 interface DeleteConfirmModalProps {
-  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection' | 'removeStaleTabs' | 'archiveStaleGroups' | 'clearAllData' | 'resetEncryption';
+  type: 'deleteGroup' | 'deleteWindow' | 'deleteTab' | 'deleteSelection' | 'removeStaleTabs' | 'removeAllWindows' | 'archiveStaleGroups' | 'clearAllData' | 'resetEncryption';
   data: Record<string, unknown>;
   onClose: () => void;
 }
@@ -51,6 +51,13 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
       description: `Are you sure you want to remove ${data.count as number} stale ${pluralize(data.count as number, 'tab')}? This cannot be undone.`,
       confirm: 'Remove',
     },
+    removeAllWindows: {
+      title: isNowOpen ? 'Close All Windows' : 'Remove All Windows',
+      description: isNowOpen
+        ? 'Are you sure you want to close all browser windows and their tabs?'
+        : 'Are you sure you want to remove all windows and their tabs from this group? This cannot be undone.',
+      confirm: isNowOpen ? 'Close All' : 'Remove All',
+    },
     archiveStaleGroups: {
       title: 'Archive Stale Groups',
       description: `Are you sure you want to archive ${data.count as number} stale ${pluralize(data.count as number, 'group')}?`,
@@ -87,7 +94,7 @@ export function DeleteConfirmModal({ type, data, onClose }: DeleteConfirmModalPr
       });
     } else if (type === 'deleteSelection' && items) {
       bulkDelete(items);
-    } else if (type === 'removeStaleTabs' || type === 'archiveStaleGroups' || type === 'clearAllData' || type === 'resetEncryption') {
+    } else if (type === 'removeStaleTabs' || type === 'removeAllWindows' || type === 'archiveStaleGroups' || type === 'clearAllData' || type === 'resetEncryption') {
       (data.onConfirm as () => void)?.();
     }
     onClose();

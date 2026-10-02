@@ -4,6 +4,7 @@ import type { Group, GroupsState, Tab } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
 import { getGroupsState, saveGroupsState } from '@/lib/localDb';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
+import { resolveIncognito } from '@/lib/incognito';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
@@ -903,7 +904,11 @@ export function useMoveWindow() {
         const win = state.available[fromGroupIndex]?.windows[windowIndex];
         if (win) {
           const urls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
-          if (urls.length > 0) chrome.windows.create({ url: urls, focused: false }).catch(() => {});
+          if (urls.length > 0) {
+            void resolveIncognito(win.incognito).then((incognito) =>
+              chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })
+            ).catch(() => {});
+          }
         }
         // If source is also Now Open, browser window already exists — nothing to remove
         if (state.available[fromGroupIndex]?.permanent) return;

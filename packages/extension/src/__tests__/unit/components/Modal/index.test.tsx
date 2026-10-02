@@ -51,7 +51,7 @@ describe('ModalRoot — routing', () => {
     expect(screen.getByTestId(testId)).toBeTruthy()
   })
 
-  it.each(['deleteGroup', 'deleteWindow', 'deleteTab', 'deleteSelection', 'clearAllData'])(
+  it.each(['deleteGroup', 'deleteWindow', 'deleteTab', 'deleteSelection', 'removeAllWindows', 'clearAllData'])(
     'routes all delete variants (%s) to DeleteConfirmModal',
     (type) => {
       mockState({ type })

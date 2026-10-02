@@ -9,6 +9,7 @@ import type { SelectedItem } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY, RESTRICTED_URL_RE } from '@/hooks/useGroups';
 import { createWindow, getGroupInfo, sortWindowsByStarred } from '@/lib/utils';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
+import { resolveIncognito } from '@/lib/incognito';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import type { Tab, Window as WindowType } from '@/lib/types';
 
@@ -329,7 +330,11 @@ export function useBulkMoveToGroup() {
           // Moving to Now Open → open each window in the browser; useCurrentTabs will sync them in
           for (const win of windowsToMove) {
             const urls = win.tabs.map((t) => t.url).filter((u) => u && !RESTRICTED_URL_RE.test(u));
-            if (urls.length > 0) chrome.windows.create({ url: urls, focused: false }).catch(() => {});
+            if (urls.length > 0) {
+              void resolveIncognito(win.incognito).then((incognito) =>
+                chrome.windows.create(incognito ? { url: urls, focused: false, incognito: true } : { url: urls, focused: false })
+              ).catch(() => {});
+            }
           }
           // Don't insert into Now Open IndexedDB — the sync handles it
         } else {

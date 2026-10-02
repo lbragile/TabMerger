@@ -179,6 +179,16 @@ describe('useKeyboardMove — entering', () => {
     expect(document.querySelectorAll('#tm-dnd-aux-host [data-testid="drag-ghost"]')).toHaveLength(1)
   })
 
+  it('the docked ghost never carries the source marker (only the source row does)', async () => {
+    const { rows } = await setup()
+    await begin(rows, 'tab', 'work::w0::t1')
+    const ghost = document.querySelector('#tm-dnd-aux-host [data-testid="drag-ghost"]')!
+    expect(ghost).not.toBeNull()
+    expect(ghost.hasAttribute('data-tm-move-source')).toBe(false)
+    expect(ghost.querySelector('[data-tm-move-source]')).toBeNull()
+    expect(rows['work::w0::t1'].hasAttribute('data-tm-move-source')).toBe(true)
+  })
+
   it('Down moves the gap with the cursor (the rows after the new slot shift)', async () => {
     const { rows } = await setup()
     await begin(rows, 'tab', 'work::w0::t1')

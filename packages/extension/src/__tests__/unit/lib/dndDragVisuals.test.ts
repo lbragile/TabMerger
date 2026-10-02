@@ -53,6 +53,24 @@ describe('buildDragGhost', () => {
     expect(ghost.style.width).toBe('300px')
   })
 
+  it('strips data-tm-move-source from the cloned row and from any descendant', () => {
+    const row = tabRow('g::w0::t0')
+    row.setAttribute('data-tm-move-source', '')
+    row.querySelector('img')!.setAttribute('data-tm-move-source', '')
+    const ghost = buildDragGhost(row, rect(0, 24))
+    expect(ghost.hasAttribute('data-tm-move-source')).toBe(false)
+    expect(ghost.querySelector('[data-tm-move-source]')).toBeNull()
+    // the source row itself is left untouched
+    expect(row.hasAttribute('data-tm-move-source')).toBe(true)
+  })
+
+  it('also strips it from a multi-item ghost', () => {
+    const row = tabRow('g::w0::t0')
+    row.setAttribute('data-tm-move-source', '')
+    const ghost = buildDragGhost(row, rect(0, 24), { count: 3 })
+    expect(ghost.querySelector('[data-tm-move-source]')).toBeNull()
+  })
+
   it('multi item: a `+N` badge (N = the OTHER items), two stacked cards behind a solid front card holding the clone', () => {
     const ghost = buildDragGhost(tabRow('g::w0::t0'), rect(0, 24), { count: 4 })
     const badge = ghost.querySelector('[data-testid="drag-ghost-count"]') as HTMLElement

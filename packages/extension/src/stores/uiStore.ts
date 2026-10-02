@@ -15,6 +15,7 @@ export type ModalType =
   | 'urlRules'
   | 'deleteSelection'
   | 'removeStaleTabs'
+  | 'removeAllWindows'
   | 'reviewStaleTabs'
   | 'clearAllData'
   | 'saveSession'
