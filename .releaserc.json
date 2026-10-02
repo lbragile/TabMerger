@@ -1,6 +1,7 @@
 {
+  "repositoryUrl": "https://github.com/lbragile/TabMerger.git",
   "branches": [
-    "agentic-revamp",
+    "main",
     { "name": "beta", "prerelease": true }
   ],
   "plugins": [

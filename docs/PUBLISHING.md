@@ -12,7 +12,7 @@
   `packages/extension/package.json`. `package.json`'s version is never bumped by CI — the git
   tag is the sole source of truth for what ships.
 - Releases are cut only from the `beta` branch (a semantic-release prerelease branch). The
-  default branch, `agentic-revamp`, runs every CI gate on every push but does **not** release.
+  default branch, `main`, runs every CI gate on every push but does **not** release.
 - Commit scopes `ci`, `release`, `publish`, `e2e`, `demo`, `dev`, and `web` never trigger a
   release, regardless of commit type. A commit body line starting with `BREAKING CHANGE:`
   (with the colon) always forces a major release, even in an otherwise-suppressed scope.
@@ -29,7 +29,7 @@
   `BETA_STORE_MAJOR_OFFSET` (see that file for why — an accidental early release permanently
   raised the floor on the BETA item's accepted version numbers).
 - `.github/workflows/deploy-web.yml` deploys a Vercel **preview** (not production) of
-  `packages/web`, called from `ci.yml` after CI passes on `agentic-revamp`, aliased to a fixed
+  `packages/web`, called from `ci.yml` after CI passes on `main`, aliased to a fixed
   `tabmerger-preview.vercel.app` URL.
 
 Read the workflow files themselves for the authoritative, heavily-commented behavior — a lot of
@@ -221,7 +221,7 @@ The real secrets are only the credentials: `CHROME_CLIENT_ID`, `CHROME_CLIENT_SE
 
 ## Releasing (current flow)
 
-Cutting a release is a normal conventional-commit merge to `beta` (or `agentic-revamp` for
+Cutting a release is a normal conventional-commit merge to `beta` (or `main` for
 non-release work) — there is no manual version bump or manual `git tag`. See
 [`docs/RELEASE_SANITY_CHECK.md`](RELEASE_SANITY_CHECK.md) for the full pre-flight/post-flight
 checklist, and `.claude/skills/release-checklist` for the automated-gate summary.

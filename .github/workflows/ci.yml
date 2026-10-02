@@ -31,7 +31,7 @@ name: CI
 # ──────────────────────────────────────────────────────────────────────────────
 
 on:
-  # Manual run: every gate runs as usual and, on agentic-revamp, a passing run
+  # Manual run: every gate runs as usual and, on main, a passing run
   # deploys a web preview even if nothing under packages/web changed. It's the way
   # to get a preview without a web commit. Re-running an OLD run doesn't do the same
   # job — a re-run uses that commit's code, including whatever made it fail.
@@ -41,7 +41,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - agentic-revamp
+      - main
       - beta
     # Skip the whole workflow when EVERY changed file is docs/agent-memory —
     # this is what most of the ~15-job/~30-billed-minute runs used to burn on a
@@ -54,7 +54,7 @@ on:
       - ".agents/**"
   pull_request:
     branches:
-      - agentic-revamp
+      - main
       - beta
     paths-ignore:
       - "**/*.md"
@@ -71,7 +71,7 @@ permissions:
 # release branch (see the `release` job below): cancelling a run mid-release
 # could kill a run after semantic-release has already pushed a tag but before
 # the required gates finish, stranding that version. Every other ref (PRs,
-# agentic-revamp) is safe to cancel-and-restart on a new push.
+# main) is safe to cancel-and-restart on a new push.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/beta' }}
@@ -176,7 +176,7 @@ jobs:
       # letting it move the baseline would let a coverage drop ride into stable
       # unnoticed at promotion time.
       - name: Publish coverage baseline (default branch only)
-        if: github.ref == 'refs/heads/agentic-revamp' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: actions/upload-artifact@v7
         with:
           name: coverage-baseline
@@ -199,7 +199,7 @@ jobs:
         with:
           workflow: ci.yml
           # Must match the branch that PUBLISHES the baseline above.
-          branch: agentic-revamp
+          branch: main
           name: coverage-baseline
           path: baseline
 
@@ -564,7 +564,7 @@ jobs:
     # break the beta versioning rather than merely disabling stable.
     #
     # TO RE-ENABLE STABLE: restore the default branch to this condition —
-    #   (github.ref == 'refs/heads/agentic-revamp' || github.ref == 'refs/heads/beta')
+    #   (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
     # and nothing else needs to change; publish.yml already routes stable vs
     # prerelease off github.event.release.prerelease.
     if: github.ref == 'refs/heads/beta' && github.event_name == 'push'
@@ -694,7 +694,7 @@ jobs:
     name: Detect web changes
     if: >-
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      && github.ref == 'refs/heads/agentic-revamp'
+      && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # actions: read lists this repo's runs and jobs; contents: read is for checkout.
@@ -726,7 +726,7 @@ jobs:
           # (push or manual) counts, because all of them deploy this branch's HEAD.
           # `status=success` already excludes the in-progress current run; the
           # explicit id check is belt and braces.
-          runs=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=agentic-revamp&status=success&per_page=30" \
+          runs=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=main&status=success&per_page=30" \
             --jq ".workflow_runs[] | select(.id != $RUN_ID) | .id" 2>/dev/null) \
             || deploy "Could not list previous runs; deploying a preview to be safe."
 

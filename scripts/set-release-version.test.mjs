@@ -11,8 +11,8 @@ import { join } from 'node:path'
 import { isStableReleaseBranch, writePackageVersion, run } from './set-release-version.mjs'
 
 test('isStableReleaseBranch: bare string branch entry matches by name', () => {
-  assert.equal(isStableReleaseBranch(['agentic-revamp'], 'agentic-revamp'), true)
-  assert.equal(isStableReleaseBranch(['agentic-revamp'], 'beta'), false)
+  assert.equal(isStableReleaseBranch(['main'], 'main'), true)
+  assert.equal(isStableReleaseBranch(['main'], 'beta'), false)
 })
 
 test('isStableReleaseBranch: object entry without `prerelease` is stable', () => {
@@ -29,14 +29,14 @@ test('isStableReleaseBranch: object entry with `prerelease` is NOT stable', () =
 
 test('isStableReleaseBranch: unknown branch name is not stable', () => {
   assert.equal(
-    isStableReleaseBranch(['agentic-revamp', { name: 'beta', prerelease: true }], 'some-other-branch'),
+    isStableReleaseBranch(['main', { name: 'beta', prerelease: true }], 'some-other-branch'),
     false,
   )
 })
 
 test('isStableReleaseBranch: non-array branches is not stable', () => {
-  assert.equal(isStableReleaseBranch(undefined, 'agentic-revamp'), false)
-  assert.equal(isStableReleaseBranch(null, 'agentic-revamp'), false)
+  assert.equal(isStableReleaseBranch(undefined, 'main'), false)
+  assert.equal(isStableReleaseBranch(null, 'main'), false)
 })
 
 test('writePackageVersion: rewrites only the version field, preserving 2-space indent + trailing newline', () => {
@@ -84,7 +84,7 @@ function setupFixtureRepo() {
     releasercPath,
     JSON.stringify(
       {
-        branches: ['agentic-revamp', { name: 'beta', prerelease: true }],
+        branches: ['main', { name: 'beta', prerelease: true }],
       },
       null,
       2,
@@ -94,14 +94,14 @@ function setupFixtureRepo() {
 }
 
 test('run: throws on missing args', () => {
-  assert.throws(() => run(undefined, 'agentic-revamp'), /usage:/)
+  assert.throws(() => run(undefined, 'main'), /usage:/)
   assert.throws(() => run('1.0.0', undefined), /usage:/)
 })
 
 test('run: throws when the releaserc file does not exist', () => {
   assert.throws(
     () =>
-      run('1.0.0', 'agentic-revamp', {
+      run('1.0.0', 'main', {
         releasercPath: join(tmpdir(), 'does-not-exist-releaserc.json'),
       }),
     /no \.releaserc\.json found/,
@@ -122,7 +122,7 @@ test('run: beta (prerelease) branch is a no-op — package.json files untouched'
 test('run: stable branch writes the version into both root and extension package.json', () => {
   const { dir, releasercPath, rootPkgPath, extensionPkgPath } = setupFixtureRepo()
 
-  const result = run('3.1.0', 'agentic-revamp', { releasercPath, rootPkgPath, extensionPkgPath })
+  const result = run('3.1.0', 'main', { releasercPath, rootPkgPath, extensionPkgPath })
 
   assert.deepEqual(result, { wrote: true })
   assert.match(readFileSync(rootPkgPath, 'utf8'), /"version": "3\.1\.0"/)

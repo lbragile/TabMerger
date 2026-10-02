@@ -144,7 +144,7 @@ When the flag is on, the extension POSTs to `${VITE_WEB_APP_URL}/api/ai/*` with 
 | | Web | Extension | Supabase project |
 |---|---|---|---|
 | Local | `pnpm dev:web` → `localhost:3000` | `development` mode | local CLI stack (`supabase start`) |
-| Preview | `https://tabmerger-preview.vercel.app`. CI deploys it: `ci.yml` → `deploy-web.yml`, after CI passes on `agentic-revamp`, only when web-relevant paths changed. | Locally built `beta` (`.env.beta`) | `xmofzeq…` |
+| Preview | `https://tabmerger-preview.vercel.app`. CI deploys it: `ci.yml` → `deploy-web.yml`, after CI passes on `main`, only when web-relevant paths changed. | Locally built `beta` (`.env.beta`) | `xmofzeq…` |
 | Production | `https://tabmerger.vercel.app` | Stable store listing (`production` mode); the CI-built store BETA also points here | `jzgz…` |
 
 TODO (owner): no workflow in `.github/workflows/` deploys web to production (`deploy-web.yml` is preview-only). Document how production web deploys happen, e.g. Vercel Git integration or a manual promote.

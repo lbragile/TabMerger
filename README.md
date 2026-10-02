@@ -1,7 +1,7 @@
 # TabMerger
 
-[![CI](https://img.shields.io/github/actions/workflow/status/lbragile/TabMerger/ci.yml?branch=agentic-revamp&label=CI&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/actions)
-[![License](https://img.shields.io/github/license/lbragile/tabmerger?label=License&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/blob/agentic-revamp/LICENSE.md)
+[![CI](https://img.shields.io/github/actions/workflow/status/lbragile/TabMerger/ci.yml?branch=main&label=CI&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/actions)
+[![License](https://img.shields.io/github/license/lbragile/tabmerger?label=License&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/blob/main/LICENSE.md)
 
 A cross-browser tab manager for Chrome, Firefox, and Edge. Save, organize, and restore your tab
 sessions, with optional cloud sync (end-to-end encrypted) and AI-powered grouping (coming soon).
@@ -112,7 +112,7 @@ See [`docs/`](docs/) for architecture, the release process, and other design not
 
 ## Releases and branches
 
-`agentic-revamp` is the default branch; every push runs the full CI gate suite but does not
+`main` is the default branch; every push runs the full CI gate suite but does not
 cut a release. Releases (via `semantic-release`) are currently cut only from the `beta`
 branch, publishing prerelease builds to a private Chrome Web Store beta listing. See
 [`docs/PUBLISHING.md`](docs/PUBLISHING.md) and [`docs/RELEASE_SANITY_CHECK.md`](docs/RELEASE_SANITY_CHECK.md).

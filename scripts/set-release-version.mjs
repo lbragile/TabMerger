@@ -10,7 +10,7 @@
 // the one thing we actually need (write two JSON fields) instead.
 //
 // "Stable" is derived from .releaserc.json's `branches` config, never hard-coded:
-// a `branches` entry that is a bare string (e.g. "agentic-revamp"), or an object
+// a `branches` entry that is a bare string (e.g. "main"), or an object
 // entry with no `prerelease` key, is a stable release branch. Anything else
 // (an object with `prerelease: true/"channel"`) is a prerelease branch — beta,
 // currently — and this script must be a no-op there. package.json's version is
