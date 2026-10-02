@@ -273,7 +273,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
     <>
       <DialogHeader>
         <DialogTitle>Sign In to TabMerger</DialogTitle>
-        <DialogDescription>Sync your groups across devices with a free account.</DialogDescription>
+        <DialogDescription>Signing in is free. Syncing your groups across devices comes with Pro.</DialogDescription>
       </DialogHeader>
 
       {consentDenied && (

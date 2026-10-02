@@ -53,6 +53,12 @@ beforeEach(() => {
 })
 
 describe('AuthModal — signed out', () => {
+  it('describes sign-in as free and sync as a Pro feature (no free-account sync claim)', () => {
+    renderModal()
+    expect(screen.getByText('Signing in is free. Syncing your groups across devices comes with Pro.')).toBeTruthy()
+    expect(screen.queryByText(/free account/i)).toBeNull()
+  })
+
   it('renders Sign In / Sign Up tabs', () => {
     renderModal()
     expect(screen.getByRole('tab', { name: /sign in/i })).toBeTruthy()
