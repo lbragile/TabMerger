@@ -176,7 +176,7 @@ Write a learning when you discover:
 
 Do **not** write learnings for things that are obvious from reading the code, covered in official docs at face value, or ephemeral to a single task.
 
-The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded into every session and links to each file).
+Each agent's learnings are notes in `.claude/agent-memory/<agent>/`, one note per learning, listed in that folder's index (see below).
 
 **Public vs private memory.** Agent notes live in `.claude/agent-memory/<agent>/`, and this repo is public. Agents read both indexes: `MEMORY.md` (public) and `MEMORY.private.md` (private, git-ignored).
 - A private note (owner preferences, project state, open bugs or security gaps) **must** use the `feedback_`, `project_` or `user_` filename prefix and be listed in `MEMORY.private.md` only.
