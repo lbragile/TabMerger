@@ -9,9 +9,18 @@ import { createServiceRoleClient } from "@/lib/supabase/server";
  * pauses for human approval, then applies the approved changes to Supabase.
  *
  * Schema note: this codebase stores tabs nested inside a `windows` jsonb column
- * on each `groups` row (there is no separate tabs table). The "Now Open" group
- * lives at position 0 and is treated as `permanent` — it is guarded against
- * destructive actions in {@link applyChanges}.
+ * on each `groups` row (there is no separate tabs table).
+ *
+ * "Now Open" (the permanent group) is device-local: the extension never syncs it,
+ * so it is never a `groups` row. Rows are therefore never permanent, whatever
+ * their `position`: legacy rows written before the extension pushed `position`
+ * all hold the column default 0, so position 0 says nothing about Now Open. The
+ * only way the workflow sees Now Open is in the client-supplied payload
+ * ({@link ClientGroup}); {@link applyChanges} pins those ids and refuses any
+ * action on an id that is not a stored row.
+ *
+ * `position` follows the extension's rule: a group's index in the client's list,
+ * where Now Open is index 0 and never stored, so synced groups are >= 1.
  */
 
 // --- Action model -----------------------------------------------------------
@@ -63,7 +72,10 @@ export interface ClientGroup {
   id: string;
   name: string;
   tabs: unknown[];
-  /** Optional; defaults to "index 0 is Now Open", matching the DB's position-0 rule. */
+  /**
+   * Optional; defaults to `index === 0`, because the extension's list always starts
+   * with Now Open (current builds also send the flag explicitly).
+   */
   permanent?: boolean;
 }
 
@@ -76,9 +88,10 @@ export async function fetchUserData(
   "use step";
 
   if (clientGroups) {
-    // Array order is the client's own group order, so the index doubles as
-    // `position` and index 0 is the permanent "Now Open" group — the same
-    // invariant the DB path derives from `position === 0`.
+    // Array order is the client's own group order (`groupsState.available`,
+    // which includes the local-only Now Open group), so the index doubles as
+    // `position` (the same rule the extension uses when pushing) and index 0
+    // is Now Open unless the client says otherwise.
     return clientGroups.map((g, i) => ({
       id: g.id,
       name: g.name,
@@ -96,7 +109,11 @@ export async function fetchUserData(
     .from("groups")
     .select("id, name, color, position, windows")
     .eq("user_id", userId)
-    .order("position", { ascending: true });
+    // Legacy rows all tie at position 0 (the column default), so add stable
+    // tie-breakers: most recently edited first, then id.
+    .order("position", { ascending: true })
+    .order("updated_at", { ascending: false })
+    .order("id", { ascending: true });
 
   if (error) throw new Error(`fetchUserData: ${error.message}`);
 
@@ -105,15 +122,24 @@ export async function fetchUserData(
     name: g.name,
     color: g.color,
     position: g.position,
-    // Position 0 is the permanent "Now Open" group (see CLAUDE.md invariant).
-    permanent: g.position === 0,
+    // Now Open is never synced, so no stored row is permanent, not even a
+    // legacy row sitting at the default position 0.
+    permanent: false,
     windows: g.windows ?? [],
   }));
 }
 
+/**
+ * Applies approved actions to the user's stored `groups` rows.
+ *
+ * @param pinnedIds ids of permanent groups the workflow saw (the client's Now
+ *   Open group). They are never stored, so every action naming one is skipped,
+ *   and `reorder` keeps them at index 0 without spending a position on them.
+ */
 export async function applyChanges(
   userId: string,
-  actions: ReorganizeAction[]
+  actions: ReorganizeAction[],
+  pinnedIds: string[] = []
 ): Promise<{ applied: number; skipped: ReorganizeAction[] }> {
   "use step";
   const supabase = await createServiceRoleClient();
@@ -125,13 +151,21 @@ export async function applyChanges(
     .eq("user_id", userId);
   if (error) throw new Error(`applyChanges/fetch: ${error.message}`);
 
+  // Stored rows are never permanent (see the module comment).
   const groups = new Map(
     (data ?? []).map((g) => [
       g.id,
-      { ...g, permanent: g.position === 0 } as SerializableGroup,
+      { ...g, permanent: false } as SerializableGroup,
     ])
   );
-  const isPermanent = (id: string) => groups.get(id)?.permanent === true;
+  const pinned = new Set(pinnedIds);
+  /**
+   * True when the server may act on `id`: a stored row that is not pinned.
+   * Unknown ids (Now Open, groups not yet synced, ids the model invented, rows
+   * removed earlier in this batch) are reported as skipped instead of being
+   * counted as applied for a write that matched nothing.
+   */
+  const isActionable = (id: string) => !pinned.has(id) && groups.has(id);
 
   /**
    * True when the group's stored content is client-side ciphertext.
@@ -153,12 +187,18 @@ export async function applyChanges(
   let applied = 0;
 
   for (const action of actions) {
-    // Guard: the permanent "Now Open" group can never be deleted or drained.
-    if (action.type === "delete" && isPermanent(action.groupId)) {
+    // Guard: Now Open and any group without a stored row are out of reach.
+    if (
+      (action.type === "delete" || action.type === "rename") &&
+      !isActionable(action.groupId)
+    ) {
       skipped.push(action);
       continue;
     }
-    if (action.type === "merge" && isPermanent(action.sourceGroupId)) {
+    if (
+      action.type === "merge" &&
+      (!isActionable(action.sourceGroupId) || !isActionable(action.targetGroupId))
+    ) {
       skipped.push(action);
       continue;
     }
@@ -199,12 +239,9 @@ export async function applyChanges(
         break;
       }
       case "merge": {
-        const source = groups.get(action.sourceGroupId);
-        const target = groups.get(action.targetGroupId);
-        if (!source || !target) {
-          skipped.push(action);
-          break;
-        }
+        // Both exist: the isActionable guard above already checked them.
+        const source = groups.get(action.sourceGroupId)!;
+        const target = groups.get(action.targetGroupId)!;
         const srcWindows = Array.isArray(source.windows) ? source.windows : [];
         const tgtWindows = Array.isArray(target.windows) ? target.windows : [];
         const { error: e1 } = await supabase
@@ -225,11 +262,16 @@ export async function applyChanges(
         break;
       }
       case "reorder": {
-        // Keep the permanent group pinned at position 0 regardless of proposal.
+        // Same rule as the extension: position = index in the client's list,
+        // with Now Open pinned at index 0 and never stored. So pinned ids take
+        // no slot, every other id takes the next slot starting at 1, and only
+        // stored rows are written (a local-only group still occupies its slot,
+        // keeping later groups' positions equal to their client index).
         let pos = 0;
         for (const id of action.groupIds) {
-          if (isPermanent(id)) continue;
+          if (pinned.has(id)) continue;
           pos++;
+          if (!groups.has(id)) continue;
           const { error: e } = await supabase
             .from("groups")
             .update({ position: pos })
@@ -319,7 +361,11 @@ export async function tabOrganizerWorkflow(
     return { approved: false, applied: 0, actions: finalActions };
   }
 
-  const outcome = await applyChanges(userId, finalActions);
+  const outcome = await applyChanges(
+    userId,
+    finalActions,
+    groups.filter((g) => g.permanent).map((g) => g.id)
+  );
   return {
     approved: true,
     applied: outcome.applied,
