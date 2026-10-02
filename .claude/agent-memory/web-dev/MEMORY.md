@@ -17,3 +17,4 @@
 - [SYNC_AUTH via externally_connectable](learnings/sync-extension-auth-external-message.md) — web app forwards the Supabase session to the extension from `useSyncExtensionAuth` (mounted in SyncIndicator); tests must mock `auth.onAuthStateChange`
 - [gtag environment tagging](learnings/learnings_gtag_environment_tagging.md) — trackEvent() appends an `environment` field to every GA4 call; exact-param test assertions must include it
 - [Supabase client mock shape](learnings/learnings_supabase_client_mock_shape.md) — any RTL test mounting SyncIndicator must mock `auth.onAuthStateChange` on `@/lib/supabase/client`
+- [Social preview + metadataBase](learnings/social-preview-metadata-base.md) — file-convention og/twitter images, non-throwing getMetadataBase(), shallow openGraph replacement trap

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { cn, formatDate, formatCurrency, absoluteUrl } from '@/lib/utils'
+import { cn, formatDate, formatCurrency, absoluteUrl, getMetadataBase } from '@/lib/utils'
 
 describe('cn', () => {
   it('merges class names', () => {
@@ -142,5 +142,23 @@ describe('absoluteUrl', () => {
   it('keeps a non-default port, which is part of the origin', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', 'http://localhost:3000/')
     expect(absoluteUrl('/dashboard')).toBe('http://localhost:3000/dashboard')
+  })
+})
+
+describe('getMetadataBase', () => {
+  afterEach(() => vi.unstubAllEnvs())
+
+  it('prefers NEXT_PUBLIC_APP_URL', () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://tabmerger.app')
+    expect(getMetadataBase().origin).toBe('https://tabmerger.app')
+  })
+
+  it('falls back to the Vercel host, then localhost, without throwing', () => {
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', '')
+    vi.stubEnv('VERCEL_URL', 'x-abc.vercel.app')
+    expect(getMetadataBase().origin).toBe('https://x-abc.vercel.app')
+    vi.stubEnv('VERCEL_URL', '')
+    vi.stubEnv('VERCEL_PROJECT_PRODUCTION_URL', '')
+    expect(getMetadataBase().origin).toBe('http://localhost:3000')
   })
 })
