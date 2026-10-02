@@ -52,6 +52,9 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
   const [justChecked, setJustChecked] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
 
+  // Initial load / manual refresh only: ordering by `updated_at` ignores position-only reorders
+  // (migration 020 keeps `updated_at` unchanged for them). Acceptable, since reorders surface
+  // live through the realtime handler below and the extension's own sync status.
   const fetchLatestSync = useCallback(async () => {
     const supabase = createClient()
     const { data, error } = await supabase
@@ -115,8 +118,12 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'groups', filter: `user_id=eq.${userId}` },
         (payload) => {
+          // Position-only (reorder) and view_count updates leave `updated_at` unchanged (migration
+          // 020), so the row's value can be OLD. The event itself proves a sync just happened:
+          // use its arrival time, keep `updated_at` only if newer, and never move the label back.
           const updatedAt = (payload.new as { updated_at?: string })?.updated_at
-          setLastSyncedAt(updatedAt ? new Date(updatedAt) : new Date())
+          const eventTime = latestOf(new Date(), updatedAt ? new Date(updatedAt) : null)
+          setLastSyncedAt((prev) => latestOf(prev, eventTime))
           setJustSynced(true)
           setTimeout(() => setJustSynced(false), 2000)
         }
@@ -175,6 +182,11 @@ export function SyncIndicator({ userId }: SyncIndicatorProps) {
       </TooltipProvider>
     </div>
   )
+}
+
+function latestOf(a: Date | null, b: Date | null): Date {
+  if (!a) return b ?? new Date()
+  return b && b > a ? b : a
 }
 
 function relativeTime(date: Date): string {

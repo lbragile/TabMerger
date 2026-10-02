@@ -76,6 +76,22 @@ describe('SyncIndicator', () => {
     expect(screen.getByText('Syncing...')).toBeInTheDocument()
   })
 
+  it('does not move the label backwards on a position-only UPDATE carrying an old updated_at', async () => {
+    const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    select.mockResolvedValue({ data: [{ updated_at: hourAgo }] })
+    render(<SyncIndicator userId="user-1" />)
+    await waitFor(() => expect(screen.getByText('Synced 1h ago')).toBeInTheDocument())
+
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+    act(() => {
+      changeHandler!({ eventType: 'UPDATE', new: { updated_at: twoHoursAgo, position: 3 } })
+    })
+    expect(screen.getByText('Syncing...')).toBeInTheDocument()
+
+    // After the 2s "Syncing..." pulse: recent activity, never "2h ago" or the older "1h ago"
+    await waitFor(() => expect(screen.getByText('Synced just now')).toBeInTheDocument(), { timeout: 3000 })
+  })
+
   it('re-fetches and updates the displayed timestamp when "Refresh sync status" is clicked', async () => {
     select.mockResolvedValueOnce({ data: [] })
     render(<SyncIndicator userId="user-1" />)
