@@ -2,13 +2,13 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`019`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`020`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
 | # | File | What it did |
 |---|------|-------------|
-| 001 | `001_initial_schema.sql` | `profiles`, `subscriptions`, `groups`, `sessions`. `handle_new_user()` trigger. `update_updated_at()` triggers on `groups` and `subscriptions`. |
+| 001 | `001_initial_schema.sql` | `profiles`, `subscriptions`, `groups`, `sessions`. `handle_new_user()` trigger. `update_updated_at()` triggers on `groups` and `subscriptions` (`groups` uses `groups_set_updated_at()` since 020). |
 | 002 | `002_rls_policies.sql` | RLS and owner-only policies on the four initial tables. |
 | 003 | `003_indexes.sql` | Indexes on `groups`, `sessions`, `subscriptions`. |
 | 004 | `004_create_organize_runs.sql` | `organize_runs` table and RLS. |
@@ -27,6 +27,7 @@ The migrations in `supabase/migrations/` (`001`–`019`) are the source of truth
 | 017 | `017_rename_ai_usage_credits.sql` | Renames `ai_usage.request_count` to `credits_used` (weighted credits). |
 | 018 | `018_encryption_keys_delete_policy.sql` | Adds the missing `encryption_keys` delete policy. Without it, `resetEncryption()` silently deleted 0 rows. |
 | 019 | `019_gate_cloud_sync_rls.sql` | Adds `public.has_cloud_sync(uid)` — tier in `pro`/`pro_ai` and status in `active`/`trialing`/`past_due` (kept in sync with the shared `ENTITLED_SUBSCRIPTION_STATUSES` constant used by `useEntitlements.ts`'s `resolveTier()`). Replaces the insert/update policies on `groups`, `sessions`, `device_sessions`, `shared_bundles` (insert only) and `encryption_keys` to also require it, closing a gap where any signed-in free user could write sync rows directly (RLS previously only checked `auth.uid() = user_id`). `sessions` is gated too (owner decision: free users sync 0 sessions, keeping up to 3 locally only — the extension's free-tier upload path was removed in the same change). select/delete are untouched everywhere so downgraded users keep read/export/delete access. |
+| 020 | `020_groups_position_keeps_updated_at.sql` | `groups_set_updated_at()` replaces `update_updated_at()` on `groups` only: a position-only or view_count-only update keeps `updated_at`, any other change stamps `now()`. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -104,7 +105,7 @@ Groups are synced from the extension. Local IndexedDB is written first, then `sy
 | `view_count` | `integer` | not null, default `0` (007) |
 | `window_count` | `integer` | not null, default `0` (016). Plaintext; the client computes it before encrypting |
 | `tab_count` | `integer` | not null, default `0` (016). Same as `window_count` |
-| `updated_at` | `timestamptz` | not null, default `now()`, bumped by trigger. The last-write-wins key |
+| `updated_at` | `timestamptz` | not null, default `now()`, bumped by trigger `groups_set_updated_at()` (020) on content changes, kept as-is on position-only updates. The last-write-wins key |
 | `created_at` | `timestamptz` | not null, default `now()` |
 
 **RLS:** full owner CRUD (`groups_select_own`, `_insert_own`, `_update_own`, `_delete_own`). No public select policy exists. Since 019, `_insert_own`/`_update_own` also require `public.has_cloud_sync(auth.uid())` (tier `pro`/`pro_ai` and status `active`/`trialing`/`past_due`) — cloud sync is a Pro/Pro AI feature; select/delete stay owner-only so a downgraded user keeps read/export/delete access.
