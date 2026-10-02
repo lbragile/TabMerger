@@ -1,7 +1,6 @@
 # TabMerger
 
 [![CI](https://img.shields.io/github/actions/workflow/status/lbragile/TabMerger/ci.yml?branch=main&label=CI&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/actions)
-[![License](https://img.shields.io/github/license/lbragile/tabmerger?label=License&style=flat-square&logo=github)](https://github.com/lbragile/TabMerger/blob/main/LICENSE.md)
 
 A cross-browser tab manager for Chrome, Firefox, and Edge. Save, organize, and restore your tab
 sessions, with optional cloud sync (end-to-end encrypted) and AI-powered grouping (coming soon).
