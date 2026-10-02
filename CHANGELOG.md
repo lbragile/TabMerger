@@ -1,3 +1,13 @@
+# [3.1.0-beta.10](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.9...v3.1.0-beta.10) (2026-10-02)
+
+
+### Bug Fixes
+
+* **extension:** ask before removing all windows when confirm-on-delete is on ([9ac4a13](https://github.com/lbragile/TabMerger/commit/9ac4a13f64f93586b5c5b5dbfd14f7562a876248))
+* **extension:** don't copy the move-source marker onto the drag ghost ([a8d0103](https://github.com/lbragile/TabMerger/commit/a8d0103f7b8f355152c2e4cc14c4aed4944710d5))
+* **extension:** reopen saved incognito windows as incognito ([1d9bf1b](https://github.com/lbragile/TabMerger/commit/1d9bf1bee2246ef77574104aa14e3571de2b42fd))
+* **extension:** say that sync comes with Pro in the sign-in dialog ([f938fa3](https://github.com/lbragile/TabMerger/commit/f938fa33f6adedebb35be5c5161d20027438531a))
+
 # [3.1.0-beta.9](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.8...v3.1.0-beta.9) (2026-10-01)
 
 
