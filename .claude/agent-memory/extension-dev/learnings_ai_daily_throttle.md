@@ -1,0 +1,22 @@
+---
+name: ai-daily-throttle
+description: Client-side daily throttle + master kill switch for AI mutations in useAI.ts — only applies to automatic triggers, not manual button clicks
+metadata:
+  type: project
+---
+
+Implemented `wasCalledToday`/`markCalledToday` in `packages/extension/src/lib/aiThrottle.ts` (chrome.storage.local, key `ai_last_call_{action}`, epoch-day comparison) plus two new `AppSettings` fields (`useAppSettings.ts`): `aiDailyThrottle` and `aiFeaturesEnabled`, both default `true`.
+
+**Why**: server AI quota (`AI_MONTHLY_CAP`) is monthly. `AIGroupSuggestion.tsx`'s background "fetch once per install" effect only persisted to storage on success — a failed/empty response left `stored` null, so it re-fired on every popup open. Once `useSuggestSessions` marks the day as used *before* the network call (inside `enforceDailyThrottle`, called at the top of `mutationFn`), retries within the same day short-circuit with an error instead of re-hitting the API — this incidentally fixed the AIGroupSuggestion retry-storm without a second persistence mechanism.
+
+**Key distinction (a deliberate design rule)**: the daily throttle only applies to AI mutations triggered *automatically* by the extension (currently only `useSuggestSessions`, called solely from `AIGroupSuggestion`'s effect). It must NOT apply to manual button-driven mutations (`useAutoGroup`, `useNameGroup`, `useOrganizeTabs`) — those always run when clicked, gated only by the existing server-side monthly quota. `useTabSummary` is also excluded from the daily throttle (hover-triggered, already has its own per-URL session cache in `useTabPreview.ts`'s module-level `summaryCache`).
+
+The separate `aiFeaturesEnabled` master switch is independent of both `useEntitlements().aiFeatures` (are they Pro AI) and the daily throttle — it's a "even if entitled, do they want AI active" toggle, applied to ALL 5 hooks (including manual ones and tab summary), checked at the very top of each `mutationFn` before the network call.
+
+**How to apply**: when adding a new AI-triggering surface, ask first whether it's user-clicked or auto-fired before deciding whether to wire in `enforceDailyThrottle` — don't default to applying it everywhere. Both settings live in `Modal/Settings.tsx`'s new "AI" tab, gated by `aiFeatures` (only shown to Pro AI users), using the same draft/save pattern as the rest of Settings.
+
+Test gotcha: `Settings.test.tsx` has its own local `DEFAULT_SETTINGS` fixture (not importing the real `DEFAULT_APP_SETTINGS`) used as `mockGetSetting`'s resolved value — adding a new `AppSettings` field requires updating that fixture too, or `settingsEqual`'s Restore-defaults comparison breaks (draft has the new key from the real `DEFAULT_APP_SETTINGS` import, `saved` from the mock doesn't, so they never compare equal and Save stays enabled).
+
+**Follow-up correction (same session)**: the original design used one `aiFeaturesEnabled` master switch. The design moved to 5 independent per-feature toggles instead (`aiAutoGroupEnabled`, `aiNameGroupEnabled`, `aiSuggestSessionsEnabled`, `aiOrganizeEnabled`, `aiTabSummaryEnabled`) — replaced the single flag entirely rather than layering both, since per-feature control was a firm requirement. Also found and fixed the real root cause of "aiDailyThrottle renders off by default": `localDb.ts`'s `getSetting<T>()` returned the stored `record.value` verbatim with no merge against `defaultValue` — any settings object saved before a new field existed comes back missing that field entirely, so `Switch checked={undefined}` renders unchecked regardless of the constant's default. Fixed once in the shared `getSetting` (object-spread `{...defaultValue, ...stored}` when both are objects) rather than patching each caller — this silently affects every future field added to `AppSettings`, not just the AI ones, so it was worth fixing at the root.
+
+Also added `useAiUsage.ts` (mirrors `useEntitlements.ts`'s `useQuery` + Supabase `.from().select()` pattern) to show "AI calls left this month" in the Account tab, reading the same `ai_usage` table the web app's `checkAndIncrementAIUsage` writes to. `AI_MONTHLY_CAP = 100` is duplicated (not shared) between `packages/web/lib/ai-usage.ts` and this hook, since the web file also exports a service-role-only increment function that must never ship client-side — flagged with a ponytail comment to keep both constants in sync manually.

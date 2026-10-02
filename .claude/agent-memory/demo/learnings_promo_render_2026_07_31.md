@@ -1,0 +1,14 @@
+---
+name: learnings_promo_render_2026_07_31
+description: How the 30s promo cut was actually rendered (not just spec'd) by reusing full-walkthrough recordings and parameterizing WalkthroughDemo
+metadata:
+  type: project
+---
+
+Executed the 30s promo cut from `PROMO_VIDEO_SPEC.md` end to end (both themes rendered as real `.mp4` files), not just planned.
+
+- **Reused existing recordings — zero new Playwright pass needed.** `packages/demo/public/recordings/{dark,light}/*.webm` already existed from a prior full-walkthrough run, keyed by step id. Since `promoScript` (new export in `demo-script.ts`) reuses the SAME step objects (`open-popup`, `view-groups`, `drag-reorder`, `selection-mode`, `star-group`) via `demoScript.find(...)`, Composition.tsx's `staticFile(\`recordings/${theme}/${step.id}.webm\`)` resolves to the exact same clips already on disk. Confirmed this is the intended design per the spec's own "no new Playwright recording pass needed" note — don't re-record when a promo cut is a pure subset of existing step ids.
+- **`WalkthroughDemo` now takes an optional `script` prop** (defaults to `demoScript`) instead of a second near-duplicate component, and `totalDurationInFrames` became a `getTotalDurationInFrames(script)` function (the old const export kept for the full-walkthrough compositions in `Root.tsx`, computed via the new helper). Any future short cut (Product Hunt, landing hero) should follow this pattern — new `DemoStep[]` array + new `<Composition>` entries in `Root.tsx`, not a new component.
+- **Don't shorten `durationMs` on reused real-action steps for a "faster" cut.** durationMs is BOTH the record-time minimum AND the Composition.tsx `<Sequence>` hard cap (see `learnings_ripple_root_cause_and_pacing.md`) — cutting it short on a step whose clip is real recorded footage freezes mid-animation (mid-ripple/mid-drag) instead of looking snappy. The promo cut gets its pace from dropping whole scenes (settings/tab-preview/rename/etc.), not truncating the ones kept. Only the two promo-only text cards (`promo-hook`/`promo-outro`) got custom (shorter) durations, since text cards have no recorded footage to truncate.
+- **Result this pass**: `out/tabmerger-promo-dark.mp4` and `out/tabmerger-promo-light.mp4`, 800x600/30fps (native popup size, NOT the 1920x1080/60fps golden-standard from the spec's technical checklist — that upgrade was explicitly not attempted this pass), 731 frames (~24.4s), silent (no `public/audio/track.mp3` present — `hasAudioTrack` check in Composition.tsx already no-ops the `<Audio>` element cleanly when absent, confirmed working as designed for a music-less first pass).
+- Still open per the spec: real 1920x1080/60fps recording pass, licensed background music, foley (click/chime/whoosh), a real "chaotic tab bar" hook asset (this pass used a text-only hook card as the stand-in, same as the full walkthrough already does), and confirmed-clean browser chrome in `launchDemoContext.ts`.
