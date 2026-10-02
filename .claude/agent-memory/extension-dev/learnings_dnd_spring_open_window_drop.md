@@ -1,0 +1,22 @@
+---
+name: dnd-spring-open-window-drop
+description: Root cause + fix for "window dropped cross-group after spring-open doesn't commit" — dnd-kit's own `over` state can lag the collision layer by a render right after a container-set change
+metadata:
+  type: project
+---
+
+Fixed the user-reported bug: picking up a WINDOW, dwelling on another group's sidebar row until spring-open swaps the windows panel to it, then dropping on one of that group's WINDOW rows (not the sidebar row itself) silently committed nothing.
+
+**Root cause (confirmed via `dndDebugLog`, not just theorized):** at drop time, dnd-kit's `e.over` resolved to a TAB nested inside the destination window (`rawOverId: "play::w1::t0"`), not the window container (`"play::w1"`). `canDrop` correctly rejects window→tab (a window can only target a window or a group row), so the drop bailed `'rejected'` — "nothing commits" from the user's perspective.
+
+**What it is NOT:** not a `virtualDroppableRects`/`geometry.base` snapshot problem (my first hypothesis). That snapshot only adjusts ids captured in `geometry.base` (pre-spring-open, i.e. the SOURCE group's rows); ids for the newly-mounted destination group pass through as raw `live` rects untouched, which is correct behavior, not a bug.
+
+**What it actually is:** dnd-kit's own `over` **React state** is computed in a `useEffect` gated on `[overId]` (`core.esm.js` ~line 3260), separate from `collisions` (computed inline during render, always fresh). Reading dnd-kit's source (`node_modules/.pnpm/@dnd-kit+core@6.3.1.../dist/core.esm.js`) confirmed: `over = overContainer && overContainer.rect.current ? {...} : null` — `over` requires BOTH a matching container AND a populated `rect.current`. Right after `setActiveGroupIndex` swaps the panel (an unrelated state update, not a `dragover` event), there's a render/effect-ordering window where the collision layer already sees the new destination correctly but dnd-kit's own `over` hasn't caught up to a full window container — it can still be the nested tab from a moment earlier. This is timing/race, not a permanent measurement gap: added a fallback branch in `unifiedCollision`'s `sameTypeOnly` (redirect a lone tab hit to its own window container when no window/group hit exists at all) and confirmed via a diagnostic `dndDebugLog` that this collision-layer branch **never fired** in the repro — proving the bug is downstream, in dnd-kit's own `over` resolution, not upstream in our collision detection.
+
+**The fix that actually works:** in `commitDrop` (`useDndHandlers.ts`), after resolving `a`/`o` from the raw over id, if `a.type === 'window' && o?.type === 'tab'`, redirect `o` to `resolveRef(model, model.tabs[o.id].windowId)` — using the **model**, never `over.data.current` (which can't be trusted to be fresh either). This can only turn a wrongly-rejected drop into the right one, since every legal window target is itself a window or group row. Kept the collision-layer redirect too as defense-in-depth (harmless, and helps a genuinely-missing-window-hit scenario if one exists on a different Chrome version).
+
+**Repro that actually triggers it (many shapes DON'T):** a single-window destination group did NOT reproduce it — needed a MULTI-window destination group and a release almost immediately after a fast glide into the panel (minimal settle time). See `e2e/repro/popupRealDnd.repro.ts` "BUG REPRO variant" (~line 2345) for the exact recipe: dwell on the sidebar row past `SPRING_OPEN_MS`, confirm the panel swapped via `panelTabs()`, then a FAST 3-step glide + immediate release onto the SECOND window card. The two more "obvious" first attempts (dwell 300ms before releasing, or targeting the only/first window) both committed fine and did not expose the bug — don't trust a green first attempt when hunting this class of race.
+
+**Debugging technique that worked:** rather than theorizing indefinitely about dnd-kit internals, added a temporary `dndDebugLog` call inside the suspected collision-layer branch, reran the repro, and used "did this log line appear at all" as a yes/no oracle to falsify the geometry hypothesis and redirect investigation to dnd-kit's own `over` construction (read directly from `node_modules/.pnpm/@dnd-kit+core@.../dist/core.esm.js`, not docs — the ESM build is the most readable un-minified source available).
+
+See also [[learnings_dnd_zoned_ordering]] for the adjacent multi-item ordering work in the same DnD layer.

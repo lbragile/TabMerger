@@ -96,7 +96,7 @@ describe('POST /api/contact', () => {
   it('appends non-personal diagnostics and tags non-production subjects', async () => {
     vi.stubEnv('VERCEL_ENV', 'preview')
     vi.stubEnv('VERCEL_GIT_COMMIT_SHA', 'abcdef1234567890')
-    vi.stubEnv('VERCEL_GIT_COMMIT_REF', 'agentic-revamp')
+    vi.stubEnv('VERCEL_GIT_COMMIT_REF', 'main')
     vi.stubEnv('VERCEL_DEPLOYMENT_ID', 'dpl_test123')
     const ua =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.7339.80 Safari/537.36'
@@ -118,7 +118,7 @@ describe('POST /api/contact', () => {
       const sent = sendMock.mock.calls[0][0] as { subject: string; text: string }
       expect(sent.subject).toBe('[Contact][preview] Hello')
       expect(sent.text).toContain('Environment: preview')
-      expect(sent.text).toContain('Commit: abcdef1 (agentic-revamp)')
+      expect(sent.text).toContain('Commit: abcdef1 (main)')
       expect(sent.text).toContain('Deployment: dpl_test123')
       expect(sent.text).toContain('Sent from page: /contact (topic: beta)')
       expect(sent.text).toContain('Browser: Chrome 140 on Windows')

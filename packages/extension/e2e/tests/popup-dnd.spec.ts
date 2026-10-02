@@ -178,7 +178,7 @@ test.describe('DnD inside the real MV3 action popup', () => {
  * container, and a window can never legally target a tab — `canDrop` rejected
  * it. Fixed by redirecting such a target to the tab's own window, both in the
  * collision layer and (decisively) in `onDragEnd`'s model-based resolution.
- * See `.claude/plans/drag-and-drop-spec.md` C15 and
+ * See `docs/drag-and-drop-spec.md` C15 and
  * `.claude/agent-memory/extension-dev/learnings_dnd_spring_open_window_drop.md`.
  *
  * Runs its OWN persistent context (not the shared `describe` above) — the

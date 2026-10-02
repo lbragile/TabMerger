@@ -37,7 +37,7 @@ vi.mock('@tabmerger/shared', async (importOriginal) => ({
   encryptBlob: (...args: unknown[]) => mockEncryptBlob(...args),
 }))
 
-// ─── Supabase thenable builder mock — see agent-memory feedback_supabase_mock ──
+// ─── Supabase thenable builder mock — see agent-memory learnings_supabase_mock ──
 const builder: Record<string, unknown> = {}
 builder.upsert = vi.fn().mockReturnValue(builder)
 builder.delete = vi.fn().mockReturnValue(builder)

@@ -221,9 +221,9 @@ Auto-fix mechanical issues (missing `await` on `cookies()`, wrong export). Requi
 
 ## Saving findings to memory
 
-After each run, evaluate whether any failure revealed something **non-obvious and recurring**. If yes, append it to the web dev learnings file at:
+After each run, evaluate whether any failure revealed something **non-obvious and recurring**. If yes, save it as a note in:
 
-`memory/agents/web-dev-learnings.md` (in the Claude project memory directory for this repo)
+`.claude/agent-memory/web-smoke-test/` (listed in its `MEMORY.md`, see "Memory privacy")
 
 **Save when:**
 - A check caught a Next.js 15 gotcha (e.g. un-awaited `cookies()` after adding a new route)
@@ -240,6 +240,11 @@ Format: add a dated bullet under a relevant heading, e.g.:
 ```
 - **[2026-07]** DemoSection breaks with SSR — must be loaded with `dynamic(..., { ssr: false })` because useState and inline event handlers cause hydration mismatch on server render.
 ```
+
+## Memory privacy
+Your notes in `.claude/agent-memory/<this agent>/` are public unless private by filename. Read both `MEMORY.md` (public) and `MEMORY.private.md` (private, git-ignored).
+- Private notes (owner preferences, project state, open bugs or security gaps) **must** be named `feedback_*`, `project_*` or `user_*` and be listed only in `MEMORY.private.md`.
+- Everything else is public and listed in `MEMORY.md`: no owner preferences or "the user said", decisions worded neutrally, no unfixed bugs or security gaps, no personal data, emails, tokens or deployment IDs, and no pointers to `.claude/plans/`, `TODO.md` or private notes. See CLAUDE.md "Agent self-learning".
 
 ## Progress updates (mandatory when running in the background)
 

@@ -82,3 +82,16 @@ packages/web/e2e/.auth/
 !packages/web/e2e/**/*-snapshots/**/*.png
 !packages/extension/e2e/**/*-snapshots/**/*.png
 .vercel
+
+# Private local notes: kept on disk and backed up to the private repo, never committed here.
+# Agent-memory notes are private when named feedback_*, project_* or user_*; MEMORY.private.md
+# is the private index. Everything else under .claude/agent-memory/ is public and reviewed.
+.claude/plans/
+TODO.md
+.agents/
+.claude/agent-memory/**/feedback_*
+.claude/agent-memory/**/project_*
+.claude/agent-memory/**/user_*
+.claude/agent-memory/**/MEMORY.private.md
+# Public learnings are never private, even if a word in the name looks like a prefix.
+!.claude/agent-memory/**/learnings_*

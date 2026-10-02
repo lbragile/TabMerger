@@ -2,7 +2,7 @@
 //
 // Firefox doesn't support `externally_connectable` for web pages (MDN;
 // https://bugzil.la/1319168), so `chrome.runtime.sendMessage(extensionId, ...)` from the
-// website silently fails there — see .claude/plans/firefox-edge-beta-spec.md §3/§6.3. This
+// website silently fails there. This
 // content script relays the same three messages (`PING`, `SYNC_AUTH`, `SYNC_NOW`) between
 // `window.postMessage` (page side, packages/web/lib/extensionMessaging.ts) and
 // `chrome.runtime.sendMessage` (this extension's background script), which content scripts

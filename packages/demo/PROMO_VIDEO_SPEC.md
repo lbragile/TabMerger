@@ -7,7 +7,7 @@ source of truth for what's in the promo/walkthrough today is
 pass:
 
 - The extension's DnD stack was fully rebuilt on a dual pointer/native-HTML5
-  sensor since this doc was written (`.claude/plans/drag-and-drop-spec.md`).
+  sensor since this doc was written (`docs/drag-and-drop-spec.md`).
   `drag-reorder` (the old id referenced throughout this doc) no longer exists
   as a step; the real drag beats today are `dragTabBetweenGroups` (a
   same-window reorder, despite the name), `crossWindowTabDrag` (within one

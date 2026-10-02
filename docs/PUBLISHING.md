@@ -12,7 +12,7 @@
   `packages/extension/package.json`. `package.json`'s version is never bumped by CI — the git
   tag is the sole source of truth for what ships.
 - Releases are cut only from the `beta` branch (a semantic-release prerelease branch). The
-  default branch, `agentic-revamp`, runs every CI gate on every push but does **not** release.
+  default branch, `main`, runs every CI gate on every push but does **not** release.
 - Commit scopes `ci`, `release`, `publish`, `e2e`, `demo`, `dev`, and `web` never trigger a
   release, regardless of commit type. A commit body line starting with `BREAKING CHANGE:`
   (with the colon) always forces a major release, even in an otherwise-suppressed scope.
@@ -20,13 +20,16 @@
   publishes to the **private BETA Chrome Web Store item only** — a separate listing from the
   public stable one. Firefox and Edge stable publishing, and the public Chrome listing, are
   wired into the same workflow but only run for a non-prerelease `release` event.
+- Only **stable** releases get their packages attached as GitHub Release assets. Beta builds get
+  none, because the repo is public and the beta Chrome listing is invite-only: testers install the
+  Chrome beta from its store item and the Firefox beta from the self-hosted link below.
 - `packages/extension/scripts/manifestVersion.ts` maps the semver tag onto MV3's numeric
   `manifest.version` + free-form `version_name` — MV3 rejects a prerelease suffix in `version`
   outright. The beta channel's mapped major is intentionally offset by
   `BETA_STORE_MAJOR_OFFSET` (see that file for why — an accidental early release permanently
   raised the floor on the BETA item's accepted version numbers).
 - `.github/workflows/deploy-web.yml` deploys a Vercel **preview** (not production) of
-  `packages/web`, called from `ci.yml` after CI passes on `agentic-revamp`, aliased to a fixed
+  `packages/web`, called from `ci.yml` after CI passes on `main`, aliased to a fixed
   `tabmerger-preview.vercel.app` URL.
 
 Read the workflow files themselves for the authoritative, heavily-commented behavior — a lot of
@@ -40,7 +43,7 @@ are documented inline there and are easy to get stale in a separate doc.
 Where each browser gets TabMerger, under which ID, and whether the website can talk to it. An
 extension installed from the Chrome Web Store keeps the **same ID in every Chromium browser**, so
 Chrome, Edge, Brave, Vivaldi, Arc and Opera installs from that store all behave identically.
-Design notes and open work: `.claude/plans/firefox-edge-beta-spec.md`. Store-listing details:
+Store-listing details:
 `packages/extension/CHROMEWEBSTORE.md` (Chrome/Edge) and `packages/extension/FIREFOXADDONS.md`
 (both Firefox add-ons).
 
@@ -218,7 +221,7 @@ The real secrets are only the credentials: `CHROME_CLIENT_ID`, `CHROME_CLIENT_SE
 
 ## Releasing (current flow)
 
-Cutting a release is a normal conventional-commit merge to `beta` (or `agentic-revamp` for
+Cutting a release is a normal conventional-commit merge to `beta` (or `main` for
 non-release work) — there is no manual version bump or manual `git tag`. See
 [`docs/RELEASE_SANITY_CHECK.md`](RELEASE_SANITY_CHECK.md) for the full pre-flight/post-flight
 checklist, and `.claude/skills/release-checklist` for the automated-gate summary.

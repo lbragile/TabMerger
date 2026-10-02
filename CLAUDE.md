@@ -98,7 +98,7 @@ Whenever you create or change the Chrome extension, create and maintain `package
 
 - **Format:** follow the `chrome-extensions` skill. It lives at `.agents/skills/chrome-extensions/`, **not** `.claude/skills/`, so it is not discoverable by name — read `.agents/skills/chrome-extensions/SKILL.md` ("Part 2 — Publishing to the Chrome Web Store") and start from `references/webstore/chromewebstore-template.md`. `references/webstore/review-checklist.md` covers pre-submission checks.
 - **Update it in the same change** as anything that affects store presence: user-facing features (description, feature list, "Last Updated", Version History), `wxt.config.ts` manifest changes (every permission needs a plain-English justification — this manifest deliberately has no `host_permissions`), data collection/storage/transmission (Privacy & Data Use), icons or UI (note which screenshots need refreshing), and any store rejection (fix + Rejection History).
-- **Two listings, one file:** the stable item and the separate private BETA item (see `.claude/plans/release-and-beta-channel-spec.md` §4) differ in name, ID, and distribution — record both.
+- **Two listings, one file:** the stable item and the separate private BETA item (invite-only, receives the beta prereleases) differ in name, ID, and distribution — record both.
 - The manifest `name` comes from `getExtensionName()` in `wxt.config.ts` and differs per build mode; the listing name must match the **production** value exactly.
 
 ## Web app (`packages/web/`)
@@ -176,7 +176,11 @@ Write a learning when you discover:
 
 Do **not** write learnings for things that are obvious from reading the code, covered in official docs at face value, or ephemeral to a single task.
 
-The learnings files are in the Claude project memory (`MEMORY.md` is auto-loaded into every session and links to each file).
+Each agent's learnings are notes in `.claude/agent-memory/<agent>/`, one note per learning, listed in that folder's index (see below).
+
+**Public vs private memory.** Agent notes live in `.claude/agent-memory/<agent>/`, and this repo is public. Agents read both indexes: `MEMORY.md` (public) and `MEMORY.private.md` (private, git-ignored).
+- A private note (owner preferences, project state, open bugs or security gaps) **must** use the `feedback_`, `project_` or `user_` filename prefix and be listed in `MEMORY.private.md` only.
+- Everything else is public and listed in `MEMORY.md`. Public notes contain no owner preferences or "the user said", word decisions neutrally ("Decision: …"), describe no unfixed bug or security gap, and hold no personal data, emails, tokens or deployment IDs, and no pointers to `.claude/plans/`, `TODO.md` or private notes.
 
 ## Skills (`.claude/skills/`)
 
@@ -223,7 +227,7 @@ This applies regardless of how small the change looks. Skipping any of the three
 ## Keep these current (in the same change, not later)
 
 - **Known issues** — `packages/web/lib/knownIssues.ts`, shown to testers on `/beta#known-issues`. When a user-visible bug is confirmed and not fixed in the same change, add it; when a change fixes one, delete its entry in that change; when scope or workaround changes, reword it. Describe what the user sees and what to do meanwhile, not the code. Check the list before every beta release (it's part of what testers are told).
-- **Roadmap** — `docs/FEATURE_ROADMAP.md`. Whenever a feature ships, starts, is dropped or changes scope, tick, add, remove or reword its item, and keep "Current state" (release versions, store versions, shipped list) and its "Last updated" date accurate. Bugs and engineering tasks go in `TODO.md`, not the roadmap; per-feature specs go in `.claude/plans/`.
+- **Roadmap** — `docs/FEATURE_ROADMAP.md`. Whenever a feature ships, starts, is dropped or changes scope, tick, add, remove or reword its item, and keep "Current state" (release versions, store versions, shipped list) and its "Last updated" date accurate. Bugs and engineering tasks go in `TODO.md`, not the roadmap; per-feature specs go in `.claude/plans/`. Both are private local files (git-ignored once the repo is public), so never point public docs, code comments or public memory at them.
 
 ## Before committing
 

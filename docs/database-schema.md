@@ -81,7 +81,7 @@ There is **one row per user**, enforced by `subscriptions_user_id_key UNIQUE(use
 
 **Indexes:** `subscriptions_status_idx` and the unique index behind `subscriptions_user_id_key`.
 
-> Anything that INSERTs a second row for a user fails with `23505` on `subscriptions_user_id_key`, because the trigger has already created one. `supabase/seed.sql` still does this (open, see [TODO.md](../TODO.md)).
+> Anything that INSERTs a second row for a user fails with `23505` on `subscriptions_user_id_key`, because the trigger has already created one. `supabase/seed.sql` still does this (not yet fixed).
 
 ### `groups`
 

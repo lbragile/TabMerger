@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload } from '../helpers';
+import { openPopup, seedAndReload, waitForRenameInputReady } from '../helpers';
 import { NOW_OPEN, WORK_GROUP, seedConfirmOnDelete, tab } from '../seed';
 
 test.describe('Group management', () => {
@@ -8,7 +8,7 @@ test.describe('Group management', () => {
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
     await page.locator('[data-sidebar-group-index="1"]').locator('span.truncate').dblclick();
-    await page.waitForTimeout(100); // 50ms useEffect delay + margin
+    await waitForRenameInputReady(page);
 
     const input = page.getByRole('textbox');
     await input.click();
@@ -25,7 +25,7 @@ test.describe('Group management', () => {
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
     await page.locator('[data-sidebar-group-index="1"]').locator('span.truncate').dblclick();
-    await page.waitForTimeout(100);
+    await waitForRenameInputReady(page);
 
     const input = page.getByRole('textbox');
     await input.click();
@@ -43,7 +43,7 @@ test.describe('Group management', () => {
     await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
 
     await page.locator('[data-sidebar-group-index="1"]').locator('span.truncate').dblclick();
-    await page.waitForTimeout(100);
+    await waitForRenameInputReady(page);
 
     await page.getByRole('textbox').click();
     await page.keyboard.press('Control+A');
