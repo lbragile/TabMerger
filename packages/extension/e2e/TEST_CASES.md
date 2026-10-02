@@ -27,6 +27,11 @@ Each file loads the real built extension (`.output/chrome-mv3`) in a persistent 
 - deleting a window removes it and its tabs
 - delete window with confirmOnDelete — modal appears
 
+## removeAllWindows.spec.ts — "Remove all windows" honours confirmOnDelete
+- sidebar context menu and windows panel menu, confirmOnDelete on: dialog appears, Cancel keeps the windows
+- sidebar context menu and windows panel menu, confirmOnDelete on: Confirm removes all windows
+- confirmOnDelete off: removes immediately, no dialog
+
 ## tabs.spec.ts — tab management
 - rename tab custom title — space bar works in input
 - rename tab — Cancel button restores original title

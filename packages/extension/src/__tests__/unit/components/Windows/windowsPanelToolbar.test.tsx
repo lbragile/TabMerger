@@ -4,7 +4,7 @@
  * message, deduplicate no-op, and Add Window selectionMode guard.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import { clearDndDragLive, setDndDragLive } from '@/lib/dndMultiDrag'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
@@ -320,6 +320,22 @@ describe('WindowsPanel — toolbar dropdown mutations', () => {
     const user = await openMenu()
     expect(screen.getByText('Close all windows')).toBeInTheDocument()
     await user.click(screen.getByText('Close all windows'))
+    await waitFor(() => expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 0 }))
+    expect(mockOpenModal).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    [true, 'Close all windows'],
+    [false, 'Remove all windows'],
+  ])('confirmOnDelete on (permanent=%s): opens removeAllWindows modal; nothing deleted until onConfirm', async (permanent, label) => {
+    mockGetSetting.mockResolvedValue({ confirmOnDelete: true })
+    wrap(<WindowsPanel group={makeGroup({ permanent })} groupIndex={0} />)
+    const user = await openMenu()
+    await user.click(screen.getByText(label))
+    await waitFor(() => expect(mockOpenModal).toHaveBeenCalledWith('removeAllWindows', expect.objectContaining({ isNowOpen: permanent })))
+    expect(mockDeleteAllWindows).not.toHaveBeenCalled()
+    const data = mockOpenModal.mock.calls.find((c) => c[0] === 'removeAllWindows')![1] as { onConfirm: () => void }
+    data.onConfirm()
     expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 0 })
   })
 

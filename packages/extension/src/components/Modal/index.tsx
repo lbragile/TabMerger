@@ -29,6 +29,7 @@ export function ModalRoot() {
       case 'deleteTab':
       case 'deleteSelection':
       case 'removeStaleTabs':
+      case 'removeAllWindows':
       case 'archiveStaleGroups':
       case 'clearAllData':
       case 'resetEncryption':

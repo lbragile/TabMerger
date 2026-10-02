@@ -4,7 +4,7 @@
  * open all in new window, unite/split windows, sort by title/url, archive/restore).
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -364,6 +364,22 @@ describe('GroupContextMenu — item actions', () => {
     const user = userEvent.setup()
     renderGroup(makeGroup())
     await user.click(screen.getByText('Remove all windows'))
+    await waitFor(() => expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 1 }))
+    expect(mockOpenModal).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    [false, 'Remove all windows'],
+    [true, 'Close all windows'],
+  ])('confirmOnDelete on (permanent=%s): opens removeAllWindows modal and deletes nothing until onConfirm', async (permanent, label) => {
+    mockGetSetting.mockResolvedValue({ confirmOnDelete: true })
+    const user = userEvent.setup()
+    renderGroup(makeGroup({ permanent }))
+    await user.click(screen.getByText(label))
+    await waitFor(() => expect(mockOpenModal).toHaveBeenCalledWith('removeAllWindows', expect.objectContaining({ isNowOpen: permanent })))
+    expect(mockDeleteAllWindows).not.toHaveBeenCalled()
+    const data = mockOpenModal.mock.calls.find((c) => c[0] === 'removeAllWindows')![1] as { onConfirm: () => void }
+    data.onConfirm()
     expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 1 })
   })
 
@@ -372,7 +388,7 @@ describe('GroupContextMenu — item actions', () => {
     renderGroup(makeGroup({ permanent: true }))
     expect(screen.queryByText('Remove all windows')).toBeNull()
     await user.click(screen.getByText('Close all windows'))
-    expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 1 })
+    await waitFor(() => expect(mockDeleteAllWindows).toHaveBeenCalledWith({ groupIndex: 1 }))
   })
 })
 

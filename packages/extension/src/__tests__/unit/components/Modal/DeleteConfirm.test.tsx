@@ -125,3 +125,33 @@ describe('DeleteConfirmModal — resetEncryption', () => {
     expect(onConfirm).not.toHaveBeenCalled()
   })
 })
+
+describe('DeleteConfirmModal — removeAllWindows', () => {
+  it('saved group: "Remove All Windows" copy; confirm invokes onConfirm and closes', () => {
+    const onConfirm = vi.fn()
+    const onClose = vi.fn()
+    renderModal(<DeleteConfirmModal type="removeAllWindows" data={{ isNowOpen: false, onConfirm }} onClose={onClose} />)
+    expect(screen.getByRole('heading', { name: 'Remove All Windows' })).toBeTruthy()
+    expect(screen.getByText(/remove all windows and their tabs from this group/i)).toBeTruthy()
+    expect(onConfirm).not.toHaveBeenCalled()
+    fireEvent.click(getDestructiveButton(/^remove all$/i))
+    expect(onConfirm).toHaveBeenCalledTimes(1)
+    expect(onClose).toHaveBeenCalled()
+  })
+
+  it('Now Open: "Close All Windows" copy; confirm invokes onConfirm', () => {
+    const onConfirm = vi.fn()
+    renderModal(<DeleteConfirmModal type="removeAllWindows" data={{ isNowOpen: true, onConfirm }} onClose={vi.fn()} />)
+    expect(screen.getByRole('heading', { name: 'Close All Windows' })).toBeTruthy()
+    expect(screen.getByText(/close all browser windows/i)).toBeTruthy()
+    fireEvent.click(getDestructiveButton(/^close all$/i))
+    expect(onConfirm).toHaveBeenCalledTimes(1)
+  })
+
+  it('Cancel does not invoke onConfirm', () => {
+    const onConfirm = vi.fn()
+    renderModal(<DeleteConfirmModal type="removeAllWindows" data={{ isNowOpen: false, onConfirm }} onClose={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: /^cancel$/i }))
+    expect(onConfirm).not.toHaveBeenCalled()
+  })
+})

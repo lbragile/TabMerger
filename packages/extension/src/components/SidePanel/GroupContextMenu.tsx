@@ -304,7 +304,20 @@ export function GroupContextMenu({
               most. For "Now Open" only the first applies. */}
           <DropdownMenuItem
             className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
-            onClick={() => deleteAllWindows({ groupIndex })}
+            onClick={async () => {
+              const { confirmOnDelete } = await getSetting<{ confirmOnDelete: boolean }>(
+                'appSettings',
+                { confirmOnDelete: false }
+              );
+              if (confirmOnDelete) {
+                openModal('removeAllWindows', {
+                  isNowOpen: !!group.permanent,
+                  onConfirm: () => deleteAllWindows({ groupIndex })
+                });
+              } else {
+                deleteAllWindows({ groupIndex });
+              }
+            }}
           >
             <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
             <div>

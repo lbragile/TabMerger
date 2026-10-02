@@ -246,6 +246,16 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
     }
   };
 
+  const handleDeleteAllWindows = async () => {
+    const doDeleteAll = () => deleteAllWindows({ groupIndex });
+    const { confirmOnDelete } = await getSetting('appSettings', { confirmOnDelete: false });
+    if (confirmOnDelete) {
+      openModal('removeAllWindows', { isNowOpen: !!group.permanent, onConfirm: doDeleteAll });
+    } else {
+      doDeleteAll();
+    }
+  };
+
   useEffect(() => {
     if (noteOpen) {
       setNoteValue(group.note ?? '');
@@ -366,7 +376,7 @@ function WindowsPanelInner({ group: groupProp, groupIndex }: WindowsPanelProps) 
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive"
-                onClick={() => deleteAllWindows({ groupIndex })}
+                onClick={() => void handleDeleteAllWindows()}
               >
                 <Trash2 className="h-3.5 w-3.5 mr-2 shrink-0" />
                 <div>
