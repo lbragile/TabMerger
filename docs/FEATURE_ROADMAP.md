@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-09-30. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-10-02. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.0.0`. The beta channel is at `v3.1.0-beta.8`
   (Chrome BETA listing, and the self-hosted Firefox beta). Releases come from semantic-release on
@@ -80,7 +80,7 @@ _Last updated 2026-09-30. Keep this current in the same change as the work (a CL
 - [x] Firefox beta channel: unlisted, signed by AMO, self-hosted with auto-updates
 - [ ] Firefox stable 3.x on the AMO listing (replaces 2.0.0)
 - [ ] Edge Add-ons publishing from CI (needs `EDGE_ACCESS_TOKEN`, `EDGE_PRODUCT_ID`)
-- [ ] Publish the source to the public `lbragile/TabMerger` repo at each stable release (plan: fast-forward its `master`; secret-scan the history first)
+- [x] Development is public at `lbragile/TabMerger` (moved 2026-10-02): one repo for code, CI, releases and store publishing, with secrets in GitHub environments
 
 ## Platform (long-term)
 
