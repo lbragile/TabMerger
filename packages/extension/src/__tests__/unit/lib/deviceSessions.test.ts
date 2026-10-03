@@ -5,7 +5,7 @@ const {
   mockGetSetting,
   mockSetSetting,
   mockGetSession,
-  mockHasEncryptionKey,
+  mockGetEncryptionKeyState,
   mockGetDataKey,
   mockEncryptBlob,
   mockDecryptBlob,
@@ -14,7 +14,7 @@ const {
   mockGetSetting: vi.fn(),
   mockSetSetting: vi.fn(),
   mockGetSession: vi.fn(),
-  mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
+  mockGetEncryptionKeyState: vi.fn().mockResolvedValue('absent'),
   mockGetDataKey: vi.fn().mockReturnValue(null),
   mockEncryptBlob: vi.fn().mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' }),
   mockDecryptBlob: vi.fn(),
@@ -29,7 +29,7 @@ vi.mock('@/lib/localDb', () => ({
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
-  hasEncryptionKey: () => mockHasEncryptionKey(),
+  getEncryptionKeyState: () => mockGetEncryptionKeyState(),
   getDataKey: () => mockGetDataKey(),
 }))
 
@@ -116,8 +116,9 @@ beforeEach(() => {
   vi.clearAllMocks()
   currentBuilder = makeBuilder([])
   mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } }, error: null })
-  mockHasEncryptionKey.mockResolvedValue(false)
-  mockGetDataKey.mockReturnValue(null)
+  // steady state of a Pro account: key set up and unlocked on this device (nothing is uploaded otherwise)
+  mockGetEncryptionKeyState.mockResolvedValue('present')
+  mockGetDataKey.mockReturnValue({})
   mockEncryptBlob.mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' })
   mockDecryptBlob.mockReset()
   mockCanUploadOnFirefox.mockResolvedValue(true)
@@ -209,7 +210,7 @@ describe('pushDeviceSession (debounced push)', () => {
     expect(payload).toMatchObject({
       device_id: expect.any(String),
       device_name: expect.any(String),
-      now_open_snapshot: expect.any(Object),
+      now_open_snapshot: { v: 1, iv: 'iv-stub', ct: 'ct-stub' }, // always ciphertext
       last_active: expect.any(String),
     })
   })
@@ -375,7 +376,7 @@ describe('removeDevices', () => {
 describe('device session encryption', () => {
   it('encrypts now_open_snapshot before push when encryption is enabled and unlocked', async () => {
     currentBuilder = makeBuilder([{ data: null, error: null }])
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetDataKey.mockReturnValue({} as CryptoKey)
 
     pushDeviceSession(makeGroupsState(2))
@@ -385,9 +386,30 @@ describe('device session encryption', () => {
     expect(payload.now_open_snapshot).toEqual({ v: 1, iv: 'iv-stub', ct: 'ct-stub' })
   })
 
+  it('skips the push (there is no plaintext upload) when the account has no encryption key yet', async () => {
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+    mockGetEncryptionKeyState.mockResolvedValue('absent')
+
+    pushDeviceSession(makeGroupsState(2))
+    await vi.advanceTimersByTimeAsync(DEVICE_SESSION_DEBOUNCE_MS)
+
+    expect(currentBuilder.upsert).not.toHaveBeenCalled()
+    expect(mockEncryptBlob).not.toHaveBeenCalled()
+  })
+
+  it('skips the push (never a plaintext snapshot) when the encryption status could not be checked', async () => {
+    currentBuilder = makeBuilder([{ data: null, error: null }])
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
+
+    pushDeviceSession(makeGroupsState(2))
+    await vi.advanceTimersByTimeAsync(DEVICE_SESSION_DEBOUNCE_MS)
+
+    expect(currentBuilder.upsert).not.toHaveBeenCalled()
+  })
+
   it('skips the push when encryption is enabled but the key is locked', async () => {
     currentBuilder = makeBuilder([{ data: null, error: null }])
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetDataKey.mockReturnValue(null)
 
     pushDeviceSession(makeGroupsState(2))

@@ -22,6 +22,23 @@ if (fs.existsSync(envTestPath)) {
   }
 }
 
+// The three suites that talk to a REAL Supabase (the local stack, see .env.test) share one test
+// user: signOut()/wipes/keys of one file break another running at the same time. They run in their
+// own project with file parallelism OFF; every other (fake-indexeddb / faked Supabase) file keeps
+// running in parallel in the 'fake' project.
+const REAL_NETWORK_SUITES = [
+  'src/__tests__/integration/syncEngine.integration.test.ts',
+  'src/__tests__/integration/encryption.integration.test.ts',
+  'src/__tests__/integration/syncCas.real.integration.test.ts'
+]
+
+const shared = {
+  environment: 'jsdom' as const,
+  globals: true,
+  setupFiles: ['./src/__tests__/integration/setup.ts'],
+  testTimeout: 15000
+}
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -30,10 +47,15 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: ['./src/__tests__/integration/setup.ts'],
-    include: ['src/__tests__/integration/**/*.integration.test.{ts,tsx}'],
-    testTimeout: 15000,
+    projects: [
+      {
+        extends: true,
+        test: { ...shared, name: 'fake', include: ['src/__tests__/integration/**/*.integration.test.{ts,tsx}'], exclude: ['**/node_modules/**', ...REAL_NETWORK_SUITES] }
+      },
+      {
+        extends: true,
+        test: { ...shared, name: 'real', include: REAL_NETWORK_SUITES, fileParallelism: false }
+      }
+    ]
   },
 })

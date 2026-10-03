@@ -6,6 +6,9 @@ import { useSync } from '@/hooks/useSync'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { SESSIONS_QUERY_KEY } from '@/hooks/useSessions'
 import { useUIStore } from '@/stores/uiStore'
+import { resetAccountScopeForTests } from '@/lib/accountScope'
+import { emitForeignGroupsChange, emitSyncConflict } from '@/lib/foreignChange'
+import { toast } from '@/lib/toast'
 
 const {
   mockUseAuth,
@@ -15,7 +18,7 @@ const {
   mockSubscribeToRemoteChanges,
   mockGetGroupsState,
   mockSaveGroupsState,
-  mockHasEncryptionKey,
+  mockGetEncryptionKeyState,
   mockGetDataKey,
   mockGetSetting,
   mockSetSetting,
@@ -33,7 +36,7 @@ const {
   mockGetGroupsState: vi.fn(),
   mockSaveGroupsState: vi.fn().mockResolvedValue(undefined),
   // Existing tests below assume encryption is already set up (matches pre-default-on behavior).
-  mockHasEncryptionKey: vi.fn().mockResolvedValue(true),
+  mockGetEncryptionKeyState: vi.fn().mockResolvedValue('present'),
   // Existing tests assume the data key is unlocked this session (a real CryptoKey, not null),
   // so push/pull actually run instead of hitting the new locked-skip gate.
   mockGetDataKey: vi.fn().mockReturnValue({}),
@@ -43,7 +46,7 @@ const {
   mockSetSetting: vi.fn().mockResolvedValue(undefined),
   mockMarkAllGroupsPendingSync: vi.fn().mockResolvedValue(undefined),
   mockGetSessions: vi.fn().mockResolvedValue([]),
-  mockPushSessionToSupabase: vi.fn().mockResolvedValue(undefined),
+  mockPushSessionToSupabase: vi.fn().mockResolvedValue(true),
   mockClearLocalAccountData: vi.fn().mockResolvedValue(undefined),
   mockCanUploadOnFirefox: vi.fn().mockResolvedValue(true),
 }))
@@ -75,7 +78,7 @@ vi.mock('@/lib/syncEngine', () => ({
     return reordered;
   },
 }))
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   getGroupsState: mockGetGroupsState,
   saveGroupsState: mockSaveGroupsState,
   getSetting: mockGetSetting,
@@ -85,7 +88,7 @@ vi.mock('@/lib/localDb', () => ({
   clearLocalAccountData: mockClearLocalAccountData,
 }))
 vi.mock('@/lib/encryptionKey', () => ({
-  hasEncryptionKey: mockHasEncryptionKey,
+  getEncryptionKeyState: mockGetEncryptionKeyState,
   getDataKey: mockGetDataKey,
   ENCRYPTION_MIGRATION_DONE_KEY: 'encryptionMigrationDone',
   SESSIONS_MIGRATION_DONE_KEY: 'sessionsEncryptionMigrationDone',
@@ -103,9 +106,10 @@ const nowOpen = { id: 'now', name: 'Now Open', permanent: true, starred: false, 
 
 beforeEach(() => {
   vi.clearAllMocks()
+  resetAccountScopeForTests()
   mockGetGroupsState.mockResolvedValue({ available: [nowOpen], active: { id: 'now', index: 0 } })
   mockPullRemoteChanges.mockResolvedValue([nowOpen])
-  mockHasEncryptionKey.mockResolvedValue(true)
+  mockGetEncryptionKeyState.mockResolvedValue('present')
   mockGetDataKey.mockReturnValue({})
   mockCanUploadOnFirefox.mockResolvedValue(true)
   // Key-aware: everything defaults to "already done" (true) except the last-signed-in-user
@@ -156,7 +160,7 @@ describe('useSync — mandatory first-time encryption setup', () => {
   it('opens the encryptionSetup modal and skips push/pull when no encryption key exists yet', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(false)
+    mockGetEncryptionKeyState.mockResolvedValue('absent')
 
     const qc = new QueryClient()
     renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
@@ -165,13 +169,13 @@ describe('useSync — mandatory first-time encryption setup', () => {
     expect(mockPushPendingChanges).not.toHaveBeenCalled()
     expect(mockPullRemoteChanges).not.toHaveBeenCalled()
 
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
   })
 
   it('closes the encryptionSetup modal and resumes syncing once a key exists', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValueOnce(false).mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValueOnce('absent').mockResolvedValue('present')
     useUIStore.setState({ modal: { type: null } })
 
     const qc = new QueryClient()
@@ -182,11 +186,42 @@ describe('useSync — mandatory first-time encryption setup', () => {
   })
 })
 
+describe('useSync — encryption status that could not be checked', () => {
+  it('opens no modal and skips push/pull; the next poll tries again', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
+
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+    await waitFor(() => expect(mockGetEncryptionKeyState).toHaveBeenCalled())
+    await new Promise((r) => setTimeout(r, 0))
+    expect(useUIStore.getState().modal.type).toBeNull()
+    expect(mockPushPendingChanges).not.toHaveBeenCalled()
+    expect(mockPullRemoteChanges).not.toHaveBeenCalled()
+    expect(mockGetDataKey).not.toHaveBeenCalled()
+  })
+
+  it('leaves an already-open setup/unlock modal alone (it shows its own retry)', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
+    useUIStore.getState().openModal('encryptionSetup')
+
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+    await waitFor(() => expect(mockGetEncryptionKeyState).toHaveBeenCalled())
+    await new Promise((r) => setTimeout(r, 0))
+    expect(useUIStore.getState().modal.type).toBe('encryptionSetup')
+    useUIStore.getState().closeModal()
+  })
+})
+
 describe('useSync — encryption migration self-heal', () => {
   it('marks all groups pendingSync and sets the migration flag when a key exists but the migration never ran (accounts that set up encryption before markAllGroupsPendingSync was wired into setup)', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetSetting.mockResolvedValue(false)
 
     const qc = new QueryClient()
@@ -204,7 +239,7 @@ describe('useSync — encryption migration self-heal', () => {
   it('does not re-run the migration once the flag is already set', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetSetting.mockResolvedValue(true)
 
     const qc = new QueryClient()
@@ -218,13 +253,13 @@ describe('useSync — encryption migration self-heal', () => {
 describe('useSync — sessions encryption migration self-heal', () => {
   beforeEach(() => {
     mockGetSessions.mockResolvedValue([])
-    mockPushSessionToSupabase.mockClear()
+    mockPushSessionToSupabase.mockReset().mockResolvedValue(true)
   })
 
   it('re-uploads every locally-saved session and sets the sessions migration flag once, when it never ran', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     // Groups migration already done, sessions migration is not.
     mockGetSetting.mockImplementation((key: string) =>
       Promise.resolve(key === 'sessionsEncryptionMigrationDone' ? false : true)
@@ -244,10 +279,86 @@ describe('useSync — sessions encryption migration self-heal', () => {
     )
   })
 
+  it.each([
+    ['was skipped (not uploaded)', () => mockPushSessionToSupabase.mockResolvedValueOnce(true).mockResolvedValueOnce(false)],
+    ['threw', () => mockPushSessionToSupabase.mockResolvedValueOnce(true).mockRejectedValueOnce(new Error('network down'))],
+  ])('does NOT set the sessions flag when a push %s, so the next sync retries', async (_label, arrange) => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockGetSetting.mockImplementation((key: string) =>
+      Promise.resolve(key === 'sessionsEncryptionMigrationDone' ? false : true)
+    )
+    mockGetSessions.mockResolvedValue([{ id: 's1', name: 'A', groups: [], createdAt: 1 }, { id: 's2', name: 'B', groups: [], createdAt: 2 }])
+    arrange()
+
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+    // the cycle went on to the groups sync (the self-heal never blocks it)...
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(2)
+    // ...but the flag stays unset: one session is still not on the server
+    expect(mockSetSetting).not.toHaveBeenCalledWith('sessionsEncryptionMigrationDone', true)
+  })
+
+  it('after a failed self-heal the same popup waits before retrying, then retries and sets the flag once every push succeeds', async () => {
+    vi.useFakeTimers()
+    try {
+      vi.spyOn(console, 'warn').mockImplementation(() => {})
+      mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+      mockUseEntitlements.mockReturnValue({ cloudSync: true })
+      mockGetEncryptionKeyState.mockResolvedValue('present')
+      // a settings store that remembers the flag, like the real one
+      let sessionsDone = false
+      mockGetSetting.mockImplementation((key: string) => Promise.resolve(key === 'sessionsEncryptionMigrationDone' ? sessionsDone : true))
+      mockSetSetting.mockImplementation(async (key: string, value: unknown) => {
+        if (key === 'sessionsEncryptionMigrationDone') sessionsDone = value as boolean
+      })
+      mockGetSessions.mockResolvedValue([{ id: 's1', name: 'A', groups: [], createdAt: 1 }])
+      mockPushSessionToSupabase.mockResolvedValueOnce(false) // first attempt: not uploaded
+
+      renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+      await vi.waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalledTimes(1))
+      expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(1)
+
+      // the next 30 s polls do not re-upload the sessions...
+      await vi.advanceTimersByTimeAsync(60_000)
+      expect(mockPushPendingChanges).toHaveBeenCalledTimes(3)
+      expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(1)
+      expect(sessionsDone).toBe(false)
+
+      // ...until the retry window (5 min) has passed; then one retry, and the flag is set for good
+      await vi.advanceTimersByTimeAsync(5 * 60_000)
+      expect(mockPushSessionToSupabase).toHaveBeenCalledTimes(2)
+      expect(sessionsDone).toBe(true)
+    } finally {
+      mockSetSetting.mockReset().mockResolvedValue(undefined)
+      vi.useRealTimers()
+    }
+  })
+
+  it('does not attempt the sessions self-heal while uploads are not allowed (Firefox consent missing)', async () => {
+    mockCanUploadOnFirefox.mockResolvedValue(false)
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockGetSetting.mockImplementation((key: string) =>
+      Promise.resolve(key === 'sessionsEncryptionMigrationDone' ? false : true)
+    )
+    mockGetSessions.mockResolvedValue([{ id: 's1', name: 'A', groups: [], createdAt: 1 }])
+
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+
+    await waitFor(() => expect(mockPushPendingChanges).toHaveBeenCalled())
+    expect(mockPushSessionToSupabase).not.toHaveBeenCalled()
+    expect(mockSetSetting).not.toHaveBeenCalledWith('sessionsEncryptionMigrationDone', true)
+  })
+
   it('does not re-run the sessions self-heal once its flag is already set', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetSetting.mockResolvedValue(true)
 
     const qc = new QueryClient()
@@ -263,7 +374,7 @@ describe('useSync — locked data key (one-time-per-device unlock; key persists 
   it('skips push/pull and opens the encryptionSetup modal (unlock mode) when a key exists but this profile has never unlocked it', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetDataKey.mockReturnValue(null)
 
     const qc = new QueryClient()
@@ -277,7 +388,7 @@ describe('useSync — locked data key (one-time-per-device unlock; key persists 
   it('resumes syncing once the key is unlocked, without opening any modal', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetDataKey.mockReturnValue({})
 
     const qc = new QueryClient()
@@ -357,7 +468,7 @@ describe('useSync — syncing', () => {
     vi.useRealTimers()
   })
 
-  it('subscribes to remote changes and merges an update using last-write-wins on updatedAt', async () => {
+  it('refreshes the groups cache from IDB when a remote update was applied', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
     let onUpdate: ((g: unknown) => void) | undefined
@@ -372,36 +483,18 @@ describe('useSync — syncing', () => {
     renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
     await waitFor(() => expect(mockSubscribeToRemoteChanges).toHaveBeenCalled())
 
-    const updated = { ...existing, name: 'New', updatedAt: 200 }
-    await onUpdate!(updated)
+    // last-write-wins is decided in syncEngine (inside updateGroupsState, before the write);
+    // by the time the callback fires IDB already holds the winner, so the hook only re-reads it
+    const applied = { ...existing, name: 'New', updatedAt: 200 }
+    mockGetGroupsState.mockResolvedValue({ available: [nowOpen, applied], active: { id: 'now', index: 0 } })
+    mockSaveGroupsState.mockClear()
+    await onUpdate!(applied)
 
     await waitFor(() => {
-      const lastCall = mockSaveGroupsState.mock.calls.at(-1)?.[0]
-      expect(lastCall.available.find((g: { id: string }) => g.id === 'x').name).toBe('New')
+      const cached = qc.getQueryData<{ available: Array<{ id: string; name: string }> }>(GROUPS_QUERY_KEY)
+      expect(cached?.available.find((g) => g.id === 'x')?.name).toBe('New')
     })
-  })
-
-  it('does not overwrite local state with a stale remote update (older updatedAt)', async () => {
-    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
-    mockUseEntitlements.mockReturnValue({ cloudSync: true })
-    let onUpdate: ((g: unknown) => void) | undefined
-    mockSubscribeToRemoteChanges.mockImplementation(async (_session, cb) => {
-      onUpdate = cb
-      return vi.fn()
-    })
-    const existing = { id: 'x', name: 'Fresh Local', permanent: false, starred: false, color: '#fff', updatedAt: 500, windows: [] }
-    mockGetGroupsState.mockResolvedValue({ available: [nowOpen, existing], active: { id: 'now', index: 0 } })
-
-    const qc = new QueryClient()
-    renderHook(() => useSync(), { wrapper: makeWrapper(qc) })
-    await waitFor(() => expect(mockSubscribeToRemoteChanges).toHaveBeenCalled())
-
-    const staleRemote = { ...existing, name: 'Stale Remote', updatedAt: 50 }
-    await onUpdate!(staleRemote)
-
-    await waitFor(() => expect(mockSaveGroupsState).toHaveBeenCalled())
-    const lastCall = mockSaveGroupsState.mock.calls.at(-1)?.[0]
-    expect(lastCall.available.find((g: { id: string }) => g.id === 'x').name).toBe('Fresh Local')
+    expect(mockSaveGroupsState).not.toHaveBeenCalled() // the hook itself never writes
   })
 })
 
@@ -453,5 +546,70 @@ describe('useSync — cross-account local data isolation', () => {
       expect(mockSetSetting).toHaveBeenCalledWith('lastSignedInUserId', 'userA')
     )
     expect(mockClearLocalAccountData).not.toHaveBeenCalled()
+  })
+})
+
+describe('useSync — sync conflict toast (M6)', () => {
+  it('tells the user which group kept both versions, with a stable toast id', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true, loading: false })
+    const spy = vi.spyOn(toast, 'info').mockImplementation(() => 'id')
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    emitSyncConflict(['Work', 'Play'])
+    expect(spy).toHaveBeenCalledWith(expect.stringContaining('"Work", "Play"'), { id: 'sync-conflict-copy' })
+    spy.mockRestore()
+  })
+})
+
+describe('useSync — cloudSyncActive flag (M7)', () => {
+  it('is not written while entitlements are still loading (it would flip to false at every popup open)', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: false, loading: true })
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await new Promise((r) => setTimeout(r, 20))
+    expect(mockSetSetting).not.toHaveBeenCalledWith('cloudSyncActive', expect.anything())
+  })
+
+  it('is written true once a cloud-sync user is known, and false for a known free user', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true, loading: false })
+    const { unmount } = renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await waitFor(() => expect(mockSetSetting).toHaveBeenCalledWith('cloudSyncActive', true))
+    unmount()
+    mockUseEntitlements.mockReturnValue({ cloudSync: false, loading: false })
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await waitFor(() => expect(mockSetSetting).toHaveBeenCalledWith('cloudSyncActive', false))
+  })
+
+  it('clears the undo/redo history when a sync applied foreign changes', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true, loading: false })
+    useUIStore.setState({ undoStack: [{ available: [], active: { id: '', index: 0 } }], redoStack: [] })
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    emitForeignGroupsChange()
+    expect(useUIStore.getState().undoStack).toEqual([])
+  })
+})
+
+describe('useSync — undo history across accounts (F5)', () => {
+  const seedHistory = () => useUIStore.setState({ undoStack: [{ available: [], active: { id: '', index: 0 } }], redoStack: [{ available: [], active: { id: '', index: 0 } }] })
+
+  it('is cleared when a different account signs in (the wipe)', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'userB' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: false, loading: false })
+    mockGetSetting.mockImplementation((key: string, d: unknown) => Promise.resolve(key === 'lastSignedInUserId' ? 'userA' : d))
+    seedHistory()
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await waitFor(() => expect(mockClearLocalAccountData).toHaveBeenCalled())
+    await waitFor(() => expect(useUIStore.getState().undoStack).toEqual([]))
+    expect(useUIStore.getState().redoStack).toEqual([])
+  })
+
+  it('is cleared on sign-out', async () => {
+    mockUseAuth.mockReturnValue({ session: null })
+    mockUseEntitlements.mockReturnValue({ cloudSync: false, loading: false })
+    seedHistory()
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await waitFor(() => expect(useUIStore.getState().undoStack).toEqual([]))
   })
 })

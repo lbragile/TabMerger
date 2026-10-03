@@ -75,7 +75,7 @@ describe('localDb — read-your-writes (a read never observes state older than a
     const read = getGroupsState()
 
     await expect(bad).rejects.toBeTruthy()
-    await expect(good).resolves.toBeUndefined()
+    await expect(good).resolves.toEqual(expect.any(Number)) // the new rev
     expect((await read).available.map((g) => g.id)).toEqual([nowOpen.id, 'good'])
   })
 
@@ -272,14 +272,21 @@ describe('localDb — sync-related helpers', () => {
   it('markGroupSynced clears the pendingSync flag on an existing group', async () => {
     const { saveGroup, markGroupSynced, getPendingSyncGroups } = await freshLocalDb()
     await saveGroup({ id: 'p1', name: 'Pending', color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false, pendingSync: true })
-    await markGroupSynced('p1')
+    await markGroupSynced('p1', 1, 1)
     const pending = await getPendingSyncGroups()
     expect(pending).toHaveLength(0)
   })
 
+  it('markGroupSynced keeps pendingSync when the group changed after the pushed version (newer updatedAt)', async () => {
+    const { saveGroup, markGroupSynced, getPendingSyncGroups } = await freshLocalDb()
+    await saveGroup({ id: 'p1', name: 'Edited mid-push', color: '#fff', updatedAt: 9, windows: [], permanent: false, starred: false, pendingSync: true })
+    await markGroupSynced('p1', 1, 1) // the push that finished carried version 1
+    expect((await getPendingSyncGroups()).map((g) => g.id)).toEqual(['p1'])
+  })
+
   it('markGroupSynced is a no-op for an id that does not exist', async () => {
     const { markGroupSynced } = await freshLocalDb()
-    await expect(markGroupSynced('does-not-exist')).resolves.toBeUndefined()
+    await expect(markGroupSynced('does-not-exist', 1, 1)).resolves.toBeUndefined()
   })
 })
 
@@ -379,7 +386,7 @@ describe('localDb — groups-change notification (context menu rebuild trigger)'
     expect(sendMessage).toHaveBeenCalledWith({ type: 'TM_GROUPS_CHANGED' }, expect.any(Function))
   })
 
-  it('prefers a directly-registered listener over sendMessage — the in-SW path', async () => {
+  it('calls a directly-registered listener AND still sendMessage (the in-SW path also has to reach open popups)', async () => {
     const sendMessage = stubChromeRuntime()
     const { getGroupsState, saveGroupsState, registerGroupsChangeListener } = await freshLocalDb()
     const initial = await getGroupsState()
@@ -390,7 +397,9 @@ describe('localDb — groups-change notification (context menu rebuild trigger)'
     await saveGroupsState({ active: initial.active, available: [initial.available[0], grpForNotifyTests('b')] })
 
     expect(directListener).toHaveBeenCalledTimes(1)
-    expect(sendMessage).not.toHaveBeenCalled()
+    // sendMessage never delivers to the sender's own listeners, so this reaches OTHER
+    // contexts only (the popup's useExternalGroupsChanges refetch)
+    expect(sendMessage).toHaveBeenCalledWith({ type: 'TM_GROUPS_CHANGED' }, expect.any(Function))
   })
 
   it('does NOT notify for sync-flag-only writes (markGroupSynced, markAllGroupsPendingSync)', async () => {
@@ -400,7 +409,7 @@ describe('localDb — groups-change notification (context menu rebuild trigger)'
     await saveGroup({ id: 'g1', name: 'Work', color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
     sendMessage.mockClear()
 
-    await markGroupSynced('g1')
+    await markGroupSynced('g1', 1, 1)
     await markAllGroupsPendingSync()
 
     expect(sendMessage).not.toHaveBeenCalled()
@@ -420,6 +429,287 @@ describe('localDb — groups-change notification (context menu rebuild trigger)'
 
     await expect(
       saveGroupsState({ active: initial.active, available: [initial.available[0], grpForNotifyTests('c')] })
-    ).resolves.toBeUndefined()
+    ).resolves.toEqual(expect.any(Number))
+  })
+})
+
+describe('localDb — updateGroupsState (atomic read-modify-write)', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
+  it('hands fn a FRESH read that includes writes issued before it, and persists the result', async () => {
+    const { getGroupsState, saveGroupsState, updateGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const nowOpen = initial.available[0]
+    // not awaited: the RMW must still observe it (issued order = applied order)
+    void saveGroupsState({ active: initial.active, available: [nowOpen, grp('a')] })
+
+    const next = await updateGroupsState((cur) => {
+      expect(cur.available.map((g) => g.id)).toEqual([nowOpen.id, 'a'])
+      return { ...cur, available: [...cur.available, grp('b')] }
+    })
+
+    expect(next.available.map((g) => g.id)).toEqual([nowOpen.id, 'a', 'b'])
+    expect((await getGroupsState()).available.map((g) => g.id)).toEqual([nowOpen.id, 'a', 'b'])
+  })
+
+  it('concurrent RMWs all land (each sees the previous one)', async () => {
+    const { getGroupsState, updateGroupsState } = await freshLocalDb()
+    await getGroupsState()
+    await Promise.all(['x', 'y', 'z'].map((id) => updateGroupsState((cur) => ({ ...cur, available: [...cur.available, grp(id)] }))))
+    expect((await getGroupsState()).available.map((g) => g.id).slice(1).sort()).toEqual(['x', 'y', 'z'])
+  })
+
+  it('returning null skips the write and resolves with the unchanged state', async () => {
+    const { getGroupsState, updateGroupsState } = await freshLocalDb()
+    const before = await getGroupsState()
+    const result = await updateGroupsState(() => null)
+    expect(result.available.map((g) => g.id)).toEqual(before.available.map((g) => g.id))
+  })
+
+  it('presents an EMPTY store as the initial Now Open state and persists the result', async () => {
+    const { getGroupsState, updateGroupsState } = await freshLocalDb()
+    const next = await updateGroupsState((cur) => {
+      expect(cur.available).toHaveLength(1)
+      expect(cur.available[0].permanent).toBe(true)
+      return { ...cur, available: [...cur.available, grp('first')] }
+    })
+    const stored = await getGroupsState()
+    expect(stored.available.map((g) => g.id)).toEqual(next.available.map((g) => g.id))
+    expect(stored.available.filter((g) => g.permanent)).toHaveLength(1)
+  })
+
+  it('a throwing fn rejects for its caller but does not wedge later reads or writes', async () => {
+    const { getGroupsState, updateGroupsState } = await freshLocalDb()
+    const before = await getGroupsState()
+    await expect(updateGroupsState(() => { throw new Error('boom') })).rejects.toThrow('boom')
+    const next = await updateGroupsState((cur) => ({ ...cur, available: [...cur.available, grp('after')] }))
+    expect(next.available.map((g) => g.id)).toContain('after')
+    expect((await getGroupsState()).available).toHaveLength(before.available.length + 1)
+  })
+})
+
+describe('localDb — cross-context write lock', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
+  // A real mutual-exclusion lock manager (single name) that records every request.
+  function stubWebLocks() {
+    let tail: Promise<unknown> = Promise.resolve()
+    const request = vi.fn((_name: string, cb: () => Promise<unknown>) => {
+      const run = tail.then(() => cb())
+      tail = run.catch(() => undefined)
+      return run
+    })
+    Object.defineProperty(globalThis.navigator, 'locks', { value: { request }, configurable: true })
+    return request
+  }
+
+  afterEach(() => {
+    delete (globalThis.navigator as unknown as { locks?: unknown }).locks
+  })
+
+  it('takes the shared Web Lock around every groups-store mutation', async () => {
+    const request = stubWebLocks()
+    const { getGroupsState, saveGroupsState, updateGroupsState, markAllGroupsPendingSync, clearLocalAccountData } = await freshLocalDb()
+    const init = await getGroupsState() // first-run init is a (locked) write too
+    request.mockClear()
+
+    await saveGroupsState({ active: init.active, available: [init.available[0], grp('a')] })
+    await updateGroupsState((cur) => cur)
+    await markAllGroupsPendingSync()
+    await clearLocalAccountData()
+
+    expect(request).toHaveBeenCalledTimes(4)
+    for (const [name] of request.mock.calls) expect(name).toBe('tabmerger-groups-write')
+  })
+
+  it('without navigator.locks (jsdom/old browsers) two module copies still exclude each other', async () => {
+    expect((globalThis.navigator as unknown as { locks?: unknown }).locks).toBeUndefined()
+    const a = await freshLocalDb()
+    vi.resetModules()
+    const c = await import('@/lib/localDb')
+    expect(c).not.toBe(a)
+    await a.getGroupsState()
+    await Promise.all([
+      a.updateGroupsState((cur) => ({ ...cur, available: [...cur.available, grp('from-a')] })),
+      c.updateGroupsState((cur) => ({ ...cur, available: [...cur.available, grp('from-c')] })),
+    ])
+    const ids = (await a.getGroupsState()).available.map((g) => g.id)
+    expect(ids).toContain('from-a')
+    expect(ids).toContain('from-c')
+  })
+})
+
+describe('localDb — clearLocalAccountData ordering', () => {
+  it('a write issued before the wipe cannot restore groups after it', async () => {
+    const { saveGroupsState, clearLocalAccountData, getGroupsState } = await freshLocalDb()
+    const init = await getGroupsState()
+    const prev = { id: 'prev', name: 'p', color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false }
+    const write = saveGroupsState({ active: init.active, available: [init.available[0], prev] })
+    const wipe = clearLocalAccountData()
+    await Promise.all([write, wipe])
+    expect((await getGroupsState()).available.map((g) => g.id)).not.toContain('prev')
+  })
+})
+
+describe('localDb — durable pending remote deletes', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
+  it('a write that prunes a group records its id as pending-delete in the same step, and re-creating it clears the marker', async () => {
+    const { getGroupsState, saveGroupsState, getPendingGroupDeletes, setSetting } = await freshLocalDb()
+    const init = await getGroupsState()
+    const nowOpen = init.available[0]
+    await setSetting('cloudSyncActive', true) // a signed-in cloud-sync user (useSync sets this)
+    await saveGroupsState({ active: init.active, available: [nowOpen, grp('a'), grp('b')] })
+    expect(await getPendingGroupDeletes()).toEqual([])
+
+    await saveGroupsState({ active: init.active, available: [nowOpen, grp('b')] })
+    expect(await getPendingGroupDeletes()).toEqual(['a'])
+
+    await saveGroupsState({ active: init.active, available: [nowOpen, grp('a'), grp('b')] }) // undone delete
+    expect(await getPendingGroupDeletes()).toEqual([])
+  })
+
+  it('add/remove helpers edit the persisted set and clearLocalAccountData wipes it', async () => {
+    const { addPendingGroupDeletes, removePendingGroupDeletes, getPendingGroupDeletes, clearLocalAccountData } = await freshLocalDb()
+    await addPendingGroupDeletes(['x', 'y'])
+    await addPendingGroupDeletes(['y', 'z'])
+    expect((await getPendingGroupDeletes()).sort()).toEqual(['x', 'y', 'z'])
+    await removePendingGroupDeletes(['y'])
+    expect((await getPendingGroupDeletes()).sort()).toEqual(['x', 'z'])
+    await clearLocalAccountData()
+    expect(await getPendingGroupDeletes()).toEqual([])
+  })
+
+  it('updateGroupsState can read the pending set inside its locked step', async () => {
+    const { addPendingGroupDeletes, updateGroupsState } = await freshLocalDb()
+    await addPendingGroupDeletes(['gone'])
+    let seen: string[] = []
+    await updateGroupsState((_cur, aux) => { seen = [...aux.pendingDeletes]; return null }, { readPendingDeletes: true })
+    expect(seen).toEqual(['gone'])
+  })
+})
+
+describe('localDb — optimistic concurrency (rev)', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
+  it('every write bumps the stored rev and reads carry it', async () => {
+    const { getGroupsState, saveGroupsState, updateGroupsState } = await freshLocalDb()
+    const init = await getGroupsState()
+    const r1 = (await getGroupsState()).rev!
+    const r2 = await saveGroupsState({ active: init.active, available: [init.available[0], grp('a')] })
+    expect(r2).toBe(r1 + 1)
+    const after = await updateGroupsState((cur) => ({ ...cur, available: [...cur.available, grp('b')] }))
+    expect(after.rev).toBe(r2 + 1)
+    expect((await getGroupsState()).rev).toBe(r2 + 1)
+  })
+
+  it('a write whose expectedRev is stale is refused: nothing is written and it rejects with StaleGroupsError', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const init = await getGroupsState()
+    const base = init.rev!
+    await saveGroupsState({ active: init.active, available: [init.available[0], grp('foreign')] }) // someone else wrote
+    await expect(
+      saveGroupsState({ active: init.active, available: [init.available[0], grp('mine')] }, { expectedRev: base })
+    ).rejects.toMatchObject({ name: 'StaleGroupsError' })
+    expect((await getGroupsState()).available.map((g) => g.id)).toEqual([init.available[0].id, 'foreign'])
+  })
+
+  it('a write with the current rev succeeds', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const init = await getGroupsState()
+    await expect(saveGroupsState({ active: init.active, available: [init.available[0], grp('a')] }, { expectedRev: init.rev })).resolves.toBe(init.rev! + 1)
+  })
+})
+
+describe('localDb — positionDirty derived from the stored order', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
+  it('a blind cache-derived write cannot erase a stored flag; markPositionSynced clears it only at a matching index', async () => {
+    const { getGroupsState, saveGroupsState, markPositionSynced } = await freshLocalDb()
+    const init = await getGroupsState()
+    const nowOpen = init.available[0]
+    await saveGroupsState({ active: init.active, available: [nowOpen, grp('a'), grp('b')] }) // new groups: dirty
+    const cacheCopy = (await getGroupsState()).available // objects as a cache would hold them
+    await markPositionSynced('a', 1)
+    expect((await getGroupsState()).available.find((g) => g.id === 'a')?.positionDirty).toBeUndefined()
+    // a write from a stale cache copy (still carrying the old flag) at the SAME index changes nothing
+    await saveGroupsState({ active: init.active, available: cacheCopy })
+    await markPositionSynced('b', 2)
+    await markPositionSynced('a', 1)
+    const s = await getGroupsState()
+    expect(s.available.every((g) => !g.positionDirty)).toBe(true)
+    // moving flags exactly the groups whose index changed
+    await saveGroupsState({ active: init.active, available: [nowOpen, s.available[2], s.available[1]] })
+    expect((await getGroupsState()).available.map((g) => !!g.positionDirty)).toEqual([false, true, true])
+  })
+
+  it('never flags Now Open', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const init = await getGroupsState()
+    await saveGroupsState({ active: init.active, available: [init.available[0], grp('a')] })
+    expect((await getGroupsState()).available[0].positionDirty).toBeUndefined()
+  })
+})
+
+describe('localDb — round 3 (first-run rev, Now Open, clear all)', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+
+  it('the first-run state carries a rev, so a cache-derived write on it can be guarded', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const first = await getGroupsState()
+    expect(first.rev).toEqual(expect.any(Number))
+    await expect(saveGroupsState({ active: first.active, available: [first.available[0], grp('a')] }, { expectedRev: first.rev })).resolves.toEqual(expect.any(Number))
+  })
+
+  it('updateGroupsState on an empty store presents a state with a rev', async () => {
+    const { updateGroupsState } = await freshLocalDb()
+    let seen: number | undefined
+    await updateGroupsState((cur) => { seen = cur.rev; return null })
+    expect(seen).toEqual(expect.any(Number))
+  })
+
+  it('markAllGroupsPendingSync never marks Now Open (permanent, never synced)', async () => {
+    const { getGroupsState, saveGroupsState, markAllGroupsPendingSync } = await freshLocalDb()
+    const init = await getGroupsState()
+    await saveGroupsState({ active: init.active, available: [init.available[0], grp('a')] })
+    await markAllGroupsPendingSync()
+    const s = await getGroupsState()
+    expect(s.available[0].pendingSync).toBeFalsy()
+    expect(s.available[1].pendingSync).toBe(true)
+  })
+
+  it('clearAllLocalData wipes every store as a queued step: an earlier groups write cannot survive it', async () => {
+    const { getGroupsState, saveGroupsState, setSetting, getSetting, clearAllLocalData } = await freshLocalDb()
+    const init = await getGroupsState()
+    await setSetting('theme', 'dark')
+    const write = saveGroupsState({ active: init.active, available: [init.available[0], grp('late')] })
+    const wipe = clearAllLocalData()
+    await Promise.all([write, wipe])
+    expect((await getGroupsState()).available.map((g) => g.id)).not.toContain('late')
+    expect(await getSetting('theme', 'light')).toBe('light')
+  })
+})
+
+describe('localDb — server base stamp (remoteUpdatedAt)', () => {
+  const grp = (id: string, over = {}) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false, ...over })
+
+  it('markGroupSynced stores the returned stamp as the new base, even when an in-flight edit keeps the group pending', async () => {
+    const { getGroupsState, saveGroupsState, markGroupSynced } = await freshLocalDb()
+    const init = await getGroupsState()
+    await saveGroupsState({ active: init.active, available: [init.available[0], grp('a', { pendingSync: true, updatedAt: 9, remoteUpdatedAt: 'OLD' })] })
+    await markGroupSynced('a', 1, 1, 'NEW') // an older version was pushed; the group was edited meanwhile
+    const a = (await getGroupsState()).available[1]
+    expect(a.remoteUpdatedAt).toBe('NEW')
+    expect(a.pendingSync).toBe(true)
+  })
+
+  it('a blind (cache-derived) saveGroupsState cannot regress a stored base, but an RMW can set a fresh one', async () => {
+    const { getGroupsState, saveGroupsState, updateGroupsState } = await freshLocalDb()
+    const init = await getGroupsState()
+    await saveGroupsState({ active: init.active, available: [init.available[0], grp('a', { remoteUpdatedAt: 'S2' })] })
+    await saveGroupsState({ active: init.active, available: [init.available[0], grp('a', { remoteUpdatedAt: 'S1-stale-cache' })] })
+    expect((await getGroupsState()).available[1].remoteUpdatedAt).toBe('S2')
+    await updateGroupsState((cur) => ({ ...cur, available: cur.available.map((g) => (g.id === 'a' ? { ...g, remoteUpdatedAt: 'S3' } : g)) }))
+    expect((await getGroupsState()).available[1].remoteUpdatedAt).toBe('S3')
   })
 })

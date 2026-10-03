@@ -13,7 +13,7 @@ import type { UrlRule } from '@/lib/types'
 
 // ─── Mock localDb ─────────────────────────────────────────────────────────────
 
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: vi.fn().mockResolvedValue({
     active: { id: 'g1', index: 0 },

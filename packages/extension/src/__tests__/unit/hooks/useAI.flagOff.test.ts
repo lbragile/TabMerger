@@ -4,12 +4,12 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAutoGroup, useNameGroup, useSuggestSessions, useOrganizeTabs, useTabSummary } from '@/hooks/useAI'
 
-const { mockUseAuth, mockUseEntitlements, mockUseAppSettings, mockUseAiUsage, mockHasEncryptionKey } = vi.hoisted(() => ({
+const { mockUseAuth, mockUseEntitlements, mockUseAppSettings, mockUseAiUsage, mockGetEncryptionKeyState } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
   mockUseAppSettings: vi.fn(),
   mockUseAiUsage: vi.fn(),
-  mockHasEncryptionKey: vi.fn(),
+  mockGetEncryptionKeyState: vi.fn(),
 }))
 
 // Separate file (rather than a describe block) because `AI_ENABLED` is mocked via a
@@ -21,7 +21,7 @@ vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitl
 vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => mockUseAppSettings() }))
 vi.mock('@/hooks/useAiUsage', () => ({ useAiUsage: () => mockUseAiUsage() }))
-vi.mock('@/lib/encryptionKey', () => ({ hasEncryptionKey: mockHasEncryptionKey }))
+vi.mock('@/lib/encryptionKey', () => ({ getEncryptionKeyState: mockGetEncryptionKeyState }))
 
 function makeWrapper() {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
@@ -47,7 +47,7 @@ beforeEach(() => {
     },
   })
   mockUseAiUsage.mockReturnValue({ remaining: 100, used: 0, cap: 100, loading: false })
-  mockHasEncryptionKey.mockResolvedValue(false)
+  mockGetEncryptionKeyState.mockResolvedValue('absent')
 })
 
 describe('AI mutations when AI_ENABLED is false (coming-soon kill switch)', () => {

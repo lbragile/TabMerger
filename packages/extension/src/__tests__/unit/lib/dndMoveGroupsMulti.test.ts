@@ -113,7 +113,8 @@ describe('moveGroupsMulti — multi-group sidebar reorder', () => {
       expect(g.pendingSync).toBe(true)
       expect(g.updatedAt).toBeGreaterThan(0)
     }
-    // Untouched groups keep their identity (no spurious sync churn).
+    // Untouched groups keep their identity (no spurious sync churn). A merely shifted group
+    // is flagged `positionDirty` by the groups write itself, never here.
     expect(res.next.available.find((x) => x.id === 'b')).toBe(s.available[2])
   })
 

@@ -75,7 +75,12 @@ describe('ImportExportModal — import JSON', () => {
     const file = makeFile(JSON.stringify({ available: [{ name: 'x' }] }), 'export.json')
     const input = document.querySelector('input[type="file"][accept=".json"]') as HTMLInputElement
     fireEvent.change(input, { target: { files: [file] } })
-    await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalledWith({ available: [{ name: 'x' }] }))
+    await waitFor(() => expect(mockSetGroupsState).toHaveBeenCalled())
+    // saved groups are re-created as NEW groups (fresh id, pending, no server bookkeeping)
+    const stored = mockSetGroupsState.mock.calls[0][0] as { available: Array<{ id: string; name: string; pendingSync: boolean }> }
+    expect(stored.available).toHaveLength(1)
+    expect(stored.available[0]).toMatchObject({ name: 'x', pendingSync: true })
+    expect(typeof stored.available[0].id).toBe('string')
     expect(mockToastSuccess).toHaveBeenCalledWith('Groups imported successfully')
     expect(onClose).toHaveBeenCalled()
   })

@@ -7,7 +7,7 @@ import { useAppSettings } from './useAppSettings';
 import { useAiUsage } from './useAiUsage';
 import { useGroups } from './useGroups';
 import { wasCalledToday, markCalledToday } from '@/lib/aiThrottle';
-import { hasEncryptionKey } from '@/lib/encryptionKey';
+import { getEncryptionKeyState } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL as string;
@@ -173,7 +173,9 @@ export function useOrganizeTabs() {
       // already-decrypted local state. Array order carries the "Now Open is
       // index 0" invariant, and `permanent` is sent explicitly so the server
       // doesn't have to infer it.
-      const groups = (await hasEncryptionKey())
+      // Only a confirmed "no key" lets the server read the rows itself: when the check failed the
+      // account may be encrypted, and the server would then be reading ciphertext.
+      const groups = (await getEncryptionKeyState()) !== 'absent'
         ? groupsState?.available.map((g) => ({
             id: g.id,
             name: g.name,

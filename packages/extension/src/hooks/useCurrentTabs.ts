@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState, Window, Tab } from '@/lib/types';
-import { getGroupsState, saveGroupsState } from '@/lib/localDb';
+import { updateGroupsState } from '@/lib/localDb';
 import { getFaviconUrl, formatGroupCounts, sortWindowsByStarred } from '@/lib/utils';
 import { pushDeviceSession } from '@/lib/deviceSessions';
 import { GROUPS_QUERY_KEY } from './useGroups';
@@ -50,17 +50,20 @@ function chromeWindowToWindow(
  * Carries previously-fetched `ogImage` and `note` values forward so they survive re-syncs.
  * Strips the extension's own popup page from Now Open. Returns the updated `GroupsState`,
  * or `undefined` on error or if there is no permanent group in IDB.
+ *
+ * The chrome.* queries (macrotask gaps) run BEFORE the write; the groups state is then read
+ * fresh and rewritten inside one `updateGroupsState`, so a save/edit that landed while the
+ * queries were in flight is kept instead of being overwritten with a pre-query snapshot.
  */
 async function syncNowOpen(): Promise<GroupsState | undefined> {
   try {
     const tabGroupsAvailable = typeof chrome.tabGroups?.query === 'function';
     // Use chrome.tabs.query({}) instead of windows.getAll({ populate: true }) — the latter
     // does not reliably include groupId on returned tab objects; tabs.query always does.
-    const [chromeTabs, chromeWindows, rawTabGroups, state] = await Promise.all([
+    const [chromeTabs, chromeWindows, rawTabGroups] = await Promise.all([
       chrome.tabs.query({}),
       chrome.windows.getAll(),
-      tabGroupsAvailable ? chrome.tabGroups.query({}) : Promise.resolve([] as chrome.tabGroups.TabGroup[]),
-      getGroupsState()
+      tabGroupsAvailable ? chrome.tabGroups.query({}) : Promise.resolve([] as chrome.tabGroups.TabGroup[])
     ]);
 
     const groupMap = new Map<number, chrome.tabGroups.TabGroup>(
@@ -84,64 +87,67 @@ async function syncNowOpen(): Promise<GroupsState | undefined> {
       tabsByWindow.set(windowId, tabs.filter((t) => !t.url?.startsWith(ownExtensionPrefix)));
     }
 
-    // Carry over previously-set starred flag + relative order so drag/star actions on
-    // Now Open windows survive the next tab event instead of being wiped by the rebuild below.
-    const prevNowOpen = state.available.find((g) => g.permanent);
-    const prevStarredById = new Map<number, boolean>();
-    const prevOrderById = new Map<number, number>();
-    prevNowOpen?.windows.forEach((w, i) => {
-      prevStarredById.set(w.id, w.starred ?? false);
-      prevOrderById.set(w.id, i);
+    let wrote = false;
+    const next = await updateGroupsState((state) => {
+      // Carry over previously-set starred flag + relative order so drag/star actions on
+      // Now Open windows survive the next tab event instead of being wiped by the rebuild below.
+      const prevNowOpen = state.available.find((g) => g.permanent);
+      const prevStarredById = new Map<number, boolean>();
+      const prevOrderById = new Map<number, number>();
+      prevNowOpen?.windows.forEach((w, i) => {
+        prevStarredById.set(w.id, w.starred ?? false);
+        prevOrderById.set(w.id, i);
+      });
+
+      let nowOpenWindows: Window[] = chromeWindows
+        .filter((w) => w.type === 'normal' && w.id !== undefined)
+        .map((w) => chromeWindowToWindow(w, tabsByWindow.get(w.id!) ?? [], groupMap, prevStarredById.get(w.id!) ?? false))
+        .filter((w) => w.tabs.length > 0);
+
+      // Preserve prior relative order (new windows fall to the end of their zone), then
+      // re-clamp into starred/unstarred zones — both sorts are stable.
+      nowOpenWindows = nowOpenWindows
+        .slice()
+        .sort((a, b) => (prevOrderById.get(a.id) ?? Infinity) - (prevOrderById.get(b.id) ?? Infinity));
+      nowOpenWindows = sortWindowsByStarred(nowOpenWindows);
+
+      // Carry over previously-fetched ogImages (and notes) so they survive re-syncs.
+      const prevOgImages = new Map<string, string>();
+      const prevNotes = new Map<string, string>();
+      prevNowOpen?.windows.forEach((w) => w.tabs.forEach((t) => {
+        if (t.ogImage) prevOgImages.set(t.url, t.ogImage);
+        if (t.note) prevNotes.set(t.url, t.note);
+      }));
+
+      nowOpenWindows.forEach((w) => w.tabs.forEach((t) => {
+        if (prevOgImages.has(t.url)) t.ogImage = prevOgImages.get(t.url);
+        if (prevNotes.has(t.url)) t.note = prevNotes.get(t.url);
+      }));
+
+      // Guard: strip any extra permanent groups beyond the first one
+      let seenPermanent = false;
+      const available = state.available.filter((g) => {
+        if (!g.permanent) return true;
+        if (!seenPermanent) { seenPermanent = true; return true; }
+        return false;
+      });
+      const nowOpenIdx = available.findIndex((g) => g.permanent);
+      if (nowOpenIdx === -1) return null; // no permanent group in IDB: nothing to write
+
+      available[nowOpenIdx] = {
+        ...available[nowOpenIdx],
+        windows: nowOpenWindows,
+        updatedAt: Date.now(),
+        pendingSync: false // don't sync the "Now Open" group
+      };
+
+      const tabCount = nowOpenWindows.reduce((a, w) => a + w.tabs.length, 0);
+      available[nowOpenIdx].info = formatGroupCounts(nowOpenWindows.length, tabCount);
+
+      wrote = true;
+      return { ...state, available };
     });
-
-    let nowOpenWindows: Window[] = chromeWindows
-      .filter((w) => w.type === 'normal' && w.id !== undefined)
-      .map((w) => chromeWindowToWindow(w, tabsByWindow.get(w.id!) ?? [], groupMap, prevStarredById.get(w.id!) ?? false))
-      .filter((w) => w.tabs.length > 0);
-
-    // Preserve prior relative order (new windows fall to the end of their zone), then
-    // re-clamp into starred/unstarred zones — both sorts are stable.
-    nowOpenWindows = nowOpenWindows
-      .slice()
-      .sort((a, b) => (prevOrderById.get(a.id) ?? Infinity) - (prevOrderById.get(b.id) ?? Infinity));
-    nowOpenWindows = sortWindowsByStarred(nowOpenWindows);
-
-    // Carry over previously-fetched ogImages (and notes) so they survive re-syncs.
-    const prevOgImages = new Map<string, string>();
-    const prevNotes = new Map<string, string>();
-    prevNowOpen?.windows.forEach((w) => w.tabs.forEach((t) => {
-      if (t.ogImage) prevOgImages.set(t.url, t.ogImage);
-      if (t.note) prevNotes.set(t.url, t.note);
-    }));
-
-    nowOpenWindows.forEach((w) => w.tabs.forEach((t) => {
-      if (prevOgImages.has(t.url)) t.ogImage = prevOgImages.get(t.url);
-      if (prevNotes.has(t.url)) t.note = prevNotes.get(t.url);
-    }));
-
-    // Guard: strip any extra permanent groups beyond the first one
-    let seenPermanent = false;
-    const available = state.available.filter((g) => {
-      if (!g.permanent) return true;
-      if (!seenPermanent) { seenPermanent = true; return true; }
-      return false;
-    });
-    const nowOpenIdx = available.findIndex((g) => g.permanent);
-    if (nowOpenIdx === -1) return;
-
-    available[nowOpenIdx] = {
-      ...available[nowOpenIdx],
-      windows: nowOpenWindows,
-      updatedAt: Date.now(),
-      pendingSync: false // don't sync the "Now Open" group
-    };
-
-    const tabCount = nowOpenWindows.reduce((a, w) => a + w.tabs.length, 0);
-    available[nowOpenIdx].info = formatGroupCounts(nowOpenWindows.length, tabCount);
-
-    const next = { ...state, available };
-    await saveGroupsState(next);
-    return next;
+    return wrote ? next : undefined;
   } catch (err) {
     console.error('[useCurrentTabs] sync error', err);
   }

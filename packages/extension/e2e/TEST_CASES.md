@@ -61,6 +61,14 @@ Each file loads the real built extension (`.output/chrome-mv3`) in a persistent 
 - selection mode has no serious/critical a11y violations
 - (`nested-interactive` rule disabled — known pre-existing pattern, see `extension-dev` learnings)
 
+## devices.spec.ts — Devices settings tab (Pro)
+- free-tier (unauthenticated) user does not see the Devices tab at all
+- pro-tier user sees the Devices tab in Settings (signed in via `signInAsPro`, every Supabase call stubbed)
+
+## encryptionGate.spec.ts — encryption setup prompt (signed-in Pro user)
+- a failed encryption check does not open "Set up encryption" and leaves the popup usable
+- an account the server reports as having no key is asked to set up encryption
+
 ## Not covered yet (gaps, not silently assumed)
 - Firefox/Edge builds — suite only runs against `chrome-mv3`
 - Supabase sync / cross-device conflict resolution

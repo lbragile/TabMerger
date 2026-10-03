@@ -25,7 +25,7 @@ import { toast } from '@/lib/toast';
 import { Download, Upload } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
-import { hasEncryptionKey, resetEncryption } from '@/lib/encryptionKey';
+import { getEncryptionKeyState, resetEncryption } from '@/lib/encryptionKey';
 import { AI_ENABLED } from '@/lib/aiFlag';
 import { blockImportOverFreeLimit } from '@/lib/tierLimits';
 import { requestDataConsent } from '@/lib/dataConsent';
@@ -61,7 +61,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
   useEffect(() => {
     if (!user) return;
-    void hasEncryptionKey().then(setCanResetEncryption);
+    void getEncryptionKeyState().then((state) => setCanResetEncryption(state === 'present'));
   }, [user]);
 
   const handleResetEncryption = () => {
@@ -149,11 +149,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
   };
 
   const performClearAll = async () => {
-    const db = await import('@/lib/localDb').then((m) => m.getDb());
-    await db.clear('groups');
-    await db.clear('groupsState');
-    await db.clear('sessions');
-    await db.clear('settings');
+    // one QUEUED wipe: raw store clears raced in-flight groups writes, which could re-populate the store
+    await import('@/lib/localDb').then((m) => m.clearAllLocalData());
+    useUIStore.getState().clearHistory(); // snapshots of the wiped data must not be restorable
     toast.success('All data cleared');
     onClose();
   };

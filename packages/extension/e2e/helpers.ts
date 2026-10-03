@@ -153,3 +153,57 @@ export async function startFixtureServer(title: string): Promise<{ url: string; 
     });
   });
 }
+
+export const E2E_USER_ID = 'e2e-user';
+const E2E_USER_EMAIL = 'e2e@example.com';
+
+/**
+ * What the account's `encryption_keys` check answers for a faked Pro user:
+ *  - `unlocked`: the key row exists and this device holds the data key (the steady state of a
+ *    real Pro user: sync runs, no dialog);
+ *  - `none`: the server answers that the account has no key yet (first-time setup);
+ *  - `error`: the request fails (HTTP 500), so the status is unknown.
+ */
+export type E2eEncryption = 'unlocked' | 'none' | 'error';
+
+/**
+ * Fakes a signed-in Pro account: writes a session into chrome.storage.local (the Supabase
+ * storage adapter, see lib/supabase.ts) and stubs EVERY Supabase REST call, so the outcome does
+ * not depend on whether a Supabase is reachable from the machine running the test, or on how
+ * fast it answers. Call it, then reload the popup.
+ *
+ * Unstubbed, the `encryption_keys` check hit whatever VITE_SUPABASE_URL the build had: a local
+ * stack answered 401 at once, an unreachable host only failed after PostgREST's retry backoff
+ * (~7 s), and the test result followed that timing.
+ */
+export async function signInAsPro(page: Page, encryption: E2eEncryption = 'unlocked'): Promise<void> {
+  // Registered first = lowest priority: any table not stubbed below reads as empty / accepts writes.
+  await page.route('**/rest/v1/**', (route) => route.fulfill({ json: [] }));
+  await page.route('**/auth/v1/user*', (route) =>
+    route.fulfill({ json: { id: E2E_USER_ID, email: E2E_USER_EMAIL, aud: 'authenticated' } })
+  );
+  await page.route('**/rest/v1/subscriptions*', (route) =>
+    route.fulfill({ json: [{ tier: 'pro', status: 'active', cancel_at_period_end: false, current_period_end: null, stripe_price_id: null }] })
+  );
+  await page.route('**/rest/v1/encryption_keys*', (route) => {
+    if (encryption === 'error') return route.fulfill({ status: 500, json: { message: 'e2e: encryption check failed' } });
+    return route.fulfill({ json: encryption === 'unlocked' ? [{ user_id: E2E_USER_ID }] : [] });
+  });
+
+  const session = {
+    access_token: 'e2e-access-token',
+    refresh_token: 'e2e-refresh-token',
+    expires_at: Math.floor(Date.now() / 1000) + 3600,
+    expires_in: 3600,
+    token_type: 'bearer',
+    user: { id: E2E_USER_ID, email: E2E_USER_EMAIL, aud: 'authenticated', app_metadata: {}, user_metadata: {} },
+  };
+  const stored: Record<string, string> = { 'tabmerger-auth': JSON.stringify(session) };
+  // A raw 256-bit AES key, base64, under the key encryptionKey.ts reads (`dataKey_<userId>`).
+  if (encryption === 'unlocked') stored[`dataKey_${E2E_USER_ID}`] = Buffer.alloc(32, 7).toString('base64');
+  await page.evaluate(async (items) => {
+    await new Promise<void>((resolve) => {
+      chrome.storage.local.set(items, () => resolve());
+    });
+  }, stored);
+}

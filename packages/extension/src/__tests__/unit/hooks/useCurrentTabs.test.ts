@@ -14,7 +14,7 @@ import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { createGroup, createNowOpenGroup } from '@/lib/utils'
 import type { GroupsState, Tab } from '@/lib/types'
 
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: vi.fn(),
 }))

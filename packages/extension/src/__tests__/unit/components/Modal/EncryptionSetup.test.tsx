@@ -14,14 +14,15 @@ function renderModal(onClose = vi.fn()) {
   )
 }
 
-const { mockHasEncryptionKey, mockSetupEncryption, mockUnlockEncryption } = vi.hoisted(() => ({
-  mockHasEncryptionKey: vi.fn(),
+const { mockGetEncryptionKeyState, mockSetupEncryption, mockUnlockEncryption } = vi.hoisted(() => ({
+  mockGetEncryptionKeyState: vi.fn(),
   mockSetupEncryption: vi.fn().mockResolvedValue(undefined),
-  mockUnlockEncryption: vi.fn().mockResolvedValue(true),
+  mockUnlockEncryption: vi.fn().mockResolvedValue('unlocked'),
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
-  hasEncryptionKey: mockHasEncryptionKey,
+  getEncryptionKeyState: mockGetEncryptionKeyState,
+  ENCRYPTION_ALREADY_SET_UP_MESSAGE: 'Encryption is already set up for this account.',
   setupEncryption: mockSetupEncryption,
   unlockEncryption: mockUnlockEncryption,
 }))
@@ -32,11 +33,11 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockSetupEncryption.mockResolvedValue(undefined)
-    mockUnlockEncryption.mockResolvedValue(true)
+    mockUnlockEncryption.mockResolvedValue('unlocked')
   })
 
   it('shows the two-field setup form when no encryption_keys row exists yet', async () => {
-    mockHasEncryptionKey.mockResolvedValue(false)
+    mockGetEncryptionKeyState.mockResolvedValue('absent')
     renderModal()
     expect(await screen.findByRole('heading', { name: 'Set up encryption' })).toBeInTheDocument()
     expect(screen.getByPlaceholderText('New passphrase')).toBeInTheDocument()
@@ -44,7 +45,7 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
   })
 
   it('shows the two-field unlock form (with confirm) when a key exists but this device has not unlocked it', async () => {
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     renderModal()
     expect(await screen.findByText('Unlock encryption')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Passphrase')).toBeInTheDocument()
@@ -53,7 +54,7 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
   })
 
   it('calls unlockEncryption and closes on success in unlock mode', async () => {
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     const onClose = vi.fn()
     const user = userEvent.setup()
     renderModal(onClose)
@@ -65,7 +66,7 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
   })
 
   it('shows a mismatch error without calling unlockEncryption when the two fields differ', async () => {
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     const onClose = vi.fn()
     const user = userEvent.setup()
     renderModal(onClose)
@@ -78,8 +79,8 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
   })
 
   it('shows a spinner on the Save button while busy', async () => {
-    mockHasEncryptionKey.mockResolvedValue(true)
-    let resolveUnlock!: (v: boolean) => void
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    let resolveUnlock!: (v: string) => void
     mockUnlockEncryption.mockReturnValueOnce(new Promise((resolve) => { resolveUnlock = resolve }))
     const user = userEvent.setup()
     renderModal()
@@ -89,12 +90,72 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
     await user.click(button)
     expect(button).toBeDisabled()
     expect(button.querySelector('svg')).toBeInTheDocument()
-    resolveUnlock(true)
+    resolveUnlock('unlocked')
   })
 
-  it('shows a wrong-passphrase error without closing when unlockEncryption returns false', async () => {
-    mockHasEncryptionKey.mockResolvedValue(true)
-    mockUnlockEncryption.mockResolvedValueOnce(false)
+  it('offers a retry, never the setup form, when the encryption status could not be checked', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
+    renderModal()
+    expect(await screen.findByRole('heading', { name: /can.t check encryption right now/i })).toBeInTheDocument()
+    expect(screen.queryByPlaceholderText('New passphrase')).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Set up encryption' })).toBeNull()
+    expect(mockSetupEncryption).not.toHaveBeenCalled()
+  })
+
+  it('"Try again" re-checks and shows the unlock form once the server answers that a key exists', async () => {
+    mockGetEncryptionKeyState.mockResolvedValueOnce('unknown').mockResolvedValue('present')
+    const user = userEvent.setup()
+    renderModal()
+    await user.click(await screen.findByRole('button', { name: 'Try again' }))
+    expect(await screen.findByText('Unlock encryption')).toBeInTheDocument()
+    expect(mockGetEncryptionKeyState).toHaveBeenCalledTimes(2)
+    expect(screen.queryByPlaceholderText('New passphrase')).toBeNull()
+  })
+
+  it('switches to the unlock form when the server refuses a second key (set up elsewhere meanwhile)', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('absent')
+    mockSetupEncryption.mockRejectedValueOnce(new Error('Encryption is already set up for this account.'))
+    const onClose = vi.fn()
+    const user = userEvent.setup()
+    renderModal(onClose)
+    await user.type(await screen.findByPlaceholderText('New passphrase'), 'passphrase-1')
+    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'passphrase-1')
+    await user.click(screen.getByRole('button', { name: 'Set up encryption' }))
+    expect(await screen.findByText('Unlock encryption')).toBeInTheDocument()
+    expect(screen.getByText('Encryption is already set up for this account.')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Passphrase')).toHaveValue('')
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('does NOT say "Wrong passphrase" when the unlock request failed (offline): it shows the retry view and keeps the modal open', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockUnlockEncryption.mockResolvedValueOnce('unavailable')
+    const onClose = vi.fn()
+    const user = userEvent.setup()
+    renderModal(onClose)
+    await user.type(await screen.findByPlaceholderText('Passphrase'), 'my passphrase')
+    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'my passphrase')
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    expect(await screen.findByRole('heading', { name: /can.t check encryption right now/i })).toBeInTheDocument()
+    expect(screen.queryByText('Wrong passphrase')).toBeNull()
+    expect(onClose).not.toHaveBeenCalled()
+  })
+
+  it('switches to first-time setup when the key no longer exists on the server (reset from another device)', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockUnlockEncryption.mockResolvedValueOnce('no-key')
+    const user = userEvent.setup()
+    renderModal()
+    await user.type(await screen.findByPlaceholderText('Passphrase'), 'my passphrase')
+    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'my passphrase')
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    expect(await screen.findByRole('heading', { name: 'Set up encryption' })).toBeInTheDocument()
+    expect(screen.queryByText('Wrong passphrase')).toBeNull()
+  })
+
+  it('shows a wrong-passphrase error without closing when the passphrase does not unwrap the key', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    mockUnlockEncryption.mockResolvedValueOnce('wrong-passphrase')
     const onClose = vi.fn()
     const user = userEvent.setup()
     renderModal(onClose)

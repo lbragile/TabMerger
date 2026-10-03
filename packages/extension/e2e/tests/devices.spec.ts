@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload } from '../helpers';
+import { openPopup, seedAndReload, signInAsPro } from '../helpers';
 import { NOW_OPEN } from '../seed';
 
 test.describe('Devices settings tab (pro-tier "continue on other device")', () => {
@@ -18,31 +18,10 @@ test.describe('Devices settings tab (pro-tier "continue on other device")', () =
     const page = await openPopup(context, extensionId);
     await seedAndReload(page, [NOW_OPEN]);
 
-    // ponytail: no existing e2e auth fixture — fake a signed-in session directly in
-    // chrome.storage.local (the supabase storage adapter, see lib/supabase.ts) and stub
-    // the REST calls useAuth/useEntitlements make, rather than building a real login flow.
-    // Upgrade path: a shared `signInAs(tier)` e2e fixture if more tier-gated flows need this.
-    await page.route('**/auth/v1/user*', (route) =>
-      route.fulfill({ json: { id: 'e2e-user', email: 'e2e@example.com', aud: 'authenticated' } })
-    );
-    await page.route('**/rest/v1/subscriptions*', (route) =>
-      route.fulfill({ json: [{ tier: 'pro', status: 'active', cancel_at_period_end: false, current_period_end: null, stripe_price_id: null }] })
-    );
-
-    const fakeSession = {
-      access_token: 'e2e-access-token',
-      refresh_token: 'e2e-refresh-token',
-      expires_at: Math.floor(Date.now() / 1000) + 3600,
-      expires_in: 3600,
-      token_type: 'bearer',
-      user: { id: 'e2e-user', email: 'e2e@example.com', aud: 'authenticated', app_metadata: {}, user_metadata: {} },
-    };
-    await page.evaluate(async (session) => {
-      await new Promise<void>((resolve) => {
-        chrome.storage.local.set({ 'tabmerger-auth': JSON.stringify(session) }, () => resolve());
-      });
-    }, fakeSession);
-
+    // A Pro account in its steady state: signed in, encryption set up and unlocked on this
+    // device, every Supabase call stubbed (see signInAsPro) so no dialog covers the popup and
+    // the result does not depend on a reachable Supabase.
+    await signInAsPro(page);
     await page.reload({ waitUntil: 'networkidle' });
 
     await page.locator('header').getByRole('button').last().click();

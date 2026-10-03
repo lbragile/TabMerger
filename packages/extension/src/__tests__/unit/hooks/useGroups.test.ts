@@ -50,7 +50,7 @@ import { createGroup, createNowOpenGroup } from '@/lib/utils'
 import { useUIStore } from '@/stores/uiStore'
 import type { GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: vi.fn(),
   // uiStore's setActiveGroupIndex fire-and-forget-persists via this — needed since
@@ -537,6 +537,26 @@ describe('useSetGroupsState', () => {
     await act(async () => { await result.current(state) })
     expect(saveGroupsState).toHaveBeenCalledWith(state)
   })
+
+  it('with expectedRev: a stale write is refused, reports false and refetches instead of throwing', async () => {
+    const { qc, wrapper } = makeWrapper()
+    const invalidate = vi.spyOn(qc, 'invalidateQueries')
+    ;(saveGroupsState as ReturnType<typeof vi.fn>).mockRejectedValueOnce(Object.assign(new Error('stale'), { name: 'StaleGroupsError' }))
+    const { result } = renderHook(() => useSetGroupsState(), { wrapper })
+    let applied: boolean | undefined
+    await act(async () => { applied = await result.current(makeState([createGroup('a', 'A')]), { expectedRev: 3 }) })
+    expect(saveGroupsState).toHaveBeenCalledWith(expect.anything(), { expectedRev: 3 })
+    expect(applied).toBe(false)
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false })
+  })
+
+  it('puts the new rev on the cached state after a successful write', async () => {
+    const { qc, wrapper } = makeWrapper()
+    ;(saveGroupsState as ReturnType<typeof vi.fn>).mockResolvedValueOnce(9)
+    const { result } = renderHook(() => useSetGroupsState(), { wrapper })
+    await act(async () => { await result.current(makeState([createGroup('a', 'A')]), { expectedRev: 8 }) })
+    expect(qc.getQueryData<{ rev?: number }>(GROUPS_QUERY_KEY)?.rev).toBe(9)
+  })
 })
 
 describe('useRemoveStaleTabs', () => {
@@ -657,7 +677,22 @@ describe('useImportGroups', () => {
     const saved = lastSaved()
     expect(saved.available).toHaveLength(2)
     expect(saved.available[0].permanent).toBe(true)
-    expect(saved.available[1].id).toBe('imported')
+    // an imported group is a NEW group: fresh id, pending, and none of the source's sync bookkeeping
+    expect(saved.available[1].id).not.toBe('imported')
+    expect(saved.available[1].name).toBe('Imported')
+    expect(saved.available[1].pendingSync).toBe(true)
+  })
+
+  it('strips the server base and position flag from imported groups (a backup repeats ids/stamps of existing rows)', async () => {
+    const state = makeState([createNowOpenGroup()])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useImportGroups(), { wrapper })
+    const imported = { ...createGroup('imported', 'Imported'), remoteUpdatedAt: '2030-01-01T00:00:00Z', positionDirty: true }
+    await act(async () => { await result.current.mutateAsync([imported]) })
+    const g = lastSaved().available[1]
+    expect(g.remoteUpdatedAt).toBeUndefined()
+    expect(g.positionDirty).toBeUndefined()
   })
 })
 

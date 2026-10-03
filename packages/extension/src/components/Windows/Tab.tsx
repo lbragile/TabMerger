@@ -13,9 +13,8 @@ import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
-import { saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
-import { getDisplayTitle } from '@/lib/tabTitle';
+import { getDisplayTitle, setTabCustomTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
@@ -158,28 +157,11 @@ const { mutate: deleteTab } = useDeleteTab();
   const commitTitle = async (value: string) => {
     setEditingTitle(false);
     const trimmed = value.trim();
-    const state = queryClient.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-    if (!state) return;
-    const available = state.available.map((g, gi) => {
-      if (gi !== groupIndex) return g;
-      return {
-        ...g,
-        windows: g.windows.map((w, wi) => {
-          if (wi !== windowIndex) return w;
-          return {
-            ...w,
-            tabs: w.tabs.map((t, ti) => {
-              if (ti !== tabIndex) return t;
-              if (!trimmed || trimmed === t.title) { const { customTitle: _ct, ...rest } = t; return rest; }
-              return { ...t, customTitle: trimmed };
-            })
-          };
-        })
-      };
-    });
-    const next = { ...state, available };
-    queryClient.setQueryData(GROUPS_QUERY_KEY, next);
-    await saveGroupsState(next);
+    // Address the group by ID: the positional index came from the render this click belongs to.
+    const groupId = queryClient.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available[groupIndex]?.id;
+    if (!groupId) return;
+    // Atomic read-modify-write that also marks the group for sync (see setTabCustomTitle).
+    queryClient.setQueryData(GROUPS_QUERY_KEY, await setTabCustomTitle(groupId, windowIndex, tabIndex, trimmed));
   };
 
   const handleNoteBlur = (e: React.FocusEvent) => {

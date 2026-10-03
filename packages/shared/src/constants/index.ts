@@ -106,3 +106,6 @@ export * from './extensionMessages';
 export * from './priceFormat';
 export * from './firefoxBeta';
 export * from './firefoxDataConsent';
+
+/** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
+export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

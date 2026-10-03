@@ -12,7 +12,7 @@ import type { GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
 // ─── Mock localDb ─────────────────────────────────────────────────────────────
 
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: vi.fn(),
   deleteGroup: vi.fn().mockResolvedValue(undefined),
