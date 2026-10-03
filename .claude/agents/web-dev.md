@@ -6,7 +6,7 @@ description: >
   (excluding AI-specific routes — use ai-features agent for those), Supabase data fetching, and general
   Next.js App Router patterns. Invoke for: "update the landing page copy", "add a new dashboard widget",
   "fix the auth redirect", "add a blog section", "update the pricing table".
-model: sonnet
+model: opus
 memory: project
 tools:
   - Read

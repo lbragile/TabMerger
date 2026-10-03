@@ -6,7 +6,7 @@ description: >
     delete-vs-resurrect bugs, and permanent-group exclusion. Invoke whenever syncEngine.ts,
     localDb.ts, or their integration tests change, or when debugging a sync-related bug report.
 memory: project
-model: sonnet
+model: opus
 tools:
   - Read
   - Glob
