@@ -18,39 +18,6 @@ export type KnownIssue = {
 
 export const KNOWN_ISSUES: KnownIssue[] = [
   {
-    id: 'sync-reverts-edits',
-    area: 'Sync',
-    title: 'A change made while a sync is running can be undone',
-    details:
-      'With sync on, renaming, moving or creating a group at the moment a sync starts (syncs also start when a dialog opens or closes) can be reverted when that sync finishes, and a group created in that moment can disappear.',
-    workaround:
-      'If a change reverts, make it again: it sticks once the sync has finished. Pause for a couple of seconds after an edit before opening another dialog.',
-  },
-  {
-    id: 'account-switch-leftover-groups',
-    area: 'Sync',
-    title: 'Switching accounts in one browser can bring back the previous account’s groups',
-    details:
-      'After signing out of one account and into another in the same browser profile, groups from the first account can reappear under the second one.',
-    workaround: 'Use a separate browser profile for each TabMerger account during the beta.',
-  },
-  {
-    id: 'sync-group-order',
-    area: 'Sync',
-    title: 'Group order can differ between devices',
-    details:
-      'Your groups, their names and their tabs sync to your other devices, but the order of groups in the sidebar may not: another device (or the web dashboard) can list the same groups in a different order.',
-    workaround: 'Nothing is lost: every group and tab is there, only the order differs.',
-  },
-  {
-    id: 'background-save-overwrites-popup',
-    area: 'Extension',
-    title: 'Saving tabs from outside the popup can overwrite a change made in it at the same moment',
-    details:
-      'Saving tabs with the right-click menu or a keyboard shortcut, or a URL rule moving a tab, while you are changing something in the open popup can occasionally undo that popup change.',
-    workaround: 'If a popup change goes missing right after a background save, redo it.',
-  },
-  {
     id: 'chrome-beta-review-lag',
     area: 'Chrome',
     title: 'New Chrome beta versions arrive after Chrome Web Store review',
