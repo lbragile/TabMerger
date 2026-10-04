@@ -72,6 +72,31 @@ beforeEach(() => {
   mockGetGroupsState.mockResolvedValue({ available: [], active: { id: 'now', index: 0 } })
 })
 
+describe('useSync — this device holds a key from before the account key was replaced (H1)', () => {
+  // a real 256-bit AES key, base64, as persisted by an earlier unlock on this device
+  const storedKey = btoa(String.fromCharCode(...new Uint8Array(32).fill(7)))
+
+  it('opens the unlock prompt and syncs nothing when the server key row is not the one the key came from', async () => {
+    await chrome.storage.local.set({ dataKey_u1: storedKey, dataKeyRow_u1: { fingerprint: 'old-salt.old-iv', verified: true } })
+    mockKeyQuery.mockResolvedValue({ data: { user_id: 'u1', salt: 'new-salt', wrap_iv: 'new-iv' }, error: null })
+    renderSync()
+
+    await waitFor(() => expect(useUIStore.getState().modal.type).toBe('encryptionSetup'))
+    expect(mockPerformSync).not.toHaveBeenCalled()
+    // the dead key is gone from the device, so nothing can be uploaded under it
+    expect((await chrome.storage.local.get('dataKey_u1')).dataKey_u1).toBeUndefined()
+  })
+
+  it('syncs normally, with no prompt, while the server key row is still the one the key came from', async () => {
+    await chrome.storage.local.set({ dataKey_u1: storedKey, dataKeyRow_u1: { fingerprint: 'salt.iv', verified: true } })
+    mockKeyQuery.mockResolvedValue({ data: { user_id: 'u1', salt: 'salt', wrap_iv: 'iv' }, error: null })
+    renderSync()
+
+    await waitFor(() => expect(mockPerformSync).toHaveBeenCalled())
+    expect(useUIStore.getState().modal.type).toBeNull()
+  })
+})
+
 describe('useSync — encryption status that could not be checked', () => {
   it.each([
     ['an unauthorised request (401, stale token)', { data: null, error: { message: 'JWT expired', code: 'PGRST301' } }],

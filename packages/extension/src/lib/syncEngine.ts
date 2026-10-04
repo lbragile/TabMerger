@@ -5,13 +5,14 @@ import { emitForeignGroupsChange, emitSyncConflict } from './foreignChange';
 import { groupContentEqual, makeConflictCopy } from './syncConflict';
 import { compareStamps } from './stamp';
 import { withSyncLock } from './syncLock';
-import { syncRequestSignal } from './syncRequest';
+import { syncRequestSignal, cycleDeadline } from './syncRequest';
+import { LAST_USER_ID_KEY, REMOTE_BASE_SEEDED_KEY, DELETE_BACKOFF_KEY } from './syncSettingKeys';
 import { supabase } from './supabase';
 import {
   getGroupsState, updateGroupsState, getPendingSyncGroups, markGroupSynced, markPositionSynced, saveGroup, deleteGroup,
   getPendingGroupDeletes, addPendingGroupDeletes, removePendingGroupDeletes, getSetting, setSetting
 } from './localDb';
-import { getDataKey } from './encryptionKey';
+import { getDataKey, reportUndecryptableRows } from './encryptionKey';
 import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from './contentUploadKey';
 import { hasDataConsent } from './dataConsent';
 
@@ -34,19 +35,40 @@ interface EncryptedContent {
   info: string | undefined;
 }
 
-/**
- * Setting: true once the first sync after the base-stamp upgrade has run. Until then a pending
- * group without a `remoteUpdatedAt` may be an OLD (pre-upgrade) group whose row exists remotely:
- * it adopts the row's current stamp as its base instead of being treated as a conflict. Afterwards,
- * no base + a row that exists remotely is a genuine id collision.
- */
-const REMOTE_BASE_SEEDED_KEY = 'remoteBaseSeeded';
 const UNIQUE_VIOLATION = '23505';
 
-/** The server's current `updated_at` for one row, or null when the row does not exist (legacy detection). */
-async function probeRemoteStamp(userId: string, id: string): Promise<string | null> {
-  const { data } = await supabase.from('groups').select('updated_at').eq('id', id).eq('user_id', userId).abortSignal(syncRequestSignal()).maybeSingle();
-  return (data as { updated_at?: string } | null)?.updated_at ?? null;
+/**
+ * The server's current `updated_at` for one row (legacy detection): `stamp: null` when the server
+ * ANSWERED that the row does not exist, `ok: false` when the lookup itself failed. A failed lookup
+ * is never read as "no row".
+ */
+async function probeRemoteStamp(userId: string, id: string): Promise<{ ok: true; stamp: string | null } | { ok: false }> {
+  const { data, error } = await supabase.from('groups').select('updated_at').eq('id', id).eq('user_id', userId).abortSignal(syncRequestSignal()).maybeSingle();
+  if (error) return { ok: false };
+  return { ok: true, stamp: (data as { updated_at?: string } | null)?.updated_at ?? null };
+}
+
+/** Why a cycle (or a push) must not run for `session`; `ok` when it may. */
+type CycleIdentity = 'ok' | 'account-mismatch' | 'identity-changed';
+
+/**
+ * Two identities must match the cycle's `session` before anything is sent or merged:
+ *  - the OWNER of the local store (`LAST_USER_ID_KEY`, set by `ensureAccountScope`): the service worker
+ *    can be handed another account's session (web bridge) before the popup has switched the store,
+ *    and that account must never receive the previous owner's groups (`account-mismatch`);
+ *  - the client's CURRENT session: after a sign-out or a failed token refresh, requests go out as
+ *    anon and RLS answers "zero rows" successfully. Such an answer says nothing about the account,
+ *    and merging it would read as "everything was deleted" (`identity-changed`).
+ */
+async function checkCycleIdentity(session: Session): Promise<CycleIdentity> {
+  const owner = await getSetting<string | null>(LAST_USER_ID_KEY, null);
+  if (owner && owner !== session.user.id) return 'account-mismatch';
+  try {
+    const { data } = await supabase.auth.getSession();
+    return data.session?.user.id === session.user.id ? 'ok' : 'identity-changed';
+  } catch {
+    return 'identity-changed';
+  }
 }
 
 /**
@@ -86,7 +108,14 @@ async function pushGroup(session: Session, group: Group, position: number, legac
     const info = '';
 
     let base = group.remoteUpdatedAt;
-    if (!base && legacy) base = (await probeRemoteStamp(session.user.id, group.id)) ?? undefined;
+    if (!base && legacy) {
+      const probe = await probeRemoteStamp(session.user.id, group.id);
+      if (!probe.ok) {
+        console.warn('[SyncEngine] Could not look up the server row; the push waits for the next cycle:', group.id);
+        return;
+      }
+      base = probe.stamp ?? undefined;
+    }
 
     const row = {
       id: group.id,
@@ -130,15 +159,29 @@ async function pushGroup(session: Session, group: Group, position: number, legac
   }
 }
 
-/** Decrypts an encrypted row's `windows` blob back into `{name, windows, note, info}`, or returns null if locked. */
-async function decryptRow(row: Record<string, unknown>): Promise<EncryptedContent | null> {
+/**
+ * Decrypts an encrypted row's `windows` blob back into `{name, windows, note, info}`. Returns null
+ * when the row cannot be read on this device right now: the key is locked, or the row was written
+ * under ANOTHER key (left over from before a passphrase reset, or this device's key is the stale
+ * one) and `decryptBlob` threw; `onUndecryptable` is called in that second case.
+ */
+async function decryptRow(row: Record<string, unknown>, onUndecryptable?: () => void): Promise<EncryptedContent | null> {
   const dataKey = await getDataKey();
   if (!dataKey) return null;
-  return decryptBlob<EncryptedContent>(dataKey, row.windows as EncryptedBlob);
+  try {
+    return await decryptBlob<EncryptedContent>(dataKey, row.windows as EncryptedBlob);
+  } catch {
+    onUndecryptable?.();
+    return null;
+  }
 }
 
-/** Builds a `Group` from a raw Supabase row, decrypting it first if it's in the encrypted shape. Returns null if it's encrypted but locked (skip — retry once unlocked). */
-async function rowToGroup(row: Record<string, unknown>): Promise<Group | null> {
+/**
+ * Builds a `Group` from a raw Supabase row, decrypting it first if it's in the encrypted shape.
+ * Returns null if it's encrypted and cannot be read (locked, or written under another key): the
+ * caller skips the row, and one unreadable row never fails the rest.
+ */
+async function rowToGroup(row: Record<string, unknown>, onUndecryptable?: () => void): Promise<Group | null> {
   const encrypted = isEncryptedBlob(row.windows);
   let name = row.name as string;
   let windows = row.windows as Group['windows'];
@@ -146,7 +189,7 @@ async function rowToGroup(row: Record<string, unknown>): Promise<Group | null> {
   let info = row.info as string;
 
   if (encrypted) {
-    const content = await decryptRow(row);
+    const content = await decryptRow(row, onUndecryptable);
     if (!content) return null;
     name = content.name;
     windows = content.windows;
@@ -182,7 +225,14 @@ async function rowToGroup(row: Record<string, unknown>): Promise<Group | null> {
  * `positionDirty` and not already pending: re-sending their full content would let this
  * device's possibly stale copy win last-write-wins over another device's newer edit.
  */
-export async function pushPendingChanges(session: Session): Promise<void> {
+export async function pushPendingChanges(session: Session, deadline = cycleDeadline()): Promise<void> {
+  // Never push for a user who does not own the local store, or whose session the client no longer holds.
+  if ((await checkCycleIdentity(session)) !== 'ok') return;
+  await pushPending(session, deadline);
+}
+
+/** {@link pushPendingChanges} without the identity check (the cycle has already done it). */
+async function pushPending(session: Session, deadline: number): Promise<void> {
   if (!(await canUploadOnFirefox())) return; // consent not granted — see canUploadOnFirefox's doc comment
   // ponytail: explicit permanent guard — Now Open should already have pendingSync:false, but belt-and-suspenders
   const pending = (await getPendingSyncGroups()).filter((g) => !g.permanent);
@@ -199,8 +249,11 @@ export async function pushPendingChanges(session: Session): Promise<void> {
   const { available } = await getGroupsState();
   const positions = new Map(available.map((g, i) => [g.id, i]));
   const contentKey = gate?.key;
+  // Past the cycle deadline nothing more is started: the rest stays pending for the next cycle.
+  const outOfTime = () => Date.now() > deadline;
   if (contentKey) {
     for (const group of pending) {
+      if (outOfTime()) break;
       const position = positions.get(group.id);
       if (position === undefined || position < 1) {
         console.warn('[SyncEngine] Skipping push of a group that is not in the local order:', group.id);
@@ -212,6 +265,7 @@ export async function pushPendingChanges(session: Session): Promise<void> {
   for (const group of available) {
     const position = positions.get(group.id) ?? 0;
     if (group.permanent || group.pendingSync || !group.positionDirty || position < 1) continue;
+    if (outOfTime()) break;
     await pushPosition(session, group, position);
   }
 }
@@ -241,13 +295,21 @@ async function pushPosition(session: Session, group: Group, position: number): P
 }
 
 /**
+ * How a batch of remote deletes ended: every chunk accepted (`sent`), at least one refused by the
+ * server or the network (`failed`), or stopped by the cycle deadline with nothing refused (`out-of-time`).
+ */
+type DeleteSendResult = 'sent' | 'failed' | 'out-of-time';
+
+/**
  * Sends the remote DELETE for `ids`. A failure only logs: the ids stay in the persisted
  * pending-delete set (see `PENDING_DELETE_KEY`) and the next `performSync` sends them again.
  */
-async function sendRemoteDeletes(userId: string, ids: string[]): Promise<boolean> {
-  let ok = true;
+async function sendRemoteDeletes(userId: string, ids: string[], deadline = Infinity): Promise<DeleteSendResult> {
+  let failed = false;
   // chunked: one `in()` with hundreds of ids exceeds the request URL limit and would fail forever
   for (let i = 0; i < ids.length; i += DELETE_CHUNK) {
+    // out of cycle time: the rest is sent next cycle
+    if (Date.now() > deadline) return failed ? 'failed' : 'out-of-time';
     const { error } = await supabase
       .from('groups')
       .delete()
@@ -256,14 +318,13 @@ async function sendRemoteDeletes(userId: string, ids: string[]): Promise<boolean
       .abortSignal(syncRequestSignal());
     if (error) {
       console.error('[SyncEngine] Failed to delete remote groups', error.message);
-      ok = false;
+      failed = true;
     }
   }
-  return ok;
+  return failed ? 'failed' : 'sent';
 }
 
 const DELETE_CHUNK = 100;
-const DELETE_BACKOFF_KEY = 'pendingDeleteBackoff';
 const DELETE_BACKOFF_BASE_MS = 30_000;
 const DELETE_BACKOFF_MAX_MS = 60 * 60 * 1000;
 
@@ -289,14 +350,17 @@ export async function deleteRemoteGroups(ids: string[]): Promise<void> {
 /**
  * Retries every unconfirmed remote delete (one cycle of the durable retry loop), in chunks,
  * with exponential backoff (30 s doubling up to 1 h, persisted) after a failed cycle so an
- * offline or rejecting server is not hammered every poll.
+ * offline or rejecting server is not hammered every poll. Running out of cycle time is not a
+ * failure: nothing was refused, so the stored backoff is left as it was.
  */
-async function flushPendingDeletes(session: Session): Promise<void> {
+async function flushPendingDeletes(session: Session, deadline: number): Promise<void> {
   const ids = await getPendingGroupDeletes();
   if (ids.length === 0) return;
   const backoff = await getSetting<{ failures: number; nextAt: number }>(DELETE_BACKOFF_KEY, { failures: 0, nextAt: 0 });
   if (Date.now() < backoff.nextAt) return;
-  const ok = await sendRemoteDeletes(session.user.id, ids);
+  const result = await sendRemoteDeletes(session.user.id, ids, deadline);
+  if (result === 'out-of-time') return;
+  const ok = result === 'sent';
   const failures = ok ? 0 : backoff.failures + 1;
   const delay = Math.min(DELETE_BACKOFF_BASE_MS * 2 ** (failures - 1), DELETE_BACKOFF_MAX_MS);
   await setSetting(DELETE_BACKOFF_KEY, { failures, nextAt: ok ? 0 : Date.now() + delay });
@@ -309,15 +373,18 @@ interface RemoteSnapshot {
   groups: Map<string, Group>;
   /** Remote sidebar index per group; absent for rows written before `position` was pushed. */
   positions: Map<string, number>;
-  /** Every row id the server returned, including encrypted-but-locked rows skipped in `groups`. */
+  /** Every row id the server returned, including encrypted rows that could not be read and are skipped in `groups`. */
   ids: Set<string>;
+  /** Ids of rows whose content is still stored as legacy plaintext (they must be re-uploaded encrypted). */
+  plaintextIds: Set<string>;
 }
 
 /**
- * Fetches and decodes the user's remote groups. Returns `null` on a fetch error (callers
- * keep the local state untouched). Encrypted-but-locked rows are skipped — retried once unlocked.
+ * Fetches and decodes the user's remote groups. Returns `null` on a fetch error or when the pull
+ * ran out of time (callers keep the local state untouched). Encrypted rows that cannot be read
+ * (locked, or written under another key) are skipped, never treated as deleted, and never fail the pull.
  */
-async function fetchRemoteGroups(session: Session): Promise<RemoteSnapshot | null> {
+async function fetchRemoteGroups(session: Session, deadline = Infinity): Promise<RemoteSnapshot | null> {
   // Paginated: PostgREST caps a response at 1000 rows, and a truncated pull would make every clean
   // group beyond the cap look "deleted elsewhere". Any failed page aborts the whole cycle.
   //
@@ -327,21 +394,36 @@ async function fetchRemoteGroups(session: Session): Promise<RemoteSnapshot | nul
   // remotely (dropped locally AND queued for a remote DELETE). A delete between pages shifted the
   // offsets the same way. An id never changes, so every row that exists for the whole pull is read
   // exactly once.
+  //
+  // END OF DATA is decided by the server's exact count of the rows still matching the filter, not
+  // by `page.length < PULL_PAGE_SIZE`: a server whose response cap (`max_rows`) is below the page
+  // size returns short pages that are NOT the last one, and stopping there would again read as
+  // "the rest was deleted". (No count in the answer: fall back to the page-size rule.)
   const data: Array<Record<string, unknown>> = [];
   for (let lastId: string | null = null; ; ) {
-    let filter = supabase.from('groups').select('*').eq('user_id', session.user.id);
+    if (Date.now() > deadline) {
+      console.warn('[SyncEngine] Pull abandoned: it ran out of time');
+      return null;
+    }
+    let filter = supabase.from('groups').select('*', { count: 'exact' }).eq('user_id', session.user.id);
     if (lastId !== null) filter = filter.gt('id', lastId);
-    const { data: page, error } = await filter.order('id').limit(PULL_PAGE_SIZE).abortSignal(syncRequestSignal());
+    const { data: page, error, count } = await filter.order('id').limit(PULL_PAGE_SIZE).abortSignal(syncRequestSignal());
     if (error || !page) {
       console.error('[SyncEngine] Failed to pull groups', error?.message);
       return null;
     }
     data.push(...page);
-    if (page.length < PULL_PAGE_SIZE) break;
+    const last = typeof count === 'number' ? page.length >= count : page.length < PULL_PAGE_SIZE;
+    if (last || page.length === 0) break;
     lastId = page[page.length - 1].id as string;
   }
 
-  const decoded = await Promise.all(data.map((row) => rowToGroup(row)));
+  let unreadable = 0;
+  const decoded = await Promise.all(data.map((row) => rowToGroup(row, () => unreadable++)));
+  if (unreadable > 0) {
+    console.warn(`[SyncEngine] ${unreadable} row(s) could not be decrypted with this device's key and were skipped`);
+    await reportUndecryptableRows();
+  }
   const positions = new Map<string, number>();
   data.forEach((row) => {
     // Valid positions start at 1 (Now Open is 0 and never pushed). The column default 0 means
@@ -351,7 +433,8 @@ async function fetchRemoteGroups(session: Session): Promise<RemoteSnapshot | nul
   return {
     groups: new Map(decoded.filter((g): g is Group => g !== null).map((g) => [g.id, g])),
     positions,
-    ids: new Set(data.map((row) => row.id as string))
+    ids: new Set(data.map((row) => row.id as string)),
+    plaintextIds: new Set(data.filter((row) => !isEncryptedBlob(row.windows)).map((row) => row.id as string))
   };
 }
 
@@ -380,7 +463,8 @@ function mergeRemoteGroups(
   localGroups: Group[],
   pendingDeleteSet: Set<string>,
   remoteIds: Set<string> = new Set(remoteMap.keys()),
-  legacy = false
+  legacy = false,
+  plaintextIds: Set<string> = new Set()
 ): { merged: Group[]; toSave: Group[]; toDelete: string[]; copies: Array<{ group: Group; afterId: string }>; conflicts: string[] } {
   const localMap = new Map(localGroups.map((g) => [g.id, g]));
   let merged: Group[] = [];
@@ -406,7 +490,10 @@ function mergeRemoteGroups(
           // not newer than our base (or pre-upgrade: adopt the stamp now) -> the push wins
           merged.push(local.remoteUpdatedAt ? local : { ...local, remoteUpdatedAt: stamp });
         } else if (groupContentEqual(local, remote)) {
-          merged.push({ ...local, pendingSync: false, remoteUpdatedAt: stamp });
+          // Same content: adopt the stamp. The push is only cancelled when the server copy is already
+          // ciphertext; a legacy PLAINTEXT row keeps the group pending so it is re-uploaded encrypted
+          // (with the adopted stamp as its base, the next compare-and-swap succeeds).
+          merged.push({ ...local, pendingSync: plaintextIds.has(id), remoteUpdatedAt: stamp });
         } else {
           merged.push(remote);
           toSave.push(remote);
@@ -542,19 +629,46 @@ export async function performSync(session: Session): Promise<Group[]> {
  * `skipped: true`. Every request of a cycle is bounded by `SYNC_REQUEST_TIMEOUT_MS`, so a request the
  * network never answers cannot hold the lock (and skip every later cycle) indefinitely.
  */
-export async function performSyncCycle(session: Session): Promise<{ groups: Group[]; skipped: boolean }> {
+export async function performSyncCycle(session: Session): Promise<{ groups: Group[]; skipped: boolean; status: SyncCycleStatus }> {
   const run = await withSyncLock(() => runSyncCycle(session));
-  return run.ran ? { groups: run.value, skipped: false } : { groups: (await getGroupsState()).available, skipped: true };
+  if (!run.ran) return { groups: (await getGroupsState()).available, skipped: true, status: 'busy' };
+  return { ...run.value, skipped: false };
 }
 
-async function runSyncCycle(session: Session): Promise<Group[]> {
+/**
+ * How a cycle ended:
+ *  - `synced`: pushed, pulled and merged;
+ *  - `busy`: another cycle holds the sync lock, this one ran nothing;
+ *  - `account-mismatch`: the local store belongs to another account (the popup has not switched it yet);
+ *  - `identity-changed`: the client no longer holds this cycle's session (signed out, refresh failed);
+ *  - `pull-failed`: the remote rows could not be read (request failed, or the pull ran out of time).
+ * In every case but `synced` the local state was left as it was: nothing merged, nothing dropped.
+ */
+export type SyncCycleStatus = 'synced' | 'busy' | 'account-mismatch' | 'identity-changed' | 'pull-failed';
+
+async function runSyncCycle(session: Session): Promise<{ groups: Group[]; status: SyncCycleStatus }> {
+  const untouched = async (status: SyncCycleStatus) => ({ groups: (await getGroupsState()).available, status });
+  const sendDeadline = cycleDeadline(); // shared by the push and the delete flush
+
+  const before = await checkCycleIdentity(session);
+  if (before !== 'ok') return untouched(before);
+
   // Ids that were already pending before this cycle's requests: only those can be confirmed
   // gone by this pull. An id added later may belong to an upsert still in flight.
   const pendingBefore = await getPendingGroupDeletes();
-  await pushPendingChanges(session);
-  await flushPendingDeletes(session);
-  const snapshot = await fetchRemoteGroups(session);
-  if (!snapshot) return (await getGroupsState()).available;
+  await pushPending(session, sendDeadline);
+  await flushPendingDeletes(session, sendDeadline);
+  // The pull gets its OWN budget: on a shared one, a push backlog that used it up meant no pull at
+  // all, and a backlog only the merge can resolve (compare-and-swap failures after another device
+  // re-uploaded everything) would then never be resolved.
+  const snapshot = await fetchRemoteGroups(session, cycleDeadline());
+  if (!snapshot) return untouched('pull-failed');
+
+  // The pull may have been answered for a DIFFERENT identity than the one this cycle started with
+  // (signed out or refresh failed in between = anon = zero rows). Absence in a successful answer
+  // only means "deleted" when the answer was given to the expected user: otherwise merge nothing.
+  const after = await checkCycleIdentity(session);
+  if (after !== 'ok') return untouched(after);
 
   let merged: Group[] = [];
   let droppedRemotely: string[] = [];
@@ -568,7 +682,7 @@ async function runSyncCycle(session: Session): Promise<Group[]> {
       merged = fresh.available;
       return null;
     }
-    const result = mergeRemoteGroups(snapshot.groups, fresh.available, pendingDeletes, snapshot.ids, legacy);
+    const result = mergeRemoteGroups(snapshot.groups, fresh.available, pendingDeletes, snapshot.ids, legacy, snapshot.plaintextIds);
     droppedRemotely = result.toDelete;
     conflicts = result.conflicts;
     foreign = result.toSave.length > 0 || result.toDelete.length > 0 || result.copies.length > 0;
@@ -607,7 +721,7 @@ async function runSyncCycle(session: Session): Promise<Group[]> {
   if (legacy && !unseeded) await setSetting(REMOTE_BASE_SEEDED_KEY, true);
   if (foreign) emitForeignGroupsChange();
   if (conflicts.length > 0) emitSyncConflict(conflicts);
-  return merged;
+  return { groups: merged, status: 'synced' };
 }
 
 /**
@@ -657,8 +771,8 @@ export async function subscribeToRemoteChanges(
           return;
         }
         const row = payload.new as Record<string, unknown>;
-        const group = await rowToGroup(row);
-        if (!group) return; // encrypted but locked — skip, will be picked up on next pull once unlocked
+        const group = await rowToGroup(row, () => void reportUndecryptableRows());
+        if (!group) return; // encrypted and unreadable here (locked / another key) — skip; a later pull picks it up once readable
 
         let applied = false;
         await updateGroupsState((fresh, { pendingDeletes }) => {

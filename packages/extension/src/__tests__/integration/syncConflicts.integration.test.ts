@@ -9,7 +9,7 @@ import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey'
 import type { Group } from '@/lib/types'
 import { clearDb } from './dbTestUtils'
 import { fakeRemote, type RemoteRow } from './fakeSupabase'
-import { testDataKey, remoteName, remoteNames } from './testEncryption'
+import { testDataKey, remoteName, remoteNames, encryptRemoteRow } from './testEncryption'
 
 // M6 "keep both": compare-and-swap pushes against a per-group server base stamp; a conflict keeps the
 // server copy as the group and saves this device's edit as "<name> (conflict copy)". Real
@@ -89,6 +89,7 @@ describe('M6 keep both on a sync conflict', () => {
   it('equal content (e.g. only a reorder bumped updated_at elsewhere): no copy, base adopted, pending cleared', async () => {
     const g1 = grp('g1', 'Same')
     await seed(g1)
+    await encryptRemoteRow('g1') // the server copy is ciphertext (a legacy plaintext row would stay pending to be re-encrypted)
     await edit('g1', { name: 'Same', note: undefined }) // pending, but same content
     fakeRemote.serverEdit('g1', {}) // stamp bumped, content identical
     await performSync(session)

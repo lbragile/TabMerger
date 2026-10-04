@@ -142,6 +142,8 @@ beforeEach(() => {
   mockGetDataKey.mockReturnValue({})
   mockEncryptBlob.mockResolvedValue({ iv: 'iv-stub', ct: 'ct-stub' })
   mockHasDataConsent.mockResolvedValue(true)
+  // the client still holds the session the cycle / push runs for
+  mockGetSession.mockResolvedValue({ data: { session: makeSession('u1') } })
 
   settingsStore = { remoteBaseSeeded: true } // post-upgrade: no legacy probing (that path is covered by the integration suite)
   // updateGroupsState: hand the callback the current local state (localState) and keep its result
@@ -200,6 +202,33 @@ describe('pushPendingChanges', () => {
     await pushPendingChanges(makeSession('u1'))
     expect(mockMarkGroupSynced).not.toHaveBeenCalledWith('g1', 1000, 1, 'S1', expect.objectContaining({ id: 'g1' }))
     expect(mockMarkGroupSynced).toHaveBeenCalledWith('g2', 1000, 2, 'S1', expect.objectContaining({ id: 'g2' }))
+  })
+
+  it('L2: stops sending once the cycle deadline has passed (content and positions), leaving the groups pending', async () => {
+    pending([makeGroup({ id: 'g1' }), makeGroup({ id: 'g2' })])
+    localState.available.push(makeGroup({ id: 'g3', positionDirty: true }))
+    currentBuilder = makeBuilder([{ data: [{ updated_at: 'S1' }], error: null }])
+
+    await pushPendingChanges(makeSession('u1'), Date.now() - 1)
+
+    expect(currentBuilder.insert).not.toHaveBeenCalled()
+    expect(currentBuilder.update).not.toHaveBeenCalled()
+    expect(mockMarkGroupSynced).not.toHaveBeenCalled()
+  })
+
+  it('L2: a deadline reached mid-loop stops the remaining pushes', async () => {
+    pending([makeGroup({ id: 'g1' }), makeGroup({ id: 'g2' }), makeGroup({ id: 'g3' })])
+    currentBuilder = makeBuilder([{ data: [{ updated_at: 'S1' }], error: null }, { data: [{ updated_at: 'S2' }], error: null }, { data: [{ updated_at: 'S3' }], error: null }])
+    const deadline = Date.now() + 60_000
+    // the first push "takes" longer than the whole budget
+    mockMarkGroupSynced.mockImplementationOnce(async () => {
+      vi.spyOn(Date, 'now').mockReturnValue(deadline + 1)
+    })
+
+    await pushPendingChanges(makeSession('u1'), deadline)
+
+    expect(currentBuilder.insert).toHaveBeenCalledTimes(1)
+    vi.mocked(Date.now).mockRestore()
   })
 
   it('skips (never pushes at position 0) a pending group that is not in the local order', async () => {

@@ -10,8 +10,10 @@ const {
   mockWrapDataKey,
   mockUnwrapDataKey,
   mockExportKeyToBase64,
-  mockImportKeyFromBase64
+  mockImportKeyFromBase64,
+  mockMarkAllGroupsPendingSync
 } = vi.hoisted(() => ({
+  mockMarkAllGroupsPendingSync: vi.fn().mockResolvedValue(undefined),
   mockGetSession: vi.fn(),
   mockFrom: vi.fn(),
   mockGetSetting: vi.fn(),
@@ -31,7 +33,7 @@ vi.mock('@/lib/supabase', () => ({
 vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
   setSetting: mockSetSetting,
-  markAllGroupsPendingSync: vi.fn()
+  markAllGroupsPendingSync: mockMarkAllGroupsPendingSync
 }))
 
 vi.mock('@tabmerger/shared', () => ({
@@ -236,6 +238,130 @@ describe('resetEncryption', () => {
     await resetEncryption()
 
     expect(mockSetSetting).toHaveBeenCalledWith(SESSIONS_MIGRATION_DONE_KEY, false)
+  })
+})
+
+describe('the cached data key is bound to the server key row it was unwrapped from', () => {
+  const keyRow = (tag: string) => ({ user_id: 'u1', salt: btoa(`salt-${tag}`), wrapped_key: `wrapped-${tag}`, wrap_iv: `iv-${tag}`, kdf_iterations: 600000 })
+
+  beforeEach(() => {
+    mockDeriveWrappingKey.mockResolvedValue(fakeWrappingKey)
+    mockUnwrapDataKey.mockResolvedValue(fakeDataKey)
+  })
+
+  it('keeps the key while the account still has that key row', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const { unlockEncryption, getEncryptionKeyState, getDataKey } = await import('@/lib/encryptionKey')
+    expect(await unlockEncryption('pass')).toBe('unlocked')
+
+    expect(await getEncryptionKeyState()).toBe('present')
+    expect(await getDataKey()).toBe(fakeDataKey)
+    expect(mockMarkAllGroupsPendingSync).not.toHaveBeenCalled() // a normal unlock re-uploads nothing
+  })
+
+  it('drops the key when the account key row was replaced (passphrase reset on another device), also across a popup reopen', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const mod = await import('@/lib/encryptionKey')
+    expect(await mod.unlockEncryption('pass')).toBe('unlocked')
+
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('B'))) // another device reset and set up a new key
+    expect(await mod.getEncryptionKeyState()).toBe('present')
+    expect(await mod.getDataKey()).toBeNull() // locked: nothing may be uploaded under the dead key
+
+    vi.resetModules()
+    const reopened = await import('@/lib/encryptionKey')
+    expect(await reopened.getDataKey()).toBeNull()
+  })
+
+  it('after re-unlocking under the new key, this device re-uploads its copies (groups pending, sessions self-heal re-armed)', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const { unlockEncryption, getEncryptionKeyState, getDataKey } = await import('@/lib/encryptionKey')
+    await unlockEncryption('pass')
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('B')))
+    await getEncryptionKeyState() // detects the replaced row
+    mockSetSetting.mockClear()
+
+    expect(await unlockEncryption('new pass')).toBe('unlocked')
+
+    expect(await getDataKey()).toBe(fakeDataKey)
+    expect(mockMarkAllGroupsPendingSync).toHaveBeenCalledTimes(1)
+    expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', false)
+    // bound to the new row now: the next check keeps it
+    expect(await getEncryptionKeyState()).toBe('present')
+    expect(await getDataKey()).toBe(fakeDataKey)
+  })
+
+  it('a key cached before bindings existed adopts the current row without a re-unlock, and is then bound to it', async () => {
+    await chrome.storage.local.set({ dataKey_u1: 'b64-from-an-older-version' })
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const { getEncryptionKeyState, getDataKey } = await import('@/lib/encryptionKey')
+
+    expect(await getEncryptionKeyState()).toBe('present')
+    expect(await getDataKey()).toBe(fakeDataKey) // no prompt
+
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('B')))
+    await getEncryptionKeyState()
+    expect(await getDataKey()).toBeNull()
+  })
+
+  it('undecryptable rows drop a key that was only ADOPTED (never verified by an unlock), but not a verified one', async () => {
+    await chrome.storage.local.set({ dataKey_u1: 'b64-from-an-older-version' })
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const { getEncryptionKeyState, getDataKey, reportUndecryptableRows, unlockEncryption } = await import('@/lib/encryptionKey')
+    await getEncryptionKeyState() // adopted, not verified
+
+    await reportUndecryptableRows()
+    expect(await getDataKey()).toBeNull() // the adopted key may be the stale one: ask for the passphrase
+
+    expect(await unlockEncryption('pass')).toBe('unlocked') // verified against row A
+    await reportUndecryptableRows() // rows left over from an older key
+    expect(await getDataKey()).toBe(fakeDataKey) // a verified key is never dropped for that
+  })
+
+  it('a key row without a readable fingerprint never drops the key', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const { unlockEncryption, getEncryptionKeyState, getDataKey } = await import('@/lib/encryptionKey')
+    await unlockEncryption('pass')
+    mockFrom.mockReturnValue(makeSelectBuilder({ user_id: 'u1' }))
+    expect(await getEncryptionKeyState()).toBe('present')
+    expect(await getDataKey()).toBe(fakeDataKey)
+  })
+
+  it('a key dropped in one context locks the others too: a cached key that storage no longer holds is never handed out', async () => {
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const popup = await import('@/lib/encryptionKey')
+    expect(await popup.unlockEncryption('pass')).toBe('unlocked')
+    vi.resetModules() // a second JS context (the service worker) with its own module cache
+    const worker = await import('@/lib/encryptionKey')
+    const { getContentUploadKey } = await import('@/lib/contentUploadKey')
+    expect(await worker.getDataKey()).toBe(fakeDataKey) // now cached in the worker's memory
+    expect(await getContentUploadKey()).toEqual({ key: fakeDataKey })
+
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('B'))) // passphrase reset on another device
+    await popup.getEncryptionKeyState() // the POPUP notices and drops the persisted key
+
+    expect(await worker.getEncryptionKeyState()).toBe('present')
+    expect(await worker.getDataKey()).toBeNull()
+    expect(await getContentUploadKey()).toEqual({ key: null, reason: 'locked' }) // nothing is uploaded under the dead key
+  })
+
+  it('a key re-unlocked in another context replaces the one a context still has in memory', async () => {
+    const newDataKey = { type: 'new-data-key' } as unknown as CryptoKey
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('A')))
+    const worker = await import('@/lib/encryptionKey')
+    expect(await worker.unlockEncryption('pass')).toBe('unlocked')
+    vi.resetModules()
+    const popup = await import('@/lib/encryptionKey')
+
+    // the popup detects the replaced key row and unlocks again under the new key
+    mockFrom.mockReturnValue(makeSelectBuilder(keyRow('B')))
+    await popup.getEncryptionKeyState()
+    mockUnwrapDataKey.mockResolvedValue(newDataKey)
+    mockExportKeyToBase64.mockResolvedValue('b64-new-data-key')
+    mockImportKeyFromBase64.mockImplementation(async (b64: string) => (b64 === 'b64-new-data-key' ? newDataKey : fakeDataKey))
+    expect(await popup.unlockEncryption('new pass')).toBe('unlocked')
+
+    expect(await worker.getDataKey()).toBe(newDataKey)
   })
 })
 

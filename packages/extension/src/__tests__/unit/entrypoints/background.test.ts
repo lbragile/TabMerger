@@ -148,7 +148,7 @@ beforeEach(async () => {
   mockGetSession.mockReset().mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
   mockGetEncryptionKeyState.mockReset().mockResolvedValue('present')
   mockGetDataKey.mockReset().mockResolvedValue('key')
-  mockPerformSync.mockReset().mockResolvedValue({ groups: [], skipped: false })
+  mockPerformSync.mockReset().mockResolvedValue({ groups: [], skipped: false, status: 'synced' })
   mockRegisterGroupsChangeListener.mockReset()
   mockHasDataConsent.mockReset().mockResolvedValue(true)
   capturedMain = undefined
@@ -388,11 +388,23 @@ describe('background — externally_connectable SYNC_NOW (web dashboard trigger)
   })
 
   it('says so when the cycle was skipped because another one holds the sync lock (G3)', async () => {
-    mockPerformSync.mockResolvedValue({ groups: [], skipped: true })
+    mockPerformSync.mockResolvedValue({ groups: [], skipped: true, status: 'busy' })
     const sendResponse = vi.fn()
     stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
     await new Promise((r) => setTimeout(r, 0))
     expect(sendResponse).toHaveBeenCalledWith({ ok: true, skipped: true })
+  })
+
+  it.each([
+    ['pull-failed', 'the pull failed'],
+    ['account-mismatch', 'the local data belongs to another account'],
+    ['identity-changed', 'the session changed mid-cycle'],
+  ])('L3: does not claim success when the cycle ended as %s (%s)', async (status) => {
+    mockPerformSync.mockResolvedValue({ groups: [], skipped: false, status })
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith(expect.objectContaining({ ok: false, reason: 'error', message: expect.any(String) }))
   })
 
   it('responds ok: false, reason: error (not "finish encryption setup") when the encryption status could not be checked', async () => {

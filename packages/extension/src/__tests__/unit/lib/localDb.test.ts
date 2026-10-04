@@ -688,6 +688,17 @@ describe('localDb — round 3 (first-run rev, Now Open, clear all)', () => {
     expect((await getGroupsState()).available.map((g) => g.id)).not.toContain('late')
     expect(await getSetting('theme', 'light')).toBe('light')
   })
+
+  it('clearAllLocalData keeps the record of whose store this is (the signed-in account does not change)', async () => {
+    const { setSetting, getSetting, clearAllLocalData } = await freshLocalDb()
+    await setSetting('lastSignedInUserId', 'user-A')
+    await setSetting('cloudSyncActive', true)
+    await setSetting('remoteBaseSeeded', true)
+    await clearAllLocalData()
+    expect(await getSetting('lastSignedInUserId', null)).toBe('user-A')
+    expect(await getSetting('cloudSyncActive', false)).toBe(true)
+    expect(await getSetting('remoteBaseSeeded', false)).toBe(false) // sync progress is data about the wiped groups: gone
+  })
 })
 
 describe('localDb — server base stamp (remoteUpdatedAt)', () => {

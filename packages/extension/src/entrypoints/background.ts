@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/browser';
 import { getGroupsState, updateGroupsState, registerGroupsChangeListener } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
-import { performSyncCycle } from '@/lib/syncEngine';
+import { performSyncCycle, type SyncCycleStatus } from '@/lib/syncEngine';
 import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
 import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
@@ -31,6 +31,15 @@ type SyncNowResult = { ok: true; skipped: boolean } | { ok: false; reason: 'no-s
 // data key resets on every SW restart same as the popup's does (see chrome.storage.session fix),
 // so an account whose encryption was never unlocked THIS worker lifetime reports 'locked' rather
 // than silently no-op'ing — the web UI surfaces that as "open the extension and unlock".
+/** What the dashboard is told when a cycle ran but did not complete (nothing was merged or lost). */
+const SYNC_NOW_FAILURE_MESSAGE: Record<Exclude<SyncCycleStatus, 'synced' | 'busy'>, string> = {
+  'pull-failed': 'Could not reach the sync server. Try again.',
+  // The worker never switches (wipes) the local store itself: that is destructive and belongs to
+  // the popup's sign-in flow, where the user is present. Until then nothing is pushed or merged.
+  'account-mismatch': 'This device still holds another account\'s data. Open the extension to switch accounts.',
+  'identity-changed': 'The extension was signed out during the sync. Sign in and try again.'
+};
+
 async function handleSyncNow(): Promise<SyncNowResult> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
@@ -46,8 +55,9 @@ async function handleSyncNow(): Promise<SyncNowResult> {
     if (!(await getDataKey())) {
       return { ok: false, reason: 'locked', message: 'Open the extension and unlock encryption to sync.' };
     }
-    const { skipped } = await performSyncCycle(session);
-    return { ok: true, skipped };
+    const { status } = await performSyncCycle(session);
+    if (status === 'synced' || status === 'busy') return { ok: true, skipped: status === 'busy' };
+    return { ok: false, reason: 'error', message: SYNC_NOW_FAILURE_MESSAGE[status] };
   } catch (err) {
     return { ok: false, reason: 'error', message: err instanceof Error ? err.message : String(err) };
   }

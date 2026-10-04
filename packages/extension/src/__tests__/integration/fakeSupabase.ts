@@ -47,6 +47,12 @@ interface FakeRemoteState {
   /** One-shot hook run right after request number `page` (absolute index in `selects`) was served. */
   afterPage: { page: number; run: () => void } | null
   failDelete: boolean
+  /** Who the client is signed in as; null = signed out (requests go out as anon and RLS shows no rows). */
+  sessionUserId: string | null
+  /** Server response cap (PostgREST `max_rows`): a page never holds more rows than this, whatever `limit` asked. */
+  maxRows: number
+  /** The single-row probe (`maybeSingle`) fails like an offline request. */
+  failProbe: boolean
   holds: Partial<Record<GateName, { signalEntered: () => void; released: Promise<void> }>>
   realtimeCb: ((payload: { eventType: string; new?: unknown; old?: unknown }) => Promise<void>) | null
 }
@@ -56,7 +62,7 @@ const g = globalThis as unknown as Record<string, FakeRemoteState | undefined>
 
 function state(): FakeRemoteState {
   if (!g[KEY]) {
-    g[KEY] = { rows: new Map(), writes: [], upserts: [], updates: [], deleteCalls: [], failDelete: false, clock: Date.UTC(2030, 0, 1), trigger020: false, failInsert: false, selects: [], failAfterPages: null, afterPage: null, holds: {}, realtimeCb: null }
+    g[KEY] = { rows: new Map(), writes: [], upserts: [], updates: [], deleteCalls: [], failDelete: false, clock: Date.UTC(2030, 0, 1), trigger020: false, failInsert: false, selects: [], failAfterPages: null, afterPage: null, sessionUserId: 'user-1', maxRows: Infinity, failProbe: false, holds: {}, realtimeCb: null }
   }
   return g[KEY]!
 }
@@ -101,6 +107,16 @@ export const fakeRemote = {
   set failDelete(v: boolean) {
     state().failDelete = v
   },
+  /** Sign the client in as `userId`, or out with null (later requests are anon: RLS returns no rows, rejects writes). */
+  set sessionUserId(v: string | null) {
+    state().sessionUserId = v
+  },
+  set maxRows(v: number) {
+    state().maxRows = v
+  },
+  set failProbe(v: boolean) {
+    state().failProbe = v
+  },
   get realtimeCb() {
     return state().realtimeCb
   },
@@ -117,6 +133,9 @@ export const fakeRemote = {
     s.selects.length = 0
     s.failAfterPages = null
     s.afterPage = null
+    s.sessionUserId = 'user-1'
+    s.maxRows = Infinity
+    s.failProbe = false
     s.clock = Date.UTC(2030, 0, 1)
     s.holds = {}
     s.realtimeCb = null
@@ -167,7 +186,7 @@ function writeResult(run: () => Promise<{ data: unknown; error: unknown }>) {
 
 export const fakeSupabase = {
   auth: {
-    getSession: async () => ({ data: { session: { user: { id: 'user-1' } } } }),
+    getSession: async () => ({ data: { session: state().sessionUserId ? { user: { id: state().sessionUserId } } : null } }),
   },
   from(table: string) {
     return {
@@ -227,7 +246,7 @@ export const fakeSupabase = {
         }
         return q
       },
-      select(_cols: string) {
+      select(_cols: string, _opts?: { count?: 'exact' }) {
         let filtersId: string | undefined
         let afterId: string | null = null
         const b = {
@@ -243,6 +262,7 @@ export const fakeSupabase = {
           abortSignal: (_signal: AbortSignal) => b,
           /** Single-row probe (legacy-row detection): never gated. */
           maybeSingle: async () => {
+            if (state().failProbe) return { data: null, error: OFFLINE }
             const id = filtersId
             const row = id ? state().rows.get(id) : undefined
             return { data: row ? { updated_at: row.updated_at } : null, error: null }
@@ -261,11 +281,14 @@ export const fakeSupabase = {
               s.selects.push(cursor)
               if (fail) return { data: null, error: OFFLINE }
               // snapshot AFTER the gate, like a real server answering late
-              const all = [...s.rows.values()]
+              // RLS: an anon request (signed out) sees no rows at all, and that is a SUCCESSFUL answer
+              const visible = s.sessionUserId ? [...s.rows.values()] : []
+              const all = visible
                 .filter((r) => cursor === null || r.id > cursor)
                 .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
                 .map((r) => ({ ...r }))
-              const page = { data: all.slice(0, limit === Infinity ? undefined : limit), error: null }
+              // `count` = rows matching the filter, like PostgREST's `count: 'exact'` (not capped by limit / max_rows)
+              const page = { data: all.slice(0, Math.min(limit, s.maxRows)), error: null, count: all.length }
               if (s.afterPage && s.afterPage.page === s.selects.length) {
                 const { run } = s.afterPage
                 s.afterPage = null

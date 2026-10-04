@@ -1,4 +1,4 @@
-import { generateDataKey, decryptBlob, isEncryptedBlob, type EncryptedBlob } from '@tabmerger/shared'
+import { generateDataKey, decryptBlob, encryptBlob, isEncryptedBlob, type EncryptedBlob } from '@tabmerger/shared'
 import { fakeRemote, type RemoteRow } from './fakeSupabase'
 
 /**
@@ -19,6 +19,14 @@ export async function plainRow(row: RemoteRow | undefined): Promise<(RemoteRow &
   if (!isEncryptedBlob(row.windows)) return row as RemoteRow & Content
   const content = await decryptBlob<Content>(await testDataKey(), row.windows as EncryptedBlob)
   return { ...row, ...content }
+}
+
+/** Rewrites a remote row as the app stores it: content in the encrypted blob, plaintext columns blank. */
+export async function encryptRemoteRow(id: string): Promise<void> {
+  const row = fakeRemote.rows.get(id)
+  if (!row || isEncryptedBlob(row.windows)) return
+  const { iv, ct } = await encryptBlob(await testDataKey(), { name: row.name, windows: row.windows, note: row.note, info: row.info })
+  fakeRemote.rows.set(id, { ...row, name: '', note: null, info: '', windows: { v: 1, iv, ct } })
 }
 
 /** Decrypted `name` of one remote row. */

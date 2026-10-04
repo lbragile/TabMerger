@@ -3,7 +3,7 @@ import type { Group, GroupsState, Session } from './types';
 import { createNowOpenGroup } from './utils';
 import { GROUPS_CHANGED_MESSAGE } from './groupsChangedMessage';
 import { groupContentEqual } from './syncConflict';
-import { LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY } from './syncSettingKeys';
+import { LAST_USER_ID_KEY, CLOUD_SYNC_ACTIVE_KEY, ACCOUNT_SCOPED_SETTING_KEYS } from './syncSettingKeys';
 
 const DB_NAME = 'tabmerger';
 const DB_VERSION = 1;
@@ -556,6 +556,8 @@ export function clearLocalAccountData(): Promise<void> {
       tx.objectStore('sessions').clear(),
       // the previous account's unconfirmed deletes must not be sent against the next account
       tx.objectStore('settings').delete(PENDING_DELETE_KEY),
+      // ...nor its sync progress flags inherited by it (migrations done, bases seeded, delete backoff)
+      ...ACCOUNT_SCOPED_SETTING_KEYS.map((key) => tx.objectStore('settings').delete(key)),
       tx.done
     ]);
     notifyGroupsChanged();
@@ -565,12 +567,16 @@ export function clearLocalAccountData(): Promise<void> {
 /**
  * "Clear all data" from Settings: wipes every store as a QUEUED step (same ordering guarantee as
  * {@link clearLocalAccountData}), so an in-flight groups write cannot re-populate the store
- * afterwards. Keeps the `cloudSyncActive` flag, which `useSync` only writes when it changes.
+ * afterwards. Keeps the `cloudSyncActive` flag, which `useSync` only writes when it changes, and
+ * the store's owner (`LAST_USER_ID_KEY`): clearing the data does not change who is signed in, and
+ * `ensureAccountScope` (memoised per user, so it would not record the owner again) is the only
+ * writer of that key. Without it, a different account signing in next would get no wipe of what
+ * this account created or pulled back since, and the worker's owner check would pass for anyone.
  */
 export function clearAllLocalData(): Promise<void> {
   return enqueueGroupsWrite(async () => {
     const db = await getDb();
-    const keep = new Set<string>([CLOUD_SYNC_ACTIVE_KEY]);
+    const keep = new Set<string>([CLOUD_SYNC_ACTIVE_KEY, LAST_USER_ID_KEY]);
     const settingKeys = ((await db.getAllKeys('settings')) as string[]).filter((k) => !keep.has(k));
     const tx = db.transaction(['groups', 'groupsState', 'sessions', 'settings'], 'readwrite');
     await Promise.all([
