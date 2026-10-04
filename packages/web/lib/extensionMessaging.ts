@@ -30,6 +30,16 @@ export interface ExtensionMessageResult<T = unknown> {
   response: T | undefined
 }
 
+export interface KnownExtensionSendOptions {
+  /**
+   * How long to wait for the reply. Defaults to the short probe timeout, which suits messages
+   * answered at once (PING, SYNC_AUTH). A message whose reply follows real work (SYNC_NOW runs a
+   * full push and pull) needs longer, or the reply is dropped and the sender is told the
+   * extension is gone.
+   */
+  timeoutMs?: number
+}
+
 // Cached for the session so once we know which store the extension came from,
 // later calls (SYNC_NOW, etc.) go straight to it instead of re-probing every ID.
 let cachedResponderId: string | null = null
@@ -49,7 +59,11 @@ function getRuntime(): NonNullable<Window['chrome']>['runtime'] | undefined {
 // calls sendResponse) can be told apart from "this ID didn't answer at all".
 type Attempt<T> = { ok: true; response: T | undefined } | { ok: false }
 
-function attemptRuntime<T>(id: string, message: unknown): Promise<Attempt<T>> {
+function attemptRuntime<T>(
+  id: string,
+  message: unknown,
+  timeoutMs: number = PER_ATTEMPT_TIMEOUT_MS
+): Promise<Attempt<T>> {
   return new Promise((resolve) => {
     const runtime = getRuntime()
     if (!runtime?.sendMessage) {
@@ -62,7 +76,7 @@ function attemptRuntime<T>(id: string, message: unknown): Promise<Attempt<T>> {
       if (settled) return
       settled = true
       resolve({ ok: false })
-    }, PER_ATTEMPT_TIMEOUT_MS)
+    }, timeoutMs)
 
     try {
       runtime.sendMessage(id, message, (response) => {
@@ -154,7 +168,7 @@ function randomRequestId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
 }
 
-function attemptPostMessage<T>(message: unknown): Promise<Attempt<T>> {
+function attemptPostMessage<T>(message: unknown, timeoutMs: number = PER_ATTEMPT_TIMEOUT_MS): Promise<Attempt<T>> {
   return new Promise((resolve) => {
     if (typeof window === 'undefined') {
       resolve({ ok: false })
@@ -170,7 +184,7 @@ function attemptPostMessage<T>(message: unknown): Promise<Attempt<T>> {
       settled = true
       pendingPostMessageRequests.delete(requestId)
       resolve({ ok: false })
-    }, PER_ATTEMPT_TIMEOUT_MS)
+    }, timeoutMs)
 
     pendingPostMessageRequests.set(requestId, (response) => {
       if (settled) return
@@ -200,8 +214,10 @@ export function onExtensionReady(callback: () => void): () => void {
   }
 }
 
-async function attemptById<T>(id: string, message: unknown): Promise<Attempt<T>> {
-  return id === POSTMESSAGE_TRANSPORT_ID ? attemptPostMessage<T>(message) : attemptRuntime<T>(id, message)
+async function attemptById<T>(id: string, message: unknown, timeoutMs?: number): Promise<Attempt<T>> {
+  return id === POSTMESSAGE_TRANSPORT_ID
+    ? attemptPostMessage<T>(message, timeoutMs)
+    : attemptRuntime<T>(id, message, timeoutMs)
 }
 
 /**
@@ -259,15 +275,21 @@ export function getCachedExtensionId(): string | null {
  * actually an installed, reachable TabMerger extension.
  *
  * Resolves `null` if there is no cached responder or it stops answering.
+ *
+ * `options.timeoutMs` is offered here only, never on `sendToExtension`: a long wait is safe for
+ * one confirmed responder, but would hang for that long on every unanswered ID when probing.
  */
 export async function sendToKnownExtension<T = unknown>(
-  message: unknown
+  message: unknown,
+  options: KnownExtensionSendOptions = {}
 ): Promise<ExtensionMessageResult<T> | null> {
-  if (!cachedResponderId) return null
-  const result = await attemptById<T>(cachedResponderId, message)
+  const id = cachedResponderId
+  if (!id) return null
+  const result = await attemptById<T>(id, message, options.timeoutMs)
   if (!result.ok) {
-    cachedResponderId = null
+    // Only forget the responder this call used: another call may have cached a new one meanwhile.
+    if (cachedResponderId === id) cachedResponderId = null
     return null
   }
-  return { id: cachedResponderId, response: result.response }
+  return { id, response: result.response }
 }

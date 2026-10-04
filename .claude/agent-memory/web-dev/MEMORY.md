@@ -17,5 +17,6 @@
 - [SYNC_AUTH via externally_connectable](learnings/sync-extension-auth-external-message.md) — web app forwards the Supabase session to the extension from `useSyncExtensionAuth` (mounted in SyncIndicator); tests must mock `auth.onAuthStateChange`
 - [gtag environment tagging](learnings/learnings_gtag_environment_tagging.md) — trackEvent() appends an `environment` field to every GA4 call; exact-param test assertions must include it
 - [Supabase client mock shape](learnings/learnings_supabase_client_mock_shape.md) — any RTL test mounting SyncIndicator must mock `auth.onAuthStateChange` on `@/lib/supabase/client`
-- [Realtime updated_at not bumped](learnings/realtime-updated-at-not-bumped.md) — position-only/view_count updates keep an old updated_at; SyncIndicator uses arrival time, max-only
+- [Realtime rules](learnings/realtime-updated-at-not-bumped.md) — open channels only via `subscribeWithUserToken` (token on the realtime client before subscribe; SUBSCRIBED is not proof of delivery); filtered `groups` sub gets INSERT/UPDATE, never DELETE; old updated_at on reorders
+- [SyncIndicator status model](learnings/sync-indicator-status-model.md) — status union + one timer, SYNC_NOW long timeout via `sendToKnownExtension`, live region without the ticking time, Radix asChild undefined-prop trap, fake-timer RTL pattern
 - [Social preview + metadataBase](learnings/social-preview-metadata-base.md) — file-convention og/twitter images, non-throwing getMetadataBase(), shallow openGraph replacement trap

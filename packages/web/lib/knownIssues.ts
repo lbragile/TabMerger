@@ -40,4 +40,13 @@ export const KNOWN_ISSUES: KnownIssue[] = [
       'Checkout shows the price in your local currency, but a subscription (and every plan change or renewal of it) stays in the currency it was first paid in. Accounts that subscribed before local pricing keep paying in US dollars. Renewals in a local currency are converted again each time, so the amount can shift slightly with exchange rates.',
     workaround: 'To test local pricing, use a new account (see “Paying in your local currency” above).',
   },
+  {
+    id: 'dashboard-sync-time-new-browser',
+    area: 'Web app',
+    title: 'The dashboard’s “Synced” time can be older than your last sync',
+    details:
+      'In a browser that has not seen a sync yet (a new browser, or after clearing site data), the sync label in the dashboard header shows when your groups last changed, not when a device last synced. While the dashboard is open, a sync from another device that changed nothing, or that only deleted a group, does not move the time either.',
+    workaround:
+      'Press the refresh button on the label. The extension in that browser syncs and the time updates.',
+  },
 ]
