@@ -1,6 +1,11 @@
 # Firefox Add-ons Listings — TabMerger
 
-> Last Updated: 2026-09-27
+> Last Updated: 2026-10-06
+>
+> **State of the stable add-on:** the public AMO listing is still the v2 build (`2.0.0`). The
+> first v3 stable release is planned as `v3.1.0` and is not yet released. The listing copy,
+> permission justifications and data-use answers for it are in `CHROMEWEBSTORE.md` (same
+> extension, same facts); Firefox-specific differences are below.
 >
 > The Firefox counterpart of `CHROMEWEBSTORE.md` — everything filled into Mozilla's Add-on
 > Developer Hub (addons.mozilla.org, "AMO") and the unlisted self-distribution pipeline. Manifest
@@ -30,12 +35,32 @@ rewrite briefly used a different ID (`tabmerger@lbragile.com`), which would have
 existing Firefox user (~142 daily users per the spec) since AMO would treat it as a new,
 unrelated add-on. This was restored to the live listing's real GUID in `wxt.config.ts`.
 
+## Listing copy (stable)
+
+- **Name:** TabMerger. **Summary** (AMO limit 250 characters): reuse the Chrome short description
+  from `CHROMEWEBSTORE.md` (122 characters): "Save open tabs into named, color-coded groups and
+  restore them anytime. Works offline, with optional encrypted sync (Pro)."
+- **Description:** reuse the Chrome "Detailed Description" from `CHROMEWEBSTORE.md` with these
+  Firefox adjustments: keyboard shortcuts are rebound at `about:addons` (gear menu, "Manage
+  Extension Shortcuts"); restoring saved browser tab groups depends on the browser exposing the
+  tab-groups API, so drop that bullet if reviewers on Firefox see no effect; private windows
+  reopen as private only when "Run in Private Windows" is allowed for the add-on. AI features
+  stay out of the copy (off in every build).
+- **Privacy policy URL:** https://tabmerger.vercel.app/privacy. **Support site:**
+  https://tabmerger.vercel.app/contact. **Homepage:** https://tabmerger.vercel.app.
+- **Screenshots:** the same store images as Chrome (`packages/demo/screenshots/store/`); see the
+  asset table and the outdated-screenshot warning in `CHROMEWEBSTORE.md`.
+- **Notes to reviewer:** reuse "Notes for the review team" from `CHROMEWEBSTORE.md`, and add that
+  the Firefox build includes one content script on the TabMerger website origin (below). No test
+  account is needed for core features.
+
 ## Permissions
 
 Firefox ships the exact same `manifest.permissions` array as Chrome/Edge — see
 `CHROMEWEBSTORE.md`'s [Permissions Justification](CHROMEWEBSTORE.md#permissions-justification)
 table for the per-permission rationale (`tabs`, `tabGroups`, `storage`, `contextMenus`, `alarms`,
-`notifications`, `identity`). No `host_permissions` on Firefox either, with one addition:
+`notifications`, `identity`; re-verified 2026-10-06: `alarms` and `notifications` are used only
+for user-set reminders). No `host_permissions` on Firefox either, with one addition:
 
 ### The Firefox-only web-bridge content script
 
@@ -54,8 +79,8 @@ content script's `matches` origin differs, since it reads `VITE_WEB_APP_URL` per
 ## Data collection declaration (`data_collection_permissions`)
 
 AMO requires new submissions to declare `browser_specific_settings.gecko.data_collection_permissions`
-("Firefox Built-in Data Collection Consent" — **mandatory for add-ons created after
-2026-11-03**, so the beta add-on's new Gecko ID must comply from its first submission; the
+("Firefox Built-in Data Collection Consent" — **mandatory for new add-ons from
+2025-11-03**, so the beta add-on's new Gecko ID must comply from its first submission; the
 already-live stable listing can adopt on its own extended timeline, but this repo declares the
 same block for both so the two builds never drift). Both Firefox add-ons declare the identical
 block, set in `wxt.config.ts`'s `manifest()` for any `browser === "firefox"` build, from one
@@ -122,6 +147,13 @@ transmits and where consent is requested:
 No `websiteContent` (page text/images) or `financialAndPaymentInfo`/health/location/communications
 categories — nothing here transmits page content off-device, Stripe/billing is handled entirely by
 the web app, and TabMerger never collects health/location/communications data.
+
+**Which builds actually send analytics (checked 2026-10-06).** `publish.yml` sets no
+`VITE_POSTHOG_API_KEY` and no `VITE_SENTRY_DSN`, so PostHog and Sentry are inactive in every
+published build (stable and beta). The anonymous GA4 events go through the website's `/api/track`
+proxy and, on Firefox, only after `technicalAndInteraction` is granted. The extension also asks
+Google's favicon service for a site's icon by origin when the browser supplies none; see
+`CHROMEWEBSTORE.md`'s Data Collection table for the full category mapping and code evidence.
 
 Build-output tests assert this exact shape and that Chrome/Edge manifests never carry the key
 (it's Firefox-specific): `src/__tests__/manifest/manifest.build.test.ts` (`pnpm test:manifest`).
@@ -216,7 +248,10 @@ TabMerger's Settings (the true semver).
 
 | Listing | `version` (manifest) | `version_name` | Semver / tag | Date | Status |
 |---|---|---|---|---|---|
+| Stable (listed) | `2.0.0` | (ignored by Firefox) | `v2.0.0` | 2021-03-06 (GitHub release) | **Live: v2 `2.0.0` is the public AMO build today** |
+| Stable (listed) | `3.1.0` | (ignored by Firefox) | `v3.1.0` (planned) | not yet released | **Planned: first v3 stable release.** Not yet submitted. Stable keeps the same plain semver as Chrome (no beta offset) |
 | BETA (unlisted) | `4.1.0.7` | (ignored by Firefox) | `v3.1.0-beta.7` | 2026-09-29 | Signed; published to `/firefox-beta/`. Validator warnings above (min version 109 at the time) |
+| BETA (unlisted) | `4.1.0.11` | (ignored by Firefox) | `v3.1.0-beta.11` | not yet cut | Pending: about to be cut on the `beta` branch |
 
 ## Notes for a future review / support request
 

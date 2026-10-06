@@ -3,7 +3,8 @@ import { encryptBlob, decryptBlob, isEncryptedBlob, type EncryptedBlob } from '@
 import type { GroupsState, Tier } from './types';
 import { getSetting, setSetting } from './localDb';
 import { supabase } from './supabase';
-import { hasEncryptionKey, getDataKey } from './encryptionKey';
+import { getDataKey } from './encryptionKey';
+import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from './contentUploadKey';
 import { canUploadOnFirefox } from './syncEngine';
 
 /** Rapid Now Open changes (tab open/close bursts) coalesce into a single push after this window. */
@@ -85,21 +86,16 @@ async function doPush(): Promise<void> {
   const deviceName = getDeviceName(navigator.userAgent);
   const nowOpen = state.available.find((g) => g.permanent);
 
-  let snapshotField: { windows: GroupsState['available'][number]['windows'] } | EncryptedBlob = {
-    windows: nowOpen?.windows ?? []
-  };
-
-  if (await hasEncryptionKey()) {
-    const dataKey = await getDataKey();
-    if (!dataKey) {
-      // ponytail: locked — never push a plaintext Now Open snapshot. Skip this push,
-      // it'll retry on the next debounced tab-change once unlocked (same as pushGroup).
-      console.warn('[deviceSessions] Encryption enabled but key is locked — skipping device session push');
-      return;
-    }
-    const { iv, ct } = await encryptBlob(dataKey, snapshotField);
-    snapshotField = { v: 1, iv, ct };
+  // The Now Open snapshot is user content: it only ever leaves the device encrypted. Without an
+  // unlocked key (setup not finished, status unknown, locked) the push is skipped; the next
+  // debounced tab change retries.
+  const gate = await getContentUploadKey();
+  if (!gate.key) {
+    console.warn(`[deviceSessions] Device session not uploaded: ${UPLOAD_BLOCKED_MESSAGE[gate.reason]}`);
+    return;
   }
+  const { iv, ct } = await encryptBlob(gate.key, { windows: nowOpen?.windows ?? [] });
+  const snapshotField: EncryptedBlob = { v: 1, iv, ct };
 
   const { error } = await supabase.from('device_sessions').upsert({
     user_id: session.user.id,

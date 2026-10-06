@@ -1,9 +1,10 @@
 import * as Sentry from '@sentry/browser';
-import { getGroupsState, saveGroupsState, registerGroupsChangeListener } from '@/lib/localDb';
+import { getGroupsState, updateGroupsState, registerGroupsChangeListener } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { runGoogleOAuthFlow } from '@/lib/googleOAuthFlow';
-import { performSync } from '@/lib/syncEngine';
-import { hasEncryptionKey, getDataKey } from '@/lib/encryptionKey';
+import { performSyncCycle, type SyncCycleStatus } from '@/lib/syncEngine';
+import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
+import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
@@ -17,7 +18,12 @@ import {
 } from '@tabmerger/shared';
 import { hasDataConsent, isFirefoxBuild } from '@/lib/dataConsent';
 
-type SyncNowResult = { ok: true } | { ok: false; reason: 'no-session' | 'locked' | 'error'; message?: string };
+/**
+ * `skipped: true` = another sync cycle (the popup's, or an earlier request) held the sync lock, so
+ * THIS request ran nothing. That cycle may already be past its push step: an edit made just before
+ * the request is not guaranteed to be on the server yet when the reply arrives.
+ */
+type SyncNowResult = { ok: true; skipped: boolean } | { ok: false; reason: 'no-session' | 'locked' | 'error'; message?: string };
 
 // Triggered by the web dashboard's "Re-sync now" button via externally_connectable — runs a
 // real push+pull sync from the background context instead of just re-reading Supabase, so the
@@ -25,18 +31,33 @@ type SyncNowResult = { ok: true } | { ok: false; reason: 'no-session' | 'locked'
 // data key resets on every SW restart same as the popup's does (see chrome.storage.session fix),
 // so an account whose encryption was never unlocked THIS worker lifetime reports 'locked' rather
 // than silently no-op'ing — the web UI surfaces that as "open the extension and unlock".
+/** What the dashboard is told when a cycle ran but did not complete (nothing was merged or lost). */
+const SYNC_NOW_FAILURE_MESSAGE: Record<Exclude<SyncCycleStatus, 'synced' | 'busy'>, string> = {
+  'pull-failed': 'Could not reach the sync server. Try again.',
+  // The worker never switches (wipes) the local store itself: that is destructive and belongs to
+  // the popup's sign-in flow, where the user is present. Until then nothing is pushed or merged.
+  'account-mismatch': 'This device still holds another account\'s data. Open the extension to switch accounts.',
+  'identity-changed': 'The extension was signed out during the sync. Sign in and try again.'
+};
+
 async function handleSyncNow(): Promise<SyncNowResult> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return { ok: false, reason: 'no-session' };
-    if (!(await hasEncryptionKey())) {
+    const keyState = await getEncryptionKeyState();
+    // The check failed (offline, 401, 5xx): not "setup unfinished", and nothing may be uploaded.
+    if (keyState === 'unknown') {
+      return { ok: false, reason: 'error', message: 'Could not check the encryption status. Try again.' };
+    }
+    if (keyState === 'absent') {
       return { ok: false, reason: 'locked', message: 'Open the extension to finish encryption setup.' };
     }
     if (!(await getDataKey())) {
       return { ok: false, reason: 'locked', message: 'Open the extension and unlock encryption to sync.' };
     }
-    await performSync(session);
-    return { ok: true };
+    const { status } = await performSyncCycle(session);
+    if (status === 'synced' || status === 'busy') return { ok: true, skipped: status === 'busy' };
+    return { ok: false, reason: 'error', message: SYNC_NOW_FAILURE_MESSAGE[status] };
   } catch (err) {
     return { ok: false, reason: 'error', message: err instanceof Error ? err.message : String(err) };
   }
@@ -244,7 +265,7 @@ export default defineBackground(() => {
     // Popup-side (and other extension-page) half of the mechanism described in
     // localDb.ts's notifyGroupsChanged — a groups-changing write in the popup wakes this
     // SW via sendMessage delivery and lands here.
-    if (m?.type === 'TM_GROUPS_CHANGED') {
+    if (m?.type === GROUPS_CHANGED_MESSAGE) {
       scheduleMenuRebuild();
     }
   });
@@ -353,26 +374,29 @@ export default defineBackground(() => {
   async function appendTabsToGroup(tmTabs: TmTab[], groupId?: string) {
     if (tmTabs.length === 0) return;
 
-    const state = await getGroupsState();
-    const available = [...state.available];
-    let targetIndex = groupId
-      ? available.findIndex((g) => g.id === groupId && !g.permanent)
-      : available.findIndex((g) => !g.permanent);
+    // One atomic read-modify-write: the popup may be saving/editing at the same time, and it
+    // has its own write queue, so a plain get-then-save here could drop its write (or ours).
+    await updateGroupsState((state) => {
+      const available = [...state.available];
+      let targetIndex = groupId
+        ? available.findIndex((g) => g.id === groupId && !g.permanent)
+        : available.findIndex((g) => !g.permanent);
 
-    if (targetIndex < 0 && !groupId) {
-      available.push(createGroup(undefined, 'Quick Save'));
-      targetIndex = available.length - 1;
-    }
-    if (targetIndex < 0) return;
+      if (targetIndex < 0 && !groupId) {
+        available.push(createGroup(undefined, 'Quick Save'));
+        targetIndex = available.length - 1;
+      }
+      if (targetIndex < 0) return null;
 
-    const group = { ...available[targetIndex] };
-    const newWindow: TmWindow = { id: Date.now(), tabs: tmTabs, incognito: false, focused: false };
-    group.windows = [...group.windows, newWindow];
-    group.updatedAt = Date.now();
-    group.pendingSync = true;
-    available[targetIndex] = group;
+      const group = { ...available[targetIndex] };
+      const newWindow: TmWindow = { id: Date.now(), tabs: tmTabs, incognito: false, focused: false };
+      group.windows = [...group.windows, newWindow];
+      group.updatedAt = Date.now();
+      group.pendingSync = true;
+      available[targetIndex] = group;
 
-    await saveGroupsState({ ...state, available });
+      return { ...state, available };
+    });
   }
 
   chrome.contextMenus.onClicked.addListener(async (info, tab) => {

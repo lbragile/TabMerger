@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { LegalToc } from '@/components/legal-toc'
-import { FREE_TIER_LIMITS, FIREFOX_BETA } from '@tabmerger/shared'
+import { FREE_TIER_LIMITS, FIREFOX_BETA, CONFLICT_COPY_SUFFIX } from '@tabmerger/shared'
 import { KNOWN_ISSUES } from '@/lib/knownIssues'
 import { cn } from '@/lib/utils'
 import { BetaAreaProgress, BetaChecklistReset, BetaGoodCheck, BetaStepList } from '@/components/beta/BetaChecklist'
@@ -193,6 +193,7 @@ const TEST_AREAS: {
           'The group updates instantly.',
           'Undo restores the deleted tab exactly where it was.',
           'Redo removes it again.',
+          'With sync on, Undo can turn grey after a sync brings in changes from another device. That is expected, not a bug: the undo history is cleared when changes arrive from elsewhere.',
         ],
       },
       {
@@ -572,7 +573,7 @@ const TEST_AREAS: {
         checks: 'That a Pro subscription can move between monthly and yearly billing, and is charged correctly for it.',
         pro: true,
         steps: [
-          'With an active Pro subscription, open the pricing page. Your plan\'s card says how you\'re billed ("Billed monthly") and has a "Switch to yearly billing" button (or "Switch to monthly billing" if you pay yearly).',
+          'With an active Pro subscription, open the pricing page. Your plan\'s card is marked Current and has a "Switch to yearly billing" button (or "Switch to monthly billing" if you pay yearly): the button names the billing you would switch to.',
           'Monthly → yearly: click the switch button and confirm on Stripe\'s page.',
           'Yearly → monthly: do the same, then try the button a second time.',
           'Also open "Manage billing" on the account page: its "Update subscription" option shows the same monthly/yearly choice.',
@@ -583,8 +584,8 @@ const TEST_AREAS: {
             src: '/beta/pricing-switch.webp',
             width: 1600,
             height: 1200,
-            alt: 'The pricing page while on Pro monthly: the Pro card is marked Current, says "Billed monthly", and has a "Switch to yearly billing" button',
-            caption: 'On the pricing page, your plan\'s card shows how you\'re billed and the switch button.',
+            alt: 'The pricing page while on Pro monthly: the Pro card is marked Current and has a "Switch to yearly billing" button',
+            caption: 'On the pricing page, your plan\'s card is marked Current and has the switch button.',
           },
           {
             kind: 'image',
@@ -1516,7 +1517,7 @@ const TEST_AREAS: {
             width: 1600,
             height: 1200,
             alt: 'Device B\'s popup after signing in, unlocking and syncing: the same four groups with the same window and tab counts, and the same 4 Groups, 4 Windows, 17 Tabs footer',
-            caption: 'Device B after signing in and unlocking: the same groups and counts. (The order can differ; see Known issues.)',
+            caption: 'Device B after signing in and unlocking: the same groups and counts, in the same order.',
           },
         ],
         good: [
@@ -1579,6 +1580,20 @@ const TEST_AREAS: {
         report: 'A deleted group comes back on either device after a later sync.',
       },
       {
+        heading: 'Reordering groups syncs',
+        checks: 'That the order of your groups is the same on every device and on the dashboard.',
+        pro: true,
+        steps: [
+          'Drag a group to a new position in the sidebar on device A.',
+          'Wait for sync to catch up, then look at device B\'s sidebar and the web dashboard.',
+        ],
+        good: [
+          'Device B and the dashboard show the groups in the same order as device A.',
+          'Undo may be greyed out on a device right after a sync brings in changes from another device. That is expected: the undo history is cleared when changes arrive from elsewhere, so you can\'t accidentally undo over someone else\'s edit.',
+        ],
+        report: 'The order differs between devices after sync has caught up, or a reorder jumps back to the old order.',
+      },
+      {
         heading: 'Offline changes sync when you reconnect',
         checks: 'That changes made offline sync once you\'re back online, without duplicates or losses.',
         pro: true,
@@ -1586,6 +1601,39 @@ const TEST_AREAS: {
         good: [
           'Once back online, changes made offline sync up without duplicating or silently dropping groups.',
         ],
+      },
+      {
+        heading: 'Deleting a group while offline',
+        checks: 'That a group you delete while offline stays deleted once you reconnect.',
+        pro: true,
+        steps: [
+          'Go offline (disable network) on device A.',
+          'Delete a group on device A.',
+          'Reconnect device A and let it sync, then check device B and the dashboard.',
+        ],
+        good: [
+          'The group is removed from the server on the next sync and disappears on device B and the dashboard.',
+          'It does not come back on either device afterwards.',
+        ],
+        report: 'A group you deleted while offline reappears on any device after a sync.',
+      },
+      {
+        heading: 'Same group edited on two devices (conflict copy)',
+        checks: 'That when the same group is edited on two devices before either has synced, nothing is overwritten and you get a copy to merge by hand.',
+        pro: true,
+        steps: [
+          'Go offline (disable network) on device A. Leave device B online.',
+          'On device A, edit a group (for example add a tab). On device B, edit the same group differently (for example add a different tab).',
+          'Let device B sync first, then reconnect device A and let it sync.',
+          'Look at the sidebar on both devices.',
+        ],
+        good: [
+          'The version that reached the server first (device B) keeps the group\'s name.',
+          `Device A's version is saved right below it as a new group named "Work${CONFLICT_COPY_SUFFIX}" (using your group's name), and a toast tells you so.`,
+          'Both devices end up showing both groups. You can merge the tabs by hand and then delete the copy.',
+          'Editing only one device, or editing different groups on each, never makes a copy.',
+        ],
+        report: 'An edit silently disappears with no copy, or a "conflict copy" appears when only one device edited the group.',
       },
     ],
   },
@@ -1625,7 +1673,7 @@ const TEST_AREAS: {
         pro: true,
         steps: [
           'Sign in with the same account on a second device or browser profile.',
-          'When the "Unlock encryption" prompt appears, enter your passphrase in both fields and click "Save".',
+          'When the "Unlock encryption" prompt appears, enter your passphrase (once, there is no confirmation field) and click "Unlock" or press Enter.',
           'Repeat once more, but deliberately type the wrong passphrase.',
         ],
         example: {
@@ -1633,12 +1681,12 @@ const TEST_AREAS: {
           src: '/beta/encryption-unlock.webp',
           width: 1600,
           height: 1200,
-          alt: 'The "Unlock encryption" dialog on a second device, with Passphrase and Confirm passphrase fields and a Save button',
+          alt: 'The "Unlock encryption" dialog on a second device, with a single Passphrase field and an Unlock button',
           caption: 'On a second device, the extension asks for your existing passphrase once.',
         },
         good: [
           'The unlock prompt reads "Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won\'t be asked again unless you sign out."',
-          'The correct passphrase unlocks and shows an "Encryption passphrase set" toast.',
+          'The correct passphrase unlocks and shows an "Encryption unlocked" toast.',
           'The wrong one shows "Wrong passphrase" and changes nothing else — no corruption, no lockout, you can just try again.',
         ],
       },
@@ -1697,7 +1745,8 @@ const TEST_AREAS: {
           'The dashboard asks for the passphrase separately from the extension — unlocking there is its own one-time-per-tab step, not shared with the extension\'s unlock. The prompt reads "Your groups are end-to-end encrypted. Enter your passphrase to view them here."',
           'A wrong passphrase shows "Incorrect passphrase." without crashing the page.',
           'Once unlocked, your real group names and tabs render normally.',
-          'Before unlocking (or with the wrong key), a group shows as "(locked)" instead of leaking any content.',
+          'After a passphrase reset in the extension, the dashboard asks for the new passphrase: on the next page load, or in a dashboard that was already open, once you press the refresh button on the sync label.',
+          'A group or session the current passphrase cannot read (saved before a reset and not uploaded again yet) shows as "(locked)" instead of leaking any content. The item itself says why and what to do, and it cannot be shared or restored until it is readable again.',
         ],
       },
       {
@@ -1709,7 +1758,7 @@ const TEST_AREAS: {
           'On a device where you haven\'t unlocked yet (or the dashboard, before entering your passphrase there), notice that group names/content don\'t render until you unlock.',
         ],
         good: [
-          'The absence of readable content before unlocking is the signal: a locked group renders as "(locked)" with no name/tabs shown.',
+          'The absence of readable content before unlocking is the signal: no group name or tab is shown, and on the dashboard anything the current passphrase cannot read renders as "(locked)".',
           'The dashboard shows the passphrase card instead of your groups. If content were ever readable without unlocking, that would mean it isn\'t actually encrypted — report it immediately if you see that.',
         ],
       },
@@ -1719,7 +1768,7 @@ const TEST_AREAS: {
 
 const WANT_TO_HEAR_ABOUT = [
   'Any data loss — a group, tab, or session that disappeared and shouldn\'t have.',
-  'Sync conflicts — the same group ending up different across two devices, or edits from one device getting overwritten unexpectedly.',
+  `Sync conflicts — a "${CONFLICT_COPY_SUFFIX.trim()}" group is expected when the same group was edited on two devices before either synced. Tell us if an edit silently disappears, or if a copy appears when only one device edited.`,
   'Anything confusing, unclear, or that took you more clicks than it should have.',
   'Anything slow — the popup opening, search, drag-and-drop, or sync taking noticeably longer than expected.',
 ]

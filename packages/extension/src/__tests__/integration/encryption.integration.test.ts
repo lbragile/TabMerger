@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest'
 import { nanoid } from 'nanoid'
 import { supabase } from '@/lib/supabase'
-import { pushPendingChanges, pullRemoteChanges } from '@/lib/syncEngine'
+import { pushPendingChanges, performSync } from '@/lib/syncEngine'
 import { setupEncryption } from '@/lib/encryptionKey'
-import { saveGroup } from '@/lib/localDb'
+import { updateGroupsState, getGroupsState } from '@/lib/localDb'
 import { createGroup } from '@/lib/utils'
 import type { Group } from '@/lib/types'
 import type { Session } from '@supabase/supabase-js'
@@ -38,6 +38,9 @@ describe.skipIf(!hasTestBranch)('encryption — real Supabase branch integration
       access_token: session.access_token,
       refresh_token: session.refresh_token
     })
+    // setupEncryption only INSERTs (the server refuses a second key): clear a row an aborted
+    // earlier run may have left behind.
+    await supabase.from('encryption_keys').delete().eq('user_id', session.user.id)
     await setupEncryption('integration-test-passphrase-do-not-use-in-prod')
   })
 
@@ -65,7 +68,7 @@ describe.skipIf(!hasTestBranch)('encryption — real Supabase branch integration
       }
     ]
     createdGroupIds.push(group.id)
-    await saveGroup(group)
+    await updateGroupsState((s) => ({ ...s, available: [...s.available, group] }))
     await pushPendingChanges(session)
 
     const { data: row, error } = await supabase.from('groups').select('*').eq('id', group.id).single()
@@ -83,9 +86,10 @@ describe.skipIf(!hasTestBranch)('encryption — real Supabase branch integration
     expect(rawRowJson).not.toContain('should-not-be-readable')
     expect(row!.name).toBe('')
 
-    // Round trip: real decrypt via pullRemoteChanges surfaces the marker content correctly.
-    const merged = await pullRemoteChanges(session, [])
-    const pulled = merged.find((g) => g.id === group.id)
+    // Round trip: forget the local copy, then a sync cycle's real decrypt surfaces the marker content.
+    await updateGroupsState((s) => ({ ...s, available: s.available.filter((g) => g.id !== group.id) }))
+    await performSync(session)
+    const pulled = (await getGroupsState()).available.find((g) => g.id === group.id)
     expect(pulled?.name).toBe('Encryption Integration Test')
     expect(pulled?.windows[0]?.tabs[0]?.title).toBe(MARKER)
     expect(pulled?.windows[0]?.tabs[0]?.url).toBe(MARKER_URL)

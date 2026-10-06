@@ -82,7 +82,15 @@ function makeSupabaseMock(fetchRows: MockRow[]): MockBundle {
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
-const NOW_OPEN: MockRow = { id: 'now-open', name: 'Now Open', color: '#fff', position: 0, windows: [] }
+/**
+ * Id of the client's Now Open group. The extension never syncs Now Open, so it is
+ * never a `groups` row; the workflow only learns it from the client payload and
+ * hands it to applyChanges as a pinned id.
+ */
+const NOW_OPEN_ID = 'now-open'
+
+/** A row written before the extension pushed `position`: the column default 0. */
+const LEGACY: MockRow = { id: 'legacy', name: 'Old Saved', color: '#ff0', position: 0, windows: [] }
 const G1: MockRow = { id: 'g1', name: 'Work', color: '#f00', position: 1, windows: [] }
 const G2: MockRow = {
   id: 'g2',
@@ -101,22 +109,59 @@ const ENCRYPTED: MockRow = {
   windows: { v: 1, iv: 'aXY=', ct: 'Y3Q=' },
 }
 
+/** Positions passed to `update({ position })`, in call order. */
+function writtenPositions(builder: Record<string, unknown>): number[] {
+  return vi
+    .mocked(builder.update as ReturnType<typeof vi.fn>)
+    .mock.calls.map((c) => (c[0] as { position?: number }).position)
+    .filter((p): p is number => p !== undefined)
+}
+
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
 describe('fetchUserData', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('reads from Supabase when no client payload is supplied', async () => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN, G2])
+    const { client, builder } = makeSupabaseMock([G1, G2])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
     const result = await fetchUserData('user-123', null)
 
     expect(builder.select).toHaveBeenCalledWith('id, name, color, position, windows')
     expect(result).toHaveLength(2)
-    expect(result[0]).toMatchObject({ id: 'now-open', position: 0, permanent: true })
+    expect(result[0]).toMatchObject({ id: 'g1', position: 1, permanent: false })
     expect(result[1]).toMatchObject({ id: 'g2', position: 2, permanent: false })
     expect(result[1].windows).toEqual(G2.windows)
+  })
+
+  it('never marks a stored row permanent, even legacy rows at the default position 0', async () => {
+    // Every row written before the extension pushed `position` sits at 0, and
+    // Now Open is never synced — so position 0 must not mean "Now Open".
+    const { client } = makeSupabaseMock([
+      LEGACY,
+      { ...LEGACY, id: 'legacy-2', name: 'Also Old' },
+      G1,
+    ])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await fetchUserData('user-123', null)
+
+    expect(result.map((g) => g.permanent)).toEqual([false, false, false])
+    expect(result[0]).toMatchObject({ id: 'legacy', position: 0 })
+  })
+
+  it('orders by position, then most recently updated, then id so legacy ties are stable', async () => {
+    const { client, builder } = makeSupabaseMock([])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    await fetchUserData('user-123', null)
+
+    expect(vi.mocked(builder.order as ReturnType<typeof vi.fn>).mock.calls).toEqual([
+      ['position', { ascending: true }],
+      ['updated_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ])
   })
 
   it('uses the client payload verbatim and never touches Supabase', async () => {
@@ -130,7 +175,8 @@ describe('fetchUserData', () => {
     const result = await fetchUserData('user-123', clientGroups)
 
     expect(client.from).not.toHaveBeenCalled()
-    // index doubles as position; index 0 is the permanent "Now Open" group
+    // The client list includes its local Now Open at index 0; index doubles as
+    // position, the same rule the extension uses when pushing.
     expect(result[0]).toMatchObject({ id: 'c0', position: 0, permanent: true })
     expect(result[1]).toMatchObject({ id: 'c1', position: 1, permanent: false })
     expect(result[1].windows).toEqual([{ tabs: clientGroups[1].tabs }])
@@ -163,71 +209,113 @@ describe('applyChanges', () => {
     vi.clearAllMocks()
   })
 
-  it('skips delete of the position-0 (permanent) group', async () => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN])
+  // ── Now Open / pinned-id guards ────────────────────────────────────────────
+
+  it.each([
+    ['delete', { type: 'delete', groupId: NOW_OPEN_ID }],
+    ['rename', { type: 'rename', groupId: NOW_OPEN_ID, newName: 'Tabs' }],
+    ['merge source', { type: 'merge', sourceGroupId: NOW_OPEN_ID, targetGroupId: 'g1' }],
+    ['merge target', { type: 'merge', sourceGroupId: 'g1', targetGroupId: NOW_OPEN_ID }],
+  ])('skips %s of the pinned Now Open group without writing', async (_label, action) => {
+    const { client, builder } = makeSupabaseMock([G1])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
-    const action: ReorganizeAction = { type: 'delete', groupId: 'now-open' }
-    const result = await applyChanges('user-123', [action])
+    const result = await applyChanges('user-123', [action as ReorganizeAction], [NOW_OPEN_ID])
 
     expect(result.applied).toBe(0)
-    expect(result.skipped).toHaveLength(1)
-    expect(result.skipped[0]).toEqual(action)
-    // Supabase delete was never called
+    expect(result.skipped).toEqual([action])
+    expect(builder.update).not.toHaveBeenCalled()
     expect(builder.delete).not.toHaveBeenCalled()
   })
 
-  it('skips merge when Now Open (position 0) is the source', async () => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN, G1])
+  it('skips a pinned id even if a stored row happens to share it', async () => {
+    const { client, builder } = makeSupabaseMock([{ ...G1, id: NOW_OPEN_ID }])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
-    const action: ReorganizeAction = { type: 'merge', sourceGroupId: 'now-open', targetGroupId: 'g1' }
-    const result = await applyChanges('user-123', [action])
+    const action: ReorganizeAction = { type: 'delete', groupId: NOW_OPEN_ID }
+    const result = await applyChanges('user-123', [action], [NOW_OPEN_ID])
+
+    expect(result.skipped).toEqual([action])
+    expect(builder.delete).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['delete', { type: 'delete', groupId: 'ghost' }],
+    ['rename', { type: 'rename', groupId: 'ghost', newName: 'X' }],
+  ])('skips %s of an id with no stored row instead of counting a no-op as applied', async (_label, action) => {
+    const { client, builder } = makeSupabaseMock([G1])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await applyChanges('user-123', [action as ReorganizeAction])
 
     expect(result.applied).toBe(0)
-    expect(result.skipped).toHaveLength(1)
-    expect(result.skipped[0]).toEqual(action)
-    // No merge update was applied
+    expect(result.skipped).toEqual([action])
     expect(builder.update).not.toHaveBeenCalled()
+    expect(builder.delete).not.toHaveBeenCalled()
   })
 
-  it('allows merge when Now Open is the TARGET (not the source)', async () => {
-    const { client } = makeSupabaseMock([NOW_OPEN, G2])
+  // ── Legacy position-0 rows are ordinary groups ─────────────────────────────
+
+  it('deletes a legacy position-0 row — it is a saved group, not Now Open', async () => {
+    const { client, builder } = makeSupabaseMock([LEGACY, G1])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
-    // g2 → now-open: g2 is not permanent, so this is allowed
-    const action: ReorganizeAction = { type: 'merge', sourceGroupId: 'g2', targetGroupId: 'now-open' }
-    const result = await applyChanges('user-123', [action])
+    const result = await applyChanges('user-123', [{ type: 'delete', groupId: 'legacy' }])
 
-    expect(result.skipped).toHaveLength(0)
     expect(result.applied).toBe(1)
+    expect(result.skipped).toHaveLength(0)
+    expect(builder.delete).toHaveBeenCalled()
   })
 
-  it('reorder skips the permanent group in the position loop — position 0 is never written', async () => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN, G1, G2])
+  it('merges a legacy position-0 row away when it is the source', async () => {
+    const { client, builder } = makeSupabaseMock([LEGACY, G2])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
-    const action: ReorganizeAction = { type: 'reorder', groupIds: ['now-open', 'g1', 'g2'] }
+    const action: ReorganizeAction = { type: 'merge', sourceGroupId: 'legacy', targetGroupId: 'g2' }
     const result = await applyChanges('user-123', [action])
 
-    // Reorder action itself counts as applied (not skipped)
     expect(result.applied).toBe(1)
     expect(result.skipped).toHaveLength(0)
-
-    // update() was called for g1 (pos=1) and g2 (pos=2), but NOT for now-open
-    const updateCalls = vi.mocked(builder.update as ReturnType<typeof vi.fn>).mock.calls
-    const writtenPositions = updateCalls
-      .map((c) => (c[0] as { position?: number }).position)
-      .filter((p) => p !== undefined)
-
-    expect(writtenPositions).toContain(1)
-    expect(writtenPositions).toContain(2)
-    // position 0 is never explicitly written — now-open was skipped in the loop
-    expect(writtenPositions).not.toContain(0)
+    expect(builder.update).toHaveBeenCalledWith({ windows: G2.windows })
+    expect(builder.delete).toHaveBeenCalled()
   })
 
-  it('applies rename and delete of non-permanent groups', async () => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN, G1, G2])
+  // ── Reorder positions follow the extension's rule ──────────────────────────
+
+  it('reorder pins Now Open at index 0 and writes stored groups from 1', async () => {
+    const { client, builder } = makeSupabaseMock([LEGACY, G1, G2])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const action: ReorganizeAction = { type: 'reorder', groupIds: ['g2', NOW_OPEN_ID, 'legacy', 'g1'] }
+    const result = await applyChanges('user-123', [action], [NOW_OPEN_ID])
+
+    expect(result.applied).toBe(1)
+    expect(result.skipped).toHaveLength(0)
+    // g2=1, legacy=2, g1=3; Now Open takes no slot and position 0 is never written
+    expect(writtenPositions(builder)).toEqual([1, 2, 3])
+    expect(vi.mocked(builder.eq as ReturnType<typeof vi.fn>).mock.calls).toEqual(
+      expect.arrayContaining([['id', 'g2'], ['id', 'legacy'], ['id', 'g1']])
+    )
+  })
+
+  it('reorder gives an unsynced client group its slot without writing it', async () => {
+    const { client, builder } = makeSupabaseMock([G1, G2])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    // Client list: [Now Open, g1, local-only, g2] → g2 must land on its client index 3.
+    const action: ReorganizeAction = { type: 'reorder', groupIds: [NOW_OPEN_ID, 'g1', 'local-only', 'g2'] }
+    await applyChanges('user-123', [action], [NOW_OPEN_ID])
+
+    expect(writtenPositions(builder)).toEqual([1, 3])
+    const eqIds = vi
+      .mocked(builder.eq as ReturnType<typeof vi.fn>)
+      .mock.calls.filter((c) => c[0] === 'id')
+      .map((c) => c[1])
+    expect(eqIds).toEqual(['g1', 'g2'])
+  })
+
+  it('applies rename and delete of stored groups', async () => {
+    const { client, builder } = makeSupabaseMock([G1, G2])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
     const actions: ReorganizeAction[] = [
@@ -242,16 +330,29 @@ describe('applyChanges', () => {
     expect(builder.delete).toHaveBeenCalled()
   })
 
+  it('skips a second action on a group already deleted earlier in the batch', async () => {
+    const { client } = makeSupabaseMock([G1])
+    vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
+
+    const result = await applyChanges('user-123', [
+      { type: 'delete', groupId: 'g1' },
+      { type: 'rename', groupId: 'g1', newName: 'Gone' },
+    ])
+
+    expect(result.applied).toBe(1)
+    expect(result.skipped).toEqual([{ type: 'rename', groupId: 'g1', newName: 'Gone' }])
+  })
+
   // ── E2EE writeback guards ──────────────────────────────────────────────────
   // The server has no decryption key, so it must refuse any content-bearing
   // write to an encrypted group rather than clobbering it with plaintext.
 
   it('skips rename of an encrypted group instead of writing plaintext name', async () => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN, ENCRYPTED])
+    const { client, builder } = makeSupabaseMock([ENCRYPTED])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
     const action: ReorganizeAction = { type: 'rename', groupId: 'enc1', newName: 'Docs' }
-    const result = await applyChanges('user-123', [action])
+    const result = await applyChanges('user-123', [action], [NOW_OPEN_ID])
 
     expect(result.applied).toBe(0)
     expect(result.skipped).toEqual([action])
@@ -262,10 +363,10 @@ describe('applyChanges', () => {
     ['source', { type: 'merge', sourceGroupId: 'enc1', targetGroupId: 'g1' }],
     ['target', { type: 'merge', sourceGroupId: 'g1', targetGroupId: 'enc1' }],
   ])('skips merge when the %s group is encrypted', async (_label, action) => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN, G1, ENCRYPTED])
+    const { client, builder } = makeSupabaseMock([G1, ENCRYPTED])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
-    const result = await applyChanges('user-123', [action as ReorganizeAction])
+    const result = await applyChanges('user-123', [action as ReorganizeAction], [NOW_OPEN_ID])
 
     expect(result.applied).toBe(0)
     expect(result.skipped).toEqual([action])
@@ -274,13 +375,17 @@ describe('applyChanges', () => {
   })
 
   it('still applies content-free delete and reorder for encrypted groups', async () => {
-    const { client, builder } = makeSupabaseMock([NOW_OPEN, ENCRYPTED])
+    const { client, builder } = makeSupabaseMock([ENCRYPTED])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
-    const result = await applyChanges('user-123', [
-      { type: 'reorder', groupIds: ['now-open', 'enc1'] },
-      { type: 'delete', groupId: 'enc1' },
-    ])
+    const result = await applyChanges(
+      'user-123',
+      [
+        { type: 'reorder', groupIds: [NOW_OPEN_ID, 'enc1'] },
+        { type: 'delete', groupId: 'enc1' },
+      ],
+      [NOW_OPEN_ID]
+    )
 
     expect(result.applied).toBe(2)
     expect(result.skipped).toHaveLength(0)
@@ -289,14 +394,14 @@ describe('applyChanges', () => {
   })
 
   it('processes mixed actions, skipping only the guarded ones', async () => {
-    const { client } = makeSupabaseMock([NOW_OPEN, G1])
+    const { client } = makeSupabaseMock([G1])
     vi.mocked(createServiceRoleClient).mockResolvedValue(client as any)
 
     const actions: ReorganizeAction[] = [
-      { type: 'delete', groupId: 'now-open' }, // skipped
+      { type: 'delete', groupId: NOW_OPEN_ID }, // skipped
       { type: 'rename', groupId: 'g1', newName: 'Q3 Work' }, // applied
     ]
-    const result = await applyChanges('user-123', actions)
+    const result = await applyChanges('user-123', actions, [NOW_OPEN_ID])
 
     expect(result.applied).toBe(1)
     expect(result.skipped).toHaveLength(1)

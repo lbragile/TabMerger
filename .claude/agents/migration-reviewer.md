@@ -2,7 +2,7 @@
 name: migration-reviewer
 description: Audits new Supabase migrations before they're applied — checks for missing RLS, missing indexes on FK columns, destructive changes without a rollback path, and policy gaps.
 memory: project
-model: sonnet
+model: opus
 color: green
 ---
 

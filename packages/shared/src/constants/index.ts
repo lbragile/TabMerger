@@ -60,6 +60,7 @@ export const PRICING_TIERS: PricingTier[] = [
       'Local storage only',
       'Import & export',
       'Drag & drop',
+      'Keyboard shortcuts',
     ],
     limits: FREE_TIER_LIMITS,
   },
@@ -73,7 +74,6 @@ export const PRICING_TIERS: PricingTier[] = [
       'Unlimited groups, tabs, URL rules & sessions',
       'Cloud sync across devices',
       'Sessions synced across devices',
-      'Keyboard shortcuts',
       'Priority support',
     ],
     limits: UNLIMITED_TIER_LIMITS,
@@ -106,3 +106,6 @@ export * from './extensionMessages';
 export * from './priceFormat';
 export * from './firefoxBeta';
 export * from './firefoxDataConsent';
+
+/** Appended to a group's name when a sync conflict saves this device's edit as a separate copy. */
+export const CONFLICT_COPY_SUFFIX = ' (conflict copy)';

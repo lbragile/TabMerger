@@ -1,10 +1,34 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-09-26
+> Last Updated: 2026-10-06
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
 > pulled from `wxt.config.ts`; keep this file in sync with that file, not the other way around.
+>
+> **State of the stable item:** the public listing is still the v2 build (`2.0.0`). Everything
+> under "Store Listing — Stable" below is written for the first v3 stable release (planned as
+> `v3.1.0`, not yet released); paste it into the dashboard when that version is uploaded.
+
+## Owner to confirm in the dashboard
+
+Everything else in this file was derived from the repository. These items cannot be:
+
+- [ ] **Publisher / developer display name** and the **public contact email** shown on the listing
+      (the email is verified in the dashboard; do not commit it here).
+- [ ] **Live version** currently shown on the stable item (the repo believes `2.0.0`).
+- [ ] **Regions** (stable and BETA) as currently set.
+- [ ] **Screenshots and tiles:** upload the five screenshots and the two promo tiles listed under
+      [Graphics & Assets](#graphics--assets) (regenerated 2026-10-06).
+- [ ] **Privacy practices tab:** tick the data categories, the certifications and the
+      permission justifications exactly as written in
+      [Privacy & Data Use](#privacy--data-use) and
+      [Permissions Justification](#permissions-justification).
+- [ ] **Test instructions field:** paste the "Notes for the review team" paragraph from
+      [Review Notes](#review-notes). No test account is needed.
+- [ ] **BETA item:** update the `3.1.0-beta.10` status below once its review completes.
+- [ ] **Existing-user note:** the description tells v2 users that v3 does not import their v2
+      data. Delete that paragraph if you would rather not say so.
 
 ## Two listings
 
@@ -33,36 +57,69 @@ TabMerger
 <!-- Must match manifest.json "name" exactly — getExtensionName() returns "TabMerger" for any
      mode other than "beta"/"development". -->
 
-**Short Description** [REQUIRED]
-Save, organize, and restore your browser tabs — with optional encrypted cloud sync.
+**Short Description** [REQUIRED] (max 132 characters)
 
-<!-- TODO (owner): tighten to ≤132 characters if the dashboard rejects this; verify count at
-     submission time. -->
+122 characters, the stable manifest `description` in `wxt.config.ts`:
 
-**Detailed Description** [REQUIRED]
+> Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).
 
-Stop drowning in tabs. TabMerger lets you save open tabs into named, color-coded groups, then
-restore any group — or just the window you need — later.
+<!-- The dashboard summary is read from the manifest `description`, so change it there, not only
+     here. BETA builds use their own description string and are unaffected. -->
 
-Key features: save the current tab, all tabs, or tabs to the left/right/other with one click or
-a keyboard shortcut; drag and drop (or a keyboard-only move mode) to reorganize tabs, windows, and groups; a "Now Open" view
-that always reflects your live browser tabs; light and dark themes; right-click context menu
-actions. Pro subscribers get end-to-end encrypted cloud sync across devices and saved sessions,
-so your groups are backed up and available everywhere you sign in.
+**Detailed Description** [REQUIRED] (about 3,100 characters, limit 16,000)
 
-To get started, click the TabMerger icon to open the popup, then use the toolbar buttons or
-keyboard shortcuts to save tabs into a group. Drag tabs between groups and windows to
-reorganize, and use the sidebar to switch between groups.
+TabMerger saves the tabs you have open into named, color-coded groups, so you can close them,
+clear your browser, and bring them back later: a single tab, one window, or a whole group.
 
-TabMerger requests no permission to read or modify the content of the pages you visit. Tab data
-(URLs, titles) stays in your browser's local storage unless you sign in and enable cloud sync,
-at which point it is encrypted on your device before it ever reaches our servers — we cannot
-read it. See the full privacy policy linked below.
+WHAT YOU CAN DO
+- Save the current tab, all tabs, the tabs to the left or right of it, or all other tabs. Use the
+  popup, the right-click menu ("Save to TabMerger"), or keyboard shortcuts (Ctrl+Shift+S, K, U
+  and P; Command instead of Ctrl on Mac). You can rebind them at chrome://extensions/shortcuts.
+- Organize tabs into windows inside groups. Name each group, give it a color (12 presets or any
+  custom color), star it to keep it at the top, or archive it.
+- Restore one tab, one window or a whole group. Saved browser tab groups are recreated, and
+  private windows reopen as private windows when you have allowed TabMerger in Incognito.
+- Reorder by drag and drop, or with a keyboard-only move mode, across tabs, windows and groups.
+- See a "Now Open" view that always mirrors the tabs open in your browser right now.
+- Search every saved tab and group (Ctrl/Cmd+K).
+- Add notes to tabs, windows and groups, give tabs a custom title, and set reminders that show a
+  notification at the time you choose.
+- Set URL rules that send matching tabs to a group automatically, and clean up duplicate tabs.
+- Take saved sessions (snapshots of your groups) and restore them later.
+- Undo and redo changes, and switch between light and dark themes.
+- Import from a JSON file, a bookmarks HTML export or OneTab, and export your data as JSON.
 
-Questions or feedback? Reach out through the support links on this listing.
+FREE AND PRO
+TabMerger works fully without an account. The free plan keeps everything in your browser and
+allows up to 5 groups, 50 saved tabs, 3 URL rules and 3 saved sessions.
 
-<!-- TODO (owner): re-verify this against the current in-app feature set and word-count limit
-     (16,000 chars) before submitting — description above is comprehensive but not exhaustive. -->
+Pro is a paid subscription bought on the TabMerger website (not inside the extension). It removes
+those limits and adds optional cloud sync of your groups and sessions between devices, a
+"Continue on other device" view, and encrypted share links for groups. Pro features need a
+signed-in account; prices and plans are on the website.
+
+PRIVACY
+- Your saved tabs stay in your browser's local storage unless you sign in to a Pro account and
+  turn on sync.
+- Synced content (tab URLs and titles, group and window names, notes, sessions) is encrypted on
+  your device with a passphrase only you know before it is uploaded. We store ciphertext and
+  cannot read it. If you lose the passphrase, we cannot recover that data.
+- TabMerger does not read or change the pages you visit and does not ask for access to any
+  website.
+- Page images in tab previews are off by default. When you turn them on, hovering a tab sends
+  that tab's address to TabMerger's preview service to fetch an image.
+- The extension sends a small number of anonymous usage events (for example "group created",
+  without any URLs or titles) to help us understand which features are used. See the privacy
+  policy for the full list of what is collected and why.
+
+NOTE FOR USERS OF VERSION 2
+Version 3 is a complete rewrite. It does not import the tabs and groups saved by version 2.
+
+Questions or feedback? Use the support links on this listing.
+
+<!-- Verified against the code on 2026-10-06: shortcuts and context menu in background.ts and
+     wxt.config.ts `commands`; limits from FREE_TIER_LIMITS; sync/sessions/share gating from
+     useEntitlements + migration 019; AI is not mentioned because VITE_AI_ENABLED is off. -->
 
 **Category** [REQUIRED]
 Productivity
@@ -97,49 +154,112 @@ install unless you were invited to this testing program.
 
 ## Graphics & Assets
 
+Assets live under `packages/demo/` (paths below are relative to it; the images themselves are
+not committed). The store images are composited from raw captures by `pnpm demo:screenshots`
+(raw PNGs, 1600×1200) followed by `pnpm demo:store-assets` (headline overlay, 1280×800 JPEGs in
+`screenshots/store/`, plus the promo tiles in `promo/`). They were regenerated from a current
+demo build on 2026-10-06, and every file was opened and measured that day.
+
 | Asset | Dimensions | Status | Filename |
 |-------|-----------|--------|----------|
-| Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready | `src/public/icon/128.png` |
-| Screenshot 1 [REQUIRED] | 1280×800 or 640×400 | ⬜ Not created | TODO (owner) |
-| Screenshot 2 [RECOMMENDED] | 1280×800 or 640×400 | ⬜ Not created | TODO (owner) |
-| Screenshot 3 [RECOMMENDED] | 1280×800 or 640×400 | ⬜ Not created | TODO (owner) |
-| Small Promo Tile [RECOMMENDED] | 440×280 | ⬜ Not created | TODO (owner) |
-| Marquee Promo Tile | 1400×560 | ⬜ Not created | TODO (owner) |
+| Store icon [REQUIRED] | 128×128 PNG | Ready | `../extension/src/public/icon/128.png` |
+| Screenshot [REQUIRED] | 1280×800 | Ready | `screenshots/store/open-popup-light.jpg` (also `open-popup-dark.jpg`) |
+| Screenshot | 1280×800 | Ready | `screenshots/store/view-new-group-dark.jpg` (also `-light.jpg`) |
+| Screenshot | 1280×800 | Ready | `screenshots/store/cross-window-tab-drag-light.jpg` (also `-dark.jpg`) |
+| Screenshot | 1280×800 | Ready | `screenshots/store/add-window-note-dark.jpg` (also `-light.jpg`) |
+| Screenshot | 1280×800 | Do not upload: shows the current colour picker, but the popover hides the group list, the group is empty and a stray square shows at the left edge | `screenshots/store/color-new-group-dark.jpg`, `color-new-group-light.jpg` |
+| Screenshot | 1280×800 | Do not upload: windows are named "temp window" and the footer counts 11 windows (demo artefacts) | `screenshots/store/multi-window.jpg` |
+| Screenshot | 1280×800 | Sharp now (the browser strip is drawn at its natural size under a caption), but mostly empty canvas: not recommended | `screenshots/store/cluttered-chrome.jpg` |
+| Small promo tile [RECOMMENDED] | 440×280 | Ready | `promo/small-tile.jpg` |
+| Marquee promo tile | 1400×560 | Ready (the browser strip on its left half is now shown at native resolution) | `promo/marquee-tile.jpg` |
+| Not for the store | 1280×640 | Social preview image, not a store asset | `promo/social-preview.png` |
+| Raw captures | 1600×1200 (cluttered-chrome 1400×155) | Wrong size for upload; inputs to the composer only | `screenshots/raw/*.png` |
 
-`packages/demo/` (Remotion + Playwright) is the intended source of store screenshots/promo
-assets (`pnpm demo:screenshots`, `pnpm demo:store-assets`) — TODO (owner): confirm whether
-those commands have been run and where their output lands, then update this table with real
-filenames and check them into whatever path the store upload expects.
+**Verdict.** The store requires 1280×800 or 640×400 screenshots, a 440×280 small tile and a
+1400×560 marquee: every store JPEG, both tiles and the icon have the right pixel size, and the
+five screenshots below show the current UI. No store asset shows the encryption unlock dialog or
+the incognito strip (the demo data has neither), so recent changes to those do not date them.
+
+**Upload order (max 5):**
+
+1. `open-popup-light.jpg`: the "Now Open" view with four windows and 18 tabs.
+2. `view-new-group-dark.jpg`: a saved group with its window.
+3. `cross-window-tab-drag-light.jpg`: a tab mid-drag, with the drop zones for a new window and a
+   new group.
+4. `add-window-note-dark.jpg`: a renamed window with the note editor open.
+5. `open-popup-dark.jpg`: the main view in the dark theme.
+
+**To regenerate** (from the repo root): `pnpm --filter @tabmerger/extension build:extension:demo`,
+then `pnpm demo:screenshots`, then `pnpm demo:store-assets`. Do not upload the raw PNGs.
+Screenshots are not required to contain a headline; the current ones carry one.
 
 ### Screenshot Notes
 
-TODO (owner): describe what each screenshot should show once captured. Suggested shots based
-on the current UI: (1) popup with several groups in the sidebar and the active group's windows
-open, (2) drag-and-drop reordering a tab between windows, (3) the "Now Open" view next to a
-saved group, (4) Settings → General showing dark mode, (5) the sync/entitlements upgrade prompt.
+What each existing store screenshot shows (all use demo data; none shows personal data, AI
+features or paid-only screens):
+
+- `open-popup-light/dark.jpg` — headline "Switch to TabMerger. Every tab, already here." The popup
+  open on the "Now Open" view: four live windows with 18 tabs, five groups (Work, Research,
+  Shopping, Reading List) in the sidebar with their colours and counts, the search box, undo
+  and redo, and the Archived and Sessions sections.
+- `cross-window-tab-drag-light/dark.jpg` — headline "Drag a tab between windows. It just
+  works." A tab being dragged from one window to another inside a group, with drop targets for a
+  new window and a new group.
+- `view-new-group-light/dark.jpg` — headline "Every project, its own space." A newly created
+  group ("Q4 Launch") with one window of three tabs and the "Add Window" button.
+- `add-window-note-light/dark.jpg` — headline "Leave yourself a note on any window." The note
+  editor open on a named window, with a 500-character counter.
+- `multi-window.jpg` — headline "One group, split across windows. Still one click away." The
+  Research group split into four windows of one tab each (not for upload, see the table).
+- `color-new-group-light/dark.jpg` — headline "Color it to spot it at a glance." The current group
+  colour picker open over an empty group (not for upload, see the table).
+- `cluttered-chrome.jpg` — headline "Too many tabs. Too many windows." A crowded browser tab strip
+  at its natural size (not recommended, see the table).
+- `promo/small-tile.jpg` — the popup split diagonally between light and dark themes, "Light or
+  dark. Always organized."
+- `promo/marquee-tile.jpg` — a crowded tab strip on the left, an arrow, and the TabMerger popup on
+  the right, "Tab chaos in. Order out."
 
 ---
 
 ## Permissions Justification
 
-All permissions below come directly from `wxt.config.ts`'s `manifest.permissions` array. There
-are **no `host_permissions`** of any kind (required or optional) — deliberately, per that
-file's own comment, to keep the extension out of the store's elevated review tier for reading
-page content. Tab preview's OG-image fetch is done server-side by the web app
-(`packages/web/app/api/og-preview`), not by the extension, and is **off by default** — see
-"Show page images in previews" under Data Collection below.
+Checked against the manifest `wxt.config.ts` produces on 2026-10-06. Seven API permissions, no
+optional permissions, **no `host_permissions`** of any kind (required or optional) — deliberately,
+to keep the extension out of the store's elevated review tier for reading page content. The
+extension also declares `incognito: "spanning"`, four keyboard `commands`, and an
+`externally_connectable` block (all explained below). No content script ships in the Chrome or
+Edge build. Tab previews' page-image fetch is done server-side by the web app
+(`packages/web/app/api/og-preview`), not by the extension, and is **off by default**.
 
-| Permission | Type | Justification |
-|------------|------|----------------|
-| `tabs` | permissions | Read tab URLs/titles and move/create/close tabs so the extension can save your open tabs into groups and restore them later, and so the popup's "Now Open" view can stay in sync with what's actually open. |
-| `tabGroups` | permissions | Read and set native browser tab groups so TabMerger's saved groups can be reflected as real Chrome tab groups when restored, and vice versa. |
-| `storage` | permissions | Persist saved groups, tabs, and settings locally (IndexedDB/`chrome.storage`) so your data survives a browser restart, entirely on-device unless you opt into cloud sync. |
-| `contextMenus` | permissions | Adds right-click menu entries (e.g. "Save tab to TabMerger") as a faster alternative to opening the popup. |
-| `alarms` | permissions | Schedules periodic background sync checks for signed-in Pro users, and any other timed maintenance task, without keeping the service worker alive continuously. |
-| `notifications` | permissions | Shows a system notification for actions that complete in the background (e.g. a finished sync), so you don't have to keep the popup open to know it happened. |
-| `identity` | permissions | Used for `chrome.identity.launchWebAuthFlow` to run the Google OAuth sign-in flow (`src/lib/googleOAuthFlow.ts`) for account sign-in — needed only if you choose to sign in for cloud sync. |
+| Permission | Justification (paste into the dashboard) |
+|------------|------------------------------------------|
+| `tabs` | Reads the title, address and icon of the browser's open tabs so the user can save them into named groups, and creates, moves and closes tabs to restore or save them. The "Now Open" view uses it to mirror the tabs currently open. Tab data is only read to show it to the user and to save what they choose. |
+| `tabGroups` | Reads the browser's native tab groups (name and color) so a saved tab remembers its group, and recreates that group when the tab is restored. |
+| `storage` | Stores settings, the sync encryption key (on this device only) and pending reminders in `chrome.storage.local`, so they survive a browser restart. Saved groups are kept in the extension's own database. |
+| `contextMenus` | Adds the right-click entry "Save to TabMerger" (save this tab, tabs to the left, tabs to the right, all other tabs) as a faster alternative to opening the popup. |
+| `alarms` | Schedules the one-time reminders a user sets on a saved tab, so the reminder fires at the chosen time even when the popup is closed. |
+| `notifications` | Shows the reminder notification when a reminder the user set comes due; clicking it opens the saved tab. |
+| `identity` | Runs the "Continue with Google" sign-in window (`chrome.identity.launchWebAuthFlow`, `src/lib/googleOAuthFlow.ts`). Used only if the user chooses to sign in; the extension works without it. |
 
-<!-- No host_permissions entries — see note above. -->
+Not permissions, but reviewers ask:
+
+- **Keyboard `commands`:** four save shortcuts (current tab, tabs to the left, tabs to the
+  right, all other tabs) plus the standard "activate the extension" command. Not a permission.
+- **`incognito: "spanning"`:** one shared extension instance. Private windows are only visible
+  to the extension if the user turns on "Allow in Incognito" in Chrome; it is used to reopen
+  saved private windows as private windows.
+- **`externally_connectable`:** matches only the TabMerger website origin (the production site
+  in the stable build) and one extra extension ID (`DEV_EXTENSION_ID`, the maintainer's unpacked
+  development build). It lets the website detect that the extension is installed, pass a
+  sign-in session to it, and request a sync. It grants nothing to other sites or extensions.
+- **Content scripts:** none on Chrome and Edge. Firefox only: one script on the TabMerger
+  website origin (see "Firefox permission note" below).
+- **Remote code:** none. All code is bundled in the package; no script is loaded from a CDN.
+- **Host permissions:** none, so there is no host justification to paste.
+
+<!-- Removed 2026-10-06: the old `alarms` text (sync checks) and `notifications` text (finished
+     sync) described features that do not exist; background.ts only uses both for reminders. -->
 
 ---
 
@@ -155,27 +275,67 @@ mapping of the same facts, verified against that page and the extension's own co
 
 **Does the extension collect user data?** Yes
 
-| Data Type | Collected? | Transmitted Off-Device? | Purpose | Shared with Third Parties? |
-|-----------|-----------|------------------------|---------|---------------------------|
-| Personally identifiable info | Email (if you sign in) | Yes, to Supabase Auth | Account identification, linking your subscription to your data | Supabase (processor only) |
-| Health info | No | — | — | — |
-| Financial info | No (Stripe handles payment directly; extension/web app only store a Stripe customer ID + subscription status) | Yes, customer ID/status only | Entitlements (free/Pro/Pro AI feature gating) | Stripe (processor only) |
-| Authentication info | Supabase session/JWT | Yes, to Supabase and the web app's API routes | Sign-in, authorizing sync and AI requests | Supabase (processor only) |
-| Personal communications | No | — | — | — |
-| Location | No | — | — | — |
-| Web history | No — TabMerger only stores tabs you explicitly save, not general browsing history | — | — | — |
-| User activity | Anonymous usage events (feature usage, page views) via GA4 and PostHog, proxied server-side | Yes, via `${VITE_WEB_APP_URL}/api/track` and PostHog's Capture API | Product analytics | Google Analytics, PostHog (processors only) |
-| Website content | Saved tab URLs, titles | (a) Only if you sign in and enable cloud sync — then end-to-end encrypted client-side before upload; (b) only if you turn on the opt-in "Show page images in previews" setting (Settings → General, **off by default**) — while on, hovering a tab sends that tab's URL to TabMerger's preview service (`/api/og-preview`) to fetch an image, not linked to your account, not logged, not stored | (a) Restoring your saved tabs/groups across devices; (b) showing a page-image thumbnail in the hover preview tooltip | None — (a) is encrypted client-side, TabMerger cannot read it; (b) is a stateless fetch-and-return, not persisted or associated with any account |
+Derived from the code on 2026-10-06. This is exactly what to tick on the dashboard's
+**Privacy practices** tab. Fresh install with no account sends nothing except the anonymous
+usage events and the favicon lookups listed below.
+
+| CWS data category | Tick? | What and why | Code evidence |
+|---|---|---|---|
+| Personally identifiable information | **Yes** | Email address, only when the user signs in (account, linking a subscription). Sent to Supabase Auth. | `src/hooks/useAuth.ts`, `src/components/Modal/Auth.tsx`, `src/lib/supabase.ts` |
+| Health information | No | Never read or sent. | — |
+| Financial and payment information | No | Payment happens on the website through Stripe; the extension never sees card or billing details. It only reads the user's own plan and status (`tier`, `status`) from Supabase to unlock Pro. | `src/hooks/useEntitlements.ts` |
+| Authentication information | **Yes** | Supabase session tokens (sign-in with email and password, magic link or Google). Also an encryption-key record: the data key wrapped (encrypted) by the user's passphrase, plus a salt. The passphrase itself is never sent. | `src/hooks/useAuth.ts`, `src/lib/googleOAuthFlow.ts`, `src/lib/encryptionKey.ts` |
+| Personal communications | No | Never read or sent. | — |
+| Location | No | Never read or sent. | — |
+| Web history | **Yes** | Not browsing history: only tabs the user saves, plus the open-tab list that stays on the device. What leaves the device: (a) Pro users who turn on sync upload saved tab URLs and titles, end-to-end encrypted before upload; (b) the site's origin (for example `https://example.com`, no path) goes to Google's favicon service to fetch an icon when the browser did not supply one; (c) only if the user turns on "Show page images in previews" (off by default), the hovered tab's address goes to TabMerger's preview service, not linked to an account, not logged, not stored. | `src/lib/syncEngine.ts`, `src/lib/utils.ts` (`getFaviconUrl`), `src/hooks/useCurrentTabs.ts`, `src/lib/tabAccess.ts`, `src/components/Windows/TabPreview.tsx` |
+| User activity | **Yes** | Anonymous product-usage events (names such as `group_created`, `tab_saved`, `search_used`, `upgrade_clicked`, with counts and labels like `source` or `limit`; never URLs, titles or names) tagged with a random install ID kept in `chrome.storage.local`, not the account. Sent to TabMerger's own server (`/api/track`), which forwards to Google Analytics 4 when the production server has its analytics keys set (server-side setting, not visible in this repo). | `src/lib/analytics.ts` (`trackEvent`), `packages/web/app/api/track/route.ts` |
+| Website content | No | The extension never reads page text, images, media or links from any page. (The opt-in preview image is fetched by TabMerger's server and returned; its input is the address, covered under Web history.) | `src/lib/tabAccess.ts` |
+
+**Not applicable on purpose:** no host permissions, no content script on Chrome or Edge, no
+remote code, no data sold. AI features are off (`VITE_AI_ENABLED` is not `"true"`), so no tab
+titles or URLs are sent to Anthropic; the Pro AI row of the privacy policy only becomes true
+when AI ships, at which point re-check this table (AI would send open-tab titles and URLs, which
+is Web history).
+
+**Analytics and error reporting: which builds are active.** `.github/workflows/publish.yml`
+sets only `VITE_WEB_APP_URL`, `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for the
+store builds (stable and beta, Chrome, Firefox and Edge). It does **not** set
+`VITE_POSTHOG_API_KEY` or `VITE_SENTRY_DSN`, and `.env*` files are not in the repository, so in
+every store build:
+
+- **PostHog is inactive.** `trackPostHogEvent` returns immediately without a key.
+- **Sentry is inactive.** `Sentry.init` runs only when a DSN is present (`src/entrypoints/popup/main.tsx`,
+  `src/entrypoints/background.ts`). If a DSN is ever added, the popup would send error reports
+  (URLs redacted by a `beforeSend` filter; session replay masks all text), and this table and the
+  privacy policy must be re-checked first.
+- **GA4 via `/api/track` is active** in every store build, because `VITE_WEB_APP_URL` is set. On
+  Chrome and Edge it runs with no prompt; on Firefox it waits for the user's consent. The
+  extension never contacts Google Analytics directly and holds no measurement ID or secret.
 
 ### Data Use Certification
 
-- [x] Data is NOT sold to third parties
-- [x] Data is NOT used for purposes unrelated to the extension's core functionality
-- [x] Data is NOT used for creditworthiness or lending purposes
+All three certifications can be ticked, because they are true as built:
 
-### Notes for the review team
+- [x] I do not sell or transfer user data to third parties, outside of the approved use cases.
+      (Supabase, Stripe's website checkout and the analytics provider act as processors for
+      TabMerger; nothing is sold.)
+- [x] I do not use or transfer user data for purposes that are unrelated to my item's single
+      purpose. (Data is used only to save, sync and restore tabs, to run accounts and
+      subscriptions, and for anonymous usage statistics.)
+- [x] I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
-- Free-tier users: all tab/group data stays in local IndexedDB and never leaves the device.
+**Other dashboard questions:** "Remote code": No. "Data encrypted in transit": yes (HTTPS only).
+"Users can request deletion": yes, by deleting the account on the website (see
+[`/privacy`](https://tabmerger.vercel.app/privacy), "Data Retention").
+
+### Technical privacy notes
+
+- Free-tier users: all tab/group data stays in local IndexedDB and never leaves the device
+  (except the favicon and analytics requests in the table above, and the opt-in preview).
+- What the server can see when a Pro user syncs: row ids, timestamps, group colour, starred and
+  archived flags, sidebar order, a coarse device label such as "Chrome on Windows", and the
+  wrapped (passphrase-encrypted) data key with its salt. Everything that describes content is
+  ciphertext, as listed next.
 - Pro users who enable sync: `groups.windows/name/note/info`, `sessions.groups/name/description`,
   and `device_sessions.now_open_snapshot` are stored in Supabase as `{v:1,iv,ct}` ciphertext —
   the unwrapped data key lives only in `chrome.storage.local` on the user's device and is never
@@ -183,10 +343,11 @@ mapping of the same facts, verified against that page and the extension's own co
 - AI features (Pro AI tier) are currently **disabled/coming soon** in both the extension and the
   web app (`VITE_AI_ENABLED`/`NEXT_PUBLIC_AI_ENABLED` feature flags) — no tab content is sent to
   Anthropic's Claude API while this flag is off. Update this note when AI ships.
-- The extension itself never talks to Google Analytics, PostHog, Sentry, or Anthropic directly —
-  all of those go through the web app's server-side routes/proxies (`/api/track`, PostHog's
-  Capture API called from the extension with a public API key, and Anthropic only from the web
-  app's AI routes), consistent with "AI calls are server-side only" in `CLAUDE.md`.
+- Direct network destinations from the extension: the TabMerger website (`/api/track`,
+  `/api/og-preview` when enabled, `/api/portal` for the billing link), Supabase, Google's favicon
+  service, and the Google sign-in window. PostHog's capture endpoint and Sentry are in the code
+  but are not called by store builds (no key or DSN is set there). Anthropic is only ever called
+  from the website's server routes, and not at all while AI is off.
 
 ---
 
@@ -195,8 +356,11 @@ mapping of the same facts, verified against that page and the extension's own co
 **Privacy Policy URL** [REQUIRED]
 https://tabmerger.vercel.app/privacy
 
-<!-- TODO (owner): confirm this is the production domain, not the preview alias
-     (tabmerger-preview.vercel.app), before submitting. -->
+The route exists (`packages/web/app/(marketing)/privacy/page.tsx`, last updated September 26,
+2026) and the production domain matches `PROD_WEB_APP_URL` in `publish.yml`. Beta builds use
+the preview alias (`tabmerger-preview.vercel.app`) for the app, but the listing links the
+production domain. Terms of Service: https://tabmerger.vercel.app/terms
+(`app/(marketing)/terms/page.tsx`).
 
 ---
 
@@ -213,11 +377,11 @@ minifying is allowed, but the store's code-readability policy forbids obfuscatio
 
 **Stable listing**
 **Visibility**: Public
-**Regions**: TODO (owner) — confirm current region settings in the dashboard; not derivable from the repo.
+**Regions**: see "Owner to confirm" at the top (dashboard setting, not in the repo).
 
 **BETA listing**
 **Visibility**: Private / restricted to invited testers
-**Regions**: TODO (owner)
+**Regions**: see "Owner to confirm" at the top.
 
 **Firefox is unaffected by the two Chrome Web Store listings above** — it's a separate item on
 a separate store (see `FIREFOXADDONS.md`). Chrome and Edge builds carry
@@ -252,23 +416,20 @@ relays `window.postMessage` to `chrome.runtime.sendMessage` and back.
 ## Developer Info
 
 **Publisher Name** [REQUIRED]
-TODO (owner) — the Chrome Web Store publisher/developer account display name (not the same as
-`CHROME_PUBLISHER_ID`, which is a secret ID, not a display name).
+Set in the developer account, not in the repo (see "Owner to confirm" at the top).
 
 **Contact Email** [REQUIRED]
-TODO (owner) — confirm which address is public-facing on the listing. Security reports go
-through GitHub's private vulnerability reporting (see `.github/SECURITY.md`) rather than a
-published email; the web app's `/contact` page may use a separate address for general
-support — verify before submitting. Do not commit the actual address into this file.
+Set and verified in the developer account (see "Owner to confirm" at the top). Security reports
+go through GitHub's private vulnerability reporting (see `.github/SECURITY.md`) rather than a
+published email. Do not commit the address into this file.
 
-**Support URL / Email** [RECOMMENDED]
-https://tabmerger.vercel.app/contact (web app contact page) — or the GitHub Issues page:
-https://github.com/lbragile/TabMerger/issues
+**Support URL** [RECOMMENDED]
+https://tabmerger.vercel.app/contact (route: `packages/web/app/(marketing)/contact/page.tsx`).
+Alternative for bug reports: https://github.com/lbragile/TabMerger/issues
 
 **Homepage URL** [RECOMMENDED]
-https://tabmerger.vercel.app
-
-<!-- TODO (owner): confirm this is the correct production marketing URL. -->
+https://tabmerger.vercel.app (production site, same as `PROD_WEB_APP_URL` in `publish.yml`).
+Also live as routes: `/features`, `/pricing`, `/faq`, `/changelog`.
 
 ---
 
@@ -280,13 +441,21 @@ with the real semver string carried in `version_name`.
 
 | Listing | `version` (manifest) | `version_name` | Semver / tag | Date | Status |
 |---|---|---|---|---|---|
-| Stable | `3.0.0` | — | `v3.0.0` | TODO (owner) — confirm actual publish date from the dashboard | Published (assumed — verify in dashboard) |
+| Stable | `2.0.0` | — | `v2.0.0` | 2021-03-06 (GitHub release) | **Live: v2 `2.0.0` is the public build today** (owner to confirm the live version in the dashboard) |
+| Stable | `3.0.0` | — | `v3.0.0` | 2026-09-19 (tag) | Never published to the store; superseded by the planned `3.1.0` |
+| Stable | `3.1.0` | — | `v3.1.0` (planned) | not yet released | **Planned: the first v3 stable release.** A rewrite with optional account and end-to-end encrypted sync. Not uploaded, not released. Cut from `main` once the 3.1 beta finishes |
 | BETA | `3.1.0.1` | `3.1.0-beta.1` | `v3.1.0-beta.1` | 2026-09-20 | Superseded |
 | BETA | `3.1.0.2` | `3.1.0-beta.2` | `v3.1.0-beta.2` | 2026-09-21 | Superseded |
 | BETA | `3.1.0.3` | `3.1.0-beta.3` | `v3.1.0-beta.3` | 2026-09-23 | Superseded |
 | BETA | `4.0.0.1` | `4.0.0-beta.1` | none (tag deleted) | 2026-09-26 | Published by mistake — live until beta.5 is approved; see note |
 | BETA | `4.1.0.4` | `3.1.0-beta.4` | `v3.1.0-beta.4` | 2026-09-26 | Superseded by beta.5 (withdrawn from review if still pending) |
-| BETA | `4.1.0.5` | `3.1.0-beta.5` | `v3.1.0-beta.5` | 2026-09-26 | Submitted — TODO (owner): update when the review completes |
+| BETA | `4.1.0.5` | `3.1.0-beta.5` | `v3.1.0-beta.5` | 2026-09-26 | Superseded |
+| BETA | `4.1.0.6` | `3.1.0-beta.6` | `v3.1.0-beta.6` | 2026-09-27 | Superseded |
+| BETA | `4.1.0.7` | `3.1.0-beta.7` | `v3.1.0-beta.7` | 2026-09-29 | Superseded |
+| BETA | `4.1.0.8` | `3.1.0-beta.8` | `v3.1.0-beta.8` | 2026-09-30 | Superseded |
+| BETA | `4.1.0.9` | `3.1.0-beta.9` | `v3.1.0-beta.9` | 2026-10-01 | Superseded |
+| BETA | `4.1.0.10` | `3.1.0-beta.10` | `v3.1.0-beta.10` | 2026-10-02 | Submitted (first release from the public repo); owner to update when the review completes |
+| BETA | `4.1.0.11` | `3.1.0-beta.11` | `v3.1.0-beta.11` | not yet cut | Pending: about to be cut by semantic-release on `beta` (mapping per `manifestVersion.ts`: major 3 + offset 1, N=11 as the 4th integer) |
 
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
@@ -306,20 +475,36 @@ Never remove that offset.
 
 ## Review Notes
 
+### Notes for the review team
+
+Paste into the dashboard's test-instructions field for the v2 to v3 update:
+
+> TabMerger 3 is a rewrite of the version 2 extension (same item, same single purpose: saving,
+> organizing and restoring browser tabs in named groups). New in this version is an optional
+> account with paid end-to-end encrypted sync. No account, login or test credentials are needed
+> to review the core features: install, open the popup, and use "Save to TabMerger" from the
+> right-click menu or the popup to save tabs into a group, then restore them. Sign-in and sync
+> are only reachable from the account icon in the popup header and are not required for anything
+> else. The extension requests no host permissions and has no content script on Chrome. Saved
+> tabs are stored locally; if a user signs in and subscribes, group content is encrypted on the
+> device with the user's passphrase before upload, so the server holds only ciphertext. The
+> background script only handles reminder alarms the user set, the right-click menu, the toolbar
+> badge, keyboard shortcuts and the URL rules the user created. AI features
+> are not enabled in this release. Data saved by version 2 is not imported.
+
 ### Known Issues / Limitations
 
 - Pro AI (AI grouping, smart naming, tab previews) is marked "coming soon" and disabled behind
   a feature flag as of this writing — do not describe it as available in store copy while that
-  flag is off. See `CLAUDE.md`'s AI feature flag notes and the recent commits enabling it
-  (`945e4f1`, `63cbf63`, `7dff2d3`, `6d8fe0d`).
+  flag is off. See `CLAUDE.md`'s AI feature flag notes.
 - `externally_connectable` is scoped to the web app origin plus one extra ID,
   `DEV_EXTENSION_ID` (`@tabmerger/shared`): the maintainer's unpacked development build, so the
   local web app can reach it. It grants nothing to other extensions or sites.
 
 ### Rejection History
 
-TODO (owner): no rejection has been recorded in this repo's history as of this writing. Add a
-row here the first time one occurs.
+No rejection has been recorded in this repo's history as of 2026-10-06. Add a row here the
+first time one occurs.
 
 | Date | Reason | Fix Applied | Resubmitted |
 |------|--------|-------------|-------------|

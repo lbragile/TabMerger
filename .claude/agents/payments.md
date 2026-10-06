@@ -6,7 +6,7 @@ description: >
   pricing, building upgrade/downgrade flows, and handling billing portal. Invoke for: "add a yearly
   discount to the pricing page", "handle subscription cancellation gracefully", "add a promo code flow",
   "fix the webhook not updating the subscription", "add a free trial period".
-model: sonnet
+model: opus
 memory: project
 tools:
   - Read

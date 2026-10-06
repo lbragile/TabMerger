@@ -81,3 +81,20 @@ function resolveBaseUrl(): string {
 export function absoluteUrl(path: string): string {
   return `${resolveBaseUrl()}${path}`
 }
+
+/**
+ * Base URL for the root `metadata.metadataBase` (makes og:image / twitter:image absolute).
+ * Unlike `absoluteUrl` this never throws: a missing or invalid NEXT_PUBLIC_APP_URL must not
+ * break `next build` or page rendering. Falls back to the production alias, the preview
+ * deployment host, then localhost.
+ */
+export function getMetadataBase(): URL {
+  const explicit = validateBaseUrl(process.env.NEXT_PUBLIC_APP_URL)
+  if (explicit) return new URL(explicit)
+  const vercelHost =
+    process.env.VERCEL_ENV === 'production'
+      ? process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
+      : process.env.VERCEL_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL
+  const fromVercel = vercelHost ? validateBaseUrl(`https://${vercelHost}`) : null
+  return new URL(fromVercel ?? 'http://localhost:3000')
+}

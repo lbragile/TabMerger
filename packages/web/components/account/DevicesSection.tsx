@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from 'react'
 import type { DeviceSession } from '@tabmerger/shared'
 import { isEncryptedBlob, decryptBlob } from '@tabmerger/shared'
-import { useEncryptionKey } from '@/lib/encryption/context'
+import { useEncryptionKey, unreadableRowKey } from '@/lib/encryption/context'
 import { createClient } from '@/lib/supabase/client'
+import { LockedItemNote } from '@/components/dashboard/LockedItemNote'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -60,34 +61,43 @@ function formatRelativeTime(iso: string): string {
 }
 
 export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) {
-  const { dataKey } = useEncryptionKey()
+  const { dataKey, recheck } = useEncryptionKey()
   const [devices, setDevices] = useState(initialDevices)
+  /** Ids of devices whose snapshot the current key could not decrypt; their row says why. */
+  const [unreadableIds, setUnreadableIds] = useState<ReadonlySet<string>>(new Set())
 
   // Decrypt any encrypted now_open_snapshot blobs once a data key is available. Rows that
-  // can't be decrypted (locked, or no encryption) fall through to snapshotCounts() below,
-  // which already degrades to "no count shown" for a non-array `windows` — same graceful
-  // path used for genuinely malformed rows, no separate "locked" UI needed.
+  // can't be decrypted fall through to snapshotCounts() below, which degrades to "no count
+  // shown" for a non-array `windows`, and the row shows a LockedItemNote in its place. They are
+  // also reported to the key provider, so a key made stale by a passphrase reset is dropped here
+  // too. Nothing else in a row needs the snapshot: rename and remove use plain columns.
   useEffect(() => {
     if (!dataKey) return
     let cancelled = false
     ;(async () => {
+      const unreadable: string[] = []
       const next = await Promise.all(
         initialDevices.map(async (d) => {
-          if (!isEncryptedBlob(d.now_open_snapshot)) return d
+          const snapshot = d.now_open_snapshot
+          if (!isEncryptedBlob(snapshot)) return d
           try {
-            const content = await decryptBlob<{ windows: unknown }>(dataKey, d.now_open_snapshot)
+            const content = await decryptBlob<{ windows: unknown }>(dataKey, snapshot)
             return { ...d, now_open_snapshot: content }
           } catch {
+            unreadable.push(unreadableRowKey('device_sessions', d.id, snapshot))
             return d
           }
         })
       )
-      if (!cancelled) setDevices(next)
+      if (cancelled) return
+      if (unreadable.length > 0) void recheck(unreadable)
+      setUnreadableIds(new Set(next.filter((d) => isEncryptedBlob(d.now_open_snapshot)).map((d) => d.id)))
+      setDevices(next)
     })()
     return () => {
       cancelled = true
     }
-  }, [dataKey, initialDevices])
+  }, [dataKey, initialDevices, recheck])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
   const [deleteTarget, setDeleteTarget] = useState<DeviceRow | null>(null)
@@ -231,6 +241,7 @@ export function DevicesSection({ initialDevices, userId }: DevicesSectionProps) 
                     return windows > 0 ? ` · ${windows} window${windows === 1 ? '' : 's'} · ${tabs} tab${tabs === 1 ? '' : 's'}` : ''
                   })()}
                 </p>
+                {dataKey && unreadableIds.has(device.id) && <LockedItemNote kind="device" className="mt-1" />}
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

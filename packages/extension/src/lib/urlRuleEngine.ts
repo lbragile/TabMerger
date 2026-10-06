@@ -1,4 +1,4 @@
-import { getGroupsState, saveGroupsState, getSetting } from '@/lib/localDb';
+import { updateGroupsState, getSetting } from '@/lib/localDb';
 import { matchUrlToRule } from '@/hooks/useUrlRules';
 import type { UrlRule } from '@/lib/types';
 import type { Tab } from '@/lib/types';
@@ -21,32 +21,34 @@ export async function applyUrlRule(
 ): Promise<void> {
   if (!matchedGroupId) return;
 
-  const state = await getGroupsState();
-  const group = state.available.find((g) => g.id === matchedGroupId);
-  if (!group) return;
-
   const newTab: Tab = {
     id: tab.id ?? 0,
     url: tab.url ?? '',
     title: tab.title ?? '',
     favIconUrl: tab.favIconUrl ?? '',
+    savedAt: Date.now(),
   };
 
-  // Add to the first window, or create one if none exist
-  const windows = group.windows.length
-    ? group.windows.map((w, i) =>
-        i === 0 ? { ...w, tabs: [...w.tabs, newTab] } : w
-      )
-    : [{ id: Date.now(), tabs: [newTab], incognito: false, focused: false }];
+  // Atomic against the popup's writes: this runs in the service worker, a different JS
+  // context from the popup, so the read-modify-write must be one `updateGroupsState`.
+  await updateGroupsState((state) => {
+    const group = state.available.find((g) => g.id === matchedGroupId);
+    if (!group) return null;
 
-  const updatedState = {
-    ...state,
-    available: state.available.map((g) =>
-      g.id === matchedGroupId ? { ...g, windows, updatedAt: Date.now() } : g
-    ),
-  };
+    // Add to the first window, or create one if none exist
+    const windows = group.windows.length
+      ? group.windows.map((w, i) =>
+          i === 0 ? { ...w, tabs: [...w.tabs, newTab] } : w
+        )
+      : [{ id: Date.now(), tabs: [newTab], incognito: false, focused: false }];
 
-  await saveGroupsState(updatedState);
+    return {
+      ...state,
+      available: state.available.map((g) =>
+        g.id === matchedGroupId ? { ...g, windows, updatedAt: Date.now(), pendingSync: true } : g
+      ),
+    };
+  });
 }
 
 /** Convenience for background.ts — reads rules from settings store */

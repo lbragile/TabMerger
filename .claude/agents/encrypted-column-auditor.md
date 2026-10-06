@@ -2,7 +2,7 @@
 name: encrypted-column-auditor
 description: Audits new or changed web API routes for server-side reads of E2E-encrypted content columns (groups.windows, sessions.groups, device_sessions.now_open_snapshot, shared_bundles.groups_snapshot) that assume plaintext and will break for every real account. Invoke before merging any change touching packages/web/app/api/.
 memory: project
-model: sonnet
+model: opus
 color: red
 ---
 

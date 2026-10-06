@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseRgba, formatRgba, isValidHexColor, hexToRgba, rgbaToHex } from '@/lib/color'
+import { parseRgba, formatRgba, isValidHexColor, hexToRgba, rgbaToHex, withAlpha } from '@/lib/color'
 
 describe('parseRgba / formatRgba', () => {
   it('parses an rgba string, ignoring alpha', () => {
@@ -12,6 +12,22 @@ describe('parseRgba / formatRgba', () => {
 
   it('formats as opaque, matching PRESET_COLORS style', () => {
     expect(formatRgba({ r: 239, g: 68, b: 68 })).toBe('rgba(239, 68, 68, 1)')
+  })
+})
+
+describe('withAlpha', () => {
+  it('swaps the alpha of an rgba group colour', () => {
+    expect(withAlpha('rgba(239, 68, 68, 1)', 0.1)).toBe('rgba(239, 68, 68, 0.1)')
+    expect(withAlpha('rgba(59,130,246,1)', 0.25)).toBe('rgba(59, 130, 246, 0.25)')
+  })
+
+  it('adds an alpha to a plain rgb colour', () => {
+    expect(withAlpha('rgb(10, 20, 30)', 0.18)).toBe('rgba(10, 20, 30, 0.18)')
+  })
+
+  it('mixes any other CSS colour with transparent instead of returning it opaque', () => {
+    expect(withAlpha('#ff0000', 0.1)).toBe('color-mix(in srgb, #ff0000 10%, transparent)')
+    expect(withAlpha('rebeccapurple', 0.07)).toBe('color-mix(in srgb, rebeccapurple 7%, transparent)')
   })
 })
 

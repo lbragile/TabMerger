@@ -136,10 +136,17 @@ function MarqueeTile() {
                     `calc(100% - banner)` fix from the previous pass) and the
                     image only occupies a modest fraction of it, not most of
                     it. */}
-                <Img
-                    src={staticFile(`screenshots/raw/${CLUTTERED_CHROME_SCREENSHOT_ID}.png`)}
-                    style={{ width: "100%", height: "auto", display: "block" }}
-                />
+                {/* 2026-10-06: the 1400px strip was being downscaled to the
+                    616px panel (0.44x) which made the glyphs mush. Show it
+                    at NATIVE 1:1 pixels instead, left-aligned and cropped to
+                    the panel width (first tabs + start of the bookmarks bar),
+                    and drop the page-body sliver below the bookmarks bar. */}
+                <div style={{ width: "100%", height: 118, overflow: "hidden" }}>
+                    <Img
+                        src={staticFile(`screenshots/raw/${CLUTTERED_CHROME_SCREENSHOT_ID}.png`)}
+                        style={{ width: 1400, height: 155, maxWidth: "none", display: "block" }}
+                    />
+                </div>
             </div>
             <div
                 style={{
@@ -310,6 +317,66 @@ function SmallTile() {
     );
 }
 
-export function PromoTile({ variant }: { variant: "marquee" | "small" }) {
+// Social preview (1280x640, 2:1 — GitHub repo social preview / og:image).
+// The marquee is too wide (2.5:1) and its left half reads as empty space at
+// thumbnail size, so this is a dedicated layout: brand + big tagline left,
+// the SAME dark popup capture the marquee uses (ORGANIZED_SCREENSHOT_ID) on
+// the right, as large as it fits. Content stays inside a safe zone larger
+// than 5% top/bottom (32px of 640) because some sites crop to 1.91:1.
+// Sizes in rem (root 16px) per the project's rem preference.
+const SOCIAL_SAFE_REM = 2.5; // 40px > 5% of 640 (32px)
+const SOCIAL_POPUP_WIDTH_REM = 42.5; // 680px wide -> 510px tall at 4:3
+
+function SocialTile() {
+    return (
+        <AbsoluteFill style={{ backgroundColor: "#0b0f14", fontFamily: "sans-serif" }}>
+            <div
+                style={{
+                    position: "absolute",
+                    left: "3.5rem",
+                    top: `${SOCIAL_SAFE_REM}rem`,
+                    bottom: `${SOCIAL_SAFE_REM}rem`,
+                    width: "28rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    gap: "1.75rem",
+                }}
+            >
+                <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+                    <Img src={staticFile("logo.png")} style={{ width: "3.5rem", height: "3.5rem" }} />
+                    <div style={{ color: "white", fontWeight: 800, fontSize: "2.25rem" }}>TabMerger</div>
+                </div>
+                <div style={{ color: "white", fontWeight: 800, fontSize: "4.25rem", lineHeight: 1.05 }}>
+                    Tab chaos in. Order out.
+                </div>
+                <div style={{ color: "rgba(255,255,255,0.72)", fontWeight: 600, fontSize: "1.375rem", lineHeight: 1.35 }}>
+                    Chrome, Brave, Edge, Firefox · encrypted&nbsp;sync
+                </div>
+            </div>
+            <div
+                style={{
+                    position: "absolute",
+                    right: "2.5rem",
+                    top: "50%",
+                    width: `${SOCIAL_POPUP_WIDTH_REM}rem`,
+                    transform: "translateY(-50%)",
+                    borderRadius: "0.75rem",
+                    overflow: "hidden",
+                    boxShadow: "0 0.5rem 2rem rgba(0,0,0,0.6)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                }}
+            >
+                <Img
+                    src={staticFile(`screenshots/raw/${ORGANIZED_SCREENSHOT_ID}.png`)}
+                    style={{ width: "100%", height: "auto", display: "block" }}
+                />
+            </div>
+        </AbsoluteFill>
+    );
+}
+
+export function PromoTile({ variant }: { variant: "marquee" | "small" | "social" }) {
+    if (variant === "social") return <SocialTile />;
     return variant === "marquee" ? <MarqueeTile /> : <SmallTile />;
 }

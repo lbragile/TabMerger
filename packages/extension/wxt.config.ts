@@ -97,7 +97,7 @@ export default defineConfig({
             name: getExtensionName(mode),
             description: isBeta
                 ? "THIS EXTENSION IS FOR BETA TESTING"
-                : "Stop drowning in tabs. Save, group, and restore every window in one place.",
+                : "Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).",
             incognito: "spanning",
             permissions: [
                 "tabs",

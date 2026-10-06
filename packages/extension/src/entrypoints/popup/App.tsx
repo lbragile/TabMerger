@@ -15,6 +15,7 @@ import { useGroups } from '@/hooks/useGroups';
 import { useCurrentTabs } from '@/hooks/useCurrentTabs';
 import { getSetting } from '@/lib/localDb';
 import { useSync } from '@/hooks/useSync';
+import { useExternalGroupsChanges } from '@/hooks/useExternalGroupsChanges';
 import { useUIStore } from '@/stores/uiStore';
 import { parseSearchQuery, fuzzyMatch } from '@/lib/utils';
 import { trackEvent } from '@/lib/analytics';
@@ -81,6 +82,9 @@ function AppContent() {
 
   // Cloud sync (no-op if unauthenticated or free)
   useSync();
+
+  // Pick up groups writes made by the service worker / another extension page
+  useExternalGroupsChanges();
 
   // Auto-select group when "in:group_name" qualifier is typed
   useEffect(() => {

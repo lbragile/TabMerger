@@ -18,39 +18,6 @@ export type KnownIssue = {
 
 export const KNOWN_ISSUES: KnownIssue[] = [
   {
-    id: 'sync-reverts-edits',
-    area: 'Sync',
-    title: 'A change made while a sync is running can be undone',
-    details:
-      'With sync on, renaming, moving or creating a group at the moment a sync starts (syncs also start when a dialog opens or closes) can be reverted when that sync finishes, and a group created in that moment can disappear.',
-    workaround:
-      'If a change reverts, make it again: it sticks once the sync has finished. Pause for a couple of seconds after an edit before opening another dialog.',
-  },
-  {
-    id: 'account-switch-leftover-groups',
-    area: 'Sync',
-    title: 'Switching accounts in one browser can bring back the previous account’s groups',
-    details:
-      'After signing out of one account and into another in the same browser profile, groups from the first account can reappear under the second one.',
-    workaround: 'Use a separate browser profile for each TabMerger account during the beta.',
-  },
-  {
-    id: 'sync-group-order',
-    area: 'Sync',
-    title: 'Group order can differ between devices',
-    details:
-      'Your groups, their names and their tabs sync to your other devices, but the order of groups in the sidebar may not: another device (or the web dashboard) can list the same groups in a different order.',
-    workaround: 'Nothing is lost: every group and tab is there, only the order differs.',
-  },
-  {
-    id: 'background-save-overwrites-popup',
-    area: 'Extension',
-    title: 'Saving tabs from outside the popup can overwrite a change made in it at the same moment',
-    details:
-      'Saving tabs with the right-click menu or a keyboard shortcut, or a URL rule moving a tab, while you are changing something in the open popup can occasionally undo that popup change.',
-    workaround: 'If a popup change goes missing right after a background save, redo it.',
-  },
-  {
     id: 'chrome-beta-review-lag',
     area: 'Chrome',
     title: 'New Chrome beta versions arrive after Chrome Web Store review',
@@ -72,5 +39,23 @@ export const KNOWN_ISSUES: KnownIssue[] = [
     details:
       'Checkout shows the price in your local currency, but a subscription (and every plan change or renewal of it) stays in the currency it was first paid in. Accounts that subscribed before local pricing keep paying in US dollars. Renewals in a local currency are converted again each time, so the amount can shift slightly with exchange rates.',
     workaround: 'To test local pricing, use a new account (see “Paying in your local currency” above).',
+  },
+  {
+    id: 'dashboard-sync-time-new-browser',
+    area: 'Web app',
+    title: 'The dashboard’s “Synced” time can be older than your last sync',
+    details:
+      'In a browser that has not seen a sync yet (a new browser, or after clearing site data), the sync label in the dashboard header shows when your groups last changed, not when a device last synced. While the dashboard is open, a sync from another device that changed nothing, or that only deleted a group, does not move the time either.',
+    workaround:
+      'Press the refresh button on the label. The extension in that browser syncs and the time updates.',
+  },
+  {
+    id: 'dashboard-locked-after-passphrase-reset',
+    area: 'Web app',
+    title: 'Some groups or sessions show as “(locked)” after a passphrase reset',
+    details:
+      'After you reset your encryption passphrase, the dashboard asks for the new one. Anything that was saved with the earlier passphrase and has not been uploaded again since still cannot be read, even though the new passphrase is correct: it shows as “(locked)” with a short explanation on the item, and it cannot be shared or restored (a locked session can still be deleted). A device listed in Account shows the same explanation instead of its window and tab count.',
+    workaround:
+      'Open the extension on the device that has those groups or sessions, unlock it with the new passphrase and let it sync. It uploads them again and the dashboard can read them after a refresh.',
   },
 ]

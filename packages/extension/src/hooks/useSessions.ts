@@ -3,10 +3,11 @@ import { trackEvent } from '@/lib/analytics';
 import { nanoid } from 'nanoid';
 import { encryptBlob, FREE_TIER_LIMITS } from '@tabmerger/shared';
 import type { Session } from '@/lib/types';
-import { getSessions, saveSession, deleteSession } from '@/lib/localDb';
+import { getSessions, saveSession, deleteSession, setSetting } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { resolveIncognito } from '@/lib/incognito';
-import { hasEncryptionKey, getDataKey } from '@/lib/encryptionKey';
+import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from '@/lib/contentUploadKey';
+import { SESSIONS_MIGRATION_DONE_KEY } from '@/lib/syncSettingKeys';
 import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { useGroups } from './useGroups';
 
@@ -22,41 +23,39 @@ export function useSessions() {
 }
 
 /**
- * Best-effort upserts a single local session to Supabase, encrypting `{name, groups}`
- * when encryption is set up (never pushes plaintext if a key exists but is locked —
- * caller should skip/retry later in that case, same as pushGroup/doSync). Shared by
- * `useSaveSession`'s explicit save action and `useSync`'s session self-heal, since
- * sessions have no `pendingSync` flag or push loop of their own.
+ * Upserts a single local session to Supabase with `{name, groups, description}` ENCRYPTED into
+ * the `groups` column (the plaintext `name`/`description` columns are sent blank). There is no
+ * plaintext branch: without an unlocked key (setup not finished, status unknown, locked) nothing
+ * is sent. Resolves `true` only when the server accepted the row; `false` when the upload was
+ * skipped or rejected, so callers can retry later. Shared by `useSaveSession`'s explicit save
+ * action and `useSync`'s session self-heal, since sessions have no `pendingSync` flag or push
+ * loop of their own.
  */
-export async function pushSessionToSupabase(session: Session): Promise<void> {
+export async function pushSessionToSupabase(session: Session): Promise<boolean> {
   const { data: { session: authSession } } = await supabase.auth.getSession();
-  if (!authSession) return;
-  if (!(await canUploadOnFirefox())) return; // see syncEngine.ts's canUploadOnFirefox doc comment
+  if (!authSession) return false;
+  if (!(await canUploadOnFirefox())) return false; // see syncEngine.ts's canUploadOnFirefox doc comment
 
-  let name: string = session.name;
-  let description: string | null = session.description ?? null;
-  let groupsField: Session['groups'] | { v: 1; iv: string; ct: string } = session.groups;
-
-  if (await hasEncryptionKey()) {
-    const dataKey = await getDataKey();
-    if (!dataKey) {
-      console.warn('[TabMerger] Encryption enabled but key is locked — skipping session sync for', session.id);
-      return;
-    }
-    const { iv, ct } = await encryptBlob(dataKey, { name: session.name, groups: session.groups, description: session.description });
-    groupsField = { v: 1, iv, ct };
-    name = '';
-    description = null;
+  const gate = await getContentUploadKey();
+  if (!gate.key) {
+    console.warn(`[TabMerger] Session ${session.id} not uploaded: ${UPLOAD_BLOCKED_MESSAGE[gate.reason]}`);
+    return false;
   }
+  const { iv, ct } = await encryptBlob(gate.key, { name: session.name, groups: session.groups, description: session.description });
 
-  await supabase.from('sessions').upsert({
+  const { error } = await supabase.from('sessions').upsert({
     id: session.id,
     user_id: authSession.user.id,
-    name,
-    description,
-    groups: groupsField,
+    name: '',
+    description: null,
+    groups: { v: 1, iv, ct },
     created_at: new Date(session.createdAt).toISOString(),
   });
+  if (error) {
+    console.warn('[TabMerger] Session sync to Supabase failed', session.id, error.message);
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -91,11 +90,15 @@ export function useSaveSession() {
       // ponytail: best-effort Supabase sync — local save already succeeded. Only for
       // users with the cloud-sync entitlement; free users stay local-only.
       if (cloudSync) {
+        let uploaded = false;
         try {
-          await pushSessionToSupabase(session);
+          uploaded = await pushSessionToSupabase(session);
         } catch (e) {
           console.warn('[TabMerger] Session sync to Supabase failed', e);
         }
+        // Not on the server (no key yet / locked / offline / rejected): sessions have no per-row
+        // pending flag, so re-arm the self-heal and the next sync uploads it (see useSync).
+        if (!uploaded) await setSetting(SESSIONS_MIGRATION_DONE_KEY, false);
       }
       return session;
     },

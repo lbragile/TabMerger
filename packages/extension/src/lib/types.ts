@@ -34,6 +34,18 @@ export interface Group {
   info?: string;
   note?: string;
   pendingSync?: boolean;
+  /**
+   * The group's sidebar index changed and the new `position` is not on the server yet.
+   * Local-only (like `pendingSync`). Kept SEPARATE from `pendingSync` so a reorder never
+   * re-pushes this device's (possibly stale) content; only `position` is sent.
+   */
+  positionDirty?: boolean;
+  /**
+   * The server `updated_at` this device last saw for the row (set by every pull/merge that adopts or
+   * confirms it, every applied realtime event and every successful push). It is the compare-and-swap
+   * base for the next push: the client `updatedAt` is never compared with the server stamp.
+   */
+  remoteUpdatedAt?: string;
   archived?: boolean; // hidden from main sidebar; excluded from free-tier group count
 }
 
@@ -48,6 +60,12 @@ export interface GroupsState {
   active: { id: string; index: number };
   available: Group[];
   urlRules?: UrlRule[];
+  /**
+   * Monotonic revision of the stored state, bumped by every groups write (IDB only; carried
+   * through the cache). Cache-derived writers pass the rev of their base to `saveGroupsState`
+   * so a write that was based on a stale cache is refused instead of clobbering a newer one.
+   */
+  rev?: number;
 }
 
 export interface Session {

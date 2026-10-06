@@ -76,6 +76,21 @@ async function main() {
         });
         console.log(`[store-assets] saved ${outputLocation}`);
     }
+
+    // 1280x640 social preview: PNG for crisp text; falls back to JPEG if the
+    // PNG would reach 1 MB (GitHub's social preview limit).
+    const social = await selectComposition({ serveUrl, id: "SocialPreview" });
+    const socialPng = path.join(PROMO_DIR, "social-preview.png");
+    const socialJpg = path.join(PROMO_DIR, "social-preview.jpg");
+    fs.rmSync(socialJpg, { force: true });
+    await renderStill({ composition: social, serveUrl, output: socialPng, imageFormat: "png" });
+    if (fs.statSync(socialPng).size >= 1024 * 1024) {
+        fs.rmSync(socialPng);
+        await renderStill({ composition: social, serveUrl, output: socialJpg, imageFormat: "jpeg", jpegQuality: 92 });
+        console.log(`[store-assets] saved ${socialJpg}`);
+    } else {
+        console.log(`[store-assets] saved ${socialPng}`);
+    }
 }
 
 main().catch((err) => {

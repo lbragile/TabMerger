@@ -20,12 +20,14 @@ const {
   mockImportGroupsMutate,
   mockExportGroups,
   mockGetDb,
+  mockClearAllLocalData,
+  mockClearHistory,
   mockOpenModal,
   mockEnterDemoMode,
   mockTrackEvent,
   mockUseAiUsage,
   mockSetDevAiUsage,
-  mockHasEncryptionKey,
+  mockGetEncryptionKeyState,
   mockGetDataKey,
   mockResetEncryption,
   mockRequestDataConsent,
@@ -40,12 +42,14 @@ const {
   mockImportGroupsMutate: vi.fn(),
   mockExportGroups: vi.fn().mockReturnValue('{}'),
   mockGetDb: vi.fn().mockResolvedValue({ clear: vi.fn().mockResolvedValue(undefined) }),
+  mockClearAllLocalData: vi.fn().mockResolvedValue(undefined),
+  mockClearHistory: vi.fn(),
   mockOpenModal: vi.fn(),
   mockEnterDemoMode: vi.fn().mockResolvedValue(undefined),
   mockTrackEvent: vi.fn(),
   mockUseAiUsage: vi.fn(),
   mockSetDevAiUsage: vi.fn().mockResolvedValue(undefined),
-  mockHasEncryptionKey: vi.fn().mockResolvedValue(false),
+  mockGetEncryptionKeyState: vi.fn().mockResolvedValue('absent'),
   mockGetDataKey: vi.fn().mockResolvedValue(null),
   mockResetEncryption: vi.fn().mockResolvedValue(undefined),
   mockRequestDataConsent: vi.fn().mockResolvedValue(true),
@@ -53,7 +57,7 @@ const {
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
-  hasEncryptionKey: mockHasEncryptionKey,
+  getEncryptionKeyState: mockGetEncryptionKeyState,
   getDataKey: mockGetDataKey,
   resetEncryption: mockResetEncryption,
 }))
@@ -69,6 +73,7 @@ vi.mock('@/lib/localDb', () => ({
   getSetting: mockGetSetting,
   setSetting: mockSetSetting,
   getDb: mockGetDb,
+  clearAllLocalData: mockClearAllLocalData,
 }))
 
 vi.mock('@/lib/theme', () => ({ applyTheme: mockApplyTheme }))
@@ -91,7 +96,11 @@ vi.mock('@/lib/importExport', () => ({
 vi.mock('@/lib/toast', () => ({ toast: { success: vi.fn(), error: mockToastError } }))
 vi.mock('@/lib/dataConsent', () => ({ requestDataConsent: mockRequestDataConsent }))
 vi.mock('@/components/Settings/OtherDevices', () => ({ OtherDevices: () => <div>Other devices panel</div> }))
-vi.mock('@/stores/uiStore', () => ({ useUIStore: (sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }) }))
+vi.mock('@/stores/uiStore', () => ({
+  useUIStore: Object.assign((sel: (s: { openModal: typeof mockOpenModal }) => unknown) => sel({ openModal: mockOpenModal }), {
+    getState: () => ({ clearHistory: mockClearHistory })
+  })
+}))
 
 const DEFAULT_SETTINGS = {
   theme: 'system',
@@ -129,7 +138,7 @@ beforeEach(() => {
   globalThis.confirm = vi.fn().mockReturnValue(true) // still used by the Import flow's confirm()
   globalThis.URL.createObjectURL = vi.fn().mockReturnValue('blob:x')
   globalThis.URL.revokeObjectURL = vi.fn()
-  mockHasEncryptionKey.mockResolvedValue(false)
+  mockGetEncryptionKeyState.mockResolvedValue('absent')
   mockGetDataKey.mockReturnValue(null)
   mockRequestDataConsent.mockResolvedValue(true)
 })
@@ -489,7 +498,7 @@ describe('SettingsModal — Data tab', () => {
     expect(mockGetDb).not.toHaveBeenCalled()
   })
 
-  it('confirming the clearAllData modal clears all IndexedDB stores', async () => {
+  it('confirming the clearAllData modal wipes every store through the QUEUED wipe (not raw store clears)', async () => {
     const clearMock = vi.fn().mockResolvedValue(undefined)
     mockGetDb.mockResolvedValue({ clear: clearMock })
     renderModal()
@@ -498,10 +507,9 @@ describe('SettingsModal — Data tab', () => {
     fireEvent.click(screen.getByRole('button', { name: /clear all data/i }))
     const onConfirm = mockOpenModal.mock.calls[0][1].onConfirm as () => void
     onConfirm()
-    await waitFor(() => expect(clearMock).toHaveBeenCalledWith('groups'))
-    expect(clearMock).toHaveBeenCalledWith('groupsState')
-    expect(clearMock).toHaveBeenCalledWith('sessions')
-    expect(clearMock).toHaveBeenCalledWith('settings')
+    await waitFor(() => expect(mockClearAllLocalData).toHaveBeenCalledOnce())
+    expect(clearMock).not.toHaveBeenCalled() // no raw db.clear outside the write queue
+    expect(mockClearHistory).toHaveBeenCalled() // undo snapshots of the wiped data must not be restorable
   })
 
   function fileInput() {
@@ -698,7 +706,7 @@ describe('SettingsModal — billing portal', () => {
 describe('SettingsModal — Account tab encryption', () => {
   it('never renders an encryption section — setup/unlock is handled entirely by the mandatory encryptionSetup modal, not this tab', async () => {
     mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockGetDataKey.mockReturnValue({ fake: 'key' } as unknown as CryptoKey)
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
@@ -714,7 +722,16 @@ describe('SettingsModal — Account tab encryption', () => {
 describe('SettingsModal — Reset encryption passphrase', () => {
   it('hides the reset button when the user has no encryption key set up', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
-    mockHasEncryptionKey.mockResolvedValue(false)
+    mockGetEncryptionKeyState.mockResolvedValue('absent')
+    renderModal()
+    await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
+    await goToTab(/account/i)
+    expect(screen.queryByRole('button', { name: /forgot your passphrase/i })).toBeNull()
+  })
+
+  it('hides the reset button when the encryption status could not be checked', async () => {
+    mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
@@ -731,7 +748,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
 
   it('shows the reset button when set up, opens a confirm modal (not a bare click) on click', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
@@ -744,7 +761,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
   it('renders de-emphasized (link-style, destructive text) and after Sign out, not alongside Manage billing', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
     mockUseEntitlements.mockReturnValue({ tier: 'pro', cloudSync: true })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
     await goToTab(/account/i)
@@ -761,7 +778,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
 
   it('confirming calls resetEncryption then opens the encryptionSetup modal', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     const { toast } = await import('@/lib/toast')
     renderModal()
     await waitFor(() => expect(mockGetSetting).toHaveBeenCalled())
@@ -777,7 +794,7 @@ describe('SettingsModal — Reset encryption passphrase', () => {
 
   it('shows an error toast when resetEncryption fails, without opening encryptionSetup', async () => {
     mockUseAuth.mockReturnValue({ user: { id: 'u1', email: 'user@example.com' }, session: null, signOut: vi.fn() })
-    mockHasEncryptionKey.mockResolvedValue(true)
+    mockGetEncryptionKeyState.mockResolvedValue('present')
     mockResetEncryption.mockRejectedValueOnce(new Error('boom'))
     const { toast } = await import('@/lib/toast')
     renderModal()

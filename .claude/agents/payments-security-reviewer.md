@@ -7,7 +7,7 @@ description: >
     raw-body handling, idempotency, RLS bypass risks, entitlement bypass, and Stripe
     signature verification correctness.
 memory: project
-model: sonnet
+model: opus
 tools:
     - Read
     - Glob

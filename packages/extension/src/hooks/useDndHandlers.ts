@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Collision, DragStartEvent, DragOverEvent, DragMoveEvent, DragEndEvent } from '@dnd-kit/core';
 import { useQueryClient, notifyManager, defaultScheduler, type QueryClient } from '@tanstack/react-query';
 import { containerKeyOf, makeGap, type DndGap, type DndInsertion } from '@/lib/dndInsertion';
-import { saveGroupsState } from '@/lib/localDb';
+import { saveGroupsState, updateGroupsState } from '@/lib/localDb';
 import { trackEvent } from '@/lib/analytics';
 import { dndDebugEnabled, dndDebugLog } from '@/lib/dndDebug';
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types';
@@ -66,7 +66,7 @@ interface CommitProgress {
    * synchronous throw LATER in the commit can still await it instead of leaving an
    * unobserved write (and an unhandled rejection) behind.
    */
-  persist?: Promise<void>;
+  persist?: Promise<unknown>;
 }
 
 type UiSnapshot = {
@@ -324,6 +324,41 @@ function readInsertion(collisions: Collision[] | null | undefined): DndInsertion
  * Notifying inline lets the sensor's `flushSync` commit the new order in the drop
  * task itself. The default scheduler is restored immediately.
  */
+/**
+ * Records the rev a groups write produced on the cached state (rev only, same content), so the
+ * NEXT cache-derived write is based on it. Never moves the cached rev backwards.
+ */
+function noteCacheRev(qc: QueryClient, rev: unknown): void {
+  if (typeof rev !== 'number') return;
+  qc.setQueryData<GroupsState | undefined>(GROUPS_QUERY_KEY, (old) => (old && (old.rev ?? 0) < rev ? { ...old, rev } : old));
+}
+
+/**
+ * The drop's write was refused as stale (a newer write landed since the cache state it was
+ * derived from). Re-run the same rebase + move against a FRESH read inside the groups lock, so
+ * neither that write nor the drop is lost, and put the stored result in the cache. Throws when
+ * the drop no longer applies (an item or the target is gone); the caller's rollback path then
+ * reloads IDB and announces that the drop was not saved.
+ */
+async function redoDropOnFreshState(
+  qc: QueryClient,
+  base: GroupsState,
+  model: Model,
+  a: DndRef,
+  o: DndRef
+): Promise<void> {
+  let applied = false;
+  const stored = await updateGroupsState((fresh) => {
+    const freshModel = buildDndModel(fresh);
+    const rebased = rebaseMove(base, model, fresh, freshModel, a, o);
+    if (!rebased || !canDrop(freshModel, rebased.active, rebased.over)) return null;
+    applied = true;
+    return applyMove(freshModel, fresh, rebased.active, rebased.over).next;
+  });
+  qc.setQueryData(GROUPS_QUERY_KEY, stored);
+  if (!applied) throw new Error('the drop no longer applies to the latest groups');
+}
+
 function setGroupsNow(qc: QueryClient, next: GroupsState): void {
   notifyManager.setScheduler((cb) => cb());
   try {
@@ -1190,7 +1225,18 @@ export function useDndHandlers() {
     // and any read that starts later waits for this write (`localDb` read-your-writes).
     // No `await` may sit between here and the cache write below. (There is deliberately
     // NO `cancelQueries`: it rejected every mutation that had joined the in-flight fetch.)
-    const persist = saveGroupsState(next);
+    // Optimistic concurrency: the write must be based on the rev this cache state came from. If
+    // another write landed since (the worker, a sync, Now Open), it is refused instead of
+    // clobbering it, and the move is re-derived from a FRESH read inside the lock.
+    const persist: Promise<unknown> = Promise.resolve(
+      commitBase.rev === undefined ? saveGroupsState(next) : saveGroupsState(next, { expectedRev: commitBase.rev })
+    ).then(
+      (rev) => noteCacheRev(qc, rev),
+      (err: unknown) => {
+        if ((err as { name?: string } | null)?.name !== 'StaleGroupsError') throw err;
+        return redoDropOnFreshState(qc, base, model, a, o);
+      }
+    );
     p.persist = persist;
     // Final order + cleared drag state in ONE commit. The sensor wraps this whole
     // handler in `flushSync`; `setGroupsNow` makes the query notification

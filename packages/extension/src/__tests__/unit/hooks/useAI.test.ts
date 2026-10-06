@@ -3,14 +3,15 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAutoGroup, useNameGroup, useSuggestSessions, useOrganizeTabs, useTabSummary } from '@/hooks/useAI'
+import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 
-const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings, mockUseAiUsage, mockHasEncryptionKey } = vi.hoisted(() => ({
+const { mockUseAuth, mockUseEntitlements, mockTrackEvent, mockUseAppSettings, mockUseAiUsage, mockGetEncryptionKeyState } = vi.hoisted(() => ({
   mockUseAuth: vi.fn(),
   mockUseEntitlements: vi.fn(),
   mockTrackEvent: vi.fn(),
   mockUseAppSettings: vi.fn(),
   mockUseAiUsage: vi.fn(),
-  mockHasEncryptionKey: vi.fn(),
+  mockGetEncryptionKeyState: vi.fn(),
 }))
 
 // This suite exercises the AI-enabled behavior of these mutations directly (they're
@@ -22,9 +23,9 @@ vi.mock('@/hooks/useEntitlements', () => ({ useEntitlements: () => mockUseEntitl
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 vi.mock('@/hooks/useAppSettings', () => ({ useAppSettings: () => mockUseAppSettings() }))
 vi.mock('@/hooks/useAiUsage', () => ({ useAiUsage: () => mockUseAiUsage() }))
-// ponytail: useOrganizeTabs checks hasEncryptionKey() to decide whether to send plaintext
+// ponytail: useOrganizeTabs checks getEncryptionKeyState() to decide whether to send plaintext
 // groups in the request body; default false (unencrypted/legacy path) unless a test overrides it.
-vi.mock('@/lib/encryptionKey', () => ({ hasEncryptionKey: mockHasEncryptionKey }))
+vi.mock('@/lib/encryptionKey', () => ({ getEncryptionKeyState: mockGetEncryptionKeyState }))
 
 function makeWrapper() {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
@@ -48,7 +49,7 @@ beforeEach(() => {
   ;(chrome.storage.local.get as ReturnType<typeof vi.fn>).mockResolvedValue({})
   ;(chrome.storage.local.set as ReturnType<typeof vi.fn>).mockResolvedValue(undefined)
   mockUseAiUsage.mockReturnValue({ remaining: 100, used: 0, cap: 100, loading: false })
-  mockHasEncryptionKey.mockResolvedValue(false)
+  mockGetEncryptionKeyState.mockResolvedValue('absent')
 })
 
 describe('useAutoGroup', () => {
@@ -259,6 +260,23 @@ describe('manual AI mutations are never daily-throttled', () => {
     await act(async () => { await organizeHook.result.current.mutateAsync() })
 
     expect(globalThis.fetch).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('useOrganizeTabs — encryption status that could not be checked', () => {
+  it('never sends the empty "server reads the rows itself" body: the rows may be ciphertext', async () => {
+    mockUseAuth.mockReturnValue({ session: { access_token: 'tok' } })
+    mockUseEntitlements.mockReturnValue({ aiFeatures: true })
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
+    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({ ok: true, json: async () => ({ runId: '1', token: 't' }) })
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
+    const saved = { id: 'g1', name: 'Work', windows: [{ tabs: [{ id: 0, title: 'T', url: 'https://example.com' }] }] }
+    qc.setQueryData(GROUPS_QUERY_KEY, { active: { id: 'now', index: 0 }, available: [{ id: 'now', name: 'Now Open', permanent: true, windows: [] }, saved] })
+    const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client: qc }, children)
+    const { result } = renderHook(() => useOrganizeTabs(), { wrapper })
+    await act(async () => { await result.current.mutateAsync() })
+    const body = JSON.parse((globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body as string)
+    expect(body.groups.map((g: { id: string }) => g.id)).toEqual(['now', 'g1'])
   })
 })
 

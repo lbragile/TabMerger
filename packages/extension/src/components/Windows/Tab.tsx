@@ -11,11 +11,11 @@ import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminde
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
+import { withAlpha } from '@/lib/color';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
-import { saveGroupsState } from '@/lib/localDb';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
-import { getDisplayTitle } from '@/lib/tabTitle';
+import { getDisplayTitle, setTabCustomTitle } from '@/lib/tabTitle';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GroupsState } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR } from '@tabmerger/shared';
@@ -27,14 +27,6 @@ import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
-
-// ponytail: group colors are stored as rgba(...) strings; swap the alpha for a low-opacity pill background
-function withAlpha(rgba: string, alpha: number): string {
-  const m = rgba.match(/rgba?\(([^)]+)\)/);
-  if (!m) return rgba;
-  const [r, g, b] = m[1].split(',').map((s) => s.trim());
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 
 // ponytail: hostname + path (no query/hash) display; column already truncates via CSS
 function getUrlDisplay(url?: string): string {
@@ -158,28 +150,11 @@ const { mutate: deleteTab } = useDeleteTab();
   const commitTitle = async (value: string) => {
     setEditingTitle(false);
     const trimmed = value.trim();
-    const state = queryClient.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-    if (!state) return;
-    const available = state.available.map((g, gi) => {
-      if (gi !== groupIndex) return g;
-      return {
-        ...g,
-        windows: g.windows.map((w, wi) => {
-          if (wi !== windowIndex) return w;
-          return {
-            ...w,
-            tabs: w.tabs.map((t, ti) => {
-              if (ti !== tabIndex) return t;
-              if (!trimmed || trimmed === t.title) { const { customTitle: _ct, ...rest } = t; return rest; }
-              return { ...t, customTitle: trimmed };
-            })
-          };
-        })
-      };
-    });
-    const next = { ...state, available };
-    queryClient.setQueryData(GROUPS_QUERY_KEY, next);
-    await saveGroupsState(next);
+    // Address the group by ID: the positional index came from the render this click belongs to.
+    const groupId = queryClient.getQueryData<GroupsState>(GROUPS_QUERY_KEY)?.available[groupIndex]?.id;
+    if (!groupId) return;
+    // Atomic read-modify-write that also marks the group for sync (see setTabCustomTitle).
+    queryClient.setQueryData(GROUPS_QUERY_KEY, await setTabCustomTitle(groupId, windowIndex, tabIndex, trimmed));
   };
 
   const handleNoteBlur = (e: React.FocusEvent) => {

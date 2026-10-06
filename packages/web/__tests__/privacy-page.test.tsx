@@ -55,6 +55,20 @@ describe('PrivacyPage', () => {
     expect(section?.textContent).toMatch(/preview service/i)
   })
 
+  it('discloses the favicon lookup: which service, what is sent and what is not', () => {
+    render(<PrivacyPage />)
+    const block = document.getElementById('site-icons')
+    expect(block).toBeInTheDocument()
+    expect(block?.textContent).toMatch(/Google.s favicon service/)
+    expect(block?.textContent).toMatch(/that site.s domain/)
+    expect(block?.textContent).toMatch(/never the full page address/)
+    expect(block?.textContent).toMatch(/never passes through our servers/)
+    // linked from the tab data paragraph, repeated in the storage table and listed as a processor
+    expect(document.querySelector('#what-we-collect a[href="#site-icons"]')).toBeInTheDocument()
+    expect(document.getElementById('how-stored')?.textContent).toMatch(/Google.s favicon service/)
+    expect(document.getElementById('third-party')?.textContent).toMatch(/Google favicon service/)
+  })
+
   it('never claims tab data "never leaves your device"', () => {
     render(<PrivacyPage />)
     expect(document.body.textContent).not.toMatch(/never leaves your device/i)

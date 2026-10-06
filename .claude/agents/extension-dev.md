@@ -6,7 +6,7 @@ description: >
   IndexedDB local storage, Supabase sync, the background service worker, content scripts, and entitlement
   gating. Invoke for tasks like: "add a new feature to the extension popup", "fix the DnD ordering bug",
   "add a keyboard shortcut", "update the tab preview component".
-model: sonnet
+model: opus
 memory: project
 tools:
   - Read

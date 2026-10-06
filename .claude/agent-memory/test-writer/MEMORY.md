@@ -7,3 +7,5 @@
 - [Visual regression setup](learnings_visual_regression.md) — Playwright toHaveScreenshot, @visual tag split, video-frame/gitignore/theme-seeding gotchas, authenticated-project dashboard snapshots
 - [Continue on device tests](learnings_continue_on_device_tests.md) — deviceSessions.ts + Settings/OtherDevices.tsx test layout, standalone-mountable panel, fake-timer debounce
 - [Flag-off module const testing](learnings_flag_off_module_const.md) — AI_ENABLED-style flags need vi.resetModules()+dynamic import per state, not just vi.stubEnv, when consumed via a module-level const
+- [Race testing technique](learnings_integration_race_testing.md) — fake Supabase gates + resetModules for second context/restart in integration tests
+- [Real local Supabase suites](learnings_real_supabase_local.md) — run the real-network integration suites against the local stack; sequential files, ws transport for realtime

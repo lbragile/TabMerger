@@ -315,4 +315,60 @@ describe('sendToKnownExtension', () => {
     )
     expect(result?.id).toBe('chrome-id')
   })
+
+  describe('timeoutMs', () => {
+    type Reply = (response?: unknown) => void
+
+    /** Answers PING at once and keeps the reply callback of any other message. */
+    async function cacheResponderAndHold() {
+      const held: { reply: Reply } = { reply: () => {} }
+      const sendMessage = vi.fn((id: string, msg: unknown, cb: Reply) => {
+        if ((msg as { type: string }).type === 'PING') {
+          if (id === 'chrome-id') cb({ type: 'PONG' })
+        } else {
+          held.reply = cb
+        }
+      })
+      window.chrome = { runtime: { sendMessage } }
+      await sendToExtension({ type: 'PING' }) // establishes the cache
+      return held
+    }
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('waits past the probe timeout for a slow reply when a longer timeout is given', async () => {
+      vi.useFakeTimers()
+      const held = await cacheResponderAndHold()
+
+      const pending = sendToKnownExtension<{ ok: boolean }>({ type: 'SYNC_NOW' }, { timeoutMs: 30_000 })
+      await vi.advanceTimersByTimeAsync(8000)
+      held.reply({ ok: true })
+
+      await expect(pending).resolves.toEqual({ id: 'chrome-id', response: { ok: true } })
+      expect(getCachedExtensionId()).toBe('chrome-id')
+    })
+
+    it('still gives up after the short probe timeout by default', async () => {
+      vi.useFakeTimers()
+      await cacheResponderAndHold()
+
+      const pending = sendToKnownExtension({ type: 'SYNC_NOW' })
+      await vi.advanceTimersByTimeAsync(1500)
+
+      await expect(pending).resolves.toBeNull()
+      expect(getCachedExtensionId()).toBeNull()
+    })
+
+    it('gives up once the longer timeout has passed', async () => {
+      vi.useFakeTimers()
+      await cacheResponderAndHold()
+
+      const pending = sendToKnownExtension({ type: 'SYNC_NOW' }, { timeoutMs: 30_000 })
+      await vi.advanceTimersByTimeAsync(30_000)
+
+      await expect(pending).resolves.toBeNull()
+    })
+  })
 })

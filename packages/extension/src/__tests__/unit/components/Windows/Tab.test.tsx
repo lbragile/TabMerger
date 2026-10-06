@@ -40,6 +40,14 @@ const {
 
 vi.mock('@/lib/localDb', () => ({
   saveGroupsState: mockSaveGroupsState,
+  // the title edit is an atomic read-modify-write on the (mocked) current state
+  updateGroupsState: async (fn: (s: unknown) => unknown) => {
+    const current = mockUseGroupsData().data
+    const next = fn(current)
+    if (!next) return current
+    await mockSaveGroupsState(next)
+    return next
+  },
   getGroupsState: vi.fn(),
   getSetting: vi.fn().mockResolvedValue([]),
   setSetting: vi.fn(),
@@ -576,8 +584,15 @@ describe('TabItem — custom title / rename flow', () => {
   })
 
   it('renames the tab title via context menu and commits on Enter', async () => {
-    const user = userEvent.setup()
+    const startedAt = Date.now()
     const t = makeTab({ title: 'Example Tab' })
+    mockUseGroupsData.mockReturnValue({
+      data: {
+        available: [{ ...makeGroup(), windows: [{ id: 1, name: 'W', tabs: [t], starred: false, incognito: false, focused: false }] }],
+        active: { id: '', index: 0 },
+      },
+    })
+    const user = userEvent.setup()
     render(<TabItem tab={t} groupIndex={0} windowIndex={0} tabIndex={0} siblingCount={1} />, { wrapper })
     fireEvent.contextMenu(screen.getByRole('listitem'))
     await user.click(screen.getByText(/rename tab/i))
@@ -585,6 +600,11 @@ describe('TabItem — custom title / rename flow', () => {
     fireEvent.change(input, { target: { value: 'New Title' } })
     fireEvent.keyDown(input, { key: 'Enter' })
     await waitFor(() => expect(mockSaveGroupsState).toHaveBeenCalled())
+    // the edit is a sync-visible change to the saved group (it used to be neither pushed nor kept)
+    const saved = mockSaveGroupsState.mock.calls.at(-1)?.[0] as GroupsState
+    expect(saved.available[0].windows[0].tabs[0].customTitle).toBe('New Title')
+    expect(saved.available[0].pendingSync).toBe(true)
+    expect(saved.available[0].updatedAt).toBeGreaterThanOrEqual(startedAt)
   })
 })
 

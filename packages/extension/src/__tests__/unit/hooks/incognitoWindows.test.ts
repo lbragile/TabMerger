@@ -18,7 +18,7 @@ import type { GroupsState, Window as ExtWindow, Session } from '@/lib/types'
 const { mockToastInfo, mockGetGroupsState } = vi.hoisted(() => ({ mockToastInfo: vi.fn(), mockGetGroupsState: vi.fn() }))
 
 vi.mock('@/lib/toast', () => ({ toast: { info: mockToastInfo, error: vi.fn(), success: vi.fn() } }))
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: mockGetGroupsState,
   setSetting: vi.fn().mockResolvedValue(undefined),
@@ -30,7 +30,7 @@ vi.mock('@/lib/localDb', () => ({
 vi.mock('@/lib/syncEngine', () => ({ deleteRemoteGroups: vi.fn().mockResolvedValue(undefined), canUploadOnFirefox: vi.fn() }))
 vi.mock('@/hooks/useUrlRules', () => ({ deleteRulesForGroupIds: vi.fn().mockResolvedValue(undefined) }))
 vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: vi.fn() }, from: vi.fn() } }))
-vi.mock('@/lib/encryptionKey', () => ({ hasEncryptionKey: vi.fn().mockResolvedValue(false), getDataKey: vi.fn() }))
+vi.mock('@/lib/encryptionKey', () => ({ getEncryptionKeyState: vi.fn().mockResolvedValue('absent'), getDataKey: vi.fn() }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
 vi.mock('@/lib/chromeGroups', () => ({ openTabInChromeGroup: vi.fn().mockResolvedValue(undefined) }))
 

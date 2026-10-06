@@ -18,8 +18,10 @@ popup-lifecycle-specific and doesn't belong in the background handler.
 
 **Background handler (`background.ts`, `onMessageExternal`):** `{ type: 'SYNC_NOW' }` →
 `handleSyncNow()` does its own gating (no React deps available): `supabase.auth.getSession()`
-→ `hasEncryptionKey()` → `getDataKey()` → `performSync(session)`. Responds
-`{ ok: true }` or `{ ok: false, reason: 'no-session'|'locked'|'error', message? }`. Confirmed
+→ `getEncryptionKeyState()` → `getDataKey()` → `performSyncCycle(session)`. Responds
+`{ ok: true, skipped }` (`skipped: true` = another cycle held the sync lock, nothing ran) or
+`{ ok: false, reason: 'no-session'|'locked'|'error', message? }` (`error` also when the
+encryption status could not be checked). Confirmed
 `getDataKey()` works correctly from the background context (chrome.storage.session-backed, per
 the earlier cross-context fix) — but the background worker has its OWN lifetime and its own
 data-key-unlocked state, separate from the popup's. If the popup was closed and the SW went

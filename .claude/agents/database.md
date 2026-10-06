@@ -6,7 +6,7 @@ description: >
   data sync issues, Realtime subscription problems, or RLS permission errors. Invoke for: "add a new
   table for user preferences", "add an index to improve query performance", "fix the RLS policy blocking
   the dashboard", "write a migration to add a column".
-model: sonnet
+model: opus
 memory: project
 tools:
   - Read

@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { RotateCcw, Trash2 } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { LockedItemNote } from '@/components/dashboard/LockedItemNote'
 
 // ponytail: inline datetime format — no need for full Intl config overhead
 const formatDateTime = (date: string) =>
@@ -34,6 +35,12 @@ interface SessionCardProps {
   windowCount: number
   tabCount: number
   createdAt: string
+  /**
+   * The session's content could not be decrypted with the current key: `name` and `groups` are
+   * placeholders. The card says why, shows no counts, and Restore is refused (it would open
+   * nothing). Delete stays available: removing a session needs only its id.
+   */
+  locked?: boolean
   onDelete?: (id: string) => void
   onRestore?: (id: string) => void
 }
@@ -47,10 +54,12 @@ export function SessionCard({
   windowCount,
   tabCount,
   createdAt,
+  locked = false,
   onDelete,
   onRestore,
 }: SessionCardProps) {
   const [open, setOpen] = useState(false)
+  const lockedNoteId = useId()
   const hasContents = !!groups && groups.length > 0
 
   return (
@@ -65,15 +74,21 @@ export function SessionCard({
             {onRestore && (
               <Tooltip>
                 <TooltipTrigger asChild>
+                  {/* aria-disabled, not disabled, when locked: the control stays reachable by
+                      keyboard so the reason (tooltip and the card's note) can be read. */}
                   <button
-                    onClick={() => onRestore(id)}
+                    onClick={locked ? undefined : () => onRestore(id)}
                     aria-label="Restore session"
-                    className="text-muted-foreground hover:text-foreground rounded-md p-1"
+                    aria-disabled={locked ? true : undefined}
+                    aria-describedby={locked ? lockedNoteId : undefined}
+                    className={`text-muted-foreground rounded-md p-1 ${locked ? 'opacity-50 cursor-not-allowed' : 'hover:text-foreground'}`}
                   >
                     <RotateCcw className="w-4 h-4" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="top">Restore session</TooltipContent>
+                <TooltipContent side="top">
+                  {locked ? "This session can't be read, so it can't be restored" : 'Restore session'}
+                </TooltipContent>
               </Tooltip>
             )}
             {onDelete && (
@@ -93,11 +108,16 @@ export function SessionCard({
           </TooltipProvider>
         </div>
       </div>
-      <div className="flex flex-wrap gap-2 mb-2">
-        <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(groupCount, 'group')}</span>
-        <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(windowCount ?? 0, 'window')}</span>
-        <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(tabCount, 'tab')}</span>
-      </div>
+      {locked ? (
+        // Instead of the counts: the placeholder's "0 groups, 0 tabs" is not what the session holds.
+        <LockedItemNote id={lockedNoteId} className="mb-2" />
+      ) : (
+        <div className="flex flex-wrap gap-2 mb-2">
+          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(groupCount, 'group')}</span>
+          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(windowCount ?? 0, 'window')}</span>
+          <span className="text-[12px] bg-surface3 px-2 py-0.5 rounded-md">{p(tabCount, 'tab')}</span>
+        </div>
+      )}
       {hasContents && tabCount > 0 && (
         <div className="flex h-1.5 w-full rounded-full overflow-hidden mb-2">
           {groups!.map((group, i) => {

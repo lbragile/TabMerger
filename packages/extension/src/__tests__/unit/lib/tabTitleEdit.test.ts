@@ -13,7 +13,7 @@ import type { Tab, GroupsState } from '@/lib/types'
 
 // ─── Mock localDb ─────────────────────────────────────────────────────────────
 
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   saveGroupsState: vi.fn().mockResolvedValue(undefined),
   getGroupsState: vi.fn().mockResolvedValue({
     active: { id: 'g1', index: 0 },
@@ -97,6 +97,18 @@ describe('saveCustomTitle — Feature 66', () => {
     const workGroup = state.available.find((g: { id: string }) => g.id === 'g2')
     const tab = workGroup.windows[0].tabs[0]
     expect(tab.customTitle).toBe('My Custom Title')
+    // N5: the edit is a sync-visible change to a saved group (it used to be neither pushed nor kept)
+    expect(workGroup.pendingSync).toBe(true)
+    expect(workGroup.updatedAt).toBeGreaterThan(2)
+  })
+
+  it('does not mark Now Open (permanent, never synced)', async () => {
+    const mockState = await (getGroupsState as unknown as () => Promise<GroupsState>)()
+    mockState.available[0].windows = [{ id: 5, tabs: [{ id: 77, title: 'Live', url: 'https://live.com' }], incognito: false, focused: false }]
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValueOnce(mockState)
+    await saveCustomTitle(77, 'X')
+    const state = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    expect(state.available[0].pendingSync).toBeUndefined()
   })
 
   it('removes customTitle when saved with an empty string', async () => {

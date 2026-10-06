@@ -2,12 +2,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { nanoid } from 'nanoid';
 import type { Group, GroupsState, Tab } from '@/lib/types';
 import { DEFAULT_GROUP_COLOR, DEFAULT_GROUP_TITLE } from '@/lib/types';
-import { getGroupsState, saveGroupsState } from '@/lib/localDb';
+import { getGroupsState, saveGroupsState, updateGroupsState } from '@/lib/localDb';
 import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { resolveIncognito } from '@/lib/incognito';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
+import { asNewGroup } from '@/lib/syncDirty';
+import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
+import { toast } from '@/lib/toast';
 import { useUIStore } from '@/stores/uiStore';
 import { trackEvent } from '@/lib/analytics';
 import { type TierCaps, FreeLimitExceededError, countSavedGroupsAndTabs, exceedsFreeLimits, showFreeLimitToast } from '@/lib/tierLimits';
@@ -41,20 +44,26 @@ function assertWithinFreeLimits(
 
 export const GROUPS_QUERY_KEY = ['groups'] as const;
 
+/** Saved (non-permanent) tabs that predate the `savedAt` field. */
+function tabsMissingSavedAt(state: GroupsState): Tab[] {
+  return state.available
+    .filter((g) => !g.permanent)
+    .flatMap((g) => g.windows.flatMap((w) => w.tabs))
+    .filter((t) => !t.savedAt);
+}
+
 async function getGroupsStateWithMigration() {
   const state = await getGroupsState();
-  const now = Date.now();
-  let dirty = false;
-  state.available.forEach((g) => {
-    if (g.permanent) return;
-    g.windows.forEach((w) => {
-      w.tabs.forEach((t) => {
-        if (!t.savedAt) { t.savedAt = now; dirty = true; }
-      });
-    });
+  if (tabsMissingSavedAt(state).length === 0) return state;
+  // Redo the migration as an atomic update on a fresh read, so it can't overwrite a write
+  // (this context's or the service worker's) that landed after the read above.
+  return updateGroupsState((fresh) => {
+    const missing = tabsMissingSavedAt(fresh);
+    if (missing.length === 0) return null;
+    const now = Date.now();
+    missing.forEach((t) => { t.savedAt = now; });
+    return fresh;
   });
-  if (dirty) await saveGroupsState(state);
-  return state;
 }
 
 /** Reads all groups from IndexedDB via TanStack Query. staleTime:0 so the popup always gets the latest on open. */
@@ -70,22 +79,41 @@ export function useGroups() {
 
 /**
  * Returns a typed mutation helper used by every group/window/tab mutation hook.
- * Pattern: fetch fresh IDB state → optionally push undo snapshot → apply transform → persist → update cache.
+ * Pattern: atomic IDB read-modify-write (`updateGroupsState`: fresh read → optionally push undo
+ * snapshot → apply transform → persist, all inside the write queue + cross-context lock) → update cache.
  * Pass `skipUndo=true` for operations that are too granular to undo (notes, info fields, Now Open sync).
+ * `mutFn` runs inside the lock: keep it synchronous and cheap (fire-and-forget side effects only).
  */
 function useGroupsMutation() {
   const qc = useQueryClient();
   const pushUndo = useUIStore((s) => s.pushUndo);
 
-  return (mutFn: (prev: GroupsState) => GroupsState, skipUndo = false) =>
-    /** fetchQuery (not getQueryData) guarantees we mutate the latest IDB state even if the cache is stale */
-    qc.fetchQuery({ queryKey: GROUPS_QUERY_KEY, queryFn: getGroupsState }).then(async (prev) => {
+  return (mutFn: (prev: GroupsState) => GroupsState, skipUndo = false, opts: { align?: boolean } = {}) => {
+    // The list the user is looking at. `mutFn` closes over positional indexes from that render.
+    const base = opts.align === false ? undefined : qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
+    /** a fresh read inside the lock (not the cache) guarantees we mutate the latest IDB state, even one the service worker just wrote */
+    let gone = false;
+    return updateGroupsState((fresh) => {
+      // Resolve the target by group id: re-address the fresh state to `base`'s order so index N
+      // is still the group the user clicked; refuse (no write) if that group is gone.
+      const prev = alignToBase(base, fresh);
+      if (!prev) {
+        gone = true;
+        return null;
+      }
       if (!skipUndo) pushUndo(prev);
-      const next = mutFn(prev);
-      await saveGroupsState(next);
+      const result = mutFn(prev);
+      // The view was in the user's order: put the result back into the FRESH order (see restoreFreshOrder).
+      return prev === fresh ? result : restoreFreshOrder(fresh, prev, result);
+    }).then((next) => {
+      if (gone) {
+        toast.info('A group you were working on changed or was removed elsewhere, so nothing was changed.', { id: 'groups-changed-elsewhere' });
+        markAborted(next); // onSuccess analytics must not count a mutation that did nothing
+      }
       qc.setQueryData(GROUPS_QUERY_KEY, next);
       return next;
     });
+  };
 }
 
 /** `caps` (default `{}` = ungated) is the Free-tier backstop — see `assertWithinFreeLimits`. */
@@ -99,7 +127,7 @@ export function useAddGroup(caps: TierCaps = {}) {
       return mutate((prev) => {
         const newGroup = createGroup(nanoid(10), name, color ?? DEFAULT_GROUP_COLOR);
         return { ...prev, available: [...prev.available, newGroup] };
-      });
+      }, false, { align: false });
     },
     onSuccess: () => { trackEvent('group_created'); }
   });
@@ -183,14 +211,11 @@ export function useDuplicateGroup(caps: TierCaps = {}) {
         const source = available[groupIndex];
         if (!source) return prev;
 
-        const clone: Group = {
-          ...JSON.parse(JSON.stringify(source)),
-          id: nanoid(10),
-          name: DEFAULT_GROUP_TITLE,
-          permanent: false,
-          updatedAt: Date.now(),
-          pendingSync: true
-        };
+        // new identity: no inherited server base / position flag (see asNewGroup)
+        const clone: Group = asNewGroup(
+          { ...JSON.parse(JSON.stringify(source)), name: DEFAULT_GROUP_TITLE, permanent: false, updatedAt: Date.now() },
+          nanoid(10)
+        );
 
         const newAvailable = [...available];
         newAvailable.splice(groupIndex + 1, 0, clone);
@@ -233,7 +258,7 @@ export function useUpdateGroupName() {
         };
         return { ...prev, available };
       }),
-    onSuccess: () => { trackEvent('group_renamed'); }
+    onSuccess: (data) => { if (!wasAborted(data)) trackEvent('group_renamed'); }
   });
 }
 
@@ -959,9 +984,21 @@ export function useMoveWindow() {
 export function useSetGroupsState() {
   const qc = useQueryClient();
 
-  return async (state: GroupsState) => {
-    await saveGroupsState(state);
-    qc.setQueryData(GROUPS_QUERY_KEY, state);
+  /**
+   * `opts.expectedRev` (the rev of the cache state `state` was derived from) turns the write into
+   * an optimistic-concurrency one: if another write landed since, nothing is written, the
+   * groups are refetched and `false` is returned (the caller's snapshot is out of date).
+   */
+  return async (state: GroupsState, opts?: { expectedRev?: number }): Promise<boolean> => {
+    try {
+      const rev = await (opts ? saveGroupsState(state, opts) : saveGroupsState(state));
+      qc.setQueryData(GROUPS_QUERY_KEY, typeof rev === 'number' ? { ...state, rev } : state);
+      return true;
+    } catch (err) {
+      if ((err as { name?: string } | null)?.name !== 'StaleGroupsError') throw err;
+      void qc.invalidateQueries({ queryKey: GROUPS_QUERY_KEY }, { cancelRefetch: false });
+      return false;
+    }
   };
 }
 
@@ -1255,7 +1292,7 @@ export function useApplyAIGroups(caps: TierCaps = {}) {
         appliedGroups = result.appliedGroups;
         appliedTabs = result.appliedTabs;
         return { ...prev, available: result.nextAvailable };
-      });
+      }, false, { align: false });
 
       return { appliedGroups, appliedTabs };
     }
@@ -1289,7 +1326,7 @@ export function useSaveShortcutTabs() {
         group.info = getGroupInfo(group);
         available[targetIndex] = group;
         return { ...prev, available };
-      }),
+      }, false, { align: false }),
     onSuccess: () => { trackEvent('tabs_saved', { count: 1 }); }
   });
 }
@@ -1302,7 +1339,8 @@ export function useImportGroups() {
     mutationFn: (newGroups: import('@/lib/types').Group[]) =>
       mutate((prev) => ({
         ...prev,
-        available: [...prev.available, ...newGroups]
-      }))
+        // each imported group is a new group (a backup made on this account repeats existing ids/stamps)
+        available: [...prev.available, ...newGroups.map((g) => asNewGroup(g))]
+      }), false, { align: false })
   });
 }

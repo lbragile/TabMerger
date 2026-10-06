@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AppToaster } from '@/components/AppToaster'
 import { PostHogProvider } from '@/components/posthog-provider'
+import { getMetadataBase } from '@/lib/utils'
 import './globals.css'
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ try {
 `
 
 export const metadata: Metadata = {
+  metadataBase: getMetadataBase(),
   title: {
     default: 'TabMerger — Organize your tabs. Reclaim your focus.',
     template: '%s | TabMerger',

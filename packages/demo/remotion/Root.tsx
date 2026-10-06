@@ -121,6 +121,16 @@ export function RemotionRoot() {
                 height={560}
                 defaultProps={{ variant: "marquee" }}
             />
+            {/* 2:1 social preview (GitHub repo social preview, og:image) */}
+            <Composition
+                id="SocialPreview"
+                component={PromoTile}
+                durationInFrames={1}
+                fps={30}
+                width={1280}
+                height={640}
+                defaultProps={{ variant: "social" }}
+            />
         </>
     );
 }

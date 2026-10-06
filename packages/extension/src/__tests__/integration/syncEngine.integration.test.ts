@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { nanoid } from 'nanoid'
 import { supabase } from '@/lib/supabase'
-import { pushPendingChanges, pullRemoteChanges, deleteRemoteGroups } from '@/lib/syncEngine'
-import { saveGroup, getPendingSyncGroups, getGroupsState } from '@/lib/localDb'
+import { pushPendingChanges, performSync, deleteRemoteGroups } from '@/lib/syncEngine'
+import { updateGroupsState, getPendingSyncGroups, getGroupsState } from '@/lib/localDb'
 import { createGroup } from '@/lib/utils'
 import type { Group } from '@/lib/types'
 import type { Session } from '@supabase/supabase-js'
+import { setupFreshEncryption, removeEncryption, readableRow } from './realEncryption'
 
 // ponytail: real network, real Supabase branch, no vi.mock('@supabase/supabase-js') anywhere
 // in this file. Gated on a real .env.test (see .env.test.example) — falls back to skip so
@@ -16,6 +17,16 @@ const hasTestBranch = Boolean(
     process.env.TEST_USER_EMAIL &&
     process.env.TEST_USER_PASSWORD
 )
+
+/** Adds a group to the local list through the queued RMW (the production write path). */
+async function addLocalGroup(group: Group): Promise<void> {
+  await updateGroupsState((s) => ({ ...s, available: [...s.available, group] }))
+}
+
+/** Drops a group from the local list (as if this device had never pulled it). */
+async function dropLocalGroup(id: string): Promise<void> {
+  await updateGroupsState((s) => ({ ...s, available: s.available.filter((g) => g.id !== id) }))
+}
 
 describe.skipIf(!hasTestBranch)('syncEngine — real Supabase branch integration', () => {
   let session: Session
@@ -37,19 +48,22 @@ describe.skipIf(!hasTestBranch)('syncEngine — real Supabase branch integration
       access_token: session.access_token,
       refresh_token: session.refresh_token,
     })
+    // content is only ever pushed encrypted: without a key nothing would be uploaded at all
+    await setupFreshEncryption(session.user.id)
   })
 
   afterAll(async () => {
     if (createdGroupIds.length > 0) {
       await supabase.from('groups').delete().in('id', createdGroupIds)
     }
+    await removeEncryption(session.user.id)
     await supabase.auth.signOut()
   })
 
   it('pushes a pending group then pulls it back (push/pull round trip)', async () => {
     const group: Group = { ...createGroup(nanoid(10), 'Integration Push Test'), pendingSync: true }
     createdGroupIds.push(group.id)
-    await saveGroup(group)
+    await addLocalGroup(group)
 
     const pendingBefore = await getPendingSyncGroups()
     expect(pendingBefore.some((g) => g.id === group.id)).toBe(true)
@@ -60,17 +74,19 @@ describe.skipIf(!hasTestBranch)('syncEngine — real Supabase branch integration
     expect(pendingAfter.some((g) => g.id === group.id)).toBe(false)
 
     const { data: row } = await supabase.from('groups').select('*').eq('id', group.id).single()
-    expect(row?.name).toBe('Integration Push Test')
+    expect(row?.name).toBe('') // the plaintext column is blank: the name lives in the encrypted blob
+    expect((await readableRow(row))?.name).toBe('Integration Push Test')
 
-    // pullRemoteChanges should surface it when merging against an empty local list
-    const merged = await pullRemoteChanges(session, [])
-    expect(merged.some((g) => g.id === group.id)).toBe(true)
+    // a sync cycle should surface it again when this device does not have it locally
+    await dropLocalGroup(group.id)
+    await performSync(session)
+    expect((await getGroupsState()).available.some((g) => g.id === group.id)).toBe(true)
   })
 
   it('deleteRemoteGroups actually deletes rows server-side', async () => {
     const group: Group = { ...createGroup(nanoid(10), 'Integration Delete Test'), pendingSync: true }
     createdGroupIds.push(group.id)
-    await saveGroup(group)
+    await addLocalGroup(group)
     await pushPendingChanges(session)
 
     const { data: before } = await supabase.from('groups').select('id').eq('id', group.id)
@@ -87,7 +103,7 @@ describe.skipIf(!hasTestBranch)('syncEngine — real Supabase branch integration
     // then a different device (or the web dashboard) hard-deleted it on Supabase directly,
     // bypassing this device's deleteRemoteGroups/pendingDeleteGroupIds entirely.
     const group: Group = { ...createGroup(nanoid(10), 'Integration Remote-Delete Test'), pendingSync: true }
-    await saveGroup(group)
+    await addLocalGroup(group)
     await pushPendingChanges(session) // marks pendingSync:false locally, row now exists remotely
 
     // Remove the row directly (not via deleteRemoteGroups, so no pendingDeleteGroupIds entry is set)
@@ -96,10 +112,9 @@ describe.skipIf(!hasTestBranch)('syncEngine — real Supabase branch integration
     const state = await getGroupsState()
     expect(state.available.some((g) => g.id === group.id)).toBe(true) // still present locally pre-pull
 
-    const merged = await pullRemoteChanges(session, state.available)
-    expect(merged.some((g) => g.id === group.id)).toBe(false)
+    await performSync(session)
 
     const stateAfter = await getGroupsState()
-    expect(stateAfter.available.some((g) => g.id === group.id)).toBe(false) // deleteGroup actually persisted to IDB
+    expect(stateAfter.available.some((g) => g.id === group.id)).toBe(false) // the sync cycle's write dropped it from IDB
   })
 })

@@ -6,7 +6,8 @@ import { useSessions, useSaveSession, useDeleteSession, useRestoreSession } from
 import { createGroup, createWindow, createTab } from '@/lib/utils'
 import type { GroupsState, Session } from '@/lib/types'
 
-const { mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting, mockCanUploadOnFirefox } = vi.hoisted(() => ({
+const { mockGetSessions, mockSaveSession, mockDeleteSession, mockTrackEvent, mockGetSetting, mockSetSetting, mockCanUploadOnFirefox } = vi.hoisted(() => ({
+  mockSetSetting: vi.fn().mockResolvedValue(undefined),
   mockGetSessions: vi.fn().mockResolvedValue([]),
   mockSaveSession: vi.fn().mockResolvedValue(undefined),
   mockDeleteSession: vi.fn().mockResolvedValue(undefined),
@@ -22,12 +23,17 @@ vi.mock('@/lib/localDb', () => ({
   saveSession: mockSaveSession,
   deleteSession: mockDeleteSession,
   getSetting: mockGetSetting,
+  setSetting: mockSetSetting,
 }))
 vi.mock('@/lib/analytics', () => ({ trackEvent: mockTrackEvent }))
 
 const mockGetDataKey = vi.fn<() => CryptoKey | null>().mockReturnValue(null)
 vi.mock('@/lib/encryptionKey', () => ({
-  hasEncryptionKey: () => mockGetSetting('encryptionEnabled', false),
+  // driven by the `encryptionEnabled` setting stand-in: true -> present, 'unknown' -> the check failed
+  getEncryptionKeyState: async () => {
+    const value = await mockGetSetting('encryptionEnabled', false)
+    return value === 'unknown' ? 'unknown' : value ? 'present' : 'absent'
+  },
   getDataKey: () => mockGetDataKey(),
 }))
 
@@ -122,6 +128,8 @@ describe('useSaveSession', () => {
 
   it('best-effort syncs to Supabase when a session exists and cloudSync entitlement is true', async () => {
     mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
     responses = [{ data: null, error: null }]
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
@@ -171,17 +179,46 @@ describe('useSaveSession', () => {
       expect.anything(),
       expect.objectContaining({ name: 'My Session', description: 'Weekend reading' })
     )
+    // it is on the server: nothing to retry
+    expect(mockSetSetting).not.toHaveBeenCalled()
   })
 
-  it('includes the plaintext description in the upsert when encryption is off', async () => {
+  it('uploads NOTHING (there is no plaintext upload) when the account has no encryption key yet, and re-arms the self-heal', async () => {
     mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
     responses = [{ data: null, error: null }]
     const { result } = renderHook(() => useSaveSession(), { wrapper })
     await act(async () => {
       await result.current.mutateAsync({ name: 'My Session', description: 'Weekend reading', sessionCount: 0, hasSessions: false, cloudSync: true })
     })
-    const upserted = (builder.upsert as ReturnType<typeof vi.fn>).mock.calls[0][0]
-    expect(upserted.description).toBe('Weekend reading')
+    expect((builder.upsert as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
+    expect(mockSaveSession).toHaveBeenCalled() // local save still happens
+    // uploaded later, encrypted, by useSync once setup is finished
+    expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', false)
+  })
+
+  it('re-arms the self-heal when the server rejects the upload', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetDataKey.mockReturnValue({} as CryptoKey)
+    responses = [{ data: null, error: { message: 'new row violates row-level security policy' } }]
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
+    })
+    expect((builder.upsert as ReturnType<typeof vi.fn>)).toHaveBeenCalled()
+    expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', false)
+  })
+
+  it('skips the remote push (never plaintext) when the encryption status could not be checked', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
+    mockGetSetting.mockResolvedValue('unknown')
+    const { result } = renderHook(() => useSaveSession(), { wrapper })
+    await act(async () => {
+      await result.current.mutateAsync({ name: 'My Session', sessionCount: 0, hasSessions: false, cloudSync: true })
+    })
+    expect((builder.upsert as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
+    expect(mockSaveSession).toHaveBeenCalled() // local save still happens
+    expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', false)
   })
 
   it('skips the remote push when encryption is enabled but the key is locked', async () => {
@@ -194,6 +231,7 @@ describe('useSaveSession', () => {
     })
     expect((builder.upsert as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
     expect(mockSaveSession).toHaveBeenCalled() // local save still happens
+    expect(mockSetSetting).toHaveBeenCalledWith('sessionsEncryptionMigrationDone', false)
   })
 
   it('does not call Supabase upsert when there is no auth session', async () => {

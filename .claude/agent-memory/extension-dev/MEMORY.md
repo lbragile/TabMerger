@@ -86,3 +86,6 @@
 - [Device id cross-account scoping](learnings_device_id_cross_account_scoping.md) — getOrCreateDeviceId() now keys local setting by `deviceId:${userId}`, not one unscoped key; no migration of old shared id, lazily regenerated per user
 - [AI coming-soon flag wiring](learnings_ai_coming_soon_flag_wiring.md) — how VITE_AI_ENABLED/AI_ENABLED gates entitlements, useAI, Header, UpgradePrompt
 - [Test mocking gotcha for AI_ENABLED](learnings_test_mocking_aiflag.md) — mocking useEntitlements alone isn't enough once a file imports AI_ENABLED directly
+- [Encryption key tri-state + upload gate](learnings_encryption_key_tristate.md) — getEncryptionKeyState (unknown is not absent), getContentUploadKey (no plaintext branch), key bound to the server key row, per-row decrypt catch, cycle identity check, count-based paging, cycle deadline, marker-scan test, signInAsPro
+- [Groups RMW + cross-context lock](learnings_groups_rmw_lock.md) — updateGroupsState contract, Web Locks + globalThis fallback, queued wipe, TM_GROUPS_CHANGED refetch, withUpdateGroupsState test helper, CRLF script trap
+- [Group colour tints](learnings_group_colour_tints.md) — withAlpha lives in lib/color.ts; inline style over static primary fallback classes; flush band via -mx-1 -mt-1; computed style and position need e2e checks

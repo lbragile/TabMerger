@@ -15,7 +15,7 @@ const {
   mockApplyUrlRule,
   mockRunGoogleOAuthFlow,
   mockGetSession,
-  mockHasEncryptionKey,
+  mockGetEncryptionKeyState,
   mockGetDataKey,
   mockPerformSync,
   mockRegisterGroupsChangeListener,
@@ -29,7 +29,7 @@ const {
   mockApplyUrlRule: vi.fn().mockResolvedValue(undefined),
   mockRunGoogleOAuthFlow: vi.fn().mockResolvedValue(undefined),
   mockGetSession: vi.fn(),
-  mockHasEncryptionKey: vi.fn(),
+  mockGetEncryptionKeyState: vi.fn(),
   mockGetDataKey: vi.fn(),
   mockPerformSync: vi.fn(),
   mockHasDataConsent: vi.fn().mockResolvedValue(true),
@@ -37,7 +37,7 @@ const {
 
 vi.mock('@/lib/googleOAuthFlow', () => ({ runGoogleOAuthFlow: mockRunGoogleOAuthFlow }))
 
-vi.mock('@/lib/localDb', () => ({
+vi.mock('@/lib/localDb', async () => (await import('@/__tests__/unit/_helpers/updateGroupsStateMock')).withUpdateGroupsState({
   getGroupsState: mockGetGroupsState,
   saveGroupsState: mockSaveGroupsState,
   registerGroupsChangeListener: mockRegisterGroupsChangeListener,
@@ -48,12 +48,12 @@ vi.mock('@/lib/supabase', () => ({
 }))
 
 vi.mock('@/lib/encryptionKey', () => ({
-  hasEncryptionKey: mockHasEncryptionKey,
+  getEncryptionKeyState: mockGetEncryptionKeyState,
   getDataKey: mockGetDataKey,
 }))
 
 vi.mock('@/lib/syncEngine', () => ({
-  performSync: mockPerformSync,
+  performSyncCycle: mockPerformSync,
 }))
 
 vi.mock('@/lib/dataConsent', async (importOriginal) => ({
@@ -146,9 +146,9 @@ beforeEach(async () => {
   mockApplyUrlRule.mockReset().mockResolvedValue(undefined)
   mockRunGoogleOAuthFlow.mockReset().mockResolvedValue(undefined)
   mockGetSession.mockReset().mockResolvedValue({ data: { session: { user: { id: 'u1' } } } })
-  mockHasEncryptionKey.mockReset().mockResolvedValue(true)
+  mockGetEncryptionKeyState.mockReset().mockResolvedValue('present')
   mockGetDataKey.mockReset().mockResolvedValue('key')
-  mockPerformSync.mockReset().mockResolvedValue([])
+  mockPerformSync.mockReset().mockResolvedValue({ groups: [], skipped: false, status: 'synced' })
   mockRegisterGroupsChangeListener.mockReset()
   mockHasDataConsent.mockReset().mockResolvedValue(true)
   capturedMain = undefined
@@ -384,7 +384,36 @@ describe('background — externally_connectable SYNC_NOW (web dashboard trigger)
     expect(keepOpen).toBe(true)
     await new Promise((r) => setTimeout(r, 0))
     expect(mockPerformSync).toHaveBeenCalledWith({ user: { id: 'u1' } })
-    expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true, skipped: false })
+  })
+
+  it('says so when the cycle was skipped because another one holds the sync lock (G3)', async () => {
+    mockPerformSync.mockResolvedValue({ groups: [], skipped: true, status: 'busy' })
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true, skipped: true })
+  })
+
+  it.each([
+    ['pull-failed', 'the pull failed'],
+    ['account-mismatch', 'the local data belongs to another account'],
+    ['identity-changed', 'the session changed mid-cycle'],
+  ])('L3: does not claim success when the cycle ended as %s (%s)', async (status) => {
+    mockPerformSync.mockResolvedValue({ groups: [], skipped: false, status })
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith(expect.objectContaining({ ok: false, reason: 'error', message: expect.any(String) }))
+  })
+
+  it('responds ok: false, reason: error (not "finish encryption setup") when the encryption status could not be checked', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('unknown')
+    const sendResponse = vi.fn()
+    stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(sendResponse).toHaveBeenCalledWith(expect.objectContaining({ ok: false, reason: 'error' }))
+    expect(mockPerformSync).not.toHaveBeenCalled()
   })
 
   it('responds ok: false, reason: no-session when signed out', async () => {
@@ -397,7 +426,7 @@ describe('background — externally_connectable SYNC_NOW (web dashboard trigger)
   })
 
   it('responds ok: false, reason: locked when encryption setup was never completed', async () => {
-    mockHasEncryptionKey.mockResolvedValue(false)
+    mockGetEncryptionKeyState.mockResolvedValue('absent')
     const sendResponse = vi.fn()
     stub.listeners.onMessageExternal[0]({ type: 'SYNC_NOW' }, {}, sendResponse)
     await new Promise((r) => setTimeout(r, 0))
@@ -769,7 +798,7 @@ describe('background — Firefox web-bridge internal onMessage listener', () => 
     const keepOpen = stub.listeners.onMessage[2]({ type: EXTENSION_MESSAGE.SYNC_NOW }, WEB_APP_SENDER, sendResponse)
     expect(keepOpen).toBe(true)
     await new Promise((r) => setTimeout(r, 0))
-    expect(sendResponse).toHaveBeenCalledWith({ ok: true })
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true, skipped: false })
   })
 
   it('forwards SYNC_AUTH tokens to supabase.auth.setSession', async () => {

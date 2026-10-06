@@ -31,7 +31,7 @@ export default function PrivacyPage() {
           never sell it, and you can delete all of it at any time. Questions?{' '}
           <Link href="/contact" className="underline underline-offset-4 hover:text-foreground transition-colors">Contact us</Link>.
         </p>
-        <div className="mt-3.5 text-xs text-text3">Last updated: September 26, 2026</div>
+        <div className="mt-3.5 text-xs text-text3">Last updated: October 6, 2026</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-12 items-start">
@@ -48,7 +48,11 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Tab and group data</h3>
-              <p>Tab URLs, titles, and favicon URLs so you can organize and restore them. On the free tier this data lives in your browser's IndexedDB and is not transmitted to our servers, except as described under "Page previews" below if you turn that feature on. Pro subscribers who enable cloud sync have this data end-to-end encrypted on your device before it is ever sent to our servers. We store only ciphertext in Supabase: the encryption key is derived from a passphrase that only you know, is never transmitted to us, and is never recoverable by TabMerger. This means we cannot read your stored or synced group or tab data, and neither could anyone who gained unauthorized access to our database.</p>
+              <p>Tab URLs, titles, and favicon URLs so you can organize and restore them. On the free tier this data lives in your browser's IndexedDB and is not transmitted to our servers, except as described under "Page previews" below if you turn that feature on. Showing a tab&apos;s icon can contact Google&apos;s favicon service; see <a href="#site-icons" className="underline underline-offset-4 hover:text-foreground transition-colors">Site icons</a> below. Pro subscribers who enable cloud sync have this data end-to-end encrypted on your device before it is ever sent to our servers. We store only ciphertext in Supabase: the encryption key is derived from a passphrase that only you know, is never transmitted to us, and is never recoverable by TabMerger. This means we cannot read your stored or synced group or tab data, and neither could anyone who gained unauthorized access to our database.</p>
+            </div>
+            <div id="site-icons" className="scroll-mt-24">
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Site icons (favicons)</h3>
+              <p>TabMerger shows a small site icon next to each tab. When your browser supplies the icon, it is loaded from the address the site itself uses for it. When your browser doesn&apos;t supply one, TabMerger asks Google&apos;s favicon service for it: your browser then sends that site&apos;s domain (for example <code className="text-xs bg-muted px-1.5 py-0.5 rounded">example.com</code>; never the full page address, the tab&apos;s title or anything on the page) to Google whenever the icon is shown, in the extension, on your dashboard or on a shared link&apos;s page. The request goes straight from your browser to Google, so Google sees your IP address as any website you load does. It carries no TabMerger account or identifier, and it never passes through our servers.</p>
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-1.5">Page previews <span className="normal-case font-normal">(off by default)</span></h3>
@@ -88,7 +92,7 @@ export default function PrivacyPage() {
           <div className="divide-y divide-border rounded-none border overflow-hidden text-sm">
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Local (all tiers)</span>
-              <span className="text-muted-foreground">Tab and group data in browser IndexedDB, under your control. Not transmitted anywhere unless you enable sync, or send a specific tab's address to the preview service by turning on page previews (see "Page previews" above).</span>
+              <span className="text-muted-foreground">Tab and group data in browser IndexedDB, under your control. Not transmitted anywhere unless you enable sync, or send a specific tab's address to the preview service by turning on page previews (see "Page previews" above). One exception: showing a tab's icon can send that site's domain to Google's favicon service (see "Site icons" above).</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Supabase (Pro)</span>
@@ -111,6 +115,7 @@ export default function PrivacyPage() {
               { name: 'Sentry', purpose: 'Error monitoring — stack traces and metadata only. All URLs and tab data are stripped via a beforeSend filter before any data leaves your device.', url: 'https://sentry.io/privacy/' },
               { name: 'Anthropic', purpose: 'Claude API for AI features (Pro AI tier only)', url: 'https://www.anthropic.com/privacy' },
               { name: 'Google Analytics', purpose: 'Anonymous aggregate analytics', url: 'https://policies.google.com/privacy' },
+              { name: 'Google favicon service', purpose: "Site icons for tabs whose icon your browser doesn't supply. Receives the site's domain only, directly from your browser.", url: 'https://policies.google.com/privacy' },
               { name: 'PostHog', purpose: 'Product analytics and session replay, with form inputs masked by default', url: 'https://posthog.com/privacy' },
               { name: 'Vercel', purpose: 'Hosting for the web app, plus Web Analytics (cookieless, aggregate page views) and Speed Insights (page performance metrics such as load time)', url: 'https://vercel.com/legal/privacy-policy' },
             ].map(({ name, purpose, url }) => (

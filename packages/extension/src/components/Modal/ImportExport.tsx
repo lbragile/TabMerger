@@ -7,6 +7,7 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import type { GroupsState } from '@/lib/types';
 import { parseBookmarksHtml, parseOneTabs } from '@/lib/importExport';
 import { toast } from '@/lib/toast';
+import { prepareImportedState } from '@/lib/syncDirty';
 import { blockImportOverFreeLimit, countSavedGroupsAndTabs } from '@/lib/tierLimits';
 
 interface ImportExportModalProps {
@@ -47,7 +48,7 @@ export function ImportExportModal({ mode: initialMode, data: _data, onClose }: I
         throw new Error('Invalid format');
       }
       if (blockImportOverFreeLimit({ maxGroups, maxTabs }, [], parsed.available, 'replace')) return;
-      await setGroupsState(parsed);
+      await setGroupsState(prepareImportedState(parsed, groupsState));
       toast.success('Groups imported successfully');
       onClose();
     } catch {

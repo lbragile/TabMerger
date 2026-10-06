@@ -32,6 +32,7 @@ vi.mock('@/components/KeyboardMove/KeyboardMoveHost', () => ({ KeyboardMoveHost:
 vi.mock('@/hooks/useGroups', () => ({ useGroups: () => mockUseGroups() }))
 vi.mock('@/hooks/useCurrentTabs', () => ({ useCurrentTabs: vi.fn() }))
 vi.mock('@/hooks/useSync', () => ({ useSync: vi.fn() }))
+vi.mock('@/hooks/useExternalGroupsChanges', () => ({ useExternalGroupsChanges: vi.fn() }))
 vi.mock('@/hooks/useTheme', () => ({ useTheme: vi.fn() }))
 vi.mock('@/hooks/useKeyboardNav', () => ({ useKeyboardNav: vi.fn() }))
 vi.mock('@/lib/localDb', () => ({ getSetting: mockGetSetting }))

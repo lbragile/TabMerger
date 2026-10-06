@@ -125,6 +125,8 @@ interface UIState {
   undo: (currentState: GroupsState) => GroupsState | undefined;
   redo: (currentState: GroupsState) => GroupsState | undefined;
   clearHistory: () => void;
+  /** Puts a previously read history back (an undo/redo that lost the rev race consumed its entry). */
+  restoreHistory: (undoStack: GroupsState[], redoStack: GroupsState[]) => void;
 
   // Selection actions
   enterSelectionMode: () => void;
@@ -233,6 +235,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   },
 
   clearHistory: () => set({ undoStack: [], redoStack: [] }),
+  restoreHistory: (undoStack, redoStack) => set({ undoStack, redoStack }),
 
   enterSelectionMode: () =>
     set((prev) => ({ selectionMode: true, ...withOverlayDismiss(prev, { selectionMode: true }) })),
