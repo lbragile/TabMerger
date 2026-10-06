@@ -18,22 +18,12 @@ Everything else in this file was derived from the repository. These items cannot
       (the email is verified in the dashboard; do not commit it here).
 - [ ] **Live version** currently shown on the stable item (the repo believes `2.0.0`).
 - [ ] **Regions** (stable and BETA) as currently set.
-- [ ] **Short description:** the dashboard takes the summary from the manifest `description`.
-      Today that is the 74-character line below. To use the sharper 122-character proposal,
-      change the stable `description` in `wxt.config.ts` first (a one-line change), or keep the
-      manifest line.
-- [ ] **Screenshots:** regenerate with `pnpm demo:screenshots` then `pnpm demo:store-assets`
-      (see [Graphics & Assets](#graphics--assets)), then upload up to 5.
+- [ ] **Screenshots and tiles:** upload the five screenshots and the two promo tiles listed under
+      [Graphics & Assets](#graphics--assets) (regenerated 2026-10-06).
 - [ ] **Privacy practices tab:** tick the data categories, the certifications and the
       permission justifications exactly as written in
       [Privacy & Data Use](#privacy--data-use) and
       [Permissions Justification](#permissions-justification).
-- [ ] **Judgement call, Web history:** this file ticks "Web history" (saved tab URLs and titles
-      leave the device encrypted for Pro sync, and a site's domain goes to Google's favicon
-      service). Confirm you agree.
-- [ ] **Privacy policy wording:** confirm `/privacy` covers the favicon lookup described under
-      [Data Collection](#data-collection) before submitting (it currently describes analytics,
-      sync, previews, billing and processors, but not the favicon lookup).
 - [ ] **Test instructions field:** paste the "Notes for the review team" paragraph from
       [Review Notes](#review-notes). No test account is needed.
 - [ ] **BETA item:** update the `3.1.0-beta.10` status below once its review completes.
@@ -69,17 +59,12 @@ TabMerger
 
 **Short Description** [REQUIRED] (max 132 characters)
 
-Proposed, 122 characters:
+122 characters, the stable manifest `description` in `wxt.config.ts`:
 
 > Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).
 
-Currently in the manifest (`wxt.config.ts`, stable build), 74 characters, also valid:
-
-> Stop drowning in tabs. Save, group, and restore every window in one place.
-
-<!-- The dashboard summary is read from the manifest `description`, so the text above only goes
-     live if wxt.config.ts's stable description is changed to match. BETA builds use their own
-     description string and are unaffected. -->
+<!-- The dashboard summary is read from the manifest `description`, so change it there, not only
+     here. BETA builds use their own description string and are unaffected. -->
 
 **Detailed Description** [REQUIRED] (about 3,100 characters, limit 16,000)
 
@@ -169,48 +154,44 @@ install unless you were invited to this testing program.
 
 ## Graphics & Assets
 
-Assets live under `packages/demo/` (paths below are relative to it). The store images are
-composited from raw captures by `pnpm demo:screenshots` (raw PNGs, 1600×1200, captured
-2026-09-26) followed by `pnpm demo:store-assets` (headline overlay, 1280×800 JPEGs in
-`screenshots/store/`, plus the promo tiles in `promo/`; generated 2026-10-02). Dimensions were
-measured from the files on 2026-10-06.
+Assets live under `packages/demo/` (paths below are relative to it; the images themselves are
+not committed). The store images are composited from raw captures by `pnpm demo:screenshots`
+(raw PNGs, 1600×1200) followed by `pnpm demo:store-assets` (headline overlay, 1280×800 JPEGs in
+`screenshots/store/`, plus the promo tiles in `promo/`). They were regenerated from a current
+demo build on 2026-10-06, and every file was opened and measured that day.
 
 | Asset | Dimensions | Status | Filename |
 |-------|-----------|--------|----------|
-| Store icon [REQUIRED] | 128×128 PNG (measured 128×128) | Ready | `../extension/src/public/icon/128.png` |
-| Screenshot [REQUIRED] | 1280×800 (measured 1280×800) | Ready, UI as of 2026-09-26 | `screenshots/store/open-popup-light.jpg` (also `open-popup-dark.jpg`) |
-| Screenshot | 1280×800 | Ready | `screenshots/store/cross-window-tab-drag-dark.jpg` (also `-light.jpg`) |
-| Screenshot | 1280×800 | Ready | `screenshots/store/view-new-group-light.jpg` (also `-dark.jpg`) |
-| Screenshot | 1280×800 | Ready | `screenshots/store/add-window-note-light.jpg` (also `-dark.jpg`) |
-| Screenshot | 1280×800 | Ready | `screenshots/store/multi-window.jpg` |
-| Screenshot | 1280×800 | Wrong content: shows the older colour picker | `screenshots/store/color-new-group-dark.jpg`, `color-new-group-light.jpg` |
-| Screenshot | 1280×800 | Right size, poor quality: a 1400×155 raw capture stretched to fill the frame, text is blurry | `screenshots/store/cluttered-chrome.jpg` |
-| Small promo tile [RECOMMENDED] | 440×280 (measured 440×280) | Ready | `promo/small-tile.jpg` |
-| Marquee promo tile | 1400×560 (measured 1400×560) | Ready | `promo/marquee-tile.jpg` |
+| Store icon [REQUIRED] | 128×128 PNG | Ready | `../extension/src/public/icon/128.png` |
+| Screenshot [REQUIRED] | 1280×800 | Ready | `screenshots/store/open-popup-light.jpg` (also `open-popup-dark.jpg`) |
+| Screenshot | 1280×800 | Ready | `screenshots/store/view-new-group-dark.jpg` (also `-light.jpg`) |
+| Screenshot | 1280×800 | Ready | `screenshots/store/cross-window-tab-drag-light.jpg` (also `-dark.jpg`) |
+| Screenshot | 1280×800 | Ready | `screenshots/store/add-window-note-dark.jpg` (also `-light.jpg`) |
+| Screenshot | 1280×800 | Do not upload: shows the current colour picker, but the popover hides the group list, the group is empty and a stray square shows at the left edge | `screenshots/store/color-new-group-dark.jpg`, `color-new-group-light.jpg` |
+| Screenshot | 1280×800 | Do not upload: windows are named "temp window" and the footer counts 11 windows (demo artefacts) | `screenshots/store/multi-window.jpg` |
+| Screenshot | 1280×800 | Sharp now (the browser strip is drawn at its natural size under a caption), but mostly empty canvas: not recommended | `screenshots/store/cluttered-chrome.jpg` |
+| Small promo tile [RECOMMENDED] | 440×280 | Ready | `promo/small-tile.jpg` |
+| Marquee promo tile | 1400×560 | Ready (the browser strip on its left half is now shown at native resolution) | `promo/marquee-tile.jpg` |
 | Not for the store | 1280×640 | Social preview image, not a store asset | `promo/social-preview.png` |
 | Raw captures | 1600×1200 (cluttered-chrome 1400×155) | Wrong size for upload; inputs to the composer only | `screenshots/raw/*.png` |
 
 **Verdict.** The store requires 1280×800 or 640×400 screenshots, a 440×280 small tile and a
-1400×560 marquee: every store JPEG, both tiles and the icon already have the right pixel size.
-Nothing is the wrong size. Two things need attention before the v3 stable release:
+1400×560 marquee: every store JPEG, both tiles and the icon have the right pixel size, and the
+five screenshots below show the current UI. No store asset shows the encryption unlock dialog or
+the incognito strip (the demo data has neither), so recent changes to those do not date them.
 
-1. **Outdated UI.** All raw captures date from 2026-09-26. Since then the colour picker was
-   rebuilt (2026-09-27 and 2026-09-28), a keyboard move mode and a new sign-in dialog text
-   landed (2026-10-01), the incognito strip now follows its group colour (2026-10-06) and the
-   encryption unlock dialog was reduced to one field (2026-10-06). The two `color-new-group-*`
-   screenshots show the old picker and must not be uploaded. None of the other screenshots shows
-   the unlock dialog, the incognito strip or the picker, so they are still accurate, but
-   regenerating all of them from the release build is the safe choice.
-2. **`cluttered-chrome.jpg` is low quality** (see table) and should be replaced or left out.
-   The marquee tile reuses the same capture on its left half, where it reads as small and
-   blurry; improve it when the raw capture is retaken.
+**Upload order (max 5):**
 
-**To regenerate** (from the repo root, after the final v3 UI is built): `pnpm demo:screenshots`,
-then `pnpm demo:store-assets`. Do not upload the raw PNGs. Screenshots are not required to
-contain a headline; the current ones carry one.
+1. `open-popup-light.jpg`: the "Now Open" view with four windows and 18 tabs.
+2. `view-new-group-dark.jpg`: a saved group with its window.
+3. `cross-window-tab-drag-light.jpg`: a tab mid-drag, with the drop zones for a new window and a
+   new group.
+4. `add-window-note-dark.jpg`: a renamed window with the note editor open.
+5. `open-popup-dark.jpg`: the main view in the dark theme.
 
-**Suggested upload order (max 5):** `open-popup-light.jpg`, `cross-window-tab-drag-dark.jpg`,
-`view-new-group-light.jpg`, `add-window-note-light.jpg`, `multi-window.jpg`.
+**To regenerate** (from the repo root): `pnpm --filter @tabmerger/extension build:extension:demo`,
+then `pnpm demo:screenshots`, then `pnpm demo:store-assets`. Do not upload the raw PNGs.
+Screenshots are not required to contain a headline; the current ones carry one.
 
 ### Screenshot Notes
 
@@ -229,10 +210,11 @@ features or paid-only screens):
 - `add-window-note-light/dark.jpg` — headline "Leave yourself a note on any window." The note
   editor open on a named window, with a 500-character counter.
 - `multi-window.jpg` — headline "One group, split across windows. Still one click away." The
-  Research group split into four windows of one tab each.
-- `color-new-group-light/dark.jpg` — headline "Color it to spot it at a glance." The group colour
-  picker (old design, outdated).
-- `cluttered-chrome.jpg` — a crowded browser tab strip (low quality, see above).
+  Research group split into four windows of one tab each (not for upload, see the table).
+- `color-new-group-light/dark.jpg` — headline "Color it to spot it at a glance." The current group
+  colour picker open over an empty group (not for upload, see the table).
+- `cluttered-chrome.jpg` — headline "Too many tabs. Too many windows." A crowded browser tab strip
+  at its natural size (not recommended, see the table).
 - `promo/small-tile.jpg` — the popup split diagonally between light and dark themes, "Light or
   dark. Always organized."
 - `promo/marquee-tile.jpg` — a crowded tab strip on the left, an arrow, and the TabMerger popup on
@@ -515,9 +497,6 @@ Paste into the dashboard's test-instructions field for the v2 to v3 update:
 - Pro AI (AI grouping, smart naming, tab previews) is marked "coming soon" and disabled behind
   a feature flag as of this writing — do not describe it as available in store copy while that
   flag is off. See `CLAUDE.md`'s AI feature flag notes.
-- The Pro pricing page lists "Keyboard shortcuts" as a Pro feature, but the four save shortcuts
-  are registered for every user and are not tier-gated in the extension. The listing therefore
-  describes shortcuts without a tier claim.
 - `externally_connectable` is scoped to the web app origin plus one extra ID,
   `DEV_EXTENSION_ID` (`@tabmerger/shared`): the maintainer's unpacked development build, so the
   local web app can reach it. It grants nothing to other extensions or sites.
