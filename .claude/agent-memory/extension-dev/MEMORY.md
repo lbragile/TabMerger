@@ -88,3 +88,4 @@
 - [Test mocking gotcha for AI_ENABLED](learnings_test_mocking_aiflag.md) — mocking useEntitlements alone isn't enough once a file imports AI_ENABLED directly
 - [Encryption key tri-state + upload gate](learnings_encryption_key_tristate.md) — getEncryptionKeyState (unknown is not absent), getContentUploadKey (no plaintext branch), key bound to the server key row, per-row decrypt catch, cycle identity check, count-based paging, cycle deadline, marker-scan test, signInAsPro
 - [Groups RMW + cross-context lock](learnings_groups_rmw_lock.md) — updateGroupsState contract, Web Locks + globalThis fallback, queued wipe, TM_GROUPS_CHANGED refetch, withUpdateGroupsState test helper, CRLF script trap
+- [Group colour tints](learnings_group_colour_tints.md) — withAlpha lives in lib/color.ts; inline style over static primary fallback classes; flush band via -mx-1 -mt-1; computed style and position need e2e checks

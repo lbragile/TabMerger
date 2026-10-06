@@ -25,6 +25,21 @@ export function formatRgba({ r, g, b }: RgbParts): string {
   return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, 1)`;
 }
 
+/**
+ * A translucent variant of a group colour, for tints behind or around something drawn in
+ * the full colour (the "renamed" pill, the incognito strip). `alpha` is 0..1.
+ *
+ * Group colours are `rgba(R, G, B, 1)` strings, so the alpha is swapped in place. Any other
+ * CSS colour (not something the colour picker writes) is mixed with transparent by the
+ * browser instead, so the result is still translucent rather than the opaque colour.
+ */
+export function withAlpha(color: string, alpha: number): string {
+  const m = color.match(/rgba?\(([^)]+)\)/);
+  if (!m) return `color-mix(in srgb, ${color} ${Math.round(alpha * 100)}%, transparent)`;
+  const [r, g, b] = m[1].split(',').map((s) => s.trim());
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 /** True for 3- or 6-digit hex colours (`#rgb`, `#rrggbb`). */
 export function isValidHexColor(hex: string): boolean {
   return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hex);

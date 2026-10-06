@@ -11,6 +11,7 @@ import { useDeleteTab, useMoveTab, useGroups, useUpdateTabNote, useSetTabReminde
 import { useUrlRules, matchUrlToRule } from '@/hooks/useUrlRules';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, fuzzyMatch } from '@/lib/utils';
+import { withAlpha } from '@/lib/color';
 import { isDndDragLive } from '@/lib/dndMultiDrag';
 import { startMoveOnSpace, toggleSelectionOnCtrlSpace } from '@/lib/keyboardMoveEntry';
 import { openTabInChromeGroup } from '@/lib/chromeGroups';
@@ -26,14 +27,6 @@ import { useRovingRow } from '@/hooks/useRovingRow';
 import { useCloseOnOverlayDismiss } from '@/hooks/useCloseOnOverlayDismiss';
 
 const FALLBACK_FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='2' fill='%23e5e7eb'/%3E%3Cpath d='M4 6h8M4 10h6' stroke='%239ca3af' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E";
-
-// ponytail: group colors are stored as rgba(...) strings; swap the alpha for a low-opacity pill background
-function withAlpha(rgba: string, alpha: number): string {
-  const m = rgba.match(/rgba?\(([^)]+)\)/);
-  if (!m) return rgba;
-  const [r, g, b] = m[1].split(',').map((s) => s.trim());
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 
 // ponytail: hostname + path (no query/hash) display; column already truncates via CSS
 function getUrlDisplay(url?: string): string {

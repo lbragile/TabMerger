@@ -93,9 +93,16 @@ function wrap(ui: React.ReactElement) {
   return render(React.createElement(QueryClientProvider, { client: qc }, React.createElement(TooltipProvider, null, ui)))
 }
 
-function renderWindow(win: WindowType, groupIndex = 1) {
+function renderWindow(win: WindowType, groupIndex = 1, groupColor?: string) {
   const tabIds = win.tabs.map((t) => `tab-${t.id}`)
-  return wrap(React.createElement(WindowItem, { window: win, groupIndex, windowIndex: 0, siblingCount: 2, tabIds }))
+  return wrap(React.createElement(WindowItem, { window: win, groupIndex, windowIndex: 0, siblingCount: 2, tabIds, groupColor }))
+}
+
+/** The incognito strip: the row holding the EyeOff icon and the "Incognito" label. */
+function incognitoStrip() {
+  const label = screen.getByText('Incognito')
+  const strip = label.parentElement as HTMLElement
+  return { strip, label, icon: strip.querySelector('svg') as SVGElement }
 }
 
 async function openMoreMenu() {
@@ -176,6 +183,58 @@ describe('WindowItem', () => {
   it('shows incognito badge when window.incognito is true', () => {
     renderWindow(makeWindow({ incognito: true }))
     expect(screen.getByText('Incognito')).toBeTruthy()
+  })
+
+  it('the incognito strip follows the group colour: translucent tint, full-colour icon, no border', () => {
+    renderWindow(makeWindow({ incognito: true }), 1, 'rgba(239, 68, 68, 1)')
+    const { strip, icon } = incognitoStrip()
+    expect(strip.style.backgroundColor).toBe('rgba(239, 68, 68, 0.1)')
+    expect(icon.style.color).toBe('rgb(239, 68, 68)')
+    expect(strip.style.borderBottomColor).toBe('')
+    expect(strip.className).not.toMatch(/border/)
+  })
+
+  it('a different group colour gives a different incognito strip', () => {
+    renderWindow(makeWindow({ incognito: true }), 1, 'rgba(34, 197, 94, 1)')
+    const { strip, icon } = incognitoStrip()
+    expect(strip.style.backgroundColor).toBe('rgba(34, 197, 94, 0.1)')
+    expect(icon.style.color).toBe('rgb(34, 197, 94)')
+  })
+
+  it('the incognito strip is flush with the card: it cancels the card padding and keeps its content inset', () => {
+    renderWindow(makeWindow({ incognito: true }), 1, 'rgba(239, 68, 68, 1)')
+    const { strip } = incognitoStrip()
+    const card = document.querySelector('[data-window-index="0"]') as HTMLElement
+    expect(strip.parentElement).toBe(card)
+    // The card's own padding is untouched: only the strip steps out of it.
+    expect(card.className.split(' ')).toContain('p-1')
+    expect(strip.className.split(' ')).toEqual(expect.arrayContaining(['-mx-1', '-mt-1', 'px-2.5', 'py-0.5']))
+  })
+
+  it('the "Incognito" label uses the normal text colour, not the group colour', () => {
+    renderWindow(makeWindow({ incognito: true }), 1, 'rgba(234, 179, 8, 1)')
+    const { strip, label } = incognitoStrip()
+    expect(label.style.color).toBe('')
+    expect(label.className.split(' ')).toContain('text-foreground')
+    expect(strip.className.split(' ')).not.toContain('text-primary')
+  })
+
+  it('without a group colour the strip keeps the primary tint and icon; the label still uses the normal text colour', () => {
+    renderWindow(makeWindow({ incognito: true }))
+    const { strip, label, icon } = incognitoStrip()
+    expect(strip.style.backgroundColor).toBe('')
+    expect(icon.style.color).toBe('')
+    const classes = strip.className.split(' ')
+    expect(classes).toContain('bg-primary/10')
+    expect(classes).not.toContain('text-primary')
+    expect(strip.className).not.toMatch(/border/)
+    expect(icon.getAttribute('class')!.split(' ')).toContain('text-primary')
+    expect(label.className.split(' ')).toContain('text-foreground')
+  })
+
+  it('renders no incognito strip for a non-incognito window, even with a group colour', () => {
+    renderWindow(makeWindow({ incognito: false }), 1, 'rgba(239, 68, 68, 1)')
+    expect(screen.queryByText('Incognito')).toBeNull()
   })
 
   it('checkbox in selection mode toggles window selection', () => {

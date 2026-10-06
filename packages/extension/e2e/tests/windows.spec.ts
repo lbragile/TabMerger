@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures';
 import { openPopup, seedAndReload } from '../helpers';
-import { NOW_OPEN, WORK_GROUP, ANOTHER_GROUP, seedConfirmOnDelete } from '../seed';
+import { NOW_OPEN, WORK_GROUP, ANOTHER_GROUP, seedConfirmOnDelete, tab } from '../seed';
 
 test.describe('Window management', () => {
   test('deleting a window removes it and its tabs', async ({ context, extensionId }) => {
@@ -60,6 +60,82 @@ test.describe('Window management', () => {
 
     const cursor = await handle.evaluate((el) => getComputedStyle(el).cursor);
     expect(cursor).toBe('grab');
+  });
+
+  // Computed styles and layout in a real browser: jsdom only sees the inline declarations
+  // and class names, not that the tint wins over `bg-primary/10` or where the strip sits.
+  test('the incognito strip follows its group’s colour and sits flush with the card’s top and sides', async ({ context, extensionId }) => {
+    const incognitoGroup = (id: string, name: string, color: string, winId: number, starred = false) => ({
+      id,
+      name,
+      color,
+      windows: [{ id: winId, incognito: true, focused: false, starred, tabs: [tab(winId, `${name} tab`, 'https://example.com')] }],
+    });
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [
+      NOW_OPEN,
+      incognitoGroup('incogred001', 'Red Private', 'rgba(239, 68, 68, 1)', 60),
+      incognitoGroup('incoggreen1', 'Green Private', 'rgba(34, 197, 94, 1)', 61),
+      incognitoGroup('incogblue01', 'Blue Starred', 'rgba(59, 130, 246, 1)', 62, true),
+    ]);
+
+    const label = page.getByText('Incognito', { exact: true });
+    const strip = label.locator('..');
+    const icon = strip.locator('svg');
+
+    /** Gaps between the strip and the card's inner (padding-box) edges, plus the icon/grip alignment. */
+    const layout = () =>
+      strip.evaluate((el) => {
+        const card = el.parentElement as HTMLElement;
+        const c = card.getBoundingClientRect();
+        const s = el.getBoundingClientRect();
+        const cs = getComputedStyle(card);
+        const grip = card.querySelector('[aria-label^="Drag to reorder window"]') as HTMLElement;
+        const eye = el.querySelector('svg') as SVGElement;
+        return {
+          top: s.top - (c.top + parseFloat(cs.borderTopWidth)),
+          left: s.left - (c.left + parseFloat(cs.borderLeftWidth)),
+          right: c.right - parseFloat(cs.borderRightWidth) - s.right,
+          cardBorderLeft: parseFloat(cs.borderLeftWidth),
+          cardPaddingTop: parseFloat(cs.paddingTop),
+          iconVsGrip: eye.getBoundingClientRect().left - grip.getBoundingClientRect().left,
+        };
+      });
+    const expectFlush = async (cardBorderLeft: number) => {
+      const l = await layout();
+      expect(Math.abs(l.top)).toBeLessThanOrEqual(1);
+      expect(Math.abs(l.left)).toBeLessThanOrEqual(1);
+      expect(Math.abs(l.right)).toBeLessThanOrEqual(1);
+      // The card keeps its own padding (header and tab rows stay inset) and its border.
+      expect(l.cardPaddingTop).toBe(4);
+      expect(l.cardBorderLeft).toBe(cardBorderLeft);
+      // The icon lines up with the header content below it.
+      expect(Math.abs(l.iconVsGrip)).toBeLessThanOrEqual(1);
+      await expect(strip).toHaveCSS('border-bottom-width', '0px');
+      await expect(strip).toHaveCSS('border-top-width', '0px');
+    };
+
+    await page.getByRole('button', { name: 'Red Private', exact: true }).click();
+    await expect(page.getByRole('listitem', { name: 'Red Private tab' })).toBeVisible();
+    await expect(strip).toHaveCSS('background-color', 'rgba(239, 68, 68, 0.1)');
+    await expect(icon).toHaveCSS('color', 'rgb(239, 68, 68)');
+    // The label keeps the normal text colour, not the group's.
+    const labelColor = await label.evaluate((el) => getComputedStyle(el).color);
+    expect(labelColor).not.toBe('rgb(239, 68, 68)');
+    expect(labelColor).toBe(await page.evaluate(() => getComputedStyle(document.body).color));
+    await expectFlush(1);
+
+    await page.getByRole('button', { name: 'Green Private', exact: true }).click();
+    await expect(page.getByRole('listitem', { name: 'Green Private tab' })).toBeVisible();
+    await expect(strip).toHaveCSS('background-color', 'rgba(34, 197, 94, 0.1)');
+    await expect(icon).toHaveCSS('color', 'rgb(34, 197, 94)');
+    await expect(label).toHaveCSS('color', labelColor);
+
+    // Starred: the card gains a 2px left border in the group colour; the strip sits inside it.
+    await page.getByRole('button', { name: 'Blue Starred', exact: true }).click();
+    await expect(page.getByRole('listitem', { name: 'Blue Starred tab' })).toBeVisible();
+    await expect(strip).toHaveCSS('background-color', 'rgba(59, 130, 246, 0.1)');
+    await expectFlush(2);
   });
 });
 

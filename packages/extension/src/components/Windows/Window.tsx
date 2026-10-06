@@ -48,6 +48,7 @@ import {
 } from '@/hooks/useGroups';
 import { useUIStore } from '@/stores/uiStore';
 import { cn, pluralize } from '@/lib/utils';
+import { withAlpha } from '@/lib/color';
 import { getSetting } from '@/lib/localDb';
 import { useOpenWindow } from '@/hooks/useOpenWindow';
 import { useDndContext } from '@/components/dnd/DndProvider';
@@ -243,9 +244,19 @@ export function WindowItem({ groupId, window, groupIndex, windowIndex, siblingCo
       )}
     >
       {window.incognito && (
-        <div className="flex items-center gap-1 px-2 py-0.5 bg-primary/10 border-b border-primary/20 text-primary">
-          <EyeOff className="h-2.5 w-2.5 shrink-0" />
-          <span className="text-[10px] font-medium">Incognito</span>
+        // Flush with the card's top and sides, no border of its own: `-mx-1 -mt-1` cancel the
+        // card's `p-1` for this strip only (it stays inside the card's border, starred or not),
+        // and `px-2.5` puts the icon back in line with the header content below (card `p-1` +
+        // header `px-1.5`). Tint and icon follow the group colour (inline, so they override
+        // the primary classes, which stay as the look when no group colour is passed). The
+        // label keeps the normal text colour: group colours are user-chosen and 10px text in
+        // a light one would be unreadable. Nothing here depends on drag state.
+        <div
+          className="flex items-center gap-1 -mx-1 -mt-1 px-2.5 py-0.5 bg-primary/10"
+          style={groupColor ? { backgroundColor: withAlpha(groupColor, 0.1) } : undefined}
+        >
+          <EyeOff className="h-2.5 w-2.5 shrink-0 text-primary" style={groupColor ? { color: groupColor } : undefined} />
+          <span className="text-[10px] font-medium text-foreground">Incognito</span>
         </div>
       )}
 
