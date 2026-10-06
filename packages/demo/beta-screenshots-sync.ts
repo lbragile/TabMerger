@@ -128,8 +128,7 @@ async function main() {
     await signIn(pageB);
     await pageB.getByRole("heading", { name: "Unlock encryption" }).waitFor({ timeout: 15000 });
     await pageB.getByPlaceholder("Passphrase", { exact: true }).fill(PASSPHRASE);
-    await pageB.getByPlaceholder("Confirm passphrase").fill(PASSPHRASE);
-    await pageB.getByRole("button", { name: "Save" }).click();
+    await pageB.getByRole("button", { name: "Unlock", exact: true }).click();
     await pageB.locator('[role="dialog"]').waitFor({ state: "hidden", timeout: 15000 });
     await pageB.getByText("Reading List", { exact: true }).first().waitFor({ timeout: 45000 });
     await pageB.waitForTimeout(3500);

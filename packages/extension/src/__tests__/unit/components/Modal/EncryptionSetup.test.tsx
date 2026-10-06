@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { EncryptionSetupModal } from '@/components/Modal/EncryptionSetup'
+import { toast } from '@/lib/toast'
 
 function renderModal(onClose = vi.fn()) {
   return render(
@@ -44,13 +45,14 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
     expect(screen.getByPlaceholderText('Confirm passphrase')).toBeInTheDocument()
   })
 
-  it('shows the two-field unlock form (with confirm) when a key exists but this device has not unlocked it', async () => {
+  it('shows a single-field unlock form (no confirm) when a key exists but this device has not unlocked it', async () => {
     mockGetEncryptionKeyState.mockResolvedValue('present')
     renderModal()
     expect(await screen.findByText('Unlock encryption')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Passphrase')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Confirm passphrase')).toBeInTheDocument()
+    expect(screen.queryByPlaceholderText('Confirm passphrase')).toBeNull()
     expect(screen.queryByPlaceholderText('New passphrase')).toBeNull()
+    expect(screen.getByRole('button', { name: 'Unlock' })).toBeDisabled()
   })
 
   it('calls unlockEncryption and closes on success in unlock mode', async () => {
@@ -59,34 +61,38 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
     const user = userEvent.setup()
     renderModal(onClose)
     await user.type(await screen.findByPlaceholderText('Passphrase'), 'my passphrase')
-    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'my passphrase')
-    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
     await waitFor(() => expect(mockUnlockEncryption).toHaveBeenCalledWith('my passphrase'))
     await waitFor(() => expect(onClose).toHaveBeenCalled())
   })
 
-  it('shows a mismatch error without calling unlockEncryption when the two fields differ', async () => {
+  it('unlocks when Enter is pressed in the passphrase field', async () => {
     mockGetEncryptionKeyState.mockResolvedValue('present')
     const onClose = vi.fn()
     const user = userEvent.setup()
     renderModal(onClose)
-    await user.type(await screen.findByPlaceholderText('Passphrase'), 'one')
-    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'two')
-    await user.click(screen.getByRole('button', { name: 'Save' }))
-    expect(await screen.findByText('Passphrases do not match')).toBeInTheDocument()
-    expect(mockUnlockEncryption).not.toHaveBeenCalled()
-    expect(onClose).not.toHaveBeenCalled()
+    await user.type(await screen.findByPlaceholderText('Passphrase'), 'my passphrase{Enter}')
+    await waitFor(() => expect(mockUnlockEncryption).toHaveBeenCalledWith('my passphrase'))
+    await waitFor(() => expect(onClose).toHaveBeenCalled())
+    expect(toast.success).toHaveBeenCalledWith('Encryption unlocked')
   })
 
-  it('shows a spinner on the Save button while busy', async () => {
+  it('does not submit an empty passphrase on Enter', async () => {
+    mockGetEncryptionKeyState.mockResolvedValue('present')
+    const user = userEvent.setup()
+    renderModal()
+    await user.type(await screen.findByPlaceholderText('Passphrase'), '{Enter}')
+    expect(mockUnlockEncryption).not.toHaveBeenCalled()
+  })
+
+  it('shows a spinner on the Unlock button while busy', async () => {
     mockGetEncryptionKeyState.mockResolvedValue('present')
     let resolveUnlock!: (v: string) => void
     mockUnlockEncryption.mockReturnValueOnce(new Promise((resolve) => { resolveUnlock = resolve }))
     const user = userEvent.setup()
     renderModal()
     await user.type(await screen.findByPlaceholderText('Passphrase'), 'my passphrase')
-    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'my passphrase')
-    const button = screen.getByRole('button', { name: 'Save' })
+    const button = screen.getByRole('button', { name: 'Unlock' })
     await user.click(button)
     expect(button).toBeDisabled()
     expect(button.querySelector('svg')).toBeInTheDocument()
@@ -124,6 +130,7 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
     expect(await screen.findByText('Unlock encryption')).toBeInTheDocument()
     expect(screen.getByText('Encryption is already set up for this account.')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Passphrase')).toHaveValue('')
+    expect(screen.queryByPlaceholderText('Confirm passphrase')).toBeNull()
     expect(onClose).not.toHaveBeenCalled()
   })
 
@@ -134,8 +141,7 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
     const user = userEvent.setup()
     renderModal(onClose)
     await user.type(await screen.findByPlaceholderText('Passphrase'), 'my passphrase')
-    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'my passphrase')
-    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
     expect(await screen.findByRole('heading', { name: /can.t check encryption right now/i })).toBeInTheDocument()
     expect(screen.queryByText('Wrong passphrase')).toBeNull()
     expect(onClose).not.toHaveBeenCalled()
@@ -147,8 +153,7 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
     const user = userEvent.setup()
     renderModal()
     await user.type(await screen.findByPlaceholderText('Passphrase'), 'my passphrase')
-    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'my passphrase')
-    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
     expect(await screen.findByRole('heading', { name: 'Set up encryption' })).toBeInTheDocument()
     expect(screen.queryByText('Wrong passphrase')).toBeNull()
   })
@@ -160,8 +165,7 @@ describe('EncryptionSetupModal — self-detects setup vs unlock mode', () => {
     const user = userEvent.setup()
     renderModal(onClose)
     await user.type(await screen.findByPlaceholderText('Passphrase'), 'wrong')
-    await user.type(screen.getByPlaceholderText('Confirm passphrase'), 'wrong')
-    await user.click(screen.getByRole('button', { name: 'Save' }))
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
     expect(await screen.findByText('Wrong passphrase')).toBeInTheDocument()
     expect(onClose).not.toHaveBeenCalled()
   })

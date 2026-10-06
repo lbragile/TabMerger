@@ -1673,7 +1673,7 @@ const TEST_AREAS: {
         pro: true,
         steps: [
           'Sign in with the same account on a second device or browser profile.',
-          'When the "Unlock encryption" prompt appears, enter your passphrase in both fields and click "Save".',
+          'When the "Unlock encryption" prompt appears, enter your passphrase (once, there is no confirmation field) and click "Unlock" or press Enter.',
           'Repeat once more, but deliberately type the wrong passphrase.',
         ],
         example: {
@@ -1681,12 +1681,12 @@ const TEST_AREAS: {
           src: '/beta/encryption-unlock.webp',
           width: 1600,
           height: 1200,
-          alt: 'The "Unlock encryption" dialog on a second device, with Passphrase and Confirm passphrase fields and a Save button',
+          alt: 'The "Unlock encryption" dialog on a second device, with a single Passphrase field and an Unlock button',
           caption: 'On a second device, the extension asks for your existing passphrase once.',
         },
         good: [
           'The unlock prompt reads "Enter your encryption passphrase to unlock synced data on this device. This is a one-time step per device — you won\'t be asked again unless you sign out."',
-          'The correct passphrase unlocks and shows an "Encryption passphrase set" toast.',
+          'The correct passphrase unlocks and shows an "Encryption unlocked" toast.',
           'The wrong one shows "Wrong passphrase" and changes nothing else — no corruption, no lockout, you can just try again.',
         ],
       },

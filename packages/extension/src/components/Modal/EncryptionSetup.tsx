@@ -90,17 +90,15 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
     }
   };
 
+  // No confirm field here: the passphrase is checked against the account's existing key, so a
+  // typo is reported as "Wrong passphrase" and nothing is stored.
   const handleUnlock = async () => {
     setError('');
-    if (pass1 !== pass2) {
-      setError('Passphrases do not match');
-      return;
-    }
     setBusy(true);
     try {
       const result = await unlockEncryption(pass1);
       if (result === 'unlocked') {
-        toast.success('Encryption passphrase set');
+        toast.success('Encryption unlocked');
         onClose();
       } else if (result === 'wrong-passphrase') {
         setError('Wrong passphrase');
@@ -146,7 +144,13 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
         <DialogHeader>
           <DialogTitle>Unlock encryption</DialogTitle>
         </DialogHeader>
-        <div className="space-y-3">
+        <form
+          className="space-y-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void handleUnlock();
+          }}
+        >
           <p className="text-xs text-muted-foreground">
             Enter your encryption passphrase to unlock synced data on this device. This is a
             one-time step per device — you won&apos;t be asked again unless you sign out. There
@@ -155,31 +159,18 @@ export function EncryptionSetupModal({ onClose }: EncryptionSetupModalProps) {
           </p>
           <PasswordInput
             placeholder="Passphrase"
+            aria-label="Encryption passphrase"
             value={pass1}
             onChange={(e) => setPass1(e.target.value)}
             className="h-8 text-xs rounded-none"
             visible={visible}
             onVisibleChange={setVisible}
           />
-          <PasswordInput
-            placeholder="Confirm passphrase"
-            value={pass2}
-            onChange={(e) => setPass2(e.target.value)}
-            className="h-8 text-xs rounded-none"
-            visible={visible}
-            showToggle={false}
-          />
           {error && <p className="text-xs text-destructive">{error}</p>}
-          <Button
-            size="sm"
-            className="text-xs w-full"
-            disabled={busy || !pass1 || !pass2}
-            loading={busy}
-            onClick={() => void handleUnlock()}
-          >
-            Save
+          <Button type="submit" size="sm" className="text-xs w-full" disabled={busy || !pass1} loading={busy}>
+            Unlock
           </Button>
-        </div>
+        </form>
       </>
     );
   }

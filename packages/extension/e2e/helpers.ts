@@ -1,5 +1,6 @@
 import { type BrowserContext, type Page } from '@playwright/test';
 import http from 'node:http';
+import { webcrypto } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
 
 /** Open the extension popup as a regular page (bypasses the 800×600 popup constraint). */
@@ -161,10 +162,36 @@ const E2E_USER_EMAIL = 'e2e@example.com';
  * What the account's `encryption_keys` check answers for a faked Pro user:
  *  - `unlocked`: the key row exists and this device holds the data key (the steady state of a
  *    real Pro user: sync runs, no dialog);
+ *  - `locked`: the key row exists but this device has not unlocked it yet (a second device or
+ *    profile). The row is a real wrapped key that {@link E2E_PASSPHRASE} opens;
  *  - `none`: the server answers that the account has no key yet (first-time setup);
  *  - `error`: the request fails (HTTP 500), so the status is unknown.
  */
-export type E2eEncryption = 'unlocked' | 'none' | 'error';
+export type E2eEncryption = 'unlocked' | 'locked' | 'none' | 'error';
+
+/** The passphrase that unwraps the key row served in `locked` mode. */
+export const E2E_PASSPHRASE = 'e2e-passphrase';
+
+/** An `encryption_keys` row as first-time setup stores it: a random data key wrapped with {@link E2E_PASSPHRASE}. */
+async function wrappedKeyRow(): Promise<Record<string, unknown>> {
+  const { subtle } = webcrypto;
+  const b64 = (bytes: ArrayBuffer | Uint8Array) => Buffer.from(bytes as ArrayBuffer).toString('base64');
+  const salt = webcrypto.getRandomValues(new Uint8Array(16));
+  const iv = webcrypto.getRandomValues(new Uint8Array(12));
+  // The row carries its own iteration count, so a low one keeps the test fast.
+  const iterations = 1000;
+  const baseKey = await subtle.importKey('raw', new TextEncoder().encode(E2E_PASSPHRASE), 'PBKDF2', false, ['deriveKey']);
+  const wrappingKey = await subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations, hash: 'SHA-256' },
+    baseKey,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['wrapKey']
+  );
+  const dataKey = await subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+  const wrapped = await subtle.wrapKey('raw', dataKey, wrappingKey, { name: 'AES-GCM', iv });
+  return { user_id: E2E_USER_ID, salt: b64(salt), wrap_iv: b64(iv), wrapped_key: b64(wrapped), kdf_iterations: iterations };
+}
 
 /**
  * Fakes a signed-in Pro account: writes a session into chrome.storage.local (the Supabase
@@ -185,9 +212,10 @@ export async function signInAsPro(page: Page, encryption: E2eEncryption = 'unloc
   await page.route('**/rest/v1/subscriptions*', (route) =>
     route.fulfill({ json: [{ tier: 'pro', status: 'active', cancel_at_period_end: false, current_period_end: null, stripe_price_id: null }] })
   );
+  const keyRow = encryption === 'locked' ? await wrappedKeyRow() : { user_id: E2E_USER_ID };
   await page.route('**/rest/v1/encryption_keys*', (route) => {
     if (encryption === 'error') return route.fulfill({ status: 500, json: { message: 'e2e: encryption check failed' } });
-    return route.fulfill({ json: encryption === 'unlocked' ? [{ user_id: E2E_USER_ID }] : [] });
+    return route.fulfill({ json: encryption === 'none' ? [] : [keyRow] });
   });
 
   const session = {

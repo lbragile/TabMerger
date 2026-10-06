@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload, signInAsPro } from '../helpers';
+import { E2E_PASSPHRASE, openPopup, seedAndReload, signInAsPro } from '../helpers';
 import { NOW_OPEN } from '../seed';
 
 // First-time encryption setup is offered only when the server ANSWERS that the account has no
@@ -29,5 +29,31 @@ test.describe('Encryption setup prompt (signed-in Pro user)', () => {
     await page.reload({ waitUntil: 'networkidle' });
 
     await expect(page.getByRole('heading', { name: 'Set up encryption' })).toBeVisible();
+  });
+
+  // The passphrase is checked against the account's existing key, so unlocking asks for it once:
+  // a confirmation field belongs to first-time setup only.
+  test('a device that has not unlocked the account key asks for the passphrase once, with no confirmation', async ({ context, extensionId }) => {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN]);
+    await signInAsPro(page, 'locked');
+
+    await page.reload({ waitUntil: 'networkidle' });
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('heading', { name: 'Unlock encryption' })).toBeVisible();
+    await expect(dialog.getByPlaceholder('Confirm passphrase')).toHaveCount(0);
+    const passphrase = dialog.getByPlaceholder('Passphrase', { exact: true });
+    const unlock = dialog.getByRole('button', { name: 'Unlock', exact: true });
+    await expect(unlock).toBeDisabled();
+
+    await passphrase.fill('not-the-passphrase');
+    await unlock.click();
+    await expect(dialog.getByText('Wrong passphrase')).toBeVisible();
+
+    await passphrase.fill(E2E_PASSPHRASE);
+    await passphrase.press('Enter');
+    await expect(page.getByText('Encryption unlocked')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Unlock encryption' })).toHaveCount(0);
   });
 });
