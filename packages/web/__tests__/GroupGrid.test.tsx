@@ -175,8 +175,10 @@ describe('GroupGrid per-group Share button', () => {
     const lockedGroups = [{ ...proGroups[0], name: '(locked)', windows: [], locked: true }]
     render(<GroupGrid groups={lockedGroups} isPro={true} />)
 
+    // aria-disabled rather than disabled: the control stays focusable so its reason can be read
+    // (see locked-items.test.tsx); the click below is what must be refused.
     const shareBtn = screen.getByRole('button', { name: 'Share group' })
-    expect(shareBtn).toBeDisabled()
+    expect(shareBtn).toHaveAttribute('aria-disabled', 'true')
 
     fireEvent.click(shareBtn)
 

@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect, useMemo, useSyncExternalStore } from 'react'
+import { useState, useEffect, useId, useMemo, useSyncExternalStore } from 'react'
 import { LayoutGrid, List, Cloud, Share2, X, CheckSquare, Square, Star, ExternalLink, AlertTriangle, ChevronDown, ChevronRight, Archive, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'sonner'
 import { isEncryptedBlob, decryptBlob, type EncryptedBlob } from '@tabmerger/shared'
-import { useEncryptionKey } from '@/lib/encryption/context'
+import { useEncryptionKey, unreadableRowKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
+import { LockedItemNote } from '@/components/dashboard/LockedItemNote'
 import { createSharedBundle } from '@/lib/sharing'
 
 interface Tab { title?: string; url?: string; favIconUrl?: string }
@@ -22,7 +23,9 @@ interface DashboardGroup {
   starred?: boolean
   archived?: boolean
   /** Set when this group's encrypted blob couldn't be decrypted with the current data key
-   * (wrong/rotated key) — Share must refuse rather than send an empty/garbage snapshot. */
+   * (wrong/rotated key). Its name and windows are placeholders, so nothing that needs the content
+   * may act on it: it is never shared (alone or in a bundle) and cannot be selected. The card
+   * says why with a {@link LockedItemNote}. */
   locked?: boolean
 }
 
@@ -44,9 +47,11 @@ interface GroupGridProps {
 }
 
 /** Decrypts every encrypted-blob group with the session's data key. Groups that are
- * already plaintext (legacy rows, or before encryption setup completes) pass through. */
+ * already plaintext (legacy rows, or before encryption setup completes) pass through.
+ * Groups that fail to decrypt are reported to the key provider, which drops a stale key (the
+ * passphrase prompt then returns); otherwise they stay as "(locked)" placeholders. */
 function useDecryptedGroups(groups: RawDashboardGroup[]) {
-  const { dataKey } = useEncryptionKey()
+  const { dataKey, recheck } = useEncryptionKey()
   const hasEncrypted = useMemo(() => groups.some((g) => isEncryptedBlob(g.windows)), [groups])
   // Only the genuinely async decrypt result needs React state — the "nothing encrypted"
   // case is derived straight from props below, with no setState-in-effect needed for it.
@@ -56,6 +61,7 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
     if (!hasEncrypted || !dataKey) return
     let cancelled = false
     ;(async () => {
+      const unreadable: string[] = []
       const results = await Promise.all(
         groups.map(async (g) => {
           if (!isEncryptedBlob(g.windows)) return g as DashboardGroup
@@ -64,16 +70,19 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
             return { ...g, name: content.name, windows: content.windows }
           } catch {
             // wrong/rotated key — fall back to a visibly-locked placeholder rather than crashing
+            unreadable.push(unreadableRowKey('groups', g.id, g.windows))
             return { ...g, name: '(locked)', windows: [], locked: true }
           }
         })
       )
-      if (!cancelled) setAsyncDecrypted(results)
+      if (cancelled) return
+      if (unreadable.length > 0) void recheck(unreadable)
+      setAsyncDecrypted(results)
     })()
     return () => {
       cancelled = true
     }
-  }, [groups, hasEncrypted, dataKey])
+  }, [groups, hasEncrypted, dataKey, recheck])
 
   const decrypted = hasEncrypted ? (asyncDecrypted ?? []) : (groups as DashboardGroup[])
 
@@ -88,14 +97,18 @@ function useDecryptedGroups(groups: RawDashboardGroup[]) {
  * selected" flow in {@link GroupGrid.shareBundle} — there is deliberately no
  * second encryption path here. The link is a snapshot: later edits to the
  * group don't update it.
+ *
+ * For a locked group the control is `aria-disabled` rather than `disabled`: it stays reachable by
+ * keyboard so the reason (the tooltip, and the card's note via `lockedNoteId`) can be read, and a
+ * click is refused.
  */
-function ShareButton({ group }: { group: DashboardGroup }) {
+function ShareButton({ group, lockedNoteId }: { group: DashboardGroup; lockedNoteId?: string }) {
   const [busy, setBusy] = useState(false)
   const [copied, setCopied] = useState(false)
 
   async function share() {
     if (group.locked) {
-      toast.error("This group is still locked — enter your passphrase to share it.")
+      toast.error("This group can't be read, so it can't be shared.")
       return
     }
     setBusy(true)
@@ -120,9 +133,13 @@ function ShareButton({ group }: { group: DashboardGroup }) {
         <TooltipTrigger asChild>
           <button
             onClick={share}
-            disabled={busy || group.locked}
+            disabled={busy}
+            aria-disabled={group.locked ? true : undefined}
+            aria-describedby={group.locked ? lockedNoteId : undefined}
             aria-label="Share group"
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md border border-transparent hover:border-border transition-colors disabled:opacity-50"
+            className={`flex items-center gap-1 text-xs text-muted-foreground px-2 py-1 rounded-md border border-transparent transition-colors disabled:opacity-50 ${
+              group.locked ? 'opacity-50 cursor-not-allowed' : 'hover:text-foreground hover:border-border'
+            }`}
           >
             {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <Share2 className="w-3 h-3" />}
             {copied ? 'Copied!' : 'Share'}
@@ -130,7 +147,7 @@ function ShareButton({ group }: { group: DashboardGroup }) {
         </TooltipTrigger>
         <TooltipContent side="top">
           {group.locked
-            ? 'Unlock your passphrase to share this group'
+            ? "This group can't be read, so it can't be shared"
             : 'Copies a link to a snapshot of this group — later edits won’t update it'}
         </TooltipContent>
       </Tooltip>
@@ -177,24 +194,29 @@ function GroupCard({
   readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const lockedNoteId = useId()
   const tabs = group.windows.flatMap((w) => w.tabs)
   const firstThree = tabs.slice(0, 3)
   const overflow = tabs.length - firstThree.length
+  // A locked group cannot go into a share bundle, so it cannot be picked.
+  const selectable = selecting && !group.locked
 
   return (
     <div
-      className={`rounded-lg border border-border overflow-hidden relative transition-shadow duration-200 hover:shadow-sh2 ${selecting ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
+      className={`rounded-lg border border-border overflow-hidden relative transition-shadow duration-200 hover:shadow-sh2 ${selectable ? 'cursor-pointer' : ''} ${selected ? 'ring-2 ring-primary' : ''}`}
       style={{
         borderLeft: `4px solid ${group.color}`,
         background: `linear-gradient(to right, ${group.color}14, transparent 40%), hsl(var(--surface))`,
       }}
-      onClick={selecting ? () => onToggle(group.id) : undefined}
+      onClick={selectable ? () => onToggle(group.id) : undefined}
     >
       {selecting && !readOnly && (
         <button
-          className="absolute top-2 right-2 z-10 text-muted-foreground hover:text-primary"
+          className="absolute top-2 right-2 z-10 text-muted-foreground hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-muted-foreground"
           onClick={(e) => { e.stopPropagation(); onToggle(group.id) }}
-          aria-label={selected ? 'Deselect' : 'Select'}
+          disabled={group.locked}
+          aria-describedby={group.locked ? lockedNoteId : undefined}
+          aria-label={group.locked ? "Locked group can't be selected" : selected ? 'Deselect' : 'Select'}
         >
           {selected ? <CheckSquare className="w-4 h-4 text-primary" /> : <Square className="w-4 h-4" />}
         </button>
@@ -209,12 +231,22 @@ function GroupCard({
         </div>
 
         {/* Meta */}
-        <p className="text-xs text-muted-foreground mb-3">
-          {group.windows.length} {group.windows.length === 1 ? 'window' : 'windows'} ·{' '}
-          {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
-          {isPro && ` · synced ${relativeTime(group.updated_at)}`}
-          {!isPro && ` · ${relativeTime(group.updated_at)}`}
-        </p>
+        {group.locked ? (
+          // No window/tab counts: the placeholder's empty content is not what the group holds.
+          <>
+            <p className="text-xs text-muted-foreground mb-2">
+              {isPro ? `Synced ${relativeTime(group.updated_at)}` : relativeTime(group.updated_at)}
+            </p>
+            <LockedItemNote id={lockedNoteId} className="mb-3" />
+          </>
+        ) : (
+          <p className="text-xs text-muted-foreground mb-3">
+            {group.windows.length} {group.windows.length === 1 ? 'window' : 'windows'} ·{' '}
+            {tabs.length} {tabs.length === 1 ? 'tab' : 'tabs'}
+            {isPro && ` · synced ${relativeTime(group.updated_at)}`}
+            {!isPro && ` · ${relativeTime(group.updated_at)}`}
+          </p>
+        )}
 
         {isStale(group.updated_at) && (
           <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-2 py-1 mb-3">
@@ -247,7 +279,7 @@ function GroupCard({
         {/* Action row */}
         {!selecting && (
           <div className="flex items-center gap-1">
-            {isPro && !readOnly && <ShareButton group={group} />}
+            {isPro && !readOnly && <ShareButton group={group} lockedNoteId={lockedNoteId} />}
             {tabs.length > 0 && (
               <button
                 onClick={() => openAllTabs(group)}
@@ -290,26 +322,34 @@ function GroupRow({
   readOnly?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const lockedNoteId = useId()
   const tabs = group.windows.flatMap((w) => w.tabs)
+
+  // A locked group has nothing to expand and cannot be picked for a share bundle.
+  const onRowClick = group.locked
+    ? undefined
+    : selecting && !readOnly
+      ? () => onToggle(group.id)
+      : () => setOpen((v) => !v)
 
   return (
     <div className={`rounded-lg border border-border ${selected ? 'ring-2 ring-primary' : ''}`}>
       <div
-        className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-muted/50"
-        onClick={selecting && !readOnly ? () => onToggle(group.id) : () => setOpen((v) => !v)}
+        className={`flex items-center gap-3 px-4 py-3 ${group.locked ? '' : 'cursor-pointer hover:bg-muted/50'}`}
+        onClick={onRowClick}
       >
         {selecting && !readOnly && (
-          <span className="shrink-0 text-muted-foreground">
+          <span className={`shrink-0 text-muted-foreground ${group.locked ? 'opacity-50' : ''}`}>
             {selected ? <CheckSquare className="w-4 h-4 text-primary" /> : <Square className="w-4 h-4" />}
           </span>
         )}
         <span className="w-3 h-3 rounded-full shrink-0" style={{ background: group.color }} />
         <span className="font-medium text-sm flex-1 truncate">{group.name}</span>
         <div className="flex items-center gap-2 shrink-0 text-xs text-muted-foreground">
-          <span>{group.windows.length}w · {tabs.length}t</span>
+          {!group.locked && <span>{group.windows.length}w · {tabs.length}t</span>}
           {readOnly && <Archive className="w-3 h-3" />}
           {isPro && !readOnly && <Cloud className="w-3 h-3" />}
-          {isPro && !selecting && !readOnly && <ShareButton group={group} />}
+          {isPro && !selecting && !readOnly && <ShareButton group={group} lockedNoteId={lockedNoteId} />}
           {!selecting && tabs.length > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); openAllTabs(group) }}
@@ -323,6 +363,8 @@ function GroupRow({
           <span>{relativeTime(group.updated_at)}</span>
         </div>
       </div>
+      {/* On its own line under the row, so the reason is fully visible without widening the row. */}
+      {group.locked && <LockedItemNote id={lockedNoteId} className="border-t px-4 py-2" />}
       {open && (!selecting || readOnly) && tabs.length > 0 && (
         <div className="border-t px-4 py-2">
           <ul className="space-y-1">
@@ -383,7 +425,12 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
     setStoredView(next)
   }
 
+  // What "Share selected" may send. A group can become locked after it was picked (a refresh brings
+  // a row the key cannot read), so the selection is filtered here rather than trusted.
+  const shareableSelected = groups.filter((g) => selected.has(g.id) && !g.locked)
+
   function toggleSelection(id: string) {
+    if (groups.some((g) => g.id === id && g.locked)) return
     setSelected((prev) => {
       const next = new Set(prev)
       if (next.has(id)) next.delete(id); else next.add(id)
@@ -397,14 +444,12 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
   }
 
   async function shareBundle() {
-    if (selected.size === 0) return
+    if (shareableSelected.length === 0) return
     setSharing(true)
     try {
       // Already-decrypted content, encrypted and inserted entirely in-browser via
       // createSharedBundle — no plaintext or key ever crosses the network.
-      const shareGroups = groups
-        .filter((g) => selected.has(g.id))
-        .map((g) => ({ id: g.id, name: g.name, color: g.color, windows: g.windows }))
+      const shareGroups = shareableSelected.map((g) => ({ id: g.id, name: g.name, color: g.color, windows: g.windows }))
       const url = await createSharedBundle(shareGroups)
       await navigator.clipboard.writeText(url)
       toast.success('Link copied! Share page is live.')
@@ -512,7 +557,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
               group={g}
               isPro={isPro}
               selecting={selecting}
-              selected={selected.has(g.id)}
+              selected={selected.has(g.id) && !g.locked}
               onToggle={toggleSelection}
             />
           ))}
@@ -525,7 +570,7 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
               group={g}
               isPro={isPro}
               selecting={selecting}
-              selected={selected.has(g.id)}
+              selected={selected.has(g.id) && !g.locked}
               onToggle={toggleSelection}
             />
           ))}
@@ -579,9 +624,9 @@ export function GroupGrid({ groups: rawGroups, isPro }: GroupGridProps) {
       )}
 
       {/* ponytail: floating bar — only rendered when items are selected */}
-      {selecting && selected.size > 0 && (
+      {selecting && shareableSelected.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-popover border shadow-lg rounded-none px-4 py-2 z-50">
-          <span className="text-sm font-medium">{selected.size} selected</span>
+          <span className="text-sm font-medium">{shareableSelected.length} selected</span>
           <Button size="sm" className="rounded-none" onClick={shareBundle} disabled={sharing} loading={sharing}>
             {!sharing && <Share2 className="w-4 h-4 mr-1" />}
             Share selected

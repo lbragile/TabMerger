@@ -1745,7 +1745,8 @@ const TEST_AREAS: {
           'The dashboard asks for the passphrase separately from the extension — unlocking there is its own one-time-per-tab step, not shared with the extension\'s unlock. The prompt reads "Your groups are end-to-end encrypted. Enter your passphrase to view them here."',
           'A wrong passphrase shows "Incorrect passphrase." without crashing the page.',
           'Once unlocked, your real group names and tabs render normally.',
-          'Before unlocking (or with the wrong key), a group shows as "(locked)" instead of leaking any content.',
+          'After a passphrase reset in the extension, the dashboard asks for the new passphrase: on the next page load, or in a dashboard that was already open, once you press the refresh button on the sync label.',
+          'A group or session the current passphrase cannot read (saved before a reset and not uploaded again yet) shows as "(locked)" instead of leaking any content. The item itself says why and what to do, and it cannot be shared or restored until it is readable again.',
         ],
       },
       {
@@ -1757,7 +1758,7 @@ const TEST_AREAS: {
           'On a device where you haven\'t unlocked yet (or the dashboard, before entering your passphrase there), notice that group names/content don\'t render until you unlock.',
         ],
         good: [
-          'The absence of readable content before unlocking is the signal: a locked group renders as "(locked)" with no name/tabs shown.',
+          'The absence of readable content before unlocking is the signal: no group name or tab is shown, and on the dashboard anything the current passphrase cannot read renders as "(locked)".',
           'The dashboard shows the passphrase card instead of your groups. If content were ever readable without unlocking, that would mean it isn\'t actually encrypted — report it immediately if you see that.',
         ],
       },

@@ -49,4 +49,13 @@ export const KNOWN_ISSUES: KnownIssue[] = [
     workaround:
       'Press the refresh button on the label. The extension in that browser syncs and the time updates.',
   },
+  {
+    id: 'dashboard-locked-after-passphrase-reset',
+    area: 'Web app',
+    title: 'Some groups or sessions show as “(locked)” after a passphrase reset',
+    details:
+      'After you reset your encryption passphrase, the dashboard asks for the new one. Anything that was saved with the earlier passphrase and has not been uploaded again since still cannot be read, even though the new passphrase is correct: it shows as “(locked)” with a short explanation on the item, and it cannot be shared or restored (a locked session can still be deleted). A device listed in Account shows the same explanation instead of its window and tab count.',
+    workaround:
+      'Open the extension on the device that has those groups or sessions, unlock it with the new passphrase and let it sync. It uploads them again and the dashboard can read them after a refresh.',
+  },
 ]

@@ -19,4 +19,5 @@
 - [Supabase client mock shape](learnings/learnings_supabase_client_mock_shape.md) — any RTL test mounting SyncIndicator must mock `auth.onAuthStateChange` on `@/lib/supabase/client`
 - [Realtime rules](learnings/realtime-updated-at-not-bumped.md) — open channels only via `subscribeWithUserToken` (token on the realtime client before subscribe; SUBSCRIBED is not proof of delivery); filtered `groups` sub gets INSERT/UPDATE, never DELETE; old updated_at on reorders
 - [SyncIndicator status model](learnings/sync-indicator-status-model.md) — status union + one timer, SYNC_NOW long timeout via `sendToKnownExtension`, live region without the ticking time, Radix asChild undefined-prop trap, fake-timer RTL pattern
+- [Dashboard key row binding](learnings/dashboard-key-row-binding.md) — cached data key is tied to its `encryption_keys` row (`salt.wrap_iv`); `recheck(rows)` loop guards; per-item `LockedItemNote`; `aria-disabled` over `disabled`; test stubs
 - [Social preview + metadataBase](learnings/social-preview-metadata-base.md) — file-convention og/twitter images, non-throwing getMetadataBase(), shallow openGraph replacement trap

@@ -94,6 +94,24 @@ describe('GroupGrid + encryption', () => {
 
     await waitFor(() => expect(screen.getByText('Work')).toBeInTheDocument())
   })
+
+  it('caches the unlocked key together with the fingerprint (salt.wrap_iv) of the key row it came from', async () => {
+    render(
+      <EncryptionKeyProvider>
+        <GroupGrid groups={[encryptedGroup as never]} isPro={false} />
+      </EncryptionKeyProvider>
+    )
+    const input = await screen.findByLabelText('Encryption passphrase')
+    fireEvent.change(input, { target: { value: 'correct horse battery staple' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Unlock' }))
+
+    await waitFor(() => expect(screen.getByText('Work')).toBeInTheDocument())
+    // Binding rule and cases (replaced row, missing fingerprint, failed lookup): encryption-key-binding.test.tsx
+    expect(JSON.parse(sessionStorage.getItem('tabmerger:dataKey:u1')!)).toEqual({
+      key: 'b64(fake-data-key)',
+      fingerprint: 'AAAA.iv',
+    })
+  })
 })
 
 function Probe() {

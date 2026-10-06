@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { isEncryptedBlob, decryptBlob, type EncryptedBlob, FREE_TIER_LIMITS } from '@tabmerger/shared'
-import { useEncryptionKey } from '@/lib/encryption/context'
+import { useEncryptionKey, unreadableRowKey } from '@/lib/encryption/context'
 import { PassphrasePrompt } from '@/components/dashboard/PassphrasePrompt'
 import { SessionCard } from './SessionCard'
 import Link from 'next/link'
@@ -29,6 +29,9 @@ interface Session {
   description?: string | null
   groups: SessionGroup[]
   created_at: string
+  /** Set when this session's encrypted blob couldn't be decrypted with the current data key:
+   * `name` and `groups` are placeholders, so it cannot be restored (see SessionCard's `locked`). */
+  locked?: boolean
 }
 
 /** Raw row shape from Supabase — `groups` (and `name`, when encrypted) is ciphertext until decrypted client-side. */
@@ -44,7 +47,7 @@ interface EncryptedSessionContent {
 
 /** Decrypts every encrypted-blob session with the session's data key — mirrors GroupGrid's useDecryptedGroups. */
 function useDecryptedSessions(sessions: RawSession[]) {
-  const { dataKey } = useEncryptionKey()
+  const { dataKey, recheck } = useEncryptionKey()
   const hasEncrypted = useMemo(() => sessions.some((s) => isEncryptedBlob(s.groups)), [sessions])
   // Only the genuinely async decrypt result needs React state — the "nothing encrypted"
   // case is derived straight from props below, with no setState-in-effect needed for it.
@@ -54,6 +57,7 @@ function useDecryptedSessions(sessions: RawSession[]) {
     if (!hasEncrypted || !dataKey) return
     let cancelled = false
     ;(async () => {
+      const unreadable: string[] = []
       const results = await Promise.all(
         sessions.map(async (s) => {
           if (!isEncryptedBlob(s.groups)) return s as Session
@@ -61,16 +65,20 @@ function useDecryptedSessions(sessions: RawSession[]) {
             const content = await decryptBlob<EncryptedSessionContent>(dataKey, s.groups)
             return { ...s, name: content.name, groups: content.groups, description: content.description }
           } catch {
-            return { ...s, name: '(locked)', groups: [] }
+            unreadable.push(unreadableRowKey('sessions', s.id, s.groups))
+            return { ...s, name: '(locked)', groups: [], locked: true }
           }
         })
       )
-      if (!cancelled) setAsyncDecrypted(results)
+      if (cancelled) return
+      // A stale key is dropped by the provider (the prompt returns); see GroupGrid's useDecryptedGroups.
+      if (unreadable.length > 0) void recheck(unreadable)
+      setAsyncDecrypted(results)
     })()
     return () => {
       cancelled = true
     }
-  }, [sessions, hasEncrypted, dataKey])
+  }, [sessions, hasEncrypted, dataKey, recheck])
 
   const decrypted = hasEncrypted ? (asyncDecrypted ?? []) : (sessions as Session[])
 
@@ -88,6 +96,11 @@ export function SessionList({ sessions: rawSessions, isPro }: SessionListProps) 
   const { sessions, needsUnlock } = useDecryptedSessions(rawSessions)
 
   function handleRestore(session: Session) {
+    // Second guard behind the card's disabled control: a locked session has no readable tabs.
+    if (session.locked) {
+      toast.error("This session can't be read, so it can't be restored.")
+      return
+    }
     const urls = session.groups.flatMap((g) =>
       (g.windows ?? []).flatMap((w) => (w.tabs ?? []).map((t) => t.url))
     )
@@ -134,6 +147,7 @@ export function SessionList({ sessions: rawSessions, isPro }: SessionListProps) 
               0
             )}
             createdAt={session.created_at}
+            locked={session.locked}
             onRestore={() => handleRestore(session)}
             onDelete={handleDelete}
           />
