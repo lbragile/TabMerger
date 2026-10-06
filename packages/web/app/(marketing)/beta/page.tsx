@@ -573,7 +573,7 @@ const TEST_AREAS: {
         checks: 'That a Pro subscription can move between monthly and yearly billing, and is charged correctly for it.',
         pro: true,
         steps: [
-          'With an active Pro subscription, open the pricing page. Your plan\'s card says how you\'re billed ("Billed monthly") and has a "Switch to yearly billing" button (or "Switch to monthly billing" if you pay yearly).',
+          'With an active Pro subscription, open the pricing page. Your plan\'s card is marked Current and has a "Switch to yearly billing" button (or "Switch to monthly billing" if you pay yearly): the button names the billing you would switch to.',
           'Monthly → yearly: click the switch button and confirm on Stripe\'s page.',
           'Yearly → monthly: do the same, then try the button a second time.',
           'Also open "Manage billing" on the account page: its "Update subscription" option shows the same monthly/yearly choice.',
@@ -584,8 +584,8 @@ const TEST_AREAS: {
             src: '/beta/pricing-switch.webp',
             width: 1600,
             height: 1200,
-            alt: 'The pricing page while on Pro monthly: the Pro card is marked Current, says "Billed monthly", and has a "Switch to yearly billing" button',
-            caption: 'On the pricing page, your plan\'s card shows how you\'re billed and the switch button.',
+            alt: 'The pricing page while on Pro monthly: the Pro card is marked Current and has a "Switch to yearly billing" button',
+            caption: 'On the pricing page, your plan\'s card is marked Current and has the switch button.',
           },
           {
             kind: 'image',

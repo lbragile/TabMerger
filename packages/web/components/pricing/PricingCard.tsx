@@ -228,7 +228,6 @@ export function PricingCard({
           </Button>
         ) : switchTarget ? (
           <>
-            <p className="mb-2 text-center text-[11.5px] text-text3">Billed {currentInterval}</p>
             <Button
               variant="default"
               className="w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"

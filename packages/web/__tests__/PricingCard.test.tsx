@@ -276,10 +276,19 @@ describe('PricingCard', () => {
     it('offers "Switch to yearly billing" on a monthly current plan, in the primary style', async () => {
       const PricingCard = await loadPricingCard(true)
       render(<PricingCard {...baseProps} currentTier="pro" currentInterval="monthly" />)
-      expect(screen.getByText('Billed monthly')).toBeInTheDocument()
       const button = screen.getByRole('button', { name: 'Switch to yearly billing' })
       expect(button.className).toContain('bg-primary')
       expect(screen.queryByRole('button', { name: /Upgrade to/ })).not.toBeInTheDocument()
+    })
+
+    it.each([
+      ['monthly', 'Switch to yearly billing'],
+      ['yearly', 'Switch to monthly billing'],
+    ] as const)('shows no "Billed %s" label above the switch button', async (currentInterval, switchLabel) => {
+      const PricingCard = await loadPricingCard(true)
+      render(<PricingCard {...baseProps} currentTier="pro" currentInterval={currentInterval} />)
+      expect(screen.queryByText(/^Billed (monthly|yearly)$/)).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: switchLabel })).toBeInTheDocument()
     })
 
     it('offers "Switch to monthly billing" on a yearly current plan, whichever interval the toggle shows', async () => {

@@ -22,8 +22,8 @@ function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>):
 }
 
 export function PricingTable({ currentTier, currentInterval }: PricingTableProps) {
-  // Open on what the user already pays, so the current plan's card shows their real price.
-  const [interval, setInterval] = useState<'monthly' | 'yearly'>(currentInterval ?? 'monthly')
+  // Always opens on Monthly, whatever the current plan is billed at.
+  const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
 
   return (
     <div className="flex flex-col items-center gap-10">
