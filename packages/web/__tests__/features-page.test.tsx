@@ -27,6 +27,20 @@ describe('FeaturesPage', () => {
     expect(proSection.querySelector('.bg-surface2')).toBeNull()
   })
 
+  // The shortcuts work on every plan (see the pricing tiers), so the card must not sit under Pro.
+  it('lists keyboard shortcuts in the Core section, not under Pro, without claiming every action has one', () => {
+    render(<FeaturesPage />)
+
+    const sectionOf = (heading: string) =>
+      screen.getByRole('heading', { name: heading }).closest('div')?.parentElement as HTMLElement
+    const core = sectionOf('Powerful tab management')
+    const pro = sectionOf('Sync & sessions')
+
+    expect(core.textContent).toContain('Keyboard shortcuts')
+    expect(pro.textContent).not.toContain('Keyboard shortcuts')
+    expect(document.body.textContent).not.toMatch(/every action has a keyboard shortcut/i)
+  })
+
   it('restarts row numbering at "01" for each of the three tier sections', () => {
     render(<FeaturesPage />)
 

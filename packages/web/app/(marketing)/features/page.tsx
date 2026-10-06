@@ -59,6 +59,12 @@ const featureSections = [
           'Rearrange tabs within groups and reorder groups themselves with smooth drag-and-drop interactions.',
       },
       {
+        icon: Keyboard,
+        title: 'Keyboard shortcuts',
+        description:
+          'Save the current tab, the tabs to its left or right, or all other tabs without opening the popup. Inside it, open search with Ctrl/Cmd+K and move tabs, windows and groups with the keyboard alone.',
+      },
+      {
         icon: Download,
         title: 'Import & export',
         description:
@@ -89,12 +95,6 @@ const featureSections = [
         title: 'Session save & restore',
         description:
           `Snapshot your current groups as a named session and restore them instantly. Free plans save up to ${FREE_TIER_LIMITS.sessions} sessions in this browser; Pro syncs unlimited sessions across every device.`,
-      },
-      {
-        icon: Keyboard,
-        title: 'Keyboard shortcuts',
-        description:
-          'Every action has a keyboard shortcut. Create groups, move tabs, open sessions — all without touching the mouse.',
       },
       {
         icon: Shield,

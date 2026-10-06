@@ -5,6 +5,13 @@ describe('TIERS.pro.features', () => {
   it('starts with "Everything in Free"', () => {
     expect(TIERS.pro.features[0]).toBe('Everything in Free')
   })
+
+  // The save shortcuts are registered for every user, so they are sold as part of Free.
+  it('does not sell keyboard shortcuts as a Pro feature: they are listed under Free', () => {
+    expect(TIERS.pro.features).not.toContain('Keyboard shortcuts')
+    expect(TIERS.proAi.features).not.toContain('Keyboard shortcuts')
+    expect(TIERS.free.features).toContain('Keyboard shortcuts')
+  })
 })
 
 describe('getStripePriceId / getPriceInfo', () => {
