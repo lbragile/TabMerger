@@ -136,10 +136,17 @@ function MarqueeTile() {
                     `calc(100% - banner)` fix from the previous pass) and the
                     image only occupies a modest fraction of it, not most of
                     it. */}
-                <Img
-                    src={staticFile(`screenshots/raw/${CLUTTERED_CHROME_SCREENSHOT_ID}.png`)}
-                    style={{ width: "100%", height: "auto", display: "block" }}
-                />
+                {/* 2026-10-06: the 1400px strip was being downscaled to the
+                    616px panel (0.44x) which made the glyphs mush. Show it
+                    at NATIVE 1:1 pixels instead, left-aligned and cropped to
+                    the panel width (first tabs + start of the bookmarks bar),
+                    and drop the page-body sliver below the bookmarks bar. */}
+                <div style={{ width: "100%", height: 118, overflow: "hidden" }}>
+                    <Img
+                        src={staticFile(`screenshots/raw/${CLUTTERED_CHROME_SCREENSHOT_ID}.png`)}
+                        style={{ width: 1400, height: 155, maxWidth: "none", display: "block" }}
+                    />
+                </div>
             </div>
             <div
                 style={{
