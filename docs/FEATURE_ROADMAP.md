@@ -82,7 +82,7 @@ _Last updated 2026-10-02. Keep this current in the same change as the work (a CL
 - [x] Firefox beta channel: unlisted, signed by AMO, self-hosted with auto-updates
 - [ ] Chrome Web Store stable 3.x (replaces 2.0.0), after the 3.1 beta
 - [ ] Firefox stable 3.x on the AMO listing (replaces 2.0.0)
-- [ ] Edge Add-ons publishing from CI (needs `EDGE_ACCESS_TOKEN`, `EDGE_PRODUCT_ID`)
+- [ ] Edge Add-ons publishing from CI (the job is ready; needs the `EDGE_PRODUCT_ID`, `EDGE_CLIENT_ID` and `EDGE_API_KEY` secrets in the `store-stable` environment)
 - [x] Development is public at `lbragile/TabMerger` (moved 2026-10-02): one repo for code, CI, releases and store publishing, with secrets in GitHub environments
 
 ## Platform (long-term)
