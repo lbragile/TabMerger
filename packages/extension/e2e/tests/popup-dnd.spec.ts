@@ -1,8 +1,6 @@
 import { test, expect, chromium, type BrowserContext, type Page } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { seedIdb } from '../helpers';
+import { EXTENSION_PATH } from '../extensionPath';
 import { RawCdp } from '../rawCdp';
 
 /**
@@ -25,10 +23,8 @@ import { RawCdp } from '../rawCdp';
  * (`--headless=new`), matching `e2e/fixtures.ts`.
  */
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const EXT = fs.existsSync(path.resolve(__dirname, '../../.output/chrome-mv3-dev'))
-  ? path.resolve(__dirname, '../../.output/chrome-mv3-dev')
-  : path.resolve(__dirname, '../../.output/chrome-mv3');
+// One resolver for the whole suite (honours TM_E2E_EXT_DIR), see extensionPath.ts.
+const EXT = EXTENSION_PATH;
 const CDP_PORT = 9411;
 
 const NOW_OPEN = { id: 'now-open', name: 'Now Open', permanent: true, windows: [] };

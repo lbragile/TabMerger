@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload } from '../helpers';
+import { openPopup, seedAndReload, waitForStoredGroup } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
 
 test.describe('Notes', () => {
@@ -22,6 +22,8 @@ test.describe('Notes', () => {
     await noteEditor.locator('textarea').fill('Remember to update docs');
     await noteEditor.getByRole('button', { name: 'Save', exact: true }).click();
 
+    // Save does not wait for its write: reload only once IndexedDB holds the note.
+    await waitForStoredGroup(page, (g) => g.id === WORK_GROUP.id && g.note === 'Remember to update docs', 'the Work group note');
     await page.reload({ waitUntil: 'networkidle' });
 
     // Menu item changes to "Edit note" once a note exists

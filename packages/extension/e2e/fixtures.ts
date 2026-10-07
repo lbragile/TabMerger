@@ -1,22 +1,13 @@
-import { test as base, chromium, type BrowserContext } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// Prefer a dev-mode build (`wxt build -m development`) when present: it is bundled
-// against `.env.local` (valid local Supabase URL) so the popup actually mounts.
-// The default `.output/chrome-mv3` is a production build — if `.env.production`
-// still holds placeholder values (`https://<prod-project-ref>.supabase.co`),
-// `new URL()` inside supabase-js throws and the popup renders blank.
-const EXTENSION_PATH = fs.existsSync(path.resolve(__dirname, '../.output/chrome-mv3-dev'))
-  ? path.resolve(__dirname, '../.output/chrome-mv3-dev')
-  : path.resolve(__dirname, '../.output/chrome-mv3');
+import { test as base, chromium, type BrowserContext, type Page } from '@playwright/test';
+import { EXTENSION_PATH, CPU_THROTTLE_RATE, EXTRA_CHROMIUM_ARGS } from './extensionPath';
 
 /**
  * Custom Playwright fixture that uses chromium.launchPersistentContext so the
  * extension service worker loads. The default `context` fixture uses
  * browser.newContext() which never loads extensions.
+ *
+ * Which build is loaded, and the `TM_E2E_*` environment switches, are documented in
+ * `./extensionPath.ts`.
  */
 export const test = base.extend<{ context: BrowserContext; extensionId: string }>({
   // Override the built-in context fixture
@@ -32,8 +23,21 @@ export const test = base.extend<{ context: BrowserContext; extensionId: string }
         `--disable-extensions-except=${EXTENSION_PATH}`,
         '--no-first-run',
         '--no-default-browser-check',
+        ...EXTRA_CHROMIUM_ARGS,
       ],
     });
+    if (CPU_THROTTLE_RATE >= 2) {
+      const throttle = async (page: Page) => {
+        try {
+          const session = await context.newCDPSession(page);
+          await session.send('Emulation.setCPUThrottlingRate', { rate: CPU_THROTTLE_RATE });
+        } catch {
+          // the page closed before the session attached
+        }
+      };
+      context.on('page', (page) => void throttle(page));
+      await Promise.all(context.pages().map(throttle));
+    }
     await use(context);
     await context.close();
   },

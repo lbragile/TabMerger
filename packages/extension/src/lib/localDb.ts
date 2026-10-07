@@ -195,7 +195,10 @@ async function readStoredGroupsState(): Promise<GroupsState | null> {
     tx.objectStore('groups').getAll()
   ]);
 
-  await tx.done;
+  // Both results are in hand: do NOT wait for the read-only transaction's `complete` event. That
+  // is one more round trip in front of every read-modify-write (this read is its first step),
+  // which lengthens the time a user's change is not yet on disk. Nothing below depends on it.
+  tx.done.catch(() => undefined);
 
   // Deduplicate permanent groups: keep oldest (lowest updatedAt), delete the rest
   let groups = allGroups;
@@ -429,13 +432,21 @@ async function writeGroupsState(state: GroupsState, expectedRev?: number, preser
   keepIds.forEach((id) => pending.delete(id));
   capPendingDeletes(pending);
 
-  await Promise.all([
+  const requests = [
     ...(pending.size || pendingRecord ? [tx.objectStore('settings').put({ id: PENDING_DELETE_KEY, value: [...pending] })] : []),
     ...orphanIds.map((id) => tx.objectStore('groups').delete(id)),
     ...groups.map((g) => tx.objectStore('groups').put(g)),
-    tx.objectStore('groupsState').put({ id: 'state', active: state.active, order: groups.map((g) => g.id), rev }),
-    tx.done
-  ]);
+    tx.objectStore('groupsState').put({ id: 'state', active: state.active, order: groups.map((g) => g.id), rev })
+  ];
+  // Hand the commit to IndexedDB NOW, in the same tick as the last request. Left to auto-commit,
+  // the page must stay alive for one more round trip (every request's success event has to come
+  // back before the browser is asked to commit), and the popup is torn down the moment it loses
+  // focus: a transaction whose commit was never requested is aborted, silently dropping the
+  // user's change. Measured in the popup: the write survives a page that goes away right after
+  // this call, and is lost without it. A failed request still aborts the transaction (`tx.done`
+  // rejects), exactly as before.
+  tx.commit();
+  await Promise.all([...requests, tx.done]);
   notifyGroupsChanged();
   return { ...state, available: groups, rev };
 }

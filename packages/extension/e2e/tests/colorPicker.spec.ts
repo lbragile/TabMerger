@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload } from '../helpers';
+import { openPopup, seedAndReload, waitForStoredGroup } from '../helpers';
 import { NOW_OPEN, WORK_GROUP } from '../seed';
 
 test.describe('Group colour picker', () => {
@@ -21,6 +21,9 @@ test.describe('Group colour picker', () => {
     await page.getByRole('button', { name: 'Apply' }).click();
     await expect(swatch).toHaveCSS('background-color', 'rgb(17, 34, 51)');
 
+    // The write is asynchronous and the sidebar dot already shows the colour as a preview, so
+    // the screen proves nothing: wait until IndexedDB holds it before leaving the page.
+    await waitForStoredGroup(page, (g) => g.id === WORK_GROUP.id && g.color !== WORK_GROUP.color, 'the Work group with the applied colour');
     // Persisted — survives a reopen (reload re-reads from IndexedDB).
     await page.reload({ waitUntil: 'networkidle' });
     const swatchAfterReload = page
@@ -48,6 +51,9 @@ test.describe('Group colour picker', () => {
     await expect(page.getByPlaceholder('#rrggbb')).toBeVisible();
 
     await page.getByRole('button', { name: 'Apply' }).click();
+    // The write is asynchronous and the sidebar dot already shows the colour as a preview, so
+    // the screen proves nothing: wait until IndexedDB holds it before leaving the page.
+    await waitForStoredGroup(page, (g) => g.id === WORK_GROUP.id && g.color !== WORK_GROUP.color, 'the Work group with the applied colour');
     await page.reload({ waitUntil: 'networkidle' });
     await expect(
       page.locator('[data-sidebar-group-index="1"]').getByRole('button', { name: 'Change group color' })
@@ -93,7 +99,8 @@ test.describe('Group colour picker', () => {
     await page.getByRole('button', { name: 'Cancel' }).click();
     await expect(swatch).toHaveCSS('background-color', originalColor);
 
-    // Never persisted — still the original colour after a reload.
+    // Never persisted — still the original colour after a reload. (Cancel writes nothing, so
+    // there is no stored change to wait for before reloading.)
     await page.reload({ waitUntil: 'networkidle' });
     const swatchAfterReload = page
       .locator('[data-sidebar-group-index="1"]')
