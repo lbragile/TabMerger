@@ -33,6 +33,14 @@ export const KNOWN_ISSUES: KnownIssue[] = [
     workaround: 'When reporting a bug, give the version shown in TabMerger’s Settings instead.',
   },
   {
+    id: 'change-lost-if-popup-closes-instantly',
+    area: 'Extension',
+    title: 'A change made the instant before the popup closes may not be saved',
+    details:
+      'A change (a new colour, a rename, a move, a note) takes a split second to be stored. If the popup closes within that moment, for example by pressing Enter and then Escape straight away, or on a slow or busy computer, the change can be missing when you reopen TabMerger. Nothing else is affected.',
+    workaround: 'Reopen TabMerger and make the change again. After an edit, give the popup a moment before closing it.',
+  },
+  {
     id: 'subscription-currency-fixed',
     area: 'Billing',
     title: 'A subscription keeps the currency it started in',
