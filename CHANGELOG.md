@@ -1,3 +1,26 @@
+# [3.1.0-beta.11](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.10...v3.1.0-beta.11) (2026-10-07)
+
+
+### Bug Fixes
+
+* **extension:** ask for the passphrase once when unlocking a device ([0fdce0b](https://github.com/lbragile/TabMerger/commit/0fdce0b366e225943f15ec204a9cb65d040bb204))
+* **extension:** ask storage to commit a change in the same tick it is written ([5df90de](https://github.com/lbragile/TabMerger/commit/5df90de3f577a7c2fa20f0d8358f81369a043baa))
+* **extension:** keep sync safe across key resets and account changes ([e2e24ce](https://github.com/lbragile/TabMerger/commit/e2e24ced6567e7efadc2252798824027d853d0bb))
+* **extension:** stop sync losing edits, deletes and group order ([5e56723](https://github.com/lbragile/TabMerger/commit/5e56723cdb251ecca27e5181f10950358f3f2952))
+* **web:** ask for the new passphrase after a reset and mark locked items ([c205d77](https://github.com/lbragile/TabMerger/commit/c205d771dcbd7aec846f72909c59980212c168d4))
+* **web:** disclose the favicon lookup and list shortcuts under Free ([497bf6c](https://github.com/lbragile/TabMerger/commit/497bf6c0e2fd39337fb821b8fe604de764b6b648))
+* **web:** make the dashboard sync label live and accurate ([508badd](https://github.com/lbragile/TabMerger/commit/508badd97135c33bbd4ed77054cdecdff3ff5d6e))
+* **web:** never move the dashboard's last-synced label backwards ([c5e01ea](https://github.com/lbragile/TabMerger/commit/c5e01ea603700594fe19224f82a7ccae8a328616))
+* **web:** open the pricing toggle on Monthly and drop the "Billed" line ([d817fac](https://github.com/lbragile/TabMerger/commit/d817facb1fe37d53f649bf026338a0f7cb54f054))
+* **web:** stop the organizer treating stored groups as Now Open ([68b2caf](https://github.com/lbragile/TabMerger/commit/68b2caf0f69c0865ad074beb14f495bf09480006))
+
+
+### Features
+
+* **demo:** render a 1280x640 social preview still ([d929adc](https://github.com/lbragile/TabMerger/commit/d929adc1577860b7bd1c604307b877c4af7d1bb7))
+* **extension:** match the incognito strip to its group colour ([da7750c](https://github.com/lbragile/TabMerger/commit/da7750c1a238dfca4921087f8d6f3045f04bde66))
+* **web:** add a social preview image to shared links ([de04980](https://github.com/lbragile/TabMerger/commit/de04980cb16b45fc95ef2950904697b156efba98))
+
 # [3.1.0-beta.10](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.9...v3.1.0-beta.10) (2026-10-02)
 
 
