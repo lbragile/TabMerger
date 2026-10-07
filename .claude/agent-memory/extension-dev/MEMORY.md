@@ -90,3 +90,4 @@
 - [Groups RMW + cross-context lock](learnings_groups_rmw_lock.md) — updateGroupsState contract, Web Locks + globalThis fallback, queued wipe, TM_GROUPS_CHANGED refetch
 - [Group colour tints](learnings_group_colour_tints.md) — withAlpha lives in lib/color.ts; inline style over static primary fallback classes; flush band via -mx-1 -mt-1
 - [Write commit + e2e persistence](learnings_popup_write_commit_and_e2e_persistence.md) — explicit tx.commit(), where click-to-commit time goes, waitForStoredGroup
+- [Visual regression determinism](learnings_visual_regression_determinism.md) — frozen clock on extension pages, blocked network, theme seeding, seed under the groups write lock, production-build fixture option
