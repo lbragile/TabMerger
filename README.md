@@ -77,7 +77,8 @@ pnpm scan-secrets # Check staged files for API keys / PII
 ```
 
 See `CLAUDE.md` for the full command reference, including extension-specific integration/E2E
-test commands.
+test commands. CI runs the extension's visual regression as an informational (non-blocking) check
+against Linux baselines; see `docs/VISUAL_REGRESSION.md` for how to regenerate them.
 
 ---
 
@@ -108,6 +109,13 @@ See [`docs/`](docs/) for architecture, the release process, and other design not
 maintainer approval) and prereleases from the `beta` branch (to a private Chrome Web Store
 beta listing). See
 [`docs/PUBLISHING.md`](docs/PUBLISHING.md) and [`docs/RELEASE_SANITY_CHECK.md`](docs/RELEASE_SANITY_CHECK.md).
+
+---
+
+## Accessibility
+
+See [`ACCESSIBILITY.md`](ACCESSIBILITY.md) for what we aim for, the known limitations, and how to
+report an accessibility barrier.
 
 ---
 
