@@ -193,6 +193,21 @@ the incognito strip (the demo data has neither), so recent changes to those do n
 then `pnpm demo:screenshots`, then `pnpm demo:store-assets`. Do not upload the raw PNGs.
 Screenshots are not required to contain a headline; the current ones carry one.
 
+### Edge Add-ons images
+
+Partner Center (Store listings → Details) takes the same pixel sizes as Chrome, with three
+differences worth knowing before uploading:
+
+| Field | Requirement | Use |
+|-------|-------------|-----|
+| Extension logo [REQUIRED] | Square, 300×300 recommended (128×128 minimum) | A 300×300 PNG scaled from `packages/web/public/logo.png` (662×662); the 128×128 extension icon is only the minimum |
+| Small promotional tile | 440×280 | `promo/small-tile.jpg` content |
+| Large promotional tile | 1400×560, **PNG** | `promo/marquee-tile.jpg` content, converted to PNG (the JPEG is not accepted as-is) |
+| Screenshots | Up to **6**, 1280×800 or 640×400 | The five listed above plus `add-window-note-light.jpg` |
+
+The listing text and images cannot be changed through the publish API; they are entered by hand.
+The description must be between 250 and 10,000 characters (the stable description above fits).
+
 ### Screenshot Notes
 
 What each existing store screenshot shows (all use demo data; none shows personal data, AI
