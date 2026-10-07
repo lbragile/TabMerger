@@ -6,6 +6,9 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { outputFolder: './playwright-report', open: 'never' }],
+    // CI sets PLAYWRIGHT_JUNIT_OUTPUT_NAME to also write test results for Codecov's Tests
+    // tab. Local runs don't set it, so they are unchanged.
+    ...(process.env.PLAYWRIGHT_JUNIT_OUTPUT_NAME ? [['junit'] as ['junit']] : []),
   ],
   timeout: 30_000,
   // One retry — general safety margin for CI runner slowness/contention (the URL-rule

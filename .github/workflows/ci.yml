@@ -161,11 +161,16 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      # `--reporter=junit` also writes the test results that the `codecov` job sends to
+      # Codecov's Tests tab; `--reporter=default` keeps the normal console output.
       - name: Test extension (with coverage)
-        run: pnpm --filter @tabmerger/extension test:coverage
+        run: pnpm --filter @tabmerger/extension test:coverage --reporter=default --reporter=junit --outputFile.junit=coverage/junit.xml
 
+      # No `--` before the flags: pnpm passes a literal `--` through, and Vitest then reads
+      # `--coverage` as a file filter. That ran the web tests WITHOUT coverage, so the web
+      # thresholds and the web delta check below were silently not applied.
       - name: Test web (with coverage)
-        run: pnpm --filter @tabmerger/web test -- --coverage
+        run: pnpm --filter @tabmerger/web test --coverage --reporter=default --reporter=junit --outputFile.junit=coverage/junit.xml
 
       # Repo-level release tooling (scripts/set-release-version.mjs, run by semantic-release)
       - name: Test release scripts
@@ -218,6 +223,23 @@ jobs:
             packages/web/coverage/coverage-summary.json \
             2
 
+      # Hand the reports to the `codecov` job. Sending them to Codecov from here would put
+      # a third-party service on the release path; saving an artifact does not. Never fails
+      # the job.
+      - name: Keep reports for Codecov
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: codecov-unit
+          path: |
+            packages/extension/coverage/coverage-final.json
+            packages/extension/coverage/junit.xml
+            packages/web/coverage/coverage-final.json
+            packages/web/coverage/junit.xml
+          if-no-files-found: ignore
+          retention-days: 1
+
   # ── Gate 2: integration tests (real IndexedDB round trips) ──
   integration-tests:
     name: Integration Tests
@@ -231,7 +253,17 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tabmerger/extension test:integration
+      # The junit reporter writes the test results the `codecov` job sends to Codecov.
+      - run: pnpm --filter @tabmerger/extension test:integration --reporter=default --reporter=junit --outputFile.junit=junit-integration.xml
+      - name: Keep test results for Codecov
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: codecov-integration
+          path: packages/extension/junit-integration.xml
+          if-no-files-found: ignore
+          retention-days: 1
 
   # ── Gate 3: E2E — both fixture sets, non-visual specs only (visual specs
   # are handled by the informational visual-regression job below) ──
@@ -329,12 +361,25 @@ jobs:
       # literal `--` would make Playwright read --shard as a file filter.
       - run: pnpm --filter @tabmerger/extension test:e2e --shard=${{ matrix.shard }}/3
         if: steps.gate.outputs.run == 'true'
+        env:
+          # Makes e2e/playwright.config.ts add the junit reporter (test results for the
+          # `codecov` job). Written next to the config, one file per shard.
+          PLAYWRIGHT_JUNIT_OUTPUT_NAME: junit-e2e-extension-${{ matrix.shard }}.xml
       - uses: actions/upload-artifact@v7
         if: failure() && steps.gate.outputs.run == 'true'
         with:
           name: extension-e2e-report-${{ matrix.shard }}
           path: packages/extension/e2e/playwright-report/
           retention-days: 7
+      - name: Keep test results for Codecov
+        if: ${{ !cancelled() && steps.gate.outputs.run == 'true' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: codecov-e2e-extension-${{ matrix.shard }}
+          path: packages/extension/e2e/junit-e2e-extension-${{ matrix.shard }}.xml
+          if-no-files-found: ignore
+          retention-days: 1
 
   e2e-web:
     name: E2E Tests (Web)
@@ -391,6 +436,9 @@ jobs:
           # preview project's service-role key: a key from another project fails auth, and
           # production's would let CI create users in production.
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PREVIEW_SUPABASE_SERVICE_ROLE_KEY }}
+          # Makes playwright.config.ts add the junit reporter (test results for the
+          # `codecov` job). Written in packages/web.
+          PLAYWRIGHT_JUNIT_OUTPUT_NAME: junit-e2e-web.xml
         run: |
           if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
             echo "::error::Add the PREVIEW_SUPABASE_SERVICE_ROLE_KEY secret (preview project → Settings → API Keys → service_role)."
@@ -403,6 +451,141 @@ jobs:
           name: web-e2e-report
           path: packages/web/playwright-report/
           retention-days: 7
+      - name: Keep test results for Codecov
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: codecov-e2e-web
+          path: packages/web/junit-e2e-web.xml
+          if-no-files-found: ignore
+          retention-days: 1
+
+  # ── Codecov — INFORMATIONAL reporting, never a gate. ──
+  #
+  # Sends coverage and test results (Codecov "Test Analytics") to Codecov. It is a
+  # separate job on purpose: the test jobs only save their report files as artifacts,
+  # and this job, which nothing `needs`, does the talking to Codecov. A slow or failing
+  # Codecov can therefore never fail or delay a job that `release` or a deploy waits on.
+  # Do not add it to any `needs:` list and never make it a required status check.
+  #
+  # Authentication is OIDC (no token, no secret): `id-token: write` is granted to THIS
+  # job only, and it runs no repository code, just the upload action. Fork PRs and
+  # Dependabot cannot get an OIDC token, so they fall back to Codecov's tokenless path
+  # for public repositories; a refused upload only logs a warning.
+  #
+  # `!cancelled()` so the results of a FAILED test run are still reported. The real
+  # coverage gates stay where they are: the Vitest thresholds and coverage-delta.mjs in
+  # `unit-tests`. See docs/CODECOV.md and codecov.yml.
+  codecov:
+    name: Codecov (informational)
+    needs: [unit-tests, integration-tests, e2e-extension, e2e-web]
+    if: ${{ !cancelled() }}
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      USE_OIDC: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && github.actor != 'dependabot[bot]' }}
+    steps:
+      # Codecov maps the report's file paths onto the repository, so it needs the tree.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Collect the reports saved by the test jobs
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          pattern: codecov-*
+          path: codecov-reports
+
+      - name: List reports
+        run: find codecov-reports -type f 2>/dev/null | sort || true
+
+      - name: Coverage — extension
+        if: ${{ hashFiles('codecov-reports/codecov-unit/extension/coverage/coverage-final.json') != '' }}
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: ${{ env.USE_OIDC }}
+          fail_ci_if_error: false
+          disable_search: true
+          files: codecov-reports/codecov-unit/extension/coverage/coverage-final.json
+          flags: extension
+
+      - name: Coverage — web
+        if: ${{ hashFiles('codecov-reports/codecov-unit/web/coverage/coverage-final.json') != '' }}
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: ${{ env.USE_OIDC }}
+          fail_ci_if_error: false
+          disable_search: true
+          files: codecov-reports/codecov-unit/web/coverage/coverage-final.json
+          flags: web
+
+      - name: Test results — unit (extension)
+        if: ${{ hashFiles('codecov-reports/codecov-unit/extension/coverage/junit.xml') != '' }}
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: ${{ env.USE_OIDC }}
+          fail_ci_if_error: false
+          disable_search: true
+          report_type: test_results
+          files: codecov-reports/codecov-unit/extension/coverage/junit.xml
+          flags: unit-extension
+
+      - name: Test results — unit (web)
+        if: ${{ hashFiles('codecov-reports/codecov-unit/web/coverage/junit.xml') != '' }}
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: ${{ env.USE_OIDC }}
+          fail_ci_if_error: false
+          disable_search: true
+          report_type: test_results
+          files: codecov-reports/codecov-unit/web/coverage/junit.xml
+          flags: unit-web
+
+      - name: Test results — integration
+        if: ${{ hashFiles('codecov-reports/codecov-integration/junit-integration.xml') != '' }}
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: ${{ env.USE_OIDC }}
+          fail_ci_if_error: false
+          disable_search: true
+          report_type: test_results
+          files: codecov-reports/codecov-integration/junit-integration.xml
+          flags: integration
+
+      - name: Test results — e2e (extension, all shards)
+        if: ${{ hashFiles('codecov-reports/codecov-e2e-extension-*/junit-e2e-extension-*.xml') != '' }}
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: ${{ env.USE_OIDC }}
+          fail_ci_if_error: false
+          disable_search: true
+          report_type: test_results
+          files: codecov-reports/codecov-e2e-extension-1/junit-e2e-extension-1.xml,codecov-reports/codecov-e2e-extension-2/junit-e2e-extension-2.xml,codecov-reports/codecov-e2e-extension-3/junit-e2e-extension-3.xml
+          flags: e2e-extension
+
+      - name: Test results — e2e (web)
+        if: ${{ hashFiles('codecov-reports/codecov-e2e-web/junit-e2e-web.xml') != '' }}
+        continue-on-error: true
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: ${{ env.USE_OIDC }}
+          fail_ci_if_error: false
+          disable_search: true
+          report_type: test_results
+          files: codecov-reports/codecov-e2e-web/junit-e2e-web.xml
+          flags: e2e-web
 
   # ── Visual regression (extension popup) — INFORMATIONAL, never a gate. ──
   #

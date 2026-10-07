@@ -61,6 +61,8 @@ playwright-report/
 blob-report/
 test-results/
 .vitest-cache/
+# JUnit files written for Codecov's Tests tab (CI only, see docs/CODECOV.md)
+junit-*.xml
 
 # Playwright MCP artifacts
 .playwright-mcp/

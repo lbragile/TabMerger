@@ -1,0 +1,68 @@
+# Codecov configuration. Codecov is REPORTING ONLY here: nothing in it may fail a
+# check, a merge, a release or a deploy. The real gates are the 80% Vitest thresholds
+# and scripts/ci/coverage-delta.mjs (see .github/workflows/ci.yml).
+# Validate edits with: curl -s --data-binary @codecov.yml https://codecov.io/validate
+
+codecov:
+  require_ci_to_pass: false # show reports even when an unrelated job is red or skipped
+
+coverage:
+  status:
+    project:
+      default:
+        informational: true # never a failing status
+    patch:
+      default:
+        informational: true
+
+comment:
+  layout: "condensed_header, condensed_files, condensed_footer"
+  require_changes: "coverage_drop OR uncovered_patch" # stay quiet on PRs that change nothing
+
+# Flags are set by the upload steps in ci.yml; carryforward keeps a flag's last report
+# when a run skips that job (e.g. the unit tests of a docs-only change).
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: extension
+      paths:
+        - packages/extension/src/
+    - name: web
+      paths:
+        - packages/web/
+
+# Package-level view of the same data.
+component_management:
+  individual_components:
+    - component_id: extension
+      name: Extension
+      paths:
+        - packages/extension/src/**
+    - component_id: web
+      name: Web app
+      paths:
+        - packages/web/**
+    - component_id: shared
+      name: Shared
+      paths:
+        - packages/shared/**
+
+ignore:
+  - "**/__tests__/**"
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/e2e/**"
+  - "**/mocks/**"
+  - "packages/demo/**"
+  - "packages/extension/scripts/**"
+  - "packages/extension/dev/**"
+  - "packages/extension/.output/**"
+  - "packages/extension/.wxt/**"
+  - "packages/web/.next/**"
+  - "**/components/ui/**"
+  - "**/*.config.*"
+  - "**/*.d.ts"
+  - "scripts/**"
+  - "supabase/**"
+  - "docs/**"
