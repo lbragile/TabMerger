@@ -101,14 +101,6 @@ See [`docs/`](docs/) for architecture, the release process, and other design not
 
 ---
 
-## Pricing tiers
-
-| Tier | Price | Features |
-|---|---|---|
-| Free | $0 | 5 groups · 50 tabs · local storage |
-| Pro | $3.99/mo | Unlimited groups + tabs · end-to-end encrypted cloud sync · sessions |
-| Pro AI | $7.99/mo | Pro + AI grouping · smart naming · tab previews — **coming soon**, not yet purchasable |
-
 ## Releases and branches
 
 `main` is the default branch; every push runs the full CI gate suite but does not
