@@ -196,6 +196,10 @@ How production is deployed:
 - Production is built fresh with production env vars; a preview deployment is never promoted
   (`NEXT_PUBLIC_*` values are baked in at build time, so a preview carries the preview Supabase
   project).
+- `tabmerger.vercel.app` is an **alias**, not a domain registered on the Vercel project, so
+  `vercel deploy --prod` alone does not move it. The workflow points it at the new deployment
+  with `vercel alias set` (as the preview workflow does for `tabmerger-preview.vercel.app`). To
+  move it by hand: `vercel alias set <deployment-url> tabmerger.vercel.app`.
 
 Confirm a deploy: the job's **Verify the live site** step must be green (it checks `/`, `/privacy`
 and that `/api/track` answers an extension preflight with a matching `Access-Control-Allow-Origin`),

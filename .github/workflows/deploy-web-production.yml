@@ -164,8 +164,9 @@ jobs:
       - name: Build
         run: vercel build --prod --standalone --non-interactive
 
-      # --prebuilt deploys exactly the output built above. --prod assigns the
-      # production domain (tabmerger.vercel.app) to it.
+      # --prebuilt deploys exactly the output built above. --prod makes it a production
+      # deployment and moves the PROJECT's production domain to it — but that domain is
+      # an auto-generated name, not tabmerger.vercel.app (see the alias step below).
       - name: Deploy production
         id: deploy
         run: |
@@ -181,6 +182,22 @@ jobs:
           fi
           case "$url" in http*) ;; *) url="https://$url" ;; esac
           echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      # tabmerger.vercel.app is an ALIAS, not a domain registered on the Vercel project, so
+      # `--prod` alone leaves it on whatever deployment it was last pointed at. The first
+      # run of this workflow deployed correctly and still left the site on a months-old
+      # build for exactly that reason. Same mechanism as tabmerger-preview.vercel.app in
+      # deploy-web.yml. REQUIRED: the Production environment's NEXT_PUBLIC_APP_URL, the
+      # Supabase redirect allow-list and the stable extension builds all use this host.
+      - name: Point tabmerger.vercel.app at this deployment
+        env:
+          URL: ${{ steps.deploy.outputs.url }}
+          ALIAS: tabmerger.vercel.app
+        run: |
+          vercel alias set "$URL" "$ALIAS" --non-interactive || {
+            echo "::error::Deployed to $URL, but couldn't point $ALIAS at it. The token's scope may not own this project. Production is still serving the previous deployment."
+            exit 1
+          }
 
       # A green `vercel deploy` only proves the upload worked. Production once sat on a
       # 53-day-old build with nobody noticing, and a stale build was exactly what broke
