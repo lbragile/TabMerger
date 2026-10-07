@@ -31,6 +31,10 @@
 - `.github/workflows/deploy-web.yml` deploys a Vercel **preview** (not production) of
   `packages/web`, called from `ci.yml` after CI passes on `main`, aliased to a fixed
   `tabmerger-preview.vercel.app` URL.
+- `.github/workflows/deploy-web-production.yml` deploys `packages/web` to Vercel
+  **production** (`tabmerger.vercel.app`). It runs automatically when a **stable** (non-prerelease)
+  GitHub release is published, and manually from the Actions tab. Every run waits for approval in
+  the `vercel-production` environment. See "Step 4 — Vercel" below.
 
 Read the workflow files themselves for the authoritative, heavily-commented behavior — a lot of
 non-obvious constraints (artifact glob patterns, `include-hidden-files`, publisher IDs, etc.)
@@ -168,6 +172,33 @@ in Partner Center.
 3. Add to GitHub Secrets: `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`.
    (`VERCEL_PROJECT_ID` starts with `prj_`; don't swap the two IDs.)
 
+**Preview** uses the `vercel-preview` GitHub environment. **Production** uses a separate
+`vercel-production` environment:
+
+1. GitHub → Settings → Environments → New environment → `vercel-production`.
+2. Enable **Required reviewers** and add the maintainer, so every production deploy waits for an
+   approval click.
+3. Deployment branches and tags: a release run executes on the release's tag, a manual run on
+   `main`, so either allow both (`main` and `v*` tags) or leave it unrestricted.
+4. Add the same three secrets to that environment: `VERCEL_TOKEN`, `VERCEL_ORG_ID`,
+   `VERCEL_PROJECT_ID`. Anything the production build needs (`NEXT_PUBLIC_*`, server keys) lives in
+   Vercel's own **Production** environment variables, which `vercel pull` loads.
+
+How production is deployed:
+
+- **Automatic:** publishing a stable release (the same event that triggers `publish.yml`) deploys
+  that release's tag. Prereleases are ignored.
+- **Manual:** Actions → "Deploy Web Production" → Run workflow, on the `main` branch. It refuses
+  other branches, and refuses a commit that has no successful `CI` run.
+- Production is built fresh with production env vars; a preview deployment is never promoted
+  (`NEXT_PUBLIC_*` values are baked in at build time, so a preview carries the preview Supabase
+  project).
+
+Confirm a deploy: the job's **Verify the live site** step must be green (it checks `/`, `/privacy`
+and that `/api/track` answers an extension preflight with a matching `Access-Control-Allow-Origin`),
+and the job summary shows the deployed commit and deployment URL. Then open
+`https://tabmerger.vercel.app/privacy` and check its "Last updated" date.
+
 ### Step 4b — Firefox beta hosting (Vercel Blob)
 
 The self-distributed (unlisted) Firefox beta build is served from the BETA web app's own domain
@@ -233,6 +264,12 @@ Cutting a release is a normal conventional-commit merge to `beta` (or `main` for
 non-release work) — there is no manual version bump or manual `git tag`. See
 [`docs/RELEASE_SANITY_CHECK.md`](RELEASE_SANITY_CHECK.md) for the full pre-flight/post-flight
 checklist, and `.claude/skills/release-checklist` for the automated-gate summary.
+
+A **stable** release also deploys the website: publishing the GitHub release triggers
+`deploy-web-production.yml`, which pauses for approval in the `vercel-production` environment
+(Actions → the run → Review deployments). Stable extension builds call the production site, so
+approve it promptly. Web-only production deploys can be started manually from the Actions tab
+(branch `main`, CI must have passed on that commit).
 
 `publish.yml` also exposes a `workflow_dispatch` escape hatch to (re-)publish an already-tagged
 beta version to the BETA listing only, for the case where a `release` GitHub event silently
