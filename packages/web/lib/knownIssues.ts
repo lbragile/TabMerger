@@ -41,6 +41,14 @@ export const KNOWN_ISSUES: KnownIssue[] = [
     workaround: 'Reopen TabMerger and make the change again. After an edit, give the popup a moment before closing it.',
   },
   {
+    id: 'tab-address-cut-off',
+    area: 'Extension',
+    title: 'A long web address in a tab row is cut off without “…”',
+    details:
+      'When a tab’s address is too long for its column, it stops abruptly, sometimes in the middle of a letter, instead of ending in “…”. On a narrow row it can also run up against the “renamed” label. Only the display is affected; the saved address is complete.',
+    workaround: 'Hover the tab to see its full address.',
+  },
+  {
     id: 'subscription-currency-fixed',
     area: 'Billing',
     title: 'A subscription keeps the currency it started in',
