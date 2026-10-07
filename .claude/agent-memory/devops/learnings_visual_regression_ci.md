@@ -13,4 +13,6 @@ metadata:
   - `upload-artifact` roots a single glob path at its non-wildcard prefix; to keep repo-root-relative paths, copy files with `cp --parents` into a staging dir and upload that dir.
   - Put the step that can fail on `continue-on-error` as well as the job, so report/summary steps still run after a failing comparison.
   - Pass free-text dispatch inputs through `env:`, never inline in the script.
+  - To link the report from the job summary, run `upload-artifact` (with an `id`) before the summary step and pass `steps.<id>.outputs.artifact-url` through `env:`. A summary cannot show the images themselves: it only renders images from a public URL.
+  - The summary table is built from Playwright's JSON report: strip ANSI colours from error text and escape `|` and `<` in test titles before writing table cells. A missing baseline is not retried (one result); a pixel or size difference is (two results, both with a `*-diff.png` attachment).
 - Runner or image updates can shift font rendering by a pixel; the fix is re-running the baselines workflow. See `docs/VISUAL_REGRESSION.md`.

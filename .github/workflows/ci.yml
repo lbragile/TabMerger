@@ -729,16 +729,26 @@ jobs:
           PLAYWRIGHT_JSON_OUTPUT_NAME: ${{ github.workspace }}/visual-results.json
         run: pnpm --filter @tabmerger/extension test:visual --reporter=list,html,json
 
+      # Before the Report step, so the summary can link straight to the download.
+      - uses: actions/upload-artifact@v7
+        id: report_artifact
+        if: always() && steps.visual.outcome == 'failure'
+        with:
+          name: visual-regression-report
+          path: packages/extension/e2e/playwright-report/
+          retention-days: 3
+
       - name: Report
         if: always()
         env:
           PRESENT: ${{ steps.baselines.outputs.present }}
           RUN: ${{ steps.gate.outputs.run }}
           OUTCOME: ${{ steps.visual.outcome }}
+          ARTIFACT_URL: ${{ steps.report_artifact.outputs.artifact-url }}
         run: |
           node - <<'EOF'
           const fs = require('fs');
-          const { PRESENT, RUN, OUTCOME, GITHUB_STEP_SUMMARY } = process.env;
+          const { PRESENT, RUN, OUTCOME, ARTIFACT_URL, GITHUB_STEP_SUMMARY } = process.env;
           const summary = [];
           const emit = () => GITHUB_STEP_SUMMARY && fs.appendFileSync(GITHUB_STEP_SUMMARY, summary.join('\n') + '\n');
           summary.push('### Visual regression (informational)', '');
@@ -751,21 +761,41 @@ jobs:
             summary.push('All screenshots match their Linux baselines.');
           } else {
             const file = (process.env.GITHUB_WORKSPACE || '.') + '/visual-results.json';
+            // Test titles and error text end up in a Markdown table: drop terminal
+            // colours and anything that could break a cell or be read as markup.
+            const plain = (s) => String(s ?? '').replace(/\u001b\[[0-9;]*m/g, '');
+            const cell = (s) => plain(s).replace(/\s+/g, ' ').replace(/\|/g, '\\|').replace(/</g, '&lt;').trim().slice(0, 160);
             let total = 0, differ = 0, missing = 0, other = 0;
-            const walk = (suite) => {
+            const rows = [];
+            const walk = (suite, inherited) => {
+              // The describe block names the theme: "... popup states, dark theme".
+              const theme = /\b(light|dark) theme\b/.exec(suite.title ?? '')?.[1] ?? inherited;
               for (const spec of suite.specs ?? []) {
                 for (const t of spec.tests ?? []) {
                   total++;
                   if (t.status === 'expected' || t.status === 'skipped') continue;
                   const results = t.results ?? [];
                   const names = results.flatMap((r) => (r.attachments ?? []).map((a) => a.name ?? ''));
-                  const msgs = results.map((r) => r.error?.message ?? '').join('\n');
-                  if (names.some((n) => /-diff\.png$/.test(n))) differ++;
-                  else if (/snapshot doesn't exist/i.test(msgs)) missing++;
-                  else other++;
+                  const msgs = plain(results.map((r) => r.error?.message ?? '').join('\n'));
+                  let result, detail = '';
+                  if (names.some((n) => /-diff\.png$/.test(n))) {
+                    differ++;
+                    result = 'Differs from the baseline';
+                    // A changed size says more than the pixel count that comes with it.
+                    detail = /Expected an image [^.\n]*/.exec(msgs)?.[0]
+                      ?? /[\d,]+ pixels? \(ratio [\d.]+ of all image pixels\) (?:are|is) different/.exec(msgs)?.[0] ?? '';
+                  } else if (/snapshot doesn't exist/i.test(msgs)) {
+                    missing++;
+                    result = 'No Linux baseline';
+                  } else {
+                    other++;
+                    result = 'Error';
+                    detail = msgs.split('\n').find((l) => l.trim()) ?? '';
+                  }
+                  rows.push(`| ${cell(spec.title)} | ${cell(theme ?? '')} | ${result} | ${cell(detail)} |`);
                 }
               }
-              for (const s of suite.suites ?? []) walk(s);
+              for (const s of suite.suites ?? []) walk(s, theme);
             };
             if (fs.existsSync(file)) for (const s of JSON.parse(fs.readFileSync(file, 'utf8')).suites ?? []) walk(s);
             const failed = differ + missing + other;
@@ -773,10 +803,17 @@ jobs:
               summary.push('The visual run failed before producing results (build or browser problem). See the step log.');
               console.log('::warning::Visual regression (informational) did not run to completion; see the job log.');
             } else {
+              const report = ARTIFACT_URL
+                ? `[Download the visual report](${ARTIFACT_URL})`
+                : 'Download the `visual-regression-report` artifact';
               summary.push(
-                `${failed} of ${total} screenshots failed: ${differ} differ from the baseline, ${missing} have no Linux baseline, ${other} errored.`,
+                `${failed} of ${total} screenshots failed (${differ} differ from the baseline, ${missing} without a Linux baseline, ${other} errored).`,
                 '',
-                'Download the `visual-regression-report` artifact and open `index.html` to see the expected, actual and diff images.',
+                '| Popup state | Theme | Result | Detail |',
+                '|---|---|---|---|',
+                ...rows,
+                '',
+                `${report} and open \`index.html\` to see the expected, actual and diff images.`,
                 '',
                 'If the change is intended, run the **Visual baselines** workflow on this branch, download its artifact and commit the updated `*-linux.png` files (see docs/VISUAL_REGRESSION.md). This check never blocks the PR, a release or a deploy.');
               console.log(`::warning::Visual regression (informational): ${differ} differ, ${missing} missing baseline, ${other} errored of ${total}. See the job summary.`);
@@ -784,13 +821,6 @@ jobs:
           }
           emit();
           EOF
-
-      - uses: actions/upload-artifact@v7
-        if: always() && steps.visual.outcome == 'failure'
-        with:
-          name: visual-regression-report
-          path: packages/extension/e2e/playwright-report/
-          retention-days: 3
 
   # ── Build: extension (Chrome MV3, with bundle-size budget check) + web.
   # Merged from the former build-extension/build-web jobs to share one

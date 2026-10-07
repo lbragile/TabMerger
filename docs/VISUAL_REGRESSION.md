@@ -12,8 +12,10 @@ The `visual-regression` job in `.github/workflows/ci.yml` compares the popup aga
 
 - It is not a required status check and is in no `needs:` list, so it can never block or delay a
   merge, a release or a deploy. Job-level `continue-on-error` keeps the run green when it fails.
-- A difference shows up as a warning annotation, a job summary (how many screenshots differ) and a
-  `visual-regression-report` artifact (HTML report with expected, actual and diff images, kept 3 days).
+- A difference shows up as a warning annotation, a job summary and a `visual-regression-report`
+  artifact (HTML report with expected, actual and diff images, kept 3 days). The summary lists each
+  failed screenshot (popup state, theme, whether it differs or has no baseline, and how many pixels
+  or which size changed) and links to the report download.
 - It does nothing (green, with a notice) until at least one `*-linux.png` baseline is committed.
 - It is skipped when only `packages/web/`, `packages/demo/`, `supabase/`, `docs/`, agent files or
   markdown changed.
