@@ -1,6 +1,10 @@
 import { ChromeIcon } from '@/components/marketing/BrowserIcons'
+import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 
 export function ShareInstallCta() {
+  // Server component: the links follow the deployment answering this request.
+  const storeLinks = getStoreLinks()
+
   return (
     <div className="mt-8 rounded-2xl border border-dashed border-border2 p-5 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
       <div className="flex-1">
@@ -8,9 +12,7 @@ export function ShareInstallCta() {
         <p className="text-[13px] text-text2">Install TabMerger and this collection becomes a group you can restore in a click.</p>
       </div>
       <a
-        href="https://chrome.google.com/webstore"
-        target="_blank"
-        rel="noopener noreferrer"
+        {...storeLinkProps(storeLinks.chrome)}
         className="shrink-0 inline-flex items-center gap-2 h-10 px-5 rounded-md text-white text-[13.5px] font-medium shadow-sh2 hover:shadow-sh3 hover:-translate-y-px transition-all"
         style={{ backgroundImage: 'var(--gradient-brand)' }}
       >

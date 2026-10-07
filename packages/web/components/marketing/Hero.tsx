@@ -2,8 +2,13 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
 import { DemoSection } from './DemoSection'
+import { StoreLink } from '@/components/StoreLink'
+import { getStoreLinks } from '@/lib/storeLinks'
 
 export function Hero() {
+  // Server component: the links follow the deployment answering this request.
+  const storeLinks = getStoreLinks()
+
   return (
     <section className="py-14 px-8 bg-background">
       <div className="container">
@@ -28,34 +33,22 @@ export function Hero() {
             {/* CTA row */}
             <div className="flex flex-wrap items-center gap-2 mb-2.5">
               <Button size="lg" className="gap-2" asChild>
-                <a
-                  href="https://chrome.google.com/webstore"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <StoreLink href={storeLinks.chrome}>
                   <ChromeIcon size={18} />
                   Install for Chrome — free
-                </a>
+                </StoreLink>
               </Button>
               <Button size="sm" variant="outline" className="gap-1.5" asChild>
-                <a
-                  href="https://addons.mozilla.org/firefox/addon/tabmerger"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <StoreLink href={storeLinks.firefox}>
                   <FirefoxIcon size={15} />
                   Firefox
-                </a>
+                </StoreLink>
               </Button>
               <Button size="sm" variant="outline" className="gap-1.5" asChild>
-                <a
-                  href="https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <StoreLink href={storeLinks.edge}>
                   <EdgeIcon size={15} />
                   Edge
-                </a>
+                </StoreLink>
               </Button>
             </div>
 

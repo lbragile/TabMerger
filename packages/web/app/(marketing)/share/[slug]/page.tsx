@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { ShareBundleContent } from '@/components/ShareBundleContent'
 import { CopyShareUrl } from '@/components/CopyShareUrl'
+import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 
 export const dynamic = 'force-dynamic'
 
@@ -62,6 +63,7 @@ export default async function SharePage({ params }: Props) {
   const host = h.get('x-forwarded-host') ?? h.get('host') ?? 'tabmerger.vercel.app'
   const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https')
   const shareUrl = `${proto}://${host}/share/${slug}`
+  const storeLinks = getStoreLinks()
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-14">
@@ -71,9 +73,7 @@ export default async function SharePage({ params }: Props) {
           <p className="text-[13px] text-text2">Install TabMerger and this collection becomes a group you can restore in a click.</p>
         </div>
         <a
-          href="https://chrome.google.com/webstore"
-          target="_blank"
-          rel="noopener noreferrer"
+          {...storeLinkProps(storeLinks.chrome)}
           className="shrink-0 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors inline-flex items-center justify-center"
         >
           Install free

@@ -32,6 +32,11 @@ interface PricingCardProps {
   displayMonthly?: string
   displayYearly?: string
   yearlySubtext?: string
+  /**
+   * Where the Free card's "Install free" goes. Resolved on the server (`getStoreLinks()`) and
+   * passed down: this client component cannot tell which deployment it is running on.
+   */
+  installHref: string
 }
 
 export function PricingCard({
@@ -47,6 +52,7 @@ export function PricingCard({
   displayMonthly,
   displayYearly,
   yearlySubtext,
+  installHref,
 }: PricingCardProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -107,7 +113,7 @@ export function PricingCard({
   async function handleClick() {
     if (isComingSoon) return
     if (isFree) {
-      window.open('https://chrome.google.com/webstore', '_blank', 'noopener')
+      window.open(installHref, '_blank', 'noopener')
       return
     }
 

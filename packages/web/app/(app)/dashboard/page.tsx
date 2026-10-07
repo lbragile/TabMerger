@@ -15,6 +15,7 @@ import { getEffectiveCap } from '@/lib/ai-usage'
 import { isEncryptedBlob } from '@tabmerger/shared'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { getStoreLinks } from '@/lib/storeLinks'
 
 // ponytail: capitalize the whole email local-part as a first name proxy — no profile
 // display-name column exists yet, and splitting on '.' would mangle names like "mary.jane"
@@ -154,7 +155,7 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      <OnboardingChecklist isSignedIn={!!user} isPro={isPro} />
+      <OnboardingChecklist isSignedIn={!!user} isPro={isPro} installHref={getStoreLinks().chrome} />
 
       <StatsOverview
         tabCount={tabCount}

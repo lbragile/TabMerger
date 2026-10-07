@@ -79,6 +79,18 @@ different IDs, so Edge treats them as two extensions.
 There is deliberately no separate Edge beta item: Edge Add-ons has no tester list (only Public or
 Hidden), certifies each submission in up to 7 business days, and would issue a new ID.
 
+### Which install links each site shows
+
+Every "install" button on the website follows the deployment. The production site links to the
+stable listings above (Chrome Web Store, addons.mozilla.org, Edge Add-ons). Every other
+deployment (the preview site, local development) links to the beta builds: Chrome and Edge
+buttons open the TabMerger BETA listing, and Firefox buttons go to the Firefox step of the beta
+guide (`/beta?download=firefox#firefox`), which starts the beta file on arrival when
+`FIREFOX_BETA_BLOB_BASE_URL` is set and always shows the step's own install link. The listing
+URLs and item IDs are constants in `packages/shared/src/constants/storeListings.ts`; the choice
+between the two sets is `getStoreLinks()` in `packages/web/lib/storeLinks.ts`, decided on the
+server from `VERCEL_ENV` and passed to client components as props.
+
 ### Website ↔ extension messaging
 
 The website sends `PING` (install detection), `SYNC_AUTH` (hand its sign-in to the extension) and

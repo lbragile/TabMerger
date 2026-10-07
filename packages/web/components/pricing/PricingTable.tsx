@@ -9,6 +9,8 @@ interface PricingTableProps {
   currentTier?: string
   /** How the current paid plan is billed; unknown (or free) leaves it undefined. */
   currentInterval?: 'monthly' | 'yearly'
+  /** The Free card's install link, resolved on the server (`getStoreLinks()`) by the page. */
+  installHref: string
 }
 
 const PRO_SAVINGS = yearlySavings(TIERS.pro.monthlyPrice, TIERS.pro.yearlyPrice)
@@ -21,7 +23,7 @@ function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>):
   return `${formatListPrice(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
 }
 
-export function PricingTable({ currentTier, currentInterval }: PricingTableProps) {
+export function PricingTable({ currentTier, currentInterval, installHref }: PricingTableProps) {
   // Always opens on Monthly, whatever the current plan is billed at.
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
 
@@ -61,6 +63,7 @@ export function PricingTable({ currentTier, currentInterval }: PricingTableProps
           interval={interval}
           currentTier={currentTier}
           currentInterval={currentInterval}
+          installHref={installHref}
           displayMonthly="$0"
           displayYearly="$0"
         />
@@ -77,6 +80,7 @@ export function PricingTable({ currentTier, currentInterval }: PricingTableProps
             highlighted
             currentTier={currentTier}
             currentInterval={currentInterval}
+            installHref={installHref}
             displayMonthly={formatListPrice(TIERS.pro.monthlyPrice)}
             displayYearly={formatListPrice(TIERS.pro.yearlyPrice)}
             yearlySubtext={yearlySubtext(PRO_SAVINGS)}
@@ -92,6 +96,7 @@ export function PricingTable({ currentTier, currentInterval }: PricingTableProps
           interval={interval}
           currentTier={currentTier}
           currentInterval={currentInterval}
+          installHref={installHref}
           displayMonthly={formatListPrice(TIERS.proAi.monthlyPrice)}
           displayYearly={formatListPrice(TIERS.proAi.yearlyPrice)}
           yearlySubtext={yearlySubtext(PRO_AI_SAVINGS)}

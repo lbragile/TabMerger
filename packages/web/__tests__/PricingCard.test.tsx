@@ -15,6 +15,7 @@ const baseProps = {
   features: ['Feature A', 'Feature B'],
   interval: 'monthly' as const,
   tier: 'pro',
+  installHref: 'https://store.example/tabmerger',
 }
 
 /**

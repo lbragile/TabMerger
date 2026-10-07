@@ -2,8 +2,12 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ChromeIcon } from './BrowserIcons'
 import { AI_ENABLED } from '@/lib/aiFlag'
+import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 
 export function FinalCta() {
+  // Server component: the links follow the deployment answering this request.
+  const storeLinks = getStoreLinks()
+
   return (
     <section className="py-16 sm:py-[72px] px-6 sm:px-11 bg-surface2">
       <div className="container max-w-[720px] text-center">
@@ -17,7 +21,7 @@ export function FinalCta() {
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button size="lg" className="gap-2" asChild>
-            <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener noreferrer">
+            <a {...storeLinkProps(storeLinks.chrome)}>
               <ChromeIcon size={18} />
               Install for Chrome — free
             </a>

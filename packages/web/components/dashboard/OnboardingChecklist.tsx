@@ -4,12 +4,18 @@ import { useEffect, useState } from 'react'
 import { CheckCircle2, Circle, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useExtensionInstalled } from '@/lib/hooks/useExtensionInstalled'
+import { storeLinkProps } from '@/lib/storeLinks'
 
 const STORAGE_KEY = 'tm_onboarding_dismissed'
 
 interface Props {
   isSignedIn: boolean
   isPro: boolean
+  /**
+   * Where "Install the TabMerger extension" goes. Resolved on the server (`getStoreLinks()`)
+   * and passed down: this client component cannot tell which deployment it is running on.
+   */
+  installHref: string
 }
 
 interface Step {
@@ -19,7 +25,7 @@ interface Step {
   done: boolean
 }
 
-export function OnboardingChecklist({ isSignedIn, isPro }: Props) {
+export function OnboardingChecklist({ isSignedIn, isPro, installHref }: Props) {
   const [dismissed, setDismissed] = useState(false)
   // Read localStorage after mount, in an effect rather than a lazy useState initializer —
   // reading it during the client's first render (matching SSR's `false`) would mismatch
@@ -32,7 +38,7 @@ export function OnboardingChecklist({ isSignedIn, isPro }: Props) {
     {
       id: 'install',
       label: 'Install the TabMerger extension',
-      href: 'https://chromewebstore.google.com/detail/tabmerger/inmiajapbpafmhjleiebcamfhkfnlgoc',
+      href: installHref,
       done: extensionInstalled,
     },
     {
@@ -111,7 +117,7 @@ export function OnboardingChecklist({ isSignedIn, isPro }: Props) {
                 className={`h-3.5 w-3.5 shrink-0 ${step.done ? 'text-green-500 dark:text-green-400' : 'text-muted-foreground'}`}
               />
               {step.href && !step.done ? (
-                <a href={step.href} className="text-xs text-blue-600 dark:text-blue-300 hover:underline" target={step.href.startsWith('http') ? '_blank' : undefined} rel={step.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                <a {...storeLinkProps(step.href)} className="text-xs text-blue-600 dark:text-blue-300 hover:underline">
                   {step.label}
                 </a>
               ) : content}

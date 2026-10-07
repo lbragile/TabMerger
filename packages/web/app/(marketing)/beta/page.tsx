@@ -5,11 +5,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { LegalToc } from '@/components/legal-toc'
-import { FREE_TIER_LIMITS, FIREFOX_BETA, CONFLICT_COPY_SUFFIX } from '@tabmerger/shared'
+import { FREE_TIER_LIMITS, FIREFOX_BETA, CONFLICT_COPY_SUFFIX, STORE_LISTING_URL } from '@tabmerger/shared'
 import { KNOWN_ISSUES } from '@/lib/knownIssues'
 import { cn } from '@/lib/utils'
 import { isProductionDeployment } from '@/lib/deployment'
+import { BETA_GUIDE_FIREFOX_ID } from '@/lib/storeLinks'
 import { BetaAreaProgress, BetaChecklistReset, BetaGoodCheck, BetaStepList } from '@/components/beta/BetaChecklist'
+import { FirefoxBetaAutoStart } from '@/components/beta/FirefoxBetaAutoStart'
 
 // Same gate next.config.ts uses to decide whether to rewrite /firefox-beta/* to the Blob store —
 // only set on the Preview deployment (see docs/PUBLISHING.md). Reading it directly here (rather
@@ -38,7 +40,7 @@ const BETA_GOOGLE_GROUP_URL = 'https://groups.google.com/g/tabmerger-beta-tester
 
 // The private BETA item's store listing. It only opens for members of the tester group
 // (the Chrome Web Store shows "Item not found" to everyone else).
-const BETA_STORE_LISTING_URL = 'https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd'
+const BETA_STORE_LISTING_URL = STORE_LISTING_URL.CHROME_BETA
 
 const GITHUB_REPO = 'lbragile/TabMerger'
 const GITHUB_DISCUSSIONS_URL = `https://github.com/${GITHUB_REPO}/discussions`
@@ -1888,7 +1890,7 @@ export default function BetaPage() {
                 one. Safari isn't supported.
               </li>
               {FIREFOX_BETA_CONFIGURED ? (
-                <li id="firefox">
+                <li id={BETA_GUIDE_FIREFOX_ID} className="scroll-mt-24">
                   <span className="text-foreground font-medium">Firefox.</span> Firefox has its
                   own beta build, installed from a direct link rather than the Chrome Web Store
                   listing above.{' '}
@@ -1908,13 +1910,15 @@ export default function BetaPage() {
                     Anyone with the install link above can install it
                   </strong>{' '}
                   — please don't share it outside the tester group.
+                  <FirefoxBetaAutoStart xpiHref={FIREFOX_BETA_XPI_URL} />
                 </li>
               ) : (
-                <li>
+                <li id={BETA_GUIDE_FIREFOX_ID} className="scroll-mt-24">
                   <span className="text-foreground font-medium">Firefox.</span> A Firefox beta is
                   coming soon; until then, Firefox users can join the beta with any of the
                   supported Chromium browsers listed above (Chrome, Edge, Brave, Vivaldi, Arc,
                   Opera).
+                  <FirefoxBetaAutoStart xpiHref={null} />
                 </li>
               )}
               <li>

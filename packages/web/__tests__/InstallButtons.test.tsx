@@ -11,11 +11,11 @@ describe('InstallButtons', () => {
     expect(screen.getByRole('link', { name: /Add to Edge/i })).toBeInTheDocument()
   })
 
-  it('Chrome link points to the Chrome Web Store', () => {
+  it('Chrome link points to a TabMerger listing on the Chrome Web Store, not the store home page', () => {
     render(<InstallButtons />)
     expect(screen.getByRole('link', { name: /Add to Chrome/i })).toHaveAttribute(
       'href',
-      expect.stringContaining('chrome.google.com')
+      expect.stringMatching(/^https:\/\/chromewebstore\.google\.com\/detail\/.+/)
     )
   })
 
