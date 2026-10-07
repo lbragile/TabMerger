@@ -2,11 +2,13 @@ import type { Metadata } from 'next'
 import { Fragment } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { LegalToc } from '@/components/legal-toc'
 import { FREE_TIER_LIMITS, FIREFOX_BETA, CONFLICT_COPY_SUFFIX } from '@tabmerger/shared'
 import { KNOWN_ISSUES } from '@/lib/knownIssues'
 import { cn } from '@/lib/utils'
+import { isProductionDeployment } from '@/lib/deployment'
 import { BetaAreaProgress, BetaChecklistReset, BetaGoodCheck, BetaStepList } from '@/components/beta/BetaChecklist'
 
 // Same gate next.config.ts uses to decide whether to rewrite /firefox-beta/* to the Blob store —
@@ -16,11 +18,18 @@ import { BetaAreaProgress, BetaChecklistReset, BetaGoodCheck, BetaStepList } fro
 const FIREFOX_BETA_CONFIGURED = Boolean(process.env.FIREFOX_BETA_BLOB_BASE_URL)
 const FIREFOX_BETA_XPI_URL = `${FIREFOX_BETA.PATH}/${FIREFOX_BETA.LATEST_XPI_FILE}`
 
-export const metadata: Metadata = {
-  title: 'Beta Program',
-  description:
-    'Join the TabMerger beta — install the private beta build, know what to test, and report bugs directly to the team.',
-}
+// The tester guide exists on the preview site and in local development only. On the production
+// deployment the page answers 404 (see BetaPage below). Rendering per request means the gate
+// reads the running deployment's environment rather than a value frozen when the site was built.
+export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = isProductionDeployment()
+  ? { robots: { index: false, follow: false } }
+  : {
+      title: 'Beta Program',
+      description:
+        'Join the TabMerger beta — install the private beta build, know what to test, and report bugs directly to the team.',
+    }
 
 // The Google Group is also the Chrome Web Store trusted-tester list for the private
 // BETA item. Joining it is what makes the private listing visible to that Google
@@ -1783,6 +1792,8 @@ function GitHubMark({ className }: { className?: string }) {
 }
 
 export default function BetaPage() {
+  if (isProductionDeployment()) notFound()
+
   return (
     <div className="container py-16 max-w-5xl">
       {/* Hero */}

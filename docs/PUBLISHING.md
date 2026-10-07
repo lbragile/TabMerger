@@ -219,7 +219,10 @@ web app's rewrite and CI's publish step.
    `https://<id>.public.blob.vercel-storage.com`) as a Vercel environment variable on the
    **Preview** environment only — the beta channel only exists on the preview deployment, and
    this is not a secret (it's just environment-specific, so it isn't hardcoded). Leave it unset on
-   Production; the `/beta` page falls back to a short "coming soon" line when it's unset.
+   Production; the `/beta` page falls back to a short "coming soon" line when it's unset. The
+   `/beta` tester guide itself is not served on Production at all: there it answers 404 and the
+   footer link is hidden (`isProductionDeployment()` in `packages/web/lib/deployment.ts`), so
+   testers always use the preview site.
 3. CI's publish step (`packages/extension/scripts/publishFirefoxBeta.ts`, run from the
    `publish-firefox-beta` job in `publish.yml`) uploads the signed `.xpi` and `updates.json` to that store under the
    `FIREFOX_BETA.PATH` prefix, using `FIREFOX_BETA.XPI_CONTENT_TYPE` for the `.xpi`'s
