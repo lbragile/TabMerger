@@ -21,7 +21,7 @@ pnpm lint                   # ESLint across extension + web
 pnpm type-check             # TypeScript check across all packages
 pnpm test               # Vitest unit tests (extension + web)
 pnpm test:e2e           # Playwright E2E (web app)
-pnpm test:visual        # Playwright visual regression (extension + web, @visual-tagged specs)
+pnpm test:visual        # Playwright visual regression (extension + web, @visual-tagged specs); CI runs the extension spec as an informational check against Linux baselines (docs/VISUAL_REGRESSION.md)
 pnpm --filter @tabmerger/extension test:e2e         # Extension E2E tests
 pnpm --filter @tabmerger/extension test:e2e:ui      # Extension E2E — interactive Playwright UI dashboard
 pnpm --filter @tabmerger/extension test:integration # Extension integration tests (real IndexedDB round trips)
@@ -43,7 +43,7 @@ packages/
 supabase/      Postgres migrations, RLS policies, seed data
 docs/          Architecture, feature roadmap, integration guides
 scripts/       Dev tooling (scan-secrets.sh, setup.sh)
-.github/       CI/CD workflows (ci.yml, publish.yml, deploy-web.yml, deploy-web-production.yml)
+.github/       CI/CD workflows (ci.yml, publish.yml, deploy-web.yml, deploy-web-production.yml, visual-baselines.yml)
 .claude/       Agent definitions for domain-specific development tasks
 ```
 
