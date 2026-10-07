@@ -42,4 +42,8 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn(), refresh: vi.fn() }),
   usePathname: () => '/',
   useSearchParams: () => new URLSearchParams(),
+  // The real notFound() throws to stop rendering; keep that so a gated page can't render on.
+  notFound: () => {
+    throw new Error('NEXT_HTTP_ERROR_FALLBACK;404')
+  },
 }))

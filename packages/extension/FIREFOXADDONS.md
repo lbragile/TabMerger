@@ -251,7 +251,7 @@ TabMerger's Settings (the true semver).
 | Stable (listed) | `2.0.0` | (ignored by Firefox) | `v2.0.0` | 2021-03-06 (GitHub release) | **Live: v2 `2.0.0` is the public AMO build today** |
 | Stable (listed) | `3.1.0` | (ignored by Firefox) | `v3.1.0` (planned) | not yet released | **Planned: first v3 stable release.** Not yet submitted. Stable keeps the same plain semver as Chrome (no beta offset) |
 | BETA (unlisted) | `4.1.0.7` | (ignored by Firefox) | `v3.1.0-beta.7` | 2026-09-29 | Signed; published to `/firefox-beta/`. Validator warnings above (min version 109 at the time) |
-| BETA (unlisted) | `4.1.0.11` | (ignored by Firefox) | `v3.1.0-beta.11` | not yet cut | Pending: about to be cut on the `beta` branch |
+| BETA (unlisted) | `4.1.0.11` | (ignored by Firefox) | `v3.1.0-beta.11` | 2026-10-07 | Signed and published to the self-hosted beta channel by the publish workflow |
 
 ## Notes for a future review / support request
 

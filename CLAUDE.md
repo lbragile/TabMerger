@@ -21,7 +21,7 @@ pnpm lint                   # ESLint across extension + web
 pnpm type-check             # TypeScript check across all packages
 pnpm test               # Vitest unit tests (extension + web)
 pnpm test:e2e           # Playwright E2E (web app)
-pnpm test:visual        # Playwright visual regression (extension + web, @visual-tagged specs)
+pnpm test:visual        # Playwright visual regression (extension + web, @visual-tagged specs); CI runs the extension spec as an informational check against Linux baselines (docs/VISUAL_REGRESSION.md)
 pnpm --filter @tabmerger/extension test:e2e         # Extension E2E tests
 pnpm --filter @tabmerger/extension test:e2e:ui      # Extension E2E — interactive Playwright UI dashboard
 pnpm --filter @tabmerger/extension test:integration # Extension integration tests (real IndexedDB round trips)
@@ -43,15 +43,15 @@ packages/
 supabase/      Postgres migrations, RLS policies, seed data
 docs/          Architecture, feature roadmap, integration guides
 scripts/       Dev tooling (scan-secrets.sh, setup.sh)
-.github/       CI/CD workflows (ci.yml, publish.yml, deploy-web.yml)
+.github/       CI/CD workflows (ci.yml, publish.yml, deploy-web.yml, deploy-web-production.yml, visual-baselines.yml)
 .claude/       Agent definitions for domain-specific development tasks
 ```
 
 ## Repository and contributions
 
-- **Public repo:** `lbragile/TabMerger`. Default branch `main` (CI, web preview); `beta` is the release branch (semantic-release cuts `vX.Y.Z-beta.N` and publishes to the BETA store listings). Stable releases come from `main` once re-enabled.
+- **Public repo:** `lbragile/TabMerger`. Default branch `main` (CI, web preview, and stable releases: semantic-release cuts `vX.Y.Z` on a push with a release-worthy commit; the public store jobs and the production web deploy wait for maintainer approval); `beta` is the prerelease branch (semantic-release cuts `vX.Y.Z-beta.N` and publishes to the BETA store listings).
 - **Rulesets:** `main` and `beta` need a PR with 1 approval and the 8 CI checks, squash merges only; the maintainer bypasses. Only the maintainer (or semantic-release acting as them) can create, move or delete `v*` tags.
-- **Secrets live in GitHub environments**, never at repo level (except `SENTRY_AUTH_TOKEN`): `release`, `store-beta`, `store-stable` (maintainer approval), `vercel-preview`, `ci-preview-db`. Fork PRs never get secrets, so any job that needs one must skip on fork PRs (see `e2e-web`). Never add `pull_request_target`.
+- **Secrets live in GitHub environments**, never at repo level (except `SENTRY_AUTH_TOKEN`): `release`, `store-beta`, `store-stable` (maintainer approval), `vercel-preview`, `vercel-production` (maintainer approval), `ci-preview-db`. Fork PRs never get secrets, so any job that needs one must skip on fork PRs (see `e2e-web`). Never add `pull_request_target`.
 - **Contributions:** outside contributors' workflow runs need maintainer approval. Merge with squash; the PR title becomes the conventional-commit message semantic-release reads.
 - **semantic-release** tracks prerelease channels in git notes (`refs/notes/semantic-release-<tag>`). Never drop them when rewriting history or moving the repo.
 

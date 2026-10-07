@@ -2,8 +2,13 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { ChromeIcon, FirefoxIcon, EdgeIcon } from './BrowserIcons'
+import { StoreLink } from '@/components/StoreLink'
+import { getStoreLinks } from '@/lib/storeLinks'
 
 export function InstallButtons() {
+  // Server component: the links follow the deployment answering this request.
+  const storeLinks = getStoreLinks()
+
   return (
     <section className="py-24">
       <div className="container">
@@ -17,29 +22,27 @@ export function InstallButtons() {
 
           {/* Browser install buttons */}
           <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            <a
-              href="https://chrome.google.com/webstore"
-              target="_blank"
-              rel="noopener noreferrer"
+            <StoreLink
+              href={storeLinks.chrome}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-xs"
             >
               <ChromeIcon size={20} />
               Add to Chrome
-            </a>
-            <a
-              href="#"
+            </StoreLink>
+            <StoreLink
+              href={storeLinks.firefox}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-xs"
             >
               <FirefoxIcon size={20} />
               Add to Firefox
-            </a>
-            <a
-              href="#"
+            </StoreLink>
+            <StoreLink
+              href={storeLinks.edge}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-gray-900 hover:bg-gray-50 transition-colors shadow-xs"
             >
               <EdgeIcon size={20} />
               Add to Edge
-            </a>
+            </StoreLink>
           </div>
 
           {/* Secondary CTA */}

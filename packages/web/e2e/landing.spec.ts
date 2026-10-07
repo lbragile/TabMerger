@@ -23,14 +23,26 @@ test.describe('Landing page', () => {
     // text is asymmetric between the primary and secondary buttons. `.first()` on the
     // Chrome link — FinalCta repeats the same Chrome install link further down the page;
     // Hero's is the first one in DOM order.
-    await expect(page.locator('a[href="https://chrome.google.com/webstore"]').first()).toBeVisible()
-    await expect(
-      page.locator('a[href="https://addons.mozilla.org/firefox/addon/tabmerger"]')
-    ).toBeVisible()
-    await expect(
-      // The product ID is required — the slug-only URL returns 404.
-      page.locator('a[href="https://microsoftedge.microsoft.com/addons/detail/tabmerger/eogjdfjemlgmbblgkjlcgdehbeoodbfn"]')
-    ).toBeVisible()
+    //
+    // The links depend on the deployment (lib/storeLinks.ts). This suite runs against a
+    // local build or the preview site, never production, so it sees the beta targets:
+    // Chrome and Edge both go to the Chrome BETA listing, Firefox to the Firefox step of
+    // the beta guide (which then starts the beta file). Written out here on purpose: an
+    // end-to-end check of the rendered addresses, independent of the app's constants.
+    const hero = page.locator('section').filter({ has: page.getByRole('heading', { level: 1 }) })
+    const chromeBeta = hero.locator(
+      'a[href="https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd"]'
+    )
+    await expect(chromeBeta).toHaveCount(2)
+    await expect(chromeBeta.first()).toBeVisible()
+    await expect(chromeBeta.last()).toBeVisible()
+    const firefox = hero.locator('a[href="/beta?download=firefox#firefox"]')
+    await expect(firefox).toBeVisible()
+    // The Firefox beta link stays on this site; the store links open a new tab.
+    await expect(firefox).not.toHaveAttribute('target', '_blank')
+    await expect(chromeBeta.first()).toHaveAttribute('target', '_blank')
+    // Never the Chrome Web Store home page.
+    await expect(page.locator('a[href="https://chrome.google.com/webstore"]')).toHaveCount(0)
   })
 
   test('landing page shows no invented testimonials', async ({ page }) => {

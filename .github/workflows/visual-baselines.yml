@@ -1,0 +1,142 @@
+name: Visual baselines
+
+# Manual only: (re)generates the LINUX reference screenshots for the extension's
+# `@visual` Playwright spec on a GitHub runner, so they match what the informational
+# `visual-regression` job in ci.yml renders. Windows baselines (`*-win32.png`) are for
+# local runs only.
+#
+# This workflow NEVER commits or pushes: branch rulesets require a PR. It uploads the
+# PNGs as an artifact; the maintainer downloads and commits them (the exact commands
+# are printed in the run's summary):
+#   gh run download <run-id> -n visual-baselines-linux -D .
+#
+# Run it on any branch (pick the branch in the "Run workflow" dropdown, or
+# `gh workflow run visual-baselines.yml --ref <branch>`), including a PR branch whose UI
+# changed on purpose. The workflow file itself must exist on the default branch for the
+# dispatch to be offered.
+#
+# Public-repo rules: `workflow_dispatch` only (never `pull_request_target`), read-only
+# token, no secrets. The extension build and the spec make no authenticated calls.
+
+on:
+  workflow_dispatch:
+    inputs:
+      grep:
+        description: "Optional Playwright --grep pattern (matched against the tests of visual.spec.ts). Leave empty to regenerate every @visual test."
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visual-baselines-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  baselines:
+    name: Generate Linux baselines
+    runs-on: ubuntu-latest
+    # Keep identical to the image in ci.yml (e2e jobs and the visual-regression job)
+    # and @playwright/test in pnpm-lock.yaml: the first step fails on a mismatch.
+    # Baselines are only comparable when rendered by the same image. A GitHub runner
+    # or image update can shift font rendering by a pixel; if the informational
+    # check starts reporting small diffs everywhere, re-run this workflow and commit
+    # the result.
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      options: --ipc=host
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Check Playwright version matches the container image
+        run: |
+          locked=$(grep -m1 -oE "^  '@playwright/test@[0-9]+\.[0-9]+\.[0-9]+'" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          core=$(grep -m1 -oE "^  playwright-core@[0-9]+\.[0-9]+\.[0-9]+:" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          image=$(grep -m1 -E '^ +image: mcr\.microsoft\.com/playwright:v' .github/workflows/visual-baselines.yml | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | tr -d v)
+          ci_image=$(grep -m1 -E '^ +image: mcr\.microsoft\.com/playwright:v' .github/workflows/ci.yml | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | tr -d v)
+          echo "lockfile @playwright/test=$locked playwright-core=$core image=$image ci.yml image=$ci_image"
+          if [ -z "$locked" ] || [ "$locked" != "$image" ] || [ "$core" != "$image" ] || [ "$image" != "$ci_image" ]; then
+            echo "::error::Playwright versions disagree (lockfile $locked / core $core, this workflow $image, ci.yml $ci_image). Bump the image in ci.yml (every job) and here together with @playwright/test, so baselines are rendered exactly like the CI comparison."
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tabmerger/extension build
+
+      # The input goes through an env var, never straight into the script, so it cannot
+      # inject shell. With a pattern, only visual.spec.ts is run (so a loose pattern
+      # cannot pull in the behavioral e2e specs). `=all` rewrites every selected
+      # snapshot so the committed set always reflects this exact render.
+      - name: Update Linux snapshots
+        env:
+          GREP: ${{ inputs.grep }}
+        # Plain `sh`: steps in a container job run with `sh -e`, not bash, so no arrays here.
+        run: |
+          cd packages/extension/e2e
+          if [ -n "$GREP" ]; then
+            ../node_modules/.bin/playwright test tests/visual.spec.ts --grep "$GREP" --update-snapshots=all --reporter=list
+          else
+            ../node_modules/.bin/playwright test --grep @visual --update-snapshots=all --reporter=list
+          fi
+
+      # Stage only the *-linux.png files under their repo-root-relative paths, so the
+      # artifact extracts straight onto the repository with `-D .`.
+      - name: Collect Linux baselines
+        id: collect
+        run: |
+          rm -rf visual-baselines-staging
+          mkdir visual-baselines-staging
+          find packages -path '*/node_modules' -prune -o -type f -name '*-linux.png' -path '*-snapshots/*' -print \
+            | while IFS= read -r f; do cp --parents "$f" visual-baselines-staging/; done
+          count=$(find visual-baselines-staging -type f -name '*-linux.png' | wc -l)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No *-linux.png files were produced. Does the grep pattern match a visual test?"
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: visual-baselines-linux
+          path: visual-baselines-staging/
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Summary
+        env:
+          RUN_ID: ${{ github.run_id }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          {
+            echo "### Linux visual baselines"
+            echo
+            echo "${{ steps.collect.outputs.count }} file(s), rendered in the Playwright container image used by CI:"
+            echo
+            echo "| File | Size (bytes) |"
+            echo "|---|---|"
+            (cd visual-baselines-staging && find . -type f -name '*-linux.png' | sort | while IFS= read -r f; do
+              echo "| \`${f#./}\` | $(stat -c %s "$f") |"
+            done)
+            echo
+            echo "Nothing was committed. To adopt them, from a checkout of \`$REF_NAME\`:"
+            echo
+            echo '```bash'
+            echo "gh run download $RUN_ID -n visual-baselines-linux -D ."
+            echo "git add packages/extension/e2e/tests/visual.spec.ts-snapshots/*-linux.png"
+            echo "git commit -m \"test(extension): update the Linux visual baselines\""
+            echo '```'
+            echo
+            echo "Then push and open a PR. The artifact is kept for 7 days."
+          } >> "$GITHUB_STEP_SUMMARY"

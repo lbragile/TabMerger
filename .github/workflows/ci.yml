@@ -11,9 +11,9 @@ name: CI
 #   • E2E Tests            (e2e-extension — 3 shards, "E2E Tests (Extension) 1/3".."3/3";
 #                            e2e-web)
 #   • Build                (build — extension + web, was build-extension/build-web)
-#   • Visual Regression    PAUSED — see the visual-regression job below, it no
-#                          longer runs and must not be added back as a required
-#                          check until it does.
+#   • Visual Regression    NOT required, on purpose — the visual-regression job
+#                          below is informational (continue-on-error, in no
+#                          `needs:` list). Never make it a required check.
 #
 # dep-audit is intentionally non-blocking (continue-on-error on that step only)
 # so Renovate/Dependabot PRs can still land even with transitive advisories.
@@ -67,14 +67,15 @@ on:
 permissions:
   contents: read
 
-# Cancel a superseded run for the same ref — except on `beta`. Beta is the
-# release branch (see the `release` job below): cancelling a run mid-release
-# could kill a run after semantic-release has already pushed a tag but before
-# the required gates finish, stranding that version. Every other ref (PRs,
-# main) is safe to cancel-and-restart on a new push.
+# Cancel a superseded run for the same ref — except on `main` and `beta`. Both
+# are release branches (see the `release` job below): cancelling a run
+# mid-release could kill it after semantic-release has already pushed a tag but
+# before the GitHub Release exists, stranding that version. A new push to either
+# branch queues behind the running one instead. Every other ref (PRs) is safe to
+# cancel-and-restart on a new push.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/beta' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/beta' && github.ref != 'refs/heads/main' }}
 
 # CI's web build and web E2E run against the PREVIEW Supabase project, never production:
 # the E2E setup creates and deletes throwaway users through the admin API. Public values
@@ -233,7 +234,7 @@ jobs:
       - run: pnpm --filter @tabmerger/extension test:integration
 
   # ── Gate 3: E2E — both fixture sets, non-visual specs only (visual specs
-  # are handled by the paused visual-regression job below) ──
+  # are handled by the informational visual-regression job below) ──
   # Sharded 3 ways (the suite runs one worker per runner, so shards are the only
   # parallelism). The job id stays `e2e-extension` so `release.needs` and
   # `deploy-web-preview.needs` wait on every shard. Check names are now
@@ -403,33 +404,206 @@ jobs:
           path: packages/web/playwright-report/
           retention-days: 7
 
-  # ── Gate 4: visual regression — PAUSED. ──
+  # ── Visual regression (extension popup) — INFORMATIONAL, never a gate. ──
   #
-  # This job is deliberately disabled (`if: false`) rather than deleted, so the
-  # detection/build/run logic is ready to go the moment baselines exist. It has
-  # been failing every run since there are no *-snapshots/*-linux.png files —
-  # every run fails with "A snapshot doesn't exist ... writing actual" — which
-  # is wasted runner time even with continue-on-error, since it still checks out,
-  # installs, and builds before failing.
+  # What it checks: the `@visual` Playwright spec (packages/extension/e2e/tests/
+  # visual.spec.ts, `toHaveScreenshot()`) compared against the committed LINUX
+  # baselines (visual.spec.ts-snapshots/*-linux.png), rendered in the same
+  # Playwright container image as the e2e jobs.
   #
-  # It has also been removed from every `needs:` list below (release,
-  # deploy-web-preview) — it was never a real gate there either, since it always
-  # ran with continue-on-error: true, but a `needs:` entry on a job that never
-  # runs would leave those jobs waiting on something that's skipped, not merely
-  # non-blocking.
+  # Why it is informational: pixel comparisons depend on the font/rasterizer stack,
+  # and a Playwright image or runner update can shift text by a pixel without any
+  # code change. It must therefore never block or delay a merge, a release or a
+  # deploy:
+  #   • it is NOT in any `needs:` list (`release`, `deploy-web-preview`), and must
+  #     not be added to one, nor made a required status check;
+  #   • job-level `continue-on-error: true` keeps the workflow run green when it
+  #     fails (a gated job still finishes green in seconds);
+  #   • a difference is surfaced as a `::warning::` annotation, a job summary and a
+  #     `visual-regression-report` artifact (HTML report with expected/actual/diff).
   #
-  # TO RE-ENABLE: generate baseline screenshots on LINUX (they are
-  # platform-suffixed; Windows produces -win32.png and font rendering differs),
-  # e.g. via the mcr.microsoft.com/playwright container, commit them, then
-  # delete the `if: false` line below and add this job back to the `needs:`
-  # lists on `release` and `deploy-web-preview`.
+  # It does nothing until Linux baselines exist: with no `*-linux.png` it ends
+  # green with a notice. To (re)generate them run the "Visual baselines" workflow
+  # (.github/workflows/visual-baselines.yml) on the branch, download its
+  # artifact and commit the PNGs (see docs/VISUAL_REGRESSION.md). Windows (`*-win32.png`)
+  # baselines are for local runs only and are never used here. If a runner or
+  # image update shifts every screenshot slightly, the fix is to re-run that
+  # workflow, not to chase the code.
+  #
+  # Scope: the EXTENSION spec only. The web app's visual spec
+  # (packages/web/e2e/visual.spec.ts) is intentionally NOT run in CI; it stays
+  # local-only.
+  #
+  # Fork PRs work: no secrets are used, the token is read-only, and the spec makes
+  # no network calls.
   visual-regression:
-    name: Visual Regression (paused)
-    if: false
+    name: Visual Regression (informational)
     runs-on: ubuntu-latest
+    # Same image as the e2e jobs, so the image version is the single source of
+    # truth for the browser and fonts. Keep the tag equal to the e2e jobs, the
+    # Visual baselines workflow and @playwright/test (the first step checks).
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      options: --ipc=host
+    continue-on-error: true
     timeout-minutes: 20
+    permissions:
+      contents: read
     steps:
-      - run: echo "Paused until Linux baseline screenshots exist — see the comment on this job in ci.yml."
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # the gate step diffs the push/PR range
+          persist-credentials: false
+
+      # Cheapest check first: nothing to compare against means nothing to do. Do not
+      # fail here: a red run before the baselines are committed would be noise.
+      - name: Check for Linux baselines
+        id: baselines
+        run: |
+          count=$(find packages/extension/e2e/tests/visual.spec.ts-snapshots -maxdepth 1 -name '*-linux.png' 2>/dev/null | wc -l)
+          echo "Linux baselines found: $count"
+          if [ "$count" -gt 0 ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No Linux visual baselines yet; run the Visual baselines workflow and commit its output."
+          fi
+
+      - name: Check Playwright version matches the container image
+        if: steps.baselines.outputs.present == 'true'
+        run: |
+          locked=$(grep -m1 -oE "^  '@playwright/test@[0-9]+\.[0-9]+\.[0-9]+'" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          core=$(grep -m1 -oE "^  playwright-core@[0-9]+\.[0-9]+\.[0-9]+:" pnpm-lock.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          # The first image line in this file is the e2e-extension one; the `job`
+          # context does not expose the image, so read it from the file.
+          image=$(grep -m1 -E '^ +image: mcr\.microsoft\.com/playwright:v' .github/workflows/ci.yml | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | tr -d v)
+          echo "lockfile @playwright/test=$locked playwright-core=$core image=$image"
+          if [ -z "$locked" ] || [ "$locked" != "$image" ] || [ "$core" != "$image" ]; then
+            echo "::error::Playwright in pnpm-lock.yaml ($locked / core $core) does not match the container image tag ($image). Bump the image in ci.yml (every job) and visual-baselines.yml together with @playwright/test."
+            exit 1
+          fi
+
+      # Same idea as the e2e-extension gate (copied, not shared: a job cannot call a
+      # step of another job, and sharing it would need a composite action or
+      # reusable workflow for one regex): run unless EVERY changed file is on the
+      # allowlist of paths that cannot change the popup's look.
+      - name: Decide whether visual regression is needed
+        if: steps.baselines.outputs.present == 'true'
+        id: gate
+        env:
+          BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # The container runs as root over a workspace owned by the runner user.
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          decide() { echo "run=$1" >> "$GITHUB_OUTPUT"; echo "$2"; exit 0; }
+          [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && decide true "Manual run; running."
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git cat-file -e "${PR_BASE}^{commit}" 2>/dev/null && git cat-file -e "${PR_HEAD}^{commit}" 2>/dev/null \
+              || decide true "PR range not available; running."
+            range="$PR_BASE...$PR_HEAD"
+          else
+            { [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] \
+              && git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; } \
+              || decide true "No comparable previous commit; running."
+            range="$BEFORE..$GITHUB_SHA"
+          fi
+          changed=$(git diff --name-only "$range") || decide true "Diff failed; running."
+          echo "$changed"
+          [ -n "$changed" ] || decide true "Empty diff; running."
+          if echo "$changed" | grep -qvE '^(packages/web/|packages/demo/|supabase/|docs/|\.claude/|\.agents/)|\.md$'; then
+            decide true "Extension-affecting changes; running."
+          fi
+          decide false "Only web/demo/supabase/docs/agent/markdown files changed; skipping visual regression."
+
+      - uses: pnpm/action-setup@v6
+        if: steps.gate.outputs.run == 'true'
+      - uses: actions/setup-node@v7
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        if: steps.gate.outputs.run == 'true'
+      - run: pnpm --filter @tabmerger/extension build
+        if: steps.gate.outputs.run == 'true'
+
+      # continue-on-error on the STEP so the report steps below still run after a
+      # failing comparison. No `--` before the options: pnpm appends them as-is.
+      # The json reporter feeds the summary; the html one is the uploaded report
+      # (default folder, the same one playwright.config.ts uses).
+      - name: Visual regression (extension, Linux baselines)
+        id: visual
+        if: steps.gate.outputs.run == 'true'
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_HTML_OPEN: never
+          PLAYWRIGHT_JSON_OUTPUT_NAME: ${{ github.workspace }}/visual-results.json
+        run: pnpm --filter @tabmerger/extension test:visual --reporter=list,html,json
+
+      - name: Report
+        if: always()
+        env:
+          PRESENT: ${{ steps.baselines.outputs.present }}
+          RUN: ${{ steps.gate.outputs.run }}
+          OUTCOME: ${{ steps.visual.outcome }}
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const { PRESENT, RUN, OUTCOME, GITHUB_STEP_SUMMARY } = process.env;
+          const summary = [];
+          const emit = () => GITHUB_STEP_SUMMARY && fs.appendFileSync(GITHUB_STEP_SUMMARY, summary.join('\n') + '\n');
+          summary.push('### Visual regression (informational)', '');
+          if (PRESENT !== 'true') {
+            summary.push('No Linux baselines are committed yet, so nothing was compared.',
+              'Run the **Visual baselines** workflow, download its artifact and commit the PNGs (see docs/VISUAL_REGRESSION.md).');
+          } else if (RUN !== 'true') {
+            summary.push("Skipped: the changes cannot affect the popup's look.");
+          } else if (OUTCOME === 'success') {
+            summary.push('All screenshots match their Linux baselines.');
+          } else {
+            const file = (process.env.GITHUB_WORKSPACE || '.') + '/visual-results.json';
+            let total = 0, differ = 0, missing = 0, other = 0;
+            const walk = (suite) => {
+              for (const spec of suite.specs ?? []) {
+                for (const t of spec.tests ?? []) {
+                  total++;
+                  if (t.status === 'expected' || t.status === 'skipped') continue;
+                  const results = t.results ?? [];
+                  const names = results.flatMap((r) => (r.attachments ?? []).map((a) => a.name ?? ''));
+                  const msgs = results.map((r) => r.error?.message ?? '').join('\n');
+                  if (names.some((n) => /-diff\.png$/.test(n))) differ++;
+                  else if (/snapshot doesn't exist/i.test(msgs)) missing++;
+                  else other++;
+                }
+              }
+              for (const s of suite.suites ?? []) walk(s);
+            };
+            if (fs.existsSync(file)) for (const s of JSON.parse(fs.readFileSync(file, 'utf8')).suites ?? []) walk(s);
+            const failed = differ + missing + other;
+            if (failed === 0) {
+              summary.push('The visual run failed before producing results (build or browser problem). See the step log.');
+              console.log('::warning::Visual regression (informational) did not run to completion; see the job log.');
+            } else {
+              summary.push(
+                `${failed} of ${total} screenshots failed: ${differ} differ from the baseline, ${missing} have no Linux baseline, ${other} errored.`,
+                '',
+                'Download the `visual-regression-report` artifact and open `index.html` to see the expected, actual and diff images.',
+                '',
+                'If the change is intended, run the **Visual baselines** workflow on this branch, download its artifact and commit the updated `*-linux.png` files (see docs/VISUAL_REGRESSION.md). This check never blocks the PR, a release or a deploy.');
+              console.log(`::warning::Visual regression (informational): ${differ} differ, ${missing} missing baseline, ${other} errored of ${total}. See the job summary.`);
+            }
+          }
+          emit();
+          EOF
+
+      - uses: actions/upload-artifact@v7
+        if: always() && steps.visual.outcome == 'failure'
+        with:
+          name: visual-regression-report
+          path: packages/extension/e2e/playwright-report/
+          retention-days: 3
 
   # ── Build: extension (Chrome MV3, with bundle-size budget check) + web.
   # Merged from the former build-extension/build-web jobs to share one
@@ -552,28 +726,26 @@ jobs:
     # Holds RELEASE_TOKEN. NOTE: the preflight step below also reads the CHROME_*
     # secrets, so those must be readable from this environment too (repo-level today).
     environment: release
-    # ── BETA ONLY (deliberate, temporary) ────────────────────────────────────
-    # Releases are currently cut from `beta` and nowhere else, so nothing can
-    # reach the PRODUCTION Chrome Web Store listing while the channel is being
-    # proven out. Pushes to the default branch still run every gate above; they
-    # just never release.
+    # ── BOTH RELEASE BRANCHES ─────────────────────────────────────────────────
+    # `main` cuts STABLE releases (vX.Y.Z), `beta` cuts prereleases (vX.Y.Z-beta.N).
+    # A push to `main` releases whenever it carries a release-worthy commit since
+    # the last stable tag, so every such push reaches the public store jobs.
+    # Those jobs still wait for a maintainer approval (the `store-stable`
+    # environment in publish.yml), and the Chrome job only uploads a draft.
     #
-    # `.releaserc.json` deliberately still lists BOTH branches: `beta` is a
-    # prerelease branch and computes its version from the last release on the
-    # default channel, so removing the default branch from that config would
-    # break the beta versioning rather than merely disabling stable.
-    #
-    # TO RE-ENABLE STABLE: restore the default branch to this condition —
-    #   (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
-    # and nothing else needs to change; publish.yml already routes stable vs
+    # `.releaserc.json` lists both branches. publish.yml routes stable vs
     # prerelease off github.event.release.prerelease.
-    if: github.ref == 'refs/heads/beta' && github.event_name == 'push'
+    #
+    # TO PAUSE STABLE (it was off until v3.1): narrow this condition back to
+    # `github.ref == 'refs/heads/beta'`. Leave `.releaserc.json` alone: `beta`
+    # computes its version from the last release on the default channel.
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta') && github.event_name == 'push'
     # Collapse a burst of merges into one release rather than one submission each.
     # NOT cancel-in-progress: cancelling mid-release can leave a pushed tag with no
     # GitHub Release, which strands the version and blocks the next run. This is
     # consistent with the workflow-level `concurrency` above, which also never
-    # cancels a run on `beta` — a workflow-level cancel can never reach in and kill
-    # this job mid-release either.
+    # cancels a run on `main` or `beta` — a workflow-level cancel can never reach
+    # in and kill this job mid-release either.
     concurrency:
       group: release-${{ github.ref }}
       cancel-in-progress: false
@@ -587,9 +759,9 @@ jobs:
     # fails to produce an artifact. Gating on it turns that stranded release into an
     # ordinary red CI run.
     #
-    # visual-regression is deliberately NOT listed — it is paused (`if: false`,
-    # see that job's comment) and was never a real gate anyway (continue-on-error:
-    # true). Listing a job that never runs would leave this job waiting forever.
+    # visual-regression is deliberately NOT listed — it is informational
+    # (continue-on-error, see that job's comment) and must never delay or block a
+    # release. Do not add it here.
     needs:
       [
         static-checks,

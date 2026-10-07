@@ -106,10 +106,18 @@ change. Keep notes technical and neutral, with no personal data, tokens or unrel
 Notes named `feedback_*`, `project_*` or `user_*` are maintainer-private and git-ignored, so
 don't add those.
 
+## Accessibility
+
+If your change touches the interface or the docs, follow the contributor expectations in
+[`ACCESSIBILITY.md`](../ACCESSIBILITY.md#contributor-expectations): a keyboard-only pass, labels
+on icon-only buttons, contrast in both themes (including group colors), and a note in your pull
+request of what you checked.
+
 ## Reporting issues
 
 Use the [bug report](ISSUE_TEMPLATE/bug_report.md) or
-[feature request](ISSUE_TEMPLATE/feature_request.md) templates when opening a new issue.
+[feature request](ISSUE_TEMPLATE/feature_request.md) templates when opening a new issue. For an
+accessibility barrier, use the [accessibility template](ISSUE_TEMPLATE/accessibility.md).
 
 ## Security issues
 

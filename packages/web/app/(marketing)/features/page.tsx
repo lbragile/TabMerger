@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AI_COMING_SOON_LABEL, FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 import {
   Layers,
   Search,
@@ -139,6 +140,9 @@ const featureSections = [
 ]
 
 export default function FeaturesPage() {
+  // Server component: the links follow the deployment answering this request.
+  const storeLinks = getStoreLinks()
+
   return (
     <div className="py-16">
       <div className="container">
@@ -153,11 +157,7 @@ export default function FeaturesPage() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="gap-2" asChild>
-              <a
-                href="https://chrome.google.com/webstore"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a {...storeLinkProps(storeLinks.chrome)}>
                 <Globe className="h-5 w-5" />
                 Add to Chrome — It&apos;s Free
               </a>

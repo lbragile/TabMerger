@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { PricingTable } from '@/components/pricing/PricingTable'
 import { getPriceInfo, type BillingInterval } from '@/lib/tiers'
 import { hasCloudSync } from '@/lib/cloudSync'
+import { getStoreLinks } from '@/lib/storeLinks'
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -47,7 +48,11 @@ export default async function PricingPage() {
             Start free. Upgrade when you&apos;re ready for more.
           </p>
         </div>
-        <PricingTable currentTier={currentTier} currentInterval={currentInterval} />
+        <PricingTable
+          currentTier={currentTier}
+          currentInterval={currentInterval}
+          installHref={getStoreLinks().chrome}
+        />
       </div>
       <p className="text-center text-sm text-text2 mt-14">
         Have more questions? See the <Link href="/faq" className="text-primary hover:underline">FAQ</Link>.

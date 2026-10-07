@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { afterEach, describe, it, expect, vi } from 'vitest'
 import { Footer } from '@/components/layout/Footer'
 
 describe('Footer', () => {
@@ -17,10 +17,34 @@ describe('Footer', () => {
     expect(screen.getByRole('heading', { name: 'Legal' })).toBeInTheDocument()
   })
 
-  it('links to the beta page under Public', () => {
-    render(<Footer />)
-    const publicColumn = screen.getByRole('heading', { name: 'Public' }).parentElement as HTMLElement
-    const link = within(publicColumn).getByRole('link', { name: 'Beta' })
-    expect(link).toHaveAttribute('href', '/beta')
+  describe('beta guide link', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs()
+    })
+
+    function stubDeployment(vercelEnv: string) {
+      vi.stubEnv('VERCEL_ENV', vercelEnv)
+      vi.stubEnv('NEXT_PUBLIC_VERCEL_ENV', vercelEnv)
+    }
+
+    it.each([
+      ['the preview deployment', 'preview'],
+      ['local development (no Vercel environment)', ''],
+    ])('links to the beta page under Public on %s', (_label, vercelEnv) => {
+      stubDeployment(vercelEnv)
+      render(<Footer />)
+      const publicColumn = screen.getByRole('heading', { name: 'Public' }).parentElement as HTMLElement
+      const link = within(publicColumn).getByRole('link', { name: 'Beta' })
+      expect(link).toHaveAttribute('href', '/beta')
+    })
+
+    it('has no beta link on the production deployment, where the guide is not served', () => {
+      stubDeployment('production')
+      render(<Footer />)
+      expect(screen.queryByRole('link', { name: 'Beta' })).not.toBeInTheDocument()
+      expect(document.querySelector('a[href^="/beta"]')).toBeNull()
+      // The rest of the Public column is unaffected.
+      expect(screen.getByRole('link', { name: 'Shared group demo' })).toHaveAttribute('href', '/share/demo')
+    })
   })
 })

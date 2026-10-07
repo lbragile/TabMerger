@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { afterEach, describe, it, expect, vi } from 'vitest'
+import { BETA_STORE_LINKS, STABLE_STORE_LINKS } from '@/lib/storeLinks'
 
 // SharePage is an async server component — mock its data dependency.
 
@@ -24,6 +25,10 @@ function mockSupabase(data: Record<string, unknown> | null) {
 }
 
 describe('SharePage — visual restyle additions', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   it('shows the read-only badge pill above the heading', async () => {
     vi.resetModules()
     mockSupabase({
@@ -74,7 +79,11 @@ describe('SharePage — visual restyle additions', () => {
     expect(screen.queryByText(/link expires/i)).not.toBeInTheDocument()
   })
 
-  it('shows an "Install free" CTA linking to the Chrome Web Store', async () => {
+  it.each([
+    ['the stable listing on the production deployment', 'production', STABLE_STORE_LINKS.chrome],
+    ['the BETA listing on the preview deployment', 'preview', BETA_STORE_LINKS.chrome],
+  ])('shows an "Install free" CTA linking to %s', async (_label, vercelEnv, expectedHref) => {
+    vi.stubEnv('VERCEL_ENV', vercelEnv)
     vi.resetModules()
     mockSupabase({
       slug: 'abc123',
@@ -88,6 +97,8 @@ describe('SharePage — visual restyle additions', () => {
     render(jsx as React.ReactElement)
 
     const cta = screen.getByRole('link', { name: /install free/i })
-    expect(cta).toHaveAttribute('href', 'https://chrome.google.com/webstore')
+    expect(cta).toHaveAttribute('href', expectedHref)
+    expect(cta).toHaveAttribute('target', '_blank')
+    expect(cta).toHaveAttribute('rel', 'noopener noreferrer')
   })
 })

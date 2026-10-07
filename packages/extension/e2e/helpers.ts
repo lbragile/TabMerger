@@ -42,11 +42,28 @@ export async function seedIdb(
     color?: string;
     permanent?: boolean;
     starred?: boolean;
+    archived?: boolean;
+    note?: string;
+    /** Epoch ms. Default: the page's `Date.now()` at seeding time. */
+    updatedAt?: number;
     windows?: {
       id: number;
-      tabs: { id: number; title: string; url: string; favIconUrl?: string; ogImage?: string }[];
+      tabs: {
+        id: number;
+        title: string;
+        url: string;
+        favIconUrl?: string;
+        ogImage?: string;
+        customTitle?: string;
+        note?: string;
+        /** Epoch ms the tab was saved; drives the "stale tab" marker. */
+        savedAt?: number;
+      }[];
       incognito: boolean;
       focused: boolean;
+      starred?: boolean;
+      name?: string;
+      note?: string;
     }[];
   }[]
 ) {
@@ -54,7 +71,7 @@ export async function seedIdb(
     const DB_NAME = 'tabmerger';
     const DB_VERSION = 1;
 
-    await new Promise<void>((resolve, reject) => {
+    const write = () => new Promise<void>((resolve, reject) => {
       const req = indexedDB.open(DB_NAME, DB_VERSION);
       req.onerror = () => reject(req.error);
       req.onsuccess = async () => {
@@ -68,11 +85,13 @@ export async function seedIdb(
             id: g.id,
             name: g.name,
             color: g.color ?? 'rgba(128,128,128,1)',
-            updatedAt: Date.now(),
+            updatedAt: g.updatedAt ?? Date.now(),
             windows: g.windows ?? [],
             permanent: g.permanent ?? false,
             starred: g.starred ?? false,
             pendingSync: false,
+            ...(g.archived ? { archived: true } : {}),
+            ...(g.note ? { note: g.note } : {}),
           });
         }
 
@@ -100,7 +119,38 @@ export async function seedIdb(
           db.createObjectStore('settings', { keyPath: 'id' });
       };
     });
+
+    // Hold the app's own groups write lock (GROUPS_LOCK_NAME in src/lib/localDb.ts) while seeding.
+    // The popup that is already open rewrites the groups state on its own (the Now Open sync on
+    // mount and on every tab event) as a read-modify-write under this lock. Unlocked, a seed that
+    // landed between that read and its write was overwritten and every seeded group was lost.
+    if (navigator.locks?.request) await navigator.locks.request('tabmerger-groups-write', write);
+    else await write();
   }, groups);
+}
+
+/**
+ * Write records into the `settings` store, keyed by record id (`appSettings`, `activeGroupIndex`,
+ * `urlRules`, ...). The app reads them on its next load, so call this before a reload. A partial
+ * `appSettings` is fine: the app merges the stored object over its defaults.
+ */
+export async function seedSettings(page: Page, records: Record<string, unknown>): Promise<void> {
+  await page.evaluate(async (records) => {
+    await new Promise<void>((resolve, reject) => {
+      const req = indexedDB.open('tabmerger', 1);
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => {
+        const db = req.result;
+        const tx = db.transaction('settings', 'readwrite');
+        for (const [id, value] of Object.entries(records)) tx.objectStore('settings').put({ id, value });
+        tx.oncomplete = () => {
+          db.close();
+          resolve();
+        };
+        tx.onerror = () => reject(tx.error);
+      };
+    });
+  }, records);
 }
 
 /** A group as IndexedDB holds it (the fields tests assert on). */

@@ -198,6 +198,10 @@ auto-publishes. Green means *submitted*, never *live*.
       especially.
 - [ ] Upgrade path: install the **previous** version first, then update. Confirm existing
       IndexedDB data survives. A fresh install proves nothing about migrations.
+- [ ] **Stable releases only:** the `Deploy Web Production` run was approved and is green
+      (its "Verify the live site" step proves `/`, `/privacy` and the extension CORS preflight
+      on `tabmerger.vercel.app`). Stable extension builds talk to that site, so do this before
+      announcing the release. Betas use the preview site and need no approval.
 - [ ] Web changelog at `/changelog` shows the new entry (built from repo-root `CHANGELOG.md`;
       prereleases are filtered out, so a beta will *not* appear — that's intended).
 - [ ] Sentry: no new error signature in the hour after rollout.

@@ -33,7 +33,11 @@ vi.mock('@/components/dashboard/SubscriptionBadge', () => ({ SubscriptionBadge: 
 vi.mock('@/components/dashboard/SessionList', () => ({ SessionList: () => <div>sessions</div> }))
 vi.mock('@/components/dashboard/GroupGrid', () => ({ GroupGrid: () => <div>groups</div> }))
 vi.mock('@/components/dashboard/OrganizeProposal', () => ({ OrganizeProposal: () => <div>organize</div> }))
-vi.mock('@/components/dashboard/OnboardingChecklist', () => ({ OnboardingChecklist: () => <div>onboarding</div> }))
+vi.mock('@/components/dashboard/OnboardingChecklist', () => ({
+  OnboardingChecklist: ({ installHref }: { installHref: string }) => (
+    <div data-testid="onboarding" data-install-href={installHref}>onboarding</div>
+  ),
+}))
 
 describe('DashboardPage header restyle', () => {
   beforeEach(() => {
@@ -83,6 +87,19 @@ describe('DashboardPage header restyle', () => {
       /^(synced|syncing|sync status)/i.test(el.textContent ?? '')
     )
     expect(syncTextNodes).toHaveLength(0)
+  })
+
+  // The checklist is a client component, so the page (server) resolves its install link.
+  it.each([
+    ['the stable Chrome listing on production', 'production', 'https://chromewebstore.google.com/detail/inmiajapbpafmhjleiebcamfhkfnlgoc'],
+    ['the Chrome BETA listing on preview', 'preview', 'https://chromewebstore.google.com/detail/tabmerger-beta/nboljhidpjakiohfdkdjkcljdehcapcd'],
+  ])('hands the onboarding checklist %s', async (_label, vercelEnv, expectedHref) => {
+    vi.stubEnv('VERCEL_ENV', vercelEnv)
+    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const jsx = await DashboardPage({ searchParams: Promise.resolve({}) })
+    render(jsx as React.ReactElement)
+
+    expect(screen.getByTestId('onboarding')).toHaveAttribute('data-install-href', expectedHref)
   })
 
   it('hides the "AI organise" button entirely when NEXT_PUBLIC_AI_ENABLED is off', async () => {

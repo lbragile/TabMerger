@@ -1,221 +1,117 @@
-# [3.1.0-beta.11](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.10...v3.1.0-beta.11) (2026-10-07)
+# [3.1.0](https://github.com/lbragile/TabMerger/compare/v3.0.0...v3.1.0) (2026-10-07)
 
 
 ### Bug Fixes
 
+* **db:** require an active paid subscription to write synced data ([46711e4](https://github.com/lbragile/TabMerger/commit/46711e4467e926693a6c3a128c8722fdeeb07fad))
+* **extension:** ask before removing all windows when confirm-on-delete is on ([9ac4a13](https://github.com/lbragile/TabMerger/commit/9ac4a13f64f93586b5c5b5dbfd14f7562a876248))
 * **extension:** ask for the passphrase once when unlocking a device ([0fdce0b](https://github.com/lbragile/TabMerger/commit/0fdce0b366e225943f15ec204a9cb65d040bb204))
 * **extension:** ask storage to commit a change in the same tick it is written ([5df90de](https://github.com/lbragile/TabMerger/commit/5df90de3f577a7c2fa20f0d8358f81369a043baa))
+* **extension:** build beta and demo as production, not development ([d83d1ea](https://github.com/lbragile/TabMerger/commit/d83d1ea7e01f1cbec07713538ea179609527486a))
+* **extension:** clear the remaining lint warnings ([847d85a](https://github.com/lbragile/TabMerger/commit/847d85a624e46e34eb31856432dd71218268c4a9))
+* **extension:** de-emphasize the encryption reset in Settings ([2a92a77](https://github.com/lbragile/TabMerger/commit/2a92a77bbdb76511b7dfd46c4a261843ba4a3c2c))
+* **extension:** don't copy the move-source marker onto the drag ghost ([a8d0103](https://github.com/lbragile/TabMerger/commit/a8d0103f7b8f355152c2e4cc14c4aed4944710d5))
+* **extension:** enforce Free plan limits on import and in the data layer ([05e15b7](https://github.com/lbragile/TabMerger/commit/05e15b73dea37d86efa4a48084c342135d29020c))
+* **extension:** generate WXT types on install ([05c7d4e](https://github.com/lbragile/TabMerger/commit/05c7d4eccdc99be910d081d982f3d762ea070a77))
 * **extension:** keep sync safe across key resets and account changes ([e2e24ce](https://github.com/lbragile/TabMerger/commit/e2e24ced6567e7efadc2252798824027d853d0bb))
+* **extension:** let the page-images setting turn on, and say when it's off ([e5f3eaf](https://github.com/lbragile/TabMerger/commit/e5f3eaf9aaeb8f0dbbd2aeb7c0f481f18a2413c7))
+* **extension:** let the website reach Firefox, and restore the live Firefox add-on ID ([f4e9fb7](https://github.com/lbragile/TabMerger/commit/f4e9fb704885fc8d92e5c396fbd7bf2184cecc8c))
+* **extension:** make the auth modal's label-to-input gaps actually render ([2ca52c5](https://github.com/lbragile/TabMerger/commit/2ca52c5eaf21fda92e5dd66d28afb1004c847b20))
+* **extension:** make toasts clickable over dialogs, and show their countdown ([44a7db9](https://github.com/lbragile/TabMerger/commit/44a7db9d5f3946fd5523f24209da16ced646f881))
+* **extension:** only paid subscriptions get Pro, and free sessions stay local ([0a6edae](https://github.com/lbragile/TabMerger/commit/0a6edaec24a79586c9eee40da71ef7a13b60998a))
+* **extension:** reopen saved incognito windows as incognito ([1d9bf1b](https://github.com/lbragile/TabMerger/commit/1d9bf1bee2246ef77574104aa14e3571de2b42fd))
+* **extension:** require Firefox 140 (Android 142) ([09297ef](https://github.com/lbragile/TabMerger/commit/09297ef3ad1725c9b15def7ff9551598d4b34ad7))
+* **extension:** restore icon assets dropped in ea8b0d5 ([b78e961](https://github.com/lbragile/TabMerger/commit/b78e961ea0bb5ff43861bb36158c123292b52a95))
+* **extension:** say that sync comes with Pro in the sign-in dialog ([f938fa3](https://github.com/lbragile/TabMerger/commit/f938fa33f6adedebb35be5c5161d20027438531a))
+* **extension:** show current groups in the right-click menu ([6e2fcfb](https://github.com/lbragile/TabMerger/commit/6e2fcfb64ba56d2f48b343a0b16654bc76a145d2))
+* **extension:** show the drop gap after spring-open switches the group mid-drag ([22ef523](https://github.com/lbragile/TabMerger/commit/22ef5233cdf0d366c0801a04bed201d30f51d645))
+* **extension:** start keyboard drags from the focused row and step through real targets ([5fbd294](https://github.com/lbragile/TabMerger/commit/5fbd294c56e9cf7fd2e418690ce5a057a7fe9fb9))
 * **extension:** stop sync losing edits, deletes and group order ([5e56723](https://github.com/lbragile/TabMerger/commit/5e56723cdb251ecca27e5181f10950358f3f2952))
+* **extension:** stop the Supabase client crashing when env is absent ([05f84ec](https://github.com/lbragile/TabMerger/commit/05f84ec36872a6f24f93da2f39ec22eef082319d))
+* **payments:** upsert subscriptions on user_id, not id ([6303a22](https://github.com/lbragile/TabMerger/commit/6303a2202ede5ffa79f96e5f0fb937d8ba78d385))
+* **supabase:** make the seed work with the sign-up trigger ([b0cfb3d](https://github.com/lbragile/TabMerger/commit/b0cfb3da42efcc5eeeccd5ae83d38f7dc7e7e03c))
+* **web:** 404 unknown share slugs, and retire dead landing-page tests ([0bc836b](https://github.com/lbragile/TabMerger/commit/0bc836b53df51672e4eac871e33b660568a56614))
+* **web:** answer CORS preflights for the extension's /api calls ([f75188f](https://github.com/lbragile/TabMerger/commit/f75188f489d14e76a7cb29ccf3c3a06d176df0a5))
 * **web:** ask for the new passphrase after a reset and mark locked items ([c205d77](https://github.com/lbragile/TabMerger/commit/c205d771dcbd7aec846f72909c59980212c168d4))
 * **web:** disclose the favicon lookup and list shortcuts under Free ([497bf6c](https://github.com/lbragile/TabMerger/commit/497bf6c0e2fd39337fb821b8fe604de764b6b648))
+* **web:** draw the toast dismiss button as a plain icon inside the toast ([c044fb3](https://github.com/lbragile/TabMerger/commit/c044fb32ed9872e4af527d37cd2d77f07e52f888))
+* **web:** encrypt dashboard shares entirely in the browser ([c3cc9b8](https://github.com/lbragile/TabMerger/commit/c3cc9b84a5f1b385ab9c2b0bbd503393e9537e64))
+* **web:** find page preview images on more sites ([ce68733](https://github.com/lbragile/TabMerger/commit/ce687336be6fad464dc59cdd4a3cab360655b90e))
+* **web:** find preview images on more pages ([de27986](https://github.com/lbragile/TabMerger/commit/de2798628b51376bdffafb29d70cbbd3931cfa70))
+* **web:** fit the signed-in header on phones ([f317585](https://github.com/lbragile/TabMerger/commit/f3175852ad21991f97ae13cdf5b34cb477b66a61))
+* **web:** fold import and export into the beta Settings section ([b6baa2c](https://github.com/lbragile/TabMerger/commit/b6baa2c19120be810e8d121461d37bd79e095fc8))
+* **web:** go straight in after sign-up when no email confirmation is needed ([24b1ead](https://github.com/lbragile/TabMerger/commit/24b1eadc55f66ef67d100001c6c7321e3e93f7ec))
+* **web:** hide the review stats divider when the stats stack on mobile ([47db688](https://github.com/lbragile/TabMerger/commit/47db688a516f12bb1b57e6b7d50059981f95b7b4))
+* **web:** list the beta page under Public in the footer ([7d7c466](https://github.com/lbragile/TabMerger/commit/7d7c4663a7f3f88db0eab170e3ee3b939976dd53))
+* **web:** list v3.0.0 on the changelog page ([891133b](https://github.com/lbragile/TabMerger/commit/891133b07146ba9450d2662345436c509e363465))
+* **web:** log why contact emails fail, and tidy the beta report buttons ([7af7fcd](https://github.com/lbragile/TabMerger/commit/7af7fcd99de3ae95ff9b6391243677ba7f37c484))
+* **web:** make the contact form's sender and inbox configurable ([e37e542](https://github.com/lbragile/TabMerger/commit/e37e542370af6a245bf203d132ae713c53219c55))
 * **web:** make the dashboard sync label live and accurate ([508badd](https://github.com/lbragile/TabMerger/commit/508badd97135c33bbd4ed77054cdecdff3ff5d6e))
+* **web:** make the dashboard's per-group Share link work ([89c3ef2](https://github.com/lbragile/TabMerger/commit/89c3ef247a17674ac5cabef6da6434161300dabf))
 * **web:** never move the dashboard's last-synced label backwards ([c5e01ea](https://github.com/lbragile/TabMerger/commit/c5e01ea603700594fe19224f82a7ccae8a328616))
 * **web:** open the pricing toggle on Monthly and drop the "Billed" line ([d817fac](https://github.com/lbragile/TabMerger/commit/d817facb1fe37d53f649bf026338a0f7cb54f054))
+* **web:** point the beta page at the tabmerger-beta-testers group ([448b18a](https://github.com/lbragile/TabMerger/commit/448b18accec7a8c845e6ca1c654a01cbe2622520))
+* **web:** replace invented changelog history with the real releases ([bc2cdce](https://github.com/lbragile/TabMerger/commit/bc2cdcee163be465a2e6db48e3f59adf092951ba))
+* **web:** resolve react-hooks/set-state-in-effect across the app ([2554b7e](https://github.com/lbragile/TabMerger/commit/2554b7ed0ed74196fb5fe03678c77865e51b3c86))
+* **web:** resolve Stripe redirect URLs at runtime, per deployment ([93a6108](https://github.com/lbragile/TabMerger/commit/93a6108db35fa9fb5b5322150f1025c7522de010))
+* **web:** route the pricing page's billing portal through absoluteUrl ([1a976f1](https://github.com/lbragile/TabMerger/commit/1a976f1be5ea5538dacff7145a764f18b44475be))
+* **web:** show plain favicons and working previews on shared groups ([b7eec70](https://github.com/lbragile/TabMerger/commit/b7eec7093f0b9d02d95ebd6dabd6407c2e57e9c3))
+* **web:** show the currency on Billing Portal prices ([4f2f93e](https://github.com/lbragile/TabMerger/commit/4f2f93e1fb0da1c56746444a88d636d24ab18754))
+* **web:** stop module-scope SDK clients crashing the build ([e83dbc3](https://github.com/lbragile/TabMerger/commit/e83dbc3e8d40e51bdaf6ba5739509b68f2a90928))
+* **web:** stop supabase/server.ts crashing every request without env ([e00ac18](https://github.com/lbragile/TabMerger/commit/e00ac18c289b0248103ab7408a65f6ff77744292))
 * **web:** stop the organizer treating stored groups as Now Open ([68b2caf](https://github.com/lbragile/TabMerger/commit/68b2caf0f69c0865ad074beb14f495bf09480006))
 
 
 ### Features
 
-* **demo:** render a 1280x640 social preview still ([d929adc](https://github.com/lbragile/TabMerger/commit/d929adc1577860b7bd1c604307b877c4af7d1bb7))
+* **extension:** add a custom colour picker with live preview ([a3115bc](https://github.com/lbragile/TabMerger/commit/a3115bc5e0dfd231f1839136e1514adf044027ba))
+* **extension:** always show Archived and Sessions, and save sessions there ([7e22777](https://github.com/lbragile/TabMerger/commit/7e2277777829c8cd36e61de536e320bd401f832b))
+* **extension:** consolidate group actions and add Now Open window controls ([a4854c6](https://github.com/lbragile/TabMerger/commit/a4854c65827df00abebb0f844fde207d89dc373f))
+* **extension:** finish popup drag and drop ([edad192](https://github.com/lbragile/TabMerger/commit/edad1925c731d61a97e4e01bb442e9cbe590ef76))
+* **extension:** Firefox beta self-updates, and asks before sending data on Firefox ([e8073b2](https://github.com/lbragile/TabMerger/commit/e8073b2efdf7431b9259a43b806948bfc8ed8398))
+* **extension:** hide AI features until they launch ([27a11fc](https://github.com/lbragile/TabMerger/commit/27a11fc5820a1a60577b385ca04be8b6f05c004d))
+* **extension:** make page images in previews an opt-in setting ([ab5d216](https://github.com/lbragile/TabMerger/commit/ab5d216105df34c0996ede1271e50fde6732c503))
+* **extension:** mark plan prices as US dollars in Settings ([a02e97e](https://github.com/lbragile/TabMerger/commit/a02e97e1bc11b9c0253122694b811d9e97a93c89))
 * **extension:** match the incognito strip to its group colour ([da7750c](https://github.com/lbragile/TabMerger/commit/da7750c1a238dfca4921087f8d6f3045f04bde66))
+* **extension:** move tabs, windows and groups with a keyboard move mode ([a464534](https://github.com/lbragile/TabMerger/commit/a464534dca173ab710863f8fd7952ba53faa3f34))
+* **extension:** open the colour picker straight into the custom picker, swatches included ([e424d2e](https://github.com/lbragile/TabMerger/commit/e424d2ecd25aa1cfe23772d313f02a000e4d39f3))
+* **extension:** rebuild popup drag and drop on native HTML5 drag ([b7631b8](https://github.com/lbragile/TabMerger/commit/b7631b837ce0c08ac45f58bfacb02f4448244236))
+* **extension:** show the version next to the Settings title ([a854215](https://github.com/lbragile/TabMerger/commit/a854215a04337eeb92f3e5daa1685e41c36a0967))
+* **shared:** add the AI feature flag helper ([682948b](https://github.com/lbragile/TabMerger/commit/682948b9caf537cbee920a274ca3230d3e2e8920))
+* show URL rule limits on every plan, from one shared definition ([e5e762b](https://github.com/lbragile/TabMerger/commit/e5e762baf93019c44eb68dd5a0060f072cf5fc78))
+* **web:** add a /beta page for testers ([b1863c3](https://github.com/lbragile/TabMerger/commit/b1863c3ab344dd4c9091b36f4a707f29c798eda1))
+* **web:** add a countdown to toasts and make them easier to read ([60d63ea](https://github.com/lbragile/TabMerger/commit/60d63eaffbcaaf28d488d337e539e0c82db6b327))
 * **web:** add a social preview image to shared links ([de04980](https://github.com/lbragile/TabMerger/commit/de04980cb16b45fc95ef2950904697b156efba98))
-
-# [3.1.0-beta.10](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.9...v3.1.0-beta.10) (2026-10-02)
-
-
-### Bug Fixes
-
-* **extension:** ask before removing all windows when confirm-on-delete is on ([9ac4a13](https://github.com/lbragile/TabMerger/commit/9ac4a13f64f93586b5c5b5dbfd14f7562a876248))
-* **extension:** don't copy the move-source marker onto the drag ghost ([a8d0103](https://github.com/lbragile/TabMerger/commit/a8d0103f7b8f355152c2e4cc14c4aed4944710d5))
-* **extension:** reopen saved incognito windows as incognito ([1d9bf1b](https://github.com/lbragile/TabMerger/commit/1d9bf1bee2246ef77574104aa14e3571de2b42fd))
-* **extension:** say that sync comes with Pro in the sign-in dialog ([f938fa3](https://github.com/lbragile/TabMerger/commit/f938fa33f6adedebb35be5c5161d20027438531a))
-
-# [3.1.0-beta.9](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.8...v3.1.0-beta.9) (2026-10-01)
-
-
-### Bug Fixes
-
-* **extension:** show the drop gap after spring-open switches the group mid-drag ([e664c0a](https://github.com/lbragile/TabMerger/commit/e664c0a8958efad9c4c25553c0b43869ba3114e5))
-* **extension:** start keyboard drags from the focused row and step through real targets ([906aa39](https://github.com/lbragile/TabMerger/commit/906aa392ca8b959abdb4189192fb536f4402bce6))
-* **web:** draw the toast dismiss button as a plain icon inside the toast ([b25151e](https://github.com/lbragile/TabMerger/commit/b25151ed843d13205aa5e8f8b944f938b6c8e6d4))
-* **web:** fit the signed-in header on phones ([6ddc9b9](https://github.com/lbragile/TabMerger/commit/6ddc9b9c980ac93dd734f17cbad424bcc9e5c466))
-* **web:** go straight in after sign-up when no email confirmation is needed ([6b276d7](https://github.com/lbragile/TabMerger/commit/6b276d7f0f365a69e4b69bedf9ffb43f561fa0c2))
-
-
-### Features
-
-* **extension:** move tabs, windows and groups with a keyboard move mode ([e88a06c](https://github.com/lbragile/TabMerger/commit/e88a06c799073223e5f5bd84717320e59b48133c))
-* **web:** let customers pay in their local currency at checkout ([599bc31](https://github.com/lbragile/TabMerger/commit/599bc31c113b2896c919a4caa1a377744ec192ab))
-* **web:** turn the beta guide into a checklist with screenshots, Pro markers and known issues ([fabb67f](https://github.com/lbragile/TabMerger/commit/fabb67f545880b375169bc57b425a2897bf876d1))
-
-# [3.1.0-beta.8](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.7...v3.1.0-beta.8) (2026-09-30)
-
-
-### Bug Fixes
-
-* **extension:** require Firefox 140 (Android 142) ([6caa0a7](https://github.com/lbragile/TabMerger/commit/6caa0a714c4d73ede7ed0641dd8e6cfa9b022cad))
-
-
-### Features
-
-* **extension:** mark plan prices as US dollars in Settings ([c0e6ddb](https://github.com/lbragile/TabMerger/commit/c0e6ddb2614db41f63b2471c9762b1e91a8638f3))
-
-# [3.1.0-beta.7](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.6...v3.1.0-beta.7) (2026-09-29)
-
-
-### Bug Fixes
-
-* **db:** require an active paid subscription to write synced data ([8dca9c8](https://github.com/lbragile/TabMerger/commit/8dca9c8d14bde865156c1a41e2a106d1d90f97de))
-* **dev:** use the dev extension's real ID for website messaging and local Google sign-in ([f92dee1](https://github.com/lbragile/TabMerger/commit/f92dee1339d29ff62129e804347fbcc26f0e328a))
-* **extension:** enforce Free plan limits on import and in the data layer ([6f7bc59](https://github.com/lbragile/TabMerger/commit/6f7bc59a5452aa98bbf8db4d3c88f82acbf4e8a4))
-* **extension:** let the website reach Firefox, and restore the live Firefox add-on ID ([85099c1](https://github.com/lbragile/TabMerger/commit/85099c181a8ecb8347a1b550656d891591156cdd))
-* **extension:** make toasts clickable over dialogs, and show their countdown ([dbd562d](https://github.com/lbragile/TabMerger/commit/dbd562d6c33707034941e3475eb409c3c7b56db1))
-* **extension:** only paid subscriptions get Pro, and free sessions stay local ([766606c](https://github.com/lbragile/TabMerger/commit/766606c99cd38f2436eaf8801c281a1a2b188c9c))
-* **scripts:** push build-time server variables to Vercel as plain config ([e60488b](https://github.com/lbragile/TabMerger/commit/e60488bf71aad736636d6cba453cf8efff48f802))
-* **supabase:** make the seed work with the sign-up trigger ([02120d1](https://github.com/lbragile/TabMerger/commit/02120d1318876f1c8593afd0ecba49833dcd78b8))
-* **web:** find page preview images on more sites ([0b43a2e](https://github.com/lbragile/TabMerger/commit/0b43a2efca15423a1db67be5c6b231029116a322))
-* **web:** find preview images on more pages ([6b57cb6](https://github.com/lbragile/TabMerger/commit/6b57cb67b7bfd5b0ed8d5121409b143694186fd5))
-* **web:** fold import and export into the beta Settings section ([cad43bd](https://github.com/lbragile/TabMerger/commit/cad43bd88ea6d0bb7c0d6fe27f77250e1d1ccbf5))
-* **web:** log why contact emails fail, and tidy the beta report buttons ([87874d4](https://github.com/lbragile/TabMerger/commit/87874d47decabc3eaa0db3580e6d1775aaeb9ab3))
-* **web:** make the contact form's sender and inbox configurable ([6cf603e](https://github.com/lbragile/TabMerger/commit/6cf603e37961d33483ccd70c265202e646c15f55))
-* **web:** show the currency on Billing Portal prices ([1e97ffb](https://github.com/lbragile/TabMerger/commit/1e97ffbfaa682a98385fef7cc0332eb97f0619ff))
-
-
-### Features
-
-* **extension:** add a custom colour picker with live preview ([6224d88](https://github.com/lbragile/TabMerger/commit/6224d88111954426760aff5461f18b73bc772494))
-* **extension:** Firefox beta self-updates, and asks before sending data on Firefox ([00e51a2](https://github.com/lbragile/TabMerger/commit/00e51a23c2d4c67f7ee2956188bf4fe84e2406ce))
-* **extension:** open the colour picker straight into the custom picker, swatches included ([c864a05](https://github.com/lbragile/TabMerger/commit/c864a0591e383a192a2e10e9734e0c7b38f11da3))
-* show URL rule limits on every plan, from one shared definition ([2b9c89a](https://github.com/lbragile/TabMerger/commit/2b9c89af70ad9ddc7d1b94f42a91b16167cc19b9))
-* **web:** add a countdown to toasts and make them easier to read ([30c725a](https://github.com/lbragile/TabMerger/commit/30c725ac0ad9f2aafd68a89ead010ea601e4c8fe))
-* **web:** add non-personal diagnostics to contact emails ([3358abc](https://github.com/lbragile/TabMerger/commit/3358abc1606fdf54350b16a10937265703a14896))
-* **web:** draw toasts with the app's theme and tokens ([855bc14](https://github.com/lbragile/TabMerger/commit/855bc140d5c17de5dbbcb1fc45b29038d3e9b942))
-* **web:** drop the dashboard's New group button and let the upgrade banner be dismissed ([16df641](https://github.com/lbragile/TabMerger/commit/16df6410b6f32035e3c70daba1991435490b7ac7))
-* **web:** full beta test plan with sharp screenshots of every step ([6950e54](https://github.com/lbragile/TabMerger/commit/6950e5449e67a706cb9b36fc0f6e340bbf743cbe)), closes [hi#density](https://github.com/hi/issues/density)
-* **web:** hide sync-only parts of the dashboard and account page for free accounts ([d34a7a0](https://github.com/lbragile/TabMerger/commit/d34a7a06f7d4c338e1b6d8a5961ad3958992554e))
-* **web:** reach the extension from any store, with a Firefox fallback ([0174896](https://github.com/lbragile/TabMerger/commit/017489623c61d0fe2874411512872ac1b7f110bc))
-* **web:** say that prices are in US dollars ([0eb8f34](https://github.com/lbragile/TabMerger/commit/0eb8f340aab82dab38307b92e7e96c918de0adc8))
-* **web:** serve the Firefox beta add-on from the beta site ([d249cfd](https://github.com/lbragile/TabMerger/commit/d249cfda8bceba1a3e94337b7d2c595010dbfae0))
-* **web:** show the monthly equivalent and saving under yearly prices ([842154f](https://github.com/lbragile/TabMerger/commit/842154ff3a9b1d2199b501303528a6c4efd6b801))
-* **web:** switch a paid plan between monthly and yearly billing ([4d70ba6](https://github.com/lbragile/TabMerger/commit/4d70ba6323a8a24592e0ca01bee69502e6eb175a))
-
-# [3.1.0-beta.6](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.5...v3.1.0-beta.6) (2026-09-27)
-
-
-### Bug Fixes
-
-* **extension:** let the page-images setting turn on, and say when it's off ([219e2c3](https://github.com/lbragile/TabMerger/commit/219e2c300136e776b53e7dc60b880f51b948a347))
-* **web:** encrypt dashboard shares entirely in the browser ([b9ebeb9](https://github.com/lbragile/TabMerger/commit/b9ebeb9bc74f6e7e4b78e77d59d78679233dffc6))
-* **web:** list the beta page under Public in the footer ([9b209b3](https://github.com/lbragile/TabMerger/commit/9b209b34df86d3b632d0aba694a08be2c7ed3378))
-* **web:** make the dashboard's per-group Share link work ([d89d4e9](https://github.com/lbragile/TabMerger/commit/d89d4e93b41cb883ff74fcf91a47d3343336edc5))
-* **web:** point the beta page at the tabmerger-beta-testers group ([240c6c3](https://github.com/lbragile/TabMerger/commit/240c6c3071886f5239c057d76c0bb1834a6c75f9))
-* **web:** show plain favicons and working previews on shared groups ([d6ce186](https://github.com/lbragile/TabMerger/commit/d6ce186ed630f34ed83b931b782f6766e9ed617a))
-
-
-### Features
-
-* **demo:** record headless at full frame and cut the videos to 30s and 60s ([4908e99](https://github.com/lbragile/TabMerger/commit/4908e995f46536353e57b58a34c4113aed7f6cca))
-* **demo:** showcase multi-tab and cross-group drag in the promo ([3dbcc34](https://github.com/lbragile/TabMerger/commit/3dbcc34b1d1d715e60050fcff99739cf1d6ec4f3))
-* **extension:** make page images in previews an opt-in setting ([fa11997](https://github.com/lbragile/TabMerger/commit/fa11997defde17930aaa703746f7e02f43b360ec))
-* **extension:** show the version next to the Settings title ([c2e77c4](https://github.com/lbragile/TabMerger/commit/c2e77c40bb58b4aa362eece468ba1bd9422c5cc0))
-* **web:** add a /beta page for testers ([1569d27](https://github.com/lbragile/TabMerger/commit/1569d271bab6b5a789d460da01370163f2f01a77))
-* **web:** give each beta test steps and an example, and take reports on GitHub ([7e5422a](https://github.com/lbragile/TabMerger/commit/7e5422a7701e696f1d7a7765ac8ef4a172ff999f))
-* **web:** make page previews opt-in and disclose them in the policy ([ecc2349](https://github.com/lbragile/TabMerger/commit/ecc2349be62ddb4441267c03fe3ba57e31510c37))
-
-# [3.1.0-beta.5](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.4...v3.1.0-beta.5) (2026-09-26)
-
-
-### Features
-
-* **extension:** hide AI features until they launch ([6d8fe0d](https://github.com/lbragile/TabMerger/commit/6d8fe0d1a91abba01f3ff92bdafa2d6c8e173f65))
-* **shared:** add the AI feature flag helper ([945e4f1](https://github.com/lbragile/TabMerger/commit/945e4f14c28e0833ae2dcf31dfb9e4ca4cd2e1d1))
-* **web:** refuse AI requests and AI purchases while AI is off ([63cbf63](https://github.com/lbragile/TabMerger/commit/63cbf63cb37aa06e8fb37fc63bdcb41c1585cc31))
-* **web:** show AI as coming soon on the site ([7dff2d3](https://github.com/lbragile/TabMerger/commit/7dff2d3d8cbee0944cbab3490423fec225aaa347))
-
-# [3.1.0-beta.4](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.3...v3.1.0-beta.4) (2026-09-26)
-
-
-### Bug Fixes
-
-* **ci:** allow a manual CI run that deploys a web preview ([e345f2c](https://github.com/lbragile/TabMerger/commit/e345f2caa686de7b828109cf892baff6e3fba2e1))
-* **ci:** build the web preview standalone so pnpm symlinks upload cleanly ([ab11416](https://github.com/lbragile/TabMerger/commit/ab11416c8a47345b6d7a1707f58fc6209246885b))
-* **ci:** correct the Vercel token-scope hint in the preview deploy ([15bba0c](https://github.com/lbragile/TabMerger/commit/15bba0c786be00120c8036cccac2cfe07967c456))
-* **ci:** deploy a web preview on every agentic-revamp push ([e0f72d4](https://github.com/lbragile/TabMerger/commit/e0f72d4619bad647d24954e7211d1fcdd6015267))
-* **ci:** deploy the web preview only after CI passes, and fix release-config ([ddfca1b](https://github.com/lbragile/TabMerger/commit/ddfca1b3c8331c94222cfe38c5286abdb86bf6ea))
-* **ci:** diagnose Vercel project-access failures in the preview deploy ([e521c45](https://github.com/lbragile/TabMerger/commit/e521c4567fdfd7385b0b0887fb47f8bd34f21576))
-* **ci:** gate releases on builds and ship store builds with Supabase config ([ffdcfdc](https://github.com/lbragile/TabMerger/commit/ffdcfdc5b8171b89d6b2784c21bfaaec492ff37c))
-* **ci:** log which revision the beta cancel withdrew ([71dd7c8](https://github.com/lbragile/TabMerger/commit/71dd7c8c4afeb1a477db0a0f7e6c3a84e6796def))
-* **ci:** read the preview URL from the deploy CLI's JSON output ([548eee9](https://github.com/lbragile/TabMerger/commit/548eee9a8fb3964caf0999ef4038dfa3199ff17f))
-* **ci:** stop an apostrophe from breaking the preview URL step ([af46657](https://github.com/lbragile/TabMerger/commit/af466575ace47b4d888adeb7aec9da1be1549083))
-* **extension:** build beta and demo as production, not development ([bf6691f](https://github.com/lbragile/TabMerger/commit/bf6691f93434410c64a4bcab0238edbf8d89858c))
-* **extension:** de-emphasize the encryption reset in Settings ([bc62fbd](https://github.com/lbragile/TabMerger/commit/bc62fbdc26ad9ee5225964466e02bd40c34a28e3))
-* **extension:** make the auth modal's label-to-input gaps actually render ([15b780a](https://github.com/lbragile/TabMerger/commit/15b780a210eebcc88c336c5bafeeb2cb20cac65b))
-* **extension:** show current groups in the right-click menu ([ff41f32](https://github.com/lbragile/TabMerger/commit/ff41f3270f1fb19caaa6a7f47dd4251e06986dbe))
-* **publish:** keep beta store versions above the accidental 4.0.0.1 ([e1264df](https://github.com/lbragile/TabMerger/commit/e1264df0c005b5c4f63ff55eba292cc7813f2e89))
-* **release:** only cut a major release for a keyword note with its colon ([95bab8a](https://github.com/lbragile/TabMerger/commit/95bab8a2afc2528a99d5550ad51d25603f0a2ec5))
-* **web:** answer CORS preflights for the extension's /api calls ([dd6eb45](https://github.com/lbragile/TabMerger/commit/dd6eb4517db599dcde666aca183a43c07f32e93f))
-* **web:** hide the review stats divider when the stats stack on mobile ([5139c02](https://github.com/lbragile/TabMerger/commit/5139c02890197a5ad98920bafd24aae5bbe63119))
-* **web:** list v3.0.0 on the changelog page ([fe0ad2c](https://github.com/lbragile/TabMerger/commit/fe0ad2cf754eae0b4de2f6132b991d2931715359))
-* **web:** replace invented changelog history with the real releases ([dabe68e](https://github.com/lbragile/TabMerger/commit/dabe68eec7561f9a7293cbff15b1c01240dbf113))
-* **web:** resolve Stripe redirect URLs at runtime, per deployment ([934554d](https://github.com/lbragile/TabMerger/commit/934554d0306ebda3b1cd14724eff03f0bae61a01))
-* **web:** route the pricing page's billing portal through absoluteUrl ([4d6222b](https://github.com/lbragile/TabMerger/commit/4d6222be9dab454ae0bb9507335f3d93ff706cf5))
-
-
-### Features
-
-* **ci:** link the web preview on its commit ([8505730](https://github.com/lbragile/TabMerger/commit/850573062a3f7a9dd23712b0b0467579b58740c1))
-* **ci:** serve the web preview at a fixed URL ([06624c7](https://github.com/lbragile/TabMerger/commit/06624c79f7edb06bad2e6b78715e70511bca1aa0))
-* **extension:** always show Archived and Sessions, and save sessions there ([5d3d065](https://github.com/lbragile/TabMerger/commit/5d3d065e2a60f682afcb628ac2f670b2d2cf6834))
-* **extension:** consolidate group actions and add Now Open window controls ([96b604b](https://github.com/lbragile/TabMerger/commit/96b604bc118d4315b368239bbeb6b1f27a9be601))
-* **release:** don't cut a version for scopes that can't change the extension ([6731758](https://github.com/lbragile/TabMerger/commit/6731758e50988944cfdfea5b487dd6aefbc33bfa))
-* **web:** add the untagged v1.0.0-v1.1.3 releases to the changelog ([9f57275](https://github.com/lbragile/TabMerger/commit/9f572754a4f1699902ea8bdd9b88a4a0191b6835))
-* **web:** add v1.1.1, v1.1.2, v1.3.1, v1.4.1 and v1.4.2 to the changelog ([9aa3d5d](https://github.com/lbragile/TabMerger/commit/9aa3d5de7bbcebc40658f9487094f21a94ef61ec))
-* **web:** add Vercel Web Analytics and Speed Insights ([78d56b3](https://github.com/lbragile/TabMerger/commit/78d56b33020cb7f26db6fce731656497792f738c))
-* **web:** censor profanity in store reviews shown on the site ([72d1048](https://github.com/lbragile/TabMerger/commit/72d1048a5ec2bc15f697a68bc7efd68e79cb6170))
-* **web:** center the sign-in and sign-up forms and drop the button glow ([f6c6277](https://github.com/lbragile/TabMerger/commit/f6c62779e88cf2b8621b37e040d62381b84c80bd))
-* **web:** let visitors step and swipe through the reviews ([6f8a99d](https://github.com/lbragile/TabMerger/commit/6f8a99da070cfbef2a754f8916cfd98a8469fb20))
-* **web:** show real store reviews in place of invented testimonials ([4ad07ef](https://github.com/lbragile/TabMerger/commit/4ad07efe1909be5b4845dd42b64f33d8d1c935be))
-
-
-### Reverts
-
-* **release:** undo the accidental 4.0.0-beta.1 release commit ([617da09](https://github.com/lbragile/TabMerger/commit/617da09273d60fa5599f101ec250587e0f7e18cd))
-
-# [3.1.0-beta.3](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.2...v3.1.0-beta.3) (2026-09-23)
-
-
-### Bug Fixes
-
-* **ci:** install nothing — use npx in the publish jobs ([a3caeb9](https://github.com/lbragile/TabMerger/commit/a3caeb9e38d03e064f1637a43d6c3abae9bdb184))
-* **ci:** pass PUBLISHER_ID to the Chrome Web Store publish jobs ([be23033](https://github.com/lbragile/TabMerger/commit/be23033ba6184de040cd83bdd23e8624b7f50277))
-* **ci:** upload artifacts from .output, a hidden directory ([c65b286](https://github.com/lbragile/TabMerger/commit/c65b28676651f57e2a5ea5915e4388825af4a6a8))
-* **e2e:** finish the URL-rule fixture server, completing aa6c361 ([d1e649c](https://github.com/lbragile/TabMerger/commit/d1e649cdb2d65a8a6028a32e6831f83769ce445b)), closes [#4](https://github.com/lbragile/TabMerger/issues/4)
-* **release:** stop @semantic-release/github commenting on issues ([aa6c361](https://github.com/lbragile/TabMerger/commit/aa6c361ecb828874361dc14c174ecb8f8a25dc67))
-
-
-### Features
-
-* **ci:** cancel an in-flight beta submission before uploading ([a659102](https://github.com/lbragile/TabMerger/commit/a65910264377698f1db061ddc142ac7205385dd6))
-
-# [3.1.0-beta.2](https://github.com/lbragile/TabMerger/compare/v3.1.0-beta.1...v3.1.0-beta.2) (2026-09-21)
-
-
-### Bug Fixes
-
-* **ci:** give the release checkout the PAT instead of stripping credentials ([c439976](https://github.com/lbragile/TabMerger/commit/c43997604324f52ce0d8bef8f237160268897854))
-* **ci:** match the zip filenames WXT actually produces ([94c2b1a](https://github.com/lbragile/TabMerger/commit/94c2b1a9028bc7a75859087ef4da4de5a9aa6107))
-* **ci:** release with a PAT so publish.yml actually triggers ([d122ab8](https://github.com/lbragile/TabMerger/commit/d122ab8201154029c53c394069baa55fc306ab79))
+* **web:** add non-personal diagnostics to contact emails ([73dd151](https://github.com/lbragile/TabMerger/commit/73dd151598a7fbcb2afe8dccac9564b26b7d77fe))
+* **web:** add the untagged v1.0.0-v1.1.3 releases to the changelog ([5ad20f3](https://github.com/lbragile/TabMerger/commit/5ad20f348ae3a9e0578d458874c5c92e6186bfdc))
+* **web:** add v1.1.1, v1.1.2, v1.3.1, v1.4.1 and v1.4.2 to the changelog ([0780132](https://github.com/lbragile/TabMerger/commit/07801326118522a11ac5ff34896386f8dc55a66b))
+* **web:** add Vercel Web Analytics and Speed Insights ([da244b8](https://github.com/lbragile/TabMerger/commit/da244b8894ae2470f5c55c0aa862b3a9657751d2))
+* **web:** censor profanity in store reviews shown on the site ([ed1b292](https://github.com/lbragile/TabMerger/commit/ed1b292f3e3ba0dc642995cc7462c2b8d9d3688e))
+* **web:** center the sign-in and sign-up forms and drop the button glow ([9d61395](https://github.com/lbragile/TabMerger/commit/9d6139570e8641dfc178c38d3a7e2032210ed526))
+* **web:** draw toasts with the app's theme and tokens ([4d13125](https://github.com/lbragile/TabMerger/commit/4d131252cd8d71b1d2cdbeaf44ee26c1dc4edb56))
+* **web:** drive the changelog page from generated CHANGELOG.md ([1f36cd3](https://github.com/lbragile/TabMerger/commit/1f36cd3a21d925c9cb9044f5c38891233fe29fd6))
+* **web:** drop the dashboard's New group button and let the upgrade banner be dismissed ([65143db](https://github.com/lbragile/TabMerger/commit/65143dbd5efbe3db16982f4c825800bbf0c2eb24))
+* **web:** full beta test plan with sharp screenshots of every step ([b727be3](https://github.com/lbragile/TabMerger/commit/b727be33fc0360422a3c96e646b21a50765f8c68)), closes [hi#density](https://github.com/hi/issues/density)
+* **web:** give each beta test steps and an example, and take reports on GitHub ([9585d1f](https://github.com/lbragile/TabMerger/commit/9585d1fe2603aee4e5b7a3393297228794d54731))
+* **web:** hide sync-only parts of the dashboard and account page for free accounts ([99d69e9](https://github.com/lbragile/TabMerger/commit/99d69e9e5bc712d3d883d25631b54877218dd2f4))
+* **web:** let customers pay in their local currency at checkout ([a7c723f](https://github.com/lbragile/TabMerger/commit/a7c723f30e70b3ac7e07d03e395a6b5508dcb425))
+* **web:** let visitors step and swipe through the reviews ([7e3cf96](https://github.com/lbragile/TabMerger/commit/7e3cf96266f00a5e55f83215a01e3b8985af43af))
+* **web:** make page previews opt-in and disclose them in the policy ([fbe975c](https://github.com/lbragile/TabMerger/commit/fbe975c8f9f8fe2462046d562a42f50e8f4b49b3))
+* **web:** reach the extension from any store, with a Firefox fallback ([46df4fd](https://github.com/lbragile/TabMerger/commit/46df4fd0e766e98cf1871e08f477a7d194a21ee3))
+* **web:** refuse AI requests and AI purchases while AI is off ([22cd614](https://github.com/lbragile/TabMerger/commit/22cd614d0b432fe2baa5293c9dd9042092f90c22))
+* **web:** say that prices are in US dollars ([b5bfaa9](https://github.com/lbragile/TabMerger/commit/b5bfaa939a155ed4b253e72599ac2d49a44f8f5d))
+* **web:** serve the Firefox beta add-on from the beta site ([88bd8a5](https://github.com/lbragile/TabMerger/commit/88bd8a50132f632bd5a51426eb44c7c397408d75))
+* **web:** show AI as coming soon on the site ([4d859ef](https://github.com/lbragile/TabMerger/commit/4d859efe526acfcf6fd4fe1cb775fbe1f4f4d567))
+* **web:** show real store reviews in place of invented testimonials ([7efebb2](https://github.com/lbragile/TabMerger/commit/7efebb26555401e2c2aebec8f3dd234812dd5cbc))
+* **web:** show the monthly equivalent and saving under yearly prices ([6943fb0](https://github.com/lbragile/TabMerger/commit/6943fb0ecacae01c9f71181eb90934ee06ed6cce))
+* **web:** switch a paid plan between monthly and yearly billing ([11c6b67](https://github.com/lbragile/TabMerger/commit/11c6b67a972865fe72ec8280a760f533d7761a09))
+* **web:** turn the beta guide into a checklist with screenshots, Pro markers and known issues ([2cf0ad3](https://github.com/lbragile/TabMerger/commit/2cf0ad3cec0650a93edc48f3505939a42cdf9908))
 
 # [3.1.0-beta.1](https://github.com/lbragile/TabMerger/compare/v3.0.0...v3.1.0-beta.1) (2026-09-20)
 
 
 ### Bug Fixes
 
-* **ci:** export CHROME_EXTENSION_ID_BETA, not CHROME_EXTENSION_ID ([06e7f04](https://github.com/lbragile/TabMerger/commit/06e7f04029bcb869598f701a326148207785e354))
-* **ci:** let packageManager drive the pnpm version ([585e3b7](https://github.com/lbragile/TabMerger/commit/585e3b7e7fd6e333ef737fdf668c55906ea5c34d))
-* **deps:** bound brace-expansion overrides per major ([192e543](https://github.com/lbragile/TabMerger/commit/192e543e709c872d40795f9a4a5e1c166413b720))
-* **deps:** clear all critical and high advisories ([e19daf1](https://github.com/lbragile/TabMerger/commit/e19daf1df35ad08868fa69300f1e8c51b5c2afc4))
 * **extension:** clear the remaining lint warnings ([a78d075](https://github.com/lbragile/TabMerger/commit/a78d075ca3d4383d1854f9c84e2a57a210defb5f))
 * **extension:** generate WXT types on install ([108191e](https://github.com/lbragile/TabMerger/commit/108191e1a9061a374ecd169f6ac784443849c45d))
 * **extension:** restore icon assets dropped in ea8b0d5 ([1bef466](https://github.com/lbragile/TabMerger/commit/1bef4665d8a372d2eb1bc4e4567d32ff5d2f1f27))

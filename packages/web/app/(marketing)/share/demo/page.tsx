@@ -1,4 +1,5 @@
 import { ShareBundleContent } from '@/components/ShareBundleContent'
+import { getStoreLinks, storeLinkProps } from '@/lib/storeLinks'
 
 // ponytail: static fixture, no Supabase call — this route must always work for marketing links
 const DEMO_BUNDLE = {
@@ -42,6 +43,9 @@ const DEMO_BUNDLE = {
 }
 
 export default function ShareDemoPage() {
+  // Server component: the links follow the deployment answering this request.
+  const storeLinks = getStoreLinks()
+
   return (
     <main className="max-w-3xl mx-auto px-4 py-14">
       <div className="mb-8">
@@ -60,9 +64,7 @@ export default function ShareDemoPage() {
           <p className="text-[13px] text-text2">Install TabMerger and this collection becomes a group you can restore in a click.</p>
         </div>
         <a
-          href="https://chrome.google.com/webstore"
-          target="_blank"
-          rel="noopener noreferrer"
+          {...storeLinkProps(storeLinks.chrome)}
           className="shrink-0 h-9 px-4 rounded-md bg-primary text-primary-foreground text-[13.5px] font-medium hover:bg-primary/90 transition-colors inline-flex items-center justify-center"
         >
           Install free

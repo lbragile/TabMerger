@@ -11,11 +11,21 @@
 - Version numbers are managed by **semantic-release** (`.releaserc.json`), not by hand-editing
   `packages/extension/package.json`. `package.json`'s version is never bumped by CI — the git
   tag is the sole source of truth for what ships.
-- Releases are cut only from the `beta` branch (a semantic-release prerelease branch). The
-  default branch, `main`, runs every CI gate on every push but does **not** release.
+- Releases are cut from two branches. `main` cuts **stable** versions (`vX.Y.Z`): a push to it
+  releases whenever it carries a release-worthy commit since the last stable tag. `beta` (a
+  semantic-release prerelease branch) cuts `vX.Y.Z-beta.N`. Stable store jobs wait for approval
+  in the `store-stable` environment, and the Chrome job only uploads a draft. To pause stable
+  releases, narrow the `release` job's condition in `ci.yml` back to `beta`.
 - Commit scopes `ci`, `release`, `publish`, `e2e`, `demo`, `dev`, and `web` never trigger a
   release, regardless of commit type. A commit body line starting with `BREAKING CHANGE:`
   (with the colon) always forces a major release, even in an otherwise-suppressed scope.
+- Commit scopes `ci`, `e2e`, `dev`, `demo`, `release`, `publish`, `deps`, and `scripts` are
+  also left out of `CHANGELOG.md` and the GitHub release notes (they are not about the
+  product). This list is deliberately different from the one above: that one decides whether
+  a release happens (`web` is in it but is still printed; `deps` and `scripts` are not in it),
+  this one only decides what is printed. It lives in the `headerPattern` of the
+  `release-notes-generator` `parserOpts` in `.releaserc.json`. A `BREAKING CHANGE:` in one of
+  these scopes is still printed (without a section heading).
 - A tag on `beta` fires `.github/workflows/publish.yml`, which builds the extension via WXT and
   publishes to the **private BETA Chrome Web Store item only** — a separate listing from the
   public stable one. Firefox and Edge stable publishing, and the public Chrome listing, are
@@ -31,6 +41,10 @@
 - `.github/workflows/deploy-web.yml` deploys a Vercel **preview** (not production) of
   `packages/web`, called from `ci.yml` after CI passes on `main`, aliased to a fixed
   `tabmerger-preview.vercel.app` URL.
+- `.github/workflows/deploy-web-production.yml` deploys `packages/web` to Vercel
+  **production** (`tabmerger.vercel.app`). It runs automatically when a **stable** (non-prerelease)
+  GitHub release is published, and manually from the Actions tab. Every run waits for approval in
+  the `vercel-production` environment. See "Step 4 — Vercel" below.
 
 Read the workflow files themselves for the authoritative, heavily-commented behavior — a lot of
 non-obvious constraints (artifact glob patterns, `include-hidden-files`, publisher IDs, etc.)
@@ -71,6 +85,18 @@ different IDs, so Edge treats them as two extensions.
 
 There is deliberately no separate Edge beta item: Edge Add-ons has no tester list (only Public or
 Hidden), certifies each submission in up to 7 business days, and would issue a new ID.
+
+### Which install links each site shows
+
+Every "install" button on the website follows the deployment. The production site links to the
+stable listings above (Chrome Web Store, addons.mozilla.org, Edge Add-ons). Every other
+deployment (the preview site, local development) links to the beta builds: Chrome and Edge
+buttons open the TabMerger BETA listing, and Firefox buttons go to the Firefox step of the beta
+guide (`/beta?download=firefox#firefox`), which starts the beta file on arrival when
+`FIREFOX_BETA_BLOB_BASE_URL` is set and always shows the step's own install link. The listing
+URLs and item IDs are constants in `packages/shared/src/constants/storeListings.ts`; the choice
+between the two sets is `getStoreLinks()` in `packages/web/lib/storeLinks.ts`, decided on the
+server from `VERCEL_ENV` and passed to client components as props.
 
 ### Website ↔ extension messaging
 
@@ -168,6 +194,37 @@ in Partner Center.
 3. Add to GitHub Secrets: `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`.
    (`VERCEL_PROJECT_ID` starts with `prj_`; don't swap the two IDs.)
 
+**Preview** uses the `vercel-preview` GitHub environment. **Production** uses a separate
+`vercel-production` environment:
+
+1. GitHub → Settings → Environments → New environment → `vercel-production`.
+2. Enable **Required reviewers** and add the maintainer, so every production deploy waits for an
+   approval click.
+3. Deployment branches and tags: a release run executes on the release's tag, a manual run on
+   `main`, so either allow both (`main` and `v*` tags) or leave it unrestricted.
+4. Add the same three secrets to that environment: `VERCEL_TOKEN`, `VERCEL_ORG_ID`,
+   `VERCEL_PROJECT_ID`. Anything the production build needs (`NEXT_PUBLIC_*`, server keys) lives in
+   Vercel's own **Production** environment variables, which `vercel pull` loads.
+
+How production is deployed:
+
+- **Automatic:** publishing a stable release (the same event that triggers `publish.yml`) deploys
+  that release's tag. Prereleases are ignored.
+- **Manual:** Actions → "Deploy Web Production" → Run workflow, on the `main` branch. It refuses
+  other branches, and refuses a commit that has no successful `CI` run.
+- Production is built fresh with production env vars; a preview deployment is never promoted
+  (`NEXT_PUBLIC_*` values are baked in at build time, so a preview carries the preview Supabase
+  project).
+- `tabmerger.vercel.app` is an **alias**, not a domain registered on the Vercel project, so
+  `vercel deploy --prod` alone does not move it. The workflow points it at the new deployment
+  with `vercel alias set` (as the preview workflow does for `tabmerger-preview.vercel.app`). To
+  move it by hand: `vercel alias set <deployment-url> tabmerger.vercel.app`.
+
+Confirm a deploy: the job's **Verify the live site** step must be green (it checks `/`, `/privacy`
+and that `/api/track` answers an extension preflight with a matching `Access-Control-Allow-Origin`),
+and the job summary shows the deployed commit and deployment URL. Then open
+`https://tabmerger.vercel.app/privacy` and check its "Last updated" date.
+
 ### Step 4b — Firefox beta hosting (Vercel Blob)
 
 The self-distributed (unlisted) Firefox beta build is served from the BETA web app's own domain
@@ -181,7 +238,10 @@ web app's rewrite and CI's publish step.
    `https://<id>.public.blob.vercel-storage.com`) as a Vercel environment variable on the
    **Preview** environment only — the beta channel only exists on the preview deployment, and
    this is not a secret (it's just environment-specific, so it isn't hardcoded). Leave it unset on
-   Production; the `/beta` page falls back to a short "coming soon" line when it's unset.
+   Production; the `/beta` page falls back to a short "coming soon" line when it's unset. The
+   `/beta` tester guide itself is not served on Production at all: there it answers 404 and the
+   footer link is hidden (`isProductionDeployment()` in `packages/web/lib/deployment.ts`), so
+   testers always use the preview site.
 3. CI's publish step (`packages/extension/scripts/publishFirefoxBeta.ts`, run from the
    `publish-firefox-beta` job in `publish.yml`) uploads the signed `.xpi` and `updates.json` to that store under the
    `FIREFOX_BETA.PATH` prefix, using `FIREFOX_BETA.XPI_CONTENT_TYPE` for the `.xpi`'s
@@ -229,10 +289,18 @@ The real secrets are only the credentials: `CHROME_CLIENT_ID`, `CHROME_CLIENT_SE
 
 ## Releasing (current flow)
 
-Cutting a release is a normal conventional-commit merge to `beta` (or `main` for
-non-release work) — there is no manual version bump or manual `git tag`. See
+Cutting a release is a normal conventional-commit merge: to `beta` for a prerelease, to `main`
+for a stable version. There is no manual version bump or manual `git tag`. A push to `main`
+that carries only suppressed scopes (`web`, `ci`, `demo`, ...) or docs releases nothing, unless
+release-worthy commits are still unreleased. See
 [`docs/RELEASE_SANITY_CHECK.md`](RELEASE_SANITY_CHECK.md) for the full pre-flight/post-flight
 checklist, and `.claude/skills/release-checklist` for the automated-gate summary.
+
+A **stable** release also deploys the website: publishing the GitHub release triggers
+`deploy-web-production.yml`, which pauses for approval in the `vercel-production` environment
+(Actions → the run → Review deployments). Stable extension builds call the production site, so
+approve it promptly. Web-only production deploys can be started manually from the Actions tab
+(branch `main`, CI must have passed on that commit).
 
 `publish.yml` also exposes a `workflow_dispatch` escape hatch to (re-)publish an already-tagged
 beta version to the BETA listing only, for the case where a `release` GitHub event silently

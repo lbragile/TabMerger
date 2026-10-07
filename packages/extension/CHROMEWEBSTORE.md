@@ -26,7 +26,7 @@ Everything else in this file was derived from the repository. These items cannot
       [Permissions Justification](#permissions-justification).
 - [ ] **Test instructions field:** paste the "Notes for the review team" paragraph from
       [Review Notes](#review-notes). No test account is needed.
-- [ ] **BETA item:** update the `3.1.0-beta.10` status below once its review completes.
+- [ ] **BETA item:** update the `3.1.0-beta.11` status below once its review completes.
 - [ ] **Existing-user note:** the description tells v2 users that v3 does not import their v2
       data. Delete that paragraph if you would rather not say so.
 
@@ -192,6 +192,21 @@ the incognito strip (the demo data has neither), so recent changes to those do n
 **To regenerate** (from the repo root): `pnpm --filter @tabmerger/extension build:extension:demo`,
 then `pnpm demo:screenshots`, then `pnpm demo:store-assets`. Do not upload the raw PNGs.
 Screenshots are not required to contain a headline; the current ones carry one.
+
+### Edge Add-ons images
+
+Partner Center (Store listings → Details) takes the same pixel sizes as Chrome, with three
+differences worth knowing before uploading:
+
+| Field | Requirement | Use |
+|-------|-------------|-----|
+| Extension logo [REQUIRED] | Square, 300×300 recommended (128×128 minimum) | A 300×300 PNG scaled from `packages/web/public/logo.png` (662×662); the 128×128 extension icon is only the minimum |
+| Small promotional tile | 440×280 | `promo/small-tile.jpg` content |
+| Large promotional tile | 1400×560, **PNG** | `promo/marquee-tile.jpg` content, converted to PNG (the JPEG is not accepted as-is) |
+| Screenshots | Up to **6**, 1280×800 or 640×400 | The five listed above plus `add-window-note-light.jpg` |
+
+The listing text and images cannot be changed through the publish API; they are entered by hand.
+The description must be between 250 and 10,000 characters (the stable description above fits).
 
 ### Screenshot Notes
 
@@ -454,8 +469,8 @@ with the real semver string carried in `version_name`.
 | BETA | `4.1.0.7` | `3.1.0-beta.7` | `v3.1.0-beta.7` | 2026-09-29 | Superseded |
 | BETA | `4.1.0.8` | `3.1.0-beta.8` | `v3.1.0-beta.8` | 2026-09-30 | Superseded |
 | BETA | `4.1.0.9` | `3.1.0-beta.9` | `v3.1.0-beta.9` | 2026-10-01 | Superseded |
-| BETA | `4.1.0.10` | `3.1.0-beta.10` | `v3.1.0-beta.10` | 2026-10-02 | Submitted (first release from the public repo); owner to update when the review completes |
-| BETA | `4.1.0.11` | `3.1.0-beta.11` | `v3.1.0-beta.11` | not yet cut | Pending: about to be cut by semantic-release on `beta` (mapping per `manifestVersion.ts`: major 3 + offset 1, N=11 as the 4th integer) |
+| BETA | `4.1.0.10` | `3.1.0-beta.10` | `v3.1.0-beta.10` | 2026-10-02 | Superseded by beta.11 (withdrawn from review if still pending) |
+| BETA | `4.1.0.11` | `3.1.0-beta.11` | `v3.1.0-beta.11` | 2026-10-07 | Submitted by the publish workflow; owner to update when the review completes |
 
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 

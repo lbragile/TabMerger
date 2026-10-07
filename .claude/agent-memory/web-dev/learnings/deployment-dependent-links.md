@@ -1,0 +1,14 @@
+---
+name: deployment-dependent-links
+description: Install/store links that differ per deployment (lib/storeLinks.ts), why they are resolved on the server and passed as props, and the click-then-start pattern used for the Firefox beta file
+metadata:
+  type: reference
+---
+
+- Single source: listing URLs and item IDs are constants in `@tabmerger/shared` (`storeListings.ts`); `getStoreLinks()` in `packages/web/lib/storeLinks.ts` picks stable (production) or beta (everything else). A source-scan test in `__tests__/storeLinks.test.ts` fails on any store literal under `app/`, `components/`, `lib/`, and on a `'use client'` file importing `getStoreLinks` or `isProductionDeployment`.
+- Decision: anything that depends on the deployment is resolved in a server component and handed to client components as a prop (`installHref` on `PricingTable`/`PricingCard`/`OnboardingChecklist`). `NEXT_PUBLIC_VERCEL_ENV` is only inlined when the build defines it; check before relying on it by fetching a live page, downloading its `/_next/static/*.js` chunks and grepping for the expression: a surviving `...env.NEXT_PUBLIC_VERCEL_ENV` lookup means it was not inlined (an inlined value shows as a string literal). Props also rule out a hydration mismatch.
+- [[production-deployment-gate]] has the two-mode proof (`next start` with `VERCEL_ENV=production` then `=preview`). For links in a client component, the value shows up in the served HTML inside the flight payload as an escaped `installHref\":\"...`, not as an `<a href>`.
+- `StoreLink` (`components/StoreLink.tsx`) renders `<a target="_blank">` for a listing and Next `<Link>` for an internal target. It works as the child of `<Button asChild>` because it passes every other prop (className, ref) through.
+- Click-then-start pattern (Firefox beta): the button is a client-side navigation to `/beta?download=firefox#firefox`; `FirefoxBetaAutoStart` in that step removes the flag with `history.replaceState(null, ...)` and then sends the tab to the file (`lib/startFile.ts`). Reasons: a browser's "this came from a click" window survives a client-side navigation but not a new document, and a download or add-on response leaves the current page on screen. Pass `null` as the state so the Next router adopts the new address. Remove the flag before starting, so a reload, Back or StrictMode's second effect run cannot start it twice.
+- Checking it without the real file: Playwright `page.route('**/firefox-beta/**', r => r.fulfill({ contentType: 'application/x-xpinstall', body }))`, count the requests and `download` events, and set a `window` marker before the click to prove the document was not replaced.
+- jsdom cannot navigate and `window.location.assign` cannot be spied on, so the navigation lives in its own module that tests replace with `vi.mock` plus a `vi.hoisted` fn (a plain `vi.fn()` in the factory is recreated after `vi.resetModules()`). Set the test address with `history.pushState`.

@@ -537,6 +537,25 @@ jobs:
       EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
       EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
     steps:
+      # Values are masked in logs, so a bad paste is invisible. A trailing newline in the
+      # product ID made the first run fail with only "curl: (3) URL rejected: Malformed
+      # input to a URL function". Say which secret is wrong instead.
+      - name: Preflight — Edge credentials
+        env:
+          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+        run: |
+          bad=()
+          for v in EDGE_PRODUCT_ID EDGE_CLIENT_ID EDGE_API_KEY; do
+            val="${!v}"
+            if [ -z "$val" ]; then bad+=("$v is not set in the store-stable environment"); continue; fi
+            [ "$val" != "$(printf '%s' "$val" | tr -d '[:space:]')" ] && bad+=("$v contains whitespace or a newline — paste the bare value")
+            case "$val" in *'"'*|*"'"*) bad+=("$v contains quote characters — paste the bare value") ;; esac
+          done
+          if [ ${#bad[@]} -gt 0 ]; then
+            for b in "${bad[@]}"; do echo "::error::$b"; done
+            exit 1
+          fi
+
       - uses: actions/download-artifact@v8
         with:
           name: tabmerger-edge

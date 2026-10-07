@@ -1,5 +1,18 @@
+import fs from 'fs';
+import path from 'path';
 import { test as base, chromium, type BrowserContext, type Page } from '@playwright/test';
-import { EXTENSION_PATH, CPU_THROTTLE_RATE, EXTRA_CHROMIUM_ARGS } from './extensionPath';
+import { EXTENSION_PATH, CPU_THROTTLE_RATE, EXTRA_CHROMIUM_ARGS, OFFLINE_CHROMIUM_ARG } from './extensionPath';
+
+/** Per-file switches (`test.use({ ... })`) for the browser the fixture launches. */
+interface ExtensionOptions {
+  /** Folder of the built extension to load. Default: the suite-wide choice in `./extensionPath.ts`. */
+  extensionPath: string;
+  /**
+   * Launch Chromium so that only loopback resolves: no page and no service worker can reach a
+   * real host. Requests a test stubs with `page.route` are answered before DNS, so they still work.
+   */
+  blockNetwork: boolean;
+}
 
 /**
  * Custom Playwright fixture that uses chromium.launchPersistentContext so the
@@ -9,9 +22,16 @@ import { EXTENSION_PATH, CPU_THROTTLE_RATE, EXTRA_CHROMIUM_ARGS } from './extens
  * Which build is loaded, and the `TM_E2E_*` environment switches, are documented in
  * `./extensionPath.ts`.
  */
-export const test = base.extend<{ context: BrowserContext; extensionId: string }>({
+export const test = base.extend<{ context: BrowserContext; extensionId: string } & ExtensionOptions>({
+  extensionPath: [EXTENSION_PATH, { option: true }],
+  blockNetwork: [false, { option: true }],
+
   // Override the built-in context fixture
-  context: async ({}, use) => {
+  context: async ({ extensionPath, blockNetwork }, use) => {
+    if (!fs.existsSync(path.join(extensionPath, 'manifest.json'))) {
+      throw new Error(`No built extension (manifest.json) in ${extensionPath}. Build it first, see e2e/TEST_CASES.md.`);
+    }
+    const extraArgs = new Set([...(blockNetwork ? [OFFLINE_CHROMIUM_ARG] : []), ...EXTRA_CHROMIUM_ARGS]);
     const context = await chromium.launchPersistentContext('', {
       // `--headless=new` is Chromium's modern headless: it loads MV3 extensions
       // (old headless does not) and keeps CI/local runs windowless. Playwright's
@@ -19,11 +39,11 @@ export const test = base.extend<{ context: BrowserContext; extensionId: string }
       headless: false,
       args: [
         '--headless=new',
-        `--load-extension=${EXTENSION_PATH}`,
-        `--disable-extensions-except=${EXTENSION_PATH}`,
+        `--load-extension=${extensionPath}`,
+        `--disable-extensions-except=${extensionPath}`,
         '--no-first-run',
         '--no-default-browser-check',
-        ...EXTRA_CHROMIUM_ARGS,
+        ...extraArgs,
       ],
     });
     if (CPU_THROTTLE_RATE >= 2) {
