@@ -1,4 +1,4 @@
-import { type BrowserContext, type Page } from '@playwright/test';
+import { expect, type BrowserContext, type Page, type Worker } from '@playwright/test';
 import http from 'node:http';
 import { webcrypto } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
@@ -101,6 +101,96 @@ export async function seedIdb(
       };
     });
   }, groups);
+}
+
+/** A group as IndexedDB holds it (the fields tests assert on). */
+export interface StoredGroup {
+  id: string;
+  name: string;
+  color: string;
+  note?: string;
+  info?: string;
+  starred?: boolean;
+  archived?: boolean;
+  permanent?: boolean;
+  windows: { name?: string; note?: string; starred?: boolean; incognito?: boolean; tabs: { title: string; customTitle?: string; url: string; note?: string }[] }[];
+}
+
+/**
+ * The groups as IndexedDB holds them right now, in sidebar order. Reads through its OWN
+ * connection in `reader` (any page or the service worker of the extension), so it only ever
+ * sees committed data and works after the popup that made the change is gone.
+ */
+export async function readStoredGroups(reader: Page | Worker): Promise<StoredGroup[]> {
+  return reader.evaluate(
+    () =>
+      new Promise<StoredGroup[]>((resolve, reject) => {
+        const req = indexedDB.open('tabmerger');
+        // No database yet: refuse to create one (an empty version-1 database with no stores
+        // would stop the app's own upgrade from ever running).
+        let missing = false;
+        req.onupgradeneeded = () => {
+          missing = true;
+          req.transaction?.abort();
+        };
+        req.onerror = (event: Event) => {
+          if (!missing) return reject(req.error);
+          event.preventDefault();
+          resolve([]);
+        };
+        req.onsuccess = () => {
+          const db = req.result;
+          const tx = db.transaction(['groups', 'groupsState'], 'readonly');
+          const groups = tx.objectStore('groups').getAll();
+          const state = tx.objectStore('groupsState').get('state');
+          tx.oncomplete = () => {
+            db.close();
+            const order: string[] = state.result?.order ?? [];
+            const rank = (id: string) => (order.indexOf(id) === -1 ? Number.MAX_SAFE_INTEGER : order.indexOf(id));
+            resolve((groups.result as StoredGroup[]).sort((a, b) => rank(a.id) - rank(b.id)));
+          };
+          tx.onerror = () => reject(tx.error);
+          tx.onabort = () => reject(tx.error);
+        };
+      })
+  );
+}
+
+/**
+ * Waits until IndexedDB holds the change a UI action just made. Call it before EVERY reload,
+ * close or reopen of the popup that follows an action.
+ *
+ * Why: a group write is asynchronous (cross-context lock, fresh read, then the write
+ * transaction) and the action's handler does not wait for it, so the change reaches disk a few
+ * milliseconds to a few hundred milliseconds after the click, depending on how busy the machine
+ * is. Playwright reloads the page within a millisecond or two of the click, faster than any
+ * person can dismiss the popup, and a page that goes away takes its unfinished write with it.
+ * What the UI shows is not a signal (optimistic previews render before the write), and a fixed
+ * sleep is a guess: poll the store itself.
+ *
+ * `what` names the expected change in the failure message.
+ */
+export async function waitForStoredGroups(
+  reader: Page | Worker,
+  isStored: (groups: StoredGroup[]) => boolean,
+  what: string
+): Promise<void> {
+  await expect
+    .poll(async () => isStored(await readStoredGroups(reader)), {
+      message: `IndexedDB never held: ${what}`,
+      timeout: 10_000,
+      intervals: [20, 50, 100, 250],
+    })
+    .toBe(true);
+}
+
+/** {@link waitForStoredGroups} for one group, found by name or by the predicate itself. */
+export async function waitForStoredGroup(
+  reader: Page | Worker,
+  isStored: (group: StoredGroup) => boolean,
+  what: string
+): Promise<void> {
+  await waitForStoredGroups(reader, (groups) => groups.some(isStored), what);
 }
 
 /** Seed state then reload popup so the app reads fresh IDB data. */

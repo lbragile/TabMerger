@@ -149,9 +149,17 @@ project gained such an entry, `https://hjdgjhiidldknnhdcboiaceofladfgbh.chromium
 ### Step 3 — Edge Add-ons
 
 1. Sign in to [Microsoft Partner Center](https://partner.microsoft.com/dashboard).
-2. Note the extension's **Product ID**.
-3. Generate an API access token via the Partner Center API.
-4. Add to GitHub Secrets: `EDGE_PRODUCT_ID`, `EDGE_ACCESS_TOKEN`.
+2. **Microsoft Edge → Overview** → the extension → copy the **Product ID** ("Extension identity").
+3. **Microsoft Edge → Publish API**: enable the new experience, then **Create API credentials**.
+   Copy the **Client ID** and the **API key**. The key has an expiry date: renew it here and
+   update the secret before it lapses.
+4. Add to the `store-stable` environment's secrets: `EDGE_PRODUCT_ID`, `EDGE_CLIENT_ID`,
+   `EDGE_API_KEY`.
+
+`publish.yml` uses version 1.1 of the Edge Add-ons Update REST API (`Authorization: ApiKey …` plus
+`X-ClientID`). Version 1, which sent an access token, ended on 2024-12-31. The API uploads the
+package and submits it for certification; the listing text and screenshots can only be changed
+in Partner Center.
 
 ### Step 4 — Vercel
 
@@ -215,7 +223,7 @@ The real secrets are only the credentials: `CHROME_CLIENT_ID`, `CHROME_CLIENT_SE
 `CHROME_REFRESH_TOKEN`, `CHROME_PUBLISHER_ID`, `FIREFOX_API_KEY`, `FIREFOX_API_SECRET`,
 `FIREFOX_BETA_BLOB_TOKEN`, `RELEASE_TOKEN`, `VERCEL_TOKEN` (+ `VERCEL_ORG_ID`,
 `VERCEL_PROJECT_ID`), `PREVIEW_SUPABASE_SERVICE_ROLE_KEY`, and the not-yet-set
-`EDGE_ACCESS_TOKEN`, `EDGE_PRODUCT_ID`, `SENTRY_AUTH_TOKEN`.
+`EDGE_PRODUCT_ID`, `EDGE_CLIENT_ID`, `EDGE_API_KEY`, `SENTRY_AUTH_TOKEN`.
 
 ---
 

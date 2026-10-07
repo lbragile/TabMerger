@@ -1,9 +1,7 @@
 import { chromium, type BrowserContext, type Worker } from '@playwright/test';
-import fs from 'fs';
 import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { seedIdb } from './helpers';
+import { EXTENSION_PATH } from './extensionPath';
 import { CDP_TARGET_CLOSED, RawCdp } from './rawCdp';
 
 /**
@@ -12,10 +10,8 @@ import { CDP_TARGET_CLOSED, RawCdp } from './rawCdp';
  * with the Tab key (never by focusing a grip directly). Headless (`--headless=new`).
  */
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const EXT = fs.existsSync(path.resolve(__dirname, '../.output/chrome-mv3-dev'))
-  ? path.resolve(__dirname, '../.output/chrome-mv3-dev')
-  : path.resolve(__dirname, '../.output/chrome-mv3');
+// One resolver for the whole suite (honours TM_E2E_EXT_DIR), see extensionPath.ts.
+const EXT = EXTENSION_PATH;
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export const mkTab = (title: string) => ({ id: 0, title, url: `https://example.com/${title.toLowerCase()}` });

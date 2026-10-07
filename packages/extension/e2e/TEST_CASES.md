@@ -1,7 +1,14 @@
 # Extension E2E test cases
 
 Playwright suite in `packages/extension/e2e/tests/`, run via `pnpm --filter @tabmerger/extension test:e2e`.
-Each file loads the real built extension (`.output/chrome-mv3`) in a persistent Chromium context — no mocking.
+Each file loads the real built extension in a persistent Chromium context — no mocking. Which build: the dev build
+(`.output/chrome-mv3-dev`) when it exists, else the production build (`.output/chrome-mv3`, the only one CI has).
+Set `TM_E2E_EXT_DIR=.output/chrome-mv3` to run locally against the production-mode build, and `TM_E2E_CPU_THROTTLE=4`
+to slow the popup down like a busy CI runner (see `extensionPath.ts`).
+
+**Reload/close rule:** a test that reloads, closes or reopens the popup after a UI action must first wait for the
+change in IndexedDB with `waitForStoredGroup` / `waitForStoredGroups` (`helpers.ts`). The write is asynchronous and
+the screen can show the change before it is stored, so neither the UI nor a fixed sleep is a valid wait.
 
 ## core.spec.ts — sidebar and basic invariants
 - popup shows seeded groups in the sidebar
@@ -55,6 +62,10 @@ Each file loads the real built extension (`.output/chrome-mv3`) in a persistent 
 
 ## misc.spec.ts — Notes
 - group note text persists after popup reload
+
+## persistence.spec.ts — a change survives the popup going away
+- a colour change is on disk when the popup is destroyed the instant its write was handed to IndexedDB
+  (the popup runs in an iframe that removes itself in the microtask after the write's last request)
 
 ## a11y.spec.ts — axe-core
 - popup with seeded groups has no serious/critical a11y violations

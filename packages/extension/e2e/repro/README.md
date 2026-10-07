@@ -55,4 +55,5 @@ REPRO_HEADED=1 REPRO_KEEP_OPEN=10000 pnpm --filter @tabmerger/extension repro:dn
 - `harness.ts` — launch context, seed IDB, open + attach to the real popup, drag/read helpers
 - `popupInstrumented.repro.ts` — one tab reorder, prints the `[tm-dnd]` stage sequence
 - `dndMatrix.repro.ts` — all six DnD kinds with a before/after IndexedDB dump
+- `writeWindow.repro.ts` — not DnD: times a user action from the click to its IndexedDB commit (lock wait, read, write), lists who takes the groups lock at popup start, and checks whether the write survives leaving the page N ms after the click. Uses the shared fixture, so `TM_E2E_EXT_DIR` / `TM_E2E_CPU_THROTTLE` apply: `TM_E2E_EXT_DIR=.output/chrome-mv3 npx playwright test --config repro/playwright.repro.config.ts writeWindow`
 - `playwright.repro.config.ts` — standalone config (`pnpm test:e2e` never picks these up); artifacts land in `e2e/test-results/repro/` (gitignored)

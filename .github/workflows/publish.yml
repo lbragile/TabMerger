@@ -528,25 +528,89 @@ jobs:
     environment: store-stable
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Edge Add-ons Update REST API v1.1: an API key plus the client ID, both from Partner
+    # Center → Microsoft Edge → Publish API. v1 (an Entra access token sent as `Bearer`) ended
+    # on 2024-12-31. The API key has an expiry date: renew it there and update the secret.
+    # Credentials via env, not inline `${{ }}` in the script — same reason as the Chrome jobs.
+    env:
+      EDGE_API: https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}
+      EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
+      EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
     steps:
       - uses: actions/download-artifact@v8
         with:
           name: tabmerger-edge
 
+      # Answers 202 with the operation ID in the `Location` header; processing is asynchronous.
+      # `--fail-with-body` matters: plain `curl -s` exits 0 on a 401, so a rejected upload used
+      # to look like a success.
       - name: Upload package to Edge Add-ons
+        id: upload
         run: |
-          UPLOAD_RESPONSE=$(curl -s -X POST \
-            "https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}/submissions/draft/package" \
-            -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}" \
+          set -euo pipefail
+          curl -sS --fail-with-body -D headers.txt -o /dev/null -X POST \
+            "$EDGE_API/submissions/draft/package" \
+            -H "Authorization: ApiKey $EDGE_API_KEY" \
+            -H "X-ClientID: $EDGE_CLIENT_ID" \
             -H "Content-Type: application/zip" \
-            --data-binary @$(ls *-edge.zip))
-          echo "Upload response: $UPLOAD_RESPONSE"
+            --data-binary @"$(ls *-edge.zip)"
+          op=$(grep -i '^location:' headers.txt | tr -d '\r' | awk '{print $2}')
+          [ -n "$op" ] || { echo "Edge returned no operation ID"; exit 1; }
+          echo "operation=$op" >> "$GITHUB_OUTPUT"
 
-      - name: Submit for review
+      # Submitting before the upload has been processed fails, so wait for it.
+      - name: Wait for the upload to be processed
+        env:
+          OPERATION: ${{ steps.upload.outputs.operation }}
         run: |
-          curl -s -X POST \
-            "https://api.addons.microsoftedge.microsoft.com/v1/products/${{ secrets.EDGE_PRODUCT_ID }}/submissions" \
-            -H "Authorization: Bearer ${{ secrets.EDGE_ACCESS_TOKEN }}"
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            body=$(curl -sS --fail-with-body \
+              "$EDGE_API/submissions/draft/package/operations/$OPERATION" \
+              -H "Authorization: ApiKey $EDGE_API_KEY" -H "X-ClientID: $EDGE_CLIENT_ID")
+            status=$(echo "$body" | jq -r '.status')
+            echo "upload status: $status"
+            if [ "$status" = "Succeeded" ]; then exit 0; fi
+            if [ "$status" = "Failed" ]; then echo "$body"; exit 1; fi
+            sleep 10
+          done
+          echo "Timed out waiting for the Edge upload"; exit 1
+
+      # The body is the notes for certification, as plain text.
+      - name: Submit for review
+        id: submit
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          curl -sS --fail-with-body -D headers.txt -o /dev/null -X POST \
+            "$EDGE_API/submissions" \
+            -H "Authorization: ApiKey $EDGE_API_KEY" \
+            -H "X-ClientID: $EDGE_CLIENT_ID" \
+            -H "Content-Type: text/plain" \
+            -d "Automated submission of $TAG from the release workflow."
+          op=$(grep -i '^location:' headers.txt | tr -d '\r' | awk '{print $2}')
+          [ -n "$op" ] || { echo "Edge returned no operation ID"; exit 1; }
+          echo "operation=$op" >> "$GITHUB_OUTPUT"
+
+      # A 202 only means "accepted for processing": the operation can still fail (nothing new
+      # to publish, a submission already in review, validation errors).
+      - name: Confirm the submission was accepted
+        env:
+          OPERATION: ${{ steps.submit.outputs.operation }}
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            body=$(curl -sS --fail-with-body \
+              "$EDGE_API/submissions/operations/$OPERATION" \
+              -H "Authorization: ApiKey $EDGE_API_KEY" -H "X-ClientID: $EDGE_CLIENT_ID")
+            status=$(echo "$body" | jq -r '.status')
+            echo "submission status: $status"
+            if [ "$status" = "Succeeded" ]; then exit 0; fi
+            if [ "$status" = "Failed" ]; then echo "$body"; exit 1; fi
+            sleep 10
+          done
+          echo "Timed out waiting for the Edge submission"; exit 1
 
   # ── Attach the stable packages to the GitHub Release ──
   # `--clobber` so a re-run replaces the assets instead of failing on "already exists".

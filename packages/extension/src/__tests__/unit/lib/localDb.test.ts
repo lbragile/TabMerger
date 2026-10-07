@@ -724,3 +724,94 @@ describe('localDb — server base stamp (remoteUpdatedAt)', () => {
     expect((await getGroupsState()).available[1].remoteUpdatedAt).toBe('S3')
   })
 })
+
+// REGRESSION GUARD: a change must not need the page to stay alive after the write was issued.
+// Chrome destroys the popup the moment it loses focus. Left to auto-commit, a transaction is only
+// committed after every request's success event came back to the page (one more round trip); a
+// page destroyed in that gap aborts it and the change is silently gone. So the groups write
+// requests its commit itself, in the same synchronous run as its last request.
+describe('localDb: a groups write requests its commit with its last request', () => {
+  const grp = (id: string) => ({ id, name: id, color: '#fff', updatedAt: 1, windows: [], permanent: false, starred: false })
+  const realPut = IDBObjectStore.prototype.put
+  const realCommit = IDBTransaction.prototype.commit
+
+  /** Records the last request of a groups write, the commit request, and the first microtask after that last request. */
+  function recordWriteOrder(): string[] {
+    const events: string[] = []
+    vi.spyOn(IDBObjectStore.prototype, 'put').mockImplementation(function (this: IDBObjectStore, ...args: Parameters<IDBObjectStore['put']>) {
+      if (this.transaction.mode === 'readwrite' && this.name === 'groupsState') {
+        events.push('last request')
+        queueMicrotask(() => events.push('next microtask'))
+      }
+      return realPut.apply(this, args)
+    })
+    vi.spyOn(IDBTransaction.prototype, 'commit').mockImplementation(function (this: IDBTransaction) {
+      events.push('commit requested')
+      return realCommit.call(this)
+    })
+    return events
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('updateGroupsState (every user action): the commit is requested before the page gets control back', async () => {
+    const { getGroupsState, updateGroupsState } = await freshLocalDb()
+    await getGroupsState()
+    const events = recordWriteOrder()
+
+    await updateGroupsState((cur) => ({ ...cur, available: [...cur.available, grp('a')] }))
+
+    expect(events).toEqual(['last request', 'commit requested', 'next microtask'])
+    vi.restoreAllMocks()
+    expect((await getGroupsState()).available.map((g) => g.id)).toContain('a')
+  })
+
+  it('saveGroupsState (drag and drop, undo/redo, import): same', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    const events = recordWriteOrder()
+
+    await saveGroupsState({ active: initial.active, available: [initial.available[0], grp('a')] })
+
+    expect(events).toEqual(['last request', 'commit requested', 'next microtask'])
+    vi.restoreAllMocks()
+    expect((await getGroupsState()).available.map((g) => g.id)).toContain('a')
+  })
+
+  it('a write refused for a stale rev issues no request and no commit', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    await saveGroupsState({ active: initial.active, available: [initial.available[0], grp('a')] })
+    const events = recordWriteOrder()
+
+    const stale = saveGroupsState({ active: initial.active, available: [initial.available[0]] }, { expectedRev: initial.rev })
+    await expect(stale).rejects.toMatchObject({ name: 'StaleGroupsError' })
+
+    expect(events).toEqual([])
+    vi.restoreAllMocks()
+    expect((await getGroupsState()).available.map((g) => g.id)).toContain('a')
+  })
+
+  it('a read resolves from its results without waiting for the read-only transaction to complete', async () => {
+    const { getGroupsState, saveGroupsState } = await freshLocalDb()
+    const initial = await getGroupsState()
+    await saveGroupsState({ active: initial.active, available: [initial.available[0], grp('a')] })
+
+    // A read-only transaction whose `complete` never reaches the page must not hold the read up.
+    const realAdd = IDBTransaction.prototype.addEventListener
+    vi.spyOn(IDBTransaction.prototype, 'addEventListener').mockImplementation(function (
+      this: IDBTransaction,
+      ...args: Parameters<IDBTransaction['addEventListener']>
+    ) {
+      if (this.mode === 'readonly' && args[0] === 'complete') return
+      return realAdd.apply(this, args)
+    })
+
+    const state = await Promise.race([getGroupsState(), new Promise<'timeout'>((resolve) => setTimeout(() => resolve('timeout'), 500))])
+
+    expect(state).not.toBe('timeout')
+    expect((state as Awaited<ReturnType<typeof getGroupsState>>).available.map((g) => g.id)).toContain('a')
+  })
+})

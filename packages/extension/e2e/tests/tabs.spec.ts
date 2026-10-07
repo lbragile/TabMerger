@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures';
-import { openPopup, seedAndReload, waitForRenameInputReady } from '../helpers';
+import { openPopup, seedAndReload, waitForRenameInputReady, waitForStoredGroup } from '../helpers';
 import { NOW_OPEN, WORK_GROUP, seedConfirmOnDelete } from '../seed';
 
 // Tab rename is triggered via the tab's right-click context menu ("Rename tab"),
@@ -85,9 +85,14 @@ test.describe('Tab management', () => {
     await page.keyboard.type('Wiki Home');
     await page.keyboard.press('Enter');
 
-    // commitTitle's IDB write is fire-and-forget (not awaited by the Enter handler) —
-    // wait for the renamed title to render before reloading, or the write can lose the race.
+    // commitTitle's IDB write is fire-and-forget (not awaited by the Enter handler): wait until
+    // IndexedDB itself holds the new title before reloading, or the write can lose the race.
     await expect(page.getByText('Wiki Home')).toBeVisible();
+    await waitForStoredGroup(
+      page,
+      (g) => g.id === WORK_GROUP.id && g.windows.some((w) => w.tabs.some((t) => t.customTitle === 'Wiki Home')),
+      'the renamed tab'
+    );
     await page.reload({ waitUntil: 'networkidle' });
     await page.getByRole('button', { name: 'Work', exact: true }).click();
 
