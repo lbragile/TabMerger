@@ -19,6 +19,13 @@
 - Commit scopes `ci`, `release`, `publish`, `e2e`, `demo`, `dev`, and `web` never trigger a
   release, regardless of commit type. A commit body line starting with `BREAKING CHANGE:`
   (with the colon) always forces a major release, even in an otherwise-suppressed scope.
+- Commit scopes `ci`, `e2e`, `dev`, `demo`, `release`, `publish`, `deps`, and `scripts` are
+  also left out of `CHANGELOG.md` and the GitHub release notes (they are not about the
+  product). This list is deliberately different from the one above: that one decides whether
+  a release happens (`web` is in it but is still printed; `deps` and `scripts` are not in it),
+  this one only decides what is printed. It lives in the `headerPattern` of the
+  `release-notes-generator` `parserOpts` in `.releaserc.json`. A `BREAKING CHANGE:` in one of
+  these scopes is still printed (without a section heading).
 - A tag on `beta` fires `.github/workflows/publish.yml`, which builds the extension via WXT and
   publishes to the **private BETA Chrome Web Store item only** — a separate listing from the
   public stable one. Firefox and Edge stable publishing, and the public Chrome listing, are

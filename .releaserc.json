@@ -19,7 +19,11 @@
       ]
     }],
     ["@semantic-release/release-notes-generator", {
-      "parserOpts": { "noteKeywords": ["BREAKING CHANGE:", "BREAKING-CHANGE:"] }
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE:", "BREAKING-CHANGE:"],
+        "headerPattern": "^(\\w*)(?:\\((?!(?:ci|e2e|dev|demo|release|publish|deps|scripts)\\))(.*)\\))?: (.*)$",
+        "headerCorrespondence": ["type", "scope", "subject"]
+      }
     }],
     ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
     ["@semantic-release/exec", {
