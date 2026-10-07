@@ -209,17 +209,21 @@ jobs:
           name: coverage-baseline
           path: baseline
 
+      # The baseline paths have NO `packages/` level: upload-artifact roots an artifact
+      # with several paths at their least common ancestor (`packages/`), so the files
+      # unpack as `baseline/<package>/coverage/...`. With the wrong path the script
+      # finds no baseline and skips, which is how this check once compared nothing.
       - name: Compare extension coverage
         run: |
           node scripts/ci/coverage-delta.mjs \
-            baseline/packages/extension/coverage/coverage-summary.json \
+            baseline/extension/coverage/coverage-summary.json \
             packages/extension/coverage/coverage-summary.json \
             2
 
       - name: Compare web coverage
         run: |
           node scripts/ci/coverage-delta.mjs \
-            baseline/packages/web/coverage/coverage-summary.json \
+            baseline/web/coverage/coverage-summary.json \
             packages/web/coverage/coverage-summary.json \
             2
 
