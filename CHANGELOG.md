@@ -3,29 +3,7 @@
 
 ### Bug Fixes
 
-* **ci:** allow a manual CI run that deploys a web preview ([cb088ce](https://github.com/lbragile/TabMerger/commit/cb088cec678661da7ba03684bbc423bee0a84e82))
-* **ci:** build the web preview standalone so pnpm symlinks upload cleanly ([ff0a9d5](https://github.com/lbragile/TabMerger/commit/ff0a9d54c6945da7aac163c19f1b37b9cea51d4d))
-* **ci:** correct the Vercel token-scope hint in the preview deploy ([b1cd654](https://github.com/lbragile/TabMerger/commit/b1cd6542a424ee4d3dc74dcfe9f2c67c6ecf6fcb))
-* **ci:** deploy a web preview on every agentic-revamp push ([ef7ac38](https://github.com/lbragile/TabMerger/commit/ef7ac38f304a1fd50068a4ae6092f7f5ced005f0))
-* **ci:** deploy the web preview only after CI passes, and fix release-config ([a05c974](https://github.com/lbragile/TabMerger/commit/a05c974b2ee7a00404eace8fe34d7c294b55fe8d))
-* **ci:** diagnose Vercel project-access failures in the preview deploy ([bbc1dcc](https://github.com/lbragile/TabMerger/commit/bbc1dccf80d0bd93d54e25b744a26f2e7a7b3988))
-* **ci:** export CHROME_EXTENSION_ID_BETA, not CHROME_EXTENSION_ID ([da120d1](https://github.com/lbragile/TabMerger/commit/da120d191ae7b441ebe29f263eaba98512be4cb2))
-* **ci:** gate releases on builds and ship store builds with Supabase config ([626909e](https://github.com/lbragile/TabMerger/commit/626909e82de1febdf75a98c6f0d1054cc8fcfe28))
-* **ci:** give the release checkout the PAT instead of stripping credentials ([8e23afa](https://github.com/lbragile/TabMerger/commit/8e23afacd094c7b2a80eacc738382c5aa8a8c35a))
-* **ci:** install nothing — use npx in the publish jobs ([9ad1a49](https://github.com/lbragile/TabMerger/commit/9ad1a497ceb63accf7ccff2f16effe319cd2f80e))
-* **ci:** let packageManager drive the pnpm version ([186e5ea](https://github.com/lbragile/TabMerger/commit/186e5ea775b3db437b1e6e25b84d3c67654d9f2e))
-* **ci:** log which revision the beta cancel withdrew ([a471f37](https://github.com/lbragile/TabMerger/commit/a471f371304d06641237cbe7b0a4cffbaf6955fb))
-* **ci:** match the zip filenames WXT actually produces ([ff91cf9](https://github.com/lbragile/TabMerger/commit/ff91cf9f75e8b12518acba5bf81a7c224e8ece3f))
-* **ci:** pass PUBLISHER_ID to the Chrome Web Store publish jobs ([804e852](https://github.com/lbragile/TabMerger/commit/804e8528895e891057f32e232009ddebb6a52be7))
-* **ci:** read the preview URL from the deploy CLI's JSON output ([fd843c3](https://github.com/lbragile/TabMerger/commit/fd843c33966b6139c893421e245f8abbcda2ae05))
-* **ci:** release with a PAT so publish.yml actually triggers ([3c31e0c](https://github.com/lbragile/TabMerger/commit/3c31e0c02ff5c8b727d5eaf47563524d34b8d8eb))
-* **ci:** stop an apostrophe from breaking the preview URL step ([10155f2](https://github.com/lbragile/TabMerger/commit/10155f2956f010a03c1f8a4c1b8ccd3c02b68f00))
-* **ci:** upload artifacts from .output, a hidden directory ([9c4fbcd](https://github.com/lbragile/TabMerger/commit/9c4fbcdcb8232b9968844bbbd81ce44bb25d7df9))
 * **db:** require an active paid subscription to write synced data ([46711e4](https://github.com/lbragile/TabMerger/commit/46711e4467e926693a6c3a128c8722fdeeb07fad))
-* **deps:** bound brace-expansion overrides per major ([947e3c5](https://github.com/lbragile/TabMerger/commit/947e3c5e0f0a11a82cfb554bfea336d941868fdb))
-* **deps:** clear all critical and high advisories ([b59e3d6](https://github.com/lbragile/TabMerger/commit/b59e3d669af08e6f6cac2a091d8b1bec3ca0f4cb))
-* **dev:** use the dev extension's real ID for website messaging and local Google sign-in ([205e7c5](https://github.com/lbragile/TabMerger/commit/205e7c5e556ab9332ca531b847f76207cc43d6c6))
-* **e2e:** finish the URL-rule fixture server, completing aa6c361 ([a8ecc7a](https://github.com/lbragile/TabMerger/commit/a8ecc7a176eeacbfa5bb6ac65b5d001ab3e5f808))
 * **extension:** ask before removing all windows when confirm-on-delete is on ([9ac4a13](https://github.com/lbragile/TabMerger/commit/9ac4a13f64f93586b5c5b5dbfd14f7562a876248))
 * **extension:** ask for the passphrase once when unlocking a device ([0fdce0b](https://github.com/lbragile/TabMerger/commit/0fdce0b366e225943f15ec204a9cb65d040bb204))
 * **extension:** ask storage to commit a change in the same tick it is written ([5df90de](https://github.com/lbragile/TabMerger/commit/5df90de3f577a7c2fa20f0d8358f81369a043baa))
@@ -51,10 +29,6 @@
 * **extension:** stop sync losing edits, deletes and group order ([5e56723](https://github.com/lbragile/TabMerger/commit/5e56723cdb251ecca27e5181f10950358f3f2952))
 * **extension:** stop the Supabase client crashing when env is absent ([05f84ec](https://github.com/lbragile/TabMerger/commit/05f84ec36872a6f24f93da2f39ec22eef082319d))
 * **payments:** upsert subscriptions on user_id, not id ([6303a22](https://github.com/lbragile/TabMerger/commit/6303a2202ede5ffa79f96e5f0fb937d8ba78d385))
-* **publish:** keep beta store versions above the accidental 4.0.0.1 ([4f8c2ce](https://github.com/lbragile/TabMerger/commit/4f8c2ce3c6bd33ac2c0e7637ede5e958fcf1f489))
-* **release:** only cut a major release for a keyword note with its colon ([4ca033f](https://github.com/lbragile/TabMerger/commit/4ca033f34f3608ff5784d2d2eda16c1ff5cbe305))
-* **release:** stop @semantic-release/github commenting on issues ([9f8b415](https://github.com/lbragile/TabMerger/commit/9f8b415e0e58a7368ab580ee066a97957274004d))
-* **scripts:** push build-time server variables to Vercel as plain config ([e693f5f](https://github.com/lbragile/TabMerger/commit/e693f5f5277292599a223806729798ed5a70a66c))
 * **supabase:** make the seed work with the sign-up trigger ([b0cfb3d](https://github.com/lbragile/TabMerger/commit/b0cfb3da42efcc5eeeccd5ae83d38f7dc7e7e03c))
 * **web:** 404 unknown share slugs, and retire dead landing-page tests ([0bc836b](https://github.com/lbragile/TabMerger/commit/0bc836b53df51672e4eac871e33b660568a56614))
 * **web:** answer CORS preflights for the extension's /api calls ([f75188f](https://github.com/lbragile/TabMerger/commit/f75188f489d14e76a7cb29ccf3c3a06d176df0a5))
@@ -90,12 +64,6 @@
 
 ### Features
 
-* **ci:** cancel an in-flight beta submission before uploading ([e955769](https://github.com/lbragile/TabMerger/commit/e9557698d3b0276d79c64413ce62c0ff52041163))
-* **ci:** link the web preview on its commit ([c664f7b](https://github.com/lbragile/TabMerger/commit/c664f7b3aa0d6b3faefd83feec70ae97c12edae9))
-* **ci:** serve the web preview at a fixed URL ([43fe38e](https://github.com/lbragile/TabMerger/commit/43fe38ec4e4d0dac92b18de971f8db58a9f2847a))
-* **demo:** record headless at full frame and cut the videos to 30s and 60s ([3a25832](https://github.com/lbragile/TabMerger/commit/3a25832a5b6cf9d07cb584a7f2554e620910037a))
-* **demo:** render a 1280x640 social preview still ([d929adc](https://github.com/lbragile/TabMerger/commit/d929adc1577860b7bd1c604307b877c4af7d1bb7))
-* **demo:** showcase multi-tab and cross-group drag in the promo ([54ae805](https://github.com/lbragile/TabMerger/commit/54ae805e574546638a3db1a02b8d3399a1818af7))
 * **extension:** add a custom colour picker with live preview ([a3115bc](https://github.com/lbragile/TabMerger/commit/a3115bc5e0dfd231f1839136e1514adf044027ba))
 * **extension:** always show Archived and Sessions, and save sessions there ([7e22777](https://github.com/lbragile/TabMerger/commit/7e2277777829c8cd36e61de536e320bd401f832b))
 * **extension:** consolidate group actions and add Now Open window controls ([a4854c6](https://github.com/lbragile/TabMerger/commit/a4854c65827df00abebb0f844fde207d89dc373f))
@@ -109,7 +77,6 @@
 * **extension:** open the colour picker straight into the custom picker, swatches included ([e424d2e](https://github.com/lbragile/TabMerger/commit/e424d2ecd25aa1cfe23772d313f02a000e4d39f3))
 * **extension:** rebuild popup drag and drop on native HTML5 drag ([b7631b8](https://github.com/lbragile/TabMerger/commit/b7631b837ce0c08ac45f58bfacb02f4448244236))
 * **extension:** show the version next to the Settings title ([a854215](https://github.com/lbragile/TabMerger/commit/a854215a04337eeb92f3e5daa1685e41c36a0967))
-* **release:** don't cut a version for scopes that can't change the extension ([cbdec75](https://github.com/lbragile/TabMerger/commit/cbdec756ab6c4e432f5dcf9961f3a86f5d684631))
 * **shared:** add the AI feature flag helper ([682948b](https://github.com/lbragile/TabMerger/commit/682948b9caf537cbee920a274ca3230d3e2e8920))
 * show URL rule limits on every plan, from one shared definition ([e5e762b](https://github.com/lbragile/TabMerger/commit/e5e762baf93019c44eb68dd5a0060f072cf5fc78))
 * **web:** add a /beta page for testers ([b1863c3](https://github.com/lbragile/TabMerger/commit/b1863c3ab344dd4c9091b36f4a707f29c798eda1))
@@ -145,10 +112,6 @@
 
 ### Bug Fixes
 
-* **ci:** export CHROME_EXTENSION_ID_BETA, not CHROME_EXTENSION_ID ([06e7f04](https://github.com/lbragile/TabMerger/commit/06e7f04029bcb869598f701a326148207785e354))
-* **ci:** let packageManager drive the pnpm version ([585e3b7](https://github.com/lbragile/TabMerger/commit/585e3b7e7fd6e333ef737fdf668c55906ea5c34d))
-* **deps:** bound brace-expansion overrides per major ([192e543](https://github.com/lbragile/TabMerger/commit/192e543e709c872d40795f9a4a5e1c166413b720))
-* **deps:** clear all critical and high advisories ([e19daf1](https://github.com/lbragile/TabMerger/commit/e19daf1df35ad08868fa69300f1e8c51b5c2afc4))
 * **extension:** clear the remaining lint warnings ([a78d075](https://github.com/lbragile/TabMerger/commit/a78d075ca3d4383d1854f9c84e2a57a210defb5f))
 * **extension:** generate WXT types on install ([108191e](https://github.com/lbragile/TabMerger/commit/108191e1a9061a374ecd169f6ac784443849c45d))
 * **extension:** restore icon assets dropped in ea8b0d5 ([1bef466](https://github.com/lbragile/TabMerger/commit/1bef4665d8a372d2eb1bc4e4567d32ff5d2f1f27))
