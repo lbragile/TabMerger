@@ -82,13 +82,13 @@ jobs:
       - name: Update Linux snapshots
         env:
           GREP: ${{ inputs.grep }}
+        # Plain `sh`: steps in a container job run with `sh -e`, not bash, so no arrays here.
         run: |
           cd packages/extension/e2e
-          args=(--update-snapshots=all --reporter=list)
           if [ -n "$GREP" ]; then
-            ../node_modules/.bin/playwright test tests/visual.spec.ts --grep "$GREP" "${args[@]}"
+            ../node_modules/.bin/playwright test tests/visual.spec.ts --grep "$GREP" --update-snapshots=all --reporter=list
           else
-            ../node_modules/.bin/playwright test --grep @visual "${args[@]}"
+            ../node_modules/.bin/playwright test --grep @visual --update-snapshots=all --reporter=list
           fi
 
       # Stage only the *-linux.png files under their repo-root-relative paths, so the
