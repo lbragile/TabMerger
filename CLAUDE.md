@@ -49,7 +49,7 @@ scripts/       Dev tooling (scan-secrets.sh, setup.sh)
 
 ## Repository and contributions
 
-- **Public repo:** `lbragile/TabMerger`. Default branch `main` (CI, web preview); `beta` is the release branch (semantic-release cuts `vX.Y.Z-beta.N` and publishes to the BETA store listings). Stable releases come from `main` once re-enabled.
+- **Public repo:** `lbragile/TabMerger`. Default branch `main` (CI, web preview, and stable releases: semantic-release cuts `vX.Y.Z` on a push with a release-worthy commit; the public store jobs and the production web deploy wait for maintainer approval); `beta` is the prerelease branch (semantic-release cuts `vX.Y.Z-beta.N` and publishes to the BETA store listings).
 - **Rulesets:** `main` and `beta` need a PR with 1 approval and the 8 CI checks, squash merges only; the maintainer bypasses. Only the maintainer (or semantic-release acting as them) can create, move or delete `v*` tags.
 - **Secrets live in GitHub environments**, never at repo level (except `SENTRY_AUTH_TOKEN`): `release`, `store-beta`, `store-stable` (maintainer approval), `vercel-preview`, `vercel-production` (maintainer approval), `ci-preview-db`. Fork PRs never get secrets, so any job that needs one must skip on fork PRs (see `e2e-web`). Never add `pull_request_target`.
 - **Contributions:** outside contributors' workflow runs need maintainer approval. Merge with squash; the PR title becomes the conventional-commit message semantic-release reads.

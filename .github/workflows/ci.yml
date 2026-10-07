@@ -67,14 +67,15 @@ on:
 permissions:
   contents: read
 
-# Cancel a superseded run for the same ref — except on `beta`. Beta is the
-# release branch (see the `release` job below): cancelling a run mid-release
-# could kill a run after semantic-release has already pushed a tag but before
-# the required gates finish, stranding that version. Every other ref (PRs,
-# main) is safe to cancel-and-restart on a new push.
+# Cancel a superseded run for the same ref — except on `main` and `beta`. Both
+# are release branches (see the `release` job below): cancelling a run
+# mid-release could kill it after semantic-release has already pushed a tag but
+# before the GitHub Release exists, stranding that version. A new push to either
+# branch queues behind the running one instead. Every other ref (PRs) is safe to
+# cancel-and-restart on a new push.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/beta' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/beta' && github.ref != 'refs/heads/main' }}
 
 # CI's web build and web E2E run against the PREVIEW Supabase project, never production:
 # the E2E setup creates and deletes throwaway users through the admin API. Public values
@@ -552,28 +553,26 @@ jobs:
     # Holds RELEASE_TOKEN. NOTE: the preflight step below also reads the CHROME_*
     # secrets, so those must be readable from this environment too (repo-level today).
     environment: release
-    # ── BETA ONLY (deliberate, temporary) ────────────────────────────────────
-    # Releases are currently cut from `beta` and nowhere else, so nothing can
-    # reach the PRODUCTION Chrome Web Store listing while the channel is being
-    # proven out. Pushes to the default branch still run every gate above; they
-    # just never release.
+    # ── BOTH RELEASE BRANCHES ─────────────────────────────────────────────────
+    # `main` cuts STABLE releases (vX.Y.Z), `beta` cuts prereleases (vX.Y.Z-beta.N).
+    # A push to `main` releases whenever it carries a release-worthy commit since
+    # the last stable tag, so every such push reaches the public store jobs.
+    # Those jobs still wait for a maintainer approval (the `store-stable`
+    # environment in publish.yml), and the Chrome job only uploads a draft.
     #
-    # `.releaserc.json` deliberately still lists BOTH branches: `beta` is a
-    # prerelease branch and computes its version from the last release on the
-    # default channel, so removing the default branch from that config would
-    # break the beta versioning rather than merely disabling stable.
-    #
-    # TO RE-ENABLE STABLE: restore the default branch to this condition —
-    #   (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
-    # and nothing else needs to change; publish.yml already routes stable vs
+    # `.releaserc.json` lists both branches. publish.yml routes stable vs
     # prerelease off github.event.release.prerelease.
-    if: github.ref == 'refs/heads/beta' && github.event_name == 'push'
+    #
+    # TO PAUSE STABLE (it was off until v3.1): narrow this condition back to
+    # `github.ref == 'refs/heads/beta'`. Leave `.releaserc.json` alone: `beta`
+    # computes its version from the last release on the default channel.
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta') && github.event_name == 'push'
     # Collapse a burst of merges into one release rather than one submission each.
     # NOT cancel-in-progress: cancelling mid-release can leave a pushed tag with no
     # GitHub Release, which strands the version and blocks the next run. This is
     # consistent with the workflow-level `concurrency` above, which also never
-    # cancels a run on `beta` — a workflow-level cancel can never reach in and kill
-    # this job mid-release either.
+    # cancels a run on `main` or `beta` — a workflow-level cancel can never reach
+    # in and kill this job mid-release either.
     concurrency:
       group: release-${{ github.ref }}
       cancel-in-progress: false

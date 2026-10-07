@@ -11,8 +11,11 @@
 - Version numbers are managed by **semantic-release** (`.releaserc.json`), not by hand-editing
   `packages/extension/package.json`. `package.json`'s version is never bumped by CI — the git
   tag is the sole source of truth for what ships.
-- Releases are cut only from the `beta` branch (a semantic-release prerelease branch). The
-  default branch, `main`, runs every CI gate on every push but does **not** release.
+- Releases are cut from two branches. `main` cuts **stable** versions (`vX.Y.Z`): a push to it
+  releases whenever it carries a release-worthy commit since the last stable tag. `beta` (a
+  semantic-release prerelease branch) cuts `vX.Y.Z-beta.N`. Stable store jobs wait for approval
+  in the `store-stable` environment, and the Chrome job only uploads a draft. To pause stable
+  releases, narrow the `release` job's condition in `ci.yml` back to `beta`.
 - Commit scopes `ci`, `release`, `publish`, `e2e`, `demo`, `dev`, and `web` never trigger a
   release, regardless of commit type. A commit body line starting with `BREAKING CHANGE:`
   (with the colon) always forces a major release, even in an otherwise-suppressed scope.
@@ -260,8 +263,10 @@ The real secrets are only the credentials: `CHROME_CLIENT_ID`, `CHROME_CLIENT_SE
 
 ## Releasing (current flow)
 
-Cutting a release is a normal conventional-commit merge to `beta` (or `main` for
-non-release work) — there is no manual version bump or manual `git tag`. See
+Cutting a release is a normal conventional-commit merge: to `beta` for a prerelease, to `main`
+for a stable version. There is no manual version bump or manual `git tag`. A push to `main`
+that carries only suppressed scopes (`web`, `ci`, `demo`, ...) or docs releases nothing, unless
+release-worthy commits are still unreleased. See
 [`docs/RELEASE_SANITY_CHECK.md`](RELEASE_SANITY_CHECK.md) for the full pre-flight/post-flight
 checklist, and `.claude/skills/release-checklist` for the automated-gate summary.
 

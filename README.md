@@ -103,9 +103,10 @@ See [`docs/`](docs/) for architecture, the release process, and other design not
 
 ## Releases and branches
 
-`main` is the default branch; every push runs the full CI gate suite but does not
-cut a release. Releases (via `semantic-release`) are currently cut only from the `beta`
-branch, publishing prerelease builds to a private Chrome Web Store beta listing. See
+`main` is the default branch; every push runs the full CI gate suite. Releases are cut by
+`semantic-release`: stable versions from `main` (to the public store listings, after a
+maintainer approval) and prereleases from the `beta` branch (to a private Chrome Web Store
+beta listing). See
 [`docs/PUBLISHING.md`](docs/PUBLISHING.md) and [`docs/RELEASE_SANITY_CHECK.md`](docs/RELEASE_SANITY_CHECK.md).
 
 ---
