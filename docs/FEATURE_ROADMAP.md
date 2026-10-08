@@ -4,7 +4,7 @@ This is the forward-looking list. Known bugs and engineering tasks are tracked s
 
 ## Current state
 
-_Last updated 2026-10-06. Keep this current in the same change as the work (a CLAUDE.md rule)._
+_Last updated 2026-10-08. Keep this current in the same change as the work (a CLAUDE.md rule)._
 
 - **Releases:** the latest stable tag is `v3.0.0`, but it hasn't been published to the stores: v3
   goes to stable after the 3.1 beta. The beta channel is at `v3.1.0-beta.11`
@@ -32,7 +32,7 @@ _Last updated 2026-10-06. Keep this current in the same change as the work (a CL
 ### Web
 
 - [x] `/changelog` page (reads the semantic-release `CHANGELOG.md`; prereleases filtered out)
-- [x] Invented testimonials replaced by live store ratings and reviews (Chrome Web Store, with Firefox AMO as fallback)
+- [x] Invented testimonials replaced by live store ratings and reviews from all three listings (Chrome Web Store, Firefox Add-ons, Edge Add-ons): one combined rating, each store's own figures, and a carousel mixing their reviews
 - [x] SEO basics: metadata, `sitemap.ts`, `robots.ts`
 - [ ] OpenGraph/Twitter share image. `metadata.openGraph` has no image today.
 - [ ] Email capture on the landing page (newsletter/waitlist). Resend is used only for the contact form so far.

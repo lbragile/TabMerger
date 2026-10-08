@@ -78,4 +78,55 @@ test.describe('Landing page', () => {
     const heading = page.getByRole('heading', { level: 1, name: /Stop drowning in browser tabs/i })
     await expect(heading).toBeVisible()
   })
+
+  // The reviews section reads three live third-party stores on the server, so nothing here
+  // depends on what they answer: the section may be present or absent, and the page must
+  // render either way. Store requests are server-side fetches, so Playwright cannot stub them.
+  test('renders the rest of the page whether or not the reviews section is there', async ({ page }) => {
+    const errors: string[] = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    const res = await page.goto('/')
+    expect(res?.status()).toBe(200)
+
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 2, name: 'Simple, transparent pricing' })).toBeVisible()
+    await expect(page.getByRole('contentinfo')).toBeVisible()
+
+    // Either the section is rendered (heading + labelled carousel) or none of it is.
+    const reviewsHeading = page.getByRole('heading', { level: 2, name: 'What people are saying' })
+    if ((await reviewsHeading.count()) > 0) {
+      await expect(reviewsHeading).toBeVisible()
+      // The loading placeholder never stays behind once the page has rendered.
+      await expect(page.locator('[aria-busy="true"]')).toHaveCount(0)
+    }
+    expect(errors).toEqual([])
+  })
+
+  test('pricing teaser: the monthly equivalent of the yearly price shows on Yearly only', async ({ page }) => {
+    await page.goto('/')
+    const teaser = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Simple, transparent pricing' }) })
+    const pro = teaser.getByText('$3.58/mo billed yearly · save 10%')
+    const proAi = teaser.getByText('$7.17/mo billed yearly · save 10%')
+
+    // Monthly (default): the lines hold their space but are hidden from sight and readers.
+    await expect(pro).toBeHidden()
+    await expect(proAi).toBeHidden()
+    await expect(teaser.getByText('No credit card required')).toBeVisible()
+
+    await teaser.getByRole('button', { name: /Yearly/ }).click()
+    await expect(pro).toBeVisible()
+    await expect(proAi).toBeVisible()
+    await expect(pro).not.toHaveAttribute('aria-hidden', 'true')
+
+    await teaser.getByRole('button', { name: 'Monthly' }).click()
+    await expect(pro).toBeHidden()
+    await expect(proAi).toBeHidden()
+  })
+
+  test('the full pricing page keeps its own yearly wording', async ({ page }) => {
+    await page.goto('/pricing')
+    await page.getByRole('button', { name: /Yearly/ }).click()
+    await expect(page.getByText('$3.58/mo billed yearly · save 10%')).toBeVisible()
+    await expect(page.getByText('$7.17/mo billed yearly · save 10%')).toBeVisible()
+  })
 })

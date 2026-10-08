@@ -131,12 +131,15 @@ describe('getFirefoxAddonStats', () => {
     vi.restoreAllMocks()
   })
 
-  it('reads headline stats from the AMO API and rounds to one decimal', async () => {
+  // Rounding happens once, where the figure is displayed: the mean combined across stores
+  // is computed from this value, and a pre-rounded 3.9 would shift it.
+  it('reads headline stats from the AMO API and returns the mean unrounded', async () => {
     mockAmo({ ratings: { average: 3.9333, count: 15 } }, { results: [review()] })
     const stats = await getFirefoxAddonStats()
-    expect(stats?.rating).toBe(3.9)
+    expect(stats?.rating).toBe(3.9333)
     expect(stats?.ratingCount).toBe(15)
     expect(stats?.reviews).toHaveLength(1)
+    expect(stats?.reviews[0].store).toBe('firefox')
   })
 
   it('queries the public listing slug by default and honours an override', async () => {
