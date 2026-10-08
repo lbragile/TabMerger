@@ -144,6 +144,24 @@ describe('checkAndIncrementAIUsage', () => {
   })
 })
 
+describe('checkAndIncrementAIUsage — purchased credits never replace the subscription check', () => {
+  it.each([
+    ['free', { tier: 'free', status: 'active' }],
+    ['pro', { tier: 'pro', status: 'active' }],
+    ['pro_ai but canceled', { tier: 'pro_ai', status: 'canceled' }],
+    ['pro_ai but past_due', { tier: 'pro_ai', status: 'past_due' }],
+    ['no subscription row', null],
+  ])('denies a %s account that holds purchased credits, and records nothing', async (_label, sub) => {
+    const { supabase, from } = makeSupabase(sub, null, [{ credits: 500 }])
+    expect(await checkAndIncrementAIUsage(supabase, 'u1', CREDIT_COSTS.nameGroup)).toEqual({
+      allowed: false,
+      remaining: 0,
+    })
+    expect(upsert).not.toHaveBeenCalled()
+    expect(from).not.toHaveBeenCalledWith('ai_credit_purchases')
+  })
+})
+
 describe('getEffectiveCap', () => {
   it('returns the base cap when there are no purchases', async () => {
     const { supabase } = makeSupabase(null, null, [])

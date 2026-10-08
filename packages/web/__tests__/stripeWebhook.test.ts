@@ -9,7 +9,7 @@
  *   - invoice.payment_failed handler
  *   - idempotency (upsert semantics already present, but tested explicitly)
  */
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest'
 import { NextRequest } from 'next/server'
 
 // ── Stripe mock ──────────────────────────────────────────────────────────────
@@ -73,6 +73,13 @@ function makeSubscription(overrides: Record<string, unknown> = {}) {
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 describe('POST /api/webhooks/stripe', () => {
+  // Restored after every test, so a failing assertion cannot leave console.error silenced.
+  let errorSpy: ReturnType<typeof vi.spyOn> | undefined
+  afterEach(() => {
+    errorSpy?.mockRestore()
+    errorSpy = undefined
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test'
@@ -425,6 +432,130 @@ describe('POST /api/webhooks/stripe', () => {
     expect(mockInsert).toHaveBeenCalledWith(
       expect.objectContaining({ user_id: 'user-uuid-1', credits: 3, stripe_checkout_session_id: 'cs_test123' })
     )
+  })
+
+  // Checkout accepts promotion codes, so a completed session can cost less than list price or
+  // nothing at all. The entitlement comes from the subscription's price and status, never from
+  // what was charged. Both payment_status values are covered so the grant can't start depending
+  // on which one Stripe reports for a free first invoice.
+  it.each(['paid', 'no_payment_required'])(
+    'checkout.session.completed with a 100%%-off code (payment_status %s) still upgrades the subscription',
+    async (paymentStatus) => {
+      const { POST } = await import('@/app/api/webhooks/stripe/route')
+      mockSubscriptionsRetrieve.mockResolvedValue(makeSubscription({ id: 'sub_free_first_invoice' }))
+
+      mockConstructEvent.mockReturnValue({
+        type: 'checkout.session.completed',
+        data: {
+          object: {
+            mode: 'subscription',
+            subscription: 'sub_free_first_invoice',
+            customer: 'cus_test123',
+            metadata: { user_id: 'user-uuid-1' },
+            payment_status: paymentStatus,
+            amount_subtotal: 399,
+            amount_total: 0,
+            total_details: { amount_discount: 399, amount_shipping: 0, amount_tax: 0 },
+          },
+        },
+      })
+
+      const res = await POST(makeRequest('{}'))
+      expect(res.status).toBe(200)
+      expect(mockUpsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'sub_free_first_invoice',
+          user_id: 'user-uuid-1',
+          tier: 'pro',
+          status: 'active',
+          stripe_price_id: 'price_pro_monthly',
+        }),
+        { onConflict: 'user_id' }
+      )
+    }
+  )
+
+  // Credits follow the quantity on the line item, never the amount paid: a discount changes the
+  // price of the pack, not its size, and a free pack is still exactly the quantity bought.
+  it.each([
+    ['half price', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 1250, payment_intent: 'pi_test123' }],
+    ['free (100% off)', { payment_status: 'paid', amount_subtotal: 2500, amount_total: 0, payment_intent: null }],
+    ['free, reported as no_payment_required', { payment_status: 'no_payment_required', amount_subtotal: 2500, amount_total: 0, payment_intent: null }],
+  ])('a discounted credit pack (%s) grants the quantity bought, not an amount-based number', async (_label, amounts) => {
+    const mockInsert = vi.fn().mockResolvedValue({ error: null })
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'ai_credit_purchases') return { insert: mockInsert }
+      return { upsert: mockUpsert, update: mockUpdate }
+    })
+    mockListLineItems.mockResolvedValue({ data: [{ quantity: 500 }] })
+
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_discounted',
+          mode: 'payment',
+          customer: 'cus_test123',
+          metadata: { user_id: 'user-uuid-1', type: 'ai_credit_pack' },
+          ...amounts,
+        },
+      },
+    })
+
+    const res = await POST(makeRequest('{}'))
+    expect(res.status).toBe(200)
+    // The quantity is read back from Stripe for THIS session, not derived from the amounts.
+    expect(mockListLineItems).toHaveBeenCalledWith('cs_discounted', { limit: 1 })
+    expect(mockInsert).toHaveBeenCalledTimes(1)
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({ user_id: 'user-uuid-1', credits: 500, stripe_checkout_session_id: 'cs_discounted' })
+    )
+    // 500 is the line item's quantity; neither the amount paid nor the list price implies it.
+    expect(mockInsert.mock.calls[0][0].credits).not.toBe(Number(amounts.amount_total))
+    expect(mockInsert.mock.calls[0][0].credits).not.toBe(Number(amounts.amount_subtotal))
+  })
+
+  // One redemption of a code is one Checkout Session, and a session can be credited once: the
+  // insert is keyed on the session id, so a redelivered event hits the unique constraint (23505)
+  // and is dropped without an error. How often a code can be redeemed is Stripe's limit to enforce.
+  it('a redelivered free credit-pack event is keyed on the same session and the duplicate is ignored', async () => {
+    const mockInsert = vi
+      .fn()
+      .mockResolvedValueOnce({ error: null })
+      .mockResolvedValueOnce({ error: { code: '23505', message: 'duplicate key value' } })
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'ai_credit_purchases') return { insert: mockInsert }
+      return { upsert: mockUpsert, update: mockUpdate }
+    })
+    mockListLineItems.mockResolvedValue({ data: [{ quantity: 500 }] })
+    errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const { POST } = await import('@/app/api/webhooks/stripe/route')
+    mockConstructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_free_pack',
+          mode: 'payment',
+          customer: 'cus_test123',
+          metadata: { user_id: 'user-uuid-1', type: 'ai_credit_pack' },
+          payment_status: 'paid',
+          amount_total: 0,
+          payment_intent: null,
+        },
+      },
+    })
+
+    const first = await POST(makeRequest('{}'))
+    const second = await POST(makeRequest('{}'))
+
+    expect(first.status).toBe(200)
+    expect(second.status).toBe(200)
+    expect(mockInsert).toHaveBeenCalledTimes(2)
+    expect(mockInsert.mock.calls[0][0].stripe_checkout_session_id).toBe('cs_free_pack')
+    expect(mockInsert.mock.calls[1][0].stripe_checkout_session_id).toBe('cs_free_pack')
+    expect(errorSpy).not.toHaveBeenCalled()
   })
 })
 

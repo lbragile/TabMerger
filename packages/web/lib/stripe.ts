@@ -72,6 +72,11 @@ export async function createCheckoutSession({
     // other purchases too (e.g. an AI credit-pack top-up) instead of typing a card in
     // again — same mechanism as the credit-pack checkout in createCreditPackCheckoutSession.
     saved_payment_method_options: { payment_method_save: 'enabled' },
+    // Shows Stripe's "Add promotion code" field. The codes are created and restricted in the
+    // Stripe Dashboard, not here: the coupon sets the discount, how long it lasts and which
+    // products it applies to; the promotion code on top sets redemption limits and expiry.
+    // Stripe validates the code on its own page, so nothing on our side decides a price.
+    allow_promotion_codes: true,
     success_url: successUrl,
     cancel_url: cancelUrl,
     // user_id on session metadata is a fallback readable from session object directly
@@ -131,6 +136,11 @@ export async function createCreditPackCheckoutSession({
     // actual Customer object (either the existing one, or a freshly created one
     // via customer_creation above when we only had an email).
     saved_payment_method_options: { payment_method_save: 'enabled' },
+    // Same "Add promotion code" field as the subscription checkout; codes are created and
+    // restricted in the Stripe Dashboard. A coupon that isn't limited to specific products
+    // works here too, so limit subscription coupons to the plan's product. The webhook grants
+    // credits from the quantity bought, so a discount changes the price and never the credits.
+    allow_promotion_codes: true,
     success_url: successUrl,
     cancel_url: cancelUrl,
     metadata: { user_id: userId, type: 'ai_credit_pack' },

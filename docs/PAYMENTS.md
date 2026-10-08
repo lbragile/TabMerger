@@ -75,7 +75,8 @@ PricingCard → POST /api/checkout { tier: 'pro' | 'proAi', interval: 'monthly' 
   4. price ID from env via getStripePriceId()     → 500 'Price ID not configured' if unset
   5. stripe.checkout.sessions.create(mode: 'subscription',
        customer = profiles.stripe_customer_id ?? customer_email,
-       metadata.user_id AND subscription_data.metadata.user_id)
+       metadata.user_id AND subscription_data.metadata.user_id,
+       allow_promotion_codes: true)
   → { url }  (client navigates to Stripe)
   success → /dashboard?upgraded=1   cancel → /pricing
 ```
@@ -85,6 +86,41 @@ flag off → 503 `ai_disabled` → session with `metadata: { user_id, type: 'ai_
 Success → `/dashboard?credits=1`, cancel → `/dashboard`.
 
 Downgrades from the pricing page go to `/api/billing-portal`, never `/api/checkout`.
+
+### Promotion codes
+
+Both checkouts (subscription and credit pack) pass `allow_promotion_codes: true`, so Stripe's page
+shows an "Add promotion code" field. Codes exist only in Stripe, separately in test and live mode:
+the app doesn't know about them and the pricing page doesn't change. Stripe validates the code; the
+webhook grants the tier from the subscription's price and credits from the line-item quantity, so
+a discounted or free checkout grants exactly what a full-price one does.
+
+To create a code (Dashboard → Products → Coupons → **+ New**, in the right mode):
+
+1. **Coupon**: percentage or fixed amount (USD). Under **Apply to specific products** pick the
+   product it's for (e.g. TabMerger Pro). Without that, the coupon also works on the credit pack.
+2. **Duration**: "once" discounts only the first invoice. A multi-month or "forever" duration
+   keeps discounting later invoices, including the prorated charge of a monthly → yearly switch
+   made while the coupon is still running. Prefer "once" unless that is intended.
+3. Turn on **Use customer-facing promotion codes**, enter the code, and set its limits: number of
+   redemptions, expiry date, first-time order only, minimum order value.
+4. Check it in test mode first: start a checkout, enter the code, pay with `4242 4242 4242 4242`.
+
+Things to know:
+
+- Stripe has no "once per customer" limit. A code with no redemption limit can be used again by
+  the same customer; on the credit pack every use is a new pack of up to 500 credits. For
+  credit-pack codes, set a redemption limit or restrict the code to one customer rather than
+  relying on "first-time order only".
+- A 100%-off code completes checkout without a charge. The subscription checkout still asks for a
+  card and renewals charge full price once the coupon's duration ends; the credit pack asks for
+  no card.
+- The GA4 `checkout_completed` value is the list price, not the discounted amount.
+- The Billing Portal has its own switches (Dashboard → Settings → Billing → Customer portal):
+  **Use promotion codes** (enter a code when changing plan) and **Retention coupons** (an offer
+  shown before cancelling). Stripe ships both off, and neither is affected by the checkout
+  setting. Note that the CLI snippet under [Switching between monthly and
+  yearly](#switching-between-monthly-and-yearly) turns the first one on.
 
 ### Redirect URLs
 
@@ -218,6 +254,10 @@ stripe billing_portal configurations update <bpc_…> [--live] \
   -d "features[subscription_update][products][0][prices][1]=<Pro yearly price>" \
   -d "features[subscription_update][products][0][adjustable_quantity][enabled]=false"
 ```
+
+The `default_allowed_updates[1]=promotion_code` line is the API form of the Dashboard's **Use
+promotion codes** switch: with it, a customer can enter a promotion code in the portal when
+changing plan. Leave that line out (or turn the switch off) to accept codes at checkout only.
 
 List only products that are on sale: while AI is "coming soon", leave **Pro AI** out, or the portal
 would let a Pro customer upgrade to it. Add it (both prices) when AI launches. Test mode's default
