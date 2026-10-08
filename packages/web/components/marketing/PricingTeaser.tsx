@@ -2,7 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { TIERS, PRICES_IN_USD_NOTE, formatListPrice } from '@/lib/tiers'
+import {
+  TIERS,
+  PRICES_IN_USD_NOTE,
+  YEARLY_DISCOUNT_PERCENT,
+  YEARLY_SAVINGS,
+  formatListPrice,
+  yearlySubtext,
+} from '@/lib/tiers'
 import { cn } from '@/lib/utils'
 import { AI_ENABLED } from '@/lib/aiFlag'
 import { AI_COMING_SOON_LABEL } from '@tabmerger/shared'
@@ -12,6 +19,9 @@ const tiers = [
   { key: 'pro', highlighted: true, blurb: 'For users who want extra premium features' },
   { key: 'proAi', highlighted: false, blurb: 'For power users who want AI related features' },
 ] as const
+
+/** The small muted lines under a card's price: the blurb, and the note below it. */
+const SUB_LINE = 'text-[11.5px] text-text3 mt-1'
 
 export function PricingTeaser() {
   const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly')
@@ -37,18 +47,24 @@ export function PricingTeaser() {
               )}
             >
               {opt === 'monthly' ? 'Monthly' : 'Yearly'}
-              {opt === 'yearly' && <span className="text-[11px] font-semibold text-primary">−10%</span>}
+              {opt === 'yearly' && YEARLY_DISCOUNT_PERCENT > 0 && (
+                <span className="text-[11px] font-semibold text-primary">−{YEARLY_DISCOUNT_PERCENT}%</span>
+              )}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        {/* auto-rows-fr: stacked on mobile, every card is as tall as the tallest one (a blurb
+            that wraps makes its card taller); side by side, the single row already does that. */}
+        <div className="grid grid-cols-1 auto-rows-fr sm:grid-cols-3 gap-4 mb-6">
           {tiers.map((t) => {
             const tier = TIERS[t.key]
             const isComingSoon = t.key === 'proAi' && !AI_ENABLED
             const rawPrice = interval === 'monthly' ? tier.monthlyPrice : tier.yearlyPrice
             const price = rawPrice === 0 ? '$0' : formatListPrice(rawPrice)
             const period = rawPrice === 0 ? 'forever' : interval === 'monthly' ? '/mo' : '/yr'
+            // Same wording and numbers as the pricing page's yearly cards.
+            const monthlyEquivalent = t.key === 'free' ? null : yearlySubtext(YEARLY_SAVINGS[t.key])
             return (
               <div
                 key={t.key}
@@ -76,9 +92,20 @@ export function PricingTeaser() {
                   {price}
                   <span className="text-[13px] font-normal text-text3 ml-1">{period}</span>
                 </p>
-                <p className="text-[11.5px] text-text3 mt-1">{t.blurb}</p>
-                {t.key === 'free' && (
-                  <p className="text-[11.5px] text-text3 mt-1">No credit card required</p>
+                <p className={SUB_LINE}>{t.blurb}</p>
+                {/* Every card has a note line, so the three stay the same height when stacked. A
+                    paid card's line is the yearly price per month: on Monthly it stays in place,
+                    hidden from sight and from assistive tech, so its space (however it wraps) is
+                    already reserved and nothing moves on toggling. */}
+                {monthlyEquivalent === null ? (
+                  <p className={SUB_LINE}>No credit card required</p>
+                ) : (
+                  <p
+                    className={cn(SUB_LINE, interval === 'monthly' && 'invisible')}
+                    aria-hidden={interval === 'monthly' ? true : undefined}
+                  >
+                    {monthlyEquivalent}
+                  </p>
                 )}
               </div>
             )

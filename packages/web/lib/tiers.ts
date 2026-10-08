@@ -1,4 +1,4 @@
-import { getPricingTier, type PricingTier } from '@tabmerger/shared'
+import { formatListPrice, getPricingTier, type PricingTier } from '@tabmerger/shared'
 
 /** Name, prices, features and limits come from the shared PRICING_TIERS, the single source. */
 function display(tier: PricingTier) {
@@ -38,6 +38,26 @@ export function yearlySavings(monthlyPrice: number, yearlyPrice: number) {
     perMonth: yearlyPrice / 12,
     percent: twelveMonths > 0 ? Math.floor(((twelveMonths - yearlyPrice) / twelveMonths) * 100) : 0,
   }
+}
+
+/** Each paid plan's yearly saving, shared by every plan listing (pricing page, landing teaser). */
+export const YEARLY_SAVINGS = {
+  pro: yearlySavings(TIERS.pro.monthlyPrice, TIERS.pro.yearlyPrice),
+  proAi: yearlySavings(TIERS.proAi.monthlyPrice, TIERS.proAi.yearlyPrice),
+}
+
+/**
+ * The percentage on the Monthly/Yearly toggle's badge: the smaller of the paid plans' discounts,
+ * so it's true for every plan.
+ */
+export const YEARLY_DISCOUNT_PERCENT = Math.min(
+  YEARLY_SAVINGS.pro.percent,
+  YEARLY_SAVINGS.proAi.percent
+)
+
+/** "$3.58/mo billed yearly · save 10%": the yearly plan's monthly equivalent, under its price. */
+export function yearlySubtext({ perMonth, percent }: ReturnType<typeof yearlySavings>): string {
+  return `${formatListPrice(perMonth)}/mo billed yearly${percent > 0 ? ` · save ${percent}%` : ''}`
 }
 
 export function getStripePriceId(

@@ -73,6 +73,29 @@ describe('yearlySavings', () => {
   })
 })
 
+describe('yearlySubtext', () => {
+  it('writes the monthly equivalent and the saving for each paid plan', async () => {
+    const { yearlySubtext, YEARLY_SAVINGS } = await import('@/lib/tiers')
+    expect(yearlySubtext(YEARLY_SAVINGS.pro)).toBe('$3.58/mo billed yearly · save 10%')
+    expect(yearlySubtext(YEARLY_SAVINGS.proAi)).toBe('$7.17/mo billed yearly · save 10%')
+  })
+
+  it('leaves the saving out when there is none', async () => {
+    const { yearlySubtext, yearlySavings } = await import('@/lib/tiers')
+    expect(yearlySubtext(yearlySavings(5, 60))).toBe('$5.00/mo billed yearly')
+  })
+})
+
+describe('YEARLY_DISCOUNT_PERCENT', () => {
+  it('is the smaller of the paid plans’ savings, so the toggle badge is true for both', async () => {
+    const { YEARLY_DISCOUNT_PERCENT, YEARLY_SAVINGS } = await import('@/lib/tiers')
+    expect(YEARLY_DISCOUNT_PERCENT).toBe(
+      Math.min(YEARLY_SAVINGS.pro.percent, YEARLY_SAVINGS.proAi.percent)
+    )
+    expect(YEARLY_DISCOUNT_PERCENT).toBe(10)
+  })
+})
+
 describe('formatUsd', () => {
   it('always shows cents', async () => {
     const { formatUsd } = await import('@/lib/tiers')
