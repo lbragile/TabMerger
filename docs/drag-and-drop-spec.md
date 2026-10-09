@@ -1,6 +1,6 @@
 # Drag & Drop — Spec and Verification Guide (extension popup)
 
-Status: living document. Last updated 2026-09-19, after fixing the spring-open cross-group WINDOW drop bug (C15, window→tab redirect).
+Status: living document. Last updated 2026-10-09.
 Owner agent: `extension-dev`. Read this before touching any DnD code.
 
 - **[BLOCKED]** — a requested behaviour a known constraint prevents.
@@ -19,7 +19,7 @@ Every drag and selection interaction in the popup (`packages/extension/src/entry
 - **Multi-item drag** of tabs, windows and groups (react-beautiful-dnd pattern).
 - **Selection:** Ctrl/Cmd-click, Shift-click ranges, Shift+Space, Ctrl/Cmd+A, selection mode, click-away, overlay dismissal.
 - **Drop zones:** "new window" (within a group) and "new group" (sidebar).
-- **Keyboard and touch drags**, with screen-reader announcements and focus management.
+- **Keyboard move mode** (§5.1) and **touch drags**, with screen-reader announcements and focus management.
 
 Out of scope: drags on the web dashboard.
 
@@ -38,10 +38,10 @@ Out of scope: drags on the web dashboard.
 | **C7** | **Closing the ACTIVE tab of the popup's own window dismisses the popup.** Dragging out of Now Open is a **MOVE** (the real tabs close), so that one tab must never be closed while the popup is open. Tabs of any other window are safe to close, active or not: the popup watches only its own window's tab strip. | A real-popup test failed within 5s of the drop when actives were closed inline. | `runSideEffects` partitions via `chrome.tabs.query({active:true})` and `chrome.windows.getCurrent()` (the window containing the calling page — the anchor window for the toolbar popup, the tab's window when `popup.html` is opened as a tab): **only the active tab of the popup's own window is deferred** to the background worker over a `chrome.runtime.connect` port that closes it on `onDisconnect` (popup teardown); **every other tab closes immediately**, so a dragged window the popup is not attached to closes completely at the drop. **Fallback:** if the own window can't be identified (the call is missing or rejects, or it names a window that owns no active tab), every active tab is deferred. |
 | C8 | No error boundary: an uncaught render/effect error unmounts everything. | The `measuring: Always` loop took the popup down. | `measuring.droppable.strategy` stays `BeforeDragging (1)`; drag-end code is defensive. |
 | C9 | CDP screenshots can't see OS-composited things (native drag image, cursor); they **can** see in-page DOM. | Screenshots showed a correct ghost while a human tester saw the grey grip snapshot. | See §9 blind spots. |
-| C10 | CDP key events never reach the **native drag loop**; keyboard drags have no native session, so CDP keys drive them fine. | Escape test: the drag continued and committed. | Native-drag Escape is human-only. |
+| C10 | CDP key events never reach the **native drag loop**; keyboard move mode (§5.1) has no native session, so CDP keys drive it fine. | Escape test: the drag continued and committed. | Native-drag Escape is human-only. |
 | C11 | `useGroups` uses `staleTime: 0`, so any mounting component refetches; a read overlapping the drop's write would overwrite the committed cache. | Spring-open test: correct for 3 frames, then reverted ~150ms later. | Serialized groups writes; `getGroupsState` waits and re-reads (max 5). **Never `cancelQueries`**; every groups-key `invalidateQueries` passes `cancelRefetch:false`. |
 | C12 | A focused new window doesn't dismiss the popup in *headless* Chrome. | Agent diagnostic. | Every DnD `windows.create` is `focused:false`; every `tabs.create` is `active:false`. |
-| C13 | During a keyboard drag, ArrowLeft from a tab grip reaches its **window container** first; a second reaches the sidebar. | Real-popup keyboard case. | Keyboard-drag tests must step twice to reach the sidebar. |
+| C13 | **Keyboard moves do not go through dnd-kit.** Space on a focused row starts keyboard move mode (§5.1), which walks an explicit list of real drop targets: there is no keyboard sensor, no coordinates and no collision detection. One ArrowLeft from the main panel puts the cursor in the group list, on the shown group. | `e2e/tests/popup-keyboard-move.spec.ts` (real toolbar popup, raw CDP key events). | Keyboard tests press real keys and read the app live region `#tm-dnd-live-region`. Now Open is a group-list stop, so reaching "New group" with Up from the first saved group takes two presses. |
 | **C14** | For a discrete event, React flushes passive effects **inside its own root-container listener**, so a `document` listener added by that effect receives the very click that mounted it. | The click-away hook exited selection mode on the click that entered it. | Global dismiss listeners must arm on the **next macrotask**. Do not use an `Event.timeStamp` guard: jsdom's is epoch-based while Chrome's is time-origin based, so it is silently inert in tests. |
 | **C15** | dnd-kit's own `over` **state** (not the collision result) is computed in a `useEffect` gated on `[overId]`, separately from `collisions` (computed inline during render). Right after a container-set change — `setActiveGroupIndex` swapping the windows panel to a sprung-open group — this can leave `over` resolved one render behind the live collision result for at least one drop. | `dndDebugLog` showed `unifiedCollision`'s own fallback branch (§6, window→tab redirect) never fired, yet `e.over` at drop was still a TAB nested in the correct destination window (`rawOverId` a tab id, not the window). Real-popup repro: `e2e/repro/popupRealDnd.repro.ts` "BUG REPRO variant" (~line 2345). | `onDragEnd` must re-derive the target from the **model**, never trust `over`/`over.data.current` alone, whenever the active type constrains what a valid target can be — see the window→tab redirect in `commitDrop` (`useDndHandlers.ts`). |
 
@@ -63,6 +63,11 @@ Out of scope: drags on the web dashboard.
 | `src/lib/dndAnnouncements.ts` | Announcement text incl. multi-group blocks and partial moves. |
 | `src/lib/dndLiveRegion.ts` | App-owned assertive live region in `#tm-dnd-aux-host`. |
 | `src/lib/dndFocus.ts` | Focus after a keyboard drop, by object identity. Grip-less window target is **`[data-window-header]`**. |
+| `src/lib/keyboardMove.ts` | Keyboard move mode, the pure model: the ordered list of real drop targets for a source (`buildTargets`), the `main` / `list` modes, stepping and wrapping, `rebuildMove`, and the announcement text. No DOM, no dnd-kit. |
+| `src/hooks/useKeyboardMove.ts` | Keyboard move mode, the controller: the document-level key handler, the preview (collapsed rows, `applyGap`, docked ghost, zone highlight), announcements, focus, the re-anchor on every cache update, and the drop through `commitKeyboardMove`. |
+| `src/lib/keyboardMoveEntry.ts` | Row key entry points: plain Space requests a move (`startMoveOnSpace`); Ctrl/Cmd+Space toggles selection without moving (`toggleSelectionOnCtrlSpace`). |
+| `src/lib/keyboardMoveGhost.ts`, `src/lib/keyboardMoveDom.ts` | The docked copy (the pointer's ghost, with the `+N` badge showing the number of items being moved) and where it docks; keeps it inside the visible part of its scroll containers. |
+| `src/components/KeyboardMove/KeyboardMoveHost.tsx` + `src/stores/keyboardMoveStore.ts` | Mounts the controller once inside the provider and renders the hidden focusable "Moving items" element that holds focus during a move; the store carries the move request and the live `kind` / zone marker. |
 | `src/lib/selectionRange.ts` | Shift ranges for tabs, windows and groups. |
 | `src/lib/selectionFocus.ts` | Moves focus out of selection controls before they unmount. |
 | `src/hooks/useSelectionClickAway.ts` | Exits selection mode on a plain click outside a selection control. **Arms on the next macrotask** (C14). |
@@ -81,7 +86,7 @@ Out of scope: drags on the web dashboard.
 - **group:** `group.id` · **window:** `${groupId}::w${i}` · **tab:** `${groupId}::w${i}::t${j}`
 - **new-window zone:** `${groupId}::new-window` · **new-group zone:** `::new-group` (fixed sentinel, resolved without a model lookup)
 
-**Rebase identity:** tab = `url` + `savedAt` + `customTitle` + `title` + `note` + `pinned` + `reminder.fireAt`; window = `name` + `starred` + `note` + per-tab identities; live Now Open items by real `id`; groups by `group.id`.
+**Rebase identity:** tab = `url` + `savedAt` + `customTitle` + `title` + `note` + `pinned` + `reminder.fireAt`; window = `name` + `starred` + `note` + per-tab identities; live Now Open items by real `id`; groups by `group.id`. Because model ids are positional, this identity is what says "the same item" whenever the groups change during a move: a pointer drop rebases at the drop (§5 step 8.2), and keyboard move mode re-anchors its picked-up item(s) on every cache update (§5.1).
 
 **Constants trap:** `packages/extension/src/lib/types.ts` **redefines** `DEFAULT_GROUP_TITLE` (`'temp group'`) and `DEFAULT_GROUP_COLOR`, shadowing `@tabmerger/shared`'s different values (`'New'`). `createGroup` (`src/lib/utils.ts`) imports the **local** ones, so a new group is named **"temp group"**. Always check which module a constant came from.
 
@@ -93,12 +98,12 @@ Out of scope: drags on the web dashboard.
 2. **Path decision (per drag):** pointer path (capture, `preventDefault` the native `dragstart`, `grabbing`) or native path (synchronous `dataTransfer` setup, transparent drag image, capture listeners). Exactly one activation; `path:*` logged.
 3. **First rAF:** ghost; collapse the source row **and every other visible selected row**; open the gap; group drags activate the dragged group.
 4. **`onDragStart`:** snapshot the cache, resolve `active`, record `keyboard`, carry or clear the selection, set the live-drag flag **last**.
-5. **Each move:** ghost; collision over virtual geometry; `dndInsertion` recomputes gap/target; `onDragOver` records `lastRealOverRef` and arms the 600ms spring-open (**never for keyboard drags**).
+5. **Each move:** ghost; collision over virtual geometry; `dndInsertion` recomputes gap/target; `onDragOver` records `lastRealOverRef` and arms the 600ms spring-open (pointer drags only; keyboard move mode changes the shown group from its group list, §5.1).
 6. **End:** a final `onMove` from the event's own coordinates, then `scheduleEnd`.
 7. **Drop frame (one paint):** `data-tm-dnd-instant` → notify dnd-kit inside `flushSync` → remove ghost, restore rows → clear the attribute.
 8. **`onDragEnd`**, wrapped in `try/catch/finally { reset() }`:
    1. Resolve against the snapshot, then `canDrop`.
-   2. `rebaseMove` onto the current cache; cancel if the item/target is gone, a duplicated identity was permuted, or a missing member may have been edited. Deleted members are excluded and reported via `removed`.
+   2. `rebaseMove` onto the current cache; cancel if the item/target is gone, a duplicated identity was permuted, or a missing member may have been edited. Deleted members are excluded and reported via `removed`. Keyboard move mode applies the same rule to its picked-up item(s) on every cache update, so at the drop they already name the same item(s) in the current cache (§5.1).
    3. `applyMove`; skip `isStructuralNoop`.
    4. `pushUndo(current)` when undoable.
    5. `const persist = saveGroupsState(next)` **before** the cache write.
@@ -106,10 +111,49 @@ Out of scope: drags on the web dashboard.
    7. Update the active index; remap the selection.
    8. `reset()` → `await persist` → `runSideEffects()`.
    9. **On failure:** `reset()` before `rollback()`; conditional on `cacheWritten` (no undo-pop or failure announce for an already-issued write, but still awaited).
-   10. **Keyboard drops:** dnd-kit gets a token; `dndFocus` focuses the landed item by identity; the full outcome goes to the live region ~150ms later.
+   10. **Keyboard move drops** (§5.1) enter here through `commitKeyboardMove`, which runs this same tail (`commitResolved`): `dndFocus` focuses the landed item by identity, and the full outcome goes to the app live region `#tm-dnd-live-region` ~150ms later.
 9. **Release in place** restores exactly; a non-contiguous selection gathers into a block **[DECISION]**.
 
 `reset()` clears the live-drag flag and drag selection **first**; the unmount fallback is unconditional.
+
+### 5.1 Keyboard move mode
+
+Keyboard moves are a separate mode, not a dnd-kit drag. The pure model is `src/lib/keyboardMove.ts`; the controller is `src/hooks/useKeyboardMove.ts`, mounted once by `KeyboardMoveHost`.
+
+**Keys**
+
+| Key | Effect |
+|---|---|
+| **Space** on a focused tab row, window header, group row or its grip | Picks the item up. A selected row picks up the whole same-type selection; an unselected row moves alone and clears the selection. A picked-up group becomes the shown group. |
+| **Up / Down** (main panel) | Walk the drop targets of the shown group, wrapping at both ends ("Wrapped to top." / "Wrapped to bottom."). |
+| **Left** (tab and window sources) | Moves the cursor to the sidebar's group list, on the shown group. |
+| **Up / Down** (group list) | Pick a group, wrapping. The highlighted group becomes the shown group and its row carries the cursor ring (`data-tm-move-cursor`). Groups that cannot take the item are skipped. "New group" is the last stop, offered only below the free-tier group cap. |
+| **Right** (group list) | Enters the highlighted group with the item at its end; Up / Down then walk that group. Does nothing on "New group". |
+| **Space** | Drops at the current target. In the group list that is the end of the highlighted group, or a new group on "New group". |
+| **Escape** | Cancels: nothing moves, the group shown at pick-up is shown again, focus returns to the item's row. |
+| Enter, Tab, modified or auto-repeated Space | Inert during a move. A pointer press or the window losing focus cancels the move. |
+| **Ctrl/Cmd+Space** (outside a move) | Toggles the row in the selection without moving it. |
+
+**Targets** are real drop targets only: every one passes `canDrop`, and rows that are not rendered (search filter, collapsed sections) are never offered.
+
+- **Tab:** the insertion slots between each window's other visible tabs, window after window (an empty window is one stop), then the group's "new window" zone.
+- **Window:** the slots among the shown group's windows in the source's own starred zone; a group with no window of that zone is one "add as a window" stop.
+- **Group:** the slots among the saved groups in the source's own starred zone, never above Now Open. Left / Right do nothing.
+
+**Preview** is the pointer drag's own: the moving rows collapse, the insertion gap opens through `applyGap`, the new-window / new-group zone highlights, and the ghost is docked in the gap, always inside the visible part of its scroll containers. Its `+N` badge shows the number of items being moved. Focus sits on the hidden "Moving items" element for the whole move, so it is never on a collapsed row.
+
+**Announcements** go to the app live region `#tm-dnd-live-region`: the pick-up ("Picked up tab Bravo, position 2 of 3 in Window 1 of group Work. Up and Down arrows move it, Left chooses a group, Space drops, Escape cancels."), every target the cursor lands on ("Bravo, last in Window 1", "Group list: Play", "Play: Bravo, last in Window 1"), and the outcome.
+
+**The picked-up item stays the same item.** While an item is picked up, the groups may change underneath (a sync pull, a Now Open update, any cache update). On each cache update the controller re-anchors the picked-up source by identity with `rebaseMove` (§4), against the state it was last resolved in, and then rebuilds the targets around where the item now is:
+
+- The source ids, the collapsed rows and the source marks follow the item. A cursor on the item's own slot stays on it; a cursor on another slot keeps that slot; a target that now reads differently is announced again.
+- A multi-item selection is re-anchored as a whole. A member that was clearly deleted elsewhere leaves the move, and the badge and the announcements show the number still moving.
+- If an item can no longer be identified (it is gone, identical duplicates were permuted so identity is ambiguous, or a missing member may have been edited), the move is cancelled: nothing is written, the live region says **"The groups changed, so the movement was cancelled."**, and focus returns to the row the move started from (after an earlier re-anchor, the item's last known row).
+- A keyboard drop never moves an item other than the one picked up.
+
+**Drop:** `commitKeyboardMove(active, over)` runs the same `commitResolved` tail as a pointer drop (step 8), so the result, the single undo step, persistence, selection remap, focus and outcome announcement are the pointer's.
+
+**Debug stages** (`tm_dnd_debug`): `keyboard:reanchored` when the picked-up ids changed, `keyboard:cancelled-stale` when the move was cancelled because the groups changed, then the shared `committed` on a drop.
 
 ---
 
@@ -139,7 +183,7 @@ Out of scope: drags on the web dashboard.
 | **Now Open tab(s) → Now Open's OWN new-window zone (2026-09-24, reverses the earlier "left out of scope")** | **REAL detach**, never a stored write (`next` is the same reference) | `tabs.detachToNewWindow` — `windows.create({tabId, focused:false})` then `tabs.move` for any further ids, order preserved | no |
 | Saved tab(s) → Now Open's new-window zone | Removed from sources; one new real window (unchanged — this already worked via `resolveTabDest`'s `new-window` handling, just unreachable through the UI until the zone was rendered for `group.permanent`) | `windows.create({focused:false})` | no |
 
-- **Emptied windows are KEPT.** No move ever prunes a window left with no tabs; it renders as an empty card, keeps its badges, stays a drop target, and accepts tabs dragged back in. `useGroups` agrees (`useDeleteTab` and both `useMoveTab` branches). Explicit bulk cleanups (`useDeduplicateTabs`, `useRemoveStaleTabs`, AI-apply) still prune — they are cleanups, not moves.
+- **Emptied windows are KEPT.** No move ever prunes a window left with no tabs; it renders as an empty card, keeps its badges, stays a drop target, and accepts tabs dragged back in. `useGroups` agrees (`useDeleteTab` and both `useMoveTab` branches). Explicit bulk cleanups (`useDeduplicateGroup`, `useRemoveStaleTabs`, AI-apply) still prune — they are cleanups, not moves.
 - **New-group zone at the free cap: HIDES.** `dropZoneActive = (tab‖window drag) && !atGroupLimit`; it renders exactly as when idle (`invisible`, `pointer-events-none`, `aria-hidden`, droppable disabled, still mounted per C4) and refuses silently. No toast. The Add Group button's own at-limit behaviour is unchanged.
 - **New groups are named `"temp group"`** (the local `DEFAULT_GROUP_TITLE`, §4) and the zone does not open the rename input **[DECISION]**.
 
@@ -210,7 +254,7 @@ Focus rings `ring-ring` **16.54 / 11.98**; tab row + grip on a selected row **15
 
 **Side effects:** **never close the ACTIVE tab of the popup's own window while the popup is open** — defer it to the background port, and defer every active tab when the own window is unknown (C7); never `windows.remove` from DnD (it would also close tabs the drop never saved); always `focused:false` / `active:false`; never persist a DnD-produced saved tab with a nonzero id; never activate Now Open from a drag; **never prune an emptied window in a move**.
 
-**Keyboard/a11y:** global key handlers check `isDndDragLive()` and `defaultPrevented`; never arm spring-open for a keyboard drag; never restore focus by positional slot; keep `restoreFocus:false`; grip selectors use `^=`; **arm global dismiss listeners on the next macrotask** (C14).
+**Keyboard/a11y:** global key handlers check `isDndDragLive()` and `defaultPrevented`; never route a keyboard move through dnd-kit or spring-open (it is move mode, §5.1); never offer a keyboard target that fails `canDrop`; never carry a picked-up item across a cache update by its positional id, only by identity through `rebaseMove`, and cancel when identity is lost; never let Enter or Tab act during a move; never restore focus by positional slot; keep `restoreFocus:false`; grip selectors use `^=`; **arm global dismiss listeners on the next macrotask** (C14).
 
 ---
 
@@ -277,7 +321,7 @@ Native drag image and cursor (C9); **whether `grabbing` renders for a human and 
 - The `SelectionActionBar` click-away case and the toolbar's "More group options" menu are **unreachable in the headless popup** — unit-covered only.
 - The new-group zone at the free cap is unit-covered only (no free-tier fixture).
 - `core.spec.ts:109` is network-flaky (loads real github.com).
-- Keyboard multi-drag visuals beyond the companion outline; multi-drag spring-open into another group's window list untested in the real popup.
+- Multi-drag spring-open into another group's window list untested in the real popup.
 
 ### Risks
 - Shift+Space on a checkbox relies on the synthesized click carrying `shiftKey` (true in Chromium; unverified in Firefox).

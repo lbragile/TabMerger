@@ -369,6 +369,114 @@ describe('useKeyboardMove — main panel', () => {
     expect(isDndDragLive()).toBe(false)
   })
 
+  it('re-anchors the picked-up tab by identity when the groups change: rows, gap, announcement and the drop follow the item', async () => {
+    const { rows } = await setup()
+    await begin(rows, 'tab', 'work::w0::t1') // Bravo
+    const changed = state()
+    changed.available[1] = grp('work', 'Work', [win(['Bravo', 'Charlie']), win(['Delta'])]) // Alpha removed
+    act(() => {
+      qc.setQueryData(GROUPS_QUERY_KEY, changed)
+    })
+    // still Bravo's move, on Bravo's own slot (not announced again: it reads the same)
+    expect(useKeyboardMoveStore.getState().kind).toBe('tab')
+    expect(live()).toMatch(/^Picked up tab Bravo/)
+    // the preview follows the item: its new row is collapsed and marked, its old row is back
+    expect(rows['work::w0::t0'].hasAttribute('data-tm-move-source')).toBe(true)
+    expect(rows['work::w0::t0'].style.getPropertyValue('height')).toBe('0px')
+    expect(rows['work::w0::t1'].hasAttribute('data-tm-move-source')).toBe(false)
+    expect(rows['work::w0::t1'].style.getPropertyValue('height')).toBe('')
+    expect(lastGap()!.containerKey).toBe('work::w0')
+    expect([...lastGap()!.shiftIds]).toEqual(['work::w0::t1'])
+    // one docked copy, still the picked-up item's
+    expect(document.querySelectorAll('#tm-dnd-aux-host [data-testid="drag-ghost"]')).toHaveLength(1)
+    key('ArrowDown')
+    expect(live()).toBe('Bravo, last in Window 1')
+    key('Space')
+    expect(commitSpy).toHaveBeenCalledTimes(1)
+    expect(commitSpy).toHaveBeenCalledWith(
+      { type: 'tab', id: 'work::w0::t0', selectionIds: undefined },
+      { type: 'tab', id: 'work::w0::t1', index: 1 }
+    )
+  })
+
+  it('Escape after a re-anchor returns focus to the item\'s own row and names where it is now', async () => {
+    const { rows } = await setup()
+    await begin(rows, 'tab', 'work::w0::t1')
+    const changed = state()
+    changed.available[1] = grp('work', 'Work', [win(['Bravo', 'Charlie']), win(['Delta'])])
+    act(() => {
+      qc.setQueryData(GROUPS_QUERY_KEY, changed)
+    })
+    key('Escape')
+    expect(live()).toMatch(/^Movement cancelled\. Tab Bravo returned to position 1 of 2 in Window 1 of group Work\./)
+    expect(document.activeElement).toBe(rows['work::w0::t0'])
+    expect(document.querySelectorAll('[data-tm-move-source]')).toHaveLength(0)
+    expect(rows['work::w0::t0'].style.getPropertyValue('height')).toBe('')
+    expect(commitSpy).not.toHaveBeenCalled()
+  })
+
+  it('a cursor that reads differently after the groups changed is announced again', async () => {
+    const { rows } = await setup()
+    await begin(rows, 'tab', 'work::w0::t1')
+    key('ArrowUp')
+    expect(live()).toBe('Bravo, first in Window 1')
+    const changed = state()
+    changed.available[1] = grp('work', 'Work', [win(['Bravo', 'Charlie']), win(['Delta'])]) // Alpha removed: that slot is now Bravo's own
+    act(() => {
+      qc.setQueryData(GROUPS_QUERY_KEY, changed)
+    })
+    expect(live()).toBe('Bravo, original position')
+  })
+
+  it('a selection is re-anchored as a whole; a member deleted elsewhere leaves it and the badge shows the number still moving', async () => {
+    const { rows } = await setup()
+    promoteSpy.mockReturnValue(['work::w0::t0', 'work::w0::t1', 'work::w0::t2'])
+    uiState.selectedItems = [{ type: 'tab', id: 'tab-1-0-0' }]
+    await begin(rows, 'tab', 'work::w0::t1')
+    expect(document.querySelector('[data-testid="drag-ghost-count"]')?.textContent).toBe('+2')
+    const changed = state()
+    changed.available[1] = grp('work', 'Work', [win(['Bravo', 'Charlie']), win(['Delta'])]) // Alpha deleted elsewhere
+    act(() => {
+      qc.setQueryData(GROUPS_QUERY_KEY, changed)
+    })
+    expect(useKeyboardMoveStore.getState().kind).toBe('tab')
+    expect(live()).toBe('2 tabs, original position')
+    expect(document.querySelector('[data-testid="drag-ghost-count"]')?.textContent).toBe('+1')
+    expect(rows['work::w0::t0'].hasAttribute('data-tm-move-source')).toBe(true)
+    expect(rows['work::w0::t1'].hasAttribute('data-tm-move-source')).toBe(true)
+    expect(rows['work::w0::t2'].hasAttribute('data-tm-move-source')).toBe(false)
+    keys('ArrowDown', 'Space')
+    expect(commitSpy).toHaveBeenCalledWith(
+      { type: 'tab', id: 'work::w0::t0', selectionIds: ['work::w0::t0', 'work::w0::t1'] },
+      expect.objectContaining({ type: 'tab', id: 'work::w1::t0' })
+    )
+  })
+
+  it('identical windows permuted under the move: cancelled with the explanation, focus back on the starting row', async () => {
+    const dup = state()
+    dup.available[1] = grp('work', 'Work', [win(['Same']), win(['Other']), win(['Same'])])
+    qc.setQueryData(GROUPS_QUERY_KEY, dup)
+    const { rows } = await setup()
+    const third = document.createElement('div')
+    third.setAttribute('data-tm-dnd-id', 'work::w2')
+    document.body.appendChild(third)
+    await begin(rows, 'window', 'work::w0')
+    expect(live()).toMatch(/^Picked up window Window 1, position 1 of 3 in group Work\./)
+    const permuted = state()
+    permuted.available[1] = grp('work', 'Work', [win(['Other']), win(['Same']), win(['Same'])])
+    act(() => {
+      qc.setQueryData(GROUPS_QUERY_KEY, permuted)
+    })
+    expect(live()).toBe('The groups changed, so the movement was cancelled.')
+    expect(useKeyboardMoveStore.getState().kind).toBeNull()
+    expect(isDndDragLive()).toBe(false)
+    expect(document.querySelectorAll('[data-testid="drag-ghost"]')).toHaveLength(0)
+    expect(lastGap()).toBeNull()
+    expect(document.activeElement).toBe(rows['work::w0'])
+    keys('ArrowDown', 'ArrowDown', 'Space')
+    expect(commitSpy).not.toHaveBeenCalled()
+  })
+
   it('a cache update that moves the cursor target re-announces it and republishes the gap', async () => {
     const { rows } = await setup()
     await begin(rows, 'tab', 'work::w0::t1')

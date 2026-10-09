@@ -7,11 +7,14 @@ import { getNewGroupZoneGate, ownFocusSelectors, promoteStoreSelection } from '@
 import { useDndContext } from '@/components/dnd/DndProvider';
 import { announceDnd } from '@/lib/dndLiveRegion';
 import { describeDropBail } from '@/lib/dndAnnouncements';
+import { dndDebugLog } from '@/lib/dndDebug';
 import { focusFirst } from '@/lib/dndFocus';
 import { measureRows, collapseRows, type CollapseHandle } from '@/lib/dndDragVisuals';
 import { holdInstantFrames } from '@/lib/dndHtml5Sensor';
 import { makeGap } from '@/lib/dndInsertion';
+import { NEW_GROUP_ID, type DndRef } from '@/lib/dndMove';
 import { clearDndDragLive, setDndDragLive } from '@/lib/dndMultiDrag';
+import { rebaseMove } from '@/lib/dndRebase';
 import { motionScrollBehavior } from '@/lib/reducedMotion';
 import {
   activeRefFor,
@@ -34,7 +37,8 @@ import {
   type MoveOptions,
   type MoveScope,
   type MoveSource,
-  type MoveState
+  type MoveState,
+  type MoveTarget
 } from '@/lib/keyboardMove';
 import { createMoveGhost, type MoveGhost } from '@/lib/keyboardMoveGhost';
 import { anchorFor, clampToVisible, dockRectFor, markerElement, revealSpan, rowFor } from '@/lib/keyboardMoveDom';
@@ -48,6 +52,16 @@ export { markerElement };
 
 /** Frames the docked ghost keeps re-measuring after a target change (the rows animate for ~200ms). */
 const GHOST_FOLLOW_FRAMES = 24;
+
+/** Spoken when the groups changed and the picked-up item(s) can no longer be identified in them. */
+const GROUPS_CHANGED_TEXT = 'The groups changed, so the movement was cancelled.';
+
+/**
+ * The target handed to `rebaseMove` when only the picked-up SOURCE is re-anchored (the
+ * targets are rebuilt around it afterwards): the "new group" zone names no existing item,
+ * so it resolves against any groups state.
+ */
+const ANY_STATE_TARGET: DndRef = { type: 'new-group', id: NEW_GROUP_ID };
 
 interface Live {
   ms: MoveState;
@@ -72,6 +86,15 @@ interface Live {
  *  - announcements to the app-owned live region, scrolling the target into view, and focus
  *    (the host holds it during the move so it is never on a collapsed row; drop: the commit
  *    focuses the landed row; cancel: back where it started).
+ *
+ * The picked-up item stays the SAME item when the groups change underneath (a sync pull, a
+ * Now Open update, any cache update). Model ids are positional, so on every cache update the
+ * source is re-anchored BY IDENTITY with `rebaseMove` (the rebase a pointer drop runs) and
+ * the targets are rebuilt around where it now is. If an item can no longer be identified
+ * (it is gone, identical duplicates were permuted, or a missing selection member may have
+ * been edited) the move is cancelled and says so. A drop therefore never moves an item
+ * other than the one picked up.
+ *
  * The pure state machine is `@/lib/keyboardMove`; the commit is `commitKeyboardMove`, the
  * exact tail pointer drops use.
  */
@@ -117,12 +140,14 @@ export function useKeyboardMove(hostRef?: RefObject<HTMLElement | null>): void {
     }
   }
 
-  function begin(kind: MoveKind, id: string): void {
+  function begin(kind: MoveKind, picked: string): void {
     const found = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
     if (!found) return;
     const base: GroupsState = found;
     const model = buildDndModel(base);
-    if (!(model.tabs[id] || model.windows[id] || model.groups[id])) return;
+    if (!(model.tabs[picked] || model.windows[picked] || model.groups[picked])) return;
+    /** The picked-up row's model id. Positional: it follows the item when the groups change (see `retarget`). */
+    let id = picked;
     const ui = useUIStore.getState();
     const shownAtStart = ui.activeGroupIndex ?? 0;
     // Same rule as a pointer drag: a selected row carries the whole (same-type) selection;
@@ -136,9 +161,15 @@ export function useKeyboardMove(hostRef?: RefObject<HTMLElement | null>): void {
       const gi = model.groups[id]?.index ?? 0;
       if (gi > 0 && gi !== ui.activeGroupIndex) ui.setActiveGroupIndex(gi);
     }
-    const source: MoveSource = { kind, anchorId: id, ids };
+    let source: MoveSource = { kind, anchorId: id, ids };
     let ms = startMove(base, source, options());
-    const origin = document.activeElement as HTMLElement | null;
+    let origin = document.activeElement as HTMLElement | null;
+    /** The groups state (and its model) the moving ids and the targets were last resolved against. */
+    let anchored = base;
+    let anchoredModel = model;
+    /** A cache update is waiting for its render (see `catchUp`); `held` is the target the cursor was on before it. */
+    let rerendering = false;
+    let held: MoveTarget | null = null;
     let done = false;
     let collapsed: CollapseHandle | null = null;
     let ghost: MoveGhost | null = null;
@@ -194,8 +225,14 @@ export function useKeyboardMove(hostRef?: RefObject<HTMLElement | null>): void {
       const tick = () => {
         followFrame = null;
         if (done) return;
+        // When the render changed the preview, `catchUp` has republished it (a fresh run).
+        if (rerendering && catchUp()) return;
         settle();
         if (++n < GHOST_FOLLOW_FRAMES) followFrame = requestAnimationFrame(tick);
+        else {
+          rerendering = false;
+          held = null;
+        }
       };
       followFrame = requestAnimationFrame(tick);
     };
@@ -316,6 +353,7 @@ export function useKeyboardMove(hostRef?: RefObject<HTMLElement | null>): void {
       consume();
       if (!next || next === ms) return;
       ms = next;
+      held = null;
       if (live.current) live.current.ms = ms;
       if (text) announceDnd(text);
       publish();
@@ -325,23 +363,88 @@ export function useKeyboardMove(hostRef?: RefObject<HTMLElement | null>): void {
     const onBlur = () => cancel('Movement cancelled.');
     const onLayout = () => placeGhost();
 
+    /** The picked-up item(s) can no longer be identified in the groups: end the move and say why. */
+    const cancelStale = () => {
+      dndDebugLog('keyboard:cancelled-stale', { from: id });
+      cancel(GROUPS_CHANGED_TEXT, false);
+    };
+
+    /** The moving items now sit at `next`'s ids: the collapsed / marked rows of the preview follow them. */
+    const retarget = (next: MoveSource) => {
+      dndDebugLog('keyboard:reanchored', { from: id, to: next.anchorId, count: next.ids.length });
+      markSources(ids, false);
+      // A cancel returns focus to the item's own row, wherever it is now.
+      if (next.anchorId !== id) origin = null;
+      id = next.anchorId;
+      ids = next.ids;
+      source = next;
+      ghost?.setCount(ids.length);
+      collapseRendered();
+      markSources(ids, true);
+    };
+
+    /** Take rebuilt targets: speak the cursor's target when it reads differently from `before`, then render it. */
+    const adopt = (next: MoveState, before: MoveTarget | null) => {
+      ms = next;
+      if (live.current) live.current.ms = ms;
+      const t = currentTarget(ms);
+      if (t && t.text !== before?.text) announceDnd(t.text);
+      publish();
+    };
+
+    /**
+     * The rows re-render a moment after a cache update. Once they are in the DOM: collapse
+     * the moving rows that have just mounted, and rebuild the targets from the rows that
+     * are really there (the cursor keeps the target it had before the update). True when
+     * that changed the preview, which was then republished.
+     */
+    function catchUp(): boolean {
+      const holding = new Set((collapsed?.rows ?? []).map((m) => m.row));
+      const arrived = ids.some((x) => {
+        const row = rowFor(x);
+        return row !== null && !holding.has(row);
+      });
+      if (arrived) {
+        collapseRendered();
+        markSources(ids, true);
+      }
+      const rebuilt = rebuildMove(held ? { ...ms, targets: [held], index: 0 } : ms, anchored, options());
+      if (!rebuilt || JSON.stringify([rebuilt.index, rebuilt.targets]) === JSON.stringify([ms.index, ms.targets])) return false;
+      adopt(rebuilt, currentTarget(ms));
+      return true;
+    }
+
     const unsubscribe = qc.getQueryCache().subscribe((event) => {
       if (done || event.type !== 'updated' || event.query.queryKey[0] !== GROUPS_QUERY_KEY[0]) return;
       const state = event.query.state.data as GroupsState | undefined;
       if (!state) return;
-      const rebuilt = rebuildMove(ms, state, options());
+      // The picked-up item(s) stay the SAME item(s): find them again by identity, exactly as a
+      // pointer drop re-resolves its dragged items, before anything is rebuilt around them.
+      let next = source;
+      if (state !== anchored) {
+        const nextModel = buildDndModel(state);
+        const rebased = rebaseMove(anchored, anchoredModel, state, nextModel, activeRefFor(source), ANY_STATE_TARGET);
+        if (!rebased) {
+          cancelStale();
+          return;
+        }
+        const nextIds = rebased.active.selectionIds ?? [rebased.active.id];
+        if (nextIds.length !== ids.length || nextIds.some((x, i) => x !== ids[i])) {
+          next = { kind, anchorId: rebased.active.id, ids: nextIds };
+        }
+        anchored = state;
+        anchoredModel = nextModel;
+      }
+      const rebuilt = rebuildMove({ ...ms, source: next }, state, options());
       if (!rebuilt) {
-        cancel('The groups changed, so the movement was cancelled.', false);
+        cancelStale();
         return;
       }
-      const before = currentTarget(ms)?.key;
-      ms = rebuilt;
-      if (live.current) live.current.ms = ms;
-      if (currentTarget(ms)?.key !== before) {
-        const t = currentTarget(ms);
-        if (t) announceDnd(t.text);
-      }
-      publish();
+      const before = currentTarget(ms);
+      if (next !== source) retarget(next);
+      held ??= before;
+      rerendering = true;
+      adopt(rebuilt, before);
     });
 
     /** End the move's preview + listeners. `restoreShown`: cancel puts the originally shown group back. */

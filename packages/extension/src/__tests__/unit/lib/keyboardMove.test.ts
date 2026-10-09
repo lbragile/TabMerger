@@ -655,6 +655,28 @@ describe('rebuildMove / describePickup', () => {
     expect(rebuildMove(ms, noTab, o)).toBeNull()
   })
 
+  it('a cursor on the item\'s own slot stays on it when the re-anchored item sits at another position', () => {
+    const s = fixture()
+    const ms = startMove(s, src('tab', tabId('work', 0, 1)), o) // Bravo, on its own slot
+    const shifted = fixture()
+    shifted.available[1] = grp('work', 'Work', [win(['Zulu', 'Alpha', 'Bravo', 'Charlie']), win(['Delta', 'Echo'])])
+    // the caller re-anchored Bravo by identity: it is now the third tab
+    const rebuilt = rebuildMove({ ...ms, source: src('tab', tabId('work', 0, 2)) }, shifted, o)
+    expect(rebuilt && currentTarget(rebuilt)?.origin).toBe(true)
+    expect(rebuilt && currentTarget(rebuilt)?.text).toBe('Bravo, original position')
+    expect(rebuilt && currentTarget(rebuilt)?.key).not.toBe(currentTarget(ms)?.key)
+  })
+
+  it('a cursor on another slot keeps that slot\'s key around the re-anchored item', () => {
+    const s = fixture()
+    const ms = press(startMove(s, src('tab', tabId('work', 0, 1)), o), s, o, 'up') // first in Window 1
+    const shifted = fixture()
+    shifted.available[1] = grp('work', 'Work', [win(['Zulu', 'Alpha', 'Bravo', 'Charlie']), win(['Delta', 'Echo'])])
+    const rebuilt = rebuildMove({ ...ms, source: src('tab', tabId('work', 0, 2)) }, shifted, o)
+    expect(rebuilt && currentTarget(rebuilt)?.key).toBe(currentTarget(ms)?.key)
+    expect(rebuilt && currentTarget(rebuilt)?.text).toBe('Bravo, first in Window 1')
+  })
+
   it('describePickup names the item, its position, the count and the keys', () => {
     const s = fixture()
     expect(describePickup(s, src('tab', tabId('work', 0, 1)))).toBe(

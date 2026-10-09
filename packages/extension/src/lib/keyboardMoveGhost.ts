@@ -14,6 +14,8 @@ export interface MoveGhost {
   place: (rect: { left: number; top: number; width: number } | null) => void;
   /** The copy's rendered height, for placing / revealing it. */
   height: () => number;
+  /** The badge shows the number of items being moved: `+{count-1}` beside the one shown, none for a single item. */
+  setCount: (count: number) => void;
   remove: () => void;
 }
 
@@ -35,6 +37,17 @@ export function createMoveGhost(row: HTMLElement, count: number): MoveGhost | nu
       el.style.transform = `translate3d(${Math.round(rect.left)}px, ${Math.round(rect.top)}px, 0)`;
     },
     height: () => el.offsetHeight,
+    setCount(next) {
+      const rest = Math.max(0, Math.floor(next) - 1);
+      const badge = el.querySelector('[data-testid="drag-ghost-count"]');
+      if (badge && rest > 0) badge.textContent = `+${rest}`;
+      else badge?.remove();
+      // One card behind the shown item per other item, the nearest ones kept.
+      const stack = el.querySelectorAll('[data-testid="drag-ghost-stack"]');
+      stack.forEach((card, i) => {
+        if (i < stack.length - rest) card.remove();
+      });
+    },
     remove() {
       el.remove();
     }

@@ -44,7 +44,7 @@ async function tabOpened(s: PopupSession, log: (x: string) => void): Promise<boo
 async function cell(
   name: string,
   groups: SeedGroup[],
-  opts: { liveWindows?: string[][]; timeout?: number },
+  opts: { liveWindows?: string[][]; timeout?: number; dndDebug?: boolean },
   fn: (s: PopupSession, log: (x: string) => void) => Promise<boolean>
 ) {
   test(name, async () => {
@@ -474,4 +474,50 @@ cell('V3 long sidebar (16 groups): at every stop of a group move the copy is ins
   log('failures=' + (failures.length ? failures.slice(0, 6).join(' || ') : 'none'));
   await s.press('Escape');
   return failures.length === 0;
+});
+
+// ───────────────────────── the groups change under a picked-up item ─────────────────────────
+// A cache change is injected the way another writer's sync pull lands: through the groups query
+// client the page exposes when the debug flag is on. The picked-up item stays the same item.
+const STALE_TEXT = 'The groups changed, so the movement was cancelled.';
+const UNIQUE_WINDOWS: SeedGroup[] = [NOW_OPEN, grp('dup', 'Dup', win(1, 'Alpha'), win(2, 'Bravo'), win(3, 'Charlie')), grp('play', 'Play', win(4, 'Foxtrot'))];
+// (saved windows carry id 0, so two windows with the same tabs are indistinguishable by identity)
+const TWIN_WINDOWS: SeedGroup[] = [NOW_OPEN, grp('dup', 'Dup', win(0, 'Same'), win(0, 'Other'), win(0, 'Same')), grp('play', 'Play', win(4, 'Foxtrot'))];
+/** Replace the Dup group's windows with its current windows in `order` (indexes into the current list). */
+const reorderDup = (s: PopupSession, order: number[]) =>
+  s.eval<boolean>(`(() => {
+    const qc = globalThis.__tmQueryClient;
+    if (!qc) return false;
+    qc.setQueryData(['groups'], (st) => ({ ...st, available: st.available.map((g) => g.id === 'dup' ? { ...g, updatedAt: Date.now(), windows: ${JSON.stringify(order)}.map((i) => g.windows[i]) } : g) }));
+    return true;
+  })()`);
+const moveStages = (s: PopupSession) => s.eval<string[]>(`(globalThis.__tmDndLog ?? []).map((e) => e[1]).filter((n) => n.startsWith('keyboard:') || n === 'committed')`);
+
+cell('R1 windows reordered mid-move: the picked-up window is the one the drop moves', UNIQUE_WINDOWS, { dndDebug: true }, async (s, log) => {
+  await openGroup(s, 'Dup');
+  await s.tabTo(`el.getAttribute('aria-label') === ${JSON.stringify(W(1))}`);
+  await s.press('Space'); log('pick=' + await s.live());
+  const injected = await reorderDup(s, [1, 2, 0]); // Alpha is now last
+  await sleep(600);
+  const stages = await moveStages(s); log('stages=' + stages.join(','));
+  await s.press('ArrowUp', { ms: 450 }); log('up=' + await s.live());
+  await dropped(s, log);
+  const after = await moveStages(s);
+  return injected && stages.includes('keyboard:reanchored') && !stages.includes('keyboard:cancelled-stale') && after.includes('committed')
+    && eq((await s.snapshot()).groups.dup, [['Bravo'], ['Alpha'], ['Charlie']]);
+});
+cell('R2 identical windows permuted mid-move: the move is cancelled with the message and nothing is written', TWIN_WINDOWS, { dndDebug: true }, async (s, log) => {
+  await openGroup(s, 'Dup');
+  await s.tabTo(`el.getAttribute('aria-label') === ${JSON.stringify(W(1))}`);
+  await s.press('Space'); log('pick=' + await s.live());
+  const injected = await reorderDup(s, [1, 0, 2]); // [Other, Same, Same]
+  await sleep(600);
+  const text = await s.live();
+  const stages = await moveStages(s); log('live=' + text + ' stages=' + stages.join(','));
+  // the move's keys are no longer captured: Space does not drop anything
+  await s.press('ArrowDown'); await s.press('Space', { ms: 450 });
+  const idb = (await s.snapshot()).groups.dup;
+  return injected && text === STALE_TEXT && stages.includes('keyboard:cancelled-stale') && !stages.includes('keyboard:reanchored')
+    && !stages.includes('committed') && (await sourcesMarked(s)) === 0 && (await ghostCount(s)) === 0
+    && eq(idb, [['Same'], ['Other'], ['Same']]);
 });

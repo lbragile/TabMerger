@@ -68,7 +68,7 @@ let portCounter = 9460 + Number(process.env.TEST_PARALLEL_INDEX ?? 0) * 100;
 /** Open the real popup on `groups` with `liveTabs` open as real browser tabs (Now Open). */
 export async function openRealPopup(
   groups: SeedGroup[],
-  opts: { liveWindows?: string[][] } = {}
+  opts: { liveWindows?: string[][]; dndDebug?: boolean } = {}
 ): Promise<PopupSession> {
   const port = portCounter++;
   const server = http.createServer((req, res) => {
@@ -98,6 +98,8 @@ export async function openRealPopup(
   const seedPage = await context.newPage();
   await seedPage.goto(`chrome-extension://${extensionId}/popup.html`, { waitUntil: 'networkidle' });
   await seedIdb(seedPage, groups);
+  // The move/drag stage log (`__tmDndLog`) and the groups query client (`__tmQueryClient`) are exposed to the page only when this flag is set.
+  if (opts.dndDebug) await seedPage.evaluate(() => localStorage.setItem('tm_dnd_debug', '1'));
   await seedPage.close();
 
   // Real browser tabs (Now Open). First list goes in the existing window, others in new windows.
