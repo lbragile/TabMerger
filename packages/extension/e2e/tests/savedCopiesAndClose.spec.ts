@@ -15,6 +15,10 @@ import { openPopup, seedAndReload, readStoredGroups, waitForStoredGroups } from 
  *     id 0, without the live `pinned` flag, and leaves the real tabs open.
  *  3. Duplicates are matched by position. "Deduplicate tabs" on a saved group removes only the
  *     duplicate tab; every other tab and window stays and no browser tab closes.
+ *  4. The selection bar's group menu works with the mouse. A click on "Copy to group" (Now Open)
+ *     or "Move to group" (a saved group) opens the menu with the selection intact, and choosing a
+ *     group acts on the ticked items. A click on empty space closes the menu and keeps the
+ *     selection; the next click on empty space leaves selection mode.
  *
  * Real windows are created from the service worker on a loopback server whose page title is the
  * last URL segment (stable, distinct row names, no internet). "Open" is asserted with
@@ -258,6 +262,153 @@ test.describe('Selection bar "Copy to group" from Now Open', () => {
     } finally {
       await server.close();
     }
+  });
+});
+
+test.describe('Selection bar group menu opened with the mouse', () => {
+  const MOVE_SOURCE = {
+    id: 'movesource1',
+    name: 'Move Source',
+    color: 'rgba(16,185,129,1)',
+    windows: [
+      { id: 0, incognito: false, focused: false, tabs: [{ id: 0, title: 'Keep One', url: 'https://keep.example.com' }] },
+      {
+        id: 0,
+        incognito: false,
+        focused: false,
+        tabs: [
+          { id: 0, title: 'Go One', url: 'https://go-one.example.com' },
+          { id: 0, title: 'Go Two', url: 'https://go-two.example.com' },
+        ],
+      },
+    ],
+  };
+
+  /** Ticked selection checkboxes, counted in the DOM (an open menu hides the page behind it from role queries). */
+  const ticked = (page: Page) => page.locator('[role="checkbox"][aria-checked="true"]');
+  const selectionBar = (page: Page) => page.locator('[data-selection-action-bar]');
+
+  /** Selection mode is over: no bar, no checkboxes, and the header offers to start a new selection. */
+  async function expectSelectionModeEnded(page: Page) {
+    await expect(selectionBar(page)).toHaveCount(0);
+    await expect(page.locator('[role="checkbox"]')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Select items' })).toBeVisible();
+  }
+
+  /** Open the popup on "Move Source" in selection mode with its "Go One" window ticked. */
+  async function openMoveSourceWithTick(context: BrowserContext, extensionId: string) {
+    const page = await openPopup(context, extensionId);
+    await seedAndReload(page, [NOW_OPEN_PLACEHOLDER, MOVE_SOURCE, TARGET] as Parameters<typeof seedAndReload>[1]);
+    await page.getByRole('button', { name: 'Move Source', exact: true }).click();
+    await expect(page.getByRole('listitem', { name: 'Go One' })).toBeVisible();
+    await page.getByRole('button', { name: 'Select items' }).click();
+    await tickWindow(page, 'Go One');
+    await expect(ticked(page)).toHaveCount(1);
+    return page;
+  }
+
+  test('Now Open: a mouse click on "Copy to group" opens the menu, and the chosen group gets detached copies while every real tab stays open', async ({
+    context,
+    extensionId,
+  }) => {
+    const server = await startTitleServer();
+    try {
+      const { page, sw } = await openWithWindows(context, extensionId, server, [TARGET], [['Live M1', 'Live M2'], ['Live N1']]);
+      const liveBefore = ['Live M1', 'Live M2', 'Live N1'];
+      expect(await liveTitles(sw)).toEqual(liveBefore);
+      const tabsBefore = await tabCount(sw);
+
+      await page.getByRole('button', { name: 'Select items' }).click();
+      await tickWindow(page, 'Live M1');
+      await expect(ticked(page)).toHaveCount(1);
+
+      // Opens the menu with the mouse: the selection is still there to act on.
+      await page.getByRole('button', { name: 'Copy to group' }).click();
+      const item = page.getByRole('menuitem', { name: 'Copy Target', exact: true });
+      await expect(item).toBeVisible();
+      await expect(ticked(page)).toHaveCount(1);
+      await expect(selectionBar(page)).toHaveCount(1);
+      await item.click();
+
+      await waitForStoredGroups(
+        page,
+        (groups) => groups.find((g) => g.id === 'copytarget2')?.windows.length === 2,
+        'Copy Target holding 2 windows'
+      );
+      const all = await storedWindows(page, 'copytarget2');
+      const copied = all.filter((w) => w.tabs.some((t) => t.title.startsWith('Live ')));
+      expect(all.some((w) => w.tabs.some((t) => t.title === 'Existing'))).toBe(true);
+      expect(copied.map((w) => w.tabs.map((t) => t.title))).toEqual([['Live M1', 'Live M2']]);
+      expectDetached(copied);
+      // The action is done, so selection mode is over.
+      await expectSelectionModeEnded(page);
+      // A copy closes nothing.
+      await page.waitForTimeout(500);
+      expect(await liveTitles(sw)).toEqual(liveBefore);
+      expect(await tabCount(sw)).toBe(tabsBefore);
+      expect(page.isClosed()).toBe(false);
+    } finally {
+      await server.close();
+    }
+  });
+
+  test('saved group: a mouse click on "Move to group" opens the menu, and the ticked window moves to the chosen group', async ({
+    context,
+    extensionId,
+  }) => {
+    const page = await openMoveSourceWithTick(context, extensionId);
+    const [sw] = context.serviceWorkers();
+    const tabsBefore = await tabCount(sw);
+
+    await page.getByRole('button', { name: 'Move to group' }).click();
+    const item = page.getByRole('menuitem', { name: 'Copy Target', exact: true });
+    await expect(item).toBeVisible();
+    await expect(ticked(page)).toHaveCount(1);
+    await expect(selectionBar(page)).toHaveCount(1);
+    await item.click();
+
+    await waitForStoredGroups(
+      page,
+      (groups) =>
+        groups.find((g) => g.id === 'movesource1')?.windows.length === 1 &&
+        groups.find((g) => g.id === 'copytarget2')?.windows.length === 2,
+      'Move Source holding 1 window and Copy Target holding 2'
+    );
+    const source = await storedWindows(page, 'movesource1');
+    expect(source.map((w) => w.tabs.map((t) => t.title))).toEqual([['Keep One']]);
+    const target = await storedWindows(page, 'copytarget2');
+    expect(target.map((w) => w.tabs.map((t) => t.title)).sort()).toEqual([['Existing'], ['Go One', 'Go Two']]);
+    // The move is done, so selection mode is over and the moved rows are gone from this group.
+    await expectSelectionModeEnded(page);
+    await expect(page.getByRole('listitem', { name: 'Go One' })).toHaveCount(0);
+    await expect(page.getByRole('listitem', { name: 'Keep One' })).toBeVisible();
+    // Moving saved windows closes no browser tab.
+    expect(await tabCount(sw)).toBe(tabsBefore);
+  });
+
+  test('a click on empty space closes the open menu and keeps the selection; the next one leaves selection mode', async ({
+    context,
+    extensionId,
+  }) => {
+    const page = await openMoveSourceWithTick(context, extensionId);
+    // Empty panel space: just above the left end of the selection bar, clear of the menu
+    // (which opens above the trigger, at the right).
+    const bar = (await selectionBar(page).boundingBox())!;
+    const emptySpace = { x: bar.x + 40, y: bar.y - 24 };
+
+    await page.getByRole('button', { name: 'Move to group' }).click();
+    await expect(page.getByRole('menuitem', { name: 'Copy Target', exact: true })).toBeVisible();
+
+    await page.mouse.click(emptySpace.x, emptySpace.y);
+    await expect(page.getByRole('menuitem')).toHaveCount(0);
+    await expect(ticked(page)).toHaveCount(1);
+    await expect(selectionBar(page)).toHaveCount(1);
+
+    await page.mouse.click(emptySpace.x, emptySpace.y);
+    await expectSelectionModeEnded(page);
+    // Nothing was moved.
+    const source = await storedWindows(page, 'movesource1');
+    expect(source.map((w) => w.tabs.map((t) => t.title))).toEqual([['Keep One'], ['Go One', 'Go Two']]);
   });
 });
 

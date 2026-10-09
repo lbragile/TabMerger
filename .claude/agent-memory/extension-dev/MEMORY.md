@@ -94,3 +94,5 @@
 - [Write commit + e2e persistence](learnings_popup_write_commit_and_e2e_persistence.md) — explicit tx.commit(), where click-to-commit time goes, waitForStoredGroup
 - [Visual regression determinism](learnings_visual_regression_determinism.md) — frozen clock on extension pages, blocked network, theme seeding, seed under the groups write lock, production-build fixture option
 - [Saved copies + positional matching](learnings_saved_copies_and_positional_matching.md) — copyLiveTab/copyLiveWindow for every live-to-saved writer, closableTabIds for deletes, findDuplicateTabs positions with a URL check
+- [Selection click-away press rule](learnings_selection_click_away_press_rule.md) — background click = press began on background + no overlay open; a menu trigger's click targets the document root
+- [Keyboard move re-anchor](learnings_keyboard_move_reanchor.md) — picked-up item re-anchored by identity on each cache update; cache listener is pre-render; real-commit test pattern
