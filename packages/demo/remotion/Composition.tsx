@@ -23,7 +23,7 @@ import { demoScript, LEADING_TRIM_MS, type DemoStep } from "../demo-script";
 // recording of the themed popup), but these Remotion-drawn elements don't
 // get that for free and were previously hardcoded dark regardless of which
 // composition (WalkthroughDemoDark vs WalkthroughDemoLight) was rendering.
-const THEME_COLORS = {
+export const THEME_COLORS = {
     dark: { bg: "#0b0f14", bgGradient: "linear-gradient(135deg, #0b0f14 0%, #131b26 100%)", text: "white" },
     light: { bg: "#f5f6f8", bgGradient: "linear-gradient(135deg, #f5f6f8 0%, #e7eaee 100%)", text: "#111318" },
 } as const;
@@ -131,9 +131,9 @@ const FILL_FRAME_STYLE: React.CSSProperties = { objectFit: "cover" };
 // late relative to its nominal cut point and fades in/out over that window,
 // so two adjacent clips genuinely cross-dissolve rather than one popping in
 // after the other's already gone.
-const TRANSITION_FRAMES = 8; // ~267ms at 30fps — snappy, not a slow dissolve
+export const TRANSITION_FRAMES = 8; // ~267ms at 30fps — snappy, not a slow dissolve
 
-function Fade({
+export function Fade({
     children,
     fadeIn,
     fadeOut,

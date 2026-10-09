@@ -28,3 +28,7 @@
 - [Social preview still (2026-10-02)](learnings_social_preview_2026_10_02.md) — 1280x640 SocialPreview is a PromoTile variant rendered by store-assets; reuses the marquee's dark popup capture
 - [Sharp cluttered-chrome + store-assets side effects (2026-10-06)](learnings_store_assets_sharp_clutter_2026_10_06.md) — native-aspect composition for the 1400x155 strip; which gitignored files store-assets rewrites
 - [Beta sharing pipeline build (2026-10-06)](learnings_beta_sharing_pipeline_build_2026_10_06.md) — stale .pw-ext-dev default; build demo ext and set TM_DEMO_EXT_DIR; back up beta dir before running ext+device2
+- [Feature tour scene 1 (2026-10-08)](learnings_feature_tour_scene1_2026_10_08.md) — drawn Chrome windows + scene registry + per-scene render; headless capture limits for X/Super User; how to type-check packages/demo
+- [Feature tour scene 2 (2026-10-08)](learnings_feature_tour_scene2_2026_10_08.md) — own popup clip + popup-as-truth titles, bot-wall title, stale card, integer z-index
+- [Feature tour popup capture (2026-10-09)](learnings_feature_tour_scene3_2026_10_09.md) — sharp CDP frame-grab capture, setPace/pointer hook reuse, tooltip/cursor/title-flap gotchas
+- [Feature tour drag scene (2026-10-09)](learnings_feature_tour_scene4_2026_10_09.md) — drag to a new group in headless footage, click-marker sync of drawn windows, timed captions, open-windows record

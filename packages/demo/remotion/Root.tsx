@@ -4,6 +4,11 @@ import { WalkthroughDemo, MobileWalkthroughDemo, getTotalDurationInFrames } from
 import { demoScript, promoScript } from "../demo-script";
 import { ScreenshotFrame } from "./stills/ScreenshotFrame";
 import { PromoTile } from "./stills/PromoTile";
+import { TourSceneView, TourVideo } from "./tour/TourVideo";
+import { TOUR_FPS, TOUR_HEIGHT, TOUR_WIDTH } from "./tour/common";
+import { TOUR_SCENES, getTourDurationInFrames, tourSceneCompositionId } from "./tour/registry";
+
+const TOUR_THEMES = ["dark", "light"] as const;
 
 // ponytail: 2026-09-26 — hard duration caps from direct user asks: the full
 // walkthrough must land at/under 60s (was 103.1s), the promo cut at/under
@@ -93,6 +98,35 @@ export function RemotionRoot() {
                 height={1920}
                 defaultProps={{ theme: "light", script: promoScript, speed: PROMO_SPEED }}
             />
+            {/* Feature tour (1920x1080, drawn browser windows next to the popup) —
+                the full video, then one composition per registry scene so a
+                single scene renders on its own (see render-tour-scene.ts). */}
+            {TOUR_THEMES.map((theme) => (
+                <Composition
+                    key={`tour-${theme}`}
+                    id={`Tour${theme === "dark" ? "Dark" : "Light"}`}
+                    component={TourVideo}
+                    durationInFrames={getTourDurationInFrames()}
+                    fps={TOUR_FPS}
+                    width={TOUR_WIDTH}
+                    height={TOUR_HEIGHT}
+                    defaultProps={{ theme }}
+                />
+            ))}
+            {TOUR_SCENES.flatMap((scene) =>
+                TOUR_THEMES.map((theme) => (
+                    <Composition
+                        key={`${scene.id}-${theme}`}
+                        id={tourSceneCompositionId(scene.id, theme)}
+                        component={TourSceneView}
+                        durationInFrames={scene.durationInFrames}
+                        fps={TOUR_FPS}
+                        width={TOUR_WIDTH}
+                        height={TOUR_HEIGHT}
+                        defaultProps={{ theme, sceneId: scene.id }}
+                    />
+                )),
+            )}
             {/* Chrome Web Store listing assets — rendered via render-store-assets.ts */}
             <Composition
                 id="ScreenshotFrame"

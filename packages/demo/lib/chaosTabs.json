@@ -1,0 +1,122 @@
+{
+    "https://mail.yahoo.com": {
+        "fromPopup": true,
+        "title": "Yahoo Mail | Email with smart features and top-notch security",
+        "host": "mail.yahoo.com",
+        "favicon": "tour/favicons/mail-yahoo-com.ico",
+        "screenshot": "tour/pages/mail-yahoo-com.jpg",
+        "accent": "#6b7280"
+    },
+    "https://calendar.google.com/calendar/u/0/r/week": {
+        "fromPopup": true,
+        "title": "Google Calendar - Sign in to Access & Edit Your Schedule",
+        "host": "accounts.google.com/v3/signin/identifier",
+        "favicon": "tour/favicons/calendar-google-com.png",
+        "screenshot": "tour/pages/calendar-google-com.jpg",
+        "accent": "#6b7280"
+    },
+    "https://app.slack.com/client": {
+        "fromPopup": true,
+        "title": "Find your workspace | Slack",
+        "host": "app.slack.com/client",
+        "favicon": "tour/favicons/app-slack-com.ico",
+        "screenshot": "tour/pages/app-slack-com.jpg",
+        "accent": "#6b7280"
+    },
+    "https://github.com": {
+        "fromPopup": true,
+        "title": "GitHub · Change is constant. GitHub keeps you ahead. · GitHub · GitHub",
+        "host": "github.com",
+        "favicon": "tour/favicons/github-com.png",
+        "screenshot": "tour/pages/github-com.jpg",
+        "accent": "#1e2327"
+    },
+    "https://www.dropbox.com": {
+        "fromPopup": true,
+        "title": "Dropbox: Secure cloud storage, file sharing, and more",
+        "host": "dropbox.com",
+        "favicon": "tour/favicons/dropbox-com.ico",
+        "screenshot": "tour/pages/dropbox-com.jpg",
+        "accent": "#6b7280"
+    },
+    "https://arxiv.org": {
+        "fromPopup": true,
+        "title": "arXiv.org e-Print archive",
+        "host": "arxiv.org",
+        "favicon": "tour/favicons/arxiv-org.png",
+        "screenshot": "tour/pages/arxiv-org.jpg",
+        "accent": "#ffffff"
+    },
+    "https://react.dev": {
+        "fromPopup": true,
+        "title": "React",
+        "host": "react.dev",
+        "favicon": "tour/favicons/react-dev.png",
+        "screenshot": "tour/pages/react-dev.jpg",
+        "accent": "#23272f"
+    },
+    "https://developer.mozilla.org": {
+        "fromPopup": true,
+        "title": "MDN Web Docs",
+        "host": "developer.mozilla.org/en-US/",
+        "favicon": "tour/favicons/developer-mozilla-org.ico",
+        "screenshot": "tour/pages/developer-mozilla-org.jpg",
+        "accent": "#6b7280"
+    },
+    "https://wxt.dev": {
+        "fromPopup": true,
+        "title": "Next-gen Web Extension Framework – WXT",
+        "host": "wxt.dev",
+        "favicon": "tour/favicons/wxt-dev.ico",
+        "screenshot": "tour/pages/wxt-dev.jpg",
+        "accent": "#6b7280"
+    },
+    "https://news.ycombinator.com": {
+        "fromPopup": true,
+        "title": "Hacker News",
+        "host": "news.ycombinator.com",
+        "favicon": "tour/favicons/news-ycombinator-com.svg",
+        "screenshot": "tour/pages/news-ycombinator-com.jpg",
+        "accent": "#6b7280"
+    },
+    "https://superuser.com": {
+        "fromPopup": true,
+        "title": "Super User",
+        "host": "superuser.com",
+        "favicon": "tour/favicons/superuser-com.ico",
+        "screenshot": "",
+        "accent": "#6b7280"
+    },
+    "https://www.sketch.com": {
+        "fromPopup": true,
+        "title": "Sketch · Design, prototype, collaborate and handoff",
+        "host": "sketch.com",
+        "favicon": "tour/favicons/sketch-com.png",
+        "screenshot": "tour/pages/sketch-com.jpg",
+        "accent": "#ffffff"
+    },
+    "https://trello.com": {
+        "fromPopup": true,
+        "title": "Capture, organize, and tackle your to-dos from anywhere",
+        "host": "trello.com",
+        "favicon": "tour/favicons/trello-com.ico",
+        "screenshot": "tour/pages/trello-com.jpg",
+        "accent": "#6b7280"
+    },
+    "https://dribbble.com": {
+        "fromPopup": true,
+        "title": "Dribbble - Discover the World’s Top Designers & Creative Professionals",
+        "host": "dribbble.com",
+        "favicon": "tour/favicons/dribbble-com.ico",
+        "screenshot": "tour/pages/dribbble-com.jpg",
+        "accent": "#FFFFFF"
+    },
+    "https://www.flickr.com": {
+        "title": "Flickr | The best place to be a photographer online.",
+        "host": "flickr.com",
+        "favicon": "tour/favicons/flickr-com.png",
+        "screenshot": "tour/pages/flickr-com.jpg",
+        "accent": "#6b7280",
+        "fromPopup": true
+    }
+}

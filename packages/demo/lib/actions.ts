@@ -4,6 +4,7 @@
 //
 // Shared by record.ts and screenshots.ts so both drive identical UI state.
 import type { CDPSession, ElementHandle, Locator, Page } from "@playwright/test";
+import { CHAOS_WINDOW_URLS } from "./chaosWindows";
 
 // ponytail: 2026-09-26 — ROOT CAUSE of every drag beat failing 100% of the
 // time under `--headless=new` (confirmed via a standalone repro before
@@ -85,6 +86,7 @@ async function getCdpMouse(page: Page): Promise<CdpMouse> {
 async function ripple(locator: Locator) {
     const box = await locator.boundingBox();
     if (!box) return;
+    await pace.pointer?.(locator.page(), box.x + box.width / 2, box.y + box.height / 2);
     await locator
         .page()
         .evaluate(
@@ -104,16 +106,46 @@ async function ripple(locator: Locator) {
 // to render — this is a floor under all of them, not a replacement).
 const POST_CLICK_PAUSE_MS = 350;
 
+// ponytail: pacing/pointer knobs, defaults = exactly the walkthrough's
+// behavior. Only the feature tour's record-tour.ts changes them (via
+// setPace), to script the SAME createGroup/colorNewGroup actions tighter and
+// with a visible, travelling cursor — so the tour reuses these actions'
+// logic instead of a rewritten copy.
+export interface Pace {
+    /** Pause after every click. */
+    postClickMs: number;
+    /** Delay between typed characters in the group-name flow. */
+    typeDelayMs: number;
+    /** Multiplier on the fixed holds inside createGroup / colorNewGroup. */
+    holdScale: number;
+    /** Show the Ctrl+A / Enter key badge (the tour has no room for it). */
+    keyBadges: boolean;
+    /** Called with the click target (page coords) before every click, e.g. to glide a cursor there. */
+    pointer: ((page: Page, x: number, y: number) => Promise<void>) | null;
+    /** Multiplier on how many steps a drag's travel takes (more steps = slower, smoother). */
+    dragTravel: number;
+    /** Called at named moments inside an action (drag pick-up, over the drop target, drop). */
+    mark: ((name: string) => void) | null;
+    /** renameGroup renames this group to that name (default: Shopping to "Family Trip"). */
+    renameGroup: { from: string; to: string } | null;
+}
+const DEFAULT_PACE: Pace = { postClickMs: POST_CLICK_PAUSE_MS, typeDelayMs: 90, holdScale: 1, keyBadges: true, pointer: null, dragTravel: 1, mark: null, renameGroup: null };
+const pace: Pace = { ...DEFAULT_PACE };
+export function setPace(next: Partial<Pace> | null) {
+    Object.assign(pace, DEFAULT_PACE, next ?? {});
+}
+const hold = (ms: number) => Math.round(ms * pace.holdScale);
+
 async function clickWithRipple(locator: Locator, options?: Parameters<Locator["click"]>[0]) {
     await ripple(locator);
     await locator.click(options);
-    await locator.page().waitForTimeout(POST_CLICK_PAUSE_MS);
+    await locator.page().waitForTimeout(pace.postClickMs);
 }
 
 async function dblclickWithRipple(locator: Locator, options?: Parameters<Locator["dblclick"]>[0]) {
     await ripple(locator);
     await locator.dblclick(options);
-    await locator.page().waitForTimeout(POST_CLICK_PAUSE_MS);
+    await locator.page().waitForTimeout(pace.postClickMs);
 }
 
 // ponytail: renameGroup targets an ElementHandle (frozen before the rename
@@ -123,6 +155,7 @@ async function dblclickWithRipple(locator: Locator, options?: Parameters<Locator
 async function clickHandleWithRipple(page: Page, handle: ElementHandle<Element>) {
     const box = await handle.boundingBox();
     if (box) {
+        await pace.pointer?.(page, box.x + box.width / 2, box.y + box.height / 2);
         await page.evaluate(
             ({ x, y }) => (window as unknown as { __tmRipple?: (x: number, y: number) => void }).__tmRipple?.(x, y),
             { x: box.x + box.width / 2, y: box.y + box.height / 2 },
@@ -130,7 +163,7 @@ async function clickHandleWithRipple(page: Page, handle: ElementHandle<Element>)
         await page.waitForTimeout(120);
     }
     await handle.click();
-    await page.waitForTimeout(POST_CLICK_PAUSE_MS);
+    await page.waitForTimeout(pace.postClickMs);
 }
 
 // ponytail: plain typing, no per-character badge — a badge on every letter
@@ -181,7 +214,7 @@ async function naturalMouseMove(
     // rarely stop exactly on the first arrival.
     const overshootFactor = options?.overshoot ? 1.06 + Math.random() * 0.04 : 1;
     const peak = { x: from.x + dx * overshootFactor, y: from.y + dy * overshootFactor };
-    const TRAVEL_STEPS = 16;
+    const TRAVEL_STEPS = Math.round(16 * pace.dragTravel);
     for (let i = 1; i <= TRAVEL_STEPS; i++) {
         const t = easeInOutCubic(i / TRAVEL_STEPS);
         // Tiny perpendicular wobble, strongest mid-travel, ~zero at the ends —
@@ -213,6 +246,10 @@ async function naturalMouseMove(
 // launchDemoContext.ts's addInitScript) — fixed bottom-center position, so
 // no target element/bounding box needed here.
 async function pressWithIndicator(page: Page, keys: string, label: string) {
+    if (!pace.keyBadges) {
+        await page.keyboard.press(keys);
+        return;
+    }
     await page.evaluate(
         (label) => (window as unknown as { __tmKeyBadge?: (label: string) => void }).__tmKeyBadge?.(label),
         label,
@@ -225,64 +262,13 @@ async function pressWithIndicator(page: Page, keys: string, label: string) {
 // (Work/Research/Shopping/Reading List groups). If the seed data changes,
 // update these strings too — no dynamic lookup, it's a fixed script.
 
-// ponytail: fixed window/tab pools for the multi-window chaosHook (and the
-// steps chained after it) — hardcoded against these exact URLs, not dynamic,
-// same convention as the rest of this file (see the group/tab-name comment
-// above). If these change, downstream steps that assume "the first Now Open
+// ponytail: the window/tab pools for the multi-window chaosHook (and the
+// steps chained after it) live in chaosWindows.ts, shared with the feature
+// tour's drawn browser windows — hardcoded against those exact URLs, not
+// dynamic. If they change, downstream steps that assume "the first Now Open
 // window has these 5 tabs" (copyWindowToGroup, closeNowOpenWindow) need
-// updating too.
-const CHAOS_WINDOW_SETS = [
-    [
-        // ponytail: 2026-09-26 — swapped out "https://mail.google.com/..."
-        // and "https://www.notion.so" here: this array navigates to the
-        // REAL live site (by design — see chaosHook's comment, real chaos
-        // not mocked), and Chrome's tab title reflects that site's actual
-        // <title> at whatever moment record.ts runs. Both of those sites'
-        // real current page titles read "Gmail: Secure, AI-Powered Email
-        // for…" and "The AI workspace that works for you…" respectively —
-        // fine on their own merits, but this product's AI features aren't
-        // launched yet (VITE_AI_ENABLED unset) and no demo frame should show
-        // the text "AI" for an unrelated reason. Swapped to Yahoo Mail and
-        // Dropbox — verified their real live <title>s directly before
-        // picking them (curl -sL | grep title): "Yahoo Mail | Email with
-        // smart features and top-notch security" / "Dropbox: Secure cloud
-        // storage, file sharing, and more" — neither mentions AI. Re-verify
-        // the same way before ever reusing a live external URL here again;
-        // real sites' marketing copy drifts without warning.
-        "https://mail.yahoo.com",
-        "https://calendar.google.com/calendar/u/0/r/week",
-        "https://app.slack.com/client",
-        "https://github.com",
-        "https://www.dropbox.com",
-    ],
-    [
-        "https://arxiv.org",
-        "https://react.dev",
-        "https://developer.mozilla.org",
-        "https://wxt.dev",
-        "https://news.ycombinator.com",
-    ],
-    [
-        // ponytail: 2026-09-26 — swapped stackoverflow.com out: it serves a
-        // Cloudflare interstitial to this recorder's request pattern, so its
-        // real tab title comes back as "Just a moment..." (a coordinator
-        // review caught this literal string showing up in "Now Open" window
-        // 3 and the marquee tile). superuser.com (same Stack Exchange
-        // family, same "developer Q&A" flavor) responds directly with a real
-        // title — verified via curl: "Super User".
-        "https://superuser.com",
-        // ponytail: 2026-09-26 — swapped Figma's real URL out (its live
-        // <title> is "Figma: The collaborative canvas for design, code, and
-        // AI" — verified via curl before swapping, same reasoning as the
-        // Yahoo Mail/Dropbox swap above). Sketch.com's live title
-        // ("Sketch · Design, prototype, collaborate and handoff") is the
-        // same "design tool" category with no AI mention.
-        "https://www.sketch.com",
-        "https://trello.com",
-        "https://www.linkedin.com",
-        "https://twitter.com",
-    ],
-];
+// updating too, and `tour-assets` must be re-run.
+const CHAOS_WINDOW_SETS = CHAOS_WINDOW_URLS;
 
 type ZoomOrigin = { x: number; y: number } | undefined;
 
@@ -460,7 +446,7 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
     },
 
     async renameGroup(page) {
-        const groupName = page.getByText("Shopping", { exact: true }).first();
+        const groupName = page.getByText(pace.renameGroup?.from ?? "Shopping", { exact: true }).first();
         // ponytail: Playwright locators re-resolve their FULL selector chain
         // lazily on every call — a `Locator` built from "Shopping" text
         // still re-queries by that text later, and once isRenaming flips
@@ -495,23 +481,23 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
         if (!groupRowHandle) throw new Error("renameGroup: could not resolve group row container");
         const inputHandle = await groupRowHandle.waitForSelector("input", { state: "visible", timeout: 5000 });
         await clickHandleWithRipple(page, inputHandle);
-        await page.waitForTimeout(250); // > GroupItem.tsx's internal 50ms auto-focus/caret-reset timer
+        await page.waitForTimeout(hold(250)); // > GroupItem.tsx's internal 50ms auto-focus/caret-reset timer
         await pressWithIndicator(page, "Control+a", "Ctrl+A");
-        await page.waitForTimeout(150);
+        await page.waitForTimeout(hold(150));
         // ponytail: plain typing (no per-character badge, see typeText) —
         // renamed to a two-word name ("Family Trip", not "Wishlist")
         // specifically so the recording demonstrates that spaces type
         // correctly — page.keyboard.type() itself was never dropping
         // spaces, the real input just wasn't actually selected/focused yet
         // when we thought it was (see above).
-        await typeText(inputHandle, "Family Trip", 110);
-        await page.waitForTimeout(200);
+        await typeText(inputHandle, pace.renameGroup?.to ?? "Family Trip", pace.renameGroup ? pace.typeDelayMs : 110);
+        await page.waitForTimeout(hold(200));
         await pressWithIndicator(page, "Enter", "Enter");
         // ponytail: hold on the sidebar row now reading "Family Trip" — the
         // resulting UI update — not just the moment Enter is pressed (same
         // "show the effect, not just the trigger" fix applied to every
         // rename/edit action in this file, see createGroup/renameGroupTab).
-        await page.waitForTimeout(700);
+        await page.waitForTimeout(hold(700));
     },
 
     async renameTab(page) {
@@ -842,7 +828,7 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
             .first()
             .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' group ')][1]");
         await clickWithRipple(groupRow.locator("button.rounded-full"));
-        await page.waitForTimeout(300);
+        await page.waitForTimeout(hold(300));
         // Picker is open with all preset swatches visible but nothing
         // committed yet — the interesting mid-gesture moment for a still.
         await midGesture?.();
@@ -853,7 +839,7 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
         // A swatch only loads the colour into the picker (live preview); Apply saves it.
         await clickWithRipple(page.getByRole("button", { name: "Apply" }));
         // Hold on the swatch's new color — the resulting UI update.
-        await page.waitForTimeout(800);
+        await page.waitForTimeout(hold(800));
         return originFraction(groupRow);
     },
 
@@ -1100,6 +1086,48 @@ const actions: Record<string, (page: Page, midGesture?: MidGestureHook) => Promi
         // Confirm + let the viewer see the destination now holding the moved
         // tab's new window: switch to "Shopping" itself for the hold.
         await clickWithRipple(page.getByText("Shopping", { exact: true }).first());
+    },
+
+    // Feature tour: picks the first "Now Open" window card up by its grip,
+    // carries it to the sidebar's "new group" drop target (an overlay over
+    // "Add Group" that only appears while a tab/window drag is live) and drops
+    // it. Per docs/drag-and-drop-spec.md that MOVES the window: a new group
+    // named "temp group" gains a copy and the real tabs close. Through the raw
+    // CDP mouse like every drag in this file; `pace.dragTravel` slows the
+    // carry, `pace.mark` reports pick-up / over-target / drop.
+    async dragWindowToNewGroup(page) {
+        const grip = page.locator('[aria-label^="Drag to reorder window"]').first();
+        const gripBox = await grip.boundingBox();
+        if (!gripBox) throw new Error("dragWindowToNewGroup: could not resolve the window grip");
+        const sx = gripBox.x + gripBox.width / 2;
+        const sy = gripBox.y + gripBox.height / 2;
+        const mouse = await getCdpMouse(page);
+        await pace.pointer?.(page, sx, sy);
+        await page.evaluate(
+            ({ x, y }) => (window as unknown as { __tmRipple?: (x: number, y: number) => void }).__tmRipple?.(x, y),
+            { x: sx, y: sy },
+        );
+        await page.waitForTimeout(hold(200));
+        await mouse.move(sx, sy);
+        await mouse.down();
+        pace.mark?.("pickup");
+        await mouse.move(sx, sy - 6);
+        await page.waitForTimeout(hold(250));
+        // The drop target only exists (visible) once the drag is live.
+        const zone = page.getByTestId("new-group-dropzone");
+        await zone.waitFor({ state: "visible", timeout: 5000 });
+        const zoneBox = await zone.boundingBox();
+        if (!zoneBox) throw new Error("dragWindowToNewGroup: could not resolve the new-group drop target");
+        // Approach and release at the right end of the target so the carried card's left edge
+        // clears the "Drop for a new group" label.
+        const tx = zoneBox.x + zoneBox.width - 18;
+        const ty = zoneBox.y + zoneBox.height / 2;
+        await naturalMouseMove(page, mouse, { x: sx, y: sy - 6 }, { x: tx, y: ty }, { overshoot: false });
+        pace.mark?.("overZone");
+        await page.waitForTimeout(hold(700));
+        await mouse.up();
+        pace.mark?.("drop");
+        await page.waitForTimeout(hold(500));
     },
 
     // Reuses renameTab's proven focus/caret-reset fix (see that handler's

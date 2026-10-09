@@ -14,6 +14,12 @@
     "render:promo-light": "remotion render remotion/Root.tsx PromoLight out/tabmerger-promo-light.mp4 --crf=16",
     "render:promo-dark-vertical": "remotion render remotion/Root.tsx PromoDarkVertical out/tabmerger-promo-dark-vertical.mp4 --crf=16",
     "render:promo-light-vertical": "remotion render remotion/Root.tsx PromoLightVertical out/tabmerger-promo-light-vertical.mp4 --crf=16",
+    "render:tour-dark": "remotion render remotion/Root.tsx TourDark out/tour/tabmerger-tour-dark.mp4 --crf=16",
+    "render:tour-light": "remotion render remotion/Root.tsx TourLight out/tour/tabmerger-tour-light.mp4 --crf=16",
+    "render:tour-scene": "tsx render-tour-scene.ts",
+    "record:tour": "tsx record-tour.ts",
+    "record:tour-window": "tsx record-tour-window.ts",
+    "tour-assets": "tsx capture-tour-assets.ts",
     "screenshots": "tsx screenshots.ts",
     "beta-shots": "tsx beta-screenshots.ts",
     "store-assets": "tsx render-store-assets.ts"

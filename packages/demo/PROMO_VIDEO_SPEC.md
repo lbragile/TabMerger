@@ -523,3 +523,21 @@ re-rendered after the fix.
    alongside the existing walkthrough/store-asset compositions in `Root.tsx`, rather
    than trying to force the existing 800×600/30fps `WalkthroughDemo` composition to
    serve both purposes.
+
+## Feature tour
+
+A separate roughly 60-90s, 1920x1080 tour that also shows browser windows, drawn in Remotion as Chrome-style windows (see README "Feature tour"). Each scene is its own component in `remotion/tour/registry.ts` and is reviewed and approved before the next is built.
+
+| # | Scene | Status |
+|---|---|---|
+| 1 | The mess: three browser windows crammed with tabs | Built (4.5s), accepted |
+| 2 | Open TabMerger: the same windows and tabs appear in "Now Open", next to the browser windows | Built (6.5s), accepted |
+| 3 | Drag a window into a new group, name it, colour it | Built (10.7s), awaiting review |
+| 4 | Organise by dragging (a tab into its own window, then several tabs at once into another group) | Not started |
+| 5 | Rename and annotate | Not started |
+| 6 | Find a tab | Not started |
+| 7 | Restore: open a saved group and the browser windows come back | Not started |
+| 8 | Share a group (Pro) | Not started |
+| 9 | Sync across devices (Pro) | Not started |
+| 10 | Settings | Not started |
+| 11 | Closing card | Not started |
