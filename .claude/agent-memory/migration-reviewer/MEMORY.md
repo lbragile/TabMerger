@@ -1,0 +1,2 @@
+- [CLI migration atomicity](learnings_cli_migration_atomicity.md) — one implicit transaction per file incl. history row; CONCURRENTLY/VACUUM break it; no lock_timeout
+- [Privilege-revoke review checklist](learnings_privilege_revoke_review.md) — has_table_privilege blind to column grants; grantor rule; views/definer paths; pgTAP 42501 ambiguity
