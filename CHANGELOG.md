@@ -1,3 +1,25 @@
+## [3.1.1](https://github.com/lbragile/TabMerger/compare/v3.1.0...v3.1.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **extension:** close a dragged Now Open window at the drop ([c4813f2](https://github.com/lbragile/TabMerger/commit/c4813f2bc937dfa17fa6749aec0887aa43fbda63))
+* **extension:** keep a keyboard move on the picked-up item when groups change ([01f75f2](https://github.com/lbragile/TabMerger/commit/01f75f2ab8a13f04eeeec6fb9b367da730534a3c))
+* **extension:** keep a Now Open window open when copying it to a group ([fd2538d](https://github.com/lbragile/TabMerger/commit/fd2538d1d7bb266ebeef99e71ed97a2454ba6a21))
+* **extension:** keep saved groups independent of open browser tabs ([3d9b5ae](https://github.com/lbragile/TabMerger/commit/3d9b5ae95d2a052aa5cd0bd8e076d6eb57a5d0ec))
+* **extension:** open selection bar group menus with a mouse click ([f3fe102](https://github.com/lbragile/TabMerger/commit/f3fe1027c9795ce2acc888ff7480ef863745d657))
+* **web:** apply billing events by subscription and current state ([05239a6](https://github.com/lbragile/TabMerger/commit/05239a68067f56bb1c4d46dcaccdf90fdb8cd486))
+* **web:** do not serve the beta tester guide on the production site ([ee0e75e](https://github.com/lbragile/TabMerger/commit/ee0e75e69b3fbd284d51877edec68f0e862b9cc5))
+* **web:** keep one subscription per account at checkout ([41da29c](https://github.com/lbragile/TabMerger/commit/41da29c29377d0faecb0902d4ca443cfc61ab1f4))
+
+
+### Features
+
+* **web:** accept promotion codes at checkout ([60ed004](https://github.com/lbragile/TabMerger/commit/60ed00410fd2c2ac595ddd62d7f424977494ef0a))
+* **web:** link to the beta builds on the preview site ([069852c](https://github.com/lbragile/TabMerger/commit/069852c68b1c6b17aa4b83f41b87fef994b0cbb6))
+* **web:** show ratings and reviews from all three stores ([8e2d6b2](https://github.com/lbragile/TabMerger/commit/8e2d6b27679bdece398d9373dbc9acca570faa0a))
+* **web:** show the monthly equivalent of yearly prices on the home page ([2e7da95](https://github.com/lbragile/TabMerger/commit/2e7da9544f5a4deb1d23076ce180c2c195993be0))
+
 # [3.1.0](https://github.com/lbragile/TabMerger/compare/v3.0.0...v3.1.0) (2026-10-07)
 
 
