@@ -41,7 +41,7 @@ import { useEntitlements } from '@/hooks/useEntitlements';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { useNameGroup, QuotaExceededError } from '@/hooks/useAI';
 import { getSetting } from '@/lib/localDb';
-import { deduplicateTabs } from '@/lib/deduplication';
+import { findDuplicateTabs } from '@/lib/deduplication';
 import { toast } from '@/lib/toast';
 import type { Group } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -118,8 +118,7 @@ export function GroupContextMenu({
   // Same handler the windows-toolbar ⋯ uses (Windows/index.tsx `handleDeduplicate`) —
   // kept in sync per the P1 subset rule.
   const handleDeduplicate = () => {
-    const allTabs = group.windows.flatMap((w) => w.tabs);
-    const { duplicates } = deduplicateTabs(allTabs);
+    const duplicates = findDuplicateTabs(group.windows);
     if (duplicates.length === 0) {
       toast.info('No duplicates found');
       return;

@@ -7,6 +7,7 @@ import { GROUPS_CHANGED_MESSAGE } from '@/lib/groupsChangedMessage';
 import { getEncryptionKeyState, getDataKey } from '@/lib/encryptionKey';
 import { trackEvent } from '@/lib/analytics';
 import { createGroup } from '@/lib/utils';
+import { copyLiveTab } from '@/lib/dndMove';
 import type { Tab as TmTab, Window as TmWindow } from '@/lib/types';
 import { DEFERRED_CLOSE_PORT, type DeferredCloseMessage } from '@/lib/deferredTabClose';
 import {
@@ -90,7 +91,8 @@ const SCOPE_LABELS: Record<Scope, string> = {
 };
 
 // Shared by the context-menu handler and the global keyboard shortcuts: picks the
-// subset of tabs in a window for a given scope, filtering out chrome:// urls.
+// subset of tabs in a window for a given scope, filtering out chrome:// urls. The result
+// is what gets saved, so each tab is a detached saved copy (id 0, savedAt — see copyLiveTab).
 export function tabsForScope(
   scope: Scope,
   contextTab: chrome.tabs.Tab,
@@ -107,13 +109,14 @@ export function tabsForScope(
 
   return selected
     .filter((t) => t.url && !t.url.startsWith('chrome://'))
-    .map((t, i) => ({
-      id: t.id ?? Date.now() + i,
-      title: t.title ?? t.url ?? '',
-      url: t.url ?? '',
-      favIconUrl: t.favIconUrl,
-      pinned: t.pinned,
-    }));
+    .map((t) =>
+      copyLiveTab({
+        id: t.id ?? 0,
+        title: t.title ?? t.url ?? '',
+        url: t.url ?? '',
+        favIconUrl: t.favIconUrl,
+      })
+    );
 }
 
 let _building = false;

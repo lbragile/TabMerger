@@ -1,5 +1,6 @@
 import { updateGroupsState, getSetting } from '@/lib/localDb';
 import { matchUrlToRule } from '@/hooks/useUrlRules';
+import { copyLiveTab } from '@/lib/dndMove';
 import type { UrlRule } from '@/lib/types';
 import type { Tab } from '@/lib/types';
 
@@ -21,13 +22,13 @@ export async function applyUrlRule(
 ): Promise<void> {
   if (!matchedGroupId) return;
 
-  const newTab: Tab = {
+  // The saved tab is a detached copy of the live one: id 0, stamped savedAt (see copyLiveTab)
+  const newTab: Tab = copyLiveTab({
     id: tab.id ?? 0,
     url: tab.url ?? '',
     title: tab.title ?? '',
     favIconUrl: tab.favIconUrl ?? '',
-    savedAt: Date.now(),
-  };
+  });
 
   // Atomic against the popup's writes: this runs in the service worker, a different JS
   // context from the popup, so the read-modify-write must be one `updateGroupsState`.

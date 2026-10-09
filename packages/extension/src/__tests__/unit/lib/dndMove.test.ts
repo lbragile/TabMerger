@@ -31,7 +31,7 @@
  * NOT a setup error. They go green once the rework lands.
  */
 import { describe, it, expect } from 'vitest'
-import { canDrop, applyMove, copyLiveWindow } from '@/lib/dndMove'
+import { canDrop, applyMove, copyLiveWindow, copyLiveWindowKeepingStar } from '@/lib/dndMove'
 import { buildDndModel } from '@/hooks/useDndModel'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
@@ -1019,5 +1019,22 @@ describe('copyLiveWindow', () => {
   it('defaults a missing incognito flag to false and handles a window with no tabs', () => {
     const w = { id: 5, tabs: [], focused: true } as unknown as ExtWindow
     expect(copyLiveWindow(w)).toMatchObject({ id: 0, incognito: false, focused: false, tabs: [] })
+  })
+
+  it('keepStar carries the live window\'s star onto the copy; everything else is detached the same way', () => {
+    const copy = copyLiveWindow(live(), { keepStar: true })
+    expect(copy).toMatchObject({ id: 0, focused: false, starred: true, incognito: true, name: 'Research', note: 'keep' })
+    expect(copy.tabs.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+  })
+
+  it('keepStar on an unstarred window (flag false or missing) stores starred: false', () => {
+    expect(copyLiveWindow({ ...live(), starred: false }, { keepStar: true }).starred).toBe(false)
+    const noFlag: ExtWindow = { id: 78, tabs: [], incognito: false, focused: true }
+    expect(copyLiveWindow(noFlag, { keepStar: true }).starred).toBe(false)
+  })
+
+  it('copyLiveWindowKeepingStar is the keepStar copy, usable directly as a map callback', () => {
+    const copies = [live(), { ...live(), starred: false }].map(copyLiveWindowKeepingStar)
+    expect(copies.map((w) => [w.id, w.focused, w.starred])).toEqual([[0, false, true], [0, false, false]])
   })
 })

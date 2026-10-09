@@ -7,7 +7,7 @@ import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { resolveIncognito } from '@/lib/incognito';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
-import { copyLiveWindow } from '@/lib/dndMove';
+import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { asNewGroup } from '@/lib/syncDirty';
 import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
@@ -22,7 +22,7 @@ import { type TierCaps, FreeLimitExceededError, countSavedGroupsAndTabs, exceeds
  * `caps` is a HOOK-level param (default `{}`, i.e. ungated) rather than part of the mutation
  * payload, so existing callers/tests that don't pass it are completely unaffected, and the
  * mutation's payload shape never has to change. Reads the QueryClient cache (not a fresh
- * fetch) — same tradeoff `useDeleteGroup`/`useDeleteWindow` already make for their
+ * fetch) — same tradeoff `useDeleteWindow`/`useDeleteTab` already make for their
  * live-tab-closing precheck — so an empty/stale cache just skips the check rather than
  * blocking (there's nothing reliable to gate against yet).
  * Throws (rather than returning a sentinel) so the mutation's promise rejects and the
@@ -134,16 +134,19 @@ export function useAddGroup(caps: TierCaps = {}) {
   });
 }
 
-/** Returns the set of URLs currently open in the Now Open group (index 0). */
-function getNowOpenUrls(state: GroupsState | undefined): Set<string> {
-  const nowOpen = state?.available[0];
-  if (!nowOpen) return new Set();
-  return new Set(nowOpen.windows.flatMap((w) => w.tabs.map((t) => t.url)));
+/**
+ * The browser tab ids a delete may close. Only Now Open (`permanent`) holds live tabs, so
+ * only its ids are ever handed to `chrome.tabs.remove`; a saved group's tabs are detached
+ * copies and deleting them never closes anything.
+ */
+export function closableTabIds(group: Group | undefined, tabs: Tab[]): number[] {
+  if (!group?.permanent) return [];
+  return tabs.map((t) => t.id).filter((id): id is number => typeof id === 'number' && id > 0);
 }
 
 /**
- * Removes a saved group from IndexedDB. If any of its tabs are live in Now Open,
- * closes them in Chrome first. Permanent groups (Now Open) are silently rejected.
+ * Removes a saved group from IndexedDB. No browser tab is closed: a saved group holds
+ * detached copies. Permanent groups (Now Open) are silently rejected.
  * Recalculates `active.index` so the sidebar never points to a stale slot.
  */
 export function useDeleteGroup() {
@@ -152,19 +155,8 @@ export function useDeleteGroup() {
 
   return useMutation({
     mutationFn: async (groupIndex: number) => {
-      // Only close browser tabs that are actually live in the Now Open group (Task 23)
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const target = state?.available[groupIndex];
-      if (target && !target.permanent) {
-        const liveUrls = getNowOpenUrls(state);
-        const tabIds = target.windows
-          .flatMap((w) => w.tabs)
-          .filter((t) => liveUrls.has(t.url))
-          .map((t) => t.id);
-        if (tabIds.length > 0) {
-          chrome.tabs.remove(tabIds).catch(() => {});
-        }
-      }
 
       return mutate((prev) => {
         const { active, available } = prev;
@@ -212,9 +204,13 @@ export function useDuplicateGroup(caps: TierCaps = {}) {
         const source = available[groupIndex];
         if (!source) return prev;
 
-        // new identity: no inherited server base / position flag (see asNewGroup)
+        // new identity: no inherited server base / position flag (see asNewGroup).
+        // Duplicating Now Open saves its windows as detached copies that keep their star
+        // (see copyLiveWindowKeepingStar).
+        const copied: Group = JSON.parse(JSON.stringify(source));
+        if (source.permanent) copied.windows = sortWindowsByStarred(source.windows.map(copyLiveWindowKeepingStar));
         const clone: Group = asNewGroup(
-          { ...JSON.parse(JSON.stringify(source)), name: DEFAULT_GROUP_TITLE, permanent: false, updatedAt: Date.now() },
+          { ...copied, name: DEFAULT_GROUP_TITLE, permanent: false, updatedAt: Date.now() },
           nanoid(10)
         );
 
@@ -342,15 +338,12 @@ export function useDeleteWindow() {
 
   return useMutation({
     mutationFn: async ({ groupIndex, windowIndex }: { groupIndex: number; windowIndex: number }) => {
-      // Only close browser tabs that are actually live in the Now Open group (Task 23)
+      // Only a Now Open window's tabs are closed in the browser (see closableTabIds)
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      const windowObj = state?.available[groupIndex]?.windows[windowIndex];
-      if (windowObj) {
-        const liveUrls = getNowOpenUrls(state);
-        const tabIds = windowObj.tabs.filter((t) => liveUrls.has(t.url)).map((t) => t.id);
-        if (tabIds.length > 0) {
-          chrome.tabs.remove(tabIds).catch(() => {});
-        }
+      const group = state?.available[groupIndex];
+      const tabIds = closableTabIds(group, group?.windows[windowIndex]?.tabs ?? []);
+      if (tabIds.length > 0) {
+        chrome.tabs.remove(tabIds).catch(() => {});
       }
 
       return mutate((prev) => {
@@ -377,14 +370,9 @@ export function useDeleteAllWindows() {
     mutationFn: async ({ groupIndex }: { groupIndex: number }) => {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const group = state?.available[groupIndex];
-      if (group) {
-        const liveUrls = getNowOpenUrls(state);
-        const tabIds = group.windows
-          .flatMap((w) => w.tabs)
-          .filter((t) => liveUrls.has(t.url))
-          .map((t) => t.id);
-        if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
-      }
+      // Only Now Open's tabs are closed in the browser (see closableTabIds)
+      const tabIds = closableTabIds(group, group?.windows.flatMap((w) => w.tabs) ?? []);
+      if (tabIds.length > 0) chrome.tabs.remove(tabIds).catch(() => {});
 
       return mutate((prev) => {
         const available = [...prev.available];
@@ -565,9 +553,9 @@ export function useToggleWindowIncognito() {
 }
 
 /**
- * Removes a tab from a group. If the tab's URL is live in Now Open, closes it in Chrome.
- * Tabs with `id:0` are never sent to `chrome.tabs.remove` — they are saved copies, not live tabs.
- * Auto-collapses the source window when it becomes empty and the group still has other windows.
+ * Removes a tab from a group. A Now Open tab is also closed in the browser; a saved tab is a
+ * detached copy, so removing it never calls `chrome.tabs.remove` (see `closableTabIds`).
+ * An emptied window is kept.
  */
 export function useDeleteTab() {
   const qc = useQueryClient();
@@ -583,14 +571,13 @@ export function useDeleteTab() {
       windowIndex: number;
       tabIndex: number;
     }) => {
-      // Only close the browser tab if its URL is live in the Now Open group (Task 23)
+      // Only a Now Open tab is closed in the browser (see closableTabIds)
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
-      const tab = state?.available[groupIndex]?.windows[windowIndex]?.tabs[tabIndex];
-      if (tab?.id) {
-        const liveUrls = getNowOpenUrls(state);
-        if (liveUrls.has(tab.url)) {
-          chrome.tabs.remove(tab.id).catch(() => {});
-        }
+      const group = state?.available[groupIndex];
+      const tab = group?.windows[windowIndex]?.tabs[tabIndex];
+      const [tabId] = closableTabIds(group, tab ? [tab] : []);
+      if (tabId !== undefined) {
+        chrome.tabs.remove(tabId).catch(() => {});
       }
 
       return mutate((prev) => {
@@ -652,7 +639,8 @@ export function useUpdateTabNote() {
 
 /**
  * Overwrites a saved group's windows with a snapshot of the current Now Open (index 0) windows.
- * Stamps `savedAt` on any tabs that don't already have it. Used by "Update from current tabs".
+ * The snapshot is made of detached saved copies that keep their star (see
+ * `copyLiveWindowKeepingStar`), starred windows first. Used by "Update from current tabs".
  */
 export function useReplaceWithCurrent() {
   const mutate = useGroupsMutation();
@@ -662,14 +650,10 @@ export function useReplaceWithCurrent() {
       mutate((prev) => {
         const available = [...prev.available];
         const now = Date.now();
-        const currentWindows = JSON.parse(JSON.stringify(available[0].windows));
-        currentWindows.forEach((w: Group['windows'][0]) => {
-          w.focused = false;
-          w.tabs.forEach((t: Tab) => { if (!t.savedAt) t.savedAt = now; });
-        });
+        const currentWindows = available[0].windows.map(copyLiveWindowKeepingStar);
         available[groupIndex] = {
           ...available[groupIndex],
-          windows: currentWindows,
+          windows: sortWindowsByStarred(currentWindows),
           updatedAt: now,
           pendingSync: true
         };
@@ -680,8 +664,11 @@ export function useReplaceWithCurrent() {
 }
 
 /**
- * Prepends a snapshot of the current Now Open windows to a saved group.
- * Unlike `useReplaceWithCurrent`, the group's existing windows are kept at the end.
+ * Prepends a snapshot of the current Now Open windows to a saved group, as detached saved
+ * copies that keep their star (see `copyLiveWindowKeepingStar`).
+ * Unlike `useReplaceWithCurrent`, the group's existing windows are kept, after the copies.
+ * Starred windows stay first: starred copies, the group's starred windows, unstarred copies,
+ * then the group's unstarred windows.
  */
 export function useMergeWithCurrent() {
   const mutate = useGroupsMutation();
@@ -690,15 +677,10 @@ export function useMergeWithCurrent() {
     mutationFn: (groupIndex: number) =>
       mutate((prev) => {
         const available = [...prev.available];
-        const now = Date.now();
-        const currentWindows = JSON.parse(JSON.stringify(available[0].windows));
-        currentWindows.forEach((w: Group['windows'][0]) => {
-          w.focused = false;
-          w.tabs.forEach((t: Tab) => { if (!t.savedAt) t.savedAt = now; });
-        });
+        const currentWindows = available[0].windows.map(copyLiveWindowKeepingStar);
         available[groupIndex] = {
           ...available[groupIndex],
-          windows: [...currentWindows, ...available[groupIndex].windows],
+          windows: sortWindowsByStarred([...currentWindows, ...available[groupIndex].windows]),
           updatedAt: Date.now(),
           pendingSync: true
         };
@@ -873,8 +855,8 @@ export function useMoveTab() {
         const savedAt = Date.now();
         let movedTab;
         if (copy) {
-          // ponytail: id:0 is falsy — useDeleteTab's `if (tab?.id)` guard won't close the live browser tab
-          movedTab = { ...fromWindows[fromWindowIndex].tabs[fromTabIndex], id: 0, ogImage, savedAt };
+          // The source tab stays where it is; the target gets a detached saved copy (see copyLiveTab)
+          movedTab = { ...copyLiveTab(fromWindows[fromWindowIndex].tabs[fromTabIndex]), ogImage };
         } else {
           // Remove tab from source window
           [movedTab] = fromWindows[fromWindowIndex].tabs.splice(fromTabIndex, 1);
@@ -909,7 +891,8 @@ export function useMoveTab() {
  * if the target is Now Open, opens the URLs in a new Chrome window and removes them from the source.
  * For saved-to-saved moves, appends the window to the target (sorted by starred).
  * A Now Open source is always a COPY (same rule as `useMoveTab`'s `copy`): the target gets a
- * detached saved copy and Now Open is left untouched, so the real window stays open.
+ * detached saved copy that keeps the window's star, and Now Open is left untouched, so the real
+ * window stays open.
  */
 export function useMoveWindow() {
   const qc = useQueryClient();
@@ -960,7 +943,7 @@ export function useMoveWindow() {
           // Now Open source ("Copy to group"): the live window stays where it is and stays open.
           const liveWindow = available[fromGroupIndex].windows[windowIndex];
           if (!liveWindow) return prev;
-          movedWindow = copyLiveWindow(liveWindow);
+          movedWindow = copyLiveWindowKeepingStar(liveWindow);
         } else {
           // Remove window from source group
           const fromGroup = { ...available[fromGroupIndex] };
@@ -1013,28 +996,51 @@ export function useSetGroupsState() {
   };
 }
 
-/** Removes duplicate tabs (by URL) from a group. For Now Open, also closes them in Chrome. */
+/** A duplicate tab to remove: its position in the group, and the URL it was listed with. */
+export interface DuplicateTabRef {
+  windowIndex: number;
+  tabIndex: number;
+  url: string;
+}
+
+/**
+ * The listed duplicates that are still where they were listed: a position counts only while
+ * the tab there still has the listed URL, so a list made on an earlier view of the group
+ * never selects a different tab.
+ */
+function duplicatesStillInPlace(group: Group, duplicates: DuplicateTabRef[]): DuplicateTabRef[] {
+  return duplicates.filter((d) => group.windows[d.windowIndex]?.tabs[d.tabIndex]?.url === d.url);
+}
+
+/**
+ * Removes duplicate tabs from a group. Tabs are matched by position (`windowIndex`,
+ * `tabIndex`), never by `tab.id`. For Now Open, the same tabs are also closed in Chrome.
+ */
 export function useDeduplicateGroup() {
   const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: async ({ groupIndex, duplicateIds }: { groupIndex: number; duplicateIds: number[] }) => {
+    mutationFn: async ({ groupIndex, duplicates }: { groupIndex: number; duplicates: DuplicateTabRef[] }) => {
       const state = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const group = state?.available[groupIndex];
       if (!group) return;
-      // For Now Open, close browser tabs
-      if (group.permanent && duplicateIds.length > 0) {
-        chrome.tabs.remove(duplicateIds).catch(() => {});
+      // For Now Open, close the browser tabs at those positions (see closableTabIds)
+      const tabIds = closableTabIds(
+        group,
+        duplicatesStillInPlace(group, duplicates).map((d) => group.windows[d.windowIndex].tabs[d.tabIndex])
+      );
+      if (tabIds.length > 0) {
+        chrome.tabs.remove(tabIds).catch(() => {});
       }
-      const idSet = new Set(duplicateIds);
       return mutate(
         (prev) => {
           const available = [...prev.available];
           const g = available[groupIndex];
-          const updatedWindows = g.windows.map((w) => ({
+          const drop = new Set(duplicatesStillInPlace(g, duplicates).map((d) => `${d.windowIndex}:${d.tabIndex}`));
+          const updatedWindows = g.windows.map((w, wi) => ({
             ...w,
-            tabs: w.tabs.filter((t) => !idSet.has(t.id))
+            tabs: w.tabs.filter((_, ti) => !drop.has(`${wi}:${ti}`))
           })).filter((w) => w.tabs.length > 0)
           available[groupIndex] = {
             ...g,
@@ -1227,7 +1233,6 @@ function applyAiSuggestionsToState(
   const available = [...prev.available];
   const nowOpen = { ...available[0] };
   let windows = nowOpen.windows.map((w) => ({ ...w, tabs: [...w.tabs] }));
-  const now = Date.now();
   const newGroups: Group[] = [];
   let appliedGroups = 0;
   let appliedTabs = 0;
@@ -1237,7 +1242,7 @@ function applyAiSuggestionsToState(
     const movedTabs: Tab[] = [];
     windows = windows.map((w) => {
       const [keep, taken] = [w.tabs.filter((t) => !idSet.has(t.id)), w.tabs.filter((t) => idSet.has(t.id))];
-      movedTabs.push(...taken.map((t) => ({ ...t, id: 0, savedAt: now })));
+      movedTabs.push(...taken.map((t) => copyLiveTab(t)));
       return { ...w, tabs: keep };
     });
     if (movedTabs.length === 0) continue;

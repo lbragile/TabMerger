@@ -429,8 +429,11 @@ function detachTab(tab: Tab): Tab {
   return { ...rest, id: 0 };
 }
 
-/** A saved, detached copy of a LIVE Now Open tab. */
-function copyLiveTab(tab: Tab): Tab {
+/**
+ * A saved, detached copy of a LIVE Now Open tab: `id: 0`, no `pinned`, stamped `savedAt`.
+ * Every writer that stores a live tab in a saved group goes through this (or `copyLiveWindow`).
+ */
+export function copyLiveTab(tab: Tab): Tab {
   return { ...detachTab(tab), savedAt: Date.now() };
 }
 
@@ -445,16 +448,28 @@ function liveTabIds(tabs: Tab[]): number[] {
 /**
  * A saved, detached copy of a LIVE Now Open window. Closing the real window is the caller's
  * call: a drag does (via `tabs.remove`), the "Copy to group" menu (`useMoveWindow`) does not.
+ *
+ * The star: a dragged window lands unstarred (the default); a menu or button copy passes
+ * `keepStar` so the copy carries the live window's star. A caller that keeps the star runs the
+ * target's windows through `sortWindowsByStarred`.
  */
-export function copyLiveWindow(w: ExtWindow): ExtWindow {
+export function copyLiveWindow(w: ExtWindow, { keepStar = false }: { keepStar?: boolean } = {}): ExtWindow {
   return {
     ...w,
     id: 0,
     incognito: w.incognito ?? false,
     focused: false,
-    starred: false,
+    starred: keepStar && w.starred === true,
     tabs: w.tabs.map(copyLiveTab)
   };
+}
+
+/**
+ * The copy a menu or button action stores (Copy to group, Duplicate, Replace / Merge with
+ * current): detached like any `copyLiveWindow` result, with the live window's star kept.
+ */
+export function copyLiveWindowKeepingStar(w: ExtWindow): ExtWindow {
+  return copyLiveWindow(w, { keepStar: true });
 }
 
 /** Positions of `objs` (by identity) inside group `gi` of `available`; missing ones are skipped. */

@@ -463,6 +463,137 @@ describe('useBulkMoveToGroup — cross-group comparator, permanent-source guard,
   })
 })
 
+/**
+ * "Copy to group" from Now Open stores detached saved copies: id 0, no `pinned`, a `savedAt`
+ * stamp, and for a window id 0 / unfocused with the window's star kept. Now Open itself keeps
+ * its live items, and nothing in the browser is closed or opened.
+ */
+describe('useBulkMoveToGroup — a Now Open source is stored as detached saved copies', () => {
+  it('tabs: the target gets id-0 copies with savedAt and no pinned flag; Now Open keeps the live tabs', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [{ ...tab(11, 'https://a.com'), pinned: true }, tab(12, 'https://b.com')], incognito: false, focused: true },
+      { id: 502, tabs: [tab(13, 'https://c.com')], incognito: false, focused: false },
+    ]
+    const target = createGroup('t', 'Target')
+    target.windows = []
+    const state = makeState([nowOpen, target])
+    const nowOpenBefore = structuredClone(nowOpen)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        items: [
+          { type: 'tab' as const, id: 'tab-0-0-0' },
+          { type: 'tab' as const, id: 'tab-0-0-1' },
+          { type: 'tab' as const, id: 'tab-0-1-0' },
+        ],
+        targetGroupIndex: 1,
+      })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[0]).toEqual(nowOpenBefore)
+    const copies = saved.available[1].windows.flatMap((w) => w.tabs)
+    expect(copies.map((t) => t.url)).toEqual(['https://a.com', 'https://b.com', 'https://c.com'])
+    expect(copies.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+    expect(saved.available[1].windows.every((w) => w.focused === false)).toBe(true)
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(chrome.tabs.create).not.toHaveBeenCalled()
+  })
+
+  it('windows: the target gets a detached copy (id 0, unfocused, id-0 tabs) that keeps the star; Now Open keeps the live window', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [{ ...tab(11, 'https://a.com'), pinned: true }, tab(12, 'https://b.com')], incognito: true, focused: true, starred: true, name: 'live' },
+    ]
+    const target = createGroup('t', 'Target')
+    target.windows = []
+    const state = makeState([nowOpen, target])
+    const nowOpenBefore = structuredClone(nowOpen)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        items: [{ type: 'window' as const, id: 'window-0-0' }],
+        targetGroupIndex: 1,
+      })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[0]).toEqual(nowOpenBefore)
+    const [copy] = saved.available[1].windows
+    expect(copy).toMatchObject({ id: 0, focused: false, starred: true, incognito: true, name: 'live' })
+    expect(copy.tabs.map((t) => t.url)).toEqual(['https://a.com', 'https://b.com'])
+    expect(copy.tabs.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+    expect(copy).not.toBe(nowOpen.windows[0])
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(chrome.windows.create).not.toHaveBeenCalled()
+  })
+
+  it('windows: a starred copy lands before the target\'s starred windows, an unstarred copy after them and before its unstarred windows', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [tab(11, 'https://a.com')], incognito: false, focused: true, starred: true, name: 'live star' },
+      { id: 502, tabs: [tab(12, 'https://b.com')], incognito: false, focused: false, name: 'live plain' },
+    ]
+    const target = createGroup('t', 'Target')
+    target.windows = [
+      { ...win([{ ...tab(0, 'https://s.com'), savedAt: 5 }]), starred: true, name: 'old star' },
+      { ...win([{ ...tab(0, 'https://p.com'), savedAt: 5 }]), name: 'old plain' },
+    ]
+    const state = makeState([nowOpen, target])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        items: [{ type: 'window' as const, id: 'window-0-0' }, { type: 'window' as const, id: 'window-0-1' }],
+        targetGroupIndex: 1,
+      })
+    })
+
+    const windows = lastSaved().available[1].windows
+    expect(windows.map((w) => [w.name, w.starred ?? false])).toEqual([
+      ['live star', true],
+      ['old star', true],
+      ['live plain', false],
+      ['old plain', false],
+    ])
+    const copies = [windows[0], windows[2]]
+    expect(copies.every((w) => w.id === 0 && w.focused === false)).toBe(true)
+    expect(copies.flatMap((w) => w.tabs).every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+  })
+
+  it('a saved source is moved as it is: its tabs keep their savedAt and the window keeps its star', async () => {
+    const source = createGroup('s', 'Source')
+    source.windows = [{ ...win([{ ...tab(0, 'https://a.com'), savedAt: 123 }]), starred: true }]
+    const target = createGroup('t', 'Target')
+    target.windows = []
+    const state = makeState([createNowOpenGroup(), source, target])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkMoveToGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        items: [{ type: 'window' as const, id: 'window-1-0' }],
+        targetGroupIndex: 2,
+      })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows).toHaveLength(0)
+    expect(saved.available[2].windows[0].starred).toBe(true)
+    expect(saved.available[2].windows[0].tabs[0].savedAt).toBe(123)
+  })
+})
+
 describe('useBulkStar — malformed ids, missing group/window guards, permanent guard', () => {
   it('ignores window items with malformed ids, missing groups, and missing windows', async () => {
     const group = createGroup('a', 'A')

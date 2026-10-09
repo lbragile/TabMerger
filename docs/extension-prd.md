@@ -47,7 +47,7 @@ interface Tab {
 }
 ```
 
-**Invariant:** Saved tabs always have `id: 0`. Live tabs (in Now Open) have a real Chrome tab ID > 0. When a tab is copied from Now Open into a saved group, its `id` is set to 0. This prevents `useDeleteTab` from trying to close a browser tab that was already a saved copy.
+**Invariant:** Saved tabs always have `id: 0`. Live tabs (in Now Open) have a real Chrome tab ID > 0. When a tab is copied from Now Open into a saved group, its `id` is set to 0. Whether a removal closes browser tabs is decided by the group the item is in, never by a tab id: only removing items from Now Open closes browser tabs; removing a saved tab, window or group only removes it from TabMerger.
 
 ### 1.2 ExtWindow
 
@@ -235,7 +235,7 @@ Right-clicking Now Open shows a limited menu. **"Delete group" is absent.** Avai
 - **Trigger:** Right-click context menu → "Delete group".
 - **confirmOnDelete = false (default):** Deletion is immediate — no modal, group and all its windows/tabs are removed.
 - **confirmOnDelete = true:** A `deleteGroup` modal is shown. User must click a "Confirm" / "Delete" button to proceed. Cancel dismisses the modal and leaves the group intact.
-- **Side effect:** If any of the deleted group's tabs have URLs currently live in Now Open, those Chrome tabs are closed via `chrome.tabs.remove(tabIds)`.
+- **Side effect:** None in the browser. Deleting a saved group only removes it from TabMerger; tabs open in the browser stay open, including tabs with the same URLs. Only removing items from Now Open closes browser tabs.
 - **Active index recalculation:** If the deleted group was the active group (`active.index === groupIndex`), the active index is decremented by 1 (but never below 0). If the deleted group was before the active group, active index is also decremented. If after, active index is unchanged.
 - **Undo:** The deletion is pushed to the undo stack. Undoing restores the group at its original position.
 - **Now Open:** Never deletable. "Delete group" is not present in its context menu.
@@ -321,7 +321,7 @@ Each window in the main panel has:
 - **Trigger:** × button in the window card header.
 - **confirmOnDelete = false:** Immediate deletion.
 - **confirmOnDelete = true:** `deleteWindow` modal is shown. User must confirm.
-- **Side effect:** If any of the window's tabs have URLs live in Now Open, those Chrome tabs are closed.
+- **Side effect:** A Now Open window's browser tabs are closed. Deleting a saved window closes nothing in the browser.
 - **Deleting the last window:** The group is left with `windows: []` (an empty group). The group itself is NOT automatically deleted.
 - **Undo:** Pushed to undo stack.
 - **Window note:** If the window has a note, it is deleted along with the window.
@@ -329,7 +329,7 @@ Each window in the main panel has:
 ### 5.4 Delete All Windows
 
 - **Trigger:** Context menu (group level) or a "Clear all" action — sets `windows: []` on the group.
-- **Side effect:** Closes any live tabs.
+- **Side effect:** In Now Open, closes the browser tabs. In a saved group, closes nothing in the browser.
 - **Undo:** Pushed to undo stack.
 
 ### 5.5 Star / Unstar Window
@@ -401,7 +401,7 @@ Each tab row shows (left to right):
 
 - **Trigger:** × button on the tab row (visible on hover, hidden in selection/edit mode).
 - **confirmOnDelete:** Tab deletion is **always direct — no modal, regardless of `confirmOnDelete` setting.** This is an explicit design decision.
-- **Side effect (saved group tab):** If the tab's URL is currently live in Now Open, the corresponding Chrome tab is closed via `chrome.tabs.remove(tab.id)`. Check is against URL match in Now Open's tab list, not tab ID.
+- **Side effect (saved group tab):** None in the browser. The tab is removed from TabMerger only; a browser tab with the same URL stays open.
 - **Side effect (Now Open tab):** Closes the Chrome tab immediately.
 - **Auto-collapse empty window:** If deleting the last tab in a window AND the group has more than one window, the now-empty window is automatically removed. If it was the only window, the window remains (empty group state is valid).
 - **Undo:** Pushed to undo stack.
@@ -522,12 +522,12 @@ DnD ID strings are reused as selection IDs:
 Shown at the bottom of the popup when at least one item is selected.
 
 #### Available actions (tabs selected):
-- **Delete selected** (`useBulkDelete`): Removes all selected tabs. Closes live tabs in Chrome. Auto-collapses empty windows (if group has >1). Pushes undo. Exits selection mode.
+- **Delete selected** (`useBulkDelete`): Removes all selected tabs. Closes the browser tabs of selected Now Open tabs only. Auto-collapses empty windows (if group has >1). Pushes undo. Exits selection mode.
 - **Move to group** (`useBulkMoveToGroup`): Group picker dropdown. Moves selected tabs to new windows in the target group. Now Open source tabs are copied (not removed). Moving to Now Open opens them in Chrome. Exits selection mode.
 - **Star / Unstar** (`useBulkStar`): Not applicable to tabs (only windows and groups).
 
 #### Available actions (windows selected):
-- **Delete selected** (`useBulkDelete`): Removes all selected windows and their tabs. Closes live tabs.
+- **Delete selected** (`useBulkDelete`): Removes all selected windows and their tabs. Closes the browser tabs of selected Now Open windows only.
 - **Move to group** (`useBulkMoveToGroup`): Moves entire windows to the target group.
 - **Star / Unstar** (`useBulkStar`): Batch-stars or unstars windows; re-sorts each group by starred.
 
@@ -811,8 +811,8 @@ Space bar must insert a space in:
 |---|---|
 | Delete last tab in window; group has >1 window | Source window is auto-removed |
 | Delete last tab in window; group has only 1 window | Window remains empty |
-| Delete group with tabs live in Now Open | Chrome tabs closed before group removed from IDB |
-| Delete window with tabs live in Now Open | Chrome tabs closed |
+| Delete a saved group whose tabs are also open in Now Open | Group removed from TabMerger only; no browser tab is closed |
+| Delete a saved window whose tabs are also open in Now Open | Window removed from TabMerger only; no browser tab is closed |
 | Bulk delete groups (includes Now Open) | Now Open skipped silently |
 | Bulk delete tabs; group has empty windows after | Empty windows auto-removed per-window (if group has >1) |
 

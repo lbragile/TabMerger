@@ -123,6 +123,23 @@ describe('applyUrlRule — Feature 65 background listener behavior', () => {
     expect(allTabs).toContainEqual(expect.objectContaining({ url: 'https://github.com/pr/1' }))
   })
 
+  it('saves a detached copy of the tab: id 0, stamped savedAt, no pinned flag', async () => {
+    const tab = { id: 42, title: 'GitHub PR', url: 'https://github.com/pr/1', favIconUrl: 'https://github.com/f.ico', pinned: true }
+    await applyUrlRule(tab as chrome.tabs.Tab, 'g2')
+
+    const savedState = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    const workGroup = savedState.available.find((g: { id: string }) => g.id === 'g2')
+    const [saved] = workGroup.windows[0].tabs
+    expect(saved).toEqual({
+      id: 0,
+      title: 'GitHub PR',
+      url: 'https://github.com/pr/1',
+      favIconUrl: 'https://github.com/f.ico',
+      savedAt: expect.any(Number),
+    })
+    expect(workGroup.pendingSync).toBe(true)
+  })
+
   it('does NOT call chrome.tabs.remove — tab stays open in browser', async () => {
     const tab = { id: 99, title: 'Test', url: 'https://github.com/test' }
     await applyUrlRule(tab as chrome.tabs.Tab, 'g2')

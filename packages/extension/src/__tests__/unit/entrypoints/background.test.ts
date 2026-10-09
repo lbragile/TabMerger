@@ -501,6 +501,32 @@ describe('background — context menu click (save-to-group)', () => {
     expect(g1.windows[0].tabs[0].url).toBe('https://a.com')
   })
 
+  it('saves detached copies of the browser tabs: id 0, stamped savedAt, no pinned flag', async () => {
+    mockGetGroupsState.mockResolvedValue({
+      available: [{ id: 'g1', permanent: false, windows: [], name: 'Work' }],
+      active: { id: 'g1', index: 0 },
+    })
+    const clicked = { id: 11, index: 0, windowId: 1, url: 'https://clicked.com', title: 'Clicked', pinned: true, favIconUrl: 'https://clicked.com/f.ico' }
+    const right = { id: 12, index: 1, windowId: 1, url: 'https://right.com', title: 'Right', pinned: false }
+    stub.chrome.tabs.query.mockResolvedValue([clicked, right])
+    await stub.listeners.onClicked[0]({ menuItemId: 'tm-scope-current-g1' }, clicked)
+    await stub.listeners.onClicked[0]({ menuItemId: 'tm-scope-right-g1' }, clicked)
+
+    const savedTabs = mockSaveGroupsState.mock.calls.map(
+      (call) => (call[0] as { available: { windows: { tabs: unknown[] }[] }[] }).available[0].windows.at(-1)!.tabs[0]
+    )
+    expect(savedTabs[0]).toEqual({
+      id: 0,
+      title: 'Clicked',
+      url: 'https://clicked.com',
+      favIconUrl: 'https://clicked.com/f.ico',
+      savedAt: expect.any(Number),
+    })
+    expect(savedTabs[1]).toMatchObject({ id: 0, url: 'https://right.com', savedAt: expect.any(Number) })
+    expect(savedTabs[1]).not.toHaveProperty('pinned')
+    expect(stub.chrome.tabs.remove).not.toHaveBeenCalled()
+  })
+
   it('"excluding" scope keeps other real tabs but drops chrome:// tabs and the clicked tab itself', async () => {
     mockGetGroupsState.mockResolvedValue({
       available: [{ id: 'g1', permanent: false, windows: [], name: 'Work' }],
@@ -595,6 +621,9 @@ describe('background — global keyboard shortcut group picker', () => {
         }),
       })
     )
+    // The stashed tabs are already detached saved copies, so the picker stores them as they are.
+    const stashed = stub.chrome.storage.session.set.mock.calls[0][0].pendingShortcutSave.tabs
+    expect(stashed).toEqual([{ id: 0, title: 'A', url: 'https://a.com', favIconUrl: undefined, savedAt: expect.any(Number) }])
     expect(stub.chrome.action.openPopup).toHaveBeenCalled()
   })
 

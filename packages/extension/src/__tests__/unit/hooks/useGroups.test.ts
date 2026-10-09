@@ -45,6 +45,7 @@ import {
   useGroups,
   useApplyAIGroups,
   GROUPS_QUERY_KEY,
+  closableTabIds,
 } from '@/hooks/useGroups'
 import { createGroup, createNowOpenGroup, formatGroupCounts } from '@/lib/utils'
 import { useUIStore } from '@/stores/uiStore'
@@ -138,6 +139,74 @@ describe('useDuplicateGroup', () => {
     expect(saved.available).toHaveLength(3)
     expect(saved.available[2].id).not.toBe('a')
     expect(saved.available[2].permanent).toBe(false)
+  })
+
+  it('duplicating Now Open saves detached copies of its windows; Now Open keeps its live items', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [{ ...tab(11, 'https://a.com'), pinned: true }, tab(12, 'https://b.com')], incognito: false, focused: true, starred: true },
+    ]
+    const state = makeState([nowOpen])
+    const nowOpenBefore = structuredClone(nowOpen)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useDuplicateGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync(0)
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[0]).toEqual(nowOpenBefore)
+    const clone = saved.available[1]
+    expect(clone.permanent).toBe(false)
+    expect(clone.id).not.toBe(nowOpen.id)
+    expect(clone.pendingSync).toBe(true)
+    expect(clone.windows).toHaveLength(1)
+    // The copy is detached (id 0, unfocused) and keeps the window's star.
+    expect(clone.windows[0]).toMatchObject({ id: 0, focused: false, starred: true })
+    expect(clone.windows[0].tabs.map((t) => t.url)).toEqual(['https://a.com', 'https://b.com'])
+    expect(clone.windows[0].tabs.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+  })
+
+  it('duplicating Now Open keeps each window\'s star: a starred window is stored starred, an unstarred one unstarred, starred first', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [tab(11, 'https://a.com')], incognito: false, focused: true, starred: true, name: 'star' },
+      { id: 502, tabs: [tab(12, 'https://b.com')], incognito: false, focused: false, name: 'plain' },
+    ]
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useDuplicateGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync(0)
+    })
+
+    const clone = lastSaved().available[1]
+    expect(clone.windows.map((w) => [w.name, w.starred])).toEqual([['star', true], ['plain', false]])
+    expect(clone.windows.every((w) => w.id === 0 && w.focused === false)).toBe(true)
+    expect(clone.windows.flatMap((w) => w.tabs).every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+  })
+
+  it('duplicating a saved group copies its windows as they are (savedAt and star kept) without aliasing them', async () => {
+    const a = createGroup('a', 'A')
+    a.windows = [{ ...win([{ ...tab(0, 'https://a.com'), savedAt: 77 }]), starred: true }]
+    const state = makeState([createNowOpenGroup(), a])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { wrapper } = makeWrapper()
+    const { result } = renderHook(() => useDuplicateGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync(1)
+    })
+
+    const clone = lastSaved().available[2]
+    expect(clone.windows[0].starred).toBe(true)
+    expect(clone.windows[0].tabs[0].savedAt).toBe(77)
+    expect(clone.windows[0]).not.toBe(a.windows[0])
+    expect(clone.windows[0].tabs[0]).not.toBe(a.windows[0].tabs[0])
   })
 })
 
@@ -341,6 +410,70 @@ describe('useAddWindow / useDeleteWindow / useDeleteAllWindows', () => {
     await act(async () => { await result.current.mutateAsync({ groupIndex: 0 }) })
     expect(lastSaved().available[0].windows).toHaveLength(0)
   })
+
+  /**
+   * Only Now Open holds live browser tabs. Deleting a window (or every window) closes its
+   * tabs when the group is Now Open, and closes nothing when the group is a saved one.
+   */
+  function nowOpenAndSaved() {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(11, 'https://a.com'), tab(12, 'https://b.com')]), win([tab(13, 'https://c.com')])]
+    const saved = createGroup('a', 'A')
+    saved.windows = [win([tab(11, 'https://a.com'), tab(12, 'https://b.com')]), win([tab(13, 'https://c.com')])]
+    const state = makeState([nowOpen, saved])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    return { wrapper }
+  }
+
+  it('useDeleteWindow: a Now Open window closes its browser tabs', async () => {
+    const { wrapper } = nowOpenAndSaved()
+    const { result } = renderHook(() => useDeleteWindow(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0 }) })
+    expect(chrome.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(chrome.tabs.remove).toHaveBeenCalledWith([11, 12])
+  })
+
+  it('useDeleteWindow: a saved window closes no browser tab', async () => {
+    const { wrapper } = nowOpenAndSaved()
+    const { result } = renderHook(() => useDeleteWindow(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 1, windowIndex: 0 }) })
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(lastSaved().available[1].windows).toHaveLength(1)
+  })
+
+  it('useDeleteAllWindows: Now Open closes every browser tab', async () => {
+    const { wrapper } = nowOpenAndSaved()
+    const { result } = renderHook(() => useDeleteAllWindows(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0 }) })
+    expect(chrome.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(chrome.tabs.remove).toHaveBeenCalledWith([11, 12, 13])
+  })
+
+  it('useDeleteAllWindows: a saved group closes no browser tab', async () => {
+    const { wrapper } = nowOpenAndSaved()
+    const { result } = renderHook(() => useDeleteAllWindows(), { wrapper })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 1 }) })
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(lastSaved().available[1].windows).toHaveLength(0)
+  })
+
+  it('closableTabIds: only a permanent group yields ids, and never the detached id 0', () => {
+    const nowOpen = createNowOpenGroup()
+    const saved = createGroup('a', 'A')
+    const tabs = [tab(11, 'https://a.com'), tab(0, 'https://b.com'), tab(13, 'https://c.com')]
+    expect(closableTabIds(nowOpen, tabs)).toEqual([11, 13])
+    expect(closableTabIds(saved, tabs)).toEqual([])
+    expect(closableTabIds(undefined, tabs)).toEqual([])
+  })
+
+  it('closableTabIds: skips negative and missing ids and yields nothing for an empty tab list', () => {
+    const nowOpen = createNowOpenGroup()
+    const odd = [tab(-1, 'https://a.com'), { ...tab(5, 'https://b.com'), id: undefined } as unknown as Tab, tab(7, 'https://c.com')]
+    expect(closableTabIds(nowOpen, odd)).toEqual([7])
+    expect(closableTabIds(nowOpen, [])).toEqual([])
+  })
 })
 
 describe('useUpdateWindowName / useUpdateWindowNote / useToggleWindowStarred', () => {
@@ -417,6 +550,90 @@ describe('useReplaceWithCurrent / useMergeWithCurrent', () => {
     await act(async () => { await result.current.mutateAsync(1) })
     expect(lastSaved().available[1].windows).toHaveLength(2)
     expect(lastSaved().available[1].windows[0].tabs[0].url).toBe('https://live.com')
+  })
+
+  /** The Now Open snapshot is stored as detached saved copies; Now Open keeps its live items. */
+  function liveNowOpenAndSaved() {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [{ ...tab(11, 'https://a.com'), pinned: true }, tab(12, 'https://b.com')], incognito: false, focused: true, starred: true, name: 'live' },
+      { id: 502, tabs: [tab(13, 'https://c.com')], incognito: true, focused: false },
+    ]
+    const group = createGroup('a', 'A')
+    group.windows = [{ ...win([{ ...tab(0, 'https://old.com'), savedAt: 5 }]), name: 'old' }]
+    const state = makeState([nowOpen, group])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    return { nowOpen, group, nowOpenBefore: structuredClone(nowOpen), wrapper: makeWrapper().wrapper }
+  }
+  function expectDetached(windows: ExtWindow[]) {
+    expect(windows.every((w) => w.id === 0 && w.focused === false)).toBe(true)
+    expect(windows.flatMap((w) => w.tabs).every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+  }
+
+  it('useReplaceWithCurrent stores detached copies of the Now Open windows and leaves Now Open as it is', async () => {
+    const { nowOpenBefore, wrapper } = liveNowOpenAndSaved()
+    const { result } = renderHook(() => useReplaceWithCurrent(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(1) })
+
+    const saved = lastSaved()
+    expect(saved.available[0]).toEqual(nowOpenBefore)
+    const windows = saved.available[1].windows
+    expect(windows.map((w) => w.tabs.map((t) => t.url))).toEqual([['https://a.com', 'https://b.com'], ['https://c.com']])
+    expectDetached(windows)
+    // Each copy keeps its window's star: the starred window is stored starred, the other unstarred.
+    expect(windows.map((w) => w.starred)).toEqual([true, false])
+    expect(windows.map((w) => w.incognito)).toEqual([false, true])
+    expect(windows[0].name).toBe('live')
+    expect(saved.available[1].pendingSync).toBe(true)
+    expect(saved.available[1].info).toBe(formatGroupCounts(2, 3))
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+  })
+
+  it('useMergeWithCurrent prepends detached copies of the Now Open windows and keeps the saved windows untouched', async () => {
+    const { nowOpenBefore, wrapper } = liveNowOpenAndSaved()
+    const { result } = renderHook(() => useMergeWithCurrent(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(1) })
+
+    const saved = lastSaved()
+    expect(saved.available[0]).toEqual(nowOpenBefore)
+    const windows = saved.available[1].windows
+    expect(windows.map((w) => w.name)).toEqual(['live', undefined, 'old'])
+    expectDetached(windows.slice(0, 2))
+    // Each copy keeps its window's star: the starred window is stored starred, the other unstarred.
+    expect(windows.slice(0, 2).map((w) => w.starred)).toEqual([true, false])
+    // The windows the group already had are not rewritten.
+    expect(windows[2].tabs[0].savedAt).toBe(5)
+    expect(saved.available[1].info).toBe(formatGroupCounts(3, 4))
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+  })
+
+  it('useMergeWithCurrent keeps starred windows first: starred copies, the group\'s starred windows, unstarred copies, the group\'s unstarred windows', async () => {
+    const { group, wrapper } = liveNowOpenAndSaved()
+    group.windows = [
+      { ...win([{ ...tab(0, 'https://s.com'), savedAt: 5 }]), starred: true, name: 'old star' },
+      { ...win([{ ...tab(0, 'https://old.com'), savedAt: 5 }]), name: 'old' },
+    ]
+    const { result } = renderHook(() => useMergeWithCurrent(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(1) })
+
+    const windows = lastSaved().available[1].windows
+    expect(windows.map((w) => [w.name, w.starred ?? false])).toEqual([
+      ['live', true],
+      ['old star', true],
+      [undefined, false],
+      ['old', false],
+    ])
+  })
+
+  it('useReplaceWithCurrent stores starred copies first', async () => {
+    const { nowOpen, wrapper } = liveNowOpenAndSaved()
+    nowOpen.windows = [...nowOpen.windows].reverse()
+    const { result } = renderHook(() => useReplaceWithCurrent(), { wrapper })
+    await act(async () => { await result.current.mutateAsync(1) })
+
+    const windows = lastSaved().available[1].windows
+    expect(windows.map((w) => [w.name, w.starred])).toEqual([['live', true], [undefined, false]])
+    expectDetached(windows)
   })
 })
 
@@ -788,7 +1005,7 @@ describe('useDeleteGroup', () => {
     expect(trackEvent).not.toHaveBeenCalledWith('group_deleted')
   })
 
-  it('closes live browser tabs whose URLs are open in Now Open, and hard-deletes remotely', async () => {
+  it('closes no browser tab (a saved group holds detached copies), and hard-deletes remotely', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = [win([tab(1, 'https://a.com')])]
     const group = createGroup('a', 'A')
@@ -801,7 +1018,7 @@ describe('useDeleteGroup', () => {
 
     await act(async () => { await result.current.mutateAsync(1) })
 
-    expect(chrome.tabs.remove).toHaveBeenCalledWith([1])
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
     expect(deleteRemoteGroups).toHaveBeenCalledWith(['a'])
     expect(lastSaved().available).toHaveLength(1)
     expect(trackEvent).toHaveBeenCalledWith('group_deleted')
@@ -1026,6 +1243,29 @@ describe('useMoveTab', () => {
     })
 
     expect(lastSaved().available[2].windows[0].tabs[0].ogImage).toBeUndefined()
+  })
+
+  it('copy=true from Now Open to a saved group: the target gets a detached copy and the live tab stays in Now Open', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([{ ...tab(11, 'https://a.com'), pinned: true }])]
+    const to = createGroup('to', 'To')
+    to.windows = []
+    const state = makeState([nowOpen, to])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveTab(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 0, fromWindowIndex: 0, fromTabIndex: 0, toGroupIndex: 1, copy: true })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[0].windows[0].tabs[0]).toMatchObject({ id: 11, pinned: true })
+    const copy = saved.available[1].windows[0].tabs[0]
+    expect(copy).toMatchObject({ id: 0, url: 'https://a.com', savedAt: expect.any(Number) })
+    expect(copy).not.toHaveProperty('pinned')
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
   })
 
   it('copy=true between saved groups: keeps id 0 and preserves the source tab', async () => {
@@ -1257,13 +1497,13 @@ describe('useMoveWindow', () => {
     expect(chrome.windows.remove).not.toHaveBeenCalled()
     expect(chrome.windows.create).not.toHaveBeenCalled()
 
-    // Target: the copy lands after the starred window, with no live ids or live-only flags.
+    // Target: the copy lands after the starred window, with no live ids and unfocused; it keeps its star.
     const target = saved.available[1]
     expect(target.windows).toHaveLength(2)
     const copy = target.windows[1]
     expect(copy.id).toBe(0)
     expect(copy.focused).toBe(false)
-    expect(copy.starred).toBe(false)
+    expect(copy.starred).toBe(true)
     expect(copy.tabs.map((t) => t.url)).toEqual(['https://a.com', 'https://b.com'])
     expect(copy.tabs.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
     expect(target.pendingSync).toBe(true)
@@ -1301,10 +1541,10 @@ describe('useMoveWindow', () => {
     expect(chrome.windows.create).not.toHaveBeenCalled()
   })
 
-  it('a starred, focused Now Open window lands UNstarred and UNfocused, so the starred sort puts it after the target\'s starred window', async () => {
+  it('a starred, focused Now Open window lands STARRED and UNfocused: after the target\'s starred window, before its unstarred one', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = [
-      { id: 501, tabs: [tab(11, 'https://a.com')], incognito: false, focused: true, starred: true, name: 'live' },
+      { id: 501, tabs: [{ ...tab(11, 'https://a.com'), pinned: true }], incognito: false, focused: true, starred: true, name: 'live' },
     ]
     const to = createGroup('to', 'To')
     to.windows = [
@@ -1322,13 +1562,39 @@ describe('useMoveWindow', () => {
     })
 
     const target = lastSaved().available[1]
-    expect(target.windows.map((w) => w.name)).toEqual(['star', 'plain', 'live'])
-    const copy = target.windows[2]
-    expect(copy.starred).toBe(false)
+    expect(target.windows.map((w) => w.name)).toEqual(['star', 'live', 'plain'])
+    const copy = target.windows[1]
+    expect(copy.starred).toBe(true)
     expect(copy.focused).toBe(false)
     expect(copy.id).toBe(0)
+    expect(copy.tabs.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
     // The live window itself is still starred and focused.
     expect(lastSaved().available[0].windows[0]).toMatchObject({ id: 501, starred: true, focused: true })
+  })
+
+  it('an unstarred Now Open window lands unstarred, after every window the target already has', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [tab(11, 'https://a.com')], incognito: false, focused: true, name: 'live' },
+    ]
+    const to = createGroup('to', 'To')
+    to.windows = [
+      { ...win([tab(0, 'https://star.com')]), starred: true, name: 'star' },
+      { ...win([tab(0, 'https://plain.com')]), name: 'plain' },
+    ]
+    const state = makeState([nowOpen, to])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 0, windowIndex: 0, toGroupIndex: 1 })
+    })
+
+    const target = lastSaved().available[1]
+    expect(target.windows.map((w) => w.name)).toEqual(['star', 'plain', 'live'])
+    expect(target.windows[2]).toMatchObject({ id: 0, focused: false, starred: false })
   })
 
   it('Now Open copy: only the target gets updatedAt/pendingSync/info; Now Open keeps its object, updatedAt and pendingSync', async () => {
@@ -1408,7 +1674,7 @@ describe('useMoveWindow', () => {
     const saved = lastSaved()
     expect(saved.available[1].windows.map((w) => w.name)).toEqual(['keep'])
     expect(saved.available[2].windows.map((w) => w.name)).toEqual(['moved'])
-    // A saved window moves as-is (it keeps its starred flag), unlike a live-window copy.
+    // A saved window moves as-is: it keeps its starred flag.
     expect(saved.available[2].windows[0].starred).toBe(true)
     for (const i of [1, 2]) {
       expect(saved.available[i].updatedAt).toBeGreaterThan(1)
@@ -1446,7 +1712,27 @@ describe('useMoveWindow', () => {
 })
 
 describe('useDeleteTab', () => {
-  it('removes the tab and closes the live browser tab when its URL is open in Now Open', async () => {
+  it('a Now Open tab is removed and closed in the browser', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(101, 'https://a.com'), tab(102, 'https://b.com')])]
+    const group = createGroup('a', 'A')
+    group.windows = [win([tab(0, 'https://a.com')])]
+    const state = makeState([nowOpen, group])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useDeleteTab(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0, tabIndex: 0 })
+    })
+
+    expect(chrome.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(chrome.tabs.remove).toHaveBeenCalledWith(101)
+    expect(lastSaved().available[0].windows[0].tabs.map((t) => t.id)).toEqual([102])
+  })
+
+  it('a saved tab is removed without closing any browser tab, even when its URL is open in Now Open', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = [win([tab(101, 'https://a.com')])]
     const group = createGroup('a', 'A')
@@ -1461,7 +1747,7 @@ describe('useDeleteTab', () => {
       await result.current.mutateAsync({ groupIndex: 1, windowIndex: 0, tabIndex: 0 })
     })
 
-    expect(chrome.tabs.remove).toHaveBeenCalledWith(101)
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
     expect(lastSaved().available[1].windows[0].tabs).toHaveLength(1)
   })
 
@@ -1520,7 +1806,10 @@ describe('useDeleteTab', () => {
 })
 
 describe('useDeduplicateGroup', () => {
-  it('removes tabs matching the given duplicate ids', async () => {
+  /** A duplicate reference as the confirm modal sends it: position in the group + listed URL. */
+  const dup = (windowIndex: number, tabIndex: number, url: string) => ({ windowIndex, tabIndex, url })
+
+  it('removes the tab at the given position from a saved group', async () => {
     const group = createGroup('a', 'A')
     group.windows = [win([tab(1, 'https://a.com'), tab(2, 'https://a.com')])]
     const state = makeState([group])
@@ -1528,14 +1817,83 @@ describe('useDeduplicateGroup', () => {
     qc.setQueryData(GROUPS_QUERY_KEY, state)
     ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
     const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
-    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, duplicateIds: [2] }) })
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 0, duplicates: [dup(0, 1, 'https://a.com')] }) })
     expect(lastSaved().available[0].windows[0].tabs).toHaveLength(1)
     expect(lastSaved().available[0].windows[0].tabs[0].id).toBe(1)
   })
 
+  it('a saved group of detached tabs (all id 0) loses only its duplicate tab; the other tabs and windows stay', async () => {
+    const group = createGroup('a', 'A')
+    group.windows = [
+      win([tab(0, 'https://a.com'), tab(0, 'https://b.com')]),
+      win([tab(0, 'https://c.com'), tab(0, 'https://a.com')]),
+    ]
+    const state = makeState([createNowOpenGroup(), group])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
+
+    // The one duplicate is the second https://a.com (window 1, tab 1).
+    await act(async () => { await result.current.mutateAsync({ groupIndex: 1, duplicates: [dup(1, 1, 'https://a.com')] }) })
+
+    expect(lastSaved().available[1].windows.map((w) => w.tabs.map((t) => t.url))).toEqual([
+      ['https://a.com', 'https://b.com'],
+      ['https://c.com'],
+    ])
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(lastSaved().available[1].pendingSync).toBe(true)
+    expect(lastSaved().available[1].info).toBe(formatGroupCounts(2, 3))
+  })
+
+  it('removes several duplicates across windows by position and drops a window left without tabs', async () => {
+    const group = createGroup('a', 'A')
+    group.windows = [
+      win([tab(0, 'https://a.com'), tab(0, 'https://a.com'), tab(0, 'https://b.com')]),
+      win([tab(0, 'https://b.com')]),
+      win([tab(0, 'https://c.com')]),
+    ]
+    const state = makeState([createNowOpenGroup(), group])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        groupIndex: 1,
+        duplicates: [dup(0, 1, 'https://a.com'), dup(1, 0, 'https://b.com')],
+      })
+    })
+
+    expect(lastSaved().available[1].windows.map((w) => w.tabs.map((t) => t.url))).toEqual([
+      ['https://a.com', 'https://b.com'],
+      ['https://c.com'],
+    ])
+  })
+
+  it('leaves a tab alone when the tab at the listed position does not have the listed URL', async () => {
+    const group = createGroup('a', 'A')
+    group.windows = [win([tab(0, 'https://a.com'), tab(0, 'https://other.com')])]
+    const state = makeState([createNowOpenGroup(), group])
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({
+        groupIndex: 1,
+        duplicates: [dup(0, 1, 'https://a.com'), dup(4, 0, 'https://a.com')],
+      })
+    })
+
+    expect(lastSaved().available[1].windows[0].tabs.map((t) => t.url)).toEqual(['https://a.com', 'https://other.com'])
+  })
+
   it('closes live browser tabs for duplicates found in the permanent Now Open group', async () => {
     const nowOpen = createNowOpenGroup()
-    nowOpen.windows = [win([tab(1, 'https://a.com'), tab(2, 'https://a.com')])]
+    nowOpen.windows = [win([tab(1, 'https://a.com'), tab(2, 'https://a.com')]), win([tab(3, 'https://a.com')])]
     const state = makeState([nowOpen])
     ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
     const { qc, wrapper } = makeWrapper()
@@ -1543,13 +1901,37 @@ describe('useDeduplicateGroup', () => {
     const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
 
     await act(async () => {
-      await result.current.mutateAsync({ groupIndex: 0, duplicateIds: [2] })
+      await result.current.mutateAsync({
+        groupIndex: 0,
+        duplicates: [dup(0, 1, 'https://a.com'), dup(1, 0, 'https://a.com')],
+      })
     })
 
-    expect(chrome.tabs.remove).toHaveBeenCalledWith([2])
+    expect(chrome.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(chrome.tabs.remove).toHaveBeenCalledWith([2, 3])
+    expect(lastSaved().available[0].windows.map((w) => w.tabs.map((t) => t.id))).toEqual([[1]])
+    // Now Open edits are not synced.
+    expect(lastSaved().available[0].pendingSync).toBe(false)
   })
 
-  it('does not call chrome.tabs.remove for a non-permanent group even with duplicate ids', async () => {
+  it('Now Open: a listed position whose tab has another URL is neither closed nor removed', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(1, 'https://a.com'), tab(7, 'https://new.com'), tab(2, 'https://a.com')])]
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, duplicates: [dup(0, 1, 'https://a.com')] })
+    })
+
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(lastSaved().available[0].windows[0].tabs.map((t) => t.id)).toEqual([1, 7, 2])
+  })
+
+  it('does not call chrome.tabs.remove for a non-permanent group', async () => {
     const group = createGroup('a', 'A')
     group.windows = [win([tab(1, 'https://a.com'), tab(2, 'https://a.com')])]
     const state = makeState([group])
@@ -1559,7 +1941,7 @@ describe('useDeduplicateGroup', () => {
     const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
 
     await act(async () => {
-      await result.current.mutateAsync({ groupIndex: 0, duplicateIds: [2] })
+      await result.current.mutateAsync({ groupIndex: 0, duplicates: [dup(0, 1, 'https://a.com')] })
     })
 
     expect(chrome.tabs.remove).not.toHaveBeenCalled()
@@ -1572,7 +1954,7 @@ describe('useDeduplicateGroup', () => {
     const { result } = renderHook(() => useDeduplicateGroup(), { wrapper })
 
     await act(async () => {
-      await result.current.mutateAsync({ groupIndex: 5, duplicateIds: [2] })
+      await result.current.mutateAsync({ groupIndex: 5, duplicates: [dup(0, 1, 'https://a.com')] })
     })
 
     expect(saveGroupsState).not.toHaveBeenCalled()
@@ -1640,6 +2022,9 @@ describe('useApplyAIGroups', () => {
     expect(saved.available[2].windows[0].tabs[0]).toMatchObject({ id: 0, url: 'https://fun.com' })
     expect(saved.available[0].windows).toHaveLength(1)
     expect(saved.available[0].windows[0].tabs).toHaveLength(0)
+    // The grouped tabs are detached saved copies: stamped savedAt, no pinned flag.
+    const grouped = [saved.available[1], saved.available[2]].flatMap((g) => g.windows.flatMap((w) => w.tabs))
+    expect(grouped.every((t) => typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
   })
 
   it('skips a suggestion whose tabIds do not match any live Now Open tab, writing nothing and reporting zero applied', async () => {

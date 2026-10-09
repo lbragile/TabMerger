@@ -28,9 +28,13 @@ caller cannot forget the flag.
 
 **Things to know when touching this:**
 - `copyLiveWindow` is the one "live window → saved window" helper: `id: 0`, `focused: false`,
-  `starred: false`, tabs through `copyLiveTab` (`id: 0`, fresh `savedAt`, `pinned` dropped).
-  A starred Now Open window therefore lands unstarred, same as a drag.
-- The copy lands where a saved-to-saved move lands: appended, then `sortWindowsByStarred`.
+  tabs through `copyLiveTab` (`id: 0`, fresh `savedAt`, `pinned` dropped). The menu path calls
+  it through `copyLiveWindowKeepingStar`, so a starred Now Open window is stored starred; a
+  drag calls `copyLiveWindow` directly and lands unstarred. See
+  [[saved-copies-and-positional-matching]].
+- The copy lands where a saved-to-saved move lands: appended, then `sortWindowsByStarred`. A
+  starred copy therefore sits after the target's starred windows and before its unstarred
+  ones; an unstarred copy sits last.
 - Undo: `useGroupsMutation` pushes the pre-copy snapshot, and `restoreSnapshotAsLocalChange`
   never takes Now Open from a snapshot, so undo only removes the copy from the target group.
   The drag-out path stays `undoable: false` because it closes real tabs.

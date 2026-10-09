@@ -64,7 +64,8 @@ describe('useMoveWindow Now Open "Copy to group" — real IndexedDB integration'
     const copy = target.windows[0]
     expect(copy.id).toBe(0)
     expect(copy.focused).toBe(false)
-    expect(copy.starred).toBe(false)
+    // The menu copy keeps the live window's star.
+    expect(copy.starred).toBe(true)
     expect(copy.tabs.map((t) => t.url)).toEqual(['https://a.example.com', 'https://b.example.com'])
     for (const t of copy.tabs) {
       expect(t.id).toBe(0)
@@ -95,6 +96,8 @@ describe('useMoveWindow Now Open "Copy to group" — real IndexedDB integration'
     expect(data.available[0].windows).toHaveLength(2)
     expect(data.available[1].windows).toHaveLength(1)
     expect(data.available[1].windows[0].tabs[0]).toMatchObject({ id: 0, url: 'https://c.example.com' })
+    // An unstarred live window is stored unstarred.
+    expect(data.available[1].windows[0].starred).toBe(false)
   })
 
   it('copying twice yields two independent saved windows while Now Open still holds the one live window', async () => {

@@ -220,12 +220,13 @@ describe('useOpenWindow', () => {
 
 /**
  * useBulkDelete — batch deletion of selected tabs/windows/groups.
- * Key constraints under test: tabs with `id:0` must not call `chrome.tabs.remove`
- * (they are saved copies, not live browser tabs); undo snapshot is always pushed before mutating;
- * selection mode exits on success; empty items array is a complete no-op.
+ * Key constraints under test: only items selected in Now Open are closed in the browser
+ * (saved items are detached copies and never call `chrome.tabs.remove`); undo snapshot is
+ * always pushed before mutating; selection mode exits on success; empty items array is a
+ * complete no-op.
  */
 describe('useBulkDelete', () => {
-  it('calls chrome.tabs.remove for the tab IDs of all selected tabs', async () => {
+  it('removes selected saved tabs without calling chrome.tabs.remove', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = [win([tab(101, 'https://live.com', 'Live')])]
 
@@ -245,11 +246,72 @@ describe('useBulkDelete', () => {
       await result.current.mutateAsync(items)
     })
 
-    expect(chromeMock.tabs.remove).toHaveBeenCalledWith([202])
+    expect(chromeMock.tabs.remove).not.toHaveBeenCalled()
     expect(saveGroupsState).toHaveBeenCalled()
     // The tab should be removed from state
     const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
     expect(saved.available[1].windows[0].tabs).toHaveLength(0)
+    void qc
+  })
+
+  it('closes the selected Now Open tabs in the browser, and only those', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(101, 'https://live.com', 'Live'), tab(102, 'https://other.com', 'Other')])]
+
+    const savedGroup = createGroup('g1', 'Work')
+    savedGroup.windows = [win([tab(202, 'https://work.com', 'Work')])]
+
+    const state = makeState([nowOpen, savedGroup])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+
+    const { qc, wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkDelete(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync([{ type: 'tab' as const, id: 'tab-0-0-0' }])
+    })
+
+    expect(chromeMock.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(chromeMock.tabs.remove).toHaveBeenCalledWith([101])
+    void qc
+  })
+
+  it('closes the tabs of a selected Now Open window in the browser', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(101, 'https://a.com'), tab(102, 'https://b.com')]), win([tab(103, 'https://c.com')])]
+    const state = makeState([nowOpen])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+
+    const { qc, wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkDelete(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync([{ type: 'window' as const, id: 'window-0-0' }])
+    })
+
+    expect(chromeMock.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(chromeMock.tabs.remove).toHaveBeenCalledWith([101, 102])
+    void qc
+  })
+
+  it('deletes selected saved groups without calling chrome.tabs.remove', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [win([tab(101, 'https://a.com')])]
+    const savedGroup = createGroup('g1', 'Work')
+    savedGroup.windows = [win([tab(101, 'https://a.com'), tab(202, 'https://work.com')])]
+    const state = makeState([nowOpen, savedGroup])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+
+    const { qc, wrapper } = makeWrapper()
+    const { result } = renderHook(() => useBulkDelete(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync([{ type: 'group' as const, id: 'group-1' }])
+    })
+
+    expect(chromeMock.tabs.remove).not.toHaveBeenCalled()
+    const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
+    expect(saved.available).toHaveLength(1)
     void qc
   })
 
@@ -603,7 +665,7 @@ describe('useBulkMoveToGroup', () => {
     void qc
   })
 
-  it('closes browser tabs and removes the window for window-type bulk delete', async () => {
+  it('removes a saved window for window-type bulk delete without closing any browser tab', async () => {
     const nowOpen = createNowOpenGroup()
     const savedGroup = createGroup('g1', 'Work')
     savedGroup.windows = [win([tab(11, 'https://a.com'), tab(12, 'https://b.com')]), win([tab(13, 'https://c.com')])]
@@ -617,7 +679,7 @@ describe('useBulkMoveToGroup', () => {
       await result.current.mutateAsync([{ type: 'window' as const, id: 'window-1-0' }])
     })
 
-    expect(chromeMock.tabs.remove).toHaveBeenCalledWith([11, 12])
+    expect(chromeMock.tabs.remove).not.toHaveBeenCalled()
     const saved = (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls[0][0] as GroupsState
     expect(saved.available[1].windows).toHaveLength(1)
     expect(saved.available[1].windows[0].tabs[0].url).toBe('https://c.com')
@@ -1199,10 +1261,9 @@ describe('useMoveTab', () => {
 // ─── useDeleteTab ─────────────────────────────────────────────────────────────
 
 /**
- * useDeleteTab — removes a tab from a group, conditionally closing it in Chrome.
- * Core invariant: tabs with `id:0` (saved copies from useMoveTab copy:true) must
- * never trigger `chrome.tabs.remove` even if their URL happens to appear in Now Open.
- * Tabs with a real numeric id are only closed if their URL is live in Now Open.
+ * useDeleteTab — removes a tab from a group, closing it in Chrome only when the tab is in
+ * Now Open. Core invariant: a saved tab is a detached copy and never triggers
+ * `chrome.tabs.remove`, even if its URL also appears in Now Open.
  */
 describe('useDeleteTab', () => {
   it('does NOT call chrome.tabs.remove when the tab has id:0', async () => {
@@ -1226,13 +1287,13 @@ describe('useDeleteTab', () => {
       await result.current.mutateAsync({ groupIndex: 1, windowIndex: 0, tabIndex: 0 })
     })
 
-    // id:0 is falsy — the guard `if (tab?.id)` must not call remove
+    // A saved tab is a detached copy: nothing is closed
     expect(chromeMock.tabs.remove).not.toHaveBeenCalled()
 
     void qc
   })
 
-  it('calls chrome.tabs.remove for a tab with a real id that is live in Now Open', async () => {
+  it('calls chrome.tabs.remove for a Now Open tab, and not for a saved tab at the same URL', async () => {
     const nowOpen = createNowOpenGroup()
     nowOpen.windows = [win([tab(77, 'https://live.com', 'Live')])]
 
@@ -1249,7 +1310,12 @@ describe('useDeleteTab', () => {
     await act(async () => {
       await result.current.mutateAsync({ groupIndex: 1, windowIndex: 0, tabIndex: 0 })
     })
+    expect(chromeMock.tabs.remove).not.toHaveBeenCalled()
 
+    await act(async () => {
+      await result.current.mutateAsync({ groupIndex: 0, windowIndex: 0, tabIndex: 0 })
+    })
+    expect(chromeMock.tabs.remove).toHaveBeenCalledTimes(1)
     expect(chromeMock.tabs.remove).toHaveBeenCalledWith(77)
 
     void qc
