@@ -54,6 +54,7 @@
 - [DnD ghost clone fidelity](learnings_dnd_ghost_clone_fidelity.md) — replaced synthesized ghost card with `cloneNode(true)` of the real row
 - [Now Open DnD copy semantics (SUPERSEDED: drag-out is a MOVE again, see DnD finishing pass)](learnings_now_open_dnd_copy_semantics.md) — why a synchronous tabs.remove dismissed the popup; harness gotchas still valid
 - [Window "Copy to group" from Now Open](learnings_now_open_window_copy_to_group.md) — useMoveWindow copies when the source is permanent (no caller flag); copyLiveWindow exported from dndMove
+- [Now Open drag-out: own-window rule](learnings_now_open_close_own_window_rule.md) — only the active tab of the page's own window (windows.getCurrent) is deferred; fallback defers all actives; tsx probe recipe
 - [Collapse, instant drop, pointer probe](learnings_dnd_collapse_instant_drop_probe.md) — MEASURED: native-drag abort = mutation inside dragstart dispatch/microtask only
 - [DnD ghost prominence + cursor dead end](learnings_dnd_ghost_prominence_and_cursor.md) — switched source-hide from opacity dim to `visibility:hidden`
 - [Phase-1 cross-group + active group](learnings_phase1_cross_group_active_group.md) — useGroups staleTime:0 refetch-on-mount clobbered the optimistic DnD commit

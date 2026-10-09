@@ -275,8 +275,9 @@ describe('applyMove — LIVE window dragged out of Now Open (item 9)', () => {
 
     const res = applyMove(m, s, winRef(0, 0), groupRef(1))
 
-    // The real window goes with its last tab. `runSideEffects` defers the ACTIVE tab to
-    // popup teardown, so this never dismisses the popup mid-drop (spec C7).
+    // The real window goes with its last tab — at the drop, unless it is the popup's own
+    // window: `runSideEffects` defers THAT window's active tab to popup teardown, so this
+    // never dismisses the popup mid-drop (spec C7).
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9, 10] }])
   })
 

@@ -10,3 +10,4 @@
 - [Race testing technique](learnings_integration_race_testing.md) — fake Supabase gates + resetModules for second context/restart in integration tests
 - [Real local Supabase suites](learnings_real_supabase_local.md) — run the real-network integration suites against the local stack; sequential files, ws transport for realtime
 - [E2E Now Open live windows](learnings_e2e_now_open_live_windows.md) — e2e loads the prebuilt dev build (rebuild after edits); create real windows from the SW for Now Open specs
+- [Now Open close rule tests](learnings_now_open_close_rule_tests.md) — where the "defer only the own window's active tab" rule is tested per layer; stubs need windows.getCurrent or the fallback runs

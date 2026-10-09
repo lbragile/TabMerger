@@ -67,7 +67,7 @@ async function launch(
   opts: {
     hostUrl?: string;
     extraTabUrls?: string[];
-    extraWindowUrls?: string[];
+    extraWindowUrls?: (string | string[])[];
     /** seed groups (default: Now Open, Work, Play) */
     groups?: Parameters<typeof seedIdb>[1];
     /**
@@ -2024,6 +2024,126 @@ test('real popup — NOW OPEN TAB (the ANCHOR tab of the window the popup hangs 
 test('real popup — NOW OPEN WINDOW (the window the popup hangs off) dropped on a saved group is MOVED; its non-anchor tab closes at once, the anchor tab on popup close', async () => {
   test.setTimeout(150_000);
   await nowOpenMoveOutDrag('window');
+});
+
+// The popup only closes when the ACTIVE tab of the window it hangs off closes, so a window it
+// is NOT attached to must close completely at the drop (spec C7), tabs and all.
+
+/** Centre of the header of the window card that holds the tab row titled `title`. */
+async function windowHeaderPoint(cdp: RawCdp, title: string) {
+  return cdp.evaluate<{ x: number; y: number } | null>(`(() => {
+    const rows = [...document.querySelectorAll('[role="listitem"]')];
+    const row = rows.find(e => e.getAttribute('aria-label') === ${JSON.stringify(title)})
+      || rows.find(e => (e.getAttribute('aria-label') || '').includes('<title>' + ${JSON.stringify(title)} + '</title>'));
+    let scope = row && row.parentElement;
+    while (scope && !(scope.hasAttribute('data-window-index') && scope.querySelector('[data-window-header]'))) scope = scope.parentElement;
+    const header = scope && scope.querySelector('[data-window-header]');
+    if (!header) return null;
+    const r = header.getBoundingClientRect();
+    return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+  })()`);
+}
+
+test('real popup — NOW OPEN WINDOW the popup is NOT attached to closes whole at the drop, and the popup stays alive', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({
+    hostUrl: liveUrl('LiveHost'),
+    extraTabUrls: [liveUrl('LiveOther')],
+    extraWindowUrls: [[liveUrl('SecondA'), liveUrl('SecondB'), liveUrl('SecondC')]]
+  });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Now Open');
+    await expect.poll(() => liveGripByTitle(cdp, 'SecondA', 'window'), { timeout: 10_000 }).not.toBeNull();
+    const from = (await liveGripByTitle(cdp, 'SecondA', 'window'))!;
+    const workRow = await rowBoxByText(cdp, 'Work');
+    expect(workRow).not.toBeNull();
+    const tabsBefore = await browserTabs(context);
+    const secondWindowId = tabsBefore.find((t) => t.title === 'SecondA')!.windowId;
+    expect(tabsBefore.filter((t) => t.windowId === secondWindowId).map((t) => t.title).sort()).toEqual(['SecondA', 'SecondB', 'SecondC']);
+
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, center(workRow!));
+
+    // The whole window is gone while the popup is still open.
+    await expect
+      .poll(async () => (await browserTabs(context)).filter((t) => t.windowId === secondWindowId).length, { timeout: 5_000 })
+      .toBe(0);
+    const alive = await probeAlive(cdp, 'not-attached-window');
+    expect(alive).not.toBeNull();
+    expect(alive).toBeGreaterThan(0);
+    expect(stageNames(await readLog(cdp))).toEqual(expect.arrayContaining(['onDragEnd', 'committed']));
+    const { consoleErrors, pageErrors } = await readErrors(cdp);
+    expect(pageErrors).toEqual([]);
+    expect(consoleErrors).toEqual([]);
+
+    // The anchor window was not touched, and the saved group holds the whole copy.
+    const titlesAfter = (await browserTabs(context)).map((t) => t.title);
+    expect(titlesAfter).toEqual(expect.arrayContaining(['LiveHost', 'LiveOther']));
+    const work = await idbTabs(cdp, 'work');
+    expect(work.some((w) => w.map((t) => t.title).join() === 'SecondA,SecondB,SecondC')).toBe(true);
+    for (const t of work.flat()) expect(t.id).toBe(0);
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
+});
+
+test('real popup — NOW OPEN mixed WINDOW selection (the anchor window plus another): the other closes whole, the anchor tab waits for the popup to close', async () => {
+  test.setTimeout(150_000);
+  const { context, cdp } = await launch({
+    hostUrl: liveUrl('LiveHost'),
+    extraTabUrls: [liveUrl('LiveOther')],
+    extraWindowUrls: [[liveUrl('SecondA'), liveUrl('SecondB')]]
+  });
+  try {
+    await installErrorCapture(cdp);
+    await selectGroup(cdp, 'Now Open');
+    await expect
+      .poll(async () => !!(await windowHeaderPoint(cdp, 'LiveHost')) && !!(await windowHeaderPoint(cdp, 'SecondA')), { timeout: 10_000 })
+      .toBe(true);
+    // Ctrl-click a window header: enters selection mode and selects that window.
+    await modClick(cdp, (await windowHeaderPoint(cdp, 'LiveHost'))!, MOD_CTRL);
+    await modClick(cdp, (await windowHeaderPoint(cdp, 'SecondA'))!, MOD_CTRL);
+    await expect
+      .poll(() => cdp.evaluate<number>(`document.querySelectorAll('[role="checkbox"][aria-checked="true"]').length`), { timeout: 4_000 })
+      .toBe(2);
+
+    const from = (await liveGripByTitle(cdp, 'SecondA', 'window'))!;
+    const workRow = await rowBoxByText(cdp, 'Work');
+    expect(workRow).not.toBeNull();
+    const tabsBefore = await browserTabs(context);
+    const secondWindowId = tabsBefore.find((t) => t.title === 'SecondA')!.windowId;
+    await cdp.evaluate(`globalThis.__tmDndLog = []`);
+    await drive(cdp, from, center(workRow!));
+
+    await expect
+      .poll(async () => (await browserTabs(context)).filter((t) => t.windowId === secondWindowId).length, { timeout: 5_000 })
+      .toBe(0);
+    const alive = await probeAlive(cdp, 'mixed-window-selection');
+    expect(alive).not.toBeNull();
+    expect(alive).toBeGreaterThan(0);
+    expect(stageNames(await readLog(cdp))).toEqual(expect.arrayContaining(['onDragEnd', 'committed']));
+    expect((await readErrors(cdp)).pageErrors).toEqual([]);
+
+    // Anchor window: its non-active tabs closed at the drop; the active (anchor) tab is still open.
+    const titlesAfter = (await browserTabs(context)).map((t) => t.title);
+    expect(titlesAfter).not.toContain('LiveOther');
+    expect(titlesAfter).toContain('LiveHost');
+
+    const work = await idbTabs(cdp, 'work');
+    const copies = work.slice(-2).map((w) => w.map((t) => t.title));
+    expect(copies.some((w) => w.join() === 'SecondA,SecondB')).toBe(true);
+    expect(copies.some((w) => w.includes('LiveHost') && w.includes('LiveOther'))).toBe(true);
+
+    // The deferred close lands when the popup goes away.
+    await cdp.evaluate(`window.close()`).catch(() => {});
+    await sleep(1_500);
+    expect((await browserTabs(context)).map((t) => t.title)).not.toContain('LiveHost');
+  } finally {
+    cdp.close();
+    await context.close().catch(() => {});
+  }
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

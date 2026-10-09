@@ -515,13 +515,35 @@ function resolveActive(base: GroupsState, id: string, dataCurrent?: unknown): Dn
 }
 
 /**
+ * Id of the browser window this TabMerger page lives in, or `null` when it can't be told.
+ *
+ * `chrome.windows.getCurrent()` resolves to the window containing the calling page, not
+ * the focused one: for the toolbar popup that is the window it is anchored to, and for
+ * `popup.html` opened as an ordinary tab it is the window holding that tab. (It must be
+ * asked from the page — in a service worker "current" falls back to the last active
+ * window. `chrome.tabs.getCurrent()` is no use either: it is `undefined` in a popup.)
+ */
+async function ownWindowId(): Promise<number | null> {
+  try {
+    const win = await chrome.windows.getCurrent();
+    return typeof win?.id === 'number' && win.id >= 0 ? win.id : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Split the tabs a Now Open drag-out wants closed into "safe to close right now" and
  * "must wait until the popup is gone".
  *
  * Closing the ACTIVE tab of the window the toolbar popup is anchored to dismisses the
- * popup instantly (spec C7). Rather than trying to identify that one window — the popup
- * has no reliable handle on its own anchor — every tab that is active in ANY window is
- * deferred. Over-deferring costs nothing (the close still happens, just on popup close);
+ * popup instantly (spec C7), so that ONE tab is deferred. Every other tab closes now,
+ * active or not: the popup only watches its own window's tab strip, and a dragged window
+ * the popup is not attached to is expected to close completely at the drop.
+ *
+ * If the popup's own window can't be identified — the lookup fails, or it names a window
+ * that owns none of the active tabs — every tab that is active in ANY window is deferred
+ * instead. Over-deferring costs nothing (the close still happens, just on popup close);
  * under-deferring costs the user their popup mid-drop.
  *
  * Exported for tests; `chrome.tabs.query` failing degrades to "defer everything", which
@@ -532,16 +554,19 @@ export async function partitionClosableTabs(
 ): Promise<{ now: number[]; deferred: number[] }> {
   const unique = [...new Set(tabIds)].filter((id) => typeof id === 'number' && id > 0);
   if (unique.length === 0) return { now: [], deferred: [] };
-  let activeIds = new Set<number>();
+  let held = new Set<number>();
   try {
-    const active = await chrome.tabs.query({ active: true });
-    activeIds = new Set(active.map((t) => t.id).filter((id): id is number => typeof id === 'number'));
+    const [active, ownId] = await Promise.all([chrome.tabs.query({ active: true }), ownWindowId()]);
+    const mine = ownId === null ? [] : active.filter((t) => t.windowId === ownId);
+    held = new Set(
+      (mine.length > 0 ? mine : active).map((t) => t.id).filter((id): id is number => typeof id === 'number')
+    );
   } catch {
     return { now: [], deferred: unique };
   }
   return {
-    now: unique.filter((id) => !activeIds.has(id)),
-    deferred: unique.filter((id) => activeIds.has(id))
+    now: unique.filter((id) => !held.has(id)),
+    deferred: unique.filter((id) => held.has(id))
   };
 }
 
@@ -553,7 +578,8 @@ export async function partitionClosableTabs(
  *
  * `tabs.remove` (a drag OUT of Now Open, which now MOVES rather than copies) is the only
  * destructive effect, and it is split by {@link partitionClosableTabs} so the popup never
- * closes its own anchor tab. Side effects run AFTER `saveGroupsState` has been issued, so
+ * closes its own anchor tab; every other tab, including another window's active tab,
+ * closes here at the drop. Side effects run AFTER `saveGroupsState` has been issued, so
  * even a dismissed popup leaves the destination group persisted.
  */
 export async function runSideEffects(effects: DndSideEffect[]): Promise<void> {

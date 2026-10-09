@@ -4,8 +4,11 @@
  * The destination still gets a detached copy, but the real tabs are now closed. The whole
  * risk of this change is spec C7: closing the ACTIVE tab of the window the toolbar popup
  * is anchored to dismisses the popup instantly, which killed the drop commit. So the
- * executor never closes an active tab itself — it hands those ids to the background worker
- * over a port that disconnects when the popup goes away.
+ * executor never closes THAT tab itself — it hands its id to the background worker over a
+ * port that disconnects when the popup goes away. Every other tab closes at the drop,
+ * including the active tab of a window the popup is not attached to, so a dragged window
+ * closes completely. When the popup's own window can't be identified, every active tab is
+ * deferred instead.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { partitionClosableTabs, runSideEffects } from '@/hooks/useDndHandlers'
@@ -21,17 +24,44 @@ interface PortStub {
   onDisconnect: { addListener: ReturnType<typeof vi.fn> }
 }
 
-function stubChrome(opts: { activeIds?: number[]; queryThrows?: boolean } = {}) {
+/** The popup's own window in these tests; `OTHER` is a window it is not attached to. */
+const OWN = 1
+const OTHER = 2
+
+/**
+ * `active` maps window id → that window's active tab id. `ownWindow` is what
+ * `chrome.windows.getCurrent()` answers: a window object, `'rejects'`, or `'missing'` for a
+ * browser without the method (the default, so the lookup fails unless a test opts in).
+ */
+function stubChrome(
+  opts: {
+    active?: Record<number, number>
+    ownWindow?: { id?: number } | 'rejects' | 'missing'
+    queryThrows?: boolean
+  } = {}
+) {
   const ports: PortStub[] = []
+  const ownWindow = opts.ownWindow ?? 'missing'
+  const activeTabs = Object.entries(opts.active ?? {}).map(([windowId, id]) => ({ id, windowId: Number(windowId) }))
   const chromeStub = {
-    windows: { create: vi.fn().mockResolvedValue({}) },
+    windows: {
+      create: vi.fn().mockResolvedValue({}),
+      ...(ownWindow === 'missing'
+        ? {}
+        : {
+            getCurrent:
+              ownWindow === 'rejects'
+                ? vi.fn().mockRejectedValue(new Error('no current window'))
+                : vi.fn().mockResolvedValue(ownWindow)
+          })
+    },
     tabs: {
       create: vi.fn().mockResolvedValue({}),
       move: vi.fn().mockResolvedValue({}),
       remove: vi.fn().mockResolvedValue(undefined),
       query: opts.queryThrows
         ? vi.fn().mockRejectedValue(new Error('no'))
-        : vi.fn().mockResolvedValue((opts.activeIds ?? []).map((id) => ({ id })))
+        : vi.fn().mockResolvedValue(activeTabs)
     },
     runtime: {
       connect: vi.fn((info: { name: string }) => {
@@ -56,13 +86,29 @@ afterEach(() => {
 })
 
 describe('partitionClosableTabs — what may be closed while the popup is open', () => {
-  it('closes non-active tabs now and defers every ACTIVE tab (the popup anchor is one of them)', async () => {
-    stubChrome({ activeIds: [10, 30] })
+  it("defers ONLY the active tab of the popup's own window; another window's active tab closes now", async () => {
+    stubChrome({ active: { [OWN]: 10, [OTHER]: 30 }, ownWindow: { id: OWN } })
+    expect(await partitionClosableTabs([10, 20, 30, 40])).toEqual({ now: [20, 30, 40], deferred: [10] })
+  })
+
+  it('closes every tab of a window the popup is not attached to, active included', async () => {
+    stubChrome({ active: { [OWN]: 10, [OTHER]: 30 }, ownWindow: { id: OWN } })
+    expect(await partitionClosableTabs([30, 31, 32])).toEqual({ now: [30, 31, 32], deferred: [] })
+  })
+
+  it.each([
+    ['windows.getCurrent rejects', 'rejects' as const],
+    ['windows.getCurrent is missing', 'missing' as const],
+    ['the window has no id', {}],
+    ['the id is WINDOW_ID_NONE', { id: -1 }],
+    ['the id names a window that owns no active tab', { id: 99 }]
+  ])('FALLBACK — defers every active tab when %s', async (_why, ownWindow) => {
+    stubChrome({ active: { [OWN]: 10, [OTHER]: 30 }, ownWindow })
     expect(await partitionClosableTabs([10, 20, 30, 40])).toEqual({ now: [20, 40], deferred: [10, 30] })
   })
 
   it('de-duplicates and drops the saved-tab sentinel id 0 (chrome.tabs.remove(0) is never valid)', async () => {
-    stubChrome({ activeIds: [] })
+    stubChrome({ ownWindow: { id: OWN } })
     expect(await partitionClosableTabs([7, 7, 0, -1])).toEqual({ now: [7], deferred: [] })
   })
 
@@ -73,14 +119,14 @@ describe('partitionClosableTabs — what may be closed while the popup is open',
   })
 
   it('degrades to DEFER EVERYTHING when the active-tab query fails — the safe direction', async () => {
-    stubChrome({ queryThrows: true })
+    stubChrome({ queryThrows: true, ownWindow: { id: OWN } })
     expect(await partitionClosableTabs([1, 2])).toEqual({ now: [], deferred: [1, 2] })
   })
 })
 
 describe('runSideEffects — tabs.remove', () => {
-  it('removes the non-active tabs itself and hands the active one to the background port', async () => {
-    const { chromeStub, ports } = stubChrome({ activeIds: [10] })
+  it("the popup's own window: removes its non-active tabs itself and hands the active one to the background port", async () => {
+    const { chromeStub, ports } = stubChrome({ active: { [OWN]: 10 }, ownWindow: { id: OWN } })
     await runSideEffects([{ type: 'tabs.remove', tabIds: [10, 20, 30] }])
     expect(chromeStub.tabs.remove).toHaveBeenCalledTimes(1)
     expect(chromeStub.tabs.remove).toHaveBeenCalledWith([20, 30])
@@ -89,22 +135,44 @@ describe('runSideEffects — tabs.remove', () => {
     expect(ports[0].postMessage).toHaveBeenCalledWith({ tabIds: [10] })
   })
 
-  it('never calls chrome.tabs.remove when every dragged tab is active — that would dismiss the popup', async () => {
-    const { chromeStub, ports } = stubChrome({ activeIds: [10, 11] })
+  it('another window: removes ALL its tabs at the drop, active included, and opens no port', async () => {
+    const { chromeStub, ports } = stubChrome({ active: { [OWN]: 10, [OTHER]: 30 }, ownWindow: { id: OWN } })
+    await runSideEffects([{ type: 'tabs.remove', tabIds: [30, 31, 32] }])
+    expect(chromeStub.tabs.remove).toHaveBeenCalledTimes(1)
+    expect(chromeStub.tabs.remove).toHaveBeenCalledWith([30, 31, 32])
+    expect(ports).toHaveLength(0)
+  })
+
+  it("both windows in one drop: the other window closes whole, only the own window's active tab waits", async () => {
+    const { chromeStub, ports } = stubChrome({ active: { [OWN]: 10, [OTHER]: 30 }, ownWindow: { id: OWN } })
+    await runSideEffects([{ type: 'tabs.remove', tabIds: [10, 11, 30, 31] }])
+    expect(chromeStub.tabs.remove).toHaveBeenCalledWith([11, 30, 31])
+    expect(ports[0].postMessage).toHaveBeenCalledWith({ tabIds: [10] })
+  })
+
+  it("never removes the own window's active tab itself, even when it is the only tab dragged", async () => {
+    const { chromeStub, ports } = stubChrome({ active: { [OWN]: 10, [OTHER]: 30 }, ownWindow: { id: OWN } })
+    await runSideEffects([{ type: 'tabs.remove', tabIds: [10] }])
+    expect(chromeStub.tabs.remove).not.toHaveBeenCalled()
+    expect(ports[0].postMessage).toHaveBeenCalledWith({ tabIds: [10] })
+  })
+
+  it('FALLBACK — own window unknown: never calls chrome.tabs.remove for an active tab of any window', async () => {
+    const { chromeStub, ports } = stubChrome({ active: { [OWN]: 10, [OTHER]: 11 }, ownWindow: 'rejects' })
     await runSideEffects([{ type: 'tabs.remove', tabIds: [10, 11] }])
     expect(chromeStub.tabs.remove).not.toHaveBeenCalled()
     expect(ports[0].postMessage).toHaveBeenCalledWith({ tabIds: [10, 11] })
   })
 
   it('opens no port at all when nothing needs deferring', async () => {
-    const { chromeStub, ports } = stubChrome({ activeIds: [] })
+    const { chromeStub, ports } = stubChrome({ active: { [OWN]: 99 }, ownWindow: { id: OWN } })
     await runSideEffects([{ type: 'tabs.remove', tabIds: [5, 6] }])
     expect(chromeStub.tabs.remove).toHaveBeenCalledWith([5, 6])
     expect(ports).toHaveLength(0)
   })
 
   it('a failing remove does not stop the rest of the batch (best effort, Now Open re-syncs)', async () => {
-    const { chromeStub } = stubChrome({ activeIds: [] })
+    const { chromeStub } = stubChrome({ active: { [OWN]: 99 }, ownWindow: { id: OWN } })
     chromeStub.tabs.remove.mockRejectedValueOnce(new Error('already gone'))
     await runSideEffects([
       { type: 'tabs.remove', tabIds: [5] },

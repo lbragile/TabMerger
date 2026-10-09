@@ -35,7 +35,7 @@ Out of scope: drags on the web dashboard.
 | C4 | **Native path only:** a layout mutation of the dragged row or its ancestors aborts the drag **only** inside the `dragstart` dispatch or a microtask queued from it. Attribute-only changes always survive. | `popupAbortWindow.repro.ts`, 82+ trials. | Defer visuals to the first rAF; never unmount a drop zone mid-drag, only hide it. |
 | C5 | **Native path only:** the OS owns the cursor. | Confirmed. | **`grabbing` works on the pointer path** (`html[data-tm-dnd-grabbing]` + `!important`). On the native path the OS glyph is unavoidable. |
 | C6 | `setDragImage(el)` silently ignores a **detached** non-`<img>`. | Log reads `{tagName:"IMG", complete:true, naturalWidth:1, isConnected:true}`. | Suppressed with a preloaded, decoded 1×1 transparent GIF `<img>` in `#tm-dnd-aux-host`. |
-| **C7** | **Closing the popup's ACTIVE tab dismisses the popup.** Dragging out of Now Open is a **MOVE** (the real tabs close), so the close must never be synchronous for an active tab. | A real-popup test failed within 5s of the drop when actives were closed inline. | `runSideEffects` partitions via `chrome.tabs.query({active:true})`: **non-active tabs close immediately**; **every active tab is deferred** to the background worker over a `chrome.runtime.connect` port that closes it on `onDisconnect` (popup teardown). The popup has no reliable handle on its own anchor, so over-deferring every active tab is deliberate. |
+| **C7** | **Closing the ACTIVE tab of the popup's own window dismisses the popup.** Dragging out of Now Open is a **MOVE** (the real tabs close), so that one tab must never be closed while the popup is open. Tabs of any other window are safe to close, active or not: the popup watches only its own window's tab strip. | A real-popup test failed within 5s of the drop when actives were closed inline. | `runSideEffects` partitions via `chrome.tabs.query({active:true})` and `chrome.windows.getCurrent()` (the window containing the calling page — the anchor window for the toolbar popup, the tab's window when `popup.html` is opened as a tab): **only the active tab of the popup's own window is deferred** to the background worker over a `chrome.runtime.connect` port that closes it on `onDisconnect` (popup teardown); **every other tab closes immediately**, so a dragged window the popup is not attached to closes completely at the drop. **Fallback:** if the own window can't be identified (the call is missing or rejects, or it names a window that owns no active tab), every active tab is deferred. |
 | C8 | No error boundary: an uncaught render/effect error unmounts everything. | The `measuring: Always` loop took the popup down. | `measuring.droppable.strategy` stays `BeforeDragging (1)`; drag-end code is defensive. |
 | C9 | CDP screenshots can't see OS-composited things (native drag image, cursor); they **can** see in-page DOM. | Screenshots showed a correct ghost while a human tester saw the grey grip snapshot. | See §9 blind spots. |
 | C10 | CDP key events never reach the **native drag loop**; keyboard drags have no native session, so CDP keys drive them fine. | Escape test: the drag continued and committed. | Native-drag Escape is human-only. |
@@ -59,7 +59,7 @@ Out of scope: drags on the web dashboard.
 | `src/lib/dndInsertion.ts` | Insertion index from the dragged item's centre; returns rows to shift **and** the commit target. |
 | `src/lib/dndRebase.ts` | `rebaseMove` (identity + occurrence rank + context check for duplicates), `isStructuralNoop`. |
 | `src/lib/dndMove.ts` | Pure engine: `canDrop`, `applyMove`, `moveTabsMulti`, `moveWindowsMulti`, `moveGroupsMulti`, `moveToNewGroup`, `NEW_GROUP_ID`. Emits `{type:'tabs.remove', tabIds}` for Now Open moves. **No empty-window pruning.** |
-| `src/lib/deferredTabClose.ts` | Hands active tab ids to the background worker over a `chrome.runtime.connect` port; closes them on `onDisconnect`. |
+| `src/lib/deferredTabClose.ts` | Hands the deferred tab id(s) — the active tab of the popup's own window — to the background worker over a `chrome.runtime.connect` port; closes them on `onDisconnect`. |
 | `src/lib/dndAnnouncements.ts` | Announcement text incl. multi-group blocks and partial moves. |
 | `src/lib/dndLiveRegion.ts` | App-owned assertive live region in `#tm-dnd-aux-host`. |
 | `src/lib/dndFocus.ts` | Focus after a keyboard drop, by object identity. Grip-less window target is **`[data-window-header]`**. |
@@ -132,7 +132,7 @@ Out of scope: drags on the web dashboard.
 | Saved window(s) → window position / group row | Inserted at the gap / new last window(s), starred-first kept | none | yes |
 | Saved window(s) → new-group zone | A new group holding them | none | yes |
 | Group reorder (single or multi) | Contiguous block at the gap; **never index 0**; anchor stays active | none | yes |
-| **Now Open tab(s)/window → saved group or new-group zone** | **MOVED.** Destination gains a detached copy (`id:0`, `savedAt`); the real tabs close | **`tabs.remove` — non-active immediately, active deferred to popup teardown (C7)** | no |
+| **Now Open tab(s)/window → saved group or new-group zone** | **MOVED.** Destination gains a detached copy (`id:0`, `savedAt`); the real tabs close | **`tabs.remove` — everything immediately, except the active tab of the popup's own window, which is deferred to popup teardown (C7)** | no |
 | Now Open tab reorder within Now Open | Real tab(s) moved | `chrome.tabs.move` | no |
 | Saved tab(s)/window(s) → Now Open row | Removed from sources; one new real window | `windows.create({focused:false})` | no |
 | Saved tab → live Now Open tab/window | Removed from source; real tab opened there | `tabs.create({active:false})` | no |
@@ -208,7 +208,7 @@ Focus rings `ring-ring` **16.54 / 11.98**; tab row + grip on a selected row **15
 
 **Commit/persistence:** never tear down the ghost before the commit flushes; never `cancelQueries` on the groups query, and never `invalidateQueries` on the groups key without `cancelRefetch:false`; never commit from the snapshot alone; never `await` between issuing `saveGroupsState` and the cache write; never leave `onDragEnd` without `finally { reset() }`; never `rollback()` before `reset()`; never pop undo or announce failure for an already-issued write; never clear the live-drag flag late in `reset()`; never read/write groups outside `getGroupsState`/`saveGroupsState`.
 
-**Side effects:** **never close an ACTIVE tab synchronously** — defer to the background port (C7); never `windows.remove` from DnD; always `focused:false` / `active:false`; never persist a DnD-produced saved tab with a nonzero id; never activate Now Open from a drag; **never prune an emptied window in a move**.
+**Side effects:** **never close the ACTIVE tab of the popup's own window while the popup is open** — defer it to the background port, and defer every active tab when the own window is unknown (C7); never `windows.remove` from DnD (it would also close tabs the drop never saved); always `focused:false` / `active:false`; never persist a DnD-produced saved tab with a nonzero id; never activate Now Open from a drag; **never prune an emptied window in a move**.
 
 **Keyboard/a11y:** global key handlers check `isDndDragLive()` and `defaultPrevented`; never arm spring-open for a keyboard drag; never restore focus by positional slot; keep `restoreFocus:false`; grip selectors use `^=`; **arm global dismiss listeners on the next macrotask** (C14).
 
@@ -242,7 +242,7 @@ Native drag image and cursor (C9); **whether `grabbing` renders for a human and 
 
 **Checklist**
 - Pointer drags: ghost matches the row, source collapses, gap follows, no flash or revert, **cursor is `grabbing`**.
-- **Now Open → saved group MOVES:** the copy lands, non-active tabs close immediately, and the active tab closes once you close the popup. The popup must never be dismissed by the drop.
+- **Now Open → saved group MOVES:** the copy lands and the real tabs close at the drop. A dragged window the popup is **not** attached to closes completely straight away. Dragging the window the popup **is** attached to closes every tab but its active one, which closes once you close the popup. The popup must never be dismissed by the drop.
 - New-group zone appears for tab/window drags and creates a group; at the free cap it does not appear.
 - Group multi-drag: Ctrl-click several, drag by a grip, block moves, never above Now Open.
 - A group's last window can be dragged out; the emptied window and the emptied group both stay and stay usable.
@@ -300,7 +300,7 @@ Native drag image and cursor (C9); **whether `grabbing` renders for a human and 
 | Native HTML5 sensor | Made dragging work; aborted by `<DragOverlay>` mount, Add-button unmount and transform churn at pickup (C4). |
 | Detached canvas / row-clone drag image | Silently ignored → grey grip box (C6). Now a decoded `<img>`. |
 | React-state ghost → rAF direct-DOM ghost | Jank was the per-event reconcile, not the event rate. |
-| Now Open drag-out emitting `tabs.remove` inline | Dismissed the popup (C7) → switched to a **copy** → **reversed again to a move**, with active tabs deferred to a background port. |
+| Now Open drag-out emitting `tabs.remove` inline | Dismissed the popup (C7) → switched to a **copy** → **reversed again to a move**, with active tabs deferred to a background port → narrowed to the active tab of the popup's own window, so a dragged window closes at the drop. |
 | `visibility:hidden` source slot | Looked like a duplicate; replaced by rAF-deferred collapse + `dndInsertion` gap. |
 | Teardown before `onEnd` / default scheduler / row transitions | Old-order frame + slide; fixed with the instant attribute, `flushSync`, sync notify. |
 | Cache write then `await saveGroupsState` | A mounting refetch reverted the drop (C11); fixed with the write queue. |

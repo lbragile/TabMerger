@@ -232,10 +232,11 @@ export default defineBackground(() => {
 
   // Tabs the popup dragged OUT of "Now Open" that it must not close itself: closing the
   // ACTIVE tab of the popup's anchor window dismisses the popup instantly (spec C7), which
-  // used to kill the drop commit. The popup posts the ids down a long-lived port and we
-  // close them when that port disconnects — i.e. the moment the popup goes away, whatever
-  // made it go away. The open port also keeps this worker alive until then, so the close
-  // can't be lost to worker eviction.
+  // used to kill the drop commit. That is the only tab it holds back; every other dragged
+  // tab the popup closes itself at the drop. The popup posts the ids down a long-lived
+  // port and we close them when that port disconnects — i.e. the moment the popup goes
+  // away, whatever made it go away. The open port also keeps this worker alive until then,
+  // so the close can't be lost to worker eviction.
   chrome.runtime.onConnect.addListener((port) => {
     if (port.name !== DEFERRED_CLOSE_PORT) return;
     const pending = new Set<number>();

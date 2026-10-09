@@ -350,8 +350,9 @@ describe('applyMove — Now Open delegation', () => {
     expect(copy!.savedAt).toEqual(expect.any(Number))
     // Now Open group in `next` is NOT directly mutated (it re-syncs from the browser)
     expect(res.next.available[0]).toEqual(s.available[0])
-    // MOVE semantics: the real tab is closed. `runSideEffects` defers an ACTIVE tab to
-    // popup teardown so the popup's anchor tab can't dismiss it mid-drop (spec C7).
+    // MOVE semantics: the real tab is closed. `runSideEffects` defers it to popup teardown
+    // only if it is the active tab of the popup's own window, so closing the popup's
+    // anchor tab can't dismiss it mid-drop (spec C7).
     expect(res.sideEffects).toEqual([{ type: 'tabs.remove', tabIds: [9] }])
     // Undo can't faithfully reopen a closed tab, so the move stays out of the stack.
     expect(res.undoable).toBe(false)
@@ -434,8 +435,8 @@ describe('applyMove — Now Open delegation', () => {
 // The hazard this replaced a copy with is spec C7: closing the ACTIVE tab of the
 // window the toolbar popup is anchored to makes Chrome dismiss the popup instantly,
 // which used to kill the commit mid-flight. `applyMove` stays pure and just names the
-// ids; `runSideEffects` closes only NON-active tabs itself and defers every active one
-// to the background worker, which closes it when the popup goes away (see
+// ids; `runSideEffects` closes them itself, except the active tab of the popup's own
+// window, which it defers to the background worker to close when the popup goes away (see
 // `dndNowOpenMoveOut.test.ts`). The guard that survives here: a `tabs.remove` may only
 // ever appear for a Now Open → saved drop, and may only ever name REAL (non-zero) ids.
 // ─────────────────────────────────────────────────────────────────────────────

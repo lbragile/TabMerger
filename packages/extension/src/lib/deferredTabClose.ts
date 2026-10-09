@@ -7,6 +7,11 @@
  * popup hands those ids to the background service worker over a long-lived port and the
  * worker closes them when the port DISCONNECTS, which is exactly when the popup goes away.
  *
+ * Normally that is ONE id per drop at most: the active tab of the popup's own window
+ * (`partitionClosableTabs` in `useDndHandlers.ts`). Tabs of every other window, active or
+ * not, are closed by the popup at the drop and never come here. Only when the popup can't
+ * tell which window it is in does every dragged active tab get queued instead.
+ *
  * Why a port and not a delayed message:
  *  - `onDisconnect` is the only signal that fires for EVERY way a popup can vanish
  *    (Escape, click-away, opening another popup, navigating), not just a tidy close.

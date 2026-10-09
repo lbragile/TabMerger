@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
@@ -219,5 +219,94 @@ describe('unified DnD commit path — real IndexedDB round trips', () => {
     const reloaded = await getGroupsState()
     expect(reloaded.available.map((g) => g.id)).toEqual(['now', 'g-b', 'g-c', 'g-a'])
     expect(reloaded.active).toEqual({ id: 'g-a', index: 3 })
+  })
+})
+
+describe('Now Open drag-out — the saved copy is in IndexedDB before any real tab closes', () => {
+  const OWN = 100
+  const OTHER = 200
+  type ChromeLike = Record<string, Record<string, unknown>>
+  beforeEach(async () => {
+    await clearDb()
+  })
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  /** Seed Now Open with an own window (tabs 10, 11; 10 active) and another window (20, 21; 20 active). */
+  async function seedNowOpen() {
+    const nowOpen = group(
+      'now',
+      'Now Open',
+      [
+        win([{ ...tab('o1'), id: 10 }, { ...tab('o2'), id: 11 }], { id: OWN }),
+        win([{ ...tab('x1'), id: 20 }, { ...tab('x2'), id: 21 }], { id: OTHER })
+      ],
+      { permanent: true }
+    )
+    const state: GroupsState = { active: { id: 'now', index: 0 }, available: [nowOpen, group('g-b', 'B', [])] }
+    await saveGroupsState(state)
+    return state
+  }
+
+  /** Records what IndexedDB holds for `g-b` at the moment each chrome side effect fires. */
+  function stubChromeSnapshottingDb() {
+    const seen: { effect: string; destTitles: string[][]; destIds: number[] }[] = []
+    const snapshot = async (effect: string) => {
+      const dest = (await getGroupsState()).available.find((g) => g.id === 'g-b')!
+      seen.push({
+        effect,
+        destTitles: dest.windows.map((w) => w.tabs.map((t) => t.title)),
+        destIds: dest.windows.flatMap((w) => w.tabs.map((t) => t.id))
+      })
+    }
+    const base = (globalThis as unknown as { chrome: ChromeLike }).chrome
+    const remove = vi.fn(async () => snapshot('tabs.remove'))
+    vi.stubGlobal('chrome', {
+      ...base,
+      windows: { ...base.windows, getCurrent: vi.fn().mockResolvedValue({ id: OWN }) },
+      tabs: {
+        ...base.tabs,
+        query: vi.fn().mockResolvedValue([
+          { id: 10, windowId: OWN },
+          { id: 20, windowId: OTHER }
+        ]),
+        remove
+      },
+      runtime: {
+        ...base.runtime,
+        connect: vi.fn(() => {
+          void snapshot('port')
+          return { postMessage: vi.fn(), onDisconnect: { addListener: vi.fn() } }
+        })
+      }
+    })
+    return { seen, remove }
+  }
+
+  it('dragging a window the page is not in: when tabs.remove fires, IndexedDB already holds the detached copy (id 0 tabs)', async () => {
+    const state = await seedNowOpen()
+    const { seen, remove } = stubChromeSnapshottingDb()
+    const { result } = renderHook(() => useDndHandlers(), { wrapper: makeWrapper(state).wrapper })
+    await drag(result, 'now::w1', 'g-b')
+
+    expect(remove).toHaveBeenCalledWith([20, 21])
+    expect(seen.map((s) => s.effect)).toEqual(['tabs.remove'])
+    expect(seen[0].destTitles).toEqual([['x1', 'x2']])
+    expect(seen[0].destIds).toEqual([0, 0])
+  })
+
+  it("dragging the page's own window: the non-active tab closes and the active one is queued, both after the copy is persisted", async () => {
+    const state = await seedNowOpen()
+    const { seen, remove } = stubChromeSnapshottingDb()
+    const { result } = renderHook(() => useDndHandlers(), { wrapper: makeWrapper(state).wrapper })
+    await drag(result, 'now::w0', 'g-b')
+    await vi.waitFor(() => expect(seen.map((s) => s.effect).sort()).toEqual(['port', 'tabs.remove']))
+
+    for (const s of seen) {
+      expect(s.destTitles).toEqual([['o1', 'o2']])
+      expect(s.destIds).toEqual([0, 0])
+    }
+    expect(remove).toHaveBeenCalledWith([11])
   })
 })
