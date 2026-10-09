@@ -7,6 +7,7 @@ import { deleteRemoteGroups } from '@/lib/syncEngine';
 import { resolveIncognito } from '@/lib/incognito';
 import { deleteRulesForGroupIds } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
+import { copyLiveWindow } from '@/lib/dndMove';
 import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { asNewGroup } from '@/lib/syncDirty';
 import { alignToBase, restoreFreshOrder, markAborted, wasAborted } from '@/lib/groupsAlign';
@@ -907,6 +908,8 @@ export function useMoveTab() {
  * Moves an entire window between groups. Mirrors `useMoveTab`'s Now Open destination logic:
  * if the target is Now Open, opens the URLs in a new Chrome window and removes them from the source.
  * For saved-to-saved moves, appends the window to the target (sorted by starred).
+ * A Now Open source is always a COPY (same rule as `useMoveTab`'s `copy`): the target gets a
+ * detached saved copy and Now Open is left untouched, so the real window stays open.
  */
 export function useMoveWindow() {
   const qc = useQueryClient();
@@ -952,15 +955,23 @@ export function useMoveWindow() {
       return mutate((prev) => {
         const available = [...prev.available];
 
-        // Remove window from source group
-        const fromGroup = { ...available[fromGroupIndex] };
-        const fromWindows = [...fromGroup.windows];
-        const [movedWindow] = fromWindows.splice(windowIndex, 1);
-        fromGroup.windows = fromWindows;
-        fromGroup.updatedAt = Date.now();
-        fromGroup.pendingSync = true;
-        fromGroup.info = getGroupInfo(fromGroup);
-        available[fromGroupIndex] = fromGroup;
+        let movedWindow;
+        if (available[fromGroupIndex].permanent) {
+          // Now Open source ("Copy to group"): the live window stays where it is and stays open.
+          const liveWindow = available[fromGroupIndex].windows[windowIndex];
+          if (!liveWindow) return prev;
+          movedWindow = copyLiveWindow(liveWindow);
+        } else {
+          // Remove window from source group
+          const fromGroup = { ...available[fromGroupIndex] };
+          const fromWindows = [...fromGroup.windows];
+          [movedWindow] = fromWindows.splice(windowIndex, 1);
+          fromGroup.windows = fromWindows;
+          fromGroup.updatedAt = Date.now();
+          fromGroup.pendingSync = true;
+          fromGroup.info = getGroupInfo(fromGroup);
+          available[fromGroupIndex] = fromGroup;
+        }
 
         // Append window to target group (sorted by starred)
         const toGroup = { ...available[toGroupIndex] };

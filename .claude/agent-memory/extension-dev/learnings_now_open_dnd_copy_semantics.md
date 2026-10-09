@@ -7,6 +7,12 @@ metadata:
 
 # DnD out of "Now Open" is a COPY, never a close
 
+> **Superseded (re-checked against the code 2026-10-09):** a drag out of Now Open is a MOVE
+> again. `tabs.remove` is back in `DndSideEffect`, and the executor closes non-active tabs
+> itself and defers every active tab to popup teardown; see
+> `learnings_dnd_finishing_pass.md`. The menu paths ("Copy to group") still copy. The history
+> and the harness gotchas below remain accurate.
+
 **Fact:** `dndMove.ts` used to emit `tabs.remove` when a live Now Open tab (single) or
 whole window was dropped on a saved group. Closing the ACTIVE tab of the window the
 MV3 toolbar popup is anchored to makes Chrome dismiss the popup instantly, which looked

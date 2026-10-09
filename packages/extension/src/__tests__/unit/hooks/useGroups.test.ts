@@ -46,7 +46,7 @@ import {
   useApplyAIGroups,
   GROUPS_QUERY_KEY,
 } from '@/hooks/useGroups'
-import { createGroup, createNowOpenGroup } from '@/lib/utils'
+import { createGroup, createNowOpenGroup, formatGroupCounts } from '@/lib/utils'
 import { useUIStore } from '@/stores/uiStore'
 import type { GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
@@ -1230,6 +1230,218 @@ describe('useMoveWindow', () => {
     const saved = lastSaved()
     expect(saved.available[0].windows).toHaveLength(0)
     expect(saved.available[1].windows).toHaveLength(2)
+  })
+
+  it('COPIES a Now Open window into a saved group: Now Open is untouched and the target gets a detached saved copy', async () => {
+    const nowOpen = createNowOpenGroup()
+    const live: ExtWindow = { id: 501, tabs: [tab(11, 'https://a.com'), { ...tab(12, 'https://b.com'), pinned: true }], incognito: false, focused: true, starred: true }
+    nowOpen.windows = [live, { id: 502, tabs: [tab(13, 'https://c.com')], incognito: false, focused: false }]
+    const to = createGroup('to', 'To')
+    to.windows = [{ ...win([tab(0, 'https://z.com')]), starred: true }]
+    to.updatedAt = 1
+    const state = makeState([nowOpen, to])
+    const nowOpenBefore = structuredClone(nowOpen)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 0, windowIndex: 0, toGroupIndex: 1 })
+    })
+
+    const saved = lastSaved()
+    // Now Open: same windows, same order, not marked for sync; nothing closed or opened.
+    expect(saved.available[0]).toEqual(nowOpenBefore)
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(chrome.windows.remove).not.toHaveBeenCalled()
+    expect(chrome.windows.create).not.toHaveBeenCalled()
+
+    // Target: the copy lands after the starred window, with no live ids or live-only flags.
+    const target = saved.available[1]
+    expect(target.windows).toHaveLength(2)
+    const copy = target.windows[1]
+    expect(copy.id).toBe(0)
+    expect(copy.focused).toBe(false)
+    expect(copy.starred).toBe(false)
+    expect(copy.tabs.map((t) => t.url)).toEqual(['https://a.com', 'https://b.com'])
+    expect(copy.tabs.every((t) => t.id === 0 && typeof t.savedAt === 'number' && !('pinned' in t))).toBe(true)
+    expect(target.pendingSync).toBe(true)
+    expect(target.updatedAt).toBeGreaterThan(1)
+    expect(target.info).toBe(formatGroupCounts(2, 3))
+    // Undoable like any other saved-group edit: the snapshot is the state before the copy.
+    expect(useUIStore.getState().undoStack[0].available[1].windows).toHaveLength(1)
+  })
+
+  it('copying from a Now Open window index that does not exist leaves the state unchanged and touches no browser window', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [{ id: 501, tabs: [tab(11, 'https://a.com')], incognito: false, focused: false }]
+    nowOpen.updatedAt = 5
+    const to = createGroup('to', 'To')
+    to.windows = [win([tab(0, 'https://z.com')])]
+    to.updatedAt = 7
+    const state = makeState([nowOpen, to])
+    const before = structuredClone(state)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 0, windowIndex: 5, toGroupIndex: 1 })
+    })
+
+    // Whatever is (re)written is identical to what was there: no phantom window, no bumped group.
+    expect(qc.getQueryData(GROUPS_QUERY_KEY)).toEqual(before)
+    for (const call of (saveGroupsState as ReturnType<typeof vi.fn>).mock.calls) {
+      expect(call[0]).toEqual(before)
+    }
+    expect(chrome.tabs.remove).not.toHaveBeenCalled()
+    expect(chrome.windows.remove).not.toHaveBeenCalled()
+    expect(chrome.windows.create).not.toHaveBeenCalled()
+  })
+
+  it('a starred, focused Now Open window lands UNstarred and UNfocused, so the starred sort puts it after the target\'s starred window', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [tab(11, 'https://a.com')], incognito: false, focused: true, starred: true, name: 'live' },
+    ]
+    const to = createGroup('to', 'To')
+    to.windows = [
+      { ...win([tab(0, 'https://plain.com')]), name: 'plain' },
+      { ...win([tab(0, 'https://star.com')]), starred: true, name: 'star' },
+    ]
+    const state = makeState([nowOpen, to])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 0, windowIndex: 0, toGroupIndex: 1 })
+    })
+
+    const target = lastSaved().available[1]
+    expect(target.windows.map((w) => w.name)).toEqual(['star', 'plain', 'live'])
+    const copy = target.windows[2]
+    expect(copy.starred).toBe(false)
+    expect(copy.focused).toBe(false)
+    expect(copy.id).toBe(0)
+    // The live window itself is still starred and focused.
+    expect(lastSaved().available[0].windows[0]).toMatchObject({ id: 501, starred: true, focused: true })
+  })
+
+  it('Now Open copy: only the target gets updatedAt/pendingSync/info; Now Open keeps its object, updatedAt and pendingSync', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = [
+      { id: 501, tabs: [tab(11, 'https://a.com'), tab(12, 'https://b.com')], incognito: false, focused: false },
+    ]
+    nowOpen.updatedAt = 42
+    nowOpen.pendingSync = false
+    const to = createGroup('to', 'To')
+    to.windows = []
+    to.updatedAt = 1
+    to.pendingSync = false
+    to.info = 'stale'
+    const state = makeState([nowOpen, to])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 0, windowIndex: 0, toGroupIndex: 1 })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[0]).toBe(nowOpen)
+    expect(saved.available[0].updatedAt).toBe(42)
+    expect(saved.available[0].pendingSync).toBe(false)
+    expect(saved.available[1].updatedAt).toBeGreaterThan(1)
+    expect(saved.available[1].pendingSync).toBe(true)
+    expect(saved.available[1].info).toBe(formatGroupCounts(1, 2))
+    expect(saved.available[1]).not.toBe(to)
+  })
+
+  it('a copy does not alias the live window: mutating the saved copy cannot change the Now Open window', async () => {
+    const nowOpen = createNowOpenGroup()
+    const live: ExtWindow = { id: 501, tabs: [tab(11, 'https://a.com')], incognito: false, focused: false }
+    nowOpen.windows = [live]
+    const to = createGroup('to', 'To')
+    to.windows = []
+    const state = makeState([nowOpen, to])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 0, windowIndex: 0, toGroupIndex: 1 })
+    })
+
+    const copy = lastSaved().available[1].windows[0]
+    expect(copy).not.toBe(live)
+    expect(copy.tabs[0]).not.toBe(live.tabs[0])
+    expect(live.tabs[0].id).toBe(11)
+  })
+
+  it('saved-to-saved move still REMOVES the window from the source and bumps both groups (regression guard for the Now Open copy branch)', async () => {
+    const from = createGroup('from', 'From')
+    from.windows = [
+      { ...win([tab(0, 'https://a.com')]), name: 'keep' },
+      { ...win([tab(0, 'https://b.com')]), name: 'moved', starred: true },
+    ]
+    from.updatedAt = 1
+    const to = createGroup('to', 'To')
+    to.windows = []
+    to.updatedAt = 1
+    const state = makeState([createNowOpenGroup(), from, to])
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 1, windowIndex: 1, toGroupIndex: 2 })
+    })
+
+    const saved = lastSaved()
+    expect(saved.available[1].windows.map((w) => w.name)).toEqual(['keep'])
+    expect(saved.available[2].windows.map((w) => w.name)).toEqual(['moved'])
+    // A saved window moves as-is (it keeps its starred flag), unlike a live-window copy.
+    expect(saved.available[2].windows[0].starred).toBe(true)
+    for (const i of [1, 2]) {
+      expect(saved.available[i].updatedAt).toBeGreaterThan(1)
+      expect(saved.available[i].pendingSync).toBe(true)
+    }
+    expect(saved.available[1].info).toBe(formatGroupCounts(1, 1))
+    expect(saved.available[2].info).toBe(formatGroupCounts(1, 1))
+    expect(chrome.windows.create).not.toHaveBeenCalled()
+  })
+
+  it('saved-to-Now-Open still opens the URLs and removes the window from the source, bumping the source only', async () => {
+    const nowOpen = createNowOpenGroup()
+    nowOpen.windows = []
+    nowOpen.updatedAt = 9
+    const group = createGroup('a', 'A')
+    group.windows = [win([tab(0, 'https://a.com')]), win([tab(0, 'https://b.com')])]
+    group.updatedAt = 1
+    const state = makeState([nowOpen, group], 1)
+    ;(getGroupsState as ReturnType<typeof vi.fn>).mockResolvedValue(state)
+    const { qc, wrapper } = makeWrapper()
+    qc.setQueryData(GROUPS_QUERY_KEY, state)
+    const { result } = renderHook(() => useMoveWindow(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ fromGroupIndex: 1, windowIndex: 0, toGroupIndex: 0 })
+    })
+
+    expect(chrome.windows.create).toHaveBeenCalledWith({ url: ['https://a.com'], focused: false })
+    const saved = lastSaved()
+    expect(saved.available[1].windows.map((w) => w.tabs[0].url)).toEqual(['https://b.com'])
+    expect(saved.available[1].updatedAt).toBeGreaterThan(1)
+    expect(saved.available[1].pendingSync).toBe(true)
+    expect(saved.available[0].updatedAt).toBe(9)
   })
 })
 

@@ -9,3 +9,4 @@
 - [Flag-off module const testing](learnings_flag_off_module_const.md) — AI_ENABLED-style flags need vi.resetModules()+dynamic import per state, not just vi.stubEnv, when consumed via a module-level const
 - [Race testing technique](learnings_integration_race_testing.md) — fake Supabase gates + resetModules for second context/restart in integration tests
 - [Real local Supabase suites](learnings_real_supabase_local.md) — run the real-network integration suites against the local stack; sequential files, ws transport for realtime
+- [E2E Now Open live windows](learnings_e2e_now_open_live_windows.md) — e2e loads the prebuilt dev build (rebuild after edits); create real windows from the SW for Now Open specs

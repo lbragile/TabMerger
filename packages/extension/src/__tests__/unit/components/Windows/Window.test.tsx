@@ -445,6 +445,39 @@ describe('WindowItem', () => {
     expect(screen.getByText(/copy to group/i)).toBeTruthy()
   })
 
+  it('Now Open window: the submenu trigger reads "Copy to group" (never "Move to group") and choosing a group calls the move mutation with the right indices', async () => {
+    const user = userEvent.setup()
+    renderWindow(makeWindow(), 0)
+    const header = document.querySelector('[data-window-index="0"] .group.relative') as HTMLElement
+    fireEvent.contextMenu(header)
+    expect(screen.queryByText(/move to group/i)).not.toBeInTheDocument()
+    await user.hover(screen.getByText(/copy to group/i))
+    const other = await screen.findByText('Other')
+    fireEvent.click(other.closest('[role="menuitem"]') as HTMLElement)
+    expect(mockMoveWindow).toHaveBeenCalledTimes(1)
+    expect(mockMoveWindow).toHaveBeenCalledWith({ fromGroupIndex: 0, windowIndex: 0, toGroupIndex: 2 })
+  })
+
+  it('Now Open window: "Create new group…" copies the window into the freshly created group', async () => {
+    const user = userEvent.setup()
+    renderWindow(makeWindow(), 0)
+    const header = document.querySelector('[data-window-index="0"] .group.relative') as HTMLElement
+    fireEvent.contextMenu(header)
+    await user.hover(screen.getByText(/copy to group/i))
+    fireEvent.click(await screen.findByText('Create new group…'))
+    const onCreated = (baseUIState.openModal as ReturnType<typeof vi.fn>).mock.calls[0][1].onCreated as (i: number) => void
+    onCreated(3)
+    expect(mockMoveWindow).toHaveBeenCalledWith({ fromGroupIndex: 0, windowIndex: 0, toGroupIndex: 3 })
+  })
+
+  it('saved-group window: the submenu trigger reads "Move to group" (never "Copy to group")', () => {
+    renderWindow(makeWindow(), 1)
+    const header = document.querySelector('[data-window-index="0"] .group.relative') as HTMLElement
+    fireEvent.contextMenu(header)
+    expect(screen.getByText(/move to group/i)).toBeTruthy()
+    expect(screen.queryByText(/copy to group/i)).not.toBeInTheDocument()
+  })
+
   it('excludes archived groups from the move-to-group submenu', async () => {
     const user = userEvent.setup()
     mockUseGroups.mockReturnValue({

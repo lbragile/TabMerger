@@ -438,8 +438,11 @@ function liveTabIds(tabs: Tab[]): number[] {
   return tabs.map((t) => t.id).filter((id): id is number => typeof id === 'number' && id > 0);
 }
 
-/** A saved, detached copy of a LIVE Now Open window (the real window's tabs are closed). */
-function copyLiveWindow(w: ExtWindow): ExtWindow {
+/**
+ * A saved, detached copy of a LIVE Now Open window. Closing the real window is the caller's
+ * call: a drag does (via `tabs.remove`), the "Copy to group" menu (`useMoveWindow`) does not.
+ */
+export function copyLiveWindow(w: ExtWindow): ExtWindow {
   return {
     ...w,
     id: 0,

@@ -31,7 +31,7 @@
  * NOT a setup error. They go green once the rework lands.
  */
 import { describe, it, expect } from 'vitest'
-import { canDrop, applyMove } from '@/lib/dndMove'
+import { canDrop, applyMove, copyLiveWindow } from '@/lib/dndMove'
 import { buildDndModel } from '@/hooks/useDndModel'
 import type { Group, GroupsState, Tab, Window as ExtWindow } from '@/lib/types'
 
@@ -967,5 +967,56 @@ describe('applyMove — the Now Open ROW as a drop target', () => {
       }
     }
     expect(creates).toBeGreaterThan(1)
+  })
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// copyLiveWindow — the detached saved copy of a live Now Open window
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe('copyLiveWindow', () => {
+  const live = (): ExtWindow => ({
+    id: 77,
+    focused: true,
+    starred: true,
+    incognito: true,
+    name: 'Research',
+    note: 'keep',
+    tabs: [
+      { id: 101, title: 'A', url: 'https://a.com', pinned: true, favIconUrl: 'https://a.com/f.ico' },
+      { id: 102, title: 'B', url: 'https://b.com' },
+    ],
+  })
+
+  it('detaches the window: id 0, unfocused, unstarred; keeps name, note and incognito', () => {
+    const copy = copyLiveWindow(live())
+    expect(copy).toMatchObject({ id: 0, focused: false, starred: false, incognito: true, name: 'Research', note: 'keep' })
+  })
+
+  it('detaches every tab: id 0, a fresh savedAt, no pinned flag; url/title/favicon kept in order', () => {
+    const before = Date.now()
+    const copy = copyLiveWindow(live())
+    expect(copy.tabs.map((t) => [t.title, t.url])).toEqual([['A', 'https://a.com'], ['B', 'https://b.com']])
+    expect(copy.tabs[0].favIconUrl).toBe('https://a.com/f.ico')
+    for (const t of copy.tabs) {
+      expect(t.id).toBe(0)
+      expect(t.savedAt).toBeGreaterThanOrEqual(before)
+      expect('pinned' in t).toBe(false)
+    }
+  })
+
+  it('does not mutate or alias the live window', () => {
+    const w = live()
+    const snapshot = structuredClone(w)
+    const copy = copyLiveWindow(w)
+    expect(w).toEqual(snapshot)
+    expect(copy).not.toBe(w)
+    expect(copy.tabs).not.toBe(w.tabs)
+    expect(copy.tabs[0]).not.toBe(w.tabs[0])
+  })
+
+  it('defaults a missing incognito flag to false and handles a window with no tabs', () => {
+    const w = { id: 5, tabs: [], focused: true } as unknown as ExtWindow
+    expect(copyLiveWindow(w)).toMatchObject({ id: 0, incognito: false, focused: false, tabs: [] })
   })
 })
