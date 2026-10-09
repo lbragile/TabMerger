@@ -72,8 +72,10 @@ PricingCard → POST /api/checkout { tier: 'pro' | 'proAi', interval: 'monthly' 
   1. Supabase cookie session required            → 401 otherwise
   2. tier / interval validated                    → 400
   3. tier === 'proAi' && AI flag off              → 503 { error: 'ai_disabled' }   (no Stripe call)
-  4. price ID from env via getStripePriceId()     → 500 'Price ID not configured' if unset
-  5. stripe.checkout.sessions.create(mode: 'subscription',
+  4. caller's subscriptions row is on a paid tier
+     with an entitled status                      → 409 { error: 'already_subscribed' } (no Stripe call)
+  5. price ID from env via getStripePriceId()     → 500 'Price ID not configured' if unset
+  6. stripe.checkout.sessions.create(mode: 'subscription',
        customer = profiles.stripe_customer_id ?? customer_email,
        metadata.user_id AND subscription_data.metadata.user_id,
        allow_promotion_codes: true)
@@ -85,7 +87,31 @@ Credit packs: `BuyCreditsButton` → `POST /api/checkout/credits { quantity? }` 
 flag off → 503 `ai_disabled` → session with `metadata: { user_id, type: 'ai_credit_pack' }`.
 Success → `/dashboard?credits=1`, cancel → `/dashboard`.
 
-Downgrades from the pricing page go to `/api/billing-portal`, never `/api/checkout`.
+### One subscription per account
+
+An account holds one subscription. Checkout starts the first one; every later change (another
+plan, another interval, cancelling) is made on that subscription in the Billing Portal.
+
+- **Server rule.** `/api/checkout` reads the caller's `subscriptions` row with the caller's own
+  cookie-scoped client (RLS lets a user select only their own row). If `tier` is not `free` and
+  `status` passes `isEntitledSubscriptionStatus` from `@tabmerger/shared` (active, trialing,
+  past_due), it answers `409 { error: 'already_subscribed' }` and creates no Checkout Session. If
+  the row can't be read it answers 500, also without a Stripe call. The code is
+  `ALREADY_SUBSCRIBED_ERROR` in `packages/web/lib/checkoutErrors.ts`, shared with the pricing card.
+  The AI-flag check comes first, so `proAi` is still 503 `ai_disabled` while AI is off.
+- **Pricing page.** `PricingCard` gets the user's plan from the page (`currentTier`, set only
+  while the subscription is entitled). For a subscriber, every other paid card ("Upgrade to …" or
+  "Downgrade to …") posts to `/api/billing-portal`, never `/api/checkout`; the current plan's card
+  offers the interval switch (below). If checkout still answers 409 `already_subscribed` (a page
+  loaded before the purchase, a second tab), the card shows "You already have a plan. Opening
+  billing so you can change it." and opens the portal; if the portal can't be opened it points to
+  **Manage billing** on the account page.
+- **Credit packs are not subscriptions.** `/api/checkout/credits` doesn't apply this rule: a
+  subscriber buys credits on top of their plan.
+- A canceled subscription leaves the row on `free`, so the same account can check out again.
+- **Pro → Pro AI** is a portal plan change like any other, so the portal configuration must offer
+  Pro AI once AI launches (see [Switching between monthly and
+  yearly](#switching-between-monthly-and-yearly)).
 
 ### Promotion codes
 
@@ -140,7 +166,7 @@ All success/cancel/portal-return URLs come from `absoluteUrl()` in `packages/web
 | Entry point | Route / call | Auth | Return URL |
 | --- | --- | --- | --- |
 | Account page "Manage billing" link | `createBillingPortalSession` in the server component | cookie | `/account` |
-| Pricing page downgrade | `POST /api/billing-portal` | cookie | `/dashboard` |
+| Pricing page, a subscriber choosing another plan (upgrade or downgrade) | `POST /api/billing-portal` | cookie | `/dashboard` |
 | Extension Settings | `POST /api/portal` | Bearer JWT | `/dashboard` |
 
 Both routes need `profiles.stripe_customer_id` (400 / 404 respectively when absent).
@@ -157,12 +183,67 @@ Events handled (the `switch`):
 
 | Event | Effect |
 | --- | --- |
-| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` → insert `ai_credit_purchases` (quantity from `listLineItems`; idempotent on unique `stripe_checkout_session_id`, 23505 ignored). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` (no-op without `GA_API_SECRET`). |
-| `customer.subscription.updated` | Profile by customer ID → upsert subscription. |
-| `customer.subscription.deleted` | `status = 'canceled'`, `tier = 'free'` (matched on `subscriptions.id`). |
-| `invoice.payment_failed` | `status = 'past_due'` (matched on `user_id`). |
+| `checkout.session.completed` | `mode: 'payment'` + `metadata.type === 'ai_credit_pack'` → insert `ai_credit_purchases` (quantity from `listLineItems`; idempotent on unique `stripe_checkout_session_id`: 23505 is answered 200, any other insert error 500). `mode: 'subscription'` → retrieve subscription, resolve user (`subscription.metadata.user_id` → `session.metadata.user_id` → profile by `stripe_customer_id`), save `stripe_customer_id` on the profile, upsert subscription, fire GA4 `checkout_completed` (no-op without `GA_API_SECRET`). |
+| `customer.subscription.updated` | Retrieve the subscription's current state from Stripe by the id in the event → resolve the user (order below) → upsert that state, unless the user's row does not track this subscription and it is not entitled (then nothing is written). The object embedded in the event is not written. |
+| `customer.subscription.deleted` | `status = 'canceled'`, `tier = 'free'` on the row whose `subscriptions.id` is the event's subscription id. No user or profile lookup, no retrieve. |
+| `invoice.payment_failed` | Retrieve the current state of the invoice's subscription from Stripe → write its status (`past_due` while Stripe retries the payment) on the row whose `subscriptions.id` is that id. No user or profile lookup; an invoice that bills no subscription changes nothing. |
 
-Anything else is ignored with 200.
+Anything else is ignored with 200. A database error, or a failed read from Stripe, while one of
+these is being recorded is answered with 500, so Stripe sends the event again (see "What the
+handler answers").
+
+**What is written is Stripe's current state.** Stripe does not deliver events in order and can
+deliver one again much later, so the object embedded in an event may be older than what the row
+already holds. An event therefore only says *which* subscription changed:
+
+- `customer.subscription.updated` and `invoice.payment_failed` read the subscription from Stripe
+  by that id (`retrieveCurrentSubscription()`, the same call a completed checkout makes) and write
+  what it is now. A subscription that has ended is still returned, with status `canceled`, so an
+  update that arrives after the cancellation writes the ended state again.
+- `customer.subscription.deleted` needs no read: ending is final at Stripe, so it is correct
+  whenever and however often it arrives.
+- The id in the event stays the key. If Stripe answers with a different subscription, nothing is
+  written (500). If Stripe has no subscription with that id (`resource_missing`), nothing is
+  written and the event is answered 200 with the "matched no subscription row or user" line. If
+  the read fails for any other reason, nothing is written (500): the embedded object is never
+  used in its place.
+
+One Stripe API call is made per `updated` and per `payment_failed` event.
+
+**Which row an event changes.** After the first purchase the row's `id` is the Stripe subscription
+id, and that id is the key:
+
+- A cancellation or a failed payment is applied by subscription id, to that row only. The customer
+  named in the event plays no part.
+- An update needs a user for the upsert. `resolveSubscriptionUserId()` is given the subscription
+  retrieved from Stripe (whose id is the event's), tries these in order and takes the first that
+  resolves; a later key never overrides an earlier one:
+  1. the `user_id` of the row already stored under the subscription id;
+  2. `subscription.metadata.user_id` (stamped server-side by `createCheckoutSession`), used only
+     when no row holds that subscription id yet, and only if it is shaped like a user id and a
+     profile with that id exists;
+  3. the profile whose `stripe_customer_id` is the subscription's customer.
+
+  A lookup that fails with a database error is not a miss: the handler answers 500 and no weaker
+  key is tried in its place.
+- The upsert rewrites the user's one row, so a subscription that row does not track yet (the user
+  was resolved by key 2 or 3, not key 1) may take the row over only while its status at Stripe is
+  entitled (`isEntitledSubscriptionStatus`: active, trialing, past_due). That is how a new plan
+  starts when its update arrives before the completed checkout. If it is not entitled, nothing is
+  written and the event is answered with 200 and logged as `Stripe webhook: <event type> ignored:
+  the subscription is not the one on record and its status is <status> (subscription <id>)`: an
+  event about an ended or unpaid earlier subscription never replaces the plan the row holds. The
+  subscription the row tracks (key 1) is written whatever its status.
+- A completed checkout is not subject to that rule: the paid session itself says whose row the
+  subscription belongs on. A cancellation and a failed payment only ever touch the row stored
+  under their subscription id.
+- An event that matches no row and no user is answered with 200 and logged as
+  `Stripe webhook: <event type> matched no subscription row or user (subscription <id>)`. The line
+  holds the event type and the subscription id only.
+
+The invoice's subscription id is read from `parent.subscription_details.subscription`, or from a
+top-level `subscription` on payloads of an older API version: an event's shape follows the API
+version of the webhook endpoint, not of the SDK client.
 
 **Upsert uses `onConflict: 'user_id'`.** `handle_new_user()` pre-creates a `free_<uuid>` row for
 every signup and migration 012 makes `user_id` unique, so the first purchase must rewrite that row
@@ -170,21 +251,62 @@ every signup and migration 012 makes `user_id` unique, so the first purchase mus
 free. Written columns: `id, user_id, tier, status, stripe_price_id, cancel_at_period_end,
 current_period_end` (from the subscription **item**), `updated_at`.
 
-### Known gap: 200 without an upgrade
+### Stored statuses
 
-The handler returns 200 (so Stripe shows the delivery as successful and does not retry) when:
+`subscriptions.status` holds one of `STORED_SUBSCRIPTION_STATUSES` (`@tabmerger/shared`): `active,
+canceled, past_due, trialing, incomplete`, the CHECK list on the column. Stripe has more statuses
+than that (`unpaid`, `paused`, `incomplete_expired`, and any it adds later), so every write of
+`status` in the handler goes through `toStoredState()`:
 
-- the price ID matches none of the four env vars → tier silently resolves to `free`;
-- the Supabase upsert fails → only `console.error('upsertSubscription error:', …)`. This includes a
-  Stripe status outside the DB CHECK list (`active, canceled, past_due, trialing, incomplete`), e.g.
-  `unpaid`, `paused`, `incomplete_expired`;
-- the user or profile can't be resolved (logged for `checkout.session.completed`, silent for the
-  other three events);
-- a credit-pack insert fails with anything other than 23505, or lacks `metadata.user_id`.
+- `canceled` is always written with `tier = 'free'`. The status alone ends the entitlement
+  (`isEntitledSubscriptionStatus`); the tier follows it so an ended plan is the same row whether a
+  `customer.subscription.deleted` event or any other event reported it;
+- any other stored status is written as is, with the tier of the subscription's price;
+- a status that is not stored is written as `status = 'canceled'`, `tier = 'free'` (the same
+  ended state) and logged as `Stripe webhook: <event type> status <status> is not a stored
+  status; the row is written as canceled (subscription <id>)`.
 
-Only a thrown error (e.g. the Stripe API call inside the handler failing) returns 500. When a
-customer paid but didn't upgrade, check the Vercel function logs for these messages — Stripe's
-dashboard will show green.
+The other columns still follow the subscription, and a later event that finds a stored status (a
+paused subscription that resumes, an unpaid one that is paid) writes the plan back.
+
+### What the handler answers
+
+**200** — Stripe shows the delivery as successful and does not send it again:
+
+- the event was recorded;
+- the price ID matches none of the four env vars → the row is written with tier `free`;
+- no row or user matches the event (logged; see "Which row an event changes"), including a
+  completed checkout whose user cannot be resolved and a credit pack without `metadata.user_id`;
+- Stripe has no subscription with the id an update or a failed payment names (same log line);
+- an update is for a subscription the user's row does not track and that is not entitled (logged
+  as "ignored: the subscription is not the one on record");
+- a credit pack that was already granted (23505 on `stripe_checkout_session_id`);
+- an event type the handler does not handle.
+
+**500** — Stripe sends the event again (with backoff, for up to three days in live mode):
+
+- a database read or write fails while the event is being recorded: any lookup in
+  `resolveSubscriptionUserId()`, the update by subscription id, the subscription upsert, the
+  profile lookup or the `stripe_customer_id` write of a completed checkout, or a credit-pack insert
+  with an error other than 23505. Logged as one line: `Stripe webhook: <event type> <step> failed
+  (subscription <id>, code <database error code>)`, followed by the database's message for a
+  write. The line never holds the error's details, the payload, metadata or an email;
+- the subscription cannot be read from Stripe (network, a 5xx, a rate limit), Stripe answers with
+  a different subscription, or a completed checkout's subscription is not found. Logged as one
+  line, e.g. `Stripe webhook: <event type> subscription retrieve failed (subscription <id>,
+  <Stripe error type>, status <HTTP status>)`, without the error object;
+- any other call inside the handler throws, e.g. listing a credit pack's line items (logged as
+  `Webhook handler error:`).
+
+Every handler leaves the same result when its event is delivered twice: the updates are keyed on
+the subscription id, the upsert conflicts on `user_id`, an update, a failed payment and a
+completed checkout read the subscription from Stripe again before writing, and a credit pack is
+inserted once per session id. For one subscription the order of delivery does not matter either:
+whichever of its events is handled last writes the state Stripe has then, or the ended state.
+
+When a customer paid but didn't upgrade, check the Vercel function logs for these lines. A 200
+with a "matched no subscription row or user" line or an unknown price shows green in Stripe's
+dashboard; a 500 shows there as a failed delivery, which can also be resent by hand.
 
 ---
 
@@ -264,6 +386,19 @@ would let a Pro customer upgrade to it. Add it (both prices) when AI launches. T
 configuration was set up this way on 2026-09-28. `STRIPE_PORTAL_CONFIGURATION_ID` (optional) makes
 the switch use a different configuration than the account default.
 
+**When AI launches**, the portal is the only way from Pro to Pro AI (see [One subscription per
+account](#one-subscription-per-account)), so in each mode:
+
+1. Add **TabMerger Pro AI** with its monthly and yearly prices to the configuration's products
+   (`features[subscription_update][products][1]…`), next to Pro.
+2. Do it on the account's **default** configuration: the pricing page's plan-change button and
+   **Manage billing** open the portal through `createBillingPortalSession`, which uses the default.
+   Only the interval switch reads `STRIPE_PORTAL_CONFIGURATION_ID`.
+3. Expect Pro AI → Pro to apply immediately, with proration: Stripe's portal can defer a change
+   to the end of the period only between prices of the same product, and these are two products.
+4. Set `STRIPE_PRO_AI_MONTHLY_PRICE_ID` / `STRIPE_PRO_AI_YEARLY_PRICE_ID` in that environment, or
+   the webhook maps the new price to `free`.
+
 ---
 
 ## AI flag and payments
@@ -286,16 +421,22 @@ Details and how to turn it on: [AI_FEATURES.md](AI_FEATURES.md#coming-soon-flag)
 **Extension** — `useEntitlements()` reads `subscriptions` (`tier, status, cancel_at_period_end,
 current_period_end, stripe_price_id`) for the signed-in user, polling every 30 s (no Realtime).
 
-- Signed out, no row, query error, or `status === 'canceled'` → `free`.
-- Otherwise `tier` maps to `TIER_LIMITS` (`packages/extension/src/lib/types.ts`):
-  free = 5 groups / 50 tabs, no sync, no sessions; pro = unlimited + `cloudSync` + `sessions`;
-  pro_ai = pro + `aiFeatures`.
-- `past_due` / `trialing` / `incomplete` keep the paid tier in the extension.
+- Only a status in `ENTITLED_SUBSCRIPTION_STATUSES` (`active`, `trialing`, `past_due`; checked
+  with `isEntitledSubscriptionStatus` from `@tabmerger/shared`) grants the paid tier. Any other
+  status (`canceled`, `incomplete`, …), no row, a query error, or being signed out gives `free`,
+  whatever the row's `tier` says.
+- With an entitled status, `tier` maps to `TIER_LIMITS` (`packages/extension/src/lib/types.ts`):
+  free = 5 groups / 50 tabs / 3 URL rules, no cloud sync; pro = unlimited + `cloudSync` +
+  `sessions`; pro_ai = pro + `aiFeatures`. A `tier` that is neither `pro` nor `pro_ai` is `free`.
+- Sessions: free keeps up to 3 saved sessions, in the browser only (`FREE_TIER_LIMITS.sessions`,
+  enforced in `useSessions`). The `sessions` entitlement of the paid tiers lifts that cap, and
+  their `cloudSync` entitlement is what uploads sessions so they sync across devices.
 - `aiFeatures` is **ANDed with the AI flag** (`VITE_AI_ENABLED`), so a real `pro_ai` subscriber
   sees no AI while the flag is off. Demo builds (`VITE_DEMO_BUILD=true`) get pro_ai limits, with
   `aiFeatures` still gated by the flag.
-- The 5/50 limits are hard-coded in `TIER_LIMITS`; keep them equal to `FREE_TIER_LIMITS` in
-  `packages/shared/src/constants/index.ts`.
+- The numbers are not written in `TIER_LIMITS`: it reads `FREE_TIER_LIMITS` and
+  `UNLIMITED_TIER_LIMITS` from `packages/shared/src/constants/index.ts`, the single source for
+  enforcement and pricing copy.
 
 **Server (AI routes)** — `checkAndIncrementAIUsage` in `packages/web/lib/ai-usage.ts` requires
 `tier === 'pro_ai'` **and** `status === 'active'`. `trialing` and `past_due` do **not** get AI.
